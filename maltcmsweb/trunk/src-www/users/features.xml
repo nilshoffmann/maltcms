@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content group="users" ident="users/features" nname="Features" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
+<column id="content">
+            <h1>Maltcms</h1>
+            <h2>ChromA(1D,2D)</h2>
+            <h2>ChromA4D</h2>
+            <h1>ChromAUI</h1>
+</column>
+</content>

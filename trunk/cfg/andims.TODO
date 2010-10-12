@@ -1,0 +1,296 @@
+/*
+********************************************************************************
+*
+*  ADMINISTRATIVE-DATA Information Class - Category 1 & 2 Data Elements
+*
+********************************************************************************
+*/
+
+typedef struct {
+   char *		dataset_completeness;
+   char *		ms_template_revision;
+   char *		netcdf_revision;
+   char *		languages;
+   char *		comments;
+   char *		dataset_origin;
+   char *		dataset_owner;
+   char *		netcdf_date_time;
+   char *		experiment_title;
+   char *		experiment_date_time;
+   char *		experiment_x_ref_0;
+   char *		experiment_x_ref_1;
+   char *		experiment_x_ref_2;
+   char *		experiment_x_ref_3;
+   char *		operator_name;
+   char *		pre_expt_program_name;
+   char *		post_expt_program_name;
+   char *		source_file_reference;
+   char *		source_file_format;
+   char *		source_file_date_time;
+   char *		external_file_ref_0;
+   char *		external_file_ref_1;
+   char *		external_file_ref_2;
+   char *		external_file_ref_3;
+   char *		calibration_history_0;
+   char *		calibration_history_1;
+   char *		calibration_history_2;
+   char *		calibration_history_3;
+   char *		error_log;
+   ms_admin_expt_t	experiment_type;
+   long			number_times_processed;
+   long			number_times_calibrated;
+   long			number_instrument_components;
+} MS_Admin_Data;
+
+/*
+********************************************************************************
+*
+*  INSTRUMENT-ID Information Class - Category 1 through 5 Data Elements
+*
+********************************************************************************
+*/
+
+/* Note that the contents or format of the string fields below have
+   not been defined in the MS proposal.  The structure definition has been
+   provided for completeness only.					*/
+
+typedef struct {
+   long			inst_no;
+   char *		name;
+   char *		id;
+   char *		manufacturer;
+   char *		model_number;
+   char *		serial_number;
+   char *		software_version;
+   char *		firmware_version;
+   char *		operating_system;
+   char *		application_software;
+   char *		comments;
+} MS_Instrument_Data;
+
+/*
+********************************************************************************
+*
+*  SAMPLE-DESCRIPTION Information Class - Category 1 & 2 Data Elements
+*
+********************************************************************************
+*/
+
+typedef	struct {
+   char *		internal_id;
+   char *		external_id;
+   char *		receipt_date_time;
+   char *		owner;
+   char *		procedure_name;
+   char *		matrix;
+   char *		storage;
+   char *		disposal;
+   char *		history;
+   char *		prep_procedure;
+   char *		prep_comments;
+   char *		manual_handling;
+   char *		comments;
+   ms_sample_state_t	state;
+} MS_Sample_Data;
+
+/*
+********************************************************************************
+*
+*  TEST-METHOD Information Class - Category 1 & 2 Data Elements
+*
+********************************************************************************
+*/
+
+typedef	struct {
+   ms_test_separation_t		separation_type;
+   ms_test_inlet_t		ms_inlet;
+   float			ms_inlet_temperature;
+   ms_test_ioniz_t		ionization_mode;
+   ms_test_polarity_t		ionization_polarity;
+   float			electron_energy;
+   float			laser_wavelength;
+   char *			reagent_gas;
+   float			reagent_gas_pressure;
+   char *			fab_type;
+   char *			fab_matrix;
+   float			source_temperature;
+   float			filament_current;
+   float			emission_current;
+   float			accelerating_potential;
+   ms_test_detector_t		detector_type;
+   float			detector_potential;
+   float			detector_entrance_potential;
+   ms_test_res_t		resolution_type;
+   char *			resolution_method;
+   ms_test_function_t		scan_function;
+   ms_test_direction_t		scan_direction;
+   ms_test_law_t		scan_law;
+   float			scan_time;
+   char *			mass_calibration_file;
+   char *			external_reference_file;
+   char *			internal_reference_file;
+   char *			comments;
+} MS_Test_Data;
+
+/*
+********************************************************************************
+*
+*  RAW-DATA Information Class - Category 1 & 2 Data Elements
+*
+********************************************************************************
+*/
+
+/* The "has_masses" and "has_times" flags are used only when reading netCDF
+   files, and are set to TRUE if the respective data is present in the
+   file.								*/
+
+typedef struct {
+   long			nscans;		/* Number of scans in data set	*/
+   int			has_masses;	/* TRUE if masses present in file */
+   int			has_times;	/* TRUE if times present in file  */
+   double		mass_factor;
+   double		time_factor;
+   double		intensity_factor;
+   double		intensity_offset;
+   ms_data_mass_t	mass_units;
+   ms_data_time_t	time_units;
+   ms_data_intensity_t	intensity_units;
+   ms_data_intensity_t	total_intensity_units;
+   ms_data_format_t	mass_format;
+   ms_data_format_t	time_format;
+   ms_data_format_t	intensity_format;
+   char *		mass_label;
+   char *		time_label;
+   char *		intensity_label;
+   long			starting_scan_number;
+   double		mass_axis_global_min;
+   double		mass_axis_global_max;
+   double		time_axis_global_min;
+   double		time_axis_global_max;
+   double		intensity_axis_global_min;
+   double		intensity_axis_global_max;
+   double		calibrated_mass_min;
+   double		calibrated_mass_max;
+   double		run_time;
+   double		delay_time;
+   short		uniform_flag;
+   char *		comments;
+} MS_Raw_Data_Global;
+
+/* Note: this data is provided on a per-scan basis.  The arrays of mass,
+   time, and intensity values must be the same size, and have a one-to-one
+   correspondence between them (i.e. one mass, time, and intensity triplet
+   for each datum point).  Mass or time data may be both present, or only mass
+   or only time data.  WHATEVER IS PRESENT, THE SAME DATA MUST BE PRESENT
+   FOR EVERY SCAN IN THE FILE.  If one abcissa type is missing, the pointer
+   may be set to NULL.  The arrays are declared as void * to allow for
+   variable typing (they may actually be short, long, float, or double,
+   depending on the data format indicated in the MS_Raw_Data_Global fields.
+
+   Flag_masses and flag_values arrays are optional.  If no peaks are flagged
+   for a given scan, then NULL pointers may be passed.  Otherwise, these
+   arrays are filled pairwise with the mass/time and flag value for those peaks
+   which are flagged.  Peaks which have no flags need not be included.
+
+   The following rules determine whether masses or times are passed in the
+   flag_peaks array:
+   (1) If both times and masses are recorded for scan data, then MASSES
+       must be passed;
+   (2) If times only are recorded, then TIMES must be passed; or,
+   (3) If masses only are recorded, then MASSES must be passed.
+   In every case, the flag_paeks array must be of the same data type as the
+   masses or times array as appropriate.  The flag_values array MUST be
+   of the same data type as the intensities array (since it is physically
+   written to the netCDF file by concatenating it to the end of the
+   intensities data for each scan, and therefore must be of the same type).
+
+   Flags values are listed below.  If a peak has more than one flag,
+   then a composite flag is constructed using the logical OR of the
+   separate flags.  All of the peaks in the flag_peakss array MUST be present
+   in the masses or times array for the scan; unpredictable results will occur
+   if there is a mismatch.
+
+   For each scan, the scan_no, points, and flags fields MUST have
+   valid values.  If there are no peaks or flags for a given scan,
+   pass zeros in those fields.  An entry must be made in the netCDF file
+   for every scan, whether it has peaks or not.				*/
+
+typedef struct {
+   long			scan_no;	/* Index number of this scan	*/
+   long			points;		/* Number of points in this scan*/
+   long			flags;		/* Number of flagged peaks	*/
+   long			actual_scan_no;	/* Data file scan number	*/
+   double		total_intensity;
+   double		a_d_rate;
+   short		a_d_coadditions;
+   double		scan_acq_time;
+   double		scan_duration;
+   double		inter_scan_time;
+   double		mass_range_min;
+   double		mass_range_max;
+   double		time_range_min;
+   double		time_range_max;
+   double		resolution;
+   void *		masses;		/* Array of masses		*/
+   void *		times;		/* Array of times		*/
+   void *		intensities;	/* Array of intensities		*/
+   long *		flag_peaks;	/* Array of flagged peaks	*/
+   short *		flag_values;	/* Array of flag values		*/
+} MS_Raw_Per_Scan;
+
+/* The following struct is used for SIR/SIM/MID-type data to record the
+   scan group information.  The three arrays are parallel - that is, for
+   each mass, there is a corresponding sampling time (how long that mass
+   was monitored during the scan) and delay time (how long it took to
+   get to the next monitored mass).  All times are in milliseconds.
+
+   On writing, the arrays are assumed to be dimensioned to "mass_count"
+   length.  On reading, the arrays are dynamically allocated to a length
+   appropriate to the number of masses in the scan group being read.	*/
+
+typedef struct {
+   long			group_no;	/* Index number of this group	*/
+   long			mass_count;	/* Number of masses in group	*/
+   long			starting_scan;	/* Group starts with this scan	*/
+   double *		masses;		/* Array of masses		*/
+   double *		sampling_times;	/* Sampling time for each mass	*/
+   double *		delay_times;	/* Inter-mass delay time	*/
+} MS_Raw_Per_Group;
+
+/* Note:  For library data, in addition to the per-scan raw data, the following
+   data is provided for each library spectrum.				*/
+
+/* Note:  The specification provides for any number of additional names;
+   this is difficult to implement in netCDF, so in this present implementation,
+   only four other additional names fields are provided.		*/
+
+typedef struct {
+   long			scan_no;
+   char *		entry_name;
+   char *		entry_id;
+   long			entry_number;
+   char *		source_data_file_reference;
+   char *		cas_name;
+   long			cas_number;
+   char *		other_name_0;
+   char *		other_name_1;
+   char *		other_name_2;
+   char *		other_name_3;
+   char *		formula;
+   char *		smiles;
+   char *		wiswesser;
+   char *		molfile_reference;
+   char *		other_structure;
+   double		retention_index;
+   char *		retention_type;
+   double		absolute_retention;
+   double		relative_retention;
+   char *		retention_reference;
+   long			retention_cas;
+   float		mp;
+   float		bp;
+   double		chemical_mass;
+   long			nominal_mass;
+   double		accurate_mass;
+   char *		other_info;
+} MS_Raw_Library;

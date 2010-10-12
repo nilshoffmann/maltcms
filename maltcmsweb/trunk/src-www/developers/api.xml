@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content group="developers" ident="developers/api" nname="API" toRoot="../" publish="yes" lastchanged="$Date$ by $Author$">
+<column id="content">
+	    <p><a href="api/maltcms-1.0/index.html">Maltcms 1.0 API</a></p>
+</column>
+</content>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content group="home" ident="home/gettingStarted" nname="Getting Started" toRoot="../" publish="yes" lastchanged="$Date$ by $Author$">
+<column id="content">
+        <a href="http://sourceforge.net/apps/trac/maltcms/">Quick start</a>
+</column>
+</content>

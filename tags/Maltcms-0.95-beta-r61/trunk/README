@@ -1,0 +1,93 @@
+###############################################################################
+Requirements:
+Java Runtime Environment (JRE) version 1.6.0, http://java.sun.com/javase/6/
+The scripts will try to guess the location of your java installation.
+In case of failure, simply add a file "javahome" to the directory in which 
+this README is located, consisting of one line holding the path to your JRE.
+
+Libraries contained in lib/ need to be in classpath,
+which is built automatically when calling 'scripts/maltcms.sh'
+
+Please note:
+The scripts will always prompt for the installation directory of 
+maltcms, if you do not set the environment variable MALTCMSDIR
+to the installation location. We recommend to add 
+
+export MALTCMSDIR=/path/to/your/maltcms/
+
+to your $HOME/.bashrc or $HOME/.profile file.
+Alternatively, simply overwrite the environment variable within
+scripts/maltcms.sh and scripts/maltcms-interactive.sh to set 
+it to a fixed location.
+
+###############################################################################
+
+Running Maltcms:
+>scripts/maltcms.sh -- -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
+Required inputs are:
+-i <INPUTDIR> (e.g. /vol/data)
+-o <OUTPUTDIR> (e.g. /vol/output)
+-f <FILES> (e.g. "*.cdf")
+
+>scripts/maltcms.sh -- -h
+prints command-line options with explanations.
+
+For interactive input of the parameters:
+>scripts/maltcms-interactive.sh
+which will ask you interactively for the most important things.
+It will provide defaults, where appropriate.
+
+If you prefer a graphical wizard to help you create a configuration:
+>scripts/maltcms.sh -exec maltcms.ui.wizard.PipelineWizard -- 
+
+###############################################################################
+Remarks:
+Currently, netCDF compatible input and output is 
+supported, mzXML input works reliably for MS1 data, output is
+currently redirected to netCDF format. Additionally, mzData is supported 
+as input format, but again, output is redirected to netCDF format.
+
+To get some insight into the parameters used by Maltcms and possible
+alternatives, consult the properties files in cfg/, especially
+ * alignment.properties
+ * preprocessing.properties
+ * graphics.properties
+
+Examples for custom configurations can be found in all files prefixed
+with "my_". Custom configuration files can be provided to maltcms.sh and 
+maltcms-interactive.sh, overriding default values with the -c option.
+
+File format for Anchors:
+Anchor files start with a file designation in their first line:
+Path can be omitted, if ORIGINAL_DATA_FILE and anchor file are both located 
+in input basedirectory (cmdline option -i). Otherwise, the absolute path to
+the original file has to be given.
+>NAME_OF_ORIGINAL_DATA_FILE.cdf
+
+The second line defines the column names:
+Name	RI	RT	Scan
+
+All following lines contain information for one anchor each:
+
+RI1	-	-	230
+RI2	-	-	430
+
+etc.
+
+Note that columns RI and RT are optional, Scan and Name are required.
+Anchor names should be identical for matched compounds.
+
+Full example:
+File Example1.txt would look like this:
+>Example1.cdf
+Name	RI	RT	Scan
+RI1	-	-	230
+RI2	-	-	430
+RI3	-	-	600
+	
+File Example2.txt would look like this:
+>Example2.cdf
+Name	RI	RT	Scan
+RI1	-	-	234
+RI2	-	-	437
+RI3	-	-	598

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+	targetNamespace="http://hobit.sourceforge.net/xsds/20060102/sequenceML"
+	xmlns:bt="http://schemas.bioservices.net/2006/01/biotypes"
+	xmlns:seq="http://hobit.sourceforge.net/xsds/20060102/sequenceML"
+	xmlns:cr="http://schemas.bioservices.net/2006/01/crossrefs"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	
+	<xs:import namespace="http://schemas.bioservices.net/2006/01/biotypes" schemaLocation="http://schemas.bioservices.net/2006/01/biotypes_1.1.xsd" />
+	<xs:import namespace="http://schemas.bioservices.net/2006/01/crossrefs" schemaLocation="http://schemas.bioservices.net/2006/01/crossrefs_0.1.xsd" />
+	
+	<!--                   -->
+	<!-- ELEMENTS -->
+	<!--                   -->
+	<xs:element name="sequenceML" nillable="true">
+		<xs:annotation>
+			<xs:documentation>represents a list of sequences (mostly a XML replacement for FASTA)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" name="sequence" type="seq:sequenceType" />
+			</xs:sequence>
+			<xs:attribute fixed="0.1" name="version" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+	<!--             -->
+	<!-- TYPES -->
+	<!--             -->
+	<xs:complexType name="sequenceType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="name" type="xs:string" />
+			<xs:element minOccurs="0" name="synonyms" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Synonyms for this element</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" name="description" type="xs:string" />
+			<xs:choice>
+				<xs:element name="aminoAcidSequence" type="bt:aminoAcidOneLetterSequence" />
+				<xs:element name="nucleicAcidSequence" type="bt:nucleotideSequence" />
+				<xs:element name="freeSequence" type="bt:sequence" />
+			</xs:choice>
+			<xs:element minOccurs="0" ref="cr:crossRefs" />
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="property" type="seq:propertyType" />
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="comment" type="seq:commentType" />
+		</xs:sequence>
+		<xs:attribute name="seqID" type="xs:string" use="required" />
+		<xs:attribute name="size" type="xs:int" use="optional" />
+	</xs:complexType>
+	
+	<!-- Types, currently not within BioTypes 1.0 , possible in 1.1 ? -->
+	<xs:complexType name="propertyType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" />
+			<xs:element name="value" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="commentType">
+		<xs:sequence>
+			<xs:element name="text" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

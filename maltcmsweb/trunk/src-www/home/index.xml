@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content group="home" ident="home/index" nname="Welcome" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
+	<column id="content">
+		<h1>News</h1>
+		<h2>ChromAUI featured as a Netbeans RCP application</h2>
+		<p>After a recent inquiry about our project ChromAUI from Geertjan Wielenga, I prepared a few screenshots of the current prototype and wrote short descriptions for them.
+		Visit <a href="http://blogs.sun.com/geertjan/entry/metabolomics_and_proteomics_on_the" target="_blank">Geertjan Wielenga's blog</a> to see for yourself.</p>
+		<h1>About Maltcms and ChromA</h1>
+		<h2>What is Maltcms?</h2>
+		<p>
+			Maltcms, short for "Modular Application Toolkit for Chromatography Mass-Spectrometry" is an application framework 
+			mainly suited for developers working in the domain of bioinformatics for metabolomics and proteomics. Its aim is to 
+			provide reusable, efficient datastructures, abstracting from the various low-level data-formats like netcdf (ANDIMS), mzXML, mzData and mzML
+			and providing consistent access to data features like mass spectra, chromatograms and metadata. Furthermore, Maltcms provides a platform 
+			for the implementation and execution of processing pipelines. New and existing algorithms can be easily implemented or included and executed together with 
+			existing processing elements.   
+		</p>
+		<p>For a more extensive list of features, please refer to the <ref target="users/features"/> section.</p>
+		
+		<h2>What is ChromA/ChromA4D?</h2>
+		<p>
+			ChromA and ChromA4D are particular pipelines of defined processing elements, which realize the typical workflow of GC-MS/LC-MS (ChromA) and 
+			GCxGC-MS (ChromA4D) data analysis.
+		</p>
+		
+		<h1>Future Developments</h1>
+		<p>We are currently developing a rich client application, called ChromAUI, which is based on the Netbeans RCP framework.
+		The aim of this RCP application is, to allow manual interaction with the data, as well as visualization of raw and processed data. However, 
+		it will also be possible to define custom processing pipelines, run them as batch tasks and inspect the results, while they are being created.
+		If you are interested to try ChromAUI, please go to <ref target="info/contact"/>.</p>
+		<p>
+		An early preview and some screenshots of ChromAUI are now featured on <a href="http://blogs.sun.com/geertjan/entry/metabolomics_and_proteomics_on_the" target="_blank">Geertjan Wielenga's blog</a>.
+		</p>
+		
+	</column>
+</content>

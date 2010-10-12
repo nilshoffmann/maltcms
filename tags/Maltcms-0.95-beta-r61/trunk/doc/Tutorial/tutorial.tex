@@ -1,0 +1,295 @@
+\documentclass[a4paper,10pt]{article}
+
+%Grundeinstellungen
+\usepackage[latin1]{inputenc}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+\usepackage{subfigure}
+\usepackage[dvips]{color}
+\usepackage{listings}
+
+\ifx\pdfoutput\undefined
+\usepackage{graphicx}
+\usepackage{hyperref}
+\else
+\usepackage[pdftex]{graphicx}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage{epstopdf}
+\usepackage[pdftex,pdfpagelabels,pageanchor=false]{hyperref}
+% \hypersetup{
+%   a4paper,
+%   colorlinks,
+%   citecolor=black,
+%   linkcolor=black,
+%   filecolor=black,
+%   anchorcolor=black,
+%   urlcolor=blue}
+% \pdfinfo{
+%   /Author Max Mustermann
+%   /Subject (Seminar: Datenkompression)
+%   /Title (Titel)
+% }
+\fi
+
+% Definition eines Kommandos zur Angabe, wer einen Abschnitt geschrieben hat.
+\newcommand{\parauthor}[1]{\marginpar{\begin{center}#1\end{center}}}
+\definecolor{lightgray}{rgb}{0.99,0.99,0.99}
+\lstset{language=Java,frame=single,backgroundcolor=\color{lightgray},basicstyle=\footnotesize,breaklines=true,numberstyle=\tiny,numbers=left,numbersep=5pt,texcl=true,tabsize=4}
+
+% Informationen f�r den Titel.
+% Wird sp�ter mit \maketitle erzeugt.
+\author{Nils Hoffmann \\\url{Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE}}
+\title{Programming with Maltcms 0.95}
+\date{\today}
+
+
+% Hier f�ngt das eigentliche Dokument an.
+\begin{document}
+% Titel(seite) erstellen
+\maketitle
+% Inhaltsverzeichnis aufbauen
+\tableofcontents
+
+\section{Introduction}
+The following Tutorial was written as an introduction to the Java based framework Maltcms (Modular Application Toolkit for
+Chromatography Mass Spectrometry). It tries to give an overview of key classes and concepts,
+as well as in depth information, where necessary.
+\subsection{Audience}
+The target audience of this tutorial are typically programmers or scientists, wishing to 
+extend the functionality of Maltcms, or wishing to incorporate Maltcms
+functionality into their own projects.
+\section{Components}
+The following section gives a short overview of the core components, mainly
+situated in the generic package \texttt{cross.*} (Common Runtime Object Support
+System). These components provide basic datastructures and infrastructure for
+logging, IO and other things.
+\subsection{A document tree datastructure: IFileFragment and
+FileFragment}\footnote{found in package \texttt{cross.datastructures.fragments}}
+Maltcms makes use of the netcdf\footnote{\url{http://www.unidata.ucar.edu/software/netcdf/}} file format which is based on an abstract model for scientific data. This model allows for naming of variables, attributes and 
+dimensions within one file, thus creating self-describing data. There is also a possibility for 
+using structures and groups within such files. However, in Maltcms only a subset of this model is used, and mirrored
+as an extended, internal data structure, which allows for serialization to XML
+and lazy (on demand) loading of array data, as well as indexed reading in row
+compressed storage (rcs) format of one array with indices stored in another array.\footnote{The associated classes can be found in the package \texttt{maltcms.datastructures.fragments}. The package name will be omitted from now on, unless necessary for unique identification of classes.} The internal structure can be imagined as a document tree, where the root of the tree is an instance of \texttt{IFileFragment}. It is possible to add instances of \texttt{IVariableFragment} to the root, as well as removing them. Each \texttt{IVariableFragment} has different attributes, which can be altered.
+
+Arbitrary input file formats are mapped to the internal array style format by
+corresponding \texttt{cross.io.IDataSource} implementations. Such a data file
+must provide methods for reading single array data, as well as for reading scan
+oriented indexed arrays. The implementation is required to react on passed in
+references to objects of type
+\texttt{cross.datastructures.fragments.IVariableFragment}, which provide a name
+for the data part associated with that name. The names of variables mimic those
+defined in the AIA/ANDI-MS standard,
+so that once the internal data structure has been established from a different
+input file via an appropriate \texttt{cross.io.IDataSource} implementation, 
+the data can be saved to an AIA/ANDI-MS compatible netcdf file.
+
+\subsubsection{Referencing previous IFileFragment Objects}
+
+\subsection{Manipulating document trees: AFragmentCommand}
+The classes extending \texttt{cross.commands.fragments.AFragmentCommand}
+build the core classes of a processing pipeline. Each such class must provide a method public \lstinline|TupleND<IFileFragment> apply(TupleND<IFileFragment> t)| to receive a 
+tuple of \texttt{IFileFragment} objects and return them possibly processed or replaced.
+
+As an example of how such a \texttt{AFragmentCommand} is created, the class
+\texttt{Normalizer} will be used as an example. Let's focus on the necessary imports first:
+\begin{lstlisting}
+/* The package declaration is placed at the top of the File
+ * Since this example will be application domain specific, we 
+ * place it under maltcms.commands.fragments
+ */
+package maltcms.commands.fragments;
+// The most basic imports are
+import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.FileFragment;
+import cross.datastructures.tuple.TupleND;
+// In order to use the logging and configuration infrastructure of Maltcms,
+// we also need the following imports
+import cross.Logging;
+import org.slf4j.Logger;
+import org.apache.commons.configuration.Configuration;
+// We also add an import to throw Exceptions from not yet implemented methods
+import maltcms.exception.NotImplementedException;
+\end{lstlisting}
+After having imported the basic dependencies necessary for our Normalizer,
+we can begin describing our class.
+\begin{lstlisting}
+// Now we can start describing \texttt{Normalizer}, which extends 
+// \texttt{FragmentCommand}
+public class Normalizer extends AFragmentCommand {
+// Define some private variables
+	private boolean normalize_mass_channels = false;
+	private boolean normalize_scan_intensities = false;
+	private Logger log = Logging.getLogger(this.getClass());
+// Implement the \texttt{apply} method of \texttt{FragmentCommand}
+	public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
+// Let it throw a \texttt{NotImplementedException} for now:
+		throw new NotImplementedException();
+	}
+	...
+\end{lstlisting}
+\begin{lstlisting}
+public class Normalizer extends AFragmentCommand {
+   ...
+// Next, we should override the \texttt{configure} method of 
+// \texttt{Configurable} to allow the Factory to configure objects of this class
+// at runtime. Since Java version 1.5, overridden methods should be annotated
+// with \texttt{@Override}.
+	@Override\\
+	public void configure(Configuration cfg) {
+// We will set the private variables in here and publish log messages in 
+// info-mode, the second parameter in \texttt{cfg.getBoolean(String s, boolean b)}
+// is the default value, if \texttt{s} is not found within the configuration.
+		this.normalize_mass_channels=cfg.getBoolean("normalize.mass_channels",true);
+// The braces \texttt{{}} within the logging statement are used for pattern
+// substitution, to prevent costly variable expansion/evaluation if we are in a
+// different logging mode.
+		log.info("Normalizing mass channels = {}",this.normalize_mass_channels);
+		this.normalize_scan_intensities=cfg.getBoolean("normalize.scan_intensities",true);
+		log.info("Normalizing scan intensities = {}",this.normalize_scan_intensities);
+	}
+}
+\end{lstlisting}
+% \begin{figure}
+% \resizebox{\textwidth}{!}{
+%  \centering
+%  \includegraphics{../uml/fragment.pdf}}
+%  % fragment.pdf: 1179666x1179666 pixel, 0dpi, infxinf cm, bb=
+%  \caption{Class diagram of package \texttt{maltcms.datastructures.fragments}}
+%  \label{fig:fragment_uml}
+% \end{figure}
+
+% import maltcms.exception.NotImplementedException;
+% import maltcms.system.Options;
+% 
+% import org.apache.commons.configuration.Configuration;
+% import org.slf4j.Logger;
+% 
+% public class Normalizer extends FragmentCommand {
+% 
+% 	private boolean normalize_mass_channels = true;
+% 	private boolean normalize_scan_intensities = true;
+% 	private Logger log = Options.getLogger(this.getClass());
+% 	
+% 	public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
+% 		throw new NotImplementedException();
+% 	}
+% 	
+% 	@Override
+% 	public void configure(Configuration cfg) {
+% 		this.normalize_mass_channels=cfg.getBoolean("normalize.mass_channels",true);
+% 		log.info("Normalizing mass channels = {}",this.normalize_mass_channels);
+% 		this.normalize_scan_intensities=cfg.getBoolean("normalize.scan_intensities",true);
+% 		log.info("Normalizing scan intensities = {}", this.normalize_scan_intensities);
+% 	}
+% 
+% }
+In order to put some functionality into our class, we will begin implementing the \texttt{apply} method.
+\lstset{language=Java,basicstyle=\small,breaklines=true,texcl=true,tabsize=4}
+\begin{lstlisting}
+public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
+// Iterate over all \texttt{IFileFragment} objects in \texttt{t}
+	for(IFileFragment ff:t){
+// Create a \texttt{IFileFragment} with default name to take the
+// results of operation
+		IFileFragment work = FragmentTools.create(this.getClass());
+// Query for a specific variable
+		if(ff.hasChildren("intensity_values","scan_index")){
+// intensity\_values is an indexed variable
+			VariableFragment intensity_values = ff.getChild("intensity_values");
+			VariableFragment scan_index = ff.getChild("scan_index");
+			intensity_values.setIndex(scan_index);
+		}
+	}
+}
+\end{lstlisting}
+Now that we have some VariableFragments ready, we can try to read their associated arrays.
+\begin{lstlisting}
+// Returns the scans contained in intensity\_values. 
+// Read access uses the index variable scan\_index
+ArrayList<Array> intens_scan_arrays = intensity_values.getIndexedArray();
+// Traversing the scans
+for(Array arr:intens_scan_arrays) {
+//we can try to cast an array to a more concrete type
+	if(arr instanceof ArrayInt.D1){
+		ArrayInt.D1 scan_i = (ArrayInt.D1)arr;
+//read value 100 of scan
+		int value =  scan_i.get(100);
+	}
+// otherwise, we can always use an IndexIterator to traverse all values
+	IndexIterator iter = arr.getIndexIterator();
+	while(iter.hasNext()) {
+		double d = iter.getDoubleNext();
+	}
+}
+// We can also read the array of intensity\_values as a whole, 
+// in it's row compressed storage representation
+Array intens_values_array = intensity_values.getArray();
+// We can of course read scan\_index as well
+Array a = scan_index.getArray();
+// If the type of an array and it's shape are known in advance, 
+// we can directly cast to the appropriate type.
+// This allows for direct element access, without using an Index.
+ArrayInt.D1 scan_index_array = ((ArrayInt.D1)a);
+\end{lstlisting}
+
+
+\subsection{Building a pipeline with CommandSequence}
+Command sequence is a collection type class, allowing a special kind of iteration.
+Initialization is performed by passing in a List of \texttt{FragmentCommand} objects and input \texttt{IFileFragment} objects.
+Then, upon each invocation of the usual 
+
+\texttt{if(hasNext)->next()}
+
+paradigm on iterable objects, the output of the last active \texttt{FragmentComand} is pushed as input to the next \texttt{FragmentCommand}. It is thus possible to build processing 
+chains\footnote{Even for batch processing, since n-Tuples of \texttt{IFileFragment} serve as input.}, which start for example with loading of default values, then preprocessing, then continue applying a feature detection algorithm and end with a visualization.
+The file \texttt{cfg/default\_pipeline.properties} contains a key to set the
+elements of the pipeline used in left to right order called \texttt{pipeline}.
+
+The simple pipeline scheme has some limitations though, if for example a \texttt{FragmentCommand} creates additional data, which is needed by \texttt{FragmentCommand} later in the pipeline. For this case, we currently use the configuration, obtainable via \texttt{Factory.getConfiguration()}, adding a new key-value mapping pointing e.g. to the file representation of the data.  
+
+
+\begin{lstlisting}[language=]
+//The following line would load FragmentCommand objects 
+//as given under property anchors.class, loading possibly available retention 
+//indices, then would run the default.varloader, which loads all variables listed under
+//default.variables. Then, the dense arrays are produced from row compressed storage arrays
+//and finally, pairwise distances between the arrays are calculated
+pipeline = ${anchors.class},${default.varloader},${dense.arrays},${pairwise.distances}
+\end{lstlisting}
+
+\subsection{Manipulating Arrays: ArrayCommand}
+\section{Tools}
+\subsection{ArrayTools}
+\subsection{MaltcmsTools}
+\subsection{FileTools}
+\section{CLI, Configuration and Logging Infrastructure}
+Maltcms uses pre-existing software solutions to provide a common logging, command line and configuration system.
+Those systems are in wide use and thus rather bug free.
+\subsection{Command Line Interface with Jakarta Commons CLI}
+The class \texttt{apps.Maltcms} uses the command line interface provided by Apache Jakarta Commons CLI and defines 
+custom command line parameters, which can be inspected by typing the usual \texttt{-?,--help,-h} options after the program name.
+\subsection{Configuration with Jakarta Commons}
+Configuration in Maltcms is usually done in java properties file format, e.g. \texttt{PROPERTYNAME = VALUE}.
+The main configuration options are stored in \texttt{cfg/default.properties}. Configuration files can be aggregated 
+by including other configuration files: \texttt{include = other.properties}.
+\subsection{Logging with Simple Logging Facade for Java: SLF4J}
+The simple logging facade allows easy exchange of the underlying logging system. Currently, apache log4j is used, but potentially any other compatible logging framework, such as the jdk's own logging could be used.
+\section{Supporting Scripts}
+\subsection{\texttt{scripts/maltcms.sh}}
+\lstinputlisting{../../scripts/maltcms.sh}
+
+\subsection{\texttt{scripts/buildCP.sh}}
+\lstinputlisting{../../scripts/buildCP.sh}
+
+\subsection{\texttt{scripts/buildAntCP.sh}}
+\lstinputlisting{../../scripts/buildAntCP.sh}
+
+\subsection{\texttt{scripts/setJavaHome.sh}}
+\lstinputlisting{../../scripts/setJavaHome.sh}
+
+\subsection{\texttt{scripts/updateBuildNumber.sh}}
+\lstinputlisting{../../scripts/updateBuildNumber.sh}
+\end{document}

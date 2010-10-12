@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.cebitec.uni-bielefeld.de/maltcmsAlignment" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:maltcms="http://www.cebitec.uni-bielefeld.de/maltcmsAlignment">
+
+    <complexType name="alignmentType">
+    	<sequence>
+    		<element ref="maltcms:source" minOccurs="0" maxOccurs="unbounded"></element>
+    		<element ref="maltcms:pairedScans" minOccurs="0" maxOccurs="unbounded"></element>
+    	</sequence>
+    	<attributeGroup ref="maltcms:alignmentAttributes"></attributeGroup>
+    </complexType>
+
+
+
+    <complexType name="pairedScansType">
+    	<simpleContent>
+    		<extension base="base64Binary"></extension>
+    	</simpleContent>
+    </complexType>
+
+    <element name="alignment" type="maltcms:alignmentType"></element>
+
+    <complexType name="sourceType">
+    	<attribute name="src" type="anyURI"></attribute>
+    </complexType>
+
+
+
+    <element name="pairedScans" type="maltcms:pairedScansType"></element>
+
+    <element name="source" type="maltcms:sourceType"></element>
+</schema>

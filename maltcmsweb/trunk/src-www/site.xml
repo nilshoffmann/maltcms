@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site xmlns:xi="http://www.w3.org/2001/XInclude">
+	<div id="header">
+		<div id="affiliation">
+			<ul>
+				<li>
+					<a href="http://www.uni-bielefeld.de" title="Bielefeld University, Germany"
+						target="_blank">Bielefeld University</a>
+				</li>
+				<li>
+					<a href="http://www.cebitec.uni-bielefeld.de" title="Center for Biotechnology, Bielefeld"
+						target="_blank">CeBiTeC</a>
+				</li>
+				<li>
+					<a href="http://gi.cebitec.uni-bielefeld.de/" title="Genome Informatics Group, Bielefeld University">Genome
+						Informatics Group</a>
+				</li>
+				<li>
+					<a href="http://bibiserv.techfak.uni-bielefeld.de/" title="Bielefeld Bioinformatics Server">BiBiServ</a>
+				</li>
+			</ul>
+		</div>
+		<div id="download">
+			<a href="http://sourceforge.net/projects/maltcms/files/" title="Download">
+				Maltcms 1.0 RC1
+				<img src="../img/tango-go-down-red.png" />
+				<br />
+				<span class="small">Released on June 25th, 2010</span>
+			</a>
+		</div>
+	</div>
+	<nav>
+
+		<group class="nav_dotted" nname="Home" ident="home">
+			<ref target="home/index" />
+			<ref target="home/gettingStarted" />
+		</group>
+		<!--
+			<group class="nav_dotted" nname="Downloads"> <a
+			href="http://sourceforge.net/projects/maltcms/files/"
+			title="Download">Maltcms/ChromA</a> </group>
+		-->
+
+		<group class="nav_dotted" nname="Users" ident="users">
+			<ref target="users/features" />
+			<!--	<ref target="users/tutorials" /> -->
+			<ref target="users/support" />
+		</group>
+		-->
+		<group class="nav_dotted" nname="Developers" ident="developers">
+			<!-- <ref target="developers/concepts" /> -->
+			<ref target="developers/api" />
+			<!-- <ref target="styleGuide" />-->
+			<a href="http://sourceforge.net/projects/maltcms/" title="Project Website">Project
+				Home</a>
+			<a href="http://sourceforge.net/apps/trac/maltcms/" title="Trac">Trac</a>
+			<!-- <ref target="roadmap" />-->
+		</group>
+		<group class="nav_dotted" nname="Info" ident="info">
+			<ref target="info/publications" />
+			<ref target="info/relatedProjects" />
+			<ref target="info/license" />
+			<ref target="info/contact" />
+		</group>
+	</nav>
+
+	<!-- Home -->
+	<xi:include href="home/index.xml" parse="xml" />
+	<xi:include href="home/gettingStarted.xml" parse="xml" />
+	<!-- Users -->
+	<xi:include href="users/features.xml" parse="xml" />
+	<!-- <xi:include href="users/tutorials.xml" parse="xml" /> -->
+	<xi:include href="users/support.xml" parse="xml" />
+	<!-- Developers -->
+	<!-- <xi:include href="developers/concepts.xml" parse="xml" /> -->
+	<xi:include href="developers/api.xml" parse="xml" />
+	<xi:include href="developers/styleGuide.xml" parse="xml" />
+	<!-- Info -->
+	<xi:include href="info/publications.xml" parse="xml" />
+	<xi:include href="info/relatedProjects.xml" parse="xml" />
+	<xi:include href="info/license.xml" parse="xml" />
+	<xi:include href="info/contact.xml" parse="xml" />
+</site>

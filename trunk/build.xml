@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="help" name="Maltcms">
+
+    <!-- run script to find java home location -->
+    <!-- if this fails, simply create a file javahome in the same directory -->
+    <!-- as this buildfile, containing the path to your java installation -->
+    <exec executable="/bin/bash" outputproperty="JAVA.HOME"  failonerror="true">
+        <arg value="scripts/setJavaHome.sh"/>
+    </exec>
+    <exec executable="/bin/bash" failonerror="true" outputproperty="BUILD.VERSION">
+        <arg value="scripts/updateBuildNumber.sh"/>
+        <arg value="."/>
+    </exec>
+    <!--<echo message="Target updateBuildNumber currently deactivated!"/>-->
+
+    <property name="jbin.dir" value="bin/"/>
+    <property environment="env"/>
+    <property name="java.compiler" value="${JAVA.HOME}${jbin.dir}javac"/>
+    <property name="build.compiler" value="modern"/>
+    <property name="build.dir" value="build"/>
+    <!-- contains junit and checkstyle jars -->
+    <property name="build.lib.dir" value="buildlib"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="release_dir" value="release"/>
+    <property name="preprocess.dir" value="aptpp"/>
+
+    <path id="Maltcms.classpath">
+        <fileset dir="${basedir}">
+                <include name="lib/**/*.jar" />
+                <include name="res/jaxb/*.jar" />
+                <!--<include name="bin/**/*.class" />-->
+        </fileset>
+    </path>
+	
+    <target name="help" description="Prints usage info using -projecthelp">
+        <java classname="org.apache.tools.ant.Main">
+            <arg value="-buildfile"/>
+            <arg value="${ant.file}"/>
+            <arg value="-projecthelp"/>
+        </java>
+    </target>
+
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+        <copy includeemptydirs="false" todir="${build.dir}">
+            <fileset dir="src" excludes="**/*.launch, **/*.g, **/*.testsuite, **/*.deploy, **/*.location, **/*.execution, **/*.datapool, **/*.artifact, **/*.html, **/*.svg, **/*.java"/>
+        </copy>
+    </target>
+	
+    <target name="clean" description="Remove build results and release directory">
+	    <delete dir="${build.dir}"/>
+	    <delete dir="${release_dir}"/>
+	    <delete>
+	        <fileset dir="." includes="*.jar"/>
+	    </delete>
+            <delete file="versionfile"/>
+            <delete file="javahome"/>
+    </target>
+	
+    <target name="cleandoc" description="Remove documentation for build">
+	    <delete dir="doc/api/javadoc"/>
+	    <delete dir="doc/api/doxygen"/>
+    </target>
+    <target name="cleanall" description="Remove build results, release directory and documentation for build" depends="clean,cleandoc"/>
+    <target name="build" depends="build-project"/>
+    <!-- initialize build -->
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file} building on ${os.name}-${os.arch}-${os.version}"/>
+    	<echo message="Using java compiler ${java.compiler}"/>
+        <javac executable="${java.compiler}" fork="yes" verbose="false" compiler="${build.compiler}" includeJavaRuntime="true" debug="true" debuglevel="${debuglevel}" destdir="${build.dir}">
+            <src path="src"/>
+            <classpath refid="Maltcms.classpath"/>
+        </javac>
+    </target>
+    <!-- create release documentation -->
+    <target name="doc" description="Create complete documentation for Maltcms (javadoc, doxygen and tutorial)" depends="release">
+            <mkdir dir="${release_dir}/doc"/>
+            <antcall target="javadoc"/>
+            <!--<antcall target="doxygen"/>-->
+            <!--<antcall target="tutorial"/>-->
+            <mkdir dir="${release_dir}/doc/api"/>
+            <!--
+            <mkdir dir="${release_dir}/doc/api/doxygen"/>
+            <mkdir dir="${release_dir}/doc/api/doxygen/html"/>
+            <copy toDir="${release_dir}/doc/api/doxygen/html">
+                    <fileset dir="doc/doxygen/html/" includes="*"/>
+            </copy>
+            <mkdir dir="${release_dir}/doc/api/doxygen/latex"/>
+            <copy toDir="${release_dir}/doc/api/doxygen/latex">
+                    <fileset dir="doc/doxygen/latex/" includes="*"/>
+            </copy>-->
+            <mkdir dir="${release_dir}/doc/api/javadoc"/>
+                    <copy toDir="${release_dir}/doc/api/javadoc">
+                    <fileset dir="doc/api/javadoc/"/>
+            </copy>
+            <!--<mkdir dir="${release_dir}/doc/Tutorial"/>
+            <copy toDir="${release_dir}/doc/Tutorial">
+                    <fileset dir="doc/Tutorial/" includes="*.pdf"/>
+            </copy>-->
+    </target>
+
+    <target name="all" description="Build the project, copy source and build api documentation" depends="release,srcrelease,doc"/>
+ 
+    <target name="tutorial">
+        <exec executable="pdflatex" dir="doc/Tutorial/" failonerror="true">
+            <arg value="tutorial.tex"/>
+        </exec>
+    </target>
+    <target name="javadoc" description="Create javadoc documentation for Maltcms">
+        <javadoc sourcepath="src" classpath="${Maltcms.classpath}" packagenames="*" destdir="doc/api/javadoc" access="public"/>
+    </target>
+    <target name="doxygen" description="Create doxygen documentation for Maltcms" depends="build">
+        <exec executable="doxygen"  failonerror="true">
+            <arg value="Doxyfile"/>
+            <arg value="src/"/>
+        </exec>
+    </target>
+
+    <target name="test" description="Run JUnit tests for Maltcms (to be implemented)" depends="build">
+        
+    </target>
+
+    <!-- create a release -->
+    <target name="release" description="Create a release of Maltcms" depends="build">
+    	<echo message="Creating directories"/>
+	    <!--<mkdir dir="${preprocess.dir}"/>
+    	<antcall target="run-apt"/>-->
+    	<mkdir dir="${release_dir}"/>
+	    <mkdir dir="${release_dir}/scripts"/>
+	    <mkdir dir="${release_dir}/lib"/>
+	    <mkdir dir="${release_dir}/licenses"/>
+	    <mkdir dir="${release_dir}/cfg"/>
+	    <mkdir dir="${release_dir}/cfg/fragmentCommands"/>
+    	<echo message="Building Jars"/>
+   		<!--<antcall target="makemaltcmslibmanifest"/>-->
+        <antcall target="makecrossjar"/>
+        <antcall target="makemaltcmsjar"/>
+    	<antcall target="makemaltcmsexpjar"/>
+    	<antcall target="makemaltcmsmetabolitedbjar"/>
+    	<antcall target="makecfgjar"/>
+    	<antcall target="makeresjar"/>
+        <!--	    <antcall target="makelibjar"/> -->
+        <antcall target="makeappjar"/>
+        <!--<antcall target="makeucarjar"/>-->
+    	<antcall target="makesmuellerjar"/>
+    	<echo message="Copying files to ${release_dir}"/>
+	    <copy toDir="${release_dir}/cfg">
+		    <fileset dir="cfg" includes="*.properties"/>
+		    <fileset dir="cfg" includes="*.properties"/>
+	    </copy>
+	    <copy toDir="${release_dir}/cfg/fragmentCommands">
+		    <fileset dir="cfg/fragmentCommands" includes="*.properties"/>
+		    <fileset dir="cfg/fragmentCommands" includes="*.properties"/>
+	    </copy>
+	    <copy toDir="${release_dir}/licenses">
+		    <fileset dir="licenses" includes="**/*"/>
+	    </copy>
+	    <copy toDir="${release_dir}">
+		    <fileset dir="." includes="README*"/>
+	    </copy>
+	    <copy toDir="${release_dir}/scripts">
+		    <fileset dir="scripts" includes="*.sh"/>
+	    </copy>
+	    <chmod type="file" perm="ugo+rx">
+		    <fileset dir="${release_dir}/scripts" includes="*.sh"/>
+	    </chmod>
+	    <copy toDir="${release_dir}/lib">
+		    <fileset dir="${build.dir}" includes="*.jar" excludes="maltcms.jar"/>
+	    </copy>
+	    <copy toDir="${release_dir}/lib">
+		    <fileset dir="lib" includes="*.jar"/>
+	    </copy>
+    	<mkdir dir="${release_dir}/res"/>
+    	<copy toDir="${release_dir}/res">
+			<fileset dir="res/" includes="**/*"/>
+		</copy>
+    	<antcall target="makecpappjar"/>
+	<echo message="Adjusting rights"/>
+	<exec dir="${release_dir}" executable="chmod">
+		<arg line="-R"/>
+		<arg line="2775"/>
+		<arg line="."/>
+	</exec>
+    	<echo message="Done!"/>
+    </target>
+
+    <target name="ziprelease" description="Creates a zip archive of the current release (call after release or src-release)" depends="release">
+        <mkdir dir="${ant.project.name}-${BUILD.VERSION}"/>
+        <copy toDir="${ant.project.name}-${BUILD.VERSION}">
+            <fileset dir="${release_dir}" includes="**/*"/>
+        </copy>
+        <zip destfile="${ant.project.name}-${BUILD.VERSION}.zip" basedir="${ant.project.name}-${BUILD.VERSION}"/>
+        <delete dir="${ant.project.name}-${BUILD.VERSION}"/>
+    </target>
+
+   
+
+    <!-- create jars -->
+    <target name="makecrossjar">
+        <jar jarfile="${build.dir}/cross-lib.jar" includes="cross/**/*.class" basedir="${build.dir}/">
+        	<manifest>
+		      <attribute name="Created-By" value="${user.name}" />
+		    	<section name="common">
+	              <attribute name="Implementation-Title" value="Maltcms Libraries"/>
+	              <attribute name="Implementation-Version" value="${BUILD.VERSION}"/>
+	              <attribute name="Implementation-Vendor" value="Center for Biotechnology, Bielefeld University"/>
+	            </section>
+		    </manifest>
+    	</jar>
+    </target>
+    <target name="makemaltcmsjar">
+        <jar jarfile="${build.dir}/maltcms-lib.jar" includes="maltcms/**/*.class" excludes="maltcms/experimental/**/*.class,maltcms/db/**/*.class" basedir="${build.dir}/">
+        	<manifest>
+		      <attribute name="Created-By" value="${user.name}" />
+		    	<section name="common">
+	              <attribute name="Implementation-Title" value="Maltcms Libraries"/>
+	              <attribute name="Implementation-Version" value="${BUILD.VERSION}"/>
+	              <attribute name="Implementation-Vendor" value="Center for Biotechnology, Bielefeld University"/>
+	            </section>
+		    </manifest>
+        	<service type="cross.commands.fragments.AFragmentCommand">
+        		<provider classname="maltcms.commands.fragments.alignment.CenterStarAlignment"/>
+        		<provider classname="maltcms.commands.fragments.alignment.ProgressiveTreeAlignment"/>
+        		<provider classname="maltcms.commands.fragments.assignment.EIMSDBMetaboliteAssignment"/>
+        		<provider classname="maltcms.commands.fragments.assignment.PeakCliqueAssignment"/>
+        		<!--<provider classname="maltcms.commands.fragments.cluster.ClusteringAlgorithm"/>-->
+        		<provider classname="maltcms.commands.fragments.cluster.SingleLinkageAlgorithm"/>
+        		<provider classname="maltcms.commands.fragments.cluster.CompleteLinkageAlgorithm"/>
+        		<provider classname="maltcms.commands.fragments.cluster.SingleLinkageAlgorithm"/>
+        		<provider classname="maltcms.commands.fragments.cluster.NeighborJoinAlgorithm"/>
+        		<provider classname="maltcms.commands.fragments.cluster.UPGMAAlgorithm"/>
+        		<provider classname="maltcms.commands.fragments.cluster.PairwiseDistanceCalculator"/>
+        		<provider classname="maltcms.commands.fragments.io.ANDIChromImporter"/>
+        		<provider classname="maltcms.commands.fragments.io.ANDIMSExporter"/>
+        		<provider classname="maltcms.commands.fragments.io.CSVAnchorReader"/>
+        		<provider classname="maltcms.commands.fragments.io.MSPExporter"/>
+        		<provider classname="maltcms.commands.fragments.io.ObiWarplmataExporter"/>
+        		<provider classname="maltcms.commands.fragments.io.TICPeakListImporter"/>
+        		<provider classname="maltcms.commands.fragments.io.VariableDataExporter"/>
+        		<provider classname="maltcms.commands.fragments.peakfinding.EICPeakFinder"/>
+        		<provider classname="maltcms.commands.fragments.peakfinding.TICPeakFinder"/>
+        		<provider classname="maltcms.commands.fragments.preprocessing.DefaultVarLoader"/>
+        		<provider classname="maltcms.commands.fragments.preprocessing.DenseArrayProducer"/>
+        		<provider classname="maltcms.commands.fragments.preprocessing.MassFilter"/>
+        		<!--<provider classname="maltcms.commands.fragments.preprocessing.ModulationTimeEstimator"/>-->
+        		<provider classname="maltcms.commands.fragments.visualization.Array1DVisualizer"/>
+        		<provider classname="maltcms.commands.fragments.visualization.ChromatogramVisualizer"/>
+        		<!--<provider classname="maltcms.commands.fragments.visualization.MZIDistributionVisualizer"/>-->
+        		<provider classname="maltcms.commands.fragments.visualization.PairwiseAlignmentMatrixVisualizer"/>
+        		<provider classname="maltcms.commands.fragments.visualization.PairwiseAlignmentVisualizer"/>
+        		<!--<provider classname="maltcms.commands.fragments.visualization.ScoreDistributionVisualizer"/>-->
+        		<provider classname="maltcms.commands.fragments.warp.ChromatogramWarp"/>
+        		<provider classname="maltcms.commands.fragments.warp.PathWarp"/>
+        		<provider classname="maltcms.commands.fragments2d.peakfinding.SeededRegionGrowing"/>
+        		<provider classname="maltcms.commands.fragments2d.preprocessing.Default2DVarLoader"/>
+        		<provider classname="maltcms.commands.fragments2d.preprocessing.MeanVarProducer"/>
+        		<provider classname="maltcms.commands.fragments2d.preprocessing.MeanVarVis"/>
+        		<provider classname="maltcms.commands.fragments2d.preprocessing.ModulationExtractor"/>
+        		<provider classname="maltcms.commands.fragments2d.testing.Alignment2D"/>
+        		<provider classname="maltcms.commands.fragments2d.visualization.Chromatogram2DVisualizer"/>
+        		<provider classname="maltcms.commands.fragments2d.visualization.DeltaMasses"/>
+        		<provider classname="maltcms.commands.fragments2d.visualization.GradientVisualizer"/>
+        		<provider classname="maltcms.commands.fragments2d.visualization.MassSpectrumVisualization"/>
+        		<provider classname="maltcms.commands.fragments2d.warp.CreateHorizontalTicVector"/>
+        		<provider classname="maltcms.commands.fragments2d.warp.DTW2DTicVisualizer"/>
+        	</service>
+        	<service type="maltcms.commands.filters.array.AArrayFilter">
+        		<provider classname="maltcms.commands.filters.array.AdditionFilter"/>
+        		<provider classname="maltcms.commands.filters.array.AddRandomNoise"/>
+        		<provider classname="maltcms.commands.filters.array.ArrayMerge"/>
+        		<provider classname="maltcms.commands.filters.array.ExpFilter"/>
+    			<provider classname="maltcms.commands.filters.array.FirstDerivativeFilter"/>
+    			<provider classname="maltcms.commands.filters.array.LogFilter"/>
+        		<provider classname="maltcms.commands.filters.array.MeanStdDevNormalizationFilter"/>
+    			<provider classname="maltcms.commands.filters.array.MedianBaselineFilter"/>
+    			<provider classname="maltcms.commands.filters.array.MinimumFilter"/>
+        		<provider classname="maltcms.commands.filters.array.MinMaxNormalizationFilter"/>
+    			<provider classname="maltcms.commands.filters.array.MovingAverageFilter"/>
+        		<provider classname="maltcms.commands.filters.array.MovingMedianFilter"/>
+    			<provider classname="maltcms.commands.filters.array.MultiplicationFilter"/>
+    			<provider classname="maltcms.commands.filters.array.NormalizationFilter"/>
+    			<provider classname="maltcms.commands.filters.array.SqrtFilter"/>
+    			<provider classname="maltcms.commands.filters.array.TopHatFilter"/>
+        		<provider classname="maltcms.commands.filters.array.BottomHatFilter"/>
+        	</service>
+        	<service type="maltcms.commands.distances.IArrayDoubleComp">
+        		<provider classname="maltcms.commands.distances.Array2DTimePenalized"/>
+        		<provider classname="maltcms.commands.distances.ArrayCorr"/>
+        		<provider classname="maltcms.commands.distances.ArrayCos"/>
+    			<provider classname="maltcms.commands.distances.ArrayCosLp"/>
+        		<provider classname="maltcms.commands.distances.ArrayCov"/>
+        		<provider classname="maltcms.commands.distances.ArrayDot"/>
+				<provider classname="maltcms.commands.distances.ArrayDotLp"/>
+        		<provider classname="maltcms.commands.distances.ArrayDotMap"/>
+        		<provider classname="maltcms.commands.distances.ArrayHamming"/>
+				<provider classname="maltcms.commands.distances.ArrayLp"/>
+				<provider classname="maltcms.commands.distances.ArrayRankCorr"/>
+				<provider classname="maltcms.commands.distances.ArrayTanimoto"/>
+				<provider classname="maltcms.commands.distances.ArrayTimePenalizedDot"/>
+				<provider classname="maltcms.commands.distances.ArrayVarNormLp"/>
+				<provider classname="maltcms.commands.distances.ArrayTimePenalizedRankCorr"/>
+        		<provider classname="maltcms.commands.distances.ArrayWeightedCosine"/>
+        		<provider classname="maltcms.commands.distances.ArrayTimePenalizedWeightedCosine"/>
+        	</service>
+        	<service type="cross.io.IDataSource">
+        		<provider classname="maltcms.io.andims.NetcdfDataSource"/>
+        		<provider classname="maltcms.io.xml.mzData.MZDataDataSource"/>
+        		<provider classname="maltcms.io.xml.mzML.MZMLDataSource"/>
+    			<provider classname="maltcms.io.xml.mzXML.MZXMLDataSource"/>
+        	</service>
+    	</jar>
+    </target>
+	<target name="makemaltcmsexpjar">
+        <jar jarfile="${build.dir}/maltcms-experimental-lib.jar" includes="maltcms/experimental/**/*.class" basedir="${build.dir}/">
+        	<manifest>
+		      <attribute name="Created-By" value="${user.name}" />
+		    	<section name="common">
+	              <attribute name="Implementation-Title" value="Maltcms Libraries"/>
+	              <attribute name="Implementation-Version" value="${BUILD.VERSION}"/>
+	              <attribute name="Implementation-Vendor" value="Center for Biotechnology, Bielefeld University"/>
+	            </section>
+		    </manifest>
+    	</jar>
+    </target>
+	<target name="makemaltcmsmetabolitedbjar">
+        <jar jarfile="${build.dir}/maltcms-metaboliteDB.jar" includes="maltcms/db/**/*.class" basedir="${build.dir}/">
+        	<manifest>
+		      <attribute name="Created-By" value="${user.name}" />
+		    	<section name="common">
+	              <attribute name="Implementation-Title" value="Maltcms Libraries"/>
+	              <attribute name="Implementation-Version" value="${BUILD.VERSION}"/>
+	              <attribute name="Implementation-Vendor" value="Center for Biotechnology, Bielefeld University"/>
+	            </section>
+		    </manifest>
+    	</jar>
+	</target>
+    <target name="makecfgjar">
+        <jar jarfile="${build.dir}/maltcms-cfg.jar" includes="cfg/**/*.properties" basedir=".">
+        	<manifest>
+		      <attribute name="Created-By" value="${user.name}" />
+		    	<section name="common">
+	              <attribute name="Implementation-Title" value="Maltcms Libraries"/>
+	              <attribute name="Implementation-Version" value="${BUILD.VERSION}"/>
+	              <attribute name="Implementation-Vendor" value="Center for Biotechnology, Bielefeld University"/>
+	            </section>
+		    </manifest>
+    	</jar>	
+    </target>
+    <target name="makeresjar">
+        <jar jarfile="${build.dir}/maltcms-res.jar" includes="res/**/*" basedir=".">
+        	<manifest>
+		      <attribute name="Created-By" value="${user.name}" />
+		    	<section name="common">
+	              <attribute name="Implementation-Title" value="Maltcms Libraries"/>
+	              <attribute name="Implementation-Version" value="${BUILD.VERSION}"/>
+	              <attribute name="Implementation-Vendor" value="Center for Biotechnology, Bielefeld University"/>
+	            </section>
+		    </manifest>
+    	</jar>
+    </target>
+    <target name="makeappjar"><!-- depends="makemaltcmsappsmanifest">-->
+		<jar jarfile="${build.dir}/maltcms-apps.jar" includes="apps/**/*.class, annotations/**/*.properties" basedir="${build.dir}/">
+			<manifest>
+		      <attribute name="Created-By" value="${user.name}" />
+			  <attribute name="Main-Class" value="apps.Maltcms" />
+		    	<section name="common">
+	              <attribute name="Implementation-Title" value="Maltcms Libraries"/>
+	              <attribute name="Implementation-Version" value="${BUILD.VERSION}"/>
+	              <attribute name="Implementation-Vendor" value="Center for Biotechnology, Bielefeld University"/>
+	            </section>
+		    </manifest>
+		</jar>
+    </target>
+    <target name="makesmuellerjar">
+        <jar jarfile="${build.dir}/maltcms-symbolicRepAlignment-lib.jar" includes="smueller/**/*.class, annotations/**/*.properties" basedir="${build.dir}/">
+        	<manifest>
+		      <attribute name="Created-By" value="${user.name}" />
+		    	<section name="common">
+	              <attribute name="Implementation-Title" value="Maltcms Libraries"/>
+	              <attribute name="Implementation-Version" value="${BUILD.VERSION}"/>
+	              <attribute name="Implementation-Vendor" value="Center for Biotechnology, Bielefeld University"/>
+	            </section>
+		    </manifest>
+        </jar>
+    </target>
+	
+	<target name="makecpappjar">
+		<path id="relative.classpath">
+	        <fileset dir="${release_dir}">
+	        		<include name="." />
+	                <include name="lib/*.jar" />
+	                <include name="res/jaxb/*.jar" />
+	                <!--<include name="bin/**/*.class" />-->
+	        </fileset>
+	    </path>
+		 <!-- Manifest file generation -->
+		<manifestclasspath property="jar.classpath" jarfile="${release_dir}/maltcms.jar">
+		      <classpath refid="relative.classpath"/>
+		</manifestclasspath>
+		<!--<echo message="Jar classpath: ${jar.classpath}"/>-->
+		<jar jarfile="${release_dir}/maltcms.jar"
+		       basedir="${release_dir}"
+			   excludes="**/**/*"
+			   whenmanifestonly="create">
+		    <manifest>
+		      	<attribute name="Class-Path" value="${jar.classpath}" />
+		    	<attribute name="Created-By" value="${user.name}" />
+		    	<attribute name="Main-Class" value="apps.Maltcms" />
+			    <attribute name="Implementation-Title" value="Maltcms Application Framework"/>
+			    <attribute name="Implementation-Version" value="${BUILD.VERSION}"/>
+			    <attribute name="Implementation-Vendor" value="Center for Biotechnology, Bielefeld University"/>
+		    </manifest>
+		 </jar>
+	</target>
+
+    <!-- copy src to release folder -->
+    <target name="srcrelease" description="Create a release of Maltcms with sources" depends="release">
+	    <mkdir dir="${release_dir}/src"/>
+	    <copy toDir="${release_dir}/src">
+	    	<fileset dir="src" includes="**/*.java"/>
+	    </copy>
+            <copy toDir="${release_dir}">
+	    	<fileset dir="." includes="*.xml" excludes="nb-build.xml"/>
+	    </copy>
+    </target> 
+</project>
