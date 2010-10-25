@@ -1,4 +1,3 @@
-maltcms.commands.fragments2d.peakfinding.SeededRegionGrowing
 maltcms.commands.fragments2d.preprocessing.Default2DVarLoader
 maltcms.commands.fragments2d.preprocessing.MeanVarProducer
 maltcms.commands.fragments2d.preprocessing.MeanVarVis

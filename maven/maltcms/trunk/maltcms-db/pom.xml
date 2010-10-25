@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>maltcms-modules</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>maltcms-modules</artifactId>
+        <groupId>net.sf.maltcms</groupId>
+        <version>1.1-SNAPSHOT</version>
+    </parent>
     <groupId>net.sf.maltcms</groupId>
+    <artifactId>maltcms-db</artifactId>
     <version>1.1-SNAPSHOT</version>
-  </parent>
-  <groupId>net.sf.maltcms</groupId>
-  <artifactId>maltcms-db</artifactId>
-  <version>1.1-SNAPSHOT</version>
-  <name>maltcms-db</name>
-  <url>http://maltcms.sourceforge.net</url>
+    <name>maltcms-db</name>
+    <url>http://maltcms.sourceforge.net</url>
     <build>
         <plugins>
             <plugin>
@@ -34,37 +34,16 @@
         </plugins>
     </build>
     <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.db4o</groupId>
-      <artifactId>db4o-all</artifactId>
-      <version>7.12</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>cross-main</artifactId>
-      <version>1.0</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>slf4j-jdk14</artifactId>
-          <groupId>org.slf4j</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-experimental</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>jfree</groupId>
-            <artifactId>jfreechart</artifactId>
-            <version>1.0.13</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -90,6 +69,17 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-datastructures</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.maltcms</groupId>
+            <artifactId>cross-main</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.db4o</groupId>
+            <artifactId>db4o</artifactId>
+            <version>7.12</version>
+            <classifier>java5</classifier>
         </dependency>
     </dependencies>
     <properties>

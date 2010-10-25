@@ -52,7 +52,7 @@
     </dependency>
     <dependency>
       <groupId>net.sf.sashimi</groupId>
-      <artifactId>jrap-stax</artifactId>
+      <artifactId>jrapStAX</artifactId>
       <version>4</version>
     </dependency>
   </dependencies>

@@ -55,17 +55,12 @@
       <artifactId>slf4j-api</artifactId>
       <version>1.6.1</version>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>cross-main-api</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>cross-main</artifactId>
-      <version>1.0</version>
-    </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>net.sf.maltcms</groupId>
+            <artifactId>cross-main</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+    </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

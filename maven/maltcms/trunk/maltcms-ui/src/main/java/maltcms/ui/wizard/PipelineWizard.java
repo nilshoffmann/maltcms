@@ -296,7 +296,7 @@ public class PipelineWizard implements WizardResultProducer, HyperlinkListener,
 	}
 
 	public void execChroma(final PropertiesConfiguration cfg, final Container jf) {
-		LocalHostLauncher lhl = new LocalHostLauncher(cfg, jf);
+		LocalHostLauncher lhl = new LocalHostLauncher(cfg, jf, true);
 		Thread t = new Thread(lhl);
 		t.start();
 	}

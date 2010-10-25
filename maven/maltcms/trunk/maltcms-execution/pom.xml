@@ -46,23 +46,17 @@
             <version>1.6.1</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>cross-main</artifactId>
-            <version>1.0</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-jdk14</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>drmaa</groupId>
             <artifactId>drmaa</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.netbeans.api</groupId>
+            <groupId>net.sf.maltcms</groupId>
+            <artifactId>cross-main</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>wizard</groupId>
             <artifactId>wizard</artifactId>
             <version>0.998.1</version>
         </dependency>

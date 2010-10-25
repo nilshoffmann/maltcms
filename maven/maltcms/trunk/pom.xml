@@ -14,13 +14,15 @@
     </scm>
     <distributionManagement>
         <repository>
-            <id>sourceforge-maltcms-frs</id>
-            <url>sftp://frs.sourceforge.net:/home/frs/project/m/ma/maltcms/release/</url>
+            <id>maltcms-artifactory</id>
+            <name>maltcms-artifactory-releases</name>
+            <url>http://www.maltcms.de:8081/artifactory/libs-releases-local</url>
         </repository>
 
         <snapshotRepository>
-            <id>sourceforge-maltcms-frs</id>
-            <url>sftp://frs.sourceforge.net:/home/frs/project/m/ma/maltcms/snapshot/</url>
+            <id>maltcms-artifactory</id>
+            <name>maltcms-artifactory-snapshots</name>
+            <url>http://www.maltcms.de:8081/artifactory/libs-snapshots-local</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -70,6 +72,7 @@
         <module>maltcms-apps</module>
         <module>maltcms-chroma</module>
         <module>maltcms-chroma4D</module>
+        <module>maltcms-chroma4D-srg</module>
         <module>maltcms-filters</module>
         <module>maltcms-commands</module>
         <module>maltcms-datastructures</module>
@@ -90,8 +93,9 @@
         <module>maltcms-io-mzdata</module>
         <module>maltcms-io-mzml</module>
     </modules>
-
+ <!--
     <repositories>
+
         <repository>
             <id>source.db4o</id>
             <url>http://source.db4o.com/maven</url>
@@ -118,7 +122,7 @@
             </releases>
 
         </repository>
-        <!--<repository>
+        <repository>
             <id>maltcms-maven-snapshot-repository</id>
             <url>http://sourceforge.net/projects/maltcms/files/snapshot/</url>
             <snapshots>
@@ -127,15 +131,9 @@
             <releases>
                 <enabled>false</enabled>
             </releases>
-        </repository>-->
-    </repositories>
-    <dependencies>
-        <dependency>
-            <groupId>net.sf.maltcms</groupId>
-            <artifactId>cross-main</artifactId>
-            <version>1.0</version>
-        </dependency>
-    </dependencies>
+        </repository>
+    </repositories>-->
+    <dependencies></dependencies>
     <reporting>
         <plugins>
             <plugin>

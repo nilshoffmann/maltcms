@@ -67,6 +67,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution><id>create-cp-jar</id><phase>package</phase><goals><goal>jar</goal></goals>
                 <configuration>
                     <archive>
                         <manifest>
@@ -77,6 +79,8 @@
                     </archive>
                     <outputDirectory>${project.build.directory}/${project.name}-${project.version}</outputDirectory>
                 </configuration>
+                </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
