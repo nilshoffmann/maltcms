@@ -55,11 +55,6 @@
             <version>4.1</version>
         </dependency>
         <dependency>
-            <groupId>edu.ucar.unidata</groupId>
-            <artifactId>unidatacommon</artifactId>
-            <version>4.1</version>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>cross-annotations</artifactId>
             <version>${project.version}</version>
@@ -100,6 +95,11 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>cross-main-api</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.ucar.unidata</groupId>
+            <artifactId>netcdf-unidatacommon</artifactId>
+            <version>4.1</version>
         </dependency>
     </dependencies>
     <properties>

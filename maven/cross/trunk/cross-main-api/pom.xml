@@ -47,14 +47,19 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>cross-exception</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>edu.ucar.unidata</groupId>
             <artifactId>netcdf</artifactId>
             <version>4.1</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>cross-exception</artifactId>
-            <version>${project.version}</version>
+            <groupId>edu.ucar.unidata</groupId>
+            <artifactId>netcdf-unidatacommon</artifactId>
+            <version>4.1</version>
         </dependency>
     </dependencies>
 </project>
