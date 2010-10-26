@@ -284,12 +284,12 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
 			final String wflname = getName();
 			this.log.info("Saving workflow to file {}", wflname);
 			final Document doc = new Document();
-			final HashMap<String, String> hm = new HashMap<String, String>();
-			hm.put("type", "text/xsl");
-			hm.put("href", this.xslPathPrefix + "maltcmsResult.xsl");
+//			final HashMap<String, String> hm = new HashMap<String, String>();
+//			hm.put("type", "text/xsl");
+//			hm.put("href", this.xslPathPrefix + "maltcmsResult.xsl");
 			final ProcessingInstruction pi = new ProcessingInstruction(
 			        "xml-stylesheet",
-			        "type=\"text/xsl\" href=\"http://bibiserv.techfak.uni-bielefeld.de/chroma/maltcmsResult.xsl\"");
+			        "type=\"text/xsl\" href=\"http://maltcms.sourceforge.net/res/maltcmsHTMLResult.xsl\"");
 			doc.addContent(pi);
 			doc.addContent(writeXML());
 			final XMLOutputter outp = new XMLOutputter(Format.getPrettyFormat());
