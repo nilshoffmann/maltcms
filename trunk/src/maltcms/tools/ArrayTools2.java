@@ -70,10 +70,40 @@ public class ArrayTools2 {
 		final ArrayInt.D1 intarray = new ArrayInt.D1(array.getShape()[0]);
 		final IndexIterator iter = intarray.getIndexIterator();
 		final IndexIterator arrayIter = array.getIndexIterator();
+		int intensity = 0;
 		while (iter.hasNext()) {
-			iter.setIntNext(arrayIter.getIntNext());
+			intensity = arrayIter.getIntNext();
+			iter.setIntNext(intensity);
 		}
+		return intarray;
+	}
 
+	/**
+	 * Creates an {@link ArrayInt} out of an other array. All listed masses in
+	 * masqMasses will be set to 0.
+	 * 
+	 * @param array
+	 *            array
+	 * @param masqMasses
+	 *            masses which will be set to 0 instead of the original value
+	 * @return intarray
+	 */
+	public static ArrayInt.D1 createIntegerArray(final Array array,
+			final List<Integer> masqMasses) {
+		final ArrayInt.D1 intarray = new ArrayInt.D1(array.getShape()[0]);
+		final IndexIterator iter = intarray.getIndexIterator();
+		final IndexIterator arrayIter = array.getIndexIterator();
+		int i = 0;
+		int intensity = 0;
+		while (iter.hasNext()) {
+			intensity = arrayIter.getIntNext();
+			if (!masqMasses.contains(i)) {
+				iter.setIntNext(intensity);
+			} else {
+				iter.setIntNext(0);
+			}
+			i++;
+		}
 		return intarray;
 	}
 

@@ -161,7 +161,7 @@ public class ImageTools {
 		img.setData(raster);
 		return img;
 	}
-
+	
 	/**
 	 * Adds all peaks to an image. If one of the colors are <code>null</code>,
 	 * this component wont be drawn.

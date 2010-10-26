@@ -85,7 +85,7 @@ public class MScanSimilarityPredicate extends MetabolitePredicate{
     	}else{
     		this.matchThreshold=d;
     	}
-    	System.out.println("Match threshold set to "+this.matchThreshold);
+//    	System.out.println("Match threshold set to "+this.matchThreshold);
     }
 
 }

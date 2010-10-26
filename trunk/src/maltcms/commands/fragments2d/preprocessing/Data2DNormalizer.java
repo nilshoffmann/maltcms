@@ -57,7 +57,7 @@ public class Data2DNormalizer extends AFragmentCommand {
 	@Configurable
 	private int topHatFilterWindow = 5;
 	@Configurable
-	private boolean multiplyWithTic = true;
+	private boolean multiplyWithTic = false;
 
 	@Override
 	public String getDescription() {
@@ -270,7 +270,7 @@ public class Data2DNormalizer extends AFragmentCommand {
 		this.topHatFilterWindow = cfg.getInt(this.getClass().getName()
 		        + ".topHatFilterWindow", 5);
 		this.multiplyWithTic = cfg.getBoolean(this.getClass().getName()
-		        + ".multiplyWithTic", true);
+		        + ".multiplyWithTic", false);
 	}
 
 	@Override
