@@ -36,9 +36,6 @@ import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.math.MathException;
-import org.apache.commons.math.analysis.interpolation.LoessInterpolator;
-import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
 import org.slf4j.Logger;
 
 import ucar.ma2.Array;
@@ -316,7 +313,6 @@ public class ChromatogramWarp2 extends AFragmentCommand {
 			}
 			return path;
 		}
-
 	}
 
 	@Override
@@ -427,9 +423,9 @@ public class ChromatogramWarp2 extends AFragmentCommand {
 	        final List<Tuple2DI> path, final boolean toLHS, final IWorkflow iw) {
 		this.log.info("Warping {}, saving in {}",
 		        querySource.getAbsolutePath(), queryTarget.getAbsolutePath());
-		// warp2D(queryTarget, ref, querySource, path, this.indexedVars, toLHS);
+		warp2D(queryTarget, ref, querySource, path, this.indexedVars, toLHS);
 		warp1D(queryTarget, ref, querySource, path, this.plainVars, toLHS);
-		// warpAnchors(queryTarget, querySource, path, toLHS);
+		warpAnchors(queryTarget, querySource, path, toLHS);
 		queryTarget.addSourceFile(querySource);
 		return queryTarget;
 	}
@@ -463,50 +459,48 @@ public class ChromatogramWarp2 extends AFragmentCommand {
 			if (s.equals(this.satvar)) {
 				warpSAT(warpedB, ref, toBeWarped, path, plainVars, toLHS);
 				continue;
-			} else {
-				return warpedB;
 			}
-			// this.log.info("Warping variable {}", s);
-			// IVariableFragment var = null;
-			// Array warpedA = null;
-			// if (warpedB.hasChild(s)) {
-			// var = warpedB.getChild(s);
-			// } else {
-			// var = new VariableFragment(warpedB, s);
-			// }
-			// if (toLHS) {// a is on lhs of path
-			// this.log
-			// .debug("Warping to lhs {}, {} from file {}",
-			// new Object[] { ref.getName(), s,
-			// toBeWarped.getName() });
-			// final Array refA = ref.getChild(s).getArray();
-			// warpedA = toBeWarped.getChild(s).getArray();
-			// // there exists a subtle bug, if variables in original file has
-			// // an empty array
-			// // then this array might be null
-			// if (warpedA != null) {
-			// // refA is only needed for correct shape and data type
-			// warpedA = ArrayTools
-			// .projectToLHS(refA, path, warpedA, true);
-			// }
-			//
-			// } else { // whether b is on lhs of path
-			// this.log
-			// .debug("Warping to lhs {}, {} from file {}",
-			// new Object[] { ref.getName(), s,
-			// toBeWarped.getName() });
-			// final Array refA = ref.getChild(s).getArray();
-			// warpedA = toBeWarped.getChild(s).getArray();
-			// // there exists a subtle bug, if variables in original file has
-			// // an empty array
-			// // then this array might be null
-			// if (warpedA != null) {
-			// // refA is only needed for correct shape and data type
-			// warpedA = ArrayTools
-			// .projectToRHS(refA, path, warpedA, true);
-			// }
-			// }
-			// var.setArray(warpedA);
+			this.log.info("Warping variable {}", s);
+			IVariableFragment var = null;
+			Array warpedA = null;
+			if (warpedB.hasChild(s)) {
+				var = warpedB.getChild(s);
+			} else {
+				var = new VariableFragment(warpedB, s);
+			}
+			if (toLHS) {// a is on lhs of path
+				this.log
+				        .debug("Warping to lhs {}, {} from file {}",
+				                new Object[] { ref.getName(), s,
+				                        toBeWarped.getName() });
+				final Array refA = ref.getChild(s).getArray();
+				warpedA = toBeWarped.getChild(s).getArray();
+				// there exists a subtle bug, if variables in original file has
+				// an empty array
+				// then this array might be null
+				if (warpedA != null) {
+					// refA is only needed for correct shape and data type
+					warpedA = ArrayTools
+					        .projectToLHS(refA, path, warpedA, true);
+		}
+
+			} else { // whether b is on lhs of path
+				this.log
+				        .debug("Warping to lhs {}, {} from file {}",
+				                new Object[] { ref.getName(), s,
+				                        toBeWarped.getName() });
+				final Array refA = ref.getChild(s).getArray();
+				warpedA = toBeWarped.getChild(s).getArray();
+				// there exists a subtle bug, if variables in original file has
+				// an empty array
+				// then this array might be null
+				if (warpedA != null) {
+					// refA is only needed for correct shape and data type
+					warpedA = ArrayTools
+					        .projectToRHS(refA, path, warpedA, true);
+				}
+			}
+			var.setArray(warpedA);
 		}
 		return warpedB;
 	}
@@ -677,64 +671,6 @@ public class ChromatogramWarp2 extends AFragmentCommand {
 			// then this array might be null
 			if (warpedA != null) {
 				// refA is only needed for correct shape and data type
-				// warpedA = projectToLHS(refA, path, warpedA, true);
-				// warpedA = mapToLHS(refA, path, warpedA, true);
-				warpedA = warpToLHS(refA, warpedA, path);
-			}
-
-		} else { // whether b is on lhs of path
-			this.log.debug("Warping to lhs {}, {} from file {}", new Object[] {
-			        ref.getName(), s, toBeWarped.getName() });
-			final Array refA = ref.getChild(s).getArray();
-			warpedA = toBeWarped.getChild(s).getArray();
-			// there exists a subtle bug, if variables in original file has
-			// an empty array
-			// then this array might be null
-			if (warpedA != null) {
-				// refA is only needed for correct shape and data type
-				// warpedA = projectToRHS(refA, path, warpedA, true);
-				// warpedA = mapToRHS(refA, path, warpedA, true);
-				warpedA = warpToRHS(refA, warpedA, path);
-			}
-		}
-		var.setArray(warpedA);
-		return warpedB;
-	}
-
-	/**
-	 * Warps without modification of SAT dimension.
-	 * 
-	 * @param warpedB
-	 * @param ref
-	 * @param toBeWarped
-	 * @param path
-	 * @param plainVars
-	 * @param toLHS
-	 * @return
-	 */
-	private IFileFragment warpSAT2(final IFileFragment warpedB,
-	        final IFileFragment ref, final IFileFragment toBeWarped,
-	        final List<Tuple2DI> path, final List<String> plainVars,
-	        final boolean toLHS) {
-		this.log.info("Warping scan acquisition time");
-		IVariableFragment var = null;
-		Array warpedA = null;
-		final String s = this.satvar;
-		if (warpedB.hasChild(s)) {
-			var = warpedB.getChild(s);
-		} else {
-			var = new VariableFragment(warpedB, s);
-		}
-		if (toLHS) {// a is on lhs of path
-			this.log.debug("Warping to lhs {}, {} from file {}", new Object[] {
-			        ref.getName(), s, toBeWarped.getName() });
-			final Array refA = ref.getChild(s).getArray();
-			warpedA = toBeWarped.getChild(s).getArray();
-			// there exists a subtle bug, if variables in original file has
-			// an empty array
-			// then this array might be null
-			if (warpedA != null) {
-				// refA is only needed for correct shape and data type
 				warpedA = projectToLHS(refA, path, warpedA, true);
 			}
 
@@ -753,141 +689,6 @@ public class ChromatogramWarp2 extends AFragmentCommand {
 		}
 		var.setArray(warpedA);
 		return warpedB;
-	}
-
-	private List<Tuple2DI> getStrictlyIncreasingPath(List<Tuple2DI> path) {
-		List<Tuple2DI> strictlyIncreasingPoints = new ArrayList<Tuple2DI>();
-		Tuple2DI p = path.get(0);// start point
-		strictlyIncreasingPoints.add(p);
-
-		for (int i = 0; i < path.size() - 1; i++) {
-			Tuple2DI q = path.get(i);
-			if (q.getFirst() > p.getFirst() && q.getSecond() > p.getSecond()) {
-				if (i < 10)
-					this.log.info("Adding q={}", q);
-				strictlyIncreasingPoints.add(q);
-				p = q;
-			}
-
-		}
-		p = strictlyIncreasingPoints.get(strictlyIncreasingPoints.size() - 1);
-		Tuple2DI q = path.get(path.size() - 1);
-		if (q.getFirst() > p.getFirst() && q.getSecond() > p.getSecond()) {
-			strictlyIncreasingPoints.add(q);
-		} else {
-			strictlyIncreasingPoints
-			        .remove(strictlyIncreasingPoints.size() - 1);
-			strictlyIncreasingPoints.add(q);
-		}
-		this.log.info("Number of Surviving Points: {}",
-		        strictlyIncreasingPoints.size());
-		return strictlyIncreasingPoints;
-	}
-
-	private Array warpToLHS(Array ref, Array toBeWarped, List<Tuple2DI> path) {
-		List<Tuple2DI> sp = getStrictlyIncreasingPath(path);
-		LoessInterpolator li = new LoessInterpolator();
-		double[] x = new double[sp.size()];
-		double[] y = new double[sp.size()];
-		for (int i = 0; i < sp.size(); i++) {
-			Tuple2DI t = sp.get(i);
-			x[i] = toBeWarped.getDouble(t.getSecond());
-			y[i] = ref.getDouble(t.getFirst());
-		}
-		double[] smoothx = new double[toBeWarped.getShape()[0]];
-		try {
-			PolynomialSplineFunction pi = li.interpolate(x, y);
-			for (int i = 0; i < smoothx.length; i++) {
-				smoothx[i] = pi.value(toBeWarped.getDouble(i));
-			}
-			return Array.factory(smoothx);
-		} catch (MathException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	private Array warpToRHS(Array ref, Array toBeWarped, List<Tuple2DI> path) {
-		List<Tuple2DI> sp = getStrictlyIncreasingPath(path);
-		LoessInterpolator li = new LoessInterpolator();
-		double[] x = new double[sp.size()];
-		double[] y = new double[sp.size()];
-		for (int i = 0; i < sp.size(); i++) {
-			Tuple2DI t = sp.get(i);
-			x[i] = toBeWarped.getDouble(t.getFirst());
-			y[i] = ref.getDouble(t.getSecond());
-		}
-		double[] smoothx = new double[toBeWarped.getShape()[0]];
-		try {
-			PolynomialSplineFunction pi = li.interpolate(x, y);
-			for (int i = 0; i < smoothx.length; i++) {
-				smoothx[i] = pi.value(toBeWarped.getDouble(i));
-			}
-			return Array.factory(smoothx);
-		} catch (MathException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/**
-	 * Average of sum of values for multiply assigned scans.
-	 * 
-	 * @param lhs
-	 * @param al
-	 * @param rhs
-	 * @param average
-	 * @return
-	 */
-	public static Array mapToLHS(final Array lhs, final List<Tuple2DI> al,
-	        final Array rhs, final boolean average) {
-		final Array rhsm = Array.factory(lhs.getElementType(), rhs.getShape());
-		final Index rhsmi = rhsm.getIndex();
-		final Index lhsi = lhs.getIndex();
-		int[] indexCounter = new int[rhs.getShape()[0]];
-		for (final Tuple2DI tpl : al) {
-			indexCounter[tpl.getSecond()]++;
-			rhsmi.set(tpl.getSecond());
-			rhsm.setDouble(
-			        rhsmi,
-			        rhsm.getDouble(rhsmi)
-			                + lhs.getDouble(lhsi.set(tpl.getFirst())));
-		}
-		for (int i = 0; i < indexCounter.length; i++) {
-			rhsm.setDouble(i, rhsm.getDouble(i) / ((double) indexCounter[i]));
-		}
-		return rhsm;
-	}
-
-	/**
-	 * Average of sum of values for multiply assigned scans.
-	 * 
-	 * @param rhs
-	 * @param al
-	 * @param lhs
-	 * @param average
-	 * @return
-	 */
-	public static Array mapToRHS(final Array rhs, final List<Tuple2DI> al,
-	        final Array lhs, final boolean average) {
-		final Array lhsm = Array.factory(rhs.getElementType(), lhs.getShape());
-		final Index lhsmi = lhsm.getIndex();
-		final Index rhsi = rhs.getIndex();
-		int[] indexCounter = new int[lhs.getShape()[0]];
-		for (final Tuple2DI tpl : al) {
-			indexCounter[tpl.getFirst()]++;
-			lhsmi.set(tpl.getFirst());
-			lhsm.setDouble(
-			        lhsmi,
-			        lhsm.getDouble(lhsmi)
-			                + rhs.getDouble(rhsi.set(tpl.getSecond())));
-		}
-		for (int i = 0; i < indexCounter.length; i++) {
-			lhsm.setDouble(i, lhsm.getDouble(i) / ((double) indexCounter[i]));
-		}
-		return lhsm;
 	}
 
 	public static Array projectToLHS(final Array lhs, final List<Tuple2DI> al,
