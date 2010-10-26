@@ -6,7 +6,7 @@
 #Results of Maltcms Run
 <xsl:apply-templates/>
 </xsl:template>
-<xsl:template match="/workflow/workflowElementResult">
+<xsl:template match="/workflow/workflowElementResult/resources/resource">
 file<xsl:number/>=<xsl:value-of select="./@file"/>
 </xsl:template>
 </xsl:stylesheet>

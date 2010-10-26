@@ -139,7 +139,7 @@ public class PipelineWizard implements WizardResultProducer, HyperlinkListener,
 				sb
 				        .append("<h2 style=\"font-family:Arial,Tahoma,sans-serif;\">Getting Started</h2>");
 				sb
-				        .append("<p style=\"font-family:Arial,Tahoma,sans-serif;\">If you do not have any data in netcdf or mzXML format at hand, please <a href=\"http://bibiserv.techfak.uni-bielefeld.de/chroma/download.html\">download some example files</a></p>");
+				        .append("<p style=\"font-family:Arial,Tahoma,sans-serif;\">If you do not have any data in netcdf, mzXML, mzData or mzML format at hand, please <a href=\"http://bibiserv.techfak.uni-bielefeld.de/chroma/download.html\">download some example files</a></p>");
 				sb
 				        .append("<p style=\"font-family:Arial,Tahoma,sans-serif;\">To <a href=\"http://bibiserv.techfak.uni-bielefeld.de/chroma/createConfiguration\">create a new configuration</a> for ChromA, select <em>File->Create config</em></p>");
 				sb
@@ -176,7 +176,7 @@ public class PipelineWizard implements WizardResultProducer, HyperlinkListener,
 					public void actionPerformed(ActionEvent e) {
 						JEditorPane jep = new JEditorPane(
 						        "text/html",
-						        "<p style=\"font-family:Arial,Tahoma,sans-serif;\">ChromA version 0.9, April 2009<br />by Nils Hoffmann &lt;Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE&gt;</p><p style=\"font-family:Arial,Tahoma,sans-serif;\"><a href=\"http://bibiserv.techfak.uni-bielefeld.de/chroma/\">Visit ChromA on the web</a></p><p style=\"font-family:Arial,Tahoma,sans-serif;\">Do you have any ideas on how to improve ChromA?<br /><a href=\"https://sourceforge.net/tracker/?func=add&group_id=251287&atid=1126546\">Visit our feature request tracker</a></p>");
+						        "<p style=\"font-family:Arial,Tahoma,sans-serif;\">ChromA version 1.0.1, October 2010<br />by Nils Hoffmann &lt;Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE&gt;</p><p style=\"font-family:Arial,Tahoma,sans-serif;\"><a href=\"http://maltcms.sourceforge.net\">Visit Maltcms at Sourceforge</a></p><p style=\"font-family:Arial,Tahoma,sans-serif;\"><a href=\"http://bibiserv.techfak.uni-bielefeld.de/chroma/\">Visit ChromA on the web</a></p><p style=\"font-family:Arial,Tahoma,sans-serif;\">Do you have any ideas on how to improve ChromA?<br /><a href=\"https://sourceforge.net/tracker/?func=add&group_id=251287&atid=1126546\">Visit our feature request tracker</a></p>");
 						jep.setEditable(false);
 						jep.setBorder(BorderFactory
 						        .createBevelBorder(BevelBorder.LOWERED));

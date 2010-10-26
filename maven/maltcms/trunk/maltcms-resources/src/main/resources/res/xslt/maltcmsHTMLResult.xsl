@@ -21,14 +21,19 @@
   <xsl:template match="/workflow/workflowElementResult">
   	<tr>
   		<td>
+			<xsl:apply-templates/>
+		</td>
+  		<td><xsl:value-of select="./@slot"/></td>
+  	</tr>
+  </xsl:template>
+  
+  <xsl:template match="/workflow/workflowElementResult/resources/resource">
 			<xsl:element name="a">
 				<xsl:attribute name="href">
 					<xsl:value-of select="./@file"/>
 				</xsl:attribute>
 				<xsl:value-of select="./@file"/>
 			</xsl:element>
-		</td>
-  		<td><xsl:value-of select="./@slot"/></td>
-  	</tr>
   </xsl:template>
+
 </xsl:stylesheet>
