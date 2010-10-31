@@ -1,0 +1,6 @@
+application.version.major=1
+application.version.minor=.0
+application.version.type=-rc1
+application.version.revision=-r161
+application.build.date=-2010_Sep_29
+application.version=${application.version.major}${application.version.minor}${application.version.type}${application.version.revision}${application.build.date}
