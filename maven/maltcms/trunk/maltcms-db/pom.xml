@@ -71,11 +71,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.maltcms</groupId>
-            <artifactId>cross-main</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>com.db4o</groupId>
             <artifactId>db4o</artifactId>
             <version>7.12</version>

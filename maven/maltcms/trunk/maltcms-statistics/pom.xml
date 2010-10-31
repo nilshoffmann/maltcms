@@ -61,16 +61,6 @@
             <version>2.1</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.maltcms</groupId>
-            <artifactId>cross-main</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.maltcms</groupId>
-            <artifactId>cross-tools</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.13</version>

@@ -22,11 +22,6 @@
       <artifactId>maltcms-datastructures-api</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>net.sf.maltcms</groupId>
-      <artifactId>cross-main</artifactId>
-      <version>1.0.1</version>
-    </dependency>
   </dependencies>
     <packaging>jar</packaging>
     <build>

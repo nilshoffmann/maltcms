@@ -40,11 +40,6 @@
       <version>4.8.1</version>
       <scope>test</scope>
     </dependency>
-        <dependency>
-            <groupId>net.sf.maltcms</groupId>
-            <artifactId>cross-main</artifactId>
-            <version>1.0.1</version>
-        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

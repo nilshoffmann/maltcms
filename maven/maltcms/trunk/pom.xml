@@ -93,47 +93,19 @@
         <module>maltcms-io-mzdata</module>
         <module>maltcms-io-mzml</module>
     </modules>
- <!--
-    <repositories>
-
-        <repository>
-            <id>source.db4o</id>
-            <url>http://source.db4o.com/maven</url>
-        </repository>
-        <repository>
-            <id>ebi-repo</id>
-            <name>The EBI internal repository</name>
-            <url>http://www.ebi.ac.uk/~maven/m2repo</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>maltcms-maven-release-repository</id>
-            <url>http://sourceforge.net/projects/maltcms/files/release/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-
-        </repository>
-        <repository>
-            <id>maltcms-maven-snapshot-repository</id>
-            <url>http://sourceforge.net/projects/maltcms/files/snapshot/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-    </repositories>-->
-    <dependencies />
+    <dependencies>
+	<dependency>
+    <groupId>net.sf.maltcms</groupId>
+    <artifactId>cross-main</artifactId>
+    <version>1.1</version>
+    <!--<type>pom</type>-->
+</dependency>
+<dependency>
+    <groupId>net.sf.maltcms</groupId>
+    <artifactId>cross-ui</artifactId>
+    <version>1.1</version>
+</dependency>
+ 	</dependencies>
     <reporting>
         <plugins>
             <plugin>

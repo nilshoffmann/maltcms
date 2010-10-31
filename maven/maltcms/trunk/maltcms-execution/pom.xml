@@ -51,11 +51,6 @@
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.maltcms</groupId>
-            <artifactId>cross-main</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>wizard</groupId>
             <artifactId>wizard</artifactId>
             <version>0.998.1</version>
