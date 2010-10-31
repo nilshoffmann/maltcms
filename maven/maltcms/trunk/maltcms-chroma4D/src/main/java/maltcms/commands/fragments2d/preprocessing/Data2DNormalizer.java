@@ -57,7 +57,7 @@ public class Data2DNormalizer extends AFragmentCommand {
 	@Configurable
 	private int topHatFilterWindow = 5;
 	@Configurable
-	private boolean multiplyWithTic = true;
+	private boolean multiplyWithTic = false;
 
 	@Override
 	public String getDescription() {
@@ -128,7 +128,7 @@ public class Data2DNormalizer extends AFragmentCommand {
 			cnt++;
 		}
 
-		Array tic = cross.datastructures.tools.ArrayTools.glue(intensities);
+		Array tic = cross.tools.ArrayTools.glue(intensities);
 
 		ArrayDouble.D2 tic2d = create2DArray(scanLineCount, scansPerModulation,
 		        values);
@@ -270,7 +270,7 @@ public class Data2DNormalizer extends AFragmentCommand {
 		this.topHatFilterWindow = cfg.getInt(this.getClass().getName()
 		        + ".topHatFilterWindow", 5);
 		this.multiplyWithTic = cfg.getBoolean(this.getClass().getName()
-		        + ".multiplyWithTic", true);
+		        + ".multiplyWithTic", false);
 	}
 
 	@Override

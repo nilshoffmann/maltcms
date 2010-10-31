@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
  * 
- * $Id: ImageTools.java 161 2010-09-07 19:14:30Z mwilhelm42 $
+ * $Id: ImageTools.java 238 2010-10-26 20:43:25Z mwilhelm42 $
  */
 
 package maltcms.tools;
@@ -161,7 +161,7 @@ public class ImageTools {
 		img.setData(raster);
 		return img;
 	}
-
+	
 	/**
 	 * Adds all peaks to an image. If one of the colors are <code>null</code>,
 	 * this component wont be drawn.
@@ -246,7 +246,7 @@ public class ImageTools {
 	        final double threshold, final int[][] colorRamp,
 	        final Class<T> creator) {
 		int maxIndex = 0;
-		Array intensities = cross.datastructures.tools.ArrayTools.glue(intensity);
+		Array intensities = cross.tools.ArrayTools.glue(intensity);
 		final IndexIterator ii = intensities.getIndexIterator();
 		while (ii.hasNext()) {
 			if (ii.getDoubleNext() == fillValue) {
@@ -655,7 +655,7 @@ public class ImageTools {
 	public static void makeImage(final WritableRaster w,
 	        final List<Array> arrays, final int nsamples,
 	        final int[][] colorRamp, final double threshold) {
-		final Array values = cross.datastructures.tools.ArrayTools.glue(arrays);
+		final Array values = cross.tools.ArrayTools.glue(arrays);
 		final double[] breakpoints = ImageTools.getBreakpoints(values,
 		        nsamples, Double.POSITIVE_INFINITY);
 		ImageTools.makeImage(w, arrays, nsamples, colorRamp, threshold,
