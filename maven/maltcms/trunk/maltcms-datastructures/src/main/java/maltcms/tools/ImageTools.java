@@ -246,7 +246,7 @@ public class ImageTools {
 	        final double threshold, final int[][] colorRamp,
 	        final Class<T> creator) {
 		int maxIndex = 0;
-		Array intensities = cross.tools.ArrayTools.glue(intensity);
+		Array intensities = cross.datastructures.tools.ArrayTools.glue(intensity);
 		final IndexIterator ii = intensities.getIndexIterator();
 		while (ii.hasNext()) {
 			if (ii.getDoubleNext() == fillValue) {
@@ -655,7 +655,7 @@ public class ImageTools {
 	public static void makeImage(final WritableRaster w,
 	        final List<Array> arrays, final int nsamples,
 	        final int[][] colorRamp, final double threshold) {
-		final Array values = cross.tools.ArrayTools.glue(arrays);
+		final Array values = cross.datastructures.tools.ArrayTools.glue(arrays);
 		final double[] breakpoints = ImageTools.getBreakpoints(values,
 		        nsamples, Double.POSITIVE_INFINITY);
 		ImageTools.makeImage(w, arrays, nsamples, colorRamp, threshold,
