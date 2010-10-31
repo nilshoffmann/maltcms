@@ -128,7 +128,7 @@ public class Data2DNormalizer extends AFragmentCommand {
 			cnt++;
 		}
 
-		Array tic = cross.tools.ArrayTools.glue(intensities);
+		Array tic = cross.datastructures.tools.ArrayTools.glue(intensities);
 
 		ArrayDouble.D2 tic2d = create2DArray(scanLineCount, scansPerModulation,
 		        values);
