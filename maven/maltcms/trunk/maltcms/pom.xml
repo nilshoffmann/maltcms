@@ -14,39 +14,36 @@
     <packaging>pom</packaging>
     <build>
 
-        <!-- Copy the resources required during building -->
-        <!--
-	<resources>
-            <resource>
-                <directory>src/main/resources/</directory>
-            </resource>
-            <resource>
-                <directory>src/main/res/</directory>
-            </resource>
-            <resource>
-                <directory>src/main/cfg/</directory>
-            </resource>
-        </resources>
-	-->
-
         <plugins>
-
-            <!-- Compiler plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-
             <!-- Dependency plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
+			<execution>
+             <id>unpack</id>
+             <phase>package</phase>
+             <goals>
+               <goal>unpack</goal>
+             </goals>
+             <configuration>
+               <artifactItems>
+                 <artifactItem>
+                   <groupId>net.sf.maltcms</groupId>
+                   <artifactId>maltcms-resources</artifactId>
+                   <version>${project.version}</version>
+                   <type>jar</type>
+                   <overWrite>true</overWrite>
+                   <outputDirectory>${project.build.directory}/${project.name}-${project.version}</outputDirectory>
+		   <excludes>META-INF/</excludes>
+                 </artifactItem>
+               </artifactItems>
+               <overWriteReleases>true</overWriteReleases>
+               <overWriteSnapshots>true</overWriteSnapshots>
+		<outputDirectory>${project.build.directory}/${project.name}-${project.version}</outputDirectory>
+		<excludes>META-INF/</excludes>
+             </configuration>
+           </execution>
                     <execution>
                         <id>copy-dependencies</id>
                         <phase>package</phase>
@@ -60,9 +57,9 @@
                             <overWriteIfNewer>true</overWriteIfNewer>
                         </configuration>
                     </execution>
+
                 </executions>
             </plugin>
-
             <!-- Jar plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -77,6 +74,7 @@
                             <classpathPrefix>lib</classpathPrefix>
                         </manifest>
                     </archive>
+		    <finalName>${project.name}</finalName>
                     <outputDirectory>${project.build.directory}/${project.name}-${project.version}</outputDirectory>
                 </configuration>
                 </execution>
@@ -95,16 +93,31 @@
                         </goals>
                     </execution>
                 </executions>
-
                 <configuration>
-                    <filters>
-                        <filter>src/assemble/filter.properties</filter>
-                    </filters>
                     <descriptors>
                         <descriptor>src/assemble/distribution.xml</descriptor>
                     </descriptors>
                 </configuration>
             </plugin>
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-antrun-plugin</artifactId>
+    <executions>
+        <execution>
+            <id>set-file-perms</id>
+            <phase>package</phase>
+            <configuration>
+                <tasks>
+                    <echo message="Correcting file permissions in ${project.build.directory}/${project.name}-${project.version}/scripts/" />
+                <chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.name}-${project.version}/scripts/" perm="ugo+rx"/>
+		</tasks>
+            </configuration>
+            <goals>
+                <goal>run</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
 
         </plugins>
     </build>
@@ -113,6 +126,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-chroma4D</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-chroma4D-srg</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

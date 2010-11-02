@@ -7,21 +7,27 @@
   </formats>
   <fileSets>
     <fileSet>
-      <includes>
-        <include>pom.xml</include>
-      </includes>
-      <useDefaultExcludes>true</useDefaultExcludes>
-    </fileSet>
-
-    <fileSet>
-      <useStrictFiltering>true</useStrictFiltering>
       <directory>${project.build.directory}/${project.name}-${project.version}</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
+      <outputDirectory>/</outputDirectory>
+      <fileMode>0644</fileMode>
+      <directoryMode>0755</directoryMode>
+	<excludes><exclude>scripts/</exclude></excludes>
+      <!--<includes>
           <include>lib/</include>
           <include>*.jar</include>
-      </includes>
+      </includes>-->
     </fileSet>
+    <fileSet>
+      <directory>${project.build.directory}/${project.name}-${project.version}/scripts</directory>
+      <outputDirectory>scripts</outputDirectory>
+      <fileMode>0755</fileMode>
+      <directoryMode>0755</directoryMode>
+    </fileSet>
+   <!-- <fileSet>
+	<directory>${project.build.directory}/unpacked</directory>
+	<outputDirectory>/</outputDirectory>
+    </fileSet>-->
+<!--
     <fileSet>
         <useStrictFiltering>true</useStrictFiltering>
 	<directory>../maltcms-resources/src/main/resources/res</directory>
@@ -29,16 +35,16 @@
     </fileSet>
     <fileSet>
         <useStrictFiltering>true</useStrictFiltering>
-	<directory>../maltcms-resources/src/main/licenses</directory>
+	<directory>../maltcms-resources/src/main/resources/licenses</directory>
         <outputDirectory>licenses</outputDirectory>
     </fileSet>
     <fileSet>
         <useStrictFiltering>true</useStrictFiltering>
-        <directory>../maltcms-resources/src/main/scripts</directory>
+        <directory>../maltcms-resources/src/main/resources/scripts</directory>
         <outputDirectory>scripts</outputDirectory>
     </fileSet>
     <fileSet>
-        <useStrictFiltering>true</useStrictFiltering>
+        <useStrictFiltering>false</useStrictFiltering>
 	<directory>../maltcms-resources/src/main/resources/cfg</directory>
         <outputDirectory>cfg</outputDirectory>
 	<filtered>true</filtered>
@@ -46,10 +52,10 @@
     <fileSet>
         <useStrictFiltering>true</useStrictFiltering>
 	<directory>../maltcms-resources/src/main/resources/</directory>
-        <outputDirectory></outputDirectory>
+        <outputDirectory>/</outputDirectory>
 	<includes>
 		<include>README*</include>
 	</includes>
-    </fileSet>
+    </fileSet>-->
   </fileSets>
 </assembly>
