@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/maltcmsAnnotation" xmlns:tns="http://www.example.org/maltcmsAnnotation" elementFormDefault="qualified">
+
+    
+    <complexType name="attributeType">
+    	<attribute name="name" type="string" use="required"></attribute>
+    	<attribute name="value" type="string" use="required"></attribute>
+    	<attribute name="unit" type="string" use="optional"></attribute>
+    </complexType>
+
+    <complexType name="annotationType">
+    	<sequence>
+    		<element ref="tns:attribute" maxOccurs="unbounded" minOccurs="0"></element>
+    	</sequence>
+    	<attribute name="type" type="string"></attribute>
+    	<attribute name="name" type="string"></attribute>
+    </complexType>
+
+    <element name="attribute" type="tns:attributeType"></element>
+
+    <element name="annotation" type="tns:annotationType"></element>
+
+    <complexType name="annotationsType">
+    	<sequence>
+    		<element ref="tns:annotation" maxOccurs="unbounded" minOccurs="0"></element>
+    	</sequence>
+    	<attribute name="type" type="string"></attribute>
+    	<attribute name="generator" type="string"></attribute>
+    </complexType>
+
+    <complexType name="resourceType">
+    	<attribute name="uri" type="anyURI"></attribute>
+    </complexType>
+
+    <element name="resource" type="tns:resourceType"></element>
+
+
+    <element name="maltcmsAnnotation">
+	    <complexType>
+	    	<sequence>
+	    		<element ref="tns:resource" maxOccurs="1" minOccurs="1"></element>
+	    		<element ref="tns:annotations" maxOccurs="unbounded" minOccurs="0"></element>
+	    	</sequence>
+	    </complexType>
+	</element>
+    
+    <element name="annotations" type="tns:annotationsType"></element>
+
+</schema>
