@@ -20,7 +20,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-			<execution>
+<!--		<execution>
              <id>unpack</id>
              <phase>package</phase>
              <goals>
@@ -43,7 +43,7 @@
 		<outputDirectory>${project.build.directory}/${project.name}-${project.version}</outputDirectory>
 		<excludes>META-INF/</excludes>
              </configuration>
-           </execution>
+           </execution> -->
                     <execution>
                         <id>copy-dependencies</id>
                         <phase>package</phase>
@@ -109,6 +109,7 @@
             <configuration>
                 <tasks>
                     <echo message="Correcting file permissions in ${project.build.directory}/${project.name}-${project.version}/scripts/" />
+		<unzip src="${project.build.directory}/${project.name}-${project.version}/lib/maltcms-resources-${project.version}.jar" dest="${project.build.directory}/${project.name}-${project.version}/"/>
                 <chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.name}-${project.version}/scripts/" perm="ugo+rx"/>
 		</tasks>
             </configuration>

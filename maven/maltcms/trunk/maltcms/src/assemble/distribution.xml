@@ -3,6 +3,7 @@
   xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
   <id>bin</id>
   <formats>
+    <format>dir</format>
     <format>zip</format>
   </formats>
   <fileSets>
@@ -11,7 +12,7 @@
       <outputDirectory>/</outputDirectory>
       <fileMode>0644</fileMode>
       <directoryMode>0755</directoryMode>
-	<excludes><exclude>scripts/</exclude></excludes>
+	<excludes><exclude>scripts/</exclude><exclude>META-INF/</exclude></excludes>
       <!--<includes>
           <include>lib/</include>
           <include>*.jar</include>
