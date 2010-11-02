@@ -4,11 +4,11 @@
     <parent>
         <artifactId>maltcms-modules</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.0.4-SNAPSHOT</version>
+        <version>1.0.4</version>
     </parent>
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.4</version>
     <name>maltcms</name>
     <url>http://maltcms.sourceforge.net</url>
     <packaging>pom</packaging>
@@ -109,8 +109,8 @@
             <configuration>
                 <tasks>
                     <echo message="Correcting file permissions in ${project.build.directory}/${project.name}-${project.version}/scripts/" />
-		<unzip src="${project.build.directory}/${project.name}-${project.version}/lib/maltcms-resources-${project.version}.jar" dest="${project.build.directory}/${project.name}-${project.version}/"/>
-                <chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.name}-${project.version}/scripts/" perm="ugo+rx"/>
+		<unzip src="${project.build.directory}/${project.name}-${project.version}/lib/maltcms-resources-${project.version}.jar" dest="${project.build.directory}/${project.name}-${project.version}/" />
+                <chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.name}-${project.version}/scripts/" perm="ugo+rx" />
 		</tasks>
             </configuration>
             <goals>
