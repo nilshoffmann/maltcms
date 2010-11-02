@@ -4,11 +4,11 @@
   <parent>
     <artifactId>maltcms-modules</artifactId>
     <groupId>net.sf.maltcms</groupId>
-    <version>1.0.4</version>
+    <version>1.0.5-SNAPSHOT</version>
   </parent>
   <groupId>net.sf.maltcms</groupId>
   <artifactId>maltcms-filters</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5-SNAPSHOT</version>
   <name>maltcms-filters</name>
   <url>http://maltcms.sourceforge.net</url>
 

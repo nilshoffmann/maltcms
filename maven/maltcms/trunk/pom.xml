@@ -4,13 +4,13 @@
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-modules</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.4</version>
+    <version>1.0.5-SNAPSHOT</version>
     <name>Maltcms-Modules</name>
     <url>http://maltcms.sourceforge.net</url>
     <scm>
-        <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/tags/maltcms-modules-1.0.4</connection>
-        <developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/tags/maltcms-modules-1.0.4</developerConnection>
-        <url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/tags/maltcms-modules-1.0.4</url>
+        <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</connection>
+        <developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</developerConnection>
+        <url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/</url>
     </scm>
     <distributionManagement>
         <repository>
