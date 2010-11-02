@@ -3,10 +3,16 @@
   xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
   <id>bin</id>
   <formats>
-    <format>tar.bz2</format>
     <format>zip</format>
   </formats>
   <fileSets>
+    <fileSet>
+      <includes>
+        <include>pom.xml</include>
+      </includes>
+      <useDefaultExcludes>true</useDefaultExcludes>
+    </fileSet>
+
     <fileSet>
       <useStrictFiltering>true</useStrictFiltering>
       <directory>${project.build.directory}/${project.name}-${project.version}</directory>
@@ -28,8 +34,14 @@
     </fileSet>
     <fileSet>
         <useStrictFiltering>true</useStrictFiltering>
+        <directory>../maltcms-resources/src/main/scripts</directory>
+        <outputDirectory>scripts</outputDirectory>
+    </fileSet>
+    <fileSet>
+        <useStrictFiltering>true</useStrictFiltering>
 	<directory>../maltcms-resources/src/main/resources/cfg</directory>
         <outputDirectory>cfg</outputDirectory>
+	<filtered>true</filtered>
     </fileSet>
     <fileSet>
         <useStrictFiltering>true</useStrictFiltering>
