@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.cebitec.uni-bielefeld.de/ANDIMS" xmlns:tns="http://www.cebitec.uni-bielefeld.de/ANDIMS" elementFormDefault="qualified">
+
+    <complexType name="Dimension">
+    	<attribute name="name" type="string"></attribute>
+    	<attribute name="length" type="long"></attribute>
+    	<attribute name="isShared" type="boolean"></attribute>
+    	<attribute name="isUnlimited" type="boolean"></attribute>
+    	<attribute name="isVariableLength" type="string"></attribute>
+    </complexType>
+
+    <complexType name="Attribute">
+    	<sequence>
+    		<element ref="tns:DataTypeValue" minOccurs="1" maxOccurs="1"></element>
+    	</sequence>
+    	<attribute name="name" type="string"></attribute>
+    </complexType>
+
+    <complexType name="DataTypeValue">
+    	<choice minOccurs="1" maxOccurs="1">
+    		<element name="IntVal" type="int"></element>
+    		<element name="DoubleVal" type="double"></element>
+    		<element name="LongVal" type="long"></element>
+    		<element name="FloatVal" type="float"></element>
+    		<element name="BooleanVal" type="boolean"></element>
+    		<element name="ShortVal" type="short"></element>
+    		<element name="ByteVal" type="byte"></element>
+    		<element name="CharVal" type="positiveInteger"></element>
+    		<element name="StringVal" type="string"></element>
+    	</choice>
+    </complexType>
+
+    <element name="Dimension" type="tns:Dimension"></element>
+    
+    <attribute name="NewAttribute" type="string"></attribute>
+
+
+    <element name="DataTypeValue" type="string"></element>
+
+    <element name="Attribute" type="tns:Attribute"></element>
+
+    <complexType name="ANDIMS">
+    	<sequence>
+    		<element ref="tns:AttributeSet"></element>
+    	</sequence>
+    </complexType>
+    
+
+    <complexType name="DatasetCompleteness">
+    	<sequence>
+    		<element ref="tns:Attribute"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="MSTemplateRevision">
+    	<sequence>
+    		<element ref="tns:Attribute"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="AdministrativeComments">
+    	<sequence>
+    		<element ref="tns:Attribute"></element>
+    	</sequence>
+    	<attribute ref="tns:andi_name"></attribute>
+    </complexType>
+
+    <complexType name="DatasetOwner">
+    	<sequence>
+    		<element ref="tns:Attribute"></element>
+    	</sequence>
+    	<attribute ref="tns:andi_name"></attribute>
+    </complexType>
+    
+    <complexType name="ExperimentTitle">
+    	<sequence>
+    		<element ref="tns:Attribute"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="ExperimentDateTimeStamp">
+    	<sequence>
+    		<element ref="tns:Attribute"></element>
+    	</sequence>
+    	<attribute ref="tns:andi_name"></attribute>
+    </complexType>
+    
+
+    <attribute name="andi_name" type="string"></attribute>
+
+    <complexType name="NetcdfFileDateTimeStamp">
+    	<sequence>
+    		<element ref="tns:Attribute"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="ExperimentType"></complexType>
+
+    <complexType name="NetcdfRevision"></complexType>
+
+    <complexType name="OperatorName"></complexType>
+
+    <complexType name="SourceFileReference"></complexType>
+
+    <complexType name="SourceFileDateTimeStamp"></complexType>
+
+    <complexType name="SourceFileFormat"></complexType>
+
+    <complexType name="Languages"></complexType>
+
+    <complexType name="ExternalFileRef0"></complexType>
+
+    <complexType name="InstrumentNumber"></complexType>
+
+    <element name="ANDIMS" type="tns:ANDIMS"></element>
+
+    <complexType name="RootAttributes">
+    	<sequence>
+    		<element ref="tns:Attribute"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="AttributeSet">
+    	<sequence>
+    		<element ref="tns:Attribute" minOccurs="0" maxOccurs="unbounded"></element>
+    	</sequence>
+    </complexType>
+
+    <element name="AttributeSet" type="tns:AttributeSet"></element>
+</schema>
