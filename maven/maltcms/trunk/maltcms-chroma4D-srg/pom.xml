@@ -4,11 +4,11 @@
   <parent>
     <artifactId>maltcms-modules</artifactId>
     <groupId>net.sf.maltcms</groupId>
-    <version>1.0.5</version>
+    <version>1.0.6-SNAPSHOT</version>
   </parent>
   <groupId>net.sf.maltcms</groupId>
   <artifactId>maltcms-chroma4D-srg</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.6-SNAPSHOT</version>
   <name>maltcms-chroma4D-srg</name>
   <url>http://maltcms.sourceforge.net</url>
 
