@@ -20,30 +20,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-<!--		<execution>
-             <id>unpack</id>
-             <phase>package</phase>
-             <goals>
-               <goal>unpack</goal>
-             </goals>
-             <configuration>
-               <artifactItems>
-                 <artifactItem>
-                   <groupId>net.sf.maltcms</groupId>
-                   <artifactId>maltcms-resources</artifactId>
-                   <version>${project.version}</version>
-                   <type>jar</type>
-                   <overWrite>true</overWrite>
-                   <outputDirectory>${project.build.directory}/${project.name}-${project.version}</outputDirectory>
-		   <excludes>META-INF/</excludes>
-                 </artifactItem>
-               </artifactItems>
-               <overWriteReleases>true</overWriteReleases>
-               <overWriteSnapshots>true</overWriteSnapshots>
-		<outputDirectory>${project.build.directory}/${project.name}-${project.version}</outputDirectory>
-		<excludes>META-INF/</excludes>
-             </configuration>
-           </execution> -->
                     <execution>
                         <id>copy-dependencies</id>
                         <phase>package</phase>
