@@ -92,6 +92,7 @@
         <module>maltcms-io-mzxml</module>
         <module>maltcms-io-mzdata</module>
         <module>maltcms-io-mzml</module>
+        <module>maltcms-io-openms-featurexml</module>
     </modules>
     <dependencies>
 	<dependency>

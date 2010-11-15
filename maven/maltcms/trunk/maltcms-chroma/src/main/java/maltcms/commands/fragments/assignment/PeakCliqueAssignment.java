@@ -185,10 +185,10 @@ public class PeakCliqueAssignment extends AFragmentCommand {
 	private String scanAcquisitionTimeVariableName = "scan_acquisition_time";
 
 	@Configurable
-	private boolean savePeakSimilarities;
+	private boolean savePeakSimilarities = false;
 
 	@Configurable
-	private boolean exportAlignedFeatures;
+	private boolean exportAlignedFeatures = false;
 
 	@Configurable
 	private double maxRTDifference = 600;
@@ -1114,10 +1114,13 @@ public class PeakCliqueAssignment extends AFragmentCommand {
 			cliques = combineBiDiBestHits(t, fragmentToPeaks, ll, t.size());
 			// combineBiDiBestHitsAll(t, fragmentToPeaks, ll);
 		} else {
-			this.log.info("Combining bidirectional best hits");
+			this.log.info("Combining bidirectional best hits, minimum group size: {}",this.minCliqueSize);
 			cliques = combineBiDiBestHits(t, fragmentToPeaks, ll,
 			        this.minCliqueSize);
 		}
+
+                //reinspect
+
 		removePeakSimilaritiesWhichHaveNoBestHits(t, fragmentToPeaks);
 		this.log.info("Found cliques in {} milliseconds",
 		        System.currentTimeMillis() - startT2);
@@ -1460,6 +1463,7 @@ public class PeakCliqueAssignment extends AFragmentCommand {
 
 	private void saveToLangeTautenhahnFormat(
 	        final HashMap<String, Integer> columnMap, final List<List<Peak>> ll) {
+                this.log.info("Saving data to [intensity rt m/z] format.");
 		// filename intensity rt m/z
 		// final List<List<String>> rows = new
 		// ArrayList<List<String>>(ll.size());
@@ -1542,7 +1546,7 @@ public class PeakCliqueAssignment extends AFragmentCommand {
 						if (validFeatures < minNumberOfCommonFeatures) {
 							keysToRemove.add(d);
 							log.info(
-							        "Skipping mass {}, not enough well features within bounds: {},{}!",
+							        "Skipping mass {}, not enough well behaved features within bounds: {},{}!",
 							        new Object[] {
 							                d,
 							                median
@@ -1655,6 +1659,7 @@ public class PeakCliqueAssignment extends AFragmentCommand {
 	private void visualizePeakSimilarities(
 	        final HashMap<String, List<Peak>> hm, final int samples,
 	        final String prefix) {
+
 		int npeaks = 0;
 		for (final String key : hm.keySet()) {
 			npeaks += hm.get(key).size();
@@ -1663,6 +1668,7 @@ public class PeakCliqueAssignment extends AFragmentCommand {
 			this.log.warn("No peak similarities to visualize!");
 			return;
 		}
+                this.log.info("Saving pairwise peak similarity images.");
 		final List<String> keys = new ArrayList<String>(hm.keySet());
 		Collections.sort(keys);
 		boolean minimize = this.costFunctionClass.minimize();

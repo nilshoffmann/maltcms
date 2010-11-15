@@ -7,9 +7,9 @@
     <version>1.0.6-SNAPSHOT</version>
   </parent>
   <groupId>net.sf.maltcms</groupId>
-  <artifactId>maltcms-xml-alignment</artifactId>
+  <artifactId>maltcms-io-openms-featurexml</artifactId>
   <version>1.0.6-SNAPSHOT</version>
-  <name>maltcms-xml-alignment</name>
+  <name>maltcms-io-openms-featurexml</name>
   <url>http://maltcms.sourceforge.net</url>
   <packaging>jar</packaging>
 <build>
@@ -25,9 +25,9 @@
             </goals>
           </execution>
         </executions>
-	<configuration>
-              <generatePackage>maltcms.io.xml.bindings.alignment</generatePackage>
-       </configuration>
+	<configuration> 
+              <generatePackage>maltcms.io.xml.bindings.openms.featurexml</generatePackage> 
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
