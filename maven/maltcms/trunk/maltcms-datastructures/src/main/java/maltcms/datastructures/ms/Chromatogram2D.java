@@ -99,9 +99,7 @@ public class Chromatogram2D implements IChromatogram2D {
         double sat1 = satOffset + (p.x*getModulationDuration());
         double sat = MaltcmsTools.getScanAcquisitionTime(this.parent, i);
         double sat2 = sat - sat1;
-        final Scan2D s = new Scan2D(t.getFirst(), t.getSecond(), i, sat);
-        s.setSecondColumnScanIndex(p.y);
-        s.setSecondColumnScanAcquisitionTime(sat2);
+        final Scan2D s = new Scan2D(t.getFirst(), t.getSecond(), i, sat, p.x,p.y,sat1,sat2);
         return s;
     }
 

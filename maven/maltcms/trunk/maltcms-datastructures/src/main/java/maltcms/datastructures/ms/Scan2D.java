@@ -54,6 +54,15 @@ public class Scan2D extends Scan1D {
 		super(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
 	}
 
+        public Scan2D(Array masses1, Array intensities1, int scanNumber1,
+	        double scanAcquisitionTime1, int idx1, int idx2, double rt1, double rt2) {
+		this(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
+                this.fcind = idx1;
+                this.scind = idx2;
+                this.fctime = rt1;
+                this.sctime = rt2;
+        }
+
 	public int getSecondColumnScanIndex() {
 		return this.scind;
 	}
