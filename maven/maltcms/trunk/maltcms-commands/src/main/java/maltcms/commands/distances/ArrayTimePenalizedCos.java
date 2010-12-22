@@ -34,9 +34,9 @@ import cross.annotations.Configurable;
  * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-public class ArrayTimePenalizedDot implements IArrayDoubleComp {
+public class ArrayTimePenalizedCos implements IArrayDoubleComp {
 
-	private volatile ArrayDot dot = new ArrayDot();
+	private volatile ArrayCos dot = new ArrayCos();
 
 	@Configurable(name = "expansion_weight")
 	private double wExp = 1.0d;

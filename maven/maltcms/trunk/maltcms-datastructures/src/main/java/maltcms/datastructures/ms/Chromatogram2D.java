@@ -19,7 +19,6 @@
  * 
  * $Id: Chromatogram2D.java 159 2010-08-31 18:44:07Z nilshoffmann $
  */
-
 package maltcms.datastructures.ms;
 
 import java.awt.Point;
@@ -46,222 +45,219 @@ import cross.datastructures.tuple.Tuple2D;
  */
 public class Chromatogram2D implements IChromatogram2D {
 
-	private IFileFragment parent;
-	private IScanLine isl;
+    private IFileFragment parent;
+    private IScanLine isl;
+    private final String scanAcquisitionTimeUnit = "seconds";
+    private final String secondColumnScanAcquisitionTimeUnit = "seconds";
+    private double md = -1;
+    private final int spm;
+    private final int slc;
+    private double satOffset = 0;
 
-	private final String scanAcquisitionTimeUnit = "seconds";
-	private final String secondColumnScanAcquisitionTimeUnit = "seconds";
-	private double md = -1;
-	private final int spm;
-	private final int slc;
+    public Chromatogram2D(final IFileFragment e) {
+        this.parent = e;
+        this.isl = ScanLineCacheFactory.getScanLineCache(e);
+        this.spm = this.isl.getScansPerModulation();
+        this.slc = this.isl.getScanLineCount();
+        this.satOffset = e.getChild("scan_acquisition_time").getArray().getDouble(0);
+        this.md = getModulationDuration();
+    }
 
-	public Chromatogram2D(final IFileFragment e) {
-		this.parent = e;
-		this.isl = ScanLineCacheFactory.getScanLineCache(e);
-		this.spm = this.isl.getScansPerModulation();
-		this.slc = this.isl.getScanLineCount();
-	}
+    @Override
+    public IFileFragment getParent() {
+        return this.parent;
+    }
 
-	@Override
-	public IFileFragment getParent() {
-		return this.parent;
-	}
+    @Override
+    public int getNumberOf2DScans() {
+        return this.isl.getScanLineCount() * this.isl.getScansPerModulation();
+    }
 
-	@Override
-	public int getNumberOf2DScans() {
-		return this.isl.getScanLineCount() * this.isl.getScansPerModulation();
-	}
+    @Override
+    /**
+     *  @param firstColumnScanIndex
+     *  @param secondColumnScanIndex
+     */
+    public Scan2D getScan2D(final int firstColumnScanIndex,
+            final int secondColumnScanIndex) {
+        return buildScan((firstColumnScanIndex * isl.getScansPerModulation())
+                + secondColumnScanIndex);
+    }
 
-	@Override
-	/**
-	 *  @param firstColumnScanIndex
-	 *  @param secondColumnScanIndex
-	 */
-	public Scan2D getScan2D(final int firstColumnScanIndex,
-	        final int secondColumnScanIndex) {
-		return buildScan((firstColumnScanIndex * isl.getScansPerModulation())
-		        + secondColumnScanIndex);
-	}
+    /**
+     * Call for explicit access to the underlying IScanLine implementation.
+     *
+     * @return
+     */
+    public IScanLine getScanLineImpl() {
+        return this.isl;
+    }
 
-	/**
-	 * Call for explicit access to the underlying IScanLine implementation.
-	 * 
-	 * @return
-	 */
-	public IScanLine getScanLineImpl() {
-		return this.isl;
-	}
+    protected Scan2D buildScan(int i) {
+        Point p = this.isl.mapIndex(i);
+        final Tuple2D<Array, Array> t = this.isl.getSparseMassSpectra(p.x, p.y);
+        double sat1 = satOffset + (p.x*getModulationDuration());
+        double sat = MaltcmsTools.getScanAcquisitionTime(this.parent, i);
+        double sat2 = sat - sat1;
+        final Scan2D s = new Scan2D(t.getFirst(), t.getSecond(), i, sat);
+        s.setSecondColumnScanIndex(p.y);
+        s.setSecondColumnScanAcquisitionTime(sat2);
+        return s;
+    }
 
-	protected Scan2D buildScan(int i) {
-		Point p = this.isl.mapIndex(i);
-		final Tuple2D<Array, Array> t = this.isl.getSparseMassSpectra(p.x, p.y);
-		double sat1 = MaltcmsTools.getScanAcquisitionTime(this.parent, this.isl
-		        .mapPoint(p.x, 0));
-		double sat = MaltcmsTools.getScanAcquisitionTime(this.parent, i);
-		double sat2 = sat - sat1;
-		final Scan2D s = new Scan2D(t.getFirst(), t.getSecond(), i, sat);
-		s.setSecondColumnScanIndex(p.y);
-		s.setSecondColumnScanAcquisitionTime(sat2);
-		return s;
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
+    public List<Array> getIntensities() {
+        return MaltcmsTools.getMZIs(this.parent).getSecond();
+    }
 
-	}
+    public List<Array> getMasses() {
+        return MaltcmsTools.getMZIs(this.parent).getFirst();
+    }
 
-	public List<Array> getIntensities() {
-		return MaltcmsTools.getMZIs(this.parent).getSecond();
-	}
+    /**
+     * @param scan
+     *            scan index to load
+     */
+    @Override
+    public Scan2D getScan(final int scan) {
+        return buildScan(scan);
+    }
 
-	public List<Array> getMasses() {
-		return MaltcmsTools.getMZIs(this.parent).getFirst();
-	}
+    @Override
+    public String getScanAcquisitionTimeUnit() {
+        return this.scanAcquisitionTimeUnit;
+    }
 
-	/**
-	 * @param scan
-	 *            scan index to load
-	 */
-	@Override
-	public Scan2D getScan(final int scan) {
-		return buildScan(scan);
-	}
+    public List<Scan2D> getScans() {
+        ArrayList<Scan2D> al = new ArrayList<Scan2D>();
+        for (int i = 0; i < getNumberOfScans(); i++) {
+            al.add(buildScan(i));
+        }
+        return al;
+    }
 
-	@Override
-	public String getScanAcquisitionTimeUnit() {
-		return this.scanAcquisitionTimeUnit;
-	}
+    /**
+     * This iterator acts on the underlying collection of scans in
+     * Chromatogram1D, so be careful with concurrent access / modification!
+     */
+    @Override
+    public Iterator<Scan2D> iterator() {
 
-	public List<Scan2D> getScans() {
-		ArrayList<Scan2D> al = new ArrayList<Scan2D>();
-		for (int i = 0; i < getNumberOfScans(); i++) {
-			al.add(buildScan(i));
-		}
-		return al;
-	}
+        final Iterator<Scan2D> iter = new Iterator<Scan2D>() {
 
-	/**
-	 * This iterator acts on the underlying collection of scans in
-	 * Chromatogram1D, so be careful with concurrent access / modification!
-	 */
-	@Override
-	public Iterator<Scan2D> iterator() {
+            private int currentPos = 0;
 
-		final Iterator<Scan2D> iter = new Iterator<Scan2D>() {
+            @Override
+            public boolean hasNext() {
+                if (this.currentPos < getScans().size() - 1) {
+                    return true;
+                }
+                return false;
+            }
 
-			private int currentPos = 0;
+            @Override
+            public Scan2D next() {
+                return getScan(this.currentPos++);
+            }
 
-			@Override
-			public boolean hasNext() {
-				if (this.currentPos < getScans().size() - 1) {
-					return true;
-				}
-				return false;
-			}
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException(
+                        "Can not remove scans with iterator!");
+            }
+        };
+        return iter;
+    }
 
-			@Override
-			public Scan2D next() {
-				return getScan(this.currentPos++);
-			}
+    public void setExperiment(final IExperiment e) {
+        if (e instanceof IExperiment2D) {
+            this.parent = (IExperiment2D) e;
+        }
+        throw new IllegalArgumentException(
+                "Parameter must be of type IExperiment2D!");
+    }
 
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException(
-				        "Can not remove scans with iterator!");
-			}
+    /*
+     * (non-Javadoc)
+     *
+     * @see maltcms.datastructures.ms.IChromatogram#getScanAcquisitionTime()
+     */
+    @Override
+    public Array getScanAcquisitionTime() {
+        return this.parent.getChild("scan_acquisition_time").getArray();
+    }
 
-		};
-		return iter;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see maltcms.datastructures.ms.IChromatogram#getNumberOfScans()
+     */
+    @Override
+    public int getNumberOfScans() {
+        return MaltcmsTools.getNumberOfScans(this.parent);
+    }
 
-	public void setExperiment(final IExperiment e) {
-		if (e instanceof IExperiment2D) {
-			this.parent = (IExperiment2D) e;
-		}
-		throw new IllegalArgumentException(
-		        "Parameter must be of type IExperiment2D!");
-	}
+    public Array getIntensities(int globalScan, int localScan) {
+        return getIntensities().get(this.isl.mapPoint(globalScan, localScan));
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.ms.IChromatogram#getScanAcquisitionTime()
-	 */
-	@Override
-	public Array getScanAcquisitionTime() {
-		return this.parent.getChild("scan_acquisition_time").getArray();
-	}
+    public Array getMasses(int globalScan, int localScan) {
+        return getMasses().get(this.isl.mapPoint(globalScan, localScan));
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.ms.IChromatogram#getNumberOfScans()
-	 */
-	@Override
-	public int getNumberOfScans() {
-		return MaltcmsTools.getNumberOfScans(this.parent);
-	}
+    @Override
+    public Point getPointFor(int scan) {
+        return this.isl.mapIndex(scan);
+    }
 
-	public Array getIntensities(int globalScan, int localScan) {
-		return getIntensities().get(this.isl.mapPoint(globalScan, localScan));
-	}
+    @Override
+    public Point getPointFor(double scan_acquisition_time) {
+        return getPointFor(getIndexFor(scan_acquisition_time));
+    }
 
-	public Array getMasses(int globalScan, int localScan) {
-		return getMasses().get(this.isl.mapPoint(globalScan, localScan));
-	}
+    @Override
+    public int getIndexFor(double scan_acquisition_time) {
+        double[] d = (double[]) getScanAcquisitionTime().get1DJavaArray(
+                double.class);
+        int idx = Arrays.binarySearch(d, scan_acquisition_time);
+        if (idx >= 0) {// exact hit
+            return idx;
+        } else {// imprecise hit, find closest element
+            double current = d[Math.max(d.length - 1, (-idx) + 1)];
+            double next = d[Math.max(d.length - 1, (-idx) + 2)];
+            if (Math.abs(scan_acquisition_time - current) < Math.abs(scan_acquisition_time - next)) {
+                return (-idx) + 1;
+            } else {
+                return (-idx) + 2;
+            }
+        }
+    }
 
-	@Override
-	public Point getPointFor(int scan) {
-		return this.isl.mapIndex(scan);
-	}
+    @Override
+    public String getSecondColumnScanAcquisitionTimeUnit() {
+        return this.secondColumnScanAcquisitionTimeUnit;
+    }
 
-	@Override
-	public Point getPointFor(double scan_acquisition_time) {
-		return getPointFor(getIndexFor(scan_acquisition_time));
-	}
+    @Override
+    public int getNumberOfModulations() {
+        return this.isl.getScanLineCount();
+    }
 
-	@Override
-	public int getIndexFor(double scan_acquisition_time) {
-		double[] d = (double[]) getScanAcquisitionTime().get1DJavaArray(
-		        double.class);
-		int idx = Arrays.binarySearch(d, scan_acquisition_time);
-		if (idx >= 0) {// exact hit
-			return idx;
-		} else {// imprecise hit, find closest element
-			double current = d[Math.max(d.length - 1, (-idx) + 1)];
-			double next = d[Math.max(d.length - 1, (-idx) + 2)];
-			if (Math.abs(scan_acquisition_time - current) < Math
-			        .abs(scan_acquisition_time - next)) {
-				return (-idx) + 1;
-			} else {
-				return (-idx) + 2;
-			}
-		}
-	}
+    @Override
+    public int getNumberOfScansPerModulation() {
+        return this.isl.getScansPerModulation();
+    }
 
-	@Override
-	public String getSecondColumnScanAcquisitionTimeUnit() {
-		return this.secondColumnScanAcquisitionTimeUnit;
-	}
-
-	@Override
-	public int getNumberOfModulations() {
-		return this.isl.getScanLineCount();
-	}
-
-	@Override
-	public int getNumberOfScansPerModulation() {
-		return this.isl.getScansPerModulation();
-	}
-
-	@Override
-	public double getModulationDuration() {
-		if (this.md == -1) {
-			Scan2D s1 = getScan2D(0, 0);
-			Scan2D s2 = getScan2D(1, 0);
-			this.md = s2.getScanAcquisitionTime() - s1.getScanAcquisitionTime();
-		}
-		return this.md;
-	}
-
+    @Override
+    public double getModulationDuration() {
+        if (this.md == -1) {
+            Array sat = this.parent.getChild("scan_acquisition_time").getArray();
+            double t1 = sat.getDouble(getNumberOfScansPerModulation());
+            this.md = t1 - this.satOffset;
+        }
+        return this.md;
+    }
 }

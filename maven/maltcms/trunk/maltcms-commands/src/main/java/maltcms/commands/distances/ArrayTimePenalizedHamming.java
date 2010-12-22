@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
  * 
- * $Id: ArrayTimePenalizedDot.java 116 2010-06-17 08:46:30Z nilshoffmann $
+ * $Id$
  */
 
 package maltcms.commands.distances;
@@ -34,9 +34,9 @@ import cross.annotations.Configurable;
  * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-public class ArrayTimePenalizedDot implements IArrayDoubleComp {
+public class ArrayTimePenalizedHamming implements IArrayDoubleComp {
 
-	private volatile ArrayDot dot = new ArrayDot();
+	private volatile ArrayHamming sf = new ArrayHamming();
 
 	@Configurable(name = "expansion_weight")
 	private double wExp = 1.0d;
@@ -54,7 +54,7 @@ public class ArrayTimePenalizedDot implements IArrayDoubleComp {
 	@Override
 	public Double apply(final int i1, final int i2, final double time1,
 	        final double time2, final Array t1, final Array t2) {
-		// if no time is supplied, use 1 as default -> cosine/dot product
+		// if no time is supplied, use 1 as default -> cosine/sf product
 		// similarity
 		final double weight = ((time1 == -1) || (time2 == -1)) ? 1.0d
 		        : Math
@@ -64,9 +64,9 @@ public class ArrayTimePenalizedDot implements IArrayDoubleComp {
 		if (weight - this.rtEpsilon < 0) {
 			return Double.NEGATIVE_INFINITY;
 		}
-		final double dotP = this.dot.apply(i1, i2, time1, time2, t1, t2);
+		final double dotP = this.sf.apply(i1, i2, time1, time2, t1, t2);
 		// Robinson
-		return dotP * weight;
+		return dotP * (1-weight);
 	}
 
 	@Override
@@ -105,6 +105,6 @@ public class ArrayTimePenalizedDot implements IArrayDoubleComp {
 
 	@Override
 	public boolean minimize() {
-		return false;
+		return true;
 	}
 }

@@ -199,6 +199,7 @@ public final class MetaboliteBrowser extends JFrame {
                             public void run() {
                                 c.setPassword(new String(jpf.getPassword()));
                                 c.setLocation(jtf.getText());
+                                mb.setTitle("MetaboliteBrowser: "+jtf.getText());
                                 if (c.getLocation() == null) {
                                     System.err.println("No db selected, exiting!");
                                     System.exit(1);
@@ -347,7 +348,7 @@ public final class MetaboliteBrowser extends JFrame {
 
     public void setupUI() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setTitle("MetaboliteBrowser");
+        //this.setTitle("MetaboliteBrowser: ");
         MetaboliteView mv = new MetaboliteView(mvm);
         mvm.setMetaboliteView(mv);
         mv.addComponents(this);

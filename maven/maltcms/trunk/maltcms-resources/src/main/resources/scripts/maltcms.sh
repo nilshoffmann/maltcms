@@ -8,27 +8,37 @@ export MALTCMSARGS=""
 export PROFILE=""
 export USRCLSPATH=""
 
-if [ -z "$MALTCMSDIR" ]; then
-	echo "Please enter path to Maltcms installation or add MALTCMSDIR to your bash profile:"
-	read MALTCMSUSRDIR;
-	if [ -z "$MALTCMSUSRDIR" ]; then
-		echo "No user defined directory for Maltcms installation entered, no default g    iven, exiting!";
-	exit 1;
-fi
-	else
-		MALTCMSUSRDIR=$MALTCMSDIR;
+echo -e "Working in $(pwd)";
+#Check, whether we are called from a maltcms installation
+if [ -f "$(pwd)/maltcms.jar" ]; then
+	echo -e "Found maltcms in current working directory $(pwd)";
+	MALTCMSUSRDIR="$(pwd)";
+else
+#no, so check environment variable
+	echo -e "maltcms.jar not found in working directory."
+	echo -e "Checking for maltcms location MALTCMSDIR.";
+	if [ -z "$MALTCMSDIR" ]; then
+		echo "Please enter path to Maltcms installation or add MALTCMSDIR to your bash profile:"
+		read MALTCMSUSRDIR;
+		if [ -z "$MALTCMSUSRDIR" ]; then
+			echo "No user defined directory for Maltcms installation entered, no default given, exiting!";
+		exit 1;
+	fi
+		else
+			MALTCMSUSRDIR="$MALTCMSDIR";
+	fi
 fi
 
 LOG4J_LOCATION="-Dlog4j.configuration=file://$MALTCMSUSRDIR/cfg/log4j.properties"
 
 #Check if javahome exists => contains path to java
-if [ -f $MALTCMSUSRDIR/javahome ]; then
+if [ -f "$MALTCMSUSRDIR/javahome" ]; then
 	echo "File javahome exists";
 else
-	$MALTCMSUSRDIR/scripts/setJavaHome.sh;
+	"$MALTCMSUSRDIR/scripts/setJavaHome.sh";
 fi	
 
-export JAVA_HOME="$(cat $MALTCMSUSRDIR/javahome)";
+export JAVA_HOME="$(cat "$MALTCMSUSRDIR/javahome")";
 echo -e "Using the following java location: $JAVA_HOME\n"
 
 function printHelp {
@@ -78,16 +88,16 @@ while [ $# -gt 0 ]; do
 			echo "Running a $JARCH VM with -Xmx $MXSIZE"
 			shift
 			#Check for clspath file
-			if [ -f $MALTCMSUSRDIR/clspath ]; then
+			if [ -f "$MALTCMSUSRDIR/clspath" ]; then
 				echo "File clspath exists";
 			else
-				$MALTCMSUSRDIR/scripts/buildCP.sh
+				"$MALTCMSUSRDIR"/scripts/buildCP.sh
 			fi
-			USRCLSPATH="$CLASSPATH:$(cat $MALTCMSUSRDIR/clspath)"
+			USRCLSPATH="$CLASSPATH:$(cat "$MALTCMSUSRDIR/clspath")"
 			echo -e "Passing args to $EXEC"
 			echo -e "$@"
 			sleep 1
-			$JAVA_HOME/bin/java -cp $USRCLSPATH $PROFILE -Xms$MSSIZE -Xmx$MXSIZE $JARCH $LOG4J_LOCATION $EXEC "$@" 
+			$JAVA_HOME/bin/java -cp "$USRCLSPATH" $PROFILE -Xms$MSSIZE -Xmx$MXSIZE $JARCH "$LOG4J_LOCATION" "$EXEC" "\"$@\"" 
 			exit $?
 			;;	
 		-"?"|--help)

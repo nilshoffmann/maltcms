@@ -40,6 +40,12 @@ public class TICPeakListImporter extends AFragmentCommand {
 
 	@Configurable
 	private List<String> filesToRead;
+	
+	@Configurable(type=int.class,value="0")
+	private int scanIndexOffset = 0;
+	
+	@Configurable(type=String.class,value="SCAN")
+	private String scanIndexColumnName = "SCAN";
 
 	@Configurable(value = "var.tic_peaks")
 	private String ticPeakVarName = "tic_peaks";
@@ -61,6 +67,8 @@ public class TICPeakListImporter extends AFragmentCommand {
 		        .getName()
 		        + ".filesToRead", Collections.emptyList()));
 		ticPeakVarName = cfg.getString("var.tic_peaks", "tic_peaks");
+		scanIndexColumnName = cfg.getString(getClass().getName()+".scanIndexColumnName","SCAN");
+		scanIndexOffset = cfg.getInt(getClass().getName()+".scanIndexOffset", 0);
 	}
 
 	/*
@@ -88,15 +96,14 @@ public class TICPeakListImporter extends AFragmentCommand {
 						table = csvr.read(new FileInputStream(s));
 						HashMap<String, Vector<String>> hm = csvr
 						        .getColumns(table);
-						Vector<String> peakScanIndex = hm.get("SCAN");
+						Vector<String> peakScanIndex = hm.get(scanIndexColumnName);
 						ArrayInt.D1 extr = new ArrayInt.D1(peakScanIndex.size());
 						for (int i = 0; i < peakScanIndex.size(); i++) {
-							// TODO this is a quick fix
 							// ChemStation output seems to start with 1 based
 							// indexing,
 							// we need to correct to 0 based indexing
 							extr.set(i,
-							        Integer.parseInt(peakScanIndex.get(i)) - 1);
+							        Integer.parseInt(peakScanIndex.get(i)) - scanIndexOffset);
 						}
 						final IVariableFragment peaks = new VariableFragment(
 						        work, this.ticPeakVarName);

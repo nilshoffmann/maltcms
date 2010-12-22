@@ -99,10 +99,10 @@ if [ -z "$BITS" ]; then
 	echo "Using $DEFAULTBITS bit";
 	BITS="$DEFAULTBITS";
 fi
-CMDLINE="scripts/maltcms.sh -cp -mx $HEAPSIZE -$BITS -- $INDIR $DORECURSE $FILENAMES $OUTDIR $ANCHORFILES $CONFIGFILE";
+CMDLINE="scripts/maltcms.sh -cp -mx $HEAPSIZE -$BITS -- \"$INDIR\" $DORECURSE \"$FILENAMES\" \"$OUTDIR\" \"$ANCHORFILES\" \"$CONFIGFILE\"";
 echo "Using the following commandline: ";
 echo "$CMDLINE";
 export MALTCMSDIR=$MALTCMSUSRDIR;
-cd $MALTCMSDIR;
-exec $CMDLINE;
+cd "$MALTCMSDIR";
+exec "$CMDLINE";
 exit $!;

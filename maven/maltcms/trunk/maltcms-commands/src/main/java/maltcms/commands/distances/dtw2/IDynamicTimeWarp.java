@@ -62,8 +62,6 @@ public interface IDynamicTimeWarp extends ListDistanceFunction {
 
 	public abstract Array[] apply(Tuple2D<Array[], Array[]> t);
 
-	public abstract IFileFragment apply(Tuple2D<IFileFragment, IFileFragment> t);
-
 	public Tuple2D<List<Array>, List<Array>> createTuple(
 	        Tuple2D<IFileFragment, IFileFragment> t);
 

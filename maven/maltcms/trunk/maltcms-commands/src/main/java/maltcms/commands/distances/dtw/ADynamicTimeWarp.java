@@ -254,7 +254,18 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 	 * .fragments.FileFragment, cross.datastructures.fragments.FileFragment)
 	 */
 	public IFileFragment apply(final IFileFragment a, final IFileFragment b) {
-		return apply(new Tuple2D<IFileFragment, IFileFragment>(a, b));
+		this.log
+		        .info("#############################################################################");
+		final String s = this.getClass().getName();
+		this.log.info("# {} running", s);
+		this.log
+		        .info("#############################################################################");
+		this.log.info("LHS: {}", a.getName());
+		this.log.info("RHS: {}", b.getName());
+		EvalTools
+		        .notNull(new Object[] { a, b }, this);
+		IFileFragment alignmentFragment = calcAlignment(new Tuple2D<IFileFragment,IFileFragment>(a,b));
+		return alignmentFragment;
 	}
 
 	/*
@@ -267,32 +278,10 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 	public Array[] apply(final Tuple2D<Array[], Array[]> t) {
 		EvalTools.notNull(t, this);
 		EvalTools.notNull(new Object[] { this.refF, this.queryF }, this);
-		this.resF = apply(new Tuple2D<IFileFragment, IFileFragment>(this.refF,
-		        this.queryF));
+		this.resF = apply(this.refF,
+		        this.queryF);
 		EvalTools.notNull(this.res, this);
 		return new Array[] { this.res };
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maltcms.commands.distances.dtw.IDynamicTimeWarp#apply(cross.datastructures
-	 * .tuple.Tuple2D)
-	 */
-	public IFileFragment apply(final Tuple2D<IFileFragment, IFileFragment> t) {
-		this.log
-		        .info("#############################################################################");
-		final String s = this.getClass().getName();
-		this.log.info("# {} running", s);
-		this.log
-		        .info("#############################################################################");
-		this.log.info("LHS: {}", t.getFirst().getName());
-		this.log.info("RHS: {}", t.getSecond().getName());
-		EvalTools
-		        .notNull(new Object[] { t, t.getFirst(), t.getSecond() }, this);
-		IFileFragment alignmentFragment = calcAlignment(t);
-		return alignmentFragment;
 	}
 
 	private AnchorPairSet buildAnchorPairSet(

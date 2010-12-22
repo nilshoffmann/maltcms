@@ -17,10 +17,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
  * 
- * $Id: ArrayTimePenalizedDot.java 116 2010-06-17 08:46:30Z nilshoffmann $
+ * $Id$
  */
 
 package maltcms.commands.distances;
+
 
 import org.apache.commons.configuration.Configuration;
 
@@ -29,21 +30,20 @@ import cross.Logging;
 import cross.annotations.Configurable;
 
 /**
- * 
- * FIXME requires citation of paper
+ * Calculates Spearman's rank correlation as similarity between arrays.
  * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * 
  */
-public class ArrayTimePenalizedDot implements IArrayDoubleComp {
+public class ArrayTimePenalizedLp implements IArrayDoubleComp {
 
-	private volatile ArrayDot dot = new ArrayDot();
-
+	private ArrayLp sf = new ArrayLp();
 	@Configurable(name = "expansion_weight")
 	private double wExp = 1.0d;
 	@Configurable(name = "compression_weight")
 	private double wComp = 1.0d;
 	@Configurable(name = "diagonal_weight")
-	private double wDiag = 2.0d;
+	private double wDiag = 2.25d;
 
 	@Configurable
 	private double rtTolerance = 50.0d;
@@ -64,9 +64,8 @@ public class ArrayTimePenalizedDot implements IArrayDoubleComp {
 		if (weight - this.rtEpsilon < 0) {
 			return Double.NEGATIVE_INFINITY;
 		}
-		final double dotP = this.dot.apply(i1, i2, time1, time2, t1, t2);
-		// Robinson
-		return dotP * weight;
+
+		return (1-weight) * sf.apply(i1, i2, time1, time2, t1, t2);
 	}
 
 	@Override
@@ -80,10 +79,8 @@ public class ArrayTimePenalizedDot implements IArrayDoubleComp {
 		this.wExp = cfg.getDouble(this.getClass().getName()
 		        + ".expansion_weight", 1.0d);
 		this.wDiag = cfg.getDouble(this.getClass().getName()
-		        + ".diagonal_weight", 1.0d);
+		        + ".diagonal_weight", 2.25d);
 		StringBuilder sb = new StringBuilder();
-		sb.append("rtTolerance: " + this.rtTolerance + ", ");
-		sb.append("rtEpsilon: " + this.rtEpsilon + ", ");
 		sb.append("wComp: " + this.wComp + ", ");
 		sb.append("wExp: " + this.wExp + ", ");
 		sb.append("wDiag: " + this.wDiag);
@@ -105,6 +102,7 @@ public class ArrayTimePenalizedDot implements IArrayDoubleComp {
 
 	@Override
 	public boolean minimize() {
-		return false;
+		return true;
 	}
+
 }

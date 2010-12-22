@@ -98,13 +98,13 @@
 	<dependency>
     <groupId>net.sf.maltcms</groupId>
     <artifactId>cross-main</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <!--<type>pom</type>-->
 </dependency>
 <dependency>
     <groupId>net.sf.maltcms</groupId>
     <artifactId>cross-ui</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
 </dependency>
 <dependency>
   <groupId>javax.media</groupId>

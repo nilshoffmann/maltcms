@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
  * 
- * $Id: ArrayHamming.java 116 2010-06-17 08:46:30Z nilshoffmann $
+ * $Id$
  */
 package maltcms.commands.distances;
 
@@ -83,12 +83,11 @@ public class ArrayTimePenalizedCosineLogIntensityDifference implements
 		final double weight = ((time1 == -1) || (time2 == -1)) ? 1.0d
 		        : Math
 		                .exp(-((time1 - time2) * (time1 - time2) / (2.0d * this.rtTolerance * this.rtTolerance)));
-		// 1 for perfect time correspondence, 0 for really bad time
+                // 1 for perfect time correspondence, 0 for really bad time
 		// correspondence (towards infinity)
-		// System.out.println("RT weight: " + weight);
-		// if (weight - this.rtEpsilon < 0) {
-		// return Double.NEGATIVE_INFINITY;
-		// }
+		if (weight - this.rtEpsilon < 0) {
+			return Double.NEGATIVE_INFINITY;
+		}
 		// add 1
 		AdditionFilter af = new AdditionFilter(1.0f);
 		// apply log10 elementwise

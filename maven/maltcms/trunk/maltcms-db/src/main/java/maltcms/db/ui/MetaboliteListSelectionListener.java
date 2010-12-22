@@ -30,6 +30,7 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.MAMath;
 import cross.datastructures.tuple.Tuple2D;
+import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import java.util.LinkedHashMap;
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.JToolBar;
 
 public class MetaboliteListSelectionListener implements ListSelectionListener,
         WindowListener, MouseListener {
@@ -53,6 +55,7 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
     protected JFreeChart jfc = null;
     protected ChartPanel cp = null;
     protected JFrame msframe = null;
+    protected JToolBar toolbar = null;
     private int frameIndex = 0;
     protected MetaboliteViewModel mvm2 = null;
     private ExecutorService es = Executors.newFixedThreadPool(5);
@@ -80,8 +83,25 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
             System.out.println("Creating new Frame");
             msframe = new JFrame("Mass Spectra");
             msframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            msframe.add(getJToolBar(),BorderLayout.PAGE_START);
+
         }
         return msframe;
+    }
+
+    private JToolBar getJToolBar() {
+        if(toolbar == null) {
+            toolbar = new JToolBar();
+            toolbar.add(new AbstractAction("Clear"){
+
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    series.clear();
+                    updatePlot();
+                }
+            });
+        }
+        return toolbar;
     }
 
     private void addMetaboliteToChart(final IMetabolite m) {
