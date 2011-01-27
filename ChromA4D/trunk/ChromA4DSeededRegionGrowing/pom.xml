@@ -7,9 +7,9 @@
     <name>maltcms-chroma4D-srg-module</name>
     <url>http://maltcms.sourceforge.net</url>
     <scm>
-        <connection>scm:svn:svn+ssh://porta.cebitec.uni-bielefeld.de/vol/maltcms/repository/ChromA4D/trunk/ChromA4DSeededRegionGrowing</connection>
-        <developerConnection>scm:svn:svn+ssh://porta.cebitec.uni-bielefeld.de/vol/maltcms/repository/ChromA4D/trunk/ChromA4DSeededRegionGrowing</developerConnection>
-        <url>svn+ssh://porta.cebitec.uni-bielefeld.de/vol/maltcms/repository/ChromA4D/trunk/ChromA4DSeededRegionGrowing</url>
+        <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/ChromA4D/trunk/ChromA4DSeededRegionGrowing</connection>
+        <developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/ChromA4D/trunk/ChromA4DSeededRegionGrowing</developerConnection>
+        <url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/ChromA4D/trunk/ChromA4DSeededRegionGrowing</url>
     </scm>
     <!-- dependencies for this pom -->
     <dependencies> 
