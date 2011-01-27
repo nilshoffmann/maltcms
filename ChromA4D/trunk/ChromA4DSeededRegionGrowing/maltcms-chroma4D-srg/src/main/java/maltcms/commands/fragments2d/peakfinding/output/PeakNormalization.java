@@ -1,0 +1,69 @@
+package maltcms.commands.fragments2d.peakfinding.output;
+
+import java.awt.Point;
+import java.util.Collection;
+import java.util.List;
+
+import maltcms.commands.fragments2d.peakfinding.bbh.BBHTools;
+import maltcms.datastructures.peak.Peak2D;
+import maltcms.datastructures.peak.Peak2DClique;
+import cross.datastructures.fragments.IFileFragment;
+
+public class PeakNormalization {
+
+	private int expectedX = -1;
+	private int expectedY = -1;
+	private double threshold = 3.0d;
+
+	private double eucl(int x1, int y1, int x2, int y2) {
+		return Math.sqrt(x1 * x2 + y1 * y2);
+	}
+
+	public List<Peak2D> findReference(List<List<Peak2D>> peakLists,
+			List<List<Point>> bidiBestHits, Collection<IFileFragment> f) {
+		final List<Peak2DClique> peakCliqueLists = BBHTools
+				.getPeak2DCliqueList(f, bidiBestHits, peakLists);
+
+		int x, y, s, minArg = -1;
+		double min = Double.MAX_VALUE;
+		for (int i = 0; i < peakCliqueLists.size(); i++) {
+			x = 0;
+			y = 0;
+			s = peakCliqueLists.get(i).getAll().size();
+			for (Peak2D p : peakCliqueLists.get(i).getAll()) {
+				x += p.getFirstScanIndex();
+				y += p.getSecondScanIndex();
+			}
+			if (eucl(x / s, y / s, this.expectedX, this.expectedY) < min) {
+				min = eucl(x / s, y / s, this.expectedX, this.expectedY);
+				minArg = i;
+			}
+		}
+		int bestClique = -1;
+		if (min < this.threshold) {
+			bestClique = minArg;
+		}
+
+		if (bestClique != -1) {
+			return peakCliqueLists.get(bestClique).getAll();
+		}
+		return null;
+	}
+
+	public void normalize(List<Peak2D> list, Peak2D ref) {
+		for (Peak2D p : list) {
+			p.normalizeTo(ref);
+		}
+	}
+
+	public void normalize(List<List<Peak2D>> peakLists,
+			List<List<Point>> bidiBestHits, Collection<IFileFragment> f) {
+		final List<Peak2D> refs = findReference(peakLists, bidiBestHits, f);
+		if (refs != null) {
+			for (int i = 0; i < peakLists.size(); i++) {
+				normalize(peakLists.get(i), refs.get(i));
+			}
+		}
+	}
+
+}

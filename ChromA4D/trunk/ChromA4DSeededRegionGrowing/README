@@ -1,0 +1,40 @@
+NOTE: The order of the following steps may be essential!
+
+
+COMPILING
+To compile the project, call
+>mvn compile
+
+INSTALLATION
+To install artifacts in the user repository, call
+>mvn install
+
+BUILDING A PACAKGE
+To build the project artifacts, call
+>mvn package
+
+DEPLOYING SNAPSHOTS FOR SHARED ACCESS
+In order to keep everyone developing up to date, 
+you should deploy your build snapshots from time to time,
+by issuing
+>mvn deploy
+
+
+PERFORMING A RELEASE (Stable version)
+
+To perform a release, first perform
+>svn update 
+and resolve all possible problems. Then commit all 
+local changes with
+>svn commit -m "Preparing for release"
+Then, go on and call
+>mvn release:prepare -Dusername=MYUSERNAME -Dpassword=MYPASSWORD
+with MYUSERNAME substituted by your subversion username and MYPASSWORD
+subst. by your subverions password.
+Maven will prompt you for version numbers for all submodules, simply 
+hit enter if the numbers are fine. 
+
+If all went well, you can now call
+>mvn release:perform
+otherwise, to rollback the release in case of errors:
+>mvn release:rollback

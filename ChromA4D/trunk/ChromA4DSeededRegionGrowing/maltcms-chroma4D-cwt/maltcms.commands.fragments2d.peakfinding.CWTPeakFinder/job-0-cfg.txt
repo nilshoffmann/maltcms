@@ -1,0 +1,3 @@
+JAR_PATH=/vol/maltcms/codebase/chroma4DCWTPeakfinder.jar
+STARTUP_CLASS=maltcms.commands.fragments2d.peakfinding.CWTRunnable
+CONFIGURATION_FILE=/Users/nilshoffmann/Documents/ChromA4DSeededRegionGrowing/maltcms-chroma4D-cwt/maltcms.commands.fragments2d.peakfinding.CWTPeakFinder/maltcms.commands.fragments2d.peakfinding.CWTRunnable_0.properties

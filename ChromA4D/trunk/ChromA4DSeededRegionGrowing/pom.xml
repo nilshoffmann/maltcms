@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.sf.maltcms</groupId>
+    <artifactId>maltcms-chroma4D-srg-module</artifactId>
+    <version>2.0-SNAPSHOT</version>
+    <name>maltcms-chroma4D-srg-module</name>
+    <url>http://maltcms.sourceforge.net</url>
+    <scm>
+        <connection>scm:svn:svn+ssh://porta.cebitec.uni-bielefeld.de/vol/maltcms/repository/ChromA4D/trunk/ChromA4DSeededRegionGrowing</connection>
+        <developerConnection>scm:svn:svn+ssh://porta.cebitec.uni-bielefeld.de/vol/maltcms/repository/ChromA4D/trunk/ChromA4DSeededRegionGrowing</developerConnection>
+        <url>svn+ssh://porta.cebitec.uni-bielefeld.de/vol/maltcms/repository/ChromA4D/trunk/ChromA4DSeededRegionGrowing</url>
+    </scm>
+    <!-- dependencies for this pom -->
+    <dependencies> 
+                <dependency> 
+                        <groupId>net.sf.maltcms</groupId> 
+                        <artifactId>maltcms</artifactId> 
+                        <version>1.0.6-SNAPSHOT</version>
+                        <type>pom</type> 
+                        <exclusions> 
+                                 <exclusion>  <!-- declare the exclusion here --> 
+                                 <groupId>net.sf.maltcms</groupId> 
+                                 <artifactId>maltcms-chroma4D-srg</artifactId> 
+                                 </exclusion> 
+                        </exclusions> 
+                </dependency> 
+    </dependencies>
+    <!-- dependencies for children -->
+    <dependencyManagement>
+    	<dependencies>
+<!--    	<dependency>
+			<groupId>net.sf.maltcms</groupId>
+		        <artifactId>maltcms-resources</artifactId>
+      			<version>1.0.6-SNAPSHOT</version>
+            		<type>pom</type>
+		</dependency>-->
+		<dependency>
+			<groupId>net.sf.maltcms</groupId>
+		        <artifactId>maltcms-resources</artifactId>
+      			<version>1.0.6-SNAPSHOT</version>
+            		<type>jar</type>
+		</dependency>
+    	</dependencies>
+    </dependencyManagement>
+    <distributionManagement>
+        <repository>
+            <id>maltcms-artifactory</id>
+            <name>maltcms-artifactory-releases</name>
+            <url>http://www.maltcms.de:8081/artifactory/libs-releases-local</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>maltcms-artifactory</id>
+            <name>maltcms-artifactory-snapshots</name>
+            <url>http://www.maltcms.de:8081/artifactory/libs-snapshots-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            </plugins>
+    </build>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <packaging>pom</packaging>
+    <modules>
+    	<module>maltcms-chroma4D-cwt</module>
+    	<module>maltcms-chroma4D-srg</module>
+    	<module>maltcms-chroma4D-srg-dist</module>
+    </modules>
+</project>
+
+
+
+
+
+
