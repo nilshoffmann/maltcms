@@ -74,6 +74,7 @@
     <modules>
     	<module>maltcms-chroma4D-cwt</module>
     	<module>maltcms-chroma4D-srg</module>
+    	<module>maltcms-chroma4D-jbl</module>
     	<module>maltcms-chroma4D-srg-dist</module>
     </modules>
 </project>

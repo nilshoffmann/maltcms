@@ -10,7 +10,8 @@ To install artifacts in the user repository, call
 >mvn install
 
 BUILDING A PACAKGE
-To build the project artifacts, call
+To build the project artifacts EXPLICITLY (already 
+done by mvn install), call
 >mvn package
 
 DEPLOYING SNAPSHOTS FOR SHARED ACCESS
