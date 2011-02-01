@@ -1,0 +1,12 @@
+Add a class with your choice of name for it 
+in this package. The main (plugin) class which should run within the 
+pipeline system should extend
+cross.commands.fragments.AFragmentCommand
+
+Please add the fully qualified name of your class, e.g.
+maltcms.commands.fragments2d.peakfinding.MyPeakFinder
+to the file 
+src/main/resources/META-INF/services/maltcms.commands.fragments.AFragmentCommand
+
+For more details on working with 2D chromatograms, please see the code in 
+the maltcms-chroma4D-cwt and maltcms-chroma4D-srg plugins.
