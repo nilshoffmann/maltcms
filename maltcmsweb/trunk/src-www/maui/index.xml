@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content group="maui" ident="maui/index" nname="Maltcms User Interface" publish="yes" toRoot="../" lastchanged="$Date: 2010-08-10 11:22:22 +0200 (Di, 10 Aug 2010) $ by $Author: nilshoffmann $">
+<column id="content">
+            <h1>Maltcms</h1>
+            <h2>ChromA(1D,2D)</h2>
+            <h2>ChromA4D</h2>
+            <h1>ChromAUI</h1>
+</column>
+</content>

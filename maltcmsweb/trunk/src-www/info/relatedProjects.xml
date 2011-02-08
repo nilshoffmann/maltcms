@@ -6,28 +6,28 @@
 		<h1>Projects using Maltcms/ChromA/ChromA4D</h1>
 		<p>
 			<a href="https://meltdb.cebitec.uni-bielefeld.de" title="MeltDB"
-				target="_blank">MeltDB</a>
+				>MeltDB</a>
 		</p>
 		<p>
 			<a href="http://bibiserv.techfak.uni-bielefeld.de/chroma/" title="ChromA Webapp"
-				target="_blank">ChromA webapplication</a>
+				>ChromA webapplication</a>
 		</p>
 		<h1>Related Projects</h1>
 		<p>
 			<a href="http://metlin.scripps.edu/download/" title="XCMS software"
-				target="_blank">XCMS</a>
+				>XCMS</a>
 		</p>
 		<p>
-			<a href="http://www.openms.de" title="OpenMS software" target="_blank">OpenMS
+			<a href="http://www.openms.de" title="OpenMS software">OpenMS
 			</a>
 		</p>
 		<p>
 			<a href="http://mzmine.sourceforge.net/" title="MZMine2 software"
-				target="_blank">MZMine2</a>
+				>MZMine2</a>
 		</p>
 		<p>
 			<a href="http://www.metalign.wur.nl/UK/" title="MetAlign software"
-				target="_blank">MetAlign</a>
+				>MetAlign</a>
 		</p>
 		<h2>
 			If you think your project is missing, please visit
@@ -37,8 +37,8 @@
 		<h1>Other</h1>
 		<p>
 			This website uses icons derived from the
-			<a href="http://tango.freedesktop.org/Tango_Desktop_Project" title="Tange project"
-				target="_blank">Tango project</a>
+			<a href="http://tango.freedesktop.org/Tango_Desktop_Project" title="Tango project"
+				>Tango project</a>
 			icon theme.
 		</p>
 	</column>

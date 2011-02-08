@@ -13,7 +13,7 @@
 			quickly and ask questions on just
 			about everything. You can subscribe to the mailing list
 			<a href="https://lists.sourceforge.net/lists/listinfo/maltcms-user"
-				target="_blank">here</a>
+				>here</a>
 			or post a message anonymously, which will then be published at the
 			list moderator's discretion. If you discover bugs and are not sure on
 			how to report them, we would also recommend to post your
@@ -24,7 +24,7 @@
 			If you happen to stumble across bugs in Maltcms or any associated
 			application, we would appreciate your feedback.
 			We provide a publicly accessible
-			<a href="https://sourceforge.net/tracker/?group_id=251287&amp;atid=1126545" target="_blank">issue tracker</a>, which does not require
+			<a href="https://sourceforge.net/tracker/?group_id=251287&amp;atid=1126545">issue tracker</a>, which does not require
 			you to have an account at sourceforge. However, in order to be able to
 			contact you, we recommend to register an account with sourceforge, or
 			register on
@@ -39,7 +39,7 @@
 			provide means to get help fast from the people developing Maltcms.
 			For advanced users and developers, the first place to turn to is the
 			<a href="http://sourceforge.net/apps/trac/maltcms/" title="Trac issue tracking system"
-				target="_blank">Trac</a>
+				>Trac</a>
 			instance on sourceforge, which
 			allows you to view existing
 			<em>tickets</em>

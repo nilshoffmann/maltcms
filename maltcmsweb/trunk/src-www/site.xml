@@ -4,12 +4,10 @@
 		<div id="affiliation">
 			<ul>
 				<li>
-					<a href="http://www.uni-bielefeld.de" title="Bielefeld University, Germany"
-						target="_blank">Bielefeld University</a>
+					<a href="http://www.uni-bielefeld.de" title="Bielefeld University, Germany">Bielefeld University</a>
 				</li>
 				<li>
-					<a href="http://www.cebitec.uni-bielefeld.de" title="Center for Biotechnology, Bielefeld"
-						target="_blank">CeBiTeC</a>
+					<a href="http://www.cebitec.uni-bielefeld.de" title="Center for Biotechnology, Bielefeld">CeBiTeC</a>
 				</li>
 				<li>
 					<a href="http://gi.cebitec.uni-bielefeld.de/" title="Genome Informatics Group, Bielefeld University">Genome
@@ -21,16 +19,36 @@
 			</ul>
 		</div>
 		<div id="download">
-			<a href="http://sourceforge.net/projects/maltcms/files/" title="Download">
-				Maltcms 1.0 RC1
-				<img src="../img/tango-go-down-red.png" />
+			<a href="http://sourceforge.net/projects/maltcms/files/latest" title="Download">
+				<div>
+				Get Maltcms
+				<img src="../img/tango-go-down-red.png" alt="Download Image"/>
 				<br />
-				<span class="small">Released on June 25th, 2010</span>
+				<span class="small">Provided by sourceforge.net</span>
+				</div>
 			</a>
+		</div>
+		<div id="download">
+			<a href="http://sourceforge.net/projects/maltcms/files/latest" title="Download">
+				<div>
+				Preview Maui
+				<img src="../img/tango-go-down-red.png" alt="Download Image"/>
+				<br />
+				<span class="small">Provided by sourceforge.net</span>
+				</div>
+			</a>
+		</div>
+		<div id="categories">
+			<ul>
+				<li><a href="../home/index.html">Home</a></li>
+				<li><a href="../users/features.html">Users</a></li>
+				<li><a href="../developers/api.html">Developers</a></li>
+				<li><a href="../info/publications.html">Info</a></li>
+				<!--<li><a href="../maui/index.html">Maui</a></li>-->
+			</ul>
 		</div>
 	</div>
 	<nav>
-
 		<group class="nav_dotted" nname="Home" ident="home">
 			<ref target="home/index" />
 			<ref target="home/gettingStarted" />
@@ -62,6 +80,10 @@
 			<ref target="info/license" />
 			<ref target="info/contact" />
 		</group>
+<!--
+		<group class="nav_dotted" nname="Maui" ident="maui">
+			<ref target="maui/index" />
+		</group>-->
 	</nav>
 
 	<!-- Home -->
@@ -80,4 +102,6 @@
 	<xi:include href="info/relatedProjects.xml" parse="xml" />
 	<xi:include href="info/license.xml" parse="xml" />
 	<xi:include href="info/contact.xml" parse="xml" />
+	<!-- Maui -->
+	<!--<xi:include href="maui/index.xml" parse="xml" />-->
 </site>

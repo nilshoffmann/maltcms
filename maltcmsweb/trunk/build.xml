@@ -74,9 +74,9 @@
 		<copy includeemptydirs="false" todir="${build-www.dir}">
 			<fileset dir="src-www" />
 		</copy>
-		<copy todir="${build-www.dir}/site">
+		<!--<copy todir="${build-www.dir}/site">
 			<fileset dir="src-www/img" />
-		</copy>
+		</copy>-->
 	</target>
 
 	<target name="xinclude" description="Apply xinclude">
@@ -110,9 +110,12 @@
 		-->
 		<mkdir dir="${release_dir}/site" />
 		<copy toDir="${release_dir}/site" includeemptydirs="false">
-			<fileset dir="${build-www.dir}/" excludes="**/*.xml,**/*.xsl,**/siteOut.txt" />
+			<fileset dir="${build-www.dir}/" excludes="**/*.xml,transform.xsl,site-xinclude.xml,siteOut.txt" />
 		</copy>
-
+		<!--<mkdir dir="${release_dir}/site/chromaui" />
+		<copy toDir="${release_dir}/site/chromaui" includeemptydirs="true">
+			<fileset dir="${build-www.dir}/chromaui" />
+		</copy>-->
 		<!--<echo message="Adjusting rights" />
 		<exec inputstring="" dir="${release_dir}" executable="chmod">
 			<arg line="-R" />

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content group="home" ident="home/index" nname="Welcome" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
 	<column id="content">
-		<h1>News</h1>
-		<h2>ChromAUI featured as a Netbeans RCP application</h2>
-		<p>After a recent inquiry about our project ChromAUI from Geertjan Wielenga, I prepared a few screenshots of the current prototype and wrote short descriptions for them.
-		Visit <a href="http://blogs.sun.com/geertjan/entry/metabolomics_and_proteomics_on_the" target="_blank">Geertjan Wielenga's blog</a> to see for yourself.</p>
 		<h1>About Maltcms and ChromA</h1>
 		<h2>What is Maltcms?</h2>
 		<p>
@@ -29,8 +25,16 @@
 		it will also be possible to define custom processing pipelines, run them as batch tasks and inspect the results, while they are being created.
 		If you are interested to try ChromAUI, please go to <ref target="info/contact"/>.</p>
 		<p>
-		An early preview and some screenshots of ChromAUI are now featured on <a href="http://blogs.sun.com/geertjan/entry/metabolomics_and_proteomics_on_the" target="_blank">Geertjan Wielenga's blog</a>.
+		An early preview and some screenshots of ChromAUI are now featured on <a href="http://blogs.sun.com/geertjan/entry/metabolomics_and_proteomics_on_the">Geertjan Wielenga's blog</a>.
 		</p>
-		
+		<hr/>
+		<h1>News</h1>
+		<h2>ChromAUI at the Perspektive 2010 Science Fair</h2>
+		<p>On Thursday, November 11th, we will have a poster presentation at the science fair of the general purpose job fair Perspektive at Bielefeld University. Have a look at it <a href="http://www.cebitec.uni-bielefeld.de/~hoffmann">here</a>.</p>
+		<h2>Netbeans RCP Training at Bielefeld University</h2>
+		<p>Geertjan Wielenga and Aljoscha Rittner recently gave a great three day introductory course on core Netbeans RCP technologies to a group of twenty people at Bielefeld University. During the course, Geertjan asked for presentations of existing applications based on Netbeans RCP, <a href="http://netbeans.dzone.com/video-bioinformatics-research" title="ChromAUI Video">and here it is</a>.</p>
+		<h2>ChromAUI featured as a Netbeans RCP application</h2>
+		<p>After a recent inquiry about our project ChromAUI from Geertjan Wielenga, I prepared a few screenshots of the current prototype and wrote short descriptions for them.
+		Visit <a href="http://blogs.sun.com/geertjan/entry/metabolomics_and_proteomics_on_the">Geertjan Wielenga's blog</a> to see for yourself.</p>
 	</column>
 </content>

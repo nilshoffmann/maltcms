@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content group="info" ident="info/license" nname="License"
+	publish="yes" toRoot="../"
+	lastchanged="$Date: 2010-08-15 12:45:55 +0200 (So, 15. Aug 2010) $ by $Author: nilshoffmann $">
+	<column id="content">
+		<h1>License</h1>
+		<p>
+			The sourcecodes of Maltcms (which includes ChromA and ChromA4D) are
+			licensed under the
+			<a href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">L-GPL v3 OpenSource license</a>.
+		</p>
+	</column>
+</content>
