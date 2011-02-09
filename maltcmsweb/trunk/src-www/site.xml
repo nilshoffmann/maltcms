@@ -20,12 +20,10 @@
 		</div>
 		<div class="download">
 			<a href="http://sourceforge.net/projects/maltcms/files/latest" title="Download">
-				<div>
-				Get Maltcms
+				<span>Get Maltcms</span>
 				<img src="../img/tango-go-down-red.png" alt="Download Image"/>
 				<br />
 				<span class="small">Provided by sourceforge.net</span>
-				</div>
 			</a>
 		</div>
 		<!--
