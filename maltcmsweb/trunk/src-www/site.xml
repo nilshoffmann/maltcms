@@ -18,7 +18,7 @@
 				</li>
 			</ul>
 		</div>
-		<div id="download">
+		<div class="download">
 			<a href="http://sourceforge.net/projects/maltcms/files/latest" title="Download">
 				<div>
 				Get Maltcms
@@ -28,7 +28,8 @@
 				</div>
 			</a>
 		</div>
-		<div id="download">
+		<!--
+		<div class="download">
 			<a href="http://sourceforge.net/projects/maltcms/files/latest" title="Download">
 				<div>
 				Preview Maui
@@ -37,7 +38,7 @@
 				<span class="small">Provided by sourceforge.net</span>
 				</div>
 			</a>
-		</div>
+		</div>-->
 		<div id="categories">
 			<ul>
 				<li><a href="../home/index.html">Home</a></li>

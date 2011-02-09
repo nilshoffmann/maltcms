@@ -178,7 +178,7 @@ div.nav_dotted ul.unbulletedlist li.active {
 	width: 75%;
 }
 
-#download {
+.download {
 	float: right;
 	padding: 0.2em;
 	background-color: #AACC88;
@@ -189,7 +189,7 @@ div.nav_dotted ul.unbulletedlist li.active {
 	margin: 1em;
 }
 
-#download a {
+.download a {
 	font-size: 1.2em;
 	font-family: Arial, sans-serif;
 	font-weight: bold;
@@ -198,11 +198,11 @@ div.nav_dotted ul.unbulletedlist li.active {
 	background-color: inherit;
 }
 
-#download:hover {
+.download:hover {
 	border: 1px solid #446622;
 }
 
-#download a img {
+.download a img {
 	vertical-align: middle;
 	border: 0;
 }
