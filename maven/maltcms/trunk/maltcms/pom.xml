@@ -31,6 +31,8 @@
                             <overWriteReleases>true</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
+                            <!-- security fix, otherwise, logging will fail to work-->
+			    <excludeArtifactIds>log4j-over-slf4j</excludeArtifactIds>
                         </configuration>
                     </execution>
 
@@ -144,6 +146,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-execution</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j-over-slf4j</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

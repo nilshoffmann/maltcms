@@ -229,6 +229,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
 		this.log.info("Received " + t.getSize() + " elements!");
 		final List<Tuple2D<IFileFragment, IFileFragment>> list = checkInput(t);
 		this.log.info("Calculating " + list.size() + " pairwise distances!");
+                this.log.info("Using {} as local function.",this.pairwiseDistanceFunction);
 
 		final HashMap<IFileFragment, Integer> filenameToIndex = new HashMap<IFileFragment, Integer>();
 		final int nextIndex = 0;

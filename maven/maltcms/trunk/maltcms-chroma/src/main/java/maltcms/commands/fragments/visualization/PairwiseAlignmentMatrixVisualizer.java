@@ -541,6 +541,7 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
 	}
 
 	private void createImage(final IFileFragment f) {
+                this.log.info("Processing file {}",f.getName());
 		for (final String s : this.matrix_vars) {
 			try {
 				final IVariableFragment matrix_frag = f.getChild(s);

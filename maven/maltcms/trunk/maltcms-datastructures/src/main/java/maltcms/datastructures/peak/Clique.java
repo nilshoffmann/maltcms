@@ -32,6 +32,8 @@ public class Clique {
     private double cliqueMean = 0, cliqueVar = 0;
     private HashMap<IFileFragment, Peak> clique = new HashMap<IFileFragment, Peak>();
     private Peak centroid = null;
+    private int maxBBHErrors = 0;
+    private int bbhErrors = 0;
     private int bidiHits = 0;
 
     public Clique() {
@@ -116,15 +118,15 @@ public class Clique {
                     new Object[]{p, q, bbh1});
             // if we have a draw, we need to consider the
             // distance to the center
-            double p1 = Math.abs(getCliqueRTMean()-p.getScanAcquisitionTime());
-            double q2 = Math.abs(getCliqueRTMean()-q.getScanAcquisitionTime());
+            double p1 = Math.abs(getCliqueRTMean() - p.getScanAcquisitionTime());
+            double q2 = Math.abs(getCliqueRTMean() - q.getScanAcquisitionTime());
             //conflict resolution: nearest rt neighbor to clique RT mean wins
-            if(p1<q2) {
+            if (p1 < q2) {
                 removePeak(q);
                 return addPeak2(p);
-            }else if(p1>q2) {
+            } else if (p1 > q2) {
                 return false;
-            }else{
+            } else {
                 log.warn("Draw resolution failed!");
             }
         }
@@ -146,14 +148,16 @@ public class Clique {
             return true;
         } else {
             // if (clique.isEmpty()) {
-            int bidiHits = getBBHCount(p);
-            if ((bidiHits < clique.size())) {
+            int actualBidiHits = getBBHCount(p);
+            int diff = clique.size()-actualBidiHits;
+            if (((bbhErrors+diff) > maxBBHErrors)) {
                 return false;
             }
+            bbhErrors+=diff;
             log.debug(
-                    "Adding peak {} with {} bbh hit(s) to clique",
-                    p.getAssociation().getName() + "@"
-                    + p.getScanAcquisitionTime(), bidiHits);
+                    "Adding peak {} with {}/{} bbh hit(s) to clique",
+                    new Object[]{p.getAssociation().getName() + "@"
+                    + p.getScanAcquisitionTime(), actualBidiHits,clique.size()});
             update(p);
             clique.put(p.getAssociation(), p);
             selectCentroid();
@@ -192,6 +196,9 @@ public class Clique {
                 clear();
                 return true;
             }
+            int actualBidiHits = getBBHCount(p);
+            int diff = clique.size()-actualBidiHits;
+            bbhErrors-=diff;
             updateRemoval(p);
             selectCentroid();
             return true;
@@ -387,4 +394,21 @@ public class Clique {
         }
         return true;
     }
+    
+    public double getCliqueMean() {
+        return cliqueMean;
+    }
+
+    public double getCliqueVar() {
+        return cliqueVar;
+    }
+
+    public int getMaxBBHErrors() {
+        return maxBBHErrors;
+    }
+
+    public void setMaxBBHErrors(int maxBBHErrors) {
+        this.maxBBHErrors = maxBBHErrors;
+    }
+
 }

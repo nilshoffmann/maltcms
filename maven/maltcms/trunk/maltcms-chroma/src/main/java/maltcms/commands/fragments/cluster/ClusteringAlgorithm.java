@@ -316,7 +316,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 		        .instantiate(
 		                cfg
 		                        .getString("guide.tree.distance",
-		                                "maltcms.commands.distances.MZIDynamicTimeWarp"),
+		                                "maltcms.commands.distances.dtw.MZIDynamicTimeWarp"),
 		                ListDistanceFunction.class);
 		this.chromatogramWarpCommandClass = Factory.getInstance()
 		        .getObjectFactory().instantiate(

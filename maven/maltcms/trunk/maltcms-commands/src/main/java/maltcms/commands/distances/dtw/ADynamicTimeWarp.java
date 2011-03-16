@@ -178,6 +178,9 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 			        Double.NEGATIVE_INFINITY);
 			initMatrices(rows, cols, Double.NEGATIVE_INFINITY, ris, maxdev1);
 		}
+
+		//saveLayoutImage(ris,"test");
+		
 		EvalTools.notNull(new Object[] { this.distance, this.alignment }, this);
 		final long start = System.currentTimeMillis();
 		if (this.precalculatePairwiseDistances) {
@@ -197,11 +200,13 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 		this.log.debug("Shape of alignment: {} X {}, sx {}, sy {}",
 		        new Object[] { this.alignment.rows(), this.alignment.columns(),
 		                rows, cols });
-		this.log.info("Value of alignment[{}][{}]={}", new Object[] {
-		        this.alignment.rows() - 1,
-		        this.alignment.columns() - 1,
-		        this.alignment.get(this.alignment.rows() - 1, this.alignment
-		                .columns() - 1) });
+		this.log.info(
+		        "Value of alignment[{}][{}]={}",
+		        new Object[] {
+		                this.alignment.rows() - 1,
+		                this.alignment.columns() - 1,
+		                this.alignment.get(this.alignment.rows() - 1,
+		                        this.alignment.columns() - 1) });
 		return this.alignment;
 	}
 
@@ -219,9 +224,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 			values[i] = this.pairwiseDistanceClass.getDistance(i1, i2, sat_ref
 			        .get(i1), sat_query.get(i2), tuple.getFirst().get(i1),
 			        tuple.getSecond().get(i2));
-			log
-			        .debug("Sampling {},{} = {}", new Object[] { i1, i2,
-			                values[i] });
+			log.debug("Sampling {},{} = {}", new Object[] { i1, i2, values[i] });
 		}
 		hd.addSeries(name, values, bins);
 		JFreeChart jfc = ChartFactory.createHistogram(
@@ -231,8 +234,9 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 		                + this.pairwiseDistanceClass.getDistance().getClass()
 		                        .getName(), "value", "count", hd,
 		        PlotOrientation.VERTICAL, true, true, true);
-		ImageTools.writeImage(jfc, new File(getIWorkflow().getOutputDirectory(
-		        this), name + "-pw-histogram.png"), 1024, 768);
+		ImageTools.writeImage(jfc,
+		        new File(getIWorkflow().getOutputDirectory(this), name
+		                + "-pw-histogram.png"), 1024, 768);
 	}
 
 	/*
@@ -254,17 +258,15 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 	 * .fragments.FileFragment, cross.datastructures.fragments.FileFragment)
 	 */
 	public IFileFragment apply(final IFileFragment a, final IFileFragment b) {
-		this.log
-		        .info("#############################################################################");
+		this.log.info("#############################################################################");
 		final String s = this.getClass().getName();
 		this.log.info("# {} running", s);
-		this.log
-		        .info("#############################################################################");
+		this.log.info("#############################################################################");
 		this.log.info("LHS: {}", a.getName());
 		this.log.info("RHS: {}", b.getName());
-		EvalTools
-		        .notNull(new Object[] { a, b }, this);
-		IFileFragment alignmentFragment = calcAlignment(new Tuple2D<IFileFragment,IFileFragment>(a,b));
+		EvalTools.notNull(new Object[] { a, b }, this);
+		IFileFragment alignmentFragment = calcAlignment(new Tuple2D<IFileFragment, IFileFragment>(
+		        a, b));
 		return alignmentFragment;
 	}
 
@@ -278,8 +280,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 	public Array[] apply(final Tuple2D<Array[], Array[]> t) {
 		EvalTools.notNull(t, this);
 		EvalTools.notNull(new Object[] { this.refF, this.queryF }, this);
-		this.resF = apply(this.refF,
-		        this.queryF);
+		this.resF = apply(this.refF, this.queryF);
 		EvalTools.notNull(this.res, this);
 		return new Array[] { this.res };
 	}
@@ -293,14 +294,13 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 		if ((ris.getFirst().size() > 0) && (ris.getSecond().size() > 0)) {
 			this.log.info("Using {} alignment anchors", ris.getFirst().size());
 		}
-		Factory
-		        .getInstance()
+		Factory.getInstance()
 		        .getConfiguration()
 		        .setProperty(
 		                "maltcms.datastructures.alignment.DefaultPairSet.minScansBetweenAnchors",
 		                10);
-		final AnchorPairSet aps = new AnchorPairSet(ris.getFirst(), ris
-		        .getSecond(), this.ref_num_scans, this.query_num_scans);
+		final AnchorPairSet aps = new AnchorPairSet(ris.getFirst(),
+		        ris.getSecond(), this.ref_num_scans, this.query_num_scans);
 		for (final Tuple2D<Integer, Integer> ta : aps.getCorrespondingScans()) {
 			this.log.debug("{}<->{}", ta.getFirst(), ta.getSecond());
 		}
@@ -313,8 +313,8 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 	 */
 	private IFileFragment calcAlignment(
 	        final Tuple2D<IFileFragment, IFileFragment> t) {
-		this.pa = Factory.getInstance().getObjectFactory().instantiate(
-		        PairwiseAlignment.class);
+		this.pa = Factory.getInstance().getObjectFactory()
+		        .instantiate(PairwiseAlignment.class);
 		this.pa.setIWorkflow(getIWorkflow());
 		this.pa.setFileFragments(t.getFirst(), t.getSecond(), this.getClass());
 
@@ -322,8 +322,12 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 		final AnchorPairSet aps = buildAnchorPairSet(t);
 		final ArrayDouble.D1 sat_ref = getScanAcquisitionTime(t.getFirst());
 		final ArrayDouble.D1 sat_query = getScanAcquisitionTime(t.getSecond());
-		samplePWDistance(tuple, sat_ref, sat_query, (int) Math.ceil(0.01
-		        * tuple.getFirst().size() * tuple.getSecond().size()), 10,
+		samplePWDistance(
+		        tuple,
+		        sat_ref,
+		        sat_query,
+		        (int) Math.ceil(0.01 * tuple.getFirst().size()
+		                * tuple.getSecond().size()), 10,
 		        StringTools.removeFileExt(t.getFirst().getName()) + " "
 		                + StringTools.removeFileExt(t.getSecond().getName()));
 		// calculate the alignment matrix
@@ -377,12 +381,28 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 		// getIWorkflow());
 		final IFileFragment forwardAlignment = saveState(this.resF);
 		if (this.saveLayoutImage) {
-			final ArrayFactory f = Factory.getInstance().getObjectFactory()
-			        .instantiate(ArrayFactory.class);
-			final BufferedImage bi = f.createLayoutImage(this.distance);
-			final Color c = Color.white;
+			saveLayoutImage(aps, StringTools.removeFileExt(forwardAlignment
+                    .getName()));
+		}
+
+		t.getFirst().clearArrays();
+		t.getSecond().clearArrays();
+		return forwardAlignment;
+	}
+
+	/**
+	 * @param aps
+	 * @param alignmentName
+	 */
+	private void saveLayoutImage(final AnchorPairSet aps,
+	        final String alignmentName) {
+		final ArrayFactory f = Factory.getInstance().getObjectFactory()
+		        .instantiate(ArrayFactory.class);
+		final BufferedImage bi = f.createLayoutImage(this.distance);
+		final Color c = Color.white;
+		final Graphics2D g2 = (Graphics2D) bi.getGraphics();
+		if (this.pa != null) {
 			final List<Tuple2DI> l = this.pa.getPath();
-			final Graphics2D g2 = (Graphics2D) bi.getGraphics();
 			final GeneralPath gp = new GeneralPath();
 			gp.moveTo(0, 0);
 			for (final Tuple2DI pair : l) {
@@ -390,36 +410,30 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 			}
 			g2.setColor(c);
 			g2.draw(gp);
-
-			// final Color d = new Color(0, 0, 255, 128);
-			// final List<Tuple2DI> l2 = this.pa.getInterppath();
-			// final GeneralPath gp2 = new GeneralPath();
-			// gp2.moveTo(0, 0);
-			// for (final Tuple2DI pair : l2) {
-			// gp2.lineTo(pair.getSecond(), pair.getFirst());
-			// }
-			// g2.setColor(d);
-			// g2.draw(gp2);
-
-			g2.setColor(Color.RED);
-			for (final Tuple2D<Integer, Integer> pair : aps
-			        .getCorrespondingScans()) {
-				g2.fillRect(pair.getSecond(), pair.getFirst(), 1, 1);
-			}
-			try {
-				ImageIO.write(bi, "PNG", new File(getIWorkflow()
-				        .getOutputDirectory(this), StringTools
-				        .removeFileExt(forwardAlignment.getName())
-				        + "_matrixLayout.png"));
-			} catch (final IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 
-		t.getFirst().clearArrays();
-		t.getSecond().clearArrays();
-		return forwardAlignment;
+		// final Color d = new Color(0, 0, 255, 128);
+		// final List<Tuple2DI> l2 = this.pa.getInterppath();
+		// final GeneralPath gp2 = new GeneralPath();
+		// gp2.moveTo(0, 0);
+		// for (final Tuple2DI pair : l2) {
+		// gp2.lineTo(pair.getSecond(), pair.getFirst());
+		// }
+		// g2.setColor(d);
+		// g2.draw(gp2);
+
+		g2.setColor(Color.RED);
+		for (final Tuple2D<Integer, Integer> pair : aps.getCorrespondingScans()) {
+			g2.fillRect(pair.getSecond(), pair.getFirst(), 1, 1);
+		}
+		try {
+			ImageIO.write(bi, "PNG", new File(getIWorkflow()
+			        .getOutputDirectory(this), alignmentName
+			        + "_matrixLayout.png"));
+		} catch (final IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	protected void calculateCumulativeDistances(final IArrayD2Double distance2,
@@ -494,7 +508,9 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 	public void configure(final Configuration cfg) {
 		this.log.debug("Configure called on {}", this.getClass().getName());
 		EvalTools.notNull(cfg, this);
-		setPairwiseScanDistance(Factory.getInstance().getObjectFactory()
+		setPairwiseScanDistance(Factory
+		        .getInstance()
+		        .getObjectFactory()
 		        .instantiate(
 		                cfg.getString("alignment.pairwise.distance",
 		                        "maltcms.commands.distances.PairwiseDistance"),
@@ -507,8 +523,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 		        .getInstance()
 		        .getObjectFactory()
 		        .instantiate(
-		                Factory
-		                        .getInstance()
+		                Factory.getInstance()
 		                        .getConfiguration()
 		                        .getString("alignment.cumulative.distance",
 		                                "maltcms.commands.distances.CumulativeDistance"),
@@ -653,8 +668,8 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 		final IArrayD2Double parts2 = f.createSharedLayout(parts1);
 		this.distance = parts2;
 		this.predecessors = new int[rows][cols];
-		this.log.debug("Alignment matrix has {} rows and {} columns", parts1
-		        .rows(), parts2.columns());
+		this.log.debug("Alignment matrix has {} rows and {} columns",
+		        parts1.rows(), parts2.columns());
 		final long time = System.currentTimeMillis() - start;
 		if (getStatsMap() != null) {
 			getStatsMap().put("alignmentMatrixInitTime", (double) time);
@@ -669,8 +684,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 	 */
 	public boolean minimize() {
 		final boolean b = (this.pairwiseDistanceClass != null) ? this.pairwiseDistanceClass
-		        .getDistance().minimize()
-		        : true;
+		        .getDistance().minimize() : true;
 		return b;
 	}
 

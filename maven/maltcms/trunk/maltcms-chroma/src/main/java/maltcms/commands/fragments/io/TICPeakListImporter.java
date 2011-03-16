@@ -103,7 +103,7 @@ public class TICPeakListImporter extends AFragmentCommand {
 							// indexing,
 							// we need to correct to 0 based indexing
 							extr.set(i,
-							        Integer.parseInt(peakScanIndex.get(i)) - scanIndexOffset);
+							        Integer.parseInt(peakScanIndex.get(i)) + scanIndexOffset);
 						}
 						final IVariableFragment peaks = new VariableFragment(
 						        work, this.ticPeakVarName);

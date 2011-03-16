@@ -136,7 +136,7 @@ public class ArrayFactory {
 			return PartitionedArray.createLayoutImage((PartitionedArray) ia,
 			        Color.lightGray, Color.darkGray);
 		}
-		throw new IllegalArgumentException("Unsupported IArrayD2Double class!");
+		throw new IllegalArgumentException("Unsupported IArrayD2Double object of class: "+ia.getClass().getName());
 	}
 
 	/**

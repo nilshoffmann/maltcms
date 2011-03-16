@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 
 import cross.Logging;
 import cross.annotations.Configurable;
+import cross.exception.ConstraintViolationException;
 import cross.tools.MathTools;
 
 /**
@@ -92,7 +93,7 @@ public class CumulativeDistance implements IRecurrence {
 			// "Case 1: First column, first row ={}, best from Diag", nw);
 			return nw;
 		} else if ((row > 0) && (column == 0)) {
-			n = ((this.comp_weight * cij) + cumDistMatrix.get(row - 1, 0));
+			n = ((this.comp_weight * cij) + cumDistMatrix.get(row - 1, 0)) + this.globalGapPenalty;
 			// System.out.println("i="+row+" j="+column+" cij = "+cij +
 			// ", n= "+n);
 			cumDistMatrix.set(row, column, n);
@@ -101,7 +102,7 @@ public class CumulativeDistance implements IRecurrence {
 			// row, n);
 			return n;
 		} else if ((row == 0) && (column > 0)) {
-			w = ((this.exp_weight * cij) + cumDistMatrix.get(0, column - 1));
+			w = ((this.exp_weight * cij) + cumDistMatrix.get(0, column - 1)) + this.globalGapPenalty;
 			// System.out.println("i="+row+" j="+column+" cij = "+cij +
 			// ", w= "+w);
 			cumDistMatrix.set(row, column, w);
@@ -110,18 +111,20 @@ public class CumulativeDistance implements IRecurrence {
 			// column, w);
 			return w;
 		} else { // all other cases
-			n = (this.comp_weight * cij) + cumDistMatrix.get(row - 1, column);
+			n = (this.comp_weight * cij) + cumDistMatrix.get(row - 1, column) + this.globalGapPenalty;
 			nw = (this.diag_weight * cij)
 			        + cumDistMatrix.get(row - 1, column - 1);
-			w = (this.exp_weight * cij) + cumDistMatrix.get(row, column - 1);
+			w = (this.exp_weight * cij) + cumDistMatrix.get(row, column - 1) + this.globalGapPenalty;
 			final int neq = nequal(n, nw, w);
-			// if (neq > 0) {
-			// this.log.debug("{} values are equal at {},{}", new Object[] {
-			// neq, row, column });
-			// this.log.debug("n={},nw={},w={}", new Object[] { n, nw, w });
-			// }
+			if (neq == 3) {
+				this.log.error("{} values are equal at {},{}, n={},nw={},w={}", new Object[] {
+				        neq, row, column,n,nw,w });
+                                throw new ConstraintViolationException("Illegal recursion state detected! Please check alignment constraints and pairwise similarity! Example: rtEpsilon should not be set too low for DTW!");
+//				this.log.warn("n={},nw={},w={}", new Object[] { n, nw, w });
+			}
 			final double m = minimize1 ? MathTools.min(n, w, nw) : MathTools
 			        .max(n, w, nw);
+			// int neq = nequal(n, w, nw);
 			if (m == nw) {
 				predecessors[row][column] = 1;
 			} else if (m == n) {
@@ -158,7 +161,7 @@ public class CumulativeDistance implements IRecurrence {
 	private double cumDistM(final int row, final int column,
 	        final IArrayD2Double prev, final IArrayD2Double curr,
 	        final double cij, final boolean minimize1) {
-		System.out.println("Gap penalty: " + this.globalGapPenalty);
+		//System.out.println("Gap penalty: " + this.globalGapPenalty);
 		double m = cij;
 		final double init = minimize1 ? Double.POSITIVE_INFINITY
 		        : Double.NEGATIVE_INFINITY;
@@ -177,6 +180,13 @@ public class CumulativeDistance implements IRecurrence {
 			nw = (this.diag_weight * cij) + prev.get(column - 1, 0);
 			w = (this.exp_weight * cij) + curr.get(column - 1, 0)
 			        + this.globalGapPenalty;
+                        final int neq = nequal(n, nw, w);
+			if (neq == 3) {
+				this.log.error("{} values are equal at {},{}, n={},nw={},w={}", new Object[] {
+				        neq, row, column,n,nw,w });
+                                throw new ConstraintViolationException("Illegal recursion state detected! Please check alignment constraints and pairwise similarity! Example: rtEpsilon should not be set too low for DTW!");
+//				this.log.warn("n={},nw={},w={}", new Object[] { n, nw, w });
+			}
 		}
 		m = minimize1 ? MathTools.min(n, w, nw) : MathTools.max(n, w, nw);
 		curr.set(column, 0, m);

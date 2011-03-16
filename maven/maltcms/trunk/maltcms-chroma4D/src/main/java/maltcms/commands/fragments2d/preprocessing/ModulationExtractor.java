@@ -31,6 +31,7 @@ import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
+import ucar.nc2.Attribute;
 import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
@@ -144,19 +145,23 @@ public class ModulationExtractor extends AFragmentCommand {
 			        .getDouble(Index.scalarIndexImmutable);
 			final double modT = ff.getChild(this.modulationTimeVar).getArray()
 			        .getDouble(Index.scalarIndexImmutable);
-			final int globalNumberOfModulations = ff.getChild(
-			        this.secondColumnScanIndexVar).getArray().getShape()[0];
+			final int globalNumberOfModulations = ff
+			        .getChild(this.secondColumnScanIndexVar).getArray()
+			        .getShape()[0];
 			log.info("File contains {} modulations", globalNumberOfModulations);
 			final int globalStartIndex = (int) (Math.max(this.startModulation,
-			        0)
-			        * (int) srv * (int) modT);
+			        0) * (int) srv * (int) modT);
 			log.info("Scan rate is {}", srv);
 			log.info("Modulation time is {}", modT);
-			int globalEndIndex = (int) (this.endModulation);
+			int globalEndIndex = (int) (this.endModulation) * (int) srv
+			        * (int) modT;
+			int globalLastIndex = (int) (globalNumberOfModulations * (int) srv * (int) modT) - 1;
 			if (this.endModulation == -1) {
-				globalEndIndex = (int) (globalNumberOfModulations * (int) srv * (int) modT) - 1;
+				globalEndIndex = globalLastIndex;
 			}
 
+			globalEndIndex = Math.min(globalEndIndex, globalLastIndex);
+			
 			int startMod = Math.max(this.startModulation, 0);
 			int endMod = this.endModulation == -1 ? globalNumberOfModulations - 1
 			        : Math.min(this.endModulation,
@@ -195,12 +200,18 @@ public class ModulationExtractor extends AFragmentCommand {
 				final VariableFragment nScanIndex = new VariableFragment(work,
 				        this.scanIndexVar);
 				nScanIndex.setArray(sia);
+				VariableFragment scanAcquisitionTime = new VariableFragment(work,this.scanAcquisitionTimeVar);
+				IVariableFragment origSAT = ff.getChild(this.scanAcquisitionTimeVar);
+				origSAT.setRange(new Range[] {r});
+				scanAcquisitionTime.setArray(origSAT.getArray());
+				
 				DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
 				        work.getAbsolutePath()), this, getWorkflowSlot(), work);
 				getIWorkflow().append(dwr);
 			} catch (InvalidRangeException ire) {
 				log.warn("{}", ire.getLocalizedMessage());
 			}
+			work.setAttributes(ff.getAttributes().toArray(new Attribute[ff.getAttributes().size()]));
 			work.save();
 			res.add(work);
 		}
