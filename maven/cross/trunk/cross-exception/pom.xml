@@ -3,12 +3,12 @@
   <parent>
     <artifactId>cross</artifactId>
     <groupId>net.sf.maltcms</groupId>
-    <version>1.1.3</version>
+    <version>1.1.4-SNAPSHOT</version>
   </parent>
   <groupId>net.sf.maltcms</groupId>
   <artifactId>cross-exception</artifactId>
   <packaging>jar</packaging>
-  <version>1.1.3</version>
+  <version>1.1.4-SNAPSHOT</version>
   <name>cross-exception</name>
   <url>http://maven.apache.org</url>
     <build>
