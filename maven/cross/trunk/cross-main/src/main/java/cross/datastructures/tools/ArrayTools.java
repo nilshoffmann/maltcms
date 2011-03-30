@@ -126,9 +126,9 @@ public class ArrayTools {
 		ArrayTools.log.debug("Retrieved Array: {}", a);
 		EvalTools.notNull(a, FragmentTools.class);
 		ArrayList<String> s = new ArrayList<String>();
-		if (a instanceof ArrayChar.D2) {
-			final ArrayChar.D2 d = ((ArrayChar.D2) a);
-			s = new ArrayList<String>(d.getShape()[0]);
+		if (a instanceof ArrayChar) {
+			final ArrayChar d = ((ArrayChar) a);
+			s = new ArrayList<String>();
 			final StringIterator si = d.getStringIterator();
 			while (si.hasNext()) {
 				final String str = si.next();
