@@ -1,0 +1,2 @@
+Preparing a release:
+mvn release:prepare -Dusername=[username] -Dpassword=[password]
