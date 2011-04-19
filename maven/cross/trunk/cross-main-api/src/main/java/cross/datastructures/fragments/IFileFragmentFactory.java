@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009 Nils Hoffmann Nils.Hoffmann A T
+ * Copyright (C) 2008-2011 Nils Hoffmann Nils.Hoffmann A T
  * CeBiTec.Uni-Bielefeld.DE
  *
  * This file is part of Cross/Maltcms.

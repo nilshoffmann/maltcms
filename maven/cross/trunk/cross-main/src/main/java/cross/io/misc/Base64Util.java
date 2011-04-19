@@ -1,6 +1,3 @@
-/**
- * 
- */
 package cross.io.misc;
 
 import java.util.ArrayList;
