@@ -4,11 +4,11 @@
   <parent>
     <artifactId>maltcms-modules</artifactId>
     <groupId>net.sf.maltcms</groupId>
-    <version>1.0.6</version>
+    <version>1.0.7-SNAPSHOT</version>
   </parent>
   <groupId>net.sf.maltcms</groupId>
   <artifactId>maltcms-io-netcdf</artifactId>
-  <version>1.0.6</version>
+  <version>1.0.7-SNAPSHOT</version>
   <name>maltcms-io-netcdf</name>
   <url>http://maltcms.sourceforge.net</url>
     <build>
