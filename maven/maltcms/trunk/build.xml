@@ -28,4 +28,14 @@
 			<arg value="${sf.username},maltcms@web.sourceforge.net:/home/project-web/maltcms/htdocs/maven/maltcms/"/>
 		</exec>
 	</target>
+	<target name="upload-bin" description="Upload distribution to sourceforge" depends="credentials">
+		<exec command="rsync" inputstring="">
+			<arg value="-avtruP"/>
+			<arg value="-e ssh "/>
+			<arg value="maltcms/target/" />
+			<arg value="--include=maltcms-1.*-bin.zip" />
+			<arg value="--exclude=*" />
+                        <arg value="${sf.username},maltcms@frs.sourceforge.net:/home/frs/project/m/ma/maltcms/maltcms/maltcms-1.0/"/>
+		</exec>
+	</target>
 </project>

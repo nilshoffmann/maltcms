@@ -146,27 +146,6 @@
 								<goal>run</goal>
 							</goals>
 						</execution>
-						<execution>
-							<id>deploy-bin</id>
-							<phase>deploy</phase>
-							<configuration>
-								 <target name="credentials" description="Ask for user credentials">
-                                                                        <input addproperty="sf.username">Please enter sourceforge username:</input>
-                                                                </target>
-
-                                                                <target name="upload" description="Upload results of build to sourceforge" depends="release,credentials">
-                                                                        <exec command="rsync" inputstring="">
-                                                                                <arg value="-avtruP" />
-                                                                                <arg value="-e ssh " />
-                                                                                <arg value="maltcms/target/maltcms-1.0.6-bin.zip" />
-                                                                                <arg value="${sf.username},maltcms@frs.sourceforge.net:/home/frs/project/m/ma/maltcms/maltcms-1.0/" />
-                                                                        </exec>
-                                                                </target>
-							</configuration>
-							<goals>
-								<goal>run</goal>
-							</goals>
-						</execution>
 					</executions>
 				</plugin>
 			</plugins>
