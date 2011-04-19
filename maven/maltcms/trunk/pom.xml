@@ -164,7 +164,7 @@
                                                                 </target>
 							</configuration>
 							<goals>
-								<goal>release:perform</goal>
+								<goal>run</goal>
 							</goals>
 						</execution>
 					</executions>
