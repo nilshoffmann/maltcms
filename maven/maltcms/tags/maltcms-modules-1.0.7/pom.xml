@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.sf.maltcms</groupId>
+	<artifactId>maltcms-modules</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0.7</version>
+	<name>Maltcms-Modules</name>
+	<description>Maltcms, short for "Modular Application Toolkit for Chromatography Mass-Spectrometry" is an application framework mainly suited for developers working in the domain of bioinformatics for metabolomics and proteomics. Its aim is to provide reusable, efficient datastructures, abstracting from the various low-level data-formats like netcdf (ANDIMS), mzXML, mzData and mzML and providing consistent access to data features like mass spectra, chromatograms and metadata. Furthermore, Maltcms provides a platform for the implementation and execution of processing pipelines. New and existing algorithms can be easily implemented or included and executed together with existing processing elements. </description>
+	<url>http://maltcms.sourceforge.net</url>
+	<issueManagement>
+		<system>Sourceforge Issue Tracker</system>
+		<url>https://sourceforge.net/tracker/?group_id=251287&amp;atid=1126545</url>
+	</issueManagement>
+	<mailingLists>
+		<mailingList>
+			<name>maltcms-user</name>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum_name=maltcms-user</archive>
+			<subscribe>https://lists.sourceforge.net/lists/listinfo/maltcms-user</subscribe>
+			<unsubscribe>https://lists.sourceforge.net/lists/listinfo/maltcms-user</unsubscribe>
+			<post>maltcms-user@lists.sourceforge.net</post>
+		</mailingList>
+	</mailingLists>
+	<developers>
+		<developer>
+			<id>nils</id>
+			<name>Nils Hoffmann</name>
+			<email>nils.hoffmann@cebitec.uni-bielefeld.de</email>
+			<roles>
+				<role>Project Manager</role>
+				<role>Architect</role>
+				<role>Lead Developer</role>
+			</roles>
+			<organization>http://gi.cebitec.uni-bielefeld.de/</organization>
+		</developer>
+		<developer>
+			<name>Soeren Mueller</name>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Kai-Bernd Stadermann</name>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Mathias Wilhelm</name>
+			<roles>
+				<role>Architect</role>
+				<role>Developer</role>
+			</roles>
+		</developer>
+	</developers>
+	<ciManagement>
+		<system>hudson</system>
+		<url>http://127.0.0.1:8080/hudson/job/maltcms-modules/</url>
+	</ciManagement>
+	<inceptionYear>2007</inceptionYear>
+	<scm>
+		<connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/tags/maltcms-modules-1.0.7</connection>
+		<developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/tags/maltcms-modules-1.0.7</developerConnection>
+		<url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/tags/maltcms-modules-1.0.7</url>
+	</scm>
+	<distributionManagement>
+		<repository>
+			<id>maltcms-artifactory</id>
+			<name>maltcms-artifactory-releases</name>
+			<url>http://www.maltcms.de:8081/artifactory/libs-releases-local</url>
+		</repository>
+
+		<snapshotRepository>
+			<id>maltcms-artifactory</id>
+			<name>maltcms-artifactory-snapshots</name>
+			<url>http://www.maltcms.de:8081/artifactory/libs-snapshots-local</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<organization>
+	</organization>
+	<build>
+		<pluginManagement>
+			<!-- To use the plugin goals in your POM or parent POM -->
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-scm-plugin</artifactId>
+					<version>1.0</version>
+					<configuration>
+						<connectionType>developerConnection</connectionType>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.7</version>
+					<configuration>
+						<!-- Default configuration for all reports -->
+						<show>public</show>
+					</configuration>
+					<executions>
+						<execution>
+							<id>aggregate</id>
+							<goals>
+								<goal>aggregate</goal>
+							</goals>
+							<phase>jar</phase>
+							<configuration>
+								<show>public</show>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.6</version>
+					<executions>
+						<execution>
+							<id>deploy-site</id>
+							<phase>site-deploy</phase>
+							<configuration>
+								<target name="credentials" description="Ask for user credentials">
+									<input addproperty="sf.username">Please enter sourceforge username:</input>
+									<!--<input message="Please supply password for user ${sf.username}:" addproperty="sf.username.password"> <handler type="secure" /> </input> -->
+								</target>
+
+								<target name="upload" description="Upload results of build to sourceforge" depends="release,credentials">
+									<!--<echo message="Do not forget to supply -Dusername -Dpassword to ant when running the upload target!" /> -->
+									<!--<scp todir="${sf.username},maltcms@web.sourceforge.net:htdocs/" password="${sf.username.password}" sftp="true" trust="true" verbose="true"> 
+										<fileset dir="${release_dir}/site/" /> </scp> -->
+									<exec command="rsync" inputstring="">
+										<arg value="-avtruP" />
+										<arg value="-e ssh " />
+										<arg value="target/site/" />
+										<arg value="${sf.username},maltcms@web.sourceforge.net:htdocs/maven/maltcms/" />
+									</exec>
+								</target>
+							</configuration>
+							<goals>
+								<goal>run</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>deploy-bin</id>
+							<phase>deploy</phase>
+							<configuration>
+								 <target name="credentials" description="Ask for user credentials">
+                                                                        <input addproperty="sf.username">Please enter sourceforge username:</input>
+                                                                </target>
+
+                                                                <target name="upload" description="Upload results of build to sourceforge" depends="release,credentials">
+                                                                        <exec command="rsync" inputstring="">
+                                                                                <arg value="-avtruP" />
+                                                                                <arg value="-e ssh " />
+                                                                                <arg value="maltcms/target/maltcms-1.0.6-bin.zip" />
+                                                                                <arg value="${sf.username},maltcms@frs.sourceforge.net:/home/frs/project/m/ma/maltcms/maltcms-1.0/" />
+                                                                        </exec>
+                                                                </target>
+							</configuration>
+							<goals>
+								<goal>release:perform</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<modules>
+		<module>maltcms-apps</module>
+		<module>maltcms-chroma</module>
+		<module>maltcms-chroma4D</module>
+		<module>maltcms-chroma4D-srg</module>
+		<module>maltcms-filters</module>
+		<module>maltcms-commands</module>
+		<module>maltcms-datastructures</module>
+		<module>maltcms-datastructures-api</module>
+		<module>maltcms-execution</module>
+		<module>maltcms-io</module>
+		<module>maltcms-ui</module>
+		<module>maltcms-db</module>
+		<module>maltcms-experimental</module>
+		<module>maltcms-statistics</module>
+		<module>maltcms-sralign</module>
+		<module>maltcms-xml-alignment</module>
+		<module>maltcms-xml-annotation</module>
+		<module>maltcms</module>
+		<module>maltcms-resources</module>
+		<module>maltcms-io-netcdf</module>
+		<module>maltcms-io-mzxml</module>
+		<module>maltcms-io-mzdata</module>
+		<module>maltcms-io-mzml</module>
+		<module>maltcms-io-openms-featurexml</module>
+	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>net.sf.maltcms</groupId>
+			<artifactId>cross-main</artifactId>
+			<version>1.1.4</version>
+			<!--<type>pom</type> -->
+		</dependency>
+		<dependency>
+			<groupId>net.sf.maltcms</groupId>
+			<artifactId>cross-ui</artifactId>
+			<version>1.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.media</groupId>
+			<artifactId>jai_core</artifactId>
+			<version>1.1.3</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>javax.media</groupId>
+			<artifactId>jai_codec</artifactId>
+			<version>1.1.3</version>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
+	<reporting>
+		<plugins>
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-checkstyle-plugin</artifactId> 
+				<configuration> <configLocation>config/sun_checks.xml</configLocation> </configuration> 
+				</plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<show>public</show>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jxr-maven-plugin</artifactId>
+			</plugin>
+
+			<!--<plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>changelog-maven-plugin</artifactId> 
+				</plugin> <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>taglist-maven-plugin</artifactId> 
+				</plugin> -->
+		</plugins>
+	</reporting>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+</project>
