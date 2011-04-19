@@ -24,6 +24,8 @@ package maltcms.commands.fragments2d.preprocessing;
 import java.io.File;
 import java.util.Arrays;
 
+import maltcms.commands.filters.array.AdditionFilter;
+
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 
@@ -131,6 +133,10 @@ public class ModulationExtractor extends AFragmentCommand {
 		return "Allows definition of a start and end modulation period to be extracted from a raw GCxGC-MS chromatogram.";
 	}
 
+	private void modifyVariables(IFileFragment f) {
+		String[] dimensionNames = {"scan_number","point_number","_64_byte_string","error_number"};
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -141,6 +147,7 @@ public class ModulationExtractor extends AFragmentCommand {
 		final TupleND<IFileFragment> res = new TupleND<IFileFragment>();
 		for (IFileFragment ff : t) {
 			final IFileFragment work = createWorkFragment(ff);
+			
 			final double srv = ff.getChild(this.scanRateVar).getArray()
 			        .getDouble(Index.scalarIndexImmutable);
 			final double modT = ff.getChild(this.modulationTimeVar).getArray()
@@ -171,7 +178,7 @@ public class ModulationExtractor extends AFragmentCommand {
 			        globalEndIndex);
 			final int numberOfModulations = endMod - startMod;
 			log.info("Reading {} modulations", numberOfModulations);
-
+			endMod=endMod-1;
 			try {
 				log.debug("start mod: {}, end mod: {}", startMod, endMod);
 				final Range modRange = new Range(startMod, endMod);
@@ -183,7 +190,8 @@ public class ModulationExtractor extends AFragmentCommand {
 				// log.info("{}", sia);
 				final VariableFragment nScanIndex = new VariableFragment(work,
 				        this.secondColumnScanIndexVar);
-				nScanIndex.setArray(sia);
+				AdditionFilter af = new AdditionFilter(-sia.getInt(0));
+				nScanIndex.setArray(af.apply(sia));
 				DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
 				        work.getAbsolutePath()), this, getWorkflowSlot(), work);
 				getIWorkflow().append(dwr);
@@ -199,7 +207,8 @@ public class ModulationExtractor extends AFragmentCommand {
 				final Array sia = origScanIndex.getArray();
 				final VariableFragment nScanIndex = new VariableFragment(work,
 				        this.scanIndexVar);
-				nScanIndex.setArray(sia);
+				AdditionFilter af = new AdditionFilter(-sia.getInt(0));
+				nScanIndex.setArray(af.apply(sia));
 				VariableFragment scanAcquisitionTime = new VariableFragment(work,this.scanAcquisitionTimeVar);
 				IVariableFragment origSAT = ff.getChild(this.scanAcquisitionTimeVar);
 				origSAT.setRange(new Range[] {r});
