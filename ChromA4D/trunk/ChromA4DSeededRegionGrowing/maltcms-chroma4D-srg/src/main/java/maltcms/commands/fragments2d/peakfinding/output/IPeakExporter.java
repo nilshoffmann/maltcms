@@ -30,13 +30,14 @@ import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.peak.Peak2D;
 import cross.IConfigurable;
 import cross.datastructures.workflow.IWorkflow;
+import cross.datastructures.workflow.IWorkflowElement;
 
 /**
  * Provides some methods to export relevant peak information.
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
-public interface IPeakExporter extends IConfigurable {
+public interface IPeakExporter extends IConfigurable, IWorkflowElement {
 
 	/**
 	 * Will export the information about the bidirectional best hits.
@@ -166,13 +167,5 @@ public interface IPeakExporter extends IConfigurable {
 	 */
 	@SuppressWarnings("unchecked")
 	void setCaller(final Class nCaller);
-
-	/**
-	 * Setter.
-	 * 
-	 * @param workflow
-	 *            {@link IWorkflow}
-	 */
-	void setIWorkflow(final IWorkflow workflow);
 
 }
