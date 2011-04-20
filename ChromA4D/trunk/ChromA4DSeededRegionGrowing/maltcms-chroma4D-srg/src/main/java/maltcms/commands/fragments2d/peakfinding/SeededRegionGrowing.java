@@ -210,6 +210,9 @@ public class SeededRegionGrowing extends AFragmentCommand {
 			bidiBestHitList = startSecondRun(bidiBestHitList, t);
 		}
 
+                for (int i = 0; i < t.size(); i++) {
+                    addAdditionalInformation(this.peakLists.get(i), t.get(i));
+                }
 		this.log.info("Saving all Peaks");
 		// exporting bbh information + doing normalization + statistical
 		// evaluation
@@ -302,6 +305,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
 				- start);
 
 		if (this.separate) {
+                    //Also, maybe better to use time penalized dist class! with a smaller window?
 			this.ps.startSeparationFor(peakAreaList, this.distance, slc,
 					this.regionGrowing.getIntensities());
 		}
@@ -450,6 +454,8 @@ public class SeededRegionGrowing extends AFragmentCommand {
 				"ucar.nc2.NetcdfFile.fillValueDouble", 9.9692099683868690e+36);
 		this.threshold = cfg.getDouble("images.thresholdLow", 0.0d);
 
+                // TODO: This dist class is used to determine second seeds. Maybe it is better to use a time penalized dist class here?
+                // But if so, you have to change scan index difference to time difference in line 372
 		this.distClass = cfg.getString(
 				this.getClass().getName() + ".distClass",
 				"maltcms.commands.distances.ArrayCos");
@@ -740,12 +746,12 @@ public class SeededRegionGrowing extends AFragmentCommand {
 	 * @return peak list
 	 */
 	private List<Peak2D> savePeaks(final IFileFragment ff,
-			final IFileFragment fret, final List<Peak2D> peakList,
+			final IFileFragment fret, final List<Peak2D> peaklist,
 			final int[][] colorRamp) {
 		this.log.info("Saving areas");
-		final ArrayInt.D1 peakindex = new ArrayInt.D1(peakList.size());
+		final ArrayInt.D1 peakindex = new ArrayInt.D1(peaklist.size());
 		final IndexIterator iter = peakindex.getIndexIterator();
-		for (final Peak2D pa : peakList) {
+		for (final Peak2D pa : peaklist) {
 			iter.setIntNext(idx(pa.getPeakArea().getSeedPoint().x, pa
 					.getPeakArea().getSeedPoint().y));
 		}
@@ -753,9 +759,6 @@ public class SeededRegionGrowing extends AFragmentCommand {
 		final IVariableFragment var = new VariableFragment(fret,
 				this.peakListVar);
 		var.setArray(peakindex);
-
-		this.log.info("Creating peaklist");
-		final List<Peak2D> peaklist = addAdditionalInformation(peakList, fret);
 
 		this.log.info("Saving peaks");
 		this.peakExporter.exportPeakInformation(StringTools.removeFileExt(ff
@@ -790,7 +793,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
 				.getName())
 				+ "-peaks.msp", peaklist, isl);
 		isl.clear();
-		createImage(ff, peakList, colorRamp, getRetentiontime(ff), peaklist);
+		createImage(ff, peaklist, colorRamp, getRetentiontime(ff), peaklist);
 		return peaklist;
 	}
 

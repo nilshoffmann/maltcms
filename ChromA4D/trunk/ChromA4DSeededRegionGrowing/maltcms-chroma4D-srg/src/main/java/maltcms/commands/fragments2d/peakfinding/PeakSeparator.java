@@ -168,6 +168,7 @@ public class PeakSeparator {
 			pa1 = list.get(i);
 			for (int j = i + 1; j < list.size(); j++) {
 				pa2 = list.get(j);
+                                //TODO should at least gibt scan index difference to distance class
 				c = distance
 						.apply(0, 0, 0, 0, pa1.getSeedMS(), pa2.getSeedMS());
 				// this.log.info("		Score(" + pa1.getSeedPoint().x + ", "

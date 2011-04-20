@@ -113,7 +113,7 @@ public class PeakExporter implements IPeakExporter {
 				table.get(i).add(names.get(i - 1));
 			}
 			for (final List<Point> l : bidiBestHitList) {
-				String name = "Unknown";
+				String name = "Unkown";
 				for (final Point p : l) {
 					if (p.x != -1) {
 						// table.get(p.y + 1).add(
@@ -125,12 +125,13 @@ public class PeakExporter implements IPeakExporter {
 								this.formatter.format(peaklist.get(p.y)
 										.get(p.x).getPeakArea()
 										.getAreaIntensity()));
-						if (name.equals("Unknown")) {
+//                                                                p.x + "");
+						if (name.equals("Unkown")) {
 							name = peaklist.get(p.y).get(p.x).getName();
 						}
 					} else {
 						// table.get(p.y + 1).add("-(-)");
-						table.get(p.y + 1).add("0.0");
+						table.get(p.y + 1).add("-1.0");
 					}
 				}
 				table.get(0).add(name);
@@ -154,7 +155,7 @@ public class PeakExporter implements IPeakExporter {
 			this.log.error("Bidirectional best hit list ist empty");
 		}
 	}
-        
+
         /**
 	 * {@inheritDoc}
 	 */

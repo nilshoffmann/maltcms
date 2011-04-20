@@ -117,6 +117,9 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
 						.error(
 								"			Stopping region growing: Limit of {} points/peakarea exceeded (maxPeakSize)",
 								this.maxPeakSize);
+                                while (pa.hasActivePoints()) {
+                                    pa.addBoundaryPoint(pa.popActivePoint());
+                                }
 				break;
 			}
 			if (this.useMeanMS) {
@@ -135,9 +138,12 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
 			this.log.info("		Avg time {} in {} runs",
 					this.timesum / this.count, this.count);
 		}
-		if ((pa.size() > this.maxPeakSize)
-				|| (pa.getRegionPoints().size() < this.minPeakSize)) {
-			return null;
+		if (pa.size() > this.maxPeakSize) {
+                    return pa;
+                    //TODO or null?
+                }
+		if (pa.getRegionPoints().size() < this.minPeakSize) {
+                    return null;
 		}
 		
 //		double meanI = pa.getAreaIntensity() / (double) (pa.getRegionPoints().size() + 1);

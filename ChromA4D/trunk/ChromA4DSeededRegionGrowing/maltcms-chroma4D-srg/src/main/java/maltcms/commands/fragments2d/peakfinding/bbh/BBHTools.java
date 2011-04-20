@@ -132,9 +132,9 @@ public class BBHTools {
 
 		// peakExporter.exportBBHInformation(bidiBestHitList, bbh,
 		// chromatogramNames, relis);
-                peakExporter.exportBBHInformation(bidiBestHitList, peaklist, bbh,
+		peakExporter.exportBBHInformation(bidiBestHitList, peaklist, bbh,
 				chromatogramNames, null);
-		peakExporter.exportBBHMultipleAlignmentRT(bidiBestHitList, peaklist, bbh,
+                peakExporter.exportBBHMultipleAlignmentRT(bidiBestHitList, peaklist, bbh,
 				chromatogramNames, null);
 
 		// return bidiBestHitList;
@@ -192,8 +192,8 @@ public class BBHTools {
 				meanSecondScanIndex /= c;
 				missingPeak.setMeanFirstScanIndex(meanFirstScanIndex);
 				missingPeak.setMeanSecondScanIndex(meanSecondScanIndex);
-				missingPeak.setMaxFirstDelta(maxFirstDelta);
-				missingPeak.setMaxSecondDelta(maxSecondDelta);
+				missingPeak.setMaxFirstDelta((int) ((double)maxFirstDelta*1.25)); //adding 25% as additional offset
+				missingPeak.setMaxSecondDelta((int) ((double)maxSecondDelta*1.25)); // adding 25% as additional offset
 				missingPeak.setAverageCount(c);
 				missing.add(missingPeak);
 			}

@@ -59,7 +59,7 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
 	@Configurable(value = "0.9d", type = double.class)
 	private Double threshold = 0.9d;
 	@Configurable(value = "25.0d", type = double.class)
-	private double maxRetDiff = 25.0d;
+	private double maxRetDiff = 500.0d;
 
 	private IArrayDoubleComp dist = new ArrayCos();
 	private List<Map<Integer, Boolean>> doneList;
@@ -138,28 +138,35 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
 		}
 		double sim;
 		Peak2D np;
-		// FIXME faster!
+                double diff;
 		for (int i = 0; i < list.size(); i++) {
-			np = list.get(i);
-			if (Math.abs(p.getFirstRetTime() - np.getFirstRetTime()) < this.maxRetDiff) {
-				this.counter++;
-
-				sim = sim(p, np);
-
-				if (this.dist.minimize()) {
-					if (sim < max) {
-						maxI = i;
-						max = sim;
-					}
-				} else {
-					if (sim > max) {
-						maxI = i;
-						max = sim;
-					}
-				}
-			} else {
-				this.fcounter++;
-			}
+                    np = list.get(i);
+                    //                               200  -> 1000 - 200  =  800
+                    // p = 1000, maxdiff = 500, np = 500  -> 1000 - 500  =  500
+                    // p = 1000, maxdiff = 500, np = 1500 -> 1000 - 1500 = -500
+                    //                               1800 -> 1000 - 1800 = -800
+                    diff = p.getFirstRetTime() - np.getFirstRetTime();
+                    if (Math.abs(diff) < this.maxRetDiff) {
+                            this.counter++;
+                            sim = sim(p, np);
+                            if (this.dist.minimize()) {
+                                    if (sim < max) {
+                                            maxI = i;
+                                            max = sim;
+                                    }
+                            } else {
+                                    if (sim > max) {
+                                            maxI = i;
+                                            max = sim;
+                                    }
+                            }
+                    } else {
+                        if (diff < -this.maxRetDiff) {
+                            this.fcounter += list.size()-i;
+                            return maxI;
+                        }
+                        this.fcounter++;
+                    }
 		}
 		if (this.threshold != 0) {
 			if (this.dist.minimize()) {
@@ -183,17 +190,14 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
 	 */
 	public List<List<Point>> getBidiBestHitList(
 			final List<List<Peak2D>> peaklists) {
+            System.out.println(this.maxRetDiff);
 		this.log.info("Dist: {}", this.dist.getClass().getName());
 		this.log.info("Threshold: {}", this.threshold);
 		this.log.info("Use mean MS: {}", this.useMeanMS);
 
-		this.doneList = new ArrayList<Map<Integer, Boolean>>();
+		this.doneList = new ArrayList<Map<Integer, Boolean>>(peaklists.size());
 		for (int i = 0; i < peaklists.size(); i++) {
-			this.doneList.add(new HashMap<Integer, Boolean>());
-			// System.out.println("=========================================");
-			// for (Peak2D peak : peaklist) {
-			// System.out.println(peak.getPeakArea().getSeedPoint());
-			// }
+			this.doneList.add(new HashMap<Integer, Boolean>(peaklists.get(i).size()));
 		}
 
 		this.log.info("peaklistsize {}:", peaklists.size());
@@ -223,25 +227,43 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
 					while (true) {
 						bidibestr = findBidiBestHist(peaklists.get(l).get(ii),
 								peaklists.get(r));
-						if (bidibestr != -1) {
+						if (bidibestr != -1 && !this.doneList.get(r).containsKey(bidibestr)) {
 							bidibestl = findBidiBestHist(peaklists.get(r).get(
 									bidibestr), peaklists.get(l));
 							if (bidibestl == ii) {
-								bidibestlist.add(new Point(bidibestr, r));
-								// System.out.println("SIM: "
-								// + sim(this.peaklists.get(l).get(ii),
-								// this.peaklists.get(r).get(
-								// bidibestr)));
-								this.doneList.get(l).put(ii, true);
-								this.doneList.get(r).put(bidibestr, true);
-								l = r;
-								r++;
-								ii = bidibestr;
+                                                                //TODO check whether group is still a consistent bidibest hit group
+                                                                boolean consistent = true;
+                                                                for (Point tp : bidibestlist) {
+                                                                    int tmpm;
+                                                                    // what if peak bidibestr in chromatogram r has a bidibest hit in chromatogram tp.y, but one of the first ones does not have it?
+                                                                    if (tp.x != -1 && tp.y != l) {
+                                                                        //check tp.x peaklist against bidibestr in r
+                                                                        tmpm = findBidiBestHist(peaklists.get(r).get(bidibestr), peaklists.get(tp.y));
+                                                                        if (tmpm != tp.x) {
+                                                                            consistent = false;
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                if (consistent) {
+                                                                    bidibestlist.add(new Point(bidibestr, r));
+                                                                    this.doneList.get(l).put(ii, true);
+                                                                    this.doneList.get(r).put(bidibestr, true);
+                                                                    l = r;
+                                                                    r++;
+                                                                    ii = bidibestr;
+                                                                } else {
+//                                                                    System.out.println("would result in an inconsistent group! will not add peak to group!");
+                                                                    bidibestlist.add(new Point(-1, r));
+                                                                    r++;
+                                                                }
 							} else {
+                                                            // is not a bidibest hit
 								bidibestlist.add(new Point(-1, r));
 								r++;
 							}
 						} else {
+                                                        // does not have a hit, or hit is already in a peak clique
 							bidibestlist.add(new Point(-1, r));
 							r++;
 						}
@@ -249,8 +271,6 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
 							break;
 						}
 					}
-					// this.log.info("		Size: " + bidibestlist.size() + "/" +
-					// c++);
 					indexList.add(bidibestlist);
 					bidibestlist = new ArrayList<Point>();
 				}

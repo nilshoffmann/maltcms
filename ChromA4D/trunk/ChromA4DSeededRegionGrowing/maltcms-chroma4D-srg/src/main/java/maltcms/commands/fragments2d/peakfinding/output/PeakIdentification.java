@@ -65,18 +65,21 @@ public class PeakIdentification implements IPeakIdentification {
 
     private final Logger log = Logging.getLogger(this);
     private MetaboliteQueryDB mqdb;
-    private ObjectContainer oc;
+//    private ObjectContainer oc;
+    private List<ObjectContainer> ocl = new ArrayList<ObjectContainer>();
     @Configurable(value = "false", type = boolean.class)
     private boolean doSearch = false;
     @Configurable(type = String.class)
     private String dbFile = null;
+    private List<String> dbFiles = new ArrayList<String>();
     @Configurable(name = "dbThreshold", value = "0.9d", type = double.class)
     private double threshold = 0.08d;
     @Configurable(name = "kBest", value = "1", type = int.class)
     private int k = 1;
     private boolean dbAvailable = true;
     private List<Integer> masqMasses = new ArrayList<Integer>();
-    private ObjectSet<IMetabolite> dbMetabolites = null;
+//    private ObjectSet<IMetabolite> dbMetabolites = null;
+    private List<ObjectSet<IMetabolite>> dbMetabolitesList = new ArrayList<ObjectSet<IMetabolite>>();
 
     /**
      * {@inheritDoc}
@@ -86,6 +89,9 @@ public class PeakIdentification implements IPeakIdentification {
         // this.doDBSearch = cfg.getBoolean(this.getClass().getName()
         // + ".doDBSearch", false);
         this.dbFile = cfg.getString(this.getClass().getName() + ".dbFile", null);
+        for (String single : cfg.getStringArray(this.getClass().getName() + ".dbFile")) {
+            this.dbFiles.add(single);
+        }
         this.threshold = cfg.getDouble(this.getClass().getName()
                 + ".dbThreshold", 0.8d);
         this.doSearch = cfg.getBoolean(this.getClass().getName() + ".doSearch",
@@ -105,30 +111,34 @@ public class PeakIdentification implements IPeakIdentification {
      * {@inheritDoc}
      */
     public void setName(final Peak2D peak) {
-//		System.out.println("start");
-        if ((this.dbFile == null) || this.dbFile.isEmpty()) {
+        if ((this.dbFiles.isEmpty()) || this.dbFile.isEmpty()) {
             this.dbAvailable = false;
         }
         if (this.dbAvailable && this.doSearch) {
-            if (this.oc == null) {
-                if (new File(this.dbFile).exists()) {
-                    this.log.debug("Opening DB locally as file!");
-                    this.oc = Db4o.openFile(this.dbFile);
-                } else {
-                    URL url;
-                    try {
-                        url = new URL(this.dbFile);
-                        this.log.debug("Opening DB via Client!");
-                        this.oc = Db4o.openClient(url.getHost(), url.getPort(),
-                                url.getUserInfo(), "default");
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                        return;
+            if (this.ocl.isEmpty()) {
+                for (String dbf : this.dbFiles) {
+                    this.log.info("Creating db oc for {}", dbf);
+                    if (new File(dbf).exists()) {
+                        this.log.debug("Opening DB locally as file!");
+                        this.ocl.add(Db4o.openFile(dbf));
+                    } else {
+                        URL url;
+                        try {
+                            url = new URL(dbf);
+                            this.log.debug("Opening DB via Client!");
+                            this.ocl.add(Db4o.openClient(url.getHost(), url.getPort(),
+                                    url.getUserInfo(), "default"));
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                            return;
+                        }
                     }
                 }
             }
-            if (this.dbMetabolites == null) {
-                dbMetabolites = this.oc.query(IMetabolite.class);
+            if (this.dbMetabolitesList.isEmpty()) {
+                for (ObjectContainer oc : this.ocl) {
+                    this.dbMetabolitesList.add(oc.query(IMetabolite.class));
+                }
             }
             long s = System.currentTimeMillis();
             final ArrayDouble.D1 massValues = new ArrayDouble.D1(peak.getPeakArea().getSeedMS().getShape()[0]);
@@ -142,31 +152,22 @@ public class PeakIdentification implements IPeakIdentification {
             final Tuple2D<Array, Array> query = new Tuple2D<Array, Array>(
                     massValues, ms);
 
-            // final MScanSimilarityPredicate ssp = new
-            // MScanSimilarityPredicate(
-            // query);
-            // ssp.setThreshold(this.threshold);
-            //
-            // this.mqdb.setPredicate(ssp);
-            // final QueryCallable<IMetabolite> qc = this.mqdb.getCallable();
-            // ObjectSet<IMetabolite> osRes = null;
-
             List<Tuple2D<Double, IMetabolite>> hits = null;
             try {
-                // osRes = qc.call();
-
-                // this.log.info("Received {} hits from ObjectSet!",
-                // osRes.size());
-
-                // if ((osRes != null) && (osRes.size() != 0)) {
                 final List<Tuple2D<Double, IMetabolite>> l = new ArrayList<Tuple2D<Double, IMetabolite>>();
                 final MetaboliteSimilarity mss = new MetaboliteSimilarity();
-                // for (final IMetabolite im : osRes) {
-                for (final IMetabolite im : dbMetabolites) {
-                    double val = mss.get(query, im);
-                    if (val >= this.threshold) {
-                        l.add(new Tuple2D<Double, IMetabolite>(val, im));
+//                int f = 0, ff = 0;
+                for (ObjectSet<IMetabolite> dbMetabolites : this.dbMetabolitesList) {
+//                    ff = 0;
+                    for (final IMetabolite im : dbMetabolites) {
+                        double val = mss.get(query, im);
+                        if (val >= this.threshold) {
+//                            ff++;
+                            l.add(new Tuple2D<Double, IMetabolite>(val, im));
+//                            this.debug.info("\tFound hit with sim {}", val);
+                        }
                     }
+//                    this.log.info("Looking in dbMetabolites {}; {} hits found", f++, ff);
                 }
                 if (this.k > 1) {
                     final Comparator<Tuple2D<Double, IMetabolite>> comp = new Comparator<Tuple2D<Double, IMetabolite>>() {
@@ -180,12 +181,6 @@ public class PeakIdentification implements IPeakIdentification {
                     };
                     Collections.sort(l, Collections.reverseOrder(comp));
                     hits = l.subList(0, Math.min(l.size(), this.k + 1));
-                    // for (Tuple2D<Double, IMetabolite> tuple2D : hits) {
-                    // System.out.println(""
-                    // + (int) (tuple2D.getFirst() * 1000.0) + ""
-                    // + im.getRetentionIndex() + "" + im.getFormula()
-                    // + im.getID());
-                    // }
                 } else {
                     double max = Double.NEGATIVE_INFINITY;
                     IMetabolite maxMet = null;
@@ -200,12 +195,6 @@ public class PeakIdentification implements IPeakIdentification {
                         hits.add(new Tuple2D<Double, IMetabolite>(max, maxMet));
                     }
                 }
-                // }
-                // qc.terminate();
-                // } catch (final InterruptedException e) {
-                // e.printStackTrace();
-                // } catch (final ExecutionException e) {
-                // e.printStackTrace();
             } catch (final Db4oIOException e) {
                 e.printStackTrace();
                 this.log.error("Stopping DB search.");
@@ -221,7 +210,7 @@ public class PeakIdentification implements IPeakIdentification {
             if (hits != null) {
                 peak.setNames(hits);
             }
-            System.out.println("identification took " + (System.currentTimeMillis()-s)/1000 + "s");
+            this.log.info("identification took {} s", (System.currentTimeMillis() - s) / 1000);
         }
     }
 
