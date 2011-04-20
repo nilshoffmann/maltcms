@@ -53,6 +53,22 @@ public interface IPeakExporter extends IConfigurable {
 	void exportBBHInformation(final List<List<Point>> bidiBestHitList, List<List<Peak2D>> peaklist,
 			final IBidirectionalBestHit bbh, final List<String> names,
 			final List<Reliability> reliabilities);
+        
+        /**
+	 * Will export the alignment of retention times about the bidirectional best hits.
+	 * 
+	 * @param bidiBestHitList
+	 *            bidirational best hits table
+	 * @param bbh
+	 *            bidirection best hits intance
+	 * @param names
+	 *            names of the chromtatograms
+	 * @param reliabilites
+	 *            reliability of peak groups
+	 */
+	void exportBBHMultipleAlignmentRT(final List<List<Point>> bidiBestHitList, List<List<Peak2D>> peaklist,
+			final IBidirectionalBestHit bbh, final List<String> names,
+			final List<Reliability> reliabilities);
 
 	/**
 	 * Will export a detailed list about the bidirectional best hits.

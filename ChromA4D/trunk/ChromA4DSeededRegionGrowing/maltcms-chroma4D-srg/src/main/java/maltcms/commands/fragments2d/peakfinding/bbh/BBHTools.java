@@ -132,7 +132,9 @@ public class BBHTools {
 
 		// peakExporter.exportBBHInformation(bidiBestHitList, bbh,
 		// chromatogramNames, relis);
-		peakExporter.exportBBHInformation(bidiBestHitList, peaklist, bbh,
+                peakExporter.exportBBHInformation(bidiBestHitList, peaklist, bbh,
+				chromatogramNames, null);
+		peakExporter.exportBBHMultipleAlignmentRT(bidiBestHitList, peaklist, bbh,
 				chromatogramNames, null);
 
 		// return bidiBestHitList;

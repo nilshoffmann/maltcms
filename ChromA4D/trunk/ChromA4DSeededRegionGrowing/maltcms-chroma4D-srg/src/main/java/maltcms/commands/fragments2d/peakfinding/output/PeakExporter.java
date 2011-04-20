@@ -113,7 +113,7 @@ public class PeakExporter implements IPeakExporter {
 				table.get(i).add(names.get(i - 1));
 			}
 			for (final List<Point> l : bidiBestHitList) {
-				String name = "Unkown";
+				String name = "Unknown";
 				for (final Point p : l) {
 					if (p.x != -1) {
 						// table.get(p.y + 1).add(
@@ -125,7 +125,7 @@ public class PeakExporter implements IPeakExporter {
 								this.formatter.format(peaklist.get(p.y)
 										.get(p.x).getPeakArea()
 										.getAreaIntensity()));
-						if (name.equals("Unkown")) {
+						if (name.equals("Unknown")) {
 							name = peaklist.get(p.y).get(p.x).getName();
 						}
 					} else {
@@ -149,6 +149,44 @@ public class PeakExporter implements IPeakExporter {
 			csvw.setIWorkflow(this.iworkflow);
 			csvw.writeTableByCols(this.iworkflow.getOutputDirectory(this)
 					.getAbsolutePath(), "bidibestHits.csv", table,
+					WorkflowSlot.PEAKFINDING);
+		} else {
+			this.log.error("Bidirectional best hit list ist empty");
+		}
+	}
+        
+        /**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void exportBBHMultipleAlignmentRT(final List<List<Point>> bidiBestHitList,
+			List<List<Peak2D>> peaklist, final IBidirectionalBestHit bbh,
+			final List<String> names, final List<Reliability> reliabilities) {
+		final List<List<String>> table = new ArrayList<List<String>>();
+                NumberFormat formatter = new DecimalFormat("#0.0000",
+			DecimalFormatSymbols.getInstance(Locale.US));
+		if (bidiBestHitList.size() > 0) {
+			for (int i = 0; i < bidiBestHitList.get(0).size(); i++) {
+				table.add(new ArrayList<String>());
+				table.get(i).add(names.get(i));
+			}
+			for (final List<Point> l : bidiBestHitList) {
+				for (final Point p : l) {
+					if (p.x != -1) {
+						table.get(p.y).add(
+								formatter.format(peaklist.get(p.y)
+										.get(p.x).getRetentionTime()));
+					} else {
+						// table.get(p.y + 1).add("-(-)");
+						table.get(p.y).add("NA");
+					}
+				}
+			}
+
+			final CSVWriter csvw = new CSVWriter();
+			csvw.setIWorkflow(this.iworkflow);
+			csvw.writeTableByCols(this.iworkflow.getOutputDirectory(this)
+					.getAbsolutePath(), "multiple-alignmentRT.csv", table,
 					WorkflowSlot.PEAKFINDING);
 		} else {
 			this.log.error("Bidirectional best hit list ist empty");
