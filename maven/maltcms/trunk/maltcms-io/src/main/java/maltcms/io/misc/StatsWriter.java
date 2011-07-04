@@ -66,10 +66,10 @@ public class StatsWriter implements IWorkflowElement {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see cross.datastructures.workflow.IWorkflowElement#getIWorkflow()
+	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
 	 */
 	@Override
-	public IWorkflow getIWorkflow() {
+	public IWorkflow getWorkflow() {
 		return this.iwf;
 	}
 
@@ -86,11 +86,11 @@ public class StatsWriter implements IWorkflowElement {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seecross.datastructures.workflow.IWorkflowElement#setIWorkflow(cross.
+	 * @seecross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
 	 * datastructures.workflow.IWorkflow)
 	 */
 	@Override
-	public void setIWorkflow(final IWorkflow iw) {
+	public void setWorkflow(final IWorkflow iw) {
 		this.iwf = iw;
 
 	}
@@ -116,7 +116,7 @@ public class StatsWriter implements IWorkflowElement {
 					final IFragment f = map.getAssociation();
 					final CSVWriter csvw = Factory.getInstance()
 					        .getObjectFactory().instantiate(CSVWriter.class);
-					csvw.setIWorkflow(getIWorkflow());
+					csvw.setWorkflow(getWorkflow());
 					// if (f instanceof IGroupFragment) {
 					// csvw.write(f
 					// , map);

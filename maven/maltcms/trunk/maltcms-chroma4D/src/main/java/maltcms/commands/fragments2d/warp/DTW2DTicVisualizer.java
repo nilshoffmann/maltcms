@@ -225,7 +225,7 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 					final String filename = baseFilename + "_rgb";
 					// final File out =
 					ImageTools.saveImage(image, filename, this.format,
-							getIWorkflow().getOutputDirectory(this), this);
+							getWorkflow().getOutputDirectory(this), this);
 
 					if (this.createSerialized) {
 						// createChart(ref, query, filename, warpi, warpj,
@@ -399,12 +399,12 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 		final PlotRunner pl = new EPlotRunner(chart, StringTools
 				.removeFileExt(ref.getName())
 				+ "_vs_" + StringTools.removeFileExt(query.getName()) + "-D",
-				getIWorkflow().getOutputDirectory(this));
+				getWorkflow().getOutputDirectory(this));
 		pl.configure(Factory.getInstance().getConfiguration());
 		final File f = pl.getFile();
 		final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f, this,
 				WorkflowSlot.VISUALIZATION, ref, query);
-		getIWorkflow().append(dwr);
+		getWorkflow().append(dwr);
 		Factory.getInstance().submitJob(pl);
 	}
 

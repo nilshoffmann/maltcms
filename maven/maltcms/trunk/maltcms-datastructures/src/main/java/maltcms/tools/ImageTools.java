@@ -986,7 +986,7 @@ public class ImageTools {
 		if (iw != null) {
 			final DefaultWorkflowResult dwr = new DefaultWorkflowResult(out,
 			        iw, WorkflowSlot.VISUALIZATION, resources);
-			iw.getIWorkflow().append(dwr);
+			iw.getWorkflow().append(dwr);
 		}
 		try {
 			ImageTools.log.info("Saving image to " + out.getAbsolutePath());

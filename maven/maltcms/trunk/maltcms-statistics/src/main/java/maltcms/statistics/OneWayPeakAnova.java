@@ -139,13 +139,13 @@ public class OneWayPeakAnova implements IWorkflowElement {
 		        true);
 		customizeBarChart(jfc);
 		PlotRunner pr = new PlotRunner(jfc.getXYPlot(), "Clique fisher ratios",
-		        "cliquesFisherRatios.png", getIWorkflow().getOutputDirectory(
+		        "cliquesFisherRatios.png", getWorkflow().getOutputDirectory(
 		                this));
 		pr.configure(Factory.getInstance().getConfiguration());
 		final File file = pr.getFile();
 		final DefaultWorkflowResult dwr = new DefaultWorkflowResult(file, this,
 		        WorkflowSlot.VISUALIZATION, f.toArray(new IFileFragment[] {}));
-		getIWorkflow().append(dwr);
+		getWorkflow().append(dwr);
 		Factory.getInstance().submitJob(pr);
 
 		DefaultXYDataset pxyds = new DefaultXYDataset();
@@ -156,13 +156,13 @@ public class OneWayPeakAnova implements IWorkflowElement {
 		        "p-value", dscdRT2, PlotOrientation.VERTICAL, true, true, true);
 		customizeBarChart(jfc2);
 		PlotRunner pr2 = new PlotRunner(jfc2.getXYPlot(), "Clique p-values",
-		        "cliquesPValues.png", getIWorkflow().getOutputDirectory(this));
+		        "cliquesPValues.png", getWorkflow().getOutputDirectory(this));
 		pr2.configure(Factory.getInstance().getConfiguration());
 		final File file2 = pr2.getFile();
 		final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(file2,
 		        this, WorkflowSlot.VISUALIZATION, f
 		                .toArray(new IFileFragment[] {}));
-		getIWorkflow().append(dwr2);
+		getWorkflow().append(dwr2);
 		Factory.getInstance().submitJob(pr2);
 
 	}
@@ -303,10 +303,10 @@ public class OneWayPeakAnova implements IWorkflowElement {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see cross.datastructures.workflow.IWorkflowElement#getIWorkflow()
+	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
 	 */
 	@Override
-	public IWorkflow getIWorkflow() {
+	public IWorkflow getWorkflow() {
 		return this.workflow;
 	}
 
@@ -323,11 +323,11 @@ public class OneWayPeakAnova implements IWorkflowElement {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seecross.datastructures.workflow.IWorkflowElement#setIWorkflow(cross.
+	 * @seecross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
 	 * datastructures.workflow.IWorkflow)
 	 */
 	@Override
-	public void setIWorkflow(IWorkflow iw) {
+	public void setWorkflow(IWorkflow iw) {
 		this.workflow = iw;
 
 	}

@@ -148,7 +148,7 @@ public class DeltaMasses extends AFragmentCommand {
 		final BufferedImage bi2 = maltcms.tools.ImageTools.fullSpectrum(title,
 		        aa, aa.get(0).getShape()[0], colorRamp, 1024, true,
 		        lowThreshold);
-		maltcms.tools.ImageTools.saveImage(bi2, filename, "png", getIWorkflow()
+		maltcms.tools.ImageTools.saveImage(bi2, filename, "png", getWorkflow()
 		        .getOutputDirectory(this), elem);
 	}
 

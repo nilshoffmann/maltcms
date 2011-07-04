@@ -68,7 +68,7 @@ import maltcms.commands.fragments2d.tools.ArrayTools;
     "var.maxms_1d_horizontal_index", "var.maxms_1d_horizontal",
     "var.used_mass_values", "var.maxms_1d_vertical_index",
     "var.maxms_1d_vertical", "var.total_intensity_1d",
-    "var.scan_acquisition_time_1d", "var.total_intensity_1d"})
+    "var.scan_acquisition_time_1d"})
 // "var.v_total_intensity",
 @RequiresOptionalVariables(names = {""})
 @ProvidesVariables(names = {""})
@@ -166,12 +166,12 @@ public class MeanVarVis extends AFragmentCommand {
                     + "[TIC]", this.useLogScale);
             final PlotRunner pr = new PlotRunner(xyc.create(), "Plot of "
                     + "1D_TIC", StringTools.removeFileExt(ff.getName()) + "_"
-                    + "1d_tic", getIWorkflow().getOutputDirectory(this));
+                    + "1d_tic", getWorkflow().getOutputDirectory(this));
             pr.configure(Factory.getInstance().getConfiguration());
             final File f = pr.getFile();
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
                     this, getWorkflowSlot(), ff);
-            getIWorkflow().append(dwr);
+            getWorkflow().append(dwr);
             Factory.getInstance().submitJob(pr);
 
             meanMaxMSVisualization(ff);
@@ -340,10 +340,10 @@ public class MeanVarVis extends AFragmentCommand {
                 useLog, false);
 
         final PlotRunner pl = new PlotRunner(plot.create(), name, filename,
-                getIWorkflow().getOutputDirectory(this));
+                getWorkflow().getOutputDirectory(this));
         pl.configure(Factory.getInstance().getConfiguration());
         final DefaultWorkflowResult dwr1 = new DefaultWorkflowResult(pl.getFile(), this, this.getWorkflowSlot(), resource);
-        this.getIWorkflow().append(dwr1);
+        this.getWorkflow().append(dwr1);
         Factory.getInstance().submitJob(pl);
     }
 
@@ -369,7 +369,7 @@ public class MeanVarVis extends AFragmentCommand {
         final BufferedImage bi2 = maltcms.tools.ImageTools.fullSpectrum(title,
                 aa, aa.get(0).getShape()[0], colorRamp, 1024, true,
                 lowThreshold);
-        ImageTools.saveImage(bi2, filename, this.format, getIWorkflow().getOutputDirectory(this), elem);
+        ImageTools.saveImage(bi2, filename, this.format, getWorkflow().getOutputDirectory(this), elem);
     }
 
     /**

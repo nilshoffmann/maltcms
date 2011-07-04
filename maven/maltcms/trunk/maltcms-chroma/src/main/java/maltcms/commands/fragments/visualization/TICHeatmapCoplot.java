@@ -106,17 +106,17 @@ public class TICHeatmapCoplot extends AFragmentCommand {
 	 */
 	@Override
 	public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-		final File jfplot = drawTICSJFreeChart(getIWorkflow()
+		final File jfplot = drawTICSJFreeChart(getWorkflow()
 		        .getOutputDirectory(this), t, totalIntensityVar,
 		        scanAcquisitionTimeVar, null, "tics-jfreechart.png");
 		final DefaultWorkflowResult dwrut1 = new DefaultWorkflowResult(jfplot,
 		        this, getWorkflowSlot(), t.toArray(new IFileFragment[] {}));
-		getIWorkflow().append(dwrut1);
-		final File utics = drawTICS(getIWorkflow().getOutputDirectory(this), t,
+		getWorkflow().append(dwrut1);
+		final File utics = drawTICS(getWorkflow().getOutputDirectory(this), t,
 		        totalIntensityVar, scanAcquisitionTimeVar, null, "tics.png");
 		final DefaultWorkflowResult dwrut = new DefaultWorkflowResult(utics,
 		        this, getWorkflowSlot(), t.toArray(new IFileFragment[] {}));
-		getIWorkflow().append(dwrut);
+		getWorkflow().append(dwrut);
 		return t;
 	}
 

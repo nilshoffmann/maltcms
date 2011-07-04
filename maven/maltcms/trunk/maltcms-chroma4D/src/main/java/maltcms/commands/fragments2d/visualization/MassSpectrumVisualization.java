@@ -98,13 +98,13 @@ public class MassSpectrumVisualization extends AFragmentCommand {
 									+ index, massSpectra, false, false);
 
 					ImageTools.writeImage(new JFreeChart(plot.create()),
-							new File(getIWorkflow().getOutputDirectory(this), StringTools.removeFileExt(ff.getName())
+							new File(getWorkflow().getOutputDirectory(this), StringTools.removeFileExt(ff.getName())
 									+ "_ms-" + index + ".png"), 1024, 768);
 
 					// final PlotRunner pl = new PlotRunner(plot.create(),
 					// title,
 					// StringTools.removeFileExt(ff.getName()) + "_ms-"
-					// + index, getIWorkflow().getOutputDirectory(
+					// + index, getWorkflow().getOutputDirectory(
 					// this));
 					// pl.configure(Factory.getInstance().getConfiguration());
 					// Factory.getInstance().submitJob(pl);

@@ -169,7 +169,7 @@ public class TICPeakFinder extends AFragmentCommand {
         for (final IFileFragment f : t) {
             peaks.add(findPeaks(f));
             // notify workflow
-            getIWorkflow().append(dwpr.nextStep());
+            getWorkflow().append(dwpr.nextStep());
         }
         return new TupleND<IFileFragment>(peaks);
     }
@@ -231,7 +231,7 @@ public class TICPeakFinder extends AFragmentCommand {
                     "TIC and TIC derivatives " + filename,
                     "tic-derivatives-"
                     + StringTools.removeFileExt(filename),
-                    getIWorkflow().getOutputDirectory(this));
+                    getWorkflow().getOutputDirectory(this));
             pr.configure(Factory.getInstance().getConfiguration());
             Factory.getInstance().submitJob(pr);
             // fall back to TIC
@@ -457,7 +457,7 @@ public class TICPeakFinder extends AFragmentCommand {
         }
         final String filename = f.getName();
         final IFileFragment ff = Factory.getInstance().getFileFragmentFactory().create(
-                new File(getIWorkflow().getOutputDirectory(this),
+                new File(getWorkflow().getOutputDirectory(this),
                 filename));
 
         ff.addSourceFile(f);
@@ -466,7 +466,7 @@ public class TICPeakFinder extends AFragmentCommand {
         ff.save();
         f.clearArrays();
         DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(ff.getAbsolutePath()), this, WorkflowSlot.PEAKFINDING, ff);
-        getIWorkflow().append(dwr);
+        getWorkflow().append(dwr);
         return ff;
         // }
     }
@@ -592,13 +592,13 @@ public class TICPeakFinder extends AFragmentCommand {
     // }
     // }
     // CSVWriter csvw = new CSVWriter();
-    // csvw.setIWorkflow(getIWorkflow());
-    // csvw.writeTableByRows(getIWorkflow().getOutputDirectory(this)
+    // csvw.setWorkflow(getWorkflow());
+    // csvw.writeTableByRows(getWorkflow().getOutputDirectory(this)
     // .getAbsolutePath(), StringTools.removeFileExt(f.getName())
     // + "_eicPeaks.csv", v, WorkflowSlot.PEAKFINDING);
     // this.log.info("Number of peak signal groups of sizes: {}", hm);
     // this.log.info("Total number of peak signals: {}", totalPeakSignals);
-    // FileFragment ff = new FileFragment(getIWorkflow().getOutputDirectory(
+    // FileFragment ff = new FileFragment(getWorkflow().getOutputDirectory(
     // this), StringTools.removeFileExt(f.getName())
     // + "_apexPeaks.cdf");
     // IVariableFragment mv = new VariableFragment(ff, "mass_values");
@@ -639,7 +639,7 @@ public class TICPeakFinder extends AFragmentCommand {
     // ff.save();
     // DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(ff
     // .getAbsolutePath()), this, WorkflowSlot.PEAKFINDING, ff);
-    // getIWorkflow().append(dwr);
+    // getWorkflow().append(dwr);
     // }
     /**
      * @param correctedtic
@@ -1122,8 +1122,8 @@ public class TICPeakFinder extends AFragmentCommand {
         }
 
         final CSVWriter csvw = new CSVWriter();
-        csvw.setIWorkflow(getIWorkflow());
-        csvw.writeTableByRows(getIWorkflow().getOutputDirectory(this).getAbsolutePath(), StringTools.removeFileExt(iff.getName())
+        csvw.setWorkflow(getWorkflow());
+        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).getAbsolutePath(), StringTools.removeFileExt(iff.getName())
                 + "_peakAreas.csv", rows, WorkflowSlot.ALIGNMENT);
 
         savePeakAnnotations(l, iff);
@@ -1132,7 +1132,7 @@ public class TICPeakFinder extends AFragmentCommand {
     public void savePeakAnnotations(final List<Peak1D> l,
             final IFileFragment iff) {
         MaltcmsAnnotationFactory maf = new MaltcmsAnnotationFactory();
-        File matFile = new File(getIWorkflow().getOutputDirectory(this),
+        File matFile = new File(getWorkflow().getOutputDirectory(this),
                 StringTools.removeFileExt(iff.getName())
                 + ".maltcmsAnnotation.xml");
         MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(new File(iff.getAbsolutePath()).toURI());
@@ -1142,7 +1142,7 @@ public class TICPeakFinder extends AFragmentCommand {
         maf.save(ma, matFile);
         DefaultWorkflowResult dwr = new DefaultWorkflowResult(matFile, this,
                 WorkflowSlot.PEAKFINDING, iff);
-        getIWorkflow().append(dwr);
+        getWorkflow().append(dwr);
     }
 
     public void visualize(final IFileFragment f, final Array intensities,
@@ -1199,7 +1199,7 @@ public class TICPeakFinder extends AFragmentCommand {
         cdt.configure(Factory.getInstance().getConfiguration());
         final PlotRunner pr = new PlotRunner(cdt.create(),
                 "TIC and Peak information for " + f.getName(),
-                "combinedTICandPeakChart-" + f.getName(), getIWorkflow().getOutputDirectory(this));
+                "combinedTICandPeakChart-" + f.getName(), getWorkflow().getOutputDirectory(this));
         pr.configure(Factory.getInstance().getConfiguration());
         Factory.getInstance().submitJob(pr);
     }

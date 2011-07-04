@@ -237,10 +237,10 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see cross.datastructures.workflow.IWorkflowElement#getIWorkflow()
+	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
 	 */
 	@Override
-	public IWorkflow getIWorkflow() {
+	public IWorkflow getWorkflow() {
 		return this.iw;
 	}
 
@@ -353,7 +353,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 				this.iw = new DefaultWorkflow();
 			}
 			this.ff = FragmentTools.createFragment(this.ref, this.target,
-			        getIWorkflow().getOutputDirectory(this));
+			        getWorkflow().getOutputDirectory(this));
 			final PathTools pt = Factory.getInstance().getObjectFactory()
 			        .instantiate(PathTools.class);
 			long time = start;
@@ -369,7 +369,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 				this.log.info("Calculated traceback in {} milliseconds", time);
 				start = System.currentTimeMillis();
 				pt.savePathCSV(this.ff, this.alignment, this.distance,
-				        this.path, getIWorkflow(), isMinimize());
+				        this.path, getWorkflow(), isMinimize());
 				pt.decorate(this.ff, this.distance);
 			} else {
 				PathTools.getFragments(this.ff, this.path, this.distance);
@@ -382,8 +382,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 			rows.add(row);
 			CSVWriter csvw = Factory.getInstance().getObjectFactory()
 			        .instantiate(CSVWriter.class);
-			csvw.setIWorkflow(getIWorkflow());
-			csvw.writeTableByRows(getIWorkflow().getOutputDirectory(this)
+			csvw.setWorkflow(getWorkflow());
+			csvw.writeTableByRows(getWorkflow().getOutputDirectory(this)
 			        .getAbsolutePath(), StringTools.removeFileExt(this.ff
 			        .getName())
 			        + "_names.txt", rows, WorkflowSlot.ALIGNMENT);
@@ -399,8 +399,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 				}
 				CSVWriter csvw2 = Factory.getInstance().getObjectFactory()
 				        .instantiate(CSVWriter.class);
-				csvw2.setIWorkflow(getIWorkflow());
-				csvw2.writeTableByRows(getIWorkflow().getOutputDirectory(this)
+				csvw2.setWorkflow(getWorkflow());
+				csvw2.writeTableByRows(getWorkflow().getOutputDirectory(this)
 				        .getAbsolutePath(), StringTools.removeFileExt(this.ff
 				        .getName())
 				        + "_anchors.csv", rows, WorkflowSlot.ALIGNMENT);
@@ -624,11 +624,11 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seecross.datastructures.workflow.IWorkflowElement#setIWorkflow(cross.
+	 * @seecross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
 	 * datastructures.workflow.IWorkflow)
 	 */
 	@Override
-	public void setIWorkflow(final IWorkflow iw1) {
+	public void setWorkflow(final IWorkflow iw1) {
 		this.iw = iw1;
 
 	}

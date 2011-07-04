@@ -235,7 +235,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 		                        .getName(), "value", "count", hd,
 		        PlotOrientation.VERTICAL, true, true, true);
 		ImageTools.writeImage(jfc,
-		        new File(getIWorkflow().getOutputDirectory(this), name
+		        new File(getWorkflow().getOutputDirectory(this), name
 		                + "-pw-histogram.png"), 1024, 768);
 	}
 
@@ -315,7 +315,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 	        final Tuple2D<IFileFragment, IFileFragment> t) {
 		this.pa = Factory.getInstance().getObjectFactory()
 		        .instantiate(PairwiseAlignment.class);
-		this.pa.setIWorkflow(getIWorkflow());
+		this.pa.setWorkflow(getWorkflow());
 		this.pa.setFileFragments(t.getFirst(), t.getSecond(), this.getClass());
 
 		final Tuple2D<List<Array>, List<Array>> tuple = createTuple(t);
@@ -378,7 +378,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 		// this.resF, this.extension);
 		// save the path to csv
 		// pt.savePathCSV(this.resF, this.alignment, pa.getPath(),
-		// getIWorkflow());
+		// getWorkflow());
 		final IFileFragment forwardAlignment = saveState(this.resF);
 		if (this.saveLayoutImage) {
 			saveLayoutImage(aps, StringTools.removeFileExt(forwardAlignment
@@ -427,7 +427,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 			g2.fillRect(pair.getSecond(), pair.getFirst(), 1, 1);
 		}
 		try {
-			ImageIO.write(bi, "PNG", new File(getIWorkflow()
+			ImageIO.write(bi, "PNG", new File(getWorkflow()
 			        .getOutputDirectory(this), alignmentName
 			        + "_matrixLayout.png"));
 		} catch (final IOException e) {
@@ -578,10 +578,10 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see cross.datastructures.workflow.IWorkflowElement#getIWorkflow()
+	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
 	 */
 	@Override
-	public IWorkflow getIWorkflow() {
+	public IWorkflow getWorkflow() {
 		return this.iw;
 	}
 
@@ -733,11 +733,11 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seecross.datastructures.workflow.IWorkflowElement#setIWorkflow(cross.
+	 * @seecross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
 	 * datastructures.workflow.IWorkflow)
 	 */
 	@Override
-	public void setIWorkflow(final IWorkflow iw1) {
+	public void setWorkflow(final IWorkflow iw1) {
 		this.iw = iw1;
 	}
 

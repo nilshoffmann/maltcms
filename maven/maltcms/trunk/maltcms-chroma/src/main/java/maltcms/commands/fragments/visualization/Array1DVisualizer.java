@@ -121,13 +121,13 @@ public class Array1DVisualizer extends AFragmentCommand {
 				        this.xAxisLabel, this.yAxisLabel);
 				final PlotRunner pr = new PlotRunner(xyc.create(), "Plot of "
 				        + this.variableName, ff.getName() + ">"
-				        + this.variableName, getIWorkflow().getOutputDirectory(
+				        + this.variableName, getWorkflow().getOutputDirectory(
 				        this));
 				pr.configure(Factory.getInstance().getConfiguration());
 				final File f = pr.getFile();
 				final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
 				        this, getWorkflowSlot(), ff);
-				getIWorkflow().append(dwr);
+				getWorkflow().append(dwr);
 				Factory.getInstance().submitJob(pr);
 			}
 			i++;
@@ -137,13 +137,13 @@ public class Array1DVisualizer extends AFragmentCommand {
 			        + this.variableName, labels, values, domains,
 			        this.xAxisLabel, this.yAxisLabel);
 			final PlotRunner pr = new PlotRunner(xyc.create(), "Plot of "
-			        + this.variableName, this.variableName, getIWorkflow()
+			        + this.variableName, this.variableName, getWorkflow()
 			        .getOutputDirectory(this));
 			pr.configure(Factory.getInstance().getConfiguration());
 			final File f = pr.getFile();
 			final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
 			        this, getWorkflowSlot(), t.toArray(new IFileFragment[] {}));
-			getIWorkflow().append(dwr);
+			getWorkflow().append(dwr);
 			Factory.getInstance().submitJob(pr);
 		}
 		return t;
@@ -306,14 +306,14 @@ public class Array1DVisualizer extends AFragmentCommand {
 				final PlotRunner pr = new PlotRunner(xyc.create(), "Plot of "
 				        + this.variableName + " from files " + lhs.getName()
 				        + " and " + rhs.getName(), this.variableName + "Chart-"
-				        + lhs.getName() + "-" + rhs.getName(), getIWorkflow()
+				        + lhs.getName() + "-" + rhs.getName(), getWorkflow()
 				        .getOutputDirectory(this));
 				pr.configure(Factory.getInstance().getConfiguration());
 				final File f = pr.getFile();
 				final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
 				        this, getWorkflowSlot(),
 				        new IFileFragment[] { lhs, rhs });
-				getIWorkflow().append(dwr);
+				getWorkflow().append(dwr);
 				Factory.getInstance().submitJob(pr);
 				pairs++;
 			} else {
@@ -403,13 +403,13 @@ public class Array1DVisualizer extends AFragmentCommand {
 				                + " from files " + lhs.getName() + " and "
 				                + rhs.getName(), "residualChart-"
 				                + lhs.getName() + "-" + rhs.getName(),
-				        getIWorkflow().getOutputDirectory(this));
+				        getWorkflow().getOutputDirectory(this));
 				pr2.configure(Factory.getInstance().getConfiguration());
 				final File f = pr2.getFile();
 				final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
 				        this, WorkflowSlot.VISUALIZATION, new IFileFragment[] {
 				                lhs, rhs });
-				getIWorkflow().append(dwr);
+				getWorkflow().append(dwr);
 				Factory.getInstance().submitJob(pr2);
 			} else {
 				throw new IllegalArgumentException(lhs.getAbsolutePath()

@@ -66,14 +66,14 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
 	 */
 	@Override
 	public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-		final File[] files = drawEICs(getIWorkflow().getOutputDirectory(this),
+		final File[] files = drawEICs(getWorkflow().getOutputDirectory(this),
 		        t, Factory.getInstance().getConfiguration().getString(
 		                "var.scan_acquisition_time", "scan_acquisition_time"),
 		        null, "");
 		for (final File file : files) {
 			final DefaultWorkflowResult dwrut = new DefaultWorkflowResult(file,
 			        this, getWorkflowSlot(), t.toArray(new IFileFragment[] {}));
-			getIWorkflow().append(dwrut);
+			getWorkflow().append(dwrut);
 		}
 		return t;
 	}

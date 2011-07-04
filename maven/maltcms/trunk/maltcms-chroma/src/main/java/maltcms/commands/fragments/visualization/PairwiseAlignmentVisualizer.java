@@ -369,13 +369,13 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
 		        "alignmentComparativeChart_"
 		                + StringTools.removeFileExt(ref.getName()) + "-vs-"
 		                + StringTools.removeFileExt(query.getName()),
-		        getIWorkflow().getOutputDirectory(this));
+		        getWorkflow().getOutputDirectory(this));
 		pl.configure(Factory.getInstance().getConfiguration());
 		final File file = pl.getFile();
 		final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(file,
 		        this, WorkflowSlot.VISUALIZATION, new IFileFragment[] { ref,
 		                query });
-		getIWorkflow().append(dwr2);
+		getWorkflow().append(dwr2);
 		Factory.getInstance().submitJob(pl);
 	}
 
@@ -415,12 +415,12 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
 		        "alignmentDifferentialChart_"
 		                + StringTools.removeFileExt(ref.getName()) + "-vs-"
 		                + StringTools.removeFileExt(query.getName()),
-		        getIWorkflow().getOutputDirectory(this));
+		        getWorkflow().getOutputDirectory(this));
 		pl.configure(Factory.getInstance().getConfiguration());
 		final File file = pl.getFile();
 		final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(file,
 		        this, WorkflowSlot.VISUALIZATION, ref, query);
-		getIWorkflow().append(dwr2);
+		getWorkflow().append(dwr2);
 		Factory.getInstance().submitJob(pl);
 	}
 
@@ -466,12 +466,12 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
 		        "alignmentMapChart_"
 		                + StringTools.removeFileExt(filea1.getName()) + "-vs-"
 		                + StringTools.removeFileExt(fileb1.getName()),
-		        getIWorkflow().getOutputDirectory(this));
+		        getWorkflow().getOutputDirectory(this));
 		pl.configure(Factory.getInstance().getConfiguration());
 		final File f = pl.getFile();
 		final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f, this,
 		        WorkflowSlot.VISUALIZATION, alignment, filea1, fileb1);
-		getIWorkflow().append(dwr);
+		getWorkflow().append(dwr);
 		Factory.getInstance().submitJob(pl);
 	}
 
@@ -511,12 +511,12 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
 		        "alignmentRatioChart_"
 		                + StringTools.removeFileExt(ref.getName()) + "-vs-"
 		                + StringTools.removeFileExt(query.getName()),
-		        getIWorkflow().getOutputDirectory(this));
+		        getWorkflow().getOutputDirectory(this));
 		pl.configure(Factory.getInstance().getConfiguration());
 		final File file = pl.getFile();
 		final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(file,
 		        this, WorkflowSlot.VISUALIZATION, ref, query);
-		getIWorkflow().append(dwr2);
+		getWorkflow().append(dwr2);
 		Factory.getInstance().submitJob(pl);
 	}
 
@@ -560,12 +560,12 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
 		        "alignmentSuperimpositionChart_"
 		                + StringTools.removeFileExt(ref.getName()) + "-vs-"
 		                + StringTools.removeFileExt(query.getName()),
-		        getIWorkflow().getOutputDirectory(this));
+		        getWorkflow().getOutputDirectory(this));
 		pl.configure(Factory.getInstance().getConfiguration());
 		final File file = pl.getFile();
 		final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(file,
 		        this, WorkflowSlot.VISUALIZATION, ref, query);
-		getIWorkflow().append(dwr2);
+		getWorkflow().append(dwr2);
 		Factory.getInstance().submitJob(pl);
 	}
 

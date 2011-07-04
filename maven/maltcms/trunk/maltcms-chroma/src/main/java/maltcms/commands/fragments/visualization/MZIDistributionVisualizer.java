@@ -109,13 +109,13 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
 			        new NumberAxis("intensity value"), xyb);
 			final PlotRunner pl = new PlotRunner(cp,
 			        "Intensity Distribution Plot of " + f.getName(),
-			        "intensDistrPlot-" + f.getName(), getIWorkflow()
+			        "intensDistrPlot-" + f.getName(), getWorkflow()
 			                .getOutputDirectory(this));
 			pl.configure(Factory.getInstance().getConfiguration());
 			final File file = pl.getFile();
 			final DefaultWorkflowResult dwr = new DefaultWorkflowResult(file,
 			        this, WorkflowSlot.VISUALIZATION, f);
-			getIWorkflow().append(dwr);
+			getWorkflow().append(dwr);
 			Factory.getInstance().submitJob(pl);
 		}
 		return t;

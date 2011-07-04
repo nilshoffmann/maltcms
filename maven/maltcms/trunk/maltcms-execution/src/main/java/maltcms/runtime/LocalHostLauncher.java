@@ -52,31 +52,24 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.slf4j.Logger;
 
 import cross.Factory;
 import cross.Logging;
-import cross.commands.fragments.AFragmentCommand;
-import cross.datastructures.pipeline.ICommandSequence;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowFileResult;
 import cross.datastructures.workflow.IWorkflowResult;
-import cross.event.EventSource;
 import cross.event.IEvent;
-import cross.event.IEventSource;
 import cross.event.IListener;
-import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
 
 /**
@@ -87,113 +80,6 @@ import cross.datastructures.tools.FileTools;
 public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
         IListener<IEvent<IWorkflowResult>>, Runnable, PropertyChangeListener,
         HyperlinkListener {
-
-    public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowResult> implements
-            IListener<IEvent<IWorkflowResult>>, IEventSource<IWorkflowResult> {
-
-        private Configuration cfg = null;
-        private final EventSource<IWorkflowResult> es = new EventSource<IWorkflowResult>();
-
-        public void addListener(final IListener<IEvent<IWorkflowResult>> l) {
-            this.es.addListener(l);
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.concurrent.Callable#call()
-         */
-        @Override
-        public IWorkflow doInBackground() throws Exception {
-            LocalHostLauncher.this.log.info("Starting up Maltcms!");
-            LocalHostLauncher.this.log.info("Running Maltcms version {}",
-                    this.cfg.getString("application.version"));
-            LocalHostLauncher.this.log.info("Configuring Factory");
-
-            Factory.getInstance().configure(this.cfg);
-            // Set up the command sequence
-            LocalHostLauncher.this.log.info("Setting up command sequence");
-            final ICommandSequence cs = Factory.getInstance().createCommandSequence();
-            LocalHostLauncher.this.startup = cs.getIWorkflow().getStartupDate();
-            final AFragmentCommand[] commands = cs.getCommands().toArray(
-                    new AFragmentCommand[]{});
-            final float nsteps = commands.length;
-            cs.getIWorkflow().addListener(this);
-            EvalTools.notNull(cs, cs);
-            float step = 0;
-            // Evaluate until empty
-            LocalHostLauncher.this.log.info("Executing command sequence");
-            int progress = 0;
-            while (cs.hasNext()) {
-                if (isCancelled()) {
-                    LocalHostLauncher.this.log.warn("Thread was cancelled, bailing out");
-                    Factory.getInstance().shutdownNow();
-                    throw new InterruptedException();
-                }
-                progress = (int) ((step / nsteps) * 100.0f);
-                final int progv = progress;
-                LocalHostLauncher.this.log.debug("Progress: {}", progress);
-                final Runnable r = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        setProgress(progv);
-                    }
-                };
-                SwingUtilities.invokeLater(r);
-                cs.next();
-                step++;
-            }
-            progress = (int) ((step / nsteps) * 100.0f);
-            final int progv = progress;
-            final Runnable r = new Runnable() {
-
-                @Override
-                public void run() {
-                    setProgress(progv);
-                }
-            };
-            SwingUtilities.invokeLater(r);
-            LocalHostLauncher.this.log.info("Progress: {}", progress);
-            LocalHostLauncher.shutdown(30, LocalHostLauncher.this.log);
-            // Save configuration
-            Factory.dumpConfig("runtime.properties",
-                    LocalHostLauncher.this.startup);
-            // Save workflow
-            final IWorkflow iw = cs.getIWorkflow();
-            iw.save();
-            return iw;
-        }
-
-        public void fireEvent(final IEvent<IWorkflowResult> e) {
-            this.es.fireEvent(e);
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see cross.event.IListener#listen(cross.event.IEvent)
-         */
-        /**
-         * Relay method, calling all registered Listeners, if an event is
-         * received from a Workflow.
-         */
-        @Override
-        public void listen(final IEvent<IWorkflowResult> v) {
-            this.publish(v.get());
-            this.es.fireEvent(v);
-        }
-
-        public void removeListener(final IListener<IEvent<IWorkflowResult>> l) {
-            this.es.removeListener(l);
-        }
-
-        public void setConfiguration(final Configuration cfg) {
-            this.cfg = cfg;
-            LocalHostLauncher.this.log.debug("Using configuration");
-            LocalHostLauncher.this.log.debug("{}", ConfigurationUtils.toString(cfg));
-        }
-    };
 
     protected enum State {
 
@@ -260,6 +146,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
     private JPanel progress;
     private Date startup = null;
     private boolean exitOnException = false;
+    private boolean navigateToResults = true;
 
     public LocalHostLauncher(final PropertiesConfiguration userConfig,
             final Container jf, final boolean exitOnException) {
@@ -268,6 +155,14 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
         this.lhmp = new LocalHostMaltcmsProcess();
         this.lhmp.setConfiguration(getDefaultConfig());
         this.exitOnException = exitOnException;
+    }
+
+    public void setNavigateToResults(boolean b) {
+        this.navigateToResults = b;
+    }
+
+    public boolean isNavigateToResults() {
+        return this.navigateToResults;
     }
 
     public boolean isExitOnException() {
@@ -362,7 +257,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
                             for (final IWorkflowFileResult iwr : LocalHostLauncher.this.buffer) {
                                 LocalHostLauncher.this.dlm.addElement(iwr.getWorkflowSlot()
                                         + ": "
-                                        + iwr.getIWorkflowElement().getClass().getSimpleName()
+                                        + iwr.getWorkflowElement().getClass().getSimpleName()
                                         + " created "
                                         + iwr.getFile().getName());
                             }
@@ -370,7 +265,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
                         } else {
                             LocalHostLauncher.this.dlm.addElement(dwr.getWorkflowSlot()
                                     + ": "
-                                    + dwr.getIWorkflowElement().getClass().getSimpleName()
+                                    + dwr.getWorkflowElement().getClass().getSimpleName()
                                     + " created "
                                     + dwr.getFile().getName());
                         }
@@ -439,22 +334,25 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
         try {
             iw = getProcess().get();
             final File result = new File(iw.getName()).getParentFile();
-            if (Desktop.isDesktopSupported()) {
-                try {
-                    if (result.exists()) {
-                        Desktop.getDesktop().browse(result.toURI());
-                    } else {
-                        Desktop.getDesktop().browse(
-                                result.getParentFile().toURI());
+            if (isNavigateToResults()) {
+                if (Desktop.isDesktopSupported()) {
+                    try {
+                        if (result.exists()) {
+                            Desktop.getDesktop().browse(result.toURI());
+                        } else {
+                            Desktop.getDesktop().browse(
+                                    result.getParentFile().toURI());
+                        }
+                    } catch (final IOException e) {
+                        this.log.error("{}", "Could not access Desktop object");
                     }
-                } catch (final IOException e) {
-                    this.log.error("{}", "Could not access Desktop object");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please view your results at "
+                            + result.getParentFile());
                 }
-            } else {
-                JOptionPane.showMessageDialog(null, "Please view your results at "
-                        + result.getParentFile());
+                shutdown(30, log);
             }
-            System.exit(0);
+            //System.exit(0);
         } catch (final CancellationException e1) {
             this.jl.setModel(new DefaultListModel());
             this.progressBar.setValue(0);
@@ -467,6 +365,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
             LocalHostLauncher.handleRuntimeException(this.log, e1, this,
                     this.startup);
         }
+        
     }
 
     /*

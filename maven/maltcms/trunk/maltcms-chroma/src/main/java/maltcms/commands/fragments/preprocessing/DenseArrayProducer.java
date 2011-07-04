@@ -136,7 +136,7 @@ public class DenseArrayProducer extends AFragmentCommand {
 			        scan_index, mass_values, intensity_values,
 			        binned_scan_index, binned_mass_values,
 			        binned_intensity_values, minmax.getFirst(), minmax
-			                .getSecond(), getIWorkflow().getOutputDirectory(
+			                .getSecond(), getWorkflow().getOutputDirectory(
 			                this));
 			// f.save();
 			log.debug("Loaded scans for file {}, stored in {}", ff, f);
@@ -154,9 +154,9 @@ public class DenseArrayProducer extends AFragmentCommand {
 			final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
 			        new File(f.getAbsolutePath()), iwe,
 			        WorkflowSlot.GENERAL_PREPROCESSING, f);
-			getIWorkflow().append(dwr);
+			getWorkflow().append(dwr);
 			// notify workflow
-			getIWorkflow().append(dwpr.nextStep());
+			getWorkflow().append(dwpr.nextStep());
 			// }
 			// };
 			// em.submit(r);

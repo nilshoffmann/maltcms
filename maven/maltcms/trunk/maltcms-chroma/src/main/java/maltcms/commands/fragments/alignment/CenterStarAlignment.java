@@ -127,10 +127,10 @@ public class CenterStarAlignment extends AFragmentCommand {
         final IFileFragment centerSeq = findCenterSequence(pwdist, names1);
 
         final CSVWriter csvw = Factory.getInstance().getObjectFactory().instantiate(CSVWriter.class);
-        csvw.setIWorkflow(getIWorkflow());
+        csvw.setWorkflow(getWorkflow());
         List<List<String>> tble = new ArrayList<List<String>>();
         tble.add(Arrays.asList(centerSeq.getName()));
-        csvw.writeTableByRows(getIWorkflow().getOutputDirectory(this).getAbsolutePath(), "center-star.csv", tble, WorkflowSlot.CLUSTERING);
+        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "center-star.csv", tble, WorkflowSlot.CLUSTERING);
 
         this.log.info("Center sequence is: {}", centerSeq);
         final TupleND<IFileFragment> alignments = MaltcmsTools.getAlignmentsFromFragment(pwd);
@@ -238,12 +238,12 @@ public class CenterStarAlignment extends AFragmentCommand {
             af.addScanIndexMap(a, new File(iff.getAbsolutePath()).toURI(),
                     fragmentToScanIndexMap.get(iff), false);
         }
-        File out = new File(getIWorkflow().getOutputDirectory(this),
+        File out = new File(getWorkflow().getOutputDirectory(this),
                 "centerStarAlignment.maltcmsAlignment.xml");
         af.save(a, out);
         DefaultWorkflowResult dwr = new DefaultWorkflowResult(out, this,
                 WorkflowSlot.ALIGNMENT, tuple.toArray(new IFileFragment[]{}));
-        getIWorkflow().append(dwr);
+        getWorkflow().append(dwr);
     }
 
     private IFileFragment findCenterSequence(final ArrayDouble.D2 a,
@@ -396,7 +396,7 @@ public class CenterStarAlignment extends AFragmentCommand {
         // warped.add(top);
         // final ChromatogramWarp cw = Factory.getInstance().getObjectFactory()
         // .instantiate(ChromatogramWarp.class);
-        // cw.setIWorkflow(getIWorkflow());
+        // cw.setWorkflow(getWorkflow());
         prepareFileFragments(alignments, top, refname, repOnLHS, repOnRHS,
                 warped, null);
 
@@ -408,13 +408,13 @@ public class CenterStarAlignment extends AFragmentCommand {
         addMultipleAlignmentColumns(top, repOnLHS, repOnRHS, warped, null,
                 table);
         // create alignment table fragment
-        IFileFragment maFragment = new FileFragment(getIWorkflow().getOutputDirectory(this), "multiple-alignment.cdf");
+        IFileFragment maFragment = new FileFragment(getWorkflow().getOutputDirectory(this), "multiple-alignment.cdf");
         addMultipleAlignment(maFragment, table);
         maFragment.save();
         DefaultWorkflowResult dfw = new DefaultWorkflowResult(new File(
                 maFragment.getAbsolutePath()), this, WorkflowSlot.ALIGNMENT,
                 warped.toArray(new IFileFragment[]{}));
-        getIWorkflow().append(dfw);
+        getWorkflow().append(dfw);
         for (IFileFragment ifrag : warped) {
             ifrag.addSourceFile(maFragment);
         }
@@ -470,8 +470,8 @@ public class CenterStarAlignment extends AFragmentCommand {
             satTable.add(colList);
         }
         final CSVWriter csv = Factory.getInstance().getObjectFactory().instantiate(CSVWriter.class);
-        csv.setIWorkflow(getIWorkflow());
-        csv.writeTableByCols(getIWorkflow().getOutputDirectory(this).getAbsolutePath(), "multiple-alignmentRT.csv", satTable,
+        csv.setWorkflow(getWorkflow());
+        csv.writeTableByCols(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "multiple-alignmentRT.csv", satTable,
                 WorkflowSlot.ALIGNMENT);
     }
 
@@ -482,8 +482,8 @@ public class CenterStarAlignment extends AFragmentCommand {
     private File saveMultipleAlignmentTable(final Class<?> creator,
             final List<List<String>> table) {
         final CSVWriter csv = Factory.getInstance().getObjectFactory().instantiate(CSVWriter.class);
-        csv.setIWorkflow(getIWorkflow());
-        return csv.writeTableByCols(getIWorkflow().getOutputDirectory(this).getAbsolutePath(), "multiple-alignment.csv", table,
+        csv.setWorkflow(getWorkflow());
+        return csv.writeTableByCols(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "multiple-alignment.csv", table,
                 WorkflowSlot.ALIGNMENT);
     }
 
@@ -504,17 +504,17 @@ public class CenterStarAlignment extends AFragmentCommand {
 
         // final IFileFragment centerCopy = Factory.getInstance()
         // .getFileFragmentFactory().create(
-        // new File(getIWorkflow().getOutputDirectory(this), top
+        // new File(getWorkflow().getOutputDirectory(this), top
         // .getName()), top);
         // final IFileFragment centerCopy = cw.copyReference(
-        // getOriginalFileFor(top), getIWorkflow());
+        // getOriginalFileFor(top), getWorkflow());
         // centerCopy.addSourceFile(top);
         // DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
         // centerCopy.getAbsolutePath()), this, WorkflowSlot.WARPING,
         // centerCopy);
-        // getIWorkflow().append(dwr);
+        // getWorkflow().append(dwr);
         // warped.add(centerCopy);
-        FileFragment newTop = new FileFragment(getIWorkflow().getOutputDirectory(this), top.getName());
+        FileFragment newTop = new FileFragment(getWorkflow().getOutputDirectory(this), top.getName());
         newTop.addSourceFile(top);
         warped.add(newTop);
         this.log.info("Ref is {}", refname);
@@ -528,13 +528,13 @@ public class CenterStarAlignment extends AFragmentCommand {
             // .getAbsolutePath());
             if (lhsName.equals(refname)) {
                 this.log.info("Warping {} to lhs", rhs.getAbsolutePath());
-                FileFragment nrhs = new FileFragment(getIWorkflow().getOutputDirectory(this), rhs.getName());
+                FileFragment nrhs = new FileFragment(getWorkflow().getOutputDirectory(this), rhs.getName());
                 nrhs.addSourceFile(rhs);
                 warped.add(nrhs);
                 repOnLHS.add(iff);
             } else if (refname.equals(rhsName)) {
                 this.log.info("Warping {} to rhs", lhs.getAbsolutePath());
-                FileFragment nlhs = new FileFragment(getIWorkflow().getOutputDirectory(this), lhs.getName());
+                FileFragment nlhs = new FileFragment(getWorkflow().getOutputDirectory(this), lhs.getName());
                 nlhs.addSourceFile(lhs);
                 warped.add(nlhs);
                 repOnRHS.add(iff);
@@ -717,10 +717,10 @@ public class CenterStarAlignment extends AFragmentCommand {
         final IFileFragment ifwarped = cw.warp(top,
                 getOriginalFileFor(FragmentTools.getLHSFile(repOnRHS.get(i))),
                 FragmentTools.getLHSFile(repOnRHS.get(i)), al, false,
-                getIWorkflow());
+                getWorkflow());
         dwr = new DefaultWorkflowResult(new File(ifwarped.getAbsolutePath()),
                 this, WorkflowSlot.WARPING, ifwarped);
-        getIWorkflow().append(dwr);
+        getWorkflow().append(dwr);
         warped.add(ifwarped);
     }
 
@@ -740,10 +740,10 @@ public class CenterStarAlignment extends AFragmentCommand {
         final IFileFragment ifwarped = cw.warp(top,
                 getOriginalFileFor(FragmentTools.getRHSFile(repOnLHS.get(i))),
                 FragmentTools.getRHSFile(repOnLHS.get(i)), al, true,
-                getIWorkflow());
+                getWorkflow());
         dwr = new DefaultWorkflowResult(new File(ifwarped.getAbsolutePath()),
                 this, WorkflowSlot.WARPING, ifwarped);
-        getIWorkflow().append(dwr);
+        getWorkflow().append(dwr);
         warped.add(ifwarped);
     }
 

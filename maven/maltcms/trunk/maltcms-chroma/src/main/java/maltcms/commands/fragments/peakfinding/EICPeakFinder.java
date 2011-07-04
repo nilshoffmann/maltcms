@@ -133,8 +133,8 @@ public class EICPeakFinder extends AFragmentCommand {
                 k++;
             }
 //			final CSVWriter csvw = new CSVWriter();
-//			csvw.setIWorkflow(getIWorkflow());
-//			csvw.writeOneFilePerArray(getIWorkflow().getOutputDirectory(this)
+//			csvw.setWorkflow(getWorkflow());
+//			csvw.writeOneFilePerArray(getWorkflow().getOutputDirectory(this)
 //			        .getAbsolutePath(), StringTools.removeFileExt(f.getName())
 //			        + "_eic.csv", ArrayTools.generalizeList(al));
 //			this.log.info("ArrayStatsScanner returned {} StatsMaps", sm.length);
@@ -183,7 +183,7 @@ public class EICPeakFinder extends AFragmentCommand {
                 }
             }
             final IFileFragment iff = Factory.getInstance().getFileFragmentFactory().create(
-                    new File(getIWorkflow().getOutputDirectory(this),
+                    new File(getWorkflow().getOutputDirectory(this),
                     StringTools.removeFileExt(f.getName())
                     + "-eic_correlation.cdf"));
 
@@ -200,7 +200,7 @@ public class EICPeakFinder extends AFragmentCommand {
                     Double.POSITIVE_INFINITY);
             ImageTools.saveImage(bi, "eic_correlation_"
                     + StringTools.removeFileExt(iff.getName()), "png",
-                    getIWorkflow().getOutputDirectory(this), this);
+                    getWorkflow().getOutputDirectory(this), this);
             // IVariableFragment ivf2 = FragmentTools.createVariable(iff,
             // "eic-crosscorrelation", null);
             // ivf2.setArray(crossCorrs);
@@ -208,7 +208,7 @@ public class EICPeakFinder extends AFragmentCommand {
             final DefaultWorkflowResult fileMapRes = new DefaultWorkflowResult(
                     new File(iff.getAbsolutePath()), this,
                     WorkflowSlot.PEAKFINDING, iff);
-            getIWorkflow().append(fileMapRes);
+            getWorkflow().append(fileMapRes);
         }
         EvalTools.notNull(t, this);
         return t;

@@ -91,7 +91,7 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
 		IFileFragment fret;
 		for (IFileFragment ff : t) {
 			fret = Factory.getInstance().getFileFragmentFactory().create(
-			        new File(getIWorkflow().getOutputDirectory(this), ff
+			        new File(getWorkflow().getOutputDirectory(this), ff
 			                .getName()));
 			fret.addSourceFile(ff);
 			ret.add(fret);
@@ -167,7 +167,7 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
 		for (IFileFragment ff : ret) {
 			final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
 			        new File(ff.getAbsolutePath()), this, getWorkflowSlot(), ff);
-			getIWorkflow().append(dwr);
+			getWorkflow().append(dwr);
 			ff.save();
 		}
 

@@ -60,6 +60,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import java.util.Arrays;
 
 /**
  * Use Objects of this class to apply an alignment, warping a source
@@ -74,9 +75,9 @@ import cross.tools.StringTools;
 public class ChromatogramWarp2 extends AFragmentCommand {
 
 	@Configurable
-	private List<String> indexedVars = Collections.emptyList();
+	private List<String> indexedVars = Arrays.asList("mass_values","intensity_values");
 	@Configurable
-	private List<String> plainVars = Collections.emptyList();
+	private List<String> plainVars = Arrays.asList("total_intensity","scan_acquisition_time");
 	@Configurable
 	private String indexVar = "scan_index";
 	private final Logger log = Logging.getLogger(this);
@@ -199,7 +200,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
 		// }
 		// }
 
-		this.log.info("Reference is {}", ref);
+		this.log.info("Reference is {}", refOrig);
 		for (int i = 0; i < wt.size(); i++) {
 			IFileFragment queryTarget = wt.get(i);
 			IFileFragment querySource = t.get(i);
@@ -210,18 +211,18 @@ public class ChromatogramWarp2 extends AFragmentCommand {
 				        refOrig.getName());
 				IFileFragment res = warp(refOrig, querySource, queryTarget,
 				        at.getPathFor(refOrig, queryTarget), true,
-				        getIWorkflow());
+				        getWorkflow());
 				res.save();
 				DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
 				        res.getAbsolutePath()), this, WorkflowSlot.WARPING, res);
-				getIWorkflow().append(dwr);
+				getWorkflow().append(dwr);
 			} else {
 				IFileFragment res = copyReference(querySource, queryTarget,
-				        getIWorkflow());
+				        getWorkflow());
 				res.save();
 				DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
 				        res.getAbsolutePath()), this, WorkflowSlot.WARPING, res);
-				getIWorkflow().append(dwr);
+				getWorkflow().append(dwr);
 			}
 		}
 		return wt;

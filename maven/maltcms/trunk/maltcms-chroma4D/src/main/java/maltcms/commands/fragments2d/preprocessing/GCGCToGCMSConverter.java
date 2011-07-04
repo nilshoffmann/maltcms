@@ -47,7 +47,7 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
 //			final int scansPerModulation = scanRate * modulationTime;
 //			this.log.debug("SPM: {}", scansPerModulation);
 
-            IFileFragment retF = new FileFragment(getIWorkflow().getOutputDirectory(this), ff.getName());
+            IFileFragment retF = new FileFragment(getWorkflow().getOutputDirectory(this), ff.getName());
 //            retF.addSourceFile(ff);
             ArrayStatsScanner ass = new ArrayStatsScanner();
             Chromatogram2D c2 = new Chromatogram2D(ff);

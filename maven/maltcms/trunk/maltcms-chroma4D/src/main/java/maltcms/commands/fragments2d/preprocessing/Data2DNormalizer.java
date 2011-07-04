@@ -75,7 +75,7 @@ public class Data2DNormalizer extends AFragmentCommand {
 			final int scansPerModulation = scanRate * modulationTime;
 			this.log.debug("SPM: {}", scansPerModulation);
 
-			IFileFragment retF = new FileFragment(getIWorkflow()
+			IFileFragment retF = new FileFragment(getWorkflow()
 			        .getOutputDirectory(this), ff.getName());
 			retF.addSourceFile(ff);
 
@@ -135,7 +135,7 @@ public class Data2DNormalizer extends AFragmentCommand {
 		RenderedImage bi = ImageTools.makeImage2D(tic2d, 256,
 		        Double.NEGATIVE_INFINITY);
 		ImageTools.saveImage(ImageTools.flipVertical(bi), f.getName()
-		        + "-TIC2D-beforeFilters", "png", getIWorkflow()
+		        + "-TIC2D-beforeFilters", "png", getWorkflow()
 		        .getOutputDirectory(this), this);
 		if (applyMovingAverage && movingAverageWindow > -1) {
 			log.info("Applying moving average filter with window size y: {}",
@@ -159,7 +159,7 @@ public class Data2DNormalizer extends AFragmentCommand {
 		tic2d = create2DArray(scanLineCount, scansPerModulation, tic);
 		bi = ImageTools.makeImage2D(tic2d, 256, Double.NEGATIVE_INFINITY);
 		ImageTools.saveImage(ImageTools.flipVertical(bi), f.getName()
-		        + "-TIC2D-afterAllFilters", "png", getIWorkflow()
+		        + "-TIC2D-afterAllFilters", "png", getWorkflow()
 		        .getOutputDirectory(this), this);
 		return createReturnArray(scanLineCount, scansPerModulation, tic2d);
 	}

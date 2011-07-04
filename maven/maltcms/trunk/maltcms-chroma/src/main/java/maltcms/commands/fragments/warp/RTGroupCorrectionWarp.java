@@ -113,7 +113,7 @@ public class RTGroupCorrectionWarp extends AFragmentCommand {
 		}
 		final IFileFragment copy = Factory.getInstance()
 		        .getFileFragmentFactory().create(
-		                new File(getIWorkflow().getOutputDirectory(this),
+		                new File(getWorkflow().getOutputDirectory(this),
 		                        StringTools.removeFileExt(ref.getName())
 		                                + ".cdf"));
 		this.log.info("Ref: {}, copy: {}", ref.getAbsolutePath(), copy
@@ -234,7 +234,7 @@ public class RTGroupCorrectionWarp extends AFragmentCommand {
 		        .getAbsolutePath(), processedFile.getAbsolutePath());
 		final IFileFragment warped = Factory.getInstance()
 		        .getFileFragmentFactory().create(
-		                new File(getIWorkflow().getOutputDirectory(this),
+		                new File(getWorkflow().getOutputDirectory(this),
 		                        StringTools.removeFileExt(originalFile
 		                                .getName())
 		                                + ".cdf"));

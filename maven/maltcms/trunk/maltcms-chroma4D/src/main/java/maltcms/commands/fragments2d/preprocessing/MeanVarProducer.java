@@ -114,7 +114,7 @@ public class MeanVarProducer extends AFragmentCommand {
         for (final IFileFragment ff : t) {
             this.log.info("Computing mean and std for {}", StringTools.removeFileExt(ff.getName()));
             final IFileFragment fret = Factory.getInstance().getFileFragmentFactory().create(
-                    new File(getIWorkflow().getOutputDirectory(this),
+                    new File(getWorkflow().getOutputDirectory(this),
                     ff.getName()));
             fret.addSourceFile(ff);
 
@@ -171,7 +171,7 @@ public class MeanVarProducer extends AFragmentCommand {
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
                     new File(fret.getAbsolutePath()), this, getWorkflowSlot(),
                     ff);
-            getIWorkflow().append(dwr);
+            getWorkflow().append(dwr);
 
             fret.save();
             ret.add(fret);

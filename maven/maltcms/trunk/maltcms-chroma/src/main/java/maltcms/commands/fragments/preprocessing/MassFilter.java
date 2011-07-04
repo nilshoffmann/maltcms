@@ -131,7 +131,7 @@ public class MassFilter extends AFragmentCommand {
 			// create a new FileFragment to hold processed data
 			final IFileFragment retf = Factory.getInstance()
 			        .getFileFragmentFactory().create(
-			                new File(getIWorkflow().getOutputDirectory(this),
+			                new File(getWorkflow().getOutputDirectory(this),
 			                        iff.getName()), iff);
 			if (!exclMassSet.isEmpty()) {
 				final List<Double> exclMass = new ArrayList<Double>(exclMassSet);
@@ -205,7 +205,7 @@ public class MassFilter extends AFragmentCommand {
 			retf.save();
 			rett.add(retf);
 			// notify workflow
-			getIWorkflow().append(dwpr.nextStep());
+			getWorkflow().append(dwpr.nextStep());
 		}
 		return rett;
 	}

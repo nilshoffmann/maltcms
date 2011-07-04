@@ -87,7 +87,7 @@ public class TICPeakListImporter extends AFragmentCommand {
 					log.warn("Loading TIC peaks from file {}", s);
 					IFileFragment work = Factory.getInstance()
 					        .getFileFragmentFactory().create(
-					                getIWorkflow().getOutputDirectory(this),
+					                getWorkflow().getOutputDirectory(this),
 					                ff.getName(), ff);
 					CSVReader csvr = Factory.getInstance().getObjectFactory()
 					        .instantiate(CSVReader.class);

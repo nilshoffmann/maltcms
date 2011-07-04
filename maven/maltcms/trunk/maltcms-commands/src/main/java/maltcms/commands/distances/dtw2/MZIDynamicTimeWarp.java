@@ -127,13 +127,13 @@ public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
 			synchronized (t.getFirst()) {
 				eics1 = MaltcmsTools.rankEICsByVariance(t.getFirst(), intens1,
 				        this.numberOfEICsToSelect, this.getClass(),
-				        getIWorkflow().getOutputDirectory(this));
+				        getWorkflow().getOutputDirectory(this));
 			}
 			List<Tuple2D<Double, Double>> eics2 = null;
 			synchronized (t.getSecond()) {
 				eics2 = MaltcmsTools.rankEICsByVariance(t.getSecond(), intens2,
 				        this.numberOfEICsToSelect, this.getClass(),
-				        getIWorkflow().getOutputDirectory(this));
+				        getWorkflow().getOutputDirectory(this));
 			}
 			final Integer[] pairedEics = MaltcmsTools.pairedEICs(eics1, eics2);
 			tuple = new Tuple2D<List<Array>, List<Array>>(MaltcmsTools

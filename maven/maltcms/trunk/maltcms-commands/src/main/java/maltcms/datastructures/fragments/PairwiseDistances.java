@@ -99,7 +99,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
 		return this.alignments;
 	}
 
-	public IWorkflow getIWorkflow() {
+	public IWorkflow getWorkflow() {
 		return this.iw;
 	}
 
@@ -183,7 +183,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
 		this.alignments = t;
 	}
 
-	public void setIWorkflow(final IWorkflow iw1) {
+	public void setWorkflow(final IWorkflow iw1) {
 		this.iw = iw1;
 	}
 

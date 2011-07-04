@@ -49,9 +49,9 @@ public class VariableDataExporter extends AFragmentCommand {
 	@Override
 	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
 		final CSVWriter csvw = new CSVWriter();
-		csvw.setIWorkflow(getIWorkflow());
+		csvw.setWorkflow(getWorkflow());
 		for (final IFileFragment iff : t) {
-			final File path = getIWorkflow().getOutputDirectory(this);
+			final File path = getWorkflow().getOutputDirectory(this);
 			for (final String s : this.varNames) {
 				final Array a = iff.getChild(s).getArray();
 				csvw.writeArray(path.getAbsolutePath(), StringTools

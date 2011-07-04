@@ -116,16 +116,16 @@ public class DTWNew {
         System.out.println("Done!");
         System.out.println(v);
         System.out.println(ia.getIOptimizationFunction().getOptimalValue());
-        IFileFragment ares = Factory.getInstance().getFileFragmentFactory().create(iff3, iff4, cp.getIWorkflow().getOutputDirectory(ia));
+        IFileFragment ares = Factory.getInstance().getFileFragmentFactory().create(iff3, iff4, cp.getWorkflow().getOutputDirectory(ia));
         ia.modify(ares);
         ares.save();
         ADynamicTimeWarp adtw = Factory.getInstance().getObjectFactory().instantiate(
                 "maltcms.commands.distances.dtw.MZIDynamicTimeWarp",
                 ADynamicTimeWarp.class);
-        adtw.setIWorkflow(cp.getIWorkflow());
+        adtw.setWorkflow(cp.getWorkflow());
         IFileFragment iff = adtw.apply(iff3, iff4);
         iff.clearArrays();
-        List<IWorkflowResult> l = cp.getIWorkflow().getResultsOfType("_path-symbolic.txt");
+        List<IWorkflowResult> l = cp.getWorkflow().getResultsOfType("_path-symbolic.txt");
 //        List<Tuple2DI> ll = MaltcmsTools.getWarpPath(iff);
 
 //        List<Point> pl2 = PathTools.toPointList(ll);

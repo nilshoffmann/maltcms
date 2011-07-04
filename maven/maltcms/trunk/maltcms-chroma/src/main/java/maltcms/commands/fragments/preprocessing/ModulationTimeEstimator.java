@@ -92,7 +92,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
 		for (final IFileFragment ff : t) {
 			final IFileFragment fret = Factory.getInstance()
 			        .getFileFragmentFactory().create(
-			                new File(getIWorkflow().getOutputDirectory(this),
+			                new File(getWorkflow().getOutputDirectory(this),
 			                        ff.getName()));
 
 			findSecondRetentionTimes(ff, fret);
@@ -434,14 +434,14 @@ public class ModulationTimeEstimator extends AFragmentCommand {
 		        (int) (this.secondColumnTime * this.scanRate), colorRamp, 1024,
 		        true, this.threshold);
 		ImageTools.saveImage(bi, ff.getName() + "-chromatogram", "png",
-		        getIWorkflow().getOutputDirectory(this), this);
+		        getWorkflow().getOutputDirectory(this), this);
 		final HeatMapChart hmc = new HeatMapChart(bi, "time 1 [s]",
 		        "time 2 [s]", buildScanAcquisitionTime(
 		                (int) (this.secondColumnTime * this.scanRate), tic
 		                        .getShape()[0], satMean), ff.getAbsolutePath());
 		final PlotRunner pl = new PlotRunner(hmc.create(), "Chromatogram of "
 		        + ff.getAbsolutePath(), "chromatogram-" + ff.getName(),
-		        getIWorkflow().getOutputDirectory(this));
+		        getWorkflow().getOutputDirectory(this));
 		pl.configure(Factory.getInstance().getConfiguration());
 		Factory.getInstance().submitJob(pl);
 		// checkDeltas(maxima);

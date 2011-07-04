@@ -165,7 +165,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
 		} catch (final InterruptedException e) {
 			log.error(e.getLocalizedMessage());
 		}
-		final IWorkflow iw = cs.getIWorkflow();
+		final IWorkflow iw = cs.getWorkflow();
 		// Save configuration
 		Factory.dumpConfig("runtime.properties", iw.getStartupDate());
 		// Save workflow
@@ -236,7 +236,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
 			        + ".csv";
 			final IFileFragment iff = Factory.getInstance()
 			        .getFileFragmentFactory().create(
-			                new File(getIWorkflow().getOutputDirectory(this),
+			                new File(getWorkflow().getOutputDirectory(this),
 			                        filename));
 			final StatsMap sm = new StatsMap(iff);
 			final long t_start = System.currentTimeMillis();
@@ -283,7 +283,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
 				                .getDistmat(),
 				        SymbolicRepresentationAlignment.location, fr,
 				        SymbolicRepresentationAlignment.al, aoriglen, boriglen,
-				        getIWorkflow());
+				        getWorkflow());
 			}
 			final int maplength = MaltcmsTools.getWarpPath(
 			        put.getResult().provideFileFragment()).size();
@@ -305,7 +305,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
 			pairwiseDistances.set(i2, i1, value);
 			final StatsWriter sw = Factory.getInstance().getObjectFactory()
 			        .instantiate(StatsWriter.class);
-			sw.setIWorkflow(getIWorkflow());
+			sw.setWorkflow(getWorkflow());
 			sw.write(sm);
 			alignments.add(put.getResult().provideFileFragment());
 			// MaltcmsTools.addPairwiseAlignment(F.getFirst(), F.getSecond(),
@@ -322,7 +322,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
 		final IFileFragment ret = Factory
 		        .getInstance()
 		        .getFileFragmentFactory()
-		        .create(new File(getIWorkflow().getOutputDirectory(this), name));
+		        .create(new File(getWorkflow().getOutputDirectory(this), name));
 		pd.modify(ret);
 		ret.save();
 		// Factory.getInstance().getConfiguration().setProperty(
@@ -425,7 +425,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
 		}
 		File out = null;
 		final String filename = "aligned-tics." + "png";
-		final File d = getIWorkflow().getOutputDirectory(this);
+		final File d = getWorkflow().getOutputDirectory(this);
 		out = new File(d, filename);
 		try {
 			this.log.info("Saving image to " + out.getAbsolutePath());
@@ -486,7 +486,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
 		}
 		File out = null;
 		final String filename = "unaligned-tics." + "png";
-		final File d = getIWorkflow().getOutputDirectory(this);
+		final File d = getWorkflow().getOutputDirectory(this);
 		out = new File(d, filename);
 		try {
 			this.log.info("Saving image to " + out.getAbsolutePath());
@@ -548,10 +548,10 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
 	        final ArrayDouble.D2 distances, final ArrayChar.D2 names) {
 		final CSVWriter csvw = Factory.getInstance().getObjectFactory()
 		        .instantiate(CSVWriter.class);
-		csvw.setIWorkflow(getIWorkflow());
-		csvw.writeArray2DwithLabels(getIWorkflow().getOutputDirectory(this)
+		csvw.setWorkflow(getWorkflow());
+		csvw.writeArray2DwithLabels(getWorkflow().getOutputDirectory(this)
 		        .getAbsolutePath(), "pairwise_distances.csv", distances, names,
-		        this.getClass(), WorkflowSlot.STATISTICS, getIWorkflow()
+		        this.getClass(), WorkflowSlot.STATISTICS, getWorkflow()
 		                .getStartupDate(), pwdist);
 	}
 

@@ -115,7 +115,7 @@ public class ChromatogramVisualizer extends AFragmentCommand {
 			// this.scanIndexVariableName, this.mzVariableName,
 			// this.intenVariableName, "binned_scan_index",
 			// "binned_mass_values", "binned_intensity_values", tple
-			// .getFirst(), tple.getSecond(), getIWorkflow()
+			// .getFirst(), tple.getSecond(), getWorkflow()
 			// .getStartupDate());
 			// final IVariableFragment bints = iff
 			// .getChild("binned_intensity_values");
@@ -180,7 +180,7 @@ public class ChromatogramVisualizer extends AFragmentCommand {
 				        aa, bins, colorRamp, this.sampleSize, true,
 				        this.lowThreshold);
 				ImageTools.saveImage(bi, ff.getName() + "-chromatogram",
-				        this.format, getIWorkflow().getOutputDirectory(this),
+				        this.format, getWorkflow().getOutputDirectory(this),
 				        this);
 
 				final HeatMapChart hmc = new HeatMapChart(bi, x_label, "m/z",
@@ -189,13 +189,13 @@ public class ChromatogramVisualizer extends AFragmentCommand {
 				final PlotRunner pl = new PlotRunner(hmc.create(),
 				        "Chromatogram of " + ff.getName(), StringTools
 				                .removeFileExt(ff.getName())
-				                + "-chromatogram-chart", getIWorkflow()
+				                + "-chromatogram-chart", getWorkflow()
 				                .getOutputDirectory(this));
 				pl.configure(Factory.getInstance().getConfiguration());
 				final File f = pl.getFile();
 				final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
 				        this, WorkflowSlot.VISUALIZATION, ff);
-				getIWorkflow().append(dwr);
+				getWorkflow().append(dwr);
 				Factory.getInstance().submitJob(pl);
 			} else {
 				this.log.warn("Could not load required variables");

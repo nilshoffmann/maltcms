@@ -270,7 +270,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 	        final Tuple2D<IFileFragment, IFileFragment> t) {
 		this.pa = Factory.getInstance().getObjectFactory().instantiate(
 		        PairwiseAlignment.class);
-		this.pa.setIWorkflow(getIWorkflow());
+		this.pa.setWorkflow(getWorkflow());
 		this.pa.setFileFragments(t.getFirst(), t.getSecond(), this.getClass());
 
 		final Tuple2D<List<Array>, List<Array>> tuple = createTuple(t);
@@ -321,7 +321,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 		// this.resF, this.extension);
 		// save the path to csv
 		// pt.savePathCSV(this.resF, this.alignment, pa.getPath(),
-		// getIWorkflow());
+		// getWorkflow());
 		final IFileFragment forwardAlignment = saveState(this.resF);
 		final ArrayFactory f = Factory.getInstance().getObjectFactory()
 		        .instantiate(ArrayFactory.class);
@@ -341,7 +341,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 			g2.fillRect(pair.getSecond(), pair.getFirst(), 1, 1);
 		}
 		try {
-			ImageIO.write(bi, "PNG", new File(getIWorkflow()
+			ImageIO.write(bi, "PNG", new File(getWorkflow()
 			        .getOutputDirectory(this), StringTools
 			        .removeFileExt(forwardAlignment.getName())
 			        + "_matrixLayout.png"));
@@ -496,10 +496,10 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see cross.datastructures.workflow.IWorkflowElement#getIWorkflow()
+	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
 	 */
 	@Override
-	public IWorkflow getIWorkflow() {
+	public IWorkflow getWorkflow() {
 		return this.iw;
 	}
 
@@ -651,11 +651,11 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seecross.datastructures.workflow.IWorkflowElement#setIWorkflow(cross.
+	 * @seecross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
 	 * datastructures.workflow.IWorkflow)
 	 */
 	@Override
-	public void setIWorkflow(final IWorkflow iw1) {
+	public void setWorkflow(final IWorkflow iw1) {
 		this.iw = iw1;
 	}
 

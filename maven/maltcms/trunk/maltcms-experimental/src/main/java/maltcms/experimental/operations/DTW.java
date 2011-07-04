@@ -324,7 +324,7 @@ public class DTW implements IAlignment, IWorkflowElement, Serializable {
 	}
 
 	@Override
-	public IWorkflow getIWorkflow() {
+	public IWorkflow getWorkflow() {
 		return this.iw;
 	}
 
@@ -334,7 +334,7 @@ public class DTW implements IAlignment, IWorkflowElement, Serializable {
 	}
 
 	@Override
-	public void setIWorkflow(IWorkflow iw) {
+	public void setWorkflow(IWorkflow iw) {
 		this.iw = iw;
 	}
 

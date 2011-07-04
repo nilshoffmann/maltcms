@@ -188,7 +188,7 @@ public class Alignment2D extends AFragmentCommand {
 						+ "_vs_" + StringTools.removeFileExt(rhsff.getName());
 				final String filename = baseFilename + "_rgb";
 				final File out = ImageTools.saveImage(image, filename, "png",
-						getIWorkflow().getOutputDirectory(this), this);
+						getWorkflow().getOutputDirectory(this), this);
 
 				// for (Point p : v) {
 				// System.out.println(p.x + ":" + p.y);

@@ -129,6 +129,6 @@ public interface IPeakExporter extends IConfigurable {
 	 * @param workflow
 	 *            {@link IWorkflow}
 	 */
-	void setIWorkflow(final IWorkflow workflow);
+	void setWorkflow(final IWorkflow workflow);
 
 }

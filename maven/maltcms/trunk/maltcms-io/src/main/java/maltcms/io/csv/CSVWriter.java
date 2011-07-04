@@ -76,10 +76,10 @@ public class CSVWriter implements IWorkflowElement {
 
 	private void appendToWorkflow(final File f, final WorkflowSlot ws,
 	        final IFileFragment... resources) {
-		if (getIWorkflow() != null) {
+		if (getWorkflow() != null) {
 			final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
 			        new File(f.getAbsolutePath()), this, ws, resources);
-			getIWorkflow().append(dwr);
+			getWorkflow().append(dwr);
 		}
 	}
 
@@ -143,10 +143,10 @@ public class CSVWriter implements IWorkflowElement {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see cross.datastructures.workflow.IWorkflowElement#getIWorkflow()
+	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
 	 */
 	@Override
-	public IWorkflow getIWorkflow() {
+	public IWorkflow getWorkflow() {
 		return this.iw;
 	}
 
@@ -167,11 +167,11 @@ public class CSVWriter implements IWorkflowElement {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seecross.datastructures.workflow.IWorkflowElement#setIWorkflow(cross.
-	 * datastructures.workflow.IWorkflow)
+	 * @see cross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
+	 * datastructures.workflow.Workflow)
 	 */
 	@Override
-	public void setIWorkflow(final IWorkflow iw1) {
+	public void setWorkflow(final IWorkflow iw1) {
 		this.iw = iw1;
 
 	}

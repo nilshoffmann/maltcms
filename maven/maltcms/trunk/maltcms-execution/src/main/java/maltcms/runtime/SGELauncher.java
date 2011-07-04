@@ -49,7 +49,7 @@ public class SGELauncher implements Thread.UncaughtExceptionHandler,
 			session.init("");
 			final JobTemplate jt = session.createJobTemplate();
 			jt.setRemoteCommand("sleeper.sh");
-			jt.setArgs(Collections.singletonList("5").toArray(new String[] {}));
+			jt.setArgs(Collections.singletonList("5"));
 			final String id = session.runJob(jt);
 			System.out.println("Your job has been submitted with id " + id);
 			session.deleteJobTemplate(jt);

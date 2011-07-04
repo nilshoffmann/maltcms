@@ -130,12 +130,12 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
 		final PlotRunner pl = new EPlotRunner(chart, StringTools
 		        .removeFileExt(ref.getName())
 		        + "_vs_" + StringTools.removeFileExt(query.getName()) + "-PA",
-		        getIWorkflow().getOutputDirectory(this));
+		        getWorkflow().getOutputDirectory(this));
 		pl.configure(Factory.getInstance().getConfiguration());
 		final File f = pl.getFile();
 		final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f, this,
 		        WorkflowSlot.VISUALIZATION, ref, query);
-		getIWorkflow().append(dwr);
+		getWorkflow().append(dwr);
 		Factory.getInstance().submitJob(pl);
 	}
 

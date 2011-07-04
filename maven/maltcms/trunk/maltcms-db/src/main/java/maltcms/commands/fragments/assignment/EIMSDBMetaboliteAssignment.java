@@ -91,13 +91,13 @@ public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
 			// table.add(header);
 			// if (table.size() > 1) {
 			CSVWriter csvw = new CSVWriter();
-			csvw.setIWorkflow(getIWorkflow());
-			PrintWriter pw = csvw.createPrintWriter(getIWorkflow()
+			csvw.setWorkflow(getWorkflow());
+			PrintWriter pw = csvw.createPrintWriter(getWorkflow()
 			        .getOutputDirectory(this).getAbsolutePath(), StringTools
 			        .removeFileExt(iff.getName())
 			        + "_peak_assignment.csv", header,
 			        WorkflowSlot.IDENTIFICATION);
-			// csvw.writeTableByRows(getIWorkflow().getOutputDirectory(this)
+			// csvw.writeTableByRows(getWorkflow().getOutputDirectory(this)
 			// .getAbsolutePath(), StringTools.removeFileExt(iff
 			// .getName())
 			// + "_peak_assignment.csv", table,

@@ -111,8 +111,8 @@ public class PathWarp extends AFragmentCommand {
 	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
 		final TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
 		for (final IFileFragment ff : t) {
-			final MZIWarpInput mwi = new MZIWarpInput(ff, getIWorkflow());
-			IFileFragment tf = new FileFragment(getIWorkflow()
+			final MZIWarpInput mwi = new MZIWarpInput(ff, getWorkflow());
+			IFileFragment tf = new FileFragment(getWorkflow()
 			        .getOutputDirectory(this), ff.getName());
 			tf.addSourceFile(ff);
 			tf = apply(mwi, tf);
@@ -120,7 +120,7 @@ public class PathWarp extends AFragmentCommand {
 			this.log.debug("Path AWarp saving to {}", tf.getName());
 			final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
 			        new File(tf.getAbsolutePath()), this, getWorkflowSlot(), ff);
-			getIWorkflow().append(dwr);
+			getWorkflow().append(dwr);
 			tf.save();
 			ret.add(tf);
 		}

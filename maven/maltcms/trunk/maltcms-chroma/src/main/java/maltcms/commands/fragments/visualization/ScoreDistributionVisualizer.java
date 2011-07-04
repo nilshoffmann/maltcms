@@ -50,7 +50,7 @@ public class ScoreDistributionVisualizer extends AFragmentCommand {
 				final hep.aida.ref.Converter c = new hep.aida.ref.Converter();
 				final String s = c.toString(h);
 				final File f = new File(
-				        getIWorkflow().getOutputDirectory(this), "histogram_"
+				        getWorkflow().getOutputDirectory(this), "histogram_"
 				                + iff.getName());
 				try {
 					final BufferedWriter sw = new BufferedWriter(
@@ -67,7 +67,7 @@ public class ScoreDistributionVisualizer extends AFragmentCommand {
 				}
 				final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
 				        this, WorkflowSlot.STATISTICS, iff);
-				getIWorkflow().append(dwr);
+				getWorkflow().append(dwr);
 			} catch (final ResourceNotAvailableException rnae) {
 				this.log.warn("Could not load variable {} from file {}",
 				        "pairwise_distance", iff);

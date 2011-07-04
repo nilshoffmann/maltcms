@@ -108,7 +108,7 @@ public class DTWTest {
 		System.out.println(ia.getIOptimizationFunction().getOptimalValue());
 		// IFileFragment ares = Factory.getInstance().getFileFragmentFactory()
 		// .createFragment(iff3, iff4, DTW.class,
-		// cp.getIWorkflow().getStartupDate());
+		// cp.getWorkflow().getStartupDate());
 		// ia.decorate(ares);
 		// ares.save();
 

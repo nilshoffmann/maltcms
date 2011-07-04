@@ -775,7 +775,7 @@ public class PathTools implements IConfigurable {
 		// dwr.setIWorkflowElement(csvw);
 		// dwr.setWorkflowSlot(WorkflowSlot.ALIGNMENT);
 		// iw.append(dwr);
-		csvw.setIWorkflow(iw);
+		csvw.setWorkflow(iw);
 		csvw.writeAlignmentPath(pathCSV.getParent(), pathCSV.getName(), map1,
 		        cdist, FragmentTools.getLHSFile(parent).getName(),
 		        FragmentTools.getRHSFile(parent).getName(),

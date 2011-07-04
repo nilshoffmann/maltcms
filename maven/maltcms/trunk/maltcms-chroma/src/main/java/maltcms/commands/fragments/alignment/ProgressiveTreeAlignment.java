@@ -64,7 +64,7 @@ public class ProgressiveTreeAlignment extends AFragmentCommand {
 		// then proceed and align sequences to consensus sequences etc.
 		final AFragmentCommand ica = Factory.getInstance().getObjectFactory()
 		        .instantiate(this.guideTreeClass, AFragmentCommand.class);
-		ica.setIWorkflow(getIWorkflow());
+		ica.setWorkflow(getWorkflow());
 		((IClusteringAlgorithm) ica).init(pwd, t);
 		final TupleND<IFileFragment> tple = ica.apply(t);
 		return tple;

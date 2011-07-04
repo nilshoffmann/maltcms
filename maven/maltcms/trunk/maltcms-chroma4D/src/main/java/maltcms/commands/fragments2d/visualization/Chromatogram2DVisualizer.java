@@ -160,7 +160,7 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
 				final PlotRunner pl1 = new PlotRunner(plot.create(),
 						"Scanline TIC mean", StringTools.removeFileExt(ff
 								.getName())
-								+ "_tic-mean", getIWorkflow()
+								+ "_tic-mean", getWorkflow()
 								.getOutputDirectory(this));
 				pl1.configure(Factory.getInstance().getConfiguration());
 				Factory.getInstance().submitJob(pl1);
@@ -173,7 +173,7 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
 			final String filename = StringTools.removeFileExt(ff.getName())
 					+ "_empty";
 			final File out = ImageTools.saveImage(bi, filename, this.format,
-					getIWorkflow().getOutputDirectory(this), this);
+					getWorkflow().getOutputDirectory(this), this);
 
 			final ArrayDouble.D1 firstRetTime = (ArrayDouble.D1) ArrayTools
 					.divBy60(ff.getChild(this.scanAcquTime).getArray());
@@ -190,7 +190,7 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
 					"second retention time[s]", times, filename);
 			final PlotRunner pl = new PlotRunner(chart.create(),
 					"Chromatogram", StringTools.removeFileExt(ff.getName()),
-					getIWorkflow().getOutputDirectory(this));
+					getWorkflow().getOutputDirectory(this));
 			pl.configure(Factory.getInstance().getConfiguration());
 			Factory.getInstance().submitJob(pl);
 
@@ -211,7 +211,7 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
 					false);
 			final PlotRunner pl1 = new PlotRunner(plot.create(),
 					"Verteilung Farbe", StringTools.removeFileExt(ff.getName())
-							+ "_v", getIWorkflow().getOutputDirectory(this));
+							+ "_v", getWorkflow().getOutputDirectory(this));
 			pl1.configure(Factory.getInstance().getConfiguration());
 			Factory.getInstance().submitJob(pl1);
 		}

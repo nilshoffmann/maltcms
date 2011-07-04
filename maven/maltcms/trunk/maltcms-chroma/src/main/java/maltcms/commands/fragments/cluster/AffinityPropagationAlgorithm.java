@@ -242,10 +242,10 @@ public class AffinityPropagationAlgorithm extends ClusteringAlgorithm implements
 	}
 
 	private void saveToFiles(final double[][] similarities1) {
-		final File sims = FileTools.prepareOutput(getIWorkflow()
+		final File sims = FileTools.prepareOutput(getWorkflow()
 		        .getOutputDirectory(this).getAbsolutePath(), "Similarities",
 		        "txt");
-		final File prefs = FileTools.prepareOutput(getIWorkflow()
+		final File prefs = FileTools.prepareOutput(getWorkflow()
 		        .getOutputDirectory(this).getAbsolutePath(), "Preferences",
 		        "txt");
 		try {

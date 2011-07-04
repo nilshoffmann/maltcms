@@ -182,13 +182,13 @@ public class LogDeltaEvaluation implements IWorkflowElement {
 					customizeBarChart(jfc);
 					PlotRunner pr = new PlotRunner(jfc.getXYPlot(),
 							"Log Deltas", "cliqueslogDelta" + c1 + "-" + c2,
-							getIWorkflow().getOutputDirectory(this));
+							getWorkflow().getOutputDirectory(this));
 					pr.configure(Factory.getInstance().getConfiguration());
 					final File file = pr.getFile();
 					final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
 							file, this, WorkflowSlot.VISUALIZATION, t
 									.toArray(new IFileFragment[] {}));
-					getIWorkflow().append(dwr);
+					getWorkflow().append(dwr);
 					Factory.getInstance().submitJob(pr);
 					c++;
 				}
@@ -196,7 +196,7 @@ public class LogDeltaEvaluation implements IWorkflowElement {
 		}
 
 		final CSVWriter csvw = new CSVWriter();
-		csvw.setIWorkflow(this.workflow);
+		csvw.setWorkflow(this.workflow);
 		csvw.writeTableByRows(this.workflow.getOutputDirectory(this)
 				.getAbsolutePath(), "classDifferences.csv", metaTable,
 				WorkflowSlot.PEAKFINDING);
@@ -210,7 +210,7 @@ public class LogDeltaEvaluation implements IWorkflowElement {
 	}
 
 	@Override
-	public IWorkflow getIWorkflow() {
+	public IWorkflow getWorkflow() {
 		return this.workflow;
 	}
 
@@ -220,7 +220,7 @@ public class LogDeltaEvaluation implements IWorkflowElement {
 	}
 
 	@Override
-	public void setIWorkflow(IWorkflow iw) {
+	public void setWorkflow(IWorkflow iw) {
 		this.workflow = iw;
 
 	}

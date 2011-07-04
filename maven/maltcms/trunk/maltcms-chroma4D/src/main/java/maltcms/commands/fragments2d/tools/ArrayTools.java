@@ -100,13 +100,13 @@ public class ArrayTools {
 			final PlotRunner pr1 = new PlotRunner(plot,
 					"Plot of sorted standard deviation", StringTools
 							.removeFileExt(ff.getName())
-							+ "_sortedStd", ac.getIWorkflow()
+							+ "_sortedStd", ac.getWorkflow()
 							.getOutputDirectory(ac));
 			pr1.configure(Factory.getInstance().getConfiguration());
 			final File f1 = pr1.getFile();
 			final DefaultWorkflowResult dwr1 = new DefaultWorkflowResult(f1,
 					ac, ac.getWorkflowSlot(), ff);
-			ac.getIWorkflow().append(dwr1);
+			ac.getWorkflow().append(dwr1);
 			Factory.getInstance().submitJob(pr1);
 		}
 		return value;

@@ -242,22 +242,22 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 		pd.setMinimize(this.minimizeDist);
 		pd.setNames(names);
 		pd.setAlignments(new TupleND<IFileFragment>(this.alignments));
-		pd.setIWorkflow(getIWorkflow());
+		pd.setWorkflow(getWorkflow());
 		final IFileFragment ret = Factory.getInstance()
 		        .getFileFragmentFactory().create(
-		                new File(getIWorkflow().getOutputDirectory(pd), name));
+		                new File(getWorkflow().getOutputDirectory(pd), name));
 		pd.modify(ret);
 		ret.save();
 		final DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
 		        ret.getAbsolutePath()), this, WorkflowSlot.STATISTICS, ret);
-		getIWorkflow().append(dwr);
+		getWorkflow().append(dwr);
 
 		this.log.info("Returned FileFragments: {}", al);
 		TupleND<IFileFragment> retFiles = new TupleND<IFileFragment>();
 		for (final IFileFragment iff : al) {
 			final IFileFragment rf = Factory.getInstance()
 			        .getFileFragmentFactory().create(
-			                new File(getIWorkflow().getOutputDirectory(this),
+			                new File(getWorkflow().getOutputDirectory(this),
 			                        iff.getName()));
 			rf.addSourceFile(iff);
 			rf.addSourceFile(ret);
@@ -266,9 +266,9 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 			final DefaultWorkflowResult wr = new DefaultWorkflowResult(
 			        new File(rf.getAbsolutePath()), this,
 			        WorkflowSlot.CLUSTERING, rf);
-			getIWorkflow().append(wr);
+			getWorkflow().append(wr);
 		}
-		final File graphml = new File(getIWorkflow().getOutputDirectory(this),
+		final File graphml = new File(getWorkflow().getOutputDirectory(this),
 		        "maltcms.graphml");
 		try {
 			final BufferedWriter bw = new BufferedWriter(
@@ -279,7 +279,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 		} catch (final IOException e) {
 			this.log.error(e.getLocalizedMessage());
 		}
-		final File newick = new File(getIWorkflow().getOutputDirectory(this),
+		final File newick = new File(getWorkflow().getOutputDirectory(this),
 		        "maltcms.newick");
 		try {
 			final BufferedWriter bw = new BufferedWriter(new FileWriter(newick));
@@ -340,7 +340,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 		        .instantiate(
 		                "maltcms.commands.fragments.preprocessing.DenseArrayProducer",
 		                AFragmentCommand.class);
-		dap.setIWorkflow(getIWorkflow());
+		dap.setWorkflow(getWorkflow());
 		return dap.apply(new TupleND<IFileFragment>(iff)).get(0);
 	}
 
@@ -496,15 +496,15 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 		        ff1, ff2);
 		DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(dtw
 		        .getAbsolutePath()), this, WorkflowSlot.ALIGNMENT, dtw);
-		getIWorkflow().append(dwr);
-		this.chromatogramWarpCommandClass.setIWorkflow(getIWorkflow());
+		getWorkflow().append(dwr);
+		this.chromatogramWarpCommandClass.setWorkflow(getWorkflow());
 		final IFileFragment warped = this.chromatogramWarpCommandClass.apply(
 		        new TupleND<IFileFragment>(dtw)).get(0);
 		alignments.add(dtw);
 		final long t_end = System.currentTimeMillis() - t_start;
 		final StatsMap sm = new StatsMap(Factory.getInstance()
 		        .getFileFragmentFactory().create(
-		                new File(getIWorkflow().getOutputDirectory(this), "NJ_"
+		                new File(getWorkflow().getOutputDirectory(this), "NJ_"
 		                        + StringTools.removeFileExt(ff1.getName())
 		                        + "_"
 		                        + StringTools.removeFileExt(ff2.getName())
@@ -515,11 +515,11 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 		                .get());
 		final StatsWriter sw = Factory.getInstance().getObjectFactory()
 		        .instantiate(StatsWriter.class);
-		sw.setIWorkflow(getIWorkflow());
+		sw.setWorkflow(getWorkflow());
 		sw.write(sm);
 		dwr = new DefaultWorkflowResult(new File(warped.getAbsolutePath()),
 		        this, WorkflowSlot.WARPING, warped);
-		getIWorkflow().append(dwr);
+		getWorkflow().append(dwr);
 
 		final IFileFragment res = createDenseArrays(warped);
 
@@ -574,7 +574,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 		// System.out.println("Number of joins: "+numjoins);
 		// System.out.println("Initial number of clusters: "+this.L);
 		printDistMatrix();
-		this.chromatogramDistanceFunctionClass.setIWorkflow(getIWorkflow());
+		this.chromatogramDistanceFunctionClass.setWorkflow(getWorkflow());
 	}
 
 	/*

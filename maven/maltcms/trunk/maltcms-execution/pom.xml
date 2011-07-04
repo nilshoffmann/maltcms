@@ -40,15 +40,43 @@
             <artifactId>commons-configuration</artifactId>
             <version>1.6</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>drmaa</groupId>
             <artifactId>drmaa</artifactId>
             <version>1.0</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>wizard</groupId>
             <artifactId>wizard</artifactId>
             <version>0.998.1</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-execution-computeHost</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-execution-server</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-execution-launcher-spi</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-execution-server</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.gff.drmaa</groupId>
+            <artifactId>sun-drmaa-impl</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
     <properties>

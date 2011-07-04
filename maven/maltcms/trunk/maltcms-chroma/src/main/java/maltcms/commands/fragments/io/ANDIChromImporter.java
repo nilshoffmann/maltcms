@@ -52,7 +52,7 @@ public class ANDIChromImporter extends AFragmentCommand {
 		for (final IFileFragment iff : t) {
 			final IFileFragment fret = Factory.getInstance()
 			        .getFileFragmentFactory().create(
-			                new File(getIWorkflow().getOutputDirectory(this),
+			                new File(getWorkflow().getOutputDirectory(this),
 			                        iff.getName()));
 			final Array a = iff.getChild(this.ticVarName).getArray();
 			final Array sa = iff.getChild(this.asiVarName).getArray();

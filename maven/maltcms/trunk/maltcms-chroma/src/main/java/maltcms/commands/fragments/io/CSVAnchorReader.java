@@ -227,7 +227,7 @@ public class CSVAnchorReader extends AFragmentCommand {
 				        .getInstance()
 				        .getFileFragmentFactory()
 				        .create(
-				                new File(getIWorkflow()
+				                new File(getWorkflow()
 				                        .getOutputDirectory(this), g.getName()));
 				// add associatedToFile fragment as source file, create if
 				// non-existant
@@ -247,7 +247,7 @@ public class CSVAnchorReader extends AFragmentCommand {
 				final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
 				        new File(parentFragment.getAbsolutePath()), this,
 				        WorkflowSlot.FILEIO, parentFragment);
-				getIWorkflow().append(dwr);
+				getWorkflow().append(dwr);
 				retF.add(parentFragment);
 			} else {
 				this.log.warn("No association possible, skipping file: {}",

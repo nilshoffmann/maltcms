@@ -129,7 +129,7 @@ public class PeakExporter implements IPeakExporter {
 			}
 
 			final CSVWriter csvw = new CSVWriter();
-			csvw.setIWorkflow(this.iworkflow);
+			csvw.setWorkflow(this.iworkflow);
 			csvw.writeTableByCols(this.iworkflow.getOutputDirectory(this)
 					.getAbsolutePath(), "bidibestHits.csv", table,
 					WorkflowSlot.PEAKFINDING);
@@ -325,7 +325,7 @@ public class PeakExporter implements IPeakExporter {
 
 		// writing file
 		final CSVWriter csvw = new CSVWriter();
-		csvw.setIWorkflow(this.iworkflow);
+		csvw.setWorkflow(this.iworkflow);
 		csvw.writeTableByCols(this.iworkflow.getOutputDirectory(this)
 				.getAbsolutePath(), oFilename, metaTable,
 				WorkflowSlot.PEAKFINDING);
@@ -375,7 +375,7 @@ public class PeakExporter implements IPeakExporter {
 		}
 
 		final CSVWriter csvw = new CSVWriter();
-		csvw.setIWorkflow(this.iworkflow);
+		csvw.setWorkflow(this.iworkflow);
 		csvw.writeTableByRows(this.iworkflow.getOutputDirectory(this)
 				.getAbsolutePath(), oFilename, metaTable,
 				WorkflowSlot.PEAKFINDING);
@@ -435,7 +435,7 @@ public class PeakExporter implements IPeakExporter {
 		}
 
 		final CSVWriter csvw = new CSVWriter();
-		csvw.setIWorkflow(this.iworkflow);
+		csvw.setWorkflow(this.iworkflow);
 		csvw.writeTableByRows(this.iworkflow.getOutputDirectory(this)
 				.getAbsolutePath(), name + "_peakDetails.csv", printTable,
 				WorkflowSlot.PEAKFINDING);
@@ -493,7 +493,7 @@ public class PeakExporter implements IPeakExporter {
 		}
 
 		final CSVWriter csvw = new CSVWriter();
-		csvw.setIWorkflow(this.iworkflow);
+		csvw.setWorkflow(this.iworkflow);
 		csvw.writeTableByRows(this.iworkflow.getOutputDirectory(this)
 				.getAbsolutePath(), name + "_peaklist.csv", table,
 				WorkflowSlot.PEAKFINDING);
@@ -587,7 +587,7 @@ public class PeakExporter implements IPeakExporter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setIWorkflow(final IWorkflow workflow) {
+	public void setWorkflow(final IWorkflow workflow) {
 		this.iworkflow = workflow;
 	}
 

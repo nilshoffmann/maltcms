@@ -179,7 +179,7 @@ public class GradientVisualizer extends AFragmentCommand {
 			}
 			final String filename = StringTools.removeFileExt(ff.getName())
 					+ "-" + this.distance.getClass().getSimpleName();
-			ImageTools.saveImage(bi, filename, this.format, getIWorkflow()
+			ImageTools.saveImage(bi, filename, this.format, getWorkflow()
 					.getOutputDirectory(this), this);
 		}
 		return t;

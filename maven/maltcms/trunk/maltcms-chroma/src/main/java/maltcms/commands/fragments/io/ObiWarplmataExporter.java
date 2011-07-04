@@ -49,7 +49,7 @@ public class ObiWarplmataExporter extends AFragmentCommand {
 	@Override
 	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
 		final CSVWriter csvw = new CSVWriter();
-		csvw.setIWorkflow(getIWorkflow());
+		csvw.setWorkflow(getWorkflow());
 		csvw.setFieldSeparator(" ");
 		for (final IFileFragment iff : t) {
 			this.log.info("Exporting file {}", iff.getName());
@@ -91,7 +91,7 @@ public class ObiWarplmataExporter extends AFragmentCommand {
 				}
 				lines.add(v);
 			}
-			final File path = getIWorkflow().getOutputDirectory(this);
+			final File path = getWorkflow().getOutputDirectory(this);
 			this.log.info("Writing data...");
 			csvw.writeTableByRows(path.getAbsolutePath(), StringTools
 			        .removeFileExt(iff.getName())

@@ -533,7 +533,7 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
 			final DefaultWorkflowResult dwr = new DefaultWorkflowResult(output,
 			        this, WorkflowSlot.VISUALIZATION, new IFileFragment[] { rF,
 			                qF });
-			getIWorkflow().append(dwr);
+			getWorkflow().append(dwr);
 		} catch (IOException e) {
 			this.log.error(e.getLocalizedMessage());
 		}
@@ -584,7 +584,7 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
 					final List<Tuple2DI> l = PathTools.fromArrays(pi, pj);
 					createAlignmentMatrixImage(matrix, matrix_frag,
 					        reference_spec.getParent(), query_spec.getParent(),
-					        qval, rval, l, new File(getIWorkflow()
+					        qval, rval, l, new File(getWorkflow()
 					                .getOutputDirectory(this), this.filename),
 					        minimize);
 					System.gc();

@@ -113,8 +113,8 @@ public class LangeTautenhahnFormatExporter extends AFragmentCommand {
 		}
 
 		final CSVWriter csvw = new CSVWriter();
-		csvw.setIWorkflow(getIWorkflow());
-		csvw.writeTableByRows(getIWorkflow().getOutputDirectory(this)
+		csvw.setWorkflow(getWorkflow());
+		csvw.writeTableByRows(getWorkflow().getOutputDirectory(this)
 		        .getAbsolutePath(), "matched_features.csv", rows,
 		        WorkflowSlot.ALIGNMENT);
 
@@ -141,7 +141,7 @@ public class LangeTautenhahnFormatExporter extends AFragmentCommand {
 	private List<Clique> combineBiDiBestHits(final TupleND<IFileFragment> al) {
 		List<Clique> l = buildCliques(al);
 		OneWayPeakAnova owa = new OneWayPeakAnova();
-		owa.setIWorkflow(getIWorkflow());
+		owa.setWorkflow(getWorkflow());
 		String groupFileLocation = Factory.getInstance().getConfiguration()
 		        .getString("groupFileLocation", "");
 		owa.calcFisherRatios(l, al, groupFileLocation);
@@ -155,12 +155,12 @@ public class LangeTautenhahnFormatExporter extends AFragmentCommand {
 		jfc.getCategoryPlot().setOrientation(PlotOrientation.HORIZONTAL);
 		PlotRunner pr = new PlotRunner(jfc.getCategoryPlot(),
 		        "Clique RT diff to centroid", "cliquesRTdiffToCentroid.png",
-		        getIWorkflow().getOutputDirectory(this));
+		        getWorkflow().getOutputDirectory(this));
 		pr.configure(Factory.getInstance().getConfiguration());
 		final File f = pr.getFile();
 		final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f, this,
 		        WorkflowSlot.VISUALIZATION, al.toArray(new IFileFragment[] {}));
-		getIWorkflow().append(dwr);
+		getWorkflow().append(dwr);
 		Factory.getInstance().submitJob(pr);
 
 		DefaultBoxAndWhiskerCategoryDataset dscdTIC = new DefaultBoxAndWhiskerCategoryDataset();
@@ -175,13 +175,13 @@ public class LangeTautenhahnFormatExporter extends AFragmentCommand {
 		jfc2.getCategoryPlot().setOrientation(PlotOrientation.HORIZONTAL);
 		PlotRunner pr2 = new PlotRunner(jfc2.getCategoryPlot(),
 		        "Clique log apex TIC centroid diff to log apex TIC",
-		        "cliquesLogApexTICCentroidDiffToLogApexTIC.png", getIWorkflow()
+		        "cliquesLogApexTICCentroidDiffToLogApexTIC.png", getWorkflow()
 		                .getOutputDirectory(this));
 		pr.configure(Factory.getInstance().getConfiguration());
 		final File g = pr.getFile();
 		final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(g, this,
 		        WorkflowSlot.VISUALIZATION, al.toArray(new IFileFragment[] {}));
-		getIWorkflow().append(dwr2);
+		getWorkflow().append(dwr2);
 		Factory.getInstance().submitJob(pr2);
 
 		this.log.info("Found {} cliques", l.size());

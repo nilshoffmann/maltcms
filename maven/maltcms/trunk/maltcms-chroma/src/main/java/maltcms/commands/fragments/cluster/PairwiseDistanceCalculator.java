@@ -277,7 +277,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
 					sldf = Factory.getInstance().getObjectFactory()
 					        .instantiate(pairwiseDistFunc,
 					                ListDistanceFunction.class);
-					sldf.setIWorkflow(getIWorkflow());
+					sldf.setWorkflow(getWorkflow());
 					final String filename = "PW_DISTANCE_"
 					        + StringTools.removeFileExt(tuple.getFirst()
 					                .getName())
@@ -286,7 +286,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
 					                .getName()) + ".csv";
 					final IFileFragment iff = Factory.getInstance()
 					        .getFileFragmentFactory().create(
-					                new File(getIWorkflow().getOutputDirectory(
+					                new File(getWorkflow().getOutputDirectory(
 					                        iwe), filename));
 					final StatsMap sm = new StatsMap(iff);
 					PairwiseDistanceCalculator.this.minimizingLocalDistance = sldf
@@ -303,7 +303,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
 					final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
 					        new File(ff.getAbsolutePath()), pdc,
 					        WorkflowSlot.ALIGNMENT, ff);
-					getIWorkflow().append(dwr);
+					getWorkflow().append(dwr);
 					alignments.add(ff);
 					final long t_end = System.currentTimeMillis() - t_start;
 					final double d = sldf.getResult().get();
@@ -315,7 +315,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
 					sm.put("maplength", new Double(maplength));
 					final StatsWriter sw = Factory.getInstance()
 					        .getObjectFactory().instantiate(StatsWriter.class);
-					sw.setIWorkflow(getIWorkflow());
+					sw.setWorkflow(getWorkflow());
 					sw.write(sm);
 					PairwiseDistanceCalculator.this.log.debug("Distance: " + d);
 					tuple.getFirst().clearArrays();
@@ -340,7 +340,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
 				pairwiseDistances.set(i1, i2, tpl.getSecond());
 				pairwiseDistances.set(i2, i1, tpl.getSecond());
 				// notify workflow
-				getIWorkflow().append(dwpr.nextStep());
+				getWorkflow().append(dwpr.nextStep());
 			}
 		}
 		// set diagonal values appropriately
@@ -371,15 +371,15 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
 		pd.setMinArrayComp(this.minArrayComp);
 		pd.setMinimize(this.minimizingLocalDistance);
 		pd.setAlignments(alignments);
-		pd.setIWorkflow(getIWorkflow());
+		pd.setWorkflow(getWorkflow());
 		final IFileFragment ret = Factory.getInstance()
 		        .getFileFragmentFactory().create(
-		                new File(getIWorkflow().getOutputDirectory(pd), name));
+		                new File(getWorkflow().getOutputDirectory(pd), name));
 		pd.modify(ret);
 		ret.save();
 		final DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
 		        ret.getAbsolutePath()), this, WorkflowSlot.STATISTICS, ret);
-		getIWorkflow().append(dwr);
+		getWorkflow().append(dwr);
 		// Factory.getInstance().getConfiguration().setProperty(
 		// "pairwise_distances_location", ret.getAbsolutePath());
 		saveToCSV(ret, pairwiseDistances, names);
@@ -388,7 +388,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
 		for (final IFileFragment iff : t) {
 			final IFileFragment rf = Factory.getInstance()
 			        .getFileFragmentFactory().create(
-			                new File(getIWorkflow().getOutputDirectory(this),
+			                new File(getWorkflow().getOutputDirectory(this),
 			                        iff.getName()));
 			rf.addSourceFile(iff);
 			rf.addSourceFile(ret);
@@ -397,7 +397,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
 			final DefaultWorkflowResult wr = new DefaultWorkflowResult(
 			        new File(rf.getAbsolutePath()), this,
 			        WorkflowSlot.STATISTICS, rf);
-			getIWorkflow().append(wr);
+			getWorkflow().append(wr);
 		}
 		return tple;
 	}
@@ -406,10 +406,10 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
 	        final ArrayDouble.D2 distances, final ArrayChar.D2 names) {
 		final CSVWriter csvw = Factory.getInstance().getObjectFactory()
 		        .instantiate(CSVWriter.class);
-		csvw.setIWorkflow(getIWorkflow());
-		csvw.writeArray2DwithLabels(getIWorkflow().getOutputDirectory(this)
+		csvw.setWorkflow(getWorkflow());
+		csvw.writeArray2DwithLabels(getWorkflow().getOutputDirectory(this)
 		        .getAbsolutePath(), "pairwise_distances.csv", distances, names,
-		        this.getClass(), WorkflowSlot.STATISTICS, getIWorkflow()
+		        this.getClass(), WorkflowSlot.STATISTICS, getWorkflow()
 		                .getStartupDate(), pwdist);
 	}
 

@@ -77,11 +77,11 @@ public class DefaultVarLoader extends AFragmentCommand {
 			final String filename = StringTools.removeFileExt(f.getName());
 			final IFileFragment iff = Factory.getInstance()
 			        .getFileFragmentFactory().create(
-			                new File(getIWorkflow().getOutputDirectory(this),
+			                new File(getWorkflow().getOutputDirectory(this),
 			                        filename + ".cdf"));
 			iff.setAttributes(f.getAttributes().toArray(new Attribute[] {}));
 			// FileTools.prependDefaultDirs(filename + ".cdf", iwe
-			// .getClass(), getIWorkflow()
+			// .getClass(), getWorkflow()
 			// .getStartupDate()));
 			iff.addSourceFile(f);
 			FragmentTools.loadDefaultVars(iff);
@@ -91,7 +91,7 @@ public class DefaultVarLoader extends AFragmentCommand {
 			final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
 			        new File(iff.getAbsolutePath()), iwe, getWorkflowSlot(),
 			        iff);
-			getIWorkflow().append(dwr);
+			getWorkflow().append(dwr);
 			ret.add(iff);
 			// }
 			//

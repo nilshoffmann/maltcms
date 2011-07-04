@@ -169,7 +169,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
 		final int[][] colorRamp = crr.readColorRamp(this.colorrampLocation);
 		final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
 
-		this.peakExporter.setIWorkflow(getIWorkflow());
+		this.peakExporter.setWorkflow(getWorkflow());
 		this.peakExporter.setCaller(this.getClass());
 
 		for (final IFileFragment ff : t) {
@@ -231,7 +231,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
 
 			final IFileFragment fret = Factory.getInstance()
 			        .getFileFragmentFactory().create(
-			                new File(getIWorkflow().getOutputDirectory(this),
+			                new File(getWorkflow().getOutputDirectory(this),
 			                        ff.getName()));
 			fret.addSourceFile(ff);
 			final List<Peak2D> peaklist = savePeaks(ff, fret, peakAreaList,
@@ -248,7 +248,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
 			        new File(fret.getAbsolutePath()), this, getWorkflowSlot(),
 			        fret);
 			ff.clearArrays();
-			getIWorkflow().append(dwr);
+			getWorkflow().append(dwr);
 			fret.save();
 			ret.add(fret);
 			slc.clear();
@@ -469,12 +469,12 @@ public class SeededRegionGrowing extends AFragmentCommand {
 	private void createAndSaveImage(final BufferedImage image,
 	        final String name, final String title, final List<Peak2D> peakList,
 	        final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times) {
-		ImageTools.saveImage(image, name, this.format, getIWorkflow()
+		ImageTools.saveImage(image, name, this.format, getWorkflow()
 		        .getOutputDirectory(this), this);
 		ImageTools.saveImage(image, name + "_emtpy", this.format,
-		        getIWorkflow().getOutputDirectory(this), this);
+		        getWorkflow().getOutputDirectory(this), this);
 
-		final File d = getIWorkflow().getOutputDirectory(this);
+		final File d = getWorkflow().getOutputDirectory(this);
 		final File out = new File(d, name + "." + this.format);
 		this.log.info("Using file {} for AChart", out.getAbsolutePath());
 		final AChart<XYBPlot> chart = new BHeatMapChart(out.getAbsolutePath(),
@@ -545,7 +545,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
 					maxLength = peak.getName().length();
 				}
 			}
-			this.integration.integrate(peak, ff, getIWorkflow());
+			this.integration.integrate(peak, ff, getWorkflow());
 
 			peakNames.add(peak.getName());
 			peaklist.add(peak);
@@ -704,7 +704,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
 				while (iter.hasNext()) {
 					this.hold.add(iter.getIntNext());
 				}
-				// FIXME: wenn cahcedlist benutzt werden, klappt das über slc
+				// FIXME: wenn cahcedlist benutzt werden, klappt das √ºber slc
 				// nicht
 				this.log.info("		Using {} of {} masses", holdA.getShape()[0],
 				        750);
@@ -887,7 +887,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
 		        .getName()), peaklist);
 		this.peakExporter.exportDetailedPeakInformation(StringTools
 		        .removeFileExt(ff.getName()), peaklist);
-		TupleND<IFileFragment> iff = getIWorkflow().getCommandSequence()
+		TupleND<IFileFragment> iff = getWorkflow().getCommandSequence()
 		        .getInput();
 		IFileFragment originalFile = null;
 		for (IFileFragment f : iff) {
@@ -897,7 +897,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
 			}
 		}
 		IFileFragment pfrag = Factory.getInstance().getFileFragmentFactory()
-		        .create(getIWorkflow().getOutputDirectory(this),
+		        .create(getWorkflow().getOutputDirectory(this),
 		                "osc-" + originalFile.getName(), originalFile);
 		IVariableFragment scanRateV = new VariableFragment(pfrag, "scan_rate");
 		IVariableFragment modTV = new VariableFragment(pfrag, "modulation_time");

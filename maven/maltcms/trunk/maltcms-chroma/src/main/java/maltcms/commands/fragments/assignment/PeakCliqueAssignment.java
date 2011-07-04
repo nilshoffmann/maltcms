@@ -299,7 +299,7 @@ public class PeakCliqueAssignment extends AFragmentCommand {
             ff.getChild(this.scanAcquisitionTimeVariableName).getArray();
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
                     new File(ff.getAbsolutePath()), this, getWorkflowSlot(), ff);
-            getIWorkflow().append(dwr);
+            getWorkflow().append(dwr);
             ff.save();
         }
         return newFragments;
@@ -515,10 +515,10 @@ public class PeakCliqueAssignment extends AFragmentCommand {
         }
 
         final CSVWriter csvw = Factory.getInstance().getObjectFactory().instantiate(CSVWriter.class);
-        csvw.setIWorkflow(getIWorkflow());
+        csvw.setWorkflow(getWorkflow());
         List<List<String>> tble = new ArrayList<List<String>>();
         tble.add(Arrays.asList(newFragments.get(optIndex).getName()));
-        csvw.writeTableByRows(getIWorkflow().getOutputDirectory(this).getAbsolutePath(), "center-star.csv", tble, WorkflowSlot.CLUSTERING);
+        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "center-star.csv", tble, WorkflowSlot.CLUSTERING);
 
         log.info("{} with value {} is the center star!",
                 newFragments.get(optIndex).getName(), (minimize ? -optVal : optVal));
@@ -527,9 +527,9 @@ public class PeakCliqueAssignment extends AFragmentCommand {
     public void saveToCSV(final ArrayDouble.D2 distances,
             final ArrayChar.D2 names) {
         final CSVWriter csvw = Factory.getInstance().getObjectFactory().instantiate(CSVWriter.class);
-        csvw.setIWorkflow(getIWorkflow());
-        csvw.writeArray2DwithLabels(getIWorkflow().getOutputDirectory(this).getAbsolutePath(), "pairwise_distances.csv", distances, names,
-                this.getClass(), WorkflowSlot.STATISTICS, getIWorkflow().getStartupDate());
+        csvw.setWorkflow(getWorkflow());
+        csvw.writeArray2DwithLabels(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "pairwise_distances.csv", distances, names,
+                this.getClass(), WorkflowSlot.STATISTICS, getWorkflow().getStartupDate());
     }
 
     /*
@@ -865,7 +865,7 @@ public class PeakCliqueAssignment extends AFragmentCommand {
         String groupFileLocation = Factory.getInstance().getConfiguration().getString("groupFileLocation", "");
 
         OneWayPeakAnova owa = new OneWayPeakAnova();
-        owa.setIWorkflow(getIWorkflow());
+        owa.setWorkflow(getWorkflow());
         owa.calcFisherRatios(l, al, groupFileLocation);
 
         if (this.savePlots) {
@@ -879,12 +879,12 @@ public class PeakCliqueAssignment extends AFragmentCommand {
             jfc.getCategoryPlot().setOrientation(PlotOrientation.HORIZONTAL);
             PlotRunner pr = new PlotRunner(jfc.getCategoryPlot(),
                     "Clique RT diff to centroid", "cliquesRTdiffToCentroid.png",
-                    getIWorkflow().getOutputDirectory(this));
+                    getWorkflow().getOutputDirectory(this));
             pr.configure(Factory.getInstance().getConfiguration());
             final File f = pr.getFile();
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f, this,
                     WorkflowSlot.VISUALIZATION, al.toArray(new IFileFragment[]{}));
-            getIWorkflow().append(dwr);
+            getWorkflow().append(dwr);
             Factory.getInstance().submitJob(pr);
 
             DefaultBoxAndWhiskerCategoryDataset dscdTIC = new DefaultBoxAndWhiskerCategoryDataset();
@@ -897,12 +897,12 @@ public class PeakCliqueAssignment extends AFragmentCommand {
             jfc2.getCategoryPlot().setOrientation(PlotOrientation.HORIZONTAL);
             PlotRunner pr2 = new PlotRunner(jfc2.getCategoryPlot(),
                     "Clique log apex TIC centroid diff to log apex TIC",
-                    "cliquesLogApexTICCentroidDiffToLogApexTIC.png", getIWorkflow().getOutputDirectory(this));
+                    "cliquesLogApexTICCentroidDiffToLogApexTIC.png", getWorkflow().getOutputDirectory(this));
             pr.configure(Factory.getInstance().getConfiguration());
             final File g = pr.getFile();
             final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(g, this,
                     WorkflowSlot.VISUALIZATION, al.toArray(new IFileFragment[]{}));
-            getIWorkflow().append(dwr2);
+            getWorkflow().append(dwr2);
             Factory.getInstance().submitJob(pr2);
         }
 
@@ -1137,7 +1137,7 @@ public class PeakCliqueAssignment extends AFragmentCommand {
 
         final ArrayList<IFileFragment> al2 = new ArrayList<IFileFragment>();
         for (final IFileFragment iff : originalFragments) {
-            final IFileFragment iff2 = Factory.getInstance().getFileFragmentFactory().create(new File(getIWorkflow().getOutputDirectory(this),
+            final IFileFragment iff2 = Factory.getInstance().getFileFragmentFactory().create(new File(getWorkflow().getOutputDirectory(this),
                     iff.getName()));
             iff2.addSourceFile(iff);
             this.log.debug("Created work file {}", iff2);
@@ -1417,8 +1417,8 @@ public class PeakCliqueAssignment extends AFragmentCommand {
         }
 
         final CSVWriter csvw = new CSVWriter();
-        csvw.setIWorkflow(getIWorkflow());
-        csvw.writeTableByRows(getIWorkflow().getOutputDirectory(this).getAbsolutePath(), "multiple-alignmentRT.csv", rows,
+        csvw.setWorkflow(getWorkflow());
+        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "multiple-alignmentRT.csv", rows,
                 WorkflowSlot.ALIGNMENT);
     }
 
@@ -1465,8 +1465,8 @@ public class PeakCliqueAssignment extends AFragmentCommand {
         }
 
         final CSVWriter csvw = new CSVWriter();
-        csvw.setIWorkflow(getIWorkflow());
-        csvw.writeTableByRows(getIWorkflow().getOutputDirectory(this).getAbsolutePath(), "multiple-alignment.csv", rows,
+        csvw.setWorkflow(getWorkflow());
+        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "multiple-alignment.csv", rows,
                 WorkflowSlot.ALIGNMENT);
     }
 
@@ -1504,12 +1504,12 @@ public class PeakCliqueAssignment extends AFragmentCommand {
             af.addScanIndexMap(a, new File(iff.getAbsolutePath()).toURI(),
                     fragmentToScanIndexMap.get(iff), false);
         }
-        File out = new File(getIWorkflow().getOutputDirectory(this),
+        File out = new File(getWorkflow().getOutputDirectory(this),
                 "peakCliqueAssignment.maltcmsAlignment.xml");
         af.save(a, out);
         DefaultWorkflowResult dwr = new DefaultWorkflowResult(out, this,
                 WorkflowSlot.ALIGNMENT, tuple.toArray(new IFileFragment[]{}));
-        getIWorkflow().append(dwr);
+        getWorkflow().append(dwr);
     }
 
     private void saveToLangeTautenhahnFormat(
@@ -1518,7 +1518,7 @@ public class PeakCliqueAssignment extends AFragmentCommand {
         // filename intensity rt m/z
         // final List<List<String>> rows = new
         // ArrayList<List<String>>(ll.size());
-        File outputFile = new File(getIWorkflow().getOutputDirectory(this).getAbsolutePath(), "peakCliqueAssignment_matched_features.csv");
+        File outputFile = new File(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "peakCliqueAssignment_matched_features.csv");
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
             final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(Locale.US);
@@ -1694,7 +1694,7 @@ public class PeakCliqueAssignment extends AFragmentCommand {
             bw.close();
             DefaultWorkflowResult dwr = new DefaultWorkflowResult(outputFile,
                     this, WorkflowSlot.ALIGNMENT);
-            getIWorkflow().append(dwr);
+            getWorkflow().append(dwr);
         } catch (IOException ioe) {
             log.error("{}", ioe.getLocalizedMessage());
         }
@@ -1772,11 +1772,11 @@ public class PeakCliqueAssignment extends AFragmentCommand {
 
                     // final RenderedImage bi = ImageTools.makeImage2D(psims,
                     // samples, Double.NEGATIVE_INFINITY);
-                    JAI.create("filestore", destImg, new File(getIWorkflow().getOutputDirectory(this), prefix + "_" + keyl
+                    JAI.create("filestore", destImg, new File(getWorkflow().getOutputDirectory(this), prefix + "_" + keyl
                             + "-" + keyr + "_peak_similarities.png").getAbsolutePath(), "PNG");
                     final CSVWriter csvw = new CSVWriter();
-                    csvw.setIWorkflow(getIWorkflow());
-                    csvw.writeArray2D(getIWorkflow().getOutputDirectory(this).getAbsolutePath(), prefix + "_" + keyl + "-"
+                    csvw.setWorkflow(getWorkflow());
+                    csvw.writeArray2D(getWorkflow().getOutputDirectory(this).getAbsolutePath(), prefix + "_" + keyl + "-"
                             + keyr + "_peak_similarities.csv", psims);
                 }
             }
