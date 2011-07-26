@@ -32,10 +32,10 @@ import cross.io.xml.IXMLSerializable;
  */
 public interface IWorkflowElement extends IXMLSerializable {
 
-	public abstract IWorkflow getIWorkflow();
+	public abstract IWorkflow getWorkflow();
 
 	public abstract WorkflowSlot getWorkflowSlot();
 
-	public abstract void setIWorkflow(IWorkflow iw);
+	public abstract void setWorkflow(IWorkflow iw);
 
 }

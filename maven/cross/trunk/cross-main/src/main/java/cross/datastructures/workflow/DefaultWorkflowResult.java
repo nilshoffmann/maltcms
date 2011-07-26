@@ -37,11 +37,11 @@ import cross.datastructures.tools.EvalTools;
  */
 public class DefaultWorkflowResult implements IWorkflowFileResult {
 
-	private File f = null;
+	private File file = null;
 
-	private WorkflowSlot ws = null;
+	private WorkflowSlot workflowSlot = null;
 
-	private IWorkflowElement iwe = null;
+	private IWorkflowElement workflowElement = null;
 
 	private IFileFragment[] resources = null;
 
@@ -52,43 +52,43 @@ public class DefaultWorkflowResult implements IWorkflowFileResult {
 	public DefaultWorkflowResult(final File f1, final IWorkflowElement iwe1,
 	        final WorkflowSlot ws1, IFileFragment... resources) {
 		EvalTools.notNull(new Object[] { f1, iwe1, ws1, resources }, this);
-		this.f = f1;
-		this.iwe = iwe1;
-		this.ws = ws1;
+		this.file = f1;
+		this.workflowElement = iwe1;
+		this.workflowSlot = ws1;
 		this.resources = resources;
 	}
 
 	@Override
 	public File getFile() {
-		return this.f;
+		return this.file;
 	}
 
 	@Override
-	public IWorkflowElement getIWorkflowElement() {
-		return this.iwe;
+	public IWorkflowElement getWorkflowElement() {
+		return this.workflowElement;
 	}
 
 	@Override
 	public WorkflowSlot getWorkflowSlot() {
-		return this.ws;
+		return this.workflowSlot;
 	}
 
 	@Override
 	public void setFile(final File iff1) {
 		EvalTools.notNull(iff1, this);
-		this.f = iff1;
+		this.file = iff1;
 	}
 
 	@Override
-	public void setIWorkflowElement(final IWorkflowElement iwe1) {
+	public void setWorkflowElement(final IWorkflowElement iwe1) {
 		EvalTools.notNull(iwe1, this);
-		this.iwe = iwe1;
+		this.workflowElement = iwe1;
 	}
 
 	@Override
 	public void setWorkflowSlot(final WorkflowSlot ws1) {
 		EvalTools.notNull(ws1, this);
-		this.ws = ws1;
+		this.workflowSlot = ws1;
 	}
 
 	/*
@@ -123,7 +123,7 @@ public class DefaultWorkflowResult implements IWorkflowFileResult {
 		final Element iwr = new Element("workflowElementResult");
 		iwr.setAttribute("class", getClass().getCanonicalName());
 		iwr.setAttribute("slot", getWorkflowSlot().name());
-		iwr.setAttribute("generator", getIWorkflowElement().getClass()
+		iwr.setAttribute("generator", getWorkflowElement().getClass()
 		        .getCanonicalName());
 
 		final Element resources = iwr.addContent("resources");

@@ -128,7 +128,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
             final Element iwr = new Element("workflowElementResult");
             iwr.setAttribute("class", wr.getClass().getCanonicalName());
             iwr.setAttribute("slot", wr.getWorkflowSlot().name());
-            iwr.setAttribute("generator", wr.getIWorkflowElement().getClass().getCanonicalName());
+            iwr.setAttribute("generator", wr.getWorkflowElement().getClass().getCanonicalName());
 
             final Element resources = new Element("resources");
             if (wr instanceof IWorkflowFileResult) {
@@ -249,7 +249,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                     IWorkflowFileResult.class);
             final IWorkflowElement iwe = Factory.getInstance().getObjectFactory().instantiate(generator,
                     IWorkflowElement.class);
-            iwr.setIWorkflowElement(iwe);
+            iwr.setWorkflowElement(iwe);
             iwr.setFile(new File(file));
             iwr.setWorkflowSlot(WorkflowSlot.valueOf(slot));
             append(iwr);
@@ -549,7 +549,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         Iterator<IWorkflowResult> iter = getResults();
         while (iter.hasNext()) {
             IWorkflowResult iwr = iter.next();
-            IWorkflowElement iwe = iwr.getIWorkflowElement();
+            IWorkflowElement iwe = iwr.getWorkflowElement();
             if (iwe.getClass().getName().equals(afc.getClass().getName())) {
                 l.add(iwr);
             }
@@ -623,7 +623,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
             IWorkflowResult iwr = iter.next();
             if (iwr instanceof IWorkflowFileResult) {
                 IWorkflowFileResult iwfr = (IWorkflowFileResult) iwr;
-                if (iwfr.getIWorkflowElement().getClass().getCanonicalName().equals(afc.getClass().getCanonicalName())) {
+                if (iwfr.getWorkflowElement().getClass().getCanonicalName().equals(afc.getClass().getCanonicalName())) {
                     if (iwfr.getFile().getAbsolutePath().endsWith(fileExtension)) {
                         l.add(iwr);
                     }

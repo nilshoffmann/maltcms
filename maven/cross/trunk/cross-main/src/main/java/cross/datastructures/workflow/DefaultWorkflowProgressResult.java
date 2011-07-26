@@ -75,10 +75,10 @@ public class DefaultWorkflowProgressResult implements IWorkflowProgressResult {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see cross.datastructures.workflow.IWorkflowResult#getIWorkflowElement()
+	 * @see cross.datastructures.workflow.IWorkflowResult#getWorkflowElement()
 	 */
 	@Override
-	public IWorkflowElement getIWorkflowElement() {
+	public IWorkflowElement getWorkflowElement() {
 		return this.iwe;
 	}
 
@@ -142,11 +142,11 @@ public class DefaultWorkflowProgressResult implements IWorkflowProgressResult {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * cross.datastructures.workflow.IWorkflowResult#setIWorkflowElement(cross
+	 * cross.datastructures.workflow.IWorkflowResult#setWorkflowElement(cross
 	 * .datastructures.workflow.IWorkflowElement)
 	 */
 	@Override
-	public void setIWorkflowElement(final IWorkflowElement iwe) {
+	public void setWorkflowElement(final IWorkflowElement iwe) {
 		EvalTools.notNull(iwe, this);
 		this.iwe = iwe;
 	}

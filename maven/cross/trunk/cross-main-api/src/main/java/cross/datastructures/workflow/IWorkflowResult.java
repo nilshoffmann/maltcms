@@ -33,11 +33,11 @@ import cross.io.xml.IXMLSerializable;
  */
 public interface IWorkflowResult extends IXMLSerializable {
 
-	public IWorkflowElement getIWorkflowElement();
+	public IWorkflowElement getWorkflowElement();
 
 	public WorkflowSlot getWorkflowSlot();
 
-	public void setIWorkflowElement(IWorkflowElement iwe);
+	public void setWorkflowElement(IWorkflowElement iwe);
 
 	public void setWorkflowSlot(WorkflowSlot ws);
 

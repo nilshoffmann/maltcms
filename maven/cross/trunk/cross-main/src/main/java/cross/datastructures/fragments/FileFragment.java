@@ -37,7 +37,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.logging.Level;
 
 import org.jdom.Element;
 import org.slf4j.Logger;
@@ -54,7 +53,8 @@ import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
 import cross.datastructures.tools.FragmentTools;
 import cross.tools.StringTools;
-import java.net.URI;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 /**
  * FileFragment can be considered the root element of a Tree of
@@ -151,10 +151,10 @@ public class FileFragment implements IFileFragment {
      * Create a FileFragment
      */
     public FileFragment() {
-        this.sourcefiles = new HashSet<IFileFragment>();
+        this.sourcefiles = new LinkedHashSet<IFileFragment>();
         this.fID = FileFragment.FID++;
-        this.children = Collections.synchronizedMap(new HashMap<String, IVariableFragment>());
-        this.dims = new HashSet<Dimension>();
+        this.children = Collections.synchronizedMap(new LinkedHashMap<String, IVariableFragment>());
+        this.dims = new LinkedHashSet<Dimension>();
         setFile(getDefaultFilename());
     }
 

@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 
 import cross.annotations.AnnotationInspector;
 import cross.datastructures.tools.EvalTools;
+import java.io.File;
 
 /**
  * 
@@ -43,11 +44,14 @@ public class ObjectFactory implements IObjectFactory {
 	private final Logger log = Logging.getLogger(ObjectFactory.class);
 
 	private Configuration cfg = new PropertiesConfiguration();
+        
+        private File userConfigLocation = null;
 
 	@Override
 	public void configure(final Configuration cfg) {
 		this.cfg = new PropertiesConfiguration();
 		ConfigurationUtils.copy(cfg, this.cfg);
+                userConfigLocation = (File)this.cfg.getProperty("userConfigLocation");
 	}
 
 	public <T> void configureType(final T t) {
@@ -146,8 +150,12 @@ public class ObjectFactory implements IObjectFactory {
 	        final String configurationFile) {
 		CompositeConfiguration cc = new CompositeConfiguration();
 		try {
-
-			cc.addConfiguration(new PropertiesConfiguration(configurationFile));
+                        File configFileLocation = new File(configurationFile);
+                        //resolve non-absolute paths
+//                        if(!configFileLocation.isAbsolute()) {
+//                            configFileLocation = new File(this.userConfigLocation,configFileLocation.getPath());
+//                        }
+			cc.addConfiguration(new PropertiesConfiguration(configFileLocation.getAbsolutePath()));
 		} catch (ConfigurationException e) {
 			log.warn(e.getLocalizedMessage());
 		}

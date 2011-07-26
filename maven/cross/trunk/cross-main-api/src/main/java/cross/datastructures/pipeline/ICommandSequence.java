@@ -52,7 +52,7 @@ public interface ICommandSequence extends Iterator<TupleND<IFileFragment>>,
      */
     public abstract TupleND<IFileFragment> getInput();
 
-    public abstract IWorkflow getIWorkflow();
+    public abstract IWorkflow getWorkflow();
 
     /**
      * Do we have any unprocessed Commands left?
@@ -75,5 +75,5 @@ public interface ICommandSequence extends Iterator<TupleND<IFileFragment>>,
 
     public abstract void setInput(TupleND<IFileFragment> t);
 
-    public abstract void setIWorkflow(IWorkflow iw);
+    public abstract void setWorkflow(IWorkflow iw);
 }

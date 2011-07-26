@@ -25,13 +25,15 @@ import java.io.File;
 
 /**
  *
- * @author hoffmann
+ * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 public class UserDir {
 
     private final String appname;
     private final String version;
 
+    
+    
     /**
      * Creates a new UserDir object, which can be branded for a specific
      * application name and version. Use this object, if you want to retrieve

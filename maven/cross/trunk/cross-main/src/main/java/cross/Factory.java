@@ -240,7 +240,7 @@ public class Factory implements ConfigurationListener {
 		        CommandPipeline.class);
 		final IWorkflow iw = getWorkflowFactory().getDefaultWorkflowInstance(
 		        new Date(), cd);
-		cd.setIWorkflow(iw);
+		cd.setWorkflow(iw);
 		if (t == null) {
 			cd.setInput(getInputDataFactory().prepareInputData());
 		} else {

@@ -37,6 +37,9 @@ import cross.event.IEvent;
 import cross.event.IEventSource;
 import cross.event.IListener;
 import cross.tools.StringTools;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
 
 /**
  * A class providing a default implementation for configure and a concrete
@@ -49,11 +52,13 @@ import cross.tools.StringTools;
  * @param <V>
  * 
  */
+@Data
 public abstract class AFragmentCommand implements IFragmentCommand {
 
+        @Getter(AccessLevel.NONE)
 	private final IEventSource<IWorkflowResult> ies = new EventSource<IWorkflowResult>();
 
-	private IWorkflow iw = null;
+	private IWorkflow workflow = null;
 
 	/**
 	 * @param l
@@ -66,6 +71,7 @@ public abstract class AFragmentCommand implements IFragmentCommand {
 		this.ies.addListener(l);
 	}
 
+        @Override
 	public void appendXML(final Element e) {
 
 	}
@@ -85,11 +91,6 @@ public abstract class AFragmentCommand implements IFragmentCommand {
 	}
 
 	public abstract String getDescription();
-
-	@Override
-	public IWorkflow getIWorkflow() {
-		return this.iw;
-	}
 
 	/**
 	 * Utility method to create mutable FileFragments from a given tuple of
@@ -115,7 +116,7 @@ public abstract class AFragmentCommand implements IFragmentCommand {
 	public IFileFragment createWorkFragment(IFileFragment iff) {
 		final IFileFragment copy = Factory.getInstance()
 		        .getFileFragmentFactory().create(
-		                new File(getIWorkflow().getOutputDirectory(this),
+		                new File(getWorkflow().getOutputDirectory(this),
 		                        StringTools.removeFileExt(iff.getName())
 		                                + ".cdf"));
 		copy.addSourceFile(iff);
@@ -130,11 +131,6 @@ public abstract class AFragmentCommand implements IFragmentCommand {
         @Override
 	public void removeListener(final IListener<IEvent<IWorkflowResult>> l) {
 		this.ies.removeListener(l);
-	}
-
-	@Override
-	public void setIWorkflow(final IWorkflow iw1) {
-		this.iw = iw1;
 	}
 
 }
