@@ -19,7 +19,6 @@
  * 
  * $Id: DefaultVarLoader.java 115 2010-04-23 15:42:15Z nilshoffmann $
  */
-
 package maltcms.commands.fragments.preprocessing;
 
 import java.io.File;
@@ -51,82 +50,80 @@ import cross.tools.StringTools;
  * 
  */
 @RequiresVariables(names = {})
-@ProvidesVariables(names = { "var.mass_values", "var.intensity_values",
-        "var.scan_index", "var.scan_acquisition_time", "var.total_intensity" })
+@ProvidesVariables(names = {"var.mass_values", "var.intensity_values",
+    "var.scan_index", "var.scan_acquisition_time", "var.total_intensity"})
 public class DefaultVarLoader extends AFragmentCommand {
 
-	private final Logger log = Logging.getLogger(this.getClass());
-	private int nthreads = 5;
+    private final Logger log = Logging.getLogger(this.getClass());
+    private int nthreads = 5;
 
-	@Override
-	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-		this.log.debug("Running DefaultVarLoader on {} FileFragments!", t
-		        .size());
-		// ExecutorService es = Executors.newFixedThreadPool(Math.min(nthreads,
-		// t
-		// .size()));
-		// log.info("Running {} threads",Math.min(nthreads, t.size()));
-		final IWorkflowElement iwe = this;
-		final TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
-		for (final IFileFragment f : t) {
-			// Runnable r = new Runnable() {
-			//
-			// @Override
-			// public void run() {
-			EvalTools.notNull(f, this);
-			final String filename = StringTools.removeFileExt(f.getName());
-			final IFileFragment iff = Factory.getInstance()
-			        .getFileFragmentFactory().create(
-			                new File(getWorkflow().getOutputDirectory(this),
-			                        filename + ".cdf"));
-			iff.setAttributes(f.getAttributes().toArray(new Attribute[] {}));
-			// FileTools.prependDefaultDirs(filename + ".cdf", iwe
-			// .getClass(), getWorkflow()
-			// .getStartupDate()));
-			iff.addSourceFile(f);
-			FragmentTools.loadDefaultVars(iff);
-			FragmentTools.loadAdditionalVars(iff);
-			iff.save();
-			f.clearArrays();
-			final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-			        new File(iff.getAbsolutePath()), iwe, getWorkflowSlot(),
-			        iff);
-			getWorkflow().append(dwr);
-			ret.add(iff);
-			// }
-			//
-			// };
-			// es.submit(r);
-		}
-		// es.shutdown();
-		// try {
-		// es.awaitTermination(10, TimeUnit.HOURS);
-		// } catch (InterruptedException e) {
-		// log.error(e.getLocalizedMessage());
-		// }
-		EvalTools.notNull(ret, this);
-		this.log.debug("Returning {} FileFragments!", ret.size());
-		return ret;
-	}
+    @Override
+    public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
+        this.log.debug("Running DefaultVarLoader on {} FileFragments!", t.size());
+        // ExecutorService es = Executors.newFixedThreadPool(Math.min(nthreads,
+        // t
+        // .size()));
+        // log.info("Running {} threads",Math.min(nthreads, t.size()));
+        final IWorkflowElement iwe = this;
+        final TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
+        for (final IFileFragment f : t) {
+            // Runnable r = new Runnable() {
+            //
+            // @Override
+            // public void run() {
+            EvalTools.notNull(f, this);
+            final String filename = StringTools.removeFileExt(f.getName());
+            final IFileFragment iff = Factory.getInstance().
+                    getFileFragmentFactory().create(
+                    new File(getWorkflow().getOutputDirectory(this),
+                    filename + ".cdf"));
+            iff.setAttributes(f.getAttributes().toArray(new Attribute[]{}));
+            // FileTools.prependDefaultDirs(filename + ".cdf", iwe
+            // .getClass(), getWorkflow()
+            // .getStartupDate()));
+            iff.addSourceFile(f);
+            FragmentTools.loadDefaultVars(iff);
+            FragmentTools.loadAdditionalVars(iff);
+            iff.save();
+            f.clearArrays();
+            final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
+                    new File(iff.getAbsolutePath()), iwe, getWorkflowSlot(),
+                    iff);
+            getWorkflow().append(dwr);
+            ret.add(iff);
+            // }
+            //
+            // };
+            // es.submit(r);
+        }
+        // es.shutdown();
+        // try {
+        // es.awaitTermination(10, TimeUnit.HOURS);
+        // } catch (InterruptedException e) {
+        // log.error(e.getLocalizedMessage());
+        // }
+        EvalTools.notNull(ret, this);
+        this.log.debug("Returning {} FileFragments!", ret.size());
+        return ret;
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		this.nthreads = cfg.getInt("maltcms.pipelinethreads", 5);
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+        this.nthreads = cfg.getInt("maltcms.pipelinethreads", 5);
+    }
 
-	@Override
-	public String getDescription() {
-		return "Loads default and additional variables as defined in the configuration.";
-	}
+    @Override
+    public String getDescription() {
+        return "Loads default and additional variables as defined in the configuration.";
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-	 */
-	@Override
-	public WorkflowSlot getWorkflowSlot() {
-		return WorkflowSlot.FILECONVERSION;
-	}
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
+     */
+    @Override
+    public WorkflowSlot getWorkflowSlot() {
+        return WorkflowSlot.FILECONVERSION;
+    }
 }

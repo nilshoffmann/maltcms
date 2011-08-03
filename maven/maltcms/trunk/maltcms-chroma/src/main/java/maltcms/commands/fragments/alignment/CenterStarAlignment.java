@@ -77,11 +77,14 @@ import cross.tools.StringTools;
     "var.multiple_alignment_creator"})
 public class CenterStarAlignment extends AFragmentCommand {
 
-    @Configurable(name = "var.pairwise_distance_matrix", value = "pairwise_distance_matrix")
+    @Configurable(name = "var.pairwise_distance_matrix",
+    value = "pairwise_distance_matrix")
     private String pairwiseDistanceMatrixVariableName = "pairwise_distance_matrix";
-    @Configurable(name = "var.pairwise_distance_names", value = "pairwise_distance_names")
+    @Configurable(name = "var.pairwise_distance_names",
+    value = "pairwise_distance_names")
     private String pairwiseDistanceNamesVariableName = "pairwise_distance_names";
-    @Configurable(name = "var.minimizing_array_comp", value = "minimizing_array_comp")
+    @Configurable(name = "var.minimizing_array_comp",
+    value = "minimizing_array_comp")
     private String minimizingArrayCompVariableName = "minimizing_array_comp";
     @Configurable(name = "var.multiple_alignment")
     private String multipleAlignmentVariableName = "multiple_alignment";
@@ -108,15 +111,15 @@ public class CenterStarAlignment extends AFragmentCommand {
         final IFileFragment pwd = MaltcmsTools.getPairwiseDistanceFragment(t);
         final ArrayDouble.D2 pwdist = (ArrayDouble.D2) pwd.getChild(
                 this.pairwiseDistanceMatrixVariableName).getArray();
-        System.out.println("pwdist: "+pwdist);
+        System.out.println("pwdist: " + pwdist);
         final ArrayChar.D2 names1 = (ArrayChar.D2) pwd.getChild(
                 this.pairwiseDistanceNamesVariableName).getArray();
-        System.out.println("pwnames: "+names1);
+        System.out.println("pwnames: " + names1);
         this.log.debug("Trying to access variable: {}",
                 this.minimizingArrayCompVariableName);
         final ArrayInt.D0 minimizeDistA = (ArrayInt.D0) pwd.getChild(
                 this.minimizingArrayCompVariableName).getArray();
-        System.out.println("minArrayComp: "+minimizeDistA);
+        System.out.println("minArrayComp: " + minimizeDistA);
         if (minimizeDistA.get() == 0) {
             this.minimizeDist = false;
         } else {
@@ -126,16 +129,21 @@ public class CenterStarAlignment extends AFragmentCommand {
         // find sequence minimizing distance to all other sequences
         final IFileFragment centerSeq = findCenterSequence(pwdist, names1);
 
-        final CSVWriter csvw = Factory.getInstance().getObjectFactory().instantiate(CSVWriter.class);
+        final CSVWriter csvw = Factory.getInstance().getObjectFactory().
+                instantiate(CSVWriter.class);
         csvw.setWorkflow(getWorkflow());
         List<List<String>> tble = new ArrayList<List<String>>();
         tble.add(Arrays.asList(centerSeq.getName()));
-        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "center-star.csv", tble, WorkflowSlot.CLUSTERING);
+        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).
+                getAbsolutePath(), "center-star.csv", tble,
+                WorkflowSlot.CLUSTERING);
 
         this.log.info("Center sequence is: {}", centerSeq);
-        final TupleND<IFileFragment> alignments = MaltcmsTools.getAlignmentsFromFragment(pwd);
+        final TupleND<IFileFragment> alignments = MaltcmsTools.
+                getAlignmentsFromFragment(pwd);
         final List<IFileFragment> warpedFiles = saveAlignment(this.getClass(),
-                t, alignments, Factory.getInstance().getConfiguration().getString("var.total_intensity", "total_intensity"),
+                t, alignments, Factory.getInstance().getConfiguration().
+                getString("var.total_intensity", "total_intensity"),
                 centerSeq);
 
         for (final IFileFragment iff : warpedFiles) {
@@ -164,7 +172,8 @@ public class CenterStarAlignment extends AFragmentCommand {
             final List<List<String>> table) {
         IVariableFragment maMatrix = new VariableFragment(f,
                 this.multipleAlignmentVariableName);
-        ArrayChar.D3 matrix = new ArrayChar.D3(table.get(0).size() - 1, table.size(), 1024);
+        ArrayChar.D3 matrix = new ArrayChar.D3(table.get(0).size() - 1, table.
+                size(), 1024);
         Index mi = matrix.getIndex();
 
         // columns
@@ -179,7 +188,8 @@ public class CenterStarAlignment extends AFragmentCommand {
 
         IVariableFragment maNames = new VariableFragment(f,
                 this.multipleAlignmentNamesVariableName);
-        ArrayChar.D2 names = cross.datastructures.tools.ArrayTools.createStringArray(table.size(), 1024);
+        ArrayChar.D2 names = cross.datastructures.tools.ArrayTools.
+                createStringArray(table.size(), 1024);
         for (int j = 0; j < table.size(); j++) {
             names.setString(j, table.get(j).get(0));
         }
@@ -254,12 +264,14 @@ public class CenterStarAlignment extends AFragmentCommand {
                         StringTools.removeFileExt(this.centerSequence))) {
                     this.log.info("Using user defined center: {}",
                             this.centerSequence);
-                    return Factory.getInstance().getFileFragmentFactory().create(this.centerSequence);
+                    return Factory.getInstance().getFileFragmentFactory().create(
+                            this.centerSequence);
                 }
             }
         }
         if (this.alignToFirst) {
-            return Factory.getInstance().getFileFragmentFactory().create(names.getString(0));
+            return Factory.getInstance().getFileFragmentFactory().create(names.
+                    getString(0));
         }
         final int rows = a.getShape()[0];
         final int cols = a.getShape()[1];
@@ -293,7 +305,8 @@ public class CenterStarAlignment extends AFragmentCommand {
                 }
             }
         }
-        final IFileFragment centerSeq = Factory.getInstance().getFileFragmentFactory().create(names.getString(optIndex));
+        final IFileFragment centerSeq = Factory.getInstance().
+                getFileFragmentFactory().create(names.getString(optIndex));
         return centerSeq;
     }
 
@@ -408,7 +421,8 @@ public class CenterStarAlignment extends AFragmentCommand {
         addMultipleAlignmentColumns(top, repOnLHS, repOnRHS, warped, null,
                 table);
         // create alignment table fragment
-        IFileFragment maFragment = new FileFragment(getWorkflow().getOutputDirectory(this), "multiple-alignment.cdf");
+        IFileFragment maFragment = new FileFragment(getWorkflow().
+                getOutputDirectory(this), "multiple-alignment.cdf");
         addMultipleAlignment(maFragment, table);
         maFragment.save();
         DefaultWorkflowResult dfw = new DefaultWorkflowResult(new File(
@@ -436,7 +450,8 @@ public class CenterStarAlignment extends AFragmentCommand {
         // this is a fix, default rounding convention is HALF_EVEN,
         // which allows less error to accumulate, but is seldomly used
         // outside of java...
-        final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
+                Locale.US);
         df.setRoundingMode(RoundingMode.HALF_UP);
         df.applyPattern("0.000");
         for (int column = 0; column < table.size(); column++) {
@@ -445,7 +460,8 @@ public class CenterStarAlignment extends AFragmentCommand {
             ArrayList<String> colList = new ArrayList<String>();
             colList.add(rindices.get(0));
             IFileFragment iff = nameToFragment.get(colList.get(0));
-            this.log.debug("Using FileFragment {} as source!", iff.getAbsolutePath());
+            this.log.debug("Using FileFragment {} as source!", iff.
+                    getAbsolutePath());
             for (int row = 1; row < rindices.size(); row++) {
                 String c = rindices.get(row);
                 String[] split = c.split(",");
@@ -469,9 +485,11 @@ public class CenterStarAlignment extends AFragmentCommand {
             }
             satTable.add(colList);
         }
-        final CSVWriter csv = Factory.getInstance().getObjectFactory().instantiate(CSVWriter.class);
+        final CSVWriter csv = Factory.getInstance().getObjectFactory().
+                instantiate(CSVWriter.class);
         csv.setWorkflow(getWorkflow());
-        csv.writeTableByCols(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "multiple-alignmentRT.csv", satTable,
+        csv.writeTableByCols(getWorkflow().getOutputDirectory(this).
+                getAbsolutePath(), "multiple-alignmentRT.csv", satTable,
                 WorkflowSlot.ALIGNMENT);
     }
 
@@ -481,9 +499,11 @@ public class CenterStarAlignment extends AFragmentCommand {
      */
     private File saveMultipleAlignmentTable(final Class<?> creator,
             final List<List<String>> table) {
-        final CSVWriter csv = Factory.getInstance().getObjectFactory().instantiate(CSVWriter.class);
+        final CSVWriter csv = Factory.getInstance().getObjectFactory().
+                instantiate(CSVWriter.class);
         csv.setWorkflow(getWorkflow());
-        return csv.writeTableByCols(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "multiple-alignment.csv", table,
+        return csv.writeTableByCols(getWorkflow().getOutputDirectory(this).
+                getAbsolutePath(), "multiple-alignment.csv", table,
                 WorkflowSlot.ALIGNMENT);
     }
 
@@ -514,7 +534,8 @@ public class CenterStarAlignment extends AFragmentCommand {
         // centerCopy);
         // getWorkflow().append(dwr);
         // warped.add(centerCopy);
-        FileFragment newTop = new FileFragment(getWorkflow().getOutputDirectory(this), top.getName());
+        FileFragment newTop = new FileFragment(getWorkflow().getOutputDirectory(
+                this), top.getName());
         newTop.addSourceFile(top);
         warped.add(newTop);
         this.log.info("Ref is {}", refname);
@@ -528,13 +549,15 @@ public class CenterStarAlignment extends AFragmentCommand {
             // .getAbsolutePath());
             if (lhsName.equals(refname)) {
                 this.log.info("Warping {} to lhs", rhs.getAbsolutePath());
-                FileFragment nrhs = new FileFragment(getWorkflow().getOutputDirectory(this), rhs.getName());
+                FileFragment nrhs = new FileFragment(getWorkflow().
+                        getOutputDirectory(this), rhs.getName());
                 nrhs.addSourceFile(rhs);
                 warped.add(nrhs);
                 repOnLHS.add(iff);
             } else if (refname.equals(rhsName)) {
                 this.log.info("Warping {} to rhs", lhs.getAbsolutePath());
-                FileFragment nlhs = new FileFragment(getWorkflow().getOutputDirectory(this), lhs.getName());
+                FileFragment nlhs = new FileFragment(getWorkflow().
+                        getOutputDirectory(this), lhs.getName());
                 nlhs.addSourceFile(lhs);
                 warped.add(nlhs);
                 repOnRHS.add(iff);

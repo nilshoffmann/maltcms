@@ -75,8 +75,8 @@ import cross.datastructures.tools.FileTools;
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  * 
- * 
  */
+@Deprecated
 public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
         IListener<IEvent<IWorkflowResult>>, Runnable, PropertyChangeListener,
         HyperlinkListener {

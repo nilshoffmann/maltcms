@@ -19,7 +19,6 @@
  * 
  * $Id: VariableDataExporter.java 160 2010-08-31 19:55:58Z nilshoffmann $
  */
-
 package maltcms.commands.fragments.io;
 
 import java.io.File;
@@ -44,47 +43,46 @@ import cross.tools.StringTools;
  */
 public class VariableDataExporter extends AFragmentCommand {
 
-	private ArrayList<String> varNames = new ArrayList<String>(0);
+    private ArrayList<String> varNames = new ArrayList<String>(0);
 
-	@Override
-	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-		final CSVWriter csvw = new CSVWriter();
-		csvw.setWorkflow(getWorkflow());
-		for (final IFileFragment iff : t) {
-			final File path = getWorkflow().getOutputDirectory(this);
-			for (final String s : this.varNames) {
-				final Array a = iff.getChild(s).getArray();
-				csvw.writeArray(path.getAbsolutePath(), StringTools
-				        .removeFileExt(iff.getName())
-				        + "_" + s, a);
-			}
-		}
-		return t;
-	}
+    @Override
+    public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
+        final CSVWriter csvw = new CSVWriter();
+        csvw.setWorkflow(getWorkflow());
+        for (final IFileFragment iff : t) {
+            final File path = getWorkflow().getOutputDirectory(this);
+            for (final String s : this.varNames) {
+                final Array a = iff.getChild(s).getArray();
+                csvw.writeArray(path.getAbsolutePath(), StringTools.
+                        removeFileExt(iff.getName())
+                        + "_" + s, a);
+            }
+        }
+        return t;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * cross.commands.fragments.AFragmentCommand#configure(org.apache.commons
-	 * .configuration.Configuration)
-	 */
-	@Override
-	public void configure(final Configuration cfg) {
-		super.configure(cfg);
-		this.varNames = StringTools.toStringList(cfg.getList(this.getClass()
-		        .getName()
-		        + ".variables"));
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cross.commands.fragments.AFragmentCommand#configure(org.apache.commons
+     * .configuration.Configuration)
+     */
+    @Override
+    public void configure(final Configuration cfg) {
+        super.configure(cfg);
+        this.varNames = StringTools.toStringList(cfg.getList(this.getClass().
+                getName()
+                + ".variables"));
+    }
 
-	@Override
-	public String getDescription() {
-		return "Exports one-dimensional variables to csv format ";
-	}
+    @Override
+    public String getDescription() {
+        return "Exports one-dimensional variables to csv format ";
+    }
 
-	@Override
-	public WorkflowSlot getWorkflowSlot() {
-		return WorkflowSlot.FILEIO;
-	}
-
+    @Override
+    public WorkflowSlot getWorkflowSlot() {
+        return WorkflowSlot.FILEIO;
+    }
 }

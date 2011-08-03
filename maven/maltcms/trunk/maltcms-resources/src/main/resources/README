@@ -21,16 +21,17 @@ not sufficient. You can then call
 >java -Xms1G -Xmx2G -jar maltcms.jar
 
 where -Xms1G sets the minimum amount of memory used by the VM to 
-1GByte of Ram and with -Xmx2G limits the maximum amount of memory 
-of the VM to 2GBytes. If you have more RAM installed, you can always
-increase the latter limit.
+1GByte of Ram and -Xmx2G sets the limit of the maximum amount of memory 
+available to maltcms to 2GBytes. If you have more RAM installed, you can
+always increase the latter limit.
 
-NOTE: If you use java on a 32 bit architecture and a 32 bit VM, 2G 
-	  might not be available. Using java on 64 bit architectures
-	  and with a 64 bit VM allows higher amounts of memory to be
-	  allocated.
+NOTE:   If you use java on a 32 bit architecture and a 32 bit VM, 2G 
+	might not be available. Using java on 64 bit architectures
+	and with a 64 bit VM allows higher amounts of memory to be
+	allocated.
 
-To define custom properties, you need to pass the -c argument:
+To define custom properties, you need to pass the -c argument to
+maltcms:
 
 >java -Xms1G -Xmx2G -jar maltcms.jar -c cfg/default.properties
 
@@ -52,16 +53,16 @@ this README is located, consisting of one line holding the path to your JRE.
 Libraries contained in lib/ need to be in classpath,
 which is built automatically when calling 'scripts/maltcms.sh'
 
-NOTE: The scripts will always prompt for the installation directory of 
-	  maltcms, if you do not set the environment variable MALTCMSDIR
-	  to the installation location. We recommend to add 
+NOTE:	The scripts will always prompt for the installation directory of 
+	maltcms, if you do not set the environment variable MALTCMSDIR
+	to the installation location. We recommend to add 
 
 		export MALTCMSDIR=/path/to/your/maltcms/
 
-	  to your $HOME/.bashrc or $HOME/.profile file.
-	  Alternatively, simply overwrite the environment variable within
-	  scripts/maltcms.sh and scripts/maltcms-interactive.sh to set 
-	  it to a fixed location.
+	to your $HOME/.bashrc or $HOME/.profile file.
+	Alternatively, simply overwrite the environment variable within
+	scripts/maltcms.sh and scripts/maltcms-interactive.sh to set 
+	it to a fixed location.
 
 ###############################################################################
 
@@ -88,7 +89,7 @@ Required inputs are:
 -f <FILES> (e.g. "*.cdf")
 
 >scripts/maltcms.sh -- -h
-prints command-line options with explanations.
+prints command-line options for the script with explanations.
 
 For interactive input of the parameters:
 >scripts/maltcms-interactive.sh

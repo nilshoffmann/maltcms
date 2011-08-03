@@ -272,7 +272,7 @@ public class Peak implements IFeatureVector {
             return Array.factory(this.scanIndex);
         } else if (name.equals("binned_intensity_values")) {
             return this.msIntensities;
-        }
+        } 
         throw new ResourceNotAvailableException("No such feature: " + name);
     }
 

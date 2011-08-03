@@ -19,7 +19,6 @@
  * 
  * $Id: RHClust.java 105 2010-03-10 11:15:53Z nilshoffmann $
  */
-
 package maltcms.commands.fragments.cluster;
 
 import java.util.HashMap;
@@ -39,141 +38,134 @@ import cross.exception.NotImplementedException;
 
 public class RHClust implements IClusteringAlgorithm, IConfigurable {
 
-	public enum ClusterMethod {
-		WARD("ward"), SINGLE("single"), COMPLETE("complete"), AVERAGE("average"), MCQUITTY(
-		        "mcquitty"), MEDIAN("median"), CENTROID("centroid");
+    public enum ClusterMethod {
 
-		public static ClusterMethod fromString(final String s) {
-			if (s.equals("ward")) {
-				return WARD;
-			} else if (s.equals("single")) {
+        WARD("ward"), SINGLE("single"), COMPLETE("complete"), AVERAGE("average"), MCQUITTY(
+        "mcquitty"), MEDIAN("median"), CENTROID("centroid");
 
-			} else if (s.equals("complete")) {
+        public static ClusterMethod fromString(final String s) {
+            if (s.equals("ward")) {
+                return WARD;
+            } else if (s.equals("single")) {
+            } else if (s.equals("complete")) {
+            } else if (s.equals("average")) {
+            } else if (s.equals("mcquitty")) {
+            } else if (s.equals("median")) {
+            } else if (s.equals("centroid")) {
+            } else {
+                throw new IllegalArgumentException("Unknown cluster method: "
+                        + s);
+            }
+            return COMPLETE;
+        }
+        private String name = "complete";
 
-			} else if (s.equals("average")) {
+        ClusterMethod(final String name) {
+            this.name = name;
+        }
 
-			} else if (s.equals("mcquitty")) {
+        @Override
+        public String toString() {
+            return this.name;
+        }
+    }
+    @Configurable(
+    name = "maltcms.commands.fragments.cluster.RHClust.clusterMethod")
+    private final String clusterMethod = ClusterMethod.COMPLETE.toString();
 
-			} else if (s.equals("median")) {
+    @Override
+    public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
+        throw new NotImplementedException();
+    }
 
-			} else if (s.equals("centroid")) {
+    @Override
+    public void configure(final Configuration cfg) {
+        cfg.getString(this.getClass().getName() + "." + this.clusterMethod,
+                ClusterMethod.COMPLETE.toString());
 
-			} else {
-				throw new IllegalArgumentException("Unknown cluster method: "
-				        + s);
-			}
-			return COMPLETE;
-		}
+    }
 
-		private String name = "complete";
+    @Override
+    public BinaryCluster getCluster(final int i) {
+        throw new NotImplementedException();
+    }
 
-		ClusterMethod(final String name) {
-			this.name = name;
-		}
+    @Override
+    public Set<Entry<Integer, BinaryCluster>> getClusters() {
+        throw new NotImplementedException();
+    }
 
-		@Override
-		public String toString() {
-			return this.name;
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * maltcms.commands.fragments.cluster.IClusteringAlgorithm#getConsensus()
+     */
+    @Override
+    public IFileFragment getConsensus() {
+        throw new NotImplementedException();
+    }
 
-	@Configurable(name = "maltcms.commands.fragments.cluster.RHClust.clusterMethod")
-	private final String clusterMethod = ClusterMethod.COMPLETE.toString();
+    @Override
+    public HashMap<Integer, IFileFragment> getFragments() {
+        throw new NotImplementedException();
+    }
 
-	@Override
-	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-		throw new NotImplementedException();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * maltcms.commands.fragments.cluster.IClusteringAlgorithm#getInputFiles()
+     */
+    @Override
+    public TupleND<IFileFragment> getInputFiles() {
+        throw new NotImplementedException();
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		cfg.getString(this.getClass().getName() + "." + this.clusterMethod,
-		        ClusterMethod.COMPLETE.toString());
+    @Override
+    public String[] getNames() {
+        throw new NotImplementedException();
+    }
 
-	}
+    @Override
+    public void init(final IFileFragment pwd, final TupleND<IFileFragment> t) {
+        throw new NotImplementedException();
+    }
 
-	@Override
-	public BinaryCluster getCluster(final int i) {
-		throw new NotImplementedException();
-	}
+    @Override
+    public Iterator<IFileFragment> iterator() {
+        throw new NotImplementedException();
+    }
 
-	@Override
-	public Set<Entry<Integer, BinaryCluster>> getClusters() {
-		throw new NotImplementedException();
-	}
+    @Override
+    public void merge() {
+        throw new NotImplementedException();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maltcms.commands.fragments.cluster.IClusteringAlgorithm#getConsensus()
-	 */
-	@Override
-	public IFileFragment getConsensus() {
-		throw new NotImplementedException();
-	}
+    }
 
-	@Override
-	public HashMap<Integer, IFileFragment> getFragments() {
-		throw new NotImplementedException();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * maltcms.commands.fragments.cluster.IClusteringAlgorithm#setConsensus(
+     * cross.datastructures.fragments.IFileFragment)
+     */
+    @Override
+    public void setConsensus(final IFileFragment f) {
+        throw new NotImplementedException();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maltcms.commands.fragments.cluster.IClusteringAlgorithm#getInputFiles()
-	 */
-	@Override
-	public TupleND<IFileFragment> getInputFiles() {
-		throw new NotImplementedException();
-	}
+    }
 
-	@Override
-	public String[] getNames() {
-		throw new NotImplementedException();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * maltcms.commands.fragments.cluster.IClusteringAlgorithm#setInputFiles
+     * (cross.datastructures.tuple.TupleND)
+     */
+    @Override
+    public void setInputFiles(final TupleND<IFileFragment> t) {
+        throw new NotImplementedException();
 
-	@Override
-	public void init(final IFileFragment pwd, final TupleND<IFileFragment> t) {
-		throw new NotImplementedException();
-	}
-
-	@Override
-	public Iterator<IFileFragment> iterator() {
-		throw new NotImplementedException();
-	}
-
-	@Override
-	public void merge() {
-		throw new NotImplementedException();
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maltcms.commands.fragments.cluster.IClusteringAlgorithm#setConsensus(
-	 * cross.datastructures.fragments.IFileFragment)
-	 */
-	@Override
-	public void setConsensus(final IFileFragment f) {
-		throw new NotImplementedException();
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maltcms.commands.fragments.cluster.IClusteringAlgorithm#setInputFiles
-	 * (cross.datastructures.tuple.TupleND)
-	 */
-	@Override
-	public void setInputFiles(final TupleND<IFileFragment> t) {
-		throw new NotImplementedException();
-
-	}
-
+    }
 }

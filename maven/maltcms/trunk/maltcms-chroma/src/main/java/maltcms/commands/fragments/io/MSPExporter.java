@@ -15,37 +15,36 @@ import cross.exception.NotImplementedException;
  * 
  * 
  */
-@RequiresOptionalVariables(names = { "var.tic_peaks" })
+@RequiresOptionalVariables(names = {"var.tic_peaks"})
 public class MSPExporter extends AFragmentCommand {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.commands.fragments.AFragmentCommand#getDescription()
-	 */
-	@Override
-	public String getDescription() {
-		throw new NotImplementedException();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.commands.fragments.AFragmentCommand#getDescription()
+     */
+    @Override
+    public String getDescription() {
+        throw new NotImplementedException();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.commands.ICommand#apply(java.lang.Object)
-	 */
-	@Override
-	public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-		throw new NotImplementedException();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.commands.ICommand#apply(java.lang.Object)
+     */
+    @Override
+    public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
+        throw new NotImplementedException();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-	 */
-	@Override
-	public WorkflowSlot getWorkflowSlot() {
-		throw new NotImplementedException();
-	}
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
+     */
+    @Override
+    public WorkflowSlot getWorkflowSlot() {
+        throw new NotImplementedException();
+    }
 }

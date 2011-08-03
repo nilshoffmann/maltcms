@@ -100,6 +100,7 @@ public class EICPeakFinder extends AFragmentCommand {
     @Configurable(value = "20")
     private int filter_window = 20;
 
+    @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         EvalTools.notNull(t, this);
         for (final IFileFragment f : t) {
@@ -121,6 +122,7 @@ public class EICPeakFinder extends AFragmentCommand {
             pc.setProperty(TICPeakFinder.class.getName()+".peak_threshold", this.peak_threshold);
             pc.setProperty(TICPeakFinder.class.getName()+".filter_window", this.filter_window);
             tpf.configure(pc);
+            tpf.setWorkflow(getWorkflow());
             List<List<Peak1D>> peaks = new ArrayList<List<Peak1D>>();
             int k = 0;
             for (ArrayDouble.D1 arr : al) {

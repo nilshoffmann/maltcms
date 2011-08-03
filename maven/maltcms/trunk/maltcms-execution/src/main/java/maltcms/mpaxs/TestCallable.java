@@ -11,10 +11,10 @@ import java.util.concurrent.Callable;
  *
  * @author nilshoffmann
  */
-public class TestCallable implements Callable<Long>, Serializable {
+public class TestCallable implements Callable<String>, Serializable {
 
     @Override
-    public Long call() throws Exception {
+    public String call() throws Exception {
         for (int i = 0; i < 10; i++) {
             try {
                 Thread.sleep(100);
@@ -22,6 +22,6 @@ public class TestCallable implements Callable<Long>, Serializable {
 //                Logger.getLogger(TestCallable.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return System.nanoTime();
+        return "TestCallable"+System.nanoTime();
     }
 }

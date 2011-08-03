@@ -43,55 +43,53 @@ import cross.datastructures.workflow.WorkflowSlot;
  */
 public class ProgressiveTreeAlignment extends AFragmentCommand {
 
-	private final Logger log = Logging.getLogger(this);
+    private final Logger log = Logging.getLogger(this);
+    @Configurable(value = "maltcms.commands.fragments.cluster.UPGMAAlgorithm")
+    private String guideTreeClass = "maltcms.commands.fragments.cluster.UPGMAAlgorithm";
 
-	@Configurable(value = "maltcms.commands.fragments.cluster.UPGMAAlgorithm")
-	private String guideTreeClass = "maltcms.commands.fragments.cluster.UPGMAAlgorithm";
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.commands.ICommand#apply(java.lang.Object)
+     */
+    @Override
+    public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
+        // First step:
+        // calculate all pairwise distance
+        IFileFragment pwd = MaltcmsTools.getPairwiseDistanceFragment(t);
+        // Second step:
+        // Build a tree, based on a clustering algorithm
+        // For each pair of leaves, align the sequences and create a consensus,
+        // then proceed and align sequences to consensus sequences etc.
+        final AFragmentCommand ica = Factory.getInstance().getObjectFactory().
+                instantiate(this.guideTreeClass, AFragmentCommand.class);
+        ica.setWorkflow(getWorkflow());
+        ((IClusteringAlgorithm) ica).init(pwd, t);
+        final TupleND<IFileFragment> tple = ica.apply(t);
+        return tple;
+        // Third
+        // return t;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.commands.ICommand#apply(java.lang.Object)
-	 */
-	@Override
-	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-		// First step:
-		// calculate all pairwise distance
-		IFileFragment pwd = MaltcmsTools.getPairwiseDistanceFragment(t);
-		// Second step:
-		// Build a tree, based on a clustering algorithm
-		// For each pair of leaves, align the sequences and create a consensus,
-		// then proceed and align sequences to consensus sequences etc.
-		final AFragmentCommand ica = Factory.getInstance().getObjectFactory()
-		        .instantiate(this.guideTreeClass, AFragmentCommand.class);
-		ica.setWorkflow(getWorkflow());
-		((IClusteringAlgorithm) ica).init(pwd, t);
-		final TupleND<IFileFragment> tple = ica.apply(t);
-		return tple;
-		// Third
-		// return t;
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+        this.guideTreeClass = cfg.getString(getClass().getName()
+                + ".guideTreeClass",
+                "maltcms.commands.fragments.cluster.CompleteLinkageAlgorithm");
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		this.guideTreeClass = cfg.getString(getClass().getName()
-		        + ".guideTreeClass",
-		        "maltcms.commands.fragments.cluster.CompleteLinkageAlgorithm");
-	}
+    @Override
+    public String getDescription() {
+        return "Creates a multiple alignment by following a guide tree, based on pairwise simlarities or distances. Creates meta-chromatogram as root of the tree and realigns all other chromatograms to that reference.";
+    }
 
-	@Override
-	public String getDescription() {
-		return "Creates a multiple alignment by following a guide tree, based on pairwise simlarities or distances. Creates meta-chromatogram as root of the tree and realigns all other chromatograms to that reference.";
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-	 */
-	@Override
-	public WorkflowSlot getWorkflowSlot() {
-		return WorkflowSlot.ALIGNMENT;
-	}
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
+     */
+    @Override
+    public WorkflowSlot getWorkflowSlot() {
+        return WorkflowSlot.ALIGNMENT;
+    }
 }

@@ -19,7 +19,6 @@
  * 
  * $Id: IClusteringAlgorithm.java 73 2009-12-16 08:45:14Z nilshoffmann $
  */
-
 package maltcms.commands.fragments.cluster;
 
 import java.util.HashMap;
@@ -32,32 +31,31 @@ import cross.datastructures.tuple.TupleND;
 
 public interface IClusteringAlgorithm extends Iterable<IFileFragment> {
 
-	public abstract TupleND<IFileFragment> apply(TupleND<IFileFragment> t);
+    public abstract TupleND<IFileFragment> apply(TupleND<IFileFragment> t);
 
-	public abstract BinaryCluster getCluster(int i);
+    public abstract BinaryCluster getCluster(int i);
 
-	public abstract Set<Entry<Integer, BinaryCluster>> getClusters();
+    public abstract Set<Entry<Integer, BinaryCluster>> getClusters();
 
-	public abstract IFileFragment getConsensus();
+    public abstract IFileFragment getConsensus();
 
-	public abstract HashMap<Integer, IFileFragment> getFragments();
+    public abstract HashMap<Integer, IFileFragment> getFragments();
 
-	public abstract TupleND<IFileFragment> getInputFiles();
+    public abstract TupleND<IFileFragment> getInputFiles();
 
-	public abstract String[] getNames();
+    public abstract String[] getNames();
 
-	public abstract void init(IFileFragment pwd, TupleND<IFileFragment> t);
+    public abstract void init(IFileFragment pwd, TupleND<IFileFragment> t);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maltcms.commands.fragments.multiplealignment.ClusteringAlgorithm#merge()
-	 */
-	public abstract void merge();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * maltcms.commands.fragments.multiplealignment.ClusteringAlgorithm#merge()
+     */
+    public abstract void merge();
 
-	public abstract void setConsensus(IFileFragment f);
+    public abstract void setConsensus(IFileFragment f);
 
-	public abstract void setInputFiles(TupleND<IFileFragment> t);
-
+    public abstract void setInputFiles(TupleND<IFileFragment> t);
 }

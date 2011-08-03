@@ -30,6 +30,8 @@ import java.util.TreeSet;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import cross.annotations.NoFeature;
+import org.apache.commons.math.random.GaussianRandomGenerator;
+import org.apache.commons.math.random.MersenneTwister;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
@@ -125,6 +127,7 @@ public class Peak1DGroup extends Peak1D implements Iterable<Peak1D> {
 	}
 
 	public static void main(String[] args) {
+            
 		Peak1D p1 = new Peak1D(30, 35, 40, 213.932, 144);
 		p1.setMw(58.32);
 		Peak1D p2 = new Peak1D(28, 35, 42, 3134.932, 1567);

@@ -31,87 +31,86 @@ import maltcms.datastructures.cluster.BinaryCluster;
  */
 public class CompleteLinkageAlgorithm extends ClusteringAlgorithm {
 
-	@Override
-	public double[] dmat(final int i, final int j, final int k) {
-		final double[] dmat = new double[getNames().length];
-		final int ni = getCluster(i).getSize();
-		final int nj = getCluster(j).getSize();
-		this.log.debug("ICluster " + getCluster(i).getID() + " has " + ni
-		        + (ni == 1 ? " child" : " children") + ", cluster "
-		        + getCluster(j).getID() + " has " + nj
-		        + (nj == 1 ? " child" : " children"));
-		for (int m = 0; m < k; m++) {
-			if (!getUsedIndices().contains(m) && !getUsedIndices().contains(k)
-			        && (m != i) && (m != j)) {
-				setd(k, m, isMinimizing() ? Math.max(d(i, m), d(j, m)) : Math
-				        .min(d(i, m), d(j, m)));
-				dmat[m] = d(Math.max(i, m), Math.min(j, m));
-				this.log.info("Distance from cluster k={} to m={} ={}",
-				        new Object[] { k, getCluster(m).getName(), dmat[m] });
-			}
-		}
-		return dmat;
-	}
+    @Override
+    public double[] dmat(final int i, final int j, final int k) {
+        final double[] dmat = new double[getNames().length];
+        final int ni = getCluster(i).getSize();
+        final int nj = getCluster(j).getSize();
+        this.log.debug("ICluster " + getCluster(i).getID() + " has " + ni
+                + (ni == 1 ? " child" : " children") + ", cluster "
+                + getCluster(j).getID() + " has " + nj
+                + (nj == 1 ? " child" : " children"));
+        for (int m = 0; m < k; m++) {
+            if (!getUsedIndices().contains(m) && !getUsedIndices().contains(k)
+                    && (m != i) && (m != j)) {
+                setd(k, m, isMinimizing() ? Math.max(d(i, m), d(j, m)) : Math.
+                        min(d(i, m), d(j, m)));
+                dmat[m] = d(Math.max(i, m), Math.min(j, m));
+                this.log.info("Distance from cluster k={} to m={} ={}",
+                        new Object[]{k, getCluster(m).getName(), dmat[m]});
+            }
+        }
+        return dmat;
+    }
 
-	@Override
-	public void findBestD(final int numclust) {
-		int i = -1;
-		int j = -1;
-		double mind = isMinimizing() ? Double.NEGATIVE_INFINITY
-		        : Double.POSITIVE_INFINITY;
-		for (int m = 0; m < numclust; m++) {
-			for (int n = 0; n < numclust; n++) {
-				if (n != m) {
-					if (!getUsedIndices().contains(m)
-					        && !getUsedIndices().contains(n)) {
-						final double d = d(m, n);
-						if (isMinimizing()) {
-							if (d > mind) {
-								mind = d;
-								i = m;
-								j = n;
-							}
-						} else {
-							if (d < mind) {
-								mind = d;
-								i = m;
-								j = n;
-							}
-						}
-					}
-				}
-			}
-		}
-		if ((i >= 0) && (j >= 0)) {
-			if (isMinimizing()) {
-				this.log.debug("Found minimum distance " + d(i, j));
-			} else {
-				this.log.debug("Found maximum similarity " + d(i, j));
-			}
-			// between "+this.names[i]+" and "+this.names[j]);
-			addNodeK(i, j, numclust);
-		} else {
-			throw new IllegalArgumentException("Could not find minimum!");
-		}
+    @Override
+    public void findBestD(final int numclust) {
+        int i = -1;
+        int j = -1;
+        double mind = isMinimizing() ? Double.NEGATIVE_INFINITY
+                : Double.POSITIVE_INFINITY;
+        for (int m = 0; m < numclust; m++) {
+            for (int n = 0; n < numclust; n++) {
+                if (n != m) {
+                    if (!getUsedIndices().contains(m)
+                            && !getUsedIndices().contains(n)) {
+                        final double d = d(m, n);
+                        if (isMinimizing()) {
+                            if (d > mind) {
+                                mind = d;
+                                i = m;
+                                j = n;
+                            }
+                        } else {
+                            if (d < mind) {
+                                mind = d;
+                                i = m;
+                                j = n;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if ((i >= 0) && (j >= 0)) {
+            if (isMinimizing()) {
+                this.log.debug("Found minimum distance " + d(i, j));
+            } else {
+                this.log.debug("Found maximum similarity " + d(i, j));
+            }
+            // between "+this.names[i]+" and "+this.names[j]);
+            addNodeK(i, j, numclust);
+        } else {
+            throw new IllegalArgumentException("Could not find minimum!");
+        }
 
-	}
+    }
 
-	@Override
-	public void joinIJtoK(final int i, final int j, final int k,
-	        final double[] dist) {
-		final double dij = d(i, j);
-		final double dik = dij;
-		final double djk = dik;
-		final BinaryCluster njc = new BinaryCluster(getCluster(i),
-		        getCluster(j), dik, djk, dist, k);
-		putCluster(k, njc);
-		printDistanceToNewCluster(i, j, k);
-		getUsedIndices().add(i);
-		getUsedIndices().add(j);
-		if (getFragments() != null) {
-			handleFileFragments(i, j, k);
-		}
+    @Override
+    public void joinIJtoK(final int i, final int j, final int k,
+            final double[] dist) {
+        final double dij = d(i, j);
+        final double dik = dij;
+        final double djk = dik;
+        final BinaryCluster njc = new BinaryCluster(getCluster(i),
+                getCluster(j), dik, djk, dist, k);
+        putCluster(k, njc);
+        printDistanceToNewCluster(i, j, k);
+        getUsedIndices().add(i);
+        getUsedIndices().add(j);
+        if (getFragments() != null) {
+            handleFileFragments(i, j, k);
+        }
 
-	}
-
+    }
 }
