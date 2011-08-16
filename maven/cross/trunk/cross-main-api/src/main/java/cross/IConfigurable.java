@@ -22,6 +22,7 @@
 
 package cross;
 
+import java.io.Serializable;
 import org.apache.commons.configuration.Configuration;
 
 /**
@@ -30,7 +31,7 @@ import org.apache.commons.configuration.Configuration;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
-public interface IConfigurable {
+public interface IConfigurable extends Serializable {
 
 	public void configure(Configuration cfg);
 

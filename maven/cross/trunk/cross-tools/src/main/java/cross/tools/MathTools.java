@@ -311,6 +311,14 @@ public class MathTools {
 		}
 		return c;
 	}
+        
+        public static double sum(final double[] d) {
+            double sum = 0.0d;
+            for(double dbl:d) {
+                sum+=dbl;
+            }
+            return sum;
+        }
 
 	public static double[] weightedAverage(int r, final double[] d) {
 		double[] ret = new double[d.length];

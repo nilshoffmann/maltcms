@@ -31,7 +31,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -48,10 +47,8 @@ import org.jdom.Element;
 import org.jdom.ProcessingInstruction;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.slf4j.Logger;
 
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
 import cross.commands.fragments.IFragmentCommand;
@@ -68,6 +65,8 @@ import cross.io.misc.WorkflowZipper;
 import cross.io.xml.IXMLSerializable;
 import cross.datastructures.tools.FileTools;
 import cross.tools.StringTools;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
  * A default implementation of {@link cross.datastructures.workflow.IWorkflow}.
@@ -76,13 +75,13 @@ import cross.tools.StringTools;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
 
-    private final Logger log = Logging.getLogger(this);
     private ArrayList<IWorkflowResult> al = new ArrayList<IWorkflowResult>();
     private IEventSource<IWorkflowResult> iwres = new EventSource<IWorkflowResult>();
-    private ICommandSequence ics = null;
-    private String name = null;
+    private ICommandSequence commandSequence = null;
+    private String name = "defaultWorkflow";
     private IFragmentCommand activeCommand = null;
     @Configurable
     private String xslPathPrefix;
@@ -95,8 +94,10 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     @Configurable
     private boolean saveInFragmentCommandDir = false;
     private Date date = new Date();
-    private Configuration cfg;
+    private Configuration cfg = new PropertiesConfiguration();
+    private boolean executeLocal = true;
 
+    @Override
     public void addListener(final IListener<IEvent<IWorkflowResult>> l) {
         this.iwres.addListener(l);
     }
@@ -108,7 +109,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         }
         if (iwr instanceof IWorkflowProgressResult) {
             final IWorkflowProgressResult iwpr = (IWorkflowProgressResult) iwr;
-            this.log.info("Step {}/{}, Overall progress: {}%", new Object[]{
+            log.info("Step {}/{}, Overall progress: {}%", new Object[]{
                         iwpr.getCurrentStep(), iwpr.getNumberOfSteps(),
                         iwpr.getOverallProgress()});
         } else {
@@ -119,7 +120,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
 
     @Override
     public void appendXML(final Element e) {
-        this.log.debug("Appending xml for DefaultWorkflow " + getName());
+        log.debug("Appending xml for DefaultWorkflow " + getName());
         // Element workflow = new Element("workflow");
         // workflow.setAttribute("class", this.getClass().getCanonicalName());
         // workflow.setAttribute("name", name);
@@ -163,6 +164,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                 + ".saveInFragmentCommandDir", true);
     }
 
+    @Override
     public void fireEvent(final IEvent<IWorkflowResult> e) {
         this.iwres.fireEvent(e);
     }
@@ -170,8 +172,9 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     /**
      * @return the ICommandSequence
      */
+    @Override
     public ICommandSequence getCommandSequence() {
-        return this.ics;
+        return this.commandSequence;
     }
 
     /*
@@ -232,6 +235,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         return this.xslPathPrefix;
     }
 
+    @Override
     public void readXML(final Element e) throws IOException,
             ClassNotFoundException {
         final String workflowname = e.getAttributeValue("name");
@@ -256,14 +260,16 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         }
     }
 
+    @Override
     public void removeListener(final IListener<IEvent<IWorkflowResult>> l) {
         this.iwres.removeListener(l);
     }
 
+    @Override
     public void save() {
         try {
             final String wflname = getName();
-            this.log.info("Saving workflow to file {}", wflname);
+            log.info("Saving workflow to file {}", wflname);
             final Document doc = new Document();
 //			final HashMap<String, String> hm = new HashMap<String, String>();
 //			hm.put("type", "text/xsl");
@@ -290,7 +296,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                     BinaryFileBase64Wrapper.base64Encode(results, new File(dir,
                             results.getName() + ".b64"));
                 } else {
-                    this.log.debug("Did not Base64 encode maltcmsResults.zip");
+                    log.debug("Did not Base64 encode maltcmsResults.zip");
                 }
                 if (this.saveHTML) {
                     saveHTML(f);
@@ -299,12 +305,12 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                     saveTEXT(f);
                 }
             } catch (final IOException e) {
-                this.log.error(e.getLocalizedMessage());
+                log.error(e.getLocalizedMessage());
             }
         } catch (final FileNotFoundException e) {
-            this.log.error(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
         } catch (final IOException e) {
-            this.log.error(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
         }
     }
 
@@ -371,11 +377,12 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     }
 
     /**
-     * @param ics
+     * @param commandSequence
      *            the ICommandSequence to set
      */
+    @Override
     public void setCommandSequence(final ICommandSequence ics) {
-        this.ics = ics;
+        this.commandSequence = ics;
     }
 
     /*
@@ -439,6 +446,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         this.xslPathPrefix = xslPathPrefix;
     }
 
+    @Override
     public Element writeXML() throws IOException {
         final Element root = new Element("workflow");
         root.setAttribute("class", getClass().getCanonicalName());
@@ -456,15 +464,15 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     @Override
     public File getOutputDirectory(Object iwe) {
         if (iwe instanceof AFragmentCommand) {
-            Collection<IFragmentCommand> c = this.ics.getCommands();
+            Collection<IFragmentCommand> c = this.commandSequence.getCommands();
             int i = 0;
             int digits = (int) Math.ceil(Math.log10(c.size())) + 1;
             for (IFragmentCommand afc : c) {
                 IFragmentCommand iwa = (IFragmentCommand) iwe;
-                this.log.debug("Checking for reference equality!");
+                log.debug("Checking for reference equality!");
                 // check for reference equality
                 if (iwa == afc) {
-                    this.log.debug("Reference equality holds!");
+                    log.debug("Reference equality holds!");
                     if (activeCommand == null) {
                         activeCommand = iwa;
                     }
@@ -631,5 +639,15 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
             }
         }
         return l;
+    }
+
+    @Override
+    public boolean isExecuteLocal() {
+        return executeLocal;
+    }
+
+    @Override
+    public void setExecuteLocal(boolean executeLocal) {
+        this.executeLocal = executeLocal;
     }
 }

@@ -261,6 +261,30 @@ public class EvalTools {
 		}
 		// }
 	}
+        
+        public static void gt(final int min, final int v, final Object caller) throws ConstraintViolationException {
+            if(!(v>min)) {
+                throw new ConstraintViolationException("Called from "+caller.toString()+": Value was smaller or equal than expected: "+ v+"<="+min+". Should be greater!");
+            }
+        }
+        
+        public static void geq(final int min, final int v, final Object caller) throws ConstraintViolationException {
+            if(!(v>=min)) {
+                throw new ConstraintViolationException("Called from "+caller.toString()+": Value was smaller than expected: "+ v+"<"+min+". Should be greater or equal!");
+            }
+        }
+        
+        public static void lt(final int max, final int v, final Object caller) throws ConstraintViolationException {
+            if(!(v<max)) {
+                throw new ConstraintViolationException("Called from "+caller.toString()+": Value was larger or equal than expected: "+ v+">="+max+". Should be smaller!");
+            }
+        }
+        
+        public static void leq(final int max, final int v, final Object caller) throws ConstraintViolationException {
+            if(!(v<=max)) {
+                throw new ConstraintViolationException("Called from "+caller.toString()+": Value was larger than expected: "+ v+">"+max+". Should be smaller or equal!");
+            }
+        }
 
 	public static boolean isNumber(final String s) {
 		// REGEXP taken from java 6 api, java.lang.Double

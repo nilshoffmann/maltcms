@@ -19,7 +19,6 @@
  * 
  * $Id: ImmutableFileFragment.java 73 2009-12-16 08:45:14Z nilshoffmann $
  */
-
 /**
  * 
  */
@@ -51,407 +50,414 @@ import cross.exception.ResourceNotAvailableException;
  */
 public class ImmutableFileFragment implements IFileFragment {
 
-	private IFileFragment frag = null;
+    private IFileFragment frag = null;
 
-	public ImmutableFileFragment(final IFileFragment f) {
-		// EvalTools.notNull(f, this);
-		this.frag = f;
-	}
+    public ImmutableFileFragment(final File f) {
+        this.frag = new FileFragment(f);
+    }
 
-	/**
-	 * @param fragments
-	 * @see cross.datastructures.fragments.IFileFragment#addChildren(cross.datastructures.fragments.IVariableFragment[])
-	 */
-	public void addChildren(final IVariableFragment... fragments) {
-		throw new UnsupportedOperationException();
-	}
+    public ImmutableFileFragment(final File basedir, final String name) {
+        this(new File(basedir, name));
+    }
 
-	/**
-	 * @param dims1
-	 * @see cross.datastructures.fragments.IFileFragment#addDimensions(ucar.nc2.Dimension[])
-	 */
-	public void addDimensions(final Dimension... dims1) {
-		throw new UnsupportedOperationException();
-	}
+    public ImmutableFileFragment(final IFileFragment f) {
+        // EvalTools.notNull(f, this);
+        this.frag = f;
+    }
 
-	/**
-	 * @param c
-	 * @see cross.datastructures.fragments.IFileFragment#addSourceFile(java.util.Collection)
-	 */
-	public void addSourceFile(final Collection<IFileFragment> c) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * @param fragments
+     * @see cross.datastructures.fragments.IFileFragment#addChildren(cross.datastructures.fragments.IVariableFragment[])
+     */
+    public void addChildren(final IVariableFragment... fragments) {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @param ff
-	 * @see cross.datastructures.fragments.IFileFragment#addSourceFile(cross.datastructures.fragments.IFileFragment[])
-	 */
-	public void addSourceFile(final IFileFragment... ff) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * @param dims1
+     * @see cross.datastructures.fragments.IFileFragment#addDimensions(ucar.nc2.Dimension[])
+     */
+    public void addDimensions(final Dimension... dims1) {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @param e
-	 * @see cross.datastructures.fragments.IFileFragment#appendXML(org.jdom.Element)
-	 */
-	public void appendXML(final Element e) {
-		this.frag.appendXML(e);
-	}
+    /**
+     * @param c
+     * @see cross.datastructures.fragments.IFileFragment#addSourceFile(java.util.Collection)
+     */
+    public void addSourceFile(final Collection<IFileFragment> c) {
+        throw new UnsupportedOperationException();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.datastructures.fragments.IFileFragment#clearArrays()
-	 */
-	@Override
-	public void clearArrays() throws IllegalStateException {
-		throw new IllegalStateException(
-		        "Can not clear arrays on immutable fragment!");
-	}
+    /**
+     * @param ff
+     * @see cross.datastructures.fragments.IFileFragment#addSourceFile(cross.datastructures.fragments.IFileFragment[])
+     */
+    public void addSourceFile(final IFileFragment... ff) {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @param arg0
-	 * @param arg1
-	 * @return
-	 * @see cross.datastructures.fragments.IFragment#compare(cross.datastructures.fragments.IFragment,
-	 *      cross.datastructures.fragments.IFragment)
-	 */
-	public int compare(final IFragment arg0, final IFragment arg1) {
-		return this.frag.compare(arg0, arg1);
-	}
+    /**
+     * @param e
+     * @see cross.datastructures.fragments.IFileFragment#appendXML(org.jdom.Element)
+     */
+    public void appendXML(final Element e) {
+        this.frag.appendXML(e);
+    }
 
-	/**
-	 * @param arg0
-	 * @return
-	 * @see cross.datastructures.fragments.IFragment#compareTo(java.lang.Object)
-	 */
-	public int compareTo(final Object arg0) {
-		return this.frag.compareTo(arg0);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.datastructures.fragments.IFileFragment#clearArrays()
+     */
+    @Override
+    public void clearArrays() throws IllegalStateException {
+        throw new IllegalStateException(
+                "Can not clear arrays on immutable fragment!");
+    }
 
-	/**
-	 * @param obj
-	 * @return
-	 * @see java.util.Comparator#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(final Object obj) {
-		return this.frag.equals(obj);
-	}
+    /**
+     * @param arg0
+     * @param arg1
+     * @return
+     * @see cross.datastructures.fragments.IFragment#compare(cross.datastructures.fragments.IFragment,
+     *      cross.datastructures.fragments.IFragment)
+     */
+    public int compare(final IFragment arg0, final IFragment arg1) {
+        return this.frag.compare(arg0, arg1);
+    }
 
-	/**
-	 * @return
-	 * @see cross.datastructures.fragments.IFileFragment#getAbsolutePath()
-	 */
-	public String getAbsolutePath() {
-		return this.frag.getAbsolutePath();
-	}
+    /**
+     * @param arg0
+     * @return
+     * @see cross.datastructures.fragments.IFragment#compareTo(java.lang.Object)
+     */
+    public int compareTo(final Object arg0) {
+        return this.frag.compareTo(arg0);
+    }
 
-	/**
-	 * @param a
-	 * @return
-	 * @see cross.datastructures.fragments.IFragment#getAttribute(ucar.nc2.Attribute)
-	 */
-	public Attribute getAttribute(final Attribute a) {
-		return this.frag.getAttribute(a);
-	}
+    /**
+     * @param obj
+     * @return
+     * @see java.util.Comparator#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        return this.frag.equals(obj);
+    }
 
-	/**
-	 * @param name
-	 * @return
-	 * @see cross.datastructures.fragments.IFragment#getAttribute(java.lang.String)
-	 */
-	public Attribute getAttribute(final String name) {
-		return this.frag.getAttribute(name);
-	}
+    /**
+     * @return
+     * @see cross.datastructures.fragments.IFileFragment#getAbsolutePath()
+     */
+    public String getAbsolutePath() {
+        return this.frag.getAbsolutePath();
+    }
 
-	/**
-	 * @return
-	 * @see cross.datastructures.fragments.IFragment#getAttributes()
-	 */
-	public List<Attribute> getAttributes() {
-		return this.frag.getAttributes();
-	}
+    /**
+     * @param a
+     * @return
+     * @see cross.datastructures.fragments.IFragment#getAttribute(ucar.nc2.Attribute)
+     */
+    public Attribute getAttribute(final Attribute a) {
+        return this.frag.getAttribute(a);
+    }
 
-	/**
-	 * @param varname
-	 * @return
-	 * @throws ResourceNotAvailableException
-	 * @see cross.datastructures.fragments.IFileFragment#getChild(java.lang.String)
-	 */
-	public IVariableFragment getChild(final String varname)
-	        throws ResourceNotAvailableException {
-		return new ImmutableVariableFragment(this.frag.getChild(varname));
-	}
+    /**
+     * @param name
+     * @return
+     * @see cross.datastructures.fragments.IFragment#getAttribute(java.lang.String)
+     */
+    public Attribute getAttribute(final String name) {
+        return this.frag.getAttribute(name);
+    }
 
-	/**
-	 * @param varname
-	 * @param loadStructureOnly
-	 * @return
-	 * @throws ResourceNotAvailableException
-	 * @see {@link cross.datastructures.fragments.IFileFragment#getChild(String, boolean)}
-	 */
-	public IVariableFragment getChild(final String varname,
-	        final boolean loadStructureOnly)
-	        throws ResourceNotAvailableException {
-		return new ImmutableVariableFragment(this.frag.getChild(varname));
-	}
+    /**
+     * @return
+     * @see cross.datastructures.fragments.IFragment#getAttributes()
+     */
+    public List<Attribute> getAttributes() {
+        return this.frag.getAttributes();
+    }
 
-	/**
-	 * @return
-	 * @see cross.datastructures.fragments.IFileFragment#getID()
-	 */
-	public long getID() {
-		return this.frag.getID();
-	}
+    /**
+     * @param varname
+     * @return
+     * @throws ResourceNotAvailableException
+     * @see cross.datastructures.fragments.IFileFragment#getChild(java.lang.String)
+     */
+    public IVariableFragment getChild(final String varname)
+            throws ResourceNotAvailableException {
+        return new ImmutableVariableFragment(this.frag.getChild(varname));
+    }
 
-	/**
-	 * @return
-	 * @see cross.datastructures.fragments.IFileFragment#getName()
-	 */
-	public String getName() {
-		return this.frag.getName();
-	}
+    /**
+     * @param varname
+     * @param loadStructureOnly
+     * @return
+     * @throws ResourceNotAvailableException
+     * @see {@link cross.datastructures.fragments.IFileFragment#getChild(String, boolean)}
+     */
+    public IVariableFragment getChild(final String varname,
+            final boolean loadStructureOnly)
+            throws ResourceNotAvailableException {
+        return new ImmutableVariableFragment(this.frag.getChild(varname));
+    }
 
-	/**
-	 * @return
-	 * @see cross.datastructures.fragments.IFileFragment#getParent()
-	 */
-	public IGroupFragment getParent() {
-		return this.frag.getParent();
-	}
+    /**
+     * @return
+     * @see cross.datastructures.fragments.IFileFragment#getID()
+     */
+    public long getID() {
+        return this.frag.getID();
+    }
 
-	/**
-	 * @return
-	 * @see cross.datastructures.fragments.IFileFragment#getSize()
-	 */
-	public int getSize() {
-		return this.frag.getSize();
-	}
+    /**
+     * @return
+     * @see cross.datastructures.fragments.IFileFragment#getName()
+     */
+    public String getName() {
+        return this.frag.getName();
+    }
 
-	/**
-	 * @return
-	 * @see cross.datastructures.fragments.IFileFragment#getSourceFiles()
-	 */
-	public Collection<IFileFragment> getSourceFiles() {
-		final Collection<IFileFragment> c = this.frag.getSourceFiles();
-		final ArrayList<IFileFragment> cret = new ArrayList<IFileFragment>();
-		for (final IFileFragment ifrg : c) {
-			cret.add(new ImmutableFileFragment(ifrg));
-		}
-		return cret;
-	}
+    /**
+     * @return
+     * @see cross.datastructures.fragments.IFileFragment#getParent()
+     */
+    public IGroupFragment getParent() {
+        return this.frag.getParent();
+    }
 
-	/**
-	 * @return
-	 * @see cross.datastructures.fragments.IFragment#getStats()
-	 */
-	public StatsMap getStats() {
-		return this.frag.getStats();
-	}
+    /**
+     * @return
+     * @see cross.datastructures.fragments.IFileFragment#getSize()
+     */
+    public int getSize() {
+        return this.frag.getSize();
+    }
 
-	/**
-	 * @param a
-	 * @return
-	 * @see cross.datastructures.fragments.IFragment#hasAttribute(ucar.nc2.Attribute)
-	 */
-	public boolean hasAttribute(final Attribute a) {
-		return this.frag.hasAttribute(a);
-	}
+    /**
+     * @return
+     * @see cross.datastructures.fragments.IFileFragment#getSourceFiles()
+     */
+    public Collection<IFileFragment> getSourceFiles() {
+        final Collection<IFileFragment> c = this.frag.getSourceFiles();
+        final ArrayList<IFileFragment> cret = new ArrayList<IFileFragment>();
+        for (final IFileFragment ifrg : c) {
+            cret.add(new ImmutableFileFragment(ifrg));
+        }
+        return cret;
+    }
 
-	/**
-	 * @param name
-	 * @return
-	 * @see cross.datastructures.fragments.IFragment#hasAttribute(java.lang.String)
-	 */
-	public boolean hasAttribute(final String name) {
-		return this.frag.hasAttribute(name);
-	}
+    /**
+     * @return
+     * @see cross.datastructures.fragments.IFragment#getStats()
+     */
+    public StatsMap getStats() {
+        return this.frag.getStats();
+    }
 
-	/**
-	 * @param vf
-	 * @return
-	 * @see cross.datastructures.fragments.IGroupFragment#hasChild(cross.datastructures.fragments.IVariableFragment)
-	 */
-	public boolean hasChild(final IVariableFragment vf) {
-		return this.frag.hasChild(vf);
-	}
+    /**
+     * @param a
+     * @return
+     * @see cross.datastructures.fragments.IFragment#hasAttribute(ucar.nc2.Attribute)
+     */
+    public boolean hasAttribute(final Attribute a) {
+        return this.frag.hasAttribute(a);
+    }
 
-	/**
-	 * @param varname
-	 * @return
-	 * @see cross.datastructures.fragments.IGroupFragment#hasChild(java.lang.String)
-	 */
-	public boolean hasChild(final String varname) {
-		return this.frag.hasChild(varname);
-	}
+    /**
+     * @param name
+     * @return
+     * @see cross.datastructures.fragments.IFragment#hasAttribute(java.lang.String)
+     */
+    public boolean hasAttribute(final String name) {
+        return this.frag.hasAttribute(name);
+    }
 
-	/**
-	 * @param vf
-	 * @return
-	 * @see cross.datastructures.fragments.IFileFragment#hasChildren(cross.datastructures.fragments.IVariableFragment[])
-	 */
-	public boolean hasChildren(final IVariableFragment... vf) {
-		return this.frag.hasChildren(vf);
-	}
+    /**
+     * @param vf
+     * @return
+     * @see cross.datastructures.fragments.IGroupFragment#hasChild(cross.datastructures.fragments.IVariableFragment)
+     */
+    public boolean hasChild(final IVariableFragment vf) {
+        return this.frag.hasChild(vf);
+    }
 
-	/**
-	 * @param s
-	 * @return
-	 * @see cross.datastructures.fragments.IFileFragment#hasChildren(java.lang.String[])
-	 */
-	public boolean hasChildren(final String... s) {
-		return this.frag.hasChildren(s);
-	}
+    /**
+     * @param varname
+     * @return
+     * @see cross.datastructures.fragments.IGroupFragment#hasChild(java.lang.String)
+     */
+    public boolean hasChild(final String varname) {
+        return this.frag.hasChild(varname);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.datastructures.fragments.IFileFragment#isModified()
-	 */
-	public boolean isModified() {
-		return false;
-	}
+    /**
+     * @param vf
+     * @return
+     * @see cross.datastructures.fragments.IFileFragment#hasChildren(cross.datastructures.fragments.IVariableFragment[])
+     */
+    public boolean hasChildren(final IVariableFragment... vf) {
+        return this.frag.hasChildren(vf);
+    }
 
-	/**
-	 * @return
-	 * @see cross.datastructures.fragments.IFileFragment#iterator()
-	 */
-	public Iterator<IVariableFragment> iterator() {
-		final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
-		final Iterator<IVariableFragment> iter = this.frag.iterator();
-		while (iter.hasNext()) {
-			al.add(new ImmutableVariableFragment(iter.next()));
-		}
-		return al.iterator();
-	}
+    /**
+     * @param s
+     * @return
+     * @see cross.datastructures.fragments.IFileFragment#hasChildren(java.lang.String[])
+     */
+    public boolean hasChildren(final String... s) {
+        return this.frag.hasChildren(s);
+    }
 
-	/**
-	 * @return
-	 * @see cross.datastructures.fragments.IGroupFragment#nextGID()
-	 */
-	public long nextGID() {
-		return this.frag.nextGID();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.datastructures.fragments.IFileFragment#isModified()
+     */
+    public boolean isModified() {
+        return false;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
-	 */
-	@Override
-	public void readExternal(final ObjectInput in) throws IOException,
-	        ClassNotFoundException {
-		Object o = in.readObject();
-		if (o instanceof Long) {
-			setID(((Long) o).longValue());
-		}
-		o = in.readObject();
-		if (o instanceof String) {
-			setFile(new File((String) o));
-		}
-		in.close();
-	}
+    /**
+     * @return
+     * @see cross.datastructures.fragments.IFileFragment#iterator()
+     */
+    public Iterator<IVariableFragment> iterator() {
+        final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
+        final Iterator<IVariableFragment> iter = this.frag.iterator();
+        while (iter.hasNext()) {
+            al.add(new ImmutableVariableFragment(iter.next()));
+        }
+        return al.iterator();
+    }
 
-	/**
-	 * @param variableFragment
-	 * @see cross.datastructures.fragments.IFileFragment#removeChild(cross.datastructures.fragments.IVariableFragment)
-	 */
-	public void removeChild(final IVariableFragment variableFragment) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * @return
+     * @see cross.datastructures.fragments.IGroupFragment#nextGID()
+     */
+    public long nextGID() {
+        return this.frag.nextGID();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seecross.datastructures.fragments.IFileFragment#removeSourceFile(cross.
-	 * datastructures.fragments.IFileFragment)
-	 */
-	@Override
-	public void removeSourceFile(final IFileFragment ff) {
-		throw new UnsupportedOperationException();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+     */
+    @Override
+    public void readExternal(final ObjectInput in) throws IOException,
+            ClassNotFoundException {
+        Object o = in.readObject();
+        if (o instanceof Long) {
+            setID(((Long) o).longValue());
+        }
+        o = in.readObject();
+        if (o instanceof String) {
+            setFile(new File((String) o));
+        }
+        in.close();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.datastructures.fragments.IFileFragment#removeSourceFiles()
-	 */
-	@Override
-	public void removeSourceFiles() {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * @param variableFragment
+     * @see cross.datastructures.fragments.IFileFragment#removeChild(cross.datastructures.fragments.IVariableFragment)
+     */
+    public void removeChild(final IVariableFragment variableFragment) {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @return
-	 * @see cross.datastructures.fragments.IFileFragment#save()
-	 */
-	public boolean save() {
-		return this.frag.save();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @seecross.datastructures.fragments.IFileFragment#removeSourceFile(cross.
+     * datastructures.fragments.IFileFragment)
+     */
+    @Override
+    public void removeSourceFile(final IFileFragment ff) {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @param a
-	 * @see cross.datastructures.fragments.IFragment#setAttributes(ucar.nc2.Attribute[])
-	 */
-	public void setAttributes(final Attribute... a) {
-		throw new UnsupportedOperationException();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.datastructures.fragments.IFileFragment#removeSourceFiles()
+     */
+    @Override
+    public void removeSourceFiles() {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @param f1
-	 * @see cross.datastructures.fragments.IFileFragment#setFile(java.io.File)
-	 */
-	public void setFile(final File f1) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * @return
+     * @see cross.datastructures.fragments.IFileFragment#save()
+     */
+    public boolean save() {
+        return this.frag.save();
+    }
 
-	/**
-	 * @param file
-	 * @see cross.datastructures.fragments.IFileFragment#setFile(java.lang.String)
-	 */
-	public void setFile(final String file) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * @param a
+     * @see cross.datastructures.fragments.IFragment#setAttributes(ucar.nc2.Attribute[])
+     */
+    public void setAttributes(final Attribute... a) {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @param id
-	 * @see cross.datastructures.fragments.IGroupFragment#setID(long)
-	 */
-	public void setID(final long id) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * @param f1
+     * @see cross.datastructures.fragments.IFileFragment#setFile(java.io.File)
+     */
+    public void setFile(final File f1) {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @param stats1
-	 * @see cross.datastructures.fragments.IFragment#setStats(cross.datastructures.StatsMap)
-	 */
-	public void setStats(final StatsMap stats1) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * @param file
+     * @see cross.datastructures.fragments.IFileFragment#setFile(java.lang.String)
+     */
+    public void setFile(final String file) {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @return
-	 * @see cross.datastructures.fragments.IFileFragment#toString()
-	 */
-	@Override
-	public String toString() {
-		return this.frag.toString();
-	}
+    /**
+     * @param id
+     * @see cross.datastructures.fragments.IGroupFragment#setID(long)
+     */
+    public void setID(final long id) {
+        throw new UnsupportedOperationException();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
-	 */
-	@Override
-	public void writeExternal(final ObjectOutput out) throws IOException {
-		// store id
-		out.writeObject(Long.valueOf(getID()));
-		// store path to storage
-		out.writeObject(getAbsolutePath());
-		out.flush();
-		out.close();
-	}
+    /**
+     * @param stats1
+     * @see cross.datastructures.fragments.IFragment#setStats(cross.datastructures.StatsMap)
+     */
+    public void setStats(final StatsMap stats1) {
+        throw new UnsupportedOperationException();
+    }
 
+    /**
+     * @return
+     * @see cross.datastructures.fragments.IFileFragment#toString()
+     */
+    @Override
+    public String toString() {
+        return this.frag.toString();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
+     */
+    @Override
+    public void writeExternal(final ObjectOutput out) throws IOException {
+        // store id
+        out.writeObject(Long.valueOf(getID()));
+        // store path to storage
+        out.writeObject(getAbsolutePath());
+        out.flush();
+        out.close();
+    }
 }

@@ -188,6 +188,7 @@ public class FileFragment implements IFileFragment {
      * cross.datastructures.fragments.IFileFragment#addChildren(cross.datastructures
      * .fragments.VariableFragment)
      */
+    @Override
     public synchronized void addChildren(final IVariableFragment... fragments) {
         for (final IVariableFragment vf : fragments) {
             if (this.children.containsKey(vf.getVarname())) {
@@ -226,6 +227,7 @@ public class FileFragment implements IFileFragment {
      * cross.datastructures.fragments.IFileFragment#addDimensions(ucar.nc2.Dimension
      * )
      */
+    @Override
     public void addDimensions(final Dimension... dims1) {
         for (final Dimension d : dims1) {
             if (!this.dims.contains(d)) {
@@ -241,6 +243,7 @@ public class FileFragment implements IFileFragment {
      * cross.datastructures.fragments.IFileFragment#addSourceFile(java.util.
      * Collection)
      */
+    @Override
     public void addSourceFile(final Collection<IFileFragment> c) {
         if (c != null) {
             for (final IFileFragment f1 : c) {
@@ -339,6 +342,7 @@ public class FileFragment implements IFileFragment {
      * @seecross.datastructures.fragments.IFileFragment#addSourceFile(cross.
      * datastructures.fragments.FileFragment)
      */
+    @Override
     public void addSourceFile(final IFileFragment... ff) {
         final List<IFileFragment> l = Arrays.asList(ff);
         addSourceFile(l);
@@ -350,6 +354,7 @@ public class FileFragment implements IFileFragment {
      * @see
      * cross.datastructures.fragments.IFileFragment#appendXML(org.jdom.Element)
      */
+    @Override
     public void appendXML(final Element e) {
         this.log.debug("Appending xml for fileFragment " + getName());
         final Element fileFragment = new Element("file");
@@ -421,6 +426,7 @@ public class FileFragment implements IFileFragment {
      * @see cross.datastructures.fragments.Fragment#compare(cross.datastructures.fragments.IFragment,
      *      cross.datastructures.fragments.IFragment)
      */
+    @Override
     public int compare(final IFragment arg0, final IFragment arg1) {
         return this.fragment.compare(arg0, arg1);
     }
@@ -430,6 +436,7 @@ public class FileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.Fragment#compareTo(java.lang.Object)
      */
+    @Override
     public int compareTo(final Object arg0) {
         return this.fragment.compareTo(arg0);
     }
@@ -441,7 +448,10 @@ public class FileFragment implements IFileFragment {
      */
     @Override
     public boolean equals(final Object obj) {
-        return this.fragment.equals(obj);
+        if(obj instanceof IFileFragment) {
+            return this.fragment.equals(obj);
+        }
+        return false;
     }
 
     /*
@@ -449,6 +459,7 @@ public class FileFragment implements IFileFragment {
      *
      * @see cross.datastructures.fragments.IFileFragment#getAbsolutePath()
      */
+    @Override
     public String getAbsolutePath() {
         return this.f.getAbsolutePath();
     }
@@ -458,6 +469,7 @@ public class FileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.Fragment#getAttribute(ucar.nc2.Attribute)
      */
+    @Override
     public Attribute getAttribute(final Attribute a) {
         return this.fragment.getAttribute(a);
     }
@@ -479,6 +491,7 @@ public class FileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.Fragment#getAttribute(java.lang.String)
      */
+    @Override
     public Attribute getAttribute(final String name) {
         return this.fragment.getAttribute(name);
     }
@@ -487,6 +500,7 @@ public class FileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.Fragment#getAttributes()
      */
+    @Override
     public List<Attribute> getAttributes() {
         return this.fragment.getAttributes();
     }
@@ -495,6 +509,7 @@ public class FileFragment implements IFileFragment {
      * @param varname
      * @see cross.datastructures.fragments.IFileFragment#getChild(String)
      */
+    @Override
     public IVariableFragment getChild(final String varname)
             throws ResourceNotAvailableException {
         return getChild(varname, false);
@@ -506,6 +521,7 @@ public class FileFragment implements IFileFragment {
      * @see cross.datastructures.fragments.IFileFragment#getChild(String,
      *      boolean)
      */
+    @Override
     public synchronized IVariableFragment getChild(final String varname,
             final boolean loadStructureOnly)
             throws ResourceNotAvailableException {
@@ -585,6 +601,7 @@ public class FileFragment implements IFileFragment {
      *
      * @see cross.datastructures.fragments.IFileFragment#getID()
      */
+    @Override
     public long getID() {
         return this.fID;
     }
@@ -598,6 +615,7 @@ public class FileFragment implements IFileFragment {
      *
      * @see cross.datastructures.fragments.IFileFragment#getName()
      */
+    @Override
     public String getName() {
         return this.f.getName();
     }
@@ -607,6 +625,7 @@ public class FileFragment implements IFileFragment {
      *
      * @see cross.datastructures.fragments.IFileFragment#getParent()
      */
+    @Override
     public IGroupFragment getParent() {
         return null;
     }
@@ -616,6 +635,7 @@ public class FileFragment implements IFileFragment {
      *
      * @see cross.datastructures.fragments.IFileFragment#getSize()
      */
+    @Override
     public int getSize() {
         // int size = 0;
         // for(String key:this.children.keySet()) {
@@ -636,6 +656,7 @@ public class FileFragment implements IFileFragment {
      * of source files, call:
      * <code>tools.FragmentTools.getSourcefiles(IFileFragment f)</code>.
      */
+    @Override
     public Collection<IFileFragment> getSourceFiles() {
         return this.sourcefiles;
     }
@@ -644,6 +665,7 @@ public class FileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.Fragment#getStats()
      */
+    @Override
     public StatsMap getStats() {
         return this.fragment.getStats();
     }
@@ -653,6 +675,7 @@ public class FileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.Fragment#hasAttribute(ucar.nc2.Attribute)
      */
+    @Override
     public boolean hasAttribute(final Attribute a) {
         return this.fragment.hasAttribute(a);
     }
@@ -662,6 +685,7 @@ public class FileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.Fragment#hasAttribute(java.lang.String)
      */
+    @Override
     public boolean hasAttribute(final String name) {
         return this.fragment.hasAttribute(name);
     }
@@ -680,6 +704,7 @@ public class FileFragment implements IFileFragment {
      * cross.datastructures.fragments.IFileFragment#hasChild(cross.datastructures
      * .fragments.IVariableFragment)
      */
+    @Override
     public synchronized boolean hasChild(final IVariableFragment vf) {
         return hasChild(vf.getVarname());
     }
@@ -696,6 +721,7 @@ public class FileFragment implements IFileFragment {
      * @see
      * cross.datastructures.fragments.IFileFragment#hasChild(java.lang.String)
      */
+    @Override
     public synchronized boolean hasChild(final String varname) {
         if (this.children.containsKey(varname)) {
             this.log.debug("Variable {} already contained as child of {}",
@@ -712,6 +738,7 @@ public class FileFragment implements IFileFragment {
      * cross.datastructures.fragments.IFileFragment#hasChildren(cross.datastructures
      * .fragments.IVariableFragment)
      */
+    @Override
     public boolean hasChildren(final IVariableFragment... vf) {
         for (final IVariableFragment frag : vf) {
             if (!hasChild(frag)) {
@@ -729,6 +756,7 @@ public class FileFragment implements IFileFragment {
      * cross.datastructures.fragments.IFileFragment#hasChildren(java.lang.String
      * )
      */
+    @Override
     public boolean hasChildren(final String... s) {
         for (final String name : s) {
             if (!hasChild(name)) {
@@ -770,6 +798,7 @@ public class FileFragment implements IFileFragment {
         return sb.toString() + this.fileExtension;
     }
 
+    @Override
     public boolean isModified() {
         for (final IVariableFragment ivf : this) {
             if (ivf.isModified()) {
@@ -784,6 +813,7 @@ public class FileFragment implements IFileFragment {
      *
      * @see cross.datastructures.fragments.IFileFragment#iterator()
      */
+    @Override
     public Iterator<IVariableFragment> iterator() {
         final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>(
                 this.children.size());
@@ -841,6 +871,7 @@ public class FileFragment implements IFileFragment {
      * cross.datastructures.fragments.IFileFragment#removeChild(cross.datastructures
      * .fragments.IVariableFragment)
      */
+    @Override
     public synchronized void removeChild(
             final IVariableFragment variableFragment) {
         if (this.children.containsKey(variableFragment.getVarname())) {
@@ -894,6 +925,7 @@ public class FileFragment implements IFileFragment {
      *
      * @see cross.datastructures.fragments.IFileFragment#save()
      */
+    @Override
     public boolean save() {
         EvalTools.notNull(this.f, this);
         // FIXME all output currently redirected to netcdf
@@ -918,6 +950,7 @@ public class FileFragment implements IFileFragment {
      * @param a
      * @see cross.datastructures.fragments.Fragment#setAttributes(ucar.nc2.Attribute[])
      */
+    @Override
     public void setAttributes(final Attribute... a) {
         this.fragment.setAttributes(a);
     }
@@ -927,6 +960,7 @@ public class FileFragment implements IFileFragment {
      *
      * @see cross.datastructures.fragments.IFileFragment#setFile(java.io.File)
      */
+    @Override
     public void setFile(final File f1) {
         if ((this.f != null) && f1.getAbsolutePath().equals(getAbsolutePath())) {
             // Nothing to be done
@@ -950,6 +984,7 @@ public class FileFragment implements IFileFragment {
      * @see
      * cross.datastructures.fragments.IFileFragment#setFile(java.lang.String)
      */
+    @Override
     public void setFile(final String file) {
         setFile(new File(file));
     }
@@ -968,6 +1003,7 @@ public class FileFragment implements IFileFragment {
      * @param stats1
      * @see cross.datastructures.fragments.Fragment#setStats(cross.datastructures.StatsMap)
      */
+    @Override
     public void setStats(final StatsMap stats1) {
         this.fragment.setStats(stats1);
     }

@@ -19,7 +19,6 @@
  * 
  * $Id: DefaultWorkflowResult.java 116 2010-06-17 08:46:30Z nilshoffmann $
  */
-
 package cross.datastructures.workflow;
 
 import java.io.File;
@@ -37,106 +36,98 @@ import cross.datastructures.tools.EvalTools;
  */
 public class DefaultWorkflowResult implements IWorkflowFileResult {
 
-	private File file = null;
+    private File file = null;
+    private WorkflowSlot workflowSlot = null;
+    private IWorkflowElement workflowElement = null;
+    private IFileFragment[] resources = null;
 
-	private WorkflowSlot workflowSlot = null;
+    public DefaultWorkflowResult() {
+    }
 
-	private IWorkflowElement workflowElement = null;
+    public DefaultWorkflowResult(final File f1, final IWorkflowElement iwe1,
+            final WorkflowSlot ws1, IFileFragment... resources) {
+        EvalTools.notNull(new Object[]{f1, iwe1, ws1, resources}, this);
+        this.file = f1;
+        this.workflowElement = iwe1;
+        this.workflowSlot = ws1;
+        this.resources = resources;
+    }
 
-	private IFileFragment[] resources = null;
+    @Override
+    public File getFile() {
+        return this.file;
+    }
 
-	public DefaultWorkflowResult() {
+    public IWorkflowElement getWorkflowElement() {
+        return this.workflowElement;
+    }
 
-	}
+    @Override
+    public WorkflowSlot getWorkflowSlot() {
+        return this.workflowSlot;
+    }
 
-	public DefaultWorkflowResult(final File f1, final IWorkflowElement iwe1,
-	        final WorkflowSlot ws1, IFileFragment... resources) {
-		EvalTools.notNull(new Object[] { f1, iwe1, ws1, resources }, this);
-		this.file = f1;
-		this.workflowElement = iwe1;
-		this.workflowSlot = ws1;
-		this.resources = resources;
-	}
+    @Override
+    public void setFile(final File iff1) {
+        EvalTools.notNull(iff1, this);
+        this.file = iff1;
+    }
 
-	@Override
-	public File getFile() {
-		return this.file;
-	}
+    @Override
+    public void setWorkflowElement(final IWorkflowElement iwe1) {
+        EvalTools.notNull(iwe1, this);
+        this.workflowElement = iwe1;
+    }
 
-	@Override
-	public IWorkflowElement getWorkflowElement() {
-		return this.workflowElement;
-	}
+    @Override
+    public void setWorkflowSlot(final WorkflowSlot ws1) {
+        EvalTools.notNull(ws1, this);
+        this.workflowSlot = ws1;
+    }
 
-	@Override
-	public WorkflowSlot getWorkflowSlot() {
-		return this.workflowSlot;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.datastructures.workflow.IWorkflowFileResult#getResources()
+     */
+    @Override
+    public IFileFragment[] getResources() {
+        return this.resources;
+    }
 
-	@Override
-	public void setFile(final File iff1) {
-		EvalTools.notNull(iff1, this);
-		this.file = iff1;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cross.datastructures.workflow.IWorkflowFileResult#setResources(cross.
+     * datastructures.fragments.IFileFragment[])
+     */
+    @Override
+    public void setResources(IFileFragment... resources) {
+        this.resources = resources;
+    }
 
-	@Override
-	public void setWorkflowElement(final IWorkflowElement iwe1) {
-		EvalTools.notNull(iwe1, this);
-		this.workflowElement = iwe1;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.io.xml.IXMLSerializable#appendXML(org.jdom.Element)
+     */
+    @Override
+    public void appendXML(Element e) {
+        final Element iwr = new Element("workflowElementResult");
+        iwr.setAttribute("class", getClass().getCanonicalName());
+        iwr.setAttribute("slot", getWorkflowSlot().name());
+        iwr.setAttribute("generator", getWorkflowElement().getClass().getCanonicalName());
 
-	@Override
-	public void setWorkflowSlot(final WorkflowSlot ws1) {
-		EvalTools.notNull(ws1, this);
-		this.workflowSlot = ws1;
-	}
+        final Element resources = iwr.addContent("resources");
+        for (IFileFragment f : this.resources) {
+            final Element res = iwr.addContent("resource");
+            res.setAttribute("uri", new File(f.getAbsolutePath()).toURI().toString());
+            resources.addContent(res);
+        }
+        iwr.addContent(resources);
+        iwr.setAttribute("file", getFile().getAbsolutePath());
+        e.addContent(iwr);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.datastructures.workflow.IWorkflowFileResult#getResources()
-	 */
-	@Override
-	public IFileFragment[] getResources() {
-		return this.resources;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * cross.datastructures.workflow.IWorkflowFileResult#setResources(cross.
-	 * datastructures.fragments.IFileFragment[])
-	 */
-	@Override
-	public void setResources(IFileFragment... resources) {
-		this.resources = resources;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.io.xml.IXMLSerializable#appendXML(org.jdom.Element)
-	 */
-	@Override
-	public void appendXML(Element e) {
-		final Element iwr = new Element("workflowElementResult");
-		iwr.setAttribute("class", getClass().getCanonicalName());
-		iwr.setAttribute("slot", getWorkflowSlot().name());
-		iwr.setAttribute("generator", getWorkflowElement().getClass()
-		        .getCanonicalName());
-
-		final Element resources = iwr.addContent("resources");
-		for (IFileFragment f : this.resources) {
-			final Element res = iwr.addContent("resource");
-			res.setAttribute("uri", new File(f.getAbsolutePath()).toURI()
-			        .toString());
-			resources.addContent(res);
-		}
-		iwr.addContent(resources);
-		iwr.setAttribute("file", getFile().getAbsolutePath());
-		e.addContent(iwr);
-
-	}
-
+    }
 }

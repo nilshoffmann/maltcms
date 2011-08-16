@@ -41,7 +41,7 @@ import cross.io.xml.IXMLSerializable;
  * 
  */
 public interface ICommandSequence extends Iterator<TupleND<IFileFragment>>,
-        IConfigurable, IListener<IEvent<IWorkflowResult>>, IXMLSerializable {
+        IListener<IEvent<IWorkflowResult>>, IXMLSerializable {
 
     public abstract Collection<IFragmentCommand> getCommands();
 
@@ -76,4 +76,9 @@ public interface ICommandSequence extends Iterator<TupleND<IFileFragment>>,
     public abstract void setInput(TupleND<IFileFragment> t);
 
     public abstract void setWorkflow(IWorkflow iw);
+    
+    public abstract boolean isCheckCommandDependencies();
+    
+    public abstract void setCheckCommandDependencies(boolean checkCommandDependencies);
+
 }

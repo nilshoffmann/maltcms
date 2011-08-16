@@ -19,7 +19,6 @@
  * 
  * $Id: Factory.java 159 2010-08-31 18:44:07Z nilshoffmann $
  */
-
 package cross;
 
 import java.io.File;
@@ -79,298 +78,286 @@ import org.slf4j.LoggerFactory;
  */
 public class Factory implements ConfigurationListener {
 
-	private static Factory factory;
+    private static Factory factory;
 
-	/**
-	 * NEVER SYNCHRONIZE THIS METHOD, IT WILL BLOCK EVERYHTING WITHIN THE QUEUE!
-	 * 
-	 * @param time
-	 *            to wait until termination of each ThreadPool
-	 * @param u
-	 *            the unit of time
-	 * @throws InterruptedException
-	 *             thrown if interruption of waiting on termination occurs
-	 */
-	public static void awaitTermination(final long time, final TimeUnit u)
-	        throws InterruptedException {
-		if ((Factory.getInstance().es == null)
-		        || (Factory.getInstance().auxPool == null)) {
-			throw new IllegalArgumentException(
-			        "ExecutorService not initialized!");
-		}
-		Factory.getInstance().auxPool.awaitTermination(time, u);
-		Factory.getInstance().es.awaitTermination(time, u);
-		// NetcdfFileCache.clearCache(true);
-		// NetcdfFileCache.exit();
-		FileFragment.clearFragments();
-		// Factory.getInstance().resetDate();
-	}
+    /**
+     * NEVER SYNCHRONIZE THIS METHOD, IT WILL BLOCK EVERYHTING WITHIN THE QUEUE!
+     * 
+     * @param time
+     *            to wait until termination of each ThreadPool
+     * @param u
+     *            the unit of time
+     * @throws InterruptedException
+     *             thrown if interruption of waiting on termination occurs
+     */
+    public static void awaitTermination(final long time, final TimeUnit u)
+            throws InterruptedException {
+        if ((Factory.getInstance().es == null)
+                || (Factory.getInstance().auxPool == null)) {
+            throw new IllegalArgumentException(
+                    "ExecutorService not initialized!");
+        }
+        Factory.getInstance().auxPool.awaitTermination(time, u);
+        Factory.getInstance().es.awaitTermination(time, u);
+        // NetcdfFileCache.clearCache(true);
+        // NetcdfFileCache.exit();
+        FileFragment.clearFragments();
+        // Factory.getInstance().resetDate();
+    }
 
-	/**
-	 * Write current configuration to file.
-	 * 
-	 * @param filename
-	 */
-	public static void dumpConfig(final String filename, final Date d) {
-		final Configuration cfg = Factory.getInstance().getConfiguration();
-		final File location = new File(FileTools.prependDefaultDirsWithPrefix(
-		        "", Factory.class, d), filename);
-		Factory.getInstance().log.error("Saving configuration to: ");
-		Factory.getInstance().log.error("{}", location.getAbsolutePath());
-		Factory.saveConfiguration(cfg, location);
-	}
+    /**
+     * Write current configuration to file.
+     * 
+     * @param filename
+     */
+    public static void dumpConfig(final String filename, final Date d) {
+        final Configuration cfg = Factory.getInstance().getConfiguration();
+        final File location = new File(FileTools.prependDefaultDirsWithPrefix(
+                "", Factory.class, d), filename);
+        Factory.getInstance().log.error("Saving configuration to: ");
+        Factory.getInstance().log.error("{}", location.getAbsolutePath());
+        Factory.saveConfiguration(cfg, location);
+    }
 
-	public static Factory getInstance() {
-		if (Factory.factory == null) {
-			Factory.factory = new Factory();
-		}
-		return Factory.factory;
-	}
+    public static Factory getInstance() {
+        if (Factory.factory == null) {
+            Factory.factory = new Factory();
+        }
+        return Factory.factory;
+    }
 
-	public static void saveConfiguration(final Configuration cfg,
-	        final File location) {
-		if (cfg instanceof FileConfiguration) {
-			try {
-				((FileConfiguration) cfg).save(location);
-			} catch (final ConfigurationException e) {
-				Factory.getInstance().log.error(e.getLocalizedMessage());
-			}
-		} else {
-			try {
-				ConfigurationUtils.dump(cfg, new PrintStream(location));
-			} catch (final FileNotFoundException e) {
-				Factory.getInstance().log.error(e.getLocalizedMessage());
-			}
-		}
-	}
+    public static void saveConfiguration(final Configuration cfg,
+            final File location) {
+        if (cfg instanceof FileConfiguration) {
+            try {
+                ((FileConfiguration) cfg).save(location);
+            } catch (final ConfigurationException e) {
+                Factory.getInstance().log.error(e.getLocalizedMessage());
+            }
+        } else {
+            try {
+                ConfigurationUtils.dump(cfg, new PrintStream(location));
+            } catch (final FileNotFoundException e) {
+                Factory.getInstance().log.error(e.getLocalizedMessage());
+            }
+        }
+    }
+    private DataSourceFactory dsf = null;
+    private WorkflowFactory wf = null;
+    private InputDataFactory idf = null;
+    private ObjectFactory of = null;
+    private IFileFragmentFactory fff = null;
+    public final transient Logger log = LoggerFactory.getLogger(Factory.class);
+    private transient CompositeConfiguration objconfig = new CompositeConfiguration();
+    private transient ExecutorService es;
+    @Configurable(name = "cross.Factory.maxthreads")
+    private int maxthreads = 1;
+    private transient ExecutorService auxPool;
 
-	private DataSourceFactory dsf = null;
+    public void bootstrap(final Configuration cfg) {
+    }
 
-	private WorkflowFactory wf = null;
+    /**
+     * Listen to ConfigurationEvents.
+     */
+    public void configurationChanged(final ConfigurationEvent arg0) {
+        Factory.getInstance().log.debug("Configuration changed for property: "
+                + arg0.getPropertyName() + " to value "
+                + arg0.getPropertyValue());
 
-	private InputDataFactory idf = null;
+    }
 
-	private ObjectFactory of = null;
+    /**
+     * Call configure before retrieving an instance of ArrayFactory. This
+     * ensures, that the factory is instantiated with a fixed config.
+     * 
+     * @param config
+     */
+    public void configure(final Configuration config) {
+        EvalTools.notNull(config, Factory.class);
+        Factory.getInstance().configureMe(config);
+    }
 
-	private IFileFragmentFactory fff = null;
+    protected void configureMe(final Configuration config1) {
+        EvalTools.notNull(config1, this);
+        this.objconfig = new CompositeConfiguration();
+        this.objconfig.addConfiguration(config1);
+        this.objconfig.addConfigurationListener(this);
+        if (config1.getBoolean("maltcms.ui.charts.PlotRunner.headless", true) == true) {
+            System.setProperty("java.awt.headless", "true");
+        }
+        configureThreadPool(this.objconfig);
+        // configure ObjectFactory
+        getObjectFactory().configure(config1);
+        getDataSourceFactory().configure(config1);
+        getWorkflowFactory().configure(config1);
+        getInputDataFactory().configure(config1);
+        // instantiate DataSourceFactory
+    }
 
-	public final transient Logger log = LoggerFactory.getLogger(Factory.class);
+    private void configureThreadPool(final Configuration cfg) {
+        this.maxthreads = cfg.getInt("cross.Factory.maxthreads", 1);
+        final int numProcessors = Runtime.getRuntime().availableProcessors();
+        this.log.info("{} processors available to current runtime",
+                numProcessors);
+        this.maxthreads = (this.maxthreads < numProcessors) ? this.maxthreads
+                : numProcessors;
+        cfg.setProperty("cross.Factory.maxthreads", this.maxthreads);
+        cfg.setProperty("maltcms.pipelinethreads", this.maxthreads);
+        this.log.info("Starting with Thread-Pool of size: " + this.maxthreads);
+        initThreadPools();
+    }
 
-	private transient CompositeConfiguration objconfig = new CompositeConfiguration();
+    /**
+     * Build the command sequence, aka pipeline for command execution.
+     * 
+     * @return a command sequence initialized according to current configuration
+     */
+    public ICommandSequence createCommandSequence() {
 
-	private transient ExecutorService es;
+        return createCommandSequence(null);
+    }
 
-	@Configurable(name = "cross.Factory.maxthreads")
-	private int maxthreads = 1;
+    /**
+     * Build the command sequence, aka pipeline for command execution.
+     * 
+     * @return a command sequence initialized according to current configuration
+     */
+    public ICommandSequence createCommandSequence(final TupleND<IFileFragment> t) {
+        final ICommandSequence cd = getObjectFactory().instantiate(
+                CommandPipeline.class);
+        final IWorkflow iw = getWorkflowFactory().getDefaultWorkflowInstance(
+                new Date(), cd);
+        cd.setWorkflow(iw);
+        if (t == null) {
+            cd.setInput(getInputDataFactory().prepareInputData());
+        } else {
+            cd.setInput(t);
+        }
+        return cd;
+    }
 
-	private transient ExecutorService auxPool;
+    public Configuration getConfiguration() {
+        return Factory.getInstance().getConfigurationMe();
+    }
 
-	public void bootstrap(final Configuration cfg) {
+    protected Configuration getConfigurationMe() {
+        if (this.objconfig == null) {
+            this.log.warn("Configuration not set, creating empty one!");
+            this.objconfig = new CompositeConfiguration();
+        }
+        // EvalTools.notNull(this.objconfig,
+        // "ArrayFactory has not been configured yet!", this);
+        // throw new RuntimeException("ArrayFactory has not been configured
+        // yet!");
+        return this.objconfig;
+    }
 
-	}
+    public IDataSourceFactory getDataSourceFactory() {
+        if (this.dsf == null) {
+            this.dsf = getObjectFactory().instantiate(
+                    "cross.io.DataSourceFactory", DataSourceFactory.class,
+                    getConfiguration());
+        }
+        return this.dsf;
+    }
 
-	/**
-	 * Listen to ConfigurationEvents.
-	 */
-	public void configurationChanged(final ConfigurationEvent arg0) {
-		Factory.getInstance().log.debug("Configuration changed for property: "
-		        + arg0.getPropertyName() + " to value "
-		        + arg0.getPropertyValue());
+    public IFileFragmentFactory getFileFragmentFactory() {
+        if (this.fff == null) {
+            this.fff = getObjectFactory().instantiate(
+                    "cross.datastructures.fragments.FileFragmentFactory",
+                    FileFragmentFactory.class, getConfiguration());
+        }
+        return this.fff;
+    }
 
-	}
+    public IInputDataFactory getInputDataFactory() {
+        if (this.idf == null) {
+            this.idf = getObjectFactory().instantiate(
+                    "cross.io.InputDataFactory", InputDataFactory.class,
+                    getConfiguration());
+        }
+        return this.idf;
+    }
 
-	/**
-	 * Call configure before retrieving an instance of ArrayFactory. This
-	 * ensures, that the factory is instantiated with a fixed config.
-	 * 
-	 * @param config
-	 */
-	public void configure(final Configuration config) {
-		EvalTools.notNull(config, Factory.class);
-		Factory.getInstance().configureMe(config);
-	}
+    public IObjectFactory getObjectFactory() {
+        if (this.of == null) {
+            this.of = new ObjectFactory();
+            this.of.configure(getConfiguration());
+        }
+        return this.of;
+    }
 
-	protected void configureMe(final Configuration config1) {
-		EvalTools.notNull(config1, this);
-		this.objconfig = new CompositeConfiguration();
-		this.objconfig.addConfiguration(config1);
-		this.objconfig.addConfigurationListener(this);
-		if (config1.getBoolean("maltcms.ui.charts.PlotRunner.headless", true) == true) {
-			System.setProperty("java.awt.headless", "true");
-		}
-		configureThreadPool(this.objconfig);
-		// configure ObjectFactory
-		getObjectFactory().configure(config1);
-		getDataSourceFactory().configure(config1);
-		getWorkflowFactory().configure(config1);
-		getInputDataFactory().configure(config1);
-		// instantiate DataSourceFactory
-	}
+    public IWorkflowFactory getWorkflowFactory() {
+        if (this.wf == null) {
+            this.wf = getObjectFactory().instantiate(
+                    "cross.datastructures.workflow.WorkflowFactory",
+                    WorkflowFactory.class, getConfiguration());
+        }
+        return this.wf;
+    }
 
-	private void configureThreadPool(final Configuration cfg) {
-		this.maxthreads = cfg.getInt("cross.Factory.maxthreads", 1);
-		final int numProcessors = Runtime.getRuntime().availableProcessors();
-		this.log.info("{} processors available to current runtime",
-		        numProcessors);
-		this.maxthreads = (this.maxthreads < numProcessors) ? this.maxthreads
-		        : numProcessors;
-		cfg.setProperty("cross.Factory.maxthreads", this.maxthreads);
-		cfg.setProperty("maltcms.pipelinethreads", this.maxthreads);
-		this.log.info("Starting with Thread-Pool of size: " + this.maxthreads);
-		initThreadPools();
-	}
+    private void initThreadPools() {
+        this.es = new ExecutorsManager(this.maxthreads);// Executors.newFixedThreadPool(this.maxthreads);
+        this.auxPool = new ExecutorsManager(ExecutorType.SINGLETON);// Executors.newFixedThreadPool(this.maxthreads);
+    }
 
-	/**
-	 * Build the command sequence, aka pipeline for command execution.
-	 * 
-	 * @return a command sequence initialized according to current configuration
-	 */
-	public ICommandSequence createCommandSequence() {
-
-		return createCommandSequence(null);
-	}
-
-	/**
-	 * Build the command sequence, aka pipeline for command execution.
-	 * 
-	 * @return a command sequence initialized according to current configuration
-	 */
-	public ICommandSequence createCommandSequence(final TupleND<IFileFragment> t) {
-		final ICommandSequence cd = getObjectFactory().instantiate(
-		        CommandPipeline.class);
-		final IWorkflow iw = getWorkflowFactory().getDefaultWorkflowInstance(
-		        new Date(), cd);
-		cd.setWorkflow(iw);
-		if (t == null) {
-			cd.setInput(getInputDataFactory().prepareInputData());
-		} else {
-			cd.setInput(t);
-		}
-		return cd;
-	}
-
-	public Configuration getConfiguration() {
-		return Factory.getInstance().getConfigurationMe();
-	}
-
-	protected Configuration getConfigurationMe() {
-		if (this.objconfig == null) {
-			this.log.warn("Configuration not set, creating empty one!");
-			this.objconfig = new CompositeConfiguration();
-		}
-		// EvalTools.notNull(this.objconfig,
-		// "ArrayFactory has not been configured yet!", this);
-		// throw new RuntimeException("ArrayFactory has not been configured
-		// yet!");
-		return this.objconfig;
-	}
-
-	public IDataSourceFactory getDataSourceFactory() {
-		if (this.dsf == null) {
-			this.dsf = getObjectFactory().instantiate(
-			        "cross.io.DataSourceFactory", DataSourceFactory.class,
-			        getConfiguration());
-		}
-		return this.dsf;
-	}
-
-	public IFileFragmentFactory getFileFragmentFactory() {
-		if (this.fff == null) {
-			this.fff = getObjectFactory().instantiate(
-			        "cross.datastructures.fragments.FileFragmentFactory",
-			        FileFragmentFactory.class, getConfiguration());
-		}
-		return this.fff;
-	}
-
-	public IInputDataFactory getInputDataFactory() {
-		if (this.idf == null) {
-			this.idf = getObjectFactory().instantiate(
-			        "cross.io.InputDataFactory", InputDataFactory.class,
-			        getConfiguration());
-		}
-		return this.idf;
-	}
-
-	public IObjectFactory getObjectFactory() {
-		if (this.of == null) {
-			this.of = new ObjectFactory();
-			this.of.configure(getConfiguration());
-		}
-		return this.of;
-	}
-
-	public IWorkflowFactory getWorkflowFactory() {
-		if (this.wf == null) {
-			this.wf = getObjectFactory().instantiate(
-			        "cross.datastructures.workflow.WorkflowFactory",
-			        WorkflowFactory.class, getConfiguration());
-		}
-		return this.wf;
-	}
-
-	private void initThreadPools() {
-		this.es = new ExecutorsManager(this.maxthreads);// Executors.newFixedThreadPool(this.maxthreads);
-		this.auxPool = new ExecutorsManager(ExecutorType.SINGLETON);// Executors.newFixedThreadPool(this.maxthreads);
-	}
-
-	/**
-	 * Shutdown the factory's thread pool.
-	 * 
-	 */
-	public void shutdown() {
-		if ((this.es == null) || (this.auxPool == null)) {
-			throw new IllegalArgumentException(
-			        "ExecutorService not initialized!");
-		}
-
-		this.es.shutdown();
-		this.auxPool.shutdown();
-
-	}
-
-	/**
+    /**
+     * Shutdown the factory's thread pool.
      * 
      */
-	public List<Runnable> shutdownNow() {
-		if ((this.es == null) || (this.auxPool == null)) {
-			throw new IllegalArgumentException(
-			        "ExecutorService not initialized!");
-		}
-		final List<Runnable> l = new ArrayList<Runnable>();
-		// NetcdfFileCache.clearCache(true);
-		// NetcdfFileCache.exit();
-		FileFragment.clearFragments();
-		// resetDate();
-		l.addAll(this.es.shutdownNow());
-		l.addAll(this.auxPool.shutdownNow());
-		return l;
-	}
+    public void shutdown() {
+        if ((this.es == null) || (this.auxPool == null)) {
+            throw new IllegalArgumentException(
+                    "ExecutorService not initialized!");
+        }
 
-	/**
-	 * Jobs submitted via this method will be run by the auxiliary thread pool.
-	 * 
-	 * @param c
-	 *            the Callable of any type to submit
-	 * @return a Future of the same type as the Callable
-	 */
-	public Future<?> submitJob(final Callable<?> c) {
-		return this.auxPool.submit(c);
-	}
+        this.es.shutdown();
+        this.auxPool.shutdown();
 
-	/**
-	 * Submit a Runnable job to the Factory
-	 * 
-	 * @param r
-	 *            the Runnable to submit
-	 */
-	public void submitJob(final Runnable r) {
-		submitJobMe(r);
-	}
+    }
 
-	protected void submitJobMe(final Runnable r) {
-		EvalTools.notNull(r, this);
-		this.es.execute(r);
-	}
+    /**
+     * 
+     */
+    public List<Runnable> shutdownNow() {
+        if ((this.es == null) || (this.auxPool == null)) {
+            throw new IllegalArgumentException(
+                    "ExecutorService not initialized!");
+        }
+        final List<Runnable> l = new ArrayList<Runnable>();
+        // NetcdfFileCache.clearCache(true);
+        // NetcdfFileCache.exit();
+        FileFragment.clearFragments();
+        // resetDate();
+        l.addAll(this.es.shutdownNow());
+        l.addAll(this.auxPool.shutdownNow());
+        return l;
+    }
 
+    /**
+     * Jobs submitted via this method will be run by the auxiliary thread pool.
+     * 
+     * @param c
+     *            the Callable of any type to submit
+     * @return a Future of the same type as the Callable
+     */
+    public Future<?> submitJob(final Callable<?> c) {
+        return this.auxPool.submit(c);
+    }
+
+    /**
+     * Submit a Runnable job to the Factory
+     * 
+     * @param r
+     *            the Runnable to submit
+     */
+    public void submitJob(final Runnable r) {
+        submitJobMe(r);
+    }
+
+    protected void submitJobMe(final Runnable r) {
+        EvalTools.notNull(r, this);
+        this.es.execute(r);
+    }
 }
