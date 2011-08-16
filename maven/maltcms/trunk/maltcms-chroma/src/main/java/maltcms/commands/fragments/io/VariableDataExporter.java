@@ -34,6 +34,8 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Writes 1D-variables to csv files, one entry per row.
@@ -41,6 +43,8 @@ import cross.tools.StringTools;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Data
+@Slf4j
 public class VariableDataExporter extends AFragmentCommand {
 
     private ArrayList<String> varNames = new ArrayList<String>(0);

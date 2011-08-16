@@ -80,7 +80,10 @@ import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.BatchFilter;
+import maltcms.datastructures.peak.PeakFactory;
 
 /**
  * Find Peaks based on TIC, estimates a local baseline and, based on a given
@@ -92,11 +95,12 @@ import maltcms.commands.filters.array.BatchFilter;
 @RequiresVariables(names = {"var.total_intensity"})
 @RequiresOptionalVariables(names = {"var.scan_acquisition_time"})
 @ProvidesVariables(names = {"var.tic_peaks", "var.tic_filtered"})
+@Slf4j
+@Data
 public class TICPeakFinder extends AFragmentCommand {
 
-    private final Logger log = Logging.getLogger(this.getClass());
     @Configurable(value = "0.01d")
-    private double peak_threshold = 0.01d;
+    private double peakThreshold = 0.01d;
     @Configurable(value = "0.1d")
     private double epsilon = 0.1d;
     @Configurable(value = "false")
@@ -106,7 +110,7 @@ public class TICPeakFinder extends AFragmentCommand {
     @Configurable(value = "true")
     private boolean integrateTICPeaks = true;
     @Configurable(value = "20")
-    private int filter_window = 20;
+    private int filterWindow = 20;
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String ticVarName = "total_intensity";
     @Configurable(name = "var.scan_acquisition_time", value = "scan_acquisition_time")
@@ -162,7 +166,7 @@ public class TICPeakFinder extends AFragmentCommand {
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         EvalTools.notNull(t, this);
         final ArrayList<IFileFragment> peaks = new ArrayList<IFileFragment>();
-        this.log.info("Searching for peaks");
+        log.info("Searching for peaks");
         // create new ProgressResult
         final DefaultWorkflowProgressResult dwpr = new DefaultWorkflowProgressResult(
                 t.getSize(), this, getWorkflowSlot());
@@ -176,12 +180,12 @@ public class TICPeakFinder extends AFragmentCommand {
 
     @Override
     public void configure(final Configuration cfg) {
-        this.log.debug("Configure called on TICPeakFinder");
+        log.debug("Configure called on TICPeakFinder");
         this.ticPeakVarName = cfg.getString("var.tic_peaks", "tic_peaks");
-        this.peak_threshold = cfg.getDouble(this.getClass().getName()
-                + ".peak_threshold", 1.0d);
-        this.filter_window = cfg.getInt(this.getClass().getName()
-                + ".filter_window", 10);
+        this.peakThreshold = cfg.getDouble(this.getClass().getName()
+                + ".peakThreshold", 1.0d);
+        this.filterWindow = cfg.getInt(this.getClass().getName()
+                + ".filterWindow", 10);
         this.filter = StringTools.toStringList(cfg.getList(
                 this.getClass().getName() + ".filter",
                 Arrays.asList("maltcms.commands.filters.array.MultiplicationFilter")));
@@ -213,11 +217,11 @@ public class TICPeakFinder extends AFragmentCommand {
         return extr;
     }
 
-    public List<Peak1D> findPeakAreas(final List<Integer> ts, String filename, final double epsilon,
+    public List<Peak1D> findPeakAreas(final IFileFragment chromatogram, final List<Integer> ts, String filename, final double epsilon,
             final Array baselineCorrectedTIC, final Array sat) {
         final ArrayList<Peak1D> pbs = new ArrayList<Peak1D>();
         if (integrateTICPeaks) {
-            this.log.info("Using TIC based peak integration");
+            log.info("Using TIC based peak integration");
             FirstDerivativeFilter fdf = new FirstDerivativeFilter();
             Array fdTIC = fdf.apply(baselineCorrectedTIC);
             Array sdTIC = fdf.apply(fdTIC);
@@ -236,8 +240,8 @@ public class TICPeakFinder extends AFragmentCommand {
             Factory.getInstance().submitJob(pr);
             // fall back to TIC
             for (final Integer scanApex : ts) {
-                this.log.debug("Adding peak at scan index {}", scanApex);
-                final Peak1D pb = getPeakBoundsByTIC(scanApex,
+                log.debug("Adding peak at scan index {}", scanApex);
+                final Peak1D pb = getPeakBoundsByTIC(chromatogram,scanApex,
                         baselineCorrectedTIC, fdTIC, sdTIC, tdTIC, sat);
                 if (pb != null) {
                     pbs.add(pb);
@@ -245,7 +249,7 @@ public class TICPeakFinder extends AFragmentCommand {
             }
             Rectangle2D.Double l1 = null;
             Peak1D prev = null;
-            this.log.info("Checking peak areas for overlapping or completely contained peaks!");
+            log.info("Checking peak areas for overlapping or completely contained peaks!");
             List<Peak1D> overlaps = new ArrayList<Peak1D>();
             for (Peak1D peak : pbs) {
                 if (l1 == null) {
@@ -256,7 +260,7 @@ public class TICPeakFinder extends AFragmentCommand {
                     Rectangle2D.Double l2 = new Rectangle2D.Double(peak.getStartIndex(), 0, peak.getStopIndex()
                             - peak.getStartIndex(), 1);
                     if (l1.intersects(l2) || l1.contains(l2) || l2.contains(l1)) {
-                        this.log.warn("Peak area overlap detected!");
+                        log.warn("Peak area overlap detected!");
                         overlaps.add(prev);
                         overlaps.add(peak);
                     }
@@ -265,33 +269,10 @@ public class TICPeakFinder extends AFragmentCommand {
                 }
             }
             if (overlaps.size() > 0) {
-                this.log.info("Overlapping peaks: {}", overlaps);
+                log.info("Overlapping peaks: {}", overlaps);
             }
             pbs.removeAll(overlaps);
         }
-        // else {
-        // this.log.info("Using MZ characteristic mass integration");
-        // try {// try to get MZs first
-        // // MaltcmsTools.getMZIs(iff);
-        // for (final Integer scanApex : ts) {
-        // final Peak1D pb = getPeakBoundsByCharacteristicMasses(
-        // scanApex, iff, epsilon);
-        // if (pb != null) {
-        // pbs.add(pb);
-        // }
-        // }
-        // } catch (final ResourceNotAvailableException re) {
-        // // fall back to TIC
-        // for (final Integer scanApex : ts) {
-        // this.log.debug("Adding peak at scan index {}", scanApex);
-        // final Peak1D pb = getPeakBoundsByTIC(scanApex, iff,
-        // baselineCorrectedTIC);
-        // if (pb != null) {
-        // pbs.add(pb);
-        // }
-        // }
-        // }
-        // }
         return pbs;
     }
 
@@ -372,7 +353,7 @@ public class TICPeakFinder extends AFragmentCommand {
         EvalTools.notNull(tic, this);
         Array correctedtic = null;
         final ArrayList<Integer> ts = new ArrayList<Integer>();
-        this.log.debug("Value\tLow\tMedian\tHigh\tDev\tGTMedian\tSNR");
+        log.debug("Value\tLow\tMedian\tHigh\tDev\tGTMedian\tSNR");
         double[] ticValues = (double[]) tic.get1DJavaArray(double.class);
         correctedtic = applyFilters(tic.copy());
         // ticValues = getMinimumBaselineEstimate((double[]) correctedtic
@@ -386,20 +367,20 @@ public class TICPeakFinder extends AFragmentCommand {
         }
         for (int i = 0; i < snrValues.length; i++) {
             double baselineEst = MathTools.averageOfSquares(baselineValues, i
-                    - this.filter_window, i + this.filter_window);
+                    - this.filterWindow, i + this.filterWindow);
             double signalEst = MathTools.averageOfSquares(cticValues, i
-                    - this.filter_window, i + this.filter_window);
+                    - this.filterWindow, i + this.filterWindow);
             double snr = 20.0d * Math.log10(Math.sqrt(signalEst)
                     / Math.sqrt(baselineEst));
             snrValues[i] = Double.isInfinite(snr) ? 0 : snr;
         }
-        this.log.debug("SNR: {}", Arrays.toString(snrValues));
+        log.debug("SNR: {}", Arrays.toString(snrValues));
         final double maxCorrectedIntensity = MAMath.getMaximum(correctedtic);
-        final double threshold = this.peak_threshold;// * maxCorrectedIntensity;
+        final double threshold = this.peakThreshold;// * maxCorrectedIntensity;
         for (int i = 0; i < ticValues.length; i++) {
-            this.log.debug("i=" + i);
+            log.debug("i=" + i);
             checkExtremum(ticValues, snrValues, ts, threshold, i,
-                    this.filter_window);
+                    this.filterWindow);
         }
         PeakPositionsResultSet pprs = new PeakPositionsResultSet(correctedtic, createPeakCandidatesArray(tic, ts), snrValues, ts);
         return pprs;
@@ -439,7 +420,7 @@ public class TICPeakFinder extends AFragmentCommand {
 
 
     private IFileFragment findPeaks(final IFileFragment f) {
-        // this.log.info("Looking for EIC peaks");
+        // log.info("Looking for EIC peaks");
         // findEICPeaks(f);
         final Array tic = f.getChild(this.ticVarName).getArray();
         final Array sat = f.getChild(this.satVarName).getArray();
@@ -449,11 +430,11 @@ public class TICPeakFinder extends AFragmentCommand {
         
         List<Peak1D> peaks = Collections.emptyList();
         if (this.integratePeaks) {
-            peaks = findPeakAreas(pprs.getTs(), f.getName(), this.epsilon, tic, sat);
+            peaks = findPeakAreas(f,pprs.getTs(), f.getName(), this.epsilon, tic, sat);
             savePeakTable(peaks, f);
         }
         if (this.saveGraphics) {
-            visualize(f, tic, snrValues, extr, this.peak_threshold);
+            visualize(f, tic, snrValues, extr, this.peakThreshold);
         }
         final String filename = f.getName();
         final IFileFragment ff = Factory.getInstance().getFileFragmentFactory().create(
@@ -462,7 +443,7 @@ public class TICPeakFinder extends AFragmentCommand {
 
         ff.addSourceFile(f);
         addResults(ff, pprs.getCorrectedTIC(), extr, peaks);
-        this.log.info("Found {} peaks for file {}", peaks.size(), f.getName());
+        log.info("Found {} peaks for file {}", peaks.size(), f.getName());
         ff.save();
         f.clearArrays();
         DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(ff.getAbsolutePath()), this, WorkflowSlot.PEAKFINDING, ff);
@@ -492,7 +473,7 @@ public class TICPeakFinder extends AFragmentCommand {
     // EvalTools.notNull(eic, this);
     // Array correctedeic = null;
     // final ArrayList<Integer> ts = new ArrayList<Integer>();
-    // // this.log.debug("Value\tLow\tMedian\tHigh\tDev\tGTMedian\tSNR");
+    // // log.debug("Value\tLow\tMedian\tHigh\tDev\tGTMedian\tSNR");
     // double[] eicValues = (double[]) eic.get1DJavaArray(double.class);
     // correctedeic = applyFilters(eic);
     // eicValues = getMinimumBaselineEstimate((double[]) correctedeic
@@ -500,14 +481,14 @@ public class TICPeakFinder extends AFragmentCommand {
     // correctedeic = Array.factory(eicValues);
     // final double maxCorrectedIntensity = MAMath
     // .getMaximum(correctedeic);
-    // final double threshold = this.peak_threshold
+    // final double threshold = this.peakThreshold
     // * maxCorrectedIntensity;
     // for (int j = 0; j < eicValues.length; j++) {
-    // // this.log.debug("j=" + j);
-    // checkExtremum(eicValues, ts, threshold, j, this.filter_window);
+    // // log.debug("j=" + j);
+    // checkExtremum(eicValues, ts, threshold, j, this.filterWindow);
     // }
     // if (ts.size() > 0) {
-    // this.log.debug("Found {} peaks for file {} at mass {} to {}",
+    // log.debug("Found {} peaks for file {} at mass {} to {}",
     // new Object[] { ts.size(), f.getName(), start,
     // start + stepSize });
     // }
@@ -524,7 +505,7 @@ public class TICPeakFinder extends AFragmentCommand {
     // p.setStartTime(p.getApexTime());
     // p.setStopTime(p.getApexTime());
     // p.setFile(f.getName());
-    // // this.log.info("{}", p);
+    // // log.info("{}", p);
     // if (rtToPeakMap.containsKey(p.getApexTime())) {
     // TreeSet<Peak1D> s = rtToPeakMap.get(p.getApexTime());
     // s.add(p);
@@ -596,8 +577,8 @@ public class TICPeakFinder extends AFragmentCommand {
     // csvw.writeTableByRows(getWorkflow().getOutputDirectory(this)
     // .getAbsolutePath(), StringTools.removeFileExt(f.getName())
     // + "_eicPeaks.csv", v, WorkflowSlot.PEAKFINDING);
-    // this.log.info("Number of peak signal groups of sizes: {}", hm);
-    // this.log.info("Total number of peak signals: {}", totalPeakSignals);
+    // log.info("Number of peak signal groups of sizes: {}", hm);
+    // log.info("Total number of peak signals: {}", totalPeakSignals);
     // FileFragment ff = new FileFragment(getWorkflow().getOutputDirectory(
     // this), StringTools.removeFileExt(f.getName())
     // + "_apexPeaks.cdf");
@@ -663,10 +644,10 @@ public class TICPeakFinder extends AFragmentCommand {
         double baselineEstimate;
         double[] estimate = new double[ticValues.length];
         for (int i = 0; i < ticValues.length; i++) {
-            this.log.debug("i=" + i);
+            log.debug("i=" + i);
 
-            baselineEstimate = MathTools.min(ticValues, i - this.filter_window,
-                    i + this.filter_window);
+            baselineEstimate = MathTools.min(ticValues, i - this.filterWindow,
+                    i + this.filterWindow);
             final double signalEstimate = ticValues[i];
             estimate[i] = signalEstimate - baselineEstimate;
         }
@@ -737,21 +718,13 @@ public class TICPeakFinder extends AFragmentCommand {
         int stopIndex = findRightInclusivePeakBound(scanIndex, f,
                 baselineCorrectedTIC, firstDerivative, secondDerivative);
 
-        this.log.debug("start: {}, stop: {}", startIndex, stopIndex);
-        final Peak1D pb = new Peak1D(startIndex, scanIndex, stopIndex, 0, 0);
-        final Array sat = f.getChild(this.satVarName).getArray();
-        final Index sati = sat.getIndex();
-        final double startRT = sat.getDouble(sati.set(startIndex));
-        final double apexRT = sat.getDouble(sati.set(scanIndex));
-        final double stopRT = sat.getDouble(sati.set(stopIndex));
-        pb.setApexTime(apexRT);
-        pb.setStopTime(stopRT);
-        pb.setStartTime(startRT);
+        log.debug("start: {}, stop: {}", startIndex, stopIndex);
+        final Peak1D pb = PeakFactory.createPeak1DTic(f, startIndex, scanIndex, stopIndex);
         integratePeak(pb, null,f.getChild(this.ticVarName).getArray());
         return pb;
     }
 
-    private Peak1D getPeakBoundsByTIC(final int scanIndex, final Array baselineCorrectedTIC,
+    private Peak1D getPeakBoundsByTIC(final IFileFragment chromatogram, final int scanIndex, final Array baselineCorrectedTIC,
             final Array fdTIC, final Array sdTIC, final Array tdTIC, final Array sat) {
 
         Array fdfTIC = baselineCorrectedTIC;
@@ -842,15 +815,8 @@ public class TICPeakFinder extends AFragmentCommand {
         }
         startIndex = Math.max(0, startIndex);
 
-        this.log.debug("start: {}, stop: {}", startIndex, stopIndex);
-        final Peak1D pb = new Peak1D(startIndex, apexIndex, stopIndex, 0, 0);
-        final Index sati = sat.getIndex();
-        final double startRT = sat.getDouble(sati.set(startIndex));
-        final double stopRT = sat.getDouble(sati.set(stopIndex));
-        final double apexRT = sat.getDouble(sati.set(apexIndex));
-        pb.setApexTime(apexRT);
-        pb.setStopTime(stopRT);
-        pb.setStartTime(startRT);
+        log.debug("start: {}, stop: {}", startIndex, stopIndex);
+        final Peak1D pb = PeakFactory.createPeak1DTic(chromatogram,startIndex, apexIndex, stopIndex);
         integratePeak(pb, null, baselineCorrectedTIC);
         return pb;
     }
@@ -868,14 +834,14 @@ public class TICPeakFinder extends AFragmentCommand {
      */
     private Peak1D getPeakBoundsByCharacteristicMasses(final int scanIndex,
             final IFileFragment f, final double epsilon) {
-        this.log.debug("Checking peak {}", scanIndex);
+        log.debug("Checking peak {}", scanIndex);
         final Tuple2D<List<Array>, List<Array>> t = MaltcmsTools.getMZIs(f);
         Array intens = t.getSecond().get(scanIndex);
         Array masses = t.getFirst().get(scanIndex);
         final double maxMass = MaltcmsTools.getMaxMass(masses, intens);
-        this.log.debug("Max mass: {}", maxMass);
+        log.debug("Max mass: {}", maxMass);
         if (Double.isNaN(maxMass)) {
-            this.log.warn(
+            log.warn(
                     "Could not determine max mass for peak {}, skipping!",
                     scanIndex);
             return null;
@@ -891,9 +857,9 @@ public class TICPeakFinder extends AFragmentCommand {
         // increase scan index
         final SortedMap<Integer, List<Integer>> al = new TreeMap<Integer, List<Integer>>();
         al.put(scanIndex, peakMaxMasses);
-        this.log.debug("Extending peak to the right");
+        log.debug("Extending peak to the right");
         while ((r < t.getFirst().size())) {
-            // this.log.info("Checking scan {}", r);
+            // log.info("Checking scan {}", r);
             masses = t.getFirst().get(r);
             intens = t.getSecond().get(r);
             midx = MaltcmsTools.isMaxMass(masses, intens, maxMass, epsilon);
@@ -906,11 +872,11 @@ public class TICPeakFinder extends AFragmentCommand {
                     // final double max = MAMath.getMaximum(intensa);
                     // if (max ==
                     // intensa.getDouble(intensa.getIndex().set(mIdx))) {
-                    // this.log.info("Adding scan {}", r);
+                    // log.info("Adding scan {}", r);
                     al.put(r, midx);
 
                     // } else {
-                    // this.log
+                    // log
                     // .warn("Mass in window, but intensity was not maximal!");
                     // break;
                     // }
@@ -920,11 +886,11 @@ public class TICPeakFinder extends AFragmentCommand {
                 // final int mIdx = ranks[0];
                 // final double max = MAMath.getMaximum(intensa);
                 // if (max == intensa.getDouble(intensa.getIndex().set(mIdx))) {
-                // // this.log.info("Adding scan {}", r);
+                // // log.info("Adding scan {}", r);
                 // al.put(r, midx);
                 // r++;
                 // } else {
-                // this.log
+                // log
                 // .warn("Mass in window, but intensity was not maximal!");
                 // break;
                 // }
@@ -934,11 +900,11 @@ public class TICPeakFinder extends AFragmentCommand {
         // startIndex = r;
         int l = scanIndex - 1;
         // decrease scan index
-        this.log.debug("Extending peak to the left");
+        log.debug("Extending peak to the left");
         while ((l >= 0)) {
             masses = t.getFirst().get(l);
             intens = t.getSecond().get(l);
-            // this.log.info("Checking scan {}", l);
+            // log.info("Checking scan {}", l);
             midx = MaltcmsTools.isMaxMass(masses, intens, maxMass, epsilon);
             if (midx.size() == 0) {
                 break;
@@ -949,11 +915,11 @@ public class TICPeakFinder extends AFragmentCommand {
                 for (int k = 0; k < ranks.length; k++) {
                     // if (max ==
                     // intensa.getDouble(intensa.getIndex().set(mIdx))) {
-                    // this.log.info("Adding scan {}", l);
+                    // log.info("Adding scan {}", l);
                     al.put(l, midx);
 
                     // } else {
-                    // this.log
+                    // log
                     // .info("Mass in window, but intensity was not maximal!");
                     // break;
                     // }
@@ -961,7 +927,7 @@ public class TICPeakFinder extends AFragmentCommand {
                 l--;
             }
         }
-        this.log.debug("Found {} signals for peak: {}", al.size(), al);
+        log.debug("Found {} signals for peak: {}", al.size(), al);
         final List<int[]> mwIndices = new ArrayList<int[]>();// int[al.size()][];
         for (final Integer key : al.keySet()) {
             final int[] arr = new int[al.get(key).size()];
@@ -971,19 +937,9 @@ public class TICPeakFinder extends AFragmentCommand {
             }
             mwIndices.add(arr);
         }
-        this.log.debug("start: {}, stop: {}", (l + 1), r - 1);
-        final Peak1D pb = new Peak1D(l + 1, apexIndex, r - 1, 0, 0);
+        log.debug("start: {}, stop: {}", (l + 1), r - 1);
+        final Peak1D pb = PeakFactory.createPeak1DTic(f,l + 1, apexIndex, r - 1);
         integratePeak(pb, mwIndices, f.getChild(this.ticVarName).getArray());
-        final Array sat = f.getChild(this.satVarName).getArray();
-        final Index sati = sat.getIndex();
-        final double startRT = sat.getDouble(sati.set(l + 1));
-        final double stopRT = sat.getDouble(sati.set(r - 1));
-        final double apexRT = sat.getDouble(sati.set(apexIndex));
-        pb.setApexTime(apexRT);
-        pb.setStopTime(stopRT);
-        pb.setStartTime(startRT);
-        pb.setMw(maxMass);
-        pb.setIntensity(mwIntensity);
         return pb;
     }
 
@@ -1011,49 +967,16 @@ public class TICPeakFinder extends AFragmentCommand {
             final List<int[]> mwIndices, final Array tic) {
         double s = -1;
         if (integrateTICPeaks) {
-            this.log.debug("Using TIC based integration!");
+            log.debug("Using TIC based integration!");
 //            final Array tic = iff.getChild(this.ticVarName).getArray();
             final Index ticIndex = tic.getIndex();
             for (int i = pb.getStartIndex(); i <= pb.getStopIndex(); i++) {
                 s += (tic.getDouble(ticIndex.set(i)));
             }
             pb.setArea(s);
-            pb.setIntensity(tic.getDouble(ticIndex.set(pb.getApexIndex())));
+            pb.setApexIntensity(tic.getDouble(ticIndex.set(pb.getApexIndex())));
         }
-////        else {
-//            try {
-////                final Tuple2D<List<Array>, List<Array>> t = MaltcmsTools.getMZIs(iff);
-//                final List<Array> masses = t.getFirst().subList(
-//                        pb.getStartIndex(), pb.getStopIndex() + 1);
-//                final List<Array> intens = t.getSecond().subList(
-//                        pb.getStartIndex(), pb.getStopIndex() + 1);
-//                // EvalTools.eqI(mwIndices.size(), masses.size(), this);
-//                // EvalTools.eqI(mwIndices.size(), intens.size(), this);
-//                s = 0;
-//                Array a = null;
-//                Index aidx = null;
-//                // for all
-//                for (int i = 0; i < mwIndices.size(); i++) {
-//                    for (int j = 0; j < mwIndices.get(i).length; j++) {
-//                        final int idx = mwIndices.get(i)[j];
-//                        a = intens.get(i);
-//                        aidx = a.getIndex();
-//                        s += (intens.get(i).getDouble(aidx.set(idx)));
-//                    }
-//                }
-//                pb.setArea(s);
-//            } catch (final ResourceNotAvailableException ex) {
-//                this.log.info("Could not retrieve MS data, falling back to TIC based integration!");
-////                final Array tic = iff.getChild(this.ticVarName).getArray();
-//                final Index ticIndex = tic.getIndex();
-//                for (int i = pb.getStartIndex(); i <= pb.getStopIndex(); i++) {
-//                    s += (tic.getDouble(ticIndex.set(i)));
-//                }
-//                pb.setArea(s);
-//                pb.setIntensity(tic.getDouble(ticIndex.set(pb.getApexIndex())));
-//            }
-//        }
-        this.log.debug("Raw peak area: {}", s);
+        log.debug("Raw peak area: {}", s);
         return s;
     }
 
@@ -1078,7 +1001,7 @@ public class TICPeakFinder extends AFragmentCommand {
         if ((values[i] > 0) && isAboveThreshold(snr[i], threshold)
                 && isCandidate(i, values, window)) {
             ts.add(i);
-            this.log.debug(
+            log.debug(
                     "Found extremum above snr threshold {} with value {} at scan: {}",
                     new Object[]{threshold, values[i], i});
         }
@@ -1105,20 +1028,20 @@ public class TICPeakFinder extends AFragmentCommand {
         final String[] headerLine = new String[]{"APEX", "START", "STOP",
             "RT_APEX", "RT_START", "RT_STOP", "AREA", "MW", "INTENSITY"};
         headers = Arrays.asList(headerLine);
-        this.log.debug("Adding row {}", headers);
+        log.debug("Adding row {}", headers);
         rows.add(headers);
         for (final Peak1D pb : l) {
             final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(Locale.US);
             df.applyPattern("0.0000");
-            this.log.debug("Adding {} peaks", l.size());
+            log.debug("Adding {} peaks", l.size());
             final String[] line = new String[]{pb.getApexIndex() + "",
                 pb.getStartIndex() + "", pb.getStopIndex() + "",
                 df.format(pb.getApexTime()), df.format(pb.getStartTime()),
                 df.format(pb.getStopTime()), pb.getArea() + "",
-                "" + pb.getMw(), "" + pb.getIntensity()};
+                "" + pb.getStartMass(), "" + pb.getApexIntensity()};
             final List<String> v = Arrays.asList(line);
             rows.add(v);
-            this.log.debug("Adding row {}", v);
+            log.debug("Adding row {}", v);
         }
 
         final CSVWriter csvw = new CSVWriter();

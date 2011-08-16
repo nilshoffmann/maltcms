@@ -21,25 +21,22 @@
  */
 package maltcms.commands.fragments.preprocessing;
 
+import cross.annotations.ProvidesTypes;
 import java.io.File;
 
-import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
-import ucar.nc2.Attribute;
-import cross.Factory;
-import cross.Logging;
 import cross.annotations.ProvidesVariables;
-import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.DefaultWorkflowResult;
-import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
-import cross.datastructures.tools.FragmentTools;
-import cross.tools.StringTools;
+import java.util.List;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.fragments.preprocessing.defaultVarLoader.DefaultVarLoaderWorker;
+import maltcms.datastructures.ms.IChromatogram1D;
+import net.sf.maltcms.execution.api.ICompletionService;
 
 /**
  * Load variables defined by the option default.variables. Additionally tries to
@@ -49,67 +46,48 @@ import cross.tools.StringTools;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
-@RequiresVariables(names = {})
 @ProvidesVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.scan_acquisition_time", "var.total_intensity"})
+@Slf4j
+@Data
 public class DefaultVarLoader extends AFragmentCommand {
 
-    private final Logger log = Logging.getLogger(this.getClass());
-    private int nthreads = 5;
-
     @Override
-    public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-        this.log.debug("Running DefaultVarLoader on {} FileFragments!", t.size());
-        // ExecutorService es = Executors.newFixedThreadPool(Math.min(nthreads,
-        // t
-        // .size()));
-        // log.info("Running {} threads",Math.min(nthreads, t.size()));
-        final IWorkflowElement iwe = this;
-        final TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
-        for (final IFileFragment f : t) {
-            // Runnable r = new Runnable() {
-            //
-            // @Override
-            // public void run() {
+    public TupleND<IFileFragment> apply(final TupleND<IFileFragment> inputFileFragments) {
+        log.debug("Running DefaultVarLoader on {} FileFragments!", inputFileFragments.size());
+        //create a new completion service instance for this fragment command
+        ICompletionService<File> ics = createCompletionService(File.class);
+        for (final IFileFragment f : inputFileFragments) {
             EvalTools.notNull(f, this);
-            final String filename = StringTools.removeFileExt(f.getName());
-            final IFileFragment iff = Factory.getInstance().
-                    getFileFragmentFactory().create(
-                    new File(getWorkflow().getOutputDirectory(this),
-                    filename + ".cdf"));
-            iff.setAttributes(f.getAttributes().toArray(new Attribute[]{}));
-            // FileTools.prependDefaultDirs(filename + ".cdf", iwe
-            // .getClass(), getWorkflow()
-            // .getStartupDate()));
-            iff.addSourceFile(f);
-            FragmentTools.loadDefaultVars(iff);
-            FragmentTools.loadAdditionalVars(iff);
-            iff.save();
-            f.clearArrays();
-            final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                    new File(iff.getAbsolutePath()), iwe, getWorkflowSlot(),
-                    iff);
-            getWorkflow().append(dwr);
-            ret.add(iff);
-            // }
-            //
-            // };
-            // es.submit(r);
+            //create work fragment (retrieves output directory for fragment command)
+            IFileFragment workFragment = createWorkFragment(f);
+            //create a new worker
+            DefaultVarLoaderWorker worker = new DefaultVarLoaderWorker();
+            worker.setFileToLoad(new File(f.getAbsolutePath()));
+            worker.setFileToSave(new File(workFragment.getAbsolutePath()));
+            //submit to completion service
+            ics.submit(worker);
         }
-        // es.shutdown();
-        // try {
-        // es.awaitTermination(10, TimeUnit.HOURS);
-        // } catch (InterruptedException e) {
-        // log.error(e.getLocalizedMessage());
-        // }
-        EvalTools.notNull(ret, this);
-        this.log.debug("Returning {} FileFragments!", ret.size());
+        //wait and retrieve results
+        TupleND<IFileFragment> ret = postProcess(ics, inputFileFragments);
+        log.debug("Returning {} FileFragments!", ret.size());
         return ret;
     }
 
-    @Override
-    public void configure(final Configuration cfg) {
-        this.nthreads = cfg.getInt("maltcms.pipelinethreads", 5);
+    protected TupleND<IFileFragment> postProcess(ICompletionService<File> ics, final TupleND<IFileFragment> t) {
+        TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
+        try {
+            List<File> results = ics.call();
+            //expect at least one result
+            EvalTools.gt(0, results.size(), this);
+            //map input to results
+            ret = mapToInput(results, t);
+            //append results to workflow for bookkeeping
+            addWorkflowResults(ret);
+        } catch (Exception ex) {
+            log.warn("{} tasks failed with exception:\n{}", ics.getFailedTasks().size(), ex.getLocalizedMessage());
+        }
+        return ret;
     }
 
     @Override

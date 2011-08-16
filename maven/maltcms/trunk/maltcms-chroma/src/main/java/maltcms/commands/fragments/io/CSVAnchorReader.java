@@ -53,6 +53,8 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Class reading retention indices/anchors/identified compounds from files with
@@ -65,52 +67,9 @@ import cross.datastructures.tools.EvalTools;
 @RequiresOptionalVariables(names = {"var.scan_acquisition_time"})
 @ProvidesVariables(names = {"var.anchors.retention_index_names",
     "var.anchors.retention_scans"})
+@Slf4j
+@Data
 public class CSVAnchorReader extends AFragmentCommand {
-
-    public static void main(final String[] args) {
-        // Maltcms m = Maltcms.getInstance();
-        // Logger log = cross.Logging.getLogger(Maltcms.class);
-        // ArrayFactory.configure(m.parseCommandLine(args));
-        // ArrayFactory.appendCommand(CSVAnchorReader.class.getName());
-        // ICommandSequence cs = ArrayFactory.createCommandSequence();
-        // EvalTools.notNull(cs);
-        // while (cs.hasNext()) {
-        // cs.next();
-        // }
-        // Configuration cfg = ArrayFactory.getConfiguration();
-        // if (cfg.getBoolean("pipeline.save.after.end")) {
-        // log.info("Saving FileFragments");
-        // TupleND<FileFragment> t = cs.next();
-        // for (FileFragment ff : t) {
-        // ff.save();
-        // }
-        // }
-        // ArrayFactory.shutdown();
-        // try {
-        // ArrayFactory.awaitTermination(10000, TimeUnit.SECONDS);
-        // } catch (InterruptedException e) {
-        // log.error(e.getLocalizedMessage());
-        // }
-        // for (FileFragment f : FileFragment.fileMap.values()) {
-        // System.out.println(f);
-        // }
-        // System.exit(0);
-    }
-    private final String omit = "-";
-    private boolean time = false;
-    private boolean index = true;
-    private List<String> location = null;
-    private String fileDesignation = ">";
-    private String basedir = "";
-    private boolean scan;
-    private int max_names_length = Integer.MIN_VALUE;
-    private final Logger log = Logging.getLogger(this.getClass());
-    private String anchorNamesVariableName;
-    private String anchorTimesVariableName;
-    private String anchorRetentionIndexVariableName;
-    private String anchorScanIndexVariableName;
-    private boolean useAnchors;
-    private String satVariableName;
 
     /**
      * Simply return the same FileFragments as were received. apply will add the
@@ -308,8 +267,6 @@ public class CSVAnchorReader extends AFragmentCommand {
                 "scan_acquisition_time");
         this.useAnchors = cfg.getBoolean("anchors.use", false);
 
-    }
-
     /**
      * @param indices
      * @param parentFragment
@@ -437,26 +394,38 @@ public class CSVAnchorReader extends AFragmentCommand {
         return this.anchorRetentionIndexVariableName;
     }
 
-    /**
-     * @return the anchorScanIndexVariableName
-     */
-    public String getAnchorScanIndexVariableName() {
-        return this.anchorScanIndexVariableName;
-    }
+	/**
+	 * Simply return the same FileFragments as were received. apply will add the
+	 * necessary fragments automatically to those fragments in the tuple which
+	 * have an associated RI file.
+	 */
+        @Override
+	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
+		// EvalTools.notNull(this.location);
+		if (this.useAnchors && (this.location != null)) {
+			log.info("Using anchors!");
+			return applyCSVReader(this.location);
+			// apply(this.location);
+		} else {
+			log.info("Not using anchors!");
+		}
+		return t;
+	}
 
-    /**
-     * @return the anchorTimesVariableName
-     */
-    public String getAnchorTimesVariableName() {
-        return this.anchorTimesVariableName;
-    }
+	protected TupleND<IFileFragment> applyCSVReader(final List<String> u) {
+		if (u != null) {
+			log.debug("Setting locations to parameter u");
+			this.location = u;
+		}
 
-    /**
-     * @return the basedir
-     */
-    public String getBasedir() {
-        return this.basedir;
-    }
+		if (this.location.size() == 1) {
+			final String filename = u.get(0);
+			if (filename.equals("*.txt") || filename.equals("*.tsv")) {
+				final File f = new File(this.basedir);
+				log.debug("Trying to load anchors from {}", f
+				        .getAbsolutePath());
+				if (f.isDirectory()) {
+					final String[] files = f.list(new FilenameFilter() {
 
     @Override
     public String getDescription() {
@@ -470,12 +439,90 @@ public class CSVAnchorReader extends AFragmentCommand {
         return this.fileDesignation;
     }
 
-    /**
-     * @return the location
-     */
-    public List<String> getLocation() {
-        return this.location;
-    }
+		final ArrayList<IFileFragment> retF = new ArrayList<IFileFragment>();
+		for (final String s : this.location) {
+			File f = new File(s);
+			if (!f.exists()) {
+				f = new File(this.basedir, s);
+			}
+			log.debug("Reading anchors from file {}", s);
+			final CSVReader csvr = new CSVReader();
+			final HashMap<String, Vector<String>> cols = csvr.getColumns(csvr
+			        .read(f.getAbsolutePath()));
+			final Vector<String> skippedLines = csvr.getSkippedLines();
+			EvalTools.eqI(skippedLines.size(), 1, this);
+			final String associatedToFile = skippedLines.get(0).substring(
+			        this.fileDesignation.length());
+			log.debug("Associated to file: {}", associatedToFile);
+			final File targetFile = new File(associatedToFile);
+			final String inputBasedir = Factory.getInstance()
+			        .getConfiguration().getString("input.basedir", "");
+			File g = null;
+			if (targetFile.isAbsolute()) {
+				log.info("File association is absolute");
+				g = targetFile;
+			} else {
+				// Check if file is in same directory
+				g = new File(f.getParentFile(), associatedToFile);
+				if (!g.exists() && !inputBasedir.isEmpty()) {
+					// locate file based on filename and input files
+					final List<IFileFragment> l = Factory.getInstance()
+					        .getInputDataFactory().getInitialFiles();
+					int collision = 0;
+					for (final IFileFragment iff : l) {
+						if (iff.getName().equals(associatedToFile)) {
+							collision++;
+							g = new File(iff.getAbsolutePath());
+						}
+					}
+					if (collision > 1) {
+						log
+						        .warn(
+						                "Found {} files with the same name, can not associate!",
+						                collision);
+						g = null;
+					}
+				}
+			}
+			if (g != null) {
+				log.info("Associated file is {}", g.getAbsolutePath());
+				final String name = g.getAbsolutePath();
+				log.debug("Full path: {}", name);
+				// create new working fragment
+				final IFileFragment parentFragment = Factory
+				        .getInstance()
+				        .getFileFragmentFactory()
+				        .create(
+				                new File(getWorkflow()
+				                        .getOutputDirectory(this), g.getName()));
+				// add associatedToFile fragment as source file, create if
+				// non-existant
+				parentFragment.addSourceFile(Factory.getInstance()
+				        .getFileFragmentFactory().create(g));
+				if (this.scan) {
+					createScan(cols.get("Scan"), parentFragment);
+				}
+				if (this.index) {
+					createIndex(cols.get("RI"), parentFragment);
+				}
+				if (this.time) {
+					createTime(cols.get("RT"), parentFragment);
+				}
+				createName(cols.get("Name"), parentFragment);
+				parentFragment.save();
+				final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
+				        new File(parentFragment.getAbsolutePath()), this,
+				        WorkflowSlot.FILEIO, parentFragment);
+				getWorkflow().append(dwr);
+				retF.add(parentFragment);
+			} else {
+				log.warn("No association possible, skipping file: {}",
+				        associatedToFile);
+				g = null;
+			}
+		}
+		return new TupleND<IFileFragment>(retF);
+	}
 
     /*
      * (non-Javadoc)
@@ -513,35 +560,239 @@ public class CSVAnchorReader extends AFragmentCommand {
         this.anchorScanIndexVariableName = anchorScanIndexVariableName;
     }
 
-    /**
-     * @param anchorTimesVariableName
-     *            the anchorTimesVariableName to set
-     */
-    public void setAnchorTimesVariableName(final String anchorTimesVariableName) {
-        this.anchorTimesVariableName = anchorTimesVariableName;
-    }
+	/**
+	 * @param indices
+	 * @param parentFragment
+	 * @return
+	 */
+	private IVariableFragment createIndex(final List<String> indices,
+	        final IFileFragment parentFragment) {
+		final Array a = Array.factory(DataType.INT,
+		        new int[] { indices.size() });
+		final IndexIterator ii = a.getIndexIterator();
+		final Iterator<String> indi = indices.iterator();
+		while (ii.hasNext() && indi.hasNext()) {
+			final String idx = indi.next();
+			if (idx.equals(this.omit) || (Double.parseDouble(idx) == -1.0d)) {
+				log.debug("Skipping entry, does not contain a number!");
+				ii.setIntNext(-1);
+			} else {
+				ii.setIntNext(Integer.parseInt(idx));
+			}
+		}
+		final IVariableFragment riindices = new VariableFragment(
+		        parentFragment, this.anchorRetentionIndexVariableName);
+		riindices.setArray(a);
+		// riindices.setProtect(true);
+		log.debug(riindices.toString());
+		return riindices;
+	}
 
-    /**
-     * @param basedir
-     *            the basedir to set
-     */
-    public void setBasedir(final String basedir) {
-        this.basedir = basedir;
-    }
+	/**
+	 * @param names
+	 * @param parentFragment
+	 * @return
+	 */
+	private IVariableFragment createName(final List<String> names,
+	        final IFileFragment parentFragment) {
+		int maxlength = 0;
+		for (final String s : names) {
+			maxlength = Math.max(maxlength, s.length());
+		}
+		this.max_names_length = Math.max(this.max_names_length, maxlength);
+		final ArrayChar.D2 c = new ArrayChar.D2(names.size(),
+		        this.max_names_length);
+		final Iterator<String> nit = names.iterator();
+		int row = 0;
+		while (nit.hasNext()) {
+			c.setString(row++, nit.next());
+		}
+		final IVariableFragment rinames = new VariableFragment(parentFragment,
+		        this.anchorNamesVariableName);
+		rinames.setArray(c);
+		// rinames.setProtect(true);
+		log.debug(rinames.toString());
+		return rinames;
+	}
 
-    /**
-     * @param fileDesignation
-     *            the fileDesignation to set
-     */
-    public void setFileDesignation(final String fileDesignation) {
-        this.fileDesignation = fileDesignation;
-    }
+	/**
+	 * @param scans
+	 * @param parentFragment
+	 * @return
+	 */
+	private IVariableFragment createScan(final List<String> scans,
+	        final IFileFragment parentFragment) {
+		final Array d = Array.factory(DataType.INT, new int[] { scans.size() });
+		final IndexIterator ii = d.getIndexIterator();
+		final Iterator<String> timi = scans.iterator();
+		while (ii.hasNext() && timi.hasNext()) {
+			final String scn = timi.next();
+			if (scn.equals(this.omit) || (Integer.parseInt(scn) == -1)) {
+				log.debug("Skipping entry, does not contain a number!");
+				ii.setIntNext(-1);
+			} else {
+				ii.setIntNext(Integer.parseInt(scn));
+			}
+			// ii.setIntNext(Integer.parseInt(timi.next()));
+		}
+		final IVariableFragment riscans = new VariableFragment(parentFragment,
+		        this.anchorScanIndexVariableName);
+		riscans.setArray(d);
+		// riscans.setProtect(true);
+		log.debug(riscans.toString());
+		return riscans;
+	}
 
-    /**
-     * @param location
-     *            the location to set
-     */
-    public void setLocation(final List<String> location) {
-        this.location = location;
-    }
+	/**
+	 * @param times
+	 * @param parentFragment
+	 * @return
+	 */
+	private IVariableFragment createTime(final List<String> times,
+	        final IFileFragment parentFragment) {
+		final Array b = Array.factory(DataType.DOUBLE,
+		        new int[] { times.size() });
+		final IndexIterator ii = b.getIndexIterator();
+		final Iterator<String> timi = times.iterator();
+		while (ii.hasNext() && timi.hasNext()) {
+			final String tme = timi.next();
+			if (tme.equals(this.omit) || (Double.parseDouble(tme) == 0)) {
+				log.debug("Skipping entry, does not contain a number!");
+				ii.setDoubleNext(-1.0d);
+			} else {
+				ii.setDoubleNext(Double.parseDouble(tme));
+			}
+			// ii.setDoubleNext(Double.parseDouble(timi.next()));
+		}
+		final IVariableFragment ritimes = new VariableFragment(parentFragment,
+		        this.anchorTimesVariableName);
+		ritimes.setArray(b);
+		// ritimes.setProtect(true);
+		log.debug(ritimes.toString());
+		augmentRT(parentFragment);
+		return ritimes;
+	}
+
+	/**
+	 * @return the anchorNamesVariableName
+	 */
+	public String getAnchorNamesVariableName() {
+		return this.anchorNamesVariableName;
+	}
+
+	/**
+	 * @return the anchorRetentionIndexVariableName
+	 */
+	public String getAnchorRetentionIndexVariableName() {
+		return this.anchorRetentionIndexVariableName;
+	}
+
+	/**
+	 * @return the anchorScanIndexVariableName
+	 */
+	public String getAnchorScanIndexVariableName() {
+		return this.anchorScanIndexVariableName;
+	}
+
+	/**
+	 * @return the anchorTimesVariableName
+	 */
+	public String getAnchorTimesVariableName() {
+		return this.anchorTimesVariableName;
+	}
+
+	/**
+	 * @return the basedir
+	 */
+	public String getBasedir() {
+		return this.basedir;
+	}
+
+	@Override
+	public String getDescription() {
+		return "Reads anchors stored in csv/tsv compatible format.";
+	}
+
+	/**
+	 * @return the fileDesignation
+	 */
+	public String getFileDesignation() {
+		return this.fileDesignation;
+	}
+
+	/**
+	 * @return the location
+	 */
+	public List<String> getLocation() {
+		return this.location;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
+	 */
+	@Override
+	public WorkflowSlot getWorkflowSlot() {
+		return WorkflowSlot.FILEIO;
+	}
+
+	/**
+	 * @param anchorNamesVariableName
+	 *            the anchorNamesVariableName to set
+	 */
+	public void setAnchorNamesVariableName(final String anchorNamesVariableName) {
+		this.anchorNamesVariableName = anchorNamesVariableName;
+	}
+
+	/**
+	 * @param anchorRetentionIndexVariableName
+	 *            the anchorRetentionIndexVariableName to set
+	 */
+	public void setAnchorRetentionIndexVariableName(
+	        final String anchorRetentionIndexVariableName) {
+		this.anchorRetentionIndexVariableName = anchorRetentionIndexVariableName;
+	}
+
+	/**
+	 * @param anchorScanIndexVariableName
+	 *            the anchorScanIndexVariableName to set
+	 */
+	public void setAnchorScanIndexVariableName(
+	        final String anchorScanIndexVariableName) {
+		this.anchorScanIndexVariableName = anchorScanIndexVariableName;
+	}
+
+	/**
+	 * @param anchorTimesVariableName
+	 *            the anchorTimesVariableName to set
+	 */
+	public void setAnchorTimesVariableName(final String anchorTimesVariableName) {
+		this.anchorTimesVariableName = anchorTimesVariableName;
+	}
+
+	/**
+	 * @param basedir
+	 *            the basedir to set
+	 */
+	public void setBasedir(final String basedir) {
+		this.basedir = basedir;
+	}
+
+	/**
+	 * @param fileDesignation
+	 *            the fileDesignation to set
+	 */
+	public void setFileDesignation(final String fileDesignation) {
+		this.fileDesignation = fileDesignation;
+	}
+
+	/**
+	 * @param location
+	 *            the location to set
+	 */
+	public void setLocation(final List<String> location) {
+		this.location = location;
+	}
+
 }

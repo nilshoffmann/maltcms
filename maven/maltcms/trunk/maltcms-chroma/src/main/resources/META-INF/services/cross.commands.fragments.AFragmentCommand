@@ -1,7 +1,6 @@
 maltcms.commands.fragments.alignment.CenterStarAlignment
 maltcms.commands.fragments.alignment.ProgressiveTreeAlignment
-maltcms.commands.fragments.assignment.EIMSDBMetaboliteAssignment
-maltcms.commands.fragments.assignment.PeakCliqueAssignment
+maltcms.commands.fragments.alignment.PeakCliqueAlignment
 maltcms.commands.fragments.cluster.SingleLinkageAlgorithm
 maltcms.commands.fragments.cluster.CompleteLinkageAlgorithm
 maltcms.commands.fragments.cluster.SingleLinkageAlgorithm

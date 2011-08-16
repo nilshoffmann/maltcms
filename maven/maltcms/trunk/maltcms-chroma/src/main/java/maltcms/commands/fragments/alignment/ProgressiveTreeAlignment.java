@@ -25,15 +25,15 @@ import maltcms.commands.fragments.cluster.IClusteringAlgorithm;
 import maltcms.tools.MaltcmsTools;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of progressive, tree based multiple alignment.
@@ -41,9 +41,10 @@ import cross.datastructures.workflow.WorkflowSlot;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Data
+@Slf4j
 public class ProgressiveTreeAlignment extends AFragmentCommand {
 
-    private final Logger log = Logging.getLogger(this);
     @Configurable(value = "maltcms.commands.fragments.cluster.UPGMAAlgorithm")
     private String guideTreeClass = "maltcms.commands.fragments.cluster.UPGMAAlgorithm";
 
@@ -61,8 +62,7 @@ public class ProgressiveTreeAlignment extends AFragmentCommand {
         // Build a tree, based on a clustering algorithm
         // For each pair of leaves, align the sequences and create a consensus,
         // then proceed and align sequences to consensus sequences etc.
-        final AFragmentCommand ica = Factory.getInstance().getObjectFactory().
-                instantiate(this.guideTreeClass, AFragmentCommand.class);
+        final AFragmentCommand ica = Factory.getInstance().getObjectFactory().instantiate(this.guideTreeClass, AFragmentCommand.class);
         ica.setWorkflow(getWorkflow());
         ((IClusteringAlgorithm) ica).init(pwd, t);
         final TupleND<IFileFragment> tple = ica.apply(t);

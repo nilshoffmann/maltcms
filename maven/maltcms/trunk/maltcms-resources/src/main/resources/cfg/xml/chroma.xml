@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : testConfig.xml
+    Created on : 28. Juli 2011, 22:34
+    Author     : nils
+    Description:
+        Purpose of the document follows.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <description>
+            This file defines elements of a pipeline.
+    </description>
+               <!-- services -->
+
+    <bean id="trim"
+        class="com.mycompany.springtrial.pipeline.Trim">
+        <property name="name" value="Trim Command, removes trailing and leading whitespace"/>
+        <property name="outputDirectory" value="trim/"/>
+    </bean>
+    <bean id="toUpperCase"
+        class="com.mycompany.springtrial.pipeline.ToUpperCase">
+        <property name="name" value="ToUpperCase Command, transforms text to upper case"/>
+        <property name="outputDirectory" value="toUpperCase/"/>
+    </bean>
+    <bean id="replace1"
+        class="com.mycompany.springtrial.pipeline.Replace">
+        <property name="name" value="Replace Command, replaces all occurrences of a given pattern with the given replacement string"/>
+        <property name="outputDirectory" value="replace/"/>
+        <property name="regularExpression" value="[0-9]+"/>
+        <property name="replacement" value=""/>
+    </bean>
+    <bean id="replace2"
+        class="com.mycompany.springtrial.pipeline.Replace">
+        <property name="name" value="Replace Command, replaces all occurrences of a given pattern with the given replacement string"/>
+        <property name="outputDirectory" value="replace/"/>
+        <property name="regularExpression" value="[\s]+"/>
+        <property name="replacement" value=" "/>
+    </bean>
+    <bean id="pipeline" class="com.mycompany.springtrial.pipeline.Pipeline">
+<!--        <property name="input" value="   I am a wond24erful 1213 test text with 290 so224m numbers  "/>-->
+        <property name="pipes">
+            <list>
+                <ref bean="trim"/>
+                <ref bean="toUpperCase"/>
+                <ref bean="replace1"/>
+                <ref bean="replace2"/>
+            </list>
+        </property>
+    </bean>
+</beans>

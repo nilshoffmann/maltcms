@@ -63,6 +63,8 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.FragmentTools;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of the center star approximation for multiple alignment.
@@ -75,6 +77,8 @@ import cross.tools.StringTools;
 @ProvidesVariables(names = {"var.multiple_alignment",
     "var.multiple_alignment_names", "var.multiple_alignment_type",
     "var.multiple_alignment_creator"})
+@Data
+@Slf4j
 public class CenterStarAlignment extends AFragmentCommand {
 
     @Configurable(name = "var.pairwise_distance_matrix",
@@ -99,7 +103,6 @@ public class CenterStarAlignment extends AFragmentCommand {
     private boolean alignToFirst = false;
     @Configurable
     private String centerSequence = "";
-    private final Logger log = Logging.getLogger(this);
 
     /*
      * (non-Javadoc)
@@ -115,7 +118,7 @@ public class CenterStarAlignment extends AFragmentCommand {
         final ArrayChar.D2 names1 = (ArrayChar.D2) pwd.getChild(
                 this.pairwiseDistanceNamesVariableName).getArray();
         System.out.println("pwnames: " + names1);
-        this.log.debug("Trying to access variable: {}",
+        log.debug("Trying to access variable: {}",
                 this.minimizingArrayCompVariableName);
         final ArrayInt.D0 minimizeDistA = (ArrayInt.D0) pwd.getChild(
                 this.minimizingArrayCompVariableName).getArray();
@@ -138,7 +141,7 @@ public class CenterStarAlignment extends AFragmentCommand {
                 getAbsolutePath(), "center-star.csv", tble,
                 WorkflowSlot.CLUSTERING);
 
-        this.log.info("Center sequence is: {}", centerSeq);
+        log.info("Center sequence is: {}", centerSeq);
         final TupleND<IFileFragment> alignments = MaltcmsTools.
                 getAlignmentsFromFragment(pwd);
         final List<IFileFragment> warpedFiles = saveAlignment(this.getClass(),
@@ -147,7 +150,7 @@ public class CenterStarAlignment extends AFragmentCommand {
                 centerSeq);
 
         for (final IFileFragment iff : warpedFiles) {
-            this.log.info("Saving warped file {}", iff.getAbsolutePath());
+            log.info("Saving warped file {}", iff.getAbsolutePath());
             iff.save();
             iff.clearArrays();
         }
@@ -220,7 +223,7 @@ public class CenterStarAlignment extends AFragmentCommand {
         Alignment a = af.createNewAlignment(this.getClass().getName(), false);
         HashMap<IFileFragment, List<Integer>> fragmentToScanIndexMap = new HashMap<IFileFragment, List<Integer>>();
         for (final List<Peak> l : ll) {
-            this.log.debug("Adding {} peaks: {}", l.size(), l);
+            log.debug("Adding {} peaks: {}", l.size(), l);
             HashMap<IFileFragment, Peak> fragToPeak = new HashMap<IFileFragment, Peak>();
             for (final Peak p : l) {
                 fragToPeak.put(p.getAssociation(), p);
@@ -262,7 +265,7 @@ public class CenterStarAlignment extends AFragmentCommand {
             for (int i = 0; i < a.getShape()[0]; i++) {
                 if (StringTools.removeFileExt(names.getString(i)).equals(
                         StringTools.removeFileExt(this.centerSequence))) {
-                    this.log.info("Using user defined center: {}",
+                    log.info("Using user defined center: {}",
                             this.centerSequence);
                     return Factory.getInstance().getFileFragmentFactory().create(
                             this.centerSequence);
@@ -284,7 +287,7 @@ public class CenterStarAlignment extends AFragmentCommand {
             }
         }
         for (int i = 0; i < rows; i++) {
-            this.log.info("Sum of values for {}={}", names.getString(i),
+            log.info("Sum of values for {}={}", names.getString(i),
                     sums[i]);
         }
 
@@ -318,9 +321,9 @@ public class CenterStarAlignment extends AFragmentCommand {
     /**
      * @return the minimizingArrayCompVariableName
      */
-    public String getMinimizingArrayCompVariableName() {
-        return this.minimizingArrayCompVariableName;
-    }
+//    public String getMinimizingArrayCompVariableName() {
+//        return this.minimizingArrayCompVariableName;
+//    }
 
     private IFileFragment getOriginalFileFor(final IFileFragment iff) {
         // final List<IFileFragment> l = Factory.getInstance()
@@ -332,13 +335,13 @@ public class CenterStarAlignment extends AFragmentCommand {
         // history.push(iff);
         // while (!history.isEmpty()) {
         // IFileFragment work = history.pop();
-        // this.log.info("Exploring whether {} is a source file!", work
+        // log.info("Exploring whether {} is a source file!", work
         // .getAbsolutePath());
         // Collection<IFileFragment> c = work.getSourceFiles();
         // if (c.isEmpty()
         // && StringTools.removeFileExt(work.getName())
         // .equals(iffname)) {
-        // this.log.info("Yes");
+        // log.info("Yes");
         // return work;
         // }
         // for (IFileFragment ff : c) {
@@ -353,26 +356,26 @@ public class CenterStarAlignment extends AFragmentCommand {
         // // return f;
         // // }
         // // }
-        // this.log.warn("Could not find original file, returning argument!");
+        // log.warn("Could not find original file, returning argument!");
         return iff;
         // throw new ConstraintViolationException(
         // "Could not find original file, returning argument!");
         // // return iff;
     }
 
-    /**
-     * @return the pairwiseDistanceMatrixVariableName
-     */
-    public String getPairwiseDistanceMatrixVariableName() {
-        return this.pairwiseDistanceMatrixVariableName;
-    }
+//    /**
+//     * @return the pairwiseDistanceMatrixVariableName
+//     */
+//    public String getPairwiseDistanceMatrixVariableName() {
+//        return this.pairwiseDistanceMatrixVariableName;
+//    }
 
-    /**
-     * @return the pairwiseDistanceNamesVariableName
-     */
-    public String getPairwiseDistanceNamesVariableName() {
-        return this.pairwiseDistanceNamesVariableName;
-    }
+//    /**
+//     * @return the pairwiseDistanceNamesVariableName
+//     */
+//    public String getPairwiseDistanceNamesVariableName() {
+//        return this.pairwiseDistanceNamesVariableName;
+//    }
 
     /*
      * (non-Javadoc)
@@ -384,12 +387,12 @@ public class CenterStarAlignment extends AFragmentCommand {
         return WorkflowSlot.ALIGNMENT;
     }
 
-    /**
-     * @return the minimizeDist
-     */
-    public boolean isMinimizeDist() {
-        return this.minimizeDist;
-    }
+//    /**
+//     * @return the minimizeDist
+//     */
+//    public boolean isMinimizeDist() {
+//        return this.minimizeDist;
+//    }
 
     private List<IFileFragment> saveAlignment(final Class<?> creator,
             final TupleND<IFileFragment> t,
@@ -397,9 +400,9 @@ public class CenterStarAlignment extends AFragmentCommand {
             final IFileFragment top) {
         // Set representative name
         final String refname = StringTools.removeFileExt(top.getName());
-        this.log.debug("Ref is {}", refname);
-        this.log.debug("top: {}", top);
-        this.log.debug("ticvar is {}", ticvar);
+        log.debug("Ref is {}", refname);
+        log.debug("top: {}", top);
+        log.debug("ticvar is {}", ticvar);
         // List to hold alignments, where representative is LHS
         final ArrayList<IFileFragment> repOnLHS = new ArrayList<IFileFragment>();
         // List to hold alignment, where representative is RHS
@@ -413,7 +416,7 @@ public class CenterStarAlignment extends AFragmentCommand {
         prepareFileFragments(alignments, top, refname, repOnLHS, repOnRHS,
                 warped, null);
 
-        this.log.debug(
+        log.debug(
                 "#alignments to reference: {}, #alignments to query: {}",
                 repOnLHS.size(), repOnRHS.size());
         final List<List<String>> table = prepareMultipleAlignmentTable(ticvar,
@@ -456,16 +459,15 @@ public class CenterStarAlignment extends AFragmentCommand {
         df.applyPattern("0.000");
         for (int column = 0; column < table.size(); column++) {
             List<String> rindices = table.get(column);
-            this.log.debug("Processing row {}: {}", column, rindices);
+            log.debug("Processing row {}: {}", column, rindices);
             ArrayList<String> colList = new ArrayList<String>();
             colList.add(rindices.get(0));
             IFileFragment iff = nameToFragment.get(colList.get(0));
-            this.log.debug("Using FileFragment {} as source!", iff.
-                    getAbsolutePath());
+            log.debug("Using FileFragment {} as source!", iff.getAbsolutePath());
             for (int row = 1; row < rindices.size(); row++) {
                 String c = rindices.get(row);
                 String[] split = c.split(",");
-                this.log.debug("Split row {}: {}", row, Arrays.toString(split));
+                log.debug("Split row {}: {}", row, Arrays.toString(split));
                 // since we can have multiple indices mapped from one
                 // chromatogram
                 // to the reference, we need to assign a scan acquisition time
@@ -474,12 +476,12 @@ public class CenterStarAlignment extends AFragmentCommand {
                 int splitIdx = 0;
                 for (String st : split) {
                     int sidx = Integer.parseInt(st);
-                    this.log.debug("Reading sat at scan {}", sidx);
+                    log.debug("Reading sat at scan {}", sidx);
                     sat[splitIdx++] = MaltcmsTools.getScanAcquisitionTime(iff,
                             sidx);
                 }
                 double satv = MathTools.median(sat) / 60.0;
-                this.log.debug("Value of sat: {}", satv);
+                log.debug("Value of sat: {}", satv);
                 colList.add(df.format(satv));// String.format("%.4f",
                 // String.valueOf(sat)));
             }
@@ -538,31 +540,31 @@ public class CenterStarAlignment extends AFragmentCommand {
                 this), top.getName());
         newTop.addSourceFile(top);
         warped.add(newTop);
-        this.log.info("Ref is {}", refname);
+        log.info("Ref is {}", refname);
         for (final IFileFragment iff : alignment) {
-            // this.log.info("Processing {}", iff.getAbsolutePath());
+            // log.info("Processing {}", iff.getAbsolutePath());
             final IFileFragment lhs = FragmentTools.getLHSFile(iff);
             final IFileFragment rhs = FragmentTools.getRHSFile(iff);
             final String lhsName = StringTools.removeFileExt(lhs.getName());
             final String rhsName = StringTools.removeFileExt(rhs.getName());
-            // this.log.info("lhs: {}, rhs: {}", lhs.getAbsolutePath(), rhs
+            // log.info("lhs: {}, rhs: {}", lhs.getAbsolutePath(), rhs
             // .getAbsolutePath());
             if (lhsName.equals(refname)) {
-                this.log.info("Warping {} to lhs", rhs.getAbsolutePath());
+                log.info("Warping {} to lhs", rhs.getAbsolutePath());
                 FileFragment nrhs = new FileFragment(getWorkflow().
                         getOutputDirectory(this), rhs.getName());
                 nrhs.addSourceFile(rhs);
                 warped.add(nrhs);
                 repOnLHS.add(iff);
             } else if (refname.equals(rhsName)) {
-                this.log.info("Warping {} to rhs", lhs.getAbsolutePath());
+                log.info("Warping {} to rhs", lhs.getAbsolutePath());
                 FileFragment nlhs = new FileFragment(getWorkflow().
                         getOutputDirectory(this), lhs.getName());
                 nlhs.addSourceFile(lhs);
                 warped.add(nlhs);
                 repOnRHS.add(iff);
             } else {
-                this.log.debug(
+                log.debug(
                         "Name of reference {} not contained, skipping alignment!",
                         refname);
             }
@@ -640,7 +642,7 @@ public class CenterStarAlignment extends AFragmentCommand {
         // else if multiple elements of left are mapped to single right
         // insert right value accordingly often
         for (final Tuple2DI tpl : al) {
-            this.log.debug("value={}", value);
+            log.debug("value={}", value);
             if (mapCount == 0) {
                 column.add(tpl.getSecond() + "");
                 lastLIndex = tpl.getFirst();
@@ -696,7 +698,7 @@ public class CenterStarAlignment extends AFragmentCommand {
         // else if multiple elements of left are mapped to single right
         // insert right value accordingly often
         for (final Tuple2DI tpl : al) {
-            this.log.debug("value={}", value);
+            log.debug("value={}", value);
             if (mapCount == 0) {
                 column.add(tpl.getFirst() + "");
                 lastRIndex = tpl.getSecond();
@@ -774,34 +776,34 @@ public class CenterStarAlignment extends AFragmentCommand {
      * @param minimizeDist
      *            the minimizeDist to set
      */
-    public void setMinimizeDist(final boolean minimizeDist) {
-        this.minimizeDist = minimizeDist;
-    }
+//    public void setMinimizeDist(final boolean minimizeDist) {
+//        this.minimizeDist = minimizeDist;
+//    }
 
     /**
      * @param minimizingArrayCompVariableName
      *            the minimizingArrayCompVariableName to set
      */
-    public void setMinimizingArrayCompVariableName(
-            final String minimizingArrayCompVariableName) {
-        this.minimizingArrayCompVariableName = minimizingArrayCompVariableName;
-    }
+//    public void setMinimizingArrayCompVariableName(
+//            final String minimizingArrayCompVariableName) {
+//        this.minimizingArrayCompVariableName = minimizingArrayCompVariableName;
+//    }
 
     /**
      * @param pairwiseDistanceMatrixVariableName
      *            the pairwiseDistanceMatrixVariableName to set
      */
-    public void setPairwiseDistanceMatrixVariableName(
-            final String pairwiseDistanceMatrixVariableName) {
-        this.pairwiseDistanceMatrixVariableName = pairwiseDistanceMatrixVariableName;
-    }
+//    public void setPairwiseDistanceMatrixVariableName(
+//            final String pairwiseDistanceMatrixVariableName) {
+//        this.pairwiseDistanceMatrixVariableName = pairwiseDistanceMatrixVariableName;
+//    }
 
     /**
      * @param pairwiseDistanceNamesVariableName
      *            the pairwiseDistanceNamesVariableName to set
      */
-    public void setPairwiseDistanceNamesVariableName(
-            final String pairwiseDistanceNamesVariableName) {
-        this.pairwiseDistanceNamesVariableName = pairwiseDistanceNamesVariableName;
-    }
+//    public void setPairwiseDistanceNamesVariableName(
+//            final String pairwiseDistanceNamesVariableName) {
+//        this.pairwiseDistanceNamesVariableName = pairwiseDistanceNamesVariableName;
+//    }
 }

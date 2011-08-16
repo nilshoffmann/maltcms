@@ -34,47 +34,47 @@ public class ScoreDistributionVisualizer extends AFragmentCommand {
 
     private final Logger log = Logging.getLogger(this);
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.commands.ICommand#apply(java.lang.Object)
-     */
-    @Override
-    public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-        for (final IFileFragment iff : t) {
-            try {
-                final IVariableFragment pwd = iff.getChild("pairwise_distance");
-                final Array arr = pwd.getArray();
-                final double[] dbl = (double[]) arr.copyTo1DJavaArray();
-                final Histogram1D h = new Histogram1D(iff.getName(), dbl);
-                final hep.aida.ref.Converter c = new hep.aida.ref.Converter();
-                final String s = c.toString(h);
-                final File f = new File(
-                        getWorkflow().getOutputDirectory(this), "histogram_"
-                        + iff.getName());
-                try {
-                    final BufferedWriter sw = new BufferedWriter(
-                            new FileWriter(f));
-                    sw.write(s);
-                    sw.flush();
-                    sw.close();
-                } catch (final FileNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (final IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
-                        this, WorkflowSlot.STATISTICS, iff);
-                getWorkflow().append(dwr);
-            } catch (final ResourceNotAvailableException rnae) {
-                this.log.warn("Could not load variable {} from file {}",
-                        "pairwise_distance", iff);
-            }
-        }
-        return t;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see cross.commands.ICommand#apply(java.lang.Object)
+	 */
+	@Override
+	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
+		for (final IFileFragment iff : t) {
+			try {
+				final IVariableFragment pwd = iff.getChild("pairwise_distance");
+				final Array arr = pwd.getArray();
+				final double[] dbl = (double[]) arr.copyTo1DJavaArray();
+				final Histogram1D h = new Histogram1D(iff.getName(), dbl);
+				final hep.aida.ref.Converter c = new hep.aida.ref.Converter();
+				final String s = c.toString(h);
+				final File f = new File(
+				        getWorkflow().getOutputDirectory(this), "histogram_"
+				                + iff.getName());
+				try {
+					final BufferedWriter sw = new BufferedWriter(
+					        new FileWriter(f));
+					sw.write(s);
+					sw.flush();
+					sw.close();
+				} catch (final FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (final IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
+				        this, WorkflowSlot.STATISTICS, iff);
+				getWorkflow().append(dwr);
+			} catch (final ResourceNotAvailableException rnae) {
+				log.warn("Could not load variable {} from file {}",
+				        "pairwise_distance", iff);
+			}
+		}
+		return t;
+	}
 
     /*
      * (non-Javadoc)

@@ -30,15 +30,17 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  * 
  * 
  */
+@Slf4j
+@Data
 public class LangeTautenhahnFormatExporter extends AFragmentCommand {
-
-    private Logger log = Logging.getLogger(this);
 
     /*
      * (non-Javadoc)
@@ -50,62 +52,65 @@ public class LangeTautenhahnFormatExporter extends AFragmentCommand {
         return "Creates a data table compatible to that featured in Lange et al. Critical assessment of alignment procedures for LC-MS proteomics and metabolomics measurements. BMC Bioinformatics (2008) vol. 9 pp. 375";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.commands.ICommand#apply(java.lang.Object)
-     */
-    @Override
-    public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-        buildCliques(t);
-        // intensity rt m/z
-        final List<List<String>> rows = new ArrayList<List<String>>(t.size());
-        final IFileFragment ref = t.get(0);
-        final IVariableFragment refSindex = ref.getChild("scan_index");
-        final Array scanIndex = refSindex.getArray();
-        for (int i = 0; i < scanIndex.getShape()[0]; i++) {
-            final int si = i;
-            final List<String> line = new ArrayList<String>(t.size() * 3);
-            int j = 0;
-            boolean skipline = false;
-            for (final IFileFragment alf : t) {
-                final IVariableFragment sindex = alf.getChild("scan_index");
-                final IVariableFragment sat = alf.getChild(
-                        "scan_acquisition_time");
-                final IVariableFragment masses = alf.getChild("mass_values");
-                masses.setIndex(sindex);
-                final IVariableFragment intensities = alf.getChild(
-                        "intensity_values");
-                intensities.setIndex(sindex);
-                final Array satArray = sat.getArray();
-                final Index satIndex = satArray.getIndex();
-                final int pos = j * 3;
-                if (pos >= 0) {
-                    // line[pos] = iff.getName();
-                    this.log.debug("Reading scan {}", si);
-                    Array massesA = masses.getIndexedArray().get(si);
-                    Array intensA = intensities.getIndexedArray().get(si);
-                    if (intensA.getShape()[0] != 0) {
-                        line.add(MaltcmsTools.getMaxMassIntensity(intensA)
-                                + "");
-                        line.add(satArray.getDouble(satIndex.set(si)) + "");
-                        line.add(MaltcmsTools.getMaxMass(massesA, intensA)
-                                + "");
-                    } else {
-                        this.log.warn(
-                                "Skipping alignment of empty array after filtering masked indices in file {}",
-                                alf.getName());
-                        skipline = true;
-                    }
-                }
-                j++;
-            }
-            if (!skipline) {
-                this.log.debug("Adding row {}", line);
-                rows.add(line);
-            } else {
-                this.log.warn("Skipping row {}", line);
-            }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see cross.commands.ICommand#apply(java.lang.Object)
+	 */
+	@Override
+	public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
+		buildCliques(t);
+		// intensity rt m/z
+		final List<List<String>> rows = new ArrayList<List<String>>(t.size());
+		final IFileFragment ref = t.get(0);
+		final IVariableFragment refSindex = ref.getChild("scan_index");
+		final Array scanIndex = refSindex.getArray();
+		for (int i = 0; i < scanIndex.getShape()[0]; i++) {
+			final int si = i;
+			final List<String> line = new ArrayList<String>(t.size() * 3);
+			int j = 0;
+			boolean skipline = false;
+			for (final IFileFragment alf : t) {
+				final IVariableFragment sindex = alf.getChild("scan_index");
+				final IVariableFragment sat = alf
+				        .getChild("scan_acquisition_time");
+				final IVariableFragment masses = alf.getChild("mass_values");
+				masses.setIndex(sindex);
+				final IVariableFragment intensities = alf
+				        .getChild("intensity_values");
+				intensities.setIndex(sindex);
+				final Array satArray = sat.getArray();
+				final Index satIndex = satArray.getIndex();
+				final int pos = j * 3;
+				if (pos >= 0) {
+					// line[pos] = iff.getName();
+					log.debug("Reading scan {}", si);
+					Array massesA = masses.getIndexedArray().get(si);
+					Array intensA = intensities.getIndexedArray().get(si);
+					if (intensA.getShape()[0] != 0) {
+						line
+						        .add(MaltcmsTools.getMaxMassIntensity(intensA)
+						                + "");
+						line.add(satArray.getDouble(satIndex.set(si)) + "");
+						line
+						        .add(MaltcmsTools.getMaxMass(massesA, intensA)
+						                + "");
+					} else {
+						log
+						        .warn(
+						                "Skipping alignment of empty array after filtering masked indices in file {}",
+						                alf.getName());
+						skipline = true;
+					}
+				}
+				j++;
+			}
+			if (!skipline) {
+				log.debug("Adding row {}", line);
+				rows.add(line);
+			} else {
+				log.warn("Skipping row {}", line);
+			}
 
         }
 
@@ -179,39 +184,40 @@ public class LangeTautenhahnFormatExporter extends AFragmentCommand {
         getWorkflow().append(dwr2);
         Factory.getInstance().submitJob(pr2);
 
-        this.log.info("Found {} cliques", l.size());
-        return l;
-    }
+		log.info("Found {} cliques", l.size());
+		return l;
+	}
 
-    private List<Clique> buildCliques(final TupleND<IFileFragment> al) {
-        IFileFragment ref = al.get(0);
-        int scans = ref.getChild("scan_index").getArray().getShape()[0];
-        List<Clique> cl = new ArrayList<Clique>();
-        for (int i = 0; i < scans; i++) {
-            List<Peak> row = new ArrayList<Peak>();
-            for (IFileFragment iff : al) {
-                Peak p = new Peak("", iff, i, MaltcmsTools.getBinnedMS(iff, i).
-                        getSecond(), MaltcmsTools.getScanAcquisitionTime(iff,
-                        i));
-                row.add(p);
-            }
-            for (Peak p : row) {
-                for (Peak q : row) {
-                    if (p != q) {
-                        p.addSimilarity(q, 1.0d);
-                        q.addSimilarity(p, 1.0d);
-                    }
-                }
-            }
-            Clique c = new Clique();
-            for (Peak p : row) {
-                if (!c.addPeak(p)) {
-                    this.log.warn("Adding of peak {} to clique {} failed!", p,
-                            c);
-                }
-            }
-            cl.add(c);
-        }
-        return cl;
-    }
+	private List<Clique> buildCliques(final TupleND<IFileFragment> al) {
+		IFileFragment ref = al.get(0);
+		int scans = ref.getChild("scan_index").getArray().getShape()[0];
+		List<Clique> cl = new ArrayList<Clique>();
+		for (int i = 0; i < scans; i++) {
+			List<Peak> row = new ArrayList<Peak>();
+			for (IFileFragment iff : al) {
+				Peak p = new Peak("", iff, i, MaltcmsTools.getBinnedMS(iff, i)
+				        .getSecond(), MaltcmsTools.getScanAcquisitionTime(iff,
+				        i));
+				row.add(p);
+			}
+			for (Peak p : row) {
+				for (Peak q : row) {
+					if (p != q) {
+						p.addSimilarity(q, 1.0d);
+						q.addSimilarity(p, 1.0d);
+					}
+				}
+			}
+			Clique c = new Clique();
+			for (Peak p : row) {
+				if (!c.addPeak(p)) {
+					log.warn("Adding of peak {} to clique {} failed!", p,
+					        c);
+				}
+			}
+			cl.add(c);
+		}
+		return cl;
+	}
+
 }

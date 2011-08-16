@@ -24,6 +24,8 @@ import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -31,6 +33,8 @@ import org.slf4j.LoggerFactory;
  * 
  * 
  */
+@Slf4j
+@Data
 public class ANDIMSExporter extends AFragmentCommand {
 
     /*

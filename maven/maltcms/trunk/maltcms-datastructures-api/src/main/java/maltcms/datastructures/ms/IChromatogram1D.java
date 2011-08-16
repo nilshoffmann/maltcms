@@ -34,7 +34,7 @@ import maltcms.datastructures.ms.IScan1D;
  */
 public interface IChromatogram1D extends IChromatogram, IScan1DProvider {
 
-	@Override
-	public IScan1D getScan(int scan);
+//	@Override
+//	public Scan1D getScan(int scan);
 
 }

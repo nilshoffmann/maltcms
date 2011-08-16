@@ -21,10 +21,14 @@
  */
 package maltcms.datastructures.peak;
 
+import maltcms.datastructures.peak.annotations.PeakAnnotation;
+import cross.datastructures.fragments.FileFragment;
+import cross.datastructures.fragments.IFileFragment;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import maltcms.datastructures.array.IFeatureVector;
@@ -32,6 +36,10 @@ import maltcms.tools.PublicMemberGetters;
 import maltcms.tools.ArrayTools;
 import ucar.ma2.Array;
 import cross.exception.ResourceNotAvailableException;
+import java.io.File;
+import lombok.Data;
+import maltcms.tools.MaltcmsTools;
+import ucar.ma2.MAMath;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
@@ -40,139 +48,26 @@ import cross.exception.ResourceNotAvailableException;
  *         model mass spectral peaks over time, use a Peak1DGroup instance.
  * 
  */
-public class Peak1D implements Serializable, IFeatureVector {
+@Data
+public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
 	/**
      * 
      */
 	private static final long serialVersionUID = -8878754902179218064L;
-	int startIndex = -1;
-	int apexIndex = -1;
-	int stopIndex = -1;
-	double intensity = -1;
-	double startTime = -1;
-	double stopTime = -1;
-	double apexTime = -1;
-	double area = -1;
-	double mw = -1;
-
-	String name = "";
-
-	String file = "";
-
-	public Peak1D() {
-
-	}
-
-	public Peak1D(final int startIndex, final int apexIndex,
-	        final int stopIndex, final double area, final double intensity) {
-		this.startIndex = startIndex;
-		this.apexIndex = apexIndex;
-		this.stopIndex = stopIndex;
-		this.area = area;
-		this.intensity = intensity;
-		this.name = "";
-	}
-
-	public int getStartIndex() {
-		return startIndex;
-	}
-
-	public void setStartIndex(int startIndex) {
-		this.startIndex = startIndex;
-	}
-
-	public int getApexIndex() {
-		return apexIndex;
-	}
-
-	public void setApexIndex(int apexIndex) {
-		this.apexIndex = apexIndex;
-	}
-
-	public int getStopIndex() {
-		return stopIndex;
-	}
-
-	public void setStopIndex(int stopIndex) {
-		this.stopIndex = stopIndex;
-	}
-
-	public double getIntensity() {
-		return intensity;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setIntensity(double intensity) {
-		this.intensity = intensity;
-	}
-
-	public double getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(double startTime) {
-		this.startTime = startTime;
-	}
-
-	public double getStopTime() {
-		return stopTime;
-	}
-
-	public void setStopTime(double stopTime) {
-		this.stopTime = stopTime;
-	}
-
-	public double getApexTime() {
-		return apexTime;
-	}
-
-	public void setApexTime(double apexTime) {
-		this.apexTime = apexTime;
-	}
-
-	public double getArea() {
-		return area;
-	}
-
-	public void setArea(double area) {
-		this.area = area;
-	}
-
-	public double getMw() {
-		return mw;
-	}
-
-	public void setMw(double mw) {
-		this.mw = mw;
-	}
-
-	public String getFile() {
-		return file;
-	}
-
-	public void setFile(String file) {
-		this.file = file;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Peak for file " + getFile() + " ");
-		sb.append("from index " + getStartIndex() + " to " + getStopIndex()
-		        + " apex at " + getApexIndex() + " ");
-		sb.append("from rt " + getStartTime() + " to " + getStopTime()
-		        + " apex at " + getApexTime() + " ");
-		sb.append("area " + getArea() + " apex intensity " + getIntensity()
-		        + " mass " + getMw() + "\n");
-		return sb.toString();
-	}
+	private int startIndex = -1;
+	private int apexIndex = -1;
+	private int stopIndex = -1;
+	private double apexIntensity = -1;
+	private double startTime = -1;
+	private double stopTime = -1;
+	private double apexTime = -1;
+	private double area = -1;
+	private double startMass = -1;
+        private double stopMass = -1;
+        private double[] extractedIonCurrent;
+	private String file = "";
+        private PeakType peakType = PeakType.UNDEFINED;
+        private List<PeakAnnotation> peakAnnotations;
 
 	/*
 	 * (non-Javadoc)
@@ -199,6 +94,9 @@ public class Peak1D implements Serializable, IFeatureVector {
 				        "Can not create array representation of object for method: "
 				                + name);
 			}
+                        if(o instanceof Array) {
+                            return (Array)o;
+                        }
 			return ArrayTools.factoryScalar(o);
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
@@ -227,11 +125,37 @@ public class Peak1D implements Serializable, IFeatureVector {
 		return Arrays.asList(pmg.getGetterNames());
 	}
 
-	public static void main(String[] args) {
-		Peak1D p = new Peak1D(30, 35, 40, 123124.932, 12354);
-		System.out.println(p.getFeature("StartIndex"));
-		System.out.println(p.getFeature("StopIndex"));
-		System.out.println(p.getFeature("Area"));
-		System.out.println(p.getFeature("Intensity"));
-	}
+//	public static void main(String[] args) {
+//		Peak1D p = new Peak1D(30, 35, 40, 123124.932, 12354);
+//		System.out.println(p.getFeature("StartIndex"));
+//		System.out.println(p.getFeature("StopIndex"));
+//		System.out.println(p.getFeature("Area"));
+//		System.out.println(p.getFeature("Intensity"));
+//	}
+
+    @Override
+    public Iterator<Peak1D> iterator() {
+        final Peak1D thisPeak = this;
+        return new Iterator<Peak1D>() {
+            private Peak1D peak = thisPeak;
+            private boolean hasNext = true;
+            @Override
+            public boolean hasNext() {
+                return hasNext;
+            }
+
+            @Override
+            public Peak1D next() {
+                Peak1D returnedPeak = this.peak;
+                this.peak = null;
+                hasNext = false;
+                return returnedPeak;
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        };
+    }
 }

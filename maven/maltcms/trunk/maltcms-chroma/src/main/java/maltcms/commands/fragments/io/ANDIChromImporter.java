@@ -18,6 +18,7 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
+import lombok.Data;
 
 /**
  * 
@@ -30,61 +31,62 @@ import cross.datastructures.workflow.WorkflowSlot;
  * 
  */
 @ProvidesVariables(names = {"var.scan_acquisition_time"})
+@Data
 public class ANDIChromImporter extends AFragmentCommand {
 
-    @Configurable(name = "ordinate_values")
-    private String ticVarName = "ordinate_values";
-    @Configurable(name = "scan_acquisition_time")
-    private String satVarName = "scan_acquisition_time";
-    @Configurable(name = "actual_sampling_interval")
-    private String asiVarName = "actual_sampling_interval";
-    @Configurable(name = "actual_delay_time")
-    private String samplingDelay = "actual_delay_time";
+	@Configurable(name = "var.ordinate_values")
+	private String ordinateValuesVariable = "ordinate_values";
+	@Configurable(name = "var.scan_acquisition_time")
+	private String scanAcquisitionTimeVariable = "scan_acquisition_time";
+	@Configurable(name = "var.actual_sampling_interval")
+	private String actualSamplingIntervalVariable = "actual_sampling_interval";
+	@Configurable(name = "var.actual_delay_time")
+	private String actualDelayTimeVariable = "actual_delay_time";
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.commands.ICommand#apply(java.lang.Object)
-     */
-    @Override
-    public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-        final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
-        for (final IFileFragment iff : t) {
-            final IFileFragment fret = Factory.getInstance().
-                    getFileFragmentFactory().create(
-                    new File(getWorkflow().getOutputDirectory(this),
-                    iff.getName()));
-            final Array a = iff.getChild(this.ticVarName).getArray();
-            final Array sa = iff.getChild(this.asiVarName).getArray();
-            final ArrayDouble.D1 sat = new ArrayDouble.D1(a.getShape()[0]);
-            final Array adt = iff.getChild(this.samplingDelay).getArray();
-            final double rtStart = adt.getDouble(0);
-            final double asi = sa.getDouble(0);
-            for (int i = 0; i < sat.getShape()[0]; i++) {
-                sat.set(i, rtStart + ((i) * asi));
-            }
-            fret.addSourceFile(iff);
-            final VariableFragment vf = new VariableFragment(fret,
-                    this.satVarName);
-            vf.setArray(sat);
-            fret.save();
-            ret.add(fret);
-        }
-        return new TupleND<IFileFragment>(ret);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see cross.commands.ICommand#apply(java.lang.Object)
+	 */
+	@Override
+	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
+		final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
+		for (final IFileFragment iff : t) {
+			final IFileFragment fret = Factory.getInstance()
+			        .getFileFragmentFactory().create(
+			                new File(getWorkflow().getOutputDirectory(this),
+			                        iff.getName()));
+			final Array a = iff.getChild(this.ordinateValuesVariable).getArray();
+			final Array sa = iff.getChild(this.actualSamplingIntervalVariable).getArray();
+			final ArrayDouble.D1 sat = new ArrayDouble.D1(a.getShape()[0]);
+			final Array adt = iff.getChild(this.actualDelayTimeVariable).getArray();
+			final double rtStart = adt.getDouble(0);
+			final double asi = sa.getDouble(0);
+			for (int i = 0; i < sat.getShape()[0]; i++) {
+				sat.set(i, rtStart + ((i) * asi));
+			}
+			fret.addSourceFile(iff);
+			final VariableFragment vf = new VariableFragment(fret,
+			        this.scanAcquisitionTimeVariable);
+			vf.setArray(sat);
+			fret.save();
+			ret.add(fret);
+		}
+		return new TupleND<IFileFragment>(ret);
+	}
 
-    @Override
-    public void configure(final Configuration cfg) {
-        super.configure(cfg);
-        this.ticVarName = cfg.getString(getClass().getName()
-                + ".ordinate_values", "ordinate_values");
-        this.satVarName = cfg.getString(getClass().getName()
-                + ".scan_acquisition_time", "scan_acquisition_time");
-        this.asiVarName = cfg.getString(getClass().getName()
-                + ".actual_sampling_interval", "actual_sampling_interval");
-        this.samplingDelay = cfg.getString(getClass().getName()
-                + ".actual_delay_time", "actual_delay_time");
-    }
+	@Override
+	public void configure(final Configuration cfg) {
+		super.configure(cfg);
+		this.ordinateValuesVariable = cfg.getString(getClass().getName()
+		        + ".ordinate_values", "ordinate_values");
+		this.scanAcquisitionTimeVariable = cfg.getString(getClass().getName()
+		        + ".scan_acquisition_time", "scan_acquisition_time");
+		this.actualSamplingIntervalVariable = cfg.getString(getClass().getName()
+		        + ".actual_sampling_interval", "actual_sampling_interval");
+		this.actualDelayTimeVariable = cfg.getString(getClass().getName()
+		        + ".actual_delay_time", "actual_delay_time");
+	}
 
     /*
      * (non-Javadoc)

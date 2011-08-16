@@ -2,6 +2,7 @@ maltcms.commands.fragments2d.preprocessing.Default2DVarLoader
 maltcms.commands.fragments2d.preprocessing.MeanVarProducer
 maltcms.commands.fragments2d.preprocessing.MeanVarVis
 maltcms.commands.fragments2d.preprocessing.ModulationExtractor
+maltcms.commands.fragments2d.preprocessing.ModulationTimeEstimator
 maltcms.commands.fragments2d.preprocessing.GCGCToGCMSConverter
 maltcms.commands.fragments2d.testing.Alignment2D
 maltcms.commands.fragments2d.visualization.Chromatogram2DVisualizer

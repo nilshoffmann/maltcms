@@ -95,6 +95,7 @@ import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
+import maltcms.datastructures.peak.Peak2DGroup;
 
 /**
  * Utility class concerned with creation and saving of images.
@@ -124,7 +125,7 @@ public class ImageTools {
 	 * @return new image
 	 */
 	public static BufferedImage addPeakToImage(final BufferedImage img,
-	        final List<Peak2D> peaklist, final int[] seedPointColor,
+	        final List<Peak2DGroup> peaklist, final int[] seedPointColor,
 	        final int[] regionColor, final int[] boundaryColor,
 	        final int scansPerModulation) {
 		final WritableRaster raster = img.getRaster();

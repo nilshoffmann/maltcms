@@ -60,6 +60,8 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FragmentTools;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder.PeakPositionsResultSet;
 import maltcms.datastructures.peak.Peak1D;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -70,6 +72,8 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
+@Data
 public class EICPeakFinder extends AFragmentCommand {
 
     protected static double calcEstimatedCrossCorrelation(final Array a,
@@ -93,12 +97,11 @@ public class EICPeakFinder extends AFragmentCommand {
         // log.debug("R'({})= {}", lag, v);
         // return v;
     }
-    private final Logger log = Logging.getLogger(this);
 
     @Configurable(value = "0.01d")
-    private double peak_threshold = 0.01d;
+    private double peakThreshold = 0.01d;
     @Configurable(value = "20")
-    private int filter_window = 20;
+    private int filterWindow = 20;
 
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
@@ -107,7 +110,7 @@ public class EICPeakFinder extends AFragmentCommand {
             final ExecutorService es = Executors.newFixedThreadPool(10);
             final ArrayList<Callable<Tuple2D<Tuple2D<Integer, Integer>, Double>>> solvers = new ArrayList<Callable<Tuple2D<Tuple2D<Integer, Integer>, Double>>>();
             final Tuple2D<List<Array>, List<Array>> mzis = MaltcmsTools.getBinnedMZIs(f);
-            this.log.info("Retrieving data from {}", f.getAbsolutePath());
+            log.info("Retrieving data from {}", f.getAbsolutePath());
             final List<ArrayDouble.D1> al = ArrayTools.tiltD1(ArrayTools.convertArrays(mzis.getSecond()));
             List<Double> bins = new ArrayList<Double>(al.size());
             Array masses = mzis.getFirst().get(0);
@@ -118,20 +121,18 @@ public class EICPeakFinder extends AFragmentCommand {
             final StatsMap[] sm = ass.apply(al.toArray(new ArrayDouble.D1[]{}));
 
             TICPeakFinder tpf = new TICPeakFinder();
-            PropertiesConfiguration pc = new PropertiesConfiguration();
-            pc.setProperty(TICPeakFinder.class.getName()+".peak_threshold", this.peak_threshold);
-            pc.setProperty(TICPeakFinder.class.getName()+".filter_window", this.filter_window);
-            tpf.configure(pc);
+            tpf.setPeakThreshold(peakThreshold);
+            tpf.setFilterWindow(filterWindow);
             tpf.setWorkflow(getWorkflow());
             List<List<Peak1D>> peaks = new ArrayList<List<Peak1D>>();
             int k = 0;
             for (ArrayDouble.D1 arr : al) {
                 PeakPositionsResultSet pprs = tpf.findPeakPositions(arr);
-                List<Peak1D> l = tpf.findPeakAreas(pprs.getTs(),f.getName(), 0, arr, f.getChild("scan_acquisition_time").getArray());
-                for(Peak1D p1:l) {
-                    p1.setMw(bins.get(k));
-                }
-                peaks.add(l);
+//                List<Peak1D> l = tpf.findPeakAreas(pprs.getTs(),f.getName(), 0, arr, f.getChild("scan_acquisition_time").getArray());
+//                for(Peak1D p1:l) {
+//                    p1.setMw(bins.get(k));
+//                }
+//                peaks.add(l);
                 k++;
             }
 //			final CSVWriter csvw = new CSVWriter();
@@ -139,7 +140,7 @@ public class EICPeakFinder extends AFragmentCommand {
 //			csvw.writeOneFilePerArray(getWorkflow().getOutputDirectory(this)
 //			        .getAbsolutePath(), StringTools.removeFileExt(f.getName())
 //			        + "_eic.csv", ArrayTools.generalizeList(al));
-//			this.log.info("ArrayStatsScanner returned {} StatsMaps", sm.length);
+//			log.info("ArrayStatsScanner returned {} StatsMaps", sm.length);
             final ArrayCos ac = new ArrayCos();
             final ArrayDouble.D2 corrs = new ArrayDouble.D2(al.size(), al.size());
             // ArrayDouble.D2 crossCorrs = new
@@ -175,7 +176,7 @@ public class EICPeakFinder extends AFragmentCommand {
             // e.printStackTrace();
             // }
             for (int i = 0; i < al.size(); i++) {
-                this.log.info("Row {}", i);
+                log.info("Row {}", i);
                 for (int j = 0; j < al.size(); j++) {
                     corrs.set(i, j, getMaxAutocorrelation(al.get(i), al.get(j)).getSecond().doubleValue());// calcEstimatedCrossCorrelation(al.get(i),
                     // al
@@ -241,10 +242,10 @@ public class EICPeakFinder extends AFragmentCommand {
 
     @Override
     public void configure(Configuration cfg) {
-        this.peak_threshold = cfg.getDouble(this.getClass().getName()
-                + ".peak_threshold", 1.0d);
-        this.filter_window = cfg.getInt(this.getClass().getName()
-                + ".filter_window", 10);
+        this.peakThreshold = cfg.getDouble(this.getClass().getName()
+                + ".peakThreshold", 1.0d);
+        this.filterWindow = cfg.getInt(this.getClass().getName()
+                + ".filterWindow", 10);
     }
 
     protected void calcEstimatedAutoCorrelation(final Array a, final Array b,
@@ -265,7 +266,7 @@ public class EICPeakFinder extends AFragmentCommand {
         }
         final double v = res / norm;
         acr.set(lag, v);
-        this.log.debug("R'({})= {}", lag, v);
+        log.debug("R'({})= {}", lag, v);
         // return v;
     }
 

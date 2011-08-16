@@ -121,6 +121,17 @@
             <artifactId>jcommon</artifactId>
             <version>1.0.16</version>
         </dependency>
+        <dependency>
+            <artifactId>maltcms-execution-api</artifactId>
+            <groupId>net.sf.maltcms</groupId>
+            <type>jar</type>
+            <version>1.0-20110802.202515-29</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.maltcms</groupId>
+            <artifactId>maltcms-execution-spi</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -269,6 +269,12 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 "Prints the service providers available for a specific service, e.g. cross.commands.fragments.AFragmentCommand",
                 true, ',', true, true, 0, false, false, 0,
                 "class1,class2, ...", false));
+        this.o.addOption(addOption(
+                "b",
+                "beanXMLCreation",
+                "Creates a fragmentCommands.xml file in spring format for all instances of cross.commands.fragments.AFragmentCommand",
+                true, ',', true, true, 0, false, false, 0,
+                "class1,class2, ...", false));
     }
 
     protected Option addBooleanOption(final String s, final String l,
@@ -475,6 +481,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         boolean printOptions = false;
         String[] showPropertiesOptions = null;
         String[] listServiceProviders = null;
+        boolean createBeanXML = false;
         try {
             final CommandLine cl = clp.parse(this.o, args);
             final Option[] opts = cl.getOptions();
@@ -495,6 +502,9 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             }
             if (cl.hasOption("l")) {
                 listServiceProviders = cl.getOptionValues("l");
+            }
+            if (cl.hasOption("b")) {
+                createBeanXML = cl.hasOption("b");
             }
             if (cl.hasOption("i")) {
                 cmdLineCfg.setProperty("input.basedir", cl.getOptionValue("i"));

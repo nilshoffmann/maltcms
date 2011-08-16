@@ -35,7 +35,8 @@ import cross.Logging;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
-import cross.exception.NotImplementedException;
+import java.util.WeakHashMap;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Concrete Implementation of a 1-dimensional chromatogram.
@@ -43,10 +44,12 @@ import cross.exception.NotImplementedException;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class Chromatogram1D implements IChromatogram1D {
 
     private IFileFragment parent;
     private final String scanAcquisitionTimeUnit = "seconds";
+    private final WeakHashMap<Integer, Scan1D> scanCache = new WeakHashMap<Integer, Scan1D>();
     @Configurable(name = "var.scan_acquisition_time")
     private String scan_acquisition_time_var = "scan_acquisition_time";
 
@@ -54,30 +57,19 @@ public class Chromatogram1D implements IChromatogram1D {
         this.parent = e;
     }
 
-    protected boolean inCache(int i) {
-        // TODO implement
-        return false;
-    }
-
     protected Scan1D acquireFromCache(int i) {
-        // TODO implement
-        throw new NotImplementedException();
-    }
-
-    protected void addToCache(int i, Scan1D s) {
-        // TODO implement
-    }
-
-    protected Scan1D buildScan(int i) {
-        if (inCache(i)) {
-            return acquireFromCache(i);
-        } else {
-            final Tuple2D<Array, Array> t = MaltcmsTools.getMS(this.parent, i);
-            final Scan1D s = new Scan1D(t.getFirst(), t.getSecond(), i,
-                    MaltcmsTools.getScanAcquisitionTime(this.parent, i));
-            addToCache(i, s);
-            return s;
+        Scan1D scan = scanCache.get(Integer.valueOf(i));
+        if (scan != null) {
+            log.debug("Retrieved scan {} from cache",i);
+            return scan;
         }
+        final Tuple2D<Array, Array> t = MaltcmsTools.getMS(this.parent, i);
+        final Scan1D s = new Scan1D(t.getFirst(), t.getSecond(), i,
+                MaltcmsTools.getScanAcquisitionTime(this.parent, i));
+        scanCache.put(Integer.valueOf(i),s);
+        log.debug("Created scan {}",i);
+        return s;
+
     }
 
     @Override
@@ -102,7 +94,7 @@ public class Chromatogram1D implements IChromatogram1D {
      */
     @Override
     public Scan1D getScan(final int scan) {
-        return buildScan(scan);
+        return acquireFromCache(scan);
     }
 
     @Override
@@ -113,7 +105,7 @@ public class Chromatogram1D implements IChromatogram1D {
     public List<Scan1D> getScans() {
         ArrayList<Scan1D> al = new ArrayList<Scan1D>();
         for (int i = 0; i < getNumberOfScans(); i++) {
-            al.add(buildScan(i));
+            al.add(acquireFromCache(i));
         }
         return al;
     }
@@ -123,9 +115,9 @@ public class Chromatogram1D implements IChromatogram1D {
      * Chromatogram1D, so be careful with concurrent access / modification!
      */
     @Override
-    public Iterator<IScan1D> iterator() {
+    public Iterator<Scan1D> iterator() {
 
-        final Iterator<IScan1D> iter = new Iterator<IScan1D>() {
+        final Iterator<Scan1D> iter = new Iterator<Scan1D>() {
 
             private int currentPos = 0;
 
@@ -138,7 +130,7 @@ public class Chromatogram1D implements IChromatogram1D {
             }
 
             @Override
-            public IScan1D next() {
+            public Scan1D next() {
                 return getScan(this.currentPos++);
             }
 
@@ -181,19 +173,18 @@ public class Chromatogram1D implements IChromatogram1D {
                 double.class);
         int idx = Arrays.binarySearch(d, scan_acquisition_time);
         if (idx >= 0) {// exact hit
-            Logging.getLogger(this).info("sat {}, scan_index {}",
+            log.info("sat {}, scan_index {}",
                     scan_acquisition_time, idx);
             return idx;
         } else {// imprecise hit, find closest element
             double current = d[Math.min(d.length - 1, (-idx) + 1)];
             double previous = d[Math.max(0, (-idx))];
-            if (Math.abs(scan_acquisition_time - previous) < Math.abs(
-                    scan_acquisition_time - current)) {
-                Logging.getLogger(this).info("sat {}, scan_index {}",
+            if (Math.abs(scan_acquisition_time - previous) < Math.abs(scan_acquisition_time - current)) {
+                log.info("sat {}, scan_index {}",
                         scan_acquisition_time, (-idx) + 1);
                 return (-idx) + 1;
             } else {
-                Logging.getLogger(this).info("sat {}, scan_index {}",
+                log.info("sat {}, scan_index {}",
                         scan_acquisition_time, -idx);
                 return (-idx);
             }
