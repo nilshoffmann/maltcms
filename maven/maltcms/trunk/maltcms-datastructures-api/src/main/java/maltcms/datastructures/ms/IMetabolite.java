@@ -19,7 +19,6 @@
  * 
  * $Id: IMetabolite.java 43 2009-10-16 17:22:55Z nilshoffmann $
  */
-
 package maltcms.datastructures.ms;
 
 import ucar.ma2.ArrayDouble;
@@ -34,54 +33,53 @@ import cross.datastructures.tuple.Tuple2D;
  */
 public interface IMetabolite extends IRetentionInfo {
 
-	public String getComments();
+    public String getComments();
 
-	public String getDate();
+    public String getDate();
 
-	public String getFormula();
+    public String getFormula();
 
-	public String getID();
+    public String getID();
 
-	public Tuple2D<ArrayDouble.D1, ArrayInt.D1> getMassSpectrum();
+    public Tuple2D<ArrayDouble.D1, ArrayInt.D1> getMassSpectrum();
 
-	public double getMaxIntensity();
+    public double getMaxIntensity();
 
-	public double getMaxMass();
+    public double getMaxMass();
 
-	public double getMinIntensity();
+    public double getMinIntensity();
 
-	public double getMinMass();
+    public double getMinMass();
 
-	public int getMW();
+    public int getMW();
 
-	public String getShortName();
+    public String getShortName();
 
-	public String getSP();
+    public String getSP();
 
-	public void setComments(String comments);
+    public void setComments(String comments);
 
-	public void setDate(String date);
+    public void setDate(String date);
 
-	public void setFormula(String formula);
+    public void setFormula(String formula);
 
-	public void setID(String id);
+    public void setID(String id);
 
-	public void setMassSpectrum(ArrayDouble.D1 masses, ArrayInt.D1 intensities);
+    public void setMassSpectrum(ArrayDouble.D1 masses, ArrayInt.D1 intensities);
 
-	public void setMaxIntensity(double intens);
+    public void setMaxIntensity(double intens);
 
-	public void setMaxMass(double m);
+    public void setMaxMass(double m);
 
-	public void setMinIntensity(double intens);
+    public void setMinIntensity(double intens);
 
-	public void setMinMass(double m);
+    public void setMinMass(double m);
 
-	public void setMW(int mw);
+    public void setMW(int mw);
 
-	public void setShortName(String sname);
+    public void setShortName(String sname);
 
-	public void setSP(String sp);
+    public void setSP(String sp);
 
-	public void update(IMetabolite m);
-
+    public void update(IMetabolite m);
 }

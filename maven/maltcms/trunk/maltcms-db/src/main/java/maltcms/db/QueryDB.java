@@ -11,7 +11,7 @@ import com.db4o.query.Predicate;
 
 public class QueryDB<T>{
 
-	protected static ExecutorService es = Executors.newCachedThreadPool();
+	protected static ExecutorService es = Executors.newFixedThreadPool(Math.min(1,Runtime.getRuntime().availableProcessors()-1));
 	
 	protected String dblocation = null;
 	

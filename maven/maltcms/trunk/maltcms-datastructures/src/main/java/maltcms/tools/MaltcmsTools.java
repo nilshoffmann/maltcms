@@ -42,7 +42,6 @@ import maltcms.datastructures.ms.ChromatogramFactory;
 import maltcms.datastructures.ms.IAnchor;
 import maltcms.datastructures.ms.IChromatogram1D;
 import maltcms.datastructures.ms.RetentionInfo;
-import maltcms.datastructures.ms.Scan1D;
 import maltcms.io.csv.CSVWriter;
 
 import org.slf4j.Logger;
@@ -73,6 +72,7 @@ import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FragmentTools;
 import cross.tools.StringTools;
+import maltcms.datastructures.ms.IScan1D;
 
 /**
  * Utility class providing many comfort methods, providing more direct access to
@@ -1706,7 +1706,7 @@ public class MaltcmsTools {
         double mass;
         int bin;
         // calculate mean and variance over all mass channels
-        for (Scan1D s : c) {
+        for (IScan1D s : c) {
             final IndexIterator massIter = s.getMasses().getIndexIterator();
             final IndexIterator intenIter = s.getIntensities().getIndexIterator();
             while (massIter.hasNext() && intenIter.hasNext()) {
@@ -1786,7 +1786,7 @@ public class MaltcmsTools {
         double mass;
         int bin;
         // calculate mean and variance over all mass channels
-        for (Scan1D s : c) {
+        for (IScan1D s : c) {
             final IndexIterator massIter = s.getMasses().getIndexIterator();
             final IndexIterator intenIter = s.getIntensities().getIndexIterator();
             while (massIter.hasNext() && intenIter.hasNext()) {

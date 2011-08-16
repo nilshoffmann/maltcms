@@ -19,7 +19,6 @@
  * 
  * $Id: Scan2D.java 159 2010-08-31 18:44:07Z nilshoffmann $
  */
-
 package maltcms.datastructures.ms;
 
 import java.util.Arrays;
@@ -38,92 +37,98 @@ import ucar.ma2.ArrayInt;
  *         FIXME add support for IFeatureVector, extend Scan1D functionality
  * 
  */
-public class Scan2D extends Scan1D {
+public class Scan2D extends Scan1D implements IScan2D {
 
-	/**
+    /**
      * 
      */
-	private static final long serialVersionUID = -5785157824205744680L;
+    private static final long serialVersionUID = -5785157824205744680L;
+    private double fctime = -1, sctime = -1;
+    private int fcind = -1, scind = -1;
 
-	private double fctime = -1, sctime = -1;
+    public Scan2D(Array masses1, Array intensities1, int scanNumber1,
+            double scanAcquisitionTime1) {
+        super(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
+    }
 
-	private int fcind = -1, scind = -1;
+    public Scan2D(Array masses1, Array intensities1, int scanNumber1,
+            double scanAcquisitionTime1, int idx1, int idx2, double rt1,
+            double rt2) {
+        this(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
+        this.fcind = idx1;
+        this.scind = idx2;
+        this.fctime = rt1;
+        this.sctime = rt2;
+    }
 
-	public Scan2D(Array masses1, Array intensities1, int scanNumber1,
-	        double scanAcquisitionTime1) {
-		super(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
-	}
+    @Override
+    public int getSecondColumnScanIndex() {
+        return this.scind;
+    }
 
-        public Scan2D(Array masses1, Array intensities1, int scanNumber1,
-	        double scanAcquisitionTime1, int idx1, int idx2, double rt1, double rt2) {
-		this(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
-                this.fcind = idx1;
-                this.scind = idx2;
-                this.fctime = rt1;
-                this.sctime = rt2;
+    @Override
+    public double getSecondColumnScanAcquisitionTime() {
+        return this.sctime;
+    }
+
+    @Override
+    public void setSecondColumnScanIndex(final int a) {
+        this.scind = a;
+    }
+
+    @Override
+    public void setSecondColumnScanAcquisitionTime(final double sat) {
+        this.sctime = sat;
+    }
+
+    @Override
+    public int getFirstColumnScanIndex() {
+        return this.fcind;
+    }
+
+    @Override
+    public double getFirstColumnScanAcquisitionTime() {
+        return this.fctime;
+    }
+
+    @Override
+    public void setFirstColumnScanIndex(final int a) {
+        this.fcind = a;
+    }
+
+    @Override
+    public void setFirstColumnScanAcquisitionTime(final double sat) {
+        this.fctime = sat;
+    }
+
+    @Override
+    public Array getFeature(final String name) {
+        if (name.equals("first_column_scan_index")) {
+            ArrayInt.D0 a = new ArrayInt.D0();
+            a.set(this.fcind);
+            return a;
+        } else if (name.equals("second_column_scan_index")) {
+            ArrayInt.D0 a = new ArrayInt.D0();
+            a.set(this.scind);
+            return a;
+        } else if (name.equals("first_column_time")) {
+            ArrayDouble.D0 a = new ArrayDouble.D0();
+            a.set(this.fctime);
+            return a;
+        } else if (name.equals("second_column_time")) {
+            ArrayDouble.D0 a = new ArrayDouble.D0();
+            a.set(this.sctime);
+            return a;
+        } else {
+            return super.getFeature(name);
         }
+    }
 
-	public int getSecondColumnScanIndex() {
-		return this.scind;
-	}
-
-	public double getSecondColumnScanAcquisitionTime() {
-		return this.sctime;
-	}
-
-	public void setSecondColumnScanIndex(final int a) {
-		this.scind = a;
-	}
-
-	public void setSecondColumnScanAcquisitionTime(final double sat) {
-		this.sctime = sat;
-	}
-
-	public int getFirstColumnScanIndex() {
-		return this.fcind;
-	}
-
-	public double getFirstColumnScanAcquisitionTime() {
-		return this.fctime;
-	}
-
-	public void setFirstColumnScanIndex(final int a) {
-		this.fcind = a;
-	}
-
-	public void setFirstColumnScanAcquisitionTime(final double sat) {
-		this.fctime = sat;
-	}
-
-	@Override
-	public Array getFeature(final String name) {
-		if (name.equals("first_column_scan_index")) {
-			ArrayInt.D0 a = new ArrayInt.D0();
-			a.set(this.fcind);
-			return a;
-		} else if (name.equals("second_column_scan_index")) {
-			ArrayInt.D0 a = new ArrayInt.D0();
-			a.set(this.scind);
-			return a;
-		} else if (name.equals("first_column_time")) {
-			ArrayDouble.D0 a = new ArrayDouble.D0();
-			a.set(this.fctime);
-			return a;
-		} else if (name.equals("second_column_time")) {
-			ArrayDouble.D0 a = new ArrayDouble.D0();
-			a.set(this.sctime);
-			return a;
-		} else {
-			return super.getFeature(name);
-		}
-	}
-
-	@Override
-	public List<String> getFeatureNames() {
-		return Arrays.asList(new String[] { "mass_values", "intensity_values",
-		        "scan_index", "scan_acquisition_time", "total_intensity",
-		        "first_column_scan_index", "second_column_scan_index",
-		        "first_column_time", "second_column_time" });
-	}
-
+    @Override
+    public List<String> getFeatureNames() {
+        return Arrays.asList(new String[]{"mass_values", "intensity_values",
+                    "scan_index", "scan_acquisition_time", "total_intensity",
+                    "first_column_scan_index", "second_column_scan_index",
+                    "first_column_time", "second_column_time"});
+    }
 }

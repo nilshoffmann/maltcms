@@ -17,29 +17,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
  * 
- * $Id: IRetentionInfo2D.java 110 2010-03-25 15:21:19Z nilshoffmann $
+ * $Id: IScan1DProvider.java 129 2010-06-25 11:57:02Z nilshoffmann $
  */
 package maltcms.datastructures.ms;
 
-
 /**
- * Interface adding retention index 2d and time 2d  info.
+ * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  * 
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
-public interface IRetentionInfo2D {
+public interface IScan1DProvider extends IScanProvider<IScan1D> {
 
-	public abstract double getRetentionIndex2D();
-
-	public abstract double getRetentionTime2D();
-
-	public abstract String getRetentionTimeUnit2D();
-
-	public abstract void setRetentionIndex2D(double d);
-
-	public abstract void setRetentionTime2D(double d);
-
-	public abstract void setRetentionTimeUnit2D(String s);
-	
 }

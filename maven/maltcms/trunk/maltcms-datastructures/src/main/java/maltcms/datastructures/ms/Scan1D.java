@@ -36,7 +36,7 @@ import ucar.ma2.IndexIterator;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
-public class Scan1D implements IScan {
+public class Scan1D implements IScan1D {
 
 	/**
      * 

@@ -17,35 +17,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
  * 
- * $Id: IChromatogram2D.java 115 2010-04-23 15:42:15Z nilshoffmann $
+ * $Id: IChromatogram1D.java 115 2010-04-23 15:42:15Z nilshoffmann $
  */
 
 package maltcms.datastructures.ms;
 
-import java.awt.Point;
+import maltcms.datastructures.ms.IChromatogram;
+import maltcms.datastructures.ms.IScan1D;
+
 
 /**
- * Interface representing a 2-dimensional chromatogram.
+ * Interface representing a 1-dimensional chromatogram.
  * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
-public interface IChromatogram2D extends IChromatogram, IScan2DProvider {
+public interface IChromatogram1D extends IChromatogram, IScan1DProvider {
 
-	public Scan2D getScan2D(int globalScan, int localScan);
-
-	public int getNumberOfModulations();
-
-	public int getNumberOfScansPerModulation();
-
-	public int getNumberOf2DScans();
-
-	public double getModulationDuration();
-
-	public String getSecondColumnScanAcquisitionTimeUnit();
-
-	public Point getPointFor(int scan);
-
-	public Point getPointFor(double scan_acquisition_time);
+	@Override
+	public IScan1D getScan(int scan);
 
 }

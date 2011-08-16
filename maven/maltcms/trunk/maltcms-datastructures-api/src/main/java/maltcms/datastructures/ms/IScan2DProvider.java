@@ -26,6 +26,6 @@ package maltcms.datastructures.ms;
  * 
  * 
  */
-public interface IScan2DProvider extends IScanProvider<Scan2D> {
+public interface IScan2DProvider extends IScanProvider<IScan2D> {
 
 }

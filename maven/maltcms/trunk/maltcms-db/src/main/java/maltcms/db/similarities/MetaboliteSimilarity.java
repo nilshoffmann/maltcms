@@ -14,6 +14,13 @@ import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 import cross.datastructures.tuple.Tuple2D;
 
+/**
+ * Class is deprecated use @see maltcms.db.predicates.metabolite.MetaboliteSimilarity
+ * for a better replacement.
+ * @author nilshoffmann
+ * @deprecated
+ */
+@Deprecated
 public class MetaboliteSimilarity extends Similarity<IMetabolite> {
 
     boolean toggle = true;

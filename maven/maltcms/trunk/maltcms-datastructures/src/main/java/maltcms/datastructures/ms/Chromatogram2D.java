@@ -59,7 +59,8 @@ public class Chromatogram2D implements IChromatogram2D {
         this.isl = ScanLineCacheFactory.getScanLineCache(e);
         this.spm = this.isl.getScansPerModulation();
         this.slc = this.isl.getScanLineCount();
-        this.satOffset = e.getChild("scan_acquisition_time").getArray().getDouble(0);
+        this.satOffset = e.getChild("scan_acquisition_time").getArray().
+                getDouble(0);
         this.md = getModulationDuration();
     }
 
@@ -78,7 +79,7 @@ public class Chromatogram2D implements IChromatogram2D {
      *  @param firstColumnScanIndex
      *  @param secondColumnScanIndex
      */
-    public Scan2D getScan2D(final int firstColumnScanIndex,
+    public IScan2D getScan2D(final int firstColumnScanIndex,
             final int secondColumnScanIndex) {
         return buildScan((firstColumnScanIndex * isl.getScansPerModulation())
                 + secondColumnScanIndex);
@@ -93,13 +94,14 @@ public class Chromatogram2D implements IChromatogram2D {
         return this.isl;
     }
 
-    protected Scan2D buildScan(int i) {
+    protected IScan2D buildScan(int i) {
         Point p = this.isl.mapIndex(i);
         final Tuple2D<Array, Array> t = this.isl.getSparseMassSpectra(p.x, p.y);
-        double sat1 = satOffset + (p.x*getModulationDuration());
+        double sat1 = satOffset + (p.x * getModulationDuration());
         double sat = MaltcmsTools.getScanAcquisitionTime(this.parent, i);
         double sat2 = sat - sat1;
-        final Scan2D s = new Scan2D(t.getFirst(), t.getSecond(), i, sat, p.x,p.y,sat1,sat2);
+        final Scan2D s = new Scan2D(t.getFirst(), t.getSecond(), i, sat, p.x,
+                p.y, sat1, sat2);
         return s;
     }
 
@@ -120,7 +122,7 @@ public class Chromatogram2D implements IChromatogram2D {
      *            scan index to load
      */
     @Override
-    public Scan2D getScan(final int scan) {
+    public IScan2D getScan(final int scan) {
         return buildScan(scan);
     }
 
@@ -129,8 +131,8 @@ public class Chromatogram2D implements IChromatogram2D {
         return this.scanAcquisitionTimeUnit;
     }
 
-    public List<Scan2D> getScans() {
-        ArrayList<Scan2D> al = new ArrayList<Scan2D>();
+    public List<IScan2D> getScans() {
+        ArrayList<IScan2D> al = new ArrayList<IScan2D>();
         for (int i = 0; i < getNumberOfScans(); i++) {
             al.add(buildScan(i));
         }
@@ -142,9 +144,9 @@ public class Chromatogram2D implements IChromatogram2D {
      * Chromatogram1D, so be careful with concurrent access / modification!
      */
     @Override
-    public Iterator<Scan2D> iterator() {
+    public Iterator<IScan2D> iterator() {
 
-        final Iterator<Scan2D> iter = new Iterator<Scan2D>() {
+        final Iterator<IScan2D> iter = new Iterator<IScan2D>() {
 
             private int currentPos = 0;
 
@@ -157,7 +159,7 @@ public class Chromatogram2D implements IChromatogram2D {
             }
 
             @Override
-            public Scan2D next() {
+            public IScan2D next() {
                 return getScan(this.currentPos++);
             }
 
@@ -226,7 +228,8 @@ public class Chromatogram2D implements IChromatogram2D {
         } else {// imprecise hit, find closest element
             double current = d[Math.max(d.length - 1, (-idx) + 1)];
             double next = d[Math.max(d.length - 1, (-idx) + 2)];
-            if (Math.abs(scan_acquisition_time - current) < Math.abs(scan_acquisition_time - next)) {
+            if (Math.abs(scan_acquisition_time - current) < Math.abs(
+                    scan_acquisition_time - next)) {
                 return (-idx) + 1;
             } else {
                 return (-idx) + 2;

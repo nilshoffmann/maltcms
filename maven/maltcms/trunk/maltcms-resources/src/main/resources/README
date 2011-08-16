@@ -123,10 +123,52 @@ Anchor files start with a file designation in their first line:
 Path can be omitted, if ORIGINAL_DATA_FILE and anchor file are both located 
 in input basedirectory (cmdline option -i). Otherwise, the absolute path to
 the original file has to be given.
+
 >NAME_OF_ORIGINAL_DATA_FILE.cdf
 
 The second line defines the column names:
 Name	RI	RT	Scan
+
+All following lines contain information for one anchor each:
+
+RI1	-	-	230
+RI2	-	-	430
+
+etc.
+
+Note that columns RI and RT are optional, Scan and Name are required.
+Anchor names should be identical for matched compounds.
+
+Full example:
+File Example1.txt would look like this:
+>Example1.cdf
+Name	RI	RT	Scan
+RI1	-	-	230
+RI2	-	-	430
+RI3	-	-	600
+	
+File Example2.txt would look like this:
+>Example2.cdf
+Name	RI	RT	Scan
+RI1	-	-	234
+RI2	-	-	437
+RI3	-	-	598
+
+###############################################################################
+File format for Retention Indices:
+RI files start with a file designation in their first line:
+Path can be omitted, if ORIGINAL_DATA_FILE and ri file are both located 
+in input basedirectory (cmdline option -i). Otherwise, the absolute path to
+the original file has to be given. It is also possible to specify a single RI
+file on the commandline, in which case the retention times defined in that 
+reference will be used for RI calculation of all chromatograms. Beware that 
+this may be less accurate and you will need to increase the RI match tolerance 
+for database searches.
+
+>NAME_OF_ORIGINAL_DATA_FILE.cdf
+
+The second line defines the column names:
+Name    RT  Scan    N
 
 All following lines contain information for one anchor each:
 

@@ -23,6 +23,7 @@ package net.sf.maltcms.apps;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 import maltcms.ui.wizard.PipelineWizard;
 
@@ -55,6 +57,11 @@ import cross.datastructures.pipeline.CommandPipeline;
 import cross.datastructures.pipeline.ICommandSequence;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.workflow.IWorkflow;
+import java.net.URLClassLoader;
+import java.util.LinkedList;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.helpers.Loader;
 
@@ -220,6 +227,12 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         this.o.addOption(addBooleanOption("?", null, "Displays this help",
                 false));
         this.o.addOption(addOption(
+                "e",
+                "extensions",
+                "A list of URLs holding extension jars and/or paths containing jars: file:///path/to/my/jars",
+                true, ',', true, true, 0, false, false, 0, "path1,path2, ...",
+                false));
+        this.o.addOption(addOption(
                 "f",
                 "files",
                 "Files which should be read: FILENAME>VARNAME1#INDEXVAR[RANGEBEGIN:RANGEEND]&VARNAME2...",
@@ -293,6 +306,66 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void initClassLoader(String[] urls) {
+        URL maltcmsLocation = getClass().getProtectionDomain().getCodeSource().
+                getLocation();
+        File baseDir = new File(".");
+        log.info("current working dir is " + baseDir);
+        try {
+            baseDir = new File(maltcmsLocation.toURI()).getParentFile();
+        } catch (URISyntaxException ex) {
+            java.util.logging.Logger.getLogger(Maltcms.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }
+        log.info("Maltcms is executing from {}", baseDir);
+        ClassLoader contextClassLoader = Thread.currentThread().
+                getContextClassLoader();
+        List<URL> contextUrls = new LinkedList<URL>();
+        for (int i = 0; i < urls.length; i++) {
+            URL url = null;
+            File file = new File(urls[i]);
+            if (file.exists() && (file.isFile() || file.isDirectory() && file.
+                    canRead())) {
+                try {
+                    url = file.toURI().toURL();
+                } catch (MalformedURLException ex) {
+                    log.warn("Invalid URL: {}", urls[i]);
+                }
+            } else {
+                try {
+                    url = new URL(urls[i]);
+                } catch (MalformedURLException mue) {
+                    log.warn("Invalid URL: {}", urls[i]);
+                }
+            }
+            if (url != null) {
+                log.info("Adding {} to module path!", url);
+                contextUrls.add(url);
+
+            }
+        }
+        // Create the class loader by using the given URL
+        // Use contextClassLoader as parent to maintain current visibility
+        ClassLoader urlCl =
+                URLClassLoader.newInstance(contextUrls.toArray(new URL[contextUrls.
+                size()]), contextClassLoader);
+
+        try {
+            // Save the class loader so that you can restore it later
+            Thread.currentThread().setContextClassLoader(urlCl);
+
+        } catch (SecurityException e) {
+            log.error(
+                    "Setting of URL class loader is not allowed!\nPlease extend the classpath by adding additional jars to the -cp command line argument! Alternative: Change the security policy for this program. See http://download.oracle.com/javase/tutorial/security/tour2/step3.html for details!");
+        }
+//        } finally {
+//            // Restore
+//            log.info("Restoring original class loader!");
+//            Thread.currentThread().setContextClassLoader(contextClassLoader);
+//        }
+        
     }
 
     /**
@@ -414,6 +487,9 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 cmdLineCfg.setProperty("anchors.location",
                         cl.getOptionValues("a"));
             }
+            if (cl.hasOption("e")) {
+                initClassLoader(cl.getOptionValues("e"));
+            }
             if (cl.hasOption("s")) {
                 showPropertiesOptions = cl.getOptionValues("s");
             }
@@ -470,9 +546,11 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             if (cl.hasOption("c")) {
                 try {
                     // try to add config given by parameter c
-                    File userConfigLocation = new File(new File(System.getProperty(
-                            "user.dir")),cl.getOptionValue("c"));
-                    cmdLineCfg.setProperty("userConfigLocation", userConfigLocation);
+                    File userConfigLocation = new File(new File(System.
+                            getProperty(
+                            "user.dir")), cl.getOptionValue("c"));
+                    cmdLineCfg.setProperty("userConfigLocation",
+                            userConfigLocation);
                     cfg.addConfiguration(new PropertiesConfiguration(cl.
                             getOptionValue("c")));
                 } catch (final ConfigurationException e) {

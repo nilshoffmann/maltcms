@@ -19,7 +19,6 @@
  * 
  * $Id: Chromatogram1D.java 115 2010-04-23 15:42:15Z nilshoffmann $
  */
-
 package maltcms.datastructures.ms;
 
 import java.util.ArrayList;
@@ -46,172 +45,168 @@ import cross.exception.NotImplementedException;
  */
 public class Chromatogram1D implements IChromatogram1D {
 
-	private IFileFragment parent;
+    private IFileFragment parent;
+    private final String scanAcquisitionTimeUnit = "seconds";
+    @Configurable(name = "var.scan_acquisition_time")
+    private String scan_acquisition_time_var = "scan_acquisition_time";
 
-	private final String scanAcquisitionTimeUnit = "seconds";
+    public Chromatogram1D(final IFileFragment e) {
+        this.parent = e;
+    }
 
-	@Configurable(name = "var.scan_acquisition_time")
-	private String scan_acquisition_time_var = "scan_acquisition_time";
+    protected boolean inCache(int i) {
+        // TODO implement
+        return false;
+    }
 
-	public Chromatogram1D(final IFileFragment e) {
-		this.parent = e;
-	}
+    protected Scan1D acquireFromCache(int i) {
+        // TODO implement
+        throw new NotImplementedException();
+    }
 
-	protected boolean inCache(int i) {
-		// TODO implement
-		return false;
-	}
+    protected void addToCache(int i, Scan1D s) {
+        // TODO implement
+    }
 
-	protected Scan1D acquireFromCache(int i) {
-		// TODO implement
-		throw new NotImplementedException();
-	}
+    protected Scan1D buildScan(int i) {
+        if (inCache(i)) {
+            return acquireFromCache(i);
+        } else {
+            final Tuple2D<Array, Array> t = MaltcmsTools.getMS(this.parent, i);
+            final Scan1D s = new Scan1D(t.getFirst(), t.getSecond(), i,
+                    MaltcmsTools.getScanAcquisitionTime(this.parent, i));
+            addToCache(i, s);
+            return s;
+        }
+    }
 
-	protected void addToCache(int i, Scan1D s) {
-		// TODO implement
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+        this.scan_acquisition_time_var = cfg.getString(
+                "var.scan_acquisition_time", "scan_acquisition_time");
+    }
 
-	protected Scan1D buildScan(int i) {
-		if (inCache(i)) {
-			return acquireFromCache(i);
-		} else {
-			final Tuple2D<Array, Array> t = MaltcmsTools.getMS(this.parent, i);
-			final Scan1D s = new Scan1D(t.getFirst(), t.getSecond(), i,
-			        MaltcmsTools.getScanAcquisitionTime(this.parent, i));
-			addToCache(i, s);
-			return s;
-		}
-	}
+    @Override
+    public List<Array> getIntensities() {
+        return MaltcmsTools.getMZIs(this.parent).getSecond();
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		this.scan_acquisition_time_var = cfg.getString(
-		        "var.scan_acquisition_time", "scan_acquisition_time");
-	}
+    @Override
+    public List<Array> getMasses() {
+        return MaltcmsTools.getMZIs(this.parent).getFirst();
+    }
 
-	@Override
-	public List<Array> getIntensities() {
-		return MaltcmsTools.getMZIs(this.parent).getSecond();
-	}
+    /**
+     * @param scan
+     *            scan index to load
+     */
+    @Override
+    public Scan1D getScan(final int scan) {
+        return buildScan(scan);
+    }
 
-	@Override
-	public List<Array> getMasses() {
-		return MaltcmsTools.getMZIs(this.parent).getFirst();
-	}
+    @Override
+    public String getScanAcquisitionTimeUnit() {
+        return this.scanAcquisitionTimeUnit;
+    }
 
-	/**
-	 * @param scan
-	 *            scan index to load
-	 */
-	@Override
-	public Scan1D getScan(final int scan) {
-		return buildScan(scan);
-	}
+    public List<Scan1D> getScans() {
+        ArrayList<Scan1D> al = new ArrayList<Scan1D>();
+        for (int i = 0; i < getNumberOfScans(); i++) {
+            al.add(buildScan(i));
+        }
+        return al;
+    }
 
-	@Override
-	public String getScanAcquisitionTimeUnit() {
-		return this.scanAcquisitionTimeUnit;
-	}
+    /**
+     * This iterator acts on the underlying collection of scans in
+     * Chromatogram1D, so be careful with concurrent access / modification!
+     */
+    @Override
+    public Iterator<IScan1D> iterator() {
 
-	public List<Scan1D> getScans() {
-		ArrayList<Scan1D> al = new ArrayList<Scan1D>();
-		for (int i = 0; i < getNumberOfScans(); i++) {
-			al.add(buildScan(i));
-		}
-		return al;
-	}
+        final Iterator<IScan1D> iter = new Iterator<IScan1D>() {
 
-	/**
-	 * This iterator acts on the underlying collection of scans in
-	 * Chromatogram1D, so be careful with concurrent access / modification!
-	 */
-	@Override
-	public Iterator<Scan1D> iterator() {
+            private int currentPos = 0;
 
-		final Iterator<Scan1D> iter = new Iterator<Scan1D>() {
+            @Override
+            public boolean hasNext() {
+                if (this.currentPos < getScans().size() - 1) {
+                    return true;
+                }
+                return false;
+            }
 
-			private int currentPos = 0;
+            @Override
+            public IScan1D next() {
+                return getScan(this.currentPos++);
+            }
 
-			@Override
-			public boolean hasNext() {
-				if (this.currentPos < getScans().size() - 1) {
-					return true;
-				}
-				return false;
-			}
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException(
+                        "Can not remove scans with iterator!");
+            }
+        };
+        return iter;
+    }
 
-			@Override
-			public Scan1D next() {
-				return getScan(this.currentPos++);
-			}
+    public void setExperiment(final IExperiment1D e) {
+        this.parent = e;
+    }
 
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException(
-				        "Can not remove scans with iterator!");
-			}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.datastructures.ms.IChromatogram#getScanAcquisitionTime()
+     */
+    @Override
+    public Array getScanAcquisitionTime() {
+        return this.parent.getChild(this.scan_acquisition_time_var).getArray();
+    }
 
-		};
-		return iter;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.datastructures.ms.IChromatogram#getNumberOfScans()
+     */
+    @Override
+    public int getNumberOfScans() {
+        return MaltcmsTools.getNumberOfScans(this.parent);
+    }
 
-	public void setExperiment(final IExperiment1D e) {
-		this.parent = e;
-	}
+    @Override
+    public int getIndexFor(double scan_acquisition_time) {
+        double[] d = (double[]) getScanAcquisitionTime().get1DJavaArray(
+                double.class);
+        int idx = Arrays.binarySearch(d, scan_acquisition_time);
+        if (idx >= 0) {// exact hit
+            Logging.getLogger(this).info("sat {}, scan_index {}",
+                    scan_acquisition_time, idx);
+            return idx;
+        } else {// imprecise hit, find closest element
+            double current = d[Math.min(d.length - 1, (-idx) + 1)];
+            double previous = d[Math.max(0, (-idx))];
+            if (Math.abs(scan_acquisition_time - previous) < Math.abs(
+                    scan_acquisition_time - current)) {
+                Logging.getLogger(this).info("sat {}, scan_index {}",
+                        scan_acquisition_time, (-idx) + 1);
+                return (-idx) + 1;
+            } else {
+                Logging.getLogger(this).info("sat {}, scan_index {}",
+                        scan_acquisition_time, -idx);
+                return (-idx);
+            }
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.ms.IChromatogram#getScanAcquisitionTime()
-	 */
-	@Override
-	public Array getScanAcquisitionTime() {
-		return this.parent.getChild(this.scan_acquisition_time_var).getArray();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.ms.IChromatogram#getNumberOfScans()
-	 */
-	@Override
-	public int getNumberOfScans() {
-		return MaltcmsTools.getNumberOfScans(this.parent);
-	}
-
-	@Override
-	public int getIndexFor(double scan_acquisition_time) {
-		double[] d = (double[]) getScanAcquisitionTime().get1DJavaArray(
-		        double.class);
-		int idx = Arrays.binarySearch(d, scan_acquisition_time);
-		if (idx >= 0) {// exact hit
-			Logging.getLogger(this).info("sat {}, scan_index {}",
-			        scan_acquisition_time, idx);
-			return idx;
-		} else {// imprecise hit, find closest element
-			double current = d[Math.min(d.length - 1, (-idx) + 1)];
-			double previous = d[Math.max(0, (-idx))];
-			if (Math.abs(scan_acquisition_time - previous) < Math
-			        .abs(scan_acquisition_time - current)) {
-				Logging.getLogger(this).info("sat {}, scan_index {}",
-				        scan_acquisition_time, (-idx) + 1);
-				return (-idx) + 1;
-			} else {
-				Logging.getLogger(this).info("sat {}, scan_index {}",
-				        scan_acquisition_time, -idx);
-				return (-idx);
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.ms.IChromatogram#getParent()
-	 */
-	@Override
-	public IFileFragment getParent() {
-		return this.parent;
-	}
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.datastructures.ms.IChromatogram#getParent()
+     */
+    @Override
+    public IFileFragment getParent() {
+        return this.parent;
+    }
 }

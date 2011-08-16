@@ -21,7 +21,6 @@
  */
 package maltcms.datastructures.ms;
 
-
 /**
  * Interface adding retention index 2d and time 2d  info.
  * 
@@ -30,16 +29,15 @@ package maltcms.datastructures.ms;
  */
 public interface IRetentionInfo2D {
 
-	public abstract double getRetentionIndex2D();
+    public abstract double getRetentionIndex2D();
 
-	public abstract double getRetentionTime2D();
+    public abstract double getRetentionTime2D();
 
-	public abstract String getRetentionTimeUnit2D();
+    public abstract String getRetentionTimeUnit2D();
 
-	public abstract void setRetentionIndex2D(double d);
+    public abstract void setRetentionIndex2D(double d);
 
-	public abstract void setRetentionTime2D(double d);
+    public abstract void setRetentionTime2D(double d);
 
-	public abstract void setRetentionTimeUnit2D(String s);
-	
+    public abstract void setRetentionTimeUnit2D(String s);
 }

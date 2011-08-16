@@ -19,7 +19,6 @@
  * 
  * $Id: IRetentionInfo.java 43 2009-10-16 17:22:55Z nilshoffmann $
  */
-
 package maltcms.datastructures.ms;
 
 /**
@@ -30,16 +29,15 @@ package maltcms.datastructures.ms;
  */
 public interface IRetentionInfo extends IAnchor {
 
-	public abstract double getRetentionIndex();
+    public abstract double getRetentionIndex();
 
-	public abstract double getRetentionTime();
+    public abstract double getRetentionTime();
 
-	public abstract String getRetentionTimeUnit();
+    public abstract String getRetentionTimeUnit();
 
-	public abstract void setRetentionIndex(double d);
+    public abstract void setRetentionIndex(double d);
 
-	public abstract void setRetentionTime(double d);
+    public abstract void setRetentionTime(double d);
 
-	public abstract void setRetentionTimeUnit(String s);
-
+    public abstract void setRetentionTimeUnit(String s);
 }

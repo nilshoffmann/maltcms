@@ -26,12 +26,12 @@ import java.util.List;
 
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.ms.Chromatogram1D;
-import maltcms.datastructures.ms.Scan1D;
 import maltcms.tools.MaltcmsTools;
 import ucar.ma2.Array;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tools.EvalTools;
+import maltcms.datastructures.ms.IScan1D;
 
 /**
  * Implementation of a Factory for some common FeatureVector types.
@@ -53,7 +53,7 @@ public class FeatureVectorFactory {
 	public List<IFeatureVector> createMSFeatureVectorList(IFileFragment iff) {
 		List<IFeatureVector> l = new ArrayList<IFeatureVector>();
 		Chromatogram1D c = new Chromatogram1D(iff);
-		for (Scan1D s : c) {
+		for (IScan1D s : c) {
 			l.add(s);
 		}
 		return l;

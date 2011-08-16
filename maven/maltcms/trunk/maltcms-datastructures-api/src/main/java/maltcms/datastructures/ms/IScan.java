@@ -19,7 +19,6 @@
  * 
  * $Id: IScan.java 110 2010-03-25 15:21:19Z nilshoffmann $
  */
-
 package maltcms.datastructures.ms;
 
 import maltcms.datastructures.array.IFeatureVector;
@@ -33,14 +32,13 @@ import ucar.ma2.Array;
  */
 public interface IScan extends IFeatureVector {
 
-	public Array getIntensities();
+    public Array getIntensities();
 
-	public Array getMasses();
+    public Array getMasses();
 
-	public double getScanAcquisitionTime();
+    public double getScanAcquisitionTime();
 
-	public int getScanIndex();
+    public int getScanIndex();
 
-	public double getTotalIntensity();
-
+    public double getTotalIntensity();
 }
