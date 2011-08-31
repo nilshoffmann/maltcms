@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="help" name="MaltcmsWeb">
+
+	<target name="help" description="Prints usage info using -projecthelp">
+		<java classname="org.apache.tools.ant.Main">
+			<arg value="-buildfile" />
+			<arg value="${ant.file}" />
+			<arg value="-projecthelp" />
+		</java>
+	</target>
+
+	<target name="credentials" description="Ask for user credentials">
+		<input addproperty="sf.username">Please enter sourceforge username:</input>
+		<!--<input message="Please supply password for user ${sf.username}:" addproperty="sf.username.password">
+			<handler type="secure"/>
+		</input>-->
+	</target>
+
+	<target name="upload" description="Upload results of build to sourceforge" depends="credentials">
+		<!--<echo message="Do not forget to supply -Dusername -Dpassword to ant when running the upload target!" />-->
+		<!--<scp todir="${sf.username},maltcms@web.sourceforge.net:htdocs/" password="${sf.username.password}" sftp="true" trust="true" verbose="true">
+			<fileset dir="${release_dir}/site/" />
+		</scp>-->
+		<exec command="rsync" inputstring="">
+			<arg value="-avtruP"/>
+			<arg value="-e ssh "/>
+			<arg value="target/site/"/>
+			<arg value="${sf.username},maltcms@web.sourceforge.net:/home/project-web/maltcms/htdocs/maven/maltcms/"/>
+		</exec>
+	</target>
+	<target name="upload-bin" description="Upload distribution to sourceforge" depends="credentials">
+		<exec command="rsync" inputstring="">
+			<arg value="-avtruP"/>
+			<arg value="-e ssh "/>
+			<arg value="maltcms/target/" />
+			<arg value="--include=maltcms-1.*-bin.zip" />
+			<arg value="--exclude=*" />
+                        <arg value="${sf.username},maltcms@frs.sourceforge.net:/home/frs/project/m/ma/maltcms/maltcms/maltcms-1.0/"/>
+		</exec>
+	</target>
+</project>
