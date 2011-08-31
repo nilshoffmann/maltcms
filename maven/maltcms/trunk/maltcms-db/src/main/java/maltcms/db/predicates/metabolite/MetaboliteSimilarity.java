@@ -123,7 +123,7 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
         //is used
         double relativeCommonMasses = (commonMasses) / (double) bins;
         double d = this.similarityFunction.apply(-1, -1, 0.0d, 0.0d, s1, s2);
-        return (d + matchMW) / 2.0d;
+        return (d + matchMW);
     }
 
     @Override
