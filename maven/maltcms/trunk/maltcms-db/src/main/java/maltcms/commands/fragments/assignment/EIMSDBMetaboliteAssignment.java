@@ -4,32 +4,24 @@ package maltcms.commands.fragments.assignment;
  * 
  */
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.db.MetaboliteQueryDB;
 import maltcms.db.QueryCallable;
-import maltcms.db.predicates.metabolite.MScanSimilarityPredicate;
 import maltcms.io.csv.CSVWriter;
 
 import org.apache.commons.configuration.Configuration;
 
-import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
-import ucar.ma2.Index;
 
 import com.db4o.ObjectSet;
-import com.db4o.query.Predicate;
 
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
@@ -39,6 +31,7 @@ import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.ChromatogramFactory;
 import maltcms.datastructures.ms.IChromatogram1D;
+import maltcms.datastructures.ms.IScan1D;
 import maltcms.db.predicates.metabolite.MetaboliteSimilarity;
 
 /**
@@ -56,7 +49,6 @@ public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
     private List<String> dblocation;
     private double threshold = 0.9;
     private int maxk = 5;
-    private Predicate<IMetabolite> similarityFunction = new MetaboliteSimilarity();
 
     /*
      * (non-Javadoc)
@@ -65,7 +57,7 @@ public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
      */
     @Override
     public String getDescription() {
-        return "Tries to automatically assign peaks to metabolites in a database.";
+        return "Putative identification of EI-MS peaks for each chromatogram against the given databases.";
     }
 
     /*
@@ -76,26 +68,12 @@ public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
      */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-        int k = this.maxk;
         ChromatogramFactory cf = new ChromatogramFactory();
         for (IFileFragment iff : t) {
             IChromatogram1D chrom = cf.createChromatogram1D(iff);
-//            IVariableFragment index = iff.getChild("scan_index");
-//            IVariableFragment mv = iff.getChild("mass_values");
-//            mv.setIndex(index);
-//            IVariableFragment iv = iff.getChild("intensity_values");
-//            IVariableFragment si = iff.getChild("scan_acquisition_time");
-//            Array sia = si.getArray();
-//            Index siai = sia.getIndex();
-//            iv.setIndex(index);
-//            List<Array> ints = iv.getIndexedArray();
-//            List<Array> masses = mv.getIndexedArray();
-            // ArrayList<List<String>> table = new ArrayList<List<String>>();
             List<String> header = Arrays.asList(new String[]{"ScanNumber",
                         "RetentionTime", "Score", "RI", "MW", "Formula", "ID",
                         "SOURCE"});
-            // table.add(header);
-            // if (table.size() > 1) {
             CSVWriter csvw = new CSVWriter();
             csvw.setWorkflow(getWorkflow());
             PrintWriter pw = csvw.createPrintWriter(getWorkflow().
@@ -103,32 +81,22 @@ public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
                     removeFileExt(iff.getName())
                     + "_peak_assignment.csv", header,
                     WorkflowSlot.IDENTIFICATION);
-            // csvw.writeTableByRows(getWorkflow().getOutputDirectory(this)
-            // .getAbsolutePath(), StringTools.removeFileExt(iff
-            // .getName())
-            // + "_peak_assignment.csv", table,
-            // WorkflowSlot.IDENTIFICATION);
-            // } else {
-            // log.warn("No matches found!");
-            // }
             ArrayInt.D1 peaks = (ArrayInt.D1) iff.getChild("tic_peaks").getArray();
             for (String dbloc : this.dblocation) {
                 for (int i = 0; i < peaks.getShape()[0]; i++) {
-                    MScanSimilarityPredicate ssp = null;
                     int scan = (int) peaks.get(i);
                     this.log.info("Scan {}", scan);
-                    Tuple2D<Array, Array> query = new Tuple2D<Array, Array>(
-                            masses.get(scan), ints.get(scan));
-                    ssp = new MScanSimilarityPredicate(query);
-                    ssp.setThreshold(this.threshold);
-                    MetaboliteQueryDB mqdb = new MetaboliteQueryDB(dbloc, ssp);
+                    IScan1D scan1D = chrom.getScan(scan);
+                    MetaboliteSimilarity ms = new MetaboliteSimilarity(scan1D,
+                            threshold, maxk, false);
+                    MetaboliteQueryDB mqdb = new MetaboliteQueryDB(dbloc, ms);
                     QueryCallable<IMetabolite> qc = mqdb.getCallable();
                     ObjectSet<IMetabolite> osRes = null;
                     try {
                         osRes = qc.call();
                         log.info("Received {} hits from ObjectSet!",
                                 osRes.size());
-                        // qc.terminate();
+                        qc.terminate();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
@@ -136,31 +104,14 @@ public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    List<Tuple2D<Double, IMetabolite>> l = new ArrayList<Tuple2D<Double, IMetabolite>>();// ((MScanSimilarityPredicate)ssp).getSimilaritiesAboveThreshold();
-                    MetaboliteSimilarity ms = new MetaboliteSimilarity();
-                    for (IMetabolite im : osRes) {
-                        l.add(new Tuple2D<Double, IMetabolite>(ms.get(query, im),
-                                im));
-                    }
-                    qc.terminate();
-                    Comparator<Tuple2D<Double, IMetabolite>> comp = new Comparator<Tuple2D<Double, IMetabolite>>() {
-
-                        @Override
-                        public int compare(Tuple2D<Double, IMetabolite> o1,
-                                Tuple2D<Double, IMetabolite> o2) {
-                            return o1.getFirst().compareTo(o2.getFirst());
-                        }
-                    };
-                    Collections.sort(l, Collections.reverseOrder(comp));
-                    List<Tuple2D<Double, IMetabolite>> hits = l.subList(0, Math.
-                            min(l.size(), k));
-                    System.out.println("Adding top " + hits.size() + " hits!");
-                    for (Tuple2D<Double, IMetabolite> tuple2D : hits) {
+                    List<Tuple2D<Double, IMetabolite>> l = ms.getMatches();
+                    System.out.println("Adding top " + l.size() + " hits!");
+                    for (Tuple2D<Double, IMetabolite> tuple2D : l) {
                         IMetabolite im = tuple2D.getSecond();
                         List<String> row = Arrays.asList(
                                 new String[]{
                                     "" + (scan),
-                                    "" + sia.getDouble(siai.set(scan)),
+                                    "" + scan1D.getScanAcquisitionTime(),
                                     "" + (int) (tuple2D.getFirst() * 1000.0),
                                     "" + im.getRetentionIndex(), "" + im.getMW(),
                                     "" + im.getFormula(), im.getID(), "" + dbloc});
