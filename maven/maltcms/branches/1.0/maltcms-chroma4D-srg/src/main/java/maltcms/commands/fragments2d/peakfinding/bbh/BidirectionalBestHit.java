@@ -19,7 +19,7 @@
  * 
  * $Id: BidirectionalBestHit.java 129 2010-06-25 11:57:02Z nilshoffmann $
  */
-package maltcms.commands.fragments2d.peakfinding;
+package maltcms.commands.fragments2d.peakfinding.bbh;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -47,14 +47,14 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
 
 	private final Logger log = Logging.getLogger(this);
 
-	@Configurable(value = "maltcms.commands.distances.ArrayCos")
+	@Configurable(value = "maltcms.commands.distances.ArrayCos", type = IArrayDoubleComp.class)
 	private String distClass = "maltcms.commands.distances.ArrayCos";
-	@Configurable(value = "true")
+	@Configurable(value = "true", type = boolean.class)
 	private boolean useMeanMS = true;
-	@Configurable(value = "0.9d")
+	@Configurable(value = "0.9d", type = double.class)
 	private Double threshold = 0.9d;
-	
-	private final List<List<Peak2D>> peaklists;
+
+	private List<List<Peak2D>> peaklists;
 	private IArrayDoubleComp dist = new ArrayCos();
 	private final List<Map<Integer, Boolean>> doneList;
 
@@ -84,10 +84,10 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
 	public void configure(final Configuration cfg) {
 		this.threshold = cfg.getDouble(
 				this.getClass().getName() + ".threshold", 0.9d);
-		this.useMeanMS = cfg.getBoolean(this.getClass().getName() + ".useMeanMS",
-				true);
-		this.distClass = cfg.getString(this.getClass().getName()
-				+ ".dist", "maltcms.commands.distances.ArrayCos");
+		this.useMeanMS = cfg.getBoolean(this.getClass().getName()
+				+ ".useMeanMS", true);
+		this.distClass = cfg.getString(this.getClass().getName() + ".dist",
+				"maltcms.commands.distances.ArrayCos");
 		this.dist = Factory.getInstance().getObjectFactory().instantiate(
 				this.distClass, IArrayDoubleComp.class);
 	}
@@ -170,10 +170,12 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
 	 * @return a list of all bidirectional best hits. List contains the indices
 	 *         of peak in the peaklist.
 	 */
-	public List<List<Point>> getBidiBestHitList() {
+	public List<List<Point>> getBidiBestHitList(List<List<Peak2D>> peaklists) {
 		this.log.info("Dist: {}", this.dist.getClass().getName());
 		this.log.info("Threshold: {}", this.threshold);
 		this.log.info("Use mean MS: {}", this.useMeanMS);
+
+		this.peaklists = peaklists;
 
 		final List<List<Point>> indexList = new ArrayList<List<Point>>();
 		List<Point> bidibestlist = new ArrayList<Point>();
@@ -242,4 +244,7 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
 		return this.peaklists;
 	}
 
+	public void clear() {
+
+	}
 }

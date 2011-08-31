@@ -168,6 +168,7 @@
         <module>maltcms-chroma</module>
         <module>maltcms-chroma4D</module>
         <module>maltcms-chroma4D-srg</module>
+        <module>maltcms-chroma4D-cwt</module>
         <module>maltcms-filters</module>
         <module>maltcms-commands</module>
         <module>maltcms-datastructures</module>

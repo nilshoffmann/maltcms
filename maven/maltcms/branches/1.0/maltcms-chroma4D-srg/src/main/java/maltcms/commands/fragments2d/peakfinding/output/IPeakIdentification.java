@@ -19,7 +19,7 @@
  * 
  * $Id: IPeakIdentification.java 129 2010-06-25 11:57:02Z nilshoffmann $
  */
-package maltcms.commands.fragments2d.peakfinding;
+package maltcms.commands.fragments2d.peakfinding.output;
 
 import maltcms.datastructures.peak.Peak2D;
 import cross.IConfigurable;

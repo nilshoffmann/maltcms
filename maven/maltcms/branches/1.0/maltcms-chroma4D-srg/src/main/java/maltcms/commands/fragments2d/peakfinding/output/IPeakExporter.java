@@ -19,22 +19,25 @@
  * 
  * $Id: IPeakExporter.java 129 2010-06-25 11:57:02Z nilshoffmann $
  */
-package maltcms.commands.fragments2d.peakfinding;
+package maltcms.commands.fragments2d.peakfinding.output;
 
 import java.awt.Point;
 import java.util.List;
 
+import maltcms.commands.fragments2d.peakfinding.Reliability;
+import maltcms.commands.fragments2d.peakfinding.bbh.IBidirectionalBestHit;
 import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.peak.Peak2D;
 import cross.IConfigurable;
 import cross.datastructures.workflow.IWorkflow;
+import cross.datastructures.workflow.IWorkflowElement;
 
 /**
  * Provides some methods to export relevant peak information.
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
-public interface IPeakExporter extends IConfigurable {
+public interface IPeakExporter extends IConfigurable, IWorkflowElement {
 
 	/**
 	 * Will export the information about the bidirectional best hits.
@@ -45,9 +48,28 @@ public interface IPeakExporter extends IConfigurable {
 	 *            bidirection best hits intance
 	 * @param names
 	 *            names of the chromtatograms
+	 * @param reliabilites
+	 *            reliability of peak groups
 	 */
-	void exportBBHInformation(final List<List<Point>> bidiBestHitList,
-			final IBidirectionalBestHit bbh, final List<String> names);
+	void exportBBHInformation(final List<List<Point>> bidiBestHitList, List<List<Peak2D>> peaklist,
+			final IBidirectionalBestHit bbh, final List<String> names,
+			final List<Reliability> reliabilities);
+
+        /**
+	 * Will export the alignment of retention times about the bidirectional best hits.
+	 *
+	 * @param bidiBestHitList
+	 *            bidirational best hits table
+	 * @param bbh
+	 *            bidirection best hits intance
+	 * @param names
+	 *            names of the chromtatograms
+	 * @param reliabilites
+	 *            reliability of peak groups
+	 */
+	void exportBBHMultipleAlignmentRT(final List<List<Point>> bidiBestHitList, List<List<Peak2D>> peaklist,
+			final IBidirectionalBestHit bbh, final List<String> names,
+			final List<Reliability> reliabilities);
 
 	/**
 	 * Will export a detailed list about the bidirectional best hits.
@@ -60,13 +82,16 @@ public interface IPeakExporter extends IConfigurable {
 	 *            bbh class - needed to run the sim() method
 	 * @param chromatogramNames
 	 *            names of the chromatograms
+	 * @param reliabilities
+	 *            reliabilities of peak groups
 	 * @param oFilename
 	 *            output filename
 	 */
 	void exportDetailedBBHInformation(final List<List<Point>> bidiBestHitList,
 			final List<List<Peak2D>> peaklists,
 			final IBidirectionalBestHit bbh,
-			final List<String> chromatogramNames, final String oFilename);
+			final List<String> chromatogramNames,
+			final List<Reliability> reliabilities, final String oFilename);
 
 	/**
 	 * Will export some detailed peak information like unique mass integration,
@@ -80,6 +105,16 @@ public interface IPeakExporter extends IConfigurable {
 	void exportDetailedPeakInformation(final String filename,
 			final List<Peak2D> ps);
 
+	/**
+	 * Exports all given peaks as msp compatible format
+	 * 
+	 * @param name
+	 *            peak name
+	 * @param ps
+	 *            peak list
+	 * @param isl
+	 *            instance of an scan line cache
+	 */
 	void exportPeaksToMSP(final String name, final List<Peak2D> ps,
 			final IScanLine isl);
 
@@ -94,9 +129,9 @@ public interface IPeakExporter extends IConfigurable {
 	void exportPeakInformation(final String filename, final List<Peak2D> ps);
 
 	/**
-	 * Will export an peak occurrence map which will allow an easy plotting by R.
-	 * All Peaks will be exported in one list, but which additional information
-	 * about the occurrence, group id and some other.
+	 * Will export an peak occurrence map which will allow an easy plotting by
+	 * R. All Peaks will be exported in one list, but which additional
+	 * information about the occurrence, group id and some other.
 	 * 
 	 * @param bidiBestHitList
 	 *            bidi best hit list from bbh
@@ -114,6 +149,16 @@ public interface IPeakExporter extends IConfigurable {
 			final IBidirectionalBestHit bbh,
 			final List<String> chromatogramNames, final String oFilename);
 
+        /**
+         * Exports all identifications available for a peak.
+         * 
+         * @param peaklist
+         *          peaklist
+         * @param chomatogramName
+         *          chromatogram name
+         */
+        void exportPeakNames(final List<Peak2D> peaklist, final String chomatogramName);
+
 	/**
 	 * Setter.
 	 * 
@@ -122,13 +167,5 @@ public interface IPeakExporter extends IConfigurable {
 	 */
 	@SuppressWarnings("unchecked")
 	void setCaller(final Class nCaller);
-
-	/**
-	 * Setter.
-	 * 
-	 * @param workflow
-	 *            {@link IWorkflow}
-	 */
-	void setWorkflow(final IWorkflow workflow);
 
 }

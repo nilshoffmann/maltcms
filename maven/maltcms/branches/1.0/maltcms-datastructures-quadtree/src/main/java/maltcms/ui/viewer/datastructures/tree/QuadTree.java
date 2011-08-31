@@ -87,6 +87,37 @@ public class QuadTree<T> {
         //System.out.println("Time for get: "+(System.nanoTime()-s));
         return t;
     }
+    
+    public List<Tuple2D<Point2D, T>> getNeighborsInRadius(Point2D p, double radius) {
+        if (this.root == null) {
+            return Collections.emptyList();
+        }
+        return this.root.getChildrenInRadius(new LinkedList<Tuple2D<Point2D, T>>(), p, radius);
+    }
+    
+    public List<Tuple2D<Point2D, T>> getHorizontalNeighborsInRadius(Point2D p, double radius) {
+        List<Tuple2D<Point2D,T>> neighs = getNeighborsInRadius(p, radius);
+        List<Tuple2D<Point2D,T>> hneighs = new LinkedList<Tuple2D<Point2D,T>>();
+        for(Tuple2D<Point2D,T> t:neighs) {
+        	Point2D p2 = t.getFirst();
+        	if(Math.abs(p2.getX()-p.getX())<=radius) {
+        		hneighs.add(t);
+        	}
+        }
+        return hneighs;
+    }
+    
+    public List<Tuple2D<Point2D, T>> getVerticalNeighborsInRadius(Point2D p, double radius) {
+    	List<Tuple2D<Point2D,T>> neighs = getNeighborsInRadius(p, radius);
+        List<Tuple2D<Point2D,T>> vneighs = new LinkedList<Tuple2D<Point2D,T>>();
+        for(Tuple2D<Point2D,T> t:neighs) {
+        	Point2D p2 = t.getFirst();
+        	if(Math.abs(p2.getY()-p.getY())<=radius) {
+        		vneighs.add(t);
+        	}
+        }
+        return vneighs;
+    }
 
     public Tuple2D<Point2D, T> getClosestInRadius(Point2D p, double radius) throws ElementNotFoundException {
         //long s = System.nanoTime();

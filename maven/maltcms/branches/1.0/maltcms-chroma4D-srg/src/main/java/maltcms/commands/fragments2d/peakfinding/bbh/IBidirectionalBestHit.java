@@ -17,33 +17,37 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
  * 
- * $Id: IPeakIntegration.java 129 2010-06-25 11:57:02Z nilshoffmann $
+ * $Id: IBidirectionalBestHit.java 129 2010-06-25 11:57:02Z nilshoffmann $
  */
-package maltcms.commands.fragments2d.peakfinding;
+package maltcms.commands.fragments2d.peakfinding.bbh;
 
+import java.awt.Point;
+import java.util.List;
+
+import maltcms.commands.fragments2d.peakfinding.SeededRegionGrowing;
 import maltcms.datastructures.peak.Peak2D;
 import cross.IConfigurable;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.workflow.IWorkflow;
 
 /**
- * Provides some methods to do a peak integration.
+ * Interface for an BBH algorithm used by {@link SeededRegionGrowing}.
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
-public interface IPeakIntegration extends IConfigurable {
+public interface IBidirectionalBestHit extends IConfigurable {
 
 	/**
-	 * Integrate the peak area and adds the sum to the PeakArea.
+	 * Getter.
 	 * 
-	 * @param peak
-	 *            peak
-	 * @param ff
-	 *            file fragment
-	 * @param workflow
-	 *            workflow
+	 * 
+	 * @param peaklists
+	 *            list of peak list for all chromatograms
+	 * @return a list of all bidirectional best hits. List contains the indices
+	 *         of peak in the peaklist.
 	 */
-	void integrate(final Peak2D peak, final IFileFragment ff,
-	        final IWorkflow workflow);
+	List<List<Point>> getBidiBestHitList(List<List<Peak2D>> peaklists);
+
+	double sim(Peak2D p1, Peak2D p2);
+
+	void clear();
 
 }

@@ -81,6 +81,50 @@ public class QuadTreeNode<T> {
         }
         return l;
     }
+    
+    public List<Tuple2D<Point2D,T>> getChildrenInRadius(List<Tuple2D<Point2D,T>> children, Point2D p, double radius){
+        //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
+        if (this.t != null) {//this node has no children yet
+            //System.out.println("Looking for Point in local list!");
+            Point2D closest = null;
+            Tuple2D<Point2D, T> type = null;
+            double mindist = Double.POSITIVE_INFINITY;
+            //iterate over local points
+            for (Tuple2D<Point2D, T> tple : this.t) {
+                double dist1 = l1distance(tple.getFirst(),p);//tple.getFirst().distance(p);
+                //check if query is in radius
+                if (dist1 <= radius) {
+                    if (dist1 < mindist && !p.equals(tple.getFirst())) {
+                        children.add(tple);
+                    }
+                }
+            }
+        }
+        //System.out.println("Looking for Point in children!");
+        if (this.children != null) {//this node has children
+            //create elliptical search region
+            Ellipse2D.Double e = new Ellipse2D.Double(p.getX() - radius, p.getY() - radius, 2 * radius, 2 * radius);
+            Tuple2D<Point2D, T> mintup = null;
+            double mindist = Double.POSITIVE_INFINITY;
+            //iterate over child nodes
+            for (QuadTreeNode<T> qtn : this.children) {
+                if (qtn != null) {
+                    //intersection with quadrant
+                    if (e.intersects(qtn.getArea())) {
+                        //check for closest child
+                        qtn.getChildrenInRadius(children, p, radius);
+                    }
+                }
+            }
+        }
+        return children;
+    }
+    
+    private double l1distance(Point2D p1, Point2D p2) {
+    	double dist = Math.abs(p1.getX()-p2.getX());
+    	dist+=Math.abs(p1.getY()-p2.getY());
+    	return dist;
+    }
 
     public Tuple2D<Point2D, T> getClosestChild(Point2D p, double radius) throws ElementNotFoundException {
         //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
