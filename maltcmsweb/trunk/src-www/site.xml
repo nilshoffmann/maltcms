@@ -18,32 +18,32 @@
 				</li>
 			</ul>
 		</div>
+
+                <div class="download">
+			<a href="http://sourceforge.net/projects/maltcms/files/maui/1.0/beta/" title="Download">
+				<span>Try Maui 1.0 Beta</span>
+				<img src="../img/tango-go-down-red.png" alt="Download Image"/>
+				<br />
+				<span class="small">Provided by sourceforge.net</span>
+			</a>
+		</div>
 		<div class="download">
-			<a href="http://sourceforge.net/projects/maltcms/files/latest" title="Download">
+			<a href="http://sourceforge.net/projects/maltcms/files/maltcms/maltcms-1.0/maltcms-1.0.7-bin.zip" title="Download">
 				<span>Get Maltcms</span>
 				<img src="../img/tango-go-down-red.png" alt="Download Image"/>
 				<br />
 				<span class="small">Provided by sourceforge.net</span>
 			</a>
 		</div>
-		<!--
-		<div class="download">
-			<a href="http://sourceforge.net/projects/maltcms/files/latest" title="Download">
-				<div>
-				Preview Maui
-				<img src="../img/tango-go-down-red.png" alt="Download Image"/>
-				<br />
-				<span class="small">Provided by sourceforge.net</span>
-				</div>
-			</a>
-		</div>-->
+		
+		
 		<div id="categories">
 			<ul>
 				<li><a href="../home/index.html">Home</a></li>
-				<li><a href="../users/features.html">Users</a></li>
-				<li><a href="../developers/api.html">Developers</a></li>
+				<li><a href="../users/features.html">Maltcms</a></li>
+				<li><a href="../maui/index.html">Maui</a></li>
+                                <li><a href="../developers/api.html">Developers</a></li>
 				<li><a href="../info/publications.html">Info</a></li>
-				<!--<li><a href="../maui/index.html">Maui</a></li>-->
 			</ul>
 		</div>
 	</div>
@@ -58,19 +58,24 @@
 			title="Download">Maltcms/ChromA</a> </group>
 		-->
 
-		<group class="nav_dotted" nname="Users" ident="users">
+		<group class="nav_dotted" nname="Maltcms" ident="users">
 			<ref target="users/features" />
 			<!--	<ref target="users/tutorials" /> -->
 			<ref target="users/support" />
 		</group>
-		-->
+
+                <group class="nav_dotted" nname="Maui" ident="maui">
+			<ref target="maui/index" />
+		</group>
+
 		<group class="nav_dotted" nname="Developers" ident="developers">
-			<!-- <ref target="developers/concepts" /> -->
+<!--			<ref target="developers/concepts" />-->
 			<ref target="developers/api" />
-			<!-- <ref target="styleGuide" />-->
+<!--			<ref target="styleGuide/styleGuide" />-->
 			<a href="http://sourceforge.net/projects/maltcms/" title="Project Website">Project
 				Home</a>
 			<a href="http://sourceforge.net/apps/trac/maltcms/" title="Trac">Trac</a>
+                        <a href="http://maltcms.sourceforge.net/maven/maltcms/" title="Maven Site">Maven</a>
 			<!-- <ref target="roadmap" />-->
 		</group>
 		<group class="nav_dotted" nname="Info" ident="info">
@@ -79,10 +84,6 @@
 			<ref target="info/license" />
 			<ref target="info/contact" />
 		</group>
-<!--
-		<group class="nav_dotted" nname="Maui" ident="maui">
-			<ref target="maui/index" />
-		</group>-->
 	</nav>
 
 	<!-- Home -->
@@ -95,12 +96,12 @@
 	<!-- Developers -->
 	<!-- <xi:include href="developers/concepts.xml" parse="xml" /> -->
 	<xi:include href="developers/api.xml" parse="xml" />
-	<xi:include href="developers/styleGuide.xml" parse="xml" />
+<!--	<xi:include href="developers/styleGuide.xml" parse="xml" />-->
 	<!-- Info -->
 	<xi:include href="info/publications.xml" parse="xml" />
 	<xi:include href="info/relatedProjects.xml" parse="xml" />
 	<xi:include href="info/license.xml" parse="xml" />
 	<xi:include href="info/contact.xml" parse="xml" />
 	<!-- Maui -->
-	<!--<xi:include href="maui/index.xml" parse="xml" />-->
+	<xi:include href="maui/index.xml" parse="xml" />
 </site>

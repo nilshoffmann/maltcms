@@ -3,7 +3,7 @@
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xalan="org.apache.xalan.xslt.extensions.Redirect"
 	extension-element-prefixes="xalan">
-    <xsl:output method="xhtml" encoding="UTF-8"
+    <xsl:output method="xhtml" encoding="iso-8859-1"
 		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
 		indent="yes" />
@@ -59,7 +59,7 @@
                                     <xsl:attribute name="href">
                                         <xsl:value-of
 										select="./@toRoot" />
-                                        <xsl:text>main.css</xsl:text>
+                                        <xsl:text>css/main.css</xsl:text>
                                     </xsl:attribute>
                                     <xsl:attribute name="rel">
                                         <xsl:text>stylesheet</xsl:text>
@@ -108,36 +108,35 @@
                                 </xsl:apply-templates>
 								<!-- </div> -->
                                 <div id="footer">
-                                    <xsl:call-template name="COPYRIGHT" />
-									2008-2011,
+                                    <span><xsl:text>&#169;</xsl:text> 2008-2011,</span>
                                     <a title="Contact" href="../info/contact.html">Nils Hoffmann</a> | Maltcms is hosted by
                                     <a title="Hosting by sourceforge.net" href="http://sourceforge.net/">sourceforge.net</a> |
                                     <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fmaltcms.sourceforge.net%2Fhome%2Findex.html">Valid XHTML 1.0 Transitional</a>
-                                    <div id="sitemap">
-                                            <xsl:for-each select="//group">
-                                                <div style="float: left;">
-                                                    <h3>
-                                                        <xsl:value-of select="@ident"/>
-                                                    </h3>
-                                                    <ul style="list-style:none;">
-                                                        <xsl:for-each select="./ref">
-                                                            <li>
-                                                                <xsl:call-template name="REFTEMPLATE">
-                                                                    <xsl:with-param name="PAGENAME" select="$pagename" />
-                                                                    <xsl:with-param name="GROUPNAME" select="$activegroup" />
-                                                                </xsl:call-template>
-                                                            </li>
-                                                        </xsl:for-each>
-                                                        <xsl:for-each select="./a">
-                                                            <li>
-                                                                <xsl:call-template name="MATCHXHTML" />
-                                                            </li>
-                                                        </xsl:for-each>
-                                                    </ul>
-                                                </div>
-                                            </xsl:for-each>
-                                    </div>
                                 </div>
+                                <div id="sitemap">
+                                        <xsl:for-each select="//group">
+                                            <div style="float: left;">
+                                                <span class="sitemapHeading">
+                                                    <xsl:value-of select="@nname"/>
+                                                </span>
+                                                <ul class="sitemapList">
+                                                    <xsl:for-each select="./ref">
+                                                        <li>
+                                                            <xsl:call-template name="REFTEMPLATE">
+                                                                <xsl:with-param name="PAGENAME" select="$pagename" />
+                                                                <xsl:with-param name="GROUPNAME" select="$activegroup" />
+                                                            </xsl:call-template>
+                                                        </li>
+                                                    </xsl:for-each>
+                                                    <xsl:for-each select="./a">
+                                                        <li>
+                                                            <xsl:call-template name="MATCHXHTML" />
+                                                        </li>
+                                                    </xsl:for-each>
+                                                </ul>
+                                            </div>
+                                        </xsl:for-each>
+                                    </div>
                             </xsl:element>
                         </xsl:element>
                     </xalan:write>

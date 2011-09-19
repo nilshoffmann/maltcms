@@ -2,6 +2,7 @@
 <content group="developers" ident="developers/api" nname="API" toRoot="../" publish="yes" lastchanged="$Date$ by $Author$">
 <column id="content">
 	<h1>Maltcms</h1>
-	    <p><a href="api/maltcms-1.0/index.html">Version 1.0.x API</a></p>
+	    <p><a href="../maven/maltcms/apidocs/index.html">Current Version 1.0.x API</a></p>
+	    <p><a href="api/maltcms-1.0/index.html">Legacy Version 1.0.x API</a></p>
 </column>
 </content>
