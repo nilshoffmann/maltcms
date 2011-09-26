@@ -11,7 +11,7 @@
   <moduleSets>
     <moduleSet>
       <includes>
-        <include>net.sf.maltcms:*</include>
+        <include>cross:*</include>
       </includes>
       <binaries>
         <outputDirectory>modules/${artifactId}</outputDirectory>
