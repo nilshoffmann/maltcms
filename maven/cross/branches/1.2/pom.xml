@@ -89,8 +89,24 @@
                     <artifactId>maven-license-plugin</artifactId>
                     <configuration>
                         <basedir>${basedir}</basedir>
-                        <header>${basedir}/src/etc/license-lgpl-v3.txt</header>
+                        <header>src/etc/license-lgpl-v3.txt</header>
+                        <strictCheck>true</strictCheck> 
                     </configuration>
+<!--                    <executions>
+                        <execution>
+                            <phase>release:prepare</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <phase>release:prepare</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>-->
+
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -99,11 +115,10 @@
     <modules>
         <module>cross-annotations</module>
         <module>cross-cli</module>
-        <module>cross-main</module>
         <module>cross-event</module>
         <module>cross-exception</module>
-        <module>cross-tools</module>
         <module>cross-main-api</module>
+        <module>cross-main-spi</module>
     </modules>
     <dependencies>
         <dependency>

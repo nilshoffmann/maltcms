@@ -1,9 +1,27 @@
+/**
+ * Copyright (C) 2008-2011 Nils Hoffmann Nils.Hoffmann A T
+ * CeBiTec.Uni-Bielefeld.DE
+ *
+ * This file is part of Cross/Maltcms.
+ *
+ * Cross/Maltcms is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
+ */
 /*
  * 
  *
  * $Id$
  */
-
 package cross.datastructures.pipeline;
 
 import java.util.Collection;
@@ -30,6 +48,8 @@ public interface ICommandSequence extends Iterator<TupleND<IFileFragment>>,
 
     public abstract Collection<IFragmentCommand> getCommands();
 
+    public abstract void setCommands(Collection<IFragmentCommand> c);
+
     /**
      * Return input to this ICommandSequence.
      *
@@ -37,15 +57,17 @@ public interface ICommandSequence extends Iterator<TupleND<IFileFragment>>,
      */
     public abstract TupleND<IFileFragment> getInput();
 
+    public abstract void setInput(TupleND<IFileFragment> t);
+
     public abstract IWorkflow getWorkflow();
+
+    public abstract void setWorkflow(IWorkflow iw);
 
     /**
      * Do we have any unprocessed Commands left?
      */
     @Override
     public abstract boolean hasNext();
-
-    public abstract void init();
 
     /**
      * Apply the next ICommand and return results.
@@ -56,14 +78,8 @@ public interface ICommandSequence extends Iterator<TupleND<IFileFragment>>,
     @Override
     public abstract void remove();
 
-    public abstract void setCommands(Collection<IFragmentCommand> c);
-
-    public abstract void setInput(TupleND<IFileFragment> t);
-
-    public abstract void setWorkflow(IWorkflow iw);
-    
     public abstract boolean isCheckCommandDependencies();
-    
-    public abstract void setCheckCommandDependencies(boolean checkCommandDependencies);
 
+    public abstract void setCheckCommandDependencies(
+            boolean checkCommandDependencies);
 }

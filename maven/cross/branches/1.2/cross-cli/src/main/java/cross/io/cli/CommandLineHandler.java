@@ -1,3 +1,22 @@
+/**
+ * Copyright (C) 2008-2011 Nils Hoffmann Nils.Hoffmann A T
+ * CeBiTec.Uni-Bielefeld.DE
+ *
+ * This file is part of Cross/Maltcms.
+ *
+ * Cross/Maltcms is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
+ */
 /*
  * 
  *
@@ -11,8 +30,6 @@ import java.util.LinkedHashMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -24,6 +41,12 @@ import org.openide.util.Lookup;
 
 /**
  *
+ * CommandLineHandler is a singleton class, which provides access 
+ * to registered handlers for command line options. These handlers 
+ * need to be present on the classpath given to the application on 
+ * startup. Handlers are discovered using the Java service provider
+ * mechanism by registration in the jar file's META-INF/services folder.
+ * 
  * @author nilshoffmann
  */
 @Slf4j
@@ -80,19 +103,18 @@ public class CommandLineHandler {
                 if(optionToHandler.containsKey(opt)) {
                     tm.put(optionToHandler.get(opt), opt);
                 }else{
-                    throw new IllegalArgumentException("Option "+opt+" not claimed by any handler!");
+                    log.warn("Option {} was not claimed by any handler!",opt);
                 }
             }
             for(ICliOptionHandler handler:tm.keySet()) {
-                System.out.println("Handling option with "+handler.getClass().getName());
+                log.debug("Handling option with {}",handler.getClass().getName());
                 handler.handleOption(tm.get(handler));
                 if(handler.isTerminateAfterInvocation()) {
                     System.exit(1);
                 }
             }
         } catch (ParseException ex) {
-            Logger.getLogger(CommandLineHandler.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            log.error("Parsing of command line failed!", ex);
         }
     }
 }
