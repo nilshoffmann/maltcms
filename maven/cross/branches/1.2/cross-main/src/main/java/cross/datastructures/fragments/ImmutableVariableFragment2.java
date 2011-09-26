@@ -1,28 +1,9 @@
 /*
- * Copyright (C) 2008-2011 Nils Hoffmann Nils.Hoffmann A T
- * CeBiTec.Uni-Bielefeld.DE
- * 
- * This file is part of Cross/Maltcms.
- * 
- * Cross/Maltcms is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- * 
- * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
- * 
- * $Id: ImmutableVariableFragment2.java 160 2010-08-31 19:55:58Z nilshoffmann $
+ * $license$
+ *
+ * $Id$
  */
 
-/**
- * Created by hoffmann at 12.02.2007
- */
 package cross.datastructures.fragments;
 
 import java.io.IOException;
@@ -40,12 +21,12 @@ import ucar.ma2.Range;
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.StatsMap;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.misc.ArrayChunkIterator;
 import cross.io.misc.Base64;
 import cross.datastructures.tools.EvalTools;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * A class representing Variables. A Variable is a meta-info container for
@@ -55,9 +36,8 @@ import cross.datastructures.tools.EvalTools;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class ImmutableVariableFragment2 implements IVariableFragment {
-
-	private final Logger log = Logging.getLogger(this.getClass());
 
 	private final Fragment fragment = new Fragment();
 

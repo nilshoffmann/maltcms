@@ -1,2 +1,9 @@
+Adding a license property recursively:
+svn propset license -F Licenses/license-lgpl-v3.txt  -R *
+
+Setting properties of files recursively:
+svn propset svn:keywords "Id license" -R *
+
 Preparing a release:
 mvn release:prepare -Dusername=[username] -Dpassword=[password]
+

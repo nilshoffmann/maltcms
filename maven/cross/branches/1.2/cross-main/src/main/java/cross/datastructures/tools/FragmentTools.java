@@ -1,24 +1,9 @@
 /*
- * Copyright (C) 2008-2011 Nils Hoffmann Nils.Hoffmann A T
- * CeBiTec.Uni-Bielefeld.DE
- * 
- * This file is part of Cross/Maltcms.
- * 
- * Cross/Maltcms is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- * 
- * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
- * 
- * $Id: FragmentTools.java 116 2010-06-17 08:46:30Z nilshoffmann $
+ * $license$
+ *
+ * $Id$
  */
+
 package cross.datastructures.tools;
 
 import java.io.File;
@@ -35,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
@@ -44,14 +28,15 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.DataType;
 import ucar.nc2.Dimension;
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
+import cross.io.IDataSource;
 import cross.io.IDataSourceFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility class providing methods for storing and retrieving of Arrays,
@@ -60,9 +45,8 @@ import cross.io.IDataSourceFactory;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class FragmentTools {
-
-	static final Logger log = Logging.getLogger(FragmentTools.class);
 
 	/**
 	 * Creates a one-dimensional double array and adds it as to the

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
  * 
- * $Id: TupleNDTest.java 43 2009-10-16 17:22:55Z nilshoffmann $
+ * $Id$
  */
 
 package cross.datastructures.tuple.test;

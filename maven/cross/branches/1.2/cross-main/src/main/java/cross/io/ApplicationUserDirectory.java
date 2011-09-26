@@ -1,24 +1,9 @@
 /*
- * Copyright (C) 2008-2011 Nils Hoffmann Nils.Hoffmann A T
- * CeBiTec.Uni-Bielefeld.DE
- * 
- * This file is part of Cross/Maltcms.
- * 
- * Cross/Maltcms is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- * 
- * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
- * 
+ * $license$
+ *
  * $Id$
  */
+
 package cross.io;
 
 import java.io.File;
@@ -27,7 +12,7 @@ import java.io.File;
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-public class UserDir {
+public class ApplicationUserDirectory implements IApplicationUserDirectoryInterface {
 
     private final String appname;
     private final String version;
@@ -35,7 +20,7 @@ public class UserDir {
     
     
     /**
-     * Creates a new UserDir object, which can be branded for a specific
+     * Creates a new ApplicationUserDirectory object, which can be branded for a specific
      * application name and version. Use this object, if you want to retrieve
      * a common location for application configuration data storage.
      *
@@ -45,7 +30,7 @@ public class UserDir {
      * @param appname a short name describing the application.
      * @param version a version string for the application.
      */
-    public UserDir(final String appname, final String version) {
+    public ApplicationUserDirectory(final String appname, final String version) {
         this.appname = appname;
         this.version = version;
     }
@@ -60,6 +45,7 @@ public class UserDir {
      * in ${user.home}/.<APPLICATION_NAME>/
      * @return the application's user data directory.
      */
+    @Override
     public File getApplicationUserDirectory() {
         File userHome = new File(System.getProperty("user.home"));
         String os = System.getProperty("os.name").toLowerCase();
@@ -79,10 +65,11 @@ public class UserDir {
 
     /**
      * Returns the direct subdirectory of name <code>name</code> below this
-     * UserDir's basedir. Creates the directory if it does not exist yet.
+     * ApplicationUserDirectory's basedir. Creates the directory if it does not exist yet.
      * @param name the name of the subdirectory to return.
      * @return the subdirectory of name <code>name</code>.
      */
+    @Override
     public File getSubdirOfAppUserDir(String name) {
         return getSubdirectory(getApplicationUserDirectory(), name);
     }
@@ -94,6 +81,7 @@ public class UserDir {
      * @param name
      * @return the subdirectory of name <code>name</code> below the given basedir.
      */
+    @Override
     public File getSubdirectory(File basedir, String name) {
         File sd = new File(basedir, name);
         if (!sd.exists()) {
@@ -103,9 +91,10 @@ public class UserDir {
     }
 
     /**
-     * Returns the directory named <emph>services</emph> below this UserDir's basedir.
+     * Returns the directory named <emph>services</emph> below this ApplicationUserDirectory's basedir.
      * @return the services directory.
      */
+    @Override
     public File getServicesDirectory() {
         return getSubdirOfAppUserDir("services");
     }
@@ -118,6 +107,7 @@ public class UserDir {
      * @throws IllegalArgumentException if <code>serviceName</code> does not implement <code>serviceInterface</code>
      * @return the File object representing the subdirectory for the specific service implementation.
      */
+    @Override
     public File getDirectoryForService(Class<?> serviceInterface, Class<?> serviceName) throws IllegalArgumentException{
         if (serviceInterface.isAssignableFrom(serviceName)) {
             return getSubdirectory(getSubdirectory(getServicesDirectory(), serviceInterface.getCanonicalName()), serviceName.getCanonicalName());

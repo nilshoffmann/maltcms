@@ -1,23 +1,7 @@
 /*
- * Copyright (C) 2008-2011 Nils Hoffmann Nils.Hoffmann A T
- * CeBiTec.Uni-Bielefeld.DE
- * 
- * This file is part of Cross/Maltcms.
- * 
- * Cross/Maltcms is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- * 
- * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
- * 
- * $Id: FragmentStringParser.java 86 2010-01-10 14:46:13Z nilshoffmann $
+ * $license$
+ *
+ * $Id$
  */
 
 package cross.io.misc;
@@ -31,12 +15,12 @@ import org.slf4j.Logger;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.exception.NotImplementedException;
 import cross.datastructures.tools.EvalTools;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class is used to parse a String representation of a file structure into
@@ -63,10 +47,9 @@ import cross.datastructures.tools.EvalTools;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class FragmentStringParser {
-
-	private final Logger log = Logging.getLogger(this.getClass());
-
+    
 	/**
 	 * Create a IVariableFragment from given parameters.
 	 * 
@@ -92,11 +75,11 @@ public class FragmentStringParser {
 				vf.setIndex(ifrg);
 			}
 			// list.add(vf);
-			this.log.debug("Created VariableFragment {} with Range {}", vf,
+			log.debug("Created VariableFragment {} with Range {}", vf,
 			        vrnge);
 			return vf;
 		} catch (final IllegalArgumentException iae) {
-			this.log.error(iae.getLocalizedMessage());
+			log.error(iae.getLocalizedMessage());
 		}
 		return null;
 	}
@@ -111,34 +94,34 @@ public class FragmentStringParser {
 	 */
 	private void handleIndexVariable(final IFileFragment parent,
 	        final String var) {
-		this.log.info("Found index var in {}", var);
+		log.info("Found index var in {}", var);
 		// Separate variable name from index variable name
 		final String[] varIndex = var.split("#", 0);
 		if (varIndex.length > 1) {
 			IVariableFragment index = null;
-			this.log.info("Index var is {}", varIndex[1]);
+			log.info("Index var is {}", varIndex[1]);
 			// Look for range of index variable
 			final String[] varIndexNameRange = parseIndexRange(varIndex[1]);
 			// >1 if there is an additional range
 			Range irnge = null;
-			this.log.info("varIndexNameRange {}", varIndexNameRange);
+			log.info("varIndexNameRange {}", varIndexNameRange);
 			if (varIndexNameRange.length > 1) {
 				final String irange = varIndexNameRange[1].substring(0,
 				        varIndexNameRange[1].length() - 1);
 				final String[] beginEnd = irange.split(":", 0);
 				irnge = parseIRange(irnge, beginEnd);
-				this.log.info("Index var has range {}", irnge);
-				this.log.info("Naming index var {}", varIndexNameRange[0]);
+				log.info("Index var has range {}", irnge);
+				log.info("Naming index var {}", varIndexNameRange[0]);
 				index = getVariableFragment(null, irnge, parent,
 				        varIndexNameRange[0], null);
 			} else {
 				// one otherwise, so we
 				// read the index variable completely, and create it
-				this.log.info("Index var has no range");
+				log.info("Index var has no range");
 				if (!parent.hasChild(varIndexNameRange[0])) {
-					this.log.info("Parent does not have variable {}",
+					log.info("Parent does not have variable {}",
 					        varIndexNameRange[0]);
-					this.log.info("Naming index var {}", varIndexNameRange[0]);
+					log.info("Naming index var {}", varIndexNameRange[0]);
 					index = getVariableFragment(null, null, parent,
 					        varIndexNameRange[0], null);
 				}
@@ -161,13 +144,13 @@ public class FragmentStringParser {
 	 */
 	private void handleVariable(final String string,
 	        final IVariableFragment index, final IFileFragment parent) {
-		this.log.info("Found plain var in {}", string);
+		log.info("Found plain var in {}", string);
 		final String[] range = string.split("\\[", 0);
 		final String varname = range[0];
 		String vrange = null;
 		String[] beginEnd = null;
 		Range vrnge = null;
-		this.log.info("Range {}", Arrays.deepToString(range));
+		log.info("Range {}", Arrays.deepToString(range));
 		if (range.length > 1) {
 			vrange = range[1].substring(0, range[1].length() - 1);
 			// System.out.println("Range: "+range);
@@ -176,7 +159,7 @@ public class FragmentStringParser {
 		}
 
 		if (index != null) {
-			this.log.info("Setting index for {} to {}", string, index);
+			log.info("Setting index for {} to {}", string, index);
 		}
 		if (parent.hasChild(varname)) {
 			parent.getChild(varname).setIndex(index);
@@ -201,7 +184,7 @@ public class FragmentStringParser {
 			        .getFileFragmentFactory().create(s);
 			return ff;
 		}
-		this.log.info("Checking if Variables were given explicitly");
+		log.info("Checking if Variables were given explicitly");
 		final String[] fileNameVarNameRest = s.split(">", 0);// seperate
 		// filename and
 		// vars
@@ -217,22 +200,22 @@ public class FragmentStringParser {
 			dir = ff.getParentFile();
 			filename = ff.getName();
 		}
-		this.log.debug("From file {}, parse vars: {}", filename, Arrays
+		log.debug("From file {}, parse vars: {}", filename, Arrays
 		        .deepToString(vars));
 
 		final IFileFragment parent = Factory.getInstance()
 		        .getFileFragmentFactory().create(new File(dir, filename));
 		if (vars.length == 0) {
-			this.log.info("Vars not given explicitly, loading all!");
+			log.info("Vars not given explicitly, loading all!");
 			try {
 				Factory.getInstance().getDataSourceFactory().getDataSourceFor(
 				        parent).readStructure(parent);
 			} catch (final IOException e) {
-				this.log.error(e.getLocalizedMessage());
+				log.error(e.getLocalizedMessage());
 			}
 		} else {
 			// Find index vars first!
-			this.log.info("Scanning for variables!");
+			log.info("Scanning for variables!");
 			for (final String var : vars) {
 				// String contains index variable
 				if (var.contains("#")) {
@@ -256,7 +239,7 @@ public class FragmentStringParser {
 		String[] indexRange;
 		// System.out.println("Longer than 1");
 		indexRange = varIndex.split("\\[", 0);// seperate
-		this.log.debug("Index range {}", Arrays.deepToString(indexRange));
+		log.debug("Index range {}", Arrays.deepToString(indexRange));
 		return indexRange;
 	}
 
@@ -278,9 +261,9 @@ public class FragmentStringParser {
 				        .parseInt(beginEnd[1]));
 			}
 		} catch (final NumberFormatException e) {
-			this.log.error(e.getLocalizedMessage());
+			log.error(e.getLocalizedMessage());
 		} catch (final InvalidRangeException e) {
-			this.log.error(e.getLocalizedMessage());
+			log.error(e.getLocalizedMessage());
 		}
 		return irnge;
 	}
@@ -317,7 +300,7 @@ public class FragmentStringParser {
 			        .getFileFragmentFactory().create(s);
 			return ff;
 		}
-		this.log.info("Checking if Variables were given explicitly");
+		log.info("Checking if Variables were given explicitly");
 		// String[] fileNameVarNameRest = s.split(">", 0);// seperate
 		// filename and
 		// vars

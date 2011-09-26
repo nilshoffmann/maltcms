@@ -1,6 +1,9 @@
-/**
- * 
+/*
+ * $license$
+ *
+ * $Id$
  */
+
 package cross.ui;
 
 import java.io.File;

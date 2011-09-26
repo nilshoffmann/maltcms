@@ -1,7 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * $license$
+ *
+ * $Id$
  */
+
 package cross.annotations;
 
 import java.lang.annotation.ElementType;
@@ -18,5 +20,6 @@ import java.lang.annotation.Target;
 @Retention(value = RetentionPolicy.RUNTIME)
 @Inherited
 public @interface RequiresTypes {
-    Class[] values();
+    @SuppressWarnings("rawtypes")
+	Class[] values();
 }

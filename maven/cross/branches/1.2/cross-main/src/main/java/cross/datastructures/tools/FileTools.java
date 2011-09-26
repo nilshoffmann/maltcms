@@ -1,24 +1,9 @@
 /*
- * Copyright (C) 2008-2011 Nils Hoffmann Nils.Hoffmann A T
- * CeBiTec.Uni-Bielefeld.DE
- * 
- * This file is part of Cross/Maltcms.
- * 
- * Cross/Maltcms is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- * 
- * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
- * 
- * $Id: FileTools.java 141 2010-07-13 11:32:21Z nilshoffmann $
+ * $license$
+ *
+ * $Id$
  */
+
 package cross.datastructures.tools;
 
 import java.io.File;
@@ -27,14 +12,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.slf4j.Logger;
 
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.tools.StringTools;
 import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility class to ease handling of files and directories.
@@ -42,9 +26,9 @@ import java.util.regex.Pattern;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class FileTools {
 
-    private static Logger log = Logging.getLogger(FileTools.class);
     public static final SimpleDateFormat sdf = new SimpleDateFormat(
             "MM-dd-yyyy_HH-mm-ss", Locale.US);
 

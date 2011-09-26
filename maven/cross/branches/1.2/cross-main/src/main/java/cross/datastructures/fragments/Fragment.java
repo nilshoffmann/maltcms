@@ -1,23 +1,7 @@
 /*
- * Copyright (C) 2008-2011 Nils Hoffmann Nils.Hoffmann A T
- * CeBiTec.Uni-Bielefeld.DE
- * 
- * This file is part of Cross/Maltcms.
- * 
- * Cross/Maltcms is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- * 
- * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
- * 
- * $Id: Fragment.java 43 2009-10-16 17:22:55Z nilshoffmann $
+ * $license$
+ *
+ * $Id$
  */
 
 package cross.datastructures.fragments;
@@ -85,6 +69,7 @@ public class Fragment implements IFragment {
 	/**
 	 * Compare Fragments by comparing their string representations.
 	 */
+        @Override
 	public int compare(final IFragment arg0, final IFragment arg1) {
 		return arg0.toString().compareTo(arg1.toString());
 	}
@@ -92,6 +77,7 @@ public class Fragment implements IFragment {
 	/**
 	 * Only perform comparison on instances of Fragment.
 	 */
+        @Override
 	public int compareTo(final Object arg0) {
 		if (arg0 instanceof IFragment) {
 			return (compare(this, (IFragment) arg0));
@@ -106,6 +92,7 @@ public class Fragment implements IFragment {
 	 * @see
 	 * cross.datastructures.fragments.IFragment#getAttribute(ucar.nc2.Attribute)
 	 */
+        @Override
 	public Attribute getAttribute(final Attribute a) {
 		return getAttribute(a.getName());
 	}
@@ -116,6 +103,7 @@ public class Fragment implements IFragment {
 	 * @see
 	 * cross.datastructures.fragments.IFragment#getAttribute(java.lang.String)
 	 */
+        @Override
 	public Attribute getAttribute(final String name) {
 		return this.attributes.get(name);
 	}
@@ -125,6 +113,7 @@ public class Fragment implements IFragment {
 	 * 
 	 * @see cross.datastructures.fragments.IFragment#getAttributes()
 	 */
+        @Override
 	public List<Attribute> getAttributes() {
 		final ArrayList<Attribute> al = new ArrayList<Attribute>();
 		if (this.attributes != null) {
@@ -138,6 +127,7 @@ public class Fragment implements IFragment {
 	 * 
 	 * @see cross.datastructures.fragments.IFragment#getStats()
 	 */
+        @Override
 	public StatsMap getStats() {
 		if (this.stats == null) {
 			this.stats = new StatsMap(this);
@@ -151,6 +141,7 @@ public class Fragment implements IFragment {
 	 * @see
 	 * cross.datastructures.fragments.IFragment#hasAttribute(ucar.nc2.Attribute)
 	 */
+        @Override
 	public boolean hasAttribute(final Attribute a) {
 		return hasAttribute(a.getName());
 	}
@@ -161,6 +152,7 @@ public class Fragment implements IFragment {
 	 * @see
 	 * cross.datastructures.fragments.IFragment#hasAttribute(java.lang.String)
 	 */
+        @Override
 	public boolean hasAttribute(final String name) {
 		return this.attributes.has(name);
 	}
@@ -172,6 +164,7 @@ public class Fragment implements IFragment {
 	 * cross.datastructures.fragments.IFragment#setAttributes(ucar.nc2.Attribute
 	 * )
 	 */
+        @Override
 	public void setAttributes(final Attribute... a) {
 		if (this.attributes == null) {
 			this.attributes = new Metadata();
@@ -192,6 +185,7 @@ public class Fragment implements IFragment {
 	 * cross.datastructures.fragments.IFragment#setStats(cross.datastructures
 	 * .StatsMap)
 	 */
+        @Override
 	public void setStats(final StatsMap stats1) {
 		EvalTools.notNull(stats1, this);
 		this.stats = stats1;

@@ -1,27 +1,9 @@
 /*
- * Copyright (C) 2008-2011 Nils Hoffmann Nils.Hoffmann A T
- * CeBiTec.Uni-Bielefeld.DE
- * 
- * This file is part of Cross/Maltcms.
- * 
- * Cross/Maltcms is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- * 
- * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
- * 
- * $Id: CommandPipeline.java 116 2010-06-17 08:46:30Z nilshoffmann $
+ * $license$
+ *
+ * $Id$
  */
-/**
- * Created by Nils.Hoffmann@cebitec.uni-bielefeld.de at 28.02.2007
- */
+
 package cross.datastructures.pipeline;
 
 import java.io.File;
@@ -30,7 +12,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Formatter;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -41,17 +22,13 @@ import org.jdom.Element;
 
 import cross.Factory;
 import cross.IConfigurable;
-import cross.annotations.AnnotationInspector;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowResult;
 import cross.event.IEvent;
-import cross.exception.ConstraintViolationException;
-import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
 import lombok.AccessLevel;
@@ -72,12 +49,12 @@ import net.sf.maltcms.execution.api.Impaxs;
 @Data
 public class CommandPipeline implements ICommandSequence, IConfigurable {
     public static final String NUMBERFORMAT = "%.2f";
-    protected List<IFragmentCommand> commands = null;
-    protected Iterator<IFragmentCommand> iter = null;
-    protected TupleND<IFileFragment> input;
-    protected TupleND<IFileFragment> tmp;
-    protected IFragmentCommand head = null;
-    protected IWorkflow workflow = null;
+    private List<IFragmentCommand> commands = null;
+    private Iterator<IFragmentCommand> fragmentIterator = null;
+    private TupleND<IFileFragment> input;
+    private TupleND<IFileFragment> tmp;
+    private IFragmentCommand head = null;
+    private IWorkflow workflow = null;
     private boolean checkCommandDependencies = true;
     private Collection<Tuple2D<String, String>> pipeline = Collections.emptyList();
     private HashMap<IFragmentCommand, String> cmdToConfig = new HashMap<IFragmentCommand, String>();
@@ -85,141 +62,8 @@ public class CommandPipeline implements ICommandSequence, IConfigurable {
     @Getter
     @Setter(value = AccessLevel.NONE)
     private Impaxs executionServer = null;
-    /**
-     * Load the given commands and initialize them.
-     * 
-     * @param commands
-     */
-    protected ArrayList<IFragmentCommand> addToList(
-            final TupleND<IFileFragment> inputFragments,
-            final Collection<Tuple2D<String, String>> commands)
-            throws ConstraintViolationException {
-        EvalTools.notNull(commands, this);
-        EvalTools.notNull(inputFragments, this);
-        final ArrayList<IFragmentCommand> al = new ArrayList<IFragmentCommand>();
-        // TODO add support for pipeline constraint checking
-        // prerequisites for a correct pipeline:
-        // a: input files must provide initially created variables, which are
-        // required by first command
-        // or first command does not require any variables -> mimick by
-        // DefaultVarLoader
-        // currently, smallest initial set is total_intensity, mass_values,
-        // intensity_values,scan_index
-        // scan_acquisition_time
-        // b: later commands in the pipeline may require variables which are
-        // created further
-        // upstream and not by their immediate predecessor
-        // c: downstream commands can only be executed, if all required
-        // variables are provided
-        // upstream
-        // d: optional variables may be requested, but do not lead to
-        // termination, if they
-        // are not provided
-        final HashSet<String> providedVariables = new HashSet<String>();
-        for (final Tuple2D<String, String> s : commands) {
-            log.debug("Adding command " + s.getFirst());
-            final IFragmentCommand cmd = loadCommand(s.getFirst(), s.getSecond());
-            cmdToConfig.put(cmd, s.getSecond());
-            // ClassSpy cs = new ClassSpy(s);
-            EvalTools.notNull(
-                    cmd,
-                    "Instantiation of AFragmentCommand failed, check to remove explicit constructors in class "
-                    + s);
-            if (this.checkCommandDependencies) {
-                // required variables
-                final Collection<String> requiredVars = AnnotationInspector.getRequiredVariables(cmd);
-                // optional variables
-                final Collection<String> optionalVars = AnnotationInspector.getOptionalRequiredVariables(cmd);
-                // get variables provided from the past
-                getPersistentVariables(inputFragments, requiredVars,
-                        providedVariables);
-                getPersistentVariables(inputFragments, optionalVars,
-                        providedVariables);
-                // check dependencies
-                // The following method throws a RuntimeException, when its
-                // constraints are not met, e.g. requiredVariables are not
-                // present, leading to a termination
-                checkRequiredVariables(cmd, requiredVars, providedVariables);
-                checkOptionalVariables(cmd, optionalVars, providedVariables);
-            }
-
-            // provided variables
-            final Collection<String> createdVars = AnnotationInspector.getProvidedVariables(cmd);
-            for (final String var : createdVars) {
-                if (!var.isEmpty() && !providedVariables.contains(var)) {
-                    log.debug("Adding new variable {}, provided by {}",
-                            var, cmd.getClass().getName());
-                    providedVariables.add(var);
-                } else {
-                    log.warn(
-                            "Potential name clash, variable {} already provided!",
-                            var);
-                }
-            }
-            al.add(cmd);
-            EvalTools.notNull(cmd, this);
-        }
-        return al;
-    }
-
-    protected Collection<String> checkOptionalVariables(
-            final IFragmentCommand cmd, final Collection<String> optionalVars,
-            final HashSet<String> providedVariables) {
-        if (optionalVars.size() == 0) {
-            log.debug("No optional variables declared!");
-            return optionalVars;
-        }
-        boolean checkOpt = true;
-        for (final String var : optionalVars) {
-            if (!var.isEmpty() && !providedVariables.contains(var)) {
-                log.warn(
-                        "Variable {} requested as optional by {} not declared as created by previous commands!",
-                        var, cmd.getClass().getName());
-                checkOpt = false;
-            }
-
-        }
-        if (checkOpt && (optionalVars.size() > 0)) {
-            log.debug(
-                    "Command {} has access to all optional requested variables!",
-                    cmd.getClass().getName());
-        }
-        return optionalVars;
-    }
-
-    protected Collection<String> checkRequiredVariables(
-            final IFragmentCommand cmd, final Collection<String> requiredVars,
-            final HashSet<String> providedVariables)
-            throws ConstraintViolationException {
-        if (requiredVars.size() == 0) {
-            log.debug("No required variables declared!");
-            return requiredVars;
-        }
-        boolean check = true;
-        final Collection<String> failedVars = new ArrayList<String>();
-        for (final String var : requiredVars) {
-            log.debug("Checking variable {}", var);
-            if (!var.isEmpty() && !providedVariables.contains(var)) {
-                log.warn(
-                        "Variable {} requested by {} not declared as created by previous commands!",
-                        var, cmd.getClass().getName());
-                check = false;
-                failedVars.add(var);
-            }
-        }
-        if (check) {
-            if (requiredVars.size() > 0) {
-                log.debug(
-                        "Command {} has access to all required variables!", cmd.getClass().getName());
-            }
-            return requiredVars;
-        } else {
-            throw new ConstraintViolationException("Command "
-                    + cmd.getClass().getName()
-                    + " requires non-existing variables: "
-                    + failedVars.toString());
-        }
-    }
+    
+    private IPipelineValidator validator;
 
     @Override
     public void configure(final Configuration cfg) {
@@ -253,6 +97,7 @@ public class CommandPipeline implements ICommandSequence, IConfigurable {
      * 
      * @see maltcms.ucar.ma2.CommandSequence#getInput()
      */
+    @Override
     public TupleND<IFileFragment> getInput() {
         return this.input;
     }
@@ -262,45 +107,14 @@ public class CommandPipeline implements ICommandSequence, IConfigurable {
         return this.workflow;
     }
 
-    /**
-     * @param inputFragments
-     * @param providedVariables
-     * @return
-     */
-    private void getPersistentVariables(
-            final TupleND<IFileFragment> inputFragments,
-            final Collection<String> requiredVariables,
-            final HashSet<String> providedVariables) {
-
-        for (final IFileFragment ff : inputFragments) {
-            for (final String s : requiredVariables) {
-                // resolve the variables name
-                final String vname = Factory.getInstance().getConfiguration().getString(s);
-                if ((vname != null) && !vname.isEmpty()) {
-                    try {
-                        final IVariableFragment ivf = ff.getChild(vname, true);
-                        log.debug("Retrieved var {}", ivf.getVarname());
-                        if (!providedVariables.contains(s)) {
-                            providedVariables.add(s);
-                        }
-                    } catch (final ResourceNotAvailableException rnae) {
-                        log.debug(
-                                "Could not find variable {} as child of {}",
-                                vname, ff.getAbsolutePath());
-                    }
-                }
-            }
-        }
-    }
-
-
     /*
      * (non-Javadoc)
      * 
      * @see maltcms.ucar.ma2.CommandSequence#hasNext()
      */
+    @Override
     public boolean hasNext() {
-        return this.iter.hasNext();
+        return this.fragmentIterator.hasNext();
     }
 
     /*
@@ -345,9 +159,10 @@ public class CommandPipeline implements ICommandSequence, IConfigurable {
      * 
      * @see maltcms.ucar.ma2.CommandSequence#next()
      */
+    @Override
     public TupleND<IFileFragment> next() {
-        if (this.iter.hasNext()) {
-            final IFragmentCommand cmd = this.iter.next();
+        if (this.fragmentIterator.hasNext()) {
+            final IFragmentCommand cmd = this.fragmentIterator.next();
             cmd.setWorkflow(getWorkflow());
             cmd.getWorkflow().getOutputDirectory(cmd);
             if (cmdToConfig.containsKey(cmd)) {
@@ -408,6 +223,7 @@ public class CommandPipeline implements ICommandSequence, IConfigurable {
      * 
      * @see maltcms.ucar.ma2.CommandSequence#remove()
      */
+    @Override
     public void remove() {
     }
 
@@ -415,7 +231,7 @@ public class CommandPipeline implements ICommandSequence, IConfigurable {
     public void setCommands(final Collection<IFragmentCommand> c) {
         EvalTools.inRangeI(1, Integer.MAX_VALUE, c.size(), this);
         this.commands = new ArrayList<IFragmentCommand>(c);
-        this.iter = this.commands.iterator();
+        this.fragmentIterator = this.commands.iterator();
         this.cnt = 0;
     }
 

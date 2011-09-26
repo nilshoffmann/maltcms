@@ -1,28 +1,9 @@
 /*
- * Copyright (C) 2008-2011 Nils Hoffmann Nils.Hoffmann A T
- * CeBiTec.Uni-Bielefeld.DE
- * 
- * This file is part of Cross/Maltcms.
- * 
- * Cross/Maltcms is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- * 
- * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
- * 
- * $Id: FileFragmentFactory.java 110 2010-03-25 15:21:19Z nilshoffmann $
+ * $license$
+ *
+ * $Id$
  */
 
-/**
- * 
- */
 package cross.datastructures.fragments;
 
 import java.io.File;
@@ -48,10 +29,12 @@ public class FileFragmentFactory implements IFileFragmentFactory {
 
 	private FragmentStringParser fsp;
 
+        @Override
 	public void configure(final Configuration cfg) {
 		this.inputBasedir = cfg.getString("input.basedir", "");
 	}
 
+        @Override
 	public IFileFragment create(final File f) {
 		if (FileFragment.hasFragment(f.getAbsolutePath())) {
 			return FileFragment.getFragment(f.getAbsolutePath());
@@ -59,6 +42,7 @@ public class FileFragmentFactory implements IFileFragmentFactory {
 		return new FileFragment(f);
 	}
 
+        @Override
 	public IFileFragment create(final File f,
 	        final IFileFragment... sourceFiles) {
 		final IFileFragment iff = create(f);
@@ -66,10 +50,12 @@ public class FileFragmentFactory implements IFileFragmentFactory {
 		return iff;
 	}
 
+        @Override
 	public IFileFragment create(final String dirname, final String filename) {
 		return create(dirname, filename, new LinkedList<IFileFragment>());
 	}
 
+        @Override
 	public IFileFragment create(final String dirname, final String filename,
 	        final IFileFragment... sourceFiles) {
 		final IFileFragment iff = create(new File(dirname, filename));
@@ -77,6 +63,7 @@ public class FileFragmentFactory implements IFileFragmentFactory {
 		return iff;
 	}
 	
+        @Override
 	public IFileFragment create(final File dir, final String filename,
 	        final IFileFragment... sourceFiles) {
 		final IFileFragment iff = create(new File(dir, filename));
@@ -84,6 +71,7 @@ public class FileFragmentFactory implements IFileFragmentFactory {
 		return iff;
 	}
 
+        @Override
 	public IFileFragment create(final String dirname, final String filename,
 	        final Collection<IFileFragment> resourceFiles)
 	        throws IllegalArgumentException {
@@ -112,7 +100,7 @@ public class FileFragmentFactory implements IFileFragmentFactory {
 	 * @param f2
 	 * @return
 	 */
-
+        @Override
 	public IFileFragment create(final IFileFragment f1, final IFileFragment f2,
 	        final File outputdir) {
 		EvalTools.notNull(new Object[] { f1, f2 }, this);
@@ -122,6 +110,7 @@ public class FileFragmentFactory implements IFileFragmentFactory {
 		return ff;
 	}
 
+        @Override
 	public IFileFragment create(final String s) {
 		String filename = "";
 		String dirname = "";
@@ -144,6 +133,7 @@ public class FileFragmentFactory implements IFileFragmentFactory {
 	 * @param dataInfo
 	 * @return
 	 */
+        @Override
 	public IFileFragment fromString(final String dataInfo) {
 		if (this.fsp == null) {
 			this.fsp = new FragmentStringParser();

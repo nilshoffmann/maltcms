@@ -1,23 +1,7 @@
 /*
- * Copyright (C) 2008-2011 Nils Hoffmann Nils.Hoffmann A T
- * CeBiTec.Uni-Bielefeld.DE
- * 
- * This file is part of Cross/Maltcms.
- * 
- * Cross/Maltcms is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- * 
- * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
- * 
- * $Id: NamedGroupFragment.java 43 2009-10-16 17:22:55Z nilshoffmann $
+ * $license$
+ *
+ * $Id$
  */
 
 package cross.datastructures.fragments;
@@ -25,10 +9,8 @@ package cross.datastructures.fragments;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
-import org.slf4j.Logger;
-
-import cross.Logging;
 
 /**
  * Represents a VariableFragment group with a given (unique) name.
@@ -36,10 +18,8 @@ import cross.Logging;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class NamedGroupFragment extends Fragment implements IGroupFragment {
-
-	// protected static long GROUPID = 0;
-	private final Logger log = Logging.getLogger(this.getClass());
 
 	private ConcurrentHashMap<String, IVariableFragment> children = null;
 
