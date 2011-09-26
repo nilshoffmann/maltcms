@@ -32,6 +32,12 @@
         </snapshotRepository>
     </distributionManagement>
 
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License v3</name>
+            <url>http://www.gnu.org/licenses/</url>
+        </license>
+    </licenses>
     <build>
 		<!-- To define the plugin version in your parent POM -->
         <pluginManagement>
