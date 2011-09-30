@@ -23,40 +23,19 @@
  * $Id$
  */
 
-package cross.io.cli;
-
-import java.security.Permission;
+package cross.commands.workflow;
 
 /**
- *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * 
+ * 
  */
-public class CustomSecurityManager extends SecurityManager {
+public interface IWorkflowObjectResult<T> extends IWorkflowResult {
 
-    @Override
-    public void checkPermission(Permission perm) {
-        // allow anything.
-    }
+        public Class<? extends T> getTypeClass();
+    
+	public T getObject();
 
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-        // allow anything.
-    }
+	public void setObject(T t);
 
-    @Override
-    public void checkExit(int status) {
-        super.checkExit(status);
-        throw new ExitException(status);
-    }
-
-    public class ExitException extends SecurityException {
-
-        private static final long serialVersionUID = -1982617086752946683L;
-        public final int status;
-
-        public ExitException(int status) {
-            super("Tried to exit vm with status "+status);
-            this.status = status;
-        }
-    }
 }

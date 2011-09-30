@@ -23,40 +23,28 @@
  * $Id$
  */
 
-package cross.io.cli;
+package cross.commands;
 
-import java.security.Permission;
+import java.io.Serializable;
 
 /**
- *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * Interface for objects which represent a command acting on an object of type <code>IN</code>
+ * and returning objects of type <code>OUT</code>.
+ * 
+ * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * 
+ * @param <IN>
+ *            input type.
+ * @param <OUT>
+ *            output type.
  */
-public class CustomSecurityManager extends SecurityManager {
+public interface ICommand<IN, OUT> extends Serializable {
 
-    @Override
-    public void checkPermission(Permission perm) {
-        // allow anything.
-    }
-
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-        // allow anything.
-    }
-
-    @Override
-    public void checkExit(int status) {
-        super.checkExit(status);
-        throw new ExitException(status);
-    }
-
-    public class ExitException extends SecurityException {
-
-        private static final long serialVersionUID = -1982617086752946683L;
-        public final int status;
-
-        public ExitException(int status) {
-            super("Tried to exit vm with status "+status);
-            this.status = status;
-        }
-    }
+    /**
+     * Apply a command implementation to an Object of type <code>IN</code>,
+     * returning an object of type <code>OUT</code>.
+     * @param t
+     * @return
+     */
+    public OUT apply(IN in);
 }

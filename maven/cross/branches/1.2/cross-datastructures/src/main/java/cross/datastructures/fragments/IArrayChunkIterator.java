@@ -23,40 +23,20 @@
  * $Id$
  */
 
-package cross.io.cli;
+package cross.datastructures.fragments;
 
-import java.security.Permission;
+import java.util.Iterator;
+import ucar.ma2.Array;
 
 /**
  *
+ * Interface for chunk iterators on arrays. Arrays 
+ * may be very large physically stored on disk. A chunked
+ * array iterator allows an efficient in-order traversal of 
+ * array data in user defined chunks.
+ * 
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
-public class CustomSecurityManager extends SecurityManager {
+public interface IArrayChunkIterator extends Iterator<Array> {
 
-    @Override
-    public void checkPermission(Permission perm) {
-        // allow anything.
-    }
-
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-        // allow anything.
-    }
-
-    @Override
-    public void checkExit(int status) {
-        super.checkExit(status);
-        throw new ExitException(status);
-    }
-
-    public class ExitException extends SecurityException {
-
-        private static final long serialVersionUID = -1982617086752946683L;
-        public final int status;
-
-        public ExitException(int status) {
-            super("Tried to exit vm with status "+status);
-            this.status = status;
-        }
-    }
 }

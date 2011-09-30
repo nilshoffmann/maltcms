@@ -23,40 +23,27 @@
  * $Id$
  */
 
-package cross.io.cli;
+package cross.io.misc;
 
-import java.security.Permission;
+import java.io.File;
+import java.io.FileFilter;
 
 /**
- *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * Matches any given file.
+ * 
+ * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * 
  */
-public class CustomSecurityManager extends SecurityManager {
+public class DefaultMatchAllFileFilter implements FileFilter {
 
-    @Override
-    public void checkPermission(Permission perm) {
-        // allow anything.
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.io.FileFilter#accept(java.io.File)
+	 */
+	@Override
+	public boolean accept(final File pathname) {
+		return true;
+	}
 
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-        // allow anything.
-    }
-
-    @Override
-    public void checkExit(int status) {
-        super.checkExit(status);
-        throw new ExitException(status);
-    }
-
-    public class ExitException extends SecurityException {
-
-        private static final long serialVersionUID = -1982617086752946683L;
-        public final int status;
-
-        public ExitException(int status) {
-            super("Tried to exit vm with status "+status);
-            this.status = status;
-        }
-    }
 }

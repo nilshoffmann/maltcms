@@ -23,40 +23,25 @@
  * $Id$
  */
 
-package cross.io.cli;
+package cross.commands.workflow;
 
-import java.security.Permission;
+import java.io.File;
+
+import cross.datastructures.fragments.IFileFragment;
 
 /**
- *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * 
+ * 
  */
-public class CustomSecurityManager extends SecurityManager {
+public interface IWorkflowFileResult extends IWorkflowResult {
 
-    @Override
-    public void checkPermission(Permission perm) {
-        // allow anything.
-    }
+	public File getFile();
 
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-        // allow anything.
-    }
+	public void setFile(File iff);
 
-    @Override
-    public void checkExit(int status) {
-        super.checkExit(status);
-        throw new ExitException(status);
-    }
+	public IFileFragment[] getResources();
 
-    public class ExitException extends SecurityException {
+	public void setResources(IFileFragment... resources);
 
-        private static final long serialVersionUID = -1982617086752946683L;
-        public final int status;
-
-        public ExitException(int status) {
-            super("Tried to exit vm with status "+status);
-            this.status = status;
-        }
-    }
 }

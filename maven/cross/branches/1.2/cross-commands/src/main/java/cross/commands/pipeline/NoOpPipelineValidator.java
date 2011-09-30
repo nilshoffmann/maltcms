@@ -23,40 +23,31 @@
  * $Id$
  */
 
-package cross.io.cli;
+package cross.commands.pipeline;
 
-import java.security.Permission;
+import cross.commands.pipeline.IPipelineValidator;
+import cross.commands.fragments.IFragmentCommand;
+import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.tuple.TupleND;
+import cross.exception.ConstraintViolationException;
+import java.util.List;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
-public class CustomSecurityManager extends SecurityManager {
+@Data
+@Slf4j
+public class NoOpPipelineValidator implements IPipelineValidator {
 
+    private List<IFragmentCommand> fragmentCommands;
+    private TupleND<IFileFragment> inputFragments;
+    
     @Override
-    public void checkPermission(Permission perm) {
-        // allow anything.
+    public void validate() throws ConstraintViolationException {
+        
     }
-
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-        // allow anything.
-    }
-
-    @Override
-    public void checkExit(int status) {
-        super.checkExit(status);
-        throw new ExitException(status);
-    }
-
-    public class ExitException extends SecurityException {
-
-        private static final long serialVersionUID = -1982617086752946683L;
-        public final int status;
-
-        public ExitException(int status) {
-            super("Tried to exit vm with status "+status);
-            this.status = status;
-        }
-    }
+    
 }

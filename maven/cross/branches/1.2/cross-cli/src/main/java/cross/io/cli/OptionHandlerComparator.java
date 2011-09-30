@@ -25,38 +25,24 @@
 
 package cross.io.cli;
 
-import java.security.Permission;
+import java.util.Comparator;
 
 /**
  *
+ * Comparator implementation for IOptionHandler implementations.
+ * Compares the priority of ICliOptionHandlers to order them in ascending
+ * order of priority. Lower priority means more important, e.g. -100 is more 
+ * important than 100. If two IOptionHandlers have the same priority, their 
+ * order is determined by the service loader and class loader implementation.
+ * 
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
-public class CustomSecurityManager extends SecurityManager {
+public class OptionHandlerComparator implements Comparator<IOptionHandler>{
 
     @Override
-    public void checkPermission(Permission perm) {
-        // allow anything.
+    public int compare(IOptionHandler t, IOptionHandler t1) {
+        return t1.getPriority()-t.getPriority();
+        
     }
-
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-        // allow anything.
-    }
-
-    @Override
-    public void checkExit(int status) {
-        super.checkExit(status);
-        throw new ExitException(status);
-    }
-
-    public class ExitException extends SecurityException {
-
-        private static final long serialVersionUID = -1982617086752946683L;
-        public final int status;
-
-        public ExitException(int status) {
-            super("Tried to exit vm with status "+status);
-            this.status = status;
-        }
-    }
+    
 }

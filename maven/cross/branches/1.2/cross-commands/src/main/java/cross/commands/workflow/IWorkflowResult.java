@@ -23,40 +23,25 @@
  * $Id$
  */
 
-package cross.io.cli;
+package cross.commands.workflow;
 
-import java.security.Permission;
+import cross.datastructures.xml.IXMLSerializable;
 
 /**
- *
+ * A result of a @see cross.datastructures.workflow.IWorkflowElement, linking
+ * to a created file or immediate resources (e.g. statistics).
+ * 
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * 
  */
-public class CustomSecurityManager extends SecurityManager {
+public interface IWorkflowResult extends IXMLSerializable {
 
-    @Override
-    public void checkPermission(Permission perm) {
-        // allow anything.
-    }
+	public IWorkflowElement getWorkflowElement();
 
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-        // allow anything.
-    }
+	public WorkflowSlot getWorkflowSlot();
 
-    @Override
-    public void checkExit(int status) {
-        super.checkExit(status);
-        throw new ExitException(status);
-    }
+	public void setWorkflowElement(IWorkflowElement iwe);
 
-    public class ExitException extends SecurityException {
+	public void setWorkflowSlot(WorkflowSlot ws);
 
-        private static final long serialVersionUID = -1982617086752946683L;
-        public final int status;
-
-        public ExitException(int status) {
-            super("Tried to exit vm with status "+status);
-            this.status = status;
-        }
-    }
 }

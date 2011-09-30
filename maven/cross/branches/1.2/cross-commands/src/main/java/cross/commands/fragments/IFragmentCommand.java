@@ -23,40 +23,24 @@
  * $Id$
  */
 
-package cross.io.cli;
+package cross.commands.fragments;
 
-import java.security.Permission;
+import cross.commands.ICommand;
+import cross.commands.workflow.IWorkflowElement;
+import cross.commands.workflow.IWorkflowResult;
+import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.tuple.TupleND;
+import cross.event.IEventSource;
 
 /**
- *
+ * Interface combining functionality from ICommand, IEventSource and 
+ * IWorkflowElement
+ * 
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * 
  */
-public class CustomSecurityManager extends SecurityManager {
+public interface IFragmentCommand extends
+        ICommand<TupleND<IFileFragment>, TupleND<IFileFragment>>,
+        IEventSource<IWorkflowResult>, IWorkflowElement {
 
-    @Override
-    public void checkPermission(Permission perm) {
-        // allow anything.
-    }
-
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-        // allow anything.
-    }
-
-    @Override
-    public void checkExit(int status) {
-        super.checkExit(status);
-        throw new ExitException(status);
-    }
-
-    public class ExitException extends SecurityException {
-
-        private static final long serialVersionUID = -1982617086752946683L;
-        public final int status;
-
-        public ExitException(int status) {
-            super("Tried to exit vm with status "+status);
-            this.status = status;
-        }
-    }
 }

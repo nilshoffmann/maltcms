@@ -23,40 +23,14 @@
  * $Id$
  */
 
-package cross.io.cli;
-
-import java.security.Permission;
+package cross.commands.workflow;
 
 /**
- *
+ * 
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * 
  */
-public class CustomSecurityManager extends SecurityManager {
+public enum WorkflowSlot {
+	FILEIO, STATISTICS, FILECONVERSION, WARPING, NOISEREDUCTION, GENERAL_PREPROCESSING, PEAKFINDING, PEAKMATCHING, IDENTIFICATION, VALIDATION, VISUALIZATION, ALIGNMENT, CLUSTERING;
 
-    @Override
-    public void checkPermission(Permission perm) {
-        // allow anything.
-    }
-
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-        // allow anything.
-    }
-
-    @Override
-    public void checkExit(int status) {
-        super.checkExit(status);
-        throw new ExitException(status);
-    }
-
-    public class ExitException extends SecurityException {
-
-        private static final long serialVersionUID = -1982617086752946683L;
-        public final int status;
-
-        public ExitException(int status) {
-            super("Tried to exit vm with status "+status);
-            this.status = status;
-        }
-    }
 }

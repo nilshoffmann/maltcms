@@ -23,40 +23,51 @@
  * $Id$
  */
 
-package cross.io.cli;
-
-import java.security.Permission;
+package cross.commands.workflow;
 
 /**
- *
+ * 
+ * Interface for workflow results, which hava a progressing behaviour.
+ * 
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * 
+ * 
  */
-public class CustomSecurityManager extends SecurityManager {
+public interface IWorkflowProgressResult extends IWorkflowResult {
 
-    @Override
-    public void checkPermission(Permission perm) {
-        // allow anything.
-    }
+	/**
+	 * Returns the index of the currently active step.
+	 * 
+	 * @return
+	 */
+	public int getCurrentStep();
 
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-        // allow anything.
-    }
+	/**
+	 * Returns the number of defined steps in IWorkflowElement. Default is 1.
+	 * 
+	 * @return
+	 */
+	public int getNumberOfSteps();
 
-    @Override
-    public void checkExit(int status) {
-        super.checkExit(status);
-        throw new ExitException(status);
-    }
+	/**
+	 * Returns the overall progress of an IWorkflowElement, range is from 0 (no
+	 * progress yet) via 1 to 100 (complete)
+	 * 
+	 * @return
+	 */
+	public int getOverallProgress();
 
-    public class ExitException extends SecurityException {
+	/**
+	 * Return string names of each step.
+	 * 
+	 * @return
+	 */
+	public String[] getStepNames();
 
-        private static final long serialVersionUID = -1982617086752946683L;
-        public final int status;
+	/**
+	 * Advances the internal index by one, to the next step. Has no effect, if
+	 * last step has been reached.
+	 */
+	public IWorkflowProgressResult nextStep();
 
-        public ExitException(int status) {
-            super("Tried to exit vm with status "+status);
-            this.status = status;
-        }
-    }
 }

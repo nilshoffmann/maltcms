@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2008-2011 Nils Hoffmann Nils.Hoffmann A T
+    CeBiTec.Uni-Bielefeld.DE
+
+    This file is part of Cross/Maltcms.
+
+    Cross/Maltcms is free software: you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as published by the
+    Free Software Foundation, either version 3 of the License, or (at your
+    option) any later version.
+
+    Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+    details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<!--
+    Document   : cross.xml
+    Created on : 24. September 2011, 14:03
+    Author     : nilshoffmann
+    Description: Basic default beans configuration of the cross runtime system to be used 
+                 by a Spring ApplicationContext instance.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="searchContextAttributes" value="true"/>
+        <property name="contextOverride" value="true"/>
+        <property name="ignoreResourceNotFound" value="false"/>
+        <property name="locations">
+            <list>
+                <value>classpath:application.properties</value>
+                <value>${config}</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="factory" class="cross.Factory">
+           
+    </bean>
+       
+    <bean id="inputDataFactory" class="cross.io.InputDataFactory">
+        <property name="input" value="*.cdf"/>
+        <property name="basedir" value="."/>
+        <property name="recurse" value="false"/>
+    </bean>
+       
+    <bean id="dataSourceFactory" class="cross.io.DataSourceFactory"/>
+       
+    <bean id="workflowFactory" class="cross.datastructures.workflow.WorkflowFactory">
+    </bean>
+
+</beans>

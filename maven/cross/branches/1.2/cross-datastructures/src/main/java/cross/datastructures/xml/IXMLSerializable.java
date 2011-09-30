@@ -23,40 +23,19 @@
  * $Id$
  */
 
-package cross.io.cli;
+package cross.datastructures.xml;
 
-import java.security.Permission;
+import org.jdom.Element;
 
 /**
- *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * Interface allowing a Visitor like request to implementing objects to decorate
+ * the passed in Element to their liking with their own xml structure.
+ * 
+ * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * 
  */
-public class CustomSecurityManager extends SecurityManager {
+public interface IXMLSerializable {
 
-    @Override
-    public void checkPermission(Permission perm) {
-        // allow anything.
-    }
+	public void appendXML(Element e);
 
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-        // allow anything.
-    }
-
-    @Override
-    public void checkExit(int status) {
-        super.checkExit(status);
-        throw new ExitException(status);
-    }
-
-    public class ExitException extends SecurityException {
-
-        private static final long serialVersionUID = -1982617086752946683L;
-        public final int status;
-
-        public ExitException(int status) {
-            super("Tried to exit vm with status "+status);
-            this.status = status;
-        }
-    }
 }
