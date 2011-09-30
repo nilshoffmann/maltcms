@@ -48,7 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import maltcms.datastructures.array.IFeatureVector;
+import cross.datastructures.feature.IFeatureVector;
 import ucar.ma2.Array;
 
 /**

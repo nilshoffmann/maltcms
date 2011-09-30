@@ -34,6 +34,8 @@ import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of progressive, tree based multiple alignment.
@@ -41,6 +43,8 @@ import cross.datastructures.workflow.WorkflowSlot;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
+@Data
 public class ProgressiveTreeAlignment extends AFragmentCommand {
 
     private final Logger log = Logging.getLogger(this);

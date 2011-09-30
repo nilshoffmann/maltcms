@@ -33,6 +33,8 @@ import javax.imageio.ImageIO;
 
 import cross.datastructures.tools.FileTools;
 import cross.tools.MathTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of Affinity Propagation, see ... for details. FIXME add
@@ -41,6 +43,8 @@ import cross.tools.MathTools;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
+@Data
 public class AffinityPropagationAlgorithm extends ClusteringAlgorithm implements
         Runnable {
 

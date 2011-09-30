@@ -23,22 +23,23 @@ import org.slf4j.Logger;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import cross.Factory;
-import cross.Logging;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  * 
  * 
  */
+@Slf4j
+@Data
 public class LangeTautenhahnFormatExporter extends AFragmentCommand {
-
-    private Logger log = Logging.getLogger(this);
 
     /*
      * (non-Javadoc)

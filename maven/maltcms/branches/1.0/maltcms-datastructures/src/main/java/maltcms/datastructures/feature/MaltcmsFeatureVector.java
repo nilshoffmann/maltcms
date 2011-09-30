@@ -24,7 +24,7 @@ package maltcms.datastructures.feature;
 import java.util.ArrayList;
 import java.util.List;
 
-import maltcms.datastructures.array.IFeatureVector;
+import cross.datastructures.feature.IFeatureVector;
 import ucar.ma2.Array;
 import ucar.ma2.InvalidRangeException;
 import cross.datastructures.fragments.IFileFragment;

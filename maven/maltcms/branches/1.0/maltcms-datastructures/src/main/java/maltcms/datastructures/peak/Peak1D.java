@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
-import maltcms.datastructures.array.IFeatureVector;
+import cross.datastructures.feature.IFeatureVector;
 import maltcms.tools.PublicMemberGetters;
 import maltcms.tools.ArrayTools;
 import ucar.ma2.Array;

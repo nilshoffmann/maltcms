@@ -63,6 +63,8 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ConstraintViolationException;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Calculates pariwise scores or costs between time series of possibly different
@@ -72,6 +74,8 @@ import cross.tools.StringTools;
  */
 @ProvidesVariables(names = {"var.minimizing_array_comp",
     "var.pairwise_distance_matrix", "var.pairwise_distance_names"})
+@Slf4j
+@Data
 public class PairwiseDistanceCalculator extends AFragmentCommand {
 
 //	public static void main(final String[] args) {

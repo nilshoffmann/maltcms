@@ -27,6 +27,8 @@ import maltcms.commands.distances.ListDistanceFunction;
 import maltcms.datastructures.cluster.BinaryCluster;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implements UPGMA Algorithm by ? (cite ...) FIXME add citation
@@ -34,6 +36,8 @@ import cross.datastructures.tuple.TupleND;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
+@Data
 public class UPGMAAlgorithm extends ClusteringAlgorithm {
 
     public static void main(final String[] args) {

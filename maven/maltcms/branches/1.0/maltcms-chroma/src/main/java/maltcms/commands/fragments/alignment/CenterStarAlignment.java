@@ -63,6 +63,8 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.FragmentTools;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of the center star approximation for multiple alignment.
@@ -75,6 +77,8 @@ import cross.tools.StringTools;
 @ProvidesVariables(names = {"var.multiple_alignment",
     "var.multiple_alignment_names", "var.multiple_alignment_type",
     "var.multiple_alignment_creator"})
+@Slf4j
+@Data
 public class CenterStarAlignment extends AFragmentCommand {
 
     @Configurable(name = "var.pairwise_distance_matrix",

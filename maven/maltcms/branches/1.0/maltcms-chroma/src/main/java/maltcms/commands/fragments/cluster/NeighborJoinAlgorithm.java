@@ -27,6 +27,8 @@ import maltcms.commands.distances.ListDistanceFunction;
 import maltcms.datastructures.cluster.BinaryCluster;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of NeighborJoining by Saitou and Nei (cite...) FIXME add
@@ -35,6 +37,8 @@ import cross.datastructures.tuple.TupleND;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
+@Data
 public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
 
     public static void main(final String[] args) {

@@ -21,7 +21,7 @@
  */
 package maltcms.datastructures.ms;
 
-import maltcms.datastructures.array.IFeatureVector;
+import cross.datastructures.feature.IFeatureVector;
 import ucar.ma2.Array;
 
 /**

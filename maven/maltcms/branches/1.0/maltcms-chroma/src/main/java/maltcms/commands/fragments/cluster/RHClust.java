@@ -35,7 +35,11 @@ import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.exception.NotImplementedException;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Data
 public class RHClust implements IClusteringAlgorithm, IConfigurable {
 
     public enum ClusterMethod {

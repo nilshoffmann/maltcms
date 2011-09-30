@@ -97,6 +97,8 @@ import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import ucar.ma2.ArrayBoolean;
 
 /**
@@ -116,6 +118,8 @@ import ucar.ma2.ArrayBoolean;
 @ProvidesVariables(names = {"var.anchors.retention_index_names",
     "var.anchors.retention_times", "var.anchors.retention_indices",
     "var.anchors.retention_scans"})
+@Slf4j
+@Data
 public class PeakCliqueAssignment extends AFragmentCommand {
 
     class PeakComparator implements Comparator<Peak> {

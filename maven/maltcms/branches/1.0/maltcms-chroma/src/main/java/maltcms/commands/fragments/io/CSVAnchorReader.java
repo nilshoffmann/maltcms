@@ -33,7 +33,6 @@ import java.util.Vector;
 import maltcms.io.csv.CSVReader;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
@@ -42,7 +41,6 @@ import ucar.ma2.DataType;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.commands.fragments.AFragmentCommand;
@@ -53,6 +51,8 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Class reading retention indices/anchors/identified compounds from files with
@@ -65,6 +65,8 @@ import cross.datastructures.tools.EvalTools;
 @RequiresOptionalVariables(names = {"var.scan_acquisition_time"})
 @ProvidesVariables(names = {"var.anchors.retention_index_names",
     "var.anchors.retention_scans"})
+@Slf4j
+@Data
 public class CSVAnchorReader extends AFragmentCommand {
 
     public static void main(final String[] args) {
@@ -104,7 +106,6 @@ public class CSVAnchorReader extends AFragmentCommand {
     private String basedir = "";
     private boolean scan;
     private int max_names_length = Integer.MIN_VALUE;
-    private final Logger log = Logging.getLogger(this.getClass());
     private String anchorNamesVariableName;
     private String anchorTimesVariableName;
     private String anchorRetentionIndexVariableName;

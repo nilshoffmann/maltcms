@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import maltcms.datastructures.array.IFeatureVector;
+import cross.datastructures.feature.IFeatureVector;
 
 import org.slf4j.Logger;
 

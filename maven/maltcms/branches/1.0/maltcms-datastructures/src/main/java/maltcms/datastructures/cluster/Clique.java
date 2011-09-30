@@ -10,12 +10,12 @@ import java.util.HashSet;
 import java.util.List;
 
 import maltcms.commands.ArrayStatsMap;
-import maltcms.datastructures.array.IFeatureVector;
+import cross.datastructures.feature.IFeatureVector;
 
 import org.slf4j.Logger;
 
 import cross.Logging;
-import maltcms.datastructures.array.IMutableFeatureVector;
+import cross.datastructures.feature.IMutableFeatureVector;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE

@@ -18,6 +18,8 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
@@ -30,15 +32,17 @@ import cross.datastructures.workflow.WorkflowSlot;
  * 
  */
 @ProvidesVariables(names = {"var.scan_acquisition_time"})
+@Slf4j
+@Data
 public class ANDIChromImporter extends AFragmentCommand {
 
-    @Configurable(name = "ordinate_values")
+    @Configurable(name = "ordinate_values",value="ordinate_values")
     private String ticVarName = "ordinate_values";
-    @Configurable(name = "scan_acquisition_time")
+    @Configurable(name = "scan_acquisition_time",value="scan_acquisition_time")
     private String satVarName = "scan_acquisition_time";
-    @Configurable(name = "actual_sampling_interval")
+    @Configurable(name = "actual_sampling_interval",value="actual_sampling_interval")
     private String asiVarName = "actual_sampling_interval";
-    @Configurable(name = "actual_delay_time")
+    @Configurable(name = "actual_delay_time",value="actual_delay_time")
     private String samplingDelay = "actual_delay_time";
 
     /*

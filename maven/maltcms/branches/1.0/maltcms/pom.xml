@@ -104,12 +104,22 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-math</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-chroma4D</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-chroma4D-srg</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-chroma4D-cwt</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -135,6 +145,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-datastructures</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-datastructures-quadtree</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -223,6 +238,16 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-io-mzml</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-math</artifactId>
+                    <groupId>commons-math</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>looks</artifactId>
+                    <groupId>com.jgoodies</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

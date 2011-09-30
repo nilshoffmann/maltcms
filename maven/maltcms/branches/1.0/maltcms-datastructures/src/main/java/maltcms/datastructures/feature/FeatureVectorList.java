@@ -24,7 +24,7 @@ package maltcms.datastructures.feature;
 import java.util.HashSet;
 import java.util.List;
 
-import maltcms.datastructures.array.IFeatureVector;
+import cross.datastructures.feature.IFeatureVector;
 
 import org.apache.commons.configuration.Configuration;
 

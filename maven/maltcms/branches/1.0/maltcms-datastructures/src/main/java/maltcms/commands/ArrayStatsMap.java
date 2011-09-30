@@ -4,7 +4,7 @@
 package maltcms.commands;
 
 import java.util.List;
-import maltcms.datastructures.array.IMutableFeatureVector;
+import cross.datastructures.feature.IMutableFeatureVector;
 import maltcms.datastructures.feature.DefaultFeatureVector;
 import ucar.ma2.Array;
 

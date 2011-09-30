@@ -59,6 +59,8 @@ import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Abstract base class for clustering algorithms based on similarity or distance
@@ -67,6 +69,8 @@ import cross.tools.StringTools;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
+@Data
 public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         IClusteringAlgorithm {
 

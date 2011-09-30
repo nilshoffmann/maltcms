@@ -6,8 +6,8 @@
 package maltcms.datastructures.cluster;
 
 import java.util.List;
-import maltcms.datastructures.array.IFeatureVector;
-import maltcms.datastructures.array.IMutableFeatureVector;
+import cross.datastructures.feature.IFeatureVector;
+import cross.datastructures.feature.IMutableFeatureVector;
 
 /**
  *

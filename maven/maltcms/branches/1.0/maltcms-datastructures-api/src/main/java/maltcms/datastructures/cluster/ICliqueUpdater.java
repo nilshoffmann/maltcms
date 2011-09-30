@@ -3,7 +3,7 @@
  */
 package maltcms.datastructures.cluster;
 
-import maltcms.datastructures.array.IFeatureVector;
+import cross.datastructures.feature.IFeatureVector;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE

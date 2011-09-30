@@ -24,7 +24,7 @@ package maltcms.datastructures.feature;
 import java.util.ArrayList;
 import java.util.List;
 
-import maltcms.datastructures.array.IFeatureVector;
+import cross.datastructures.feature.IFeatureVector;
 import maltcms.datastructures.ms.Chromatogram1D;
 import maltcms.tools.MaltcmsTools;
 import ucar.ma2.Array;

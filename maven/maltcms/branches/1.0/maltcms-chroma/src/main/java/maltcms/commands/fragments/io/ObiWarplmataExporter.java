@@ -23,6 +23,8 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
@@ -32,13 +34,14 @@ import cross.tools.StringTools;
 @RequiresVariables(names = {"var.binned_mass_values",
     "var.binned_intensity_values", "var.binned_scan_index",
     "var.scan_acquisition_time"})
+@Slf4j
+@Data
 public class ObiWarplmataExporter extends AFragmentCommand {
 
     private String scanAcquisitionTimeVariableName;
     private String binnedIntensitiesVariableName;
     private String binnedScanIndexVariableName;
     private String binnedMassesVariableName;
-    private final Logger log = Logging.getLogger(this);
 
     /*
      * (non-Javadoc)

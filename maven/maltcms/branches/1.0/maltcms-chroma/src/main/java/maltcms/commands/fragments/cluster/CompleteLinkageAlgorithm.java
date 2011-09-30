@@ -21,6 +21,8 @@
  */
 package maltcms.commands.fragments.cluster;
 
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.cluster.BinaryCluster;
 
 /**
@@ -29,6 +31,8 @@ import maltcms.datastructures.cluster.BinaryCluster;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
+@Data
 public class CompleteLinkageAlgorithm extends ClusteringAlgorithm {
 
     @Override
