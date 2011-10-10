@@ -31,7 +31,6 @@ import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
 
 import ucar.ma2.Array;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
@@ -49,7 +48,7 @@ public class Chromatogram1D implements IChromatogram1D {
 
     private IFileFragment parent;
     private final String scanAcquisitionTimeUnit = "seconds";
-    private final WeakHashMap<Integer, Scan1D> scanCache = new WeakHashMap<Integer, Scan1D>();
+    private final WeakHashMap<Integer, IScan1D> scanCache = new WeakHashMap<Integer, IScan1D>();
     @Configurable(name = "var.scan_acquisition_time")
     private String scan_acquisition_time_var = "scan_acquisition_time";
 
@@ -57,14 +56,14 @@ public class Chromatogram1D implements IChromatogram1D {
         this.parent = e;
     }
 
-    protected Scan1D acquireFromCache(int i) {
-        Scan1D scan = scanCache.get(Integer.valueOf(i));
+    protected IScan1D acquireFromCache(int i) {
+        IScan1D scan = scanCache.get(Integer.valueOf(i));
         if (scan != null) {
             log.debug("Retrieved scan {} from cache",i);
             return scan;
         }
         final Tuple2D<Array, Array> t = MaltcmsTools.getMS(this.parent, i);
-        final Scan1D s = new Scan1D(t.getFirst(), t.getSecond(), i,
+        final IScan1D s = new Scan1D(t.getFirst(), t.getSecond(), i,
                 MaltcmsTools.getScanAcquisitionTime(this.parent, i));
         scanCache.put(Integer.valueOf(i),s);
         log.debug("Created scan {}",i);
@@ -93,7 +92,7 @@ public class Chromatogram1D implements IChromatogram1D {
      *            scan index to load
      */
     @Override
-    public Scan1D getScan(final int scan) {
+    public IScan1D getScan(final int scan) {
         return acquireFromCache(scan);
     }
 
@@ -102,8 +101,8 @@ public class Chromatogram1D implements IChromatogram1D {
         return this.scanAcquisitionTimeUnit;
     }
 
-    public List<Scan1D> getScans() {
-        ArrayList<Scan1D> al = new ArrayList<Scan1D>();
+    public List<IScan1D> getScans() {
+        ArrayList<IScan1D> al = new ArrayList<IScan1D>();
         for (int i = 0; i < getNumberOfScans(); i++) {
             al.add(acquireFromCache(i));
         }
@@ -115,9 +114,9 @@ public class Chromatogram1D implements IChromatogram1D {
      * Chromatogram1D, so be careful with concurrent access / modification!
      */
     @Override
-    public Iterator<Scan1D> iterator() {
+    public Iterator<IScan1D> iterator() {
 
-        final Iterator<Scan1D> iter = new Iterator<Scan1D>() {
+        final Iterator<IScan1D> iter = new Iterator<IScan1D>() {
 
             private int currentPos = 0;
 
@@ -130,7 +129,7 @@ public class Chromatogram1D implements IChromatogram1D {
             }
 
             @Override
-            public Scan1D next() {
+            public IScan1D next() {
                 return getScan(this.currentPos++);
             }
 
