@@ -39,7 +39,6 @@ import maltcms.tools.MaltcmsTools;
 
 import org.apache.commons.configuration.Configuration;
 import java.util.Arrays;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
@@ -47,7 +46,6 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresVariables;

@@ -33,7 +33,6 @@ import maltcms.tools.MaltcmsTools;
 
 import org.apache.commons.configuration.Configuration;
 import java.util.Arrays;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
@@ -42,7 +41,6 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.MAMath;
 import ucar.nc2.Attribute;
 import cross.Factory;
-import cross.Logging;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
@@ -56,6 +54,8 @@ import cross.exception.NotImplementedException;
 import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.FragmentTools;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Use Objects of this class to apply an alignment, warping a source
@@ -64,12 +64,13 @@ import cross.tools.StringTools;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
+@Data
 public class RTGroupCorrectionWarp extends AFragmentCommand {
 
     private List<String> indexedVars = Collections.emptyList();
     private List<String> plainVars = Collections.emptyList();
     private String indexVar = "scan_index";
-    private final Logger log = Logging.getLogger(this);
     private String anchorScanIndexVariableName = "retention_scans";
     private String anchorNameVariableName = "retention_names";
     private boolean average = false;

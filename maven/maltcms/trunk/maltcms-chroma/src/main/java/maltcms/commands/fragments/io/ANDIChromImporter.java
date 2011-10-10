@@ -19,6 +19,7 @@ import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
@@ -31,6 +32,7 @@ import lombok.Data;
  * 
  */
 @ProvidesVariables(names = {"var.scan_acquisition_time"})
+@Slf4j
 @Data
 public class ANDIChromImporter extends AFragmentCommand {
 

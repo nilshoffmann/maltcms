@@ -57,11 +57,9 @@ import cross.datastructures.pipeline.CommandPipeline;
 import cross.datastructures.pipeline.ICommandSequence;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.workflow.IWorkflow;
+import cross.exception.ConstraintViolationException;
 import java.net.URLClassLoader;
 import java.util.LinkedList;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.helpers.Loader;
 
@@ -146,30 +144,36 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 Factory.getInstance().configure(cfg);
                 // Set up the command sequence
                 cs = Factory.getInstance().createCommandSequence();
-                long start = System.nanoTime();
-                // Evaluate until empty
-                try {
-                    while (cs.hasNext()) {
-                        cs.next();
+                if (cs.validate()) {
+                    long start = System.nanoTime();
+                    // Evaluate until empty
+                    try {
+                        while (cs.hasNext()) {
+                            cs.next();
+                        }
+                        Maltcms.shutdown(30, log);
+                        // Save configuration
+                        Factory.dumpConfig("runtime.properties",
+                                cs.getWorkflow().
+                                getStartupDate());
+                        // Save workflow
+                        final IWorkflow iw = cs.getWorkflow();
+                        iw.save();
+                        start = Math.abs(System.nanoTime() - start);
+                        final float seconds = ((float) start)
+                                / ((float) 1000000000);
+                        final StringBuilder sb = new StringBuilder();
+                        final Formatter formatter = new Formatter(sb);
+                        formatter.format(CommandPipeline.NUMBERFORMAT, (seconds));
+                        log.info("Runtime of pipeline: {} sec", sb.toString());
+                        System.exit(ecode);
+                    } catch (final Throwable t) {
+                        Maltcms.handleRuntimeException(log, t, cs);
                     }
-                    Maltcms.shutdown(30, log);
-                    // Save configuration
-                    Factory.dumpConfig("runtime.properties", cs.getWorkflow().
-                            getStartupDate());
-                    // Save workflow
-                    final IWorkflow iw = cs.getWorkflow();
-                    iw.save();
-                    start = Math.abs(System.nanoTime() - start);
-                    final float seconds = ((float) start)
-                            / ((float) 1000000000);
-                    final StringBuilder sb = new StringBuilder();
-                    final Formatter formatter = new Formatter(sb);
-                    formatter.format(CommandPipeline.NUMBERFORMAT, (seconds));
-                    log.info("Runtime of pipeline: {} sec", sb.toString());
-                    System.exit(ecode);
-                } catch (final Throwable t) {
-                    Maltcms.handleRuntimeException(log, t, cs);
+                }else{
+                    throw new ConstraintViolationException("Pipeline is invalid, but strict checking was requested!");
                 }
+
             }
         } catch (final Throwable t) {
             Maltcms.handleRuntimeException(log, t, cs);
@@ -271,7 +275,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 "class1,class2, ...", false));
         this.o.addOption(addOption(
                 "b",
-                "beanXMLCreation",
+                "createBeanXml",
                 "Creates a fragmentCommands.xml file in spring format for all instances of cross.commands.fragments.AFragmentCommand",
                 true, ',', true, true, 0, false, false, 0,
                 "class1,class2, ...", false));
@@ -371,7 +375,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
 //            log.info("Restoring original class loader!");
 //            Thread.currentThread().setContextClassLoader(contextClassLoader);
 //        }
-        
+
     }
 
     /**
@@ -555,10 +559,13 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             cfg.addConfiguration(cmdLineCfg);
             if (cl.hasOption("c")) {
                 try {
-                    // try to add config given by parameter c
-                    File userConfigLocation = new File(new File(System.
-                            getProperty(
-                            "user.dir")), cl.getOptionValue("c"));
+                    File userConfigLocation = new File(cl.getOptionValue("c"));
+                    if (!userConfigLocation.isAbsolute()) {
+                        // try to add config given by parameter c
+                        userConfigLocation = new File(new File(System.
+                                getProperty(
+                                "user.dir")), cl.getOptionValue("c"));
+                    }
                     cmdLineCfg.setProperty("userConfigLocation",
                             userConfigLocation);
                     cfg.addConfiguration(new PropertiesConfiguration(cl.

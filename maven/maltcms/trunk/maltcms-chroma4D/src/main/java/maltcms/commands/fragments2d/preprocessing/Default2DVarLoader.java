@@ -50,6 +50,7 @@ import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This command should be the first in all 2d pipelines. It creates different
@@ -66,10 +67,10 @@ import lombok.Data;
     "var.second_column_scan_index", "var.total_intensity_1d",
     "var.scan_acquisition_time", "var.scan_acquisition_time_1d",
     "var.total_intensity_2d"})
+@Slf4j
 @Data
 public class Default2DVarLoader extends AFragmentCommand {
 
-    private final Logger log = Logging.getLogger(this);
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";
     @Configurable(name = "var.modulation_time", value = "modulation_time")
@@ -109,26 +110,26 @@ public class Default2DVarLoader extends AFragmentCommand {
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
         for (final IFileFragment ff : t) {
-            this.log.info("Running var loader for {}", ff.getName());
+            log.info("Running var loader for {}", ff.getName());
             final IFileFragment fret = Factory.getInstance().
                     getFileFragmentFactory().create(
                     new File(getWorkflow().getOutputDirectory(this),
                     ff.getName()));
             fret.addSourceFile(ff);
 
-            this.log.info("Creating {}", this.scanRateVar);
+            log.info("Creating {}", this.scanRateVar);
             createScanRate(ff, fret);
-            this.log.info("Creating {}", this.modulationTimeVar);
+            log.info("Creating {}", this.modulationTimeVar);
             createModulation(ff, fret);
 
-            this.log.info("Creating {}", this.secondColumnScanIndexVar);
+            log.info("Creating {}", this.secondColumnScanIndexVar);
             createSecondColumnIndex(ff, fret);
 
-            this.log.info("Creating {}", this.secondColumnTimeVar);
+            log.info("Creating {}", this.secondColumnTimeVar);
             createSecondColumnTime(ff, fret);
-            this.log.info("Creating {}", this.totalIntensity1dVar);
+            log.info("Creating {}", this.totalIntensity1dVar);
             create1DTic(ff, fret);
-            this.log.info("Creating {}", this.totalIntensity2dVar);
+            log.info("Creating {}", this.totalIntensity2dVar);
             createTIC2D(ff, fret);
 
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
@@ -157,11 +158,11 @@ public class Default2DVarLoader extends AFragmentCommand {
         final int size = array.getShape()[0] / scansPerModulation;
         final int modulus = array.getShape()[0] % scansPerModulation;
         if (modulus != 0) {
-            this.log.info(
+            log.info(
                     "Warning: found {} dangling scans at end of chromatogram, will truncate!",
                     modulus);
         }
-        this.log.info("Size of array: {}, reading {} scans!",
+        log.info("Size of array: {}, reading {} scans!",
                 array.getShape()[0], size);
         final ArrayList<Array> al = new ArrayList<Array>(size);
         int offset = 0;
@@ -181,7 +182,7 @@ public class Default2DVarLoader extends AFragmentCommand {
             }
             offset += len;
         }
-        this.log.info("Number of scans in list: {}", al.size());
+        log.info("Number of scans in list: {}", al.size());
         return al;
     }
 
@@ -291,7 +292,7 @@ public class Default2DVarLoader extends AFragmentCommand {
                     "Modulation time must be an integer, was: "
                     + this.modulationTime);
         }
-        this.log.info("Setting modulation time to {}", this.modulationTime);
+        log.info("Setting modulation time to {}", this.modulationTime);
         modulationArray.setDouble(idx, this.modulationTime);
         modulationvar.setArray(modulationArray);
         modulationvar.setDimensions(new Dimension[]{new Dimension(modulationTimeDimension,1,true)});
@@ -317,11 +318,11 @@ public class Default2DVarLoader extends AFragmentCommand {
             final IndexIterator iter = durationarray.getIndexIterator();
             this.scanDuration = iter.getDoubleNext();
             this.scanRate = 1 / this.scanDuration;
-            this.log.info("Found " + this.scanDurationVar + "({}) and "
+            log.info("Found " + this.scanDurationVar + "({}) and "
                     + this.scanRateVar + "({})", this.scanDuration,
                     this.scanRate);
         } catch (final ResourceNotAvailableException e) {
-            this.log.error("Couldnt find {} using default {}",
+            log.error("Couldnt find {} using default {}",
                     this.scanDurationVar, this.scanDuration);
         }
 

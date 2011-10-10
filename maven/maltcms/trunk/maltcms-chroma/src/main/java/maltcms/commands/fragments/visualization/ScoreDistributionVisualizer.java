@@ -11,10 +11,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
-import cross.Logging;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
@@ -23,6 +21,8 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
@@ -30,9 +30,9 @@ import cross.exception.ResourceNotAvailableException;
  * 
  */
 @RequiresVariables(names = {"pairwise_distance"})
+@Slf4j
+@Data
 public class ScoreDistributionVisualizer extends AFragmentCommand {
-
-    private final Logger log = Logging.getLogger(this);
 
 	/*
 	 * (non-Javadoc)

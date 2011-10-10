@@ -29,5 +29,8 @@
     </bean>
                <!-- commands -->
                
+   <bean id="default2DVarLoader" class="maltcms.commands.fragments2d.preprocessing.Default2DVarLoader">
+       
+   </bean>
     
 </beans>

@@ -42,7 +42,6 @@ public class ObiWarplmataExporter extends AFragmentCommand {
     private String binnedIntensitiesVariableName;
     private String binnedScanIndexVariableName;
     private String binnedMassesVariableName;
-    private final Logger log = Logging.getLogger(this);
 
 	/*
 	 * (non-Javadoc)

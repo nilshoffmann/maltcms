@@ -60,12 +60,13 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
         IFileFragment input = new ImmutableFileFragment(fileToLoad);
         //create a new working fragment
         IFileFragment output = new FileFragment(fileToSave);
+        output.addSourceFile(input);
 
         log.info("Loading scans for file {}", output.getName());
         MaltcmsTools.prepareDenseArraysMZI(input, output,
                 scanIndex, massValues, intensityValues,
                 binnedScanIndex, binnedMassValues,
-                binnedIntensityValues, minMass, maxMass);
+                binnedIntensityValues, minMass, maxMass,null);
 
         log.debug("Loaded scans for file {}, stored in {}", fileToLoad, fileToSave);
         log.debug("Source Files of f={} : {}", output, output.getSourceFiles());

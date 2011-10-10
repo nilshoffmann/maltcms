@@ -29,12 +29,13 @@ import ucar.ma2.MAMath.MinMax;
  *
  * @author nils
  */
-
 @Slf4j
 public class PeakSimilarityVisualizer {
+
     public void visualizePeakSimilarities(
             final HashMap<String, List<Peak>> hm, final int samples,
-            final String prefix, final IArrayDoubleComp costFunction, final IWorkflow workflow) {
+            final String prefix, final IArrayDoubleComp costFunction,
+            final IWorkflow workflow) {
 
         int npeaks = 0;
         for (final String key : hm.keySet()) {
@@ -104,11 +105,14 @@ public class PeakSimilarityVisualizer {
 
                     // final RenderedImage bi = ImageTools.makeImage2D(psims,
                     // samples, Double.NEGATIVE_INFINITY);
-                    JAI.create("filestore", destImg, new File(workflow.getOutputDirectory(this), prefix + "_" + keyl
-                            + "-" + keyr + "_peak_similarities.png").getAbsolutePath(), "PNG");
+                    JAI.create("filestore", destImg, new File(workflow.
+                            getOutputDirectory(this), prefix + "_" + keyl
+                            + "-" + keyr + "_peak_similarities.png").
+                            getAbsolutePath(), "PNG");
                     final CSVWriter csvw = new CSVWriter();
                     csvw.setWorkflow(workflow);
-                    csvw.writeArray2D(workflow.getOutputDirectory(this).getAbsolutePath(), prefix + "_" + keyl + "-"
+                    csvw.writeArray2D(workflow.getOutputDirectory(this).
+                            getAbsolutePath(), prefix + "_" + keyl + "-"
                             + keyr + "_peak_similarities.csv", psims);
                 }
             }

@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -61,6 +60,8 @@ import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
 import java.util.Arrays;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Use Objects of this class to apply an alignment, warping a source
@@ -72,6 +73,8 @@ import java.util.Arrays;
 @RequiresVariables(names = {"var.multiple_alignment",
     "var.multiple_alignment_names", "var.multiple_alignment_type",
     "var.multiple_alignment_creator"})
+@Slf4j
+@Data
 public class ChromatogramWarp2 extends AFragmentCommand {
 
     @Configurable
@@ -82,7 +85,6 @@ public class ChromatogramWarp2 extends AFragmentCommand {
             "scan_acquisition_time");
     @Configurable
     private String indexVar = "scan_index";
-    private final Logger log = Logging.getLogger(this);
     @Configurable(name = "var.anchors.retention_scans", type = String.class)
     private String anchorScanIndexVariableName = "retention_scans";
     @Configurable(name = "var.anchors.retention_index_names",
@@ -119,7 +121,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
 
             return at;
         } catch (ResourceNotAvailableException rnae) {
-            this.log.warn("Could not retrieve alignment from FileFragment!");
+            log.warn("Could not retrieve alignment from FileFragment!");
 
         }
         return null;
@@ -152,9 +154,27 @@ public class ChromatogramWarp2 extends AFragmentCommand {
         return copy;
     }
 
-			return at;
-		} catch (ResourceNotAvailableException rnae) {
-			log.warn("Could not retrieve alignment from FileFragment!");
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.commands.ICommand#apply(java.lang.Object)
+     */
+    @Override
+    public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
+        TupleND<IFileFragment> wt = createWorkFragments(t);
+        log.info("{}", t);
+        log.info("{}", wt);
+        IFileFragment ref = null;
+        // TODO enable arbitrary reference selection
+        AlignmentTable at = null;
+        // alignment location overrides, so try first
+        if (this.alignmentLocation == null || this.alignmentLocation.isEmpty()) {
+            log.info("Using alignment from fragment");
+            at = buildTableFromFragment(t.get(0));
+        } else {
+            log.info("Using alignmentLocation");
+            at = new AlignmentTable(new File(this.alignmentLocation));
+        }
 
         EvalTools.notNull(at, this);
         String refname = at.getRefName();
@@ -181,60 +201,66 @@ public class ChromatogramWarp2 extends AFragmentCommand {
         // }
         // }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.commands.ICommand#apply(java.lang.Object)
-	 */
-	@Override
-	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-		TupleND<IFileFragment> wt = createWorkFragments(t);
-		log.info("{}", t);
-		log.info("{}", wt);
-		IFileFragment ref = null;
-		// TODO enable arbitrary reference selection
-		AlignmentTable at = null;
-		// alignment location overrides, so try first
-		if (this.alignmentLocation == null || this.alignmentLocation.isEmpty()) {
-			log.info("Using alignment from fragment");
-			at = buildTableFromFragment(t.get(0));
-		} else {
-			log.info("Using alignmentLocation");
-			at = new AlignmentTable(new File(this.alignmentLocation));
-		}
+        log.info("Reference is {}", refOrig);
+        for (int i = 0; i < wt.size(); i++) {
+            IFileFragment queryTarget = wt.get(i);
+            IFileFragment querySource = t.get(i);
+            log.info("Processing {}/{}", (i + 1), wt.size());
+            if (!StringTools.removeFileExt(queryTarget.getName()).equals(
+                    refOrig.getName())) {
+                log.info("Warping {} to {}", querySource.getName(),
+                        refOrig.getName());
+                IFileFragment res = warp(refOrig, querySource, queryTarget,
+                        at.getPathFor(refOrig, queryTarget), true,
+                        getWorkflow());
+                res.save();
+                DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
+                        res.getAbsolutePath()), this, WorkflowSlot.WARPING, res);
+                getWorkflow().append(dwr);
+            } else {
+                IFileFragment res = copyReference(querySource, queryTarget,
+                        getWorkflow());
+                res.save();
+                DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
+                        res.getAbsolutePath()), this, WorkflowSlot.WARPING, res);
+                getWorkflow().append(dwr);
+            }
+        }
+        return wt;
+    }
 
     class AlignmentTable {
 
         HashMap<String, List<int[]>> columnMap = new HashMap<String, List<int[]>>();
         String refName = "";
 
-		log.info("Reference is {}", refOrig);
-		for (int i = 0; i < wt.size(); i++) {
-			IFileFragment queryTarget = wt.get(i);
-			IFileFragment querySource = t.get(i);
-			log.info("Processing {}/{}", (i + 1), wt.size());
-			if (!StringTools.removeFileExt(queryTarget.getName()).equals(
-			        refOrig.getName())) {
-				log.info("Warping {} to {}", querySource.getName(),
-				        refOrig.getName());
-				IFileFragment res = warp(refOrig, querySource, queryTarget,
-				        at.getPathFor(refOrig, queryTarget), true,
-				        getWorkflow());
-				res.save();
-				DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
-				        res.getAbsolutePath()), this, WorkflowSlot.WARPING, res);
-				getWorkflow().append(dwr);
-			} else {
-				IFileFragment res = copyReference(querySource, queryTarget,
-				        getWorkflow());
-				res.save();
-				DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
-				        res.getAbsolutePath()), this, WorkflowSlot.WARPING, res);
-				getWorkflow().append(dwr);
-			}
-		}
-		return wt;
-	}
+        AlignmentTable(ArrayChar.D3 table, ArrayChar.D2 names) {
+            refName = names.getString(0);
+            int lines = table.getShape()[0];
+            int cols = table.getShape()[1];
+            Index tableIndex = table.getIndex();
+            for (int i = 0; i < lines; i++) {
+                for (int j = 0; j < cols; j++) {
+                    String s = table.getString(tableIndex.set(i, j));
+                    String colName = names.getString(j);
+                    String[] entry = s.split(",");
+                    int[] vals = new int[entry.length];
+                    int k = 0;
+                    for (String es : entry) {
+                        vals[k++] = Integer.parseInt(es);
+                    }
+                    List<int[]> l = null;
+                    if (columnMap.containsKey(colName)) {
+                        l = columnMap.get(colName);
+                        l.add(vals);
+                    } else {
+                        l = new ArrayList<int[]>();
+                        l.add(vals);
+                        this.columnMap.put(colName, l);
+                    }
+                }
+            }
+        }
 
         AlignmentTable(File f) {
             CSVReader csvr = new CSVReader();
@@ -300,7 +326,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
                 "scan_index");
         this.plainVars = StringTools.toStringList(cfg.getList(this.getClass().
                 getName() + ".plainVars"));
-        this.log.info("{}", this.plainVars);
+        log.info("{}", this.plainVars);
         this.anchorScanIndexVariableName = cfg.getString(
                 "var.anchors.retention_scans", "retention_scans");
         this.anchorNameVariableName = cfg.getString(
@@ -325,28 +351,12 @@ public class ChromatogramWarp2 extends AFragmentCommand {
         return "Warps Chromatograms to a given reference, according to alignment paths.";
     }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		this.indexedVars = StringTools.toStringList(cfg.getList(this.getClass()
-		        .getName() + ".indexedVars"));
-		this.indexVar = cfg.getString(this.getClass().getName() + ".indexVar",
-		        "scan_index");
-		this.plainVars = StringTools.toStringList(cfg.getList(this.getClass()
-		        .getName() + ".plainVars"));
-		log.info("{}", this.plainVars);
-		this.anchorScanIndexVariableName = cfg.getString(
-		        "var.anchors.retention_scans", "retention_scans");
-		this.anchorNameVariableName = cfg.getString(
-		        "var.anchors.retention_names", "retention_names");
-		this.averageCompressions = cfg.getBoolean(this.getClass().getName()
-		        + ".averageCompressions", false);
-		this.alignmentLocation = cfg.getString(this.getClass().getName()
-		        + ".alignmentLocation");
-		// this.warpToFirst = cfg.getBoolean(this.getClass().getName()
-		// + ".warpToFirst", true);
-		this.satvar = cfg.getString("var.scan_acquisition_time",
-		        "scan_acquisition_time");
-	}
+    /**
+     * @return the indexedVars
+     */
+    public List<String> getIndexedVars() {
+        return this.indexedVars;
+    }
 
     /**
      * @return the indexVar
@@ -414,7 +424,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
     public IFileFragment warp(final IFileFragment ref,
             final IFileFragment querySource, final IFileFragment queryTarget,
             final List<Tuple2DI> path, final boolean toLHS, final IWorkflow iw) {
-        this.log.info("Warping {}, saving in {}",
+        log.info("Warping {}, saving in {}",
                 querySource.getAbsolutePath(), queryTarget.getAbsolutePath());
         warp2D(queryTarget, ref, querySource, path, this.indexedVars, toLHS);
         warp1D(queryTarget, ref, querySource, path, this.plainVars, toLHS);
@@ -453,7 +463,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
                 warpSAT(warpedB, ref, toBeWarped, path, plainVars, toLHS);
                 continue;
             }
-            this.log.info("Warping variable {}", s);
+            log.info("Warping variable {}", s);
             IVariableFragment var = null;
             Array warpedA = null;
             if (warpedB.hasChild(s)) {
@@ -462,7 +472,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
                 var = new VariableFragment(warpedB, s);
             }
             if (toLHS) {// a is on lhs of path
-                this.log.debug("Warping to lhs {}, {} from file {}",
+                log.debug("Warping to lhs {}, {} from file {}",
                         new Object[]{ref.getName(), s,
                             toBeWarped.getName()});
                 final Array refA = ref.getChild(s).getArray();
@@ -475,107 +485,144 @@ public class ChromatogramWarp2 extends AFragmentCommand {
                     warpedA = ArrayTools.projectToLHS(refA, path, warpedA, true);
                 }
 
-	/**
-	 * Warps by projecting data from originalFile to ref, given the alignment
-	 * path. toLHS determines, whether the alignment reference ref is on the
-	 * left hand side of the alignment path, or on the right hand side.
-	 * processedFile is used to keep a backpointer to processing, like anchor
-	 * finding. The returned FileFragment will have processedFile as its source
-	 * file, not originalFile, since we want to keep additional information,
-	 * which we already found out.
-	 * 
-	 * @param ref
-	 * @param query
-	 * @param path
-	 * @param toLHS
-	 * @return
-	 */
-	public IFileFragment warp(final IFileFragment ref,
-	        final IFileFragment querySource, final IFileFragment queryTarget,
-	        final List<Tuple2DI> path, final boolean toLHS, final IWorkflow iw) {
-		log.info("Warping {}, saving in {}",
-		        querySource.getAbsolutePath(), queryTarget.getAbsolutePath());
-		warp2D(queryTarget, ref, querySource, path, this.indexedVars, toLHS);
-		warp1D(queryTarget, ref, querySource, path, this.plainVars, toLHS);
-		warpAnchors(queryTarget, querySource, path, toLHS);
-		queryTarget.addSourceFile(querySource);
-		return queryTarget;
-	}
+            } else { // whether b is on lhs of path
+                log.debug("Warping to lhs {}, {} from file {}",
+                        new Object[]{ref.getName(), s,
+                            toBeWarped.getName()});
+                final Array refA = ref.getChild(s).getArray();
+                warpedA = toBeWarped.getChild(s).getArray();
+                // there exists a subtle bug, if variables in original file has
+                // an empty array
+                // then this array might be null
+                if (warpedA != null) {
+                    // refA is only needed for correct shape and data type
+                    warpedA = ArrayTools.projectToRHS(refA, path, warpedA, true);
+                }
+            }
+            var.setArray(warpedA);
+        }
+        return warpedB;
+    }
 
-	/**
-	 * Warp non-indexed arrays, which are for example scan_acquisisition_time,
-	 * tic etc.
-	 * 
-	 * @param warpedB
-	 *            target IFileFragment to store warped arrays
-	 * @param ref
-	 *            reference IFileFragment
-	 * @param toBeWarped
-	 *            the to-be-warped IFileFragment
-	 * @param path
-	 *            alignment path of alignment between a and b
-	 * @param plainVars
-	 *            list of variable names, which should be warped
-	 * @param toLHS
-	 *            warp to left hand side
-	 * @return FileFragment containing warped data
-	 */
-	public IFileFragment warp1D(final IFileFragment warpedB,
-	        final IFileFragment ref, final IFileFragment toBeWarped,
-	        final List<Tuple2DI> path, final List<String> plainVars,
-	        final boolean toLHS) {
-		for (final String s : plainVars) {
-			if (s.equals(this.indexVar)) {
-				continue;
-			}
-			if (s.equals(this.satvar)) {
-				warpSAT(warpedB, ref, toBeWarped, path, plainVars, toLHS);
-				continue;
-			}
-			log.info("Warping variable {}", s);
-			IVariableFragment var = null;
-			Array warpedA = null;
-			if (warpedB.hasChild(s)) {
-				var = warpedB.getChild(s);
-			} else {
-				var = new VariableFragment(warpedB, s);
-			}
-			if (toLHS) {// a is on lhs of path
-				log
-				        .debug("Warping to lhs {}, {} from file {}",
-				                new Object[] { ref.getName(), s,
-				                        toBeWarped.getName() });
-				final Array refA = ref.getChild(s).getArray();
-				warpedA = toBeWarped.getChild(s).getArray();
-				// there exists a subtle bug, if variables in original file has
-				// an empty array
-				// then this array might be null
-				if (warpedA != null) {
-					// refA is only needed for correct shape and data type
-					warpedA = ArrayTools
-					        .projectToLHS(refA, path, warpedA, true);
-		}
+    /**
+     * Warp indexed arrays, which are lists of 1D arrays, so pseudo 2D. In this
+     * case limited to mass_values and intensity_values.
+     * 
+     * @param warpedB
+     *            target IFileFragment to store warped arrays
+     * @param ref
+     *            reference IFileFragment
+     * @param toBeWarped
+     *            the to-be-warped IFileFragment
+     * @param path
+     *            alignment path of alignment between a and b
+     * @param plainVars
+     *            list of variable names, which should be warped
+     * @param toLHS
+     *            whether warping should be done from right to left (true) or
+     *            vice versa (false)
+     * @return FileFragment containing warped data
+     */
+    public IFileFragment warp2D(final IFileFragment warpedB,
+            final IFileFragment ref, final IFileFragment toBeWarped,
+            final List<Tuple2DI> path, final List<String> indexedVars,
+            final boolean toLHS) {
+        // indexVar.setArray(b.getChild(this.indexVar).getArray());
+        // log.info("Index Variable {}",indexVar.getArray());
+        // for(String s:indexedVars) {
+        final String s1 = "mass_values";
+        final String s2 = "intensity_values";
 
-			} else { // whether b is on lhs of path
-				log
-				        .debug("Warping to lhs {}, {} from file {}",
-				                new Object[] { ref.getName(), s,
-				                        toBeWarped.getName() });
-				final Array refA = ref.getChild(s).getArray();
-				warpedA = toBeWarped.getChild(s).getArray();
-				// there exists a subtle bug, if variables in original file has
-				// an empty array
-				// then this array might be null
-				if (warpedA != null) {
-					// refA is only needed for correct shape and data type
-					warpedA = ArrayTools
-					        .projectToRHS(refA, path, warpedA, true);
-				}
-			}
-			var.setArray(warpedA);
-		}
-		return warpedB;
-	}
+        IVariableFragment ivf1 = null, ivf2 = null;
+        List<Array> tbwa1 = null, tbwa2 = null;
+        Tuple2D<List<Array>, List<Array>> t = null;
+        final ArrayList<Tuple2DI> al = new ArrayList<Tuple2DI>(path.size());
+        al.addAll(path);
+        // if(sourceOnLHS){ //whether b is on lhs of path
+        // log.info("Processing {} indexed by {} from file {}",new
+        // Object[]{s1,this.indexVar,b.getName()});
+        // log.info("Processing {} indexed by {} from file {}",new
+        // Object[]{s2,this.indexVar,b.getName()});
+        // a.getChild(s1).setIndex(a.getChild(this.indexVar));
+        // a.getChild(s2).setIndex(a.getChild(this.indexVar));
+        // List<Array> aA1 = a.getChild(s1).getIndexedArray();
+        // List<Array> aA2 = a.getChild(s2).getIndexedArray();
+        // b.getChild(s1).setIndex(b.getChild(this.indexVar));
+        // b.getChild(s2).setIndex(b.getChild(this.indexVar));
+        // bA1 = b.getChild(s1).getIndexedArray();
+        // bA2 = b.getChild(s2).getIndexedArray();
+        // //aA is only needed for correct shape and data type
+        // t = ArrayTools.project2(false,aA1, aA2, al, bA1, bA2);
+        // bA1 = t.getFirst();
+        // bA2 = t.getSecond();
+        // }else{//a is on lhs of path
+        // log.info("Processing {} indexed by {} from file {}",new
+        // Object[]{s1,this.indexVar,b.getName()});
+        // log.info("Processing {} indexed by {} from file {}",new
+        // Object[]{s2,this.indexVar,b.getName()});
+        // a.getChild(s1).setIndex(a.getChild(this.indexVar));
+        // a.getChild(s2).setIndex(a.getChild(this.indexVar));
+        // List<Array> aA1 = a.getChild(s1).getIndexedArray();
+        // List<Array> aA2 = a.getChild(s2).getIndexedArray();
+        // b.getChild(s1).setIndex(b.getChild(this.indexVar));
+        // b.getChild(s2).setIndex(b.getChild(this.indexVar));
+        // bA1 = b.getChild(s1).getIndexedArray();
+        // bA2 = b.getChild(s2).getIndexedArray();
+        // //aA is only needed for correct shape and data type
+        // t = ArrayTools.project2(true,aA1, aA2, al, bA1, bA2);
+        // bA1 = t.getFirst();
+        // bA2 = t.getSecond();
+        // }
+        try {
+            log.debug("Processing {} indexed by {} from file {}",
+                    new Object[]{s1, this.indexVar, toBeWarped.getName()});
+            log.debug("Processing {} indexed by {} from file {}",
+                    new Object[]{s2, this.indexVar, toBeWarped.getName()});
+            ref.getChild(s1).setIndex(ref.getChild(this.indexVar));
+            ref.getChild(s2).setIndex(ref.getChild(this.indexVar));
+            final List<Array> aA1 = ref.getChild(s1).getIndexedArray();
+            final List<Array> aA2 = ref.getChild(s2).getIndexedArray();
+            toBeWarped.getChild(s1).setIndex(toBeWarped.getChild(this.indexVar));
+            toBeWarped.getChild(s2).setIndex(toBeWarped.getChild(this.indexVar));
+            tbwa1 = toBeWarped.getChild(s1).getIndexedArray();
+            tbwa2 = toBeWarped.getChild(s2).getIndexedArray();
+            // aA is only needed for correct shape and data type
+            // if(toLHS) {
+            // t = ArrayTools.project2(toLHS,bA1, bA2, al, aA1, aA2);
+            // }else{
+            // t = ArrayTools.project2(toLHS,aA1, aA2, al, bA1, bA2);
+            // }
+            t = ArrayTools.project2(toLHS, aA1, aA2, al, tbwa1, tbwa2,
+                    this.averageCompressions);
+            tbwa1 = t.getFirst();
+            tbwa2 = t.getSecond();
+            // Update index variable
+            IVariableFragment indexVar = null;
+            if (warpedB.hasChild(this.indexVar)) {
+                indexVar = warpedB.getChild(this.indexVar);
+            } else {
+                indexVar = new VariableFragment(warpedB, this.indexVar);
+            }
+            final ArrayInt.D1 index = new ArrayInt.D1(tbwa1.size());
+            int offset = 0;
+            for (int i = 0; i < tbwa1.size(); i++) {
+                index.set(i, offset);
+                offset += tbwa1.get(i).getShape()[0];
+            }
+            indexVar.setArray(index);
+            // Set all arrays
+            if (warpedB.hasChild(s1)) {
+                ivf1 = warpedB.getChild(s1);
+            } else {
+                ivf1 = new VariableFragment(warpedB, s1);
+            }
+            if (warpedB.hasChild(s2)) {
+                ivf2 = warpedB.getChild(s2);
+            } else {
+                ivf2 = new VariableFragment(warpedB, s2);
+            }
+            ivf1.setIndex(indexVar);
+            ivf2.setIndex(indexVar);
 
             final List<Array> warpedMasses = new ArrayList<Array>();
             for (final Array a : tbwa1) {
@@ -593,167 +640,77 @@ public class ChromatogramWarp2 extends AFragmentCommand {
             ivf2.setIndexedArray(warpedIntensities);
             // }
         } catch (final ResourceNotAvailableException rnae) {
-            this.log.warn("Could not warp scans: {}", rnae);
+            log.warn("Could not warp scans: {}", rnae);
         }
         return warpedB;
     }
 
-		IVariableFragment ivf1 = null, ivf2 = null;
-		List<Array> tbwa1 = null, tbwa2 = null;
-		Tuple2D<List<Array>, List<Array>> t = null;
-		final ArrayList<Tuple2DI> al = new ArrayList<Tuple2DI>(path.size());
-		al.addAll(path);
-		// if(sourceOnLHS){ //whether b is on lhs of path
-		// log.info("Processing {} indexed by {} from file {}",new
-		// Object[]{s1,this.indexVar,b.getName()});
-		// log.info("Processing {} indexed by {} from file {}",new
-		// Object[]{s2,this.indexVar,b.getName()});
-		// a.getChild(s1).setIndex(a.getChild(this.indexVar));
-		// a.getChild(s2).setIndex(a.getChild(this.indexVar));
-		// List<Array> aA1 = a.getChild(s1).getIndexedArray();
-		// List<Array> aA2 = a.getChild(s2).getIndexedArray();
-		// b.getChild(s1).setIndex(b.getChild(this.indexVar));
-		// b.getChild(s2).setIndex(b.getChild(this.indexVar));
-		// bA1 = b.getChild(s1).getIndexedArray();
-		// bA2 = b.getChild(s2).getIndexedArray();
-		// //aA is only needed for correct shape and data type
-		// t = ArrayTools.project2(false,aA1, aA2, al, bA1, bA2);
-		// bA1 = t.getFirst();
-		// bA2 = t.getSecond();
-		// }else{//a is on lhs of path
-		// log.info("Processing {} indexed by {} from file {}",new
-		// Object[]{s1,this.indexVar,b.getName()});
-		// log.info("Processing {} indexed by {} from file {}",new
-		// Object[]{s2,this.indexVar,b.getName()});
-		// a.getChild(s1).setIndex(a.getChild(this.indexVar));
-		// a.getChild(s2).setIndex(a.getChild(this.indexVar));
-		// List<Array> aA1 = a.getChild(s1).getIndexedArray();
-		// List<Array> aA2 = a.getChild(s2).getIndexedArray();
-		// b.getChild(s1).setIndex(b.getChild(this.indexVar));
-		// b.getChild(s2).setIndex(b.getChild(this.indexVar));
-		// bA1 = b.getChild(s1).getIndexedArray();
-		// bA2 = b.getChild(s2).getIndexedArray();
-		// //aA is only needed for correct shape and data type
-		// t = ArrayTools.project2(true,aA1, aA2, al, bA1, bA2);
-		// bA1 = t.getFirst();
-		// bA2 = t.getSecond();
-		// }
-		try {
-			log.debug("Processing {} indexed by {} from file {}",
-			        new Object[] { s1, this.indexVar, toBeWarped.getName() });
-			log.debug("Processing {} indexed by {} from file {}",
-			        new Object[] { s2, this.indexVar, toBeWarped.getName() });
-			ref.getChild(s1).setIndex(ref.getChild(this.indexVar));
-			ref.getChild(s2).setIndex(ref.getChild(this.indexVar));
-			final List<Array> aA1 = ref.getChild(s1).getIndexedArray();
-			final List<Array> aA2 = ref.getChild(s2).getIndexedArray();
-			toBeWarped.getChild(s1)
-			        .setIndex(toBeWarped.getChild(this.indexVar));
-			toBeWarped.getChild(s2)
-			        .setIndex(toBeWarped.getChild(this.indexVar));
-			tbwa1 = toBeWarped.getChild(s1).getIndexedArray();
-			tbwa2 = toBeWarped.getChild(s2).getIndexedArray();
-			// aA is only needed for correct shape and data type
-			// if(toLHS) {
-			// t = ArrayTools.project2(toLHS,bA1, bA2, al, aA1, aA2);
-			// }else{
-			// t = ArrayTools.project2(toLHS,aA1, aA2, al, bA1, bA2);
-			// }
-			t = ArrayTools.project2(toLHS, aA1, aA2, al, tbwa1, tbwa2,
-			        this.averageCompressions);
-			tbwa1 = t.getFirst();
-			tbwa2 = t.getSecond();
-			// Update index variable
-			IVariableFragment indexVar = null;
-			if (warpedB.hasChild(this.indexVar)) {
-				indexVar = warpedB.getChild(this.indexVar);
-			} else {
-				indexVar = new VariableFragment(warpedB, this.indexVar);
-			}
-			final ArrayInt.D1 index = new ArrayInt.D1(tbwa1.size());
-			int offset = 0;
-			for (int i = 0; i < tbwa1.size(); i++) {
-				index.set(i, offset);
-				offset += tbwa1.get(i).getShape()[0];
-			}
-			indexVar.setArray(index);
-			// Set all arrays
-			if (warpedB.hasChild(s1)) {
-				ivf1 = warpedB.getChild(s1);
-			} else {
-				ivf1 = new VariableFragment(warpedB, s1);
-			}
-			if (warpedB.hasChild(s2)) {
-				ivf2 = warpedB.getChild(s2);
-			} else {
-				ivf2 = new VariableFragment(warpedB, s2);
-			}
-			ivf1.setIndex(indexVar);
-			ivf2.setIndex(indexVar);
+    private IFileFragment warpSAT(final IFileFragment warpedB,
+            final IFileFragment ref, final IFileFragment toBeWarped,
+            final List<Tuple2DI> path, final List<String> plainVars,
+            final boolean toLHS) {
+        log.info("Warping scan acquisition time");
+        IVariableFragment var = null;
+        Array warpedA = null;
+        final String s = this.satvar;
+        if (warpedB.hasChild(s)) {
+            var = warpedB.getChild(s);
+        } else {
+            var = new VariableFragment(warpedB, s);
+        }
+        if (toLHS) {// a is on lhs of path
+            log.debug("Warping to lhs {}, {} from file {}", new Object[]{
+                        ref.getName(), s, toBeWarped.getName()});
+            final Array refA = ref.getChild(s).getArray();
+            warpedA = toBeWarped.getChild(s).getArray();
+            // there exists a subtle bug, if variables in original file has
+            // an empty array
+            // then this array might be null
+            if (warpedA != null) {
+                // refA is only needed for correct shape and data type
+                warpedA = projectToLHS(refA, path, warpedA, true);
+            }
 
-			final List<Array> warpedMasses = new ArrayList<Array>();
-			for (final Array a : tbwa1) {
-				final ArrayDouble.D1 ad = new ArrayDouble.D1(a.getShape()[0]);
-				MAMath.copyDouble(ad, a);
-				warpedMasses.add(ad);
-			}
-			ivf1.setIndexedArray(warpedMasses);
-			final List<Array> warpedIntensities = new ArrayList<Array>();
-			for (final Array a : tbwa2) {
-				final ArrayDouble.D1 ad = new ArrayDouble.D1(a.getShape()[0]);
-				MAMath.copyDouble(ad, a);
-				warpedIntensities.add(ad);
-			}
-			ivf2.setIndexedArray(warpedIntensities);
-			// }
-		} catch (final ResourceNotAvailableException rnae) {
-			log.warn("Could not warp scans: {}", rnae);
-		}
-		return warpedB;
-	}
+        } else { // whether b is on lhs of path
+            log.debug("Warping to lhs {}, {} from file {}", new Object[]{
+                        ref.getName(), s, toBeWarped.getName()});
+            final Array refA = ref.getChild(s).getArray();
+            warpedA = toBeWarped.getChild(s).getArray();
+            // there exists a subtle bug, if variables in original file has
+            // an empty array
+            // then this array might be null
+            if (warpedA != null) {
+                // refA is only needed for correct shape and data type
+                warpedA = projectToRHS(refA, path, warpedA, true);
+            }
+        }
+        var.setArray(warpedA);
+        return warpedB;
+    }
 
-	private IFileFragment warpSAT(final IFileFragment warpedB,
-	        final IFileFragment ref, final IFileFragment toBeWarped,
-	        final List<Tuple2DI> path, final List<String> plainVars,
-	        final boolean toLHS) {
-		log.info("Warping scan acquisition time");
-		IVariableFragment var = null;
-		Array warpedA = null;
-		final String s = this.satvar;
-		if (warpedB.hasChild(s)) {
-			var = warpedB.getChild(s);
-		} else {
-			var = new VariableFragment(warpedB, s);
-		}
-		if (toLHS) {// a is on lhs of path
-			log.debug("Warping to lhs {}, {} from file {}", new Object[] {
-			        ref.getName(), s, toBeWarped.getName() });
-			final Array refA = ref.getChild(s).getArray();
-			warpedA = toBeWarped.getChild(s).getArray();
-			// there exists a subtle bug, if variables in original file has
-			// an empty array
-			// then this array might be null
-			if (warpedA != null) {
-				// refA is only needed for correct shape and data type
-				warpedA = projectToLHS(refA, path, warpedA, true);
-			}
+    public static Array projectToLHS(final Array lhs, final List<Tuple2DI> al,
+            final Array rhs, final boolean average) {
+        final Array rhsm = Array.factory(lhs.getElementType(), lhs.getShape());
+        final Index rhsmi = rhsm.getIndex();
+        final Index lhsi = lhs.getIndex();
+        for (final Tuple2DI tpl : al) {
+            rhsmi.set(tpl.getFirst());
+            rhsm.setDouble(rhsmi, lhs.getDouble(lhsi.set(tpl.getFirst())));
+        }
+        return rhsm;
+    }
 
-		} else { // whether b is on lhs of path
-			log.debug("Warping to lhs {}, {} from file {}", new Object[] {
-			        ref.getName(), s, toBeWarped.getName() });
-			final Array refA = ref.getChild(s).getArray();
-			warpedA = toBeWarped.getChild(s).getArray();
-			// there exists a subtle bug, if variables in original file has
-			// an empty array
-			// then this array might be null
-			if (warpedA != null) {
-				// refA is only needed for correct shape and data type
-				warpedA = projectToRHS(refA, path, warpedA, true);
-			}
-		}
-		var.setArray(warpedA);
-		return warpedB;
-	}
+    public static Array projectToRHS(final Array rhs, final List<Tuple2DI> al,
+            final Array lhs, final boolean average) {
+        final Array lhsm = Array.factory(rhs.getElementType(), rhs.getShape());
+        final Index lhsmi = lhsm.getIndex();
+        final Index rhsi = rhs.getIndex();
+        for (final Tuple2DI tpl : al) {
+            lhsmi.set(tpl.getSecond());
+            lhsm.setDouble(lhsmi, rhs.getDouble(rhsi.set(tpl.getSecond())));
+        }
+        return lhsm;
+    }
 
     /**
      * Warp anchors according to pairwise scan mapping in path, reads anchors

@@ -21,7 +21,6 @@
  */
 package maltcms.commands.fragments.preprocessing;
 
-import cross.annotations.ProvidesTypes;
 import java.io.File;
 
 
@@ -31,11 +30,9 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
-import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.preprocessing.defaultVarLoader.DefaultVarLoaderWorker;
-import maltcms.datastructures.ms.IChromatogram1D;
 import net.sf.maltcms.execution.api.ICompletionService;
 
 /**
@@ -71,22 +68,6 @@ public class DefaultVarLoader extends AFragmentCommand {
         //wait and retrieve results
         TupleND<IFileFragment> ret = postProcess(ics, inputFileFragments);
         log.debug("Returning {} FileFragments!", ret.size());
-        return ret;
-    }
-
-    protected TupleND<IFileFragment> postProcess(ICompletionService<File> ics, final TupleND<IFileFragment> t) {
-        TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
-        try {
-            List<File> results = ics.call();
-            //expect at least one result
-            EvalTools.gt(0, results.size(), this);
-            //map input to results
-            ret = mapToInput(results, t);
-            //append results to workflow for bookkeeping
-            addWorkflowResults(ret);
-        } catch (Exception ex) {
-            log.warn("{} tasks failed with exception:\n{}", ics.getFailedTasks().size(), ex.getLocalizedMessage());
-        }
         return ret;
     }
 

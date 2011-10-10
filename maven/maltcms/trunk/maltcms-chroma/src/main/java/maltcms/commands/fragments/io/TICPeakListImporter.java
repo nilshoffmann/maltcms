@@ -40,7 +40,6 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class TICPeakListImporter extends AFragmentCommand {
 
-    private Logger log = Logging.getLogger(this);
     @Configurable
     private List<String> filesToRead;
     @Configurable(type = int.class, value = "0")

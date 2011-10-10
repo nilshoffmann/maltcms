@@ -35,6 +35,8 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
@@ -42,9 +44,10 @@ import cross.tools.StringTools;
  * 
  */
 @RequiresVariables(names = {"var.total_intensity", "var.scan_acquisition_time"})
+@Slf4j
+@Data
 public class EICHeatmapCoplot extends TICHeatmapCoplot {
 
-    private Logger log = Logging.getLogger(this);
     @Configurable
     private List<String> drawEICs;
 

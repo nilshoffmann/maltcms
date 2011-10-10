@@ -41,7 +41,6 @@ import maltcms.datastructures.peak.Peak1D;
 import maltcms.datastructures.caches.RingBuffer;
 import maltcms.io.csv.CSVWriter;
 import maltcms.io.xml.bindings.annotation.MaltcmsAnnotation;
-import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
 import maltcms.ui.charts.AChart;
 import maltcms.ui.charts.CombinedDomainXYChart;
@@ -51,7 +50,6 @@ import maltcms.ui.charts.XYChart;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
@@ -62,7 +60,6 @@ import ucar.ma2.Index;
 import ucar.ma2.MAMath;
 import ucar.nc2.Dimension;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
@@ -83,7 +80,6 @@ import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.BatchFilter;
-import maltcms.datastructures.peak.PeakFactory;
 
 /**
  * Find Peaks based on TIC, estimates a local baseline and, based on a given
@@ -719,7 +715,8 @@ public class TICPeakFinder extends AFragmentCommand {
                 baselineCorrectedTIC, firstDerivative, secondDerivative);
 
         log.debug("start: {}, stop: {}", startIndex, stopIndex);
-        final Peak1D pb = PeakFactory.createPeak1DTic(f, startIndex, scanIndex, stopIndex);
+        final Peak1D pb = new Peak1D(startIndex, scanIndex, stopIndex, 0, 0);
+        pb.setFile(f.getAbsolutePath());
         integratePeak(pb, null,f.getChild(this.ticVarName).getArray());
         return pb;
     }
@@ -816,7 +813,8 @@ public class TICPeakFinder extends AFragmentCommand {
         startIndex = Math.max(0, startIndex);
 
         log.debug("start: {}, stop: {}", startIndex, stopIndex);
-        final Peak1D pb = PeakFactory.createPeak1DTic(chromatogram,startIndex, apexIndex, stopIndex);
+        final Peak1D pb = new Peak1D(startIndex, apexIndex, stopIndex,0,0);
+        pb.setFile(chromatogram.getAbsolutePath());
         integratePeak(pb, null, baselineCorrectedTIC);
         return pb;
     }
@@ -938,7 +936,8 @@ public class TICPeakFinder extends AFragmentCommand {
             mwIndices.add(arr);
         }
         log.debug("start: {}, stop: {}", (l + 1), r - 1);
-        final Peak1D pb = PeakFactory.createPeak1DTic(f,l + 1, apexIndex, r - 1);
+        final Peak1D pb = new Peak1D(l + 1, apexIndex, r - 1,0,0);//PeakFactory.createPeak1DTic();
+        pb.setFile(f.getAbsolutePath());
         integratePeak(pb, mwIndices, f.getChild(this.ticVarName).getArray());
         return pb;
     }
@@ -974,7 +973,7 @@ public class TICPeakFinder extends AFragmentCommand {
                 s += (tic.getDouble(ticIndex.set(i)));
             }
             pb.setArea(s);
-            pb.setApexIntensity(tic.getDouble(ticIndex.set(pb.getApexIndex())));
+            pb.setIntensity(tic.getDouble(ticIndex.set(pb.getApexIndex())));
         }
         log.debug("Raw peak area: {}", s);
         return s;
@@ -1038,7 +1037,7 @@ public class TICPeakFinder extends AFragmentCommand {
                 pb.getStartIndex() + "", pb.getStopIndex() + "",
                 df.format(pb.getApexTime()), df.format(pb.getStartTime()),
                 df.format(pb.getStopTime()), pb.getArea() + "",
-                "" + pb.getStartMass(), "" + pb.getApexIntensity()};
+                "" + pb.getMw(), "" + pb.getIntensity()};
             final List<String> v = Arrays.asList(line);
             rows.add(v);
             log.debug("Adding row {}", v);

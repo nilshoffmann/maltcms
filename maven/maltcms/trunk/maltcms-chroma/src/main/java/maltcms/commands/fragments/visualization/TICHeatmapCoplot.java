@@ -36,7 +36,6 @@ import org.jfree.chart.renderer.xy.XYBlockRenderer;
 import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYZDataset;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -44,7 +43,6 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
@@ -56,6 +54,8 @@ import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
@@ -66,9 +66,10 @@ import cross.tools.StringTools;
 @RequiresOptionalVariables(names = {"var.anchors.retention_index_names",
     "var.anchors.retention_times", "var.anchors.retention_indices",
     "var.anchors.retention_scans"})
+@Slf4j
+@Data
 public class TICHeatmapCoplot extends AFragmentCommand {
 
-    private Logger log = Logging.getLogger(this);
     @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv")
     private String colorRampLocation = "res/colorRamps/bcgyr.csv";
     @Configurable(name = "var.total_intensity", value = "total_intensity")

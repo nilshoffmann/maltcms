@@ -59,8 +59,8 @@ import net.sf.maltcms.execution.api.ICompletionService;
     "var.binned_intensity_values", "var.binned_scan_index"})
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.scan_acquisition_time", "var.total_intensity"})
-//@Slf4j
-//@Data
+@Slf4j
+@Data
 public class DenseArrayProducer extends AFragmentCommand {
 
     @Configurable
@@ -99,6 +99,7 @@ public class DenseArrayProducer extends AFragmentCommand {
         mmmfw.setMaxMassVariableName(massRangeMax);
         mmmfw.setIgnoreMinMaxMassArrays(ignoreMinMaxMassArrays);
         ICompletionService<double[]> massRangeCompletionService = createCompletionService(double[].class);
+        massRangeCompletionService.submit(mmmfw);
         List<double[]> massRangeResults = new ArrayList<double[]>();
         double[] massRange = new double[]{Double.MAX_VALUE,Double.MIN_VALUE};
         try{
@@ -136,17 +137,10 @@ public class DenseArrayProducer extends AFragmentCommand {
             dapw.setFileToSave(new File(createWorkFragment(ff).getAbsolutePath()));
             ics.submit(dapw);
         }
-        TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
-        try {
-            List<File> results = ics.call();
-            //expect at least one result
-            EvalTools.gt(0, results.size(), this);
-            ret = mapToInput(results, t);
-            //append results to workflow for bookkeeping
-            addWorkflowResults(ret);
-        } catch (Exception ex) {
-            Logger.getLogger(DenseArrayProducer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+        //wait and retrieve results
+        TupleND<IFileFragment> ret = postProcess(ics, t);
+        log.debug("Returning {} FileFragments!", ret.size());
         return ret;
     }
 

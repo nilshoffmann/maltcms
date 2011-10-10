@@ -41,13 +41,11 @@ import maltcms.tools.ImageTools;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
 
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.StatsMap;
@@ -64,7 +62,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder.PeakPositionsResultSet;
 import maltcms.datastructures.peak.Peak1D;
-import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
  * Work in progress. EIC peak finder, EIC are individual ion channels.

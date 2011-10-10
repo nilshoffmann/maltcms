@@ -37,7 +37,6 @@ import maltcms.tools.MaltcmsTools;
 
 import org.apache.commons.configuration.Configuration;
 import java.util.Arrays;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
@@ -47,7 +46,6 @@ import ucar.ma2.Index;
 import ucar.ma2.MAMath;
 import ucar.nc2.Dimension;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.FileFragment;
@@ -62,6 +60,8 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FragmentTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Instead of warping one time series to the time scale of another one, warp
@@ -69,9 +69,10 @@ import cross.datastructures.tools.FragmentTools;
  * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
+@Slf4j
+@Data
 public class PathWarp extends AFragmentCommand {
 
-    private final Logger log = Logging.getLogger(this.getClass());
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String total_intensity = "total_intensity";
     @Configurable(name = "var.anchors.retention_scans",
