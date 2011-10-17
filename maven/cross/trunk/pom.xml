@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.sf.maltcms</groupId>
     <artifactId>cross</artifactId>
@@ -32,50 +33,62 @@
     </distributionManagement>
 
     <build>
-    <!-- To define the plugin version in your parent POM -->
+		<!-- To define the plugin version in your parent POM -->
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.0.2</version>
+                    <version>2.3.2</version>
                     <configuration>
                         <source>1.6</source>
                         <target>1.6</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-    <!--        <executions>
-                <execution>
-                    <id>package</id>
-                    <goals>
-                        <goal>single</goal>
-                    </goals>
-                    <phase>package</phase>
-                </execution>
-            </executions>-->
+                    <version>2.2.1</version>
+					<!-- <executions> <execution> <id>package</id> <goals> <goal>single</goal> 
+						</goals> <phase>package</phase> </execution> </executions> -->
                     <configuration>
                         <descriptors>
                             <descriptor>src/assemble/bin.xml</descriptor>
                         </descriptors>
                     </configuration>
                 </plugin>
+                
+                <!-- redirectTestOutputToFile -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.10</version>
+                    <configuration>
+                        <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>2.0</version>
+                    <version>2.2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-plugin</artifactId>
-                    <version>1.0</version>
+                    <version>1.5</version>
                     <configuration>
                         <connectionType>developerConnection</connectionType>
                     </configuration>
                 </plugin>
-
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.5</version>
+                    <configuration>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -97,24 +110,26 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
+            <artifactId>slf4j-simple</artifactId>
             <version>1.6.1</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jul-to-slf4j</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-        <dependency> 
-            <groupId>org.projectlombok</groupId> 
-            <artifactId>lombok</artifactId> 
-            <version>0.10.0-RC1</version> 
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>0.10.0-RC1</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
+            <version>RELEASE701</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <reporting>
@@ -122,6 +137,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.7</version>
                 <configuration>
                     <configLocation>config/sun_checks.xml</configLocation>
                 </configuration>

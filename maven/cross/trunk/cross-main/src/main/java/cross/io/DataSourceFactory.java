@@ -19,7 +19,6 @@
  * 
  * $Id: DataSourceFactory.java 116 2010-06-17 08:46:30Z nilshoffmann $
  */
-
 package cross.io;
 
 import java.util.ArrayList;
@@ -29,12 +28,12 @@ import java.util.List;
 import org.apache.commons.configuration.Configuration;
 
 import cross.Factory;
-import cross.IConfigurable;
 import cross.Logging;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Factory managing objects of type <code>IDataSource</code>. Objects can be
@@ -45,121 +44,125 @@ import cross.tools.StringTools;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class DataSourceFactory implements IDataSourceFactory {
 
-	private final HashMap<String, ArrayList<IDataSource>> formatToIDataSource = new HashMap<String, ArrayList<IDataSource>>();
+    private final HashMap<String, ArrayList<IDataSource>> formatToIDataSource = new HashMap<String, ArrayList<IDataSource>>();
+    @Configurable(name = "cross.io.IDataSource")
+    private List<String> dataSources = null;
 
-	@Configurable(name = "cross.io.IDataSource")
-	private List<String> dataSources = null;
+    /**
+     * Creates an instance of DataSourceServiceLoader and adds available
+     * implementations to internal hash map.
+     */
+    public DataSourceFactory() {
+        DataSourceServiceLoader ids = new DataSourceServiceLoader();
+        List<IDataSource> l = ids.getAvailableCommands();
+        for (IDataSource source : l) {
+            log.info("Adding datasource provider {} for formats {}",source,source.supportedFormats());
+            addToHashMap(source);
+        }
+    }
 
-	/**
-	 * Creates an instance of DataSourceServiceLoader and adds available
-	 * implementations to internal hash map.
-	 */
-	public DataSourceFactory() {
-		DataSourceServiceLoader ids = new DataSourceServiceLoader();
-		List<IDataSource> l = ids.getAvailableCommands();
-		for (IDataSource source : l) {
-			addToHashMap(source);
-		}
-	}
+    /**
+     * Adds IDataSource to internal HashMap
+     * 
+     * @param ids
+     */
+    private void addToHashMap(final IDataSource ids) {
+        EvalTools.notNull(ids, this);
+        for (final String s : ids.supportedFormats()) {
+            ArrayList<IDataSource> al = new ArrayList<IDataSource>(1);
+            if (this.formatToIDataSource.containsKey(s.toLowerCase())) {
+                al = this.formatToIDataSource.get(s.toLowerCase());
+            }
+            al.add(ids);
+            this.formatToIDataSource.put(s.toLowerCase(), al);
+        }
+    }
 
-	/**
-	 * Adds IDataSource to internal HashMap
-	 * 
-	 * @param ids
-	 */
-	private void addToHashMap(final IDataSource ids) {
-		EvalTools.notNull(ids, this);
-		for (final String s : ids.supportedFormats()) {
-			ArrayList<IDataSource> al = new ArrayList<IDataSource>(1);
-			if (this.formatToIDataSource.containsKey(s.toLowerCase())) {
-				al = this.formatToIDataSource.get(s.toLowerCase());
-			}
-			al.add(ids);
-			this.formatToIDataSource.put(s.toLowerCase(), al);
-		}
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+        setDataSources(StringTools.toStringList(cfg.getList(
+                "cross.io.IDataSource")));
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		setDataSources(StringTools.toStringList(cfg
-		        .getList("cross.io.IDataSource")));
-	}
+    /**
+     * Returns a compatible IDataSource for given IFileFragment. First hit wins,
+     * if multiple DataSource implementations are registered for the same file
+     * type.
+     * 
+     * @param ff
+     * @return
+     */
+    @Override
+    public IDataSource getDataSourceFor(final IFileFragment ff) {
+        String fname = ff.getName();
+        String tmp = "";
+        String[] parts = fname.split("\\.");
+        if (parts.length > 1) {
+            int cnt = parts.length - 1;
+            tmp = parts[cnt];
+            while (cnt >= 0) {
+                if (hasDataSourceFor(tmp)) {
+                    for (final IDataSource ids : this.formatToIDataSource.get(tmp.
+                            toLowerCase())) {
+                        if (ids.canRead(ff) == 1) {
+                            return ids;
+                        }
+                    }
+                }
+                if (cnt > 0) {
+                    tmp = parts[cnt - 1] + "." + tmp;
+                }
+                cnt--;
+            }
+        }
+        throw new IllegalArgumentException("Unsupported file type " + fname);
+    }
 
-	/**
-	 * Returns a compatible IDataSource for given IFileFragment. First hit wins,
-	 * if multiple DataSource implementations are registered for the same file
-	 * type.
-	 * 
-	 * @param ff
-	 * @return
-	 */
-	public IDataSource getDataSourceFor(final IFileFragment ff) {
-		String fname = ff.getName();
-		String tmp = "";
-		String[] parts = fname.split("\\.");
-		if (parts.length > 1) {
-			int cnt = parts.length - 1;
-			tmp = parts[cnt];
-			while (cnt >= 0) {
-				if (hasDataSourceFor(tmp)) {
-					for (final IDataSource ids : this.formatToIDataSource
-					        .get(tmp.toLowerCase())) {
-						if (ids.canRead(ff) == 1) {
-							return ids;
-						}
-					}
-				}
-				if (cnt > 0) {
-					tmp = parts[cnt - 1] + "." + tmp;
-				}
-				cnt--;
-			}
-		}
-		throw new IllegalArgumentException("Unsupported file type " + fname);
-	}
+    private boolean hasDataSourceFor(String fileExtension) {
+        if (this.formatToIDataSource.containsKey(fileExtension.toLowerCase())) {
+            return true;
 
-	private boolean hasDataSourceFor(String fileExtension) {
-		if (this.formatToIDataSource.containsKey(fileExtension.toLowerCase())) {
-			return true;
+        }
+        return false;
+    }
 
-		}
-		return false;
-	}
+    /**
+     * @return the dataSources
+     */
+    @Override
+    public List<String> getDataSources() {
+        return this.dataSources;
+    }
 
-	/**
-	 * @return the dataSources
-	 */
-	public List<String> getDataSources() {
-		return this.dataSources;
-	}
+    /**
+     * Returns a list of supported file extensions
+     * 
+     * @return
+     */
+    @Override
+    public List<String> getSupportedFormats() {
+        final List<String> l = new ArrayList<String>(this.formatToIDataSource.
+                keySet());
+        return l;
+    }
 
-	/**
-	 * Returns a list of supported file extensions
-	 * 
-	 * @return
-	 */
-	public List<String> getSupportedFormats() {
-		final List<String> l = new ArrayList<String>(this.formatToIDataSource
-		        .keySet());
-		return l;
-	}
-
-	/**
-	 * @param dataSources
-	 *            the dataSources to set
-	 */
-	public void setDataSources(final List<String> dataSources) {
-		this.dataSources = dataSources;
-		for (final String s : this.dataSources) {
-			Logging.getLogger(this.getClass()).info(
-			        "Trying to load IDataSource {}", s);
-			EvalTools.notNull(s, this);
-			final IDataSource ids = Factory.getInstance().getObjectFactory()
-			        .instantiate(s, IDataSource.class);
-			addToHashMap(ids);
-		}
-	}
-
+    /**
+     * @param dataSources
+     *            the dataSources to set
+     */
+    @Override
+    public void setDataSources(final List<String> dataSources) {
+        this.dataSources = dataSources;
+        for (final String s : this.dataSources) {
+            Logging.getLogger(this.getClass()).info(
+                    "Trying to load IDataSource {}", s);
+            EvalTools.notNull(s, this);
+            final IDataSource ids = Factory.getInstance().getObjectFactory().
+                    instantiate(s, IDataSource.class);
+            addToHashMap(ids);
+        }
+    }
 }

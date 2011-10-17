@@ -192,6 +192,13 @@ public class Factory implements ConfigurationListener {
         getDataSourceFactory().configure(config1);
         getWorkflowFactory().configure(config1);
         getInputDataFactory().configure(config1);
+        FileTools.inputBasedirectory = new File(config1.getString(
+                "input.basedir", ""));
+        FileTools.outputBasedirectory = new File(config1.getString(
+                "output.basedir", ""));
+        FileTools.omitUserTimePrefix = config1.getBoolean("omitUserTimePrefix",
+                false);
+        FileTools.overwrite = config1.getBoolean("output.overwrite", false);
         // instantiate DataSourceFactory
     }
 
@@ -230,7 +237,8 @@ public class Factory implements ConfigurationListener {
                 new Date(), cd);
         cd.setWorkflow(iw);
         if (t == null) {
-            cd.setInput(getInputDataFactory().prepareInputData());
+            cd.setInput(getInputDataFactory().prepareInputData(getConfiguration().
+                    getStringArray("input.dataInfo")));
         } else {
             cd.setInput(t);
         }
@@ -273,9 +281,14 @@ public class Factory implements ConfigurationListener {
 
     public IInputDataFactory getInputDataFactory() {
         if (this.idf == null) {
-            this.idf = getObjectFactory().instantiate(
+            InputDataFactory idf = getObjectFactory().instantiate(
                     "cross.io.InputDataFactory", InputDataFactory.class,
                     getConfiguration());
+            idf.setInput(getConfiguration().getStringArray("input.dataInfo"));
+            idf.setRecurse(getConfiguration().getBoolean("input.basedir.recurse",
+                    false));
+            idf.setBasedir(System.getProperty("user.dir"));
+            this.idf = idf;
         }
         return this.idf;
     }

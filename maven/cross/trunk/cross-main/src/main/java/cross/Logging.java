@@ -19,7 +19,6 @@
  * 
  * $Id: Logging.java 73 2009-12-16 08:45:14Z nilshoffmann $
  */
-
 package cross;
 
 import java.util.HashMap;
@@ -36,47 +35,43 @@ import org.slf4j.LoggerFactory;
 @Deprecated
 public class Logging {
 
-	protected static Logger getClassLogger(final Class<?> c) {
-		return LoggerFactory.getLogger(c.getName());
-	}
+    protected static Logger getClassLogger(final Class<?> c) {
+        return LoggerFactory.getLogger(c.getName());
+    }
 
-	public static Logger getLogger(final Class<?> c) {
-		Logging.getRootLogger().debug("Adding logger for {}", c.getName());
-		if (Logging.logRegistry.containsKey(c.getName())) {
-			return Logging.logRegistry.get(c.getName());
-		}
-		final Logger l = Logging.getClassLogger(c);
-		Logging.logRegistry.put(c.getName(), l);
-		return l;
-	}
+    public static Logger getLogger(final Class<?> c) {
+        Logging.getRootLogger().debug("Adding logger for {}", c.getName());
+        if (Logging.logRegistry.containsKey(c.getName())) {
+            return Logging.logRegistry.get(c.getName());
+        }
+        final Logger l = Logging.getClassLogger(c);
+        Logging.logRegistry.put(c.getName(), l);
+        return l;
+    }
 
-	public static Logger getLogger(final Object o1) {
-		return Logging.getLogger(o1.getClass());
-	}
+    public static Logger getLogger(final Object o1) {
+        return Logging.getLogger(o1.getClass());
+    }
 
-	protected static Logger getPackageLogger(final Class<?> c) {
-		return LoggerFactory.getLogger(c.getPackage().getName());
-	}
+    protected static Logger getPackageLogger(final Class<?> c) {
+        return LoggerFactory.getLogger(c.getPackage().getName());
+    }
 
-	public static Logger getRootLogger() {
-		return Logging.getInstance().logger;
-	}
+    public static Logger getRootLogger() {
+        return Logging.getInstance().logger;
+    }
+    public Logger logger = null;
+    private static Logging o;
+    private static HashMap<String, Logger> logRegistry = new HashMap<String, Logger>();
 
-	public Logger logger = null;
+    public static Logging getInstance() {
+        if (Logging.o == null) {
+            Logging.o = new Logging();
+        }
+        return Logging.o;
+    }
 
-	private static Logging o;
-
-	private static HashMap<String, Logger> logRegistry = new HashMap<String, Logger>();
-
-	public static Logging getInstance() {
-		if (Logging.o == null) {
-			Logging.o = new Logging();
-		}
-		return Logging.o;
-	}
-
-	private Logging() {
-		this.logger = LoggerFactory.getLogger("Root");
-	}
-
+    private Logging() {
+        this.logger = LoggerFactory.getLogger("Root");
+    }
 }

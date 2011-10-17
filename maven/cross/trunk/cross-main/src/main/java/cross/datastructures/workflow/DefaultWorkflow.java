@@ -64,6 +64,7 @@ import cross.io.misc.DefaultConfigurableFileFilter;
 import cross.io.misc.WorkflowZipper;
 import cross.io.xml.IXMLSerializable;
 import cross.datastructures.tools.FileTools;
+import cross.datastructures.tuple.TupleND;
 import cross.tools.StringTools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -78,6 +79,10 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 @Slf4j
 public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1781229121330043626L;
     private ArrayList<IWorkflowResult> al = new ArrayList<IWorkflowResult>();
     private IEventSource<IWorkflowResult> iwres = new EventSource<IWorkflowResult>();
     private ICommandSequence commandSequence = null;
@@ -129,12 +134,14 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
             final Element iwr = new Element("workflowElementResult");
             iwr.setAttribute("class", wr.getClass().getCanonicalName());
             iwr.setAttribute("slot", wr.getWorkflowSlot().name());
-            iwr.setAttribute("generator", wr.getWorkflowElement().getClass().getCanonicalName());
+            iwr.setAttribute("generator", wr.getWorkflowElement().getClass().
+                    getCanonicalName());
 
             final Element resources = new Element("resources");
             if (wr instanceof IWorkflowFileResult) {
                 final Element resource = new Element("resource");
-                resource.setAttribute("file", ((IWorkflowFileResult) wr).getFile().getAbsolutePath());
+                resource.setAttribute("file",
+                        ((IWorkflowFileResult) wr).getFile().getAbsolutePath());
                 resources.addContent(resource);
             }
             iwr.addContent(resources);
@@ -159,7 +166,8 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         this.xslPathPrefix = cfg.getString(this.getClass().getName()
                 + ".xslPathPrefix", "");
         this.fileFilter = cfg.getString(this.getClass().getName()
-                + ".resultFileFilter", DefaultConfigurableFileFilter.class.getName());
+                + ".resultFileFilter", DefaultConfigurableFileFilter.class.
+                getName());
         this.saveInFragmentCommandDir = cfg.getBoolean(this.getClass().getName()
                 + ".saveInFragmentCommandDir", true);
     }
@@ -249,9 +257,11 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
             final String slot = elem.getAttributeValue("slot");
             final String generator = elem.getAttributeValue("generator");
             final String file = elem.getAttributeValue("file");
-            final IWorkflowFileResult iwr = Factory.getInstance().getObjectFactory().instantiate(cls,
+            final IWorkflowFileResult iwr = Factory.getInstance().
+                    getObjectFactory().instantiate(cls,
                     IWorkflowFileResult.class);
-            final IWorkflowElement iwe = Factory.getInstance().getObjectFactory().instantiate(generator,
+            final IWorkflowElement iwe = Factory.getInstance().getObjectFactory().
+                    instantiate(generator,
                     IWorkflowElement.class);
             iwr.setWorkflowElement(iwe);
             iwr.setFile(new File(file));
@@ -287,8 +297,10 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                 f.createNewFile();
                 outp.output(doc, new BufferedOutputStream(new FileOutputStream(
                         f)));
-                final WorkflowZipper wz = Factory.getInstance().getObjectFactory().instantiate(WorkflowZipper.class);
-                wz.setFileFilter(Factory.getInstance().getObjectFactory().instantiate(this.fileFilter,
+                final WorkflowZipper wz = Factory.getInstance().getObjectFactory().
+                        instantiate(WorkflowZipper.class);
+                wz.setFileFilter(Factory.getInstance().getObjectFactory().
+                        instantiate(this.fileFilter,
                         java.io.FileFilter.class));
                 wz.setIWorkflow(this);
                 final File results = new File(dir, "maltcmsResults.zip");
@@ -324,10 +336,12 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
 
         final TransformerFactory tf = TransformerFactory.newInstance();
         try {
-            final InputStream xsstyler = getClass().getClassLoader().getResourceAsStream("res/xslt/maltcmsHTMLResult.xsl");
+            final InputStream xsstyler = getClass().getClassLoader().
+                    getResourceAsStream("res/xslt/maltcmsHTMLResult.xsl");
             final StreamSource sstyles = new StreamSource(xsstyler);
             final FileInputStream xsr = new FileInputStream(f);
-            final FileOutputStream xsw = new FileOutputStream(new File(f.getParentFile(), "workflow.html"));
+            final FileOutputStream xsw = new FileOutputStream(new File(f.
+                    getParentFile(), "workflow.html"));
             final StreamSource sts = new StreamSource(xsr);
             final StreamResult str = new StreamResult(xsw);
             final Transformer t = tf.newTransformer(sstyles);
@@ -355,10 +369,12 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
 
         final TransformerFactory tf = TransformerFactory.newInstance();
         try {
-            final InputStream xsstyler = getClass().getClassLoader().getResourceAsStream("res/xslt/maltcmsTEXTResult.xsl");
+            final InputStream xsstyler = getClass().getClassLoader().
+                    getResourceAsStream("res/xslt/maltcmsTEXTResult.xsl");
             final StreamSource sstyles = new StreamSource(xsstyler);
             final FileInputStream xsr = new FileInputStream(f);
-            final FileOutputStream xsw = new FileOutputStream(new File(f.getParentFile(), "workflow.txt"));
+            final FileOutputStream xsw = new FileOutputStream(new File(f.
+                    getParentFile(), "workflow.txt"));
             final StreamSource sts = new StreamSource(xsr);
             final StreamResult str = new StreamResult(xsw);
             final Transformer t = tf.newTransformer(sstyles);
@@ -383,6 +399,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     @Override
     public void setCommandSequence(final ICommandSequence ics) {
         this.commandSequence = ics;
+        this.commandSequence.setWorkflow(this);
     }
 
     /*
@@ -430,14 +447,13 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         this.date = date1;
     }
 
-    /**
-     * @param al
-     *            the IWorkflowResult List to set
-     */
-    public void setWorkflowResult(final ArrayList<IWorkflowResult> al) {
-        this.al = al;
-    }
-
+//    /**
+//     * @param al
+//     *            the IWorkflowResult List to set
+//     */
+//    public void setWorkflowResult(final ArrayList<IWorkflowResult> al) {
+//        this.al = al;
+//    }
     /**
      * @param xslPathPrefix
      *            the xslPathPrefix to set
@@ -479,7 +495,8 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                     if (activeCommand != iwa) {
                         activeCommand = iwa;
                     }
-                    return FileTools.prependDefaultDirsWithPrefix(String.format("%0" + digits + "d", i)
+                    return FileTools.prependDefaultDirsWithPrefix(String.format(
+                            "%0" + digits + "d", i)
                             + "_", iwa.getClass(), getStartupDate());
                 }
                 i++;
@@ -488,7 +505,8 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                 if (saveInFragmentCommandDir) {
                     return getOutputDirectory(activeCommand);
                 } else {
-                    File dir = new File(getOutputDirectory(activeCommand), iwe.getClass().getSimpleName());
+                    File dir = new File(getOutputDirectory(activeCommand), iwe.
+                            getClass().getSimpleName());
                     if (!dir.exists()) {
                         dir.mkdirs();
                     }
@@ -500,7 +518,8 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                 if (saveInFragmentCommandDir) {
                     return getOutputDirectory(activeCommand);
                 } else {
-                    File dir = new File(getOutputDirectory(activeCommand), iwe.getClass().getSimpleName());
+                    File dir = new File(getOutputDirectory(activeCommand), iwe.
+                            getClass().getSimpleName());
                     if (!dir.exists()) {
                         dir.mkdirs();
                     }
@@ -631,7 +650,8 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
             IWorkflowResult iwr = iter.next();
             if (iwr instanceof IWorkflowFileResult) {
                 IWorkflowFileResult iwfr = (IWorkflowFileResult) iwr;
-                if (iwfr.getWorkflowElement().getClass().getCanonicalName().equals(afc.getClass().getCanonicalName())) {
+                if (iwfr.getWorkflowElement().getClass().getCanonicalName().
+                        equals(afc.getClass().getCanonicalName())) {
                     if (iwfr.getFile().getAbsolutePath().endsWith(fileExtension)) {
                         l.add(iwr);
                     }
@@ -649,5 +669,14 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     @Override
     public void setExecuteLocal(boolean executeLocal) {
         this.executeLocal = executeLocal;
+    }
+
+    @Override
+    public TupleND<IFileFragment> call() throws Exception {
+        TupleND<IFileFragment> results = null;
+        while (commandSequence.hasNext()) {
+            results = commandSequence.next();
+        }
+        return results;
     }
 }

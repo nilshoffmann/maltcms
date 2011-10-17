@@ -60,7 +60,7 @@ public interface ICommandSequence extends Iterator<TupleND<IFileFragment>>,
     @Override
     public abstract boolean hasNext();
 
-    public abstract void init();
+    public abstract boolean validate();
 
     /**
      * Apply the next ICommand and return results.

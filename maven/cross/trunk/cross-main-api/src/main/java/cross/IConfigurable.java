@@ -19,7 +19,6 @@
  * 
  * $Id: IConfigurable.java 43 2009-10-16 17:22:55Z nilshoffmann $
  */
-
 package cross;
 
 import java.io.Serializable;
@@ -27,12 +26,14 @@ import org.apache.commons.configuration.Configuration;
 
 /**
  * Interface for objects which are configurable.
- * 
+ * Should be replaced in favor of Beans compatible objects with getter and setter
+ * methods. Configuration will then be performed by a Spring ApplicationContext 
+ * instance.
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Deprecated
 public interface IConfigurable extends Serializable {
 
-	public void configure(Configuration cfg);
-
+    public void configure(Configuration cfg);
 }

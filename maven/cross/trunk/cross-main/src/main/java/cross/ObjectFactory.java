@@ -19,194 +19,229 @@
  * 
  * $Id: ObjectFactory.java 129 2010-06-25 11:57:02Z nilshoffmann $
  */
-
 package cross;
 
 import java.util.Collection;
 
+import java.util.Map;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.slf4j.Logger;
 
 import cross.annotations.AnnotationInspector;
+import cross.applicationContext.DefaultApplicationContextFactory;
 import cross.datastructures.tools.EvalTools;
 import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.context.ApplicationContext;
 
 /**
  * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
+@Slf4j
 public class ObjectFactory implements IObjectFactory {
 
-	private final Logger log = Logging.getLogger(ObjectFactory.class);
+    private Configuration cfg = new PropertiesConfiguration();
+    private File userConfigLocation = null;
+    private ApplicationContext context = null;
+    public static final String CONTEXT_LOCATION_KEY = "pipeline.context";
 
-	private Configuration cfg = new PropertiesConfiguration();
-        
-        private File userConfigLocation = null;
+    @Override
+    public void configure(final Configuration cfg) {
+        this.cfg = new PropertiesConfiguration();
+        ConfigurationUtils.copy(cfg, this.cfg);
+        userConfigLocation = (File) this.cfg.getProperty("userConfigLocation");
+        String[] contextLocations = null;
+        if (cfg.containsKey(CONTEXT_LOCATION_KEY)) {
+            contextLocations = cfg.getStringArray(CONTEXT_LOCATION_KEY);
+        } else {
+            contextLocations = new String[]{"/cfg/xml/chroma.xml"};
+        }
+        log.info("Using context locations: {}",
+                Arrays.toString(contextLocations));
+        try {
+            context = new DefaultApplicationContextFactory(contextLocations).
+                    createApplicationContext();
+        } catch (Exception ex) {
+            log.warn(
+                    "Can not access configuration for application context at {}",
+                    contextLocations);
+        }
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		this.cfg = new PropertiesConfiguration();
-		ConfigurationUtils.copy(cfg, this.cfg);
-                userConfigLocation = (File)this.cfg.getProperty("userConfigLocation");
-	}
+    @Override
+    public <T> void configureType(final T t) {
+        configureType(t, this.cfg);
+    }
 
-	public <T> void configureType(final T t) {
-		configureType(t, this.cfg);
-	}
+    private <T> T configureType(final T t, final Configuration cfg) {
+        if (t instanceof IConfigurable) {
+            if (cfg == null || cfg.isEmpty()) {
+                log.error(
+                        "ObjectFactory's configuration is null or empty! Skipping configuration of {}",
+                        t.getClass().getName());
+                return t;
+            }
+            log.debug("Instance of type {} is configurable!", t.getClass().
+                    toString());
+            final Collection<String> requiredKeys = AnnotationInspector.
+                    getRequiredConfigKeys(t);
+            log.debug("Required keys for class {}", t.getClass());
+            log.debug("{}", requiredKeys);
+            log.debug("Configuring with full configuration!");
+            ((IConfigurable) t).configure(cfg);
+        }
+        return t;
+    }
 
-	private <T> T configureType(final T t, final Configuration cfg) {
-		if (t instanceof IConfigurable) {
-			if (cfg == null || cfg.isEmpty()) {
-				this.log
-				        .error(
-				                "ObjectFactory's configuration is null or empty! Skipping configuration of {}",
-				                t.getClass().getName());
-				return t;
-			}
-			this.log.debug("Instance of type {} is configurable!", t.getClass()
-			        .toString());
-			final Collection<String> requiredKeys = AnnotationInspector
-			        .getRequiredConfigKeys(t);
-			this.log.debug("Required keys for class {}", t.getClass());
-			this.log.debug("{}", requiredKeys);
-			// TODO this is temporary, as long as not all classes use the
-			// new
-			// Configurable Annotations
-			// if (requiredKeys.isEmpty()) {
-			this.log.debug("Configuring with full configuration!");
-			((IConfigurable) t).configure(cfg);
-			// } else {
-			// Constrain visibility of configuration to those keys
-			// required
-			// BaseConfiguration bc = new BaseConfiguration();
-			// for (String key : requiredKeys) {
-			// bc.setProperty(key, getConfiguration().getProperty(key));
-			// }
-			// ArrayFactory.getInstance().log.info(
-			// "Configuring with partial configuration {}"
-			// ,ConfigurationUtils.toString(bc));
-			// ((IConfigurable) t).configure(bc);
-			// }
-			// ArrayFactory.getInstance().log.info(requiredKeys.toString());
-		}
-		return t;
-	}
+    /**
+     * Create a new Instance of c, configure automatically, if c is an instance
+     * of IConfigurable
+     * 
+     * @param <T>
+     * @param c
+     * @return
+     */
+    @Override
+    public <T> T instantiate(final Class<T> c) {
+        T t = null;
+        if (context != null) {
+            try {
+                t = context.getBean(c);
+                log.info("Retrieved bean {} from context!");
+                return t;
+            } catch (NoSuchBeanDefinitionException nsbde) {
+                log.warn("Could not create bean {} from context! Reason:\n {}",
+                        c.getName(), nsbde.getLocalizedMessage());
+            } catch (BeansException be) {
+                log.warn("Could not create bean {} from context! Reason:\n {}",
+                        c.getName(), be.getLocalizedMessage());
+            }
+        }
+        log.info("Using regular configuration mechanism!");
+        return configureType(instantiateType(c), this.cfg);
+    }
 
-	/**
-	 * Create a new Instance of c, configure automatically, if c is an instance
-	 * of IConfigurable
-	 * 
-	 * @param <T>
-	 * @param c
-	 * @return
-	 */
-	public <T> T instantiate(final Class<T> c) {
-		return configureType(instantiateType(c), this.cfg);
-	}
+    private <T> T instantiateType(final Class<T> c) {
+        try {
+            return c.newInstance();
+        } catch (final InstantiationException e) {
+            log.error(e.getLocalizedMessage());
+        } catch (final IllegalAccessException e) {
+            log.error(e.getLocalizedMessage());
+        }
+        throw new IllegalArgumentException("Could not instantiate class "
+                + c.getName());
+    }
 
-	private <T> T instantiateType(final Class<T> c) {
-		try {
-			return c.newInstance();
-		} catch (final InstantiationException e) {
-			this.log.error(e.getLocalizedMessage());
-		} catch (final IllegalAccessException e) {
-			this.log.error(e.getLocalizedMessage());
-		}
-		throw new IllegalArgumentException("Could not instantiate class "
-		        + c.getName());
-	}
+    /**
+     * Instantiate a class, given by a classname and the class of Type T.
+     * 
+     * @param <T>
+     * @param classname
+     * @param cls
+     * @return
+     */
+    @Override
+    public <T> T instantiate(final String classname, final Class<T> cls) {
+        EvalTools.notNull(classname, "Class name of type " + cls.getName()
+                + " was null!", Factory.class);
+        final Class<?> c = loadClass(classname);
+        final Class<? extends T> t = c.asSubclass(cls);
+        return instantiate(t);
+    }
 
-	/**
-	 * Instantiate a class, given by a classname and the class of Type T.
-	 * 
-	 * @param <T>
-	 * @param classname
-	 * @param cls
-	 * @return
-	 */
-	public <T> T instantiate(final String classname, final Class<T> cls) {
-		EvalTools.notNull(classname, "Class name of type " + cls.getName()
-		        + " was null!", Factory.class);
-		final Class<?> c = loadClass(classname);
-		final Class<? extends T> t = c.asSubclass(cls);
-		return instantiate(t);
-	}
-
-	/**
-	 * Instantiate a class, given a classname and the class of Type t and
-	 * configure with configuration from configurationFile.
-	 * 
-	 * @param <T>
-	 * @param classname
-	 * @param cls
-	 * @param configurationFile
-	 * @return
-	 */
-	public <T> T instantiate(final String classname, final Class<T> cls,
-	        final String configurationFile) {
-		CompositeConfiguration cc = new CompositeConfiguration();
-		try {
-                        File configFileLocation = new File(configurationFile);
-                        //resolve non-absolute paths
+    /**
+     * Instantiate a class, given a classname and the class of Type t and
+     * configure with configuration from configurationFile.
+     * 
+     * @param <T>
+     * @param classname
+     * @param cls
+     * @param configurationFile
+     * @return
+     */
+    @Override
+    public <T> T instantiate(final String classname, final Class<T> cls,
+            final String configurationFile) {
+        CompositeConfiguration cc = new CompositeConfiguration();
+        try {
+            File configFileLocation = new File(configurationFile);
+            //resolve non-absolute paths
 //                        if(!configFileLocation.isAbsolute()) {
 //                            configFileLocation = new File(this.userConfigLocation,configFileLocation.getPath());
 //                        }
-			cc.addConfiguration(new PropertiesConfiguration(configFileLocation.getAbsolutePath()));
-		} catch (ConfigurationException e) {
-			log.warn(e.getLocalizedMessage());
-		}
-		cc.addConfiguration(this.cfg);
+            cc.addConfiguration(new PropertiesConfiguration(configFileLocation.
+                    getAbsolutePath()));
+        } catch (ConfigurationException e) {
+            log.warn(e.getLocalizedMessage());
+        }
+        cc.addConfiguration(this.cfg);
 
-		return instantiate(classname, cls, cc);
+        return instantiate(classname, cls, cc);
 
-		// throw new IllegalArgumentException("Could not instantiate class "
-		// + cls.getName());
-	}
+        // throw new IllegalArgumentException("Could not instantiate class "
+        // + cls.getName());
+    }
 
-	/**
-	 * Instantiate a class, given a classname and the class of Type t and
-	 * configure with configuration from config.
-	 * 
-	 * @param <T>
-	 * @param classname
-	 * @param cls
-	 * @param config
-	 * @return
-	 */
-	public <T> T instantiate(final String classname, final Class<T> cls,
-	        final Configuration config) {
-		return configureType(instantiate(classname, cls), config);
-	}
+    /**
+     * Instantiate a class, given a classname and the class of Type t and
+     * configure with configuration from config.
+     * 
+     * @param <T>
+     * @param classname
+     * @param cls
+     * @param config
+     * @return
+     */
+    @Override
+    public <T> T instantiate(final String classname, final Class<T> cls,
+            final Configuration config) {
+        return configureType(instantiate(classname, cls), config);
+    }
 
-	/**
-	 * Load a class by its name. Tries to locate the given class name on the
-	 * user class path and on the default java class path. Currently only
-	 * supports loading of classes from local storage.
-	 * 
-	 * @param name
-	 * @return
-	 */
-	protected Class<?> loadClass(final String name) {
-		EvalTools.notNull(name, ObjectFactory.class);
-		Class<?> cls = null;
-		try {
-			this.log.debug("Loading class {}", name);
-			try {
-				cls = this.getClass().getClassLoader().loadClass(name);
-				EvalTools.notNull(cls, ObjectFactory.class);
-				return cls;
-			} catch (final NullPointerException npe) {
-				this.log.error("Could not load class with name " + name
-				        + "! Check for typos!");
-			}
-		} catch (final ClassNotFoundException e) {
-			this.log.error(e.getLocalizedMessage());
-		}
-		return cls;
-	}
+    /**
+     * Load a class by its name. Tries to locate the given class name on the
+     * user class path and on the default java class path. Currently only
+     * supports loading of classes from local storage.
+     * 
+     * @param name
+     * @return
+     */
+    protected Class<?> loadClass(final String name) {
+        EvalTools.notNull(name, ObjectFactory.class);
+        Class<?> cls = null;
+        try {
+            log.debug("Loading class {}", name);
+            try {
+                cls = this.getClass().getClassLoader().loadClass(name);
+                EvalTools.notNull(cls, ObjectFactory.class);
+                return cls;
+            } catch (final NullPointerException npe) {
+                log.error("Could not load class with name " + name
+                        + "! Check for typos!");
+            }
+        } catch (final ClassNotFoundException e) {
+            log.error(e.getLocalizedMessage());
+        }
+        return cls;
+    }
 
+    @Override
+    public <T> Map<String, T> getObjectsOfType(Class<T> cls) {
+        return context.getBeansOfType(cls);
+    }
+
+    @Override
+    public <T> T getNamedObject(String name,
+            Class<T> cls) {
+        return context.getBean(name, cls);
+    }
 }

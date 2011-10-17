@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.apache.commons.configuration.Configuration;
 import org.jdom.Element;
@@ -34,6 +35,7 @@ import org.jdom.Element;
 import cross.IConfigurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.pipeline.ICommandSequence;
+import cross.datastructures.tuple.TupleND;
 import cross.event.IEventSource;
 
 /**
@@ -44,7 +46,7 @@ import cross.event.IEventSource;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
-public interface IWorkflow extends IEventSource<IWorkflowResult>, IConfigurable {
+public interface IWorkflow extends IEventSource<IWorkflowResult>, IConfigurable, Callable<TupleND<IFileFragment>> {
 
 	/**
 	 * Append IWorkflowResult to this IWorkflow instance.

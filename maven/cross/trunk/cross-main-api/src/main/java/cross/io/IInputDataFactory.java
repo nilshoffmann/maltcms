@@ -39,6 +39,6 @@ public interface IInputDataFactory extends IConfigurable {
      *
      * @return
      */
-    TupleND<IFileFragment> prepareInputData();
+    TupleND<IFileFragment> prepareInputData(String[] input);
 
 }

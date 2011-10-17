@@ -16,12 +16,14 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  */
 @Data
 public class DefaultApplicationContextFactory {
+
     private final String[] applicationContextPaths;
-    
+
     public ApplicationContext createApplicationContext() throws BeansException {
         ApplicationContext context = null;
         try {
-            context = new FileSystemXmlApplicationContext(applicationContextPaths);
+            context = new FileSystemXmlApplicationContext(
+                    applicationContextPaths);
         } catch (BeansException e2) {
             context = new ClassPathXmlApplicationContext(applicationContextPaths);
         }

@@ -26,70 +26,60 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
 
-public class TupleNDTest extends TestCase {
+@Slf4j
+public class TupleNDTest {
 
-	private TupleND<Integer> tnd;
-
-	public TupleNDTest(final String name) {
-		super(name);
-
-	}
-
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	public void testAddPairs() {
-
-	}
-
+        @Test
 	public void testGetNumberOfPairs() {
 		final Integer[] ints = new Integer[7];
 		for (int i = 0; i < 7; i++) {
 			ints[i] = i;
 		}
-		this.tnd = new TupleND<Integer>(ints);
-		Assert.assertEquals(this.tnd.getNumberOfPairs(), 7 * 6 / 2);
+		TupleND<Integer> tnd = new TupleND<Integer>(ints);
+		Assert.assertEquals(tnd.getNumberOfPairs(), 7 * 6 / 2);
 	}
 
+        @Test
 	public void testGetPairs() {
 		final Integer[] ints = new Integer[7];
 		for (int i = 0; i < 7; i++) {
 			ints[i] = i;
 		}
-		this.tnd = new TupleND<Integer>(ints);
-		final Iterator<Tuple2D<Integer, Integer>> iter = this.tnd.getPairs()
+		TupleND<Integer> tnd = new TupleND<Integer>(ints);
+		final Iterator<Tuple2D<Integer, Integer>> iter = tnd.getPairs()
 		        .iterator();
 		while (iter.hasNext()) {
 			final Tuple2D<Integer, Integer> t = iter.next();
-			System.out.println("Pair: " + t.getFirst() + " " + t.getSecond());
+			log.info("Pair: {},{}",t.getFirst(),t.getSecond());
 		}
 
 		Assert.assertEquals(1, 1);
 	}
 
+        @Test
 	public void testTupleNDCollectionOfT() {
 
 		final Integer[] ints = new Integer[7];
 		for (int i = 0; i < 7; i++) {
 			ints[i] = i;
 		}
-		this.tnd = new TupleND<Integer>(Arrays.asList(ints));
-		Assert.assertEquals(this.tnd.getSize(), 7);
+		TupleND<Integer> tnd = new TupleND<Integer>(Arrays.asList(ints));
+		Assert.assertEquals(tnd.getSize(), 7);
 	}
 
+        @Test
 	public void testTupleNDTArray() {
 		final Integer[] ints = new Integer[7];
 		for (int i = 0; i < 7; i++) {
 			ints[i] = i;
 		}
-		this.tnd = new TupleND<Integer>(ints);
-		Assert.assertEquals(this.tnd.getSize(), 7);
+		TupleND<Integer> tnd = new TupleND<Integer>(ints);
+		Assert.assertEquals(tnd.getSize(), 7);
 	}
 
 }
