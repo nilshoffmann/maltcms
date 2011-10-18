@@ -39,12 +39,5 @@
             <artifactId>netcdf-unidatacommon</artifactId>
             <version>4.1</version>
         </dependency>
-<!--        <dependency>
-            <artifactId>log4j</artifactId>
-            <groupId>log4j</groupId>
-            <type>jar</type>
-            <version>1.2.16</version>
-            <scope>runtime</scope>
-        </dependency>-->
     </dependencies>
 </project>
