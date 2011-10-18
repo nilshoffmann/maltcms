@@ -113,11 +113,11 @@
             <version>1.6.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>0.10.0-RC1</version>
-            <type>jar</type>
+        <dependency> 
+            <groupId>org.projectlombok</groupId> 
+            <artifactId>lombok</artifactId> 
+            <version>0.10.1</version>
+	    <scope>compile</scope> 
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
