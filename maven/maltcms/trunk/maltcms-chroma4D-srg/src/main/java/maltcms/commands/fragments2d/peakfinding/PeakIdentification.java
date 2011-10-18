@@ -21,9 +21,6 @@
  */
 package maltcms.commands.fragments2d.peakfinding;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -31,12 +28,9 @@ import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.db.MetaboliteQueryDB;
 import maltcms.db.QueryCallable;
-import maltcms.db.predicates.metabolite.MScanSimilarityPredicate;
-import maltcms.db.similarities.MetaboliteSimilarity;
 import maltcms.tools.ArrayTools2;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -46,17 +40,19 @@ import ucar.ma2.IndexIterator;
 import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oIOException;
 
-import cross.Logging;
 import cross.datastructures.tuple.Tuple2D;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import maltcms.db.predicates.metabolite.MSimilarityPredicate;
 
 /**
  * Will do the identification.
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 public class PeakIdentification implements IPeakIdentification {
-
-	private final Logger log = Logging.getLogger(this);
 
 	private MetaboliteQueryDB mqdb;
 
@@ -105,10 +101,11 @@ public class PeakIdentification implements IPeakIdentification {
 
 			final Tuple2D<Array, Array> query = new Tuple2D<Array, Array>(
 			        massValues, ms);
-
-			final MScanSimilarityPredicate ssp = new MScanSimilarityPredicate(
-			        query);
-			ssp.setThreshold(this.threshold);
+                        final maltcms.db.predicates.metabolite.MetaboliteSimilarity msim = new maltcms.db.predicates.metabolite.MetaboliteSimilarity(
+                                massValues, ms, threshold, this.k, false);
+			final MSimilarityPredicate ssp = new MSimilarityPredicate(msim
+			        );
+//			ssp.setThreshold(this.threshold);
 
 			this.mqdb.setPredicate(ssp);
 			final QueryCallable<IMetabolite> qc = this.mqdb.getCallable();
@@ -117,47 +114,48 @@ public class PeakIdentification implements IPeakIdentification {
 			List<Tuple2D<Double, IMetabolite>> hits = null;
 			try {
 				osRes = qc.call();
+                                hits = ssp.getSimilaritiesAboveThreshold();
 
-				// this.log.info("Received {} hits from ObjectSet!",
+				// log.info("Received {} hits from ObjectSet!",
 				// osRes.size());
 
-				if ((osRes != null) && (osRes.size() != 0)) {
-					final List<Tuple2D<Double, IMetabolite>> l = new ArrayList<Tuple2D<Double, IMetabolite>>();
-					final MetaboliteSimilarity mss = new MetaboliteSimilarity();
-					for (final IMetabolite im : osRes) {
-						l.add(new Tuple2D<Double, IMetabolite>(mss.get(query,
-						        im), im));
-					}
-					if (this.k > 1) {
-						final Comparator<Tuple2D<Double, IMetabolite>> comp = new Comparator<Tuple2D<Double, IMetabolite>>() {
-							@Override
-							public int compare(
-							        final Tuple2D<Double, IMetabolite> o1,
-							        final Tuple2D<Double, IMetabolite> o2) {
-								return o1.getFirst().compareTo(o2.getFirst());
-							}
-						};
-						Collections.sort(l, Collections.reverseOrder(comp));
-						hits = l.subList(0, Math.min(l.size(), this.k + 1));
-						// for (Tuple2D<Double, IMetabolite> tuple2D : hits) {
-						// System.out.println(""
-						// + (int) (tuple2D.getFirst() * 1000.0) + ""
-						// + im.getRetentionIndex() + "" + im.getFormula()
-						// + im.getID());
-						// }
-					} else {
-						double max = Double.NEGATIVE_INFINITY;
-						IMetabolite maxMet = null;
-						for (final Tuple2D<Double, IMetabolite> t : l) {
-							if (max < t.getFirst()) {
-								max = t.getFirst();
-								maxMet = t.getSecond();
-							}
-						}
-						hits = new ArrayList<Tuple2D<Double, IMetabolite>>();
-						hits.add(new Tuple2D<Double, IMetabolite>(max, maxMet));
-					}
-				}
+//				if ((osRes != null) && (osRes.size() != 0)) {
+//					final List<Tuple2D<Double, IMetabolite>> l = new ArrayList<Tuple2D<Double, IMetabolite>>();
+//					final MetaboliteSimilarity mss = new MetaboliteSimilarity();
+//					for (final IMetabolite im : osRes) {
+//						l.add(new Tuple2D<Double, IMetabolite>(mss.get(query,
+//						        im), im));
+//					}
+//					if (this.k > 1) {
+//						final Comparator<Tuple2D<Double, IMetabolite>> comp = new Comparator<Tuple2D<Double, IMetabolite>>() {
+//							@Override
+//							public int compare(
+//							        final Tuple2D<Double, IMetabolite> o1,
+//							        final Tuple2D<Double, IMetabolite> o2) {
+//								return o1.getFirst().compareTo(o2.getFirst());
+//							}
+//						};
+//						Collections.sort(l, Collections.reverseOrder(comp));
+//						hits = l.subList(0, Math.min(l.size(), this.k + 1));
+//						// for (Tuple2D<Double, IMetabolite> tuple2D : hits) {
+//						// System.out.println(""
+//						// + (int) (tuple2D.getFirst() * 1000.0) + ""
+//						// + im.getRetentionIndex() + "" + im.getFormula()
+//						// + im.getID());
+//						// }
+//					} else {
+//						double max = Double.NEGATIVE_INFINITY;
+//						IMetabolite maxMet = null;
+//						for (final Tuple2D<Double, IMetabolite> t : l) {
+//							if (max < t.getFirst()) {
+//								max = t.getFirst();
+//								maxMet = t.getSecond();
+//							}
+//						}
+//						hits = new ArrayList<Tuple2D<Double, IMetabolite>>();
+//						hits.add(new Tuple2D<Double, IMetabolite>(max, maxMet));
+//					}
+//				}
 				qc.terminate();
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
@@ -165,11 +163,11 @@ public class PeakIdentification implements IPeakIdentification {
 				e.printStackTrace();
 			} catch (final Db4oIOException e) {
 				e.printStackTrace();
-				this.log.error("Stopping DB search.");
+				log.error("Stopping DB search.");
 				this.dbAvailable = false;
 			} catch (final NullPointerException e) {
 				e.printStackTrace();
-				this.log.error("Stopping DB search.");
+				log.error("Stopping DB search.");
 				this.dbAvailable = false;
 			} catch (final Exception e) {
 				e.printStackTrace();

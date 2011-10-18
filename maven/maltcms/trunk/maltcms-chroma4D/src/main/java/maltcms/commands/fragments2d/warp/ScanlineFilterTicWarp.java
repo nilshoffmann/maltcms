@@ -33,8 +33,12 @@ import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
+import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Implementation of Pairwise Dynamic-Time-Warping for time-series data. This
@@ -42,6 +46,8 @@ import cross.datastructures.tuple.Tuple2D;
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 @RequiresVariables(names = { "var.second_column_scan_index",
 		"var.total_intensity" })
 @RequiresOptionalVariables(names = { "var.v_total_intensity" })
@@ -91,12 +97,12 @@ public class ScanlineFilterTicWarp extends ADynamicTimeWarp {
 		// check if the last array has the same size as the first one
 		// this may happen, if #total_intensities%scans_per_modulation != 0
 		if (ref.get(ref.size() - 1).getSize() != ref.get(0).getSize()) {
-			this.log.error("Removing last array in ref ({}!={})", ref.get(
+			log.error("Removing last array in ref ({}!={})", ref.get(
 					ref.size() - 1).getSize(), ref.get(0).getSize());
 			ref.remove(ref.size() - 1);
 		}
 		if (query.get(query.size() - 1).getSize() != query.get(0).getSize()) {
-			this.log.error("Removing last array in query ({}!={})", query.get(
+			log.error("Removing last array in query ({}!={})", query.get(
 					query.size() - 1).getSize(), query.get(0).getSize());
 			query.remove(query.size() - 1);
 		}

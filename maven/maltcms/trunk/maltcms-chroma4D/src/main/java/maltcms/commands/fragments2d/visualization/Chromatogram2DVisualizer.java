@@ -36,7 +36,6 @@ import maltcms.ui.charts.XYBPlot;
 
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.plot.XYPlot;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -44,7 +43,6 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
@@ -55,21 +53,25 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Creates an image.
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 @RequiresVariables(names = { "var.total_intensity", "var.scan_rate",
 		"var.modulation_time", "var.second_column_scan_index",
 		"var.second_column_time", "var.scan_acquisition_time" })
 @RequiresOptionalVariables(names = { "var.v_total_intensity" })
 @ProvidesVariables(names = { "var.meanms_1d_vertical",
 		"var.meanms_1d_vertical_index" })
+@ServiceProvider(service=AFragmentCommand.class)
 public class Chromatogram2DVisualizer extends AFragmentCommand {
-
-	private final Logger log = Logging.getLogger(this);
 
 	@Configurable(name = "var.total_intensity", value = "total_intensity")
 	private String totalIntensityVar = "total_intensity";
@@ -106,8 +108,8 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
 		final int[][] colorRamp = crr.readColorRamp(this.colorrampLocation);
 
 		for (final IFileFragment ff : t) {
-			this.log.info("Creating image for {}", ff.getName());
-			this.log.info("Using {} as data", this.totalIntensityVar);
+			log.info("Creating image for {}", ff.getName());
+			log.info("Using {} as data", this.totalIntensityVar);
 			final int scanRate = ff.getChild(this.scanRateVar).getArray()
 					.getInt(Index.scalarIndexImmutable);
 			final int modulationTime = ff.getChild(this.modulationTimeVar)
@@ -120,7 +122,7 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
 			boolean truncateLast = false;
 			int shapeZero = -1;
 			for (Array a : intensities) {
-				this.log.debug("Shape of array: {}", a.getShape()[0]);
+				log.debug("Shape of array: {}", a.getShape()[0]);
 				if (shapeZero == -1) {
 					shapeZero = a.getShape()[0];
 				}
@@ -184,7 +186,7 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
 			final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times = new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(
 					firstRetTime, secondRetTime);
 
-			this.log.info("Using file {} for AChart", out.getAbsolutePath());
+			log.info("Using file {} for AChart", out.getAbsolutePath());
 			final AChart<XYBPlot> chart = new BHeatMapChart(out
 					.getAbsolutePath(), "first retention time[min]",
 					"second retention time[s]", times, filename);

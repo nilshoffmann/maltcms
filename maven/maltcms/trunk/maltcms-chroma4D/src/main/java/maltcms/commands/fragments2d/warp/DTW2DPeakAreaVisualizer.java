@@ -30,27 +30,31 @@ import maltcms.ui.charts.PlotRunner;
 
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.JFreeChart;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
+import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Default visualization pipeline command.
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 @RequiresVariables(names = { "var.scan_acquisition_time_1d",
         "var.modulation_time", "var.scan_rate", "var.second_column_time",
         "var.region_index_list",
@@ -58,9 +62,8 @@ import cross.tools.StringTools;
         "var.boundary_index_list" })
 @RequiresOptionalVariables(names = { "" })
 @ProvidesVariables(names = { "" })
+@ServiceProvider(service=AFragmentCommand.class)
 public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
-
-	private final Logger log = Logging.getLogger(this);
 
 	@Configurable(name = "var.boundary_index_list", value = "boundary_index_list")
 	private String boundaryPeakListVar = "boundary_index_list";
@@ -96,11 +99,11 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
 		}
 		Array refBoundary = null;
 		if (this.fillPeakArea) {
-			this.log.info("Filling peak area; using {}",
+			log.info("Filling peak area; using {}",
 			        this.regionIndexListVar);
 			refBoundary = ff.getChild(this.regionIndexListVar).getArray();
 		} else {
-			this.log.info("Do not fill peak area; using {}",
+			log.info("Do not fill peak area; using {}",
 			        this.boundaryPeakListVar);
 			refBoundary = ff.getChild(this.boundaryPeakListVar).getArray();
 		}
@@ -113,7 +116,7 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
 				tmp = (ArrayDouble.D1) scanlines.get(k / spm);
 				tmp.set(k % spm, 1.0d);
 			} catch (final IndexOutOfBoundsException e) {
-				this.log.error("IndexOutOfBounds for index {}(" + (k / spm)
+				log.error("IndexOutOfBounds for index {}(" + (k / spm)
 				        + "," + (k % spm) + ")", k);
 			}
 		}

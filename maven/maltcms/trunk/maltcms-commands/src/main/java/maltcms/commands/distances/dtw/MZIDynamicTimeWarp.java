@@ -19,7 +19,6 @@
  * 
  * $Id: MZIDynamicTimeWarp.java 116 2010-06-17 08:46:30Z nilshoffmann $
  */
-
 package maltcms.commands.distances.dtw;
 
 import java.util.List;
@@ -34,6 +33,10 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tools.EvalTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.distances.ListDistanceFunction;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Implementation of Pairwise Dynamic-Time-Warping for time-series data with an
@@ -43,112 +46,110 @@ import cross.datastructures.tools.EvalTools;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
+@Data
+@ServiceProvider(service = ListDistanceFunction.class)
 public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
 
-	@Configurable
-	private int numberOfEICsToSelect = 0;
+    @Configurable
+    private int numberOfEICsToSelect = 0;
+    @Configurable
+    private boolean useSparseArrays = false;
 
-	@Configurable
-	private boolean useSparseArrays = false;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * maltcms.commands.distances.dtw.ADynamicTimeWarp#configure(org.apache.
+     * commons.configuration.Configuration)
+     */
+    @Override
+    public void configure(final Configuration cfg) {
+        super.configure(cfg);
+        this.numberOfEICsToSelect = cfg.getInt(this.getClass().getName()
+                + ".numberOfEICsToSelect", 0);
+        this.useSparseArrays = cfg.getBoolean(this.getClass().getName()
+                + ".useSparseArrays", false);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maltcms.commands.distances.dtw.ADynamicTimeWarp#configure(org.apache.
-	 * commons.configuration.Configuration)
-	 */
-	@Override
-	public void configure(final Configuration cfg) {
-		super.configure(cfg);
-		this.numberOfEICsToSelect = cfg.getInt(this.getClass().getName()
-		        + ".numberOfEICsToSelect", 0);
-		this.useSparseArrays = cfg.getBoolean(this.getClass().getName()
-		        + ".useSparseArrays", false);
-	}
+    @Override
+    public Tuple2D<List<Array>, List<Array>> createTuple(
+            final Tuple2D<IFileFragment, IFileFragment> t) {
+        List<Array> intens1 = null;
+        List<Array> intens2 = null;
+        if (this.useSparseArrays) {
+            final Tuple2D<Double, Double> tple = MaltcmsTools.getMinMaxMassRange(t.
+                    getFirst(), t.getSecond());
+            synchronized (t.getFirst()) {
+                intens1 = MaltcmsTools.prepareSparseMZI(t.getFirst(),
+                        this.scan_index, this.mass_values,
+                        this.intensity_values, tple.getFirst(), tple.getSecond());
+            }
+            synchronized (t.getSecond()) {
+                intens2 = MaltcmsTools.prepareSparseMZI(t.getSecond(),
+                        this.scan_index, this.mass_values,
+                        this.intensity_values, tple.getFirst(), tple.getSecond());
+            }
+        } else {
+            synchronized (t.getFirst()) {
+                final IVariableFragment index1 = t.getFirst().getChild(
+                        "binned_" + this.scan_index);
+                if (t.getFirst().getChild("binned_" + this.mass_values).getIndex() == null) {
+                    t.getFirst().getChild("binned_" + this.mass_values).setIndex(
+                            index1);
+                    t.getFirst().getChild("binned_" + this.intensity_values).
+                            setIndex(index1);
+                }
+                intens1 = t.getFirst().getChild(
+                        "binned_" + this.intensity_values).getIndexedArray();
+                EvalTools.notNull(intens1, this);
+            }
+            synchronized (t.getSecond()) {
+                final IVariableFragment index2 = t.getSecond().getChild(
+                        "binned_" + this.scan_index);
+                if (t.getSecond().getChild("binned_" + this.mass_values).
+                        getIndex() == null) {
+                    t.getSecond().getChild("binned_" + this.mass_values).
+                            setIndex(index2);
+                    t.getSecond().getChild("binned_" + this.intensity_values).
+                            setIndex(index2);
+                }
+                intens2 = t.getSecond().getChild(
+                        "binned_" + this.intensity_values).getIndexedArray();
+                EvalTools.notNull(intens2, this);
+            }
+        }
 
-	@Override
-	public Tuple2D<List<Array>, List<Array>> createTuple(
-	        final Tuple2D<IFileFragment, IFileFragment> t) {
-		List<Array> intens1 = null;
-		List<Array> intens2 = null;
-		if (this.useSparseArrays) {
-			final Tuple2D<Double, Double> tple = MaltcmsTools
-			        .getMinMaxMassRange(t.getFirst(), t.getSecond());
-			synchronized (t.getFirst()) {
-				intens1 = MaltcmsTools.prepareSparseMZI(t.getFirst(),
-				        this.scan_index, this.mass_values,
-				        this.intensity_values, tple.getFirst(), tple
-				                .getSecond());
-			}
-			synchronized (t.getSecond()) {
-				intens2 = MaltcmsTools.prepareSparseMZI(t.getSecond(),
-				        this.scan_index, this.mass_values,
-				        this.intensity_values, tple.getFirst(), tple
-				                .getSecond());
-			}
-		} else {
-			synchronized (t.getFirst()) {
-				final IVariableFragment index1 = t.getFirst().getChild(
-				        "binned_" + this.scan_index);
-				if (t.getFirst().getChild("binned_" + this.mass_values)
-				        .getIndex() == null) {
-					t.getFirst().getChild("binned_" + this.mass_values)
-					        .setIndex(index1);
-					t.getFirst().getChild("binned_" + this.intensity_values)
-					        .setIndex(index1);
-				}
-				intens1 = t.getFirst().getChild(
-				        "binned_" + this.intensity_values).getIndexedArray();
-				EvalTools.notNull(intens1, this);
-			}
-			synchronized (t.getSecond()) {
-				final IVariableFragment index2 = t.getSecond().getChild(
-				        "binned_" + this.scan_index);
-				if (t.getSecond().getChild("binned_" + this.mass_values)
-				        .getIndex() == null) {
-					t.getSecond().getChild("binned_" + this.mass_values)
-					        .setIndex(index2);
-					t.getSecond().getChild("binned_" + this.intensity_values)
-					        .setIndex(index2);
-				}
-				intens2 = t.getSecond().getChild(
-				        "binned_" + this.intensity_values).getIndexedArray();
-				EvalTools.notNull(intens2, this);
-			}
-		}
+        Tuple2D<List<Array>, List<Array>> tuple = null;
+        // If set to a number > 0, try to select as many eics according to their
+        // rank by variance (decreasing)
+        if (this.numberOfEICsToSelect > 0) {
+            log.info("Using {} eics with highest variance",
+                    this.numberOfEICsToSelect);
+            List<Tuple2D<Double, Double>> eics1 = null;
+            synchronized (t.getFirst()) {
+                eics1 = MaltcmsTools.rankEICsByVariance(t.getFirst(), intens1,
+                        this.numberOfEICsToSelect, this.getClass(),
+                        getWorkflow().getOutputDirectory(this));
+            }
+            List<Tuple2D<Double, Double>> eics2 = null;
+            synchronized (t.getSecond()) {
+                eics2 = MaltcmsTools.rankEICsByVariance(t.getSecond(), intens2,
+                        this.numberOfEICsToSelect, this.getClass(),
+                        getWorkflow().getOutputDirectory(this));
+            }
+            final Integer[] pairedEics = MaltcmsTools.pairedEICs(eics1, eics2);
+            tuple = new Tuple2D<List<Array>, List<Array>>(MaltcmsTools.copyEics(
+                    intens1, pairedEics), MaltcmsTools.copyEics(
+                    intens2, pairedEics));
 
-		Tuple2D<List<Array>, List<Array>> tuple = null;
-		// If set to a number > 0, try to select as many eics according to their
-		// rank by variance (decreasing)
-		if (this.numberOfEICsToSelect > 0) {
-			this.log.info("Using {} eics with highest variance",
-			        this.numberOfEICsToSelect);
-			List<Tuple2D<Double, Double>> eics1 = null;
-			synchronized (t.getFirst()) {
-				eics1 = MaltcmsTools.rankEICsByVariance(t.getFirst(), intens1,
-				        this.numberOfEICsToSelect, this.getClass(),
-				        getWorkflow().getOutputDirectory(this));
-			}
-			List<Tuple2D<Double, Double>> eics2 = null;
-			synchronized (t.getSecond()) {
-				eics2 = MaltcmsTools.rankEICsByVariance(t.getSecond(), intens2,
-				        this.numberOfEICsToSelect, this.getClass(),
-				        getWorkflow().getOutputDirectory(this));
-			}
-			final Integer[] pairedEics = MaltcmsTools.pairedEICs(eics1, eics2);
-			tuple = new Tuple2D<List<Array>, List<Array>>(MaltcmsTools
-			        .copyEics(intens1, pairedEics), MaltcmsTools.copyEics(
-			        intens2, pairedEics));
+        } else {// if set to 0, simply use all eics
+            log.info("Using all eics");
+            tuple = new Tuple2D<List<Array>, List<Array>>(intens1, intens2);
+        }
 
-		} else {// if set to 0, simply use all eics
-			this.log.info("Using all eics");
-			tuple = new Tuple2D<List<Array>, List<Array>>(intens1, intens2);
-		}
-
-		this.ref_num_scans = intens1.size();
-		this.query_num_scans = intens2.size();
-		return tuple;
-	}
-
+        this.ref_num_scans = intens1.size();
+        this.query_num_scans = intens2.size();
+        return tuple;
+    }
 }

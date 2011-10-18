@@ -35,7 +35,6 @@ import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
@@ -43,7 +42,6 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 import ucar.ma2.MAMath;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
@@ -62,6 +60,7 @@ import cross.tools.StringTools;
 import java.util.Arrays;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Use Objects of this class to apply an alignment, warping a source
@@ -75,6 +74,7 @@ import lombok.extern.slf4j.Slf4j;
     "var.multiple_alignment_creator"})
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class ChromatogramWarp2 extends AFragmentCommand {
 
     @Configurable

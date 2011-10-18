@@ -60,15 +60,17 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of an peak exporter.
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 public class PeakExporter implements IPeakExporter {
-
-	private final Logger log = Logging.getLogger(this);
 
 	private IWorkflow iworkflow;
 	// @SuppressWarnings("unchecked")
@@ -134,7 +136,7 @@ public class PeakExporter implements IPeakExporter {
 					.getAbsolutePath(), "bidibestHits.csv", table,
 					WorkflowSlot.PEAKFINDING);
 		} else {
-			this.log.error("Bidirectional best hit list ist empty");
+			log.error("Bidirectional best hit list ist empty");
 		}
 	}
 
@@ -320,7 +322,7 @@ public class PeakExporter implements IPeakExporter {
 		}
 
 		// for (List<String> content : metaTable) {
-		// this.log.info("{}:{}", content.get(0), content.size());
+		// log.info("{}:{}", content.get(0), content.size());
 		// }
 
 		// writing file
@@ -525,7 +527,7 @@ public class PeakExporter implements IPeakExporter {
 						denseIntensities);
 
 				// if (t == null) {
-				// this.log.info("Calling with {},{} returned null.", p
+				// log.info("Calling with {},{} returned null.", p
 				// .getPeakArea().getSeedPoint().x, p.getPeakArea()
 				// .getSeedPoint().y);
 				// }
@@ -553,7 +555,7 @@ public class PeakExporter implements IPeakExporter {
 					}
 					cnt++;
 				} else {
-					this.log.error(
+					log.error(
 							"Can not export peak {}, because MS is null", cnt);
 				}
 			}

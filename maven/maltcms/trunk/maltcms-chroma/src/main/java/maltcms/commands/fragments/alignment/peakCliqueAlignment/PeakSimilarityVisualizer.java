@@ -15,11 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import javax.media.jai.JAI;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.distances.IArrayDoubleComp;
 import maltcms.commands.filters.array.MinMaxNormalizationFilter;
 import maltcms.datastructures.peak.Peak;
 import maltcms.io.csv.CSVWriter;
 import maltcms.io.csv.ColorRampReader;
+import maltcms.math.functions.IScalarArraySimilarity;
 import maltcms.tools.ImageTools;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.MAMath;
@@ -34,7 +34,7 @@ public class PeakSimilarityVisualizer {
 
     public void visualizePeakSimilarities(
             final HashMap<String, List<Peak>> hm, final int samples,
-            final String prefix, final IArrayDoubleComp costFunction,
+            final String prefix,
             final IWorkflow workflow) {
 
         int npeaks = 0;
@@ -48,7 +48,7 @@ public class PeakSimilarityVisualizer {
         log.info("Saving pairwise peak similarity images.");
         final List<String> keys = new ArrayList<String>(hm.keySet());
         Collections.sort(keys);
-        boolean minimize = costFunction.minimize();
+        boolean minimize = false;//costFunction.minimize();
         for (final String keyl : keys) {
             final List<Peak> l = hm.get(keyl);
             for (final String keyr : keys) {

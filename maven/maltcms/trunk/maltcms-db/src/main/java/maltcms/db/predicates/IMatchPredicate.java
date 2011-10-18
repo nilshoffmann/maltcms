@@ -13,10 +13,9 @@ import java.lang.reflect.Method;
  */
 public interface IMatchPredicate<T> {
 
-	public abstract void setMethodOnTargetType(Method m);
+    public abstract void setMethodOnTargetType(Method m);
 
-	public abstract void setTargetType(Class<T> c);
-	
-	public abstract Method getMethodOnTargetType();
+    public abstract void setTargetType(Class<T> c);
 
+    public abstract Method getMethodOnTargetType();
 }

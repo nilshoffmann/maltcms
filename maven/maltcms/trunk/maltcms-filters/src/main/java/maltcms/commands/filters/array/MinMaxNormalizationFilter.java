@@ -19,13 +19,14 @@
  * 
  * $Id: MinMaxNormalizationFilter.java 129 2010-06-25 11:57:02Z nilshoffmann $
  */
-
 package maltcms.commands.filters.array;
 
 import org.apache.commons.configuration.Configuration;
 
 import ucar.ma2.Array;
 import cross.annotations.Configurable;
+import lombok.Data;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Normalize all values of an array given a normalization string.
@@ -33,56 +34,40 @@ import cross.annotations.Configurable;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Data
+@ServiceProvider(service = AArrayFilter.class)
 public class MinMaxNormalizationFilter extends AArrayFilter {
 
-	@Configurable
-	private double min = 0;
+    @Configurable
+    private double min = 0;
+    @Configurable
+    private double max = 1;
 
-	@Configurable
-	private double max = 1;
+    public MinMaxNormalizationFilter() {
+        super();
+    }
 
-	public MinMaxNormalizationFilter() {
-		super();
-	}
+    public MinMaxNormalizationFilter(final double min, final double max) {
+        this();
+        this.min = min;
+        this.max = max;
+    }
 
-	public MinMaxNormalizationFilter(final double min, final double max) {
-		this();
-		this.min = min;
-		this.max = max;
-	}
+    @Override
+    public Array apply(final Array a) {
+        // final Array[] b = super.apply(a);
+        final AdditionFilter af = new AdditionFilter(-this.min);
+        // shift by minimum
+        Array c = af.apply(a);
+        // normalize by max-min
+        final MultiplicationFilter mf = new MultiplicationFilter(
+                1.0d / (this.max - this.min));
+        c = mf.apply(c);
+        return c;
+    }
 
-	@Override
-	public Array apply(final Array a) {
-		// final Array[] b = super.apply(a);
-		final AdditionFilter af = new AdditionFilter(-this.min);
-		// shift by minimum
-		Array c = af.apply(a);
-		// normalize by max-min
-		final MultiplicationFilter mf = new MultiplicationFilter(
-		        1.0d / (this.max - this.min));
-		c = mf.apply(c);
-		return c;
-	}
-
-	@Override
-	public void configure(final Configuration cfg) {
-		super.configure(cfg);
-	}
-
-	public double getMin() {
-		return min;
-	}
-
-	public void setMin(double min) {
-		this.min = min;
-	}
-
-	public double getMax() {
-		return max;
-	}
-
-	public void setMax(double max) {
-		this.max = max;
-	}
-
+    @Override
+    public void configure(final Configuration cfg) {
+        super.configure(cfg);
+    }
 }

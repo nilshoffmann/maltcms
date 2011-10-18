@@ -62,6 +62,7 @@ import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FragmentTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Instead of warping one time series to the time scale of another one, warp
@@ -71,6 +72,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class PathWarp extends AFragmentCommand {
 
     @Configurable(name = "var.total_intensity", value = "total_intensity")

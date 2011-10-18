@@ -19,7 +19,6 @@
  * 
  * $Id: IDynamicTimeWarp.java 43 2009-10-16 17:22:55Z nilshoffmann $
  */
-
 package maltcms.commands.distances.dtw;
 
 import java.util.List;
@@ -43,44 +42,31 @@ import cross.datastructures.tuple.Tuple2D;
  */
 public interface IDynamicTimeWarp extends ListDistanceFunction {
 
-	/**
-	 * 
-	 * @param tuple
-	 * @param ris
-	 * @param maxdev
-	 * @param sat_ref
-	 *            scan_acquisition_time array for reference
-	 * @param sat_query
-	 *            scan_acquisition_time array for query
-	 * @return
-	 */
-	public abstract IArrayD2Double align(
-	        Tuple2D<List<Array>, List<Array>> tuple, AnchorPairSet ris,
-	        double maxdev, ArrayDouble.D1 sat_ref, ArrayDouble.D1 sat_query);
+    /**
+     * 
+     * @param tuple
+     * @param ris
+     * @param maxdev
+     * @param sat_ref
+     *            scan_acquisition_time array for reference
+     * @param sat_query
+     *            scan_acquisition_time array for query
+     * @return
+     */
+    public abstract IArrayD2Double align(
+            Tuple2D<List<Array>, List<Array>> tuple, AnchorPairSet ris,
+            double maxdev, ArrayDouble.D1 sat_ref, ArrayDouble.D1 sat_query);
 
-	public abstract IFileFragment apply(IFileFragment a, IFileFragment b);
+    public Tuple2D<List<Array>, List<Array>> createTuple(
+            Tuple2D<IFileFragment, IFileFragment> t);
 
-	public abstract Array[] apply(Tuple2D<Array[], Array[]> t);
+    public abstract CumulativeDistance getCumulativeDistance();
 
-	public Tuple2D<List<Array>, List<Array>> createTuple(
-	        Tuple2D<IFileFragment, IFileFragment> t);
+    public abstract PairwiseDistance getPairwiseScanDistance();
 
-	public abstract CumulativeDistance getCumulativeDistance();
+    public abstract void setCumulativeDistance(CumulativeDistance cd);
 
-	public abstract PairwiseDistance getPairwiseScanDistance();
+    public abstract void setFileFragments(IFileFragment a, IFileFragment b);
 
-	public abstract ArrayDouble.D0 getResult();
-
-	public abstract IFileFragment getResultFileFragment();
-
-	public abstract ArrayDouble.D1 getResultV();
-
-	public abstract boolean minimize();
-
-	public abstract void setCumulativeDistance(CumulativeDistance cd);
-
-	public abstract void setFileFragments(IFileFragment a, IFileFragment b);
-
-	public abstract void setPairwiseScanDistance(PairwiseDistance psd);
-
+    public abstract void setPairwiseScanDistance(PairwiseDistance psd);
 }

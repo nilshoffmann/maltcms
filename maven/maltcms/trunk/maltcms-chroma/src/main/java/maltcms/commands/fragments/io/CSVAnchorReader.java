@@ -33,7 +33,6 @@ import java.util.Vector;
 import maltcms.io.csv.CSVReader;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
@@ -42,7 +41,6 @@ import ucar.ma2.DataType;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.commands.fragments.AFragmentCommand;
@@ -55,6 +53,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Class reading retention indices/anchors/identified compounds from files with
@@ -69,6 +68,7 @@ import lombok.extern.slf4j.Slf4j;
     "var.anchors.retention_scans"})
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class CSVAnchorReader extends AFragmentCommand {
 
     public static void main(final String[] args) {

@@ -46,6 +46,7 @@ import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Plot the distribution of values looking at mz bin values.
@@ -55,6 +56,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class MZIDistributionVisualizer extends AFragmentCommand {
 
     protected IFileFragment filea;

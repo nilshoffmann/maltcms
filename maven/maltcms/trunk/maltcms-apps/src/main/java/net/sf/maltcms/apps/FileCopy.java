@@ -19,7 +19,6 @@
  * 
  * $Id: FileCopy.java 129 2010-06-25 11:57:02Z nilshoffmann $
  */
-
 /**
  * 
  */
@@ -54,66 +53,67 @@ import cross.datastructures.tools.FileTools;
  */
 public class FileCopy {
 
-	public static void main(final String[] args) {
-		final Logger log = Logging.getLogger(FileCopy.class);
-		final Maltcms m = Maltcms.getInstance();
-		log.info("Starting Maltcms");
-		Factory.getInstance().configure(m.parseCommandLine(args));
-		log.info("Configured ArrayFactory");
-		final TupleND<IFileFragment> t = Factory.getInstance()
-		        .getInputDataFactory().prepareInputData();
-		final Date d = new Date();
-		for (final IFileFragment f : t) {
-			log.info("Reading defined Variables: {}", f.getAbsolutePath());
-			final IFileFragment al = f;
-			// File target = new File(ArrayFactory.getConfiguration().getString(
-			// "output.basedir"), al.getName());
-			final IFileFragment fcopy = Factory.getInstance()
-			        .getFileFragmentFactory().create(
-			                new File(FileTools.prependDefaultDirsWithPrefix("",
-			                        FileCopy.class, d), al.getName()));
-			fcopy.addSourceFile(al);
-			for (final IVariableFragment vf : al) {
-				log.info("Retrieving Variable {}", vf);
-				final IVariableFragment toplevel = fcopy.getChild(vf
-				        .getVarname());
-				if (toplevel.getIndex() != null) {
-					final List<Array> arraysI = toplevel.getIndexedArray();
-					EvalTools.notNull(arraysI, arraysI);
-				} else {
-					final Array a = toplevel.getArray();
-					EvalTools.notNull(a, a);
-				}
-			}
-			final IVariableFragment index_fragment = fcopy.getChild(Factory
-			        .getInstance().getConfiguration().getString(
-			                "var.scan_index", "scan_index"));
-			ArrayInt.D1 index_array;
-			final Range[] index_range = index_fragment.getRange();
-			try {
-				index_array = (ArrayInt.D1) index_fragment.getArray().section(
-				        Range.toList(index_range));
-				if ((index_range != null) && (index_range[0] != null)) {
-					final ArrayInt.D1 new_index = new ArrayInt.D1(index_array
-					        .getShape()[0]);
-					for (int i = 0; i < new_index.getShape()[0]; i++) {
-						// log.info("i: {}, index_start: {}, index_end: {}",new
-						// Object[]{i,index_start,index_end});
-						new_index.set(i, index_array.get(i)
-						        - index_array.get(0));
-					}
-					index_fragment.setArray(new_index);
+    public static void main(final String[] args) {
+        final Logger log = Logging.getLogger(FileCopy.class);
+        final Maltcms m = Maltcms.getInstance();
+        log.info("Starting Maltcms");
+        Factory.getInstance().configure(m.parseCommandLine(args));
+        log.info("Configured ArrayFactory");
+        final TupleND<IFileFragment> t = Factory.getInstance().
+                getInputDataFactory().prepareInputData(Factory.getInstance().
+                getConfiguration().getStringArray("input.dataInfo"));
+        final Date d = new Date();
+        for (final IFileFragment f : t) {
+            log.info("Reading defined Variables: {}", f.getAbsolutePath());
+            final IFileFragment al = f;
+            // File target = new File(ArrayFactory.getConfiguration().getString(
+            // "output.basedir"), al.getName());
+            final IFileFragment fcopy = Factory.getInstance().
+                    getFileFragmentFactory().create(
+                    new File(FileTools.prependDefaultDirsWithPrefix("",
+                    FileCopy.class, d), al.getName()));
+            fcopy.addSourceFile(al);
+            for (final IVariableFragment vf : al) {
+                log.info("Retrieving Variable {}", vf);
+                final IVariableFragment toplevel = fcopy.getChild(
+                        vf.getVarname());
+                if (toplevel.getIndex() != null) {
+                    final List<Array> arraysI = toplevel.getIndexedArray();
+                    EvalTools.notNull(arraysI, arraysI);
+                } else {
+                    final Array a = toplevel.getArray();
+                    EvalTools.notNull(a, a);
+                }
+            }
+            final IVariableFragment index_fragment = fcopy.getChild(Factory.
+                    getInstance().getConfiguration().getString(
+                    "var.scan_index", "scan_index"));
+            ArrayInt.D1 index_array;
+            final Range[] index_range = index_fragment.getRange();
+            try {
+                index_array = (ArrayInt.D1) index_fragment.getArray().section(
+                        Range.toList(index_range));
+                if ((index_range != null) && (index_range[0] != null)) {
+                    final ArrayInt.D1 new_index = new ArrayInt.D1(index_array.
+                            getShape()[0]);
+                    for (int i = 0; i < new_index.getShape()[0]; i++) {
+                        // log.info("i: {}, index_start: {}, index_end: {}",new
+                        // Object[]{i,index_start,index_end});
+                        new_index.set(i, index_array.get(i)
+                                - index_array.get(0));
+                    }
+                    index_fragment.setArray(new_index);
 
-				}
-			} catch (final InvalidRangeException e) {
-				log.error(e.getLocalizedMessage());
-			}
+                }
+            } catch (final InvalidRangeException e) {
+                log.error(e.getLocalizedMessage());
+            }
 
-			log.info("{}", fcopy.toString());
-			log.info("{}", FileFragment.printFragment(fcopy));
-			fcopy.removeSourceFiles();
-			fcopy.save();
-		}
-		System.exit(0);
-	}
+            log.info("{}", fcopy.toString());
+            log.info("{}", FileFragment.printFragment(fcopy));
+            fcopy.removeSourceFiles();
+            fcopy.save();
+        }
+        System.exit(0);
+    }
 }

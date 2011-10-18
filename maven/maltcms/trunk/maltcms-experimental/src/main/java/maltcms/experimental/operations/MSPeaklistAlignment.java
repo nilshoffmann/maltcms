@@ -21,6 +21,7 @@
  */
 package maltcms.experimental.operations;
 
+import maltcms.commands.distances.dtwng.TwoFeatureVectorOperation;
 import java.awt.Point;
 import java.util.ArrayList;
 

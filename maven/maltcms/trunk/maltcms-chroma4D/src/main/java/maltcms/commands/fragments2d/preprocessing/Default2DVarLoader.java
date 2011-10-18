@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -36,7 +35,6 @@ import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Dimension;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
@@ -51,6 +49,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * This command should be the first in all 2d pipelines. It creates different
@@ -69,6 +68,7 @@ import lombok.extern.slf4j.Slf4j;
     "var.total_intensity_2d"})
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class Default2DVarLoader extends AFragmentCommand {
 
     @Configurable(name = "var.total_intensity", value = "total_intensity")

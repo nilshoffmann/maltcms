@@ -13,12 +13,10 @@ import java.util.Vector;
 import maltcms.io.csv.CSVReader;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.ArrayInt;
 import ucar.nc2.Dimension;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
@@ -30,6 +28,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
@@ -38,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class TICPeakListImporter extends AFragmentCommand {
 
     @Configurable

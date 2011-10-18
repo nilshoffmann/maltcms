@@ -19,7 +19,6 @@
  * 
  * $Id: MultiplicationFilter.java 80 2010-01-06 18:01:59Z nilshoffmann $
  */
-
 package maltcms.commands.filters.array;
 
 import org.apache.commons.configuration.Configuration;
@@ -27,6 +26,8 @@ import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import cross.annotations.Configurable;
+import lombok.Data;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Multiply a value with all values of an array.
@@ -34,42 +35,42 @@ import cross.annotations.Configurable;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Data
+@ServiceProvider(service = AArrayFilter.class)
 public class MultiplicationFilter extends AArrayFilter {
 
-	@Configurable
-	private double factor = 1.0d;
+    @Configurable
+    private double factor = 1.0d;
 
-	public MultiplicationFilter() {
-		super();
-	}
+    public MultiplicationFilter() {
+        super();
+    }
 
-	public MultiplicationFilter(final double multiplyFactor) {
-		this();
-		this.factor = multiplyFactor;
-	}
+    public MultiplicationFilter(final double multiplyFactor) {
+        this();
+        this.factor = multiplyFactor;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
-	 */
-	@Override
-	public Array apply(final Array a) {
-		final Array arr = super.apply(a);
-		final IndexIterator ii = arr.getIndexIteratorFast();
-		double next = 0.0d;
-		while (ii.hasNext()) {
-			next = ii.getDoubleNext();
-			final double res = this.factor * next;
-			ii.setDoubleCurrent(res);
-		}
-		return arr;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
+     */
+    @Override
+    public Array apply(final Array a) {
+        final Array arr = super.apply(a);
+        final IndexIterator ii = arr.getIndexIteratorFast();
+        double next = 0.0d;
+        while (ii.hasNext()) {
+            next = ii.getDoubleNext();
+            final double res = this.factor * next;
+            ii.setDoubleCurrent(res);
+        }
+        return arr;
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		this.factor = cfg
-		        .getDouble(this.getClass().getName() + ".factor", 1.0d);
-	}
-
+    @Override
+    public void configure(final Configuration cfg) {
+        this.factor = cfg.getDouble(this.getClass().getName() + ".factor", 1.0d);
+    }
 }

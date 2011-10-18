@@ -56,6 +56,7 @@ import cross.datastructures.tools.FragmentTools;
 import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Use Objects of this class to apply an alignment, warping a source
@@ -66,6 +67,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class RTGroupCorrectionWarp extends AFragmentCommand {
 
     private List<String> indexedVars = Collections.emptyList();

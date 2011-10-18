@@ -32,14 +32,12 @@ import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.tools.ArrayTools2;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.IndexIterator;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
@@ -53,13 +51,18 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.tools.ArrayTools;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Will iterate over all mass spectra and calculates mean and variance.
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 @RequiresVariables(names = {"var.modulation_time", "var.scan_rate"})
 @RequiresOptionalVariables(names = {""})
 @ProvidesVariables(names = {"var.mean_ms_intensity", "var.var_ms_intensity",
@@ -69,9 +72,9 @@ import maltcms.commands.fragments2d.tools.ArrayTools;
     "var.meanms_1d_vertical", "var.maxms_1d_horizontal_index",
     "var.maxms_1d_horizontal", "var.used_mass_values",
     "var.maxms_1d_vertical_index", "var.maxms_1d_vertical"})
+@ServiceProvider(service=AFragmentCommand.class)
 public class MeanVarProducer extends AFragmentCommand {
 
-    private final Logger log = Logging.getLogger(this);
     @Configurable(name = "var.mean_intensity_values", value = "mean_intensity_values")
     private String meanMSIntensityVar = "mean_intensity_values";
     @Configurable(name = "var.var_intensity_values", value = "var_intensity_values")
@@ -112,7 +115,7 @@ public class MeanVarProducer extends AFragmentCommand {
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
         for (final IFileFragment ff : t) {
-            this.log.info("Computing mean and std for {}", StringTools.removeFileExt(ff.getName()));
+            log.info("Computing mean and std for {}", StringTools.removeFileExt(ff.getName()));
             final IFileFragment fret = Factory.getInstance().getFileFragmentFactory().create(
                     new File(getWorkflow().getOutputDirectory(this),
                     ff.getName()));
@@ -121,11 +124,11 @@ public class MeanVarProducer extends AFragmentCommand {
             final IScanLine slc = ScanLineCacheFactory.getSparseScanLineCache(ff);
             slc.setCacheModulations(false);
 
-            this.log.info("Calculating {} and {}", this.meanMSIntensityVar,
+            log.info("Calculating {} and {}", this.meanMSIntensityVar,
                     this.varMSIntensityVar);
             long start = System.currentTimeMillis();
             final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> tuple = calculateMeanVarSparse(slc);
-            this.log.info("			{}", System.currentTimeMillis() - start);
+            log.info("			{}", System.currentTimeMillis() - start);
             final ArrayDouble.D1 mean = tuple.getFirst();
             final ArrayDouble.D1 var = tuple.getSecond();
 
@@ -135,13 +138,13 @@ public class MeanVarProducer extends AFragmentCommand {
                 this.minStandardDeviation = ArrayTools.getQuantilValue(ff, sd,
                         new double[]{this.minStandardDeviationQuantil}, visualize,
                         this)[0];
-                this.log.info(
+                log.info(
                         "Computing {} (using standard deviation minimum {}["
                         + (this.minStandardDeviationQuantil * 100.0d)
                         + "%])", this.vIntensityVar,
                         this.minStandardDeviation);
             } else {
-                this.log.info(
+                log.info(
                         "Computing {} (using fixed minimal standard deviation {})",
                         this.vIntensityVar, this.minStandardDeviation);
             }
@@ -240,7 +243,7 @@ public class MeanVarProducer extends AFragmentCommand {
         // final double minStandardDeviation = ArrayTools2.getQuantilValue(fret,
         // sd, new double[] { this.minStandardDeviationQuantil }, false,
         // null)[0];
-        // this.log.info("min standard deviation with quantil {} is {}",
+        // log.info("min standard deviation with quantil {} is {}",
         // this.minStandardDeviationQuantil, this.minStandardDeviation);
         for (int i = 0; i < slc.getBinsSize(); i++) {
             if (sd.get(i) > this.minStandardDeviation) {
@@ -251,12 +254,12 @@ public class MeanVarProducer extends AFragmentCommand {
                 max = sd.get(i);
             }
         }
-        this.log.info("Using mz: {}", sb);
+        log.info("Using mz: {}", sb);
 
         final IndexIterator iter1D = intensities1D.getIndexIterator();
         for (int i = 0; i < slc.getScanLineCount(); i++) {
             if (i % 100 == 0) {
-                this.log.info("scanline {}", i);
+                log.info("scanline {}", i);
             }
             final List<Array> scanline = slc.getScanlineMS(i);
             double sum1D = 0;
@@ -357,7 +360,7 @@ public class MeanVarProducer extends AFragmentCommand {
                 this.usedMassValuesVar);
         hold.setArray(ArrayTools2.createIntegerArray(holdVector));
 
-        // this.log.info("dense: {}", hMeanMs.get(100));
+        // log.info("dense: {}", hMeanMs.get(100));
         return new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(intensities,
                 intensities1D);
     }
@@ -428,7 +431,7 @@ public class MeanVarProducer extends AFragmentCommand {
         int mass;
         for (int i = 0; i < slc.getScanLineCount(); i++) {
             if (i % 100 == 0) {
-                this.log.info("scanline {}", i);
+                log.info("scanline {}", i);
             }
             final List<Tuple2D<Array, Array>> scanline = slc.getScanlineSparseMS(i);
             for (final Tuple2D<Array, Array> ms : scanline) {

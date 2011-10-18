@@ -53,7 +53,6 @@ import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.ui.TextAnchor;
 import java.util.Arrays;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.Index;
@@ -61,7 +60,6 @@ import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 import cross.Factory;
-import cross.Logging;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.StatsMap;
 import cross.datastructures.Vars;
@@ -77,6 +75,7 @@ import cross.datastructures.tools.FragmentTools;
 import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Plots a pairwise alignment, by displaying both time series' tics, connected
@@ -87,6 +86,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class PairwiseAlignmentVisualizer extends AFragmentCommand {
 
     protected boolean showMZs = false;

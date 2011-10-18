@@ -26,11 +26,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * .
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 public class AlignmentPath2D {
 
 	private Map<Integer, List<Integer>> LHStoRHShorizontalMap = new HashMap<Integer, List<Integer>>(),

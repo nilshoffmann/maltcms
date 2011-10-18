@@ -25,8 +25,6 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import maltcms.tools.MaltcmsTools;
 
 import org.apache.commons.configuration.Configuration;
@@ -46,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.preprocessing.denseArrayProducer.DenseArrayProducerWorker;
 import maltcms.commands.fragments.preprocessing.denseArrayProducer.MinMaxMassFinderWorker;
 import net.sf.maltcms.execution.api.ICompletionService;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Creates bins of fixed size (currently 1) from a given set of spectra with
@@ -61,6 +60,7 @@ import net.sf.maltcms.execution.api.ICompletionService;
     "var.scan_index", "var.scan_acquisition_time", "var.total_intensity"})
 @Slf4j
 @Data
+@ServiceProvider(service = AFragmentCommand.class)
 public class DenseArrayProducer extends AFragmentCommand {
 
     @Configurable
@@ -87,35 +87,41 @@ public class DenseArrayProducer extends AFragmentCommand {
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
 
-        
+
         log.debug("Creating dense arrays!");
         log.debug("Looking for minimum and maximum values!");
-        final double[] minmax = null;
+//        final double[] minmax = null;
         //this needs to be done for all fragments before we can do anything else
         //currently not parallelized
-        MinMaxMassFinderWorker mmmfw = new MinMaxMassFinderWorker();
-        mmmfw.setFallbackVariableName(massValues);
-        mmmfw.setMinMassVariableName(massRangeMin);
-        mmmfw.setMaxMassVariableName(massRangeMax);
-        mmmfw.setIgnoreMinMaxMassArrays(ignoreMinMaxMassArrays);
-        ICompletionService<double[]> massRangeCompletionService = createCompletionService(double[].class);
-        massRangeCompletionService.submit(mmmfw);
-        List<double[]> massRangeResults = new ArrayList<double[]>();
-        double[] massRange = new double[]{Double.MAX_VALUE,Double.MIN_VALUE};
-        try{
-            massRangeResults = massRangeCompletionService.call();
-            EvalTools.geq(1, massRangeResults.size(), DenseArrayProducer.class);
-            for(double[] result:massRangeResults) {
-                    massRange[0] = Math.min(massRange[0],result[0]);
-                    massRange[1] = Math.max(massRange[1],result[1]);
-            }
-        }catch(Exception e) {
-            
+        ICompletionService<double[]> massRangeCompletionService = createCompletionService(
+                double[].class);
+
+        for (IFileFragment f : t) {
+            MinMaxMassFinderWorker mmmfw = new MinMaxMassFinderWorker();
+            mmmfw.setFallbackVariableName(massValues);
+            mmmfw.setMinMassVariableName(massRangeMin);
+            mmmfw.setMaxMassVariableName(massRangeMax);
+            mmmfw.setIgnoreMinMaxMassArrays(ignoreMinMaxMassArrays);
+            mmmfw.setFileToLoad(new File(f.getAbsolutePath()));
+            massRangeCompletionService.submit(mmmfw);
         }
-        
-        EvalTools.notNull(minmax, this);
-        log.info("Minimum mass: {}; Maximum mass; {}", minmax[0],
-                minmax[1]);
+        List<double[]> massRangeResults = new ArrayList<double[]>();
+        double[] massRange = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
+        try {
+            massRangeResults = massRangeCompletionService.call();
+            EvalTools.geq(1, massRangeResults.size(),
+                    DenseArrayProducer.class);
+            for (double[] result : massRangeResults) {
+                massRange[0] = Math.min(massRange[0], result[0]);
+                massRange[1] = Math.max(massRange[1], result[1]);
+            }
+        } catch (Exception e) {
+            log.error("{}",e);
+        }
+
+        EvalTools.notNull(massRange, this);
+        log.info("Minimum mass: {}; Maximum mass; {}", massRange[0],
+                massRange[1]);
         ICompletionService<File> ics = createCompletionService(File.class);
         for (final IFileFragment ff : t) {
             DenseArrayProducerWorker dapw = new DenseArrayProducerWorker();
@@ -127,17 +133,18 @@ public class DenseArrayProducer extends AFragmentCommand {
             dapw.setMaskedMasses(maskedMasses);
             dapw.setMassBinResolution(massBinResolution);
             dapw.setMassValues(massValues);
-            dapw.setMinMass(minmax[0]);
-            dapw.setMaxMass(minmax[1]);
+            dapw.setMinMass(massRange[0]);
+            dapw.setMaxMass(massRange[1]);
             dapw.setNormalizeMeanVariance(normalizeMeanVariance);
             dapw.setNormalizeScans(normalizeScans);
             dapw.setScanIndex(scanIndex);
             dapw.setTotalIntensity(totalIntensity);
             dapw.setFileToLoad(new File(ff.getAbsolutePath()));
-            dapw.setFileToSave(new File(createWorkFragment(ff).getAbsolutePath()));
+            dapw.setFileToSave(new File(createWorkFragment(ff).
+                    getAbsolutePath()));
             ics.submit(dapw);
         }
-        
+
         //wait and retrieve results
         TupleND<IFileFragment> ret = postProcess(ics, t);
         log.debug("Returning {} FileFragments!", ret.size());
@@ -151,8 +158,10 @@ public class DenseArrayProducer extends AFragmentCommand {
                 "intensity_values");
         this.totalIntensity = cfg.getString("var.total_intensity",
                 "total_intensity");
-        this.massRangeMin = cfg.getString("var.mass_range_min", "mass_range_min");
-        this.massRangeMax = cfg.getString("var.mass_range_max", "mass_range_max");
+        this.massRangeMin = cfg.getString("var.mass_range_min",
+                "mass_range_min");
+        this.massRangeMax = cfg.getString("var.mass_range_max",
+                "mass_range_max");
         this.scanIndex = cfg.getString("var.scan_index", "scan_index");
         this.binnedIntensityValues = cfg.getString(
                 "var.binned_intensity_values", "binned_intensity_values");
@@ -165,7 +174,8 @@ public class DenseArrayProducer extends AFragmentCommand {
         this.normalizeMeanVariance = cfg.getBoolean(this.getClass().getName()
                 + ".normalizeMeanVariance", false);
 //		this.nthreads = cfg.getInt("cross.Factory.maxthreads", 5);
-        this.maskedMasses = MaltcmsTools.parseMaskedMassesList(cfg.getList(this.getClass().getName()
+        this.maskedMasses = MaltcmsTools.parseMaskedMassesList(cfg.getList(this.
+                getClass().getName()
                 + ".maskMasses", Collections.emptyList()));
         this.invertMaskedMasses = cfg.getBoolean(this.getClass().getName()
                 + ".invertMaskedMasses", false);

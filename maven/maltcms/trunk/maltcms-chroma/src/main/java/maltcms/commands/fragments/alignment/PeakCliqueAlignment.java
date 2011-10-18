@@ -43,8 +43,6 @@ import java.util.Locale;
 import java.util.TreeMap;
 
 
-import maltcms.commands.distances.ArrayTimePenalizedDot;
-import maltcms.commands.distances.IArrayDoubleComp;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.datastructures.alignment.AlignmentFactory;
 import maltcms.datastructures.peak.Clique;
@@ -69,7 +67,6 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
@@ -94,6 +91,11 @@ import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHFinder;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.CliqueTable;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakComparator;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakSimilarityVisualizer;
+import maltcms.math.functions.IScalarArraySimilarity;
+import maltcms.math.functions.ProductSimilarity;
+import maltcms.math.functions.similarities.ArrayCorr;
+import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * For every peak in each chromatogram, its bi-directional best hits are
@@ -114,9 +116,10 @@ import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakSimilarityVi
     "var.anchors.retention_scans"})
 @Slf4j
 @Data
+@ServiceProvider(service = AFragmentCommand.class)
 public class PeakCliqueAlignment extends AFragmentCommand {
 
-    private IArrayDoubleComp costFunction = new ArrayTimePenalizedDot();
+    private IScalarArraySimilarity similarityFunction;
     @Configurable(name = "var.tic_peaks")
     private String ticPeaks = "tic_peaks";
     @Configurable(name = "var.mass_values")
@@ -158,9 +161,17 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     private int maxBBHErrors = 0;
     @Configurable
     private boolean savePlots = false;
-    
-    @Getter(value= AccessLevel.PRIVATE) @Setter(value=AccessLevel.PRIVATE)
+    @Getter(value = AccessLevel.PRIVATE)
+    @Setter(value = AccessLevel.PRIVATE)
     private HashMap<Peak, Clique> peakToClique = new HashMap<Peak, Clique>();
+
+    public PeakCliqueAlignment() {
+        similarityFunction = new ProductSimilarity();
+        GaussianDifferenceSimilarity gds = new GaussianDifferenceSimilarity();
+        similarityFunction.setScalarSimilarities(gds);
+        ArrayCorr ac = new ArrayCorr();
+        similarityFunction.setArraySimilarities(ac);
+    }
 
     /**
      * FIXME this method seems to create correct scan indices only for the first
@@ -193,14 +204,19 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             if (size > 0) {
                 final ArrayInt.D1 anchors = new ArrayInt.D1(size);
                 ArrayTools.fillArray(anchors, Integer.valueOf(-1));
-                final IVariableFragment ri = ff.hasChild(ri_scans) ? ff.getChild(ri_scans) : new VariableFragment(ff, ri_scans);
+                final IVariableFragment ri = ff.hasChild(ri_scans) ? ff.getChild(
+                        ri_scans) : new VariableFragment(ff, ri_scans);
                 final ArrayDouble.D1 anchorTimes = new ArrayDouble.D1(size);
                 ArrayTools.fillArray(anchorTimes, Double.valueOf(-1));
-                final IVariableFragment riTimes = ff.hasChild(ri_times) ? ff.getChild(ri_times) : new VariableFragment(ff, ri_times);
-                final ArrayChar.D2 names = cross.datastructures.tools.ArrayTools.createStringArray(size, 256);
-                final IVariableFragment riNames = ff.hasChild(ri_names) ? ff.getChild(ri_names) : new VariableFragment(ff, ri_names);
+                final IVariableFragment riTimes = ff.hasChild(ri_times) ? ff.
+                        getChild(ri_times) : new VariableFragment(ff, ri_times);
+                final ArrayChar.D2 names = cross.datastructures.tools.ArrayTools.
+                        createStringArray(size, 256);
+                final IVariableFragment riNames = ff.hasChild(ri_names) ? ff.
+                        getChild(ri_names) : new VariableFragment(ff, ri_names);
                 final ArrayDouble.D1 rindexA = new ArrayDouble.D1(size);
-                final IVariableFragment rindex = ff.hasChild(ri_indices) ? ff.getChild(ri_indices)
+                final IVariableFragment rindex = ff.hasChild(ri_indices) ? ff.
+                        getChild(ri_indices)
                         : new VariableFragment(ff, ri_indices);
                 ri.setArray(anchors);
                 riNames.setArray(names);
@@ -224,7 +240,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         for (final Clique c : cliques) {
             // Matched Peaks
             for (final Peak p : c.getPeakList()) {
-                final IFileFragment association = hm.get(p.getAssociation().getName());
+                final IFileFragment association = hm.get(p.getAssociation().
+                        getName());
                 int slot = placeMap.get(association.getName());
                 if (peakToClique.containsKey(p)) {
                     id = nextIndex[slot];
@@ -240,9 +257,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
                     }
                     // log.info("Adding anchor with name {}", name);
-                    ((ArrayChar.D2) association.getChild(ri_names).getArray()).setString(id, name);
-                    ((ArrayInt.D1) association.getChild(ri_scans).getArray()).set(id, p.getScanIndex());
-                    ((ArrayDouble.D1) association.getChild(ri_times).getArray()).set(id, p.getScanAcquisitionTime());
+                    ((ArrayChar.D2) association.getChild(ri_names).getArray()).
+                            setString(id, name);
+                    ((ArrayInt.D1) association.getChild(ri_scans).getArray()).
+                            set(id, p.getScanIndex());
+                    ((ArrayDouble.D1) association.getChild(ri_times).getArray()).
+                            set(id, p.getScanAcquisitionTime());
                     nextIndex[slot]++;
                 }
 
@@ -356,7 +376,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         for (Clique c : cliques) {
             for (Peak p : c.getPeakList()) {
                 cliqueNumbers[placeMap.get(p.getAssociation().getName())]++;
-                cliqueSize[placeMap.get(p.getAssociation().getName())] += c.getPeakList().size();
+                cliqueSize[placeMap.get(p.getAssociation().getName())] += c.
+                        getPeakList().size();
                 npeaks++;
             }
 
@@ -417,7 +438,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         // for (IFileFragment f : newFragments) {
         // fragScores[placeMap.get(f.getName())] /= sumFragScores;
         // }
-        boolean minimize = costFunction.minimize();
+        boolean minimize = false;//costFunction.minimize();
         for (int j = 0; j < newFragments.size(); j++) {
             log.info("File: {}, value: {}", newFragments.get(j).getName(),
                     (minimize ? -fragScores[j] : fragScores[j]));
@@ -440,22 +461,29 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 //            }
         }
 
-        final CSVWriter csvw = Factory.getInstance().getObjectFactory().instantiate(CSVWriter.class);
+        final CSVWriter csvw = Factory.getInstance().getObjectFactory().
+                instantiate(CSVWriter.class);
         csvw.setWorkflow(getWorkflow());
         List<List<String>> tble = new ArrayList<List<String>>();
         tble.add(Arrays.asList(newFragments.get(optIndex).getName()));
-        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "center-star.csv", tble, WorkflowSlot.CLUSTERING);
+        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).
+                getAbsolutePath(), "center-star.csv", tble,
+                WorkflowSlot.CLUSTERING);
 
         log.info("{} with value {} is the center star!",
-                newFragments.get(optIndex).getName(), (minimize ? -optVal : optVal));
+                newFragments.get(optIndex).getName(),
+                (minimize ? -optVal : optVal));
     }
 
     public void saveToCSV(final ArrayDouble.D2 distances,
             final ArrayChar.D2 names) {
-        final CSVWriter csvw = Factory.getInstance().getObjectFactory().instantiate(CSVWriter.class);
+        final CSVWriter csvw = Factory.getInstance().getObjectFactory().
+                instantiate(CSVWriter.class);
         csvw.setWorkflow(getWorkflow());
-        csvw.writeArray2DwithLabels(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "pairwise_distances.csv", distances, names,
-                this.getClass(), WorkflowSlot.STATISTICS, getWorkflow().getStartupDate());
+        csvw.writeArray2DwithLabels(getWorkflow().getOutputDirectory(this).
+                getAbsolutePath(), "pairwise_distances.csv", distances, names,
+                this.getClass(), WorkflowSlot.STATISTICS, getWorkflow().
+                getStartupDate());
     }
 
     /*
@@ -495,7 +523,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 "Calculating {} pairwise peak similarities for {} peaks!",
                 ((long) n * (long) n), n);
         log.info("Using {} as pairwise peak similarity!",
-                this.costFunction.getClass().getName());
+                this.similarityFunction.getClass().getName());
         // Loop over all pairs of FileFragments
         long elements = (long) n * (long) n;
         double percentDone = 0;
@@ -541,7 +569,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
 
         if (this.savePeakSimilarities) {
-            new PeakSimilarityVisualizer().visualizePeakSimilarities(fragmentToPeaks, 256, "beforeBIDI", costFunction, getWorkflow());
+            new PeakSimilarityVisualizer().visualizePeakSimilarities(
+                    fragmentToPeaks, 256, "beforeBIDI", getWorkflow());
         }
     }
 
@@ -584,7 +613,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 for (int i = 0; i < peakScans.getShape()[0]; i++) {
                     final String name = peakNames.getString(i);
                     final int scan = peakScans.getInt(peakScansI.set(i));
-                    final double sat = scan_acquisition_time.getDouble(sat1.set(scan));
+                    final double sat = scan_acquisition_time.getDouble(sat1.set(
+                            scan));
                     log.debug("{}", t.getName());
                     final Peak p = new Peak(name, t, scan, bintens.get(scan),
                             sat);
@@ -694,7 +724,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
                             //
                             if (d != null && c != null && c != d) {
-                                log.debug("Found different cliques for peak p and q!");
+                                log.debug(
+                                        "Found different cliques for peak p and q!");
                                 log.debug("Clique for p: {}", c);
                                 log.debug("Clique for q: {}", d);
                                 // try to merge cliques
@@ -756,7 +787,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
         // sort cliques by clique rt mean
         List<Clique> l = new ArrayList<Clique>(cliques);
-        Collections.sort(l, new Comparator<Clique>()   {
+        Collections.sort(l, new Comparator<Clique>() {
 
             @Override
             public int compare(Clique o1, Clique o2) {
@@ -788,7 +819,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             }
         }
 
-        String groupFileLocation = Factory.getInstance().getConfiguration().getString("groupFileLocation", "");
+        String groupFileLocation = Factory.getInstance().getConfiguration().
+                getString("groupFileLocation", "");
 
         OneWayPeakAnova owa = new OneWayPeakAnova();
         owa.setWorkflow(getWorkflow());
@@ -809,13 +841,15 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             pr.configure(Factory.getInstance().getConfiguration());
             final File f = pr.getFile();
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f, this,
-                    WorkflowSlot.VISUALIZATION, al.toArray(new IFileFragment[]{}));
+                    WorkflowSlot.VISUALIZATION,
+                    al.toArray(new IFileFragment[]{}));
             getWorkflow().append(dwr);
             Factory.getInstance().submitJob(pr);
 
             DefaultBoxAndWhiskerCategoryDataset dscdTIC = new DefaultBoxAndWhiskerCategoryDataset();
             for (Clique c : l) {
-                dscdTIC.add(c.createApexTicBoxAndWhisker(), "", c.getCliqueRTMean());
+                dscdTIC.add(c.createApexTicBoxAndWhisker(), "", c.
+                        getCliqueRTMean());
             }
             JFreeChart jfc2 = ChartFactory.createBoxAndWhiskerChart("Cliques",
                     "clique mean RT", "log(apex TIC centroid)-log(apex TIC)",
@@ -823,11 +857,13 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             jfc2.getCategoryPlot().setOrientation(PlotOrientation.HORIZONTAL);
             PlotRunner pr2 = new PlotRunner(jfc2.getCategoryPlot(),
                     "Clique log apex TIC centroid diff to log apex TIC",
-                    "cliquesLogApexTICCentroidDiffToLogApexTIC.png", getWorkflow().getOutputDirectory(this));
+                    "cliquesLogApexTICCentroidDiffToLogApexTIC.png",
+                    getWorkflow().getOutputDirectory(this));
             pr.configure(Factory.getInstance().getConfiguration());
             final File g = pr.getFile();
             final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(g, this,
-                    WorkflowSlot.VISUALIZATION, al.toArray(new IFileFragment[]{}));
+                    WorkflowSlot.VISUALIZATION,
+                    al.toArray(new IFileFragment[]{}));
             getWorkflow().append(dwr2);
             Factory.getInstance().submitJob(pr2);
         }
@@ -931,11 +967,11 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         this.ticPeaks = cfg.getString("var.tic_peaks", "tic_peaks");
         this.minCliqueSize = cfg.getInt(this.getClass().getName()
                 + ".minCliqueSize", -1);
-        final String aldist = "maltcms.commands.distances.ArrayLp";
-        this.costFunction = Factory.getInstance().getObjectFactory().instantiate(
-                cfg.getString(this.getClass().getName()
-                + ".costFunction", aldist),
-                IArrayDoubleComp.class);
+//        final String aldist = "maltcms.commands.distances.ArrayLp";
+//        this.costFunction = Factory.getInstance().getObjectFactory().instantiate(
+//                cfg.getString(this.getClass().getName()
+//                + ".costFunction", aldist),
+//                IArrayDoubleComp.class);
         this.useUserSuppliedAnchors = cfg.getBoolean(this.getClass().getName()
                 + ".useUserSuppliedAnchors", false);
         this.savePeakSimilarities = cfg.getBoolean(this.getClass().getName()
@@ -944,10 +980,14 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 + ".exportAlignedFeatures", false);
         this.maxRTDifference = cfg.getDouble(this.getClass().getName()
                 + ".maxRTDifference", 60.0d);
-        this.intensityStdDeviationFactor = cfg.getDouble(this.getClass().getName() + ".intensityStdDeviationFactor", 5);
-        this.saveXMLAlignment = cfg.getBoolean(this.getClass().getName() + ".saveXMLAlignment", true);
-        this.maxBBHErrors = cfg.getInt(this.getClass().getName() + ".maxBBHErrors", 0);
-        this.savePlots = cfg.getBoolean(this.getClass().getName()+".savePlots",false);
+        this.intensityStdDeviationFactor = cfg.getDouble(
+                this.getClass().getName() + ".intensityStdDeviationFactor", 5);
+        this.saveXMLAlignment = cfg.getBoolean(
+                this.getClass().getName() + ".saveXMLAlignment", true);
+        this.maxBBHErrors = cfg.getInt(
+                this.getClass().getName() + ".maxBBHErrors", 0);
+        this.savePlots = cfg.getBoolean(this.getClass().getName() + ".savePlots",
+                false);
     }
 
     public void saveSimilarityMatrix(final TupleND<IFileFragment> al,
@@ -986,10 +1026,11 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     }
 
     public double getSimilarity(final Peak a, final Peak b) {
-        final double v = this.costFunction.apply(-1, -1,
-                a.getScanAcquisitionTime(), b.getScanAcquisitionTime(),
+        final double v = this.similarityFunction.apply(new double[]{
+                    a.getScanAcquisitionTime()}, new double[]{b.
+                    getScanAcquisitionTime()},
                 a.getMSIntensities(), b.getMSIntensities());
-        return this.costFunction.minimize() ? -v : v;
+        return v;
     }
 
     /*
@@ -1011,7 +1052,9 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
         final ArrayList<IFileFragment> al2 = new ArrayList<IFileFragment>();
         for (final IFileFragment iff : originalFragments) {
-            final IFileFragment iff2 = Factory.getInstance().getFileFragmentFactory().create(new File(getWorkflow().getOutputDirectory(this),
+            final IFileFragment iff2 = Factory.getInstance().
+                    getFileFragmentFactory().create(new File(getWorkflow().
+                    getOutputDirectory(this),
                     iff.getName()));
             iff2.addSourceFile(iff);
             log.debug("Created work file {}", iff2);
@@ -1024,7 +1067,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
         log.info("Searching for bidirectional best hits");
         final long startT = System.currentTimeMillis();
-        final List<Peak> unmatchedPeaks = new BBHFinder().findBiDiBestHits(t, fragmentToPeaks);
+        final List<Peak> unmatchedPeaks = new BBHFinder().findBiDiBestHits(t,
+                fragmentToPeaks);
         log.info("Found bidi best hits in {} milliseconds",
                 System.currentTimeMillis() - startT);
 
@@ -1037,10 +1081,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             // combineBiDiBestHitsAll(t, fragmentToPeaks, ll);
         } else {
             if (this.minCliqueSize > t.size()) {
-                log.info("Resetting minimum group size to: {}, was: {}", t.size(), this.minCliqueSize);
+                log.info("Resetting minimum group size to: {}, was: {}",
+                        t.size(), this.minCliqueSize);
                 this.minCliqueSize = t.size();
             }
-            log.info("Combining bidirectional best hits, minimum group size: {}", this.minCliqueSize);
+            log.info("Combining bidirectional best hits, minimum group size: {}",
+                    this.minCliqueSize);
             cliques = combineBiDiBestHits(t, fragmentToPeaks, ll,
                     this.minCliqueSize);
         }
@@ -1051,7 +1097,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         log.info("Found cliques in {} milliseconds",
                 System.currentTimeMillis() - startT2);
         if (this.savePeakSimilarities) {
-            new PeakSimilarityVisualizer().visualizePeakSimilarities(fragmentToPeaks, 2, "afterBIDI", costFunction, getWorkflow());
+            new PeakSimilarityVisualizer().visualizePeakSimilarities(
+                    fragmentToPeaks, 2, "afterBIDI", getWorkflow());
         }
         if (this.exportAlignedFeatures) {
             saveToLangeTautenhahnFormat(columnMap, ll);
@@ -1188,11 +1235,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
 
         if ((minCliqueSize < 2) && (minCliqueSize >= -1)) {
-            Logging.getLogger(PeakCliqueAlignment.class).info("Illegal value for minCliqueSize = {}, allowed values are -1, >=2 <= number of chromatograms",
+            log.info(
+                    "Illegal value for minCliqueSize = {}, allowed values are -1, >=2 <= number of chromatograms",
                     minCliqueSize);
         }
         if (i >= minCliqueSize) {
-            Logging.getLogger(PeakCliqueAlignment.class).debug(
+            log.debug(
                     "{} are BidiBestHits of each other: {}", i, peaks);
             return true;
         }
@@ -1214,7 +1262,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             // }
         }
         if (i == expectedHits) {
-            Logging.getLogger(TICPeakFinder.class).debug(
+            log.debug(
                     "All elements are BidiBestHits to first Peak: {}", peaks);
             return true;
         }
@@ -1259,7 +1307,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
         log.debug("Adding row {}", headers);
         rows.add(headers);
-        final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
+                Locale.US);
         // this is a fix, default rounding convention is HALF_EVEN,
         // which allows less error to accumulate, but is seldomly used
         // outside of java...
@@ -1292,7 +1341,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
         final CSVWriter csvw = new CSVWriter();
         csvw.setWorkflow(getWorkflow());
-        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "multiple-alignmentRT.csv", rows,
+        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).
+                getAbsolutePath(), "multiple-alignmentRT.csv", rows,
                 WorkflowSlot.ALIGNMENT);
     }
 
@@ -1340,7 +1390,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
         final CSVWriter csvw = new CSVWriter();
         csvw.setWorkflow(getWorkflow());
-        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "multiple-alignment.csv", rows,
+        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).
+                getAbsolutePath(), "multiple-alignment.csv", rows,
                 WorkflowSlot.ALIGNMENT);
     }
 
@@ -1392,10 +1443,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         // filename intensity rt m/z
         // final List<List<String>> rows = new
         // ArrayList<List<String>>(ll.size());
-        File outputFile = new File(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "peakCliqueAssignment_matched_features.csv");
+        File outputFile = new File(getWorkflow().getOutputDirectory(this).
+                getAbsolutePath(), "peakCliqueAssignment_matched_features.csv");
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+            final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
+                    Locale.US);
             df.applyPattern("0.000");
             for (final List<Peak> l : ll) {
 
@@ -1407,9 +1460,11 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 for (final Peak p : l) {
                     final IFileFragment iff = p.getAssociation();
                     final IVariableFragment sindex = iff.getChild(this.scanIndex);
-                    final IVariableFragment masses = iff.getChild(this.massValues);
+                    final IVariableFragment masses = iff.getChild(
+                            this.massValues);
                     masses.setIndex(sindex);
-                    final IVariableFragment intensities = iff.getChild(this.intensityValues);
+                    final IVariableFragment intensities = iff.getChild(
+                            this.intensityValues);
                     intensities.setIndex(sindex);
                     EvalTools.notNull(iff, this);
 
@@ -1438,7 +1493,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                         peakToMz.put(p, new double[]{mz, intens});
                     }
                 }
-                int minNumberOfCommonFeatures = this.minCliqueSize == -1 ? columnMap.size() : this.minCliqueSize;
+                int minNumberOfCommonFeatures = this.minCliqueSize == -1 ? columnMap.
+                        size() : this.minCliqueSize;
                 // check bins and remove features, which do not occur often
                 // enough
                 HashSet<Double> keysToRemove = new HashSet<Double>();
@@ -1483,7 +1539,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 for (Double d : keysToRemove) {
                     keyToPeakMz.remove(d);
                 }
-                log.info("Found {} common features!", keyToPeakMz.keySet().size());
+                log.info("Found {} common features!",
+                        keyToPeakMz.keySet().size());
 
                 // build feature line for each mz group
 

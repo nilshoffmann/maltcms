@@ -36,6 +36,8 @@ import cross.annotations.RequiresVariables;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Warps two chromatogramms according to their mean mass spectra of the scan
@@ -43,6 +45,8 @@ import cross.datastructures.tuple.Tuple2D;
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 @RequiresVariables(names = { "var.second_column_scan_index",
 		"var.total_intensity", "var.mass_values", "var.intensity_values",
 		"var.scan_index", "var.mass_range_min", "var.mass_range_max",
@@ -109,16 +113,16 @@ public class ScanlineMaxMSWarp extends ADynamicTimeWarp {
 			this.meanMSIndexVar = this.maxMSVerticalIndexVar;
 		}
 
-		this.log.info("Using {} with {}", this.meanMSVar, this.meanMSIndexVar);
+		log.info("Using {} with {}", this.meanMSVar, this.meanMSIndexVar);
 
 		List<Array> ref = null;
-		this.log.info("searching max ms in ref");
+		log.info("searching max ms in ref");
 		final IVariableFragment meanHr = t.getFirst().getChild(this.meanMSVar);
 		meanHr.setIndex(t.getFirst().getChild(this.meanMSIndexVar));
 		ref = meanHr.getIndexedArray();
 
 		List<Array> query = null;
-		this.log.info("searching max ms in query");
+		log.info("searching max ms in query");
 		final IVariableFragment meanHq = t.getSecond().getChild(this.meanMSVar);
 		meanHq.setIndex(t.getSecond().getChild(this.meanMSIndexVar));
 		query = meanHq.getIndexedArray();

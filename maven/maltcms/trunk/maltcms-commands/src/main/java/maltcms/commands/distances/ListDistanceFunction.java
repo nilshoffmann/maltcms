@@ -19,7 +19,6 @@
  * 
  * $Id: ListDistanceFunction.java 43 2009-10-16 17:22:55Z nilshoffmann $
  */
-
 package maltcms.commands.distances;
 
 import ucar.ma2.Array;
@@ -40,27 +39,24 @@ import cross.datastructures.workflow.IWorkflowElement;
 public interface ListDistanceFunction extends
         ICommand<Tuple2D<Array[], Array[]>, Array[]>, IWorkflowElement {
 
-	public abstract IFileFragment apply(IFileFragment a, IFileFragment b);
+    public abstract IFileFragment apply(IFileFragment a, IFileFragment b);
 
-	public abstract ArrayDouble.D0 getResult();
+    public abstract ArrayDouble.D0 getResult();
 
-	public abstract IFileFragment getResultFileFragment();
+    public abstract IFileFragment getResultFileFragment();
 
-	public abstract ArrayDouble.D1 getResultV();
+    public abstract ArrayDouble.D1 getResultV();
 
-	public abstract StatsMap getStatsMap();
+    public abstract StatsMap getStatsMap();
 
-	/**
-	 * Returns true, if this LDF is a distance between Arrays, false if LDF is a
-	 * similarity.
-	 * 
-	 * @return
-	 */
-	public abstract boolean minimize();
+    /**
+     * Returns true, if this LDF is a distance between Arrays, false if LDF is a
+     * similarity.
+     * 
+     * @return
+     */
+    public abstract boolean minimize();
 
-	public abstract void setStatsMap(StatsMap sm);
-
-	// public abstract Tuple2D<Array[],Array[]>
-	// prepareInput(Tuple2D<List<VariableFragment>,List<VariableFragment>> t);
+    public abstract void setStatsMap(StatsMap sm);
 
 }

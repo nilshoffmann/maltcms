@@ -48,6 +48,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Plot 1-dimensional arrays, possibly with an additional array providing domain
@@ -58,6 +59,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class Array1DVisualizer extends AFragmentCommand {
 
     private String variableName = "total_intensity";

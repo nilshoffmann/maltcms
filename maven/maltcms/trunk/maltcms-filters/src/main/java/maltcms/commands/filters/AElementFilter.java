@@ -19,7 +19,6 @@
  * 
  * $Id: AElementFilter.java 43 2009-10-16 17:22:55Z nilshoffmann $
  */
-
 package maltcms.commands.filters;
 
 import org.apache.commons.configuration.Configuration;
@@ -34,7 +33,7 @@ import cross.commands.ICommand;
  */
 public abstract class AElementFilter implements ICommand<Double, Double> {
 
-	public void configure(final Configuration cfg) {
-
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+    }
 }

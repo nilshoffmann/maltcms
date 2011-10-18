@@ -36,7 +36,6 @@ import maltcms.ui.charts.HeatMapChart;
 import maltcms.ui.charts.PlotRunner;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -46,7 +45,6 @@ import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.ArrayInt.D1;
 import cross.Factory;
-import cross.Logging;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.StatsMap;
 import cross.datastructures.Vars;
@@ -57,6 +55,9 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * ModulationTimeEstimator tries to find the spike-like peaks in GCxGC MS data
@@ -66,9 +67,10 @@ import cross.datastructures.tools.EvalTools;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
+@Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class ModulationTimeEstimator extends AFragmentCommand {
-
-	private final Logger log = Logging.getLogger(this.getClass());
 
 	private String tic_var = "total_intensity";
 

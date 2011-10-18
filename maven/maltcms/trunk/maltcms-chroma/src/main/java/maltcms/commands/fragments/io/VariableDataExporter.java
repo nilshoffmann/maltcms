@@ -36,6 +36,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Writes 1D-variables to csv files, one entry per row.
@@ -45,6 +46,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Data
 @Slf4j
+@ServiceProvider(service=AFragmentCommand.class)
 public class VariableDataExporter extends AFragmentCommand {
 
     private ArrayList<String> varNames = new ArrayList<String>(0);

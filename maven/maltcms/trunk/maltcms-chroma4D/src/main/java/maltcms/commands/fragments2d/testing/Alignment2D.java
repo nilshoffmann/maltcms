@@ -30,12 +30,11 @@ import java.util.List;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.constraint.ConstraintFactory;
 import maltcms.datastructures.feature.FeatureVectorFactory;
-import maltcms.experimental.operations.AlignmentFactory;
-import maltcms.experimental.operations.Cosine;
-import maltcms.experimental.operations.IAlignment;
-import maltcms.experimental.operations.IOptimizationFunction;
-import maltcms.experimental.operations.ThreePredecessorsOptimization;
-import maltcms.experimental.operations.TwoFeatureVectorOperation;
+import maltcms.commands.distances.dtwng.AlignmentFactory;
+import maltcms.commands.distances.dtwng.IAlignment;
+import maltcms.commands.distances.dtwng.IOptimizationFunction;
+import maltcms.commands.distances.dtwng.ThreePredecessorsOptimization;
+import maltcms.commands.distances.dtwng.TwoFeatureVectorOperation;
 import maltcms.tools.ArrayTools2;
 import maltcms.tools.ImageTools;
 import ucar.ma2.Array;
@@ -48,201 +47,212 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import maltcms.commands.distances.dtwng.FeatureVectorDtwSimilarity;
+import maltcms.math.functions.DtwPairwiseSimilarity;
+import maltcms.math.functions.similarities.ArrayCos;
 
 /**
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
-@RequiresVariables(names = { "var.maxms_1d_horizontal",
-		"var.maxms_1d_horizontal_index", "var.maxms_1d_vertical",
-		"var.maxms_1d_vertical_index", "var.total_intensity",
-		"var.second_column_scan_index" })
-@RequiresOptionalVariables(names = { "" })
-@ProvidesVariables(names = { "var.warp_path_i", "var.warp_path_j" })
+@RequiresVariables(names = {"var.maxms_1d_horizontal",
+    "var.maxms_1d_horizontal_index", "var.maxms_1d_vertical",
+    "var.maxms_1d_vertical_index", "var.total_intensity",
+    "var.second_column_scan_index"})
+@RequiresOptionalVariables(names = {""})
+@ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
 public class Alignment2D extends AFragmentCommand {
 
-	@Configurable(name = "var.maxms_1d_horizontal", value = "maxms_1d_horizontal")
-	private String horizontalVar = "maxms_1d_horizontal";
-	@Configurable(name = "var.maxms_1d_horizontal_index", value = "maxms_1d_horizontal_index")
-	private String horizontalIndexVar = "maxms_1d_horizontal_index";
-	@Configurable(name = "var.maxms_1d_vertical", value = "maxms_1d_vertical")
-	private String verticalVar = "maxms_1d_vertical";
-	@Configurable(name = "var.maxms_1d_vertical_index", value = "maxms_1d_vertical_index")
-	private String verticalIndexVar = "maxms_1d_vertical_index";
-	@Configurable(name = "var.total_intensity", value = "total_intensity")
-	private String totalIntensity = "total_intensity";
-	@Configurable(name = "var.second_column_scan_index", value = "second_column_scan_index")
-	private String secondColumnScanIndexVar = "second_column_scan_index";
+    @Configurable(name = "var.maxms_1d_horizontal",
+    value = "maxms_1d_horizontal")
+    private String horizontalVar = "maxms_1d_horizontal";
+    @Configurable(name = "var.maxms_1d_horizontal_index",
+    value = "maxms_1d_horizontal_index")
+    private String horizontalIndexVar = "maxms_1d_horizontal_index";
+    @Configurable(name = "var.maxms_1d_vertical", value = "maxms_1d_vertical")
+    private String verticalVar = "maxms_1d_vertical";
+    @Configurable(name = "var.maxms_1d_vertical_index",
+    value = "maxms_1d_vertical_index")
+    private String verticalIndexVar = "maxms_1d_vertical_index";
+    @Configurable(name = "var.total_intensity", value = "total_intensity")
+    private String totalIntensity = "total_intensity";
+    @Configurable(name = "var.second_column_scan_index",
+    value = "second_column_scan_index")
+    private String secondColumnScanIndexVar = "second_column_scan_index";
+    private TwoFeatureVectorOperation dtwSimilarity;
+    @Configurable(value = "false")
+    private boolean filter = false;
+    @Configurable(value = "false")
+    private boolean scale = false;
 
-	@Configurable(value = "false")
-	private boolean filter = false;
-	@Configurable(value = "false")
-	private boolean scale = false;
+    public Alignment2D() {
+        FeatureVectorDtwSimilarity sim = new FeatureVectorDtwSimilarity();
+        DtwPairwiseSimilarity idsf = new DtwPairwiseSimilarity();
+        idsf.setDenseMassSpectraScore(new ArrayCos());
+        sim.setScoreFunction(idsf);
+        sim.setArrayFeatureName("FEATURE0");
+        dtwSimilarity = sim;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
-	@Override
-	public String getDescription() {
-		return "2D Alignment in spe";
-	}
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
+    public String getDescription() {
+        return "2D Alignment in spe";
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
-	@Override
-	public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
+    public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
 
-		if (t.size() < 2) {
-			return t;
-		}
+        if (t.size() < 2) {
+            return t;
+        }
 
-		IFileFragment lhsff, rhsff;
-		List<IFeatureVector> l1h, l1v, l2h, l2v;
-		final AlignmentFactory af = new AlignmentFactory();
-		IAlignment ia;
-		// prepare recursion
-		final IOptimizationFunction iof = new ThreePredecessorsOptimization();
-		for (String s : iof.getStates()) {
-			if (s.equals("NW")) {
-				iof.setWeight(s, 2.25d);
-			}
-		}
-		// prepare pairwise function
-		final TwoFeatureVectorOperation tfvo = new Cosine();
-		((Cosine) tfvo).setFeatureVarName("FEATURE0");
-		double cost;
-		List<Array> scanlinesi, scanlinesj;
-		for (int i = 0; i < t.size(); i++) {
-			lhsff = t.get(i);
+        IFileFragment lhsff, rhsff;
+        List<IFeatureVector> l1h, l1v, l2h, l2v;
+        final AlignmentFactory af = new AlignmentFactory();
+        IAlignment ia;
+        // prepare recursion
+        final IOptimizationFunction iof = new ThreePredecessorsOptimization();
+        for (String s : iof.getStates()) {
+            if (s.equals("NW")) {
+                iof.setWeight(s, 2.25d);
+            }
+        }
 
-			scanlinesi = getScanlineFor(lhsff);
+        double cost;
+        List<Array> scanlinesi, scanlinesj;
+        for (int i = 0; i < t.size(); i++) {
+            lhsff = t.get(i);
 
-			for (int j = i + 1; j < t.size(); j++) {
-				rhsff = t.get(j);
+            scanlinesi = getScanlineFor(lhsff);
 
-				scanlinesj = getScanlineFor(rhsff);
+            for (int j = i + 1; j < t.size(); j++) {
+                rhsff = t.get(j);
 
-				// prepare alignment
-				ia = af.getDTWInstance();
-				// set alignment properties
-				ia.setLHSID(lhsff.getName());
-				ia.setRHSID(rhsff.getName());
-				// set recursion and pairwise function
-				ia.setIOptimizationFunction(iof);
-				ia.setPairwiseFeatureVectorOperation(tfvo);
+                scanlinesj = getScanlineFor(rhsff);
 
-				// HORIZONTAL
-				// prepare feature vectors
-				l1h = getFeatureList(lhsff, this.horizontalVar,
-						this.horizontalIndexVar, this.filter, this.scale);
-				l2h = getFeatureList(rhsff, this.horizontalVar,
-						this.horizontalIndexVar, this.filter, this.scale);
-				System.out.println("l1v size: " + l1h.size());
+                // prepare alignment
+                ia = af.getDTWInstance();
+                // set alignment properties
+                ia.setLeftHandSideId(lhsff.getName());
+                ia.setRightHandSideId(rhsff.getName());
+                // set recursion and pairwise function
+                ia.setOptimizationFunction(iof);
+                ia.setPairwiseFeatureVectorOperation(dtwSimilarity);
 
-				// set constraints
-				ia
-						.setConstraints(ConstraintFactory.getInstance()
-								.createBandConstraint(0, 0, l1h.size(),
-										l2h.size(), 0.5));
-				// apply and retrieve score
-				cost = ia.apply(l1h, l2h);
-				System.out.println("DTW score h: " + cost);
-				// retrieve map
-				List<Point> h = ia.getMap();
+                // HORIZONTAL
+                // prepare feature vectors
+                l1h = getFeatureList(lhsff, this.horizontalVar,
+                        this.horizontalIndexVar, this.filter, this.scale);
+                l2h = getFeatureList(rhsff, this.horizontalVar,
+                        this.horizontalIndexVar, this.filter, this.scale);
+                System.out.println("l1v size: " + l1h.size());
 
-				for (Point p : h) {
-					System.out.println(p.x + " - " + p.y);
-				}
+                // set constraints
+                ia.setConstraints(ConstraintFactory.getInstance().
+                        createBandConstraint(0, 0, l1h.size(),
+                        l2h.size(), 0.5));
+                // apply and retrieve score
+                cost = ia.apply(l1h, l2h);
+                System.out.println("DTW score h: " + cost);
+                // retrieve map
+                List<Point> h = ia.getMap();
 
-				// VERTICAL
-				// prepare feature vectors
-				l1v = getFeatureList(lhsff, this.verticalVar,
-						this.verticalIndexVar, this.filter, this.scale);
-				l2v = getFeatureList(rhsff, this.verticalVar,
-						this.verticalIndexVar, this.filter, this.scale);
-				System.out.println("l1v size: " + l1v.size());
+                for (Point p : h) {
+                    System.out.println(p.x + " - " + p.y);
+                }
 
-				// set constraints
-				ia
-						.setConstraints(ConstraintFactory.getInstance()
-								.createBandConstraint(0, 0, l1v.size(),
-										l2v.size(), 0.5));
-				// apply and retrieve score
-				cost = ia.apply(l1v, l2v);
-				System.out.println("DTW score v: " + cost);
-				// retrieve map
-				List<Point> v = ia.getMap();
+                // VERTICAL
+                // prepare feature vectors
+                l1v = getFeatureList(lhsff, this.verticalVar,
+                        this.verticalIndexVar, this.filter, this.scale);
+                l2v = getFeatureList(rhsff, this.verticalVar,
+                        this.verticalIndexVar, this.filter, this.scale);
+                System.out.println("l1v size: " + l1v.size());
 
-				Visualization2D vis = new Visualization2D();
+                // set constraints
+                ia.setConstraints(ConstraintFactory.getInstance().
+                        createBandConstraint(0, 0, l1v.size(),
+                        l2v.size(), 0.5));
+                // apply and retrieve score
+                cost = ia.apply(l1v, l2v);
+                System.out.println("DTW score v: " + cost);
+                // retrieve map
+                List<Point> v = ia.getMap();
 
-				final BufferedImage image = vis.createImage(scanlinesi,
-						scanlinesj, h, v);
+                Visualization2D vis = new Visualization2D();
 
-				final String baseFilename = StringTools.removeFileExt(lhsff
-						.getName())
-						+ "_vs_" + StringTools.removeFileExt(rhsff.getName());
-				final String filename = baseFilename + "_rgb";
-				final File out = ImageTools.saveImage(image, filename, "png",
-						getWorkflow().getOutputDirectory(this), this);
+                final BufferedImage image = vis.createImage(scanlinesi,
+                        scanlinesj, h, v);
 
-				// for (Point p : v) {
-				// System.out.println(p.x + ":" + p.y);
-				// }
-			}
-		}
+                final String baseFilename = StringTools.removeFileExt(lhsff.
+                        getName())
+                        + "_vs_" + StringTools.removeFileExt(rhsff.getName());
+                final String filename = baseFilename + "_rgb";
+                final File out = ImageTools.saveImage(image, filename, "png",
+                        getWorkflow().getOutputDirectory(this), this);
 
-		return t;
-	}
+                // for (Point p : v) {
+                // System.out.println(p.x + ":" + p.y);
+                // }
+            }
+        }
 
-	private List<IFeatureVector> getFeatureList(final IFileFragment ff,
-			final String varName, final String indexName, final boolean filter,
-			final boolean scale) {
-		final FeatureVectorFactory fvf = FeatureVectorFactory.getInstance();
-		ff.getChild(varName).setIndex(ff.getChild(indexName));
+        return t;
+    }
 
-		List<Array> feature = ff.getChild(varName).getIndexedArray();
-		if (filter) {
-			final List<Integer> hold = new ArrayList<Integer>();
-			feature = ArrayTools2.filterInclude(feature, hold);
-		}
-		if (scale) {
-			feature = ArrayTools2.sqrt(feature);
-		}
+    private List<IFeatureVector> getFeatureList(final IFileFragment ff,
+            final String varName, final String indexName, final boolean filter,
+            final boolean scale) {
+        final FeatureVectorFactory fvf = FeatureVectorFactory.getInstance();
+        ff.getChild(varName).setIndex(ff.getChild(indexName));
 
-		final List<IFeatureVector> featureList = fvf
-				.createFeatureVectorList(feature);
+        List<Array> feature = ff.getChild(varName).getIndexedArray();
+        if (filter) {
+            final List<Integer> hold = new ArrayList<Integer>();
+            feature = ArrayTools2.filterInclude(feature, hold);
+        }
+        if (scale) {
+            feature = ArrayTools2.sqrt(feature);
+        }
 
-		return featureList;
-	}
+        final List<IFeatureVector> featureList = fvf.createFeatureVectorList(
+                feature);
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
-	@Override
-	public WorkflowSlot getWorkflowSlot() {
-		return WorkflowSlot.ALIGNMENT;
-	}
+        return featureList;
+    }
 
-	/**
-	 * Getter.
-	 * 
-	 * @param ff
-	 *            file fragment
-	 * @return scanlines
-	 */
-	protected List<Array> getScanlineFor(final IFileFragment ff) {
-		ff.getChild(this.totalIntensity).setIndex(
-				ff.getChild(this.secondColumnScanIndexVar));
-		final List<Array> scanlines = ff.getChild(this.totalIntensity)
-				.getIndexedArray();
-		return scanlines;
-	}
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
+    public WorkflowSlot getWorkflowSlot() {
+        return WorkflowSlot.ALIGNMENT;
+    }
 
+    /**
+     * Getter.
+     * 
+     * @param ff
+     *            file fragment
+     * @return scanlines
+     */
+    protected List<Array> getScanlineFor(final IFileFragment ff) {
+        ff.getChild(this.totalIntensity).setIndex(
+                ff.getChild(this.secondColumnScanIndexVar));
+        final List<Array> scanlines = ff.getChild(this.totalIntensity).
+                getIndexedArray();
+        return scanlines;
+    }
 }

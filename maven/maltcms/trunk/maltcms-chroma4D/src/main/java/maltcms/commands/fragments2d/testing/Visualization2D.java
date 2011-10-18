@@ -34,22 +34,22 @@ import maltcms.tools.ArrayTools;
 import maltcms.tools.ArrayTools2;
 import maltcms.tools.ImageTools;
 
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
-import cross.Logging;
 import cross.datastructures.StatsMap;
 import cross.datastructures.Vars;
 import cross.datastructures.tuple.Tuple2D;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 public class Visualization2D {
-
-	private Logger log = Logging.getLogger(this.getClass());
 
 	private int currentrasterline = -1;
 
@@ -111,7 +111,7 @@ public class Visualization2D {
 			final int scanindexi = p.x;
 			final int scanindexj = p.y;
 
-			// this.log.info("{} - {}", scanindexi, scanindexj);
+			// log.info("{} - {}", scanindexi, scanindexj);
 
 			final Array scanlinei = scanlinesi.get(scanindexi);
 			final Array scanlinej = scanlinesj.get(scanindexj);

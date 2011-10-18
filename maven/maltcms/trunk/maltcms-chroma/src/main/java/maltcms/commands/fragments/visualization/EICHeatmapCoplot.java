@@ -17,15 +17,14 @@ import maltcms.ui.charts.XYChart;
 
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.plot.XYPlot;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.RequiresVariables;
+import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -37,6 +36,7 @@ import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
@@ -46,6 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiresVariables(names = {"var.total_intensity", "var.scan_acquisition_time"})
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class EICHeatmapCoplot extends TICHeatmapCoplot {
 
     @Configurable

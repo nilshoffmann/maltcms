@@ -34,6 +34,7 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Implementation of progressive, tree based multiple alignment.
@@ -43,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Data
 @Slf4j
+@ServiceProvider(service=AFragmentCommand.class)
 public class ProgressiveTreeAlignment extends AFragmentCommand {
 
     @Configurable(value = "maltcms.commands.fragments.cluster.UPGMAAlgorithm")

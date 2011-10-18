@@ -26,16 +26,16 @@ import java.util.List;
 import maltcms.commands.distances.dtw.ADynamicTimeWarp;
 import maltcms.tools.ArrayTools2;
 
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
-import cross.Logging;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of pairwise Dynamic-Time-Warping for time-series data. This
@@ -44,12 +44,12 @@ import cross.tools.StringTools;
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 @RequiresVariables(names = {})
 @RequiresOptionalVariables(names = {})
 @ProvidesVariables(names = { "var.warp_path_i", "var.warp_path_j" })
 public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
-
-	private final Logger log = Logging.getLogger(this.getClass());
 
 	private boolean scale = true;
 	private int k = 1;
@@ -75,7 +75,7 @@ public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
 
 		if (this.scale) {
 			for (int i = 0; i < k; i++) {
-				this.log.info("Scaling");
+				log.info("Scaling");
 				scanlineRef = ArrayTools2.sqrt(scanlineRef);
 				scanlineQuery = ArrayTools2.sqrt(scanlineQuery);
 			}

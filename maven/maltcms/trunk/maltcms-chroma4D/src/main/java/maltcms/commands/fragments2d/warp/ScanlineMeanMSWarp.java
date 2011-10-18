@@ -41,6 +41,8 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Warps two chromatogramms according to their mean mass spectra of the scan
@@ -48,6 +50,8 @@ import cross.exception.ResourceNotAvailableException;
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 @RequiresVariables(names = { "var.second_column_scan_index",
 		"var.total_intensity", "var.mass_values", "var.intensity_values",
 		"var.scan_index", "var.mass_range_min", "var.mass_range_max",
@@ -143,42 +147,42 @@ public class ScanlineMeanMSWarp extends ADynamicTimeWarp {
 			}
 		}
 
-		this.log.info("Using {} with {}", this.meanMSVar, this.meanMSIndexVar);
+		log.info("Using {} with {}", this.meanMSVar, this.meanMSIndexVar);
 
 		List<Array> ref;
-		this.log.info("searching mean ms in ref");
+		log.info("searching mean ms in ref");
 		try {
 			final IVariableFragment meanH = t.getFirst().getChild(
 					this.meanMSVar);
 			meanH.setIndex(t.getFirst().getChild(this.meanMSIndexVar));
 			ref = meanH.getIndexedArray();
 		} catch (final ResourceNotAvailableException e) {
-			this.log.info("computing mean mass spectras for reference");
+			log.info("computing mean mass spectras for reference");
 			ref = getMeanMSForScanline(ScanLineCacheFactory.getScanLineCache(t
 					.getFirst()));
 		}
 
 		List<Array> query;
-		this.log.info("searching mean ms in query");
+		log.info("searching mean ms in query");
 		try {
 			final IVariableFragment meanH = t.getSecond().getChild(
 					this.meanMSVar);
 			meanH.setIndex(t.getSecond().getChild(this.meanMSIndexVar));
 			query = meanH.getIndexedArray();
 		} catch (final ResourceNotAvailableException e) {
-			this.log.info("computing mean mass spectras for query");
+			log.info("computing mean mass spectras for query");
 			query = getMeanMSForScanline(ScanLineCacheFactory
 					.getScanLineCache(t.getSecond()));
 		}
 
 		if (this.scale) {
-			this.log.info("Scaling");
+			log.info("Scaling");
 			ref = ArrayTools2.sqrt(ref);
 			query = ArrayTools2.sqrt(query);
 		}
 
 		if (this.filter) {
-			this.log.info("Filtering");
+			log.info("Filtering");
 			final List<Integer> usedMassesRef = ArrayTools2.getUsedMasses(t
 					.getFirst(), this.usedMassValuesVar);
 			final List<Integer> usedMassesQuery = ArrayTools2.getUsedMasses(t
@@ -203,7 +207,7 @@ public class ScanlineMeanMSWarp extends ADynamicTimeWarp {
 		Array sum = null;
 		for (int i = 0; i < slc.getScanLineCount(); i++) {
 			if (i % 100 == 0) {
-				this.log.info("	{}", i);
+				log.info("	{}", i);
 			}
 			scanline = slc.getScanlineMS(i);
 			sum = null;

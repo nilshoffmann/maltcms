@@ -19,7 +19,6 @@
  * 
  * $Id: AArrayFilter.java 80 2010-01-06 18:01:59Z nilshoffmann $
  */
-
 package maltcms.commands.filters.array;
 
 import maltcms.commands.filters.AElementFilter;
@@ -29,6 +28,7 @@ import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 import cross.annotations.Configurable;
 import cross.commands.ICommand;
+import lombok.Data;
 
 /**
  * AArrayFilter applicable to Array objects, returning Array objects.
@@ -36,44 +36,37 @@ import cross.commands.ICommand;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Data
 public abstract class AArrayFilter implements ICommand<Array, Array> {
 
-	protected transient AElementFilter ef = null;
+    protected transient AElementFilter ef = null;
+    @Configurable
+    private boolean copyArray = true;
 
-	@Configurable
-	private boolean copyArray = true;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.ucar.ma2.Filter#filter(java.lang.Object)
+     */
+    @Override
+    public Array apply(final Array a) {
+        if (this.copyArray) {
+            return a.copy();
+        }
+        return a;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.ucar.ma2.Filter#filter(java.lang.Object)
-	 */
-	public Array apply(final Array a) {
-		if (this.copyArray) {
-			return a.copy();
-		}
-		return a;
-	}
+    public Array[] apply(final Array[] a) {
+        Array[] ret = new Array[a.length];
+        for (int i = 0; i < a.length; i++) {
+            ret[i] = apply(a[i]);
+        }
+        return ret;
+    }
 
-	public Array[] apply(final Array[] a) {
-		Array[] ret = new Array[a.length];
-		for (int i = 0; i < a.length; i++) {
-			ret[i] = apply(a[i]);
-		}
-		return ret;
-	}
-
-	public void configure(final Configuration cfg) {
-		this.copyArray = cfg.getBoolean(this.getClass().getName()
-		        + ".copyArray", true);
-	}
-
-	public AElementFilter getFilter() {
-		return this.ef;
-	}
-
-	public void setFilter(final AElementFilter ef1) {
-		this.ef = ef1;
-	}
-
+    @Override
+    public void configure(final Configuration cfg) {
+        this.copyArray = cfg.getBoolean(this.getClass().getName()
+                + ".copyArray", true);
+    }
 }

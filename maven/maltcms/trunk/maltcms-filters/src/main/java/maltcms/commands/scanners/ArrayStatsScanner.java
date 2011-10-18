@@ -19,7 +19,6 @@
  * 
  * $Id: ArrayStatsScanner.java 110 2010-03-25 15:21:19Z nilshoffmann $
  */
-
 /**
  * Created by hoffmann at 28.02.2007
  */
@@ -38,211 +37,210 @@ import cross.datastructures.StatsMap;
 import cross.datastructures.Vars;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Scans a number of arrays for statistics, such as mean and variance, storing
  * results for each array in a HashMap indexed by Elements of
  * 
- * @link{cross.Vars .
+ * @link{cross.Vars} .
  * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
 
-	private final Logger log = Logging.getLogger(this.getClass());
+    private StatsMap gsm = null;
+    private IFileFragment ff = Factory.getInstance().getFileFragmentFactory().
+            create("default_stats.cdf");
+    private IVariableFragment[] vfs = null;
+    @Configurable(name = "ignorePositiveInfinity")
+    private boolean ignorePositiveInfinity = true;
+    @Configurable(name = "ignoreNegativeInfinity")
+    private boolean ignoreNegativeInfinity = true;
 
-	private StatsMap gsm = null;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.ucar.ma2.Scanner#scan(java.lang.Object)
+     */
+    @Override
+    public StatsMap[] apply(final Array[] t) {
+        log.debug("Running ArrayStatsScanner on {} arrays", t.length);
+        int i = 0;
+        final StatsMap[] hashes = new StatsMap[t.length];
+        this.gsm = new StatsMap(this.ff);
 
-	private IFileFragment ff = Factory.getInstance().getFileFragmentFactory()
-	        .create("default_stats.cdf");
+        long globalcnt = 0;
+        double globalmean = 0.0d;
+        double globalmin = Double.POSITIVE_INFINITY;
+        double globalmax = Double.NEGATIVE_INFINITY;
+        double globalvar = 0.0d;
+        double globalskew = 0.0d;
+        for (final Array arr : t) {
+            long cnt = 0;
+            double min = 0.0d, max = 0.0d;
+            double mean = 0.0d;
+            IndexIterator iter = arr.getIndexIteratorFast();
 
-	private IVariableFragment[] vfs = null;
+            min = Double.POSITIVE_INFINITY;
+            max = Double.NEGATIVE_INFINITY;
+            while (iter.hasNext()) {// first loop for min, max, mean
+                final double d = iter.getDoubleNext();
+                if (this.ignorePositiveInfinity || this.ignoreNegativeInfinity) {
+                    if ((d < Double.POSITIVE_INFINITY)
+                            && (d > Double.NEGATIVE_INFINITY)) {
+                        max = Math.max(max, d);
+                        min = Math.min(min, d);
+                        globalmin = Math.min(globalmin, min);
+                        globalmax = Math.max(globalmax, max);
+                        globalmean += d;
+                        globalcnt++;
+                        mean += d;
+                        cnt++;
+                    }
+                } else {
+                    max = Math.max(max, d);
+                    min = Math.min(min, d);
+                    globalmin = Math.min(globalmin, min);
+                    globalmax = Math.max(globalmax, max);
+                    globalmean += d;
+                    globalcnt++;
+                    mean += d;
+                    cnt++;
+                }
+            }
+            mean = mean / (cnt);
+            double variance = 0.0d;
+            double skew = 0.0d;
+            iter = arr.getIndexIteratorFast();
+            while (iter.hasNext()) {// second loop for variance
+                final double d = (iter.getDoubleNext());
+                if (this.ignorePositiveInfinity || this.ignoreNegativeInfinity) {// FIXME
+                    // this
+                    // is
+                    // weird
+                    // !
+                    // !
+                    // !
+                    if ((d < Double.POSITIVE_INFINITY)
+                            && (d > Double.NEGATIVE_INFINITY)) {
+                        variance += Math.pow((d - mean), 2.0d);
+                        skew += Math.pow((d - mean), 3.0d);
+                        // globalvar += Math.pow((d - globalmean), 2.0d);
+                    }
+                } else {
+                    variance += Math.pow((d - mean), 2.0d);
+                    skew += Math.pow((d - mean), 3.0d);
+                    // globalvar += Math.pow((d - globalmean), 2.0d);
+                }
+            }
+            variance = variance / (cnt - 1);
+            skew = skew / (cnt - 1);
 
-	@Configurable(name = "ignorePositiveInfinity")
-	private boolean ignorePositiveInfinity = true;
-	@Configurable(name = "ignoreNegativeInfinity")
-	private boolean ignoreNegativeInfinity = true;
+            final StatsMap map = new StatsMap(this.ff);
+            map.put(Vars.Max.toString(), max);
+            map.put(Vars.Min.toString(), min);
+            map.put(Vars.Mean.toString(), mean);
+            map.put(Vars.Variance.toString(), variance);
+            map.put(Vars.Skewness.toString(), skew);
+            // Iterator<String> it = map.keySet().iterator();
+            // while (it.hasNext()) {
+            // String s = it.next();
+            // //Logging.getInstance().logger.debug(v + ": " + map.get(v));
+            // }
+            hashes[i] = map;
+            i++;
+            // Logger.getAnonymousLogger().log(Level.WARNING,"Max: "+max+" Min:
+            // "+min+" Mean: "+mean);
+        }
+        globalmean = globalmean / globalcnt;
+        for (final Array arr : t) {
+            IndexIterator iter = arr.getIndexIteratorFast();
+            iter = arr.getIndexIteratorFast();
+            while (iter.hasNext()) {// second loop for variance
+                final double d = (iter.getDoubleNext());
+                if (this.ignorePositiveInfinity || this.ignoreNegativeInfinity) {// FIXME
+                    // this
+                    // is
+                    // weird
+                    // !
+                    // !
+                    // !
+                    if ((d < Double.POSITIVE_INFINITY)
+                            && (d > Double.NEGATIVE_INFINITY)) {
+                        globalvar += Math.pow((d - globalmean), 2.0d);
+                        globalskew += Math.pow((d - globalmean), 3.0d);
+                        // globalvar += Math.pow((d - globalmean), 2.0d);
+                    }
+                } else {
+                    globalvar += Math.pow((d - globalmean), 2.0d);
+                    globalskew += Math.pow((d - globalmean), 3.0d);
+                    // globalvar += Math.pow((d - globalmean), 2.0d);
+                }
+            }
+        }
+        globalvar = globalvar / (globalcnt - 1);
+        globalskew = globalskew / (globalcnt - 1);
+        this.gsm.put(Vars.Max.toString(), globalmax);
+        this.gsm.put(Vars.Min.toString(), globalmin);
+        this.gsm.put(Vars.Mean.toString(), globalmean);
+        this.gsm.put(Vars.Variance.toString(), globalvar);
+        this.gsm.put(Vars.Skewness.toString(), globalskew);
+        // System.out.println("Global stats:");
+        // System.out.println("Min: "+globalmin+" Max: "+globalmax+" Mean:
+        // "+globalmean+" Variance: "+globalvar);
+        return hashes;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.ucar.ma2.Scanner#scan(java.lang.Object)
-	 */
-	public StatsMap[] apply(final Array[] t) {
-		this.log.debug("Running ArrayStatsScanner on {} arrays", t.length);
-		int i = 0;
-		final StatsMap[] hashes = new StatsMap[t.length];
-		this.gsm = new StatsMap(this.ff);
+    @Override
+    public void configure(final Configuration cfg) {
+        this.ignorePositiveInfinity = cfg.getBoolean(this.getClass().getName()
+                + ".ignorePositiveInfinity", true);
+        this.ignoreNegativeInfinity = cfg.getBoolean(this.getClass().getName()
+                + ".ignoreNegativeInfinity", true);
+    }
 
-		long globalcnt = 0;
-		double globalmean = 0.0d;
-		double globalmin = Double.POSITIVE_INFINITY;
-		double globalmax = Double.NEGATIVE_INFINITY;
-		double globalvar = 0.0d;
-		double globalskew = 0.0d;
-		for (final Array arr : t) {
-			long cnt = 0;
-			double min = 0.0d, max = 0.0d;
-			double mean = 0.0d;
-			IndexIterator iter = arr.getIndexIteratorFast();
+    public StatsMap getGlobalStatsMap() {
+        return this.gsm;
+    }
 
-			min = Double.POSITIVE_INFINITY;
-			max = Double.NEGATIVE_INFINITY;
-			while (iter.hasNext()) {// first loop for min, max, mean
-				final double d = iter.getDoubleNext();
-				if (this.ignorePositiveInfinity || this.ignoreNegativeInfinity) {
-					if ((d < Double.POSITIVE_INFINITY)
-					        && (d > Double.NEGATIVE_INFINITY)) {
-						max = Math.max(max, d);
-						min = Math.min(min, d);
-						globalmin = Math.min(globalmin, min);
-						globalmax = Math.max(globalmax, max);
-						globalmean += d;
-						globalcnt++;
-						mean += d;
-						cnt++;
-					}
-				} else {
-					max = Math.max(max, d);
-					min = Math.min(min, d);
-					globalmin = Math.min(globalmin, min);
-					globalmax = Math.max(globalmax, max);
-					globalmean += d;
-					globalcnt++;
-					mean += d;
-					cnt++;
-				}
-			}
-			mean = mean / (cnt);
-			double variance = 0.0d;
-			double skew = 0.0d;
-			iter = arr.getIndexIteratorFast();
-			while (iter.hasNext()) {// second loop for variance
-				final double d = (iter.getDoubleNext());
-				if (this.ignorePositiveInfinity || this.ignoreNegativeInfinity) {// FIXME
-					// this
-					// is
-					// weird
-					// !
-					// !
-					// !
-					if ((d < Double.POSITIVE_INFINITY)
-					        && (d > Double.NEGATIVE_INFINITY)) {
-						variance += Math.pow((d - mean), 2.0d);
-						skew +=Math.pow((d-mean),3.0d);
-						// globalvar += Math.pow((d - globalmean), 2.0d);
-					}
-				} else {
-					variance += Math.pow((d - mean), 2.0d);
-					skew +=Math.pow((d-mean),3.0d);
-					// globalvar += Math.pow((d - globalmean), 2.0d);
-				}
-			}
-			variance = variance / (cnt - 1);
-			skew = skew / (cnt -1);
+    /**
+     * @return the ignoreNegativeInfinity
+     */
+    public boolean isIgnoreNegativeInfinity() {
+        return this.ignoreNegativeInfinity;
+    }
 
-			final StatsMap map = new StatsMap(this.ff);
-			map.put(Vars.Max.toString(), max);
-			map.put(Vars.Min.toString(), min);
-			map.put(Vars.Mean.toString(), mean);
-			map.put(Vars.Variance.toString(), variance);
-			map.put(Vars.Skewness.toString(), skew);
-			// Iterator<String> it = map.keySet().iterator();
-			// while (it.hasNext()) {
-			// String s = it.next();
-			// //Logging.getInstance().logger.debug(v + ": " + map.get(v));
-			// }
-			hashes[i] = map;
-			i++;
-			// Logger.getAnonymousLogger().log(Level.WARNING,"Max: "+max+" Min:
-			// "+min+" Mean: "+mean);
-		}
-		globalmean = globalmean / globalcnt;
-		for (final Array arr : t) {
-			IndexIterator iter = arr.getIndexIteratorFast();
-			iter = arr.getIndexIteratorFast();
-			while (iter.hasNext()) {// second loop for variance
-				final double d = (iter.getDoubleNext());
-				if (this.ignorePositiveInfinity || this.ignoreNegativeInfinity) {// FIXME
-					// this
-					// is
-					// weird
-					// !
-					// !
-					// !
-					if ((d < Double.POSITIVE_INFINITY)
-					        && (d > Double.NEGATIVE_INFINITY)) {
-						globalvar += Math.pow((d - globalmean), 2.0d);
-						globalskew +=Math.pow((d-globalmean),3.0d);
-						// globalvar += Math.pow((d - globalmean), 2.0d);
-					}
-				} else {
-					globalvar += Math.pow((d - globalmean), 2.0d);
-					globalskew +=Math.pow((d-globalmean),3.0d);
-					// globalvar += Math.pow((d - globalmean), 2.0d);
-				}
-			}
-		}
-		globalvar = globalvar / (globalcnt - 1);
-		globalskew = globalskew/(globalcnt -1);
-		this.gsm.put(Vars.Max.toString(), globalmax);
-		this.gsm.put(Vars.Min.toString(), globalmin);
-		this.gsm.put(Vars.Mean.toString(), globalmean);
-		this.gsm.put(Vars.Variance.toString(), globalvar);
-		this.gsm.put(Vars.Skewness.toString(), globalskew);
-		// System.out.println("Global stats:");
-		// System.out.println("Min: "+globalmin+" Max: "+globalmax+" Mean:
-		// "+globalmean+" Variance: "+globalvar);
-		return hashes;
-	}
+    /**
+     * @return the ignorePositiveInfinity
+     */
+    public boolean isIgnorePositiveInfinity() {
+        return this.ignorePositiveInfinity;
+    }
 
-	public void configure(final Configuration cfg) {
-		this.ignorePositiveInfinity = cfg.getBoolean(this.getClass().getName()
-		        + ".ignorePositiveInfinity", true);
-		this.ignoreNegativeInfinity = cfg.getBoolean(this.getClass().getName()
-		        + ".ignoreNegativeInfinity", true);
-	}
+    public void setFileFragment(final IFileFragment ff1) {
+        this.ff = ff1;
+    }
 
-	public StatsMap getGlobalStatsMap() {
-		return this.gsm;
-	}
+    /**
+     * @param ignoreNegativeInfinity
+     *            the ignoreNegativeInfinity to set
+     */
+    public void setIgnoreNegativeInfinity(final boolean ignoreNegativeInfinity) {
+        this.ignoreNegativeInfinity = ignoreNegativeInfinity;
+    }
 
-	/**
-	 * @return the ignoreNegativeInfinity
-	 */
-	public boolean isIgnoreNegativeInfinity() {
-		return this.ignoreNegativeInfinity;
-	}
+    /**
+     * @param ignorePositiveInfinity
+     *            the ignorePositiveInfinity to set
+     */
+    public void setIgnorePositiveInfinity(final boolean ignorePositiveInfinity) {
+        this.ignorePositiveInfinity = ignorePositiveInfinity;
+    }
 
-	/**
-	 * @return the ignorePositiveInfinity
-	 */
-	public boolean isIgnorePositiveInfinity() {
-		return this.ignorePositiveInfinity;
-	}
-
-	public void setFileFragment(final IFileFragment ff1) {
-		this.ff = ff1;
-	}
-
-	/**
-	 * @param ignoreNegativeInfinity
-	 *            the ignoreNegativeInfinity to set
-	 */
-	public void setIgnoreNegativeInfinity(final boolean ignoreNegativeInfinity) {
-		this.ignoreNegativeInfinity = ignoreNegativeInfinity;
-	}
-
-	/**
-	 * @param ignorePositiveInfinity
-	 *            the ignorePositiveInfinity to set
-	 */
-	public void setIgnorePositiveInfinity(final boolean ignorePositiveInfinity) {
-		this.ignorePositiveInfinity = ignorePositiveInfinity;
-	}
-
-	public void setVariableFragments(final IVariableFragment... vfs1) {
-		this.vfs = vfs1;
-	}
+    public void setVariableFragments(final IVariableFragment... vfs1) {
+        this.vfs = vfs1;
+    }
 }

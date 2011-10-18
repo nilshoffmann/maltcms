@@ -26,6 +26,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -35,6 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class ANDIMSExporter extends AFragmentCommand {
 
     /*

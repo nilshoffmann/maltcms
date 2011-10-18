@@ -30,6 +30,8 @@ import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import cross.datastructures.tuple.Tuple2D;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Basically the same as {@link Default2DTWVisualizer} but dont uses the warp
@@ -37,6 +39,8 @@ import cross.datastructures.tuple.Tuple2D;
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 public class Ident2DTWVisualizer extends Default2DTWVisualizer {
 
 	// private Logger log = Logging.getLogger(this.getClass());

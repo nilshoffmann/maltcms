@@ -8,19 +8,18 @@ import cross.datastructures.fragments.IFileFragment;
 
 public class ProfileChromatogram1D extends Chromatogram1D {
 
-	/**
-	 * @param e
-	 */
-	public ProfileChromatogram1D(IFileFragment e) {
-		super(e);
-	}
+    /**
+     * @param e
+     */
+    public ProfileChromatogram1D(IFileFragment e) {
+        super(e);
+    }
 
-	public List<Array> getBinnedIntensities() {
-		return MaltcmsTools.getBinnedMZIs(getParent()).getSecond();
-	}
+    public List<Array> getBinnedIntensities() {
+        return MaltcmsTools.getBinnedMZIs(getParent()).getSecond();
+    }
 
-	public List<Array> getBinnedMasses() {
-		return MaltcmsTools.getBinnedMZIs(getParent()).getFirst();
-	}
-
+    public List<Array> getBinnedMasses() {
+        return MaltcmsTools.getBinnedMZIs(getParent()).getFirst();
+    }
 }

@@ -1,8 +1,6 @@
 package maltcms.db.predicates.metabolite;
 
 import com.db4o.query.Predicate;
-import maltcms.commands.distances.ArrayCos;
-import maltcms.commands.distances.IArrayDoubleComp;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
@@ -21,6 +19,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import maltcms.datastructures.ms.IScan;
+import maltcms.datastructures.ms.Scan1D;
+import maltcms.math.functions.IArraySimilarity;
+import maltcms.math.functions.similarities.ArrayCos;
 import ucar.ma2.ArrayInt;
 
 @Data
@@ -28,14 +29,13 @@ import ucar.ma2.ArrayInt;
 public class MetaboliteSimilarity extends Predicate<IMetabolite> {
 
     //properties
-    private IArrayDoubleComp similarityFunction = new ArrayCos();
+    private IArraySimilarity similarityFunction = new ArrayCos();
     private double resolution = 1.0d;
     private double scoreThreshold = 0.6d;
     private double massThreshold = 0.01;
     private int numberOfHitsToReturn = 1;
     private boolean normalize = false;
     private IScan scan;
-    
     //internal state
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -57,10 +57,6 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
         }
     });
 
-    public MetaboliteSimilarity() {
-        
-    }
-    
     public MetaboliteSimilarity(IScan scan, double scoreThreshold,
             int maxHits, boolean normalize) {
         this.scan = scan;
@@ -69,13 +65,29 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
         this.normalize = normalize;
     }
 
+    public MetaboliteSimilarity(Array masses, Array intensities,
+            double scoreThreshold,
+            int maxHits, boolean normalize) {
+        this(new Scan1D(masses, intensities, -1,
+                Double.NaN), scoreThreshold, maxHits,
+                normalize);
+    }
+
+    public MetaboliteSimilarity(IMetabolite metabolite, double scoreThreshold,
+            int maxHits, boolean normalize) {
+        this(new Scan1D(metabolite.getMassSpectrum().getFirst(), metabolite.
+                getMassSpectrum().getSecond(), metabolite.getScanIndex(),
+                metabolite.getRetentionTime()), scoreThreshold, maxHits,
+                normalize);
+    }
+
     public List<Tuple2D<Double, IMetabolite>> getMatches() {
         Collections.sort(this.matches, comparator);
         return this.matches;
     }
 
     protected double similarity(Array massesRef, Array intensitiesRef,
-            Array massesQuery, Array intensitiesQuery, double mw) {
+            Array massesQuery, Array intensitiesQuery) {
         MinMax mm1 = MAMath.getMinMax(massesRef);
         MinMax mm2 = MAMath.getMinMax(massesQuery);
         // Union, greatest possible interval
@@ -108,29 +120,26 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
             double maxS2 = MAMath.getMaximum(s2);
             s2 = (ArrayDouble.D1) ArrayTools.mult(s2, 1.0d / maxS2);
         }
-        double commonMasses = 0.0d;
-        double matchMW = 0.0d;
-        for (int i = 0; i < dmasses1.getShape()[0]; i++) {
-            double mass = dmasses1.getDouble(i);
-            if (s1.getDouble(i) != 0 && s2.getDouble(i) != 0) {
-                if (Math.abs(mass - mw) < massThreshold) {
-                    matchMW = 1.0;
-                }
-                commonMasses++;
-            }
-        }
+//        double commonMasses = 0.0d;
+//        double matchMW = 0.0d;
+//        for (int i = 0; i < dmasses1.getShape()[0]; i++) {
+//            double mass = dmasses1.getDouble(i);
+//            if (s1.getDouble(i) != 0 && s2.getDouble(i) != 0) {
+//                commonMasses++;
+//            }
+//        }
         //FIXME try whether it makes a difference if the minimal interval of overlap 
         //is used
-        double relativeCommonMasses = (commonMasses) / (double) bins;
-        double d = this.similarityFunction.apply(-1, -1, 0.0d, 0.0d, s1, s2);
-        return (d + matchMW);
+//        double relativeCommonMasses = (commonMasses) / (double) bins;
+        double d = this.similarityFunction.apply(s1, s2);
+        return d;
     }
 
     @Override
     public boolean match(IMetabolite et) {
         Tuple2D<ArrayDouble.D1, ArrayInt.D1> etMs = et.getMassSpectrum();
         double sim = similarity(scan.getMasses(), scan.getIntensities(), etMs.
-                getFirst(), etMs.getSecond(), et.getMW());
+                getFirst(), etMs.getSecond());
         if (sim >= scoreThreshold) {
             if (matches.size() == numberOfHitsToReturn) {
                 Collections.sort(matches, comparator);

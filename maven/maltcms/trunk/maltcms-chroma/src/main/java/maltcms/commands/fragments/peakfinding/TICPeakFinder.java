@@ -80,6 +80,8 @@ import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.BatchFilter;
+import maltcms.commands.filters.array.MultiplicationFilter;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Find Peaks based on TIC, estimates a local baseline and, based on a given
@@ -93,12 +95,13 @@ import maltcms.commands.filters.array.BatchFilter;
 @ProvidesVariables(names = {"var.tic_peaks", "var.tic_filtered"})
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class TICPeakFinder extends AFragmentCommand {
 
     @Configurable(value = "0.01d")
     private double peakThreshold = 0.01d;
-    @Configurable(value = "0.1d")
-    private double epsilon = 0.1d;
+//    @Configurable(value = "0.1d")
+//    private double epsilon = 0.1d;
     @Configurable(value = "false")
     private boolean saveGraphics = false;
     @Configurable(value = "false")
@@ -115,8 +118,8 @@ public class TICPeakFinder extends AFragmentCommand {
     private String ticPeakVarName = "tic_peaks";
     @Configurable(value = "tic_filtered")
     private String ticFilteredVarName = "tic_filtered";
-    @Configurable(value = "maltcms.commands.filters.array.MultiplicationFilter")
-    private List<String> filter = Arrays.asList("maltcms.commands.filters.array.MultiplicationFilter");
+//    @Configurable(value = "maltcms.commands.filters.array.MultiplicationFilter")
+    private List<AArrayFilter> filter = Arrays.asList((AArrayFilter)new MultiplicationFilter());
 
     private void addResults(final IFileFragment ff, final Array correctedtic,
             final ArrayInt.D1 extr, final List<Peak1D> peaklist) {
@@ -182,11 +185,11 @@ public class TICPeakFinder extends AFragmentCommand {
                 + ".peakThreshold", 1.0d);
         this.filterWindow = cfg.getInt(this.getClass().getName()
                 + ".filterWindow", 10);
-        this.filter = StringTools.toStringList(cfg.getList(
-                this.getClass().getName() + ".filter",
-                Arrays.asList("maltcms.commands.filters.array.MultiplicationFilter")));
-        this.epsilon = cfg.getDouble(this.getClass().getName()
-                + ".mass_epsilon", 0.1d);
+//        this.filter = StringTools.toStringList(cfg.getList(
+//                this.getClass().getName() + ".filter",
+//                Arrays.asList("maltcms.commands.filters.array.MultiplicationFilter")));
+//        this.epsilon = cfg.getDouble(this.getClass().getName()
+//                + ".mass_epsilon", 0.1d);
         this.ticVarName = cfg.getString("var.total_intensity",
                 "total_intensity");
         this.satVarName = cfg.getString("var.scan_acquisition_time",
@@ -213,7 +216,7 @@ public class TICPeakFinder extends AFragmentCommand {
         return extr;
     }
 
-    public List<Peak1D> findPeakAreas(final IFileFragment chromatogram, final List<Integer> ts, String filename, final double epsilon,
+    public List<Peak1D> findPeakAreas(final IFileFragment chromatogram, final List<Integer> ts, String filename,
             final Array baselineCorrectedTIC, final Array sat) {
         final ArrayList<Peak1D> pbs = new ArrayList<Peak1D>();
         if (integrateTICPeaks) {
@@ -426,7 +429,7 @@ public class TICPeakFinder extends AFragmentCommand {
         
         List<Peak1D> peaks = Collections.emptyList();
         if (this.integratePeaks) {
-            peaks = findPeakAreas(f,pprs.getTs(), f.getName(), this.epsilon, tic, sat);
+            peaks = findPeakAreas(f,pprs.getTs(), f.getName(), tic, sat);
             savePeakTable(peaks, f);
         }
         if (this.saveGraphics) {
@@ -623,13 +626,13 @@ public class TICPeakFinder extends AFragmentCommand {
      * @return
      */
     private Array applyFilters(final Array correctedtic) {
-        final List<AArrayFilter> filters = new ArrayList<AArrayFilter>(
-                this.filter.size());
-        for (String s : this.filter) {
-            filters.add(Factory.getInstance().getObjectFactory().instantiate(s,
-                    AArrayFilter.class));
-        }
-        final Array filteredtic = BatchFilter.applyFilters(correctedtic, filters);
+//        final List<AArrayFilter> filters = new ArrayList<AArrayFilter>(
+//                this.filter.size());
+//        for (String s : this.filter) {
+//            filters.add(Factory.getInstance().getObjectFactory().instantiate(s,
+//                    AArrayFilter.class));
+//        }
+        final Array filteredtic = BatchFilter.applyFilters(correctedtic, this.filter);
         return filteredtic;
     }
 

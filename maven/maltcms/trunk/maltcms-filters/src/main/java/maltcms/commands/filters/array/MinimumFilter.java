@@ -21,7 +21,9 @@
  */
 package maltcms.commands.filters.array;
 
+import lombok.Data;
 import maltcms.commands.filters.AElementFilter;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 
@@ -30,44 +32,47 @@ import ucar.ma2.IndexIterator;
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Data
+@ServiceProvider(service = AArrayFilter.class)
 public class MinimumFilter extends AArrayFilter {
 
-	private AElementFilter aef = null;
+    private AElementFilter aef = null;
 
-	public MinimumFilter() {
-		super();
-	}
+    public MinimumFilter() {
+        super();
+    }
 
-	/**
-	 * Default constructor.
-	 * 
-	 * @param iMinimum
-	 *            minimum
-	 */
-	public MinimumFilter(final double iMinimum) {
-		this();
-		this.aef = new AElementFilter() {
-			public Double apply(final Double d) {
-				if (d < iMinimum) {
-					return 0.0d;
-				} else {
-					return d;
-				}
-			}
-		};
-	}
+    /**
+     * Default constructor.
+     * 
+     * @param iMinimum
+     *            minimum
+     */
+    public MinimumFilter(final double iMinimum) {
+        this();
+        this.aef = new AElementFilter() {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Array apply(final Array a) {
-		Array arr = super.apply(a);
-		final IndexIterator ii = arr.getIndexIteratorFast();
-		while (ii.hasNext()) {
-			ii.setDoubleCurrent(this.aef.apply(ii.getDoubleNext()));
-		}
-		return arr;
-	}
+            @Override
+            public Double apply(final Double d) {
+                if (d < iMinimum) {
+                    return 0.0d;
+                } else {
+                    return d;
+                }
+            }
+        };
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Array apply(final Array a) {
+        Array arr = super.apply(a);
+        final IndexIterator ii = arr.getIndexIteratorFast();
+        while (ii.hasNext()) {
+            ii.setDoubleCurrent(this.aef.apply(ii.getDoubleNext()));
+        }
+        return arr;
+    }
 }

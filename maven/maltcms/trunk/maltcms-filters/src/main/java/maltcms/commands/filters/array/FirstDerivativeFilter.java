@@ -19,9 +19,10 @@
  * 
  * $Id: FirstDerivativeFilter.java 80 2010-01-06 18:01:59Z nilshoffmann $
  */
-
 package maltcms.commands.filters.array;
 
+import lombok.Data;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 
@@ -31,51 +32,52 @@ import ucar.ma2.IndexIterator;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Data
+@ServiceProvider(service = AArrayFilter.class)
 public class FirstDerivativeFilter extends AArrayFilter {
 
-	public FirstDerivativeFilter() {
-		super();
-	}
+    public FirstDerivativeFilter() {
+        super();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
-	 */
-	@Override
-	public Array apply(final Array a) {
-		final Array arr = super.apply(a);
-		Double last = 0.0d, current = 0.0d, next = 0.0d, derivative = 0.0d;
-		final IndexIterator ii = arr.getIndexIterator();
-		final Array der = Array.factory(arr.getElementType(), arr.getShape());
-		final IndexIterator derii = der.getIndexIterator();
-		long cnt = 0;
-		while (ii.hasNext() && derii.hasNext()) {
-			next = ii.getDoubleNext();
-			if (cnt == 0) {
-				last = next;
-			} else if (cnt == 1) {
-				current = next;
-			} else if (cnt == arr.getSize() - 1) {// set value of last
-				// derivative to the
-				// previous value
-				derii.setDoubleNext(derivative);
-				continue;// exit the loop
-			} else {
-				derivative = (current - last + (next - last)) / 2.0d / 2.0d;// calculate
-				// approximate
-				// first
-				// derivative
-				derii.setDoubleNext(derivative);
-				last = current;
-				current = next;
-			}
-			cnt++;
-		}
-		der.setDouble(der.getIndex().set(0), arr.getDouble(arr.getIndex()
-		        .set(1)));// set value of first element to that of the
-		// second element
-		return der;
-	}
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
+     */
+    @Override
+    public Array apply(final Array a) {
+        final Array arr = super.apply(a);
+        Double last = 0.0d, current = 0.0d, next = 0.0d, derivative = 0.0d;
+        final IndexIterator ii = arr.getIndexIterator();
+        final Array der = Array.factory(arr.getElementType(), arr.getShape());
+        final IndexIterator derii = der.getIndexIterator();
+        long cnt = 0;
+        while (ii.hasNext() && derii.hasNext()) {
+            next = ii.getDoubleNext();
+            if (cnt == 0) {
+                last = next;
+            } else if (cnt == 1) {
+                current = next;
+            } else if (cnt == arr.getSize() - 1) {// set value of last
+                // derivative to the
+                // previous value
+                derii.setDoubleNext(derivative);
+                continue;// exit the loop
+            } else {
+                derivative = (current - last + (next - last)) / 2.0d / 2.0d;// calculate
+                // approximate
+                // first
+                // derivative
+                derii.setDoubleNext(derivative);
+                last = current;
+                current = next;
+            }
+            cnt++;
+        }
+        der.setDouble(der.getIndex().set(0),
+                arr.getDouble(arr.getIndex().set(1)));// set value of first element to that of the
+        // second element
+        return der;
+    }
 }

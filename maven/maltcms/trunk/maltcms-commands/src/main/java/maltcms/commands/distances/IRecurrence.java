@@ -19,7 +19,6 @@
  * 
  * $Id: IRecurrence.java 116 2010-06-17 08:46:30Z nilshoffmann $
  */
-
 package maltcms.commands.distances;
 
 import maltcms.datastructures.array.IArrayD2Double;
@@ -34,17 +33,16 @@ import cross.IConfigurable;
  */
 public interface IRecurrence extends IConfigurable {
 
-	public abstract double eval(int row, int column,
-	        IArrayD2Double cumDistMatrix, double dij, int[][] predecessors);
+    public abstract double eval(int row, int column,
+            IArrayD2Double cumDistMatrix, double dij, int[][] predecessors);
 
-	public abstract double eval(int row, int column,
-	        IArrayD2Double previousRow, IArrayD2Double currentRow, double dij);
+    public abstract double eval(int row, int column,
+            IArrayD2Double previousRow, IArrayD2Double currentRow, double dij);
 
-	public abstract void set(double compression_weight,
-	        double expansion_weight, double diagonal_weight);
+    public abstract void set(double compression_weight,
+            double expansion_weight, double diagonal_weight);
 
-	public abstract void setMinimizing(boolean b);
+    public abstract void setMinimizing(boolean b);
 
-	public abstract double getGlobalGapPenalty();
-
+    public abstract double getGlobalGapPenalty();
 }

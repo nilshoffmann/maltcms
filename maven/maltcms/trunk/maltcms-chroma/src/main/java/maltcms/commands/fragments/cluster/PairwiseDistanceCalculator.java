@@ -63,6 +63,7 @@ import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Calculates pariwise scores or costs between time series of possibly different
@@ -74,6 +75,7 @@ import lombok.extern.slf4j.Slf4j;
     "var.pairwise_distance_matrix", "var.pairwise_distance_names"})
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class PairwiseDistanceCalculator extends AFragmentCommand {
 
 //	public static void main(final String[] args) {

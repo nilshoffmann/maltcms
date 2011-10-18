@@ -36,7 +36,6 @@ import maltcms.ui.charts.HeatMapChart;
 import maltcms.ui.charts.PlotRunner;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -45,7 +44,6 @@ import ucar.ma2.InvalidRangeException;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
@@ -62,6 +60,7 @@ import cross.tools.MathTools;
 import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Visualizes a chromatogram as a heat map, based on the empirical distribution
@@ -74,6 +73,7 @@ import lombok.extern.slf4j.Slf4j;
     "var.binned_intensity_values", "var.binned_scan_index"})
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class ChromatogramVisualizer extends AFragmentCommand {
 
     private String mzVariableName = "mass_values";

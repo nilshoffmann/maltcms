@@ -15,13 +15,11 @@ import maltcms.tools.MaltcmsTools;
 
 import org.apache.commons.configuration.Configuration;
 import java.util.Collections;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
@@ -36,17 +34,23 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  * 
  * 
  */
+@Slf4j
+@Data
 @ProvidesVariables(names = {"var.mass_values", "var.intensity_values",
     "var.total_intensity"})
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.total_intensity"})
 @RequiresOptionalVariables(names = {"var.excluded_masses"})
+@ServiceProvider(service=AFragmentCommand.class)
 public class MassFilter extends AFragmentCommand {
 
     @Configurable
@@ -63,7 +67,6 @@ public class MassFilter extends AFragmentCommand {
     private String totalIntensVar = "total_intensity";
     @Configurable
     private boolean invert = false;
-    private Logger log = Logging.getLogger(this);
 
     @Override
     public void configure(Configuration cfg) {
@@ -93,15 +96,13 @@ public class MassFilter extends AFragmentCommand {
         return "Removes defined masses and associated intensities from chromatogram.";
     }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.commands.fragments.AFragmentCommand#getDescription()
-	 */
-	@Override
-	public String getDescription() {
-		return "Removes defined masses and associated intensities from a raw chromatogram.";
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.commands.ICommand#apply(java.lang.Object)
+     */
+    @Override
+    public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
 
         // return if we have nothing to do
         // if (exclMass.isEmpty()) {
@@ -126,7 +127,7 @@ public class MassFilter extends AFragmentCommand {
                     exclMassSet.add(d);
                 }
             } catch (ResourceNotAvailableException r) {
-                this.log.warn(
+                log.warn(
                         "Could not load excluded_masses from previous file!");
             }
             // create a new FileFragment to hold processed data
@@ -137,7 +138,7 @@ public class MassFilter extends AFragmentCommand {
             if (!exclMassSet.isEmpty()) {
                 final List<Double> exclMass = new ArrayList<Double>(exclMassSet);
                 // Collections.sort(exclMass);
-                this.log.info("Removing the following masses: {}", exclMass);
+                log.info("Removing the following masses: {}", exclMass);
                 // retrieve original variables
                 final IVariableFragment massesV = iff.getChild(
                         this.massValuesVar);
@@ -153,51 +154,27 @@ public class MassFilter extends AFragmentCommand {
                 // get number of scans
                 final int scans = MaltcmsTools.getNumberOfScans(iff);
 
-		// create new ProgressResult
-		DefaultWorkflowProgressResult dwpr = new DefaultWorkflowProgressResult(
-		        t.getSize(), this, getWorkflowSlot());
-		TupleND<IFileFragment> rett = new TupleND<IFileFragment>();
-		for (IFileFragment iff : t) {
-			final SortedSet<Double> exclMassSet = new TreeSet<Double>();
-			for (String s : this.excludeMasses) {
-				if (!s.isEmpty()) {
-					exclMassSet.add(Double.parseDouble(s));
-				}
-			}
-			try {
-				double[] em = (double[]) iff.getChild("excluded_masses")
-				        .getArray().get1DJavaArray(double.class);
-				for (double d : em) {
-					exclMassSet.add(d);
-				}
-			} catch (ResourceNotAvailableException r) {
-				log
-				        .warn("Could not load excluded_masses from previous file!");
-			}
-			// create a new FileFragment to hold processed data
-			final IFileFragment retf = Factory.getInstance()
-			        .getFileFragmentFactory().create(
-			                new File(getWorkflow().getOutputDirectory(this),
-			                        iff.getName()), iff);
-			if (!exclMassSet.isEmpty()) {
-				final List<Double> exclMass = new ArrayList<Double>(exclMassSet);
-				// Collections.sort(exclMass);
-				log.info("Removing the following masses: {}", exclMass);
-				// retrieve original variables
-				final IVariableFragment massesV = iff
-				        .getChild(this.massValuesVar);
-				final IVariableFragment intensV = iff
-				        .getChild(this.intensValuesVar);
-				final IVariableFragment scanV = iff.getChild(this.scanIndexVar);
-				scanV.setRange(null);
-				scanV.getArray();
-				final IVariableFragment ticV = iff
-				        .getChild(this.totalIntensVar);
-				// set index
-				massesV.setIndex(scanV);
-				intensV.setIndex(scanV);
-				// get number of scans
-				final int scans = MaltcmsTools.getNumberOfScans(iff);
+                // create a new array for the tic
+                final ArrayDouble.D1 newTic = new ArrayDouble.D1(scans);
+                final ArrayInt.D1 newSidx = new ArrayInt.D1(scans);
+                // create lists for mass and intensity values
+                final ArrayList<Array> newMassesList = new ArrayList<Array>(
+                        scans);
+                final ArrayList<Array> newIntensList = new ArrayList<Array>(
+                        scans);
+                // loop over scans
+                int elems = 0;
+                for (int i = 0; i < scans; i++) {
+                    newSidx.set(i, elems);
+                    Array intens = intensV.getIndexedArray().get(i);
+                    Array masses = massesV.getIndexedArray().get(i);
+                    EvalTools.eqI(intens.getShape()[0], masses.getShape()[0],
+                            this);
+                    // find masked masses
+                    List<Integer> maskedIndices = MaltcmsTools.findMaskedMasses(
+                            masses, exclMass, this.epsilon);
+                    // filter intensities
+                    Array newIntens = null;
 
                     newIntens = ArrayTools.filterIndices(intens, maskedIndices,
                             this.invert, 0.0d);

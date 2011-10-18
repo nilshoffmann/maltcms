@@ -42,7 +42,7 @@ import maltcms.db.predicates.metabolite.MetaboliteSimilarity;
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.scan_acquisition_time", "var.tic_peaks"})
 @Data
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 @Slf4j
 public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
 

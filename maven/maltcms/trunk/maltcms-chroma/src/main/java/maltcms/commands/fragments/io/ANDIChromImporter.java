@@ -20,6 +20,7 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * 
@@ -34,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @ProvidesVariables(names = {"var.scan_acquisition_time"})
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class ANDIChromImporter extends AFragmentCommand {
 
 	@Configurable(name = "var.ordinate_values")

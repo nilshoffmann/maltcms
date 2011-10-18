@@ -21,16 +21,19 @@
  */
 package maltcms.commands.fragments.cluster;
 
+import cross.commands.fragments.AFragmentCommand;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.cluster.BinaryCluster;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Work in progress. Implements SingleLinkage clustering.
+ * Implements SingleLinkage clustering.
  * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
 @Slf4j
+@ServiceProvider(service=AFragmentCommand.class)
 public class SingleLinkageAlgorithm extends ClusteringAlgorithm {
 
 	@Override

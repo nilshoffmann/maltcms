@@ -26,22 +26,18 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import maltcms.commands.distances.ArrayDotMap;
-import maltcms.commands.distances.ArrayVarNormLp;
-import maltcms.commands.distances.IArrayDoubleComp;
+import maltcms.math.functions.IArraySimilarity;
 import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ImageTools;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
@@ -51,6 +47,10 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import maltcms.math.functions.similarities.ArrayDotMap;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Creates a gradient image of an chromatogramm using a specific distance
@@ -58,6 +58,8 @@ import cross.tools.StringTools;
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 @RequiresVariables(names = { "var.total_intensity", "var.scan_rate",
 		"var.modulation_time", "var.second_column_scan_index",
 		"var.mass_values", "var.intensity_values", "var.scan_index",
@@ -65,9 +67,8 @@ import cross.tools.StringTools;
 		"var.scan_rate" })
 @RequiresOptionalVariables(names = { "" })
 @ProvidesVariables(names = { "" })
+@ServiceProvider(service=AFragmentCommand.class)
 public class GradientVisualizer extends AFragmentCommand {
-
-	private final Logger log = Logging.getLogger(this);
 
 	@Configurable(name = "var.total_intensity", value = "total_intensity")
 	private String totalIntensityVar = "total_intensity";
@@ -89,7 +90,7 @@ public class GradientVisualizer extends AFragmentCommand {
 
 	@Configurable(value = "maltcms.commands.distances.ArrayCos")
 	private String distClass = "maltcms.commands.distances.ArrayCos";
-	private IArrayDoubleComp distance;
+	private IArraySimilarity similarity;
 	@Configurable(value = "false")
 	private boolean absolut = false;
 
@@ -102,7 +103,7 @@ public class GradientVisualizer extends AFragmentCommand {
 		final int[][] colorRamp = crr.readColorRamp(this.colorrampLocation);
 
 		for (final IFileFragment ff : t) {
-			this.log.info("Creating image for {}", ff.getName());
+			log.info("Creating image for {}", ff.getName());
 			final int scanRate = ff.getChild(this.scanRateVar).getArray()
 					.getInt(Index.scalarIndexImmutable);
 			final int modulationTime = ff.getChild(this.modulationTimeVar)
@@ -111,15 +112,15 @@ public class GradientVisualizer extends AFragmentCommand {
 			ff.getChild(this.totalIntensityVar).setIndex(
 					ff.getChild(this.secondScanIndexVar));
 
-			if (this.distance instanceof ArrayVarNormLp) {
-				log.info("Setting variance");
-				((ArrayVarNormLp) this.distance)
-						.setVarianceArray((ArrayDouble.D1) ff.getChild(
-								"var_intensity_values").getArray());
-			}
-			if (this.distance instanceof ArrayDotMap) {
-				this.log.info("Setting std");
-				((ArrayDotMap) this.distance).setStdArray((ArrayDouble.D1) ff
+//			if (this.distance instanceof ArrayVarNormLp) {
+//				log.info("Setting variance");
+//				((ArrayVarNormLp) this.distance)
+//						.setVarianceArray((ArrayDouble.D1) ff.getChild(
+//								"var_intensity_values").getArray());
+//			}
+			if (this.similarity instanceof ArrayDotMap) {
+				log.info("Setting std");
+				((ArrayDotMap) this.similarity).setStdArray((ArrayDouble.D1) ff
 						.getChild("sd_intensity_values").getArray());
 			}
 
@@ -136,7 +137,7 @@ public class GradientVisualizer extends AFragmentCommand {
 			int c = 0;
 			for (int i = 0; i < slc.getScanLineCount() - 1; i++) {
 				if (i % 100 == 0) {
-					this.log.info("Modulation {} - {}", i, sum);
+					log.info("Modulation {} - {}", i, sum);
 				}
 				final List<Array> scanline = slc.getScanlineMS(i);
 				final ArrayDouble.D1 g = new ArrayDouble.D1(scansPerModulation);
@@ -144,7 +145,7 @@ public class GradientVisualizer extends AFragmentCommand {
 				for (final Array ms : scanline) {
 					actual = ms;
 					if ((old != null) && (actual != null)) {
-						d = Math.abs(this.distance.apply(0, 0, 0, 0, old,
+						d = Math.abs(this.similarity.apply(old,
 								actual));
 						sum += d;
 						c++;
@@ -166,19 +167,19 @@ public class GradientVisualizer extends AFragmentCommand {
 				gradient.add(g);
 			}
 
-			this.log.info("sum: {}, c: {}", sum, c);
-			this.log.info("min: {}, max: {}, mean: " + (sum / c), min, max);
+			log.info("sum: {}, c: {}", sum, c);
+			log.info("min: {}, max: {}, mean: " + (sum / c), min, max);
 
 			final BufferedImage bi = ImageTools.create2DImage(ff.getName(),
 					gradient, scansPerModulation, this.doubleFillValue,
 					this.threshold, colorRamp, this.getClass());
 			if (this.absolut) {
-				this.log.info("Using abolute MS as reference");
+				log.info("Using abolute MS as reference");
 				bi.getRaster()
 						.setPixel(start.x, start.y, new int[] { 0, 0, 0 });
 			}
 			final String filename = StringTools.removeFileExt(ff.getName())
-					+ "-" + this.distance.getClass().getSimpleName();
+					+ "-" + this.similarity.getClass().getSimpleName();
 			ImageTools.saveImage(bi, filename, this.format, getWorkflow()
 					.getOutputDirectory(this), this);
 		}
@@ -205,8 +206,8 @@ public class GradientVisualizer extends AFragmentCommand {
 		distClass = cfg.getString(this.getClass().getName() + ".distance",
 				"maltcms.commands.distances.ArrayCos");
 		if (distClass != null) {
-			this.distance = Factory.getInstance().getObjectFactory()
-					.instantiate(distClass, IArrayDoubleComp.class);
+			this.similarity = Factory.getInstance().getObjectFactory()
+					.instantiate(distClass, IArraySimilarity.class);
 		}
 		this.absolut = cfg.getBoolean(this.getClass().getName() + ".absolut",
 				false);

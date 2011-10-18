@@ -36,13 +36,11 @@ import maltcms.ui.charts.PlotRunner;
 
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.JFreeChart;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
@@ -55,12 +53,17 @@ import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Default visualization pipeline command.
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 @RequiresVariables(names = { "var.scan_acquisition_time_1d",
 		"var.modulation_time", "var.scan_rate",
 		// "var.warp_path_i", "var.warp_path_j",
@@ -68,9 +71,8 @@ import cross.tools.StringTools;
 		"var.total_intensity" })
 @RequiresOptionalVariables(names = { "var.v_total_intensity" })
 @ProvidesVariables(names = { "" })
+@ServiceProvider(service=AFragmentCommand.class)
 public class DTW2DTicVisualizer extends AFragmentCommand {
-
-	private final Logger log = Logging.getLogger(this.getClass());
 
 	@Configurable(name = "var.warp_path_i", value = "warp_path_i")
 	private String warpPathi = "warp_path_i";
@@ -109,32 +111,32 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 		try {
 			pwHorizontalAlignmentFragment = MaltcmsTools
 					.getPairwiseDistanceFragment(t, "-horizontal");
-			this.log.info("horizontal pairwise distance file found");
+			log.info("horizontal pairwise distance file found");
 		} catch (final ResourceNotAvailableException e) {
-			this.log.error(e.getMessage());
+			log.error(e.getMessage());
 			pwHorizontalAlignmentFragment = null;
 		}
 		// FIXME: findet unterschiedliche distance elemente nicht mehr!
 		// try {
 		// pwVerticalAlignmentFragment = MaltcmsTools
 		// .getPairwiseDistanceFragment(t, "-vertical");
-		// this.log.info("vertical pairwise distance file found");
+		// log.info("vertical pairwise distance file found");
 		// } catch (final ResourceNotAvailableException e) {
-		// this.log.error(e.getMessage());
+		// log.error(e.getMessage());
 		// pwVerticalAlignmentFragment = null;
 		// }
 		
 		if (pwHorizontalAlignmentFragment == null
 				&& pwVerticalAlignmentFragment == null) {
-			this.log.error("Cant find horizontal or vertical pairwise distance"
+			log.error("Cant find horizontal or vertical pairwise distance"
 					+ " fragment. Trying to find normal distance"
 					+ " fragment. Assuming horizontal warping.");
 			try {
 				pwHorizontalAlignmentFragment = MaltcmsTools
 						.getPairwiseDistanceFragment(t);
 			} catch (final ResourceNotAvailableException e) {
-				this.log.error(e.getMessage());
-				this.log.error("Aborting visualization.");
+				log.error(e.getMessage());
+				log.error("Aborting visualization.");
 				return t;
 			}
 		}
@@ -149,7 +151,7 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 			for (int j = i + 1; j < t.size(); j++) {
 				final IFileFragment query = t.get(j);
 
-				this.log.info("Visualization for {},{}", ref.getName(), query
+				log.info("Visualization for {},{}", ref.getName(), query
 						.getName());
 				// log.info("i: {}({})", ref.getName());
 				// log.info("j: {}", query.getName());
@@ -169,14 +171,14 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 
 					this.scanspermodulation = modulationi.intValue()
 							* scanRatei.intValue();
-					this.log.info("Using {} for TICs", this.totalIntensity);
+					log.info("Using {} for TICs", this.totalIntensity);
 					final List<Array> scanlinesi = getScanlineFor(ref,
 							modulationi.intValue() * scanRatei.intValue());
 					final List<Array> scanlinesj = getScanlineFor(query,
 							modulationj.intValue() * scanRatej.intValue());
 
-					this.log.info("scanlines size i: {}", scanlinesi.size());
-					this.log.info("scanlines size j: {}", scanlinesj.size());
+					log.info("scanlines size i: {}", scanlinesi.size());
+					log.info("scanlines size j: {}", scanlinesj.size());
 
 					if (pwHorizontalAlignmentFragment != null) {
 						alignmentHorizontal = MaltcmsTools
@@ -184,7 +186,7 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 										pwHorizontalAlignmentFragment, ref,
 										query);
 						// alignmenttuple.add(alignmentHorizontal);
-						this.log.info("{}", alignmentHorizontal
+						log.info("{}", alignmentHorizontal
 								.getAbsolutePath());
 
 						warpiH = alignmentHorizontal.getChild(this.warpPathi)
@@ -200,7 +202,7 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 						alignmentVertical = MaltcmsTools.getPairwiseAlignment(
 								pwVerticalAlignmentFragment, ref, query);
 						// alignmenttuple.add(alignmentVertical);
-						this.log
+						log
 								.info("{}", alignmentVertical.getAbsolutePath());
 
 						warpiV = alignmentVertical.getChild(this.warpPathi)
@@ -212,7 +214,7 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 						pathV = null;
 					}
 
-					this.log.info("	Creating image");
+					log.info("	Creating image");
 					// final BufferedImage image = this.visualizer.createImage(
 					// scanlinesi, scanlinesj, warpi, warpj);
 					image = vis2d.createImage(scanlinesi, scanlinesj, pathH,
@@ -232,21 +234,21 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 						// modulationi.intValue() * scanRatei.intValue(),
 						// out);
 					} else {
-						this.log
+						log
 								.info("If you want to create a serialized Plot change the "
 										+ "maltcms.ui.charts.PlotRunner.serializeJFreeChart option to true.");
 					}
 				} else {
 					// FIXME: isnt the visualization independent from modulation
 					// and scan rate?
-					this.log.error(
+					log.error(
 							"Could not visualize time warp for {} vs {}.", ref
 									.getName(), query.getName());
-					this.log
+					log
 							.error("Different scanRates or different modulations.");
-					this.log.error(ref.getName() + " modulation{} scanRate{}",
+					log.error(ref.getName() + " modulation{} scanRate{}",
 							modulationi, scanRatei);
-					this.log.error(
+					log.error(
 							query.getName() + " modulation{} scanRate{}",
 							modulationj, scanRatej);
 					System.out.println(scanRatei + "-" + scanRatej);
@@ -306,12 +308,12 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 	private void createChart(final IFileFragment ref,
 			final IFileFragment query, final String filename,
 			final Array warpi, final Array warpj, final int spm, final File in) {
-		this.log.info("Creating a serialized Plot.");
+		log.info("Creating a serialized Plot.");
 		final ArrayDouble.D1 ret1 = (ArrayDouble.D1) ref.getChild(
 				this.scanAcquTime).getArray();
 		final ArrayDouble.D1 ret2 = (ArrayDouble.D1) query.getChild(
 				this.scanAcquTime).getArray();
-		this.log.info("Using file {} for AChart", in.getAbsolutePath());
+		log.info("Using file {} for AChart", in.getAbsolutePath());
 
 		ref.getChild(this.secondColumnTimeVar).setIndex(
 				ref.getChild(this.secondColumnScanIndexVar));
@@ -333,7 +335,7 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 							secondrettime), this.scanspermodulation);
 			saveChart(chart, ref, query);
 		} else {
-			this.log.info("null chart.");
+			log.info("null chart.");
 		}
 	}
 

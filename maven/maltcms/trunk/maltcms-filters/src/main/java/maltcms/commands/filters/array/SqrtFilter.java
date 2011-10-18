@@ -21,42 +21,47 @@
  */
 package maltcms.commands.filters.array;
 
+import lombok.Data;
 import maltcms.commands.filters.AElementFilter;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 
 /**
- * Will squar all elements.
+ * Will take the square root of all elements.
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Data
+@ServiceProvider(service = AArrayFilter.class)
 public class SqrtFilter extends AArrayFilter {
 
-	private AElementFilter aef = null;
+    private AElementFilter aef = null;
 
-	/**
-	 * Default constructor.
-	 */
-	public SqrtFilter() {
-		super();
-		this.aef = new AElementFilter() {
-			public Double apply(final Double d) {
-				return Math.sqrt(d);
-			}
-		};
-	}
+    /**
+     * Default constructor.
+     */
+    public SqrtFilter() {
+        super();
+        this.aef = new AElementFilter() {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Array apply(final Array a) {
-		final Array arr = super.apply(a);
-		final IndexIterator ii = arr.getIndexIteratorFast();
-		while (ii.hasNext()) {
-			ii.setDoubleCurrent(this.aef.apply(ii.getDoubleNext()));
-		}
-		return arr;
-	}
+            @Override
+            public Double apply(final Double d) {
+                return Math.sqrt(d);
+            }
+        };
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Array apply(final Array a) {
+        final Array arr = super.apply(a);
+        final IndexIterator ii = arr.getIndexIteratorFast();
+        while (ii.hasNext()) {
+            ii.setDoubleCurrent(this.aef.apply(ii.getDoubleNext()));
+        }
+        return arr;
+    }
 }

@@ -23,6 +23,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiresVariables(names = {"pairwise_distance"})
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class ScoreDistributionVisualizer extends AFragmentCommand {
 
 	/*

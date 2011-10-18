@@ -34,6 +34,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.preprocessing.defaultVarLoader.DefaultVarLoaderWorker;
 import net.sf.maltcms.execution.api.ICompletionService;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Load variables defined by the option default.variables. Additionally tries to
@@ -47,6 +48,7 @@ import net.sf.maltcms.execution.api.ICompletionService;
     "var.scan_index", "var.scan_acquisition_time", "var.total_intensity"})
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class DefaultVarLoader extends AFragmentCommand {
 
     @Override

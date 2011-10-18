@@ -45,16 +45,22 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Creates all reference-query horizontal tic scanlines vectors.
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 @RequiresVariables(names = { "var.total_intensity", "var.modulation_time",
         "var.scan_rate", "var.second_column_scan_index" })
 @RequiresOptionalVariables(names = { "" })
 @ProvidesVariables(names = { "" })
+@ServiceProvider(service=AFragmentCommand.class)
 public class CreateHorizontalTicVector extends AFragmentCommand {
 
 	@Configurable(name = "var.warp_path_i", value = "warp_path_i")

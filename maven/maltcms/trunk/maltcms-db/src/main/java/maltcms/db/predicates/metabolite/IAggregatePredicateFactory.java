@@ -10,12 +10,11 @@ import com.db4o.query.Predicate;
  */
 public interface IAggregatePredicateFactory<T> {
 
-	/**
-	 * RetentionIndex=[1500,2000] => NumRangePredicate on method getRetentionIndex
-	 * Name=BLABLA => StringMatchPredicate on method getName
-	 * Name=BLABLA< => StringContainsPredicate on method getName, BLABLA should be a substring
-	 * @param args
-	 */
-	public abstract Predicate<T> digestCommandLine(String[] args);
-
+    /**
+     * RetentionIndex=[1500,2000] => NumRangePredicate on method getRetentionIndex
+     * Name=BLABLA => StringMatchPredicate on method getName
+     * Name=BLABLA< => StringContainsPredicate on method getName, BLABLA should be a substring
+     * @param args
+     */
+    public abstract Predicate<T> digestCommandLine(String[] args);
 }

@@ -32,12 +32,10 @@ import maltcms.ui.charts.MassSpectrumPlot;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.XYPlot;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.MAMath;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
@@ -47,21 +45,25 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Visualization for one mass spectra.
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 @RequiresVariables(names = { "var.mass_values", "var.intensity_values",
 		"var.scan_index", "var.mass_range_min", "var.mass_range_max",
 		"var.modulation_time", "var.scan_rate", "var.modulation_time",
 		"var.scan_rate" })
 @RequiresOptionalVariables(names = { "" })
 @ProvidesVariables(names = { "" })
+@ServiceProvider(service=AFragmentCommand.class)
 public class MassSpectrumVisualization extends AFragmentCommand {
-
-	private final Logger log = Logging.getLogger(this);
 
 	@Configurable(name = "var.modulation_time", value = "modulation_time")
 	private String modulationVar = "modulation_time";
@@ -91,7 +93,7 @@ public class MassSpectrumVisualization extends AFragmentCommand {
 					final String title = "mass spectrum for index " + index
 							+ "(TIC:" + (int) MAMath.sumDouble(massSpectra)
 							+ ")";
-					this.log.info("Plotting index {}(" + MAMath
+					log.info("Plotting index {}(" + MAMath
 							.sumDouble(massSpectra) + "): {}", index, massSpectra);
 					final AChart<XYPlot> plot = new MassSpectrumPlot(title,
 							StringTools.removeFileExt(ff.getName()) + " Idx:"
@@ -109,7 +111,7 @@ public class MassSpectrumVisualization extends AFragmentCommand {
 					// pl.configure(Factory.getInstance().getConfiguration());
 					// Factory.getInstance().submitJob(pl);
 				} else {
-					this.log.error("Index {} out of range.", index);
+					log.error("Index {} out of range.", index);
 				}
 			}
 		}
@@ -129,7 +131,7 @@ public class MassSpectrumVisualization extends AFragmentCommand {
 		this.indices = new int[indA.length];
 		int c = 0;
 		for (String i : indA) {
-			this.log.info("Writing {} in array", i);
+			log.info("Writing {} in array", i);
 			this.indices[c++] = Integer.parseInt(i);
 		}
 	}

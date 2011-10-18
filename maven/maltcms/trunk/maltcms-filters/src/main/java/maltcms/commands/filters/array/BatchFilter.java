@@ -17,7 +17,8 @@ public class BatchFilter {
     public static Array applyFilters(Array a, List<AArrayFilter> filters) {
         Array b = a;
         for (AArrayFilter filter : filters) {
-            LoggerFactory.getLogger(BatchFilter.class).info("Applying Filter: {}", filter.getClass().getName());
+            LoggerFactory.getLogger(BatchFilter.class).info(
+                    "Applying Filter: {}", filter.getClass().getName());
             b = filter.apply(b);
         }
         return b;

@@ -25,12 +25,16 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.io.IDataSourceFactory;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  * 
  * 
  */
+@Slf4j
+@Data
 public class CWTPeakFinder extends AFragmentCommand {
 
 	@Configurable

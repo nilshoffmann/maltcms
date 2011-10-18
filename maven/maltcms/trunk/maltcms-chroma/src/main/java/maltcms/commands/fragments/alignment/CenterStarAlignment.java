@@ -63,6 +63,7 @@ import cross.tools.MathTools;
 import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Implementation of the center star approximation for multiple alignment.
@@ -77,6 +78,7 @@ import lombok.extern.slf4j.Slf4j;
     "var.multiple_alignment_creator"})
 @Data
 @Slf4j
+@ServiceProvider(service=AFragmentCommand.class)
 public class CenterStarAlignment extends AFragmentCommand {
 
     @Configurable(name = "var.pairwise_distance_matrix",

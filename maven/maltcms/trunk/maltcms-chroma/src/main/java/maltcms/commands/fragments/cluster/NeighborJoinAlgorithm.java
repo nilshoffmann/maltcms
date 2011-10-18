@@ -21,6 +21,7 @@
  */
 package maltcms.commands.fragments.cluster;
 
+import cross.commands.fragments.AFragmentCommand;
 import java.util.Iterator;
 
 import maltcms.commands.distances.ListDistanceFunction;
@@ -28,6 +29,7 @@ import maltcms.datastructures.cluster.BinaryCluster;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Implementation of NeighborJoining by Saitou and Nei (cite...) FIXME add
@@ -37,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
  * 
  */
 @Slf4j
+@ServiceProvider(service=AFragmentCommand.class)
 public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
 
     public static void main(final String[] args) {

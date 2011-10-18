@@ -19,7 +19,6 @@
  * 
  * $Id: TICDynamicTimeWarp.java 116 2010-06-17 08:46:30Z nilshoffmann $
  */
-
 package maltcms.commands.distances.dtw;
 
 import java.util.ArrayList;
@@ -33,67 +32,71 @@ import ucar.ma2.IndexIterator;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
+import lombok.Data;
+import maltcms.commands.distances.ListDistanceFunction;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Dynamic Time AWarp on univariate Time Series, e.g. the total ion current
+ * Dynamic Time Warp on univariate Time Series, e.g. the total ion current
  * (TIC).
  * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Data
+@ServiceProvider(service = ListDistanceFunction.class)
 public class TICDynamicTimeWarp extends ADynamicTimeWarp {
 
-	@Configurable
-	private String array1D = "total_intensity";
+    @Configurable
+    private String array1D = "total_intensity";
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maltcms.commands.distances.dtw.ADynamicTimeWarp#configure(org.apache.
-	 * commons.configuration.Configuration)
-	 */
-	@Override
-	public void configure(final Configuration cfg) {
-		super.configure(cfg);
-		this.array1D = cfg.getString("var.total_intensity", "total_intensity");
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * maltcms.commands.distances.dtw.ADynamicTimeWarp#configure(org.apache.
+     * commons.configuration.Configuration)
+     */
+    @Override
+    public void configure(final Configuration cfg) {
+        super.configure(cfg);
+        this.array1D = cfg.getString("var.total_intensity", "total_intensity");
+    }
 
-	@Override
-	public Tuple2D<List<Array>, List<Array>> createTuple(
-	        final Tuple2D<IFileFragment, IFileFragment> t) {
-		Array ticRef = null;
-		synchronized (t.getFirst()) {
-			ticRef = t.getFirst().getChild(this.array1D).getArray();
-		}
-		Array queryRef = null;
-		synchronized (t.getSecond()) {
-			queryRef = t.getSecond().getChild(this.array1D).getArray();
-		}
-		final List<Array> ref = new ArrayList<Array>();
-		final List<Array> query = new ArrayList<Array>();
-		IndexIterator iref = ticRef.getIndexIterator();
-		final Index idx = Index.scalarIndexImmutable;
-		while (iref.hasNext()) {
-			final Array a = Array.factory(ticRef.getElementType(),
-			        new int[] { 1 });
-			a.setObject(idx, iref.next());
-			ref.add(a);
-		}
-		iref = queryRef.getIndexIterator();
-		while (iref.hasNext()) {
-			final Array a = Array.factory(queryRef.getElementType(),
-			        new int[] { 1 });
-			a.setObject(idx, iref.next());
-			query.add(a);
-		}
-		// ref.add(ticRef);
-		// query.add(queryRef);
-		final Tuple2D<List<Array>, List<Array>> tuple = new Tuple2D<List<Array>, List<Array>>(
-		        ref, query);
-		this.ref_num_scans = ticRef.getShape()[0];
-		this.query_num_scans = queryRef.getShape()[0];
-		return tuple;
-	}
-
+    @Override
+    public Tuple2D<List<Array>, List<Array>> createTuple(
+            final Tuple2D<IFileFragment, IFileFragment> t) {
+        Array ticRef = null;
+        synchronized (t.getFirst()) {
+            ticRef = t.getFirst().getChild(this.array1D).getArray();
+        }
+        Array queryRef = null;
+        synchronized (t.getSecond()) {
+            queryRef = t.getSecond().getChild(this.array1D).getArray();
+        }
+        final List<Array> ref = new ArrayList<Array>();
+        final List<Array> query = new ArrayList<Array>();
+        IndexIterator iref = ticRef.getIndexIterator();
+        final Index idx = Index.scalarIndexImmutable;
+        while (iref.hasNext()) {
+            final Array a = Array.factory(ticRef.getElementType(),
+                    new int[]{1});
+            a.setObject(idx, iref.next());
+            ref.add(a);
+        }
+        iref = queryRef.getIndexIterator();
+        while (iref.hasNext()) {
+            final Array a = Array.factory(queryRef.getElementType(),
+                    new int[]{1});
+            a.setObject(idx, iref.next());
+            query.add(a);
+        }
+        // ref.add(ticRef);
+        // query.add(queryRef);
+        final Tuple2D<List<Array>, List<Array>> tuple = new Tuple2D<List<Array>, List<Array>>(
+                ref, query);
+        this.ref_num_scans = ticRef.getShape()[0];
+        this.query_num_scans = queryRef.getShape()[0];
+        return tuple;
+    }
 }

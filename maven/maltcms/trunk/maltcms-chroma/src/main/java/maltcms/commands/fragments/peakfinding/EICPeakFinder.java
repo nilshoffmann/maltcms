@@ -34,7 +34,6 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import maltcms.commands.distances.ArrayCos;
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.ImageTools;
@@ -138,7 +137,7 @@ public class EICPeakFinder extends AFragmentCommand {
 //			        .getAbsolutePath(), StringTools.removeFileExt(f.getName())
 //			        + "_eic.csv", ArrayTools.generalizeList(al));
 //			log.info("ArrayStatsScanner returned {} StatsMaps", sm.length);
-            final ArrayCos ac = new ArrayCos();
+//            final ArrayCos ac = new ArrayCos();
             final ArrayDouble.D2 corrs = new ArrayDouble.D2(al.size(), al.size());
             // ArrayDouble.D2 crossCorrs = new
             // ArrayDouble.D2(al.size(),al.size());

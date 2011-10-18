@@ -53,7 +53,10 @@ import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.tools.ArrayTools;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * This class will visualize the computed mean, variance and standard deviation
@@ -61,6 +64,8 @@ import maltcms.commands.fragments2d.tools.ArrayTools;
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 @RequiresVariables(names = {"var.mean_ms_intensity", "var.var_ms_intensity",
     "var.sd_ms_intensity", "var.v_total_intensity_1d",
     "var.meanms_1d_horizontal_index", "var.meanms_1d_horizontal",
@@ -72,6 +77,7 @@ import maltcms.commands.fragments2d.tools.ArrayTools;
 // "var.v_total_intensity",
 @RequiresOptionalVariables(names = {""})
 @ProvidesVariables(names = {""})
+@ServiceProvider(service=AFragmentCommand.class)
 public class MeanVarVis extends AFragmentCommand {
 
     @Configurable(name = "var.var_intensity_values", value = "var_intensity_values")

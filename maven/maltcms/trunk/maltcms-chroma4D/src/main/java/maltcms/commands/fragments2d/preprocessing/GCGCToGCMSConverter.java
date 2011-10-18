@@ -19,13 +19,18 @@ import cross.tools.MathTools;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.tools.ArrayTools;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
-import ucar.ma2.Index;
 
+@Slf4j
+@Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class GCGCToGCMSConverter extends AFragmentCommand {
 
     @Configurable(value="5",type=double.class)

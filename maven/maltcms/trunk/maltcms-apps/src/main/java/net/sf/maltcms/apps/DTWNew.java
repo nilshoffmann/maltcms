@@ -24,11 +24,14 @@ import maltcms.commands.distances.dtw.ADynamicTimeWarp;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.constraint.ConstraintFactory;
 import maltcms.datastructures.feature.FeatureVectorFactory;
-import maltcms.experimental.operations.AlignmentFactory;
-import maltcms.experimental.operations.Cosine;
+import maltcms.commands.distances.dtwng.AlignmentFactory;
+import maltcms.commands.distances.dtwng.FeatureVectorDtwSimilarity;
+import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.experimental.operations.EditDistance;
-import maltcms.experimental.operations.IAlignment;
-import maltcms.experimental.operations.ThreePredecessorsOptimization;
+import maltcms.commands.distances.dtwng.IAlignment;
+import maltcms.commands.distances.dtwng.ThreePredecessorsOptimization;
+import maltcms.math.functions.DtwTimePenalizedPairwiseSimilarity;
+import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
 import org.apache.commons.configuration.CompositeConfiguration;
 import ucar.ma2.Array;
 
@@ -99,23 +102,34 @@ public class DTWNew {
         System.out.println("Preparing alignment");
         // prepare alignment
         AlignmentFactory af = new AlignmentFactory();
+        FeatureVectorDtwSimilarity fvds = new FeatureVectorDtwSimilarity();
+        DtwTimePenalizedPairwiseSimilarity dtwtpps = new DtwTimePenalizedPairwiseSimilarity();
+        ArrayCos ac = new ArrayCos();
+        dtwtpps.setDenseMassSpectraScore(ac);
+        dtwtpps.setRetentionTimeScore(new GaussianDifferenceSimilarity());
+        fvds.setScoreFunction(dtwtpps);
         Area constraints = ConstraintFactory.getInstance().createBandConstraint(0, 0, l1.size(), l2.size(), 0.05);
+        ThreePredecessorsOptimization tpo = new ThreePredecessorsOptimization();
+        dtwtpps.setDiagonalWeight(2.25d);
+        tpo.setWeight(ThreePredecessorsOptimization.State.N.name(), dtwtpps.getExpansionWeight());
+        tpo.setWeight(ThreePredecessorsOptimization.State.NW.name(), dtwtpps.getDiagonalWeight());
+        tpo.setWeight(ThreePredecessorsOptimization.State.W.name(), dtwtpps.getCompressionWeight());
         IAlignment ia = af.getDTWInstance(Factory.getInstance().getObjectFactory().instantiate(
-                ThreePredecessorsOptimization.class), Factory.getInstance().getObjectFactory().instantiate(Cosine.class),
+                ThreePredecessorsOptimization.class), fvds,
                 constraints);
         // set alignment properties
-        ia.setLHSID(iff3.getName());
-        ia.setRHSID(iff4.getName());
+        ia.setLeftHandSideId(iff3.getName());
+        ia.setRightHandSideId(iff4.getName());
         System.out.println("Calculating alignment");
         // apply and retrieve score
         double v = ia.apply(l1, l2);
         // retrieve map
 //        List<Point> l = ia.getMap();
-        String s1 = ia.getIOptimizationFunction().getOptimalOperationSequenceString();
+        String s1 = ia.getOptimizationFunction().getOptimalOperationSequenceString();
 //        System.out.println(s1);
         System.out.println("Done!");
         System.out.println(v);
-        System.out.println(ia.getIOptimizationFunction().getOptimalValue());
+        System.out.println(ia.getOptimizationFunction().getOptimalValue());
         IFileFragment ares = Factory.getInstance().getFileFragmentFactory().create(iff3, iff4, cp.getWorkflow().getOutputDirectory(ia));
         ia.modify(ares);
         ares.save();

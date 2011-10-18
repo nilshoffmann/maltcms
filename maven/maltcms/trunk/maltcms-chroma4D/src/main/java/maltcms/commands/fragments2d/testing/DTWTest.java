@@ -9,11 +9,9 @@ import java.util.List;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.constraint.ConstraintFactory;
 import maltcms.datastructures.feature.FeatureVectorFactory;
-import maltcms.experimental.operations.AlignmentFactory;
-import maltcms.experimental.operations.Cosine;
-import maltcms.experimental.operations.IAlignment;
-import maltcms.experimental.operations.ThreePredecessorsOptimization;
-import maltcms.experimental.operations.TwoFeatureVectorOperation;
+import maltcms.commands.distances.dtwng.AlignmentFactory;
+import maltcms.commands.distances.dtwng.IAlignment;
+import maltcms.commands.distances.dtwng.ThreePredecessorsOptimization;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 
@@ -21,30 +19,33 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import net.sf.maltcms.apps.Maltcms;
 import cross.Factory;
+import maltcms.commands.distances.dtwng.FeatureVectorDtwSimilarity;
+import maltcms.math.functions.DtwPairwiseSimilarity;
+import maltcms.math.functions.similarities.ArrayCos;
 
 public class DTWTest {
 
 	public static void main(String[] args) {
-		Maltcms m = Maltcms.getInstance();
-		CompositeConfiguration cfg = m.parseCommandLine(new String[] { "-f",
-				"asd" });
-		cfg.setProperty("maltcms.ui.charts.PlotRunner.headless", Boolean
-				.valueOf(false));
-		cfg
-				.setProperty(
-						"cross.datastructures.fragments.VariableFragment.useCachedList",
-						Boolean.valueOf(false));
-		cfg
-				.setProperty(
-						"maltcms.datastructures.fragments.PairwiseAlignment.normalizeAlignmentValueByMapWeights",
-						Boolean.valueOf(false));
-		String pipeline = "maltcms.commands.fragments.preprocessing.DefaultVarLoader,maltcms.commands.fragments.preprocessing.DenseArrayProducer";
-		cfg.setProperty("pipeline", pipeline);
-		cfg.setProperty("cross.io.IDataSource", Arrays
-				.asList(new String[] { "maltcms.io.andims.NetcdfDataSource" }));
-		cfg.setProperty("alignment.normalizeAlignmentValueByMapWeights", true);
-		// cfg.save(new BufferedOutputStream(System.out));
-		cross.Factory.getInstance().configure(cfg);
+//		Maltcms m = Maltcms.getInstance();
+//		CompositeConfiguration cfg = m.parseCommandLine(new String[] { "-f",
+//				"asd" });
+//		cfg.setProperty("maltcms.ui.charts.PlotRunner.headless", Boolean
+//				.valueOf(false));
+//		cfg
+//				.setProperty(
+//						"cross.datastructures.fragments.VariableFragment.useCachedList",
+//						Boolean.valueOf(false));
+//		cfg
+//				.setProperty(
+//						"maltcms.datastructures.fragments.PairwiseAlignment.normalizeAlignmentValueByMapWeights",
+//						Boolean.valueOf(false));
+//		String pipeline = "maltcms.commands.fragments.preprocessing.DefaultVarLoader,maltcms.commands.fragments.preprocessing.DenseArrayProducer";
+//		cfg.setProperty("pipeline", pipeline);
+//		cfg.setProperty("cross.io.IDataSource", Arrays
+//				.asList(new String[] { "maltcms.io.andims.NetcdfDataSource" }));
+//		cfg.setProperty("alignment.normalizeAlignmentValueByMapWeights", true);
+//		// cfg.save(new BufferedOutputStream(System.out));
+//		cross.Factory.getInstance().configure(cfg);
 
 		final ArrayDouble.D1 d1 = new ArrayDouble.D1(2);
 		d1.set(0, 1);
@@ -83,8 +84,11 @@ public class DTWTest {
 		AlignmentFactory af = new AlignmentFactory();
 		Area constraints = ConstraintFactory.getInstance()
 				.createBandConstraint(0, 0, l1.size(), l2.size(), 1.0);
-		final TwoFeatureVectorOperation tfvo = new Cosine();
-		((Cosine) tfvo).setFeatureVarName("FEATURE0");
+		final FeatureVectorDtwSimilarity tfvo = new FeatureVectorDtwSimilarity();
+                final DtwPairwiseSimilarity idsf = new DtwPairwiseSimilarity();
+                idsf.setDenseMassSpectraScore(new ArrayCos());
+                tfvo.setScoreFunction(idsf);
+		tfvo.setArrayFeatureName("FEATURE0");
 
 		IAlignment ia = af
 				.getDTWInstance(Factory.getInstance().getObjectFactory()
@@ -93,19 +97,19 @@ public class DTWTest {
 		ia.setConstraints(ConstraintFactory.getInstance().createBandConstraint(
 				0, 0, la1.size(), la2.size(), 1.0));
 		// set alignment properties
-		ia.setLHSID("Left");
-		ia.setRHSID("Right");
+		ia.setLeftHandSideId("Left");
+		ia.setRightHandSideId("Right");
 		System.out.println("Calculating alignment");
 		// apply and retrieve score
 		double v = ia.apply(l1, l2);
 		// retrieve map
 		List<Point> l = ia.getMap();
 		System.out.println("");
-		System.out.println(ia.getIOptimizationFunction()
+		System.out.println(ia.getOptimizationFunction()
 				.getOptimalOperationSequenceString());
 		System.out.println("Done!");
 		System.out.println(v);
-		System.out.println(ia.getIOptimizationFunction().getOptimalValue());
+		System.out.println(ia.getOptimizationFunction().getOptimalValue());
 		// IFileFragment ares = Factory.getInstance().getFileFragmentFactory()
 		// .createFragment(iff3, iff4, DTW.class,
 		// cp.getWorkflow().getStartupDate());

@@ -56,6 +56,8 @@ import cross.datastructures.Vars;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Default visualizer for a 2d time warp. You can use it to create an image or
@@ -66,9 +68,9 @@ import cross.exception.ResourceNotAvailableException;
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
+@Data
 public class Default2DTWVisualizer implements IVisualization {
-
-	private Logger log = Logging.getLogger(this.getClass());
 
 	@Configurable(name = "var.peak_index_list", value = "peak_index_list")
 	private String peakListVar = "peak_index_list";

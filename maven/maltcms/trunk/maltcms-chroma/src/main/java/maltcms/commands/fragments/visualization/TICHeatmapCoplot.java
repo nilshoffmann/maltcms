@@ -56,6 +56,7 @@ import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
@@ -68,6 +69,7 @@ import lombok.extern.slf4j.Slf4j;
     "var.anchors.retention_scans"})
 @Slf4j
 @Data
+@ServiceProvider(service=AFragmentCommand.class)
 public class TICHeatmapCoplot extends AFragmentCommand {
 
     @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv")

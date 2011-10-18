@@ -25,13 +25,11 @@ import java.util.logging.Level;
 
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Attribute;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresVariables;
@@ -45,6 +43,9 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
 import ucar.nc2.Dimension;
@@ -61,9 +62,12 @@ import ucar.nc2.Dimension;
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  * 
  */
+@Slf4j
+@Data
 @RequiresVariables(names = {"var.modulation_time",
     "var.scan_rate"})
 @ProvidesVariables(names = {"var.scan_index", "var.scan_acquisition_time","var.mass_values","var.intensity_values","var.total_intensity","var.scan_rate","var.modulation_time"})
+@ServiceProvider(service=AFragmentCommand.class)
 public class ModulationExtractor extends AFragmentCommand {
 
     @Configurable(name = "var.total_intensity", value = "total_intensity")
@@ -90,7 +94,6 @@ public class ModulationExtractor extends AFragmentCommand {
     private int startModulation = -1;
     @Configurable(value = "-1", type = Integer.class)
     private int endModulation = -1;
-    private Logger log = Logging.getLogger(this);
 
     @Override
     public void configure(Configuration cfg) {
