@@ -19,7 +19,7 @@
  * 
  * $Id$
  */
-package maltcms.ui.viewer.datastructures.tree;
+package maltcms.datastructures.quadTree;
 
 import java.awt.geom.Point2D;
 

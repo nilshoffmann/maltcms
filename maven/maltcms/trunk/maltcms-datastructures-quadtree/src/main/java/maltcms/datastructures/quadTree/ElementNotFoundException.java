@@ -19,7 +19,7 @@
  * 
  * $Id$
  */
-package maltcms.ui.viewer.datastructures.tree;
+package maltcms.datastructures.quadTree;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE

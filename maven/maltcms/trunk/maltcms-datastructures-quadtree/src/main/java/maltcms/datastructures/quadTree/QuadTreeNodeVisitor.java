@@ -19,14 +19,17 @@
  * 
  * $Id$
  */
-package maltcms.ui.viewer.datastructures.tree;
+package maltcms.datastructures.quadTree;
+
+import cross.datastructures.tuple.Tuple2D;
+import java.awt.geom.Point2D;
+import java.util.LinkedList;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
-
  *
+ * @author nilshoffmann
  */
-public enum Quad {
+public interface QuadTreeNodeVisitor<T> {
 
-    NW, NE, SE, SW;
+    public LinkedList<Tuple2D<Point2D, T>> visit(LinkedList<Tuple2D<Point2D, T>> l);
 }
