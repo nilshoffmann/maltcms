@@ -37,7 +37,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class TICPeakListImporter extends AFragmentCommand {
 
     @Configurable
@@ -48,6 +48,11 @@ public class TICPeakListImporter extends AFragmentCommand {
     private String scanIndexColumnName = "SCAN";
     @Configurable(value = "var.tic_peaks")
     private String ticPeakVarName = "tic_peaks";
+
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
     /*
      * (non-Javadoc)

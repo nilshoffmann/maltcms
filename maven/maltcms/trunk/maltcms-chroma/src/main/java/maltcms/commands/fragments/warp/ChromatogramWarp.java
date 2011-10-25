@@ -75,6 +75,11 @@ public class ChromatogramWarp extends AFragmentCommand {
     private String anchorNameVariableName = "retention_names";
     private boolean average = false;
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     /*
      * (non-Javadoc)
      * 

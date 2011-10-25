@@ -48,12 +48,19 @@ import org.openide.util.lookup.ServiceProvider;
     "var.scan_index", "var.scan_acquisition_time", "var.total_intensity"})
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class DefaultVarLoader extends AFragmentCommand {
 
     @Override
-    public TupleND<IFileFragment> apply(final TupleND<IFileFragment> inputFileFragments) {
-        log.debug("Running DefaultVarLoader on {} FileFragments!", inputFileFragments.size());
+    public String toString() {
+        return getClass().getName();
+    }
+
+    @Override
+    public TupleND<IFileFragment> apply(
+            final TupleND<IFileFragment> inputFileFragments) {
+        log.debug("Running DefaultVarLoader on {} FileFragments!",
+                inputFileFragments.size());
         //create a new completion service instance for this fragment command
         ICompletionService<File> ics = createCompletionService(File.class);
         for (final IFileFragment f : inputFileFragments) {

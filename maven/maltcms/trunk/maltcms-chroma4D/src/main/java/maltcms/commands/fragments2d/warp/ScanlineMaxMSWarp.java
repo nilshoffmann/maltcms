@@ -47,101 +47,105 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Data
-@RequiresVariables(names = { "var.second_column_scan_index",
-		"var.total_intensity", "var.mass_values", "var.intensity_values",
-		"var.scan_index", "var.mass_range_min", "var.mass_range_max",
-		"var.modulation_time", "var.scan_rate" })
-@RequiresOptionalVariables(names = { "" })
-@ProvidesVariables(names = { "var.warp_path_i", "var.warp_path_j" })
+@RequiresVariables(names = {"var.second_column_scan_index",
+    "var.total_intensity", "var.mass_values", "var.intensity_values",
+    "var.scan_index", "var.mass_range_min", "var.mass_range_max",
+    "var.modulation_time", "var.scan_rate"})
+@RequiresOptionalVariables(names = {""})
+@ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
 public class ScanlineMaxMSWarp extends ADynamicTimeWarp {
 
-	@Configurable(name = "var.maxms_1d_horizontal", value = "maxms_1d_horizontal")
-	private String maxMSHorizontalVar = "maxms_1d_horizontal";
-	@Configurable(name = "var.maxms_1d_horizontal_index", value = "maxms_1d_horizontal_index")
-	private String maxMSHorizontalIndexVar = "maxms_1d_horizontal_index";
-	@Configurable(name = "var.maxms_1d_vertical", value = "maxms_1d_vertical")
-	private String maxMSVerticalVar = "maxms_1d_vertical";
-	@Configurable(name = "var.maxms_1d_vertical_index", value = "maxms_1d_vertical_index")
-	private String maxMSVerticalIndexVar = "maxms_1d_vertical_index";
+    @Configurable(name = "var.maxms_1d_horizontal",
+    value = "maxms_1d_horizontal")
+    private String maxMSHorizontalVar = "maxms_1d_horizontal";
+    @Configurable(name = "var.maxms_1d_horizontal_index",
+    value = "maxms_1d_horizontal_index")
+    private String maxMSHorizontalIndexVar = "maxms_1d_horizontal_index";
+    @Configurable(name = "var.maxms_1d_vertical", value = "maxms_1d_vertical")
+    private String maxMSVerticalVar = "maxms_1d_vertical";
+    @Configurable(name = "var.maxms_1d_vertical_index",
+    value = "maxms_1d_vertical_index")
+    private String maxMSVerticalIndexVar = "maxms_1d_vertical_index";
+    @Configurable(name = "var.used_mass_values", value = "used_mass_values")
+    private String usedMassValuesVar = "used_mass_values";
+    private String meanMSVar = "meanms_1d_horizontal";
+    private String meanMSIndexVar = "meanms_1d_horizontal_index";
+    @Configurable(value = "false")
+    private boolean horizontal = false;
+    @Configurable(value = "true")
+    private boolean scale = true;
+    @Configurable(value = "true")
+    private boolean filter = true;
 
-	@Configurable(name = "var.used_mass_values", value = "used_mass_values")
-	private String usedMassValuesVar = "used_mass_values";
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
-	private String meanMSVar = "meanms_1d_horizontal";
-	private String meanMSIndexVar = "meanms_1d_horizontal_index";
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void configure(final Configuration cfg) {
+        super.configure(cfg);
+        this.maxMSHorizontalVar = cfg.getString("var.maxms_1d_horizontal",
+                "maxms_1d_horizontal");
+        this.maxMSHorizontalIndexVar = cfg.getString(
+                "var.maxms_1d_horizontal_index", "maxms_1d_horizontal_index");
+        this.maxMSVerticalVar = cfg.getString("var.maxms_1d_vertical",
+                "maxms_1d_vertical");
+        this.maxMSVerticalIndexVar = cfg.getString(
+                "var.maxms_1d_vertical_index", "maxms_1d_vertical_index");
+        this.horizontal = cfg.getBoolean(this.getClass().getName()
+                + ".horizontal", false);
+        this.scale = cfg.getBoolean(this.getClass().getName() + ".scale", true);
+        this.filter = cfg.getBoolean(this.getClass().getName() + ".filter",
+                true);
+    }
 
-	@Configurable(value = "false")
-	private boolean horizontal = false;
-	@Configurable(value = "true")
-	private boolean scale = true;
-	@Configurable(value = "true")
-	private boolean filter = true;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Tuple2D<List<Array>, List<Array>> createTuple(
+            final Tuple2D<IFileFragment, IFileFragment> t) {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void configure(final Configuration cfg) {
-		super.configure(cfg);
-		this.maxMSHorizontalVar = cfg.getString("var.maxms_1d_horizontal",
-				"maxms_1d_horizontal");
-		this.maxMSHorizontalIndexVar = cfg.getString(
-				"var.maxms_1d_horizontal_index", "maxms_1d_horizontal_index");
-		this.maxMSVerticalVar = cfg.getString("var.maxms_1d_vertical",
-				"maxms_1d_vertical");
-		this.maxMSVerticalIndexVar = cfg.getString(
-				"var.maxms_1d_vertical_index", "maxms_1d_vertical_index");
-		this.horizontal = cfg.getBoolean(this.getClass().getName()
-				+ ".horizontal", false);
-		this.scale = cfg.getBoolean(this.getClass().getName() + ".scale", true);
-		this.filter = cfg.getBoolean(this.getClass().getName() + ".filter",
-				true);
-	}
+        if (this.horizontal) {
+            this.meanMSVar = this.maxMSHorizontalVar;
+            this.meanMSIndexVar = this.maxMSHorizontalIndexVar;
+        } else {
+            this.meanMSVar = this.maxMSVerticalVar;
+            this.meanMSIndexVar = this.maxMSVerticalIndexVar;
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Tuple2D<List<Array>, List<Array>> createTuple(
-			final Tuple2D<IFileFragment, IFileFragment> t) {
+        log.info("Using {} with {}", this.meanMSVar, this.meanMSIndexVar);
 
-		if (this.horizontal) {
-			this.meanMSVar = this.maxMSHorizontalVar;
-			this.meanMSIndexVar = this.maxMSHorizontalIndexVar;
-		} else {
-			this.meanMSVar = this.maxMSVerticalVar;
-			this.meanMSIndexVar = this.maxMSVerticalIndexVar;
-		}
+        List<Array> ref = null;
+        log.info("searching max ms in ref");
+        final IVariableFragment meanHr = t.getFirst().getChild(this.meanMSVar);
+        meanHr.setIndex(t.getFirst().getChild(this.meanMSIndexVar));
+        ref = meanHr.getIndexedArray();
 
-		log.info("Using {} with {}", this.meanMSVar, this.meanMSIndexVar);
+        List<Array> query = null;
+        log.info("searching max ms in query");
+        final IVariableFragment meanHq = t.getSecond().getChild(this.meanMSVar);
+        meanHq.setIndex(t.getSecond().getChild(this.meanMSIndexVar));
+        query = meanHq.getIndexedArray();
 
-		List<Array> ref = null;
-		log.info("searching max ms in ref");
-		final IVariableFragment meanHr = t.getFirst().getChild(this.meanMSVar);
-		meanHr.setIndex(t.getFirst().getChild(this.meanMSIndexVar));
-		ref = meanHr.getIndexedArray();
+        if (this.scale) {
+            ref = ArrayTools2.sqrt(ref);
+            query = ArrayTools2.sqrt(query);
+        }
 
-		List<Array> query = null;
-		log.info("searching max ms in query");
-		final IVariableFragment meanHq = t.getSecond().getChild(this.meanMSVar);
-		meanHq.setIndex(t.getSecond().getChild(this.meanMSIndexVar));
-		query = meanHq.getIndexedArray();
+        if (this.filter) {
+            final List<Integer> usedMassesRef = ArrayTools2.getUsedMasses(t.
+                    getFirst(), this.usedMassValuesVar);
+            final List<Integer> usedMassesQuery = ArrayTools2.getUsedMasses(t.
+                    getSecond(), this.usedMassValuesVar);
+            ref = ArrayTools2.filterInclude(ref, usedMassesRef);
+            query = ArrayTools2.filterInclude(query, usedMassesQuery);
+        }
 
-		if (this.scale) {
-			ref = ArrayTools2.sqrt(ref);
-			query = ArrayTools2.sqrt(query);
-		}
-
-		if (this.filter) {
-			final List<Integer> usedMassesRef = ArrayTools2.getUsedMasses(t
-					.getFirst(), this.usedMassValuesVar);
-			final List<Integer> usedMassesQuery = ArrayTools2.getUsedMasses(t
-					.getSecond(), this.usedMassValuesVar);
-			ref = ArrayTools2.filterInclude(ref, usedMassesRef);
-			query = ArrayTools2.filterInclude(query, usedMassesQuery);
-		}
-
-		return new Tuple2D<List<Array>, List<Array>>(ref, query);
-	}
-
+        return new Tuple2D<List<Array>, List<Array>>(ref, query);
+    }
 }

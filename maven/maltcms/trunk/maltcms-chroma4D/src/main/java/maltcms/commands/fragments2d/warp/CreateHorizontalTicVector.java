@@ -56,153 +56,158 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @Slf4j
 @Data
-@RequiresVariables(names = { "var.total_intensity", "var.modulation_time",
-        "var.scan_rate", "var.second_column_scan_index" })
-@RequiresOptionalVariables(names = { "" })
-@ProvidesVariables(names = { "" })
-@ServiceProvider(service=AFragmentCommand.class)
+@RequiresVariables(names = {"var.total_intensity", "var.modulation_time",
+    "var.scan_rate", "var.second_column_scan_index"})
+@RequiresOptionalVariables(names = {""})
+@ProvidesVariables(names = {""})
+@ServiceProvider(service = AFragmentCommand.class)
 public class CreateHorizontalTicVector extends AFragmentCommand {
 
-	@Configurable(name = "var.warp_path_i", value = "warp_path_i")
-	private String warpPathi = "warp_path_i";
-	@Configurable(name = "var.warp_path_j", value = "warp_path_j")
-	private String warpPathj = "warp_path_j";
-	@Configurable(name = "var.total_intensity", value = "total_intensity")
-	private String totalIntensity = "total_intensity";
-	@Configurable(name = "var.modulation_time", value = "modulation_time")
-	private String modulationVar = "modulation_time";
-	@Configurable(name = "var.scan_rate", value = "scan_rate")
-	private String scanRateVar = "scan_rate";
-	@Configurable(name = "var.second_column_scan_index", value = "second_column_scan_index")
-	private String secondColumnScanIndexVar = "second_column_scan_index";
+    @Configurable(name = "var.warp_path_i", value = "warp_path_i")
+    private String warpPathi = "warp_path_i";
+    @Configurable(name = "var.warp_path_j", value = "warp_path_j")
+    private String warpPathj = "warp_path_j";
+    @Configurable(name = "var.total_intensity", value = "total_intensity")
+    private String totalIntensity = "total_intensity";
+    @Configurable(name = "var.modulation_time", value = "modulation_time")
+    private String modulationVar = "modulation_time";
+    @Configurable(name = "var.scan_rate", value = "scan_rate")
+    private String scanRateVar = "scan_rate";
+    @Configurable(name = "var.second_column_scan_index",
+    value = "second_column_scan_index")
+    private String secondColumnScanIndexVar = "second_column_scan_index";
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getDescription() {
-		return "Creates the horizontal TIC-vector after warping the first time axis.";
-	}
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getDescription() {
+        return "Creates the horizontal TIC-vector after warping the first time axis.";
+    }
 
-		final IFileFragment pwHorizontalAlignmentFragment = MaltcmsTools
-		        .getPairwiseDistanceFragment(t, "-horizontal");
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
 
-		final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
-		IFileFragment fret;
-		for (IFileFragment ff : t) {
-			fret = Factory.getInstance().getFileFragmentFactory().create(
-			        new File(getWorkflow().getOutputDirectory(this), ff
-			                .getName()));
-			fret.addSourceFile(ff);
-			ret.add(fret);
-		}
+        final IFileFragment pwHorizontalAlignmentFragment = MaltcmsTools.
+                getPairwiseDistanceFragment(t, "-horizontal");
 
-		IFileFragment ref, query;
-		final Visualization2D vis = new Visualization2D();
-		final Index idx = Index.scalarIndexImmutable;
-		Double modulationi, modulationj;
-		Integer scanRatei, scanRatej;
-		List<Array> scanlinesi, scanlinesj, horizontalRefScanlines, horizontalQueryScanlines;
-		IFileFragment alignmentHorizontal, resRef, resQuery;
-		Array warpi, warpj;
-		Tuple2D<List<Array>, List<Array>> scanlines;
-		IVariableFragment hrs, hqs, hrsIdx, hqsIdx;
-		String refname, queryname;
-		for (int i = 0; i < t.size(); i++) {
-			resRef = ret.get(i);
-			ref = t.get(i);
-			for (int j = i + 1; j < t.size(); j++) {
-				query = t.get(j);
-				resQuery = ret.get(j);
+        final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
+        IFileFragment fret;
+        for (IFileFragment ff : t) {
+            fret = Factory.getInstance().getFileFragmentFactory().create(
+                    new File(getWorkflow().getOutputDirectory(this),
+                    ff.getName()));
+            fret.addSourceFile(ff);
+            ret.add(fret);
+        }
 
-				modulationi = ref.getChild(this.modulationVar).getArray()
-				        .getDouble(idx);
-				modulationj = query.getChild(this.modulationVar).getArray()
-				        .getDouble(idx);
-				scanRatei = ref.getChild(this.scanRateVar).getArray().getInt(
-				        idx);
-				scanRatej = query.getChild(this.scanRateVar).getArray().getInt(
-				        idx);
+        IFileFragment ref, query;
+        final Visualization2D vis = new Visualization2D();
+        final Index idx = Index.scalarIndexImmutable;
+        Double modulationi, modulationj;
+        Integer scanRatei, scanRatej;
+        List<Array> scanlinesi, scanlinesj, horizontalRefScanlines, horizontalQueryScanlines;
+        IFileFragment alignmentHorizontal, resRef, resQuery;
+        Array warpi, warpj;
+        Tuple2D<List<Array>, List<Array>> scanlines;
+        IVariableFragment hrs, hqs, hrsIdx, hqsIdx;
+        String refname, queryname;
+        for (int i = 0; i < t.size(); i++) {
+            resRef = ret.get(i);
+            ref = t.get(i);
+            for (int j = i + 1; j < t.size(); j++) {
+                query = t.get(j);
+                resQuery = ret.get(j);
 
-				scanlinesi = getScanlineFor(ref, modulationi.intValue()
-				        * scanRatei.intValue());
-				scanlinesj = getScanlineFor(query, modulationj.intValue()
-				        * scanRatej.intValue());
+                modulationi = ref.getChild(this.modulationVar).getArray().
+                        getDouble(idx);
+                modulationj = query.getChild(this.modulationVar).getArray().
+                        getDouble(idx);
+                scanRatei = ref.getChild(this.scanRateVar).getArray().getInt(
+                        idx);
+                scanRatej = query.getChild(this.scanRateVar).getArray().getInt(
+                        idx);
 
-				alignmentHorizontal = MaltcmsTools.getPairwiseAlignment(
-				        pwHorizontalAlignmentFragment, ref, query);
-				warpi = alignmentHorizontal.getChild(this.warpPathi).getArray();
-				warpj = alignmentHorizontal.getChild(this.warpPathj).getArray();
+                scanlinesi = getScanlineFor(ref, modulationi.intValue()
+                        * scanRatei.intValue());
+                scanlinesj = getScanlineFor(query, modulationj.intValue()
+                        * scanRatej.intValue());
 
-				scanlines = vis.createNewScanlines(scanlinesi, scanlinesj,
-				        PathTools.pointListFromArrays(warpi, warpj), false,
-				        false);
+                alignmentHorizontal = MaltcmsTools.getPairwiseAlignment(
+                        pwHorizontalAlignmentFragment, ref, query);
+                warpi = alignmentHorizontal.getChild(this.warpPathi).getArray();
+                warpj = alignmentHorizontal.getChild(this.warpPathj).getArray();
 
-				horizontalRefScanlines = ArrayTools2.transpose(scanlines
-				        .getFirst());
-				horizontalQueryScanlines = ArrayTools2.transpose(scanlines
-				        .getSecond());
+                scanlines = vis.createNewScanlines(scanlinesi, scanlinesj,
+                        PathTools.pointListFromArrays(warpi, warpj), false,
+                        false);
 
-				refname = StringTools.removeFileExt(ref.getName());
-				queryname = StringTools.removeFileExt(query.getName());
+                horizontalRefScanlines = ArrayTools2.transpose(scanlines.
+                        getFirst());
+                horizontalQueryScanlines = ArrayTools2.transpose(scanlines.
+                        getSecond());
 
-				hrs = new VariableFragment(resRef, refname + "_" + queryname
-				        + "-tv");
-				hrs.setIndexedArray(horizontalRefScanlines);
-				hrsIdx = new VariableFragment(resRef, refname + "_" + queryname
-				        + "-idx");
-				hrsIdx.setArray(ArrayTools2
-				        .getIndexArray(horizontalRefScanlines));
+                refname = StringTools.removeFileExt(ref.getName());
+                queryname = StringTools.removeFileExt(query.getName());
 
-				hqs = new VariableFragment(resQuery, queryname + "_" + refname
-				        + "-tv");
-				hqs.setIndexedArray(horizontalQueryScanlines);
-				hqsIdx = new VariableFragment(resQuery, queryname + "_"
-				        + refname + "-idx");
-				hqsIdx.setArray(ArrayTools2
-				        .getIndexArray(horizontalQueryScanlines));
-			}
-		}
+                hrs = new VariableFragment(resRef, refname + "_" + queryname
+                        + "-tv");
+                hrs.setIndexedArray(horizontalRefScanlines);
+                hrsIdx = new VariableFragment(resRef, refname + "_" + queryname
+                        + "-idx");
+                hrsIdx.setArray(
+                        ArrayTools2.getIndexArray(horizontalRefScanlines));
 
-		for (IFileFragment ff : ret) {
-			final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-			        new File(ff.getAbsolutePath()), this, getWorkflowSlot(), ff);
-			getWorkflow().append(dwr);
-			ff.save();
-		}
+                hqs = new VariableFragment(resQuery, queryname + "_" + refname
+                        + "-tv");
+                hqs.setIndexedArray(horizontalQueryScanlines);
+                hqsIdx = new VariableFragment(resQuery, queryname + "_"
+                        + refname + "-idx");
+                hqsIdx.setArray(ArrayTools2.getIndexArray(
+                        horizontalQueryScanlines));
+            }
+        }
 
-		return new TupleND<IFileFragment>(ret);
-	}
+        for (IFileFragment ff : ret) {
+            final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
+                    new File(ff.getAbsolutePath()), this, getWorkflowSlot(), ff);
+            getWorkflow().append(dwr);
+            ff.save();
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public WorkflowSlot getWorkflowSlot() {
-		return WorkflowSlot.GENERAL_PREPROCESSING;
-	}
+        return new TupleND<IFileFragment>(ret);
+    }
 
-	/**
-	 * Getter.
-	 * 
-	 * @param ff
-	 *            file fragment
-	 * @param spm
-	 *            scans per modulation
-	 * @return scanlines
-	 */
-	private List<Array> getScanlineFor(final IFileFragment ff, final int spm) {
-		ff.getChild(this.totalIntensity).setIndex(
-		        ff.getChild(this.secondColumnScanIndexVar));
-		final List<Array> scanlines = ff.getChild(this.totalIntensity)
-		        .getIndexedArray();
-		return scanlines;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public WorkflowSlot getWorkflowSlot() {
+        return WorkflowSlot.GENERAL_PREPROCESSING;
+    }
 
+    /**
+     * Getter.
+     * 
+     * @param ff
+     *            file fragment
+     * @param spm
+     *            scans per modulation
+     * @return scanlines
+     */
+    private List<Array> getScanlineFor(final IFileFragment ff, final int spm) {
+        ff.getChild(this.totalIntensity).setIndex(
+                ff.getChild(this.secondColumnScanIndexVar));
+        final List<Array> scanlines = ff.getChild(this.totalIntensity).
+                getIndexedArray();
+        return scanlines;
+    }
 }

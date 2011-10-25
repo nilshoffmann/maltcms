@@ -42,6 +42,11 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=AFragmentCommand.class)
 public class LangeTautenhahnFormatExporter extends AFragmentCommand {
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     /*
      * (non-Javadoc)
      * 

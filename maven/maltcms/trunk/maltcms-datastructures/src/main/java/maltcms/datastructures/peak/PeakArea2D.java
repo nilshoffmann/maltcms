@@ -23,14 +23,10 @@ package maltcms.datastructures.peak;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
 import maltcms.tools.ArrayTools;
 import ucar.ma2.Array;
 
@@ -39,10 +35,10 @@ import ucar.ma2.Array;
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
-public class PeakArea2D implements Iterable<Point>{
+public class PeakArea2D {
 
     private Point seedPoint;
-    private SortedSet<Point> regionList;
+    private List<Point> regionList;
     private List<Point> boundary;
     private FiFoQueue<Point> activeList;
     private Map<Point, Double> intensities;
@@ -79,30 +75,10 @@ public class PeakArea2D implements Iterable<Point>{
             final int sindex, final int spm) {
         init(seed, ms, intensity, sindex, spm);
     }
-    
-    private class PointComparator implements Comparator<Point> {
-
-        @Override
-        public int compare(Point o1, Point o2) {
-            if(o1.x<o2.x) {
-                return -1;
-            }else if(o1.x>o2.x) {
-                return 1;
-            }else{
-                if(o1.y<o2.y) {
-                    return -1;
-                }else if(o1.y>o2.y) {
-                    return 1;
-                }
-            }
-            return 0;
-        }
-        
-    }
 
     private void init(final Point seed, final Array ms, final double intensity,
             final int sindex, final int spm) {
-        this.regionList = new TreeSet<Point>(new PointComparator());
+        this.regionList = new ArrayList<Point>();
         this.seedPoint = seed;
         this.boundary = new ArrayList<Point>();
         this.activeList = new FiFoQueue<Point>();
@@ -121,7 +97,7 @@ public class PeakArea2D implements Iterable<Point>{
     }
 
     public void clear() {
-        this.regionList = new TreeSet<Point>(new PointComparator());
+        this.regionList = new ArrayList<Point>();
         this.boundary = new ArrayList<Point>();
         this.activeList = new FiFoQueue<Point>();
 
@@ -430,7 +406,8 @@ public class PeakArea2D implements Iterable<Point>{
      * @return true if yes, else false
      */
     public boolean regionContains(final Point point) {
-        final boolean pixelMapContainsPoint = this.pixelMap.containsKey(getIndex(point));
+        final boolean pixelMapContainsPoint = this.pixelMap.containsKey(getIndex(
+                point));
         final boolean seedPointIsPoint = (point.x == this.seedPoint.x)
                 && (point.y == this.seedPoint.y);
         if (pixelMapContainsPoint || seedPointIsPoint) {
@@ -488,10 +465,5 @@ public class PeakArea2D implements Iterable<Point>{
 
     public void normalizeTo(Peak2D reference) {
         this.areaIntensity /= reference.getPeakArea().getAreaIntensity();
-    }
-
-    @Override
-    public Iterator<Point> iterator() {
-        return regionList.iterator();
     }
 }

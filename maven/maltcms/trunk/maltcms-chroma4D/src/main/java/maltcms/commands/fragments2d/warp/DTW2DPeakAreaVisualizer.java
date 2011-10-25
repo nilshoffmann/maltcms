@@ -55,91 +55,96 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @Slf4j
 @Data
-@RequiresVariables(names = { "var.scan_acquisition_time_1d",
-        "var.modulation_time", "var.scan_rate", "var.second_column_time",
-        "var.region_index_list",
-        // "var.warp_path_i", "var.warp_path_j",
-        "var.boundary_index_list" })
-@RequiresOptionalVariables(names = { "" })
-@ProvidesVariables(names = { "" })
-@ServiceProvider(service=AFragmentCommand.class)
+@RequiresVariables(names = {"var.scan_acquisition_time_1d",
+    "var.modulation_time", "var.scan_rate", "var.second_column_time",
+    "var.region_index_list",
+    // "var.warp_path_i", "var.warp_path_j",
+    "var.boundary_index_list"})
+@RequiresOptionalVariables(names = {""})
+@ProvidesVariables(names = {""})
+@ServiceProvider(service = AFragmentCommand.class)
 public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
 
-	@Configurable(name = "var.boundary_index_list", value = "boundary_index_list")
-	private String boundaryPeakListVar = "boundary_index_list";
-	@Configurable(name = "var.region_index_list", value = "region_index_list")
-	private String regionIndexListVar = "region_index_list";
-	@Configurable(value = "false")
-	private boolean fillPeakArea = false;
+    @Configurable(name = "var.boundary_index_list",
+    value = "boundary_index_list")
+    private String boundaryPeakListVar = "boundary_index_list";
+    @Configurable(name = "var.region_index_list", value = "region_index_list")
+    private String regionIndexListVar = "region_index_list";
+    @Configurable(value = "false")
+    private boolean fillPeakArea = false;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void configure(final Configuration cfg) {
-		super.configure(cfg);
-		this.boundaryPeakListVar = cfg.getString("var.boundary_index_list",
-		        "boundary_index_list");
-		this.regionIndexListVar = cfg.getString("var.region_index_list",
-		        "region_index_list");
-		this.fillPeakArea = cfg.getBoolean(this.getClass().getName()
-		        + ".fillPeakArea", false);
-	}
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected List<Array> getScanlineFor(final IFileFragment ff, final int spm) {
-		final List<Array> scanlines = super.getScanlineFor(ff, spm);
-		super.normalize(false);
-		super.setBinSize(2);
-		for (int k = 0; k < scanlines.size(); k++) {
-			ArrayTools.fill(scanlines.get(k), 0);
-		}
-		Array refBoundary = null;
-		if (this.fillPeakArea) {
-			log.info("Filling peak area; using {}",
-			        this.regionIndexListVar);
-			refBoundary = ff.getChild(this.regionIndexListVar).getArray();
-		} else {
-			log.info("Do not fill peak area; using {}",
-			        this.boundaryPeakListVar);
-			refBoundary = ff.getChild(this.boundaryPeakListVar).getArray();
-		}
-		final IndexIterator iter = refBoundary.getIndexIterator();
-		int k = 0;
-		ArrayDouble.D1 tmp;
-		while (iter.hasNext()) {
-			k = iter.getIntNext();
-			try {
-				tmp = (ArrayDouble.D1) scanlines.get(k / spm);
-				tmp.set(k % spm, 1.0d);
-			} catch (final IndexOutOfBoundsException e) {
-				log.error("IndexOutOfBounds for index {}(" + (k / spm)
-				        + "," + (k % spm) + ")", k);
-			}
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void configure(final Configuration cfg) {
+        super.configure(cfg);
+        this.boundaryPeakListVar = cfg.getString("var.boundary_index_list",
+                "boundary_index_list");
+        this.regionIndexListVar = cfg.getString("var.region_index_list",
+                "region_index_list");
+        this.fillPeakArea = cfg.getBoolean(this.getClass().getName()
+                + ".fillPeakArea", false);
+    }
 
-		return scanlines;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected List<Array> getScanlineFor(final IFileFragment ff, final int spm) {
+        final List<Array> scanlines = super.getScanlineFor(ff, spm);
+        super.normalize(false);
+        super.setBinSize(2);
+        for (int k = 0; k < scanlines.size(); k++) {
+            ArrayTools.fill(scanlines.get(k), 0);
+        }
+        Array refBoundary = null;
+        if (this.fillPeakArea) {
+            log.info("Filling peak area; using {}",
+                    this.regionIndexListVar);
+            refBoundary = ff.getChild(this.regionIndexListVar).getArray();
+        } else {
+            log.info("Do not fill peak area; using {}",
+                    this.boundaryPeakListVar);
+            refBoundary = ff.getChild(this.boundaryPeakListVar).getArray();
+        }
+        final IndexIterator iter = refBoundary.getIndexIterator();
+        int k = 0;
+        ArrayDouble.D1 tmp;
+        while (iter.hasNext()) {
+            k = iter.getIntNext();
+            try {
+                tmp = (ArrayDouble.D1) scanlines.get(k / spm);
+                tmp.set(k % spm, 1.0d);
+            } catch (final IndexOutOfBoundsException e) {
+                log.error("IndexOutOfBounds for index {}(" + (k / spm)
+                        + "," + (k % spm) + ")", k);
+            }
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void saveChart(final JFreeChart chart, final IFileFragment ref,
-	        final IFileFragment query) {
-		final PlotRunner pl = new EPlotRunner(chart, StringTools
-		        .removeFileExt(ref.getName())
-		        + "_vs_" + StringTools.removeFileExt(query.getName()) + "-PA",
-		        getWorkflow().getOutputDirectory(this));
-		pl.configure(Factory.getInstance().getConfiguration());
-		final File f = pl.getFile();
-		final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f, this,
-		        WorkflowSlot.VISUALIZATION, ref, query);
-		getWorkflow().append(dwr);
-		Factory.getInstance().submitJob(pl);
-	}
+        return scanlines;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void saveChart(final JFreeChart chart, final IFileFragment ref,
+            final IFileFragment query) {
+        final PlotRunner pl = new EPlotRunner(chart,
+                StringTools.removeFileExt(ref.getName())
+                + "_vs_" + StringTools.removeFileExt(query.getName()) + "-PA",
+                getWorkflow().getOutputDirectory(this));
+        pl.configure(Factory.getInstance().getConfiguration());
+        final File f = pl.getFile();
+        final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f, this,
+                WorkflowSlot.VISUALIZATION, ref, query);
+        getWorkflow().append(dwr);
+        Factory.getInstance().submitJob(pl);
+    }
 }

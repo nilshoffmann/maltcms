@@ -37,62 +37,60 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class AlignmentPath2D {
 
-	private Map<Integer, List<Integer>> LHStoRHShorizontalMap = new HashMap<Integer, List<Integer>>(),
-			LHStoRHSverticalMap = new HashMap<Integer, List<Integer>>();
-	private Map<Integer, List<Integer>> RHStoLHShorizontalMap = new HashMap<Integer, List<Integer>>(),
-			RHStoLHSverticalMap = new HashMap<Integer, List<Integer>>();
+    private Map<Integer, List<Integer>> LHStoRHShorizontalMap = new HashMap<Integer, List<Integer>>(),
+            LHStoRHSverticalMap = new HashMap<Integer, List<Integer>>();
+    private Map<Integer, List<Integer>> RHStoLHShorizontalMap = new HashMap<Integer, List<Integer>>(),
+            RHStoLHSverticalMap = new HashMap<Integer, List<Integer>>();
+    private List<Point> horizontalList, verticalList;
 
-	private List<Point> horizontalList, verticalList;
+    private AlignmentPath2D(final List<Point> horizontal,
+            final List<Point> vertical) {
+        this.horizontalList = horizontal;
+        this.verticalList = vertical;
 
-	private AlignmentPath2D(final List<Point> horizontal,
-			final List<Point> vertical) {
-		this.horizontalList = horizontal;
-		this.verticalList = vertical;
+        for (final Point p : horizontal) {
+            if (!this.LHStoRHShorizontalMap.containsKey(p.x)) {
+                this.LHStoRHShorizontalMap.put(p.x, new ArrayList<Integer>());
+            }
+            this.LHStoRHShorizontalMap.get(p.x).add(p.y);
 
-		for (final Point p : horizontal) {
-			if (!this.LHStoRHShorizontalMap.containsKey(p.x)) {
-				this.LHStoRHShorizontalMap.put(p.x, new ArrayList<Integer>());
-			}
-			this.LHStoRHShorizontalMap.get(p.x).add(p.y);
+            if (!this.RHStoLHShorizontalMap.containsKey(p.y)) {
+                this.RHStoLHShorizontalMap.put(p.y, new ArrayList<Integer>());
+            }
+            this.RHStoLHShorizontalMap.get(p.y).add(p.x);
+        }
 
-			if (!this.RHStoLHShorizontalMap.containsKey(p.y)) {
-				this.RHStoLHShorizontalMap.put(p.y, new ArrayList<Integer>());
-			}
-			this.RHStoLHShorizontalMap.get(p.y).add(p.x);
-		}
+        for (final Point p : vertical) {
+            if (!this.LHStoRHSverticalMap.containsKey(p.x)) {
+                this.LHStoRHSverticalMap.put(p.x, new ArrayList<Integer>());
+            }
+            this.LHStoRHSverticalMap.get(p.x).add(p.y);
 
-		for (final Point p : vertical) {
-			if (!this.LHStoRHSverticalMap.containsKey(p.x)) {
-				this.LHStoRHSverticalMap.put(p.x, new ArrayList<Integer>());
-			}
-			this.LHStoRHSverticalMap.get(p.x).add(p.y);
+            if (!this.RHStoLHSverticalMap.containsKey(p.y)) {
+                this.RHStoLHSverticalMap.put(p.y, new ArrayList<Integer>());
+            }
+            this.RHStoLHSverticalMap.get(p.y).add(p.x);
+        }
 
-			if (!this.RHStoLHSverticalMap.containsKey(p.y)) {
-				this.RHStoLHSverticalMap.put(p.y, new ArrayList<Integer>());
-			}
-			this.RHStoLHSverticalMap.get(p.y).add(p.x);
-		}
+    }
 
-	}
+    public List<Integer> getRHSPointHorizontal(final Integer lhsHorizontal) {
+        return this.LHStoRHShorizontalMap.get(lhsHorizontal);
+    }
 
-	public List<Integer> getRHSPointHorizontal(final Integer lhsHorizontal) {
-		return this.LHStoRHShorizontalMap.get(lhsHorizontal);
-	}
+    public List<Integer> getLHSPointHorizontal(final Integer rhsHorizontal) {
+        return this.RHStoLHShorizontalMap.get(rhsHorizontal);
+    }
 
-	public List<Integer> getLHSPointHorizontal(final Integer rhsHorizontal) {
-		return this.RHStoLHShorizontalMap.get(rhsHorizontal);
-	}
+    public List<Integer> getRHSPointVerticals(final Integer lhsVertical) {
+        return this.LHStoRHSverticalMap.get(lhsVertical);
+    }
 
-	public List<Integer> getRHSPointVerticals(final Integer lhsVertical) {
-		return this.LHStoRHSverticalMap.get(lhsVertical);
-	}
+    public List<Integer> getLHSPointVertical(final Integer rhsVertical) {
+        return this.RHStoLHSverticalMap.get(rhsVertical);
+    }
 
-	public List<Integer> getLHSPointVertical(final Integer rhsVertical) {
-		return this.RHStoLHSverticalMap.get(rhsVertical);
-	}
-
-	public List<Point> getHorizontalList() {
-		return this.horizontalList;
-	}
-	
+    public List<Point> getHorizontalList() {
+        return this.horizontalList;
+    }
 }

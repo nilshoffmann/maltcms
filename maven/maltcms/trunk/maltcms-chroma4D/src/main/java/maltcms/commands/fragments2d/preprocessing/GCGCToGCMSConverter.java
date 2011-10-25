@@ -37,6 +37,11 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
     private double snrthreshold = 5;
 
     @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
+    @Override
     public String getDescription() {
         return "GCxGC-MS data to GC-MS data by simple scan-wise summation.";
     }

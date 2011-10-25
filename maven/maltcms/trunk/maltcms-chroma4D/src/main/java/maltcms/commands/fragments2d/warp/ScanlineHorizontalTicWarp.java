@@ -48,40 +48,44 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @RequiresVariables(names = {})
 @RequiresOptionalVariables(names = {})
-@ProvidesVariables(names = { "var.warp_path_i", "var.warp_path_j" })
+@ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
 public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
 
-	private boolean scale = true;
-	private int k = 1;
+    private boolean scale = true;
+    private int k = 1;
 
-	@Override
-	public Tuple2D<List<Array>, List<Array>> createTuple(
-			Tuple2D<IFileFragment, IFileFragment> t) {
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
-		final IFileFragment ref = t.getFirst(), query = t.getSecond();
+    @Override
+    public Tuple2D<List<Array>, List<Array>> createTuple(
+            Tuple2D<IFileFragment, IFileFragment> t) {
 
-		final String refname = StringTools.removeFileExt(ref.getName()), queryname = StringTools
-				.removeFileExt(query.getName());
+        final IFileFragment ref = t.getFirst(), query = t.getSecond();
 
-		ref.getChild(refname + "_" + queryname + "-tv").setIndex(
-				ref.getChild(refname + "_" + queryname + "-idx"));
-		List<Array> scanlineRef = ref.getChild(
-				refname + "_" + queryname + "-tv").getIndexedArray();
+        final String refname = StringTools.removeFileExt(ref.getName()), queryname = StringTools.
+                removeFileExt(query.getName());
 
-		query.getChild(queryname + "_" + refname + "-tv").setIndex(
-				query.getChild(queryname + "_" + refname + "-idx"));
-		List<Array> scanlineQuery = query.getChild(
-				queryname + "_" + refname + "-tv").getIndexedArray();
+        ref.getChild(refname + "_" + queryname + "-tv").setIndex(
+                ref.getChild(refname + "_" + queryname + "-idx"));
+        List<Array> scanlineRef = ref.getChild(
+                refname + "_" + queryname + "-tv").getIndexedArray();
 
-		if (this.scale) {
-			for (int i = 0; i < k; i++) {
-				log.info("Scaling");
-				scanlineRef = ArrayTools2.sqrt(scanlineRef);
-				scanlineQuery = ArrayTools2.sqrt(scanlineQuery);
-			}
-		}
+        query.getChild(queryname + "_" + refname + "-tv").setIndex(
+                query.getChild(queryname + "_" + refname + "-idx"));
+        List<Array> scanlineQuery = query.getChild(
+                queryname + "_" + refname + "-tv").getIndexedArray();
 
-		return new Tuple2D<List<Array>, List<Array>>(scanlineRef, scanlineQuery);
-	}
+        if (this.scale) {
+            for (int i = 0; i < k; i++) {
+                log.info("Scaling");
+                scanlineRef = ArrayTools2.sqrt(scanlineRef);
+                scanlineQuery = ArrayTools2.sqrt(scanlineQuery);
+            }
+        }
 
+        return new Tuple2D<List<Array>, List<Array>>(scanlineRef, scanlineQuery);
+    }
 }

@@ -111,6 +111,11 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     private boolean createSuperimposedTICChart = true;
     private String y_axis_label = "TIC";
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final IFileFragment iff = MaltcmsTools.getPairwiseDistanceFragment(t);
         TupleND<IFileFragment> pwdt = MaltcmsTools.getPairwiseAlignments(iff);

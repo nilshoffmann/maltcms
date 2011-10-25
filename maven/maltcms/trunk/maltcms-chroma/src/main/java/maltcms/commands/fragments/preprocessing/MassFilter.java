@@ -69,6 +69,11 @@ public class MassFilter extends AFragmentCommand {
     private boolean invert = false;
 
     @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
+    @Override
     public void configure(Configuration cfg) {
         super.configure(cfg);
         this.epsilon = cfg.getDouble(this.getClass().getName()

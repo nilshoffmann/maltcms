@@ -50,6 +50,11 @@ public class ProgressiveTreeAlignment extends AFragmentCommand {
     @Configurable(value = "maltcms.commands.fragments.cluster.UPGMAAlgorithm")
     private String guideTreeClass = "maltcms.commands.fragments.cluster.UPGMAAlgorithm";
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     /*
      * (non-Javadoc)
      * 

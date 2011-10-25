@@ -43,58 +43,61 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class Ident2DTWVisualizer extends Default2DTWVisualizer {
 
-	// private Logger log = Logging.getLogger(this.getClass());
+    // private Logger log = Logging.getLogger(this.getClass());
+    private int currentrasterline = -1;
 
-	private int currentrasterline = -1;
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public BufferedImage createImage(final List<Array> scanlinesi,
-	        final List<Array> scanlinesj, final Array warpPathi,
-	        final Array warpPathj) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public BufferedImage createImage(final List<Array> scanlinesi,
+            final List<Array> scanlinesj, final Array warpPathi,
+            final Array warpPathj) {
 
-		final int imageheight = (int) (scanlinesi.get(0).getSize());
+        final int imageheight = (int) (scanlinesi.get(0).getSize());
 
-		final List<Tuple2D<Array, Array>> outputintensities = new ArrayList<Tuple2D<Array, Array>>();
-		final List<Tuple2D<Integer, Integer>> outputintensitiescounter = new ArrayList<Tuple2D<Integer, Integer>>();
+        final List<Tuple2D<Array, Array>> outputintensities = new ArrayList<Tuple2D<Array, Array>>();
+        final List<Tuple2D<Integer, Integer>> outputintensitiescounter = new ArrayList<Tuple2D<Integer, Integer>>();
 
-		final Tuple2D<double[], Tuple2D<double[], double[]>> sb = getSampleAndBreakpointTable(
-		        scanlinesi, scanlinesj);
+        final Tuple2D<double[], Tuple2D<double[], double[]>> sb = getSampleAndBreakpointTable(
+                scanlinesi, scanlinesj);
 
-		final ArrayDouble.D1 emptyScanline = new ArrayDouble.D1(imageheight);
-		maltcms.tools.ArrayTools.fill(emptyScanline, 0);
-		for (int i = 0; i < Math.max(scanlinesi.size(), scanlinesj.size()); i++) {
-			final Array scanlinei;
-			final Array scanlinej;
-			if (i < scanlinesi.size()) {
-				scanlinei = scanlinesi.get(i);
-			} else {
-				scanlinei = emptyScanline;
-			}
-			if (i < scanlinesj.size()) {
-				scanlinej = scanlinesj.get(i);
-			} else {
-				scanlinej = emptyScanline;
-			}
-			outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
-			        scanlinej));
-			outputintensitiescounter.add(new Tuple2D<Integer, Integer>(1, 1));
-			this.currentrasterline++;
-		}
+        final ArrayDouble.D1 emptyScanline = new ArrayDouble.D1(imageheight);
+        maltcms.tools.ArrayTools.fill(emptyScanline, 0);
+        for (int i = 0; i < Math.max(scanlinesi.size(), scanlinesj.size()); i++) {
+            final Array scanlinei;
+            final Array scanlinej;
+            if (i < scanlinesi.size()) {
+                scanlinei = scanlinesi.get(i);
+            } else {
+                scanlinei = emptyScanline;
+            }
+            if (i < scanlinesj.size()) {
+                scanlinej = scanlinesj.get(i);
+            } else {
+                scanlinej = emptyScanline;
+            }
+            outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
+                    scanlinej));
+            outputintensitiescounter.add(new Tuple2D<Integer, Integer>(1, 1));
+            this.currentrasterline++;
+        }
 
-		return ci(outputintensities, outputintensitiescounter, imageheight, sb
-		        .getFirst(), sb.getSecond().getFirst(), sb.getSecond()
-		        .getSecond());
-	}
+        return ci(outputintensities, outputintensitiescounter, imageheight, sb.
+                getFirst(), sb.getSecond().getFirst(),
+                sb.getSecond().getSecond());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void configure(final Configuration cfg) {
-		super.configure(cfg);
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void configure(final Configuration cfg) {
+        super.configure(cfg);
+    }
 }

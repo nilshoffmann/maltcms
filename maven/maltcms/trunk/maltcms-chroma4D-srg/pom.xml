@@ -36,15 +36,15 @@
     </build>
     <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>commons-configuration</groupId>
       <artifactId>commons-configuration</artifactId>
       <version>1.6</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>edu.ucar.unidata</groupId>
@@ -111,6 +111,35 @@
             <artifactId>maltcms-apps</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-test-data</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+          <exclusions>
+            <exclusion>
+              <artifactId>log4j</artifactId>
+              <groupId>log4j</groupId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-chroma4D</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+      <dependency>
+        <artifactId>cross-main</artifactId>
+        <groupId>net.sf.maltcms</groupId>
+        <type>jar</type>
+        <version>1.2.2</version>
+        <exclusions>
+          <exclusion>
+            <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
+          </exclusion>
+        </exclusions>
+      </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

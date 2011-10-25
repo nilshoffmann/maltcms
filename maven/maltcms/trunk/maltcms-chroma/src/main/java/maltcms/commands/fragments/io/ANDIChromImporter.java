@@ -35,62 +35,69 @@ import org.openide.util.lookup.ServiceProvider;
 @ProvidesVariables(names = {"var.scan_acquisition_time"})
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class ANDIChromImporter extends AFragmentCommand {
 
-	@Configurable(name = "var.ordinate_values")
-	private String ordinateValuesVariable = "ordinate_values";
-	@Configurable(name = "var.scan_acquisition_time")
-	private String scanAcquisitionTimeVariable = "scan_acquisition_time";
-	@Configurable(name = "var.actual_sampling_interval")
-	private String actualSamplingIntervalVariable = "actual_sampling_interval";
-	@Configurable(name = "var.actual_delay_time")
-	private String actualDelayTimeVariable = "actual_delay_time";
+    @Configurable(name = "var.ordinate_values")
+    private String ordinateValuesVariable = "ordinate_values";
+    @Configurable(name = "var.scan_acquisition_time")
+    private String scanAcquisitionTimeVariable = "scan_acquisition_time";
+    @Configurable(name = "var.actual_sampling_interval")
+    private String actualSamplingIntervalVariable = "actual_sampling_interval";
+    @Configurable(name = "var.actual_delay_time")
+    private String actualDelayTimeVariable = "actual_delay_time";
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.commands.ICommand#apply(java.lang.Object)
-	 */
-	@Override
-	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-		final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
-		for (final IFileFragment iff : t) {
-			final IFileFragment fret = Factory.getInstance()
-			        .getFileFragmentFactory().create(
-			                new File(getWorkflow().getOutputDirectory(this),
-			                        iff.getName()));
-			final Array a = iff.getChild(this.ordinateValuesVariable).getArray();
-			final Array sa = iff.getChild(this.actualSamplingIntervalVariable).getArray();
-			final ArrayDouble.D1 sat = new ArrayDouble.D1(a.getShape()[0]);
-			final Array adt = iff.getChild(this.actualDelayTimeVariable).getArray();
-			final double rtStart = adt.getDouble(0);
-			final double asi = sa.getDouble(0);
-			for (int i = 0; i < sat.getShape()[0]; i++) {
-				sat.set(i, rtStart + ((i) * asi));
-			}
-			fret.addSourceFile(iff);
-			final VariableFragment vf = new VariableFragment(fret,
-			        this.scanAcquisitionTimeVariable);
-			vf.setArray(sat);
-			fret.save();
-			ret.add(fret);
-		}
-		return new TupleND<IFileFragment>(ret);
-	}
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		super.configure(cfg);
-		this.ordinateValuesVariable = cfg.getString(getClass().getName()
-		        + ".ordinate_values", "ordinate_values");
-		this.scanAcquisitionTimeVariable = cfg.getString(getClass().getName()
-		        + ".scan_acquisition_time", "scan_acquisition_time");
-		this.actualSamplingIntervalVariable = cfg.getString(getClass().getName()
-		        + ".actual_sampling_interval", "actual_sampling_interval");
-		this.actualDelayTimeVariable = cfg.getString(getClass().getName()
-		        + ".actual_delay_time", "actual_delay_time");
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.commands.ICommand#apply(java.lang.Object)
+     */
+    @Override
+    public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
+        final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
+        for (final IFileFragment iff : t) {
+            final IFileFragment fret = Factory.getInstance().
+                    getFileFragmentFactory().create(
+                    new File(getWorkflow().getOutputDirectory(this),
+                    iff.getName()));
+            final Array a = iff.getChild(this.ordinateValuesVariable).getArray();
+            final Array sa = iff.getChild(this.actualSamplingIntervalVariable).
+                    getArray();
+            final ArrayDouble.D1 sat = new ArrayDouble.D1(a.getShape()[0]);
+            final Array adt = iff.getChild(this.actualDelayTimeVariable).
+                    getArray();
+            final double rtStart = adt.getDouble(0);
+            final double asi = sa.getDouble(0);
+            for (int i = 0; i < sat.getShape()[0]; i++) {
+                sat.set(i, rtStart + ((i) * asi));
+            }
+            fret.addSourceFile(iff);
+            final VariableFragment vf = new VariableFragment(fret,
+                    this.scanAcquisitionTimeVariable);
+            vf.setArray(sat);
+            fret.save();
+            ret.add(fret);
+        }
+        return new TupleND<IFileFragment>(ret);
+    }
+
+    @Override
+    public void configure(final Configuration cfg) {
+        super.configure(cfg);
+        this.ordinateValuesVariable = cfg.getString(getClass().getName()
+                + ".ordinate_values", "ordinate_values");
+        this.scanAcquisitionTimeVariable = cfg.getString(getClass().getName()
+                + ".scan_acquisition_time", "scan_acquisition_time");
+        this.actualSamplingIntervalVariable = cfg.getString(getClass().getName()
+                + ".actual_sampling_interval", "actual_sampling_interval");
+        this.actualDelayTimeVariable = cfg.getString(getClass().getName()
+                + ".actual_delay_time", "actual_delay_time");
+    }
 
     /*
      * (non-Javadoc)

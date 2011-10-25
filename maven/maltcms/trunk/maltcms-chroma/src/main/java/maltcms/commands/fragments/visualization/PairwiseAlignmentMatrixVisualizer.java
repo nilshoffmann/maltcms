@@ -85,7 +85,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
 
     Thread t = null;
@@ -110,6 +110,11 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
     private boolean drawPath;
     private ArrayList<String> matrix_vars;
     private int fontsize = 30;
+
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
     protected BufferedImage addSpectra(final String queryName,
             final String refName, final Array query, final Array ref,

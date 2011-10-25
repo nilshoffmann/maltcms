@@ -108,6 +108,11 @@ public class MeanVarProducer extends AFragmentCommand {
     @Configurable(value = "-1.0d")
     private double minStandardDeviation = -1.0d;
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     /**
      * {@inheritDoc}
      */

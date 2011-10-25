@@ -96,6 +96,11 @@ public class ModulationExtractor extends AFragmentCommand {
     private int endModulation = -1;
 
     @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
+    @Override
     public void configure(Configuration cfg) {
         super.configure(cfg);
 

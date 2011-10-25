@@ -62,6 +62,11 @@ public class Data2DNormalizer extends AFragmentCommand {
     private boolean multiplyWithTic = false;
 
     @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
+    @Override
     public String getDescription() {
         return "Normalizes 2D / GCxGC-MS data";
     }

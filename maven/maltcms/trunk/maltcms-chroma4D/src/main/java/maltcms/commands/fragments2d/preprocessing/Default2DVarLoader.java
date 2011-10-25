@@ -25,6 +25,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.sf.maltcms.execution.api.ICompletionService;
 import org.apache.commons.configuration.Configuration;
 
 import ucar.ma2.Array;
@@ -49,6 +52,8 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.fragments2d.preprocessing.default2dVarLoader.ModulationTimeEstimatorTask;
+import net.sf.maltcms.execution.spi.MaltcmsCompletionService;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -102,7 +107,13 @@ public class Default2DVarLoader extends AFragmentCommand {
     private String modulationTimeDimension = "modulation_time";
     private String scanRateDimension = "scan_rate";
     private String scanNumberDimension = "scan_number";
+    private boolean estimateModulationTime = false;
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -287,6 +298,21 @@ public class Default2DVarLoader extends AFragmentCommand {
                 this.modulationTimeVar);
         final Array modulationArray = Array.factory(Double.class,
                 new int[]{1});
+        if(estimateModulationTime) {
+            ICompletionService<Double> mcs = createCompletionService(
+                    Double.class);
+            ModulationTimeEstimatorTask mtet = new ModulationTimeEstimatorTask();
+            mtet.setInput(new File(source.getAbsolutePath()));
+            mtet.setNumberOfScans(100000);
+            mtet.setOffset(0);
+            mcs.submit(mtet);
+            try {
+                this.modulationTime = mcs.call().get(0);
+            } catch (Exception ex) {
+                Logger.getLogger(Default2DVarLoader.class.getName()).
+                        log(Level.SEVERE, null, ex);
+            }
+        }
         if (Math.rint(this.modulationTime) != this.modulationTime) {
             throw new IllegalArgumentException(
                     "Modulation time must be an integer, was: "
@@ -353,6 +379,7 @@ public class Default2DVarLoader extends AFragmentCommand {
         Integer modulationCnt;
         // if (ticcount % scanspermodulation == 0) {
         modulationCnt = (ticcount / scanspermodulation);
+        System.out.println("Chromatogram has "+modulationCnt+" modulations");
         log.info("ticcount: {}, scanspermodulation: {}, scancount: {}",
                 new Object[]{ticcount, scanspermodulation, modulationCnt});
         // } else {

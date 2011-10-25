@@ -87,6 +87,11 @@ public class ChromatogramVisualizer extends AFragmentCommand {
     private String timeUnit = "min";
 
     @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
+    @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ColorRampReader crr = new ColorRampReader();
         final int[][] colorRamp = crr.readColorRamp(this.colorrampLocation);

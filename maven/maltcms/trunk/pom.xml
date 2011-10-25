@@ -115,6 +115,16 @@
                                 <show>public</show>
                             </configuration>
                         </execution>
+                        <execution>
+                            <id>javadoc-jar</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                            <configuration>
+                                <show>public</show>
+                            </configuration>
+                        </execution>
                     </executions>
                 </plugin>
                 <plugin>
@@ -213,13 +223,32 @@
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>cross-main</artifactId>
-            <version>1.2.1</version>
-			<!--<type>pom</type> -->
+            <version>1.2.3-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>cross-ui</artifactId>
-            <version>1.2.1</version>
+            <version>1.2.3-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>javax.media</groupId>
@@ -236,14 +265,27 @@
         <dependency> 
             <groupId>org.projectlombok</groupId> 
             <artifactId>lombok</artifactId> 
-            <version>0.10.0-RC1</version> 
+            <version>0.10.1</version> 
             <type>jar</type>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.8.1</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>1.6.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.6.1</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
     <reporting>
@@ -259,6 +301,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.8</version>
                 <configuration>
                     <show>public</show>
                 </configuration>

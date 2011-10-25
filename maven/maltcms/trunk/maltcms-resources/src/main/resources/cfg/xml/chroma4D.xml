@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-    Document   : testConfig.xml
-    Created on : 28. Juli 2011, 22:34
-    Author     : nils
-    Description:
-        Purpose of the document follows.
--->
-
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <description>
-            This file defines elements of the default ChromA pipeline.
+            This file defines the default ChromA4D pipeline.
     </description>
     
-    <!-- a command pipeline consists of input and a list of 
+    <import resource="chroma4D-base.xml"/>
+    <import resource="chroma4D-srg.xml"/>
+    <import resource="chroma4D-cwt.xml"/>
+    
+    <!-- a command pipeline consists of a list of 
      commands to be executed -->
     <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
         <property name="checkCommandDependencies" value="true"/>
         <property name="commands">
             <list>
-                <ref bean="myFirstCommand" />
-                <ref bean="mySecondCommand" />
+                <ref bean="modulationTimeEstimator" />
+                <ref bean="default2DVarLoader" />
+                <ref bean="massFilter" />
+<!--                <ref bean="ticHeatmapCoplotBeforeAlignment"/>-->
+<!--                <ref bean="eicHeatmapCoplotBeforeAlignment"/>-->
+                <ref bean="seededRegionGrowing" />
+                <ref bean="ticPeakFinder" />
+                <ref bean="peakCliqueAlignment" /><!--
+                <ref bean="pairwiseDistanceCalculator" />
+                <ref bean="centerStarAlignment" />
+                <ref bean="chromatogramWarp" />
+                <ref bean="ticHeatmapCoplotAfterAlignment"/>
+                <ref bean="eicHeatmapCoplotAfterAlignment"/>-->
             </list>
         </property>    
     </bean>
-               <!-- commands -->
-               
-   <bean id="default2DVarLoader" class="maltcms.commands.fragments2d.preprocessing.Default2DVarLoader">
-       
-   </bean>
-    
+
 </beans>

@@ -109,6 +109,11 @@ public class ChromatogramWarp2 extends AFragmentCommand {
     private String alignmentLocation = "";
     @Configurable(name = "var.scan_acquisition_time")
     private String satvar = "scan_acquisition_time";
+    
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
     private AlignmentTable buildTableFromFragment(IFileFragment f) {
         try {

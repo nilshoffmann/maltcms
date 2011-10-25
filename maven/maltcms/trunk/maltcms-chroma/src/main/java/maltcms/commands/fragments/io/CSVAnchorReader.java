@@ -71,6 +71,11 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=AFragmentCommand.class)
 public class CSVAnchorReader extends AFragmentCommand {
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     public static void main(final String[] args) {
         // Maltcms m = Maltcms.getInstance();
         // Logger log = cross.Logging.getLogger(Maltcms.class);

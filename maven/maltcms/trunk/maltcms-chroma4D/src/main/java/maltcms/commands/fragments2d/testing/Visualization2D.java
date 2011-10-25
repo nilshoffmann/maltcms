@@ -51,284 +51,281 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class Visualization2D {
 
-	private int currentrasterline = -1;
+    private int currentrasterline = -1;
+    private boolean holdHorizontalI = false;
+    private boolean holdVerticalI = false;
+    private boolean holdHorizontalJ = false;
+    private boolean holdVerticalJ = false;
+    private boolean black = true;
+    private double threshold = 6.0d;
+    private boolean globalmax = false;
+    private boolean filter = false;
+    private boolean normalize = true;
+    private int binSize = 256;
 
-	private boolean holdHorizontalI = false;
-	private boolean holdVerticalI = false;
-	private boolean holdHorizontalJ = false;
-	private boolean holdVerticalJ = false;
-	private boolean black = true;
+    public BufferedImage createImage(List<Array> scanlinesi,
+            List<Array> scanlinesj, final List<Point> horizontal,
+            final List<Point> vertical) {
 
-	private double threshold = 6.0d;
-	private boolean globalmax = false;
-	private boolean filter = false;
-	private boolean normalize = true;
-	private int binSize = 256;
+        Tuple2D<List<Array>, List<Array>> scanlines = new Tuple2D<List<Array>, List<Array>>(
+                scanlinesi, scanlinesj);
 
-	public BufferedImage createImage(List<Array> scanlinesi,
-	        List<Array> scanlinesj, final List<Point> horizontal,
-	        final List<Point> vertical) {
+        if (horizontal != null) {
+            scanlines = createNewScanlines(scanlines.getFirst(), scanlines.
+                    getSecond(), horizontal, this.holdHorizontalI,
+                    this.holdHorizontalJ);
+        }
 
-		Tuple2D<List<Array>, List<Array>> scanlines = new Tuple2D<List<Array>, List<Array>>(
-		        scanlinesi, scanlinesj);
+        if (vertical != null) {
+            scanlines = createNewScanlines(ArrayTools2.transpose(scanlines.
+                    getFirst()), ArrayTools2.transpose(scanlines.getSecond()),
+                    vertical, this.holdVerticalI, this.holdVerticalJ);
+            scanlines = new Tuple2D<List<Array>, List<Array>>(ArrayTools2.
+                    transpose(scanlines.getFirst()),
+                    ArrayTools2.transpose(scanlines.getSecond()));
+        }
 
-		if (horizontal != null) {
-			scanlines = createNewScanlines(scanlines.getFirst(), scanlines
-			        .getSecond(), horizontal, this.holdHorizontalI,
-			        this.holdHorizontalJ);
-		}
+        final Tuple2D<double[], Tuple2D<double[], double[]>> sb = getSampleAndBreakpointTable(
+                scanlinesi, scanlinesj);
 
-		if (vertical != null) {
-			scanlines = createNewScanlines(ArrayTools2.transpose(scanlines
-			        .getFirst()), ArrayTools2.transpose(scanlines.getSecond()),
-			        vertical, this.holdVerticalI, this.holdVerticalJ);
-			scanlines = new Tuple2D<List<Array>, List<Array>>(ArrayTools2
-			        .transpose(scanlines.getFirst()), ArrayTools2
-			        .transpose(scanlines.getSecond()));
-		}
+        return ci(scanlines.getFirst(), scanlines.getSecond(), sb.getFirst(),
+                sb.getSecond().getFirst(), sb.getSecond().getSecond());
+    }
 
-		final Tuple2D<double[], Tuple2D<double[], double[]>> sb = getSampleAndBreakpointTable(
-		        scanlinesi, scanlinesj);
+    public Tuple2D<List<Array>, List<Array>> createNewScanlines(
+            List<Array> scanlinesi, List<Array> scanlinesj,
+            List<Point> warpPath, final boolean holdi, final boolean holdj) {
 
-		return ci(scanlines.getFirst(), scanlines.getSecond(), sb.getFirst(),
-		        sb.getSecond().getFirst(), sb.getSecond().getSecond());
-	}
+        this.currentrasterline = -1;
 
-	public Tuple2D<List<Array>, List<Array>> createNewScanlines(
-	        List<Array> scanlinesi, List<Array> scanlinesj,
-	        List<Point> warpPath, final boolean holdi, final boolean holdj) {
+        final List<Tuple2D<Array, Array>> outputintensities = new ArrayList<Tuple2D<Array, Array>>();
+        final List<Tuple2D<Integer, Integer>> outputintensitiescounter = new ArrayList<Tuple2D<Integer, Integer>>();
 
-		this.currentrasterline = -1;
+        // log.info("Conserve left chromatogram axis: {}", this.holdi);
+        // log.info("Conserve top chromatogram axis: {}", this.holdj);
 
-		final List<Tuple2D<Array, Array>> outputintensities = new ArrayList<Tuple2D<Array, Array>>();
-		final List<Tuple2D<Integer, Integer>> outputintensitiescounter = new ArrayList<Tuple2D<Integer, Integer>>();
+        int oldi = -1, oldj = -1;
+        for (Point p : warpPath) {
+            final int scanindexi = p.x;
+            final int scanindexj = p.y;
 
-		// log.info("Conserve left chromatogram axis: {}", this.holdi);
-		// log.info("Conserve top chromatogram axis: {}", this.holdj);
+            // log.info("{} - {}", scanindexi, scanindexj);
 
-		int oldi = -1, oldj = -1;
-		for (Point p : warpPath) {
-			final int scanindexi = p.x;
-			final int scanindexj = p.y;
+            final Array scanlinei = scanlinesi.get(scanindexi);
+            final Array scanlinej = scanlinesj.get(scanindexj);
 
-			// log.info("{} - {}", scanindexi, scanindexj);
+            if (oldi != scanindexi && oldj != scanindexj) {
+                // new pixel line
+                outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
+                        scanlinej));
+                outputintensitiescounter.add(new Tuple2D<Integer, Integer>(1, 1));
+                this.currentrasterline++;
+            } else if (oldi != scanindexi && oldj == scanindexj) {
+                if (holdj) {
+                    // adding pixelline to current sum
+                    int c = outputintensitiescounter.get(this.currentrasterline).
+                            getFirst();
+                    outputintensitiescounter.get(this.currentrasterline).
+                            setFirst(++c);
+                    final Tuple2D<Array, Array> tmp = outputintensities.get(
+                            this.currentrasterline);
+                    tmp.setFirst(ArrayTools.sum(tmp.getFirst(), scanlinei));
+                } else {
+                    // adding pixelline
+                    outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
+                            scanlinej));
+                    outputintensitiescounter.add(new Tuple2D<Integer, Integer>(
+                            1, 1));
+                    this.currentrasterline++;
+                }
+            } else if (oldi == scanindexi && oldj != scanindexj) {
+                if (holdi) {
+                    // add pixelline to current sum
+                    int c = outputintensitiescounter.get(this.currentrasterline).
+                            getSecond();
+                    outputintensitiescounter.get(this.currentrasterline).
+                            setSecond(++c);
+                    final Tuple2D<Array, Array> tmp = outputintensities.get(
+                            this.currentrasterline);
+                    tmp.setSecond(ArrayTools.sum(tmp.getSecond(), scanlinej));
+                } else {
+                    // adding pixelline
+                    outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
+                            scanlinej));
+                    outputintensitiescounter.add(new Tuple2D<Integer, Integer>(
+                            1, 1));
+                    this.currentrasterline++;
+                }
+            } else {
+                throw new RuntimeException("Warppath exception. Invalid path.");
+            }
+            oldi = scanindexi;
+            oldj = scanindexj;
+        }
 
-			final Array scanlinei = scanlinesi.get(scanindexi);
-			final Array scanlinej = scanlinesj.get(scanindexj);
+        return convertToScanlines(outputintensities, outputintensitiescounter);
+    }
 
-			if (oldi != scanindexi && oldj != scanindexj) {
-				// new pixel line
-				outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
-				        scanlinej));
-				outputintensitiescounter
-				        .add(new Tuple2D<Integer, Integer>(1, 1));
-				this.currentrasterline++;
-			} else if (oldi != scanindexi && oldj == scanindexj) {
-				if (holdj) {
-					// adding pixelline to current sum
-					int c = outputintensitiescounter
-					        .get(this.currentrasterline).getFirst();
-					outputintensitiescounter.get(this.currentrasterline)
-					        .setFirst(++c);
-					final Tuple2D<Array, Array> tmp = outputintensities
-					        .get(this.currentrasterline);
-					tmp.setFirst(ArrayTools.sum(tmp.getFirst(), scanlinei));
-				} else {
-					// adding pixelline
-					outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
-					        scanlinej));
-					outputintensitiescounter.add(new Tuple2D<Integer, Integer>(
-					        1, 1));
-					this.currentrasterline++;
-				}
-			} else if (oldi == scanindexi && oldj != scanindexj) {
-				if (holdi) {
-					// add pixelline to current sum
-					int c = outputintensitiescounter
-					        .get(this.currentrasterline).getSecond();
-					outputintensitiescounter.get(this.currentrasterline)
-					        .setSecond(++c);
-					final Tuple2D<Array, Array> tmp = outputintensities
-					        .get(this.currentrasterline);
-					tmp.setSecond(ArrayTools.sum(tmp.getSecond(), scanlinej));
-				} else {
-					// adding pixelline
-					outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
-					        scanlinej));
-					outputintensitiescounter.add(new Tuple2D<Integer, Integer>(
-					        1, 1));
-					this.currentrasterline++;
-				}
-			} else {
-				throw new RuntimeException("Warppath exception. Invalid path.");
-			}
-			oldi = scanindexi;
-			oldj = scanindexj;
-		}
+    private Tuple2D<List<Array>, List<Array>> convertToScanlines(
+            List<Tuple2D<Array, Array>> outputintensities,
+            List<Tuple2D<Integer, Integer>> outputintensitiescounter) {
 
-		return convertToScanlines(outputintensities, outputintensitiescounter);
-	}
+        final List<Array> scanlinesi = new ArrayList<Array>();
+        final List<Array> scanlinesj = new ArrayList<Array>();
 
-	private Tuple2D<List<Array>, List<Array>> convertToScanlines(
-	        List<Tuple2D<Array, Array>> outputintensities,
-	        List<Tuple2D<Integer, Integer>> outputintensitiescounter) {
+        for (int i = 0; i < outputintensities.size(); i++) {
+            scanlinesi.add(ArrayTools.mult(outputintensities.get(i).getFirst(),
+                    1.0d / outputintensitiescounter.get(i).getFirst()));
+            scanlinesj.add(ArrayTools.mult(
+                    outputintensities.get(i).getSecond(),
+                    1.0d / outputintensitiescounter.get(i).getSecond()));
+        }
 
-		final List<Array> scanlinesi = new ArrayList<Array>();
-		final List<Array> scanlinesj = new ArrayList<Array>();
+        return new Tuple2D<List<Array>, List<Array>>(scanlinesi, scanlinesj);
+    }
 
-		for (int i = 0; i < outputintensities.size(); i++) {
-			scanlinesi.add(ArrayTools.mult(outputintensities.get(i).getFirst(),
-			        1.0d / outputintensitiescounter.get(i).getFirst()));
-			scanlinesj.add(ArrayTools.mult(
-			        outputintensities.get(i).getSecond(),
-			        1.0d / outputintensitiescounter.get(i).getSecond()));
-		}
+    protected BufferedImage ci(final List<Array> scanlinesi,
+            final List<Array> scanlinesj, final double[] samples,
+            final double[] breakpointsi, final double[] breakpointsj) {
 
-		return new Tuple2D<List<Array>, List<Array>>(scanlinesi, scanlinesj);
-	}
+        if (scanlinesi.size() != scanlinesj.size()) {
+            System.out.println("ERROR!!! scanlines nicht gleichlang");
+            return null;
+        }
 
-	protected BufferedImage ci(final List<Array> scanlinesi,
-	        final List<Array> scanlinesj, final double[] samples,
-	        final double[] breakpointsi, final double[] breakpointsj) {
+        final int imageheight = scanlinesi.get(0).getShape()[0];
+        final int imagewidth = scanlinesi.size();
+        final BufferedImage img = new BufferedImage(imagewidth, imageheight,
+                BufferedImage.TYPE_INT_RGB);
+        final WritableRaster raster = img.getRaster();
 
-		if (scanlinesi.size() != scanlinesj.size()) {
-			System.out.println("ERROR!!! scanlines nicht gleichlang");
-			return null;
-		}
+        IndexIterator iter1, iter2;
+        double intensityi, intensityj;
+        int[] rgbvalueEqual = null;
+        int c = 0;
+        int rasterline = 0;
 
-		final int imageheight = scanlinesi.get(0).getShape()[0];
-		final int imagewidth = scanlinesi.size();
-		final BufferedImage img = new BufferedImage(imagewidth, imageheight,
-		        BufferedImage.TYPE_INT_RGB);
-		final WritableRaster raster = img.getRaster();
+        for (int i = 0; i < scanlinesi.size(); i++) {
+            iter1 = scanlinesi.get(i).getIndexIterator();
+            iter2 = scanlinesj.get(i).getIndexIterator();
+            c = 0;
+            while (iter1.hasNext() && iter2.hasNext()) {
+                intensityi = iter1.getDoubleNext();
+                intensityj = iter2.getDoubleNext();
+                if (this.normalize) {
+                    rgbvalueEqual = getRasterColor(ImageTools.getSample(
+                            samples, breakpointsi, intensityi), 1.0d,
+                            ImageTools.getSample(samples, breakpointsj,
+                            intensityj), 1.0d);
+                } else if (!this.normalize && this.binSize == 2) {
+                    if (intensityi > 0.0d) {
+                        intensityi = 1.0d;
+                    }
+                    if (intensityj > 0.0d) {
+                        intensityj = 1.0d;
+                    }
+                    rgbvalueEqual = getRasterColor(intensityi, 1.0d,
+                            intensityj, 1.0d);
+                } else {
+                    rgbvalueEqual = getRasterColor(ImageTools.getSample(
+                            samples, breakpointsi, intensityi), 1.0d,
+                            ImageTools.getSample(samples, breakpointsj,
+                            intensityj), 1.0d);
+                }
 
-		IndexIterator iter1, iter2;
-		double intensityi, intensityj;
-		int[] rgbvalueEqual = null;
-		int c = 0;
-		int rasterline = 0;
+                if ((rasterline < imagewidth)
+                        && ((imageheight - c - 1) < imageheight)
+                        && (imageheight - c - 1) >= 0) {
+                    raster.setPixel(rasterline, imageheight - c - 1,
+                            rgbvalueEqual);
+                }
 
-		for (int i = 0; i < scanlinesi.size(); i++) {
-			iter1 = scanlinesi.get(i).getIndexIterator();
-			iter2 = scanlinesj.get(i).getIndexIterator();
-			c = 0;
-			while (iter1.hasNext() && iter2.hasNext()) {
-				intensityi = iter1.getDoubleNext();
-				intensityj = iter2.getDoubleNext();
-				if (this.normalize) {
-					rgbvalueEqual = getRasterColor(ImageTools.getSample(
-					        samples, breakpointsi, intensityi), 1.0d,
-					        ImageTools.getSample(samples, breakpointsj,
-					                intensityj), 1.0d);
-				} else if (!this.normalize && this.binSize == 2) {
-					if (intensityi > 0.0d) {
-						intensityi = 1.0d;
-					}
-					if (intensityj > 0.0d) {
-						intensityj = 1.0d;
-					}
-					rgbvalueEqual = getRasterColor(intensityi, 1.0d,
-					        intensityj, 1.0d);
-				} else {
-					rgbvalueEqual = getRasterColor(ImageTools.getSample(
-					        samples, breakpointsi, intensityi), 1.0d,
-					        ImageTools.getSample(samples, breakpointsj,
-					                intensityj), 1.0d);
-				}
+                c++;
+            }
+            rasterline++;
+        }
 
-				if ((rasterline < imagewidth)
-				        && ((imageheight - c - 1) < imageheight)
-				        && (imageheight - c - 1) >= 0) {
-					raster.setPixel(rasterline, imageheight - c - 1,
-					        rgbvalueEqual);
-				}
+        return img;
+    }
 
-				c++;
-			}
-			rasterline++;
-		}
+    /**
+     * Will create an array int[3] containing the rgb values for the raster.
+     * 
+     * @param ci
+     *            current intensity of the first series
+     * @param maxci
+     *            maximum intensity of the first series
+     * @param cj
+     *            current intensity of the second series
+     * @param maxcj
+     *            maximum intensity of the second series
+     * @return rgb color array
+     */
+    protected int[] getRasterColor(final double ci, final double maxci,
+            final double cj, final double maxcj) {
+        final int vi = (int) (ci * 255.0d / maxci);
+        final int vj = (int) (cj * 255.0d / maxcj);
 
-		return img;
-	}
+        if (this.black) {
+            return new int[]{vi, vj, 0};
+        } else {
+            return new int[]{255 - vj, 255 - vi, 255 - Math.max(vi, vj)};
+        }
+    }
 
-	/**
-	 * Will create an array int[3] containing the rgb values for the raster.
-	 * 
-	 * @param ci
-	 *            current intensity of the first series
-	 * @param maxci
-	 *            maximum intensity of the first series
-	 * @param cj
-	 *            current intensity of the second series
-	 * @param maxcj
-	 *            maximum intensity of the second series
-	 * @return rgb color array
-	 */
-	protected int[] getRasterColor(final double ci, final double maxci,
-	        final double cj, final double maxcj) {
-		final int vi = (int) (ci * 255.0d / maxci);
-		final int vj = (int) (cj * 255.0d / maxcj);
+    /**
+     * Creates the samples table and the breakpoint table for reference and
+     * query arrays.
+     * 
+     * @param scanlinesi
+     *            scanlines of the reference
+     * @param scanlinesj
+     *            scanlines of the query
+     * @return {smaple table,{breakpoints i, breakpoints j}}
+     */
+    protected Tuple2D<double[], Tuple2D<double[], double[]>> getSampleAndBreakpointTable(
+            final List<Array> scanlinesi, final List<Array> scanlinesj) {
+        final double[] samples = ImageTools.createSampleTable(this.binSize);
+        final Array scanlinesiC = cross.datastructures.tools.ArrayTools.glue(
+                scanlinesi);
+        final Array scanlinesjC = cross.datastructures.tools.ArrayTools.glue(
+                scanlinesj);
 
-		if (this.black) {
-			return new int[] { vi, vj, 0 };
-		} else {
-			return new int[] { 255 - vj, 255 - vi, 255 - Math.max(vi, vj) };
-		}
-	}
+        final ArrayStatsScanner ass = new ArrayStatsScanner();
+        final StatsMap[] sm = ass.apply(new Array[]{scanlinesiC, scanlinesjC});
+        final Double meani = sm[0].get(Vars.Mean.toString());
+        final Double meanj = sm[1].get(Vars.Mean.toString());
 
-	/**
-	 * Creates the samples table and the breakpoint table for reference and
-	 * query arrays.
-	 * 
-	 * @param scanlinesi
-	 *            scanlines of the reference
-	 * @param scanlinesj
-	 *            scanlines of the query
-	 * @return {smaple table,{breakpoints i, breakpoints j}}
-	 */
-	protected Tuple2D<double[], Tuple2D<double[], double[]>> getSampleAndBreakpointTable(
-	        final List<Array> scanlinesi, final List<Array> scanlinesj) {
-		final double[] samples = ImageTools.createSampleTable(this.binSize);
-		final Array scanlinesiC = cross.datastructures.tools.ArrayTools.glue(scanlinesi);
-		final Array scanlinesjC = cross.datastructures.tools.ArrayTools.glue(scanlinesj);
+        double thresholdi, thresholdj;
+        if (this.globalmax) {
+            thresholdi = ((meani + meanj) / 2.0d) / this.threshold;
+            thresholdj = thresholdi;
+        } else {
+            thresholdi = meani / this.threshold;
+            thresholdj = meanj / this.threshold;
+        }
 
-		final ArrayStatsScanner ass = new ArrayStatsScanner();
-		final StatsMap[] sm = ass
-		        .apply(new Array[] { scanlinesiC, scanlinesjC });
-		final Double meani = sm[0].get(Vars.Mean.toString());
-		final Double meanj = sm[1].get(Vars.Mean.toString());
+        log.info("Using thresholdi: {}", thresholdi);
+        log.info("Using thresholdj: {}", thresholdj);
+        if (thresholdi != 0) {
+            if (this.filter) {
+                final AArrayFilter minFilteri = new MinimumFilter(thresholdi);
+                minFilteri.apply(new Array[]{scanlinesiC});
+                final AArrayFilter minFilterj = new MinimumFilter(thresholdj);
+                minFilterj.apply(new Array[]{scanlinesjC});
+            } else {
+                log.info("Filtering was turned off");
+            }
+        } else {
+            log.info("Skipping threshold minimization.");
+        }
 
-		double thresholdi, thresholdj;
-		if (this.globalmax) {
-			thresholdi = ((meani + meanj) / 2.0d) / this.threshold;
-			thresholdj = thresholdi;
-		} else {
-			thresholdi = meani / this.threshold;
-			thresholdj = meanj / this.threshold;
-		}
+        final double[] breakpointsi = ImageTools.getBreakpoints(scanlinesiC,
+                this.binSize, Double.NEGATIVE_INFINITY);
+        final double[] breakpointsj = ImageTools.getBreakpoints(scanlinesjC,
+                this.binSize, Double.NEGATIVE_INFINITY);
 
-		log.info("Using thresholdi: {}", thresholdi);
-		log.info("Using thresholdj: {}", thresholdj);
-		if (thresholdi != 0) {
-			if (this.filter) {
-				final AArrayFilter minFilteri = new MinimumFilter(thresholdi);
-				minFilteri.apply(new Array[] { scanlinesiC });
-				final AArrayFilter minFilterj = new MinimumFilter(thresholdj);
-				minFilterj.apply(new Array[] { scanlinesjC });
-			} else {
-				log.info("Filtering was turned off");
-			}
-		} else {
-			log.info("Skipping threshold minimization.");
-		}
-
-		final double[] breakpointsi = ImageTools.getBreakpoints(scanlinesiC,
-		        this.binSize, Double.NEGATIVE_INFINITY);
-		final double[] breakpointsj = ImageTools.getBreakpoints(scanlinesjC,
-		        this.binSize, Double.NEGATIVE_INFINITY);
-
-		return new Tuple2D<double[], Tuple2D<double[], double[]>>(samples,
-		        new Tuple2D<double[], double[]>(breakpointsi, breakpointsj));
-	}
-
+        return new Tuple2D<double[], Tuple2D<double[], double[]>>(samples,
+                new Tuple2D<double[], double[]>(breakpointsi, breakpointsj));
+    }
 }

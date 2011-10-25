@@ -25,7 +25,7 @@ import maltcms.math.functions.similarities.ArrayCos;
 
 public class DTWTest {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 //		Maltcms m = Maltcms.getInstance();
 //		CompositeConfiguration cfg = m.parseCommandLine(new String[] { "-f",
 //				"asd" });
@@ -47,74 +47,73 @@ public class DTWTest {
 //		// cfg.save(new BufferedOutputStream(System.out));
 //		cross.Factory.getInstance().configure(cfg);
 
-		final ArrayDouble.D1 d1 = new ArrayDouble.D1(2);
-		d1.set(0, 1);
-		final ArrayDouble.D1 d2 = new ArrayDouble.D1(2);
-		d2.set(1, 1);
-		final ArrayDouble.D1 d3 = new ArrayDouble.D1(2);
-		d3.set(0, 1);
-		d3.set(1, 1);
-		final ArrayDouble.D1 d4 = new ArrayDouble.D1(2);
-		// final ArrayDouble.D1 d5 = new ArrayDouble.D1(1);
-		// final ArrayDouble.D1 d6 = new ArrayDouble.D1(1);
+        final ArrayDouble.D1 d1 = new ArrayDouble.D1(2);
+        d1.set(0, 1);
+        final ArrayDouble.D1 d2 = new ArrayDouble.D1(2);
+        d2.set(1, 1);
+        final ArrayDouble.D1 d3 = new ArrayDouble.D1(2);
+        d3.set(0, 1);
+        d3.set(1, 1);
+        final ArrayDouble.D1 d4 = new ArrayDouble.D1(2);
+        // final ArrayDouble.D1 d5 = new ArrayDouble.D1(1);
+        // final ArrayDouble.D1 d6 = new ArrayDouble.D1(1);
 
-		final List<Array> la1 = new ArrayList<Array>();
-		la1.add(d1);
-		la1.add(d2);
-		la1.add(d2);
-		la1.add(d2);
-		la1.add(d2);
+        final List<Array> la1 = new ArrayList<Array>();
+        la1.add(d1);
+        la1.add(d2);
+        la1.add(d2);
+        la1.add(d2);
+        la1.add(d2);
 //		la1.add(d1);
 //		la1.add(d1);
 //		la1.add(d1);
-		final List<Array> la2 = new ArrayList<Array>();
-		la2.add(d1);
-		la2.add(d2);
-		la2.add(d2);
-		la2.add(d2);
+        final List<Array> la2 = new ArrayList<Array>();
+        la2.add(d1);
+        la2.add(d2);
+        la2.add(d2);
+        la2.add(d2);
 
-		System.out.println("Creating feature vectors");
-		// prepare feature vectors
-		FeatureVectorFactory fvf = FeatureVectorFactory.getInstance();
-		List<IFeatureVector> l1 = fvf.createFeatureVectorList(la1);
-		List<IFeatureVector> l2 = fvf.createFeatureVectorList(la2);
+        System.out.println("Creating feature vectors");
+        // prepare feature vectors
+        FeatureVectorFactory fvf = FeatureVectorFactory.getInstance();
+        List<IFeatureVector> l1 = fvf.createFeatureVectorList(la1);
+        List<IFeatureVector> l2 = fvf.createFeatureVectorList(la2);
 
-		System.out.println("Preparing alignment");
-		// prepare alignment
-		AlignmentFactory af = new AlignmentFactory();
-		Area constraints = ConstraintFactory.getInstance()
-				.createBandConstraint(0, 0, l1.size(), l2.size(), 1.0);
-		final FeatureVectorDtwSimilarity tfvo = new FeatureVectorDtwSimilarity();
-                final DtwPairwiseSimilarity idsf = new DtwPairwiseSimilarity();
-                idsf.setDenseMassSpectraScore(new ArrayCos());
-                tfvo.setScoreFunction(idsf);
-		tfvo.setArrayFeatureName("FEATURE0");
+        System.out.println("Preparing alignment");
+        // prepare alignment
+        AlignmentFactory af = new AlignmentFactory();
+        Area constraints = ConstraintFactory.getInstance().createBandConstraint(
+                0, 0, l1.size(), l2.size(), 1.0);
+        final FeatureVectorDtwSimilarity tfvo = new FeatureVectorDtwSimilarity();
+        final DtwPairwiseSimilarity idsf = new DtwPairwiseSimilarity();
+        idsf.setDenseMassSpectraScore(new ArrayCos());
+        tfvo.setScoreFunction(idsf);
+        tfvo.setArrayFeatureName("FEATURE0");
 
-		IAlignment ia = af
-				.getDTWInstance(Factory.getInstance().getObjectFactory()
-						.instantiate(ThreePredecessorsOptimization.class),
-						tfvo, constraints);
-		ia.setConstraints(ConstraintFactory.getInstance().createBandConstraint(
-				0, 0, la1.size(), la2.size(), 1.0));
-		// set alignment properties
-		ia.setLeftHandSideId("Left");
-		ia.setRightHandSideId("Right");
-		System.out.println("Calculating alignment");
-		// apply and retrieve score
-		double v = ia.apply(l1, l2);
-		// retrieve map
-		List<Point> l = ia.getMap();
-		System.out.println("");
-		System.out.println(ia.getOptimizationFunction()
-				.getOptimalOperationSequenceString());
-		System.out.println("Done!");
-		System.out.println(v);
-		System.out.println(ia.getOptimizationFunction().getOptimalValue());
-		// IFileFragment ares = Factory.getInstance().getFileFragmentFactory()
-		// .createFragment(iff3, iff4, DTW.class,
-		// cp.getWorkflow().getStartupDate());
-		// ia.decorate(ares);
-		// ares.save();
+        IAlignment ia = af.getDTWInstance(Factory.getInstance().getObjectFactory().
+                instantiate(ThreePredecessorsOptimization.class),
+                tfvo, constraints);
+        ia.setConstraints(ConstraintFactory.getInstance().createBandConstraint(
+                0, 0, la1.size(), la2.size(), 1.0));
+        // set alignment properties
+        ia.setLeftHandSideId("Left");
+        ia.setRightHandSideId("Right");
+        System.out.println("Calculating alignment");
+        // apply and retrieve score
+        double v = ia.apply(l1, l2);
+        // retrieve map
+        List<Point> l = ia.getMap();
+        System.out.println("");
+        System.out.println(ia.getOptimizationFunction().
+                getOptimalOperationSequenceString());
+        System.out.println("Done!");
+        System.out.println(v);
+        System.out.println(ia.getOptimizationFunction().getOptimalValue());
+        // IFileFragment ares = Factory.getInstance().getFileFragmentFactory()
+        // .createFragment(iff3, iff4, DTW.class,
+        // cp.getWorkflow().getStartupDate());
+        // ia.decorate(ares);
+        // ares.save();
 
-	}
+    }
 }

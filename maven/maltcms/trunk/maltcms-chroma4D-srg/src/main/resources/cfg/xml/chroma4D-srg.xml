@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <description>
+            This file defines elements of the ChromA4D SRG seeded region growing.
+    </description>
+    
+    <bean id="peakSeparator" class="maltcms.commands.fragments2d.peakfinding.PeakSeparator">
+        <property name="minDist" ref="0.999"/>
+    </bean>
+               
+    <bean id="seededRegionGrowing" class="maltcms.commands.fragments2d.peakfinding.SeededRegionGrowing">
+        <property name="bbh" ref=""/>
+        <property name="doBBH" value="true"/>
+        <property name="doIntegration" value="true"/>
+        <property name="doNormalization" value="true"/>
+        <property name="identification" ref=""/>
+        <property name="integration" ref=""/>
+        <property name="peakExporter" ref=""/>
+        <property name="peakPicking" ref=""/>
+        <property name="peakSeparator" ref="peakSeparator"/>
+        <property name="similarity" ref=""/>
+        <property name="separationSimilarity" ref=""/>
+        <property name="similaritySecondRun" ref=""/>
+        
+    </bean>
+   
+</beans>

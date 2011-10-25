@@ -85,6 +85,11 @@ public class Alignment2D extends AFragmentCommand {
     @Configurable(value = "false")
     private boolean scale = false;
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     public Alignment2D() {
         FeatureVectorDtwSimilarity sim = new FeatureVectorDtwSimilarity();
         DtwPairwiseSimilarity idsf = new DtwPairwiseSimilarity();

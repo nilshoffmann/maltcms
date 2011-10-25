@@ -121,6 +121,11 @@ public class MeanVarVis extends AFragmentCommand {
     @Configurable(value = "false")
     private boolean useLogScale = false;
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     /**
      * {@inheritDoc}
      */

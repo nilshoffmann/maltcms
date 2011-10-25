@@ -104,6 +104,11 @@ public class CenterStarAlignment extends AFragmentCommand {
     @Configurable
     private String centerSequence = "";
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     /*
      * (non-Javadoc)
      *

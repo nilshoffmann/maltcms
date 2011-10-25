@@ -73,6 +73,11 @@ import org.openide.util.lookup.ServiceProvider;
 public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         IClusteringAlgorithm {
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     /*
      * (non-Javadoc)
      * 

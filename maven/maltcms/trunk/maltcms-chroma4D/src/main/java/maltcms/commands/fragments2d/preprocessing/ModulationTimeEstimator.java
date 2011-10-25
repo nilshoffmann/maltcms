@@ -64,12 +64,15 @@ import org.openide.util.lookup.ServiceProvider;
  * (Leco exported to netcdf ANDIMS), in order to estimate the second retention
  * time parameter.
  * 
+ * Use @see Default2DVarLoader instead with flag estimateModulationTime=true
+ * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+//@ServiceProvider(service=AFragmentCommand.class)
+@Deprecated
 public class ModulationTimeEstimator extends AFragmentCommand {
 
 	private String tic_var = "total_intensity";
@@ -335,7 +338,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
 		        .toString());
 		final double variance = sma[0].get(cross.datastructures.Vars.Variance
 		        .toString());
-		final int ubound = Math.min(tic.getShape()[0] - 1,
+		final int ubound = Math.min((tic.getShape()[0] - 1)/10,
 		        tic.getShape()[0] - 1);
 		final ArrayDouble.D1 acr = new ArrayDouble.D1(ubound);
 

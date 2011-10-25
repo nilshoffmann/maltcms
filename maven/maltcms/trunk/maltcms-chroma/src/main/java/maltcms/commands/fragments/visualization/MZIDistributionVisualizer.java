@@ -56,13 +56,18 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class MZIDistributionVisualizer extends AFragmentCommand {
 
     protected IFileFragment filea;
     private String x_var = "mass_values";
     private String y_var = "intensity_values";
     private final boolean one_for_each = true;
+
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {

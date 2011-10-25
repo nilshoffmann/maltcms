@@ -4,6 +4,7 @@
  */
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
+import maltcms.experimental.bipace.peakCliqueAlignment.PeakComparator;
 import java.util.Comparator;
 import maltcms.datastructures.peak.Peak;
 

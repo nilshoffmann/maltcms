@@ -69,7 +69,7 @@ import org.openide.util.lookup.ServiceProvider;
     "var.anchors.retention_scans"})
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class TICHeatmapCoplot extends AFragmentCommand {
 
     @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv")
@@ -79,6 +79,11 @@ public class TICHeatmapCoplot extends AFragmentCommand {
     @Configurable(name = "var.scan_acquisition_time",
     value = "scan_acquisition_time")
     private String scanAcquisitionTimeVar = "scan_acquisition_time";
+
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
     /*
      * (non-Javadoc)

@@ -39,6 +39,11 @@ import org.slf4j.LoggerFactory;
 @ServiceProvider(service=AFragmentCommand.class)
 public class ANDIMSExporter extends AFragmentCommand {
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     /*
      * (non-Javadoc)
      *

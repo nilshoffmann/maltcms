@@ -60,8 +60,6 @@ import cross.datastructures.workflow.IWorkflow;
 import cross.exception.ConstraintViolationException;
 import java.net.URLClassLoader;
 import java.util.LinkedList;
-import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.helpers.Loader;
 
 /**
  * Main Application Hook, starts with setting allowed command-line parameters.
@@ -121,13 +119,13 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      *            what is passed in from the command-line, usually
      */
     public static void main(final String[] args) {
-        if (System.getProperty("log4j.configuration") == null
-                || System.getProperty("log4j.configuration").isEmpty()) {
-            URL url = Loader.getResource("cfg/log4j.properties");
-            PropertyConfigurator.configure(url);
-            // System.setProperty("log4j.configuration",
-            // "cfg/log4j.properties");
-        }
+//        if (System.getProperty("log4j.configuration") == null
+//                || System.getProperty("log4j.configuration").isEmpty()) {
+//            URL url = Loader.getResource("cfg/log4j.properties");
+//            PropertyConfigurator.configure(url);
+//            // System.setProperty("log4j.configuration",
+//            // "cfg/log4j.properties");
+//        }
         final Logger log = cross.Logging.getLogger(Maltcms.class);
         final int ecode = 0;
         ICommandSequence cs = null;
@@ -144,6 +142,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 Factory.getInstance().configure(cfg);
                 // Set up the command sequence
                 cs = Factory.getInstance().createCommandSequence();
+                final IWorkflow iw = cs.getWorkflow();
                 if (cs.validate()) {
                     long start = System.nanoTime();
                     // Evaluate until empty
@@ -157,7 +156,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                                 cs.getWorkflow().
                                 getStartupDate());
                         // Save workflow
-                        final IWorkflow iw = cs.getWorkflow();
+//                        final IWorkflow iw = cs.getWorkflow();
                         iw.save();
                         start = Math.abs(System.nanoTime() - start);
                         final float seconds = ((float) start)

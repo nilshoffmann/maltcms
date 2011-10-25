@@ -95,6 +95,11 @@ public class PathWarp extends AFragmentCommand {
     name = "maltcms.datastructures.alignment.DefaultPairSet.minScansBetweenAnchors",
     value = "5")
     private int minScansBetweenAnchors = 5;
+    
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
     public IFileFragment apply(final MZIWarpInput m, final IFileFragment tf) {
         processIndexedArrays(m, tf);

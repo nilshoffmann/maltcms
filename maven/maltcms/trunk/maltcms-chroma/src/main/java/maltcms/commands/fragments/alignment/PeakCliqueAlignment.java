@@ -87,10 +87,10 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHFinder;
-import maltcms.commands.fragments.alignment.peakCliqueAlignment.CliqueTable;
-import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakComparator;
-import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakSimilarityVisualizer;
+import maltcms.experimental.bipace.peakCliqueAlignment.BBHFinder;
+import maltcms.experimental.bipace.peakCliqueAlignment.CliqueTable;
+import maltcms.experimental.bipace.peakCliqueAlignment.PeakComparator;
+import maltcms.experimental.bipace.peakCliqueAlignment.PeakSimilarityVisualizer;
 import maltcms.math.functions.IScalarArraySimilarity;
 import maltcms.math.functions.ProductSimilarity;
 import maltcms.math.functions.similarities.ArrayCorr;
@@ -172,6 +172,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         ArrayCorr ac = new ArrayCorr();
         similarityFunction.setArraySimilarities(ac);
     }
+    
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
 
     /**
      * FIXME this method seems to create correct scan indices only for the first

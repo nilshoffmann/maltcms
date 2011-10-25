@@ -62,6 +62,11 @@ public class DeltaMasses extends AFragmentCommand {
     private final String colorrampLocation = "res/colorRamps/bcgyr.csv";
     private final double lowThreshold = 0.0d;
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     /**
      * {@inheritDoc}
      */

@@ -46,11 +46,16 @@ import org.openide.util.lookup.ServiceProvider;
 @RequiresVariables(names = {"var.total_intensity", "var.scan_acquisition_time"})
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class EICHeatmapCoplot extends TICHeatmapCoplot {
 
     @Configurable
     private List<String> drawEICs;
+
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
     /*
      * (non-Javadoc)

@@ -46,10 +46,15 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @Data
 @Slf4j
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class VariableDataExporter extends AFragmentCommand {
 
     private ArrayList<String> varNames = new ArrayList<String>(0);
+
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {

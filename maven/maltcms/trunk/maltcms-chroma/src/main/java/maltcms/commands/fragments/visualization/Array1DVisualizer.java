@@ -75,6 +75,11 @@ public class Array1DVisualizer extends AFragmentCommand {
     private String timeUnit = "s";
 
     @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
+    @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         if (this.pairwise) {
             pairwise(t);

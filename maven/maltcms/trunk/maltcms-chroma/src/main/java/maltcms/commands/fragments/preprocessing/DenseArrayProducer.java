@@ -85,6 +85,11 @@ public class DenseArrayProducer extends AFragmentCommand {
     private double massBinResolution = 1.0d;
 
     @Override
+    public String toString() {
+        return getClass().getName();
+    }
+
+    @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
 
 
@@ -116,7 +121,7 @@ public class DenseArrayProducer extends AFragmentCommand {
                 massRange[1] = Math.max(massRange[1], result[1]);
             }
         } catch (Exception e) {
-            log.error("{}",e);
+            log.error("{}", e);
         }
 
         EvalTools.notNull(massRange, this);

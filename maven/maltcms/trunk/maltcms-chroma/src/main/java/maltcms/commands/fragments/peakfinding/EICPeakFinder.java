@@ -93,11 +93,15 @@ public class EICPeakFinder extends AFragmentCommand {
         // log.debug("R'({})= {}", lag, v);
         // return v;
     }
-
     @Configurable(value = "0.01d")
     private double peakThreshold = 0.01d;
     @Configurable(value = "20")
     private int filterWindow = 20;
+
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
@@ -105,12 +109,14 @@ public class EICPeakFinder extends AFragmentCommand {
         for (final IFileFragment f : t) {
             final ExecutorService es = Executors.newFixedThreadPool(10);
             final ArrayList<Callable<Tuple2D<Tuple2D<Integer, Integer>, Double>>> solvers = new ArrayList<Callable<Tuple2D<Tuple2D<Integer, Integer>, Double>>>();
-            final Tuple2D<List<Array>, List<Array>> mzis = MaltcmsTools.getBinnedMZIs(f);
+            final Tuple2D<List<Array>, List<Array>> mzis = MaltcmsTools.
+                    getBinnedMZIs(f);
             log.info("Retrieving data from {}", f.getAbsolutePath());
-            final List<ArrayDouble.D1> al = ArrayTools.tiltD1(ArrayTools.convertArrays(mzis.getSecond()));
+            final List<ArrayDouble.D1> al = ArrayTools.tiltD1(ArrayTools.
+                    convertArrays(mzis.getSecond()));
             List<Double> bins = new ArrayList<Double>(al.size());
             Array masses = mzis.getFirst().get(0);
-            for(int i = 0;i<masses.getShape()[0];i++) {
+            for (int i = 0; i < masses.getShape()[0]; i++) {
                 bins.add(masses.getDouble(i));
             }
             final ArrayStatsScanner ass = new ArrayStatsScanner();
@@ -118,7 +124,7 @@ public class EICPeakFinder extends AFragmentCommand {
 
             TICPeakFinder tpf = new TICPeakFinder();
             tpf.setPeakThreshold(peakThreshold);
-            tpf.setFilterWindow(filterWindow);
+            tpf.setSnrWindow(filterWindow);
             tpf.setWorkflow(getWorkflow());
             List<List<Peak1D>> peaks = new ArrayList<List<Peak1D>>();
             int k = 0;
@@ -174,14 +180,16 @@ public class EICPeakFinder extends AFragmentCommand {
             for (int i = 0; i < al.size(); i++) {
                 log.info("Row {}", i);
                 for (int j = 0; j < al.size(); j++) {
-                    corrs.set(i, j, getMaxAutocorrelation(al.get(i), al.get(j)).getSecond().doubleValue());// calcEstimatedCrossCorrelation(al.get(i),
+                    corrs.set(i, j, getMaxAutocorrelation(al.get(i), al.get(j)).
+                            getSecond().doubleValue());// calcEstimatedCrossCorrelation(al.get(i),
                     // al
                     // .get(j), 0, 0, 1, 1));
                     // ac
                     // .apply(0, 0, -1, -1, al.get(i), al.get(j)));
                 }
             }
-            final IFileFragment iff = Factory.getInstance().getFileFragmentFactory().create(
+            final IFileFragment iff = Factory.getInstance().
+                    getFileFragmentFactory().create(
                     new File(getWorkflow().getOutputDirectory(this),
                     StringTools.removeFileExt(f.getName())
                     + "-eic_correlation.cdf"));
@@ -277,7 +285,8 @@ public class EICPeakFinder extends AFragmentCommand {
                     throws Exception {
 
                 return new Tuple2D<Tuple2D<Integer, Integer>, Double>(
-                        new Tuple2D<Integer, Integer>(i, j), EICPeakFinder.calcEstimatedCrossCorrelation(ad1, ad2, meana,
+                        new Tuple2D<Integer, Integer>(i, j), EICPeakFinder.
+                        calcEstimatedCrossCorrelation(ad1, ad2, meana,
                         meanb, vara, varb));
 
             }
@@ -306,7 +315,8 @@ public class EICPeakFinder extends AFragmentCommand {
                 maxindex = i;
             }
         }
-        return new Tuple2D<Integer, Double>(Integer.valueOf(maxindex), Double.valueOf(max));
+        return new Tuple2D<Integer, Double>(Integer.valueOf(maxindex), Double.
+                valueOf(max));
     }
 
     /*

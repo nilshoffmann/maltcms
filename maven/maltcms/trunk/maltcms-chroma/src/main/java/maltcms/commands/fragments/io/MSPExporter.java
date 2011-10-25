@@ -22,6 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class MSPExporter extends AFragmentCommand {
 
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
+    
     /*
      * (non-Javadoc)
      * 
