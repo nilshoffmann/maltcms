@@ -21,6 +21,7 @@
  */
 package cross.datastructures.workflow;
 
+import cross.Factory;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,7 +49,7 @@ import org.jdom.ProcessingInstruction;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import cross.Factory;
+//import cross.Factory;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
 import cross.commands.fragments.IFragmentCommand;
@@ -63,8 +64,8 @@ import cross.io.misc.BinaryFileBase64Wrapper;
 import cross.io.misc.DefaultConfigurableFileFilter;
 import cross.io.misc.WorkflowZipper;
 import cross.io.xml.IXMLSerializable;
-import cross.datastructures.tools.FileTools;
 import cross.datastructures.tuple.TupleND;
+import cross.exception.ConstraintViolationException;
 import cross.tools.StringTools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -96,11 +97,12 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     private boolean saveHTML = false;
     @Configurable
     private boolean saveTEXT = false;
-    @Configurable
-    private boolean saveInFragmentCommandDir = false;
+//    @Configurable
+//    private boolean saveInFragmentCommandDir = false;
     private Date date = new Date();
     private Configuration cfg = new PropertiesConfiguration();
     private boolean executeLocal = true;
+    private File outputDirectory = new File(System.getProperty("user.dir"));
 
     @Override
     public void addListener(final IListener<IEvent<IWorkflowResult>> l) {
@@ -168,8 +170,8 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         this.fileFilter = cfg.getString(this.getClass().getName()
                 + ".resultFileFilter", DefaultConfigurableFileFilter.class.
                 getName());
-        this.saveInFragmentCommandDir = cfg.getBoolean(this.getClass().getName()
-                + ".saveInFragmentCommandDir", true);
+//        this.saveInFragmentCommandDir = cfg.getBoolean(this.getClass().getName()
+//                + ".saveInFragmentCommandDir", true);
     }
 
     @Override
@@ -277,6 +279,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
 
     @Override
     public void save() {
+        //TODO extract as IWorkflowPostProcessor
         try {
             final String wflname = getName();
             log.info("Saving workflow to file {}", wflname);
@@ -291,25 +294,25 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
             doc.addContent(writeXML());
             final XMLOutputter outp = new XMLOutputter(Format.getPrettyFormat());
             try {
-                final File f = new File(wflname);
+                final File f = new File(getOutputDirectory(), getName()+".xml");//new File(wflname);
                 final File dir = f.getParentFile();
                 dir.mkdirs();
                 f.createNewFile();
                 outp.output(doc, new BufferedOutputStream(new FileOutputStream(
                         f)));
-                final WorkflowZipper wz = Factory.getInstance().getObjectFactory().
-                        instantiate(WorkflowZipper.class);
-                wz.setFileFilter(Factory.getInstance().getObjectFactory().
-                        instantiate(this.fileFilter,
-                        java.io.FileFilter.class));
-                wz.setIWorkflow(this);
-                final File results = new File(dir, "maltcmsResults.zip");
-                if (wz.save(results)) {
-                    BinaryFileBase64Wrapper.base64Encode(results, new File(dir,
-                            results.getName() + ".b64"));
-                } else {
-                    log.debug("Did not Base64 encode maltcmsResults.zip");
-                }
+//                final WorkflowZipper wz = Factory.getInstance().getObjectFactory().
+//                        instantiate(WorkflowZipper.class);
+//                wz.setFileFilter(Factory.getInstance().getObjectFactory().
+//                        instantiate(this.fileFilter,
+//                        java.io.FileFilter.class));
+//                wz.setIWorkflow(this);
+//                final File results = new File(dir, "maltcmsResults.zip");
+//                if (wz.save(results)) {
+//                    BinaryFileBase64Wrapper.base64Encode(results, new File(dir,
+//                            results.getName() + ".b64"));
+//                } else {
+//                    log.debug("Did not Base64 encode maltcmsResults.zip");
+//                }
                 if (this.saveHTML) {
                     saveHTML(f);
                 }
@@ -495,45 +498,50 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                     if (activeCommand != iwa) {
                         activeCommand = iwa;
                     }
-                    return FileTools.prependDefaultDirsWithPrefix(String.format(
+                    File outputFile = new File(
+                            outputDirectory, String.format(
                             "%0" + digits + "d", i)
-                            + "_", iwa.getClass(), getStartupDate());
+                            + "_" + iwa.getClass().getSimpleName());
+                    outputFile.mkdirs();
+                    log.info("Output dir for object of type {}: {}",iwe.getClass().getSimpleName(),this.outputDirectory);
+                    return outputFile;
                 }
                 i++;
             }
             if (activeCommand != null) {
-                if (saveInFragmentCommandDir) {
-                    return getOutputDirectory(activeCommand);
-                } else {
-                    File dir = new File(getOutputDirectory(activeCommand), iwe.
-                            getClass().getSimpleName());
-                    if (!dir.exists()) {
-                        dir.mkdirs();
-                    }
-                    return dir;
+//                if (saveInFragmentCommandDir) {
+//                    return getOutputDirectory(activeCommand);
+//                } else {
+                File dir = new File(getOutputDirectory(activeCommand), iwe.
+                        getClass().getSimpleName());
+                if (!dir.exists()) {
+                    dir.mkdirs();
                 }
+                log.info("Output dir for object of type {}: {}",iwe.getClass().getSimpleName(),this.outputDirectory);
+                return dir;
+//                }
             }
         } else if (iwe instanceof IWorkflowElement) {
             if (activeCommand != null) {
-                if (saveInFragmentCommandDir) {
-                    return getOutputDirectory(activeCommand);
-                } else {
-                    File dir = new File(getOutputDirectory(activeCommand), iwe.
-                            getClass().getSimpleName());
-                    if (!dir.exists()) {
-                        dir.mkdirs();
-                    }
-                    return dir;
+//                if (saveInFragmentCommandDir) {
+//                    return getOutputDirectory(activeCommand);
+//                } else {
+                File dir = new File(getOutputDirectory(activeCommand), iwe.
+                        getClass().getSimpleName());
+                if (!dir.exists()) {
+                    dir.mkdirs();
                 }
+                log.info("Output dir for object of type {}: {}",iwe.getClass().getSimpleName(),this.outputDirectory);
+                return dir;
+//                }
             }
         }
-        if (activeCommand != null) {
-            if (saveInFragmentCommandDir) {
-                return getOutputDirectory(activeCommand);
-            }
-        }
-        return FileTools.prependDefaultDirsWithPrefix("", iwe.getClass(),
-                getStartupDate());
+
+        File outputFile = new File(outputDirectory,
+                iwe.getClass().getSimpleName());
+        outputFile.mkdirs();
+        log.info("Output dir for object of type {}: {}",iwe.getClass().getSimpleName(),this.outputDirectory);
+        return outputFile;
     }
 
     /*
@@ -674,9 +682,23 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     @Override
     public TupleND<IFileFragment> call() throws Exception {
         TupleND<IFileFragment> results = null;
+        if(commandSequence.isCheckCommandDependencies() && !commandSequence.validate()){
+            throw new ConstraintViolationException("Pipeline validation failed! Check output for details!");
+        }
         while (commandSequence.hasNext()) {
             results = commandSequence.next();
         }
         return results;
+    }
+
+    @Override
+    public File getOutputDirectory() {
+        return outputDirectory;
+    }
+
+    @Override
+    public void setOutputDirectory(File f) {
+        this.outputDirectory = f;
+        log.info("Workflow output base directory: "+this.outputDirectory);
     }
 }

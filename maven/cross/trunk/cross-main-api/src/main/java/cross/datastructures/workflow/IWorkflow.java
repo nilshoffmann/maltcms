@@ -194,8 +194,12 @@ public interface IWorkflow extends IEventSource<IWorkflowResult>, IConfigurable,
 	 */
 	public abstract File getOutputDirectory(Object iwe);
         
+        public abstract File getOutputDirectory();
+        
         public abstract boolean isExecuteLocal();
         
         public abstract void setExecuteLocal(boolean b);
+        
+        public abstract void setOutputDirectory(File f);
 
 }

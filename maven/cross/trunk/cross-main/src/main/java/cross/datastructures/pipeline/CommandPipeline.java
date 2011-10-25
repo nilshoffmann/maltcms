@@ -487,6 +487,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
 
     @Override
     public void setInput(final TupleND<IFileFragment> t) {
+        EvalTools.geq(1, t.getSize(), this);
         this.input = t;
         this.tmp = t;
     }

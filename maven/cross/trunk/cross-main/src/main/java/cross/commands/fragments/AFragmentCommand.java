@@ -60,7 +60,6 @@ import lombok.extern.slf4j.Slf4j;
  * pipeline.
  * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * @param <V>
  * 
  */
 @Slf4j

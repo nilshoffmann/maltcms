@@ -118,10 +118,10 @@ public class ObjectFactory implements IObjectFactory {
                 log.info("Retrieved bean {} from context!");
                 return t;
             } catch (NoSuchBeanDefinitionException nsbde) {
-                log.warn("Could not create bean {} from context! Reason:\n {}",
+                log.debug("Could not create bean {} from context! Reason:\n {}",
                         c.getName(), nsbde.getLocalizedMessage());
             } catch (BeansException be) {
-                log.warn("Could not create bean {} from context! Reason:\n {}",
+                log.debug("Could not create bean {} from context! Reason:\n {}",
                         c.getName(), be.getLocalizedMessage());
             }
         }

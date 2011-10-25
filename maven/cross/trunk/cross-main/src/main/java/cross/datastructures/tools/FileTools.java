@@ -136,23 +136,30 @@ public class FileTools {
         return FileTools.findFile(vf.getParent());
     }
 
-    public static File getDefaultDirs(final Date d) {
+    public static File getDefaultDirs(final File baseDirectory, final Date d) {
+        File outputBasedir = new File(Factory.getInstance().getConfiguration().getString("output.basedir", ""));
+        if(baseDirectory!=null) {
+            outputBasedir = baseDirectory;
+        }
         final boolean omitUserTimePrefix = Factory.getInstance().getConfiguration().getBoolean("omitUserTimePrefix", false);
         if (omitUserTimePrefix) {
-            final File basedir = new File(Factory.getInstance().getConfiguration().getString("output.basedir"));
-            return basedir;
+            return outputBasedir;
         } else if (d == null) {
-            final File usernamebasedir = new File(Factory.getInstance().getConfiguration().getString("output.basedir", ""),
+            final File usernamebasedir = new File(outputBasedir,
                     Factory.getInstance().getConfiguration().getString(
                     "user.name", "default"));
             return usernamebasedir;
         } else {
-            final File basedir = new File(Factory.getInstance().getConfiguration().getString("output.basedir", ""),
+            final File basedir = new File(outputBasedir,
                     Factory.getInstance().getConfiguration().getString(
                     "user.name", "default"));
             final File datedir = new File(basedir, FileTools.sdf.format(d));
             return datedir;
         }
+    }
+    
+    public static File getDefaultDirs(final Date d) {
+        return getDefaultDirs(null, d);
     }
 
     public static String getDirname(final String fullname) {
@@ -221,6 +228,11 @@ public class FileTools {
 
     public static File prepareOutput(final File dir, final String filename) {
         return prepareOutput(dir.getAbsolutePath(), filename);
+    }
+    
+    public static File prependDefaultDirsWithPrefix(File baseDir, String prefix, final Class<?> creator, final Date d) {
+        return FileTools.appendCreatorNameToBaseDir(
+                FileTools.getDefaultDirs(baseDir,d), prefix, creator);
     }
 
     public static File prependDefaultDirsWithPrefix(String prefix,

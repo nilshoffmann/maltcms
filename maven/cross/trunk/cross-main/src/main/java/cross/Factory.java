@@ -60,6 +60,8 @@ import cross.datastructures.tools.FileTools;
 import cross.datastructures.workflow.IWorkflowFactory;
 import cross.io.IDataSourceFactory;
 import cross.io.IInputDataFactory;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -235,6 +237,15 @@ public class Factory implements ConfigurationListener {
                 CommandPipeline.class);
         final IWorkflow iw = getWorkflowFactory().getDefaultWorkflowInstance(
                 new Date(), cd);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "MM-dd-yyyy_HH-mm-ss", Locale.US);
+        String userName = System.getProperty("user.name", "default");
+        File outputDir = new File(System.getProperty("output.basedir", System.
+                getProperty("user.dir")));
+        outputDir = new File(outputDir, userName);
+        outputDir = new File(outputDir, dateFormat.format(iw.getStartupDate()));
+        outputDir.mkdirs();
+        iw.setOutputDirectory(outputDir);
         cd.setWorkflow(iw);
         if (t == null) {
             cd.setInput(getInputDataFactory().prepareInputData(getConfiguration().

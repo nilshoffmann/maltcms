@@ -199,7 +199,7 @@ public class MathTools {
 		final int ii = Math.max(0, i);
 		final int jj = Math.min(d.length - 1, j);
 		final double median = MathTools.median(Arrays.copyOfRange(d, ii, jj));
-		LoggerFactory.getLogger(MathTools.class).info("{}", median);
+//		LoggerFactory.getLogger(MathTools.class).debug("{}", median);
 		return median;
 	}
 
@@ -334,8 +334,8 @@ public class MathTools {
 		final int jj = Math.min(d.length - 1, j);
 		double average = 0;
 		final double[] bc = MathTools.binCoeff(jj - ii);
-		LoggerFactory.getLogger(MathTools.class).info("len: {}, {}", bc.length,
-		        Arrays.toString(bc));
+//		LoggerFactory.getLogger(MathTools.class).debug("len: {}, {}", bc.length,
+//		        Arrays.toString(bc));
 		double bcnorm = 0;
 		for (int k = 0; k < bc.length; k++) {
 			bcnorm += bc[k];
