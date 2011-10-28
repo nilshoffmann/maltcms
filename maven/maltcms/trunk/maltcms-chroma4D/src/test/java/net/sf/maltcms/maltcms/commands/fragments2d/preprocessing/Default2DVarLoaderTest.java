@@ -5,18 +5,12 @@
 package net.sf.maltcms.maltcms.commands.fragments2d.preprocessing;
 
 import cross.commands.fragments.IFragmentCommand;
-import cross.datastructures.fragments.FileFragment;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.pipeline.CommandPipeline;
-import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.DefaultWorkflow;
 import cross.datastructures.workflow.IWorkflow;
 import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import junit.framework.Assert;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.io.ZipResourceExtractor;
 import maltcms.test.AFragmentCommandTest;
@@ -58,8 +52,7 @@ public class Default2DVarLoaderTest extends AFragmentCommandTest {
             w.call();
             w.save();
         } catch (Exception ex) {
-            Logger.getLogger(Default2DVarLoaderTest.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            Assert.fail(ex.getLocalizedMessage());
         }
     }
 

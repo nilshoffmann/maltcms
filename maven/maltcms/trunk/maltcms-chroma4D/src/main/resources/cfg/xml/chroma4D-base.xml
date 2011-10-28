@@ -20,7 +20,7 @@
                <!-- commands -->
                
    <bean id="default2DVarLoader" class="maltcms.commands.fragments2d.preprocessing.Default2DVarLoader">
-       
+       <property name=""/>
    </bean>
    
    <bean id="data2DNormalizer" class="maltcms.commands.fragments2d.preprocessing.Data2DNormalizer">

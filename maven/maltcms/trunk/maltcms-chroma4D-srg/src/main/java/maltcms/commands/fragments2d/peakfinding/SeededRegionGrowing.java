@@ -207,8 +207,11 @@ public class SeededRegionGrowing extends AFragmentCommand {
     public SeededRegionGrowing() {
         similarity = new ProductSimilarity();
         similarity.setArraySimilarities(new ArrayCos());
-        similarity.setScalarSimilarities(new GaussianDifferenceSimilarity(),
-                new GaussianDifferenceSimilarity());
+        GaussianDifferenceSimilarity gds1 = new GaussianDifferenceSimilarity();
+        gds1.setTolerance(15.0);
+        GaussianDifferenceSimilarity gds2 = new GaussianDifferenceSimilarity();
+        gds1.setTolerance(1.0);
+        similarity.setScalarSimilarities(gds1,gds2);
         similaritySecondRun = similarity;
         separationSimilarity = similarity;
     }

@@ -10,6 +10,35 @@
     <bean id="peakSeparator" class="maltcms.commands.fragments2d.peakfinding.PeakSeparator">
         <property name="minDist" ref="0.999"/>
     </bean>
+    
+    <bean id="bbhImpl" class="maltcms.commands.fragments2d.peakfinding.bbh.FastBidirectionalBestHit">
+    </bean>
+    
+    <bean id="rt1Sim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
+        <property name="tolerance" value="15.0"/>
+        <property name="threshold" value="0.0"/>
+    </bean>
+
+    <bean id="rt2Sim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
+        <property name="tolerance" value="1.0"/>
+        <property name="threshold" value="0.0"/>
+    </bean>
+    
+    <bean id="arraySim" class="maltcms.math.functions.similarities.ArrayCos"/>
+    
+    <bean id="bbhSimilarity" class="maltcms.math.functions.ProductSimilarity">
+        <property name="scalarSimilarities">
+            <array>
+                <ref bean="rt1Sim"/>
+                <ref bean="rt2Sim"/>
+            </array>
+        </property>
+        <property name="arraySimilarities">
+            <array>
+                <ref bean="arraySim"/>
+            </array>
+        </property>
+    </bean>
                
     <bean id="seededRegionGrowing" class="maltcms.commands.fragments2d.peakfinding.SeededRegionGrowing">
         <property name="bbh" ref=""/>
@@ -21,10 +50,11 @@
         <property name="peakExporter" ref=""/>
         <property name="peakPicking" ref=""/>
         <property name="peakSeparator" ref="peakSeparator"/>
-        <property name="similarity" ref=""/>
+        <property name="similarity" ref="bbhSimilarity"/>
         <property name="separationSimilarity" ref=""/>
         <property name="similaritySecondRun" ref=""/>
-        
+        <!-- java -jar maltcms.jar -DmyProperty=0.3f -->
+        <!-- <property name="myProperty" value="#{systemProperties.myProperty}"/>-->
     </bean>
    
 </beans>

@@ -101,7 +101,7 @@ public class Clique<T extends Peak> {
             // should be okay
             return addPeak(p);
         } else {
-            log.debug("BBH count draw between peaks p:{}, q:{} with value: {}",
+            log.info("BBH count draw between peaks p:{}, q:{} with value: {}",
                     new Object[]{p, q, bbh1});
             // if we have a draw, we need to consider the
             // distance to the center

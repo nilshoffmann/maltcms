@@ -44,12 +44,32 @@
         <directory>../maltcms-resources/src/main/resources/scripts</directory>
         <outputDirectory>scripts</outputDirectory>
     </fileSet>
+-->    
     <fileSet>
-        <useStrictFiltering>false</useStrictFiltering>
-	<directory>../maltcms-resources/src/main/resources/cfg</directory>
+<!--        <useStrictFiltering>false</useStrictFiltering>-->
+	<directory>../maltcms-chroma/src/main/resources/cfg</directory>
         <outputDirectory>cfg</outputDirectory>
 	<filtered>true</filtered>
     </fileSet>
+    <fileSet>
+<!--        <useStrictFiltering>false</useStrictFiltering>-->
+	<directory>../maltcms-chroma4D/src/main/resources/cfg</directory>
+        <outputDirectory>cfg</outputDirectory>
+	<filtered>true</filtered>
+    </fileSet>
+    <fileSet>
+<!--        <useStrictFiltering>false</useStrictFiltering>-->
+	<directory>../maltcms-chroma4D-srg/src/main/resources/cfg</directory>
+        <outputDirectory>cfg</outputDirectory>
+	<filtered>true</filtered>
+    </fileSet>
+    <fileSet>
+<!--        <useStrictFiltering>false</useStrictFiltering>-->
+	<directory>../maltcms-chroma4D-cwt/src/main/resources/cfg</directory>
+        <outputDirectory>cfg</outputDirectory>
+	<filtered>true</filtered>
+    </fileSet>
+    <!--
     <fileSet>
         <useStrictFiltering>true</useStrictFiltering>
 	<directory>../maltcms-resources/src/main/resources/</directory>
