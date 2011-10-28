@@ -34,12 +34,6 @@
         </plugins>
     </build>
     <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-datastructures</artifactId>
@@ -64,6 +58,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-datastructures-api</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-test-data</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <properties>

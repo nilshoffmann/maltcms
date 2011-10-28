@@ -13,7 +13,7 @@ import java.util.List;
 import junit.framework.Assert;
 import maltcms.commands.filters.array.MovingAverageFilter;
 import maltcms.commands.filters.array.TopHatFilter;
-import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
+import maltcms.commands.fragments.alignment2.PeakCliqueAlignment;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
@@ -27,8 +27,8 @@ import org.junit.rules.TemporaryFolder;
  *
  * @author nilshoffmann
  */
-public class ChromATest extends AFragmentCommandTest {
-
+public class BiPaceTest extends AFragmentCommandTest {
+    
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
 

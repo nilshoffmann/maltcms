@@ -101,7 +101,7 @@ public class ArrayTools2 {
 		}
 		return intarray;
 	}
-
+        
 	/**
 	 * Creates an {@link ArrayInt} from a given {@link Vector}.
 	 * 

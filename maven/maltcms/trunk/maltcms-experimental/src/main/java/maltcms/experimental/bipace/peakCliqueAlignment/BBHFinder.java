@@ -22,7 +22,7 @@ import maltcms.datastructures.peak.Peak;
  */
 @Slf4j
 public class BBHFinder {
- 
+
     /**
      * @param al
      * @param fragmentToPeaks
@@ -33,8 +33,10 @@ public class BBHFinder {
         final Set<Peak> matchedPeaks = new HashSet<Peak>();
         for (final Tuple2D<IFileFragment, IFileFragment> t : al.getPairs()) {
 
-            final List<Peak> lhsPeaks = fragmentToPeaks.get(t.getFirst().getName());
-            final List<Peak> rhsPeaks = fragmentToPeaks.get(t.getSecond().getName());
+            final List<Peak> lhsPeaks = fragmentToPeaks.get(
+                    t.getFirst().getName());
+            final List<Peak> rhsPeaks = fragmentToPeaks.get(t.getSecond().
+                    getName());
             log.debug("lhsPeaks: {}", lhsPeaks.size());
             log.debug("rhsPeaks: {}", rhsPeaks.size());
             for (final Peak plhs : lhsPeaks) {
@@ -74,5 +76,80 @@ public class BBHFinder {
         log.info("Removed {} unmatched peaks!", peaks);
         return unmatchedPeaks;
     }
-    
+
+    public boolean isBidiBestHitForAll(final List<Peak> peaks,
+            final int numberOfFiles) {
+        return isBidiBestHitForK(peaks, numberOfFiles, numberOfFiles);
+    }
+
+    public boolean isBidiBestHitForK(final List<Peak> peaks,
+            final int numberOfFiles, final int minCliqueSize) {
+        int i = 0;
+        int j = 0;
+        for (final Peak p : peaks) {
+            for (final Peak q : peaks) {
+                if (!p.equals(q)) {
+                    if (q.isBidiBestHitFor(p)) {
+                        i++;
+                    } else {
+                    }
+                    j++;
+                }
+            }
+        }
+
+        if ((minCliqueSize < 2) && (minCliqueSize >= -1)) {
+            log.info(
+                    "Illegal value for minCliqueSize = {}, allowed values are -1, >=2 <= number of chromatograms",
+                    minCliqueSize);
+        }
+        if (i >= minCliqueSize) {
+            log.debug(
+                    "{} are BidiBestHits of each other: {}", i, peaks);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isFirstBidiBestHitForRest(final List<Peak> peaks,
+            final int expectedHits) {
+        int i = 0;
+        final Peak p0 = peaks.get(0);
+        for (final Peak p : peaks) {
+            // for(Peak q:peaks) {
+            if (!p.equals(p0)) {
+                if (p0.isBidiBestHitFor(p)) {
+                    i++;
+                } else {
+                }
+            }
+            // }
+        }
+        if (i == expectedHits) {
+            log.debug(
+                    "All elements are BidiBestHits to first Peak: {}", peaks);
+            return true;
+        }
+        return false;
+    }
+
+    public void removePeakSimilaritiesWhichHaveNoBestHits(
+            final TupleND<IFileFragment> t,
+            final HashMap<String, List<Peak>> fragmentToPeaks) {
+        // no best hits means, that the corresponding list of sorted peaks has
+        // length greater than one
+        for (final String s : fragmentToPeaks.keySet()) {
+            for (final Peak p : fragmentToPeaks.get(s)) {
+                for (final IFileFragment iff : t) {
+                    final List<Peak> l = p.getPeaksSortedBySimilarity(iff);
+                    // clear similarities, if a best hit hasn't been assigned
+                    if (l.size() > 1) {
+                        log.debug("Clearing similarities for {} and {}",
+                                iff.getName(), p);
+                        p.clearSimilarities();
+                    }
+                }
+            }
+        }
+    }
 }

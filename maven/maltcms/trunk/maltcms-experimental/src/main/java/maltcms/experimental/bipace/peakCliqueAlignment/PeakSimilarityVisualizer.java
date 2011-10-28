@@ -5,6 +5,8 @@
 package maltcms.experimental.bipace.peakCliqueAlignment;
 
 import cross.datastructures.workflow.IWorkflow;
+import cross.datastructures.workflow.IWorkflowElement;
+import cross.datastructures.workflow.WorkflowSlot;
 import java.awt.Color;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
@@ -14,13 +16,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import javax.media.jai.JAI;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.MinMaxNormalizationFilter;
 import maltcms.datastructures.peak.Peak;
 import maltcms.io.csv.CSVWriter;
 import maltcms.io.csv.ColorRampReader;
-import maltcms.math.functions.IScalarArraySimilarity;
 import maltcms.tools.ImageTools;
+import org.jdom.Element;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
@@ -30,12 +33,14 @@ import ucar.ma2.MAMath.MinMax;
  * @author nils
  */
 @Slf4j
-public class PeakSimilarityVisualizer {
+@Data
+public class PeakSimilarityVisualizer implements IWorkflowElement{
 
+    private IWorkflow workflow;
+    
     public void visualizePeakSimilarities(
             final HashMap<String, List<Peak>> hm, final int samples,
-            final String prefix,
-            final IWorkflow workflow) {
+            final String prefix) {
 
         int npeaks = 0;
         for (final String key : hm.keySet()) {
@@ -105,19 +110,29 @@ public class PeakSimilarityVisualizer {
 
                     // final RenderedImage bi = ImageTools.makeImage2D(psims,
                     // samples, Double.NEGATIVE_INFINITY);
-                    JAI.create("filestore", destImg, new File(workflow.
+                    JAI.create("filestore", destImg, new File(getWorkflow().
                             getOutputDirectory(this), prefix + "_" + keyl
                             + "-" + keyr + "_peak_similarities.png").
                             getAbsolutePath(), "PNG");
                     final CSVWriter csvw = new CSVWriter();
-                    csvw.setWorkflow(workflow);
-                    csvw.writeArray2D(workflow.getOutputDirectory(this).
+                    csvw.setWorkflow(getWorkflow());
+                    csvw.writeArray2D(getWorkflow().getOutputDirectory(this).
                             getAbsolutePath(), prefix + "_" + keyl + "-"
                             + keyr + "_peak_similarities.csv", psims);
                 }
             }
 
         }
+
+    }
+
+    @Override
+    public WorkflowSlot getWorkflowSlot() {
+        return WorkflowSlot.CLUSTERING;
+    }
+
+    @Override
+    public void appendXML(Element e) {
 
     }
 }

@@ -43,7 +43,6 @@ import java.util.Locale;
 import java.util.TreeMap;
 
 
-import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.datastructures.alignment.AlignmentFactory;
 import maltcms.datastructures.peak.Clique;
 import maltcms.datastructures.peak.Peak;
@@ -575,8 +574,10 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
 
         if (this.savePeakSimilarities) {
-            new PeakSimilarityVisualizer().visualizePeakSimilarities(
-                    fragmentToPeaks, 256, "beforeBIDI", getWorkflow());
+            PeakSimilarityVisualizer psv = new PeakSimilarityVisualizer();
+            psv.setWorkflow(getWorkflow());
+            psv.visualizePeakSimilarities(
+                    fragmentToPeaks, 256, "beforeBIDI");
         }
     }
 
@@ -1103,8 +1104,10 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         log.info("Found cliques in {} milliseconds",
                 System.currentTimeMillis() - startT2);
         if (this.savePeakSimilarities) {
-            new PeakSimilarityVisualizer().visualizePeakSimilarities(
-                    fragmentToPeaks, 2, "afterBIDI", getWorkflow());
+            PeakSimilarityVisualizer psv = new PeakSimilarityVisualizer();
+            psv.setWorkflow(getWorkflow());
+            psv.visualizePeakSimilarities(
+                    fragmentToPeaks, 256, "afterBIDI");
         }
         if (this.exportAlignedFeatures) {
             saveToLangeTautenhahnFormat(columnMap, ll);
