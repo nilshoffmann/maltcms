@@ -22,6 +22,7 @@
 package net.sf.maltcms.apps;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -60,6 +61,7 @@ import cross.datastructures.workflow.IWorkflow;
 import cross.exception.ConstraintViolationException;
 import java.net.URLClassLoader;
 import java.util.LinkedList;
+import org.springframework.util.Log4jConfigurer;
 
 /**
  * Main Application Hook, starts with setting allowed command-line parameters.
@@ -121,10 +123,16 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     public static void main(final String[] args) {
 //        if (System.getProperty("log4j.configuration") == null
 //                || System.getProperty("log4j.configuration").isEmpty()) {
-//            URL url = Loader.getResource("cfg/log4j.properties");
-//            PropertyConfigurator.configure(url);
-//            // System.setProperty("log4j.configuration",
-//            // "cfg/log4j.properties");
+//            URL url = Maltcms.class.getResource("cfg/log4j.properties");
+//            try {
+//                //            PropertyConfigurator.configure(url);
+//                            Log4jConfigurer.initLogging(url.toString());
+//                            // "cfg/log4j.properties");
+//                            // "cfg/log4j.properties");
+//            } catch (FileNotFoundException ex) {
+//                java.util.logging.Logger.getLogger(Maltcms.class.getName()).
+//                        log(Level.SEVERE, null, ex);
+//            }
 //        }
         final Logger log = cross.Logging.getLogger(Maltcms.class);
         final int ecode = 0;
