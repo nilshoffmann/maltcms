@@ -5,6 +5,7 @@
 package cross.applicationContext;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -14,6 +15,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  *
  * @author nils
  */
+@Slf4j
 @Data
 public class DefaultApplicationContextFactory {
 
@@ -25,7 +27,8 @@ public class DefaultApplicationContextFactory {
             context = new FileSystemXmlApplicationContext(
                     applicationContextPaths);
         } catch (BeansException e2) {
-            context = new ClassPathXmlApplicationContext(applicationContextPaths);
+            throw e2;
+//            context = new ClassPathXmlApplicationContext(applicationContextPaths);
         }
         return context;
     }

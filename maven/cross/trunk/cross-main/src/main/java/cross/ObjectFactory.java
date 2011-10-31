@@ -62,7 +62,9 @@ public class ObjectFactory implements IObjectFactory {
         if (cfg.containsKey(CONTEXT_LOCATION_KEY)) {
             contextLocations = cfg.getStringArray(CONTEXT_LOCATION_KEY);
         } else {
-            contextLocations = new String[]{"/cfg/xml/chroma.xml"};
+            contextLocations = new String[]{new File(System.getProperty(
+                "user.dir"),"cfg/xml/chroma.xml").getAbsolutePath()};
+//            contextLocations = new String[]{"/cfg/xml/chroma.xml"};
         }
         log.info("Using context locations: {}",
                 Arrays.toString(contextLocations));
@@ -70,7 +72,7 @@ public class ObjectFactory implements IObjectFactory {
             context = new DefaultApplicationContextFactory(contextLocations).
                     createApplicationContext();
         } catch (Exception ex) {
-            log.warn(
+            log.error(
                     "Can not access configuration for application context at {}",
                     contextLocations);
         }
