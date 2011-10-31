@@ -62,22 +62,24 @@ public class ObjectFactory implements IObjectFactory {
         if (cfg.containsKey(CONTEXT_LOCATION_KEY)) {
             log.info("Using user-defined location: {}",cfg.getStringArray(CONTEXT_LOCATION_KEY));
             contextLocations = cfg.getStringArray(CONTEXT_LOCATION_KEY);
-        } else {
-            String str = new File(System.getProperty(
-                "user.dir"),"cfg/xml/chroma.xml").getAbsolutePath();
-            log.info("Using fallback default location: {}",str);
-            contextLocations = new String[]{str};
-//            contextLocations = new String[]{"/cfg/xml/chroma.xml"};
         }
+        if(contextLocations==null) {
+            throw new NullPointerException("No pipeline configuration found! Please define! Example: -c cfg/chroma.properties");
+        }
+//        } else {
+//            String str = new File(System.getProperty(
+//                "user.dir"),"cfg/xml/chroma.xml").getAbsolutePath();
+//            log.info("Using fallback default location: {}",str);
+//            contextLocations = new String[]{str};
+////            contextLocations = new String[]{"/cfg/xml/chroma.xml"};
+//        }
         log.info("Using context locations: {}",
                 Arrays.toString(contextLocations));
         try {
             context = new DefaultApplicationContextFactory(contextLocations).
                     createApplicationContext();
         } catch (Exception ex) {
-            log.error(
-                    "Can not access configuration for application context at {}",
-                    contextLocations);
+            throw new RuntimeException(ex);
         }
     }
 
