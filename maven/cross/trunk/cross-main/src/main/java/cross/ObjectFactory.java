@@ -51,7 +51,7 @@ public class ObjectFactory implements IObjectFactory {
     private Configuration cfg = new PropertiesConfiguration();
     private File userConfigLocation = null;
     private ApplicationContext context = null;
-    public static final String CONTEXT_LOCATION_KEY = "pipeline.context";
+    public static final String CONTEXT_LOCATION_KEY = "pipeline.xml";
 
     @Override
     public void configure(final Configuration cfg) {
@@ -60,10 +60,13 @@ public class ObjectFactory implements IObjectFactory {
         userConfigLocation = (File) this.cfg.getProperty("userConfigLocation");
         String[] contextLocations = null;
         if (cfg.containsKey(CONTEXT_LOCATION_KEY)) {
+            log.info("Using user-defined location: {}",cfg.getStringArray(CONTEXT_LOCATION_KEY));
             contextLocations = cfg.getStringArray(CONTEXT_LOCATION_KEY);
         } else {
-            contextLocations = new String[]{new File(System.getProperty(
-                "user.dir"),"cfg/xml/chroma.xml").getAbsolutePath()};
+            String str = new File(System.getProperty(
+                "user.dir"),"cfg/xml/chroma.xml").getAbsolutePath();
+            log.info("Using fallback default location: {}",str);
+            contextLocations = new String[]{str};
 //            contextLocations = new String[]{"/cfg/xml/chroma.xml"};
         }
         log.info("Using context locations: {}",
