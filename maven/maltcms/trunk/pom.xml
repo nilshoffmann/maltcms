@@ -53,11 +53,11 @@
             </roles>
         </developer>
     </developers>
+    <inceptionYear>2007</inceptionYear>
     <ciManagement>
         <system>hudson</system>
-        <url>http://127.0.0.1:8080/hudson/job/maltcms-modules/</url>
+        <url>http://127.0.0.1:8080/job/maltcms-modules/</url>
     </ciManagement>
-    <inceptionYear>2007</inceptionYear>
     <scm>
         <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</connection>
         <developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</developerConnection>

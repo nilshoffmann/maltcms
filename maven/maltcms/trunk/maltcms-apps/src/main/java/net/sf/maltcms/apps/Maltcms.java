@@ -151,6 +151,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 // Set up the command sequence
                 cs = Factory.getInstance().createCommandSequence();
                 final IWorkflow iw = cs.getWorkflow();
+                iw.setOutputDirectory(new File(Factory.getInstance().getConfiguration().getString("output.basedir", ".")));
                 if (cs.validate()) {
                     long start = System.nanoTime();
                     // Evaluate until empty
