@@ -64,11 +64,24 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
 	private double area = -1;
 	private double startMass = -1;
         private double stopMass = -1;
+        private double mw = -1;
         private double[] extractedIonCurrent;
 	private String file = "";
         private PeakType peakType = PeakType.UNDEFINED;
+        private String name = "";
         private List<PeakAnnotation> peakAnnotations;
 
+        public Peak1D() {
+            
+        }
+        
+        public Peak1D(int startIndex, int apexIndex, int stopIndex) {
+            this();
+            this.startIndex = startIndex;
+            this.apexIndex = apexIndex;
+            this.stopIndex=  stopIndex;
+        }
+        
 	/*
 	 * (non-Javadoc)
 	 * 

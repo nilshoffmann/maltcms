@@ -110,55 +110,55 @@ public class MaltcmsAnnotationFactory {
 
         AttributeType si = new AttributeType();
         si.setName("name");
-        si.setValue(p.name + "");
+        si.setValue(p.getName() + "");
         addIfNew(si, at);
 
         si = new AttributeType();
         si.setName("apex_index");
-        si.setValue(p.apexIndex + "");
+        si.setValue(p.getApexIndex() + "");
         addIfNew(si, at);
 
         si = new AttributeType();
         si.setName("start_index");
-        si.setValue(p.startIndex + "");
+        si.setValue(p.getStartIndex() + "");
         addIfNew(si, at);
 
         si = new AttributeType();
         si.setName("stop_index");
-        si.setValue(p.stopIndex + "");
+        si.setValue(p.getStopIndex() + "");
         addIfNew(si, at);
 
         si = new AttributeType();
         si.setName("apex_time");
-        si.setValue(p.apexTime + "");
+        si.setValue(p.getApexTime() + "");
         si.setUnit("seconds");
         addIfNew(si, at);
 
         si = new AttributeType();
         si.setName("start_time");
-        si.setValue(p.startTime + "");
+        si.setValue(p.getStartTime() + "");
         si.setUnit("seconds");
         addIfNew(si, at);
 
         si = new AttributeType();
         si.setName("stop_time");
-        si.setValue(p.stopTime + "");
+        si.setValue(p.getStopTime() + "");
         si.setUnit("seconds");
         addIfNew(si, at);
 
         si = new AttributeType();
         si.setName("area");
-        si.setValue(p.area + "");
+        si.setValue(p.getArea() + "");
         addIfNew(si, at);
 
         si = new AttributeType();
         si.setName("intensity");
-        si.setValue(p.intensity + "");
+        si.setValue(p.getApexIntensity() + "");
         addIfNew(si, at);
 
         si = new AttributeType();
         si.setName("mw");
-        si.setValue(p.mw + "");
+        si.setValue(p.getMw() + "");
         addIfNew(si, at);
 
         addIfNew(at, peaks);
@@ -186,7 +186,7 @@ public class MaltcmsAnnotationFactory {
             } else if (at.getName().equals("area")) {
                 p.setArea(Double.parseDouble(at.getValue()));
             } else if (at.getName().equals("intensity")) {
-                p.setIntensity(Double.parseDouble(at.getValue()));
+                p.setApexIntensity(Double.parseDouble(at.getValue()));
             } else if (at.getName().equals("mw")) {
                 p.setMw(Double.parseDouble(at.getValue()));
             } else if (at.getName().equals("first_column_retention_time")) {
@@ -262,7 +262,7 @@ public class MaltcmsAnnotationFactory {
 
         si = new AttributeType();
         si.setName("intensity");
-        si.setValue(p.getIntensity() + "");
+        si.setValue(p.getApexIntensity() + "");
         addIfNew(si, at);
 
         si = new AttributeType();

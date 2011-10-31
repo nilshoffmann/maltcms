@@ -2,6 +2,10 @@ This is the Maltcms-Modules maven2 project.
 Within this directory, you will find all the submodules, which 
 make up Maltcms.
 
+Building Maltcms as an anonymous user:
+
+>mvn -s anonymous-settings.xml clean install
+
 Building a binary release distribution:
 From the base directory (where this file is located), call:
 >mvn clean && mvn install

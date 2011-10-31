@@ -737,7 +737,7 @@ public class TICPeakFinder extends AFragmentCommand {
                 baselineCorrectedTIC, firstDerivative, secondDerivative);
 
         log.debug("start: {}, stop: {}", startIndex, stopIndex);
-        final Peak1D pb = new Peak1D(startIndex, scanIndex, stopIndex, 0, 0);
+        final Peak1D pb = new Peak1D(startIndex, scanIndex, stopIndex);
         pb.setFile(f.getAbsolutePath());
         integratePeak(pb, null, f.getChild(this.ticVarName).getArray());
         return pb;
@@ -837,7 +837,7 @@ public class TICPeakFinder extends AFragmentCommand {
         startIndex = Math.max(0, startIndex);
 
         log.debug("start: {}, stop: {}", startIndex, stopIndex);
-        final Peak1D pb = new Peak1D(startIndex, apexIndex, stopIndex, 0, 0);
+        final Peak1D pb = new Peak1D(startIndex, apexIndex, stopIndex);
         pb.setFile(chromatogram.getAbsolutePath());
         integratePeak(pb, null, baselineCorrectedTIC);
         return pb;
@@ -960,7 +960,7 @@ public class TICPeakFinder extends AFragmentCommand {
             mwIndices.add(arr);
         }
         log.debug("start: {}, stop: {}", (l + 1), r - 1);
-        final Peak1D pb = new Peak1D(l + 1, apexIndex, r - 1, 0, 0);//PeakFactory.createPeak1DTic();
+        final Peak1D pb = new Peak1D(l + 1, apexIndex, r - 1);//PeakFactory.createPeak1DTic();
         pb.setFile(f.getAbsolutePath());
         integratePeak(pb, mwIndices, f.getChild(this.ticVarName).getArray());
         return pb;
@@ -997,7 +997,7 @@ public class TICPeakFinder extends AFragmentCommand {
                 s += (tic.getDouble(ticIndex.set(i)));
             }
             pb.setArea(s);
-            pb.setIntensity(tic.getDouble(ticIndex.set(pb.getApexIndex())));
+            pb.setApexIntensity(tic.getDouble(ticIndex.set(pb.getApexIndex())));
         }
         log.debug("Raw peak area: {}", s);
         return s;
@@ -1062,7 +1062,7 @@ public class TICPeakFinder extends AFragmentCommand {
                 pb.getStartIndex() + "", pb.getStopIndex() + "",
                 df.format(pb.getApexTime()), df.format(pb.getStartTime()),
                 df.format(pb.getStopTime()), pb.getArea() + "",
-                "" + pb.getMw(), "" + pb.getIntensity()};
+                "" + pb.getMw(), "" + pb.getApexIntensity()};
             final List<String> v = Arrays.asList(line);
             rows.add(v);
             log.debug("Adding row {}", v);

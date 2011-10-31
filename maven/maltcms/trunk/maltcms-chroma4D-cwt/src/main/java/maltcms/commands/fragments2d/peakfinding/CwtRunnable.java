@@ -240,13 +240,13 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
             // scans.add(s2d);
             p.setApexIndex(ridge.getGlobalScanIndex());
             p.setFile(f.getName());
-            p.setIntensity(tic.getDouble(tidx.set(p.getApexIndex())));
+            p.setApexIntensity(tic.getDouble(tidx.set(p.getApexIndex())));
             p.setApexTime(sat.getDouble(sidx.set(p.getApexIndex())));
             p2.add(p);
             Point2D.Double ps = getPointForRidge(ridge, spm);
             Point seed = new Point((int) ps.getX(), (int) ps.getY());
             PeakArea2D pa2 = new PeakArea2D(seed, isl.getMassSpectra(seed),
-                    p.getIntensity(), p.getApexIndex(), spm);
+                    p.getApexIntensity(), p.getApexIndex(), spm);
             p.setPeakArea(pa2);
             //pi.setName(p);
             List<Tuple2D<Double, IMetabolite>> t = p.getNames();
@@ -627,7 +627,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
             // scans.add(s2d);
             p.setApexIndex(ridge.getGlobalScanIndex());
             p.setFile(f.getName());
-            p.setIntensity(tic.getDouble(tidx.set(p.getApexIndex())));
+            p.setApexIntensity(tic.getDouble(tidx.set(p.getApexIndex())));
             p.setApexTime(sat.getDouble(sidx.set(p.getApexIndex())));
         }
         PeakExporter pe = new PeakExporter();

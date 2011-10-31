@@ -73,7 +73,7 @@ public class CwtEicPeakFinderCallable implements Callable<List<Peak1D>> {
             Peak1D p = new Peak1D();
             p.setApexIndex(ridge.getGlobalScanIndex());
             p.setFile(f.getName());
-            p.setIntensity(tic.getDouble(tidx.set(p.getApexIndex())));
+            p.setApexIntensity(tic.getDouble(tidx.set(p.getApexIndex())));
             p.setApexTime(sat.getDouble(sidx.set(p.getApexIndex())));
             p.setMw(mz);
             
