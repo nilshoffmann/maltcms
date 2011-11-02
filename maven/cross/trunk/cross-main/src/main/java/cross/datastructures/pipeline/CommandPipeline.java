@@ -428,6 +428,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
             //shutdown master server in case of any uncaught exceptions
         } catch (Exception e) {
             shutdownMasterServer();
+            throw new RuntimeException(e);
         }
         return this.tmp;
     }
