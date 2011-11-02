@@ -8,8 +8,8 @@
     </description>
     
     <import resource="chroma4D-base.xml"/>
-    <import resource="chroma4D-srg.xml"/>
-    <import resource="chroma4D-cwt.xml"/>
+<!--    <import resource="chroma4D-srg.xml"/>-->
+<!--    <import resource="chroma4D-cwt.xml"/>-->
     
     <!-- a command pipeline consists of a list of 
      commands to be executed -->
@@ -17,19 +17,10 @@
         <property name="checkCommandDependencies" value="true"/>
         <property name="commands">
             <list>
-                <ref bean="modulationTimeEstimator" />
+<!--                <ref bean="modulationTimeEstimator" />-->
                 <ref bean="default2DVarLoader" />
-                <ref bean="massFilter" />
-<!--                <ref bean="ticHeatmapCoplotBeforeAlignment"/>-->
-<!--                <ref bean="eicHeatmapCoplotBeforeAlignment"/>-->
-                <ref bean="seededRegionGrowing" />
-                <ref bean="ticPeakFinder" />
-                <ref bean="peakCliqueAlignment" /><!--
-                <ref bean="pairwiseDistanceCalculator" />
-                <ref bean="centerStarAlignment" />
-                <ref bean="chromatogramWarp" />
-                <ref bean="ticHeatmapCoplotAfterAlignment"/>
-                <ref bean="eicHeatmapCoplotAfterAlignment"/>-->
+                <ref bean="chromatogram2DVisualizer" />
+<!--                <ref bean="seededRegionGrowing" />-->
             </list>
         </property>    
     </bean>

@@ -20,11 +20,17 @@ import maltcms.math.functions.IScalarArraySimilarity;
 public class PeakSeparator {
 
     private double minDist = 0.995;
+    private IScalarArraySimilarity separationSimilarity;
+    private IScalarArraySimilarity similarity;
+    private boolean useMeanMsForSeparation;
 
     public void startSeparationFor(List<PeakArea2D> peakAreaList,
-            IScalarArraySimilarity separationSimilarity,
-            IScalarArraySimilarity similarity, IScanLine slc,
-            List<ArrayDouble.D1> intensities, boolean useMeanMsForSeparation) {
+//            IScalarArraySimilarity separationSimilarity_old,
+//            IScalarArraySimilarity similarity_old,
+            IScanLine slc,
+            List<ArrayDouble.D1> intensities
+//            , boolean useMeanMsForSeparation_old
+            ) {
 
         log.info("Separator min dist: {}", this.minDist);
 
@@ -280,7 +286,6 @@ public class PeakSeparator {
 
     public void setMinDist(double minDist) {
         this.minDist = minDist;
-
     }
 
     private double e3(double x1, double y1, double i1, double x2, double y2,

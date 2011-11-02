@@ -53,7 +53,6 @@ import cross.exception.ResourceNotAvailableException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.preprocessing.default2dVarLoader.ModulationTimeEstimatorTask;
-import net.sf.maltcms.execution.spi.MaltcmsCompletionService;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -91,8 +90,8 @@ public class Default2DVarLoader extends AFragmentCommand {
     private String secondColumnScanIndexVar = "second_column_scan_index";
     @Configurable(name = "var.total_intensity_1d", value = "total_intensity_1d")
     private String totalIntensity1dVar = "total_intensity_1d";
-    @Configurable(name = "var.scan_aquisition", value = "scan_aquisition")
-    private String scanAcquisitionTimeVar = "scan_aquisition";
+    @Configurable(name = "var.scan_acquisition", value = "scan_acquisition")
+    private String scanAcquisitionTimeVar = "scan_acquisition";
     @Configurable(name = "var.scan_acquisition_1d",
     value = "scan_acquisition_1d")
     private String scanAcquisitionTime1dVar = "scan_acquisition_1d";
@@ -100,8 +99,8 @@ public class Default2DVarLoader extends AFragmentCommand {
     private String totalIntensity2dVar = "total_intensity_2d";
     @Configurable(name = "var.modulation_time.default", value = "5.0d")
     private double modulationTime = 5.0d;
-    private double scanDuration = 0.005d;
-    private double scanRate = 200.0d;
+    private double scanDuration = 0.0d;
+    private double scanRate = -1.0d;
     private String modulationIndex0Dimension = "modulation_index_0";
     private String modulationIndex1Dimension = "modulation_index_1";
     private String modulationTimeDimension = "modulation_time";
@@ -338,19 +337,25 @@ public class Default2DVarLoader extends AFragmentCommand {
     private IVariableFragment createScanRate(final IFileFragment source,
             final IFileFragment parent) {
 
-        try {
-            final Array durationarray = source.getChild(this.scanDurationVar).
-                    getArray();
-            final IndexIterator iter = durationarray.getIndexIterator();
-            this.scanDuration = iter.getDoubleNext();
-            this.scanRate = 1 / this.scanDuration;
-            log.info("Found " + this.scanDurationVar + "({}) and "
-                    + this.scanRateVar + "({})", this.scanDuration,
-                    this.scanRate);
-        } catch (final ResourceNotAvailableException e) {
-            log.error("Couldnt find {} using default {}",
-                    this.scanDurationVar, this.scanDuration);
-        }
+	if (this.scanRate == -1.0d) {
+		log.info("Cannot find default scan rate. Estimating scan rate based on the first element in scan duration. This can lead to rounding errors, so be carefull with this.");
+	        try {
+        	    final Array durationarray = source.getChild(this.scanDurationVar).
+                	    getArray();
+	            final IndexIterator iter = durationarray.getIndexIterator();
+	            this.scanDuration = iter.getDoubleNext();
+	            this.scanRate = 1.0d / this.scanDuration;
+	            log.info("Found " + this.scanDurationVar + "({}) and "
+	                    + this.scanRateVar + "({})", this.scanDuration,
+	                    this.scanRate);
+	        } catch (final ResourceNotAvailableException e) {
+	            log.error("Couldnt find {} using default {}",
+	                    this.scanDurationVar, this.scanDuration);
+	        }
+	} else {
+		log.info("Scan rate manually set to {}", this.scanRate);
+		this.scanDuration = 1.0d / this.scanRate;
+	}
 
         final Index idx = Index.scalarIndexImmutable;
         final IVariableFragment scanratevar = new VariableFragment(parent,

@@ -179,16 +179,16 @@ public class SeededRegionGrowing extends AFragmentCommand {
     private boolean doNormalization = false;
     @Configurable(value = "false", type = boolean.class)
     private boolean doIntegration = false;
-    @Configurable(value = "0.999d", type = double.class)
-    private double separationDistance = 0.999d;
+//    @Configurable(value = "0.999d", type = double.class)
+//    private double separationDistance = 0.999d;
     @Configurable(value = "0.99d", type = double.class)
     private double secondSeedMinDistance = 0.99d;
     private boolean seedNotInRegion = false;
-    private boolean useMeanMsInSeparation = false;
+//    private boolean useMeanMsInSeparation = false;
     private int scansPerModulation = 0;
 //	private int scanLineCount = 0;
-    private IScalarArraySimilarity similarity;
-    private IScalarArraySimilarity separationSimilarity;
+//    private IScalarArraySimilarity similarity;
+//    private IScalarArraySimilarity separationSimilarity;
     private IScalarArraySimilarity similaritySecondRun;
     private IPeakPicking peakPicking;
     private IRegionGrowing regionGrowing;
@@ -205,15 +205,15 @@ public class SeededRegionGrowing extends AFragmentCommand {
     }
 
     public SeededRegionGrowing() {
-        similarity = new ProductSimilarity();
-        similarity.setArraySimilarities(new ArrayCos());
-        GaussianDifferenceSimilarity gds1 = new GaussianDifferenceSimilarity();
-        gds1.setTolerance(15.0);
-        GaussianDifferenceSimilarity gds2 = new GaussianDifferenceSimilarity();
-        gds1.setTolerance(1.0);
-        similarity.setScalarSimilarities(gds1,gds2);
-        similaritySecondRun = similarity;
-        separationSimilarity = similarity;
+//        similarity = new ProductSimilarity();
+//        similarity.setArraySimilarities(new ArrayCos());
+//        GaussianDifferenceSimilarity gds1 = new GaussianDifferenceSimilarity();
+//        gds1.setTolerance(15.0);
+//        GaussianDifferenceSimilarity gds2 = new GaussianDifferenceSimilarity();
+//        gds1.setTolerance(1.0);
+//        similarity.setScalarSimilarities(gds1,gds2);
+//        similaritySecondRun = similarity;
+//        separationSimilarity = similarity;
     }
 
     /**
@@ -346,9 +346,11 @@ public class SeededRegionGrowing extends AFragmentCommand {
 
         if (this.separate) {
             //Also, maybe better to use time penalized dist class! with a smaller window?
-            this.peakSeparator.startSeparationFor(peakAreaList,
-                    this.separationSimilarity, this.similarity, slc,
-                    this.regionGrowing.getIntensities(), useMeanMsInSeparation);
+//            this.peakSeparator.startSeparationFor(peakAreaList,
+//                    null, null, slc,
+//                    this.regionGrowing.getIntensities(), false);
+            this.peakSeparator.startSeparationFor(peakAreaList, slc,
+                    this.regionGrowing.getIntensities());
         }
 
         slc.clear();
@@ -545,9 +547,9 @@ public class SeededRegionGrowing extends AFragmentCommand {
         this.regionGrowing = Factory.getInstance().getObjectFactory().
                 instantiate(regionGrowingClass, IRegionGrowing.class, cfg);
         // this.srgMinDist = this.regionGrowing.getMinDist();
-        this.separationDistance = cfg.getDouble(this.getClass().getName()
-                + ".separationDistance", 0.999d);
-        this.peakSeparator.setMinDist(this.separationDistance);
+//        this.separationDistance = cfg.getDouble(this.getClass().getName()
+//                + ".separationDistance", 0.999d);
+//        this.peakSeparator.setMinDist(this.separationDistance);
         this.separate = cfg.getBoolean(this.getClass().getName() + ".separate",
                 true);
         this.secondSeedMinDistance = cfg.getDouble(this.getClass().getName()

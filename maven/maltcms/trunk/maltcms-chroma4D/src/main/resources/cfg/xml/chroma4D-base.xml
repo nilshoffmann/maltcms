@@ -9,51 +9,53 @@
     
     <!-- a command pipeline consists of input and a list of 
      commands to be executed -->
-    <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
+<!--    <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
         <property name="checkCommandDependencies" value="true"/>
         <property name="commands">
             <list>
                 <ref bean="default2DVarLoader" />
+                <ref bean="data2DNormalizer" />
+                <ref bean="chromatogram2DVisualizer" />
             </list>
         </property>    
-    </bean>
+    </bean>-->
                <!-- commands -->
                
    <bean id="default2DVarLoader" class="maltcms.commands.fragments2d.preprocessing.Default2DVarLoader">
-       <property name=""/>
+       <property name="modulationTime" value="5.0"/>
+       <property name="scanRate" value="-1.0" />
+       <property name="estimateModulationTime" value="false" />
    </bean>
    
    <bean id="data2DNormalizer" class="maltcms.commands.fragments2d.preprocessing.Data2DNormalizer">
-       
+       <property name="applyMovingAverage" value="false" />
+       <property name="movingAverageWindow" value="1" />
+       <property name="applyMovingMedian" value="true" />
+       <property name="movingMedianWindow" value="1" />
+       <property name="applyTopHatFilter" value="true" />
+       <property name="topHatFilterWindow" value="150" />
+       <property name="multiplyWithTic" value="false" />
    </bean>
    
-   <bean id="modulationExtractor" class="maltcms.commands.fragments2d.preprocessing.ModulationExtractor">
-       
-   </bean>
+   <bean id="modulationExtractor" class="maltcms.commands.fragments2d.preprocessing.ModulationExtractor"></bean>
    
-   <bean id="modulationTimeEstimator" class="maltcms.commands.fragments2d.preprocessing.ModulationTimeEstimator">
-       
-   </bean>
+   <bean id="modulationTimeEstimator" class="maltcms.commands.fragments2d.preprocessing.ModulationTimeEstimator"></bean>
    
-   <bean id="gcgcToGcMsConvertor" class="maltcms.commands.fragments2d.preprocessing.GCGCToGCMSConverter">
-       
-   </bean>
+   <bean id="gcgcToGcMsConvertor" class="maltcms.commands.fragments2d.preprocessing.GCGCToGCMSConverter"></bean>
    
    <bean id="chromatogram2DVisualizer" class="maltcms.commands.fragments2d.visualization.Chromatogram2DVisualizer">
-       
+       <property name="totalIntensityVar" value="total_intensity_filtered" />
+       <property name="colorrampLocation" value="res/colorRamps/bcgyr.csv" />
+       <property name="doubleFillValue" value="9.9692099683868690e+36d" />
+       <property name="threshold" value="0" />
+       <property name="substractMean" value="false" />
    </bean>
    
-   <bean id="deltaMassesVisualizer" class="maltcms.commands.fragments2d.visualization.DeltaMasses">
-       
-   </bean>
+   <bean id="deltaMassesVisualizer" class="maltcms.commands.fragments2d.visualization.DeltaMasses"></bean>
    
-    <bean id="gradientVisualizer" class="maltcms.commands.fragments2d.visualization.GradientVisualizer">
-       
-   </bean>
+    <bean id="gradientVisualizer" class="maltcms.commands.fragments2d.visualization.GradientVisualizer"></bean>
    
-   <bean id="massSpectrumVisualizer" class="maltcms.commands.fragments2d.visualization.MassSpectrumVisualization">
-       
-   </bean>
+   <bean id="massSpectrumVisualizer" class="maltcms.commands.fragments2d.visualization.MassSpectrumVisualization"></bean>
    
    <bean id="createHorizontalTicVector" class="maltcms.commands.fragments2d.warp.CreateHorizontalTicVector"></bean>
    
