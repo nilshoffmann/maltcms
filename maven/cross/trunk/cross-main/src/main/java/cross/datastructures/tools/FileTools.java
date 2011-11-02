@@ -48,10 +48,10 @@ public class FileTools {
     public static final SimpleDateFormat sdf = new SimpleDateFormat(
             "MM-dd-yyyy_HH-mm-ss", Locale.US);
     
-    public static File inputBasedirectory = new File(".");
-    public static File outputBasedirectory = new File(".");
-    public static boolean omitUserTimePrefix = false;
-    public static boolean overwrite = false;
+//    public static File inputBasedirectory = new File(".");
+//    public static File outputBasedirectory = new File(".");
+//    public static boolean omitUserTimePrefix = false;
+//    public static boolean overwrite = false;
 
     private static File appendCreatorNameToBaseDir(final File base,
             String prefix, final Class<?> creator) {

@@ -393,21 +393,6 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
                 final IFragmentCommand cmd = this.iter.next();
                 cmd.setWorkflow(getWorkflow());
                 cmd.getWorkflow().getOutputDirectory(cmd);
-//            if (cmdToConfig.containsKey(cmd)) {
-//                String s = cmdToConfig.get(cmd);
-//                if (s != null) {
-//                    try {
-//                        PropertiesConfiguration pc = new PropertiesConfiguration(
-//                                s);
-//                        pc.save(new File(cmd.getWorkflow().getOutputDirectory(
-//                                cmd), cmd.getClass().getSimpleName()
-//                                + ".properties"));
-//                    } catch (ConfigurationException e) {
-//                        // TODO Auto-generated catch block
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
                 // save current state of workflow
                 final IWorkflow iw = getWorkflow();
                 iw.save();

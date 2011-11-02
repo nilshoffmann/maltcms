@@ -125,8 +125,7 @@ public class WorkflowFactory implements IWorkflowFactory {
                 IWorkflow.class);
         dw.setCommandSequence(ics);
         dw.setStartupDate(startup);
-        dw.setName(new File(FileTools.prependDefaultDirsWithPrefix("", null,
-                dw.getStartupDate()), name + ".xml").getAbsolutePath());
+        dw.setName(name);
         dw.setConfiguration(cfg);
         return dw;
     }

@@ -55,6 +55,7 @@ import cross.commands.fragments.AFragmentCommand;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.pipeline.ICommandSequence;
+import cross.datastructures.tools.FileTools;
 import cross.event.AEvent;
 import cross.event.EventSource;
 import cross.event.IEvent;
@@ -87,7 +88,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     private ArrayList<IWorkflowResult> al = new ArrayList<IWorkflowResult>();
     private IEventSource<IWorkflowResult> iwres = new EventSource<IWorkflowResult>();
     private ICommandSequence commandSequence = null;
-    private String name = "defaultWorkflow";
+    private String name = "workflow";
     private IFragmentCommand activeCommand = null;
     @Configurable
     private String xslPathPrefix;
@@ -282,7 +283,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         //TODO extract as IWorkflowPostProcessor
         try {
             final String wflname = getName();
-            log.info("Saving workflow to file {}", wflname);
+            log.info("Saving workflow {}", wflname);
             final Document doc = new Document();
 //			final HashMap<String, String> hm = new HashMap<String, String>();
 //			hm.put("type", "text/xsl");

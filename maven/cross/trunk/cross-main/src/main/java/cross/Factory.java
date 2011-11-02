@@ -194,13 +194,13 @@ public class Factory implements ConfigurationListener {
         getDataSourceFactory().configure(config1);
         getWorkflowFactory().configure(config1);
         getInputDataFactory().configure(config1);
-        FileTools.inputBasedirectory = new File(config1.getString(
-                "input.basedir", ""));
-        FileTools.outputBasedirectory = new File(config1.getString(
-                "output.basedir", ""));
-        FileTools.omitUserTimePrefix = config1.getBoolean("omitUserTimePrefix",
-                false);
-        FileTools.overwrite = config1.getBoolean("output.overwrite", false);
+//        FileTools.inputBasedirectory = new File(config1.getString(
+//                "input.basedir", ""));
+//        FileTools.outputBasedirectory = new File(config1.getString(
+//                "output.basedir", ""));
+//        FileTools.omitUserTimePrefix = config1.getBoolean("omitUserTimePrefix",
+//                false);
+//        FileTools.overwrite = config1.getBoolean("output.overwrite", false);
         // instantiate DataSourceFactory
     }
 
@@ -240,7 +240,7 @@ public class Factory implements ConfigurationListener {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "MM-dd-yyyy_HH-mm-ss", Locale.US);
         String userName = System.getProperty("user.name", "default");
-        File outputDir = new File(System.getProperty("output.basedir", System.
+        File outputDir = new File(getConfiguration().getString("output.basedir", System.
                 getProperty("user.dir")));
         outputDir = new File(outputDir, userName);
         outputDir = new File(outputDir, dateFormat.format(iw.getStartupDate()));
@@ -253,6 +253,7 @@ public class Factory implements ConfigurationListener {
         } else {
             cd.setInput(t);
         }
+        log.info("Workflow {} output: {}",iw.getName(),iw.getOutputDirectory());
         return cd;
     }
 
