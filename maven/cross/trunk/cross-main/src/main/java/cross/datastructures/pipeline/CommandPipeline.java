@@ -463,7 +463,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
     }
 
     @Override
-    public void setCommands(final Collection<IFragmentCommand> c) {
+    public void setCommands(List<IFragmentCommand> c) {
         EvalTools.inRangeI(1, Integer.MAX_VALUE, c.size(), this);
         this.commands = new ArrayList<IFragmentCommand>(c);
         this.iter = this.commands.iterator();
@@ -471,14 +471,14 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
     }
 
     @Override
-    public void setInput(final TupleND<IFileFragment> t) {
+    public void setInput(TupleND<IFileFragment> t) {
         EvalTools.geq(1, t.getSize(), this);
         this.input = t;
         this.tmp = t;
     }
 
     @Override
-    public void setWorkflow(final IWorkflow iw1) {
+    public void setWorkflow(IWorkflow iw1) {
         this.workflow = iw1;
     }
 

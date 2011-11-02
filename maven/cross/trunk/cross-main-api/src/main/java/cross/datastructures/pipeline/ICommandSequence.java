@@ -24,7 +24,6 @@ package cross.datastructures.pipeline;
 import java.util.Collection;
 import java.util.Iterator;
 
-import cross.IConfigurable;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
@@ -33,6 +32,7 @@ import cross.datastructures.workflow.IWorkflowResult;
 import cross.event.IEvent;
 import cross.event.IListener;
 import cross.io.xml.IXMLSerializable;
+import java.util.List;
 
 /**
  * Abstract sequence of commands on FileFragment objects.
@@ -43,7 +43,7 @@ import cross.io.xml.IXMLSerializable;
 public interface ICommandSequence extends Iterator<TupleND<IFileFragment>>,
         IListener<IEvent<IWorkflowResult>>, IXMLSerializable {
 
-    public abstract Collection<IFragmentCommand> getCommands();
+    public abstract List<IFragmentCommand> getCommands();
 
     /**
      * Return input to this ICommandSequence.
@@ -71,7 +71,7 @@ public interface ICommandSequence extends Iterator<TupleND<IFileFragment>>,
     @Override
     public abstract void remove();
 
-    public abstract void setCommands(Collection<IFragmentCommand> c);
+    public abstract void setCommands(List<IFragmentCommand> c);
 
     public abstract void setInput(TupleND<IFileFragment> t);
 
