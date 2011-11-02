@@ -90,8 +90,8 @@ public class Default2DVarLoader extends AFragmentCommand {
     private String secondColumnScanIndexVar = "second_column_scan_index";
     @Configurable(name = "var.total_intensity_1d", value = "total_intensity_1d")
     private String totalIntensity1dVar = "total_intensity_1d";
-    @Configurable(name = "var.scan_acquisition", value = "scan_acquisition")
-    private String scanAcquisitionTimeVar = "scan_acquisition";
+    @Configurable(name = "var.scan_acquisition", value = "scan_acquisition_time")
+    private String scanAcquisitionTimeVar = "scan_acquisition_time";
     @Configurable(name = "var.scan_acquisition_1d",
     value = "scan_acquisition_1d")
     private String scanAcquisitionTime1dVar = "scan_acquisition_1d";
