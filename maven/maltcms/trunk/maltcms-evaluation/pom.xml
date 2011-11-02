@@ -7,20 +7,24 @@
     <version>1.0.8-SNAPSHOT</version>
   </parent>
   <groupId>net.sf.maltcms</groupId>
-  <artifactId>maltcms-sralign</artifactId>
+  <artifactId>maltcms-evaluation</artifactId>
   <version>1.0.8-SNAPSHOT</version>
-  <name>maltcms-sralign</name>
+  <name>maltcms-evaluation</name>
   <url>http://maltcms.sourceforge.net</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>edu.ucar.unidata</groupId>
-            <artifactId>netcdf</artifactId>
-            <version>4.1</version>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-datastructures-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-apps</artifactId>
-            <version>${project.version}</version>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -28,30 +32,20 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-datastructures</artifactId>
-            <version>${project.version}</version>
+            <groupId>net.sourceforge.jexcelapi</groupId>
+            <artifactId>jxl</artifactId>
+            <version>2.6.10</version>
+        </dependency>
+        <dependency>
+            <groupId>com.db4o</groupId>
+            <artifactId>db4o</artifactId>
+            <version>7.12</version>
+            <classifier>java5</classifier>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-commands</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-filters</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-ui</artifactId>
+            <artifactId>maltcms-io-openms-featurexml</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-    <packaging>jar</packaging>
 </project>
-
-

@@ -2,31 +2,57 @@ This is the Maltcms-Modules maven2 project.
 Within this directory, you will find all the submodules, which 
 make up Maltcms.
 
+--------------------------------------------------------------------------------
+For users/builders:
+--------------------------------------------------------------------------------
+
 Building Maltcms as an anonymous user:
 
 >mvn -s anonymous-settings.xml clean install
 
 Building a binary release distribution:
 From the base directory (where this file is located), call:
->mvn clean && mvn install
+>mvn clean
+>mvn install
 
-Change to the maltcms folder and call:
->mvn package
+In order to build maltcms and have all tests run automatically, call:
+>mvn -Dmaven.test.skip=false install
 
-This will generate the appropriate artifacts below the target/ 
-directory.
+This will create a zip release of the project below maltcms-distribution/target.
+
+--------------------------------------------------------------------------------
+For developers:
+--------------------------------------------------------------------------------
 
 Creating a tagged release:
 1. Update local svn copy
 >svn update
 2. Commit local changes
 >svn commit
-3. Prepare release
+3. Build Maltcms with all tests enabled
+>mvn -Dmaven.test.skip=false install
+If all tests succeed, continue, otherwise, correct errors and go back to 2.
+4. Prepare release
 >mvn release:prepare -Dusername=MYSFUSERNAME =Dpassword=MYSFPASSWD
 If everything looks fine:
-4. Perform release
+5. Perform release
 >mvn release:perform 
 
-Deploying a snapshot:
+--------------------------------------------------------------------------------
+
+Deploying a snapshot to the artifactory repository (requires developer access):
 >mvn deploy
 
+--------------------------------------------------------------------------------
+
+Creating a custom maltcms module
+
+Have a look at the pom.xml and note the current version of maltcms.
+Then run
+>mvn archetype:generate -DarchetypeGroupId=net.sf.maltcms \
+ -DarchetypeVersion=1.0 -DarchetypeArtifactId=maltcms-module-archetype \
+ -DgroupId=net.sf.maltcms  
+Enter a name for your module in accordance with the guidelines. Something like
+maltcms-mymodule is okay.
+Then enter the version of your module. This should be the same as the current
+version of the top level project that you noted above.

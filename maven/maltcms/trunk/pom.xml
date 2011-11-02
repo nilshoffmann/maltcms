@@ -193,10 +193,10 @@
 									<!--<scp todir="${sf.username},maltcms@web.sourceforge.net:htdocs/" password="${sf.username.password}" sftp="true" trust="true" verbose="true"> 
 										<fileset dir="${release_dir}/site/" /> </scp> -->
                                     <exec command="rsync" inputstring="">
-                                        <arg value="-avtruP" />
-                                        <arg value="-e ssh " />
-                                        <arg value="target/site/" />
-                                        <arg value="${sf.username},maltcms@web.sourceforge.net:htdocs/maven/maltcms/" />
+                                        <arg value="-avtruP"/>
+                                        <arg value="-e ssh "/>
+                                        <arg value="target/site/"/>
+                                        <arg value="${sf.username},maltcms@web.sourceforge.net:htdocs/maven/maltcms/"/>
                                     </exec>
                                 </target>
                             </configuration>
@@ -266,7 +266,8 @@
         <module>maltcms-io-openms-featurexml</module>
         <module>maltcms-test-data</module>
         <module>maltcms-distribution</module>
-    </modules>
+    <module>maltcms-evaluation</module>
+  </modules>
     <dependencies>
         <dependency>
             <groupId>net.sf.maltcms</groupId>
@@ -332,5 +333,6 @@
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<maven.test.skip>true</maven.test.skip>
     </properties>
 </project>
