@@ -33,7 +33,7 @@
                             <overWriteSnapshots>true</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
                             <!-- security fix, otherwise, logging will fail to work-->
-                            <excludeArtifactIds>log4j-over-slf4j</excludeArtifactIds>
+                            <excludeArtifactIds>log4j-over-slf4j,lombok,slf4j-jdk14</excludeArtifactIds>
                         </configuration>
                     </execution>
 
@@ -98,6 +98,7 @@
                                 <echo message="Correcting file permissions in ${project.build.directory}/${project.name}-${project.version}/scripts/" />
                                 <unzip src="${project.build.directory}/${project.name}-${project.version}/lib/maltcms-resources-${project.version}.jar" dest="${project.build.directory}/${project.name}-${project.version}/" />
                                 <chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.name}-${project.version}/scripts/" perm="ugo+rx" />
+                                <chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.name}-${project.version}/" perm="ugo+rx" />
                             </tasks>
                         </configuration>
                         <goals>
@@ -130,6 +131,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-chroma</artifactId>
             <version>${project.version}</version>
+<!--            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-jdk14</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>-->
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-jdk14</artifactId>
@@ -161,12 +168,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-execution</artifactId>
             <version>${project.version}</version>
-            <exclusions>
+<!--            <exclusions>
                 <exclusion>
                     <artifactId>log4j-over-slf4j</artifactId>
                     <groupId>org.slf4j</groupId>
                 </exclusion>
-            </exclusions>
+            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

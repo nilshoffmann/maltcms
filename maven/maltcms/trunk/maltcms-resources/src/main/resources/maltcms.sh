@@ -42,7 +42,7 @@ export JAVA_HOME="$(cat "$MALTCMSUSRDIR/javahome")";
 echo -e "Using the following java location: $JAVA_HOME\n"
 
 function printHelp {
-			echo -e "Usage: $0 [-64] [-mx ARG] [-ms ARG] [-exec ARG|--execute ARG] [-?|--help] [-- MALTCMSARGS]"
+			echo -e "Usage: $0 [-64] [-mx ARG] [-ms ARG] [-exec ARG|--execute ARG] [-?|--help] [MALTCMSARGS]"
 			#echo -e "Usage: $0 [-cp] [-64] [-mx ARG] [-exec ARG|--execute ARG] [-?|--help] [-- MALTCMSARGS]"
 			#echo -e "\t-cp -> builds classpath from jars in lib/"
 			echo -e "\t-64 -> uses 64bit jvm"
@@ -52,7 +52,7 @@ function printHelp {
 		       	echo -e "\t\t\tif it contains a main method"
 			echo -e "\t\t\te.g. '-exec mypackage/MyClass'"
 			echo -e "\t-?|--help -> display this help"
-			echo -e "\t-- MALTCMSARGS -> hands all arguments following '--' over to Maltcms"
+			echo -e "\tMALTCMSARGS -> hand all remaining arguments over to Maltcms"
 			exit -1
 }
 
@@ -84,9 +84,11 @@ while [ $# -gt 0 ]; do
 			shift
 			export MSSIZE="$1"
 			;;
-		--)
+                -"?"|--help)
+			printHelp $0
+			;;
+		*)
 			echo "Running a $JARCH VM with -Xmx $MXSIZE"
-			shift
 			#Check for clspath file
 			if [ -f "$MALTCMSUSRDIR/clspath" ]; then
 				echo "File clspath exists";
@@ -97,13 +99,9 @@ while [ $# -gt 0 ]; do
 			echo -e "Passing args to $EXEC"
 			echo -e "$@"
 			sleep 1
-			$JAVA_HOME/bin/java -cp "$USRCLSPATH" $PROFILE -Xms$MSSIZE -Xmx$MXSIZE $JARCH "$LOG4J_LOCATION" "$EXEC" "\"$@\"" 
+			$JAVA_HOME/bin/java -cp "$USRCLSPATH" $PROFILE -Xms$MSSIZE -Xmx$MXSIZE $JARCH "$LOG4J_LOCATION" "$EXEC" "$@" 
 			exit $?
 			;;	
-		-"?"|--help)
-			printHelp $0
-			;;
-
 	esac
 	shift
 done

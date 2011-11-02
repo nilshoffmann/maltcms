@@ -441,7 +441,7 @@ public class TICPeakFinder extends AFragmentCommand {
         final PeakPositionsResultSet pprs = findPeakPositions(tic);
         final ArrayInt.D1 extr = pprs.getPeakPositions();
         final double[] snrValues = pprs.getSnrValues();
-
+        log.info("Found {} peaks for file {}", pprs.getTs().size(), f.getName());
         List<Peak1D> peaks = Collections.emptyList();
         if (this.integratePeaks) {
             peaks = findPeakAreas(f, pprs.getTs(), f.getName(), tic, sat);
@@ -459,7 +459,7 @@ public class TICPeakFinder extends AFragmentCommand {
 
         ff.addSourceFile(f);
         addResults(ff, pprs.getCorrectedTIC(), extr, peaks);
-        log.info("Found {} peaks for file {}", peaks.size(), f.getName());
+        
         ff.save();
         f.clearArrays();
         DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(ff.

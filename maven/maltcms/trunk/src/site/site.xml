@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : site.xml
+    Created on : 1. November 2011, 11:24
+    Author     : nilshoffmann
+    Description:
+        Base file for maven site documentation.
+-->
+
+<project name="Maltcms">
+  <bannerLeft>
+    <name>Maltcms</name>
+    <src>http://maven.apache.org/images/apache-maven-project.png</src>
+    <href>http://maltcms.sf.net</href>
+  </bannerLeft>
+  <bannerRight>
+    <src>http://maven.apache.org/images/maven-small.gif</src>
+  </bannerRight>
+  <publishDate position="right"/>
+  <version position="right"/>
+  <body>
+    <links>
+      <item name="Maltcms Sourceforge" href="http://maltcms.sf.net" />
+    </links>
+
+    <menu name="Maltcms">
+      <item name="Introduction" href="index.html"/>
+      <item name="Download" href="download.html"/>
+      <item name="Release Notes" href="release-notes.html" />
+      <item name="General Information" href="about.html"/>
+      <item name="Road Map" href="roadmap.html" />
+    </menu>
+    
+    <menu ref="modules" />
+
+    <menu ref="reports"/>
+  </body>
+</project>

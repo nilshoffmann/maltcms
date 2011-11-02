@@ -61,7 +61,8 @@ import cross.datastructures.workflow.IWorkflow;
 import cross.exception.ConstraintViolationException;
 import java.net.URLClassLoader;
 import java.util.LinkedList;
-import org.springframework.util.Log4jConfigurer;
+import java.util.Properties;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
  * Main Application Hook, starts with setting allowed command-line parameters.
@@ -121,19 +122,41 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      *            what is passed in from the command-line, usually
      */
     public static void main(final String[] args) {
-//        if (System.getProperty("log4j.configuration") == null
-//                || System.getProperty("log4j.configuration").isEmpty()) {
-//            URL url = Maltcms.class.getResource("cfg/log4j.properties");
-//            try {
-//                //            PropertyConfigurator.configure(url);
-//                            Log4jConfigurer.initLogging(url.toString());
-//                            // "cfg/log4j.properties");
-//                            // "cfg/log4j.properties");
-//            } catch (FileNotFoundException ex) {
-//                java.util.logging.Logger.getLogger(Maltcms.class.getName()).
-//                        log(Level.SEVERE, null, ex);
-//            }
-//        }
+        URL log4jConfiguration = null;
+        try {
+            String resource = System.getProperty("log4j.configuration");
+            if (resource != null) {
+                log4jConfiguration = new URL(resource);
+            } else {
+                log4jConfiguration = Maltcms.class.getResource(
+                        "/cfg/log4j.properties");
+            }
+        } catch (MalformedURLException ex) {
+        }
+        if (log4jConfiguration != null) {
+            PropertyConfigurator.configure(log4jConfiguration);
+        } else {
+            Properties props = new Properties();
+            props.setProperty("log4j.rootLogger", "INFO, A1");
+            props.setProperty("log4j.appender.A1",
+                    "org.apache.log4j.ConsoleAppender");
+            props.setProperty("log4j.appender.A1.layout",
+                    "org.apache.log4j.PatternLayout");
+            props.setProperty("log4j.appender.A1.layout.ConversionPattern",
+                    "%m%n");
+            props.setProperty("log4j.category.cross", "WARN");
+            props.setProperty("log4j.category.cross.datastructures.pipeline",
+                    "INFO");
+            props.setProperty("log4j.category.maltcms.commands.fragments",
+                    "INFO");
+            props.setProperty("log4j.category.maltcms.commands.fragments2d",
+                    "INFO");
+            props.setProperty("log4j.category.maltcms", "WARN");
+            props.setProperty("log4j.category.ucar", "WARN");
+            props.setProperty("log4j.category.smueller", "WARN");
+            PropertyConfigurator.configure(props);
+        }
+
         final Logger log = cross.Logging.getLogger(Maltcms.class);
         final int ecode = 0;
         ICommandSequence cs = null;
@@ -151,7 +174,6 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 // Set up the command sequence
                 cs = Factory.getInstance().createCommandSequence();
                 final IWorkflow iw = cs.getWorkflow();
-                iw.setOutputDirectory(new File(Factory.getInstance().getConfiguration().getString("output.basedir", ".")));
                 if (cs.validate()) {
                     long start = System.nanoTime();
                     // Evaluate until empty
@@ -178,8 +200,9 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     } catch (final Throwable t) {
                         Maltcms.handleRuntimeException(log, t, cs);
                     }
-                }else{
-                    throw new ConstraintViolationException("Pipeline is invalid, but strict checking was requested!");
+                } else {
+                    throw new ConstraintViolationException(
+                            "Pipeline is invalid, but strict checking was requested!");
                 }
 
             }
