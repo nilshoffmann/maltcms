@@ -92,10 +92,12 @@ public class MaxSortPeakPicking implements IPeakPicking {
 
         Collections.sort(peaks, c);
 
-        final List<Point> finalPeaks = new ArrayList<Point>();
+        List<Point> finalPeaks = new ArrayList<Point>();
         for (int i = 0; i < Math.min(count, peaks.size()); i++) {
             finalPeaks.add(peaks.get(i));
         }
+        
+        Collections.sort(finalPeaks, new PointComparator());
 
         return finalPeaks;
     }
@@ -105,18 +107,29 @@ public class MaxSortPeakPicking implements IPeakPicking {
      */
     @Override
     public List<Point> findPeaks(IFileFragment ff) {
-        this.log.info("Running {} with:", this.getClass().getName());
-        this.log.info("	total_intensity: {}", this.totalIntensityVar);
-        this.log.info("	maxDx: {}, maxDy: {}", this.maxDx, this.maxDy);
-        this.log.info("	k: {}", this.k);
+        log.info("Running {} with:", this.getClass().getName());
+        log.info("	total_intensity: {}", this.totalIntensityVar);
+        log.info("	maxDx: {}, maxDy: {}", this.maxDx, this.maxDy);
+        log.info("	k: {}", this.k);
 
         final List<ArrayDouble.D1> intensities = getIntensities(ff,
                 this.totalIntensityVar);
         List<Point> peaks = getPeaks(intensities, 0, Integer.MAX_VALUE,
                 this.minVerticalScanIndex, Integer.MAX_VALUE, this.maxDx,
                 this.maxDy);
-
         return getKMax(intensities, peaks, this.k);
+    }
+    
+    public class PointComparator implements Comparator<Point> {
+
+        @Override
+        public int compare(Point p1, Point p2) {
+            if (Double.compare(p1.x, p2.x) == 0) {
+                return Double.compare(p1.y, p2.y);
+            } else {
+                return Double.compare(p1.x, p2.x);
+            }
+        }
     }
 
     /**

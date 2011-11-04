@@ -118,11 +118,11 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
         for (final IFileFragment ff : t) {
             log.info("Creating image for {}", ff.getName());
             log.info("Using {} as data", this.totalIntensityVar);
-            final int scanRate = ff.getChild(this.scanRateVar).getArray().getInt(
+            final double scanRate = ff.getChild(this.scanRateVar).getArray().getDouble(
                     Index.scalarIndexImmutable);
-            final int modulationTime = ff.getChild(this.modulationTimeVar).
-                    getArray().getInt(Index.scalarIndexImmutable);
-            final int scansPerModulation = scanRate * modulationTime;
+            final double modulationTime = ff.getChild(this.modulationTimeVar).
+                    getArray().getDouble(Index.scalarIndexImmutable);
+            final int scansPerModulation = (int) (scanRate * modulationTime);
             ff.getChild(this.totalIntensityVar).setIndex(
                     ff.getChild(this.secondScanIndexVar));
             List<Array> intensities = ff.getChild(this.totalIntensityVar).

@@ -35,7 +35,7 @@ import cross.annotations.Configurable;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.math.functions.IScalarArraySimilarity;
-import maltcms.math.functions.ProductSimilarity;
+//import maltcms.math.functions.ProductSimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
 
@@ -74,9 +74,9 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
      */
     public FastBidirectionalBestHit() {
         this.doneList = new ArrayList<Map<Integer, Boolean>>();
-        similarity = new ProductSimilarity();
-        similarity.setArraySimilarities(new ArrayCos());
-        similarity.setScalarSimilarities(new GaussianDifferenceSimilarity());
+//        similarity = new ProductSimilarity();
+//        similarity.setArraySimilarities(new ArrayCos());
+//        similarity.setScalarSimilarities(new GaussianDifferenceSimilarity());
     }
 
     /**

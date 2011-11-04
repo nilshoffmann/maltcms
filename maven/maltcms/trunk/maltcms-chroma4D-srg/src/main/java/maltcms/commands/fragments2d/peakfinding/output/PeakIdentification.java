@@ -113,7 +113,7 @@ public class PeakIdentification implements IPeakIdentification {
      */
     @Override
     public void setName(final Peak2D peak) {
-        if ((this.dbFiles.isEmpty()) || this.dbFile.isEmpty()) {
+        if (this.dbFiles.isEmpty()) {
             this.dbAvailable = false;
         }
         if (this.dbAvailable && this.doSearch) {

@@ -53,355 +53,364 @@ import cross.exception.NotImplementedException;
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
-@RequiresVariables(names = { "var.mass_values", "var.intensity_values",
-        "var.scan_index", "var.mass_range_min", "var.mass_range_max",
-        "var.modulation_time", "var.scan_rate" })
+@RequiresVariables(names = {"var.mass_values", "var.intensity_values",
+    "var.scan_index", "var.mass_range_min", "var.mass_range_max",
+    "var.modulation_time", "var.scan_rate"})
 public class ScanLineCache implements IScanLine {
 
-	private final Logger log = Logging.getLogger(this);
+    private final Logger log = Logging.getLogger(this);
+    private String intensityValuesVar = "intensity_values";
+    private String scanIndexVar = "scan_index";
+    private String massValuesVar = "mass_values";
+    // private String minRangeVar = "mass_range_min";
+    private String maxRangeVar = "mass_range_max";
+    private String modulationVar = "modulation_time";
+    private String scanRateVar = "scan_rate";
+    private String secondColumnIndexVar = "second_column_scan_index";
+    private List<List<Integer>> xyToScanIndexMap;
+    private IVariableFragment scanIndex = null;
+    private IVariableFragment massValues = null;
+    private IVariableFragment massIntensities = null;
+    private final IFileFragment iff;
+    private int lastIndex = -1;
+    private final int scansPerModulation;
+    private int binSize = -1;
+    private final HashMap<Integer, SoftReference<List<Array>>> cache = new HashMap<Integer, SoftReference<List<Array>>>();
+    private int cachemiss = 0;
+    private int cachehit = 0;
+    private int loads = 0;
+    private int loadnew = 0;
+    // private long time = 0L;
+    private boolean cacheModulations = true;
 
-	private String intensityValuesVar = "intensity_values";
-	private String scanIndexVar = "scan_index";
-	private String massValuesVar = "mass_values";
-	// private String minRangeVar = "mass_range_min";
-	private String maxRangeVar = "mass_range_max";
-	private String modulationVar = "modulation_time";
-	private String scanRateVar = "scan_rate";
+    /**
+     * This constructor will automatically set the number of scans per
+     * modulation and the last index.
+     * 
+     * @param iff1
+     *            file fragment
+     */
+    protected ScanLineCache(final IFileFragment iff1) {
+        this.iff = iff1;
+        final double modulation = this.iff.getChild(this.modulationVar).getArray().getDouble(Index.scalarIndexImmutable);
+        final double scanRate = this.iff.getChild(this.scanRateVar).getArray().getDouble(Index.scalarIndexImmutable);
+        this.scansPerModulation = (int) (modulation * scanRate);
+        estimateBinSize();
+        estimateLastIndex();
 
-	private IVariableFragment scanIndex = null;
-	private IVariableFragment massValues = null;
-	private IVariableFragment massIntensities = null;
+        setUpxyIndexMap();
+    }
 
-	private final IFileFragment iff;
-	private int lastIndex = -1;
-	private final int scansPerModulation;
-	private int binSize = -1;
+    /**
+     * Default constructor.
+     * 
+     * @param iff1
+     *            file fragment
+     * @param scansPerModulation1
+     *            scans per modulation
+     * @param lastIndex1
+     *            index of the last scan
+     */
+    protected ScanLineCache(final IFileFragment iff1,
+            final int scansPerModulation1, final int lastIndex1) {
+        this.iff = iff1;
+        this.scansPerModulation = scansPerModulation1;
+        this.lastIndex = lastIndex1;
 
-	private final HashMap<Integer, SoftReference<List<Array>>> cache = new HashMap<Integer, SoftReference<List<Array>>>();
+        setUpxyIndexMap();
+    }
 
-	private int cachemiss = 0;
-	private int cachehit = 0;
-	private int loads = 0;
-	private int loadnew = 0;
-	// private long time = 0L;
+    private void setUpxyIndexMap() {
+        this.xyToScanIndexMap = new ArrayList<List<Integer>>();
+        final Array secondScanIndex = this.iff.getChild(this.secondColumnIndexVar).getArray();
+        final IndexIterator iter = secondScanIndex.getIndexIterator();
+        int lastScanIndex = iter.getIntNext();
+        while (iter.hasNext()) {
+            List<Integer> tmpList = new ArrayList<Integer>();
+            final int currentScanIndex = iter.getIntNext();
+            for (;lastScanIndex < currentScanIndex; lastScanIndex++) {
+                tmpList.add(lastScanIndex);
+            }
+            this.xyToScanIndexMap.add(tmpList);
+        }
+    }
 
-	private boolean cacheModulations = true;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void configure(final Configuration cfg) {
+        this.massValuesVar = cfg.getString("var.mass_values", "mass_values");
+        this.intensityValuesVar = cfg.getString("var.intensity_values",
+                "intensity_values");
+        this.scanIndexVar = cfg.getString("var.scan_index", "scan_index");
+        this.maxRangeVar = cfg.getString("var.mass_range_max", "mass_range_max");
+        this.modulationVar = cfg.getString("var.modulation_time",
+                "modulation_time");
+        this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
+    }
 
-	/**
-	 * This constructor will automatically set the number of scans per
-	 * modulation and the last index.
-	 * 
-	 * @param iff1
-	 *            file fragment
-	 */
-	protected ScanLineCache(final IFileFragment iff1) {
-		this.iff = iff1;
-		final int modulation = this.iff.getChild(this.modulationVar).getArray()
-		        .getInt(Index.scalarIndexImmutable);
-		final int scanRate = this.iff.getChild(this.scanRateVar).getArray()
-		        .getInt(Index.scalarIndexImmutable);
-		this.scansPerModulation = modulation * scanRate;
-		estimateBinSize();
-		estimateLastIndex();
-	}
+    /**
+     * Will compute the max range of an chromatogram and sets the bin size to
+     * max range + 1.
+     */
+    private void estimateBinSize() {
+        final Array maxRange = this.iff.getChild(this.maxRangeVar).getArray();
+        final IndexIterator iter = maxRange.getIndexIterator();
+        while (iter.hasNext()) {
+            final int currentMaxRange = iter.getIntNext();
+            if (this.binSize < currentMaxRange) {
+                this.binSize = currentMaxRange;
+            }
+        }
+        this.binSize++;
+    }
 
-	/**
-	 * Default constructor.
-	 * 
-	 * @param iff1
-	 *            file fragment
-	 * @param scansPerModulation1
-	 *            scans per modulation
-	 * @param lastIndex1
-	 *            index of the last scan
-	 */
-	protected ScanLineCache(final IFileFragment iff1,
-	        final int scansPerModulation1, final int lastIndex1) {
-		this.iff = iff1;
-		this.scansPerModulation = scansPerModulation1;
-		this.lastIndex = lastIndex1;
-	}
+    /**
+     * Uses the scan_index shape to estimate the last index.
+     */
+    private void estimateLastIndex() {
+        this.lastIndex = this.iff.getChild(this.scanIndexVar).getArray().getShape()[0];
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void configure(final Configuration cfg) {
-		this.massValuesVar = cfg.getString("var.mass_values", "mass_values");
-		this.intensityValuesVar = cfg.getString("var.intensity_values",
-		        "intensity_values");
-		this.scanIndexVar = cfg.getString("var.scan_index", "scan_index");
-		// this.minRangeVar = cfg
-		// .getString("var.mass_range_min", "mass_range_min");
-		this.maxRangeVar = cfg
-		        .getString("var.mass_range_max", "mass_range_max");
-		this.modulationVar = cfg.getString("var.modulation_time",
-		        "modulation_time");
-		this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
-	}
+    /**
+     * Getter.
+     * 
+     * @return bin size
+     */
+    public int getBinsSize() {
+        return this.binSize;
+    }
 
-	/**
-	 * Will compute the max range of an chromatogram and sets the bin size to
-	 * max range + 1.
-	 */
-	private void estimateBinSize() {
-		final Array maxRange = this.iff.getChild(this.maxRangeVar).getArray();
-		final IndexIterator iter = maxRange.getIndexIterator();
-		while (iter.hasNext()) {
-			final int currentMaxRange = iter.getIntNext();
-			if (this.binSize < currentMaxRange) {
-				this.binSize = currentMaxRange;
-			}
-		}
-		this.binSize++;
-	}
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    public boolean getCacheModulation() {
+        return this.cacheModulations;
+    }
 
-	/**
-	 * Uses the scan_index shape to estimate the last index.
-	 */
-	private void estimateLastIndex() {
-		this.lastIndex = this.iff.getChild(this.scanIndexVar).getArray()
-		        .getShape()[0];
-	}
+    /**
+     * Getter.
+     * 
+     * @return last index
+     */
+    public int getLastIndex() {
+        return this.lastIndex;
+    }
 
-	/**
-	 * Getter.
-	 * 
-	 * @return bin size
-	 */
-	public int getBinsSize() {
-		return this.binSize;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Array getMassSpectra(final int x, final int y) {
+        try {
+            if ((x >= 0) && (y >= 0) && (y < this.scansPerModulation)
+                    && (x < this.getScanLineCount())) {
+                return getScanlineMS(x).get(y);
+            } else {
+                return null;
+            }
+        } catch (final IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
-	public boolean getCacheModulation() {
-		return this.cacheModulations;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Array getMassSpectra(final Point p) {
+        return getMassSpectra(p.x, p.y);
+    }
 
-	/**
-	 * Getter.
-	 * 
-	 * @return last index
-	 */
-	public int getLastIndex() {
-		return this.lastIndex;
-	}
+    /**
+     * Getter.
+     * 
+     * @return scan line count
+     */
+    public int getScanLineCount() {
+        return (this.lastIndex / this.scansPerModulation);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Array getMassSpectra(final int x, final int y) {
-		try {
-			if ((x >= 0) && (y >= 0) && (y < this.scansPerModulation)
-			        && (x < this.getScanLineCount())) {
-				return getScanlineMS(x).get(y);
-			} else {
-				return null;
-			}
-		} catch (final IndexOutOfBoundsException e) {
-			return null;
-		}
-	}
+    /**
+     * Getter.
+     * 
+     * @param x
+     *            scan line number
+     * @return complete ms list of this scan line
+     */
+    public List<Array> getScanlineMS(final int x) {
+        this.loads++;
+        if (this.scanIndex == null) {
+            // TODO second_scan_index anstatt?
+            this.scanIndex = this.iff.getChild(this.scanIndexVar);
+        }
+        if (this.massValues == null) {
+            this.massValues = this.iff.getChild(this.massValuesVar, true);
+        }
+        if (this.massIntensities == null) {
+            this.massIntensities = this.iff.getChild(this.intensityValuesVar,
+                    true);
+        }
+        final Integer scan = Integer.valueOf(x);
+        if (this.cache.containsKey(scan)) {
+            final List<Array> l = this.cache.get(scan).get();
+            if (l != null) {
+                this.cachehit++;
+                return l;
+            }
+            this.cachemiss++;
+        }
+        return loadScanline(x);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Array getMassSpectra(final Point p) {
-		return getMassSpectra(p.x, p.y);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getScansPerModulation() {
+        return this.scansPerModulation;
+    }
 
-	/**
-	 * Getter.
-	 * 
-	 * @return scan line count
-	 */
-	public int getScanLineCount() {
-		return (this.lastIndex / this.scansPerModulation);
-	}
+    /**
+     * Getter. Will load the scanline from a given {@link IFileFragment}.
+     * 
+     * @param x
+     *            scan line number
+     * @return complete ms list of the scan line
+     */
+    private synchronized List<Array> loadScanline(final int x) {
+        try {
+//			int maxindex = ((x + 1) * this.scansPerModulation) - 1;
+            int last = this.xyToScanIndexMap.get(x).size() - 1;
+            int maxindex = this.xyToScanIndexMap.get(x).get(last);
+            if (maxindex > this.lastIndex) {
+                maxindex = this.lastIndex;
+            }
+//			final Range range = new Range(x * this.scansPerModulation, maxindex);
+            final Range range = new Range(this.xyToScanIndexMap.get(x).get(0), maxindex);
+            final Range[] r = new Range[]{range};
+            this.scanIndex.setRange(r);
+            this.massValues.setIndex(this.scanIndex);
+            this.massIntensities.setIndex(this.scanIndex);
 
-	/**
-	 * Getter.
-	 * 
-	 * @param x
-	 *            scan line number
-	 * @return complete ms list of this scan line
-	 */
-	public List<Array> getScanlineMS(final int x) {
-		this.loads++;
-		if (this.scanIndex == null) {
-			// TODO second_scan_index anstatt?
-			this.scanIndex = this.iff.getChild(this.scanIndexVar);
-		}
-		if (this.massValues == null) {
-			this.massValues = this.iff.getChild(this.massValuesVar, true);
-		}
-		if (this.massIntensities == null) {
-			this.massIntensities = this.iff.getChild(this.intensityValuesVar,
-			        true);
-		}
-		final Integer scan = Integer.valueOf(x);
-		if (this.cache.containsKey(scan)) {
-			final List<Array> l = this.cache.get(scan).get();
-			if (l != null) {
-				this.cachehit++;
-				return l;
-			}
-			this.cachemiss++;
-		}
-		return loadScanline(x);
-	}
+            // this.massValues.setIndexedArray(null);
+            // this.massIntensities.setIndexedArray(null);
+            final List<Array> massValuesA = this.massValues.getIndexedArray();
+            final List<Array> massIntensitiesA = this.massIntensities.getIndexedArray();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getScansPerModulation() {
-		return this.scansPerModulation;
-	}
+            final List<Array> normalized = new ArrayList<Array>();
+            for (int i = 0; (i < massValuesA.size())
+                    && (i < massIntensitiesA.size()); i++) {
+                normalized.add(ArrayTools2.normalize(massValuesA.get(i),
+                        massIntensitiesA.get(i), this.binSize, this.log));
+            }
 
-	/**
-	 * Getter. Will load the scanline from a given {@link IFileFragment}.
-	 * 
-	 * @param x
-	 *            scan line number
-	 * @return complete ms list of the scan line
-	 */
-	private synchronized List<Array> loadScanline(final int x) {
-		try {
-			final Integer scan = Integer.valueOf(x);
-			int maxindex = ((x + 1) * this.scansPerModulation) - 1;
-			if (maxindex > this.lastIndex) {
-				maxindex = this.lastIndex;
-			}
-			final Range range = new Range(x * this.scansPerModulation, maxindex);
-			final Range[] r = new Range[] { range };
-			this.scanIndex.setRange(r);
-			this.massValues.setIndex(this.scanIndex);
-			this.massIntensities.setIndex(this.scanIndex);
+            if (this.cacheModulations) {
+                final SoftReference<List<Array>> sr = new SoftReference<List<Array>>(
+                        normalized);
+                this.cache.put(Integer.valueOf(x), sr);
+            }
+            this.loadnew++;
+            return normalized;
+        } catch (final InvalidRangeException e) {
+            e.printStackTrace();
+        }
 
-			// this.massValues.setIndexedArray(null);
-			// this.massIntensities.setIndexedArray(null);
-			final List<Array> massValuesA = this.massValues.getIndexedArray();
-			final List<Array> massIntensitiesA = this.massIntensities
-			        .getIndexedArray();
+        return null;
+    }
 
-			final List<Array> normalized = new ArrayList<Array>();
-			for (int i = 0; (i < massValuesA.size())
-			        && (i < massIntensitiesA.size()); i++) {
-				normalized.add(ArrayTools2.normalize(massValuesA.get(i),
-				        massIntensitiesA.get(i), this.binSize, this.log));
-			}
+    /**
+     * Setter.
+     * 
+     * @param size
+     *            bin size
+     */
+    public void setBinSize(final int size) {
+        this.binSize = size;
+    }
 
-			if (this.cacheModulations) {
-				final SoftReference<List<Array>> sr = new SoftReference<List<Array>>(
-				        normalized);
-				this.cache.put(scan, sr);
-			}
-			this.loadnew++;
-			return normalized;
-		} catch (final InvalidRangeException e) {
-			e.printStackTrace();
-		}
+    /**
+     * {@inheritDoc}
+     */
+    public void setCacheModulations(final boolean cacheMod) {
+        this.cacheModulations = cacheMod;
+    }
 
-		return null;
-	}
+    /**
+     * Setter.
+     * 
+     * @param index
+     *            last index
+     */
+    public void setLastIndex(final int index) {
+        this.lastIndex = index;
+    }
 
-	/**
-	 * Setter.
-	 * 
-	 * @param size
-	 *            bin size
-	 */
-	public void setBinSize(final int size) {
-		this.binSize = size;
-	}
+    /**
+     * Will view some statistical information about the cache usage.
+     */
+    public void showStat() {
+        this.log.info("Statistic for ScanLineCache:");
+        this.log.info("	Loads    : {}", this.loads);
+        this.log.info("	New      : {}", this.loadnew);
+        this.log.info("	Cached   : {}", this.cachehit);
+        this.log.info("	Cachemiss: {}", this.cachemiss);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setCacheModulations(final boolean cacheMod) {
-		this.cacheModulations = cacheMod;
-	}
+    @Override
+    public List<Tuple2D<Array, Array>> getScanlineSparseMS(int x) {
+        throw new NotImplementedException(
+                "SLC don't support sparse MS yet. Please use SparseScanlineCache or CachedScanLineList instead.");
+    }
 
-	/**
-	 * Setter.
-	 * 
-	 * @param index
-	 *            last index
-	 */
-	public void setLastIndex(final int index) {
-		this.lastIndex = index;
-	}
+    @Override
+    public Tuple2D<Array, Array> getSparseMassSpectra(int x, int y) {
+        final Array intensities = getMassSpectra(x, y);
+        if (intensities != null) {
+            final ArrayInt.D1 mz = new ArrayInt.D1(intensities.getShape()[0]);
+            for (int i = 0; i < intensities.getShape()[0]; i++) {
+                mz.set(i, i);
+            }
+            return new Tuple2D<Array, Array>(mz, intensities);
+        } else {
+            this.log.info("Intensities from getMassSpectra in ScanLineCache is null.");
+            return null;
+        }
+        // throw new NotImplementedException(
+        // "SLC don't support sparse MS yet. Please use SparseScanlineCache or CachedScanLineList instead.");
+    }
 
-	/**
-	 * Will view some statistical information about the cache usage.
-	 */
-	public void showStat() {
-		this.log.info("Statistic for ScanLineCache:");
-		this.log.info("	Loads    : {}", this.loads);
-		this.log.info("	New      : {}", this.loadnew);
-		this.log.info("	Cached   : {}", this.cachehit);
-		this.log.info("	Cachemiss: {}", this.cachemiss);
-	}
+    @Override
+    public Tuple2D<Array, Array> getSparseMassSpectra(Point p) {
+        return getSparseMassSpectra(p.x, p.y);
+    }
 
-	@Override
-	public List<Tuple2D<Array, Array>> getScanlineSparseMS(int x) {
-		throw new NotImplementedException(
-		        "SLC don't support sparse MS yet. Please use SparseScanlineCache or CachedScanLineList instead.");
-	}
+    @Override
+    public Point mapIndex(int scanIndex) {
+        // FIXME: use xyMap to get x and y
+        int x = scanIndex / getScansPerModulation();
+        int y = scanIndex % getScansPerModulation();
+        return new Point(x, y);
+    }
 
-	@Override
-	public Tuple2D<Array, Array> getSparseMassSpectra(int x, int y) {
-		final Array intensities = getMassSpectra(x, y);
-		if (intensities != null) {
-			final ArrayInt.D1 mz = new ArrayInt.D1(intensities.getShape()[0]);
-			for (int i = 0; i < intensities.getShape()[0]; i++) {
-				mz.set(i, i);
-			}
-			return new Tuple2D<Array, Array>(mz, intensities);
-		} else {
-			this.log
-			        .info("Intensities from getMassSpectra in ScanLineCache is null.");
-			return null;
-		}
-		// throw new NotImplementedException(
-		// "SLC don't support sparse MS yet. Please use SparseScanlineCache or CachedScanLineList instead.");
-	}
+    @Override
+    public int mapPoint(int x, int y) {
+        return this.xyToScanIndexMap.get(x).get(y);
+    }
 
-	@Override
-	public Tuple2D<Array, Array> getSparseMassSpectra(Point p) {
-		return getSparseMassSpectra(p.x, p.y);
-	}
+    @Override
+    public int mapPoint(Point p) {
+        return mapPoint(p.x, p.y);
+    }
 
-	@Override
-	public Point mapIndex(int scanIndex) {
-		int x = scanIndex / getScansPerModulation();
-		int y = scanIndex % getScansPerModulation();
-		return new Point(x, y);
-	}
-
-	@Override
-	public int mapPoint(int x, int y) {
-		return (x * getScansPerModulation()) + y;
-	}
-
-	@Override
-	public int mapPoint(Point p) {
-		return mapPoint(p.x, p.y);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void clear() {
-		this.cache.clear();
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void clear() {
+        this.cache.clear();
+    }
 }

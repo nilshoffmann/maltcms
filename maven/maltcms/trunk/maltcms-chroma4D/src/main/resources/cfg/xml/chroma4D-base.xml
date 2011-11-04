@@ -30,11 +30,10 @@
    <bean id="data2DNormalizer" class="maltcms.commands.fragments2d.preprocessing.Data2DNormalizer">
        <property name="applyMovingAverage" value="false" />
        <property name="movingAverageWindow" value="1" />
-       <property name="applyMovingMedian" value="true" />
+       <property name="applyMovingMedian" value="false" />
        <property name="movingMedianWindow" value="1" />
        <property name="applyTopHatFilter" value="true" />
-       <property name="topHatFilterWindow" value="150" />
-       <property name="multiplyWithTic" value="false" />
+       <property name="topHatFilterWindow" value="50" />
    </bean>
    
    <bean id="modulationExtractor" class="maltcms.commands.fragments2d.preprocessing.ModulationExtractor"></bean>
@@ -44,7 +43,7 @@
    <bean id="gcgcToGcMsConvertor" class="maltcms.commands.fragments2d.preprocessing.GCGCToGCMSConverter"></bean>
    
    <bean id="chromatogram2DVisualizer" class="maltcms.commands.fragments2d.visualization.Chromatogram2DVisualizer">
-       <property name="totalIntensityVar" value="total_intensity_filtered" />
+       <property name="totalIntensityVar" value="total_intensity" />
        <property name="colorrampLocation" value="res/colorRamps/bcgyr.csv" />
        <property name="doubleFillValue" value="9.9692099683868690e+36d" />
        <property name="threshold" value="0" />

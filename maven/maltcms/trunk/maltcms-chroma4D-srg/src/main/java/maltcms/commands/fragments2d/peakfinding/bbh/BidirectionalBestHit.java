@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import maltcms.math.functions.IScalarArraySimilarity;
-import maltcms.math.functions.ProductSimilarity;
+//import maltcms.math.functions.ProductSimilarity;
 import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
 import maltcms.datastructures.peak.Peak2D;
 
@@ -67,9 +67,9 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
     public BidirectionalBestHit() {
         this.peaklists = new ArrayList<List<Peak2D>>();
         this.doneList = new ArrayList<Map<Integer, Boolean>>();
-        similarity = new ProductSimilarity();
-        similarity.setArraySimilarities(new ArrayCos());
-        similarity.setScalarSimilarities(new GaussianDifferenceSimilarity());
+//        similarity = new ProductSimilarity();
+//        similarity.setArraySimilarities(new ArrayCos());
+//        similarity.setScalarSimilarities(new GaussianDifferenceSimilarity());
     }
 
     /**

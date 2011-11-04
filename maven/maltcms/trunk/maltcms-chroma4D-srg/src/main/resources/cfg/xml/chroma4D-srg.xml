@@ -46,7 +46,7 @@
         <property name="maxDx" value="1" />
         <property name="maxDy" value="1" />
         <property name="minVerticalScanIndex" value="150" />
-        <property name="k" value="100" />
+        <property name="k" value="2" />
     </bean>
 
     <bean id="peakSeparator" class="maltcms.commands.fragments2d.peakfinding.PeakSeparator">
@@ -135,6 +135,8 @@
         <property name="similarity" ref="regionGrowingSim" />
         <property name="minPeakSize" value="2" />
         <property name="maxPeakSize" value="3000" />
+        <property name="discardPeaksWithMaxArea" value="true" />
+        <property name="discardPeaksWithMinArea" value="true" />
         <property name="filterMS" value="true" />
         <property name="useAlternativFiltering" value="true" />
         <property name="useMeanMS" value="false" />
@@ -142,20 +144,17 @@
     <bean id="regionGrowingSim" class="maltcms.math.functions.similarities.ArrayCos"/>
     
     <bean id="seededRegionGrowing" class="maltcms.commands.fragments2d.peakfinding.SeededRegionGrowing">
+        <property name="totalIntensityVar" value="total_intensity_filtered" />
         <property name="colorrampLocation" value="res/colorRamps/bcgyr.csv" />
         <property name="doubleFillValue" value="9.9692099683868690e+36d" />
         <property name="threshold" value="0.0" />
         <property name="doBBH" value="true"/>
         <property name="separate" value="true" />
         <property name="secondRun" value="true" />
-        <property name="doNormalization" value="true"/>
-        <property name="doIntegration" value="true"/>
-<!--        <property name="separationDistance" value="0.999" />-->
+        <property name="doNormalization" value="false"/>
+        <property name="doIntegration" value="false"/>
         <property name="secondSeedMinDistance" value="0.95" />
         <property name="seedNotInRegion" value="false" />
-<!--        <property name="useMeanMsInSeparation" value="false" />-->
-<!--        <property name="similarity" ref="regionGrowingSim"/>-->
-<!--        <property name="separationSimilarity" ref=""/>-->
         <property name="similaritySecondRun" ref="secondRunSim"/>
         <property name="peakPicking" ref="peakPickerMax"/>
         <property name="regionGrowing" ref="regionGrower" />

@@ -93,8 +93,8 @@ public class Default2DVarLoader extends AFragmentCommand {
     @Configurable(name = "var.scan_acquisition", value = "scan_acquisition_time")
     private String scanAcquisitionTimeVar = "scan_acquisition_time";
     @Configurable(name = "var.scan_acquisition_1d",
-    value = "scan_acquisition_1d")
-    private String scanAcquisitionTime1dVar = "scan_acquisition_1d";
+    value = "scan_acquisition_time_1d")
+    private String scanAcquisitionTime1dVar = "scan_acquisition_time_1d";
     @Configurable(name = "var.total_intensity_2d", value = "total_intensity_2d")
     private String totalIntensity2dVar = "total_intensity_2d";
     @Configurable(name = "var.modulation_time.default", value = "5.0d")
@@ -312,11 +312,11 @@ public class Default2DVarLoader extends AFragmentCommand {
                         log(Level.SEVERE, null, ex);
             }
         }
-        if (Math.rint(this.modulationTime) != this.modulationTime) {
-            throw new IllegalArgumentException(
-                    "Modulation time must be an integer, was: "
-                    + this.modulationTime);
-        }
+//        if (Math.rint(this.modulationTime) != this.modulationTime) {
+//            throw new IllegalArgumentException(
+//                    "Modulation time must be an integer, was: "
+//                    + this.modulationTime);
+//        }
         log.info("Setting modulation time to {}", this.modulationTime);
         modulationArray.setDouble(idx, this.modulationTime);
         modulationvar.setArray(modulationArray);

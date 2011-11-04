@@ -80,9 +80,6 @@ import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.math.functions.IScalarArraySimilarity;
-import maltcms.math.functions.ProductSimilarity;
-import maltcms.math.functions.similarities.ArrayCos;
-import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
 import maltcms.tools.ImageTools;
 
 /**
@@ -147,28 +144,22 @@ public class SeededRegionGrowing extends AFragmentCommand {
     private double threshold = 0;
     @Configurable(value = "true", type = String.class)
     private boolean doBBH = true;
-    @Configurable(
-    value = "maltcms.commands.fragments2d.peakfinding.picking.MaxSortPeakPicking",
+    @Configurable(value = "maltcms.commands.fragments2d.peakfinding.picking.MaxSortPeakPicking",
     type = IPeakPicking.class)
     private String pickingClass = "maltcms.commands.fragments2d.peakfinding.picking.MaxSortPeakPicking";
-    @Configurable(
-    value = "maltcms.commands.fragments2d.peakfinding.srg.OneByOneRegionGrowing",
+    @Configurable(value = "maltcms.commands.fragments2d.peakfinding.srg.OneByOneRegionGrowing",
     type = IRegionGrowing.class)
     private String srgClass = "maltcms.commands.fragments2d.peakfinding.srg.OneByOneRegionGrowing";
-    @Configurable(
-    value = "maltcms.commands.fragments2d.peakfinding.bbh.FastBidirectionalBestHit",
+    @Configurable(value = "maltcms.commands.fragments2d.peakfinding.bbh.FastBidirectionalBestHit",
     type = IBidirectionalBestHit.class)
     private String bbhClass = "maltcms.commands.fragments2d.peakfinding.bbh.FastBidirectionalBestHit";
-    @Configurable(
-    value = "maltcms.commands.fragments2d.peakfinding.output.PeakIdentification",
+    @Configurable(value = "maltcms.commands.fragments2d.peakfinding.output.PeakIdentification",
     type = IPeakIdentification.class)
     private String identificationClass = "maltcms.commands.fragments2d.peakfinding.output.PeakIdentification";
-    @Configurable(
-    value = "maltcms.commands.fragments2d.peakfinding.output.PeakIntegration",
+    @Configurable(value = "maltcms.commands.fragments2d.peakfinding.output.PeakIntegration",
     type = IPeakIntegration.class)
     private String integrationClass = "maltcms.commands.fragments2d.peakfinding.output.PeakIntegration";
-    @Configurable(
-    value = "maltcms.commands.fragments2d.peakfinding.output.PeakExporter",
+    @Configurable(value = "maltcms.commands.fragments2d.peakfinding.output.PeakExporter",
     type = IPeakExporter.class)
     private String exportClass = "maltcms.commands.fragments2d.peakfinding.output.PeakExporter";
     @Configurable(value = "true", type = boolean.class)
@@ -320,11 +311,11 @@ public class SeededRegionGrowing extends AFragmentCommand {
      * @return List of resulting peaks
      */
     private List<Peak2D> runSRG(IFileFragment ff, List<Point> seeds) {
-        final int scanRate = ff.getChild(this.scanRateVar).getArray().getInt(
+        final double scanRate = ff.getChild(this.scanRateVar).getArray().getDouble(
                 Index.scalarIndexImmutable);
-        final int modulationTime = ff.getChild(this.modulationTimeVar).getArray().
-                getInt(Index.scalarIndexImmutable);
-        this.scansPerModulation = scanRate * modulationTime;
+        final double modulationTime = ff.getChild(this.modulationTimeVar).getArray().
+                getDouble(Index.scalarIndexImmutable);
+        this.scansPerModulation = (int) (scanRate * modulationTime);
 
         if (seeds == null) {
             log.info("== starting peak finding for " + ff.getName());
@@ -341,7 +332,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
         final List<PeakArea2D> peakAreaList = this.regionGrowing.getAreasFor(
                 seeds, ff, slc);
 
-        log.info("Integration take {} ms", System.currentTimeMillis()
+        log.info("Integration: {} ms", System.currentTimeMillis()
                 - start);
 
         if (this.separate) {
@@ -349,8 +340,9 @@ public class SeededRegionGrowing extends AFragmentCommand {
 //            this.peakSeparator.startSeparationFor(peakAreaList,
 //                    null, null, slc,
 //                    this.regionGrowing.getIntensities(), false);
+            
             this.peakSeparator.startSeparationFor(peakAreaList, slc,
-                    this.regionGrowing.getIntensities());
+                    this.regionGrowing.getIntensities(), getRetentiontime(ff));
         }
 
         slc.clear();
@@ -388,9 +380,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
             double max = 0;
             for (MissingPeak2D mp : missingPeaks) {
                 if (mp.getMissingChromatogramList().contains(i)) {
-                    tmpSeeds = this.peakPicking.findPeaksNear(t.get(i), mp.
-                            getMeanPoint(), mp.getMaxFirstDelta(), mp.
-                            getMaxSecondDelta());
+                    tmpSeeds = this.peakPicking.findPeaksNear(t.get(i), mp.getMeanPoint(), mp.getMaxFirstDelta(), mp.getMaxSecondDelta());
                     // check weather point is in a region of an
                     // existing peak or an seed point of an region
                     List<Point> remove = new ArrayList<Point>();
@@ -416,9 +406,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
                     max = 0;
                     maxArg = -1;
                     for (Point p : tmpSeeds) {
-                        score = this.similaritySecondRun.apply(new double[]{mp.
-                                    getMeanFirstScanIndex(), mp.
-                                    getMeanSecondScanIndex()}, new double[]{p.x,
+                        score = this.similaritySecondRun.apply(new double[]{mp.getMeanFirstScanIndex(), mp.getMeanSecondScanIndex()}, new double[]{p.x,
                                     p.y},
                                 mp.getMeanMS(), slc.getMassSpectra(p));
                         // log.info("	s: {}", score);
@@ -792,8 +780,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
         final ArrayInt.D1 peakindex = new ArrayInt.D1(peaklist.size());
         final IndexIterator iter = peakindex.getIndexIterator();
         for (final Peak2D pa : peaklist) {
-            iter.setIntNext(idx(pa.getPeakArea().getSeedPoint().x, pa.
-                    getPeakArea().getSeedPoint().y));
+            iter.setIntNext(idx(pa.getPeakArea().getSeedPoint().x, pa.getPeakArea().getSeedPoint().y));
         }
 
         final IVariableFragment var = new VariableFragment(fret,
@@ -801,13 +788,11 @@ public class SeededRegionGrowing extends AFragmentCommand {
         var.setArray(peakindex);
 
         log.info("Saving peaks");
-        this.peakExporter.exportPeakInformation(StringTools.removeFileExt(ff.
-                getName()), peaklist);
+        this.peakExporter.exportPeakInformation(StringTools.removeFileExt(ff.getName()), peaklist);
         this.peakExporter.exportPeakNames(peaklist,
                 StringTools.removeFileExt(ff.getName()));
         if (this.doIntegration) {
-            this.peakExporter.exportDetailedPeakInformation(StringTools.
-                    removeFileExt(ff.getName()), peaklist);
+            this.peakExporter.exportDetailedPeakInformation(StringTools.removeFileExt(ff.getName()), peaklist);
         }
         // TupleND<IFileFragment> iff = getIWorkflow().getCommandSequence()
         // .getInput();
@@ -833,7 +818,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
                 ff.getName())
                 + "-peaks.msp", peaklist, isl);
         isl.clear();
-        createImage(ff, peaklist, colorRamp, getRetentiontime(ff), peaklist);
+        createImage(ff, peaklist, colorRamp, getRetentiontime(ff));
         return peaklist;
     }
 
@@ -845,27 +830,25 @@ public class SeededRegionGrowing extends AFragmentCommand {
 
     private void createImage(final IFileFragment ff,
             final List<Peak2D> peakList, final int[][] colorRamp,
-            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times,
-            final List<Peak2D> peaklist) {
+            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times) {
 
         List<Array> intensities = getIntensities(ff);
         // FIXME: should not be static!
-        // intensities = intensities.subList(0, intensities.size() - 2);
+        intensities = intensities.subList(0, intensities.size() - 2);
         final BufferedImage biBoundary = ImageTools.create2DImage(ff.getName(),
                 intensities, this.scansPerModulation, this.doubleFillValue,
                 this.threshold, colorRamp, this.getClass());
         // log.info("PEAK AREA SIZE: {}", peakAreaList.size());
-        // createAndSaveImage(ImageTools.addPeakAreaToImage(biBoundary,
-        // peakAreaList, new int[] { 0, 0, 0, 255 }, null, null,
-        // this.scansPerModulation), StringTools.removeFileExt(ff
-        // .getName())
-        // + "_seeds", "chromatogram with peak seeds", peaklist, times);
-//        createAndSaveImage(ImageTools.addPeakToImage(biBoundary, peakList,
-//                new int[]{255, 255, 255, 255}, null, new int[]{0, 0, 0,
-//                    255,}, this.scansPerModulation),
-//                StringTools.removeFileExt(ff.getName())
-//                + "_boundary", "chromatogram with peak boundaries", peaklist,
-//                times);
+        createAndSaveImage(ImageTools.addPeakToImage(biBoundary,
+                peakList, new int[]{0, 0, 0, 255}, null, null,
+                this.scansPerModulation), StringTools.removeFileExt(ff.getName())
+                + "_seeds", "chromatogram with peak seeds", peakList, times);
+        createAndSaveImage(ImageTools.addPeakToImage(biBoundary, peakList,
+                new int[]{255, 255, 255, 255}, null, new int[]{0, 0, 0,
+                    255,}, this.scansPerModulation),
+                StringTools.removeFileExt(ff.getName())
+                + "_boundary", "chromatogram with peak boundaries", peakList,
+                times);
 
         // Array[] values = null;
         // values = new Array[intensities.size()];

@@ -46,6 +46,8 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
     private boolean useAlternativFiltering = true;
     @Configurable(value = "true")
     private boolean useMeanMS = false;
+    private boolean discardPeaksWithMaxArea = true;
+    private boolean discardPeaksWithMinArea = true;
     private long timesum;
     private int count;
     private int scansPerModulation;
@@ -142,11 +144,18 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
                     this.timesum / this.count, this.count);
         }
         if (pa.size() > this.maxPeakSize) {
-            return pa;
-            //TODO or null?
+            if (this.discardPeaksWithMaxArea) {
+                return null;
+            } else {
+                return pa;
+            }
         }
         if (pa.getRegionPoints().size() < this.minPeakSize) {
-            return null;
+            if (this.discardPeaksWithMinArea) {
+                return null;
+            } else {
+                return pa;
+            }
         }
 
 //		double meanI = pa.getAreaIntensity() / (double) (pa.getRegionPoints().size() + 1);

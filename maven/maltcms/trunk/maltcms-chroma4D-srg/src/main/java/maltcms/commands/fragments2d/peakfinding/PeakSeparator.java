@@ -1,5 +1,6 @@
 package maltcms.commands.fragments2d.peakfinding;
 
+import cross.datastructures.tuple.Tuple2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,15 +24,18 @@ public class PeakSeparator {
     private IScalarArraySimilarity separationSimilarity;
     private IScalarArraySimilarity similarity;
     private boolean useMeanMsForSeparation;
-
+    
+    private ArrayDouble.D1 rt1, rt2;
+    
     public void startSeparationFor(List<PeakArea2D> peakAreaList,
-//            IScalarArraySimilarity separationSimilarity_old,
-//            IScalarArraySimilarity similarity_old,
             IScanLine slc,
-            List<ArrayDouble.D1> intensities
-//            , boolean useMeanMsForSeparation_old
+            List<ArrayDouble.D1> intensities,
+            Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rts
             ) {
 
+        this.rt1 = rts.getFirst();
+        this.rt2 = rts.getSecond();
+        
         log.info("Separator min dist: {}", this.minDist);
 
         long start = System.currentTimeMillis();
@@ -163,6 +167,18 @@ public class PeakSeparator {
         log.info("Separation take {} ms", System.currentTimeMillis()
                 - start);
     }
+    
+    private double[] getRT1RT2ForSeed(Point p) {
+        return new double[]{getRT1ForModulation(p.x), getRT2ForScanInModulation(p.y)};
+    }
+    
+    private double getRT1ForModulation(int x) {
+        return rt1.get(x);
+    }
+    
+    private double getRT2ForScanInModulation(int y) {
+        return rt2.get(y);
+    }
 
     public boolean shouldBeSeparated(List<PeakArea2D> list,
             IScalarArraySimilarity similarity, IScanLine slc,
@@ -180,8 +196,9 @@ public class PeakSeparator {
                             getMeanMS(), pa2.getMeanMS());
                 } else {
                     //TODO should at least gibt scan index difference to distance class
-                    c = similarity.apply(new double[]{}, new double[]{}, pa1.
-                            getSeedMS(), pa2.getSeedMS());
+                    c = similarity.apply(getRT1RT2ForSeed(pa1.getSeedPoint()),
+                            getRT1RT2ForSeed(pa2.getSeedPoint()),
+                            pa1.getSeedMS(), pa2.getSeedMS());
                     // log.info("		Score(" + pa1.getSeedPoint().x + ", "
                     // + pa1.getSeedPoint().y + " - " + pa2.getSeedPoint().x
                     // + ", " + pa2.getSeedPoint().y + "): {}", c);
@@ -236,8 +253,8 @@ public class PeakSeparator {
 //                rt1diff = Math.abs(p.x - pa.getSeedPoint().x)
 //                        * (double) slc.getScansPerModulation();
 //                rt2diff = Math.abs(p.y - pa.getSeedPoint().y);
-                aD = similarity.apply(new double[]{p.x, p.y}, new double[]{pa.
-                            getSeedPoint().x, pa.getSeedPoint().y},
+                aD = similarity.apply(getRT1RT2ForSeed(p),
+                        getRT1RT2ForSeed(pa.getSeedPoint()),
                         pa.getSeedMS(), slc.getMassSpectra(p));
                 if (aD > maxD) {
                     maxD = aD;
