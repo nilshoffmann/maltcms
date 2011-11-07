@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import maltcms.datastructures.peak.Clique;
 import maltcms.datastructures.peak.Peak;
-import maltcms.experimental.bipace.datastructures.api.Clique;
 import ucar.ma2.ArrayBoolean;
 
 /**
@@ -22,12 +22,12 @@ import ucar.ma2.ArrayBoolean;
  *
  * CliqueTable allows for easy retrieval of common clique information.
  */
-public class CliqueTable<T extends Peak> {
+public class CliqueTable {
 
     private ArrayBoolean.D2 arr = null;
     private HashMap<IFileFragment, Integer> placeMap = null;
 
-    public CliqueTable(TupleND<IFileFragment> fragments, List<Clique<T>> l) {
+    public CliqueTable(TupleND<IFileFragment> fragments, List<Clique> l) {
         arr = new ArrayBoolean.D2(l.size(), fragments.size());
         placeMap = new LinkedHashMap<IFileFragment, Integer>();
         int j = 0;
@@ -35,7 +35,7 @@ public class CliqueTable<T extends Peak> {
             placeMap.put(f, j++);
         }
         int i = 0;
-        for (Clique<T> c : l) {
+        for (Clique c : l) {
             for (Peak p : c.getPeakList()) {
                 arr.set(i, placeMap.get(p.getAssociation()), true);
             }
@@ -53,9 +53,9 @@ public class CliqueTable<T extends Peak> {
         return sum;
     }
 
-    public List<Clique<T>> getCommonCliques(IFileFragment a, IFileFragment b,
-            List<Clique<T>> cliques) {
-        List<Clique<T>> commonCliques = new ArrayList<Clique<T>>();
+    public List<Clique> getCommonCliques(IFileFragment a, IFileFragment b,
+            List<Clique> cliques) {
+        List<Clique> commonCliques = new ArrayList<Clique>();
         int k = placeMap.get(a);
         int l = placeMap.get(b);
         for (int i = 0; i < arr.getShape()[0]; i++) {

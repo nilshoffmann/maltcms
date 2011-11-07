@@ -251,6 +251,11 @@
             <artifactId>maltcms-io-openms-featurexml</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-evaluation</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

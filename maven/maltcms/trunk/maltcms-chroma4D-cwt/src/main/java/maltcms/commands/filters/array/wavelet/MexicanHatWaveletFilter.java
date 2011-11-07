@@ -68,5 +68,9 @@ public class MexicanHatWaveletFilter extends AArrayFilter {
 		this.variance = cfg.getDouble(this.getClass().getName() + ".variance",
 				0.63628);
 	}
+        
+        public ContinuousWaveletTransform getContinuousWaveletTransform() {
+            return this.cwt;
+        }
 
 }

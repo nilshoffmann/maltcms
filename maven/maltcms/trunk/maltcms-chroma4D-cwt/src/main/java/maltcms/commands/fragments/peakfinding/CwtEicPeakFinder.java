@@ -17,6 +17,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.peakfinding.CwtRunnable;
 import maltcms.tools.ArrayTools;
+import net.sf.maltcms.execution.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
@@ -48,6 +49,7 @@ public class CwtEicPeakFinder extends AFragmentCommand {
         // JobMonitor jm = new JobMonitor(ms,t.size());
         // ms.addJobEventListener(jm);
         // ExecutorService es = Executors.newSingleThreadExecutor();
+        ICompletionService<File> ics = createCompletionService(File.class);
         int cnt = 0;
         for (IFileFragment f : t) {
             IVariableFragment biv = f.getChild("binned_intensity_values");
@@ -56,7 +58,7 @@ public class CwtEicPeakFinder extends AFragmentCommand {
             List<Array> eics = ArrayTools.tilt(biv.getIndexedArray());
             for(Array eic:eics) {
                 CwtEicPeakFinderCallable cwt = new CwtEicPeakFinderCallable();
-                cwt.setFile(new File(f.getAbsolutePath()));
+                cwt.setInput(new File(f.getAbsolutePath()));
                 cwt.setMinScale(5);
             }
             

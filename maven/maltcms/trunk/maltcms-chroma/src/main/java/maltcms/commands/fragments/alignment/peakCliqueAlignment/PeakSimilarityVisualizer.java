@@ -19,7 +19,6 @@ import maltcms.commands.filters.array.MinMaxNormalizationFilter;
 import maltcms.datastructures.peak.Peak;
 import maltcms.io.csv.CSVWriter;
 import maltcms.io.csv.ColorRampReader;
-import maltcms.math.functions.IScalarArraySimilarity;
 import maltcms.tools.ImageTools;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.MAMath;

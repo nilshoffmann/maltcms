@@ -266,8 +266,8 @@
         <module>maltcms-io-openms-featurexml</module>
         <module>maltcms-test-data</module>
         <module>maltcms-distribution</module>
-    <module>maltcms-evaluation</module>
-  </modules>
+        <module>maltcms-evaluation</module>
+    </modules>
     <dependencies>
         <dependency>
             <groupId>net.sf.maltcms</groupId>
@@ -333,6 +333,6 @@
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	<maven.test.skip>true</maven.test.skip>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 </project>

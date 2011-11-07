@@ -13,6 +13,7 @@ import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -24,9 +25,11 @@ import maltcms.commands.filters.array.FirstDerivativeFilter;
 import maltcms.commands.filters.array.MultiplicationFilter;
 import maltcms.commands.filters.array.wavelet.MexicanHatWaveletFilter;
 import maltcms.commands.scanners.ArrayStatsScanner;
+import maltcms.datastructures.peak.MaltcmsAnnotationFactory;
 import maltcms.datastructures.peak.Peak1D;
 import maltcms.datastructures.rank.Rank;
 import maltcms.datastructures.ridge.Ridge;
+import maltcms.io.xml.bindings.annotation.MaltcmsAnnotation;
 import org.apache.commons.math.stat.descriptive.rank.Percentile;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -39,28 +42,25 @@ import ucar.ma2.Index;
  */
 @Slf4j
 @Data
-public class CwtEicPeakFinderCallable implements Callable<List<Peak1D>> {
+public class CwtEicPeakFinderCallable implements Callable<File>, Serializable {
 
     @Configurable
     private int minScale = 5;
     @Configurable
     private int maxScale = 20;
-    
-    private File file;
-    
+    private File input;
+    private File output;
     private double mz;
-    
-    private Array values;
-    
+    private double[] eic;
     private double percentile = 5.0d;
 
     @Override
     public String toString() {
         return getClass().getName();
     }
-    
+
     private List<Peak1D> createPeaksForRidges(IFileFragment f, Array tic,
-             List<Ridge> r) {
+            List<Ridge> r, MexicanHatWaveletFilter mhwf) {
         int index = 0;
         Index tidx = tic.getIndex();
         Array sat = f.getChild("scan_acquisition_time").getArray();
@@ -76,26 +76,37 @@ public class CwtEicPeakFinderCallable implements Callable<List<Peak1D>> {
             p.setApexIntensity(tic.getDouble(tidx.set(p.getApexIndex())));
             p.setApexTime(sat.getDouble(sidx.set(p.getApexIndex())));
             p.setMw(mz);
-            
+            int[] scaleBounds = mhwf.getContinuousWaveletTransform().
+                    getBoundsForWavelet(p.getApexIndex(), ridge.
+                    getIndexOfMaximum(), tic.getShape()[0]);
+            p.setStartTime(sat.getDouble(scaleBounds[0]));
+            p.setStopTime(sat.getDouble(scaleBounds[1]));
             p2.add(p);
         }
         return p2;
     }
 
+    private void setStartAndStopTimes(Peak1D peak, Ridge r) {
+    }
+
     @Override
-    public List<Peak1D> call() {
+    public File call() {
+        Array values = Array.factory(eic);
+        FileFragment ff = new FileFragment(input);
         ArrayStatsScanner ass = new ArrayStatsScanner();
         StatsMap sm = ass.apply(new Array[]{values})[0];
         MultiplicationFilter mf = new MultiplicationFilter(
                 1.0 / (sm.get(Vars.Max.name()) - sm.get(Vars.Min.name())));
         values = mf.apply(values);
         Percentile p = new Percentile(percentile);
-        double fivePercent = p.evaluate((double[]) values.get1DJavaArray(double.class));
+        double fivePercent = p.evaluate((double[]) values.get1DJavaArray(
+                double.class));
         MexicanHatWaveletFilter cwt = new MexicanHatWaveletFilter();
 
         List<Double> scales = new LinkedList<Double>();
 
-        final ArrayDouble.D2 scaleogram = new ArrayDouble.D2(values.getShape()[0],
+        final ArrayDouble.D2 scaleogram = new ArrayDouble.D2(
+                values.getShape()[0],
                 maxScale);
         for (int i = 1; i <= maxScale; i++) {
             double scale = ((double) i);
@@ -110,13 +121,13 @@ public class CwtEicPeakFinderCallable implements Callable<List<Peak1D>> {
         }
         List<Ridge> ridges = followRidgesBottomUp(fivePercent,
                 scaleogram, scales, minScale, maxScale);
- 
+
         List<Rank<Ridge>> ranks = new LinkedList<Rank<Ridge>>();
         for (Ridge r : ridges) {
             ranks.add(new Rank<Ridge>(r));
         }
 
-        filterRidgesByResponse(ranks,values);
+        filterRidgesByResponse(ranks, values);
         Collections.sort(ranks);
 
 
@@ -124,9 +135,17 @@ public class CwtEicPeakFinderCallable implements Callable<List<Peak1D>> {
                 + maxScale);
 
 
-        return createPeaksForRidges(new FileFragment(file), values, ridges);
+        List<Peak1D> peaks = createPeaksForRidges(ff, values, ridges, cwt);
+        MaltcmsAnnotationFactory maf = new MaltcmsAnnotationFactory();
+        MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(output.toURI());
+        for (Peak1D peak : peaks) {
+
+            maf.addPeakAnnotation(ma, getClass().getName(), peak);
+        }
+        maf.save(ma, output);
+        return output;
     }
-    
+
     private void filterRidgesByResponse(List<Rank<Ridge>> ranks, Array tic) {
         // List<Ridge> rr = new ArrayList<Ridge>();
         for (Rank<Ridge> rank : ranks) {
@@ -138,7 +157,7 @@ public class CwtEicPeakFinderCallable implements Callable<List<Peak1D>> {
 
         }
     }
-    
+
     private List<Integer> getPeakMaxima(ArrayDouble.D2 scaleogram, int row) {
         double[] scaleResponse = (double[]) scaleogram.slice(1, row).
                 get1DJavaArray(double.class);
@@ -154,7 +173,7 @@ public class CwtEicPeakFinderCallable implements Callable<List<Peak1D>> {
         }
         return peakMaxima;
     }
-    
+
     private HashMap<Integer, Ridge> buildRidges(List<Integer> seeds,
             int scaleIdx, ArrayDouble.D2 scaleogram) {
         // System.out.println("Peak maxima: "+seeds);
@@ -167,7 +186,7 @@ public class CwtEicPeakFinderCallable implements Callable<List<Peak1D>> {
         }
         return l;
     }
-    
+
     private double[] fillSeeds(int size, List<Integer> seeds,
             ArrayDouble.D2 scaleogram, int scaleIdx) {
         double[] b = new double[size];
@@ -177,7 +196,7 @@ public class CwtEicPeakFinderCallable implements Callable<List<Peak1D>> {
         }
         return b;
     }
-    
+
     private List<Ridge> followRidgesBottomUp(double percentile,
             ArrayDouble.D2 scaleogram, List<Double> scales, int minScale,
             int maxScale) {
@@ -233,6 +252,4 @@ public class CwtEicPeakFinderCallable implements Callable<List<Peak1D>> {
         }
         return l;
     }
-    
 }
-   

@@ -6,6 +6,7 @@ package maltcms.datastructures.peak;
 import java.awt.Point;
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -99,6 +100,52 @@ public class MaltcmsAnnotationFactory {
         if (!annt.getAttribute().contains(at)) {
             annt.getAttribute().add(at);
         }
+    }
+
+    public List<Peak1D> getPeak1D(MaltcmsAnnotation ma) {
+        List<Peak1D> peaks = new ArrayList<Peak1D>();
+        for (AnnotationsType ann : ma.getAnnotations()) {
+            String type = ann.getType();
+            if (type.equals(Peak1D.class.getName())) {
+                Peak1D p = new Peak1D();
+                List<AnnotationType> atl = ann.getAnnotation();
+                if (!atl.isEmpty()) {
+                    if (atl.size() != 1) {
+                        throw new IllegalArgumentException(
+                                "Peak annotation contained multiple annotation lists!");
+                    }
+                    AnnotationType annt = atl.get(0);
+                    for (AttributeType at : annt.getAttribute()) {
+                        if (at.getName().equals("name")) {
+                            p.setName(at.getValue());
+                        } else if (at.getName().equals("scan_index")) {
+                            p.setApexIndex(Integer.parseInt(at.getValue()));
+                        } else if (at.getName().equals("apex_index")) {
+                            p.setApexIndex(Integer.parseInt(at.getValue()));
+                        } else if (at.getName().equals("start_index")) {
+                            p.setStartIndex(Integer.parseInt(at.getValue()));
+                        } else if (at.getName().equals("stop_index")) {
+                            p.setStopIndex(Integer.parseInt(at.getValue()));
+                        } else if (at.getName().equals("apex_time")) {
+                            p.setApexTime(Double.parseDouble(at.getValue()));
+                        } else if (at.getName().equals("start_time")) {
+                            p.setStartTime(Double.parseDouble(at.getValue()));
+                        } else if (at.getName().equals("stop_time")) {
+                            p.setStopTime(Double.parseDouble(at.getValue()));
+                        } else if (at.getName().equals("area")) {
+                            p.setArea(Double.parseDouble(at.getValue()));
+                        } else if (at.getName().equals("intensity")) {
+                            p.setApexIntensity(Double.parseDouble(at.getValue()));
+                        } else if (at.getName().equals("mw")) {
+                            p.setMw(Double.parseDouble(at.getValue()));
+                        }
+                        // TODO add support for peak area
+                    }
+                    peaks.add(p);
+                }
+            }
+        }
+        return peaks;
     }
 
     public void addPeakAnnotation(MaltcmsAnnotation ma, String creator, Peak1D p) {
