@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content group="developers" ident="developers/examples/programmaticWorkflow" nname="Programmatic Workflow" toRoot="../../" publish="yes" lastchanged="$Date$ by $Author$">
+    <column id="content">
+        <pre>
+            <code class="java">
+public final class MyWorkflow {
+
+}
+            </code>
+        </pre>
+    </column>
+</content>

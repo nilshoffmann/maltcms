@@ -1,107 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<site xmlns:xi="http://www.w3.org/2001/XInclude">
-	<div id="header">
-		<div id="affiliation">
-			<ul>
-				<li>
-					<a href="http://www.uni-bielefeld.de" title="Bielefeld University, Germany">Bielefeld University</a>
-				</li>
-				<li>
-					<a href="http://www.cebitec.uni-bielefeld.de" title="Center for Biotechnology, Bielefeld">CeBiTeC</a>
-				</li>
-				<li>
-					<a href="http://gi.cebitec.uni-bielefeld.de/" title="Genome Informatics Group, Bielefeld University">Genome
-						Informatics Group</a>
-				</li>
-				<li>
-					<a href="http://bibiserv.techfak.uni-bielefeld.de/" title="Bielefeld Bioinformatics Server">BiBiServ</a>
-				</li>
-			</ul>
-		</div>
+<site xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <div id="header">
+        <div id="affiliation">
+            <ul>
+                <li>
+                    <a href="http://www.uni-bielefeld.de" title="Bielefeld University, Germany">Bielefeld University</a>
+                </li>
+                <li>
+                    <a href="http://www.cebitec.uni-bielefeld.de" title="Center for Biotechnology, Bielefeld">CeBiTeC</a>
+                </li>
+                <li>
+                    <a href="http://gi.cebitec.uni-bielefeld.de/" title="Genome Informatics Group, Bielefeld University">Genome
+						Informatics Group
+                    </a>
+                </li>
+                <li>
+                    <a href="http://bibiserv.techfak.uni-bielefeld.de/" title="Bielefeld Bioinformatics Server">BiBiServ</a>
+                </li>
+            </ul>
+        </div>
 
-                <div class="download">
-			<a href="http://sourceforge.net/projects/maltcms/files/maui/1.0/beta/" title="Download">
-				<span>Try Maui 1.0 Beta</span>
-				<img src="../img/tango-go-down-red.png" alt="Download Image"/>
-				<br />
-				<span class="small">Provided by sourceforge.net</span>
-			</a>
-		</div>
-		<div class="download">
-			<a href="http://sourceforge.net/projects/maltcms/files/maltcms/maltcms-1.0/maltcms-1.0.7-bin.zip" title="Download">
-				<span>Get Maltcms</span>
-				<img src="../img/tango-go-down-red.png" alt="Download Image"/>
-				<br />
-				<span class="small">Provided by sourceforge.net</span>
-			</a>
-		</div>
-		
-		
-		<div id="categories">
-			<ul>
-				<li><a href="../home/index.html">Home</a></li>
-				<li><a href="../users/features.html">Maltcms</a></li>
-				<li><a href="../maui/index.html">Maui</a></li>
-                                <li><a href="../developers/api.html">Developers</a></li>
-				<li><a href="../info/publications.html">Info</a></li>
-			</ul>
-		</div>
-	</div>
-	<nav>
-		<group class="nav_dotted" nname="Home" ident="home">
-			<ref target="home/index" />
-			<ref target="home/gettingStarted" />
-		</group>
+        <div class="download">
+            <a href="http://sourceforge.net/projects/maltcms/files/maui/1.0/beta/" title="Download">
+                <div style="display: inline;">
+                    <img src="../img/tango-go-down-red.png" alt="Download Image"/>
+                    <div style="display: block; width: 12em;">
+                        <div>Try Maui 1.0 Beta</div>
+                        <div>
+                            <span>Provided by sourceforge.net</span>    
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="download">
+            <a href="http://sourceforge.net/projects/maltcms/files/maltcms/maltcms-1.0/maltcms-1.0.7-bin.zip" title="Download">
+                <div style="display: inline;">
+                    <img src="../img/tango-go-down-red.png" alt="Download Image"/>
+                    <div style="display: block; width: 11em;">
+                        <div>
+                            Get Maltcms
+                        </div>
+                        <div>
+                            <span>Provided by sourceforge.net</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+        </div>
+        
+        <div id="siteimage" style="float: left clear:none;">
+            <img src="../img/ChromA4DSurface.png"/>
+        </div>
+
+        <div id="categories">
+            <ul>
+                <li>
+                    <ref target="home/index" alt="Home" /><!--<a href="../home/index.html">Home</a>-->
+                </li>
+                <li>
+                    <ref target="users/features" alt="Maltcms" />
+                </li>
+                <li>
+                    <ref target="maui/index" alt="Maui" />
+<!--                    <a href="../maui/index.html">Maui</a>-->
+                </li>
+                <li>
+                    <ref target="developers/api" alt="Developers" />
+                </li>
+                <li>
+                    <ref target="info/publications" alt="Info"/>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <nav>
+        <group class="nav_dotted" nname="Home" ident="home">
+            <ref target="home/index" />
+            <ref target="home/gettingStarted" />
+        </group>
 		<!--
 			<group class="nav_dotted" nname="Downloads"> <a
 			href="http://sourceforge.net/projects/maltcms/files/"
 			title="Download">Maltcms/ChromA</a> </group>
 		-->
 
-		<group class="nav_dotted" nname="Maltcms" ident="users">
-			<ref target="users/features" />
+        <group class="nav_dotted" nname="Maltcms" ident="users">
+            <ref target="users/features" />
 			<!--	<ref target="users/tutorials" /> -->
-			<ref target="users/support" />
-		</group>
+            <ref target="users/support" />
+        </group>
 
-                <group class="nav_dotted" nname="Maui" ident="maui">
-			<ref target="maui/index" />
-		</group>
+        <group class="nav_dotted" nname="Maui" ident="maui">
+            <ref target="maui/index" />
+        </group>
 
-		<group class="nav_dotted" nname="Developers" ident="developers">
+        <group class="nav_dotted" nname="Developers" ident="developers">
 <!--			<ref target="developers/concepts" />-->
-			<ref target="developers/api" />
+            <ref target="developers/api" />
+            <ref target="developers/tutorials/programmaticWorkflow" />
 <!--			<ref target="styleGuide/styleGuide" />-->
-			<a href="http://sourceforge.net/projects/maltcms/" title="Project Website">Project
-				Home</a>
-			<a href="http://sourceforge.net/apps/trac/maltcms/" title="Trac">Trac</a>
-                        <a href="http://maltcms.sourceforge.net/maven/maltcms/" title="Maven Site">Maven</a>
+            <a href="http://sourceforge.net/projects/maltcms/" title="Project Website">Project
+				Home
+            </a>
+            <a href="http://sourceforge.net/apps/trac/maltcms/" title="Trac">Trac</a>
+            <a href="http://maltcms.sourceforge.net/maven/maltcms/" title="Maven Site">Maven</a>
 			<!-- <ref target="roadmap" />-->
-		</group>
-		<group class="nav_dotted" nname="Info" ident="info">
-			<ref target="info/publications" />
-			<ref target="info/relatedProjects" />
-			<ref target="info/license" />
-			<ref target="info/contact" />
-		</group>
-	</nav>
+        </group>
+        <group class="nav_dotted" nname="Info" ident="info">
+            <ref target="info/publications" />
+            <ref target="info/relatedProjects" />
+            <ref target="info/license" />
+            <ref target="info/contact" />
+        </group>
+    </nav>
+
+    <div id="footer">
+        <span>
+            <xsl:text>&#169;</xsl:text> 2008-2011,
+        </span>
+        <a title="Contact" href="../info/contact.html">Nils Hoffmann</a> | Maltcms is hosted by
+        <a title="Hosting by sourceforge.net" href="http://sourceforge.net/">sourceforge.net</a> |
+        <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fmaltcms.sourceforge.net%2Fhome%2Findex.html">Valid XHTML 1.0 Transitional</a>
+    </div>
 
 	<!-- Home -->
-	<xi:include href="home/index.xml" parse="xml" />
-	<xi:include href="home/gettingStarted.xml" parse="xml" />
+    <xi:include href="home/index.xml" parse="xml" />
+    <xi:include href="home/gettingStarted.xml" parse="xml" />
 	<!-- Users -->
-	<xi:include href="users/features.xml" parse="xml" />
+    <xi:include href="users/features.xml" parse="xml" />
 	<!-- <xi:include href="users/tutorials.xml" parse="xml" /> -->
-	<xi:include href="users/support.xml" parse="xml" />
+    <xi:include href="users/support.xml" parse="xml" />
 	<!-- Developers -->
 	<!-- <xi:include href="developers/concepts.xml" parse="xml" /> -->
-	<xi:include href="developers/api.xml" parse="xml" />
+    <xi:include href="developers/api.xml" parse="xml" />
+    <xi:include href="developers/tutorials/programmaticWorkflow.xml" parse="xml" />
 <!--	<xi:include href="developers/styleGuide.xml" parse="xml" />-->
 	<!-- Info -->
-	<xi:include href="info/publications.xml" parse="xml" />
-	<xi:include href="info/relatedProjects.xml" parse="xml" />
-	<xi:include href="info/license.xml" parse="xml" />
-	<xi:include href="info/contact.xml" parse="xml" />
+    <xi:include href="info/publications.xml" parse="xml" />
+    <xi:include href="info/relatedProjects.xml" parse="xml" />
+    <xi:include href="info/license.xml" parse="xml" />
+    <xi:include href="info/contact.xml" parse="xml" />
 	<!-- Maui -->
-	<xi:include href="maui/index.xml" parse="xml" />
+    <xi:include href="maui/index.xml" parse="xml" />
 </site>

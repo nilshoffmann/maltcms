@@ -1,316 +1,299 @@
 body {
+    background: none repeat scroll 0 0 #FFFFFF;
+    font-family: Arial,sans-serif;
     font-size: 0.9em;
-    font-family: Arial, sans-serif;
     font-weight: normal;
-    width: 900px;
     margin: 0 auto;
     padding: 0;
+    width: 990px;
 }
-
 a {
-    text-decoration: underline;
-    font-weight: normal;
     color: #0000BB;
+    font-weight: normal;
+    text-decoration: underline;
 }
-
 a:hover {
     text-decoration: none;
 }
-
 div.nav_dotted ul.unbulletedlist li a {
     text-decoration: underline;
 }
-
 div.nav_dotted ul.unbulletedlist li a:hover {
-    color: #1B1E26;
     background: inherit;
+    color: #1B1E26;
     text-decoration: none;
 }
-
 div.nav_dotted ul.unbulletedlist {
-    color: #000000;
     border-top: 1px solid;
+    color: #000000;
     padding-bottom: 0.5em;
 }
-
 div.nav_dotted ul.unbulletedlist li:before {
     content: "\00BB \0020";
 }
-
 div.nav_stroked {
     padding: 0.5em;
 }
-
 div.nav_dotted ul.unbulletedlist li {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+    border-right: 1px solid;
     color: #000000;
     padding: 0.2em;
-    background: #FFFFFF;
-    border-right: 1px solid;
-    border-left: 1px solid;
-    border-bottom: 1px solid;
 }
-
 div.nav_dotted ul.unbulletedlist li:hover {
-    background: #BBFF99;
+    background: none repeat scroll 0 0 #BBFF99;
 }
-
 .copyright {
+    font-size: 0.7em;
+    padding: 0.5em;
     text-align: right;
     vertical-align: text-bottom;
-    padding: 0.5em;
-    font-size: 0.7em;
 }
-
 .hrule {
     border-top: 1px solid;
     color: #333333;
-    margin-top: 0.5em;
     margin-bottom: 0.5em;
+    margin-top: 0.5em;
 }
-
 h2 {
-    font-weight: normal;
-    font-size: 0.9em;
-    margin: 0em;
-    padding-top: 0.5em;
     color: #222222;
+    font-size: 0.9em;
+    font-weight: normal;
+    margin: 0;
+    padding-top: 0.5em;
 }
-
 h1 {
-    font-weight: bold;
-    font-size: 1em;
-    margin: 0em;
-    padding: 0em;
     color: #AA3333;
+    font-size: 1em;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
 }
-
 .rightHeader {
     border-bottom: 1px solid;
 }
-
 p {
-    padding-left: 0.5em;
-    margin-left: 0.0em;
-    margin-bottom: 0.5em;
-    margin-top: 0.1em;
-    overflow: auto;
-    z-index: 15;
-    line-height: 1.5em;
     border-top: 1px dashed #AAAAAA;
     color: #333333;
+    line-height: 1.5em;
+    margin-bottom: 0.5em;
+    margin-left: 0;
+    margin-top: 0.1em;
+    overflow: auto;
+    padding-left: 0.5em;
+    z-index: 15;
 }
-
 div.nav_dotted ul.unbulletedlist li.active {
-    background: #CCEEAA;
+    background: none repeat scroll 0 0 #CCEEAA;
     text-decoration: none;
 }
-
 .unbulletedlist {
     list-style-type: none;
-    margin-top: 0;
     margin-bottom: 0;
-    padding-top: 0;
+    margin-top: 0;
     padding-bottom: 0;
+    padding-top: 0;
 }
-
 .date {
-    text-align: right;
-    font-size: 0.8em;
     color: #FF0000;
+    font-size: 0.8em;
+    text-align: right;
 }
-
 .small {
-    font-size: 0.6em;
     color: #EEEEEE;
+    font-size: 0.6em;
 }
-
 .break:after {
-    content: "\A";
+    content: "\A ";
 }
-
 .indent {
     text-indent: 1em;
 }
-
 #header {
-    background:none repeat scroll 0 0 #A2DD7C;
     border-left: 1px solid #AACC88;
     border-right: 1px solid #AACC88;
-    min-height:110px;
-    background: url(../img/ChromA4DSurface.png) no-repeat 0em 0em transparent;
 }
-
 #categories {
-    border-top: 1px solid #AACC88;
+    background: none repeat scroll 0 0 #CCEE99;
     border-bottom: 1px solid #AACC88;
+    border-top: 1px solid #AACC88;
     clear: both;
     padding: 0.25em;
-    background: #CCEE99;
 }
-
 #categories ul li {
     display: inline;
     padding: 1em;
 }
-
 #footer {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border-bottom: 1px solid #AACC88;
+    border-top: 1px solid #AACC88;
     clear: both;
     color: #999999;
     font-size: 0.8em;
-    background: #EEEEEE;
     padding: 0.2em;
-    text-align: right;
+    text-align: center;
 }
-
 #sitemap {
-    clear: both;
+    background: none repeat scroll 0 0 #FFFFFF;
     color: #999999;
+    float: left;
     font-size: 0.8em;
-    background: #EEEEEE;
-    margin: 0.2em;
-    text-align: left;
+    width: 100%;
 }
-
 #sitemap div {
+    background: none repeat scroll 0 0 #FFFFFF;
     padding: 0.5em;
-    background: #FFFFFF;
     width: 8em;
 }
-
 .sitemapList {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
-
 .sitemapHeading {
     font-weight: bold;
 }
-
 #colfooter {
-    float: right;
     color: #999999;
+    float: right;
     font-size: 0.7em;
     text-align: right;
 }
-
 #content {
+    background-color: #FFFFFF;
     float: left;
-    /*position: relative;*/
     width: 75%;
 }
-
 .download {
+    /*    width: 170px;*/
     float: right;
-    padding: 0.2em;
-    background-color: #AACC88;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    border: 1px solid #88AA66;
-    margin: 1em;
+    border: 1px solid #AACC88;
+    background-color: #CCEE99;
+    border-radius: 10px;
+    color: #668833;
+    padding: 0.5em;
+    margin-left: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    display: block;
 }
-
 .download a {
-    font-size: 1.2em;
-    font-family: Arial, sans-serif;
+    font-family: Arial,sans-serif;
+    font-size: 1em;
     font-weight: bold;
-    text-decoration: none;
-    color: #FFFFFF;
-    background-color: inherit;
+    text-decoration: none;    
+    color: #668833;
 }
 
 .download:hover {
-    border: 1px solid #446622;
+    color: #FFFFFF;
+    border: 1px solid #668833;
+    border-radius: 10px;
+    background-color: #AACC88;
+}
+
+.download:hover a {
+    color: #FFFFFF;
+}
+
+.download a:hover {
+    color: #FFFFFF;
 }
 
 .download a img {
+    border: 0 none;
     vertical-align: middle;
-    border: 0;
-}
-
-#affiliation {
     float: right;
-    clear: left;
-    margin-right: 0.5em;
-    margin-left: 0.5em;
+/*    clear: left;*/
 }
-
+.download span {
+    font-size: 0.6em;
+    color: #99BB66;
+    text-align: center;
+}
+.download:hover span {
+    font-size: 0.6em;
+    color: #CCEE99;
+    text-align: center;
+}
+#affiliation {
+    clear: left;
+    float: right;
+    padding-right: 1em;
+}
 #affiliation a {
-    text-decoration: underline;
     background-color: inherit;
     color: #0000BB;
+    text-decoration: underline;
 }
-
 #affiliation a:hover {
-    text-decoration: none;
     background-color: inherit;
     color: #1B1E26;
+    text-decoration: none;
 }
-
 #affiliation li {
     list-style-type: none;
 }
-
 #pagename {
-    background: #EEFFDD;
-    padding: 0.5em;
+    background: none repeat scroll 0 0 #EEFFDD;
     border-bottom: 1px dashed #AACC88;
     border-left: 1px solid #EEFFDD;
     border-right: 1px solid #AACC88;
+    padding: 0.5em;
 }
-
 #colcontent {
-    background-color: #FFFFFF;
-    padding-left: 0.5em;
-    padding-top: 0.5em;
-    padding-right: 0.5em;
-    background: url(img/background.png) repeat-x;
+    background: url("img/background.png") repeat-x scroll 0 0 transparent;
     min-height: 25em;
-    /*border-right: 1px solid #AACC88;*/
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-top: 0.5em;
 }
-
 #nav {
+    color: #333333;
     float: left;
     width: 25%;
-    color: #333333;
 }
-
 #navcontent {
-    -moz-border-radius-bottomleft: 10px;
-    -webkit-border-bottom-left-radius: 10px;
-    border-radius: 0 0 0 10px;
+    background: none repeat scroll 0 0 transparent;
     border-bottom: 1px solid #AACC88;
     border-left: 1px solid #AACC88;
+    border-radius: 0 0 0 10px;
     border-right: 1px solid #AACC88;
-    background: transparent;
 }
-
 #logo {
-    float: left;
-    width: 100%;
+    background-color: transparent;
     border: 1px solid;
     color: #333333;
-    background-color: transparent;
-    padding: 0.5em;
-    margin-top: 0.5em;
-    margin-right: 0.5em;
-    margin-bottom: 0.5em;
-    margin-left: 0em;
-}
-
-#navRight {
     float: left;
-    width: 15em;
-    border: 1px solid;
+    margin: 0.5em 0.5em 0.5em 0;
+    padding: 0.5em;
+    width: 100%;
+}
+#categories ul li a {
+    padding: 0.5em;
+    color: #668833;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 10px;
+    border: 1px solid #CCEE99;
+    background-color: #CCEE99;
+}
+#navRight {
     background-color: transparent;
-    padding: 0.5em;
-    margin-top: 0.5em;
-    margin-right: 0.5em;
-    margin-bottom: 0.5em;
-    margin-left: 0em;
+    border: 1px solid;
     clear: left;
+    float: left;
+    margin: 0.5em 0.5em 0.5em 0;
     padding: 0.5em;
-    clear: left;
+    width: 15em;
+}
+#categories ul li a:hover {
+    color: #FFFFFF;
+    border-radius: 10px;
+    border: 1px solid #668833;
+    background-color: #AACC88;
 }
 

@@ -65,13 +65,38 @@
                                         <xsl:text>stylesheet</xsl:text>
                                     </xsl:attribute>
                                 </xsl:element>
+                                <xsl:element name="script">
+                                    <xsl:attribute name="src">
+                                        <xsl:value-of
+										select="./@toRoot" />
+                                        <xsl:text>scripts/highlight.pack.js</xsl:text>
+                                    </xsl:attribute>
+                                </xsl:element>
+                                <xsl:element name="link">
+                                    <xsl:attribute name="rel">
+                                        <xsl:text>stylesheet</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of
+										select="./@toRoot" />
+                                        <xsl:text>css/highlight.default.css</xsl:text>
+                                    </xsl:attribute>
+                                </xsl:element>
+                                <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+                                </script>
                             </xsl:element>
                             <xsl:element name="body">
 								<!--
 									<xsl:element name="div"> <xsl:attribute
 									name="class">all</xsl:attribute>
 								-->
-                                <xsl:copy-of select="//div[@id='header']" />
+                                <xsl:apply-templates select="//div[@id='header']">
+                                    <xsl:with-param name="PAGENAME" select="$pagename" />
+                                    <xsl:with-param name="GROUPNAME" select="$activegroup" />
+                                </xsl:apply-templates>
+<!--                                <xsl:copy-of select="//div[@id='header']" />-->
 								<!--<xsl:apply-templates select="//div[@id='categories']" />-->
 								<!-- <div id="page">-->
                                 <xsl:element name="div">
@@ -107,36 +132,32 @@
                                     <xsl:with-param name="GROUPNAME" select="$activegroup" />
                                 </xsl:apply-templates>
 								<!-- </div> -->
-                                <div id="footer">
-                                    <span><xsl:text>&#169;</xsl:text> 2008-2011,</span>
-                                    <a title="Contact" href="../info/contact.html">Nils Hoffmann</a> | Maltcms is hosted by
-                                    <a title="Hosting by sourceforge.net" href="http://sourceforge.net/">sourceforge.net</a> |
-                                    <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fmaltcms.sourceforge.net%2Fhome%2Findex.html">Valid XHTML 1.0 Transitional</a>
-                                </div>
+                                <xsl:copy-of select="//div[@id='footer']" />
+                                
                                 <div id="sitemap">
-                                        <xsl:for-each select="//group">
-                                            <div style="float: left;">
-                                                <span class="sitemapHeading">
-                                                    <xsl:value-of select="@nname"/>
-                                                </span>
-                                                <ul class="sitemapList">
-                                                    <xsl:for-each select="./ref">
-                                                        <li>
-                                                            <xsl:call-template name="REFTEMPLATE">
-                                                                <xsl:with-param name="PAGENAME" select="$pagename" />
-                                                                <xsl:with-param name="GROUPNAME" select="$activegroup" />
-                                                            </xsl:call-template>
-                                                        </li>
-                                                    </xsl:for-each>
-                                                    <xsl:for-each select="./a">
-                                                        <li>
-                                                            <xsl:call-template name="MATCHXHTML" />
-                                                        </li>
-                                                    </xsl:for-each>
-                                                </ul>
-                                            </div>
-                                        </xsl:for-each>
-                                    </div>
+                                    <xsl:for-each select="//group">
+                                        <div style="float: left;">
+                                            <span class="sitemapHeading">
+                                                <xsl:value-of select="@nname"/>
+                                            </span>
+                                            <ul class="sitemapList">
+                                                <xsl:for-each select="./ref">
+                                                    <li>
+                                                        <xsl:call-template name="REFTEMPLATE">
+                                                            <xsl:with-param name="PAGENAME" select="$pagename" />
+                                                            <xsl:with-param name="GROUPNAME" select="$activegroup" />
+                                                        </xsl:call-template>
+                                                    </li>
+                                                </xsl:for-each>
+                                                <xsl:for-each select="./a">
+                                                    <li>
+                                                        <xsl:call-template name="MATCHXHTML" />
+                                                    </li>
+                                                </xsl:for-each>
+                                            </ul>
+                                        </div>
+                                    </xsl:for-each>
+                                </div>
                             </xsl:element>
                         </xsl:element>
                     </xalan:write>
