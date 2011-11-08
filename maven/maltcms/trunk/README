@@ -1,16 +1,68 @@
-This is the Maltcms-Modules maven2 project.
+This is the Maltcms-Modules maven3 project.
 Within this directory, you will find all the submodules, which 
-make up Maltcms.
+make up Maltcms. 
+General configuration for all modules can be found within the 
+file pom.xml in the same directory as this README. Module-specific
+configuration can be found below each module's directory in the 
+corresponding pom.xml file. 
+
+Prerequisites for Maltcms:
+- Java JDK 6 (NOT JRE)
+  http://www.oracle.com/technetwork/java/javase/downloads/index.html
+- Maven 3
+  http://maven.apache.org/download.html
+
+Recommended:
+- Any IDE supporting maven 2/3 integration and subversion support
+  NetBeans 7
+  	http://netbeans.org/
+  Eclipse 3.7 (Indigo)
+  	http://eclipse.org/
+	(requires additional m2e plugin and 
+	 subclipse/subversive plugins)
+  IntelliJ Idea 10.5
+  	http://www.jetbrains.com/idea/
+
+The remainder of this README contains task descriptions and the corresponding 
+commands required to perform those tasks. Tasks marked with '*' can only be 
+executed by registered developers. In order to register, you need to have a
+sourceforge account and apply for membership within the project maltcms.
+
+User registration:
+Create a new user name at
+https://sourceforge.net/user/registration
+
+Then, apply to join maltcms by sending a mail to the project admin with your
+sourceforge username:
+http://sourceforge.net/users/nilshoffmann/ 
+
+You will then receive access to the project's subversion repository as well as
+to the maltcms artifactory instance for artifact resolution (required for maven).
+
+Maven specifics:  
+Please note that contrary to usual maven behaviour, test execution is 
+currently disabled for default builds due to the long runtime of those.
+
+To enable test execution, call maven with the argument -Dmaven.test.skip=false.
+
+Additionally, due to the size of the project, it is not always possible to 
+call multiple maven targets within one call. So instead of calling 
+>mvn clean install 
+please use
+>mvn clean && mvn install
+
+Or issue two separate calls of maven from the command-line:
+>mvn clean
+>mvn install
 
 --------------------------------------------------------------------------------
-For users/builders:
+	Building Maltcms as an anonymous user
 --------------------------------------------------------------------------------
 
-Building Maltcms as an anonymous user:
+>mvn -s anonymous-settings.xml clean
+>mvn -s anonymous-settins.xml install
 
->mvn -s anonymous-settings.xml clean install
-
-Building a binary release distribution:
+Building a binary distribution:
 From the base directory (where this file is located), call:
 >mvn clean
 >mvn install
@@ -21,8 +73,14 @@ In order to build maltcms and have all tests run automatically, call:
 This will create a zip release of the project below maltcms-distribution/target.
 
 --------------------------------------------------------------------------------
-For developers:
+	Creating a release version *
 --------------------------------------------------------------------------------
+Prerequisites:
+Ensure that there are no SNAPSHOT dependencies for cross-main, cross-ui and 
+other cross modules. If so, please first check out a clean copy of cross,
+create a tagged release and take note of the release number (e.g. cross-1.2.4)
+Then update the dependencies to cross in the pom.xml (in the same directory as 
+this file) with the new release number.
 
 Creating a tagged release:
 1. Update local svn copy
@@ -33,21 +91,22 @@ Creating a tagged release:
 >mvn -Dmaven.test.skip=false install
 If all tests succeed, continue, otherwise, correct errors and go back to 2.
 4. Prepare release
->mvn release:prepare -Dusername=MYSFUSERNAME =Dpassword=MYSFPASSWD
+>mvn release:prepare -Dusername=MYSOURCEFORGEUSERNAME =Dpassword=MYSOURCEFORGEPASSWD
 If everything looks fine:
 5. Perform release
 >mvn release:perform 
 
 --------------------------------------------------------------------------------
+	Deploying a snapshot to the artifactory repository *
+--------------------------------------------------------------------------------
 
-Deploying a snapshot to the artifactory repository (requires developer access):
 >mvn deploy
 
 --------------------------------------------------------------------------------
+	Creating a custom maltcms module *
+--------------------------------------------------------------------------------
 
-Creating a custom maltcms module
-
-Have a look at the pom.xml and note the current version of maltcms.
+Have a look at the pom.xml and take note the current version of maltcms.
 Then run
 >mvn archetype:generate -DarchetypeGroupId=net.sf.maltcms \
  -DarchetypeVersion=1.0 -DarchetypeArtifactId=maltcms-module-archetype \
