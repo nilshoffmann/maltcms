@@ -234,16 +234,6 @@
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.2.1</version>
-                    <configuration>
-                        <descriptors>
-                            <descriptor>src/assemble/distribution.xml</descriptor>
-                        </descriptors>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -325,7 +315,7 @@
         <dependency> 
             <groupId>org.projectlombok</groupId> 
             <artifactId>lombok</artifactId> 
-            <version>0.10.1</version> 
+            <version>0.10.2</version> 
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
