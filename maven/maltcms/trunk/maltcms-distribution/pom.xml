@@ -16,7 +16,7 @@
 
         <plugins>
             <!-- Dependency plugin -->
-            <plugin>
+<!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>2.3</version>
@@ -28,17 +28,17 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/${project.name}-${project.version}/lib</outputDirectory>
+                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/lib</outputDirectory>
                             <overWriteReleases>true</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                            <!-- security fix, otherwise, logging will fail to work-->
+                            <overWriteIfNewer>false</overWriteIfNewer>
+                             security fix, otherwise, logging will fail to work
                             <excludeArtifactIds>log4j-over-slf4j,lombok,slf4j-jdk14</excludeArtifactIds>
                         </configuration>
                     </execution>
 
                 </executions>
-            </plugin>
+            </plugin>-->
             <!-- Jar plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -60,22 +60,20 @@
                                 </manifest>
                             </archive>
                             <finalName>${project.artifactId}</finalName>
-                            <outputDirectory>${project.build.directory}/${project.name}-${project.version}</outputDirectory>
+                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}-bin</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
             <!-- Assembly plugin -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2.1</version>
                 <executions>
                     <execution>
                         <id>my-assembly</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>assembly</goal>
+                            <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -95,18 +93,34 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <echo message="Correcting file permissions in ${project.build.directory}/${project.name}-${project.version}/scripts/" />
-                                <unzip src="${project.build.directory}/${project.name}-${project.version}/lib/maltcms-resources-${project.version}.jar" dest="${project.build.directory}/${project.name}-${project.version}/" />
-                                <chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.name}-${project.version}/scripts/" perm="ugo+rx" />
-                                <chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.name}-${project.version}/" perm="ugo+rx" />
+                                <echo message="Correcting file permissions in ${project.build.directory}/${project.artifactId}-${project.version}-bin" />
+<!--                                <unzip src="${project.build.directory}/${project.artifactId}-${project.version}/lib/maltcms-resources-${project.version}.jar" dest="${project.build.directory}/${project.artifactId}-${project.version}/" />-->
+                                <chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/scripts/" perm="ugo+rx" />
+                                <chmod includes="*.sh,*.bat,*.jar" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/" perm="ugo+rx" />
                             </tasks>
                         </configuration>
                         <goals>
                             <goal>run</goal>
                         </goals>
                     </execution>
+<!--                    <execution>
+                        <id>create-distribution</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                                <echo message="Creating binary distributions"/>
+                                <zip destfile="${project.build.directory}/${project.artifactId}-${project.version}-bin.zip" basedir="${project.build.directory}/" includes="${project.artifactId}-${project.version}-bin/,${project.artifactId}-${project.version}-bin/**/*" encoding="UTF-8" update="true"/>
+                                <tar destfile="${project.build.directory}/${project.artifactId}-${project.version}-bin.tar.gz" compression="gzip"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>-->
+                           
                 </executions>
             </plugin>
+            
 
         </plugins>
     </build>
@@ -120,6 +134,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-chroma4D-srg</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-chroma4D-cwt</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

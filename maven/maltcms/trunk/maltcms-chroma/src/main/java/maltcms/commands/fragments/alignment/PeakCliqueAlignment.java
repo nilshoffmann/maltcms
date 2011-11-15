@@ -86,10 +86,14 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.experimental.bipace.peakCliqueAlignment.BBHFinder;
-import maltcms.experimental.bipace.peakCliqueAlignment.CliqueTable;
-import maltcms.experimental.bipace.peakCliqueAlignment.PeakComparator;
-import maltcms.experimental.bipace.peakCliqueAlignment.PeakSimilarityVisualizer;
+//import maltcms.experimental.bipace.peakCliqueAlignment.BBHFinder;
+//import maltcms.experimental.bipace.peakCliqueAlignment.CliqueTable;
+//import maltcms.experimental.bipace.peakCliqueAlignment.PeakComparator;
+//import maltcms.experimental.bipace.peakCliqueAlignment.PeakSimilarityVisualizer;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHFinder;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.CliqueTable;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakComparator;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakSimilarityVisualizer;
 import maltcms.math.functions.IScalarArraySimilarity;
 import maltcms.math.functions.ProductSimilarity;
 import maltcms.math.functions.similarities.ArrayCorr;
@@ -575,9 +579,9 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
         if (this.savePeakSimilarities) {
             PeakSimilarityVisualizer psv = new PeakSimilarityVisualizer();
-            psv.setWorkflow(getWorkflow());
+//            psv.setWorkflow(getWorkflow());
             psv.visualizePeakSimilarities(
-                    fragmentToPeaks, 256, "beforeBIDI");
+                    fragmentToPeaks, 256, "beforeBIDI",getWorkflow());
         }
     }
 
@@ -1105,9 +1109,9 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 System.currentTimeMillis() - startT2);
         if (this.savePeakSimilarities) {
             PeakSimilarityVisualizer psv = new PeakSimilarityVisualizer();
-            psv.setWorkflow(getWorkflow());
+//            psv.setWorkflow(getWorkflow());
             psv.visualizePeakSimilarities(
-                    fragmentToPeaks, 256, "afterBIDI");
+                    fragmentToPeaks, 256, "afterBIDI",getWorkflow());
         }
         if (this.exportAlignedFeatures) {
             saveToLangeTautenhahnFormat(columnMap, ll);

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+    <properties>
+        <title>Programmatic Creation of a Workflow</title>
+        <author>Nils Hoffmann</author>
+        <date>Nov. 8th, 2011</date>
+    </properties>
+
+  <!-- Optional HEAD element, which is copied as is into the XHTML <head> element -->
+    <head>
+        <script src="http://yandex.st/highlightjs/6.1/highlight.min.js"></script>
+        <link rel="stylesheet" href="http://yandex.st/highlightjs/6.1/styles/default.min.css"/>
+    </head>
+    <body>
+
+    <!-- The body of the document contains a number of sections -->
+        <section name="About Maltcms and ChromA">
+            <subsection name="What is Maltcms?">
+                <p>
+			Maltcms, short for "Modular Application Toolkit for Chromatography Mass-Spectrometry" is an application framework 
+			mainly suited for developers working in the domain of bioinformatics for metabolomics and proteomics. Its aim is to 
+			provide reusable, efficient datastructures, abstracting from the various low-level data-formats like netcdf (ANDIMS), mzXML, mzData and mzML
+			and providing consistent access to data features like mass spectra, chromatograms and metadata. Furthermore, Maltcms provides a platform 
+			for the implementation and execution of processing pipelines. New and existing algorithms can be easily implemented or included and executed together with 
+			existing processing elements.   
+                </p>
+                <p>For a more extensive list of features, please refer to the 
+                    <a href="users/features.html">features</a> section.
+                </p>
+            </subsection>	
+            <subsection name="What is ChromA/ChromA4D?">
+                <p>
+			ChromA and ChromA4D are particular pipelines of defined processing elements, which realize the typical workflow of GC-MS/LC-MS (ChromA) and 
+			GCxGC-MS (ChromA4D) data analysis.
+                </p>
+            </subsection>	
+        </section>
+        <section name="Future Developments">
+            <p>We are currently developing a rich client application, called ChromAUI, which is based on the Netbeans RCP framework.
+		The aim of this RCP application is, to allow manual interaction with the data, as well as visualization of raw and processed data. However, 
+		it will also be possible to define custom processing pipelines, run them as batch tasks and inspect the results, while they are being created.
+		If you are interested to try ChromAUI, please go to 
+                <a href="info/contact.html">contact</a>.
+            </p>
+            <p>
+		An early preview and some screenshots of ChromAUI are now featured on 
+                <a href="http://blogs.sun.com/geertjan/entry/metabolomics_and_proteomics_on_the">Geertjan Wielenga's blog</a>.
+            </p>
+        </section>
+        <hr/>
+        <section name="News">
+            <subsection name="ChromAUI at the Perspektive 2010 Science Fair">
+                <p>On Thursday, November 11th, we will have a poster presentation at the science fair of the general purpose job fair Perspektive at Bielefeld University. Have a look at it 
+                    <a href="http://www.cebitec.uni-bielefeld.de/~hoffmann">here</a>.
+                </p>
+            </subsection>
+            <subsection name="Netbeans RCP Training at Bielefeld University">
+                <p>Geertjan Wielenga and Aljoscha Rittner recently gave a great three day introductory course on core Netbeans RCP technologies to a group of twenty people at Bielefeld University. During the course, Geertjan asked for presentations of existing applications based on Netbeans RCP, 
+                    <a href="http://netbeans.dzone.com/video-bioinformatics-research" title="ChromAUI Video">and here it is</a>.
+                </p>
+            </subsection>
+            <subsection name="ChromAUI featured as a Netbeans RCP application">
+                <p>After a recent inquiry about our project ChromAUI from Geertjan Wielenga, I prepared a few screenshots of the current prototype and wrote short descriptions for them.
+		Visit 
+                    <a href="http://blogs.sun.com/geertjan/entry/metabolomics_and_proteomics_on_the">Geertjan Wielenga's blog</a> to see for yourself.
+                </p>
+            </subsection>
+        </section>
+    </body>
+</document>

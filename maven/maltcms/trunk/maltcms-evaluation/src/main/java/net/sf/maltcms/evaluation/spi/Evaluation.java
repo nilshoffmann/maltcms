@@ -71,7 +71,8 @@ public class Evaluation {
 
     }
 
-    private List<EntityGroup> createEntityGroupsForFile(EntityGroupBuilder egb, File file) {
+    private List<EntityGroup> createEntityGroupsForFile(EntityGroupBuilder egb,
+            File file) {
         List<EntityGroup> toolGroup = egb.buildCSVPeakAssociationGroups(file);
         String toolname = StringTools.removeFileExt(file.getName());
         System.out.println("Adding groups for toolName: " + toolname);
@@ -96,7 +97,8 @@ public class Evaluation {
         for (String s : pairs) {
             String[] cat_val = s.split("_");
             if (cat_val.length != 2) {
-                System.err.println("Warning: category/value pair may be invalid: " + s);
+                System.err.println(
+                        "Warning: category/value pair may be invalid: " + s);
             } else {
                 catToVal.put(cat_val[0], cat_val[1]);
             }
@@ -107,7 +109,8 @@ public class Evaluation {
     private HashSet<String> getToolCategories(List<String> toolnames) {
         HashSet<String> hs = new LinkedHashSet<String>();
         for (String str : toolnames) {
-            HashMap<String, String> hm = getCategoriesFromToolName(StringTools.removeFileExt(new File(str).getName()));
+            HashMap<String, String> hm = getCategoriesFromToolName(StringTools.
+                    removeFileExt(new File(str).getName()));
 //            if (hs.isEmpty()) {
             hs.addAll(hm.keySet());
 //            } else {
@@ -125,12 +128,15 @@ public class Evaluation {
      * @param delta
      */
     public void eval(final double delta) {
-        System.out.println("Evaluating " + toolFiles.size() + " tool results with delta: " + delta);
+        System.out.println(
+                "Evaluating " + toolFiles.size() + " tool results with delta: " + delta);
         ClassificationPerformanceTest<PeakRTFeatureVector> cpt = new ClassificationPerformanceTest<PeakRTFeatureVector>(
                 gt, new PeakRTFeatureVectorComparator(delta));
 //        List<String> usercategories = new ArrayList<String>(getToolCategories(toolFiles));
         List<String> categories = new ArrayList<String>(Arrays.asList("FullName",
-                "Sensitivity", "Specificity", "Precision", "FPR", "Accuracy", "F1", "GTEntities", "ToolEntities", "GTExclusive", "ToolExclusive", "Common", "TP", "TN", "FP", "FN"));
+                "Sensitivity", "Specificity", "Precision", "FPR", "Accuracy",
+                "F1", "GTEntities", "ToolEntities", "GTExclusive",
+                "ToolExclusive", "Common", "TP", "TN", "FP", "FN"));
 //        categories.addAll(usercategories);
         File basedir = outputDir;
 //        basedir.mkdirs();
@@ -143,11 +149,14 @@ public class Evaluation {
             appendToEvaluationResults(categories, dos);
             try {
                 for (int i = 0; i < toolFiles.size(); i++) {
-                    String toolName = StringTools.removeFileExt(new File(toolFiles.get(i)).getName());
-                    List<EntityGroup> egs = createEntityGroupsForFile(egb, new File(toolFiles.get(i)));
+                    String toolName = StringTools.removeFileExt(new File(toolFiles.
+                            get(i)).getName());
+                    List<EntityGroup> egs = createEntityGroupsForFile(egb,
+                            new File(toolFiles.get(i)));
                     File fout = new File(basedir, toolName + ".txt");
                     if (fout.exists()) {
-                        System.err.println("Warning! File exists: " + fout.getAbsolutePath());
+                        System.err.println("Warning! File exists: " + fout.
+                                getAbsolutePath());
                     }
                     writeToolResultFile(fout, toolName, cpt, egs, dos);
                 }
@@ -168,7 +177,9 @@ public class Evaluation {
 
     }
 
-    private void writeToolResultFile(File fout, String toolName, ClassificationPerformanceTest<PeakRTFeatureVector> cpt, List<EntityGroup> egs, PrintStream dos) {
+    private void writeToolResultFile(File fout, String toolName,
+            ClassificationPerformanceTest<PeakRTFeatureVector> cpt,
+            List<EntityGroup> egs, PrintStream dos) {
         List<String> toolResult = new ArrayList<String>();
         BufferedWriter bw = null;
         try {
@@ -226,12 +237,20 @@ public class Evaluation {
 
     public static void main(String[] args) {
         Options options = new Options();
-        Option outdir = OptionBuilder.withArgName("OUTDIR").hasOptionalArg().withDescription("Base directory where to store output.").create("o");
-        Option gtfile = OptionBuilder.withArgName("FILE").hasArg().isRequired().withDescription("Absolute path to ground truth file.").create("g");
-        Option toolfile = OptionBuilder.withArgName("PATH").hasArgs().isRequired().withDescription(
-                "Absolute path to base directory containing tool result files or absolute path to single tool result (.csv files).").create("t");
-        Option delta = OptionBuilder.withArgName("DOUBLE").hasArg().isRequired(false).withDescription(
-                "Delta value for feature matching between ground truth and tool results.").create("d");
+        Option outdir = OptionBuilder.withArgName("OUTDIR").hasOptionalArg().
+                withDescription("Base directory where to store output.").create(
+                "o");
+        Option gtfile = OptionBuilder.withArgName("FILE").hasArg().isRequired().
+                withDescription("Absolute path to ground truth file.").create(
+                "g");
+        Option toolfile = OptionBuilder.withArgName("PATH").hasArgs().isRequired().
+                withDescription(
+                "Absolute path to base directory containing tool result files or absolute path to single tool result (.csv files).").
+                create("t");
+        Option delta = OptionBuilder.withArgName("DOUBLE").hasArg().isRequired(
+                false).withDescription(
+                "Delta value for feature matching between ground truth and tool results.").
+                create("d");
         options.addOption(outdir);
         options.addOption(gtfile);
         options.addOption(toolfile);
@@ -270,11 +289,13 @@ public class Evaluation {
                         return pathname.getAbsolutePath().endsWith(".csv");
                     }
                 });
-            }else if(basedir.isFile() && basedir.getAbsolutePath().endsWith(".csv")) {
+            } else if (basedir.isFile() && basedir.getAbsolutePath().endsWith(
+                    ".csv")) {
                 testFiles = new File[]{basedir};
             }
-            if(testFiles == null) {
-                System.err.println("Could not locate tool results for path "+basedir.getAbsolutePath());
+            if (testFiles == null) {
+                System.err.println("Could not locate tool results for path " + basedir.
+                        getAbsolutePath());
                 System.exit(1);
             }
             System.out.println("Tool files: " + Arrays.toString(testFiles));

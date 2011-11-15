@@ -15,145 +15,146 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */
+*/
 
 body {
-  padding: 0px 0px 10px 0px;
+    background: none repeat scroll 0 0 #FFFFFF;
+    font-weight: normal;
+    margin: 0 auto;
+    padding: 0;
+    width: 900px;
 }
 body, td, select, input, li{
-  font-family: Verdana, Helvetica, Arial, sans-serif;
-  font-size: 13px;
+    font-family: Arial,sans-serif;
+    font-size: 0.9em;
 }
 code{
-  font-family: Courier, monospace;
-  font-size: 13px;
+    font-family: Courier, monospace;
+    font-size: 13px;
 }
 a {
-  text-decoration: none;
+    color: #0000BB;
+    font-weight: normal;
+    text-decoration: underline;
 }
-a:link {
-  color:#36a;
+/*a:link {
+    color:#36a;
 }
 a:visited  {
-  color:#47a;
-}
+    color:#47a;
+}*/
 a:active, a:hover {
-  color:#69c;
+    text-decoration: none;
 }
 #legend li.externalLink {
-  background: url(../images/external.png) left top no-repeat;
-  padding-left: 18px;
+    background: url(../images/tango-go-next-red-16.png) left top no-repeat;
+    padding-left: 18px;
 }
 a.externalLink, a.externalLink:link, a.externalLink:visited, a.externalLink:active, a.externalLink:hover {
-  background: url(../images/external.png) right center no-repeat;
-  padding-right: 18px;
+    background: url(../images/tango-go-next-red-16.png) right center no-repeat;
+    padding-right: 18px;
 }
 #legend li.newWindow {
-  background: url(../images/newwindow.png) left top no-repeat;
-  padding-left: 18px;
+    background: url(../images/newwindow.png) left top no-repeat;
+    padding-left: 18px;
 }
 a.newWindow, a.newWindow:link, a.newWindow:visited, a.newWindow:active, a.newWindow:hover {
-  background: url(../images/newwindow.png) right center no-repeat;
-  padding-right: 18px;
+    background: url(../images/newwindow.png) right center no-repeat;
+    padding-right: 18px;
 }
 h2 {
-  padding: 4px 4px 4px 6px;
-  border: 1px solid #999;
-  color: #900;
-  background-color: #ddd;
-  font-weight:900;
-  font-size: x-large;
+    color: #222222;
+    font-size: 0.9em;
+    font-weight: normal;
+    margin: 0;
+    padding-top: 0.5em;
 }
-h3 {
-  padding: 4px 4px 4px 6px;
-  border: 1px solid #aaa;
-  color: #900;
-  background-color: #eee;
-  font-weight: normal;
-  font-size: large;
-}
-h4 {
-  padding: 4px 4px 4px 6px;
-  border: 1px solid #bbb;
-  color: #900;
-  background-color: #fff;
-  font-weight: normal;
-  font-size: large;
-}
-h5 {
-  padding: 4px 4px 4px 6px;
-  color: #900;
-  font-size: medium;
+h1 {
+    color: #AA3333;
+    font-size: 1em;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
 }
 p {
-  line-height: 1.3em;
-  font-size: small;
+    border-top: 1px dashed #AAAAAA;
+    color: #333333;
+    line-height: 1.5em;
+    margin-bottom: 0.5em;
+    margin-left: 0;
+    margin-top: 0.1em;
+    overflow: auto;
+    padding-left: 0.5em;
+    z-index: 15;
 }
 #breadcrumbs {
-  border-top: 1px solid #aaa;
-  border-bottom: 1px solid #aaa;
-  background-color: #ccc;
+    background: none repeat scroll 0 0 #CCEE99;
+    border-bottom: 1px solid #AACC88;
+    border-top: 1px solid #AACC88;
+    clear: both;
+    padding: 0.25em;
 }
 #leftColumn {
-  margin: 10px 0 0 5px;
-  border: 1px solid #999;
-  background-color: #eee;
+    color: #333333;
+    float: left;
+    width: 25%;
 }
 #navcolumn h5 {
-  font-size: smaller;
-  border-bottom: 1px solid #aaaaaa;
-  padding-top: 2px;
-  color: #000;
+    background: none repeat scroll 0 0 transparent;
+    border-bottom: 1px solid #AACC88;
+    border-left: 1px solid #AACC88;
+    border-radius: 0 0 0 10px;
+    border-right: 1px solid #AACC88;
 }
 
 table.bodyTable th {
-  color: white;
-  background-color: #bbb;
-  text-align: left;
-  font-weight: bold;
+    color: white;
+    background-color: #bbb;
+    text-align: left;
+    font-weight: bold;
 }
 
 table.bodyTable th, table.bodyTable td {
-  font-size: 1em;
+    font-size: 1em;
 }
 
 table.bodyTable tr.a {
-  background-color: #ddd;
+    background-color: #ddd;
 }
 
 table.bodyTable tr.b {
-  background-color: #eee;
+    background-color: #eee;
 }
 
 .source {
-  border: 1px solid #999;
+    border: 1px solid #999;
 }
 dl {
-  padding: 4px 4px 4px 6px;
-  border: 1px solid #aaa;
-  background-color: #ffc;
+    padding: 4px 4px 4px 6px;
+    border: 1px solid #aaa;
+    background-color: #ffc;
 }
 dt {
-  color: #900;
+    color: #900;
 }
 #organizationLogo img, #projectLogo img, #projectLogo span{
-  margin: 8px;
+    margin: 8px;
 }
 #banner {
-  border-bottom: 1px solid #fff;
+    border-bottom: 1px solid #fff;
 }
 .errormark, .warningmark, .donemark, .infomark {
-  background: url(../images/icon_error_sml.gif) no-repeat;
+    background: url(../images/icon_error_sml.gif) no-repeat;
 }
 
 .warningmark {
-  background-image: url(../images/icon_warning_sml.gif);
+    background-image: url(../images/icon_warning_sml.gif);
 }
 
 .donemark {
-  background-image: url(../images/icon_success_sml.gif);
+    background-image: url(../images/icon_success_sml.gif);
 }
 
 .infomark {
-  background-image: url(../images/icon_info_sml.gif);
+    background-image: url(../images/icon_info_sml.gif);
 }

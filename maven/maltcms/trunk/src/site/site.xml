@@ -7,33 +7,46 @@
     Description:
         Base file for maven site documentation.
 -->
+<project xmlns="http://maven.apache.org/DECORATION/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd" name="Maltcms">
+    <bannerLeft>
+        <name>Maltcms</name>
+        <src>images/ChromA4DSurface.png</src>
+        <href>http://maltcms.sf.net</href>
+    </bannerLeft>
+    <bannerRight>
+        <src>images/MaltcmsChromALogo.png</src>
+    </bannerRight>
+    <publishDate position="right"/>
+    <version position="right"/>
+    <body>
+        <head>
+            <script src="http://yandex.st/highlightjs/6.1/highlight.min.js"></script>
+            <link rel="stylesheet" href="http://yandex.st/highlightjs/6.1/styles/default.min.css"/>
+        </head>
+        <links>
+            <item name="Maltcms Sourceforge" href="http://maltcms.sf.net" />
+        </links>
 
-<project name="Maltcms">
-  <bannerLeft>
-    <name>Maltcms</name>
-    <src>http://maven.apache.org/images/apache-maven-project.png</src>
-    <href>http://maltcms.sf.net</href>
-  </bannerLeft>
-  <bannerRight>
-    <src>http://maven.apache.org/images/maven-small.gif</src>
-  </bannerRight>
-  <publishDate position="right"/>
-  <version position="right"/>
-  <body>
-    <links>
-      <item name="Maltcms Sourceforge" href="http://maltcms.sf.net" />
-    </links>
-
-    <menu name="Maltcms">
-      <item name="Introduction" href="index.html"/>
-      <item name="Download" href="download.html"/>
-      <item name="Release Notes" href="release-notes.html" />
-      <item name="General Information" href="about.html"/>
-      <item name="Road Map" href="roadmap.html" />
-    </menu>
+        <menu name="Maltcms">
+            <item name="Introduction" href="index.html"/>
+            <item name="Download" href="download.html"/>
+            <item name="Release Notes" href="release-notes.html" />
+            <item name="General Information" href="about.html"/>
+            <item name="Road Map" href="roadmap.html" />
+        </menu>
     
-    <menu ref="modules" />
+<!--        <menu ref="modules" />-->
 
-    <menu ref="reports"/>
-  </body>
+        <menu ref="reports"/>
+        <footer>
+            <span>
+                Copyright 2008-2011,
+            </span>
+            <a title="Contact" href="../info/contact.html">Nils Hoffmann</a> | Maltcms is hosted by
+            <a title="Hosting by sourceforge.net" href="http://sourceforge.net/">sourceforge.net</a> |
+            <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fmaltcms.sourceforge.net%2Fhome%2Findex.html">Valid XHTML 1.0 Transitional</a> | 
+            <a href="http://maven.apache.org">Built by Maven 3</a>
+        </footer>
+    </body>
 </project>

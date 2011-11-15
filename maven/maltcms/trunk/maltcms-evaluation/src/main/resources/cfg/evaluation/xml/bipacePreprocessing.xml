@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : chroma.xml
+    Created on : 28. Juli 2011, 22:34
+    Author     : nils
+    Description:
+        Purpose of the document follows.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <description>
+            This file defines elements of the default ChromA pipeline.
+    </description>
+    <!-- a command pipeline consists a list of 
+     commands to be executed -->
+    <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
+        <property name="checkCommandDependencies" value="true"/>
+        <property name="commands">
+            <list>
+                <ref bean="peakImporter" />
+                <ref bean="defaultVarLoader" />
+                <ref bean="denseArrayProducer" />
+            </list>
+        </property>    
+    </bean>
+    <!-- commands -->
+    
+    <!-- DefaultVarLoader, loads default variables -->
+    <bean id="defaultVarLoader" class="maltcms.commands.fragments.preprocessing.DefaultVarLoader">
+        
+    </bean>
+    
+    <!-- DenseArrayProducer, creates a dense profile matrix -->
+    <bean id="denseArrayProducer" class="maltcms.commands.fragments.preprocessing.DenseArrayProducer">
+        <property name="maskedMasses">
+            <list>
+                <value>73</value> 
+                <value>74</value>  
+                <value>75</value>  
+                <value>147</value>  
+                <value>148</value>
+                <value>149</value>  
+            </list>
+        </property> 
+        <property name="invertMaskedMasses" value="false"/>  
+        <property name="normalizeScans" value="true"/> 
+        <property name="normalizeMeanVariance" value="false"/>
+        <property name="massBinResolution" value="1.0d"/>
+    </bean>
+    
+    <bean id="peakImporter" class="maltcms.commands.fragments.io.TICPeakListImporter">
+        <property name="filesToRead">
+            <list>
+                <value>data/0512_079.cdf</value>
+                <value>data/0512_080.cdf</value>
+                <value>data/0512_084.cdf</value>
+                <value>data/0512_085.cdf</value>
+                <value>data/0512_087.cdf</value>
+                <value>data/0512_088.cdf</value>
+                <value>data/0512_092.cdf</value>
+                <value>data/0512_093.cdf</value>
+            </list>
+        </property>
+    </bean>
+    
+</beans>

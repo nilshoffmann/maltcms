@@ -13,7 +13,6 @@ import java.util.List;
 import junit.framework.Assert;
 import maltcms.commands.filters.array.MovingAverageFilter;
 import maltcms.commands.filters.array.TopHatFilter;
-import maltcms.commands.fragments.alignment2.PeakCliqueAlignment;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
@@ -52,7 +51,7 @@ public class BiPaceTest extends AFragmentCommandTest {
         tpf.setSnrWindow(10);
         tpf.setPeakThreshold(0.0d);
         commands.add(tpf);
-        commands.add(new PeakCliqueAlignment());
+//        commands.add(new PeakCliqueAlignment());
         IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
                 inputFile1, inputFile2));
         try {
