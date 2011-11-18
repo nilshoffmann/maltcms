@@ -34,6 +34,7 @@ import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.tools.StringTools;
+import java.util.Stack;
 import java.util.regex.Pattern;
 
 /**
@@ -53,6 +54,10 @@ public class FileTools {
 //    public static boolean omitUserTimePrefix = false;
 //    public static boolean overwrite = false;
 
+    public static void deleteDirectory(File directory) {
+
+    }
+    
     private static File appendCreatorNameToBaseDir(final File base,
             String prefix, final Class<?> creator) {
         File creatordir = base;
