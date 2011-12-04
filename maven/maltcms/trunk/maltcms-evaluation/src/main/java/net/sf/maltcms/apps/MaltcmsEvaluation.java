@@ -18,7 +18,7 @@ public abstract class MaltcmsEvaluation implements Runnable {
 
     private File outputDirectory;
     private File templateFile;
-    private File settingsFile;
+    private File parametersFile;
     private File configurationFile;
     private final CommandLine commandLine;
 
@@ -29,7 +29,7 @@ public abstract class MaltcmsEvaluation implements Runnable {
             outputDirectory = new File(commandLine.getOptionValue("o"));
         }
         templateFile = new File(commandLine.getOptionValue("t"));
-        settingsFile = new File(commandLine.getOptionValue("s"));
+        parametersFile = new File(commandLine.getOptionValue("p"));
         configurationFile = new File(commandLine.getOptionValue("c"));
 
     }

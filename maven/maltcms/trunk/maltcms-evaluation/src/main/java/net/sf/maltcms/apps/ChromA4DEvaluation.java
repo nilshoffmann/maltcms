@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 import net.sf.maltcms.evaluation.api.IPostProcessor;
 import net.sf.maltcms.evaluation.spi.BeansXmlGenerator;
 import net.sf.maltcms.evaluation.spi.tasks.Task;
-import net.sf.maltcms.evaluation.spi.tasks.maltcms.WorkflowResult;
 import net.sf.maltcms.execution.api.ICompletionService;
 import net.sf.maltcms.execution.spi.CompletionServiceFactory;
 import org.apache.commons.cli.CommandLine;
@@ -36,9 +35,9 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-public class BiPaceCemappEvaluation extends MaltcmsEvaluation {
+public class ChromA4DEvaluation extends MaltcmsEvaluation {
 
-    public BiPaceCemappEvaluation(CommandLine commandLine) {
+    public ChromA4DEvaluation(CommandLine commandLine) {
         super(commandLine);
     }
 
@@ -79,7 +78,7 @@ public class BiPaceCemappEvaluation extends MaltcmsEvaluation {
                         true);
                 System.exit(1);
             }
-            BiPaceCemappEvaluation me = new BiPaceCemappEvaluation(cl);
+            ChromA4DEvaluation me = new ChromA4DEvaluation(cl);
             me.run();
         } catch (ParseException e) {
             // TODO Auto-generated catch block
@@ -139,7 +138,7 @@ public class BiPaceCemappEvaluation extends MaltcmsEvaluation {
                     getTemplateFile(), getOutputDirectory(),tokenMap);
             
             int batchSize = 100;
-            CompletionServiceFactory<WorkflowResult> csf = new CompletionServiceFactory<WorkflowResult>();
+            CompletionServiceFactory<Boolean> csf = new CompletionServiceFactory<Boolean>();
             int nchoices = bxg.size();
             int failed = 0;
             int submitted = 0;
@@ -148,7 +147,7 @@ public class BiPaceCemappEvaluation extends MaltcmsEvaluation {
                     "Using " + nchoices + " different configurations!");
 
             while (submitted + failed < nchoices) {
-                ICompletionService<WorkflowResult> ics = csf.
+                ICompletionService<Boolean> ics = csf.
                         createVMLocalCompletionService();
                 for (int i = 0; i < batchSize; i++) {
                     if (bxg.hasNext()) {
@@ -164,24 +163,23 @@ public class BiPaceCemappEvaluation extends MaltcmsEvaluation {
                         ConfigurationUtils.copy(defaultProps, properties);
                         properties.setProperty("pipeline.xml", "file:"+config.getAbsolutePath());
                         properties.save();
-                        File odir = new File(outputDirectory.getAbsolutePath(),"workflow");
                         //"-DparamsLocation="+parametersFile.getAbsolutePath(),
-                        Task t = new Task(Arrays.asList("java","-jar",
-                                "maltcms.jar", "-i", "data/", "-f", "*.cdf",
-                                "-o", odir.getAbsolutePath(), "-c",
-                                propertiesFile.getAbsolutePath()), new File("."),
-                                new LinkedList<IPostProcessor>(),odir);
-                        ics.submit(t);
+//                        Task t = new Task(Arrays.asList("java","-jar",
+//                                "maltcms.jar", "-i", "data/", "-f", "*.cdf",
+//                                "-o", new File(outputDirectory.getAbsolutePath(),"workflow").getAbsolutePath(), "-c",
+//                                propertiesFile.getAbsolutePath()), new File("."),
+//                                new LinkedList<IPostProcessor>());
+//                        ics.submit(t);
                         submitted++;
                     } else {
                         break;
                     }
                 }
                 try {
-                    List<WorkflowResult> results = ics.call();
+                    List<Boolean> results = ics.call();
                     failed+=ics.getFailedTasks().size();
                 } catch (Exception ex) {
-                    Logger.getLogger(BiPaceCemappEvaluation.class.getName()).
+                    Logger.getLogger(ChromA4DEvaluation.class.getName()).
                             log(Level.SEVERE, null, ex);
                 }
                 batch++;
@@ -196,7 +194,7 @@ public class BiPaceCemappEvaluation extends MaltcmsEvaluation {
             //cemapp stage
 
         } catch (ConfigurationException ex) {
-            Logger.getLogger(BiPaceCemappEvaluation.class.getName()).
+            Logger.getLogger(ChromA4DEvaluation.class.getName()).
                     log(Level.SEVERE, null, ex);
         }
     }

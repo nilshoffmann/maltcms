@@ -17,6 +17,10 @@ import ucar.ma2.ArrayDouble;
  */
 public class PeakRTFeatureVector implements IFeatureVector {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5936343655074144856L;
 	private final ArrayDouble.D0 rt;
 	
 	public PeakRTFeatureVector(double rt) {
