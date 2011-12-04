@@ -38,9 +38,9 @@ public class MinMaxMassFinderWorker implements Callable<double[]>, Serializable 
     public double[] call() throws Exception {
         Double min = Double.MAX_VALUE;
         Double max = Double.MIN_VALUE;
-        final boolean ignoreMinMaxMassArrays = Factory.getInstance().getConfiguration().getBoolean(
-                "maltcms.tools.MaltcmsTools.ignoreMinMaxMassArrays",
-                true);
+//        final boolean ignoreMinMaxMassArrays = Factory.getInstance().getConfiguration().getBoolean(
+//                "maltcms.tools.MaltcmsTools.ignoreMinMaxMassArrays",
+//                true);
         boolean useFallback = true;
         final IFileFragment f = new ImmutableFileFragment(fileToLoad);
         if (!ignoreMinMaxMassArrays) {

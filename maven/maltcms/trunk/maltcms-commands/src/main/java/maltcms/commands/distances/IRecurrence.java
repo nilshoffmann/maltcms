@@ -34,7 +34,7 @@ import cross.IConfigurable;
 public interface IRecurrence extends IConfigurable {
 
     public abstract double eval(int row, int column,
-            IArrayD2Double cumDistMatrix, double dij, int[][] predecessors);
+            IArrayD2Double cumDistMatrix, double dij, byte[][] predecessors);
 
     public abstract double eval(int row, int column,
             IArrayD2Double previousRow, IArrayD2Double currentRow, double dij);

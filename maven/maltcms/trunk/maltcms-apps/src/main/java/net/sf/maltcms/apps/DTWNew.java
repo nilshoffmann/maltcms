@@ -105,14 +105,14 @@ public class DTWNew {
         FeatureVectorDtwSimilarity fvds = new FeatureVectorDtwSimilarity();
         DtwTimePenalizedPairwiseSimilarity dtwtpps = new DtwTimePenalizedPairwiseSimilarity();
         ArrayCos ac = new ArrayCos();
-        dtwtpps.setDenseMassSpectraScore(ac);
-        dtwtpps.setRetentionTimeScore(new GaussianDifferenceSimilarity());
+        dtwtpps.setDenseMassSpectraSimilarity(ac);
+        dtwtpps.setRetentionTimeSimilarity(new GaussianDifferenceSimilarity());
         fvds.setScoreFunction(dtwtpps);
         Area constraints = ConstraintFactory.getInstance().createBandConstraint(0, 0, l1.size(), l2.size(), 0.05);
         ThreePredecessorsOptimization tpo = new ThreePredecessorsOptimization();
-        dtwtpps.setDiagonalWeight(2.25d);
+        dtwtpps.setMatchWeight(2.25d);
         tpo.setWeight(ThreePredecessorsOptimization.State.N.name(), dtwtpps.getExpansionWeight());
-        tpo.setWeight(ThreePredecessorsOptimization.State.NW.name(), dtwtpps.getDiagonalWeight());
+        tpo.setWeight(ThreePredecessorsOptimization.State.NW.name(), dtwtpps.getMatchWeight());
         tpo.setWeight(ThreePredecessorsOptimization.State.W.name(), dtwtpps.getCompressionWeight());
         IAlignment ia = af.getDTWInstance(Factory.getInstance().getObjectFactory().instantiate(
                 ThreePredecessorsOptimization.class), fvds,

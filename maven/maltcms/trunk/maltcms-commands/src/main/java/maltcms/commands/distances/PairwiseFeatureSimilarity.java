@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
  * 
- * $Id: PairwiseDistance.java 79 2009-12-25 11:23:36Z nilshoffmann $
+ * $Id: PairwiseFeatureSimilarity.java 79 2009-12-25 11:23:36Z nilshoffmann $
  */
 package maltcms.commands.distances;
 
@@ -60,82 +60,15 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Data
-public class PairwiseDistance implements IConfigurable {
+public class PairwiseFeatureSimilarity implements IConfigurable {
 
-    public class PartitionCalculator implements Callable<Integer>,
-            IConfigurable {
-
-        private Rectangle shape = null;
-        private IArrayD2Double pa = null;
-        private IDtwScoreFunction costFunction = null;
-        private final ArrayDouble.D1 satRef, satQuery;
-        private final List<Array> ref, query;
-
-        public PartitionCalculator(final Rectangle shape1,
-                final IArrayD2Double pa1, final ArrayDouble.D1 satRef1,
-                final ArrayDouble.D1 satQuery1, final List<Array> ref1,
-                final List<Array> query1) {
-            this.shape = shape1;
-            this.pa = pa1;
-            this.satRef = satRef1;
-            this.satQuery = satQuery1;
-            this.ref = ref1;
-            this.query = query1;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.util.concurrent.Callable#call()
-         */
-        @Override
-        public Integer call() throws Exception {
-            final Area a = this.pa.getShape();
-            if (a.intersects(this.shape)) {
-                log.debug("Bounds before intersection: {}", this.shape);
-                final Area b = new Area(this.shape);
-                b.intersect(a);
-                final Rectangle r = b.getBounds();
-                log.debug("Bounds after intersection: {}", r);
-                int counter = 0;
-                for (int i = r.y; i < r.y + r.height; i++) {
-                    final int[] bounds = this.pa.getColumnBounds(i);
-                    for (int j = bounds[0]; j < bounds[0] + bounds[1]; j++) {
-                        this.pa.set(i, j, this.costFunction.apply(i, j,
-                                this.satRef.get(i), this.satQuery.get(j),
-                                this.ref.get(i), this.query.get(j)));
-                        counter++;
-                    }
-                }
-                return new Integer(counter);
-            } else {
-                log.debug(
-                        "Job outside of defined bounds on PartitionedArray for rectangle {}",
-                        this.shape);
-            }
-
-            return new Integer(0);
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @seecross.IConfigurable#configure(org.apache.commons.configuration.
-         * Configuration)
-         */
-        @Override
-        public void configure(final Configuration cfg) {
-            final String aldist = "maltcms.commands.distances.ArrayLp";
-            this.costFunction = Factory.getInstance().getObjectFactory().
-                    instantiate(
-                    cfg.getString("alignment.algorithm.distance",
-                    aldist), IDtwScoreFunction.class);
-            log.debug("Using {}", this.costFunction.getClass().getName());
-
-        }
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2087449317783907180L;
+	
     @Configurable(name = "alignment.algorithm.distance")
-    private IDtwScoreFunction costFunction = null;
+    private IDtwSimilarityFunction similarityFunction = null;
     @Configurable(name = "cross.Factory.maxthreads")
     private int nthreads = 1;
     @Getter(AccessLevel.NONE)
@@ -230,30 +163,30 @@ public class PairwiseDistance implements IConfigurable {
 
     @Override
     public void configure(final Configuration cfg) {
-        final String aldist = "maltcms.commands.distances.ArrayLp";
-        this.costFunction = Factory.getInstance().getObjectFactory().instantiate(
-                cfg.getString("alignment.algorithm.distance", aldist),
-                IDtwScoreFunction.class);
-        log.info("Using {}", this.costFunction.getClass().getName());
+//        final String aldist = "maltcms.commands.distances.ArrayLp";
+//        this.costFunction = Factory.getInstance().getObjectFactory().instantiate(
+//                cfg.getString("alignment.algorithm.distance", aldist),
+//                IDtwSimilarityFunction.class);
+//        log.info("Using {}", this.costFunction.getClass().getName());
 
         // this.nthreads = cfg.getInt("cross.Factory.maxthreads", 1);
     }
 
     /**
-     * Returns the IDtwScoreFunction Object used to calculate pairwise
+     * Returns the IDtwSimilarityFunction Object used to calculate pairwise
      * distances/similarities.
      * 
      * @return
      */
-    public IDtwScoreFunction getDistance() {
-        return this.costFunction;
-    }
+//    public IDtwSimilarityFunction getDistance() {
+//        return this.similarityFunction;
+//    }
 
     public double getDistance(final int i, final int j, final double time_i,
             final double time_j, final Array a, final Array b) {
         double d = 0.0d;
         if (this.pad == null) {
-            d = this.costFunction.apply(i, j, time_i, time_j, a, b);
+            d = this.similarityFunction.apply(i, j, time_i, time_j, a, b);
         } else {
             return this.pad.get(i, j);
         }

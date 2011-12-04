@@ -1,14 +1,14 @@
 package maltcms.commands.distances.dtwng;
 
 import lombok.Data;
-import maltcms.commands.distances.IDtwScoreFunction;
+import maltcms.commands.distances.IDtwSimilarityFunction;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.math.functions.DtwTimePenalizedPairwiseSimilarity;
 
 @Data
 public class FeatureVectorDtwSimilarity extends TwoFeatureVectorOperation {
 
-    private IDtwScoreFunction scoreFunction = new DtwTimePenalizedPairwiseSimilarity();
+    private IDtwSimilarityFunction scoreFunction = new DtwTimePenalizedPairwiseSimilarity();
     private String arrayFeatureName = "intensity_values";
     private String timeFeatureName = "scan_acquisition_time";
 

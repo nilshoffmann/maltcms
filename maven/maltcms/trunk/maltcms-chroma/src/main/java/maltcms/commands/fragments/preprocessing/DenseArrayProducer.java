@@ -82,6 +82,7 @@ public class DenseArrayProducer extends AFragmentCommand {
     private boolean ignoreMinMaxMassArrays = false;
     @Configurable
     private boolean normalizeMeanVariance = false;
+    private boolean normalizeEicsToUnity = false;
     private double massBinResolution = 1.0d;
 
     @Override
@@ -140,7 +141,8 @@ public class DenseArrayProducer extends AFragmentCommand {
             dapw.setMassValues(massValues);
             dapw.setMinMass(massRange[0]);
             dapw.setMaxMass(massRange[1]);
-            dapw.setNormalizeMeanVariance(normalizeMeanVariance);
+            dapw.setNormalizeEicsToZeroMeanUnitVariance(normalizeMeanVariance);
+            dapw.setNormalizeEicsToUnity(normalizeEicsToUnity);
             dapw.setNormalizeScans(normalizeScans);
             dapw.setScanIndex(scanIndex);
             dapw.setTotalIntensity(totalIntensity);

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
  * 
- * $Id: CumulativeDistance.java 116 2010-06-17 08:46:30Z nilshoffmann $
+ * $Id: DtwRecurrence.java 116 2010-06-17 08:46:30Z nilshoffmann $
  */
 package maltcms.commands.distances;
 
@@ -42,7 +42,7 @@ import org.openide.util.lookup.ServiceProvider;
 @Slf4j
 @Data
 @ServiceProvider(service = IRecurrence.class)
-public class CumulativeDistance implements IRecurrence {
+public class DtwRecurrence implements IRecurrence {
 
     @Configurable(name = "alignment.algorithm.compressionweight")
     private double comp_weight = 1.0d;
@@ -76,7 +76,7 @@ public class CumulativeDistance implements IRecurrence {
 
     private double cumDistM(final int row, final int column,
             final IArrayD2Double cumDistMatrix, final double cij,
-            final boolean minimize1, final int[][] predecessors) {
+            final boolean minimize1, final byte[][] predecessors) {
         final double init = minimize1 ? Double.POSITIVE_INFINITY
                 : Double.NEGATIVE_INFINITY;
         double n = init, w = init, nw = init;
@@ -202,7 +202,7 @@ public class CumulativeDistance implements IRecurrence {
     @Override
     public double eval(final int row, final int column,
             final IArrayD2Double cumDistMatrix, final double dij,
-            final int[][] predecessors) {
+            final byte[][] predecessors) {
         if (this.minimize) {
             return cumDistM(row, column, cumDistMatrix, dij, true, predecessors);
         }

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
  * 
- * $Id: IDtwScoreFunction.java 43 2009-10-16 17:22:55Z nilshoffmann $
+ * $Id: IDtwSimilarityFunction.java 43 2009-10-16 17:22:55Z nilshoffmann $
  */
 package maltcms.commands.distances;
 
@@ -31,7 +31,7 @@ import cross.IConfigurable;
  * @author nilshoffmann
  * 
  */
-public interface IDtwScoreFunction extends IConfigurable {
+public interface IDtwSimilarityFunction extends IConfigurable {
 
     /**
      * if i1 && i2 > 0 => apply distance to indices only else apply to all
@@ -48,13 +48,13 @@ public interface IDtwScoreFunction extends IConfigurable {
 
     public double getCompressionWeight();
 
-    public double getDiagonalWeight();
+    public double getMatchWeight();
 
     public double getExpansionWeight();
     
     public void setCompressionWeight(double d);
     
-    public void setDiagonalWeight(double d);
+    public void setMatchWeight(double d);
     
     public void setExpansionWeight(double d);
 

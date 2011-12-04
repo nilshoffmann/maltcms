@@ -23,9 +23,9 @@ package maltcms.commands.distances.dtw;
 
 import java.util.List;
 
-import maltcms.commands.distances.CumulativeDistance;
-import maltcms.commands.distances.ListDistanceFunction;
-import maltcms.commands.distances.PairwiseDistance;
+import maltcms.commands.distances.DtwRecurrence;
+import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
+import maltcms.commands.distances.PairwiseFeatureSimilarity;
 import maltcms.datastructures.alignment.AnchorPairSet;
 import maltcms.datastructures.array.IArrayD2Double;
 import ucar.ma2.Array;
@@ -34,13 +34,13 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 
 /**
- * Refinement of ListDistanceFunction, adding necessary methods for alignment
+ * Refinement of PairwiseFeatureSequenceSimilarity, adding necessary methods for alignment
  * with DTW.
  * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
-public interface IDynamicTimeWarp extends ListDistanceFunction {
+public interface IDynamicTimeWarp extends PairwiseFeatureSequenceSimilarity {
 
     /**
      * 
@@ -60,13 +60,13 @@ public interface IDynamicTimeWarp extends ListDistanceFunction {
     public Tuple2D<List<Array>, List<Array>> createTuple(
             Tuple2D<IFileFragment, IFileFragment> t);
 
-    public abstract CumulativeDistance getCumulativeDistance();
+    public abstract DtwRecurrence getRecurrence();
 
-    public abstract PairwiseDistance getPairwiseScanDistance();
+    public abstract PairwiseFeatureSimilarity getPairwiseFeatureSimilarity();
 
-    public abstract void setCumulativeDistance(CumulativeDistance cd);
+    public abstract void setRecurrence(DtwRecurrence cd);
 
     public abstract void setFileFragments(IFileFragment a, IFileFragment b);
 
-    public abstract void setPairwiseScanDistance(PairwiseDistance psd);
+    public abstract void setPairwiseFeatureSimilarity(PairwiseFeatureSimilarity psd);
 }

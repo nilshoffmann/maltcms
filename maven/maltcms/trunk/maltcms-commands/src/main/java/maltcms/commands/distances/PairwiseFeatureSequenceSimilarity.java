@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
  * 
- * $Id: ListDistanceFunction.java 43 2009-10-16 17:22:55Z nilshoffmann $
+ * $Id: PairwiseFeatureSequenceSimilarity.java 43 2009-10-16 17:22:55Z nilshoffmann $
  */
 package maltcms.commands.distances;
 
@@ -36,7 +36,7 @@ import cross.datastructures.workflow.IWorkflowElement;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
-public interface ListDistanceFunction extends
+public interface PairwiseFeatureSequenceSimilarity extends
         ICommand<Tuple2D<Array[], Array[]>, Array[]>, IWorkflowElement {
 
     public abstract IFileFragment apply(IFileFragment a, IFileFragment b);
@@ -45,7 +45,7 @@ public interface ListDistanceFunction extends
 
     public abstract IFileFragment getResultFileFragment();
 
-    public abstract ArrayDouble.D1 getResultV();
+    public abstract ArrayDouble.D1 getResultVector();
 
     public abstract StatsMap getStatsMap();
 

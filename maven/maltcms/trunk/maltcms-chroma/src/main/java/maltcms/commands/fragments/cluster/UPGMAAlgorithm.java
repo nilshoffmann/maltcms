@@ -24,7 +24,7 @@ package maltcms.commands.fragments.cluster;
 import cross.commands.fragments.AFragmentCommand;
 import java.util.Iterator;
 
-import maltcms.commands.distances.ListDistanceFunction;
+import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
 import maltcms.datastructures.cluster.BinaryCluster;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
@@ -206,7 +206,7 @@ public class UPGMAAlgorithm extends ClusteringAlgorithm {
 
     public UPGMAAlgorithm(final double[][] distances,
             final TupleND<IFileFragment> fragments,
-            final ListDistanceFunction ld) {
+            final PairwiseFeatureSequenceSimilarity ld) {
         final String[] names = new String[fragments.getSize()];
         final Iterator<IFileFragment> iter = fragments.getIterator();
         int i = 0;

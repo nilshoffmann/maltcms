@@ -23,7 +23,6 @@ package maltcms.math.functions.similarities;
 
 import maltcms.tools.ArrayTools;
 
-
 import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 import lombok.Data;
@@ -40,22 +39,19 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayLp implements IArraySimilarity {
 
-    private double p = 2.0d;
-    private boolean normalizeByLength = true;
-    private double sqrtn = Double.NaN;
+	private double p = 2.0d;
+	private boolean normalizeByLength = false;
+	private double sqrtn = Double.NaN;
 
-    @Override
+	@Override
     public double apply(final Array t1, final Array t2) {
         final double val = Math.pow(MAMath.sumDouble(ArrayTools.pow(
                 ArrayTools.diff(t1, t2), 2.0d)), 1.0d / this.p);
-        if (this.normalizeByLength) {
-            if (Double.isNaN(this.sqrtn)) {
-                this.sqrtn = Math.sqrt(t1.getShape()[0]);
-            }
-            return SimilarityTools.transformToUnitRange(val / this.sqrtn);
-        } else {
-            return SimilarityTools.transformToUnitRange(val);
-        }
+//        if (this.normalizeByLength) {
+//            return SimilarityTools.transformToUnitRange(val /Math.sqrt(t1.getShape()[0]));
+//        } else {
+//            return SimilarityTools.transformToUnitRange(val);
+//        }
+        return -val;
     }
-
 }

@@ -6,9 +6,7 @@
     <groupId>net.sf.maltcms</groupId>
     <version>1.0.8-SNAPSHOT</version>
   </parent>
-  <groupId>net.sf.maltcms</groupId>
   <artifactId>maltcms-experimental</artifactId>
-  <version>1.0.8-SNAPSHOT</version>
   <name>maltcms-experimental</name>
   <url>http://maltcms.sourceforge.net</url>
     <dependencies>

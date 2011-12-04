@@ -138,6 +138,11 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.2.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-plugin</artifactId>
                     <version>1.5</version>
                     <configuration>
@@ -231,6 +236,7 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.10</version>
                     <configuration>
+                        <argLine>-Xmx1024m</argLine>
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     </configuration>
                 </plugin>
@@ -268,7 +274,9 @@
         <module>maltcms-test-data</module>
         <module>maltcms-distribution</module>
         <module>maltcms-evaluation</module>
-    </modules>
+    <module>maltcms-io-csv</module>
+    <module>maltcms-spectratyping</module>
+  </modules>
     <dependencies>
         <dependency>
             <groupId>net.sf.maltcms</groupId>
@@ -315,9 +323,9 @@
         <dependency> 
             <groupId>org.projectlombok</groupId> 
             <artifactId>lombok</artifactId> 
-            <version>0.10.2</version> 
+            <version>0.10.4</version> 
             <type>jar</type>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -334,6 +342,6 @@
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.test.skip>true</maven.test.skip>
+       <maven.test.skip>true</maven.test.skip>
     </properties>
 </project>

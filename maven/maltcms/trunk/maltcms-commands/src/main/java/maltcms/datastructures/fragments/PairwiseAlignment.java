@@ -27,9 +27,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.distances.CumulativeDistance;
+import maltcms.commands.distances.DtwRecurrence;
 import maltcms.commands.distances.IRecurrence;
-import maltcms.commands.distances.PairwiseDistance;
+import maltcms.commands.distances.PairwiseFeatureSimilarity;
 import maltcms.datastructures.alignment.DefaultPairSet;
 import maltcms.datastructures.array.IArrayD2Double;
 import maltcms.datastructures.ms.IAnchor;
@@ -98,7 +98,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 
 	private D1 resultVector;
 
-	private PairwiseDistance pwd;
+	private PairwiseFeatureSimilarity pwd;
 
 	private IFileFragment ref;
 
@@ -126,7 +126,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 
 	private IWorkflow iw;
 
-	private int[][] predecessors;
+	private byte[][] predecessors;
 
 	@Configurable(name = "normalizeAlignmentValueByMapWeights")
 	private boolean normalizeAlignmentValueByMapWeights;
@@ -252,14 +252,14 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 	/**
 	 * @return the predecessors
 	 */
-	public int[][] getPredecessors() {
+	public byte[][] getPredecessors() {
 		return this.predecessors;
 	}
 
 	/**
 	 * @return the pwd
 	 */
-	public PairwiseDistance getPwd() {
+	public PairwiseFeatureSimilarity getPwd() {
 		return this.pwd;
 	}
 
@@ -404,11 +404,11 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 				        + "_anchors.csv", rows, WorkflowSlot.ALIGNMENT);
 			}
 			final double expw = pt.getNexp()
-			        * this.pwd.getDistance().getExpansionWeight();
+			        * this.pwd.getSimilarityFunction().getExpansionWeight();
 			final double compw = pt.getNcomp()
-			        * this.pwd.getDistance().getCompressionWeight();
+			        * this.pwd.getSimilarityFunction().getCompressionWeight();
 			final double diagw = pt.getNdiag()
-			        * this.pwd.getDistance().getDiagonalWeight();
+			        * this.pwd.getSimilarityFunction().getMatchWeight();
 			final double gapPenaltiesW = (pt.getNexp() + pt.getNcomp())
 			        * this.cd.getGlobalGapPenalty();
 			// log.info("Alignment arrayDistanceClassName: {}",
@@ -458,7 +458,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 			                "alignment_class");
 			String alignmentClassName = "maltcms.commands.distances.dtw.MZIDynamicTimeWarp";
 			FragmentTools.createString(this.ff, arrayComparatorVariableName,
-			        this.pwd.getDistance().getClass().getName());
+			        this.pwd.getSimilarityFunction().getClass().getName());
 			FragmentTools.createString(this.ff, arrayDistanceClassName, this.cd
 			        .getClass().getName());
 			FragmentTools.createString(this.ff, alignmentClassVariableName,
@@ -588,7 +588,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 		this.creator = creator;
 	}
 
-	public void setCumulativeDistance(final CumulativeDistance cd1) {
+	public void setCumulativeDistance(final DtwRecurrence cd1) {
 		this.cd = cd1;
 	}
 
@@ -655,7 +655,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 		this.refsize = n;
 	}
 
-	public void setPairwiseDistance(final PairwiseDistance pwd1) {
+	public void setPairwiseDistance(final PairwiseFeatureSimilarity pwd1) {
 		this.pwd = pwd1;
 	}
 
@@ -677,7 +677,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 	 * @param predecessors
 	 *            the predecessors to set
 	 */
-	public void setPredecessors(final int[][] predecessors) {
+	public void setPredecessors(final byte[][] predecessors) {
 		this.predecessors = predecessors;
 	}
 
@@ -685,7 +685,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 	 * @param pwd
 	 *            the pwd to set
 	 */
-	public void setPwd(final PairwiseDistance pwd) {
+	public void setPwd(final PairwiseFeatureSimilarity pwd) {
 		this.pwd = pwd;
 	}
 
@@ -742,7 +742,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 		this.target = target;
 	}
 
-	public void setTraceMatrix(final int[][] predecessors1) {
+	public void setTraceMatrix(final byte[][] predecessors1) {
 		this.predecessors = predecessors1;
 	}
 

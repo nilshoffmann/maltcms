@@ -7,10 +7,8 @@
         <groupId>net.sf.maltcms</groupId>
         <version>1.0.8-SNAPSHOT</version>
     </parent>
-    <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-chroma4D-cwt</artifactId>
     <name>maltcms-chroma4D-cwt</name>
-    <version>1.0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>

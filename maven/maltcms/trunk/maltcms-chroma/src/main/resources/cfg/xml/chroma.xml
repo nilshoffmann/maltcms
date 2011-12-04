@@ -78,10 +78,10 @@
     
     
     <!-- filter beans used by ticPeakFinder -->
-    <bean id="movingAverageFilter" class="maltcms.commands.filters.array.MovingAverageFilter">
+    <bean id="movingAverageFilter" class="maltcms.commands.filters.array.MovingAverageFilter" >
         <property name="window" value="10"/>
     </bean>
-    <bean id="topHatFilter" class="maltcms.commands.filters.array.TopHatFilter">
+    <bean id="topHatFilter" class="maltcms.commands.filters.array.TopHatFilter" scope="prototype">
         <property name="window" value="50"/>
     </bean>
     <!-- TicPeakFinder -->
@@ -94,18 +94,23 @@
             </list>
         </property>
         <property name="snrWindow" value="50"/>
+        <property name="peakSeparationWindow" value="10"/>
         <property name="integratePeaks" value="false"/>
+        <property name="integrateRawTic" value="true"/>
         <property name="saveGraphics" value="false"/>
     </bean>
     
-    <bean id="gaussianDifferenceSimilarity" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
+    <bean id="gaussianDifferenceSimilarity" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity" scope="prototype">
         <property name="tolerance" value="5.0d"/>
         <property name="threshold" value="0.0d"/>
     </bean>
     
-    <bean id="cosineSimilarity" class="maltcms.math.functions.similarities.ArrayCos"/>
+    <!-- array similarity functions -->
+    <bean id="cosineSimilarity" class="maltcms.math.functions.similarities.ArrayCos" scope="prototype"/>
+    <bean id="lpSimilarity" class="maltcms.math.functions.similarities.ArrayLp" scope="prototype"/>
     
-    <bean id="timePenalizedDotProduct" class="maltcms.math.functions.ProductSimilarity">
+    <!-- time penalized functions -->
+    <bean id="timePenalizedDotProduct" class="maltcms.math.functions.ProductSimilarity" scope="prototype">
         <property name="scalarSimilarities">
             <array>
                 <ref bean="gaussianDifferenceSimilarity"/>
@@ -132,16 +137,79 @@
     </bean>
     
     <!-- PairwiseDistanceCalculator -->
-<!--    <bean id="pairwiseDistanceCalculator" class="maltcms.commands.fragments.cluster.PairwiseDistanceCalculator">
+    <bean id="pairwiseDistanceCalculator" class="maltcms.commands.fragments.cluster.PairwiseDistanceCalculator">
         <property name="pairsWithFirstElement" value="false"/> 
         <property name="normalizeToDistances" value="true"/>
+        <property name="workerFactory" ref="pairwiseDistanceWorkerFactory"/>
+        <!--<property name="pairwiseDistanceFunction" ref="ticDynamicTimeWarp"/>-->
     </bean>
     
-     CenterStarAlignment 
-    <bean id="centerStarAlignment" class="maltcms.commands.fragments.alignment.CenterStarAlignment">
-        <property name="alignToFirst" value="false"/>
-        <property name="centerSequence" value=""/>
+    <!-- TICDynamicTimeWarp -->
+    <bean id="pairwiseDistanceTic" class="maltcms.commands.distances.PairwiseDistance" scope="prototype">
+        <property name="costFunction" ref="dtwCostFunction"/>
     </bean>
+    
+    <bean id="cumulativeDistanceTic" class="maltcms.commands.distances.CumulativeDistance" scope="prototype">
+        <property name="">
+        </bean>
+    
+        <bean id="ticDynamicTimeWarp" class="maltcms.commands.distances.dtw.TICDynamicTimeWarp" scope="prototype">
+            <property name="anchorRadius" value="0"/>
+            <property name="useAnchors" value="true"/>
+            <property name="minScansBetweenAnchors" value="10"/>
+            <property name="globalBand" value="true"/>
+            <property name="bandWidthPercentage" value="1.0"/>
+            <property name="precalculatePairwiseDistances" value="true"/>
+            <property name="extension" value=""/>
+            <property name="saveLayoutImage" value="false"/>
+            <property name="cumulativeDistance" ref="cumulativeDistance"/>
+            <property name="pairwiseDistance" ref="pairwiseDistance"/> 
+        </bean>
+    
+    <!-- MZIDynamicTimeWarp -->
+        <bean id="mziDynamicTimeWarp" class="maltcms.commands.distances.dtw.MZIDynamicTimeWarp" scope="prototype">
+            <property name="anchorRadius" value="0"/>
+            <property name="useAnchors" value="true"/>
+            <property name="minScansBetweenAnchors" value="10"/>
+            <property name="globalBand" value="true"/>
+            <property name="bandWidthPercentage" value="1.0"/>
+            <property name="precalculatePairwiseDistances" value="true"/>
+            <property name="extension" value=""/>
+            <property name="saveLayoutImage" value="false"/>
+            <property name="cumulativeDistance" ref="cumulativeDistance"/>
+            <property name="pairwiseDistance" ref="pairwiseDistance"/>
+        </bean>
+    
+        <bean id="cumulativeDistance" class="maltcms.commands.distances.DtwRecurrence" scope="prototype">
+            <property name="globalGapPenalty" value="0"/>
+        </bean>
+    
+        <bean id="pairwiseDistance" class="maltcms.commands.distances.PairwiseFeatureSequenceSimilarity" scope="prototype">
+            <property name="costFunction" ref="dtwSimilarity"/>
+        </bean>
+    
+        <bean id="pairwiseDistanceWorker" class="maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.PairwiseDistanceWorker" scope="prototype">
+            <property name="similarity" ref="pairwiseDistance"/>
+        </bean>
+    
+        <bean id="pairwiseDistanceWorkerFactory" class="maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.PairwiseDistanceWorkerFactory">
+<!--        <property name="similarity" ref="pairwiseDistance"/>-->
+        </bean>
+    
+    <!-- DTW similarity function between feature vectors -->
+        <bean id="dtwSimilarity" class="maltcms.math.functions.DtwTimePenalizedPairwiseSimilarity">
+            <property name="denseMassSpectraSimilarity" ref="timePenalizedDotProduct"/>
+        </bean>
+    
+    <!--
+    
+    
+     CenterStarAlignment 
+-->    
+        <bean id="centerStarAlignment" class="maltcms.commands.fragments.alignment.CenterStarAlignment">
+            <property name="alignToFirst" value="false"/>
+            <property name="centerSequence" value=""/>
+        </bean><!--
     
      ChromatogramWarp 
     <bean id="chromatogramWarp" class="maltcms.commands.fragments.warp.ChromatogramWarp2"></bean>
@@ -151,4 +219,4 @@
     <bean id="eicHeatmapCoplotAfterAlignment" class="maltcms.commands.fragments.visualization.EICHeatmapCoplot"></bean>-->
 
     
-</beans>
+    </beans>

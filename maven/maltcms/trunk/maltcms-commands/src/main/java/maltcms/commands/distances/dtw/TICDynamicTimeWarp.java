@@ -33,7 +33,7 @@ import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import lombok.Data;
-import maltcms.commands.distances.ListDistanceFunction;
+import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -44,11 +44,11 @@ import org.openide.util.lookup.ServiceProvider;
  * 
  */
 @Data
-@ServiceProvider(service = ListDistanceFunction.class)
+@ServiceProvider(service = PairwiseFeatureSequenceSimilarity.class)
 public class TICDynamicTimeWarp extends ADynamicTimeWarp {
 
     @Configurable
-    private String array1D = "total_intensity";
+    private String arrayVariable = "total_intensity";
 
     /*
      * (non-Javadoc)
@@ -60,7 +60,7 @@ public class TICDynamicTimeWarp extends ADynamicTimeWarp {
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
-        this.array1D = cfg.getString("var.total_intensity", "total_intensity");
+        this.arrayVariable = cfg.getString("var.total_intensity", "total_intensity");
     }
 
     @Override
@@ -68,11 +68,11 @@ public class TICDynamicTimeWarp extends ADynamicTimeWarp {
             final Tuple2D<IFileFragment, IFileFragment> t) {
         Array ticRef = null;
         synchronized (t.getFirst()) {
-            ticRef = t.getFirst().getChild(this.array1D).getArray();
+            ticRef = t.getFirst().getChild(this.arrayVariable).getArray();
         }
         Array queryRef = null;
         synchronized (t.getSecond()) {
-            queryRef = t.getSecond().getChild(this.array1D).getArray();
+            queryRef = t.getSecond().getChild(this.arrayVariable).getArray();
         }
         final List<Array> ref = new ArrayList<Array>();
         final List<Array> query = new ArrayList<Array>();

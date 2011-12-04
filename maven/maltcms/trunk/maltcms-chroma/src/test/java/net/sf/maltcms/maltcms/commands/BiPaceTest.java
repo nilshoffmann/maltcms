@@ -4,12 +4,11 @@
  */
 package net.sf.maltcms.maltcms.commands;
 
-import cross.commands.fragments.IFragmentCommand;
-import cross.datastructures.workflow.IWorkflow;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import junit.framework.Assert;
 import maltcms.commands.filters.array.MovingAverageFilter;
 import maltcms.commands.filters.array.TopHatFilter;
@@ -18,9 +17,13 @@ import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import maltcms.io.ZipResourceExtractor;
 import maltcms.test.AFragmentCommandTest;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import cross.commands.fragments.IFragmentCommand;
+import cross.datastructures.workflow.IWorkflow;
 
 /**
  *

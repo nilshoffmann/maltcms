@@ -86,7 +86,7 @@ public class DTWTest {
                 0, 0, l1.size(), l2.size(), 1.0);
         final FeatureVectorDtwSimilarity tfvo = new FeatureVectorDtwSimilarity();
         final DtwPairwiseSimilarity idsf = new DtwPairwiseSimilarity();
-        idsf.setDenseMassSpectraScore(new ArrayCos());
+        idsf.setDenseMassSpectraSimilarity(new ArrayCos());
         tfvo.setScoreFunction(idsf);
         tfvo.setArrayFeatureName("FEATURE0");
 

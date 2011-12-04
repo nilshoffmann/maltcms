@@ -55,7 +55,7 @@ public class ArrayBhattacharryya implements IArraySimilarity {
             //transformation into Hellinger distance
             final double ret = Math.sqrt(1 - sum);
             if (ret > 0.0d && ret <= 1.0d) {
-                return SimilarityTools.transformToUnitRange(ret);
+                return SimilarityTools.asSimilarity(ret);
             }
             return Double.NEGATIVE_INFINITY;
         }

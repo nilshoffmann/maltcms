@@ -51,7 +51,7 @@ public class ArrayHamming implements IArraySimilarity {
                 d++;
             }
         }
-        return SimilarityTools.transformToUnitRange(d);
+        return SimilarityTools.asSimilarity(d);
     }
 
 }

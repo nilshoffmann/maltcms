@@ -6,9 +6,7 @@
     <groupId>net.sf.maltcms</groupId>
     <version>1.0.8-SNAPSHOT</version>
   </parent>
-  <groupId>net.sf.maltcms</groupId>
   <artifactId>maltcms-math</artifactId>
-  <version>1.0.8-SNAPSHOT</version>
   <name>maltcms-math</name>
   <url>http://maltcms.sourceforge.net</url>
   <dependencies>

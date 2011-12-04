@@ -1,5 +1,14 @@
 package net.sf.maltcms.tutorials;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
+import maltcms.commands.fragments.peakfinding.TICPeakFinder;
+import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
+import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
@@ -7,14 +16,6 @@ import cross.datastructures.pipeline.CommandPipeline;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflow;
 import cross.datastructures.workflow.IWorkflow;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
-import maltcms.commands.fragments.peakfinding.TICPeakFinder;
-import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
-import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 
 public class MyWorkflow {
 

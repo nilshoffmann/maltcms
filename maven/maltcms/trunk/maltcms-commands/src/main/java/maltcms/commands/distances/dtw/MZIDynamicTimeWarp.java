@@ -35,7 +35,7 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tools.EvalTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.distances.ListDistanceFunction;
+import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -48,7 +48,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @Slf4j
 @Data
-@ServiceProvider(service = ListDistanceFunction.class)
+@ServiceProvider(service = PairwiseFeatureSequenceSimilarity.class)
 public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
 
     @Configurable
@@ -56,6 +56,16 @@ public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
     @Configurable
     private boolean useSparseArrays = false;
 
+    @Configurable(name = "var.mass_values")
+    protected String mass_values = "mass_values";
+    @Configurable(name = "var.intensity_values")
+    protected String intensity_values = "intensity_values";
+    @Configurable(name = "var.mass_range_min")
+    protected String mass_range_min = "mass_range_min";
+    @Configurable(name = "var.mass_range_max")
+    protected String mass_range_max = "mass_range_max";
+    @Configurable(name = "var.scan_index")
+    protected String scan_index = "scan_index";
     /*
      * (non-Javadoc)
      * 
@@ -70,6 +80,14 @@ public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
                 + ".numberOfEICsToSelect", 0);
         this.useSparseArrays = cfg.getBoolean(this.getClass().getName()
                 + ".useSparseArrays", false);
+                this.mass_values = cfg.getString("var.mass_values", "mass_values");
+        this.intensity_values = cfg.getString("var.intensity_values",
+                "intensity_values");
+        this.mass_range_min = cfg.getString("var.mass_range_min",
+                "mass_range_min");
+        this.mass_range_max = cfg.getString("var.mass_range_max",
+                "mass_range_max");
+        this.scan_index = cfg.getString("var.scan_index", "scan_index");
     }
 
     @Override
@@ -152,4 +170,5 @@ public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
         this.query_num_scans = intens2.size();
         return tuple;
     }
+ 
 }

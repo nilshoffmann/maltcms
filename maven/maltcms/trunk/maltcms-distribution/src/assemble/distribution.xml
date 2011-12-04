@@ -50,6 +50,8 @@
                 <include>net.sf.maltcms:maltcms-chroma4D:jar</include>
                 <include>net.sf.maltcms:maltcms-chroma4D-srg:jar</include>
                 <include>net.sf.maltcms:maltcms-chroma4D-cwt:jar</include>
+                <include>net.sf.maltcms:maltcms-evaluation:jar</include>
+                <include>net.sf.maltcms:maltcms-spectratyping:jar</include>
           </includes>
           <fileMode>0644</fileMode>
 	  <unpackOptions>

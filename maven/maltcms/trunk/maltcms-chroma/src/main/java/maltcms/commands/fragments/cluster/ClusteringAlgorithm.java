@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import maltcms.commands.distances.ListDistanceFunction;
+import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
 import maltcms.datastructures.cluster.BinaryCluster;
 import maltcms.datastructures.fragments.PairwiseDistances;
 import maltcms.io.misc.StatsWriter;
@@ -59,7 +59,6 @@ import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Abstract base class for clustering algorithms based on similarity or distance
@@ -141,7 +140,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     private HashMap<Integer, IFileFragment> fragments = null;
     private HashMap<Integer, Tuple2D<String, String>> nameToNameLookup = null;
     @Configurable(name = "guide.tree.distance")
-    private ListDistanceFunction chromatogramDistanceFunctionClass = null;
+    private PairwiseFeatureSequenceSimilarity chromatogramDistanceFunctionClass = null;
     private String[] clusterNames;
     @Configurable(name = "var.pairwise_distance_matrix")
     private String pairwiseDistanceMatrixVariableName = "pairwise_distance_matrix";
@@ -291,7 +290,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         this.chromatogramDistanceFunctionClass = Factory.getInstance().getObjectFactory().instantiate(
                 cfg.getString("guide.tree.distance",
                 "maltcms.commands.distances.dtw.MZIDynamicTimeWarp"),
-                ListDistanceFunction.class);
+                PairwiseFeatureSequenceSimilarity.class);
         this.chromatogramWarpCommandClass = Factory.getInstance().getObjectFactory().instantiate(
                 cfg.getString("maltcms.commands.fragments.warp.AWarp",
                 "maltcms.commands.fragments.warp.PathWarp"),
@@ -331,7 +330,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     /**
      * @return the chromatogramDistanceFunctionClass
      */
-    public ListDistanceFunction getChromatogramDistanceFunction() {
+    public PairwiseFeatureSequenceSimilarity getChromatogramDistanceFunction() {
         return this.chromatogramDistanceFunctionClass;
     }
 
@@ -710,7 +709,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      *            the chromatogramDistanceFunctionClass to set
      */
     public void setChromatogramDistanceFunction(
-            final ListDistanceFunction chromatogramDistanceFunction) {
+            final PairwiseFeatureSequenceSimilarity chromatogramDistanceFunction) {
         this.chromatogramDistanceFunctionClass = chromatogramDistanceFunction;
     }
 
@@ -774,7 +773,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         this.L = l;
     }
 
-    public void setLDF(final ListDistanceFunction ldf1) {
+    public void setLDF(final PairwiseFeatureSequenceSimilarity ldf1) {
         this.chromatogramDistanceFunctionClass = ldf1;
     }
 

@@ -73,7 +73,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
 
 	private boolean minimize;
 
-	private String minArrayComp;
+	private String minArrayComp = "minimizing_array_comp";
 
 	private ucar.ma2.ArrayChar.D2 names;
 

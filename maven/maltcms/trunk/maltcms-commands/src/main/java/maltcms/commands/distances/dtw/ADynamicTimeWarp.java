@@ -32,8 +32,8 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import maltcms.commands.distances.CumulativeDistance;
-import maltcms.commands.distances.PairwiseDistance;
+import maltcms.commands.distances.DtwRecurrence;
+import maltcms.commands.distances.PairwiseFeatureSimilarity;
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.datastructures.alignment.AnchorPairSet;
 import maltcms.datastructures.array.ArrayFactory;
@@ -66,9 +66,9 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import java.util.LinkedList;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.distances.IDtwScoreFunction;
 
 /**
  * Base class for dynamic time warping implementations.
@@ -80,43 +80,36 @@ import maltcms.commands.distances.IDtwScoreFunction;
 @Data
 public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 
-    @Configurable(name = "alignment.algorithm.windowsize")
-    protected transient double maxdeviation = 1.0d;
+//    @Configurable(name = "alignment.algorithm.windowsize")
+//    protected transient double maxdeviation = 1.0d;
     protected transient IArrayD2Double alignment = null;
     protected transient IArrayD2Double distance = null;
-    protected transient int[][] predecessors = null;
-    @Configurable(name = "alignment.cumulative.distance")
-    protected CumulativeDistance cumulativeDistanceClass = null;
-    @Configurable(name = "var.mass_values")
-    protected String mass_values = "mass_values";
-    @Configurable(name = "var.intensity_values")
-    protected String intensity_values = "intensity_values";
-    @Configurable(name = "var.mass_range_min")
-    protected String mass_range_min = "mass_range_min";
-    @Configurable(name = "var.mass_range_max")
-    protected String mass_range_max = "mass_range_max";
-    @Configurable(name = "var.scan_index")
-    protected String scan_index = "scan_index";
-    @Configurable(name = "var.scan_acquisition_time")
-    protected String scan_acquisition_time = "scan_acquisition_time";
+    protected transient byte[][] predecessors = null;
     protected transient IFileFragment resF = null;
     protected transient IFileFragment refF = null;
     protected transient IFileFragment queryF = null;
-    protected transient ArrayDouble.D0 res = null;
-    protected transient ArrayDouble.D1 resV = null;
+    protected transient ArrayDouble.D0 result = null;
+    protected transient ArrayDouble.D1 resultVector = null;
     protected transient int ref_num_scans = 0;
     protected transient int query_num_scans = 0;
-    @Configurable(name = "alignment.pairwise.distance")
-    protected PairwiseDistance pairwiseDistanceClass = null;
+//    @Configurable(name = "alignment.cumulative.distance")
+    protected DtwRecurrence recurrence = null;
+    @Configurable(name = "var.scan_acquisition_time")
+    protected String scan_acquisition_time = "scan_acquisition_time";
+//    @Configurable(name = "alignment.pairwise.distance")
+    protected PairwiseFeatureSimilarity pairwiseFeatureSimilarity = null;
     private StatsMap statsMap;
-    private int anchorNeighborhood = 10;
-    private IWorkflow iw;
+    private boolean useAnchors = true;
+    private int anchorRadius = 10;
+    private int minScansBetweenAnchors = 10;
+    private IWorkflow workflow;
     @Configurable(name = "alignment.precalculatePairwiseDistances",
     value = "true")
     private boolean precalculatePairwiseDistances = true;
     private PairwiseAlignment pa;
     @Configurable(name = "alignment.globalBand", value = "true")
     private boolean globalBand = true;
+    private double bandWidthPercentage = 1.0d;
     private String extension = "";
     @Configurable(name = "alignment.saveLayoutImage", value = "false")
     private boolean saveLayoutImage = false;
@@ -144,7 +137,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         final int rows = ref.size();
         final int cols = query.size();
 
-        if (this.pairwiseDistanceClass.getDistance().minimize()) {
+        if (this.pairwiseFeatureSimilarity.getSimilarityFunction().minimize()) {
             log.debug("Initializing matrices with {}",
                     Double.POSITIVE_INFINITY);
             initMatrices(rows, cols, Double.POSITIVE_INFINITY, ris, maxdev1);
@@ -160,7 +153,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         final long start = System.currentTimeMillis();
         if (this.precalculatePairwiseDistances) {
             log.info("Precalculating pairwise distances/similarities");
-            this.pairwiseDistanceClass.calculatePairwiseDistances(
+            this.pairwiseFeatureSimilarity.calculatePairwiseDistances(
                     this.distance, sat_ref, sat_query, ref, query);
         }
         calculateCumulativeDistances(this.distance, this.alignment, rows, cols,
@@ -196,8 +189,8 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         for (int i = 0; i < samples; i++) {
             int i1 = r1.nextInt(tuple.getFirst().size());
             int i2 = r2.nextInt(tuple.getSecond().size());
-            values[i] = this.pairwiseDistanceClass.getDistance(i1, i2, sat_ref.
-                    get(i1), sat_query.get(i2), tuple.getFirst().get(i1),
+            values[i] = this.pairwiseFeatureSimilarity.getDistance(i1, i2,
+                    sat_ref.get(i1), sat_query.get(i2), tuple.getFirst().get(i1),
                     tuple.getSecond().get(i2));
             log.debug("Sampling {},{} = {}", new Object[]{i1, i2, values[i]});
         }
@@ -206,7 +199,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
                 "Histogram of "
                 + name
                 + " using "
-                + this.pairwiseDistanceClass.getDistance().getClass().getName(),
+                + this.pairwiseFeatureSimilarity.getSimilarityFunction().getClass().getName(),
                 "value", "count", hd,
                 PlotOrientation.VERTICAL, true, true, true);
         ImageTools.writeImage(jfc,
@@ -259,27 +252,38 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         EvalTools.notNull(t, this);
         EvalTools.notNull(new Object[]{this.refF, this.queryF}, this);
         this.resF = apply(this.refF, this.queryF);
-        EvalTools.notNull(this.res, this);
-        return new Array[]{this.res};
+        EvalTools.notNull(this.result, this);
+        return new Array[]{this.result};
     }
 
     private AnchorPairSet buildAnchorPairSet(
             final Tuple2D<IFileFragment, IFileFragment> t) {
         log.debug("Loading anchors for {} and {}",
                 t.getFirst().getAbsolutePath(), t.getSecond().getAbsolutePath());
-        final Tuple2D<List<IAnchor>, List<IAnchor>> ris = MaltcmsTools.
-                getAnchors(t.getFirst(), t.getSecond());
-        if ((ris.getFirst().size() > 0) && (ris.getSecond().size() > 0)) {
-            log.info("Using {} alignment anchors", ris.getFirst().size());
+        Tuple2D<List<IAnchor>, List<IAnchor>> ris = null;
+        AnchorPairSet aps;
+        if (useAnchors) {
+            ris = MaltcmsTools.getAnchors(t.getFirst(), t.getSecond());
+
+            if ((ris.getFirst().size() > 0) && (ris.getSecond().size() > 0)) {
+                log.info("Using {} alignment anchors", ris.getFirst().size());
+                aps = new AnchorPairSet(ris.getFirst(),
+                        ris.getSecond(), this.ref_num_scans,
+                        this.query_num_scans, minScansBetweenAnchors);
+                for (final Tuple2D<Integer, Integer> ta : aps.getCorrespondingScans()) {
+                    log.debug("{}<->{}", ta.getFirst(), ta.getSecond());
+                }
+                return aps;
+            }
+//        Factory.getInstance().getConfiguration().setProperty(
+//                "maltcms.datastructures.alignment.DefaultPairSet.minScansBetweenAnchors",
+//                10);
         }
-        Factory.getInstance().getConfiguration().setProperty(
-                "maltcms.datastructures.alignment.DefaultPairSet.minScansBetweenAnchors",
-                10);
-        final AnchorPairSet aps = new AnchorPairSet(ris.getFirst(),
-                ris.getSecond(), this.ref_num_scans, this.query_num_scans);
-        for (final Tuple2D<Integer, Integer> ta : aps.getCorrespondingScans()) {
-            log.debug("{}<->{}", ta.getFirst(), ta.getSecond());
-        }
+        //return default anchors at 0,0 and N-1,M-1
+        aps = new AnchorPairSet(new LinkedList<IAnchor>(),
+                new LinkedList<IAnchor>(), ref_num_scans, query_num_scans,
+                minScansBetweenAnchors);
+
         return aps;
     }
 
@@ -289,8 +293,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
      */
     private IFileFragment calcAlignment(
             final Tuple2D<IFileFragment, IFileFragment> t) {
-        this.pa = Factory.getInstance().getObjectFactory().instantiate(
-                PairwiseAlignment.class);
+        this.pa = new PairwiseAlignment();
         this.pa.setWorkflow(getWorkflow());
         this.pa.setFileFragments(t.getFirst(), t.getSecond(), this.getClass());
 
@@ -307,7 +310,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
                 StringTools.removeFileExt(t.getFirst().getName()) + " "
                 + StringTools.removeFileExt(t.getSecond().getName()));
         // calculate the alignment matrix
-        this.alignment = align(tuple, aps, this.maxdeviation, sat_ref,
+        this.alignment = align(tuple, aps, this.bandWidthPercentage, sat_ref,
                 sat_query);
         EvalTools.notNull(this.alignment, this);
 
@@ -322,8 +325,8 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         final StatsMap sm = ass.apply(new Array[]{this.distance.flatten().
                     getSecond()})[0];
         this.pa.setIsMinimizing(minimize());
-        this.pa.setCumulativeDistance(this.cumulativeDistanceClass);
-        this.pa.setPairwiseDistance(getPairwiseScanDistance());
+        this.pa.setCumulativeDistance(this.recurrence);
+        this.pa.setPairwiseDistance(getPairwiseFeatureSimilarity());
         this.pa.setNumberOfScansReference(this.ref_num_scans);
         this.pa.setNumberOfScansQuery(this.query_num_scans);
         this.pa.setAnchors(aps);
@@ -337,18 +340,18 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
             getStatsMap().put("longestPath",
                     (double) (this.ref_num_scans + this.query_num_scans - 1));
             getStatsMap().put("w_exp",
-                    this.cumulativeDistanceClass.getExpansionWeight());
+                    this.recurrence.getExpansionWeight());
             getStatsMap().put("w_comp",
-                    this.cumulativeDistanceClass.getCompressionWeight());
+                    this.recurrence.getCompressionWeight());
             getStatsMap().put("w_diag",
-                    this.cumulativeDistanceClass.getDiagonalWeight());
+                    this.recurrence.getDiagonalWeight());
             getStatsMap().put("gap_global",
-                    this.cumulativeDistanceClass.getGlobalGapPenalty());
+                    this.recurrence.getGlobalGapPenalty());
         }
         // calculate traceback, store path etc.
         this.resF = this.pa.provideFileFragment();
-        this.res = this.pa.getResult();
-        this.resV = this.pa.getResultVector();
+        this.result = this.pa.getResult();
+        this.resultVector = this.pa.getResultVector();
         // add the pairwise alignment to bookkeeping
         // MaltcmsTools.addPairwiseAlignment(t.getFirst(), t.getSecond(),
         // this.resF, this.extension);
@@ -357,8 +360,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         // getWorkflow());
         final IFileFragment forwardAlignment = saveState(this.resF);
         if (this.saveLayoutImage) {
-            saveLayoutImage(aps, StringTools.removeFileExt(forwardAlignment.
-                    getName()));
+            saveLayoutImage(aps, StringTools.removeFileExt(forwardAlignment.getName()));
         }
 
         t.getFirst().clearArrays();
@@ -416,13 +418,13 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
             final IArrayD2Double alignment2, final int vrows, final int vcols,
             final List<Array> ref, final List<Array> query,
             final ArrayDouble.D1 sat_ref, final ArrayDouble.D1 sat_query,
-            final int[][] predecessors) {
+            final byte[][] predecessors) {
         final long start = System.currentTimeMillis();
         log.debug("Calculating the alignment matrix!");
         EvalTools.notNull(new Object[]{distance2, alignment2}, this);
         log.debug("Number of query scans {}", query.size());
         log.debug("Number of ref scans {}", ref.size());
-        // cumulativeDistanceClass.set(compression_penalty, expansion_penalty,
+        // cumulativeDistance.set(compression_penalty, expansion_penalty,
         // diagonal_penalty);
 
         log.debug("Set up anchors!");
@@ -458,8 +460,8 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 
     private void calculateCWD(final IArrayD2Double distance2,
             final IArrayD2Double alignment2, final int row, final int col,
-            final int[][] predecessors) {
-        final double cdist = this.cumulativeDistanceClass.eval(row, col,
+            final byte[][] predecessors) {
+        final double cdist = this.recurrence.eval(row, col,
                 alignment2, distance2.get(row, col), predecessors);
         if ((row == 0) && (col == 0)) {
             log.debug("Cdist({},{})={}", new Object[]{row, col, cdist});
@@ -472,7 +474,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
             final int row, final int col) {
         final double sat_r = sat_ref == null ? -1 : sat_ref.get(row);
         final double sat_q = sat_query == null ? -1 : sat_query.get(col);
-        final double dist = getPairwiseScanDistance().getDistance(row, col,
+        final double dist = getPairwiseFeatureSimilarity().getDistance(row, col,
                 sat_r, sat_q, ref.get(row), query.get(col));
         distance2.set(row, col, dist);
         if ((row == 0) && (col == 0)) {
@@ -484,51 +486,44 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
     public void configure(final Configuration cfg) {
         log.debug("Configure called on {}", this.getClass().getName());
         EvalTools.notNull(cfg, this);
-        setPairwiseScanDistance(Factory.getInstance().getObjectFactory().
-                instantiate(
-                cfg.getString("alignment.pairwise.distance",
-                "maltcms.commands.distances.PairwiseDistance"),
-                PairwiseDistance.class));
+//        setPairwiseScanDistance(Factory.getInstance().getObjectFactory().
+//                instantiate(
+//                cfg.getString("alignment.pairwise.distance",
+//                "maltcms.commands.distances.PairwiseDistance"),
+//                PairwiseFeatureSimilarity.class));
 
-        this.maxdeviation = cfg.getDouble("alignment.algorithm.windowsize", 1.0);
+        this.bandWidthPercentage = cfg.getDouble("alignment.algorithm.windowsize", 1.0);
 
-        final CumulativeDistance cdist = Factory.getInstance().getObjectFactory().
-                instantiate(
-                Factory.getInstance().getConfiguration().getString(
-                "alignment.cumulative.distance",
-                "maltcms.commands.distances.CumulativeDistance"),
-                CumulativeDistance.class);
-        setCumulativeDistance(cdist);
+//        final DtwRecurrence cdist = Factory.getInstance().getObjectFactory().
+//                instantiate(
+//                Factory.getInstance().getConfiguration().getString(
+//                "alignment.cumulative.distance",
+//                "maltcms.commands.distances.CumulativeDistance"),
+//                DtwRecurrence.class);
+//        setCumulativeDistance(cdist);
 
-        EvalTools.notNull(new Object[]{getCumulativeDistance(),
-                    getPairwiseScanDistance(),
-                    getPairwiseScanDistance().getDistance()}, this);
-        getCumulativeDistance().setMinimizing(
-                getPairwiseScanDistance().getDistance().minimize());
-        final IDtwScoreFunction iac = getPairwiseScanDistance().
-                getDistance();
-        getCumulativeDistance().set(iac.getCompressionWeight(),
-                iac.getExpansionWeight(), iac.getDiagonalWeight());
+//        EvalTools.notNull(new Object[]{getCumulativeDistance(),
+//                    getPairwiseScanDistance(),
+//                    getPairwiseScanDistance().getDistance()}, this);
+//        getCumulativeDistance().setMinimizing(
+//                getPairwiseScanDistance().getDistance().minimize());
+//        final IDtwSimilarityFunction iac = getPairwiseScanDistance().
+//                getDistance();
+//        getCumulativeDistance().set(iac.getCompressionWeight(),
+//                iac.getExpansionWeight(), iac.getDiagonalWeight());
 
-        this.mass_values = cfg.getString("var.mass_values", "mass_values");
-        this.intensity_values = cfg.getString("var.intensity_values",
-                "intensity_values");
-        this.mass_range_min = cfg.getString("var.mass_range_min",
-                "mass_range_min");
-        this.mass_range_max = cfg.getString("var.mass_range_max",
-                "mass_range_max");
-        this.scan_index = cfg.getString("var.scan_index", "scan_index");
+
         this.scan_acquisition_time = cfg.getString("var.scan_acquisition_time",
                 "scan_acquisition_time");
-        this.anchorNeighborhood = cfg.getInteger(
-                "alignment.anchors.neighborhood", 10);
-        this.precalculatePairwiseDistances = cfg.getBoolean(
-                "alignment.precalculatePairwiseDistances", true);
-        this.globalBand = cfg.getBoolean("alignment.globalBand", true);
-        this.extension = cfg.getString(
-                this.getClass().getName() + ".extension", "");
-        this.saveLayoutImage = cfg.getBoolean("alignment.saveLayoutImage",
-                false);
+//        this.anchorRadius = cfg.getInteger(
+//                "alignment.anchors.neighborhood", 10);
+//        this.precalculatePairwiseDistances = cfg.getBoolean(
+//                "alignment.precalculatePairwiseDistances", true);
+//        this.globalBand = cfg.getBoolean("alignment.globalBand", true);
+//        this.extension = cfg.getString(
+//                this.getClass().getName() + ".extension", "");
+//        this.saveLayoutImage = cfg.getBoolean("alignment.saveLayoutImage",
+//                false);
     }
 
     /*
@@ -537,8 +532,8 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
      * @see
      * maltcms.commands.distances.dtw.IDynamicTimeWarp#getCumulativeDistance()
      */
-    public CumulativeDistance getCumulativeDistance() {
-        return this.cumulativeDistanceClass;
+    public DtwRecurrence getCumulativeDistance() {
+        return this.recurrence;
     }
 
     public String getExtension() {
@@ -552,29 +547,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
      */
     @Override
     public IWorkflow getWorkflow() {
-        return this.iw;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * maltcms.commands.distances.dtw.IDynamicTimeWarp#getPairwiseScanDistance()
-     */
-    @Override
-    public PairwiseDistance getPairwiseScanDistance() {
-        return this.pairwiseDistanceClass;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see maltcms.commands.distances.dtw.IDynamicTimeWarp#getResult()
-     */
-    @Override
-    public ArrayDouble.D0 getResult() {
-        EvalTools.notNull(this.res, this);
-        return this.res;
+        return this.workflow;
     }
 
     /*
@@ -587,17 +560,6 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
     public IFileFragment getResultFileFragment() {
         EvalTools.notNull(this.resF, this);
         return this.resF;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see maltcms.commands.distances.dtw.IDynamicTimeWarp#getResultV()
-     */
-    @Override
-    public ArrayDouble.D1 getResultV() {
-        EvalTools.notNull(this.resV, this);
-        return this.resV;
     }
 
     private ArrayDouble.D1 getScanAcquisitionTime(final IFileFragment f) {
@@ -616,11 +578,6 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         return null;
     }
 
-    @Override
-    public StatsMap getStatsMap() {
-        return this.statsMap;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -637,12 +594,12 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         final ArrayFactory f = Factory.getInstance().getObjectFactory().
                 instantiate(ArrayFactory.class);
         final IArrayD2Double parts1 = f.create(rows, cols, aps,
-                this.anchorNeighborhood, band, value.doubleValue(),
+                this.anchorRadius, band, value.doubleValue(),
                 this.globalBand);
         this.alignment = parts1;
         final IArrayD2Double parts2 = f.createSharedLayout(parts1);
         this.distance = parts2;
-        this.predecessors = new int[rows][cols];
+        this.predecessors = new byte[rows][cols];
         log.debug("Alignment matrix has {} rows and {} columns",
                 parts1.rows(), parts2.columns());
         final long time = System.currentTimeMillis() - start;
@@ -659,8 +616,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
      */
     @Override
     public boolean minimize() {
-        final boolean b = (this.pairwiseDistanceClass != null) ? this.pairwiseDistanceClass.
-                getDistance().minimize() : true;
+        final boolean b = (this.pairwiseFeatureSimilarity != null) ? this.pairwiseFeatureSimilarity.getSimilarityFunction().minimize() : true;
         return b;
     }
 
@@ -671,18 +627,6 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         final long time = System.currentTimeMillis() - start;
         log.debug("Saved state in {} milliseconds", time);
         return pa;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * maltcms.commands.distances.dtw.IDynamicTimeWarp#setCumulativeDistance
-     * (maltcms.commands.distances.CumulativeDistance)
-     */
-    @Override
-    public void setCumulativeDistance(final CumulativeDistance cd1) {
-        this.cumulativeDistanceClass = cd1;
     }
 
     public void setExtension(final String newExtension) {
@@ -706,33 +650,5 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         EvalTools.notNull(new Object[]{a, b}, this);
         this.refF = a;
         this.queryF = b;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @seecross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
-     * datastructures.workflow.IWorkflow)
-     */
-    @Override
-    public void setWorkflow(final IWorkflow iw1) {
-        this.iw = iw1;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * maltcms.commands.distances.dtw.IDynamicTimeWarp#setPairwiseScanDistance
-     * (maltcms.commands.distances.PWScanDistance)
-     */
-    @Override
-    public void setPairwiseScanDistance(final PairwiseDistance psd) {
-        this.pairwiseDistanceClass = psd;
-    }
-
-    @Override
-    public void setStatsMap(final StatsMap sm) {
-        this.statsMap = sm;
     }
 }

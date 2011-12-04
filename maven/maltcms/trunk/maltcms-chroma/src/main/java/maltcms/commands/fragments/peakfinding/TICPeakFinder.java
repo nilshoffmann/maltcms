@@ -119,6 +119,10 @@ public class TICPeakFinder extends AFragmentCommand {
     private String ticPeakVarName = "tic_peaks";
     @Configurable(value = "tic_filtered")
     private String ticFilteredVarName = "tic_filtered";
+    @Configurable(value = "true")
+    private boolean integrateRawTic = true;
+    @Configurable(value = "10")
+    private int peakSeparationWindow = 10;
 //    @Configurable(value = "maltcms.commands.filters.array.MultiplicationFilter")
     private List<AArrayFilter> filter = Arrays.asList(
             (AArrayFilter) new MultiplicationFilter());
@@ -226,8 +230,8 @@ public class TICPeakFinder extends AFragmentCommand {
     }
 
     public List<Peak1D> findPeakAreas(final IFileFragment chromatogram,
-            final List<Integer> ts, String filename,
-            final Array baselineCorrectedTIC, final Array sat) {
+            final List<Integer> ts, String filename, final Array rawTIC,
+            final Array baselineCorrectedTIC) {
         final ArrayList<Peak1D> pbs = new ArrayList<Peak1D>();
         if (integrateTICPeaks) {
             log.info("Using TIC based peak integration");
@@ -251,7 +255,8 @@ public class TICPeakFinder extends AFragmentCommand {
             for (final Integer scanApex : ts) {
                 log.debug("Adding peak at scan index {}", scanApex);
                 final Peak1D pb = getPeakBoundsByTIC(chromatogram, scanApex,
-                        baselineCorrectedTIC, fdTIC, sdTIC, tdTIC, sat);
+                        rawTIC,
+                        baselineCorrectedTIC, fdTIC, sdTIC, tdTIC);
                 if (pb != null) {
                     pbs.add(pb);
                 }
@@ -394,7 +399,7 @@ public class TICPeakFinder extends AFragmentCommand {
         for (int i = 0; i < ticValues.length; i++) {
             log.debug("i=" + i);
             checkExtremum(ticValues, snrValues, ts, threshold, i,
-                    this.snrWindow);
+                    this.peakSeparationWindow);
         }
         PeakPositionsResultSet pprs = new PeakPositionsResultSet(correctedtic,
                 createPeakCandidatesArray(tic, ts), snrValues, ts);
@@ -437,14 +442,14 @@ public class TICPeakFinder extends AFragmentCommand {
         // log.info("Looking for EIC peaks");
         // findEICPeaks(f);
         final Array tic = f.getChild(this.ticVarName).getArray();
-        final Array sat = f.getChild(this.satVarName).getArray();
+//        final Array sat = f.getChild(this.satVarName).getArray();
         final PeakPositionsResultSet pprs = findPeakPositions(tic);
         final ArrayInt.D1 extr = pprs.getPeakPositions();
         final double[] snrValues = pprs.getSnrValues();
         log.info("Found {} peaks for file {}", pprs.getTs().size(), f.getName());
         List<Peak1D> peaks = Collections.emptyList();
         if (this.integratePeaks) {
-            peaks = findPeakAreas(f, pprs.getTs(), f.getName(), tic, sat);
+            peaks = findPeakAreas(f, pprs.getTs(), f.getName(), tic, pprs.getCorrectedTIC());
             savePeakTable(peaks, f);
         }
         if (this.saveGraphics) {
@@ -459,7 +464,7 @@ public class TICPeakFinder extends AFragmentCommand {
 
         ff.addSourceFile(f);
         addResults(ff, pprs.getCorrectedTIC(), extr, peaks);
-        
+
         ff.save();
         f.clearArrays();
         DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(ff.
@@ -744,9 +749,9 @@ public class TICPeakFinder extends AFragmentCommand {
     }
 
     private Peak1D getPeakBoundsByTIC(final IFileFragment chromatogram,
-            final int scanIndex, final Array baselineCorrectedTIC,
-            final Array fdTIC, final Array sdTIC, final Array tdTIC,
-            final Array sat) {
+            final int scanIndex, final Array rawTIC,
+            final Array baselineCorrectedTIC,
+            final Array fdTIC, final Array sdTIC, final Array tdTIC) {
 
         Array fdfTIC = baselineCorrectedTIC;
         // return getPeakBoundsByTIC2(scanIndex, f, baselineCorrectedTIC);
@@ -839,7 +844,11 @@ public class TICPeakFinder extends AFragmentCommand {
         log.debug("start: {}, stop: {}", startIndex, stopIndex);
         final Peak1D pb = new Peak1D(startIndex, apexIndex, stopIndex);
         pb.setFile(chromatogram.getAbsolutePath());
-        integratePeak(pb, null, baselineCorrectedTIC);
+        if (integrateRawTic) {
+            integratePeak(pb, null, rawTIC);
+        } else {
+            integratePeak(pb, null, baselineCorrectedTIC);
+        }
         return pb;
     }
 

@@ -93,7 +93,7 @@ public class Alignment2D extends AFragmentCommand {
     public Alignment2D() {
         FeatureVectorDtwSimilarity sim = new FeatureVectorDtwSimilarity();
         DtwPairwiseSimilarity idsf = new DtwPairwiseSimilarity();
-        idsf.setDenseMassSpectraScore(new ArrayCos());
+        idsf.setDenseMassSpectraSimilarity(new ArrayCos());
         sim.setScoreFunction(idsf);
         sim.setArrayFeatureName("FEATURE0");
         dtwSimilarity = sim;
