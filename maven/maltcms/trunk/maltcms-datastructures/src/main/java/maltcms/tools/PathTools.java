@@ -812,13 +812,13 @@ public class PathTools implements IConfigurable {
 	}
 
 	/**
-	 * Calculates a trace based on the int[][] argument. Expects 0 for diagonal
+	 * Calculates a trace based on the byte[][] argument. Expects 0 for diagonal
 	 * steps, 1 for vertical steps and -1 for horizontal steps.
 	 * 
 	 * @param predecessors
 	 * @return
 	 */
-	public List<Tuple2DI> traceback(final int[][] predecessors,
+	public List<Tuple2DI> traceback(final byte[][] predecessors,
 	        final IFileFragment ref, final IFileFragment target) {
 		int a = predecessors.length - 1;
 		int b = predecessors[0].length - 1;

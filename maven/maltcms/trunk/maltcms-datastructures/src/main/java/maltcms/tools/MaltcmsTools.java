@@ -41,6 +41,7 @@ import maltcms.datastructures.ms.Chromatogram1D;
 import maltcms.datastructures.ms.ChromatogramFactory;
 import maltcms.datastructures.ms.IAnchor;
 import maltcms.datastructures.ms.IChromatogram1D;
+import maltcms.datastructures.ms.IScan1D;
 import maltcms.datastructures.ms.RetentionInfo;
 import maltcms.io.csv.CSVWriter;
 
@@ -49,13 +50,13 @@ import org.slf4j.Logger;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayBoolean;
 import ucar.ma2.ArrayChar;
+import ucar.ma2.ArrayChar.StringIterator;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.DataType;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
-import ucar.ma2.ArrayChar.StringIterator;
 import ucar.ma2.MAMath.MinMax;
 import cross.Factory;
 import cross.Logging;
@@ -64,15 +65,14 @@ import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
+import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tools.FragmentTools;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.Tuple2DDoubleComp;
 import cross.datastructures.tuple.Tuple2DI;
 import cross.datastructures.tuple.TupleND;
 import cross.exception.ResourceNotAvailableException;
-import cross.datastructures.tools.EvalTools;
-import cross.datastructures.tools.FragmentTools;
 import cross.tools.StringTools;
-import maltcms.datastructures.ms.IScan1D;
 
 /**
  * Utility class providing many comfort methods, providing more direct access to
