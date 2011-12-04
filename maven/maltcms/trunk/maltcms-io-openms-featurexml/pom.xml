@@ -6,9 +6,7 @@
     <groupId>net.sf.maltcms</groupId>
     <version>1.0.8-SNAPSHOT</version>
   </parent>
-  <groupId>net.sf.maltcms</groupId>
   <artifactId>maltcms-io-openms-featurexml</artifactId>
-  <version>1.0.8-SNAPSHOT</version>
   <name>maltcms-io-openms-featurexml</name>
   <url>http://maltcms.sourceforge.net</url>
   <packaging>jar</packaging>
@@ -17,7 +15,6 @@
       <plugin>
         <groupId>org.jvnet.jaxb2.maven2</groupId>
         <artifactId>maven-jaxb2-plugin</artifactId>
-        <version>0.7.1</version>
         <executions>
           <execution>
             <goals>

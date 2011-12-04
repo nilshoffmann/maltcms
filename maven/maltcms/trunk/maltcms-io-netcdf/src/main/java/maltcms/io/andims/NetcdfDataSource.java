@@ -57,6 +57,7 @@ import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
 import cross.tools.StringTools;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Implementation of {@link cross.io.IDataSource} for Netcdf files, following
@@ -65,6 +66,7 @@ import cross.tools.StringTools;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@ServiceProvider(service=IDataSource.class)
 public class NetcdfDataSource implements IDataSource {
 
 	@Deprecated

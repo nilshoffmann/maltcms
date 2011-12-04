@@ -59,7 +59,9 @@ import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import org.openide.util.lookup.ServiceProvider;
 
+@ServiceProvider(service=IDataSource.class)
 public class MZMLDataSource implements IDataSource {
 
     private final Logger log = Logging.getLogger(this.getClass());
@@ -508,7 +510,7 @@ public class MZMLDataSource implements IDataSource {
             }
         } else {
             throw new ResourceNotAvailableException(
-                    "Unknown varname to mzXML mapping for varname " + varname);
+                    "Unknown varname to mzML mapping for varname " + varname);
         }
         return f;
     }

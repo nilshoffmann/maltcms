@@ -24,12 +24,14 @@ import cross.exception.NotImplementedException;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.tools.StringTools;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  * 
  * 
  */
+@ServiceProvider(service=IDataSource.class)
 public class MZXMLDataSource implements IDataSource {
 
     private final List<IDataSource> ds = new ArrayList<IDataSource>();

@@ -47,6 +47,7 @@ import org.slf4j.Logger;
 
 import cross.Logging;
 import cross.datastructures.tuple.Tuple2D;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 /**

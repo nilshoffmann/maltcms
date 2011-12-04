@@ -54,8 +54,10 @@ import cross.io.IDataSource;
 import cross.io.misc.Base64Util;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.MAMath;
 
+@ServiceProvider(service=IDataSource.class)
 public class MZDataDataSource implements IDataSource {
 
     private final Logger log = Logging.getLogger(this);
