@@ -40,13 +40,14 @@ import cross.io.misc.ArrayChunkIterator;
 import cross.datastructures.tools.EvalTools;
 
 /**
- * Immutable Variant of a VariableFragment. All set operations will throw
+ * Immutable Variant of a VariableFragment. All set operations will throw an
  * UnsupportedOperationException. All other operations delegate to an instance
  * of IVariableFragment, which is provided to the constructor.
  * 
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
+ * @deprecated Use {@link cross.datastructures.fragments.ImmutableVariableFragment2} instead
  */
+@Deprecated
 public class ImmutableVariableFragment implements IVariableFragment {
 
 	private final IVariableFragment vf;

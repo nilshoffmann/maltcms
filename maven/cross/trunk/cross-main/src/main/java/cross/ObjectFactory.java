@@ -64,7 +64,9 @@ public class ObjectFactory implements IObjectFactory {
             contextLocations = cfg.getStringArray(CONTEXT_LOCATION_KEY);
         }
         if(contextLocations==null) {
-            throw new NullPointerException("No pipeline configuration found! Please define! Example: -c cfg/chroma.properties");
+            log.warn("No pipeline configuration found! Please define! Example: -c cfg/chroma.properties");
+//            throw new NullPointerException();
+            return;
         }
 //        } else {
 //            String str = new File(System.getProperty(

@@ -53,6 +53,7 @@ import org.jdom.output.XMLOutputter;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
 import cross.commands.fragments.IFragmentCommand;
+import cross.datastructures.ehcache.CacheFactory;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.pipeline.ICommandSequence;
 import cross.datastructures.tools.FileTools;
@@ -669,6 +670,26 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         }
         return l;
     }
+    
+    @Override
+    public <T> List<IWorkflowObjectResult> getResultsOfType(IWorkflowElement afc,
+            Class<? extends T> c) {
+        List<IWorkflowObjectResult> l = new ArrayList<IWorkflowObjectResult>();
+        Iterator<IWorkflowResult> iter = getResults();
+        while (iter.hasNext()) {
+            IWorkflowResult iwr = iter.next();
+            if (iwr instanceof IWorkflowObjectResult) {
+                IWorkflowObjectResult iwfr = (IWorkflowObjectResult) iwr;
+                if (iwfr.getWorkflowElement().getClass().getCanonicalName().
+                        equals(afc.getClass().getCanonicalName())) {
+                    if (c.isAssignableFrom(iwfr.getObject().getClass())) {
+                        l.add((IWorkflowObjectResult)iwr);
+                    }
+                }
+            }
+        }
+        return l;
+    }
 
     @Override
     public boolean isExecuteLocal() {
@@ -702,4 +723,5 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         this.outputDirectory = f;
         log.info("Workflow output base directory: "+this.outputDirectory);
     }
+
 }

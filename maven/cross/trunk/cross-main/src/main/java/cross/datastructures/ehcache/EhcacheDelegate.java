@@ -14,6 +14,9 @@ import net.sf.ehcache.Element;
  * Implementation of a cache delegate for typed caches backed by
  * <a href="http://www.ehcache.org">ehcache</a>.
  * 
+ * Please note that Ehcache only allows Serializable objects to be 
+ * externalized to disk, should the in-memory cache overflow.
+ * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 public class EhcacheDelegate<K, V> implements ICacheDelegate<K, V> {

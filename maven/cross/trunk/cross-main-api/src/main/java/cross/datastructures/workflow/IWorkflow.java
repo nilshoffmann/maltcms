@@ -92,7 +92,7 @@ public interface IWorkflow extends IEventSource<IWorkflowResult>, IConfigurable,
 	public abstract List<IWorkflowResult> getResultsFor(IFileFragment iff);
 
 	/**
-	 * Returns the results created by a specific AFragmentCommand.
+	 * Returns the results created by a specific IWorkflowElement.
 	 * 
 	 * @param afc
 	 * @return
@@ -100,7 +100,7 @@ public interface IWorkflow extends IEventSource<IWorkflowResult>, IConfigurable,
 	public abstract List<IWorkflowResult> getResultsFor(IWorkflowElement afc);
 
 	/**
-	 * Returns the results created by a specific AFragmentCommand for
+	 * Returns the results created by a specific IWorkflowElement for a given
 	 * IFileFragment.
 	 * 
 	 * @param afc
@@ -120,13 +120,22 @@ public interface IWorkflow extends IEventSource<IWorkflowResult>, IConfigurable,
 
 	/**
 	 * Returns the list of results matching a given file extension pattern
-	 * created by a given IWorkflow implementation.
+	 * created by a given IWorkflowElement implementation.
 	 * 
 	 * @param fileExtension
 	 * @return
 	 */
 	public abstract List<IWorkflowResult> getResultsOfType(
 	        IWorkflowElement afc, String fileExtension);
+        
+        /**
+	 * Returns the list of results matching a given class
+	 * created by a given IWorkflowElement implementation.
+	 * 
+	 * @param fileExtension
+	 * @return
+	 */
+        public abstract <T> List<IWorkflowObjectResult> getResultsOfType(IWorkflowElement afc, Class<? extends T> c);
 
 	/**
 	 * Return the startup data of this IWorkflow.

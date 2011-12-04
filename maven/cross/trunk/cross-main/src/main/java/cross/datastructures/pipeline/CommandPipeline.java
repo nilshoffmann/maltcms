@@ -427,6 +427,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
             }
             //shutdown master server in case of any uncaught exceptions
         } catch (Exception e) {
+        	log.error("Caught exception while executing pipeline: ",e);
             shutdownMasterServer();
             throw new RuntimeException(e);
         }
@@ -510,6 +511,16 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
             ifrge.addContent(ifrge0);
         }
         e.addContent(ifrge);
+        
+        final Element ofrge = new Element("workflowOutputs");
+        for (final IFileFragment ofrg : tmp) {
+            final Element ofrge0 = new Element("workflowOutput");
+            ofrge0.setAttribute("uri", new File(ofrg.getAbsolutePath()).toURI().
+                    toASCIIString());
+            ofrge.addContent(ofrge0);
+        }
+        e.addContent(ofrge);
+        
         final Element cmds = new Element("workflowCommands");
         for (final IFragmentCommand wr : getCommands()) {
             final Element iwr = new Element("workflowCommand");

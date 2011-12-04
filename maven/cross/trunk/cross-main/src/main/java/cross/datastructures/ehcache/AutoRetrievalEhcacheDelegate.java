@@ -10,6 +10,12 @@ import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 
 /**
+ * Transparent cache, which also knows how to create objects of the given 
+ * type via the @{link cross.datastructures.ehcache.ICacheElementProvider},
+ * if their key is not present in the in-memory cache.
+ *
+ * Please note that Ehcache only allows Serializable objects to be 
+ * externalized to disk, should the in-memory cache overflow.
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */

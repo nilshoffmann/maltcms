@@ -48,7 +48,7 @@ import cross.io.misc.Base64;
 import cross.datastructures.tools.EvalTools;
 
 /**
- * A class representing Variables. A Variable is a meta-info container for
+ * A class representing immutable Variables. A Variable is a meta-info container for
  * existing data stored in an array for example. VariableFragment objects belong
  * to a parent FileFragment, which corresponds to a virtual file structure.
  * 
