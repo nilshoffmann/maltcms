@@ -5,6 +5,8 @@ package maltcms.datastructures.ridge;
 
 import java.awt.geom.Point2D;
 
+import org.openide.util.lookup.ServiceProvider;
+
 import cross.datastructures.tuple.Tuple2D;
 
 /**
@@ -12,6 +14,7 @@ import cross.datastructures.tuple.Tuple2D;
  * 
  * 
  */
+@ServiceProvider(service=IRidgeCost.class)
 public class RidgeCost1 implements IRidgeCost {
 
 	/*

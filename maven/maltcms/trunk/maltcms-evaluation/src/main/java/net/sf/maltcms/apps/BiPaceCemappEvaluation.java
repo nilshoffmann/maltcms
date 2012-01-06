@@ -5,7 +5,6 @@
  */
 package net.sf.maltcms.apps;
 
-import cross.tools.StringTools;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,24 +12,26 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.sf.maltcms.evaluation.api.IPostProcessor;
+
+import net.sf.maltcms.evaluation.api.tasks.IPostProcessor;
+import net.sf.maltcms.evaluation.api.tasks.ITask;
+import net.sf.maltcms.evaluation.api.tasks.ITaskResult;
 import net.sf.maltcms.evaluation.spi.BeansXmlGenerator;
 import net.sf.maltcms.evaluation.spi.tasks.Task;
-import net.sf.maltcms.evaluation.spi.tasks.maltcms.WorkflowResult;
+import net.sf.maltcms.evaluation.spi.tasks.maltcms.MaltcmsTaskResult;
 import net.sf.maltcms.execution.api.ICompletionService;
 import net.sf.maltcms.execution.spi.CompletionServiceFactory;
+
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.PropertiesConfiguration;
+
+import cross.tools.StringTools;
 
 /**
  *
@@ -38,64 +39,29 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  */
 public class BiPaceCemappEvaluation extends MaltcmsEvaluation {
 
-    public BiPaceCemappEvaluation(CommandLine commandLine) {
-        super(commandLine);
+    public BiPaceCemappEvaluation(String[] args) {
+        super(args);
     }
 
     public static void main(String[] args) {
-        Options options = new Options();
-        Option template = OptionBuilder.withArgName("TEMPLATE").hasArg().
-                isRequired().
-                withDescription("Template beans.xml file.").create("t");
-        Option settings = OptionBuilder.withArgName("PARAMETERS").hasArg().
-                isRequired().withDescription(
-                "Property file containing key,value mappings for template parameters.").
-                create("p");
-        Option output = OptionBuilder.withArgName("OUTPUT").hasArg().isRequired().
-                withDescription("Base directory for storage of output.").create(
-                "o");
-        Option config = OptionBuilder.withArgName("CONFIGURATION").hasArg().
-                isRequired().withDescription(
-                "Configuration property file for maltcms.").
-                create("c");
-        Option help = OptionBuilder.withArgName("HELP").withLongOpt("--help").
-                create("h");
-
-
-        options.addOption(template);
-        options.addOption(settings);
-        options.addOption(output);
-        options.addOption(config);
-        options.addOption(help);
-
-        GnuParser gp = new GnuParser();
-        try {
-            CommandLine cl = gp.parse(options, args);
-            if (args.length == 0 || cl.hasOption("h")) {
-                HelpFormatter hf = new HelpFormatter();
-                hf.printHelp(
-                        "java -cp maltcms.jar "
-                        + MaltcmsEvaluation.class.getCanonicalName(), options,
-                        true);
-                System.exit(1);
-            }
-            BiPaceCemappEvaluation me = new BiPaceCemappEvaluation(cl);
-            me.run();
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            HelpFormatter hf = new HelpFormatter();
-            hf.printHelp(
-                    "java -cp maltcms.jar "
-                    + MaltcmsEvaluation.class.getCanonicalName(), options,
-                    true);
-            System.exit(1);
-        }
-
+        BiPaceCemappEvaluation bpce = new BiPaceCemappEvaluation(args);
+        bpce.run();
+    }
+    
+    @Override
+    public void handleOptions(CommandLine cmdLine) {
+        super.handleOptions(cmdLine);
+    }
+    
+    @Override
+    public Options createOptions() {
+        return super.createOptions();
     }
 
     @Override
     public void run() {
+        
+        Map<String,String> taskArguments;
         //preprocessing stage
         /**
          * templateFile for creating a maltcms pipeline
@@ -137,9 +103,9 @@ public class BiPaceCemappEvaluation extends MaltcmsEvaluation {
             //which contains the parameter settings to be used by XMLApplicationContext
             BeansXmlGenerator bxg = new BeansXmlGenerator(templateProperties,
                     getTemplateFile(), getOutputDirectory(),tokenMap);
-            
+
             int batchSize = 100;
-            CompletionServiceFactory<WorkflowResult> csf = new CompletionServiceFactory<WorkflowResult>();
+            CompletionServiceFactory<ITaskResult> csf = new CompletionServiceFactory<ITaskResult>();
             int nchoices = bxg.size();
             int failed = 0;
             int submitted = 0;
@@ -148,7 +114,7 @@ public class BiPaceCemappEvaluation extends MaltcmsEvaluation {
                     "Using " + nchoices + " different configurations!");
 
             while (submitted + failed < nchoices) {
-                ICompletionService<WorkflowResult> ics = csf.
+                ICompletionService<ITaskResult> ics = csf.
                         createVMLocalCompletionService();
                 for (int i = 0; i < batchSize; i++) {
                     if (bxg.hasNext()) {
@@ -166,7 +132,7 @@ public class BiPaceCemappEvaluation extends MaltcmsEvaluation {
                         properties.save();
                         File odir = new File(outputDirectory.getAbsolutePath(),"workflow");
                         //"-DparamsLocation="+parametersFile.getAbsolutePath(),
-                        Task t = new Task(Arrays.asList("java","-jar",
+                        ITask t = new Task(Arrays.asList("java","-jar",
                                 "maltcms.jar", "-i", "data/", "-f", "*.cdf",
                                 "-o", odir.getAbsolutePath(), "-c",
                                 propertiesFile.getAbsolutePath()), new File("."),
@@ -178,7 +144,7 @@ public class BiPaceCemappEvaluation extends MaltcmsEvaluation {
                     }
                 }
                 try {
-                    List<WorkflowResult> results = ics.call();
+                    List<ITaskResult> results = ics.call();
                     failed+=ics.getFailedTasks().size();
                 } catch (Exception ex) {
                     Logger.getLogger(BiPaceCemappEvaluation.class.getName()).

@@ -5,7 +5,6 @@
  */
 package net.sf.maltcms.evaluation.spi;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,16 +22,15 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lombok.extern.slf4j.Slf4j;
 import net.sf.maltcms.math.Combinatorics;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-@Slf4j
 public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
 
     private int idx = 0;
@@ -41,6 +39,8 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
     private final File template;
     private final File outputDirectory;
     private final HashMap<String, String> tokenMap;
+    
+    private static org.slf4j.Logger log = LoggerFactory.getLogger(BeansXmlGenerator.class);
 
     public BeansXmlGenerator(LinkedHashMap<String, List<?>> parameterMap,
             File template, File outputDirectory, HashMap<String, String> tokenMap) {
@@ -58,10 +58,7 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
 
     @Override
     public boolean hasNext() {
-        if (idx < choices.size() - 1) {
-            return true;
-        }
-        return false;
+        return (idx < choices.size() - 1);
     }
 
     @Override

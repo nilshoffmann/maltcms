@@ -5,31 +5,25 @@
  */
 package net.sf.maltcms.apps;
 
-import cross.tools.StringTools;
 import java.io.File;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.sf.maltcms.evaluation.api.IPostProcessor;
+
 import net.sf.maltcms.evaluation.spi.BeansXmlGenerator;
-import net.sf.maltcms.evaluation.spi.tasks.Task;
 import net.sf.maltcms.execution.api.ICompletionService;
 import net.sf.maltcms.execution.spi.CompletionServiceFactory;
+
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.PropertiesConfiguration;
+
+import cross.tools.StringTools;
 
 /**
  *
@@ -37,60 +31,23 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  */
 public class ChromA4DEvaluation extends MaltcmsEvaluation {
 
-    public ChromA4DEvaluation(CommandLine commandLine) {
-        super(commandLine);
+    public ChromA4DEvaluation(String[] args) {
+        super(args);
     }
 
     public static void main(String[] args) {
-        Options options = new Options();
-        Option template = OptionBuilder.withArgName("TEMPLATE").hasArg().
-                isRequired().
-                withDescription("Template beans.xml file.").create("t");
-        Option settings = OptionBuilder.withArgName("PARAMETERS").hasArg().
-                isRequired().withDescription(
-                "Property file containing key,value mappings for template parameters.").
-                create("p");
-        Option output = OptionBuilder.withArgName("OUTPUT").hasArg().isRequired().
-                withDescription("Base directory for storage of output.").create(
-                "o");
-        Option config = OptionBuilder.withArgName("CONFIGURATION").hasArg().
-                isRequired().withDescription(
-                "Configuration property file for maltcms.").
-                create("c");
-        Option help = OptionBuilder.withArgName("HELP").withLongOpt("--help").
-                create("h");
+    	ChromA4DEvaluation me = new ChromA4DEvaluation(args);
+        me.run();
+    }
 
+    @Override
+    public void handleOptions(CommandLine cmdLine) {
+        super.handleOptions(cmdLine);
+    }
 
-        options.addOption(template);
-        options.addOption(settings);
-        options.addOption(output);
-        options.addOption(config);
-        options.addOption(help);
-
-        GnuParser gp = new GnuParser();
-        try {
-            CommandLine cl = gp.parse(options, args);
-            if (args.length == 0 || cl.hasOption("h")) {
-                HelpFormatter hf = new HelpFormatter();
-                hf.printHelp(
-                        "java -cp maltcms.jar "
-                        + MaltcmsEvaluation.class.getCanonicalName(), options,
-                        true);
-                System.exit(1);
-            }
-            ChromA4DEvaluation me = new ChromA4DEvaluation(cl);
-            me.run();
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            HelpFormatter hf = new HelpFormatter();
-            hf.printHelp(
-                    "java -cp maltcms.jar "
-                    + MaltcmsEvaluation.class.getCanonicalName(), options,
-                    true);
-            System.exit(1);
-        }
-
+    @Override
+    public Options createOptions() {
+        return super.createOptions();
     }
 
     @Override

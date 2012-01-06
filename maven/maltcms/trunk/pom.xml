@@ -323,7 +323,7 @@
         <dependency> 
             <groupId>org.projectlombok</groupId> 
             <artifactId>lombok</artifactId> 
-            <version>0.10.4</version> 
+            <version>0.10.6</version> 
             <type>jar</type>
             <scope>provided</scope>
         </dependency>

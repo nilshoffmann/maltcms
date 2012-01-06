@@ -42,9 +42,8 @@
         </dependency>
         <dependency>
             <groupId>com.db4o</groupId>
-            <artifactId>db4o</artifactId>
-            <version>7.12</version>
-            <classifier>java5</classifier>
+            <artifactId>db4o-all</artifactId>
+            <version>8.0</version>
         </dependency>
     </dependencies>
     <properties>

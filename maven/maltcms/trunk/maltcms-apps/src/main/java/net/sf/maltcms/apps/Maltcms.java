@@ -292,24 +292,26 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 "Names of files containing alignment anchors, if given without path prefix, assumes location as given with option -i.",
                 true, ',', true, true, 0, false, false, 0, "file1,file2, ...",
                 false));
-        this.o.addOption(addOption(
-                "s",
-                "showProperties",
-                "Prints the properties available for configuration of given classes",
-                true, ',', true, true, 0, false, false, 0,
-                "class1,class2, ...", false));
+        //FIXME currently disabled until beans xml context can be created
+//        this.o.addOption(addOption(
+//                "s",
+//                "showProperties",
+//                "Prints the properties available for configuration of given classes",
+//                true, ',', true, true, 0, false, false, 0,
+//                "class1,class2, ...", false));
         this.o.addOption(addOption(
                 "l",
                 "listServiceProviders",
                 "Prints the service providers available for a specific service, e.g. cross.commands.fragments.AFragmentCommand",
                 true, ',', true, true, 0, false, false, 0,
                 "class1,class2, ...", false));
-        this.o.addOption(addOption(
-                "b",
-                "createBeanXml",
-                "Creates a fragmentCommands.xml file in spring format for all instances of cross.commands.fragments.AFragmentCommand",
-                true, ',', true, true, 0, false, false, 0,
-                "class1,class2, ...", false));
+        //FIXME implement beans xml creation
+//        this.o.addOption(addOption(
+//                "b",
+//                "createBeanXml",
+//                "Creates a fragmentCommands.xml file in spring format for all instances of cross.commands.fragments.AFragmentCommand",
+//                true, ',', true, true, 0, false, false, 0,
+//                "class1,class2, ...", false));
     }
 
     protected Option addBooleanOption(final String s, final String l,

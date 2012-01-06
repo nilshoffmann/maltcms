@@ -13,30 +13,25 @@
     <build>
 
         <plugins>
-            <!-- Dependency plugin -->
-<!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.3</version>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.5</version>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
                         <goals>
-                            <goal>copy-dependencies</goal>
+                            <goal>add-source</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/lib</outputDirectory>
-                            <overWriteReleases>true</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
-                            <overWriteIfNewer>false</overWriteIfNewer>
-                             security fix, otherwise, logging will fail to work
-                            <excludeArtifactIds>log4j-over-slf4j,lombok,slf4j-jdk14</excludeArtifactIds>
+                            <sources>
+                                <source>src/assemble</source>
+                            </sources>
                         </configuration>
                     </execution>
-
                 </executions>
-            </plugin>-->
+            </plugin>
             <!-- Jar plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -58,7 +53,7 @@
                                 </manifest>
                             </archive>
                             <finalName>${project.artifactId}</finalName>
-                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}-bin</outputDirectory>
+                            <outputDirectory>${project.build.directory}/</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -79,6 +74,8 @@
                     <descriptors>
                         <descriptor>src/assemble/distribution.xml</descriptor>
                     </descriptors>
+		    <!--<updateOnly>true</updateOnly>-->
+                    <attach>true</attach>
                 </configuration>
             </plugin>
             <!-- Antrun plugin -->
@@ -101,25 +98,8 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
-<!--                    <execution>
-                        <id>create-distribution</id>
-                        <phase>install</phase>
-                        <configuration>
-                            <tasks>
-                                <echo message="Creating binary distributions"/>
-                                <zip destfile="${project.build.directory}/${project.artifactId}-${project.version}-bin.zip" basedir="${project.build.directory}/" includes="${project.artifactId}-${project.version}-bin/,${project.artifactId}-${project.version}-bin/**/*" encoding="UTF-8" update="true"/>
-                                <tar destfile="${project.build.directory}/${project.artifactId}-${project.version}-bin.tar.gz" compression="gzip"/>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>-->
-                           
                 </executions>
             </plugin>
-            
-
         </plugins>
     </build>
 

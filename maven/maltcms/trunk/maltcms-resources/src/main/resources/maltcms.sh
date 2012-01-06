@@ -30,21 +30,27 @@ else
 fi
 
 LOG4J_LOCATION="-Dlog4j.configuration=file://$MALTCMSUSRDIR/cfg/log4j.properties"
-
-#Check if javahome exists => contains path to java
-if [ -f "$MALTCMSUSRDIR/javahome" ]; then
-	echo "File javahome exists";
+if [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]];  then
+    echo "Using JAVA_HOME from environment"
+    export JAVA_LOCATION="$JAVA_HOME"
 else
-	"$MALTCMSUSRDIR/scripts/setJavaHome.sh";
-fi	
-
-export JAVA_HOME="$(cat "$MALTCMSUSRDIR/javahome")";
-echo -e "Using the following java location: $JAVA_HOME\n"
+	#Check if javahome exists => contains path to java
+	if [ -f "$MALTCMSUSRDIR/javahome" ]; then
+		echo "File javahome exists";
+	else
+		"$MALTCMSUSRDIR/scripts/setJavaHome.sh";
+	fi	
+	export JAVA_LOCATION="$(cat "$MALTCMSUSRDIR/javahome")";
+fi
+if [[ -n "$JAVA_LOCATION" ]]; then
+	echo -e "Using java from ${JAVA_LOCATION}\n"
+else
+	echo "No java could be found!"
+	exit 1
+fi
 
 function printHelp {
 			echo -e "Usage: $0 [-64] [-mx ARG] [-ms ARG] [-exec ARG|--execute ARG] [-?|--help] [MALTCMSARGS]"
-			#echo -e "Usage: $0 [-cp] [-64] [-mx ARG] [-exec ARG|--execute ARG] [-?|--help] [-- MALTCMSARGS]"
-			#echo -e "\t-cp -> builds classpath from jars in lib/"
 			echo -e "\t-64 -> uses 64bit jvm"
 			echo -e "\t-mx ARG -> uses -XmxARG as maximum heapsize"
 			echo -e "\t-ms ARG -> uses -XmsARG as minimum heapsize"
@@ -62,10 +68,6 @@ fi
 
 while [ $# -gt 0 ]; do
 	case "$1" in
-		#-cp)	do this no matter what happens, ensures a clean CP
-		#	scripts/buildCP.sh 
-		#	#echo $CLASSPATH
-		#	;;
 		-64)
 			export JARCH="-d64"
 			;;
@@ -99,7 +101,7 @@ while [ $# -gt 0 ]; do
 			echo -e "Passing args to $EXEC"
 			echo -e "$@"
 			sleep 1
-			$JAVA_HOME/bin/java -cp "$USRCLSPATH" $PROFILE -Xms$MSSIZE -Xmx$MXSIZE $JARCH "$LOG4J_LOCATION" "$EXEC" "$@" 
+			$JAVA_LOCATION/bin/java -cp "$USRCLSPATH" $PROFILE -Xms$MSSIZE -Xmx$MXSIZE $JARCH "$LOG4J_LOCATION" "$EXEC" "$@" 
 			exit $?
 			;;	
 	esac

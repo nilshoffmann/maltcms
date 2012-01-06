@@ -136,15 +136,15 @@
         <property name="savePlots" value="false"/>
     </bean>
     
-    <!-- PairwiseDistanceCalculator -->
+<!--     PairwiseDistanceCalculator 
     <bean id="pairwiseDistanceCalculator" class="maltcms.commands.fragments.cluster.PairwiseDistanceCalculator">
         <property name="pairsWithFirstElement" value="false"/> 
         <property name="normalizeToDistances" value="true"/>
         <property name="workerFactory" ref="pairwiseDistanceWorkerFactory"/>
-        <!--<property name="pairwiseDistanceFunction" ref="ticDynamicTimeWarp"/>-->
+        <property name="pairwiseDistanceFunction" ref="ticDynamicTimeWarp"/>
     </bean>
     
-    <!-- TICDynamicTimeWarp -->
+     TICDynamicTimeWarp 
     <bean id="pairwiseDistanceTic" class="maltcms.commands.distances.PairwiseDistance" scope="prototype">
         <property name="costFunction" ref="dtwCostFunction"/>
     </bean>
@@ -166,7 +166,7 @@
             <property name="pairwiseDistance" ref="pairwiseDistance"/> 
         </bean>
     
-    <!-- MZIDynamicTimeWarp -->
+     MZIDynamicTimeWarp 
         <bean id="mziDynamicTimeWarp" class="maltcms.commands.distances.dtw.MZIDynamicTimeWarp" scope="prototype">
             <property name="anchorRadius" value="0"/>
             <property name="useAnchors" value="true"/>
@@ -193,23 +193,23 @@
         </bean>
     
         <bean id="pairwiseDistanceWorkerFactory" class="maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.PairwiseDistanceWorkerFactory">
-<!--        <property name="similarity" ref="pairwiseDistance"/>-->
+        <property name="similarity" ref="pairwiseDistance"/>
         </bean>
     
-    <!-- DTW similarity function between feature vectors -->
+     DTW similarity function between feature vectors 
         <bean id="dtwSimilarity" class="maltcms.math.functions.DtwTimePenalizedPairwiseSimilarity">
             <property name="denseMassSpectraSimilarity" ref="timePenalizedDotProduct"/>
         </bean>
     
-    <!--
+    
     
     
      CenterStarAlignment 
--->    
+    
         <bean id="centerStarAlignment" class="maltcms.commands.fragments.alignment.CenterStarAlignment">
             <property name="alignToFirst" value="false"/>
             <property name="centerSequence" value=""/>
-        </bean><!--
+        </bean>
     
      ChromatogramWarp 
     <bean id="chromatogramWarp" class="maltcms.commands.fragments.warp.ChromatogramWarp2"></bean>

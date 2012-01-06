@@ -53,6 +53,7 @@ import org.apache.commons.math.stat.Frequency;
 import org.apache.commons.math.stat.descriptive.rank.Percentile;
 import org.jfree.chart.annotations.XYAnnotation;
 import org.jfree.data.xy.XYSeries;
+import org.openide.util.lookup.ServiceProvider;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -79,6 +80,7 @@ import maltcms.datastructures.quadTree.QuadTree;
  * 
  * 
  */
+@ServiceProvider(service=maltcms.commands.fragments2d.peakfinding.picking.IPeakPicking.class)
 @Data
 public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
 

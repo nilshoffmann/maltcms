@@ -24,17 +24,15 @@ import org.apache.commons.cli.ParseException;
 import cross.tools.StringTools;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
-import net.sf.maltcms.evaluation.api.EntityGroup;
-import net.sf.maltcms.evaluation.api.PeakRTFeatureVector;
-import net.sf.maltcms.evaluation.api.PeakRTFeatureVectorComparator;
-import net.sf.maltcms.evaluation.api.PerformanceMetrics;
+import net.sf.maltcms.evaluation.spi.classification.ClassificationPerformanceTest;
+import net.sf.maltcms.evaluation.api.classification.EntityGroup;
+import net.sf.maltcms.evaluation.spi.classification.PeakRTFeatureVector;
+import net.sf.maltcms.evaluation.api.classification.PeakRTFeatureVectorComparator;
+import net.sf.maltcms.evaluation.spi.classification.PerformanceMetrics;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
@@ -89,36 +87,6 @@ public class Evaluation {
         }
         dos.print(sb.toString());
         dos.println();
-    }
-
-    private HashMap<String, String> getCategoriesFromToolName(String toolname) {
-        String[] pairs = toolname.split("-");
-        HashMap<String, String> catToVal = new LinkedHashMap<String, String>();
-        for (String s : pairs) {
-            String[] cat_val = s.split("_");
-            if (cat_val.length != 2) {
-                System.err.println(
-                        "Warning: category/value pair may be invalid: " + s);
-            } else {
-                catToVal.put(cat_val[0], cat_val[1]);
-            }
-        }
-        return catToVal;
-    }
-
-    private HashSet<String> getToolCategories(List<String> toolnames) {
-        HashSet<String> hs = new LinkedHashSet<String>();
-        for (String str : toolnames) {
-            HashMap<String, String> hm = getCategoriesFromToolName(StringTools.
-                    removeFileExt(new File(str).getName()));
-//            if (hs.isEmpty()) {
-            hs.addAll(hm.keySet());
-//            } else {
-//            hs.retainAll(hm.keySet());
-//            }
-
-        }
-        return hs;
     }
 
     /**
