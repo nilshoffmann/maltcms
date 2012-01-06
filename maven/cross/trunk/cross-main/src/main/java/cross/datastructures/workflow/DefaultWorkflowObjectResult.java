@@ -47,19 +47,20 @@ public class DefaultWorkflowObjectResult<T> implements IWorkflowObjectResult<T>{
         iwr.setAttribute("slot", getWorkflowSlot().name());
         iwr.setAttribute("generator", getWorkflowElement().getClass().getCanonicalName());
 
-        final Element resources = iwr.addContent("resources");
+        final Element resources = new Element("resources");
         for (IFileFragment f : this.resources) {
-            final Element res = iwr.addContent("resource");
+            final Element res = new Element("resource");
             res.setAttribute("uri", new File(f.getAbsolutePath()).toURI().toString());
             resources.addContent(res);
         }
-        iwr.addContent(resources);
         if(object instanceof IXMLSerializable) {
-            final Element objectElement = iwr.addContent("object");
+            final Element objectElement = new Element("object");
             ((IXMLSerializable)object).appendXML(objectElement);
+            iwr.addContent(objectElement);
         }else{
             log.warn("Object is does not implement cross.io.xml.IXMLSerializable!");
         }
+        iwr.addContent(resources);
         e.addContent(iwr);
     }
     

@@ -114,20 +114,20 @@ public class DefaultWorkflowResult implements IWorkflowFileResult {
      */
     @Override
     public void appendXML(Element e) {
+        
         final Element iwr = new Element("workflowElementResult");
         iwr.setAttribute("class", getClass().getCanonicalName());
         iwr.setAttribute("slot", getWorkflowSlot().name());
         iwr.setAttribute("generator", getWorkflowElement().getClass().getCanonicalName());
 
-        final Element resources = iwr.addContent("resources");
+        final Element resources = new Element("resources");
         for (IFileFragment f : this.resources) {
-            final Element res = iwr.addContent("resource");
+            final Element res = new Element("resource");
             res.setAttribute("uri", new File(f.getAbsolutePath()).toURI().toString());
             resources.addContent(res);
         }
         iwr.addContent(resources);
         iwr.setAttribute("file", getFile().getAbsolutePath());
         e.addContent(iwr);
-
     }
 }

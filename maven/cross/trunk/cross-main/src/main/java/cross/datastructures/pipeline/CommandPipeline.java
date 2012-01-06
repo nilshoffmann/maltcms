@@ -49,6 +49,10 @@ import cross.event.IEvent;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
+import cross.datastructures.workflow.DefaultWorkflowStatisticsResult;
+import cross.datastructures.workflow.WorkflowSlot;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -417,6 +421,13 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
                 log.info("Runtime of command {}: {} sec",
                         cmd.getClass().getName(),
                         sb.toString());
+                Map<String,Object> statsMap = new HashMap<String,Object>();
+                statsMap.put("RUNTIME_MILLISECONDS", Double.valueOf(start/1000000.f));
+                DefaultWorkflowStatisticsResult dwsr = new DefaultWorkflowStatisticsResult();
+                dwsr.setWorkflowElement(cmd);
+                dwsr.setWorkflowSlot(WorkflowSlot.STATISTICS);
+                dwsr.setStats(statsMap);
+                workflow.append(dwsr);
                 this.cnt++;
                 //shutdown master server if execution has finished
                 if (this.cnt == this.commands.size()) {

@@ -135,21 +135,23 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         // workflow.setAttribute("name", name);
         getCommandSequence().appendXML(e);
         for (final IWorkflowResult wr : this.al) {
-            final Element iwr = new Element("workflowElementResult");
-            iwr.setAttribute("class", wr.getClass().getCanonicalName());
-            iwr.setAttribute("slot", wr.getWorkflowSlot().name());
-            iwr.setAttribute("generator", wr.getWorkflowElement().getClass().
-                    getCanonicalName());
-
-            final Element resources = new Element("resources");
-            if (wr instanceof IWorkflowFileResult) {
-                final Element resource = new Element("resource");
-                resource.setAttribute("file",
-                        ((IWorkflowFileResult) wr).getFile().getAbsolutePath());
-                resources.addContent(resource);
-            }
-            iwr.addContent(resources);
-            e.addContent(iwr);
+            wr.appendXML(e);
+//            final Element iwr = new Element("workflowElementResult");
+//            iwr.setAttribute("class", wr.getClass().getCanonicalName());
+//            iwr.setAttribute("slot", wr.getWorkflowSlot().name());
+//            iwr.setAttribute("generator", wr.getWorkflowElement().getClass().
+//                    getCanonicalName());
+//
+//            if (wr instanceof IWorkflowFileResult) {
+//                final Element resources = new Element("resources");
+//                final Element resource = new Element("resource");
+//                resource.setAttribute("file",
+//                        ((IWorkflowFileResult) wr).getFile().getAbsolutePath());
+//                resources.addContent(resource);
+//                iwr.addContent(resources);
+//            }
+//
+//            e.addContent(iwr);
         }
         // e.addContent(workflow);
     }
