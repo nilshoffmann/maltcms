@@ -9,9 +9,6 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableFileFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tools.EvalTools;
-import cross.datastructures.tools.FragmentTools;
-import cross.datastructures.tuple.Tuple2D;
-import cross.io.misc.ArrayChunkIterator;
 
 import java.io.File;
 import java.io.Serializable;

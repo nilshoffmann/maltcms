@@ -116,20 +116,10 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         return getClass().getName();
     }
     
+    @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final IFileFragment iff = MaltcmsTools.getPairwiseDistanceFragment(t);
         TupleND<IFileFragment> pwdt = MaltcmsTools.getPairwiseAlignments(iff);
-        // if (iff == null) {// No alignment has been calculated in this run
-        // for (final IFileFragment ifrg : t) {
-        // EvalTools.notNull(ifrg, this);
-        // final IFileFragment ref = FragmentTools.getLHSFile(ifrg);
-        // final IFileFragment query = FragmentTools.getRHSFile(ifrg);
-        // log.info(ref.toString());
-        // log.info(query.toString());
-        // setFragments(ref, query, ifrg);
-        // }
-        // } else {
-        // pwdt = MaltcmsTools.getPairwiseDistanceFragments(iff);
         for (final IFileFragment ff : pwdt) {
             final IFileFragment ref = FragmentTools.getLHSFile(ff);
             final IFileFragment query = FragmentTools.getRHSFile(ff);

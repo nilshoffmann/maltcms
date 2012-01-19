@@ -106,9 +106,6 @@ public class TICPeakListImporter extends AFragmentCommand {
                                 scanIndexColumnName);
                         ArrayInt.D1 extr = new ArrayInt.D1(peakScanIndex.size());
                         for (int i = 0; i < peakScanIndex.size(); i++) {
-                            // ChemStation output seems to start with 1 based
-                            // indexing,
-                            // we need to correct to 0 based indexing
                             extr.set(i,
                                     Integer.parseInt(peakScanIndex.get(i)) + scanIndexOffset);
                         }

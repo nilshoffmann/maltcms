@@ -86,10 +86,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-//import maltcms.experimental.bipace.peakCliqueAlignment.BBHFinder;
-//import maltcms.experimental.bipace.peakCliqueAlignment.CliqueTable;
-//import maltcms.experimental.bipace.peakCliqueAlignment.PeakComparator;
-//import maltcms.experimental.bipace.peakCliqueAlignment.PeakSimilarityVisualizer;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHFinder;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.CliqueTable;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakComparator;
@@ -183,8 +179,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     
 
     /**
-     * FIXME this method seems to create correct scan indices only for the first
-     * two files.
      *
      * @param al
      * @param newFragments
@@ -347,17 +341,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 v = 0;
             }
             score += v;
-//            for (Peak p : c.getPeakList()) {
-//                for (Peak q : c.getPeakList()) {
-//                    if (p.getAssociation().getName().equals(a.getName())
-//                            && q.getAssociation().getName().equals(b.getName())) {
-//                        double v = p.getSimilarity(q);//getSimilarity(p, q);
-//                        log.debug("Similarity of {} and {} = {}", new Object[]{
-//                                    p, q, v});
-//                        score += v;
-//                    }
-//                }
-//            }
         }
         return score;
     }
@@ -406,8 +389,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         for (int i = 0; i < newFragments.size(); i++) {
             fragmentNames.setString(i, newFragments.get(i).getName());
             for (int j = 0; j < newFragments.size(); j++) {
-//                    List<Clique> commonCliques = getCommonCliques(
-//                            newFragments.get(i), newFragments.get(j), cliques);
                 List<Clique> commonCliques = ct.getCommonCliques(
                         newFragments.get(i), newFragments.get(j), cliques);
                 if (!commonCliques.isEmpty()) {
@@ -417,9 +398,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                             getCommonScore(newFragments.get(i),
                             newFragments.get(j), commonCliques)
                             / ((double) commonCliques.size()));
-                    // FIXME this should not be necessary, in some cases,
-                    // similarities are
-                    // removed further upstream
                     fragScores[i] += fragmentScores.get(i, j);
                 } else {
                     log.debug("Common cliques list is empty!");
@@ -437,16 +415,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             cnt++;
         }
 
-        // // normalize scores by number of cliques for each FileFragment
-        // for (IFileFragment f : newFragments) {
-        // fragScores[placeMap.get(f.getName())] /= cliqueNumbers[placeMap
-        // .get(f.getName())];
-        // }
-
-        // normalize scores by total score
-        // for (IFileFragment f : newFragments) {
-        // fragScores[placeMap.get(f.getName())] /= sumFragScores;
-        // }
         boolean minimize = false;//costFunction.minimize();
         for (int j = 0; j < newFragments.size(); j++) {
             log.info("File: {}, value: {}", newFragments.get(j).getName(),
@@ -457,12 +425,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
         double optVal = Double.NEGATIVE_INFINITY;
         for (int i = 0; i < fragScores.length; i++) {
-//            if (minimize) {
-//                if (fragScores[i] < optVal) {
-//                    optVal = Math.min(optVal, -fragScores[i]);
-//                    optIndex = i;
-//                }
-//            } else {
             if (fragScores[i] > optVal) {
                 optVal = Math.max(optVal, fragScores[i]);
                 optIndex = i;

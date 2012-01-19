@@ -44,10 +44,10 @@ public class CemappDtwTest extends AFragmentCommandTest {
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
     
-    public ApplicationContext getContext() {
-        ApplicationContext sac = new ClassPathXmlApplicationContext("cfg/xml/test/cemappdtwtest.xml");
-        return sac;
-    }
+//    public ApplicationContext getContext() {
+//        ApplicationContext sac = new ClassPathXmlApplicationContext("cfg/xml/test/cemappdtwtest.xml");
+//        return sac;
+//    }
 
     @Test
     public void testCemappDtwMZIFull() {

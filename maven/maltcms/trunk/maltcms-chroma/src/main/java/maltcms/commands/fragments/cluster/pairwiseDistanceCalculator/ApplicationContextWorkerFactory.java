@@ -31,6 +31,7 @@ public class ApplicationContextWorkerFactory extends AWorkerFactory implements A
     private ApplicationContext context;
     private String beanId;
 
+    @Override
     public PairwiseDistanceWorker create() {
         if (context != null) {
             return context.getBean(beanId, PairwiseDistanceWorker.class);

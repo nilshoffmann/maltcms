@@ -10,6 +10,7 @@ import maltcms.math.functions.similarities.ArrayCorr;
 import lombok.Data;
 import maltcms.commands.distances.IDtwSimilarityFunction;
 import org.apache.commons.configuration.Configuration;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
 /**
@@ -17,6 +18,7 @@ import ucar.ma2.Array;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
+@ServiceProvider(service=IDtwSimilarityFunction.class)
 public class DtwTimePenalizedPairwiseSimilarity implements IDtwSimilarityFunction {
 
     private double expansionWeight = 1.0;

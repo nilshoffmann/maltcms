@@ -59,7 +59,7 @@ public class TicDtwWorkerFactory extends AWorkerFactory {
         //setup recurrence function
         DtwRecurrence dtwr = new DtwRecurrence();
         dtwr.setGlobalGapPenalty(globalGapPenalty);
-        dtwr.set(similarity.getMatchWeight(), similarity.getCompressionWeight(), similarity.getExpansionWeight());
+        dtwr.set(similarity.getCompressionWeight(), similarity.getExpansionWeight(),similarity.getMatchWeight());
         dtwr.setMinimize(false);
         mdtw.setRecurrence(dtwr);
         worker.setSimilarity(mdtw);

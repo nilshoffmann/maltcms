@@ -112,7 +112,7 @@ public class DtwRecurrence implements IRecurrence {
                     + cumDistMatrix.get(row - 1, column - 1);
             w = (this.exp_weight * cij) + cumDistMatrix.get(row, column - 1) + this.globalGapPenalty;
             final int neq = nequal(n, nw, w);
-            if (neq == 3) {
+            if (neq == 3 && (Double.isInfinite(n) || Double.isNaN(n))) {
                 log.error("{} values are equal at {},{}, n={},nw={},w={}",
                         new Object[]{
                             neq, row, column, n, nw, w});

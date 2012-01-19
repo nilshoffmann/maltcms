@@ -6,6 +6,7 @@
 package maltcms.math.functions;
 
 import lombok.Data;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
 /**
@@ -13,6 +14,7 @@ import ucar.ma2.Array;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
+@ServiceProvider(service = IScalarArraySimilarity.class)
 public class ProductSimilarity implements IScalarArraySimilarity {
 
     private IScalarSimilarity[] scalarSimilarities = new IScalarSimilarity[0];
