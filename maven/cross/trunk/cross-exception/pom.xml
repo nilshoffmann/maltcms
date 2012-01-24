@@ -3,7 +3,7 @@
   <parent>
     <artifactId>cross</artifactId>
     <groupId>net.sf.maltcms</groupId>
-    <version>1.2.3</version>
+    <version>1.2.4-SNAPSHOT</version>
   </parent>
   <artifactId>cross-exception</artifactId>
   <packaging>jar</packaging>
