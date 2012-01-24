@@ -2,12 +2,13 @@
 <xsl:transform version="2.0"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xalan="org.apache.xalan.xslt.extensions.Redirect"
-	extension-element-prefixes="xalan">
+        xmlns:xi="http://www.w3.org/2001/XInclude"
+	extension-element-prefixes="xalan" exclude-result-prefixes="xsl xi xalan">
+	<!--exclude-result-prefixes="#default xsl xi xalan"> -->
     <xsl:output method="xhtml" encoding="iso-8859-1"
 		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
 		indent="yes" />
-
 
     <xsl:template match="/">
         <xsl:for-each select="//content">
@@ -20,6 +21,9 @@
                     <xsl:variable name="activegroup">
                         <xsl:value-of select="@group" />
                     </xsl:variable>
+                    <xsl:variable name="activesubgroup">
+                        <xsl:value-of select="@subgroup" />
+                    </xsl:variable>
                     <xsl:variable name="filename">
                         <xsl:value-of select="$pagename" />
                         <xsl:text>.html</xsl:text>
@@ -27,6 +31,13 @@
                     <xsl:variable name="fileout">
                         <xsl:value-of select="@ident" />
                         <xsl:text>.html</xsl:text>
+                    </xsl:variable>
+                    <xsl:variable name="pathToRoot">
+                        <xsl:value-of select="./@toRoot" />
+                    </xsl:variable>
+                    <xsl:variable name="headerPathToRoot">
+                        <xsl:text>../</xsl:text>
+                        <xsl:value-of select="./@pathToRoot" />
                     </xsl:variable>
                     <trace-write>
 						writing out to
@@ -58,47 +69,109 @@
                                     </xsl:attribute>
                                     <xsl:attribute name="href">
                                         <xsl:value-of
-										select="./@toRoot" />
+										select="$pathToRoot" />
                                         <xsl:text>css/main.css</xsl:text>
                                     </xsl:attribute>
                                     <xsl:attribute name="rel">
                                         <xsl:text>stylesheet</xsl:text>
                                     </xsl:attribute>
                                 </xsl:element>
-                                <xsl:element name="script">
-                                    <xsl:attribute name="src">
-                                        <xsl:value-of
-										select="./@toRoot" />
-                                        <xsl:text>scripts/highlight.pack.js</xsl:text>
-                                    </xsl:attribute>
-                                </xsl:element>
                                 <xsl:element name="link">
+                                    <xsl:attribute name="type">
+                                        <xsl:text>text/css</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:attribute name="rel">
                                         <xsl:text>stylesheet</xsl:text>
                                     </xsl:attribute>
                                     <xsl:attribute name="href">
                                         <xsl:value-of
-										select="./@toRoot" />
-                                        <xsl:text>css/highlight.default.css</xsl:text>
+										select="$pathToRoot" />
+                                        <xsl:text>css/shCore.css</xsl:text>
                                     </xsl:attribute>
                                 </xsl:element>
-                                <script>
+                                <xsl:element name="link">
+                                    <xsl:attribute name="type">
+                                        <xsl:text>text/css</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="rel">
+                                        <xsl:text>stylesheet</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of
+										select="$pathToRoot" />
+                                        <xsl:text>css/shThemeDefault.css</xsl:text>
+                                    </xsl:attribute>
+                                </xsl:element>
+                                <xsl:element name="script">
+                                    <xsl:attribute name="type">
+                                        <xsl:text>text/javascript</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="src">
+                                        <xsl:value-of
+										select="$pathToRoot" />
+                                        <xsl:text>scripts/shCore.js</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:text>  </xsl:text>
+                                </xsl:element>
+                                <xsl:element name="script">
+                                    <xsl:attribute name="type">
+                                        <xsl:text>text/javascript</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="src">
+                                        <xsl:value-of
+										select="$pathToRoot" />
+                                        <xsl:text>scripts/shBrushJava.js</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:text>  </xsl:text>
+                                </xsl:element>
+                                
+<!--                                <script>
   hljs.tabReplace = '    ';
   hljs.initHighlightingOnLoad();
-                                </script>
+                                </script>-->
                             </xsl:element>
                             <xsl:element name="body">
-								<!--
-									<xsl:element name="div"> <xsl:attribute
-									name="class">all</xsl:attribute>
-								-->
-                                <xsl:apply-templates select="//div[@id='header']">
-                                    <xsl:with-param name="PAGENAME" select="$pagename" />
-                                    <xsl:with-param name="GROUPNAME" select="$activegroup" />
-                                </xsl:apply-templates>
-<!--                                <xsl:copy-of select="//div[@id='header']" />-->
-								<!--<xsl:apply-templates select="//div[@id='categories']" />-->
-								<!-- <div id="page">-->
+                                <xsl:element name="script">
+                                    <xsl:attribute name="type">
+                                        <xsl:text>text/javascript</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:text>SyntaxHighlighter.all()</xsl:text>
+                                </xsl:element>
+						<!-- HEADER -->	
+                                <xsl:element name="div">
+                                    <xsl:attribute name="id">header</xsl:attribute>
+                                    
+                                    <xsl:apply-templates select="//header" xsl:exclude-result-prefixes="xsl xi xalan"/>
+                                    <xsl:for-each select="//header/download">
+                                        <xsl:call-template name="DOWNLOADTEMPLATE">
+                                            <xsl:with-param name="PATHTOROOT" select="$pathToRoot" />
+                                        </xsl:call-template>
+                                    </xsl:for-each>
+                                    <xsl:for-each select="//header/siteimage">
+                                        <div id="siteimage" style="float: left clear:none;">
+                                            <xsl:element name="img">
+                                                <xsl:attribute name="src"><xsl:value-of select="$pathToRoot"/><xsl:text>img/ChromA4DSurface.png</xsl:text></xsl:attribute>
+												<xsl:attribute name="alt">Chroma4D Surface Plot</xsl:attribute>
+                                            </xsl:element>
+                                        </div>
+                                    </xsl:for-each>
+                                    
+                                    <xsl:element name="div">
+                                        <xsl:attribute name="id">categories</xsl:attribute>
+                                        <ul>
+                                            <xsl:for-each select="//categories/ref">
+                                                <li>
+                                                    <xsl:call-template name="REFTEMPLATE">
+                                                        <xsl:with-param name="PAGENAME" select="$pagename" />
+                                                        <xsl:with-param name="GROUPNAME" select="$activegroup" />
+                                                        <xsl:with-param name="PATHTOROOT" select="$pathToRoot" />
+                                                    </xsl:call-template>
+                                                </li>
+                                            </xsl:for-each>
+                                        </ul>
+                                    </xsl:element>
+                                </xsl:element>
+						<!-- NAVIGATION -->	
                                 <xsl:element name="div">
                                     <xsl:attribute name="id">nav</xsl:attribute>
                                     <div id="navcontent">
@@ -113,26 +186,21 @@
                                                         <xsl:call-template name="NAVTEMPLATE">
                                                             <xsl:with-param name="PAGENAME" select="$pagename" />
                                                             <xsl:with-param name="GROUPNAME" select="./@nname" />
+                                                            <xsl:with-param name="PATHTOROOT" select="$pathToRoot" />
                                                         </xsl:call-template>
                                                     </xsl:when>
-                                                    <!--<xsl:otherwise>green</xsl:otherwise>-->
                                                 </xsl:choose>
-<!--                                                <xsl:when test="./@ident = '$activegroup'">
-                                                    <xsl:call-template name="NAVTEMPLATE">
-                                                        <xsl:with-param name="PAGENAME" select="$pagename" />
-                                                        <xsl:with-param name="GROUPNAME" select="./@nname" />
-                                                    </xsl:call-template>
-                                                </xsl:when>-->
                                             </xsl:for-each>
                                         </xsl:element>
                                     </div>
                                 </xsl:element>
-                                <xsl:apply-templates select="child::node()">
-                                    <xsl:with-param name="PAGENAME" select="$pagename" />
-                                    <xsl:with-param name="GROUPNAME" select="$activegroup" />
-                                </xsl:apply-templates>
-								<!-- </div> -->
-                                <xsl:copy-of select="//div[@id='footer']" />
+						   <!-- CONTENT -->
+                               	<xsl:apply-templates select="child::node()">
+                                   	<xsl:with-param name="PAGENAME" select="$pagename" />
+                                   	<xsl:with-param name="GROUPNAME" select="$activegroup" />
+                                   	<xsl:with-param name="PATHTOROOT" select="$pathToRoot" />
+                               	</xsl:apply-templates>
+                                <xsl:copy-of select="//div[@id='footer']" xsl:exclude-result-prefixes="xsl xi xalan"/>
                                 
                                 <div id="sitemap">
                                     <xsl:for-each select="//group">
@@ -146,12 +214,17 @@
                                                         <xsl:call-template name="REFTEMPLATE">
                                                             <xsl:with-param name="PAGENAME" select="$pagename" />
                                                             <xsl:with-param name="GROUPNAME" select="$activegroup" />
+                                                            <xsl:with-param name="PATHTOROOT" select="$pathToRoot" />
                                                         </xsl:call-template>
                                                     </li>
                                                 </xsl:for-each>
                                                 <xsl:for-each select="./a">
                                                     <li>
-                                                        <xsl:call-template name="MATCHXHTML" />
+                                                        <xsl:call-template name="MATCHXHTML" >
+                                                            <xsl:with-param name="PAGENAME" select="$pagename" />
+                                                            <xsl:with-param name="GROUPNAME" select="$activegroup" />
+                                                            <xsl:with-param name="PATHTOROOT" select="$pathToRoot" />
+                        								</xsl:call-template>
                                                     </li>
                                                 </xsl:for-each>
                                             </ul>
@@ -166,11 +239,46 @@
         </xsl:for-each>
     </xsl:template>
 
+    <xsl:template name="DOWNLOADTEMPLATE">
+        <xsl:param name="PATHTOROOT"/>
+        <div class="download">
+            <xsl:element name="a">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="./@href"/>
+                </xsl:attribute>
+                <xsl:attribute name="title">
+                    <xsl:value-of select="./@title"/>
+                </xsl:attribute>
+				<span style="display: block; width: 160px; font-size:1em; text-align: left;">
+                    <xsl:element name="img">
+                        <xsl:attribute name="src">
+                            <xsl:value-of select="$PATHTOROOT"/>
+                            <xsl:text>img/tango-go-down-red.png</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="alt">
+                            <xsl:text>Download Image</xsl:text>
+                        </xsl:attribute>
+                    </xsl:element>
+                    <span style="float: left; margin:0.2em;">
+                        <span class="dlTitle">
+                            <xsl:value-of select="./@text"/>
+                        </span>
+                        <span class="dlSubtitle">
+                            <xsl:value-of select="./@provider"/>
+                        </span>    
+                    </span>
+                </span>
+            </xsl:element>
+        </div>
+    </xsl:template>
+
     <xsl:template name="NAVTEMPLATE">
         <xsl:param name="PAGENAME" />
         <xsl:param name="GROUPNAME" />
+        <xsl:param name="PATHTOROOT" />
         <xsl:value-of select="$GROUPNAME" />
         <xsl:element name="div">
+            <xsl:attribute name="class">nav_dotted</xsl:attribute>
             <xsl:call-template name="ATTRCLASSTEMPLATE" />
             <ul class="unbulletedlist">
                 <xsl:for-each select="./ref">
@@ -178,6 +286,7 @@
                         <xsl:call-template name="REFTEMPLATE">
                             <xsl:with-param name="PAGENAME" select="$PAGENAME" />
                             <xsl:with-param name="GROUPNAME" select="$GROUPNAME" />
+                            <xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
                         </xsl:call-template>
                     </xsl:element>
                 </xsl:for-each>
@@ -187,9 +296,17 @@
                     </xsl:element>
                 </xsl:for-each>
             </ul>
+            <xsl:for-each select="./group">
+                <xsl:call-template name="NAVTEMPLATE">
+                    <xsl:with-param name="PAGENAME" select="$PAGENAME" />
+                    <xsl:with-param name="GROUPNAME" select="./@nname" />
+                    <xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
+                </xsl:call-template>
+            </xsl:for-each>
+            
         </xsl:element>
     </xsl:template>
-
+    
     <xsl:template name="ATTRCLASSTEMPLATE">
 		<!--
 			looks, wether the last selected node contains an attribute class and
@@ -209,9 +326,21 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="ref" name="REFTEMPLATE">
+	<xsl:template match="ref">
+		<xsl:param name="PAGENAME" />
+		<xsl:param name="GROUPNAME" />
+		<xsl:param name="PATHTOROOT" />
+        <xsl:call-template name="REFTEMPLATE">
+        	<xsl:with-param name="PAGENAME" select="$PAGENAME" />
+        	<xsl:with-param name="GROUPNAME" select="$GROUPNAME" />
+        	<xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
+		</xsl:call-template>
+	</xsl:template>
+
+    <xsl:template name="REFTEMPLATE">
         <xsl:param name="PAGENAME" />
         <xsl:param name="GROUPNAME" />
+        <xsl:param name="PATHTOROOT" />
 
         <xsl:variable name="posi">
             <xsl:value-of select="./@target" />
@@ -225,16 +354,21 @@
                 </xsl:choose>
             </xsl:for-each>
         </xsl:variable>
-
         <xsl:variable name="PATHCORRECTION">
+            <!-- adapt links to current position in page tree -->
             <xsl:choose>
-                <xsl:when test="not($NNAME=$GROUPNAME) and not($GROUPNAME='')">
-                    <xsl:text>../</xsl:text>
+                <xsl:when test="@subgroup">
+                    <xsl:if test="./@subgroup=$GROUPNAME">
+                        <xsl:text>../</xsl:text>
+                    </xsl:if>
                 </xsl:when>
-                <xsl:otherwise>
-                    <xsl:text>../</xsl:text>
-                </xsl:otherwise>
+                <xsl:when test="@group">
+                    <xsl:if test="./@group=$GROUPNAME">
+                        <xsl:text>../</xsl:text>
+                    </xsl:if>
+                </xsl:when>
             </xsl:choose>
+            <xsl:value-of select="$PATHTOROOT"/>
         </xsl:variable>
 
         <xsl:choose>
@@ -269,6 +403,23 @@
 
     </xsl:template>
 
+    <xsl:template name="IMGREFTEMPLATE">
+        <xsl:param name="PATHTOROOT" />
+
+        <xsl:element name="img">
+            <xsl:attribute name="src">
+                <xsl:value-of select="$PATHTOROOT" />
+                <xsl:value-of select="./@src" />
+            </xsl:attribute>
+            <xsl:attribute name="title">
+                <xsl:value-of select="./@title" />
+            </xsl:attribute>
+            <xsl:attribute name="alt">
+                <xsl:value-of select="./@alt" />
+            </xsl:attribute>
+        </xsl:element>
+    </xsl:template>
+
     <xsl:template match="new" name="NEWTEMPLATE">
         <xsl:choose>
             <xsl:when test="./@new!=''">
@@ -283,14 +434,11 @@
     </xsl:template>
 
     <xsl:template match="column" name="COLUMNTEMPLATE">
+        <xsl:param name="PAGENAME" />
+        <xsl:param name="GROUPNAME" />
+        <xsl:param name="PATHTOROOT" />
         <xsl:element name="div">
             <xsl:call-template name="ATTRCLASSTEMPLATE" />
-            <!--<xsl:element name="div">
-                <xsl:attribute name="id">
-                    <xsl:text>pagename</xsl:text>
-                </xsl:attribute>
-                <xsl:value-of select=".././@nname" />
-            </xsl:element>-->
             <xsl:variable name="LASTCHANGED">
                 <xsl:value-of select=".././@lastchanged" />
             </xsl:variable>
@@ -302,17 +450,28 @@
                 <xsl:attribute name="id">
                     <xsl:text>colcontent</xsl:text>
                 </xsl:attribute>
-                <xsl:apply-templates />
+                <xsl:apply-templates>
+                	<xsl:with-param name="PAGENAME" select="$PAGENAME" />
+                    <xsl:with-param name="GROUPNAME" select="$GROUPNAME" />
+                    <xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
+				</xsl:apply-templates>
             </xsl:element>
         </xsl:element>
     </xsl:template>
 
     <xsl:template match="info" name="INFOTEMPLATE">
+        <xsl:param name="PAGENAME" />
+        <xsl:param name="GROUPNAME" />
+        <xsl:param name="PATHTOROOT" />
         <xsl:element name="div">
             <xsl:attribute name="class">
                 <xsl:text>heading2</xsl:text>
             </xsl:attribute>
-            <xsl:apply-templates />
+            <xsl:apply-templates>
+            	<xsl:with-param name="PAGENAME" select="$PAGENAME" />
+                <xsl:with-param name="GROUPNAME" select="$GROUPNAME" />
+                <xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
+			</xsl:apply-templates>
         </xsl:element>
 
     </xsl:template>
@@ -327,10 +486,20 @@
     </xsl:template>
 
     <xsl:template match="include" name="INCLUDETEMPLATE">
-        <xsl:apply-templates />
+        <xsl:param name="PAGENAME" />
+        <xsl:param name="GROUPNAME" />
+        <xsl:param name="PATHTOROOT" />
+        <xsl:apply-templates>
+        	<xsl:with-param name="PAGENAME" select="$PAGENAME" />
+            <xsl:with-param name="GROUPNAME" select="$GROUPNAME" />
+            <xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
+		</xsl:apply-templates>
     </xsl:template>
 
     <xsl:template match="heading" name="HEADINGTEMPLATE">
+        <xsl:param name="PAGENAME" />
+        <xsl:param name="GROUPNAME" />
+        <xsl:param name="PATHTOROOT" />
         <xsl:element name="div">
             <xsl:element name="span">
                 <xsl:attribute name="class">
@@ -338,12 +507,19 @@
                     <xsl:value-of select="./@level" />
                 </xsl:attribute>
 				<!-- sets the content of the column heading -->
-                <xsl:apply-templates />
+           		<xsl:apply-templates>
+            		<xsl:with-param name="PAGENAME" select="$PAGENAME" />
+                	<xsl:with-param name="GROUPNAME" select="$GROUPNAME" />
+                	<xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
+				</xsl:apply-templates>
             </xsl:element>
         </xsl:element>
     </xsl:template>
 
     <xsl:template match="para" name="PARATEMPLATE">
+        <xsl:param name="PAGENAME" />
+        <xsl:param name="GROUPNAME" />
+        <xsl:param name="PATHTOROOT" />
         <xsl:variable name="paratitle">
             <xsl:value-of select="./@title" />
         </xsl:variable>
@@ -356,18 +532,32 @@
                     </span>
                 </xsl:element>
             </xsl:if>
-            <xsl:apply-templates />
+           	<xsl:apply-templates>
+            	<xsl:with-param name="PAGENAME" select="$PAGENAME" />
+            	<xsl:with-param name="GROUPNAME" select="$GROUPNAME" />
+            	<xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
+			</xsl:apply-templates>
         </xsl:element>
     </xsl:template>
 
     <xsl:template match="span" name="SPANTEMPLATE">
+        <xsl:param name="PAGENAME" />
+        <xsl:param name="GROUPNAME" />
+        <xsl:param name="PATHTOROOT" />
         <xsl:copy>
             <xsl:call-template name="ATTRCLASSTEMPLATE" />
-            <xsl:apply-templates />
+           	<xsl:apply-templates>
+            	<xsl:with-param name="PAGENAME" select="$PAGENAME" />
+            	<xsl:with-param name="GROUPNAME" select="$GROUPNAME" />
+            	<xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
+			</xsl:apply-templates>
         </xsl:copy>
     </xsl:template>
 
     <xsl:template match="list" name="LISTTEMPLATE">
+        <xsl:param name="PAGENAME" />
+        <xsl:param name="GROUPNAME" />
+        <xsl:param name="PATHTOROOT" />
         <div>
             <xsl:variable name="listclass">
                 <xsl:value-of select="./@class" />
@@ -379,12 +569,19 @@
 						select="$listclass" />
                     </xsl:attribute>
                 </xsl:if>
-                <xsl:apply-templates />
+           		<xsl:apply-templates>
+            		<xsl:with-param name="PAGENAME" select="$PAGENAME" />
+            		<xsl:with-param name="GROUPNAME" select="$GROUPNAME" />
+            		<xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
+				</xsl:apply-templates>
             </xsl:element>
         </div>
     </xsl:template>
 
     <xsl:template match="item" name="ITEMTEMPLATE">
+        <xsl:param name="PAGENAME" />
+        <xsl:param name="GROUPNAME" />
+        <xsl:param name="PATHTOROOT" />
         <xsl:variable name="tindent">
             <xsl:value-of select="../@indent-items" />
         </xsl:variable>
@@ -396,7 +593,11 @@
 					select="$tindent" />
                 </xsl:attribute>
             </xsl:if>
-            <xsl:apply-templates />
+           	<xsl:apply-templates>
+           		<xsl:with-param name="PAGENAME" select="$PAGENAME" />
+           		<xsl:with-param name="GROUPNAME" select="$GROUPNAME" />
+           		<xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
+			</xsl:apply-templates>
         </xsl:element>
 
 
@@ -415,22 +616,24 @@
         </div>
     </xsl:template>
 
-	<!--
-		<xsl:template match="new" name="NEWTEMPLATE"> <span
-		class="high">new</span> </xsl:template>
-	-->
-
     <xsl:template match="copy" name="COPYRIGHT">
         <xsl:text>&#169;</xsl:text>
     </xsl:template>
 
     <xsl:template name="MATCHXHTML"
-		match="a|abbr|acronym|address|b|big|blockquote|br|cite|dfn|div|em|h1|h2|h3|h4|h5|h6|hr|i|kbd|p|pre|q|quote|samp|span|small|strong|sub|sup|tt|var|button|fieldset|form|input|label|legend|option|optgroup|select|caption|col|colgroup|table|tbody|td|tfoot|th|thead|tr|dl|dd|dt|ol|ul|li|img">
-		<!-- alle XHTML 1.1 Tags werden kopiert -->
+		match="a|abbr|acronym|address|b|big|blockquote|br|cite|code|dfn|div|em|h1|h2|h3|h4|h5|h6|hr|i|kbd|p|pre|q|quote|samp|span|small|strong|sub|sup|tt|var|button|fieldset|form|input|label|legend|option|optgroup|select|caption|col|colgroup|table|tbody|td|tfoot|th|thead|tr|dl|dd|dt|ol|ul|li|img">
 
-        <xsl:copy>
-            <xsl:copy-of select="@*" />
-            <xsl:apply-templates />
+        <xsl:param name="PAGENAME" />
+        <xsl:param name="GROUPNAME" />
+        <xsl:param name="PATHTOROOT" />
+
+        <xsl:copy xsl:exclude-result-prefixes="xsl xi xalan">
+            <xsl:copy-of select="@*" xsl:exclude-result-prefixes="xsl xi xalan"/>
+            <xsl:apply-templates>
+             	<xsl:with-param name="PAGENAME" select="$PAGENAME" />
+                <xsl:with-param name="GROUPNAME" select="$GROUPNAME" />
+                <xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
+			</xsl:apply-templates>
         </xsl:copy>
     </xsl:template>
 </xsl:transform>

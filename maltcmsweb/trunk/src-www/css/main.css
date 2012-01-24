@@ -179,13 +179,12 @@ div.nav_dotted ul.unbulletedlist li.active {
     margin-top: 1em;
     margin-bottom: 1em;
     display: block;
+	text-align: left;
 }
 .download a {
     font-family: Arial,sans-serif;
-    font-size: 1em;
     font-weight: bold;
     text-decoration: none;    
-    color: #668833;
 }
 
 .download:hover {
@@ -195,29 +194,31 @@ div.nav_dotted ul.unbulletedlist li.active {
     background-color: #AACC88;
 }
 
-.download:hover a {
-    color: #FFFFFF;
-}
-
-.download a:hover {
-    color: #FFFFFF;
-}
-
 .download a img {
     border: 0 none;
     vertical-align: middle;
     float: right;
-/*    clear: left;*/
 }
-.download span {
+.download .dlTitle {
+	display: block;
+	font-size: 0.9em;
+	color: #668833;
+}
+
+.download .dlSubtitle {
+	display: block;
     font-size: 0.6em;
     color: #99BB66;
-    text-align: center;
 }
-.download:hover span {
+.download:hover .dlTitle {
+	display: block;
+	font-size: 0.9em;
+	color: #FFFFFF;
+}
+.download:hover .dlSubtitle {
+	display: block;
     font-size: 0.6em;
     color: #CCEE99;
-    text-align: center;
 }
 #affiliation {
     clear: left;
@@ -245,7 +246,7 @@ div.nav_dotted ul.unbulletedlist li.active {
     padding: 0.5em;
 }
 #colcontent {
-    background: url("img/background.png") repeat-x scroll 0 0 transparent;
+    background: url("/img/background.png") repeat-x scroll 0 0 transparent;
     min-height: 25em;
     padding-left: 0.5em;
     padding-right: 0.5em;
@@ -283,12 +284,10 @@ div.nav_dotted ul.unbulletedlist li.active {
 }
 #navRight {
     background-color: transparent;
-    border: 1px solid;
-    clear: left;
     float: left;
     margin: 0.5em 0.5em 0.5em 0;
     padding: 0.5em;
-    width: 15em;
+    width: 25%;
 }
 #categories ul li a:hover {
     color: #FFFFFF;

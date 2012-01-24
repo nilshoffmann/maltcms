@@ -23,7 +23,7 @@
 			<li>peak area integration based on 2D-TIC</li>
 			<li>multiple alignment and peak matching based on mass spectral similarities</li>
 		</ul>
-            <h1><ref target="maui/index" alt="Maui"/>, formerly ChromAUI</h1>
+            <h1><ref target="maui/index" alt="Maui"/></h1>
 		<ul>
 			<li>Netbeans RCP based user interface to Maltcms, ChromA and ChromA4D</li>
 			<li>visual definition and editing of processing pipelines</li>

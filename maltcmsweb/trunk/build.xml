@@ -93,6 +93,15 @@
 			<arg value="-in" />
 			<arg value="${build-www.dir}/site-xinclude.xml" />
 			<arg value="-xsl" />
+			<arg value="${build-www.dir}/strip-namespaces.xsl" />
+			<arg value="-out" />
+			<arg value="${build-www.dir}/site-xinclude-stripped.xml" />
+			<classpath refid="MaltcmsWeb.classpath" />
+		</java>
+		<java fork="true" classname="org.apache.xalan.xslt.Process" failonerror="true" inputstring="">
+			<arg value="-in" />
+			<arg value="${build-www.dir}/site-xinclude-stripped.xml" />
+			<arg value="-xsl" />
 			<arg value="${build-www.dir}/transform.xsl" />
 			<arg value="-out" />
 			<arg value="${build-www.dir}/siteOut.txt" />
@@ -110,7 +119,7 @@
 		-->
 		<mkdir dir="${release_dir}/site" />
 		<copy toDir="${release_dir}/site" includeemptydirs="false">
-			<fileset dir="${build-www.dir}/" excludes="**/*.xml,transform.xsl,site-xinclude.xml,siteOut.txt" />
+			<fileset dir="${build-www.dir}/" excludes="**/*.xml,transform.xsl,site-xinclude.xml,siteOut.txt,strip-namespaces.xsl" />
 		</copy>
 		<!--<mkdir dir="${release_dir}/site/chromaui" />
 		<copy toDir="${release_dir}/site/chromaui" includeemptydirs="true">
