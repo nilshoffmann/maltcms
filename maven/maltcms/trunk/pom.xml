@@ -202,7 +202,7 @@
                                         <arg value="-avtruP"/>
                                         <arg value="-e ssh "/>
                                         <arg value="target/site/"/>
-                                        <arg value="${sf.username},maltcms@web.sourceforge.net:htdocs/maven/maltcms/"/>
+                                        <arg value="${sf.username},maltcms@web.sourceforge.net:htdocs/maven/maltcms/${project.version}"/>
                                     </exec>
                                 </target>
                             </configuration>
