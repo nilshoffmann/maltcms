@@ -55,6 +55,12 @@
         <property name="epsilon" value="1.0"/>
         <property name="excludeMasses">
             <list>
+            <!-- <value>73</value> -->
+            <!-- <value>74</value> --> 
+            <!-- <value>75</value> --> 
+            <!-- <value>147</value> --> 
+            <!-- <value>148</value> --> 
+            <!-- <value>149</value> --> 
             </list>
         </property>
     </bean>
