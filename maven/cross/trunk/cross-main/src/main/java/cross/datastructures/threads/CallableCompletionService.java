@@ -35,6 +35,7 @@ import java.util.concurrent.*;
  * 
  * 
  */
+@Deprecated
 public class CallableCompletionService<T> implements Iterable<T> {
 
 	private class ResultIterator implements Iterator<T> {

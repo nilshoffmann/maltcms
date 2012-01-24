@@ -86,7 +86,7 @@ public class ObjectFactory implements IObjectFactory {
     private <T> T configureType(final T t, final Configuration cfg) {
         if (t instanceof IConfigurable) {
             if (cfg == null || cfg.isEmpty()) {
-                log.error(
+                log.warn(
                         "ObjectFactory's configuration is null or empty! Skipping configuration of {}",
                         t.getClass().getName());
                 return t;

@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
  *
  */
+@Deprecated
 public class PropertyFileGenerator {
 
     /**

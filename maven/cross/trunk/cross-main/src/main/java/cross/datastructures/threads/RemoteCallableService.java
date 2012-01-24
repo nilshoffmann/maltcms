@@ -33,6 +33,7 @@ import java.util.concurrent.Callable;
  * 
  * 
  */
+@Deprecated
 public class RemoteCallableService implements IRemoteCallable {
 
         @Override
