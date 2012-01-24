@@ -23,13 +23,7 @@ package cross.datastructures.threads;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 /**
  * Proxy for different ExecutorService implementations.
@@ -72,62 +66,75 @@ public class ExecutorsManager implements ExecutorService {
 		this.es = Executors.newFixedThreadPool(this.maxThreads);
 	}
 
+    @Override
 	public boolean awaitTermination(final long timeout, final TimeUnit unit)
 	        throws InterruptedException {
 		return this.es.awaitTermination(timeout, unit);
 	}
 
+    @Override
 	public void execute(final Runnable command) {
 		this.es.execute(command);
 	}
 
+    @Override
 	public <T> List<Future<T>> invokeAll(
 	        final Collection<? extends Callable<T>> tasks)
 	        throws InterruptedException {
 		return this.es.invokeAll(tasks);
 	}
 
+    @Override
 	public <T> List<Future<T>> invokeAll(
 	        final Collection<? extends Callable<T>> tasks, final long timeout,
 	        final TimeUnit unit) throws InterruptedException {
 		return this.es.invokeAll(tasks, timeout, unit);
 	}
 
+    @Override
 	public <T> T invokeAny(final Collection<? extends Callable<T>> tasks)
 	        throws InterruptedException, ExecutionException {
 		return this.es.invokeAny(tasks);
 	}
 
+    @Override
 	public <T> T invokeAny(final Collection<? extends Callable<T>> tasks,
 	        final long timeout, final TimeUnit unit)
 	        throws InterruptedException, ExecutionException, TimeoutException {
 		return this.es.invokeAny(tasks, timeout, unit);
 	}
 
+    @Override
 	public boolean isShutdown() {
 		return this.es.isShutdown();
 	}
 
+    @Override
 	public boolean isTerminated() {
 		return this.es.isTerminated();
 	}
 
+    @Override
 	public void shutdown() {
 		this.es.shutdown();
 	}
 
+    @Override
 	public List<Runnable> shutdownNow() {
 		return this.es.shutdownNow();
 	}
 
+    @Override
 	public <T> Future<T> submit(final Callable<T> task) {
 		return this.es.submit(task);
 	}
 
+    @Override
 	public Future<?> submit(final Runnable task) {
 		return this.es.submit(task);
 	}
 
+    @Override
 	public <T> Future<T> submit(final Runnable task, final T result) {
 		return this.es.submit(task, result);
 	}

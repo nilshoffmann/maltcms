@@ -23,11 +23,7 @@ package cross.datastructures.threads;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.*;
 
 /**
  * Allows the creation of a CompletionService which can create an iterator over

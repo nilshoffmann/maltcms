@@ -24,6 +24,8 @@
  */
 package cross.datastructures.fragments;
 
+import cross.datastructures.StatsMap;
+import cross.exception.ResourceNotAvailableException;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -32,13 +34,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.jdom.Element;
-
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
-import cross.datastructures.StatsMap;
-import cross.exception.ResourceNotAvailableException;
 
 /**
  * Immutable Variant of a FileFragment. All set operations will throw
@@ -69,6 +67,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @param fragments
      * @see cross.datastructures.fragments.IFileFragment#addChildren(cross.datastructures.fragments.IVariableFragment[])
      */
+    @Override
     public void addChildren(final IVariableFragment... fragments) {
         throw new UnsupportedOperationException();
     }
@@ -77,6 +76,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @param dims1
      * @see cross.datastructures.fragments.IFileFragment#addDimensions(ucar.nc2.Dimension[])
      */
+    @Override
     public void addDimensions(final Dimension... dims1) {
         throw new UnsupportedOperationException();
     }
@@ -85,6 +85,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @param c
      * @see cross.datastructures.fragments.IFileFragment#addSourceFile(java.util.Collection)
      */
+    @Override
     public void addSourceFile(final Collection<IFileFragment> c) {
         throw new UnsupportedOperationException();
     }
@@ -93,6 +94,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @param ff
      * @see cross.datastructures.fragments.IFileFragment#addSourceFile(cross.datastructures.fragments.IFileFragment[])
      */
+    @Override
     public void addSourceFile(final IFileFragment... ff) {
         throw new UnsupportedOperationException();
     }
@@ -101,6 +103,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @param e
      * @see cross.datastructures.fragments.IFileFragment#appendXML(org.jdom.Element)
      */
+    @Override
     public void appendXML(final Element e) {
         this.frag.appendXML(e);
     }
@@ -123,6 +126,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @see cross.datastructures.fragments.IFragment#compare(cross.datastructures.fragments.IFragment,
      *      cross.datastructures.fragments.IFragment)
      */
+    @Override
     public int compare(final IFragment arg0, final IFragment arg1) {
         return this.frag.compare(arg0, arg1);
     }
@@ -132,6 +136,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFragment#compareTo(java.lang.Object)
      */
+    @Override
     public int compareTo(final Object arg0) {
         return this.frag.compareTo(arg0);
     }
@@ -150,6 +155,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFileFragment#getAbsolutePath()
      */
+    @Override
     public String getAbsolutePath() {
         return this.frag.getAbsolutePath();
     }
@@ -159,6 +165,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFragment#getAttribute(ucar.nc2.Attribute)
      */
+    @Override
     public Attribute getAttribute(final Attribute a) {
         return this.frag.getAttribute(a);
     }
@@ -168,6 +175,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFragment#getAttribute(java.lang.String)
      */
+    @Override
     public Attribute getAttribute(final String name) {
         return this.frag.getAttribute(name);
     }
@@ -176,6 +184,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFragment#getAttributes()
      */
+    @Override
     public List<Attribute> getAttributes() {
         return this.frag.getAttributes();
     }
@@ -186,6 +195,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @throws ResourceNotAvailableException
      * @see cross.datastructures.fragments.IFileFragment#getChild(java.lang.String)
      */
+    @Override
     public IVariableFragment getChild(final String varname)
             throws ResourceNotAvailableException {
         return new ImmutableVariableFragment(this.frag.getChild(varname));
@@ -198,6 +208,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @throws ResourceNotAvailableException
      * @see {@link cross.datastructures.fragments.IFileFragment#getChild(String, boolean)}
      */
+    @Override
     public IVariableFragment getChild(final String varname,
             final boolean loadStructureOnly)
             throws ResourceNotAvailableException {
@@ -208,6 +219,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFileFragment#getID()
      */
+    @Override
     public long getID() {
         return this.frag.getID();
     }
@@ -216,6 +228,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFileFragment#getName()
      */
+    @Override
     public String getName() {
         return this.frag.getName();
     }
@@ -224,6 +237,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFileFragment#getParent()
      */
+    @Override
     public IGroupFragment getParent() {
         return this.frag.getParent();
     }
@@ -232,6 +246,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFileFragment#getSize()
      */
+    @Override
     public int getSize() {
         return this.frag.getSize();
     }
@@ -240,6 +255,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFileFragment#getSourceFiles()
      */
+    @Override
     public Collection<IFileFragment> getSourceFiles() {
         final Collection<IFileFragment> c = this.frag.getSourceFiles();
         final ArrayList<IFileFragment> cret = new ArrayList<IFileFragment>();
@@ -253,6 +269,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFragment#getStats()
      */
+    @Override
     public StatsMap getStats() {
         return this.frag.getStats();
     }
@@ -262,6 +279,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFragment#hasAttribute(ucar.nc2.Attribute)
      */
+    @Override
     public boolean hasAttribute(final Attribute a) {
         return this.frag.hasAttribute(a);
     }
@@ -271,6 +289,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFragment#hasAttribute(java.lang.String)
      */
+    @Override
     public boolean hasAttribute(final String name) {
         return this.frag.hasAttribute(name);
     }
@@ -280,6 +299,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IGroupFragment#hasChild(cross.datastructures.fragments.IVariableFragment)
      */
+    @Override
     public boolean hasChild(final IVariableFragment vf) {
         return this.frag.hasChild(vf);
     }
@@ -289,6 +309,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IGroupFragment#hasChild(java.lang.String)
      */
+    @Override
     public boolean hasChild(final String varname) {
         return this.frag.hasChild(varname);
     }
@@ -298,6 +319,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFileFragment#hasChildren(cross.datastructures.fragments.IVariableFragment[])
      */
+    @Override
     public boolean hasChildren(final IVariableFragment... vf) {
         return this.frag.hasChildren(vf);
     }
@@ -307,6 +329,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFileFragment#hasChildren(java.lang.String[])
      */
+    @Override
     public boolean hasChildren(final String... s) {
         return this.frag.hasChildren(s);
     }
@@ -316,6 +339,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * 
      * @see cross.datastructures.fragments.IFileFragment#isModified()
      */
+    @Override
     public boolean isModified() {
         return false;
     }
@@ -324,6 +348,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFileFragment#iterator()
      */
+    @Override
     public Iterator<IVariableFragment> iterator() {
         final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
         final Iterator<IVariableFragment> iter = this.frag.iterator();
@@ -337,6 +362,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IGroupFragment#nextGID()
      */
+    @Override
     public long nextGID() {
         return this.frag.nextGID();
     }
@@ -364,6 +390,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @param variableFragment
      * @see cross.datastructures.fragments.IFileFragment#removeChild(cross.datastructures.fragments.IVariableFragment)
      */
+    @Override
     public void removeChild(final IVariableFragment variableFragment) {
         throw new UnsupportedOperationException();
     }
@@ -393,6 +420,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @return
      * @see cross.datastructures.fragments.IFileFragment#save()
      */
+    @Override
     public boolean save() {
         return this.frag.save();
     }
@@ -401,7 +429,13 @@ public class ImmutableFileFragment implements IFileFragment {
      * @param a
      * @see cross.datastructures.fragments.IFragment#setAttributes(ucar.nc2.Attribute[])
      */
+    @Override
     public void setAttributes(final Attribute... a) {
+        throw new UnsupportedOperationException();
+    }
+    
+    @Override
+    public void addAttribute(Attribute a) {
         throw new UnsupportedOperationException();
     }
 
@@ -409,6 +443,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @param f1
      * @see cross.datastructures.fragments.IFileFragment#setFile(java.io.File)
      */
+    @Override
     public void setFile(final File f1) {
         throw new UnsupportedOperationException();
     }
@@ -417,6 +452,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @param file
      * @see cross.datastructures.fragments.IFileFragment#setFile(java.lang.String)
      */
+    @Override
     public void setFile(final String file) {
         throw new UnsupportedOperationException();
     }
@@ -425,6 +461,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @param id
      * @see cross.datastructures.fragments.IGroupFragment#setID(long)
      */
+    @Override
     public void setID(final long id) {
         throw new UnsupportedOperationException();
     }
@@ -433,6 +470,7 @@ public class ImmutableFileFragment implements IFileFragment {
      * @param stats1
      * @see cross.datastructures.fragments.IFragment#setStats(cross.datastructures.StatsMap)
      */
+    @Override
     public void setStats(final StatsMap stats1) {
         throw new UnsupportedOperationException();
     }

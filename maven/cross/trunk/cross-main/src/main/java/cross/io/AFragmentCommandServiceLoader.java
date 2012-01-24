@@ -21,23 +21,15 @@
  */
 package cross.io;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ServiceLoader;
-import java.util.Set;
-
-import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
-
 import cross.IConfigurable;
 import cross.Logging;
 import cross.ObjectFactory;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
 import cross.tools.StringTools;
+import java.util.*;
+import org.apache.commons.configuration.Configuration;
+import org.slf4j.Logger;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE

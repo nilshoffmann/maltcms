@@ -21,28 +21,6 @@
  */
 package cross.datastructures.tools;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
-
-import org.slf4j.Logger;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayChar;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
-import ucar.ma2.DataType;
-import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.Logging;
 import cross.datastructures.fragments.FileFragment;
@@ -52,6 +30,13 @@ import cross.datastructures.fragments.VariableFragment;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSourceFactory;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Level;
+import org.slf4j.Logger;
+import ucar.ma2.*;
+import ucar.nc2.Dimension;
 
 /**
  * Utility class providing methods for storing and retrieving of Arrays,

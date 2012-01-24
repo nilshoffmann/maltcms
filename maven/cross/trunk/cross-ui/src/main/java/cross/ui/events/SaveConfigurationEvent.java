@@ -21,9 +21,8 @@
  */
 package cross.ui.events;
 
-import org.apache.commons.configuration.Configuration;
-
 import cross.event.IEventSource;
+import org.apache.commons.configuration.Configuration;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE

@@ -25,21 +25,18 @@
  */
 package cross.io.misc;
 
+import cross.Factory;
+import cross.Logging;
+import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.tools.EvalTools;
+import cross.exception.NotImplementedException;
+import cross.exception.ResourceNotAvailableException;
 import java.io.IOException;
-import java.util.Iterator;
-
 import org.slf4j.Logger;
-
 import ucar.ma2.Array;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
 import ucar.nc2.Dimension;
-import cross.Factory;
-import cross.Logging;
-import cross.datastructures.fragments.IVariableFragment;
-import cross.exception.NotImplementedException;
-import cross.exception.ResourceNotAvailableException;
-import cross.datastructures.tools.EvalTools;
 
 /**
  * TODO Due for Maltcms-2.0

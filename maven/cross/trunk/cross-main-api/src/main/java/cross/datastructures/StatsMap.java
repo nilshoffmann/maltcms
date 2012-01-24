@@ -21,11 +21,10 @@
  */
 package cross.datastructures;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IFragment;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * StatsMap stores values corresponding to Vars, associated to a given Fragment

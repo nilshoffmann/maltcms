@@ -21,9 +21,6 @@
  */
 package cross.datastructures.pipeline;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
@@ -32,6 +29,7 @@ import cross.datastructures.workflow.IWorkflowResult;
 import cross.event.IEvent;
 import cross.event.IListener;
 import cross.io.xml.IXMLSerializable;
+import java.util.Iterator;
 import java.util.List;
 
 /**

@@ -25,11 +25,9 @@
  */
 package cross.ui.filefilters;
 
-import java.io.File;
-
-import javax.swing.filechooser.FileFilter;
-
 import cross.tools.StringTools;
+import java.io.File;
+import javax.swing.filechooser.FileFilter;
 
 public class PropertiesFileFilter extends FileFilter {
 

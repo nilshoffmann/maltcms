@@ -24,15 +24,13 @@
  */
 package cross.datastructures.fragments;
 
+import cross.exception.ResourceNotAvailableException;
 import java.io.Externalizable;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
-
 import org.jdom.Element;
-
 import ucar.nc2.Dimension;
-import cross.exception.ResourceNotAvailableException;
 
 /**
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de

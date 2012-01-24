@@ -22,21 +22,19 @@
 
 package cross.io.misc;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-
-import org.slf4j.Logger;
-
-import ucar.ma2.InvalidRangeException;
-import ucar.ma2.Range;
 import cross.Factory;
 import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
-import cross.exception.NotImplementedException;
 import cross.datastructures.tools.EvalTools;
+import cross.exception.NotImplementedException;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import org.slf4j.Logger;
+import ucar.ma2.InvalidRangeException;
+import ucar.ma2.Range;
 
 /**
  * This class is used to parse a String representation of a file structure into

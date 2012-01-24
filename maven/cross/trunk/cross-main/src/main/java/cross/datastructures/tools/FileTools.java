@@ -21,21 +21,18 @@
  */
 package cross.datastructures.tools;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import org.slf4j.Logger;
-
 import cross.Factory;
 import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.tools.StringTools;
-import java.util.Stack;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
 
 /**
  * Utility class to ease handling of files and directories.

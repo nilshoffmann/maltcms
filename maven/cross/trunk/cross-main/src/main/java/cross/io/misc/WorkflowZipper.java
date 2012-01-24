@@ -21,28 +21,20 @@
  */
 package cross.io.misc;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import cross.Factory;
+import cross.IConfigurable;
+import cross.Logging;
+import cross.datastructures.tools.FileTools;
+import cross.datastructures.workflow.IWorkflow;
+import cross.datastructures.workflow.IWorkflowFileResult;
+import cross.datastructures.workflow.IWorkflowResult;
+import java.io.*;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
-
-import cross.Factory;
-import cross.IConfigurable;
-import cross.Logging;
-import cross.datastructures.workflow.IWorkflow;
-import cross.datastructures.workflow.IWorkflowFileResult;
-import cross.datastructures.workflow.IWorkflowResult;
-import cross.datastructures.tools.FileTools;
 
 /**
  * If configured to do so, zips all elements of a given <code>IWorkflow</code>

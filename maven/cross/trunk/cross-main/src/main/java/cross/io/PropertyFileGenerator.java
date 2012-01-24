@@ -21,27 +21,18 @@
  */
 package cross.io;
 
+import cross.annotations.AnnotationInspector;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.cli.ParseException;
-
+import org.apache.commons.cli.*;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.LoggerFactory;
-
-import cross.annotations.AnnotationInspector;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.PosixParser;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE

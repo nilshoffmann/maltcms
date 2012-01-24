@@ -21,12 +21,10 @@
  */
 package cross.io.misc;
 
+import cross.IConfigurable;
 import java.io.File;
 import java.io.FileFilter;
-
 import org.apache.commons.configuration.Configuration;
-
-import cross.IConfigurable;
 
 /**
  * Matches any given file.

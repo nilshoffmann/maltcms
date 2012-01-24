@@ -4,9 +4,7 @@
 package net.sf.maltcms.math;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 import net.sf.maltcms.datastructures.IElementProvider;
 
 /**

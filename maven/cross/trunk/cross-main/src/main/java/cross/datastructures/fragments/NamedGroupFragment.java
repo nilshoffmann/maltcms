@@ -22,13 +22,11 @@
 
 package cross.datastructures.fragments;
 
+import cross.Logging;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.jdom.Element;
 import org.slf4j.Logger;
-
-import cross.Logging;
 
 /**
  * Represents a VariableFragment group with a given (unique) name.
@@ -61,6 +59,7 @@ public class NamedGroupFragment extends Fragment implements IGroupFragment {
 	 * 
 	 * @param fragments
 	 */
+    @Override
 	public synchronized void addChildren(final IVariableFragment... fragments) {
 		for (final IVariableFragment vf : fragments) {
 			this.log.debug("Adding " + vf.getVarname() + " to group "
@@ -83,6 +82,7 @@ public class NamedGroupFragment extends Fragment implements IGroupFragment {
 
 	}
 
+    @Override
 	public IVariableFragment getChild(final String varname) {
 		if (hasChild(varname)) {
 			return this.children.get(varname);
@@ -93,34 +93,42 @@ public class NamedGroupFragment extends Fragment implements IGroupFragment {
 
 	}
 
+    @Override
 	public String getName() {
 		return this.name;
 	}
 
+    @Override
 	public IGroupFragment getParent() {
 		return this.parentGroup;
 	}
 
+    @Override
 	public int getSize() {
 		return this.children.size();
 	}
 
+    @Override
 	public boolean hasChild(final IVariableFragment vf) {
 		return hasChild(vf.getVarname());
 	}
 
+    @Override
 	public boolean hasChild(final String varname) {
 		return this.children.containsKey(varname);
 	}
 
+    @Override
 	public Iterator<IVariableFragment> iterator() {
 		return this.children.values().iterator();
 	}
 
+    @Override
 	public long nextGID() {
 		return this.parentGroup.nextGID();
 	}
 
+    @Override
 	public void setID(final long id1) {
 		if (this.id == -1) {
 			this.id = id1;

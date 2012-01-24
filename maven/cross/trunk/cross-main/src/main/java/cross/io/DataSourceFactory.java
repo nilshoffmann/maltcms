@@ -21,19 +21,16 @@
  */
 package cross.io;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.commons.configuration.Configuration;
-
 import cross.Factory;
 import cross.Logging;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.EvalTools;
-import cross.tools.StringTools;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration.Configuration;
 
 /**
  * Factory managing objects of type <code>IDataSource</code>. Objects can be

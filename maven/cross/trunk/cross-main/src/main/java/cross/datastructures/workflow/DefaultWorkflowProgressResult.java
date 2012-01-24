@@ -22,9 +22,8 @@
  */
 package cross.datastructures.workflow;
 
-import org.jdom.Element;
-
 import cross.datastructures.tools.EvalTools;
+import org.jdom.Element;
 
 /**
  * To avoid numerous instances of this object, you should only instantiate it

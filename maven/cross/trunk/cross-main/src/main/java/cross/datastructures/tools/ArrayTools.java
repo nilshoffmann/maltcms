@@ -22,24 +22,13 @@
 
 package cross.datastructures.tools;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-
+import cross.exception.ConstraintViolationException;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayChar;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.InvalidRangeException;
-import ucar.ma2.MAMath;
 import ucar.ma2.ArrayChar.StringIterator;
+import ucar.ma2.*;
 import ucar.nc2.Dimension;
-import cross.exception.ConstraintViolationException;
 
 /**
  * Utility class providing methods for Sparse and Dense Arrays.

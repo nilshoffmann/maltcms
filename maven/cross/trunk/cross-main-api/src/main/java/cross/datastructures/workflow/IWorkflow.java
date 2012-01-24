@@ -22,21 +22,19 @@
 
 package cross.datastructures.workflow;
 
+import cross.IConfigurable;
+import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.pipeline.ICommandSequence;
+import cross.datastructures.tuple.TupleND;
+import cross.event.IEventSource;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
-
 import org.apache.commons.configuration.Configuration;
 import org.jdom.Element;
-
-import cross.IConfigurable;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.pipeline.ICommandSequence;
-import cross.datastructures.tuple.TupleND;
-import cross.event.IEventSource;
 
 /**
  * Workflow models a sequence of produced IWorkflowResults, which usually are

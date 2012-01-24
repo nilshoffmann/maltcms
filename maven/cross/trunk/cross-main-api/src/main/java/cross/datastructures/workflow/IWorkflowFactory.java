@@ -23,7 +23,6 @@ package cross.datastructures.workflow;
 
 import cross.IConfigurable;
 import cross.datastructures.pipeline.ICommandSequence;
-import cross.datastructures.workflow.IWorkflow;
 import java.util.Date;
 import org.apache.commons.configuration.Configuration;
 

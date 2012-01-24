@@ -21,29 +21,6 @@
  */
 package cross;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
-import java.util.logging.Level;
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.ConfigurationUtils;
-import org.apache.commons.configuration.FileConfiguration;
-import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.FileFragmentFactory;
@@ -53,19 +30,35 @@ import cross.datastructures.pipeline.CommandPipeline;
 import cross.datastructures.pipeline.ICommandSequence;
 import cross.datastructures.threads.ExecutorsManager;
 import cross.datastructures.threads.ExecutorsManager.ExecutorType;
-import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.IWorkflow;
-import cross.datastructures.workflow.WorkflowFactory;
-import cross.io.DataSourceFactory;
-import cross.io.InputDataFactory;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
+import cross.datastructures.tuple.TupleND;
+import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowFactory;
+import cross.datastructures.workflow.WorkflowFactory;
 import cross.exception.ConstraintViolationException;
+import cross.io.DataSourceFactory;
 import cross.io.IDataSourceFactory;
 import cross.io.IInputDataFactory;
+import cross.io.InputDataFactory;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.configuration.*;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -166,6 +159,7 @@ public class Factory implements ConfigurationListener {
     /**
      * Listen to ConfigurationEvents.
      */
+    @Override
     public void configurationChanged(final ConfigurationEvent arg0) {
         Factory.getInstance().log.debug("Configuration changed for property: "
                 + arg0.getPropertyName() + " to value "

@@ -23,13 +23,7 @@
 package cross.datastructures.tuple;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 /**
  * Abstract class for N-Tuples of type T, providing different utility methods,

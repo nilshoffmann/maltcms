@@ -22,23 +22,20 @@
 
 package cross.datastructures.tools;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.regex.Pattern;
-
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import cross.datastructures.StatsMap;
 import cross.datastructures.fragments.Context;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ConstraintViolationException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.regex.Pattern;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for evaluation of constraints and evaluation of Scripts.

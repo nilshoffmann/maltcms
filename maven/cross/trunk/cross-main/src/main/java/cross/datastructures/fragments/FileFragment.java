@@ -21,40 +21,22 @@
  */
 package cross.datastructures.fragments;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-
-import org.jdom.Element;
-import org.slf4j.Logger;
-
-import ucar.ma2.ArrayChar;
-import ucar.nc2.Attribute;
-import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.Logging;
 import cross.datastructures.StatsMap;
-import cross.exception.ResourceNotAvailableException;
-import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
 import cross.datastructures.tools.FragmentTools;
+import cross.exception.ResourceNotAvailableException;
+import cross.io.IDataSource;
 import cross.tools.StringTools;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
+import java.io.*;
+import java.util.*;
+import org.jdom.Element;
+import org.slf4j.Logger;
+import ucar.ma2.ArrayChar;
+import ucar.nc2.Attribute;
+import ucar.nc2.Dimension;
 
 /**
  * FileFragment can be considered the root element of a Tree of
@@ -953,6 +935,11 @@ public class FileFragment implements IFileFragment {
     @Override
     public void setAttributes(final Attribute... a) {
         this.fragment.setAttributes(a);
+    }
+    
+    @Override
+    public void addAttribute(Attribute a) {
+        this.fragment.addAttribute(a);
     }
 
     /*

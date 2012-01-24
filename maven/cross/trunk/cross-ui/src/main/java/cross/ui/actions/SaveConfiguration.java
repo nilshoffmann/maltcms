@@ -25,14 +25,6 @@
  */
 package cross.ui.actions;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.Icon;
-import javax.swing.filechooser.FileFilter;
-
-import org.apache.commons.configuration.Configuration;
-
 import cross.event.EventSource;
 import cross.event.IEvent;
 import cross.event.IEventSource;
@@ -40,6 +32,11 @@ import cross.event.IListener;
 import cross.ui.SaveConfigurationDialog;
 import cross.ui.events.SaveConfigurationEvent;
 import cross.ui.filefilters.PropertiesFileFilter;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Icon;
+import javax.swing.filechooser.FileFilter;
+import org.apache.commons.configuration.Configuration;
 
 /**
  * @author hoffmann

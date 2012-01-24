@@ -22,27 +22,17 @@
 
 package cross.ui;
 
-import java.util.Iterator;
-
-import javax.swing.AbstractAction;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.PropertiesConfiguration;
-
 import cross.event.IEvent;
 import cross.event.IEventSource;
 import cross.event.IListener;
 import cross.ui.actions.LoadConfiguration;
 import cross.ui.actions.SaveConfiguration;
+import java.util.Iterator;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
  * Visual Editor to assemble pipelines of FragmentCommands, save them, reload

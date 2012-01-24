@@ -25,10 +25,9 @@
  */
 package cross.ui.events;
 
-import org.apache.commons.configuration.Configuration;
-
 import cross.event.AEvent;
 import cross.event.IEventSource;
+import org.apache.commons.configuration.Configuration;
 
 public class ConfigurationEvent extends AEvent<Configuration> {
 

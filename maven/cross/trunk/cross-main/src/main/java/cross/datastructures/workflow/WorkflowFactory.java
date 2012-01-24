@@ -21,22 +21,14 @@
  */
 package cross.datastructures.workflow;
 
-import java.io.File;
+import cross.Factory;
+import cross.datastructures.pipeline.ICommandSequence;
+import cross.exception.NotInitializedException;
 import java.util.Date;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.PropertiesConfiguration;
-
-import cross.Factory;
-import cross.applicationContext.DefaultApplicationContextFactory;
-import cross.datastructures.pipeline.ICommandSequence;
-import cross.exception.NotInitializedException;
-import cross.datastructures.tools.FileTools;
-import cross.tools.StringTools;
-import java.util.List;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
 
 /**
  * Factory for the creation of {@link cross.datastructures.workflow.IWorkflow}

@@ -21,9 +21,8 @@
  */
 package cross.datastructures.workflow;
 
-import java.io.File;
-
 import cross.datastructures.fragments.IFileFragment;
+import java.io.File;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE

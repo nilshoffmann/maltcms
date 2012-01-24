@@ -22,55 +22,33 @@
 package cross.datastructures.workflow;
 
 import cross.Factory;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
+import cross.annotations.Configurable;
+import cross.commands.fragments.AFragmentCommand;
+import cross.commands.fragments.IFragmentCommand;
+import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.pipeline.ICommandSequence;
+import cross.datastructures.tuple.TupleND;
+import cross.event.*;
+import cross.exception.ConstraintViolationException;
+import cross.io.misc.DefaultConfigurableFileFilter;
+import cross.io.xml.IXMLSerializable;
+import cross.tools.StringTools;
+import java.io.*;
+import java.util.*;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.ProcessingInstruction;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-
-//import cross.Factory;
-import cross.annotations.Configurable;
-import cross.commands.fragments.AFragmentCommand;
-import cross.commands.fragments.IFragmentCommand;
-import cross.datastructures.ehcache.CacheFactory;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.pipeline.ICommandSequence;
-import cross.datastructures.tools.FileTools;
-import cross.event.AEvent;
-import cross.event.EventSource;
-import cross.event.IEvent;
-import cross.event.IEventSource;
-import cross.event.IListener;
-import cross.io.misc.BinaryFileBase64Wrapper;
-import cross.io.misc.DefaultConfigurableFileFilter;
-import cross.io.misc.WorkflowZipper;
-import cross.io.xml.IXMLSerializable;
-import cross.datastructures.tuple.TupleND;
-import cross.exception.ConstraintViolationException;
-import cross.tools.StringTools;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
  * A default implementation of {@link cross.datastructures.workflow.IWorkflow}.

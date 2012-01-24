@@ -24,35 +24,23 @@
  */
 package cross.datastructures.pipeline;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Formatter;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.configuration.Configuration;
-import org.jdom.Element;
-
 import cross.Factory;
 import cross.IConfigurable;
 import cross.annotations.AnnotationInspector;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.TupleND;
+import cross.datastructures.workflow.DefaultWorkflowStatisticsResult;
 import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowResult;
+import cross.datastructures.workflow.WorkflowSlot;
 import cross.event.IEvent;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
-import cross.datastructures.tools.EvalTools;
-import cross.datastructures.workflow.DefaultWorkflowStatisticsResult;
-import cross.datastructures.workflow.WorkflowSlot;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -60,6 +48,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.maltcms.execution.api.ExecutionFactory;
 import net.sf.maltcms.execution.api.Impaxs;
+import org.apache.commons.configuration.Configuration;
+import org.jdom.Element;
 
 /**
  * Implementation of ICommandSequence for a linear sequence of commands.

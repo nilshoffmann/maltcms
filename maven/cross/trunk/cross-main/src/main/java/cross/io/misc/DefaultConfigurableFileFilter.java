@@ -22,17 +22,15 @@
  */
 package cross.io.misc;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.List;
-
-import org.apache.commons.configuration.Configuration;
-import java.util.Arrays;
-import org.slf4j.Logger;
-
 import cross.IConfigurable;
 import cross.Logging;
 import cross.tools.StringTools;
+import java.io.File;
+import java.io.FileFilter;
+import java.util.Arrays;
+import java.util.List;
+import org.apache.commons.configuration.Configuration;
+import org.slf4j.Logger;
 
 /**
  * Filter matching Image and Text-File formats (configurable).

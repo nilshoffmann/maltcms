@@ -22,18 +22,15 @@
 
 package cross.io;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.event.ConfigurationListener;
-
-import ucar.ma2.Array;
 import cross.IConfigurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.exception.ResourceNotAvailableException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.configuration.event.ConfigurationListener;
+import ucar.ma2.Array;
 
 /**
  * Interface describing access to a IDataSource, which could be either a file on

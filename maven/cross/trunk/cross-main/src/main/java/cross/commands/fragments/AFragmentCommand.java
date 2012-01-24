@@ -21,38 +21,31 @@
  */
 package cross.commands.fragments;
 
-import java.io.File;
-
-import org.apache.commons.configuration.Configuration;
-import org.jdom.Element;
-
 import cross.Factory;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.DefaultWorkflowResult;
-import cross.datastructures.workflow.IWorkflow;
-import cross.datastructures.workflow.IWorkflowElement;
-import cross.datastructures.workflow.IWorkflowResult;
-import cross.datastructures.workflow.WorkflowSlot;
+import cross.datastructures.workflow.*;
 import cross.event.EventSource;
 import cross.event.IEvent;
 import cross.event.IEventSource;
 import cross.event.IListener;
 import cross.tools.StringTools;
+import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import lombok.Data;
-import net.sf.maltcms.execution.api.ICompletionService;
-import net.sf.maltcms.execution.spi.CompletionServiceFactory;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.maltcms.execution.api.ICompletionService;
+import net.sf.maltcms.execution.spi.CompletionServiceFactory;
+import org.apache.commons.configuration.Configuration;
+import org.jdom.Element;
 
 /**
  * A class providing a default implementation for configure and a concrete

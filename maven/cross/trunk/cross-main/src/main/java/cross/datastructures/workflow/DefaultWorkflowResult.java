@@ -21,12 +21,10 @@
  */
 package cross.datastructures.workflow;
 
-import java.io.File;
-
-import org.jdom.Element;
-
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.EvalTools;
+import java.io.File;
+import org.jdom.Element;
 
 /**
  * Default implementation of an <code>IWorkflowResult</code>.
@@ -58,6 +56,7 @@ public class DefaultWorkflowResult implements IWorkflowFileResult {
         return this.file;
     }
 
+    @Override
     public IWorkflowElement getWorkflowElement() {
         return this.workflowElement;
     }

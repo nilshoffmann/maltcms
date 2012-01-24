@@ -22,12 +22,7 @@
 
 package cross.tools;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import org.slf4j.LoggerFactory;
+import java.util.*;
 
 /**
  * Utility class providing some mathematical helpers.

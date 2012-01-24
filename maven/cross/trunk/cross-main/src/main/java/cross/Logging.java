@@ -22,7 +22,6 @@
 package cross;
 
 import java.util.HashMap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

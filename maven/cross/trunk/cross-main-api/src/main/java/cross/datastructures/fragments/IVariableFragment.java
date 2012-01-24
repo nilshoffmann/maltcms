@@ -24,16 +24,14 @@
  */
 package cross.datastructures.fragments;
 
+import cross.io.misc.IArrayChunkIterator;
 import java.io.IOException;
 import java.util.List;
-
 import org.jdom.Element;
-
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
 import ucar.ma2.Range;
 import ucar.nc2.Dimension;
-import cross.io.misc.IArrayChunkIterator;
 
 /**
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de

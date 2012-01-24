@@ -25,16 +25,6 @@
  */
 package cross.ui.actions;
 
-import java.awt.event.ActionEvent;
-import java.io.File;
-
-import javax.swing.AbstractAction;
-import javax.swing.Icon;
-import javax.swing.filechooser.FileFilter;
-
-import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
-
 import cross.event.EventSource;
 import cross.event.IEvent;
 import cross.event.IEventSource;
@@ -42,6 +32,13 @@ import cross.event.IListener;
 import cross.ui.LoadConfigurationDialog;
 import cross.ui.events.LoadConfigurationEvent;
 import cross.ui.filefilters.PropertiesFileFilter;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import javax.swing.AbstractAction;
+import javax.swing.Icon;
+import javax.swing.filechooser.FileFilter;
+import org.apache.commons.configuration.Configuration;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LoadConfiguration extends AbstractAction implements

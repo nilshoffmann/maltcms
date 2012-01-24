@@ -22,12 +22,11 @@
 
 package cross.datastructures.tuple.test;
 
-import java.util.Arrays;
-import java.util.Iterator;
-
-import junit.framework.Assert;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
+import java.util.Arrays;
+import java.util.Iterator;
+import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 

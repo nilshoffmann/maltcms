@@ -22,7 +22,6 @@
 package cross.event;
 
 import java.util.LinkedHashSet;
-
 import javax.swing.SwingUtilities;
 
 /**
@@ -40,6 +39,7 @@ public class SwingEventSource<V> implements IEventSource<V> {
 		this.listenerMap = new LinkedHashSet<IListener<IEvent<V>>>();
 	}
 
+    @Override
 	public void addListener(final IListener<IEvent<V>> l) {
 		if (this.listenerMap.contains(l)) {
 			// System.out.println("IListener already known, ignoring!");
@@ -49,10 +49,12 @@ public class SwingEventSource<V> implements IEventSource<V> {
 		}
 	}
 
+    @Override
 	public void fireEvent(final IEvent<V> e) {
 		for (final IListener<IEvent<V>> lst : this.listenerMap) {
 			Runnable r = new Runnable() {
 
+                @Override
 				public void run() {
 					lst.listen(e);
 				}
@@ -62,6 +64,7 @@ public class SwingEventSource<V> implements IEventSource<V> {
 		}
 	}
 
+    @Override
 	public void removeListener(final IListener<IEvent<V>> l) {
 		if (this.listenerMap.contains(l)) {
 			this.listenerMap.remove(l);
