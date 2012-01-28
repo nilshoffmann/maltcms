@@ -9,7 +9,7 @@
     
     <!-- a command pipeline consists of input and a list of 
      commands to be executed -->
-    <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
+<!--    <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
         <property name="checkCommandDependencies" value="true"/>
         <property name="commands">
             <list>
@@ -18,7 +18,7 @@
                 <ref bean="chromatogram2DVisualizer" />
             </list>
         </property>    
-    </bean>
+    </bean>-->
                <!-- commands -->
                
    <bean id="default2DVarLoader" class="maltcms.commands.fragments2d.preprocessing.Default2DVarLoader">

@@ -68,6 +68,7 @@ public class ScanLineCacheFactory {
 		final Configuration cfg = Factory.getInstance().getConfiguration();
 		// log.info("Creating CachedScanLineList for {}", ff.getName());
 		slc = new ScanLineCache(ff);
+                log.info("Using scan line cache implementation: {}",slc.getClass().getName());
 		// slc = new CachedScanLineList(ff);
 		slc.configure(cfg);
 		scanlinecaches.put(ff.getName(), slc);
@@ -87,6 +88,7 @@ public class ScanLineCacheFactory {
 
 		if (ScanLineCacheFactory.scanlinecaches.containsKey(ff.getName())) {
 			return ScanLineCacheFactory.scanlinecaches.get(ff.getName());
+                        
 		} else {
 			return ScanLineCacheFactory.createScanLineCache(ff);
 		}
@@ -98,6 +100,7 @@ public class ScanLineCacheFactory {
 		}
 		IScanLine slc = null;
 		slc = new SparseScanLineCache(ff);
+                log.info("Using scan line cache implementation: {}",slc.getClass().getName());
 		scanlinecaches.put(ff.getName(), slc);
 		return slc;
 	}
@@ -108,9 +111,23 @@ public class ScanLineCacheFactory {
 		}
 		IScanLine slc = null;
 		slc = new ScanLineCache(ff);
+                log.info("Using scan line cache implementation: {}",slc.getClass().getName());
 		scanlinecaches.put(ff.getName(), slc);
 		return slc;
 	}
+        
+        public static IScanLine getOldScanLineCache(final IFileFragment ff) {
+		if (ScanLineCacheFactory.scanlinecaches.containsKey(ff.getName())) {
+			return ScanLineCacheFactory.scanlinecaches.get(ff.getName());
+		}
+		IScanLine slc = null;
+		slc = new ScanLineCacheOld(ff);
+                log.info("Using scan line cache implementation: {}",slc.getClass().getName());
+		scanlinecaches.put(ff.getName(), slc);
+		return slc;
+	}
+        
+        
 
 	public static IScanLine getCachedListScanLineCache(final IFileFragment ff) {
 		if (ScanLineCacheFactory.scanlinecaches.containsKey(ff.getName())) {
@@ -118,6 +135,7 @@ public class ScanLineCacheFactory {
 		}
 		IScanLine slc = null;
 		slc = new CachedScanLineList(ff);
+                log.info("Using scan line cache implementation: {}",slc.getClass().getName());
 		scanlinecaches.put(ff.getName(), slc);
 		return slc;
 	}

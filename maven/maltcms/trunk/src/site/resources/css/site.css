@@ -22,59 +22,61 @@ body {
     font-weight: normal;
     margin: 0 auto;
     padding: 0;
-    width: 900px;
+    width: 990px;
 }
-body, td, select, input, li{
+body, td, select, input, li {
     font-family: Arial,sans-serif;
     font-size: 0.9em;
 }
-code{
-    font-family: Courier, monospace;
-    font-size: 13px;
+code {
+    font-family: Courier,monospace;
+    font-size: 0.8em;
 }
 a {
     color: #0000BB;
     font-weight: normal;
     text-decoration: underline;
 }
-/*a:link {
-    color:#36a;
-}
-a:visited  {
-    color:#47a;
-}*/
 a:active, a:hover {
     text-decoration: none;
 }
 #legend li.externalLink {
-    background: url(../images/tango-go-next-red-16.png) left top no-repeat;
+    background: url("../images/external.png") no-repeat scroll right center transparent;
     padding-left: 18px;
 }
 a.externalLink, a.externalLink:link, a.externalLink:visited, a.externalLink:active, a.externalLink:hover {
-    background: url(../images/tango-go-next-red-16.png) right center no-repeat;
+    background: url("../images/external.png") no-repeat scroll right center transparent;
     padding-right: 18px;
 }
 #legend li.newWindow {
-    background: url(../images/newwindow.png) left top no-repeat;
+    background: url("../images/newwindow.png") no-repeat scroll left top transparent;
     padding-left: 18px;
 }
 a.newWindow, a.newWindow:link, a.newWindow:visited, a.newWindow:active, a.newWindow:hover {
-    background: url(../images/newwindow.png) right center no-repeat;
+    background: url("../images/newwindow.png") no-repeat scroll right center transparent;
     padding-right: 18px;
 }
 h2 {
     color: #222222;
-    font-size: 0.9em;
+    font-size: 1em;
     font-weight: normal;
     margin: 0;
     padding-top: 0.5em;
 }
 h1 {
     color: #AA3333;
-    font-size: 1em;
+    font-size: 1.1em;
     font-weight: bold;
     margin: 0;
     padding: 0;
+}
+h3 {
+    background-color: #EEEEEE;
+    border: 1px solid #AAAAAA;
+    color: #990000;
+    font-size: 0.9em;
+    font-weight: normal;
+    padding: 4px 4px 4px 6px;   
 }
 p {
     border-top: 1px dashed #AAAAAA;
@@ -87,74 +89,103 @@ p {
     padding-left: 0.5em;
     z-index: 15;
 }
+#banner {
+    border-left: 1px solid #AACC88;
+    border-right: 1px solid #AACC88;
+    border-top:none;
+    border-bottom: none;
+}
 #breadcrumbs {
     background: none repeat scroll 0 0 #CCEE99;
     border-bottom: 1px solid #AACC88;
     border-top: 1px solid #AACC88;
+    border-left: 1px solid #AACC88;
+    border-right: 1px solid #AACC88;
     clear: both;
-    padding: 0.25em;
+    padding: 0.5em;
+    font-size: 0.8em;
 }
 #leftColumn {
+    background-color: #FFFFFF;
+    clear: right;
     color: #333333;
     float: left;
     width: 25%;
+    border-left: 1px solid #AACC88;
+    border-right: 1px solid #AACC88;
+    border-bottom: 1px solid #AACC88;
+    border-top: none;
+    border-radius: 0 0 0 10px;
+    margin: 0;
 }
 #navcolumn h5 {
     background: none repeat scroll 0 0 transparent;
     border-bottom: 1px solid #AACC88;
     border-left: 1px solid #AACC88;
+    border-top: 1px solid #AACC88;
     border-radius: 0 0 0 10px;
     border-right: 1px solid #AACC88;
+    padding-left: 5px;
 }
-
+#bodyColumn {
+    float:left;
+    width: 74%;
+    margin-left: 5px;
+    margin-right: 0;
+}
 table.bodyTable th {
+    background-color: #BBBBBB;
     color: white;
-    background-color: #bbb;
-    text-align: left;
     font-weight: bold;
+    text-align: left;
 }
-
 table.bodyTable th, table.bodyTable td {
-    font-size: 1em;
+    font-size: 1.0em;
 }
-
 table.bodyTable tr.a {
-    background-color: #ddd;
+    background-color: #DDDDDD;
 }
-
 table.bodyTable tr.b {
-    background-color: #eee;
+    background-color: #EEEEEE;
 }
-
 .source {
-    border: 1px solid #999;
+    border: 1px solid #999999;
+}
+#navcolumn li {
+    font-size: 1.0em;
 }
 dl {
+    background-color: #FFFFCC;
+    border: 1px solid #AAAAAA;
     padding: 4px 4px 4px 6px;
-    border: 1px solid #aaa;
-    background-color: #ffc;
 }
 dt {
-    color: #900;
+    color: #990000;
 }
-#organizationLogo img, #projectLogo img, #projectLogo span{
+#organizationLogo img, #projectLogo img, #projectLogo span {
     margin: 8px;
 }
-#banner {
-    border-bottom: 1px solid #fff;
-}
 .errormark, .warningmark, .donemark, .infomark {
-    background: url(../images/icon_error_sml.gif) no-repeat;
+    background: url("../images/icon_error_sml.gif") no-repeat scroll 0 0 transparent;
 }
-
 .warningmark {
-    background-image: url(../images/icon_warning_sml.gif);
+    background-image: url("../images/icon_warning_sml.gif");
 }
-
 .donemark {
-    background-image: url(../images/icon_success_sml.gif);
+    background-image: url("../images/icon_success_sml.gif");
 }
-
 .infomark {
-    background-image: url(../images/icon_info_sml.gif);
+    background-image: url("../images/icon_info_sml.gif");
+}
+#footer {
+    clear: both;
+    float: left;
+    font-size: x-small;
+    padding: 3px 10px;
+    text-align: center;
+    width: 100%;
+    border-bottom: 1px solid #AACC88;
+    border-left: 1px solid #AACC88;
+    border-top: 1px solid #AACC88;
+    border-right: 1px solid #AACC88;
 }

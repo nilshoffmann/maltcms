@@ -100,6 +100,7 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
      *         threshold, otherwise <code>null</code>
      */
     private PeakArea2D regionGrowing(final Point seed) {
+        System.out.println("Building peak area of seed "+seed);
         final long start = System.currentTimeMillis();
         final PeakArea2D pa = new PeakArea2D(seed,
                 slc.getMassSpectra(seed).copy(),

@@ -480,4 +480,9 @@ public class Experiment1D implements IExperiment1D {
 		        + " is unknown!");
 	}
 
+    @Override
+    public void addAttribute(Attribute atrbt) {
+        this.ff.addAttribute(atrbt);
+    }
+
 }

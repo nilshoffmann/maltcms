@@ -7,34 +7,6 @@
             This file defines elements of the ChromA4D SRG seeded region growing.
     </description>
     
-    <!-- a command pipeline consists a list of 
-     commands to be executed -->
-    <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
-        <property name="checkCommandDependencies" value="true"/>
-        <property name="commands">
-            <list>
-                <ref bean="default2DVarLoader" />
-                <ref bean="data2DNormalizer" />
-                <ref bean="seededRegionGrowing"/>
-            </list>
-        </property>    
-    </bean>
-    
-    <bean id="default2DVarLoader" class="maltcms.commands.fragments2d.preprocessing.Default2DVarLoader">
-       <property name="modulationTime" value="5.0"/>
-       <property name="scanRate" value="-1.0" />
-       <property name="estimateModulationTime" value="false" />
-   </bean>
-   
-   <bean id="data2DNormalizer" class="maltcms.commands.fragments2d.preprocessing.Data2DNormalizer">
-       <property name="applyMovingAverage" value="false" />
-       <property name="movingAverageWindow" value="1" />
-       <property name="applyMovingMedian" value="false" />
-       <property name="movingMedianWindow" value="1" />
-       <property name="applyTopHatFilter" value="true" />
-       <property name="topHatFilterWindow" value="50" />
-   </bean>
-    
     <bean id="identificationSim" class="maltcms.math.functions.similarities.ArrayCos"/>
     
     <bean id="peakIdentification" class="maltcms.commands.fragments2d.peakfinding.output.PeakIdentification">

@@ -151,6 +151,8 @@
     <bean id="pairwiseDistanceCalculator" class="maltcms.commands.fragments.cluster.PairwiseDistanceCalculator">
         <property name="pairsWithFirstElement" value="false"/> 
         <property name="workerFactory" ref="mziDtwWorkerFactory"/>
+        <!-- alternative -->
+        <!--<property name="workerFactory" ref="ticDtwWorkerFactory"/>-->
     </bean>
     
     <bean id="cumulativeDistance" class="maltcms.commands.distances.DtwRecurrence" scope="prototype">
@@ -162,7 +164,7 @@
         <property name="matchWeight" value="2.25"/>
         <property name="compressionWeight" value="1.0"/>
         <property name="retentionTimeSimilarity" ref="dtwGaussianDifferenceSimilarity"/>
-        <property name="denseMassSpectraSimilarity" ref="lpSimilarity"/>
+        <property name="denseMassSpectraSimilarity" ref="cosineSimilarity"/>
     </bean>
         
     <bean id="ticDtwWorkerFactory" class="maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.TicDtwWorkerFactory">

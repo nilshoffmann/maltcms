@@ -87,29 +87,6 @@
             <version>1.0.16</version>
         </dependency>
         <dependency>
-            <artifactId>maltcms-execution-api</artifactId>
-            <groupId>net.sf.maltcms</groupId>
-            <type>jar</type>
-            <version>1.0-20110802.202515-29</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-jdk14</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.maltcms</groupId>
-            <artifactId>maltcms-execution-spi</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-jdk14</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-test-data</artifactId>
             <version>${project.version}</version>
