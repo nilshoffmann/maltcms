@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<content group="news" ident="news/maltcms1_1" nname="Maltcms 1.1 Release" publish="no" toRoot="../" lastchanged="$Date by $Author">
+<content group="news" ident="news/maltcms1_1" nname="Maltcms 1.1 Release" publish="no" toRoot="../" lastchanged="$Date$ by $Author$">
     <column id="content">
         <h1>Maltcms 1.1 Released on February 1st, 2012</h1>
         <h2>Release Notes</h2>
