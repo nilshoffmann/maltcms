@@ -3,11 +3,11 @@
 <column id="content">
             <h1>Maltcms</h1>
 		<ul>
-			<li>supports chromatography and ms data from netcdf (ANDI-MS/-Chrom), mzXML, mzData and mzML formats</li>
+			<li>supports chromatography and mass-spectral data from netcdf (ANDI-MS/-Chrom), mzXML, mzData and mzML formats</li>
 			<li>supports msp-format (Amdis,GMD-DB,NIST) database import for mass spectral search</li>
-			<li>ms data export in msp format</li>
-			<li>csv data export for table-like data, e.g. alignments, peak tables etc.</li>
-			<li>provides a generic pipeline framework for custom processing configuration</li>
+			<li>mass-spectral data export in msp format</li>
+			<li>comma-separated-value (csv) data export for table-like data, e.g. alignments, peak tables etc.</li>
+			<li>provides a generic framework for custom processing of chromatography-mass spectrometry data</li>
 			<li>creation of charts and plots for chromatograms, mass spectra, aligned and unaligned</li> 
 		</ul>
             <h1>ChromA(1D,2D)</h1>

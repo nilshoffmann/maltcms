@@ -11,7 +11,7 @@
                 </li>
                 <li>
                     <a href="http://gi.cebitec.uni-bielefeld.de/" title="Genome Informatics Group, Bielefeld University">Genome
-						Informatics Group
+                        Informatics Group
                     </a>
                 </li>
                 <li>
@@ -25,6 +25,7 @@
     </header>
     <categories>
         <ref target="home/index" alt="Home" />
+        <ref target="news/index" alt="News" />
         <ref target="users/features" alt="Maltcms" />
         <ref target="maui/index" alt="Maui" />
         <ref target="developers/api" alt="Developers" />
@@ -34,6 +35,10 @@
         <group nname="Home" ident="home">
             <ref target="home/index" />
             <ref target="home/gettingStarted" />
+            
+            <group nname="News" ident="news">
+                <ref target="news/index" />
+            </group>
         </group>
 
         <group nname="Maltcms" ident="users">
@@ -51,7 +56,7 @@
             <ref target="developers/api" />
 <!--			<ref target="styleGuide/styleGuide" />-->
             <a href="http://sourceforge.net/projects/maltcms/" title="Project Website">Project
-				Home
+                Home
             </a>
             <a href="http://sourceforge.net/apps/trac/maltcms/" title="Trac">Trac</a>
             <a href="http://maltcms.sourceforge.net/maven/maltcms/" title="Maven Site">Maven</a>
@@ -77,22 +82,28 @@
     </div>
 
 	<!-- Home -->
-    <xi:include href="home/index.xml" parse="xml" exclude-result-prefixes="xsl xi xalan"/>
+    <xi:include href="home/index.xml" parse="xml"/>
     <xi:include href="home/gettingStarted.xml" parse="xml" />
-	<!-- Users -->
+<!--    News -->
+    <xi:include href="news/index.xml" parse="xml"/>
+    <xi:include href="news/netbeansRcpTraining.xml" parse="xml"/>
+    <xi:include href="news/netbeansMauiFeature.xml" parse="xml"/>
+    <xi:include href="news/perspektive2010.xml" parse="xml"/>
+    <xi:include href="news/maltcms1_1.xml" parse="xml"/>
+<!--    Users -->
     <xi:include href="users/features.xml" parse="xml" />
-	<!-- <xi:include href="users/tutorials.xml" parse="xml" /> -->
+    <xi:include href="users/tutorials.xml" parse="xml" /> 
     <xi:include href="users/support.xml" parse="xml" />
-	<!-- Developers -->
-	<!-- <xi:include href="developers/concepts.xml" parse="xml" /> -->
+<!--    Developers -->
+    <xi:include href="developers/concepts.xml" parse="xml" /> 
     <xi:include href="developers/api.xml" parse="xml" />
     <xi:include href="developers/tutorials/programmaticWorkflow.xml" parse="xml" />
-<!--	<xi:include href="developers/styleGuide.xml" parse="xml" />-->
-	<!-- Info -->
+    <xi:include href="developers/styleGuide.xml" parse="xml" />
+<!--    Info -->
     <xi:include href="info/publications.xml" parse="xml" />
     <xi:include href="info/relatedProjects.xml" parse="xml" />
     <xi:include href="info/license.xml" parse="xml" />
     <xi:include href="info/contact.xml" parse="xml" />
-	<!-- Maui -->
+<!--    Maui -->
     <xi:include href="maui/index.xml" parse="xml" />
 </site>

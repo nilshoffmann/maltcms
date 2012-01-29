@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<content group="maui" ident="maui/index" nname="Getting Started" publish="yes" toRoot="../" lastchanged="$Date: 2010-08-10 11:22:22 +0200 (Di, 10 Aug 2010) $ by $Author: nilshoffmann $">
+<content group="maui" ident="maui/index" nname="Getting Started" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
 <column id="content">
             <h1>Maui - Maltcms User Interface</h1>
             Maui is an application for visualization, exploration and processing of raw data from GC/LC-MS and GCxGC-MS experiments.
             <h1>Release 1.0 beta</h1>
             <h2>Available Features</h2>
             <ul>
-                <li>chromatogram view (1D and 2D) with interactive ms selection and database query</li>
+                <li>chromatogram view (1D and 2D) with interactive selection of mass spectra and database query</li>
                 <li>integration of custom scripts for raw data and csv type data via Groovy</li>
                 <li>charting of csv and raw data</li>
                 <li>import and visualization of Maltcms processing results</li>
             </ul>
-            <h2>Confirmed Features for Final Release 1.0 (Jan. 2012)</h2>
+            <h2>Confirmed Features for Final Release 1.0 (first half of 2012)</h2>
             <ul>
                 <li>pipeline editor and runner for Maltcms</li>
                 <li>interactive peak exploration</li>
                 <li>manual refinement of peak lists</li>
                 <li>statistical evaluation of peak tables</li>
-                <li>peak im-/export with <a href="http://meltdb.cebitec.uni-bielefeld.de">MeltDB</a></li>
+<!--                <li>peak im-/export with <a href="http://meltdb.cebitec.uni-bielefeld.de">MeltDB</a></li>-->
                 <li>3D viewer with interactive peak exploration for 2D chromatograms based on <a href="http://code.google.com/p/jzy3d/">jzy3D</a></li>
-            </ul>
-            <h2>Unconfirmed Features for Release 1.0</h2>
-            <ul>
                 <li>GNU-R integration</li>
                 <li>3D PCA viewer</li>
             </ul>

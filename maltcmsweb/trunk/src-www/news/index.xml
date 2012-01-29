@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content group="news" ident="news/index" nname="Overview" publish="yes" toRoot="../" lastchanged="$Date by $Author">
+    <column id="content">
+        <h1>News</h1>
+        <ul>
+<!--            <li><ref target="news/maltcms1_1" alt="Maltcms 1.1 Released on February 1st, 2012"/></li>-->
+            <li><ref target="news/perspektive2010" alt="Maui at the Perspektive 2010 Science Fair"/></li>
+            <li><ref target="news/netbeansRcpTraining" alt="Netbeans RCP Training at Bielefeld University"/></li>
+            <li><ref target="news/netbeansMauiFeature" alt="Maui featured as a Netbeans RCP application"/></li>
+        </ul>
+    </column>
+</content>

@@ -66,6 +66,7 @@
 		</copy>
 		<javac fork="yes" verbose="true" compiler="${build.compiler}" includeAntRuntime="false" includeJavaRuntime="true" destdir="${build.dir}/classes" includeDestClasses="false" source="1.6" target="1.6">
 			<src path="src" />
+                        <classpath refid="MaltcmsWeb.classpath" />
 		</javac>
 	</target>
 
@@ -84,6 +85,7 @@
 		<java fork="true" jar="${build.dir}/xinclude.jar" failonerror="true" inputstring="">
 			<arg value="${build-www.dir}/site.xml" />
 			<arg value="${build-www.dir}/site-xinclude.xml" />
+                        <classpath refid="MaltcmsWeb.classpath" />
 		</java>
 	</target>
 

@@ -45,6 +45,12 @@ div.nav_dotted ul.unbulletedlist li {
 div.nav_dotted ul.unbulletedlist li:hover {
     background: none repeat scroll 0 0 #BBFF99;
 }
+div.block {
+    border: 1px solid #CCCCCC;
+    border-radius: 10px;
+    padding: 0.5em;
+    margin-bottom: 0.5em;
+}
 .copyright {
     font-size: 0.7em;
     padding: 0.5em;
@@ -58,11 +64,10 @@ div.nav_dotted ul.unbulletedlist li:hover {
     margin-top: 0.5em;
 }
 h2 {
-    color: #222222;
+    color: #666666;
     font-size: 0.9em;
-    font-weight: normal;
+    font-weight: bold;
     margin: 0;
-    padding-top: 0.5em;
 }
 h1 {
     color: #AA3333;
@@ -75,16 +80,22 @@ h1 {
     border-bottom: 1px solid;
 }
 p {
-    border-top: 1px dashed #AAAAAA;
     color: #333333;
-    line-height: 1.5em;
-    margin-bottom: 0.5em;
     margin-left: 0;
     margin-top: 0.1em;
+    margin-bottom: 1em;
     overflow: auto;
-    padding-left: 0.5em;
     z-index: 15;
 }
+p:last-child {
+    color: #333333;
+    margin-left: 0;
+    margin-top: 0.1em;
+    margin-bottom: 0.1em;
+    overflow: auto;
+    z-index: 15;
+}
+
 div.nav_dotted ul.unbulletedlist li.active {
     background: none repeat scroll 0 0 #CCEEAA;
     text-decoration: none;
@@ -168,7 +179,7 @@ div.nav_dotted ul.unbulletedlist li.active {
     width: 75%;
 }
 .download {
-    /*    width: 170px;*/
+    width: 11em;
     float: right;
     border: 1px solid #AACC88;
     background-color: #CCEE99;
@@ -179,7 +190,7 @@ div.nav_dotted ul.unbulletedlist li.active {
     margin-top: 1em;
     margin-bottom: 1em;
     display: block;
-	text-align: left;
+    text-align: left;
 }
 .download a {
     font-family: Arial,sans-serif;
@@ -200,23 +211,23 @@ div.nav_dotted ul.unbulletedlist li.active {
     float: right;
 }
 .download .dlTitle {
-	display: block;
-	font-size: 0.9em;
-	color: #668833;
+    display: block;
+    font-size: 0.9em;
+    color: #668833;
 }
 
 .download .dlSubtitle {
-	display: block;
+    display: block;
     font-size: 0.6em;
     color: #99BB66;
 }
 .download:hover .dlTitle {
-	display: block;
-	font-size: 0.9em;
-	color: #FFFFFF;
+    display: block;
+    font-size: 0.9em;
+    color: #FFFFFF;
 }
 .download:hover .dlSubtitle {
-	display: block;
+    display: block;
     font-size: 0.6em;
     color: #CCEE99;
 }
