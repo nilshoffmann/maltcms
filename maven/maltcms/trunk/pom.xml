@@ -7,7 +7,7 @@
     <version>1.0.8-SNAPSHOT</version>
     <name>Maltcms-Modules</name>
     <description>Maltcms, short for "Modular Application Toolkit for Chromatography Mass-Spectrometry" is an application framework mainly suited for developers working in the domain of bioinformatics for metabolomics and proteomics. Its aim is to provide reusable, efficient datastructures, abstracting from the various low-level data-formats like netcdf (ANDIMS), mzXML, mzData and mzML and providing consistent access to data features like mass spectra, chromatograms and metadata. Furthermore, Maltcms provides a platform for the implementation and execution of processing pipelines. New and existing algorithms can be easily implemented or included and executed together with existing processing elements. </description>
-    <url>http://maltcms.sourceforge.net</url>
+    <url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}</url>
     <issueManagement>
         <system>Sourceforge Issue Tracker</system>
         <url>https://sourceforge.net/tracker/?group_id=251287&amp;atid=1126545</url>
@@ -147,6 +147,14 @@
                                     <show>public</show>
                                 </configuration>
                             </plugin>
+<!--                            <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>jxr-maven-plugin</artifactId>
+                                <version>2.3</version>
+                                <configuration>
+                                    <aggregate>true</aggregate>
+                                </configuration>
+                            </plugin> -->
 <!--                            <plugin>
                                 <groupId>org.apache.maven.plugins</groupId>
                                 <artifactId>maven-changelog-plugin</artifactId>

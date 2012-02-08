@@ -78,6 +78,7 @@ h3 {
     font-weight: normal;
     padding: 4px 4px 4px 6px;   
 }
+
 p {
     border-top: 1px dashed #AAAAAA;
     color: #333333;
@@ -123,7 +124,6 @@ p {
     border-bottom: 1px solid #AACC88;
     border-left: 1px solid #AACC88;
     border-top: 1px solid #AACC88;
-    border-radius: 0 0 0 10px;
     border-right: 1px solid #AACC88;
     padding-left: 5px;
 }

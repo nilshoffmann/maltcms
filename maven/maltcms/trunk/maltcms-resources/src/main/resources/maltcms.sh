@@ -50,13 +50,15 @@ else
 fi
 
 function printHelp {
-			echo -e "Usage: $0 [-64] [-mx ARG] [-ms ARG] [-exec ARG|--execute ARG] [-?|--help] [MALTCMSARGS]"
+			echo -e "Usage: $0 [-64] [-mx ARG] [-ms ARG] [-exec ARG|--execute ARG] [-DKEY=VALUE] [-?|--help] [MALTCMSARGS]"
 			echo -e "\t-64 -> uses 64bit jvm"
 			echo -e "\t-mx ARG -> uses -XmxARG as maximum heapsize"
 			echo -e "\t-ms ARG -> uses -XmsARG as minimum heapsize"
 			echo -e "\t-exec ARG|--execute ARG -> execute the given base class,"
 		       	echo -e "\t\t\tif it contains a main method"
 			echo -e "\t\t\te.g. '-exec mypackage/MyClass'"
+			echo -e "\t-DKEY=VALUE -> set environment variable KEY to value VALUE,"
+			echo -e "\t\t\tmay appear multiple times"
 			echo -e "\t-?|--help -> display this help"
 			echo -e "\tMALTCMSARGS -> hand all remaining arguments over to Maltcms"
 			exit -1

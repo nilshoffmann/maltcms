@@ -135,11 +135,11 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
             EntityGroupClassificationResult gtg = findBest(tgEg, this.groundTruth);
 
             if (gtg != null) {
-                System.out.println("GT group: \n" + gtg.getGroundTruthEntityGroup());
-                System.out.println("Best tool group: \n" + gtg.getToolEntityGroup());
+                //System.out.println("GT group: \n" + gtg.getGroundTruthEntityGroup());
+                //System.out.println("Best tool group: \n" + gtg.getToolEntityGroup());
                 EntityGroup gtEntityGroup = gtg.getGroundTruthEntityGroup();
                 if (gtToClsRes.containsKey(gtEntityGroup)) {
-                    System.err.println("Warning: GT EntityGroup already assigned!");
+                    //System.err.println("Warning: GT EntityGroup already assigned!");
                     //test for reassignment
                     EntityGroupClassificationResult other = gtToClsRes.get(gtEntityGroup);
                     int comp = gtg.compareTo(other);
@@ -149,10 +149,10 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
                         gtToClsRes.put(gtEntityGroup, gtg);
                     } else if (comp < 0) {
                         //other is better, do nothing
-                        System.err.println("Retaining assignment");
+                        //System.err.println("Retaining assignment");
                     } else {
                         //both are equal, something fishy is happening here!
-                        System.err.println("Warning: classification results are equal!");
+                        //System.err.println("Warning: classification results are equal!");
                     }
                 } else {
                     gtToClsRes.put(gtEntityGroup, gtg);

@@ -15,7 +15,7 @@ import net.sf.maltcms.evaluation.api.classification.PeakRTFeatureVectorComparato
 import net.sf.maltcms.evaluation.api.tasks.IPostProcessor;
 import net.sf.maltcms.evaluation.api.tasks.ITask;
 import net.sf.maltcms.evaluation.spi.EntityGroupBuilder;
-import net.sf.maltcms.evaluation.spi.Evaluation;
+import net.sf.maltcms.apps.MultipleAlignmentRowEvaluation;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -96,7 +96,7 @@ public class ClassificationPerformancePostProcessor implements IPostProcessor {
 //            System.exit(1);
 //        }
 //
-//        Evaluation re = new Evaluation(outputDir, groundTruthFile, toolResults.toArray(new File[toolResults.size()]));
+//        MultipleAlignmentRowEvaluation re = new MultipleAlignmentRowEvaluation(outputDir, groundTruthFile, toolResults.toArray(new File[toolResults.size()]));
 //
 //        re.eval(delta);
     }

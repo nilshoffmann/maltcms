@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sf.maltcms.evaluation.spi;
+package net.sf.maltcms.apps;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -32,6 +32,7 @@ import net.sf.maltcms.evaluation.spi.classification.ClassificationPerformanceTes
 import net.sf.maltcms.evaluation.api.classification.EntityGroup;
 import net.sf.maltcms.evaluation.spi.classification.PeakRTFeatureVector;
 import net.sf.maltcms.evaluation.api.classification.PeakRTFeatureVectorComparator;
+import net.sf.maltcms.evaluation.spi.EntityGroupBuilder;
 import net.sf.maltcms.evaluation.spi.classification.PerformanceMetrics;
 
 /**
@@ -39,7 +40,7 @@ import net.sf.maltcms.evaluation.spi.classification.PerformanceMetrics;
  * 
  * 
  */
-public class Evaluation {
+public class MultipleAlignmentColumnEvaluation {
 
     private final List<EntityGroup> gt;
     private final List<String> toolFiles;
@@ -53,7 +54,7 @@ public class Evaluation {
      * @param groundTruth
      * @param toolResults
      */
-    public Evaluation(File outputDir, File groundTruth, File... toolResults) {
+    public MultipleAlignmentColumnEvaluation(File outputDir, File groundTruth, File... toolResults) {
         this.outputDir = outputDir;
         this.outputDir.mkdirs();
         EntityGroupBuilder egb = new EntityGroupBuilder();
@@ -227,7 +228,7 @@ public class Evaluation {
             HelpFormatter hf = new HelpFormatter();
             hf.printHelp(
                     "java -jar maltcms.jar "
-                    + Evaluation.class.getCanonicalName(), options,
+                    + MultipleAlignmentColumnEvaluation.class.getCanonicalName(), options,
                     true);
             System.exit(1);
         }
@@ -267,7 +268,7 @@ public class Evaluation {
                 System.exit(1);
             }
             System.out.println("Tool files: " + Arrays.toString(testFiles));
-            Evaluation re = new Evaluation(outputDir, gtFile, testFiles);
+            MultipleAlignmentColumnEvaluation re = new MultipleAlignmentColumnEvaluation(outputDir, gtFile, testFiles);
             double deltav = 0;
             if (cl.hasOption("d")) {
                 deltav = Double.valueOf(cl.getOptionValue("d"));
