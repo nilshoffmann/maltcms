@@ -11,6 +11,8 @@ Prerequisites for Cross:
   http://www.oracle.com/technetwork/java/javase/downloads/index.html
 - Maven 3
   http://maven.apache.org/download.html
+- Ant 1.8.2 (site deployment)
+  http://ant.apache.org/
 
 Recommended:
 - Any IDE supporting maven 2/3 integration and subversion support
@@ -100,6 +102,13 @@ If all tests succeed, continue, otherwise, correct errors and go back to 2.
 If everything looks fine:
 5. Perform release
 >mvn release:perform 
+6. Create site
+>cd target/checkout
+>mvn site
+7. Check that site content is okay
+8. Deploy site
+>ant site-deploy
+9. Relax ;-)
 
 --------------------------------------------------------------------------------
 	Deploying a snapshot to the artifactory repository *
