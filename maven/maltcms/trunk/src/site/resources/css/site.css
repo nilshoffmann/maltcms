@@ -22,7 +22,7 @@ body {
     font-weight: normal;
     margin: 0 auto;
     padding: 0;
-    width: 990px;
+    width: 1024px;
 }
 body, td, select, input, li {
     font-family: Arial,sans-serif;
@@ -30,7 +30,7 @@ body, td, select, input, li {
 }
 code {
     font-family: Courier,monospace;
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 a {
     color: #0000BB;
@@ -57,30 +57,31 @@ a.newWindow, a.newWindow:link, a.newWindow:visited, a.newWindow:active, a.newWin
     padding-right: 18px;
 }
 h2 {
+    background-color: none;
+    border: none;
     color: #222222;
-    font-size: 1em;
-    font-weight: normal;
+    font-size: 1.1em;
+    font-weight: bold;
     margin: 0;
     padding-top: 0.5em;
 }
 h1 {
     color: #AA3333;
-    font-size: 1.1em;
+    font-size: 1.2em;
     font-weight: bold;
     margin: 0;
     padding: 0;
 }
 h3 {
-    background-color: #EEEEEE;
-    border: 1px solid #AAAAAA;
+    background-color: none;
+    border: none;
     color: #990000;
-    font-size: 0.9em;
+    font-size: 1em;
     font-weight: normal;
     padding: 4px 4px 4px 6px;   
 }
 
 p {
-    border-top: 1px dashed #AAAAAA;
     color: #333333;
     line-height: 1.5em;
     margin-bottom: 0.5em;
@@ -104,7 +105,11 @@ p {
     border-right: 1px solid #AACC88;
     clear: both;
     padding: 0.5em;
-    font-size: 0.8em;
+    font-size: 0.9em;
+}
+.xright, #bannerRight {
+    float: right;
+    padding: 1em;
 }
 #leftColumn {
     background-color: #FFFFFF;
@@ -150,6 +155,7 @@ table.bodyTable tr.b {
 }
 .source {
     border: 1px solid #999999;
+    background: none repeat scroll 0 0 #FFFFEE;
 }
 #navcolumn li {
     font-size: 1.0em;
@@ -177,13 +183,17 @@ dt {
 .infomark {
     background-image: url("../images/icon_info_sml.gif");
 }
+.source pre {
+    font-size: 1em;
+    margin: 0;
+    padding: 0;
+}
 #footer {
     clear: both;
-    float: left;
+    float: none;
     font-size: x-small;
     padding: 3px 10px;
     text-align: center;
-    width: 100%;
     border-bottom: 1px solid #AACC88;
     border-left: 1px solid #AACC88;
     border-top: 1px solid #AACC88;

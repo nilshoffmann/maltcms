@@ -10,6 +10,7 @@
     <name>maltcms-distribution</name>
     <url>http://maltcms.sourceforge.net</url>
     <packaging>pom</packaging>
+    
     <build>
 
         <plugins>
@@ -72,7 +73,7 @@
                 </executions>
                 <configuration>
                     <descriptors>
-                        <descriptor>src/assemble/distribution.xml</descriptor>
+                        <descriptor>src/assemble/install.xml</descriptor>
                     </descriptors>
 		    <!--<updateOnly>true</updateOnly>-->
                     <attach>true</attach>
@@ -102,6 +103,7 @@
             </plugin>
         </plugins>
     </build>
+    
 
     <dependencies>
         <dependency>

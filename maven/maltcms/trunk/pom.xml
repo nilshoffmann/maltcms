@@ -82,33 +82,31 @@
             <url>http://www.gnu.org/licenses/lgpl.html</url>
         </license>
     </licenses>
-    <organization>
-    </organization>
     <build>
         <resources>
             <resource>
-                <directory>src/site/apt</directory>
+                <directory>${basedir}/src/site/apt</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>*.apt</include>
                 </includes>
             </resource>
             <resource>
-                <directory>src/site/xdoc</directory>
+                <directory>${basedir}/src/site/xdoc</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>*.xml</include>
                 </includes>
             </resource>
             <resource>
-                <directory>src/site</directory>
+                <directory>${basedir}/src/site</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>site.xml</include>
                 </includes>
             </resource>
             <resource>
-                <directory>src/main/resources</directory>
+                <directory>${basedir}/src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
@@ -117,68 +115,7 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>3.0</version>
-                    <configuration>
-                        <reportPlugins>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-project-info-reports-plugin</artifactId>
-                                <version>2.4</version>
-                                <configuration>
-                                    <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-                                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-                                </configuration>
-              <!-- simpler configuration without reportSets available for usual cases -->
-                                <reports>
-                                    <report>dependencies</report>
-                                    <report>project-team</report>
-                                    <report>mailing-list</report>
-                                    <report>issue-tracking</report>
-                                    <report>license</report>
-                                    <report>scm</report>
-                                </reports>
-                            </plugin>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-javadoc-plugin</artifactId>
-                                <version>2.8</version>
-                                <configuration>
-                                    <show>public</show>
-                                </configuration>
-                            </plugin>
-<!--                            <plugin>
-                                <groupId>org.codehaus.mojo</groupId>
-                                <artifactId>jxr-maven-plugin</artifactId>
-                                <version>2.3</version>
-                                <configuration>
-                                    <aggregate>true</aggregate>
-                                </configuration>
-                            </plugin> -->
-<!--                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-changelog-plugin</artifactId>
-                                <version>2.2</version>
-                            </plugin>-->
-<!--                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-checkstyle-plugin</artifactId>
-                                <version>2.7</version>
-                                <configuration>
-                                    <configLocation>config/sun_checks.xml</configLocation>
-                                </configuration>
-                            </plugin>-->
-                        </reportPlugins>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>2.2.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
                     <version>2.2.1</version>
                 </plugin>
                 <plugin>
@@ -189,12 +126,32 @@
                         <connectionType>developerConnection</connectionType>
                     </configuration>
                 </plugin>
+            
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>1.5</version>
+                    <executions>
+                        <execution>
+                            <id>add-source</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>add-source</goal>
+                            </goals>
+                            <configuration>
+                                <sources>
+                                    <source>${basedir}/src/assemble</source>
+                                </sources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>2.8</version>
                     <configuration>
-						<!-- Default configuration for all reports -->
+                    <!-- Default configuration for all reports -->
                         <show>public</show>
                     </configuration>
                     <executions>
@@ -222,38 +179,6 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.6</version>
-                    <executions>
-                        <execution>
-                            <id>deploy-site</id>
-                            <phase>site-deploy</phase>
-                            <configuration>
-                                <target name="credentials" description="Ask for user credentials">
-                                    <input addproperty="sf.username">Please enter sourceforge username:</input>
-									<!--<input message="Please supply password for user ${sf.username}:" addproperty="sf.username.password"> <handler type="secure" /> </input> -->
-                                </target>
-
-                                <target name="upload" description="Upload results of build to sourceforge" depends="release,credentials">
-									<!--<echo message="Do not forget to supply -Dusername -Dpassword to ant when running the upload target!" /> -->
-									<!--<scp todir="${sf.username},maltcms@web.sourceforge.net:htdocs/" password="${sf.username.password}" sftp="true" trust="true" verbose="true"> 
-										<fileset dir="${release_dir}/site/" /> </scp> -->
-                                    <exec command="rsync" inputstring="">
-                                        <arg value="-avtruP"/>
-                                        <arg value="-e ssh "/>
-                                        <arg value="target/site/"/>
-                                        <arg value="${sf.username},maltcms@web.sourceforge.net:htdocs/maven/maltcms/${project.version}"/>
-                                    </exec>
-                                </target>
-                            </configuration>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>2.3.2</version>
                     <configuration>
@@ -270,20 +195,103 @@
                         <encoding>${project.build.sourceEncoding}</encoding>
                     </configuration>
                 </plugin>
-                <!-- redirectTestOutputToFile -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.10</version>
                     <configuration>
                         <argLine>-Xmx1024m</argLine>
+                        <!-- redirectTestOutputToFile -->
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+<!--                        <templateFile>src/site/siteTemplate.vm</templateFile>-->
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <version>2.4</version>
+                            <configuration>
+                                <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                                <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                            </configuration>
+              <!-- simpler configuration without reportSets available for usual cases -->
+                            <reports>
+                                <report>dependencies</report>
+                                <report>project-team</report>
+                                <report>mailing-list</report>
+                                <report>issue-tracking</report>
+                                <report>license</report>
+                                <report>scm</report>
+                            </reports>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <version>2.8.1</version>
+                            <configuration>
+                                <show>public</show>
+                                <links>
+                                    <link>http://docs.oracle.com/javase/6/docs/api/</link>
+                        <!-- version 4.1 api not available -->
+                                    <link>http://www.unidata.ucar.edu/software/netcdf-java/v4.0/javadoc/</link>
+                                </links>
+                            </configuration>
+                        </plugin>
+<!--                            <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>jxr-maven-plugin</artifactId>
+                                <version>2.3</version>
+                                <configuration>
+                                    <aggregate>true</aggregate>
+                                </configuration>
+                            </plugin> -->
+<!--                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-changelog-plugin</artifactId>
+                                <version>2.2</version>
+                            </plugin>-->
+<!--                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-checkstyle-plugin</artifactId>
+                                <version>2.7</version>
+                                <configuration>
+                                    <configLocation>config/sun_checks.xml</configLocation>
+                                </configuration>
+                            </plugin>-->
+                    </reportPlugins>
+                </configuration>
+            </plugin>
+<!--            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pdf-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>pdf</id>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>pdf</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
+        </plugins>
+        
     </build>
-
+   
     <modules>
         <module>maltcms-apps</module>
         <module>maltcms-chroma</module>
@@ -312,16 +320,16 @@
         <module>maltcms-io-mzml</module>
         <module>maltcms-io-openms-featurexml</module>
         <module>maltcms-test-data</module>
-        <module>maltcms-distribution</module>
         <module>maltcms-evaluation</module>
         <module>maltcms-io-csv</module>
         <module>maltcms-spectratyping</module>
+        <module>maltcms-distribution</module>
     </modules>
     <dependencies>
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>cross-main</artifactId>
-            <version>1.2.4</version>
+            <version>1.2.5</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-logging</artifactId>
@@ -336,7 +344,7 @@
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>cross-ui</artifactId>
-            <version>1.2.4</version>
+            <version>1.2.5</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-logging</artifactId>
@@ -383,6 +391,5 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.test.skip>true</maven.test.skip>
-        <project.previousVersion>1.0.7</project.previousVersion>
     </properties>
 </project>

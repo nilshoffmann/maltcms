@@ -11,6 +11,8 @@ Prerequisites for Maltcms:
   http://www.oracle.com/technetwork/java/javase/downloads/index.html
 - Maven 3
   http://maven.apache.org/download.html
+- Ant 1.8.2
+  http://ant.apache.org/
 
 Recommended:
 - Any IDE supporting maven 2/3 integration and subversion support
@@ -51,19 +53,7 @@ call multiple maven targets within one call. So instead of calling
 please use
 >mvn clean && mvn install
 
-Or issue two separate calls of maven from the command-line:
->mvn clean
->mvn install
-
---------------------------------------------------------------------------------
-	Building Maltcms as an anonymous user
---------------------------------------------------------------------------------
-
->mvn -s anonymous-settings.xml clean
->mvn -s anonymous-settins.xml install
-
-Building a binary distribution:
-From the base directory (where this file is located), call:
+Or issue three separate calls of maven from the command-line:
 >mvn clean
 >mvn install
 
@@ -82,6 +72,23 @@ create a tagged release and take note of the release number (e.g. cross-1.2.4)
 Then update the dependencies to cross in the pom.xml (in the same directory as 
 this file) with the new release number.
 
+License Headers:
+Check, that all new files all have the maltcms license header, provided 
+under maltcms-resources/src/main/resources/licenses/maltcmsLicenseHeader.txt 
+
+To add / update the license header, there is a nice plugin for the NetBeans IDE
+available: 
+	http://plugins.netbeans.org/plugin/17960/license-changer
+
+Svn keywords:
+Then, be sure to set the svn:keywords property recursively on the project. The 
+keywords should hold at least the 'Id' property. See the subversion manual for 
+more information: 
+	http://svnbook.red-bean.com/en/1.6/svn.advanced.props.special.keywords.html
+For short
+>svn propset -R svn:keywords "Id" *
+will set the 'Id' property on EVERY file below the current directory recursively.
+
 Creating a tagged release:
 1. Update local svn copy
 >svn update
@@ -95,6 +102,13 @@ If all tests succeed, continue, otherwise, correct errors and go back to 2.
 If everything looks fine:
 5. Perform release
 >mvn release:perform 
+6. Create site
+>cd target/checkout
+>mvn site
+7. Check that site content is okay
+8. Deploy site
+>ant site-deploy
+9. Relax ;-)
 
 --------------------------------------------------------------------------------
 	Deploying a snapshot to the artifactory repository *
