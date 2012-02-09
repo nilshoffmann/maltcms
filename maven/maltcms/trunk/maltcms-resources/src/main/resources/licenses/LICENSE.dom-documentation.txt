@@ -1,4 +1,4 @@
-xml-commons/java/external/LICENSE.dom-documentation.txt $Id: LICENSE.dom-documentation.txt 129 2010-06-25 11:57:02Z nilshoffmann $
+xml-commons/java/external/LICENSE.dom-documentation.txt $Id$
 
 
 This license came from: http://www.w3.org/Consortium/Legal/copyright-documents-19990405

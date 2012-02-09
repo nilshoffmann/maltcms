@@ -1,25 +1,24 @@
 /*
- * Copyright (C) 2008, 2009 Nils Hoffmann Nils.Hoffmann A T
- * CeBiTec.Uni-Bielefeld.DE
- * 
- * This file is part of Cross/Maltcms.
- * 
- * Cross/Maltcms is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- * 
- * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
- * 
- * $Id: SparseTest.java 160 2010-08-31 19:55:58Z nilshoffmann $
+ *  Copyright (C) 2008-2012 Nils Hoffmann
+ *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+ *
+ *  This file is part of Cross/Maltcms.
+ *
+ *  Cross/Maltcms is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Cross/Maltcms is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Cross/Maltcms.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  $Id$
  */
-
 package maltcms.datastructures.array.tests;
 
 import junit.framework.Assert;
@@ -117,7 +116,7 @@ public class SparseTest extends TestCase {
 		// System.out.println("Shape 1: " + this.s1.getShape()[0] + " Shape 2: "
 		// + this.s2.getShape()[0]);
 		// Assert.assertEquals(3.90222d, SparseTools.dot(this.s1,
-		// this.s2),0.01d);
+		// this.s2),0.01d);
 	}
 
 	public void testGetMaxIndex() {
@@ -127,9 +126,9 @@ public class SparseTest extends TestCase {
 		        0 + this.s2.getShape()[0] - 1);
 	}
 
-	// public void testMeanMerge() {
-	// fail("Not yet implemented");
-	// }
+	// public void testMeanMerge() {
+	// fail("Not yet implemented");
+	// }
 
 	public void testGetMinIndex() {
 		Assert.assertEquals(this.s1.getMinIndex(), 10);

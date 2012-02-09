@@ -1,25 +1,24 @@
 /*
- * Copyright (C) 2008, 2009 Soeren Mueller,Nils Hoffmann Nils.Hoffmann A T
- * CeBiTec.Uni-Bielefeld.DE
- * 
- * This file is part of Cross/Maltcms.
- * 
- * Cross/Maltcms is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- * 
- * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
- * 
- * $Id: Alignment.java 43 2009-10-16 17:22:55Z nilshoffmann $
+ *  Copyright (C) 2008-2012 Nils Hoffmann
+ *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+ *
+ *  This file is part of Cross/Maltcms.
+ *
+ *  Cross/Maltcms is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Cross/Maltcms is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Cross/Maltcms.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  $Id$
  */
-
 package smueller.alignment;
 
 import java.util.Vector;
@@ -35,8 +34,8 @@ public class Alignment {
 	protected double[][] matrix;
 	protected double[][] pwd;
 	private double[][] kostenfunktion;
-	// 3Dim-Array, welches das Backtracking und finden aller optimalen
-	// Alignments erm�glicht
+	// 3Dim-Array, welches das Backtracking und finden aller optimalen
+	// Alignments erm�glicht
 	protected int[][][] pathway;
 
 	protected double x;
@@ -49,8 +48,8 @@ public class Alignment {
 	int counter = 0;
 	int alindex1 = 0;
 	int alindex2 = 0;
-	// Vektor, der alle optimalen Alignments enth�lt. Pro Alignment existiert
-	// ein OAV, welcher Aligned Pair Vektoren enth�lt
+	// Vektor, der alle optimalen Alignments enth�lt. Pro Alignment existiert
+	// ein OAV, welcher Aligned Pair Vektoren enth�lt
 	Vector<OptimalAlignmentVector> allalignments = new Vector<OptimalAlignmentVector>();
 	OptimalAlignmentVector oav1 = new OptimalAlignmentVector();
 	OptimalAlignmentVector oav2 = new OptimalAlignmentVector();
@@ -61,7 +60,7 @@ public class Alignment {
 
 	}
 
-	// Gibt alle optimalen Alignments i.d. Konsole aus
+	// Gibt alle optimalen Alignments i.d. Konsole aus
 	public void ausgabe() {
 		String str1 = "";
 		String str2 = "";
@@ -87,7 +86,7 @@ public class Alignment {
 		}
 	}
 
-	// Buchstaben Zahlen zuordnen, um die Kostenmatrix ansprechen zu k�nnen
+	// Buchstaben Zahlen zuordnen, um die Kostenmatrix ansprechen zu k�nnen
 	public int chartoNumber(final char a) {
 		int numb = 0;
 
@@ -128,7 +127,7 @@ public class Alignment {
 		return numb;
 	}
 
-	// Klont den aktuellen OAV und und f�gt ihm den Vektor hinzu
+	// Klont den aktuellen OAV und und f�gt ihm den Vektor hinzu
 	public void cloneAl() {
 		final OptimalAlignmentVector zuKopieren = this.allalignments
 		        .get(this.counter);
@@ -148,7 +147,7 @@ public class Alignment {
 		this.matrix[0][0] = 0;
 		this.pathway[0][0][0] = 0;
 
-		// 2 Schleien um erste Zeile/Spalte f�llen zu k�nnen
+		// 2 Schleien um erste Zeile/Spalte f�llen zu k�nnen
 		for (int is = 1; is < n; is++) {
 			final double ld = vergleiche((chartoNumber(this.seq2.charAt(is))),
 			        0);
@@ -167,12 +166,12 @@ public class Alignment {
 			this.pathway[ju][0][0] = 2;
 
 		}
-		// Matrix von (1,1) bis (m,n) mit Werten f�llen und Pathway f�r
-		// Backtracking speichern
+		// Matrix von (1,1) bis (m,n) mit Werten f�llen und Pathway f�r
+		// Backtracking speichern
 		for (int i = 1; i < n; i++) {
 			for (int j = 1; j < m; j++) {
-				// 3 vorg�nger, die man f�r die Minimierung ben�tigt,
-				// holen
+				// 3 vorg�nger, die man f�r die Minimierung ben�tigt,
+				// holen
 				this.z = this.matrix[j - 1][i - 1];
 				this.x = this.matrix[j][i - 1];
 				this.y = this.matrix[j - 1][i];
@@ -185,15 +184,15 @@ public class Alignment {
 				        .charAt(i))));
 				final double ly = vergleiche(
 				        (chartoNumber(this.seq1.charAt(j))), 0);
-				// Werte f�r hor/ver/diag Schritt berechenn
+				// Werte f�r hor/ver/diag Schritt berechenn
 				this.z = Math.round((this.z + lz) * 100) / 100.00;
 				this.x = Math.round((this.x + lx) * 100) / 100.00;
 				this.y = Math.round((this.y + ly) * 100) / 100.00;
 
-				// Minimalen Weg in Matrix �bernehmen
+				// Minimalen Weg in Matrix �bernehmen
 				this.matrix[j][i] = mini(this.x, this.y, this.z);
 
-				// Pfad, von wo man gekommen ist, f�r Backtracking speichern
+				// Pfad, von wo man gekommen ist, f�r Backtracking speichern
 				vergleich: {
 					if ((this.x == mini(this.x, this.y, this.z))
 					        && (this.y == mini(this.x, this.y, this.z))
@@ -235,7 +234,7 @@ public class Alignment {
 		}
 	}
 
-	// Alle optimalen Alignments erstellen
+	// Alle optimalen Alignments erstellen
 	public void createAlignments(final String u, final String v) {
 		this.seq1 = u;
 		this.seq2 = v;
@@ -245,7 +244,7 @@ public class Alignment {
 		int j = m - 1;
 		this.allalignments.add(this.oav1);
 		align: while (true) {
-			// wenn es nur eine M�glichkeit gab:
+			// wenn es nur eine M�glichkeit gab:
 			if (this.pathway[j][i][1] == 0) {
 
 				if (this.pathway[j][i][0] == 1) {
@@ -279,7 +278,7 @@ public class Alignment {
 				}
 
 			}
-			// Wenn es 2 M�glichkeiten gab:
+			// Wenn es 2 M�glichkeiten gab:
 			if (this.pathway[j][i][2] == 0) {
 
 				if (this.pathway[j][i][1] == 2) {
@@ -310,7 +309,7 @@ public class Alignment {
 					continue align;
 				}
 			}
-			// Wenn es 3 M�glichkeiten gab:
+			// Wenn es 3 M�glichkeiten gab:
 			if (this.pathway[j][i][2] != 0) {
 				if (this.pathway[j][i][2] == 3) {
 					cloneAl();
@@ -332,7 +331,7 @@ public class Alignment {
 		}
 	}
 
-	// Matrix in der Konsole ausgeben
+	// Matrix in der Konsole ausgeben
 	public void drawMatrix() {
 		final int m = this.seq1.length();
 		final int n = this.seq2.length();
@@ -350,7 +349,7 @@ public class Alignment {
 		}
 	}
 
-	// Zeichnet alle 3 Dimensionen der Pfadmatrix
+	// Zeichnet alle 3 Dimensionen der Pfadmatrix
 	public void drawPathway() {
 		final int m = this.seq1.length();
 		final int n = this.seq2.length();

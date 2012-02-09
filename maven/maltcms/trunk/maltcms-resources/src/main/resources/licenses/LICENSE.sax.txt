@@ -1,4 +1,4 @@
-xml-commons/java/external/LICENSE.sax.txt $Id: LICENSE.sax.txt 129 2010-06-25 11:57:02Z nilshoffmann $
+xml-commons/java/external/LICENSE.sax.txt $Id$
 
 
 This license came from: http://www.megginson.com/SAX/copying.html

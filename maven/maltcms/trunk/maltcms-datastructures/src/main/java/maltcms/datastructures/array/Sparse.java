@@ -1,25 +1,24 @@
 /*
- * Copyright (C) 2008, 2009 Nils Hoffmann Nils.Hoffmann A T
- * CeBiTec.Uni-Bielefeld.DE
- * 
- * This file is part of Cross/Maltcms.
- * 
- * Cross/Maltcms is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- * 
- * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
- * 
- * $Id: Sparse.java 43 2009-10-16 17:22:55Z nilshoffmann $
+ *  Copyright (C) 2008-2012 Nils Hoffmann
+ *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+ *
+ *  This file is part of Cross/Maltcms.
+ *
+ *  Cross/Maltcms is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Cross/Maltcms is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Cross/Maltcms.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  $Id$
  */
-
 package maltcms.datastructures.array;
 
 import maltcms.tools.MaltcmsTools;
@@ -55,7 +54,7 @@ public class Sparse extends D1 {
 		// massBinResolution);
 		final double max = mm.max;// MaltcmsTools.binMZ(mm.max,mm.min,mm.max,
 		// massBinResolution);
-		// System.out.println("Min: "+min+" Max: "+max+" bins: "+nbins);
+		// System.out.println("Min: "+min+" Max: "+max+" bins: "+nbins);
 		return Sparse.create(indices, values, (int) Math.floor(min), (int) Math
 		        .ceil(max), nbins, massBinResolution);
 	}
@@ -103,8 +102,8 @@ public class Sparse extends D1 {
 			} else {
 				this.indToVal.set(index, val);
 			}
-			// this.minindex = Math.min(this.minindex, index);
-			// this.maxindex = Math.max(this.maxindex, index);
+			// this.minindex = Math.min(this.minindex, index);
+			// this.maxindex = Math.max(this.maxindex, index);
 		}
 	}
 
@@ -121,11 +120,11 @@ public class Sparse extends D1 {
 		if (arg0 >= this.indToVal.cardinality()) {
 			return 0.0;
 		}
-		// if (this.indToVal.containsKey(arg0)) {
+		// if (this.indToVal.containsKey(arg0)) {
 		return this.indToVal.get(arg0);
-		// } else {
-		// return this.mv;
-		// }
+		// } else {
+		// return this.mv;
+		// }
 	}
 
 	@Override
@@ -152,8 +151,8 @@ public class Sparse extends D1 {
 	public IndexIterator getIndexIterator() {
 		return new IndexIterator() {
 
-			// Set<Integer> s = indToVal.keySet();
-			// Iterator<Integer> iter = s.iterator();
+			// Set<Integer> s = indToVal.keySet();
+			// Iterator<Integer> iter = s.iterator();
 			int counter = 0;
 
 			public boolean getBooleanCurrent() {
@@ -378,7 +377,7 @@ public class Sparse extends D1 {
 	public int[] getShape() {
 		// return new int[] { this.maxindex - this.minindex };
 		return new int[] { this.indToVal.size() };// this.maxindex -
-		// this.minindex + 1};
+		// this.minindex + 1};
 	}
 
 	@Override
@@ -388,14 +387,14 @@ public class Sparse extends D1 {
 
 	@Override
 	public void set(final int arg0, final double arg1) {
-		// if (arg0 < this.minindex) {
-		// this.minindex = arg0;
-		// }
-		// if (arg0 > this.maxindex) {
-		// this.maxindex = arg0;
-		// }
-		// this.map_minindex = Math.min(this.map_minindex, arg0);
-		// this.map_maxindex = Math.max(this.map_maxindex, arg0);
+		// if (arg0 < this.minindex) {
+		// this.minindex = arg0;
+		// }
+		// if (arg0 > this.maxindex) {
+		// this.maxindex = arg0;
+		// }
+		// this.map_minindex = Math.min(this.map_minindex, arg0);
+		// this.map_maxindex = Math.max(this.map_maxindex, arg0);
 		this.indToVal.set(arg0, arg1);
 	}
 
