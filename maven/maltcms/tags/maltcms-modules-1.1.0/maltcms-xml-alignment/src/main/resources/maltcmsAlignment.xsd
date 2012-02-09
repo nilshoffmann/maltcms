@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (C) 2008-2012 Nils Hoffmann
+ Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+
+ This file is part of Cross/Maltcms.
+
+ Cross/Maltcms is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Cross/Maltcms is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public License
+ along with Cross/Maltcms.  If not, see &lt;http://www.gnu.org/licenses/>.
+
+ $Id$
+
+-->
+
+<schema targetNamespace="http://maltcms.sourceforge.net/maltcmsAlignment"
+	elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:maltcms="http://maltcms.sourceforge.net/maltcmsAlignment">
+
+    <complexType name="mappedPointsType">
+    	<sequence>
+    		<element ref="maltcms:resource" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element ref="maltcms:pointMap" minOccurs="1"
+    			maxOccurs="1">
+    		</element>
+    	</sequence>
+    	<attribute name="isAlignmentReference" type="boolean"
+    		use="required">
+    	</attribute>
+    </complexType>
+
+    <element name="alignment">
+		<complexType>
+			<sequence>
+				<element ref="maltcms:mappedPoints" minOccurs="1" maxOccurs="unbounded"></element>
+			</sequence>
+			<attribute name="type" type="string" use="required"></attribute>
+			<attribute name="generator" type="string" use="required"></attribute>
+			<attribute name="isCompleteMap" type="boolean" use="required"></attribute>
+			<attribute name="numberOfMaps" type="integer" use="required"></attribute>
+		</complexType>
+	</element>
+
+	<complexType name="resourceType">
+		<attribute name="uri" type="anyURI" use="required"></attribute>
+	</complexType>
+
+	<element name="resource" type="maltcms:resourceType"></element>
+
+	<element name="pointMap" type="maltcms:pointMapType"></element>	
+	<element name="mappedPoints" type="maltcms:mappedPointsType"></element>
+	<element name="point" type="maltcms:pointType"></element>
+
+	<complexType name="pointType">
+		<sequence>
+			<element name="dimension" minOccurs="0" maxOccurs="unbounded">
+				<complexType>
+					<attribute name="name" type="string" use="required"></attribute>
+					<attribute name="value" type="anySimpleType" use="required"></attribute>
+					<attribute name="unit" type="string" use="optional"></attribute>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+
+    <complexType name="pointMapType">
+    	<sequence>
+    		<element ref="maltcms:point" minOccurs="0" maxOccurs="unbounded"></element>
+    	</sequence>
+   		<attribute name="pointNumber" type="integer"></attribute>
+   		<attribute name="dimNumber" type="integer"></attribute>
+    </complexType>
+</schema>

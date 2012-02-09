@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (C) 2008-2012 Nils Hoffmann
+ Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+
+ This file is part of Cross/Maltcms.
+
+ Cross/Maltcms is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Cross/Maltcms is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public License
+ along with Cross/Maltcms.  If not, see &lt;http://www.gnu.org/licenses/>.
+
+ $Id$
+
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" xmlns:util="http://www.springframework.org/schema/util">
+    <description>
+            This file defines elements of the ChromA4D SRG seeded region growing.
+    </description>
+    
+    <bean id="identificationSim" class="maltcms.math.functions.similarities.ArrayCos"/>
+    
+    <bean id="peakIdentification" class="maltcms.commands.fragments2d.peakfinding.output.PeakIdentification">
+        <property name="doSearch" value="false" />
+        <property name="dbFiles">
+            <list>
+                <!-- insert path to your maltcms databases below -->
+                <!--<value></value>-->
+            </list>
+        </property>
+        <property name="threshold" value="0.8" />
+        <property name="k" value="1" />
+        <property name="similarity" ref="identificationSim" />
+        <property name="masqMasses" >
+            <list>
+                <value>73</value>
+                <value>74</value>
+                <value>147</value>
+                <value>148</value>
+                <value>149</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="peakIntegration" class="maltcms.commands.fragments2d.peakfinding.output.PeakIntegration">
+        <property name="k" value="5" />
+        <property name="plotIntegration" value="false" />
+    </bean>
+    
+    <bean id="peakExporter" class="maltcms.commands.fragments2d.peakfinding.output.PeakExporter">
+        <property name="compareAllAgainstAll" value="false" />
+        <property name="formatString" value="#0.00" />
+    </bean>
+    
+    <bean id="peakPickerMax" class="maltcms.commands.fragments2d.peakfinding.picking.MaxSortPeakPicking">
+        <property name="totalIntensityRedoVar" value="total_intensity_filtered" />
+        <property name="totalIntensityVar" value="total_intensity_filtered" />
+        <property name="maxDx" value="1" />
+        <property name="maxDy" value="1" />
+        <property name="minVerticalScanIndex" value="150" />
+        <property name="k" value="2" />
+    </bean>
+
+    <bean id="peakSeparator" class="maltcms.commands.fragments2d.peakfinding.PeakSeparator">
+        <property name="minDist" value="0.995"/>
+        <property name="separationSimilarity" ref="shouldBeSeparatedSim" />
+        <property name="similarity" ref="separationSim" />
+        <property name="useMeanMsForSeparation" value="false" />
+    </bean>
+    <bean id="rt1shouldBeSeparatedSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
+        <property name="tolerance" value="15.0"/>
+        <property name="threshold" value="0.0"/>
+    </bean>
+    <bean id="rt2shouldBeSeparatedSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
+        <property name="tolerance" value="1.0"/>
+        <property name="threshold" value="0.0"/>
+    </bean>
+    <bean id="arrayshouldBeSeparatedSim" class="maltcms.math.functions.similarities.ArrayCos"/>
+    <bean id="shouldBeSeparatedSim" class="maltcms.math.functions.ProductSimilarity">
+        <property name="scalarSimilarities">
+            <array>
+                <ref bean="rt1shouldBeSeparatedSim"/>
+                <ref bean="rt2shouldBeSeparatedSim"/>
+            </array>
+        </property>
+        <property name="arraySimilarities">
+            <array>
+                <ref bean="arrayshouldBeSeparatedSim"/>
+            </array>
+        </property>
+    </bean>
+    <bean id="rt1separationSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
+        <property name="tolerance" value="15.0"/>
+        <property name="threshold" value="0.0"/>
+    </bean>
+    <bean id="rt2separationSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
+        <property name="tolerance" value="1.0"/>
+        <property name="threshold" value="0.0"/>
+    </bean>
+    <bean id="arrayseparationSim" class="maltcms.math.functions.similarities.ArrayCos"/>
+    <bean id="separationSim" class="maltcms.math.functions.ProductSimilarity">
+        <property name="scalarSimilarities">
+            <array>
+                <ref bean="rt1separationSim"/>
+                <ref bean="rt2separationSim"/>
+            </array>
+        </property>
+        <property name="arraySimilarities">
+            <array>
+                <ref bean="arrayseparationSim"/>
+            </array>
+        </property>
+    </bean>
+    
+    <bean id="bbhImpl" class="maltcms.commands.fragments2d.peakfinding.bbh.FastBidirectionalBestHit" >
+        <property name="useMeanMS" value="false" />
+        <property name="threshold" value="0.9" />
+        <property name="maxRetDiff" value="500.0" />
+        <property name="similarity" ref="bbhSimilarity" />
+    </bean>
+    <bean id="rt1bbhSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
+        <property name="tolerance" value="15.0"/>
+        <property name="threshold" value="0.0"/>
+    </bean>
+    <bean id="rt2bbhSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
+        <property name="tolerance" value="1.0"/>
+        <property name="threshold" value="0.0"/>
+    </bean>
+    <bean id="arraybbhSim" class="maltcms.math.functions.similarities.ArrayCos"/>
+    <bean id="bbhSimilarity" class="maltcms.math.functions.ProductSimilarity">
+        <property name="scalarSimilarities">
+            <array>
+                <ref bean="rt1bbhSim"/>
+                <ref bean="rt2bbhSim"/>
+            </array>
+        </property>
+        <property name="arraySimilarities">
+            <array>
+                <ref bean="arraybbhSim"/>
+            </array>
+        </property>
+    </bean>
+
+    <bean id="regionGrower" class="maltcms.commands.fragments2d.peakfinding.srg.OneByOneRegionGrowing">
+        <property name="totalIntensityVar" value="total_intensity" />
+        <property name="minDistance" value="0.99" />
+        <property name="similarity" ref="regionGrowingSim" />
+        <property name="minPeakSize" value="2" />
+        <property name="maxPeakSize" value="3000" />
+        <property name="discardPeaksWithMaxArea" value="true" />
+        <property name="discardPeaksWithMinArea" value="true" />
+        <property name="filterMS" value="true" />
+        <property name="useAlternativFiltering" value="true" />
+        <property name="useMeanMS" value="false" />
+    </bean>
+    <bean id="regionGrowingSim" class="maltcms.math.functions.similarities.ArrayCos"/>
+    
+    <bean id="seededRegionGrowing" class="maltcms.commands.fragments2d.peakfinding.SeededRegionGrowing">
+        <property name="totalIntensityVar" value="total_intensity_filtered" />
+        <property name="colorrampLocation" value="res/colorRamps/bcgyr.csv" />
+        <property name="doubleFillValue" value="9.9692099683868690e+36d" />
+        <property name="threshold" value="0.0" />
+        <property name="doBBH" value="true"/>
+        <property name="separate" value="true" />
+        <property name="secondRun" value="true" />
+        <property name="doNormalization" value="false"/>
+        <property name="doIntegration" value="false"/>
+        <property name="secondSeedMinDistance" value="0.95" />
+        <property name="seedNotInRegion" value="false" />
+        <property name="similaritySecondRun" ref="secondRunSim"/>
+        <property name="peakPicking" ref="peakPickerMax"/>
+        <property name="regionGrowing" ref="regionGrower" />
+        <property name="bbh" ref="bbhImpl"/>
+        <property name="identification" ref="peakIdentification"/>
+        <property name="integration" ref="peakIntegration"/>
+        <property name="peakExporter" ref="peakExporter"/>
+        <property name="peakSeparator" ref="peakSeparator"/>
+        <!-- java -jar maltcms.jar -DmyProperty=0.3f -->
+        <!-- <property name="myProperty" value="#{systemProperties.myProperty}"/>-->
+    </bean>
+   
+   <bean id="rt1SecondRunSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
+        <property name="tolerance" value="15.0"/>
+        <property name="threshold" value="0.0"/>
+    </bean>
+    <bean id="rt2SecondRunSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
+        <property name="tolerance" value="1.0"/>
+        <property name="threshold" value="0.0"/>
+    </bean>
+    <bean id="arraySecondRunSim" class="maltcms.math.functions.similarities.ArrayCos"/>
+    <bean id="secondRunSim" class="maltcms.math.functions.ProductSimilarity">
+        <property name="scalarSimilarities">
+            <array>
+                <ref bean="rt1SecondRunSim"/>
+                <ref bean="rt2SecondRunSim"/>
+            </array>
+        </property>
+        <property name="arraySimilarities">
+            <array>
+                <ref bean="arraySecondRunSim"/>
+            </array>
+        </property>
+    </bean>
+   
+</beans>
