@@ -4,7 +4,7 @@
   <parent>
     <artifactId>maltcms-modules</artifactId>
     <groupId>net.sf.maltcms</groupId>
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
   </parent>
   <artifactId>maltcms-datastructures-quadtree</artifactId>
   <name>maltcms-datastructures-quadtree</name>
