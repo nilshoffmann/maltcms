@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<content group="developers" ident="developers/concepts" nname="Concepts" toRoot="../" publish="yes" lastchanged="$Date$ by $Author$">
+<content group="developers" ident="developers/concepts" nname="Concepts" toRoot="../" publish="yes" lastchanged="$Date: 2012-01-29 16:11:44 +0100 (So, 29. Jan 2012) $ by $Author: nilshoffmann $">
 <column id="content">
             <heading level="1">About this page</heading><heading level="2">June 27th, 2010</heading>
 	    <p>TEstdiv</p>

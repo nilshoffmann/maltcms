@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<content group="home" ident="home/gettingStarted" nname="Getting Started" toRoot="../" publish="yes" lastchanged="$Date$ by $Author$">
+<content group="home" ident="home/gettingStarted" nname="Getting Started" toRoot="../" publish="yes" lastchanged="$Date: 2012-02-10 11:15:21 +0100 (Fr, 10. Feb 2012) $ by $Author: nilshoffmann $">
 <column id="content">
         <h1>Download and Installation</h1>
         <p>Please use the following link for instructions on where to download and how to install the most recent release 
