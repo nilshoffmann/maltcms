@@ -89,6 +89,7 @@
     <xi:include href="news/netbeansMauiFeature.xml" parse="xml"/>
     <xi:include href="news/perspektive2010.xml" parse="xml"/>
     <xi:include href="news/maltcms1_1.xml" parse="xml"/>
+    <xi:include href="news/bookChapterMetabolomics.xml" parse="xml"/>
 <!--    Users -->
     <xi:include href="users/features.xml" parse="xml" />
     <xi:include href="users/tutorials.xml" parse="xml" /> 
