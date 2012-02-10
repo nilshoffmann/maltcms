@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content group="home" ident="home/gettingStarted" nname="Getting Started" toRoot="../" publish="yes" lastchanged="$Date$ by $Author$">
 <column id="content">
-        <a href="http://sourceforge.net/apps/trac/maltcms/">Quick start</a>
+        <h1>Download and Installation</h1>
+        <p>Please use the following link for instructions on where to download and how to install the most recent release 
+        of Maltcms.</p>
+        <a href="http://maltcms.sourceforge.net/maven/maltcms/1.1.0/gettingStarted.html">Instructions for Maltcms 1.1.0</a>
 </column>
 </content>

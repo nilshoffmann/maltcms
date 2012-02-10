@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<content group="news" ident="news/maltcms1_1" nname="Maltcms 1.1 Release" publish="no" toRoot="../" lastchanged="$Date$ by $Author$">
+<content group="news" ident="news/maltcms1_1" nname="Maltcms 1.1 Release" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
     <column id="content">
-        <h1>Maltcms 1.1 Released on February 1st, 2012</h1>
-        <h2>Release Notes</h2>
-        <h2>Download</h2>
+        <h1>Maltcms 1.1 Released on February 10th, 2012</h1>
+        <p>The Modular Application Toolkit for Chromatography Mass Spectrometry project is a framework mainly for programmers
+            and power-users for data preprocessing tasks, such as filtering, baseline correction, peak finding, alignment,
+            and visualization of high-throughput data.
+        </p>
+        Maltcms 1.1.0 has seen a large number of changes:
+        <ul>
+            <li>Changed configuration system from property files to Spring XML Bean definition format for improved and easier and more flexible exchange/configuration of components.</li>
+            <li>Integration of the MPAXS parallelization framework for much simpler parallelization with automatic task synchronization.</li>
+            <li>Improvements on running time and space usage of the alignment algorithms.</li>
+            <li>New Wavelet-based peak finding algorithm for GCxGC-MS data.</li>
+            <li>Improved TIC-based peak finding algorithm for GC-MS data (and general one-dimensional trajectory data).</li>
+            <li>Refactorings and cleanup in various areas to reduce interdependencies of modules.</li>
+            <li>Integration of the Groovy scripting language.</li>
+        </ul>    
+        Known Issues:
+        <ul>
+            <li>Xml io providers (except for mzML) may be rather slow on access, this will be fixed in one of the next releases.</li>
+        </ul> 
+            
+        <p>To get started, please visit 
+            <a href="http://maltcms.sf.net/maven/maltcms/1.1.0/index.html">the Maltcms 1.1 Maven site</a>.
+        </p>
+
     </column>
 </content>

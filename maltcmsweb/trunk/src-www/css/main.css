@@ -5,7 +5,7 @@ body {
     font-weight: normal;
     margin: 0 auto;
     padding: 0;
-    width: 990px;
+    width: 1024px;
 }
 a {
     color: #0000BB;
@@ -28,6 +28,27 @@ div.nav_dotted ul.unbulletedlist {
     color: #000000;
     padding-bottom: 0.5em;
 }
+
+.plainunbulletedlist {
+    list-style-type: none;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+    padding-left: 1em;
+}
+
+ul.plainunbulletedlist li {
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #000000;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+ul.plainunbulletedlist li:before {
+    content: "\00BB \0020";
+}
+
 div.nav_dotted ul.unbulletedlist li:before {
     content: "\00BB \0020";
 }
