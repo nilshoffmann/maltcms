@@ -33,13 +33,13 @@ import java.util.Set;
 
 import maltcms.datastructures.array.IFeatureVector;
 
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
-import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.exception.ResourceNotAvailableException;
 import java.util.LinkedHashMap;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Shorthand class for peaks.
@@ -47,40 +47,22 @@ import java.util.LinkedHashMap;
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  * 
  */
+@Data
+@Slf4j
 public class Peak implements IFeatureVector {
 
     /**
      * 
      */
     private static final long serialVersionUID = -4337180586706400884L;
-    private Logger log = Logging.getLogger(this);
-    private IFileFragment association = null;
     private final int scanIndex;
     private final Array msIntensities;
     private final double sat;
-    private String name = "";
-    private final HashMap<IFileFragment, Map<Peak, Double>> sims = new HashMap<IFileFragment, Map<Peak, Double>>();
-    private final HashMap<IFileFragment, List<Peak>> sortedPeaks = new HashMap<IFileFragment, List<Peak>>();
-    private boolean storeOnlyBestSimilarities = true;
-
-    public Peak(final String name, final IFileFragment file,
-            final int scanIndex, final Array msIntensities,
-            final double scan_acquisition_time) {
-        this.name = name;
-        // EvalTools.notNull(file, this);
-        this.association = file;
-        this.scanIndex = scanIndex;
-        this.msIntensities = msIntensities;
-        this.sat = scan_acquisition_time;
-    }
-
-    /**
-     * Call this directly after creation of Peak.
-     * @param b
-     */
-    public void setStoreOnlyBestSimilarities(boolean b) {
-        this.storeOnlyBestSimilarities = b;
-    }
+    private final HashMap<String, Map<Peak, Double>> sims = new HashMap<String, Map<Peak, Double>>();
+    private final HashMap<String, List<Peak>> sortedPeaks = new HashMap<String, List<Peak>>();
+    private final String name;
+    private final String association;
+    private final boolean storeOnlyBestSimilarities = true;
 
     /**
      * Add a similarity to Peak p. Resets the sortedPeaks list for the
@@ -146,34 +128,22 @@ public class Peak implements IFeatureVector {
         this.sortedPeaks.clear();
     }
 
-    public IFileFragment getAssociation() {
-        return this.association;
-    }
-
-    public Array getMSIntensities() {
-        return this.msIntensities;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
     /**
      * Only call this method, after having added all similarities!
      *
-     * @param iff
+     * @param key
      * @return
      */
-    public List<Peak> getPeaksSortedBySimilarity(final IFileFragment iff) {
-        if (this.sims.containsKey(iff)) {
+    public List<Peak> getPeaksSortedBySimilarity(final String key) {
+        if (this.sims.containsKey(key)) {
             List<Peak> peaks = null;
-            if (this.sortedPeaks.containsKey(iff)) {
-                peaks = this.sortedPeaks.get(iff);
+            if (this.sortedPeaks.containsKey(key)) {
+                peaks = this.sortedPeaks.get(key);
             } else {
-                final Set<Entry<Peak, Double>> s = this.sims.get(iff).entrySet();
+                final Set<Entry<Peak, Double>> s = this.sims.get(key).entrySet();
                 final ArrayList<Entry<Peak, Double>> al = new ArrayList<Entry<Peak, Double>>();
                 for (final Entry<Peak, Double> e : s) {
-                    if (!e.getKey().getAssociation().getName().equals(getAssociation().getName())) {
+                    if (!e.getKey().getAssociation().equals(getAssociation())) {
                         al.add(e);
                     }
                 }
@@ -197,15 +167,15 @@ public class Peak implements IFeatureVector {
                 for (final Entry<Peak, Double> e : al) {
                     peaks.add(e.getKey());
                 }
-                this.sortedPeaks.put(iff, peaks);
+                this.sortedPeaks.put(key, peaks);
             }
             return peaks;
         }
         return java.util.Collections.emptyList();
     }
 
-    public Peak getPeakWithHighestSimilarity(final IFileFragment iff) {
-        final List<Peak> l = getPeaksSortedBySimilarity(iff);
+    public Peak getPeakWithHighestSimilarity(final String key) {
+        final List<Peak> l = getPeaksSortedBySimilarity(key);
         if (l.isEmpty()) {
             return null;
         }
@@ -260,19 +230,16 @@ public class Peak implements IFeatureVector {
         }
     }
 
-    public void setName(final String s) {
-        this.name = s;
-    }
-
     @Override
     public int hashCode() {
         return toString().hashCode();
     }
 
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("Peak at position " + this.scanIndex + " and rt: " + this.sat
-                + " in file " + this.association.getName());
+                + " in file " + this.association);
         return sb.toString();
     }
 
@@ -307,6 +274,9 @@ public class Peak implements IFeatureVector {
 
     @Override
     public boolean equals(Object o) {
-        return toString().equals(o.toString());
+        if(o instanceof Peak) {
+            return toString().equals(o.toString());
+        }
+        return false;
     }
 }

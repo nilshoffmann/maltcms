@@ -878,6 +878,17 @@ public class MaltcmsTools {
 
         return new Tuple2D<Double, Double>(mm.min, mm.max);
     }
+    
+    public static Tuple2D<Double,Double> getMinMaxMassRange(Collection<IFileFragment> fragments) {
+        double min_mass = Double.POSITIVE_INFINITY;
+        double max_mass = Double.NEGATIVE_INFINITY;
+        for (final IFileFragment t : fragments) {
+            final Tuple2D<Double, Double> tple = MaltcmsTools.getMinMaxMassRange(t);
+            min_mass = Math.min(tple.getFirst(),min_mass);
+            max_mass = Math.max(tple.getSecond(),max_mass);
+        }
+        return new Tuple2D<Double,Double>(min_mass,max_mass);
+    }
 
     public static Tuple2D<Double, Double> getMinMaxMassRange(
             final IFileFragment reference, final IFileFragment query) {

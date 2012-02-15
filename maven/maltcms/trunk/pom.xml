@@ -56,7 +56,7 @@
     <inceptionYear>2007</inceptionYear>
     <ciManagement>
         <system>hudson</system>
-        <url>http://127.0.0.1:8080/job/maltcms-modules/</url>
+        <url>http://maltcms.de:8080/job/maltcms/</url>
     </ciManagement>
     <scm>
         <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</connection>
@@ -65,15 +65,15 @@
     </scm>
     <distributionManagement>
         <repository>
-            <id>maltcms-artifactory</id>
+            <id>maltcms.de</id>
             <name>maltcms-artifactory-releases</name>
-            <url>http://www.maltcms.de:8081/artifactory/libs-releases-local</url>
+            <url>http://www.maltcms.de:8081/artifactory/libs-release-local</url>
         </repository>
 
         <snapshotRepository>
-            <id>maltcms-artifactory</id>
+            <id>maltcms.de</id>
             <name>maltcms-artifactory-snapshots</name>
-            <url>http://www.maltcms.de:8081/artifactory/libs-snapshots-local</url>
+            <url>http://www.maltcms.de:8081/artifactory/libs-snapshot-local</url>
         </snapshotRepository>
     </distributionManagement>
     <licenses>
@@ -329,7 +329,7 @@
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>cross-main</artifactId>
-            <version>1.2.5</version>
+            <version>1.2.6-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-logging</artifactId>
@@ -344,7 +344,7 @@
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>cross-ui</artifactId>
-            <version>1.2.5</version>
+            <version>1.2.6-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-logging</artifactId>

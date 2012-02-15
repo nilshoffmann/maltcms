@@ -45,6 +45,8 @@ import ucar.ma2.Range;
 import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.Logging;
+import cross.datastructures.ehcache.CacheFactory;
+import cross.datastructures.ehcache.ICacheDelegate;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -53,6 +55,7 @@ import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import java.util.UUID;
 
 /**
  * Implements {@link cross.io.IDataSource} for mzXML Files.
@@ -74,6 +77,8 @@ public class MZXMLSaxDataSource implements IDataSource {
     private NetcdfDataSource ndf = null;
     private String source_files = "source_files";
     private int mslevel;
+    private MSXMLParser parser = null;
+    private ICacheDelegate<IVariableFragment,Array> variableToArrayCache = new CacheFactory<IVariableFragment,Array>().createDefaultCache(UUID.randomUUID().toString());
 
     /**
      * Checks, if passed in file is valid mzXML, by trying to invoke the parser
@@ -184,10 +189,13 @@ public class MZXMLSaxDataSource implements IDataSource {
     }
 
     private MSXMLParser getParser(final String file) {
-        final MSXMLParser mp = new MSXMLParser(file);
-        final int sc = mp.getScanCount();
-        EvalTools.inRangeI(1, Integer.MAX_VALUE, sc, this);
-        return mp;
+        if(this.parser == null) {
+            log.info("Creating new parser for file {}",file);
+            parser = new MSXMLParser(file);
+            int sc = parser.getScanCount();
+            EvalTools.inRangeI(1, Integer.MAX_VALUE, sc, this);
+        }
+        return parser;
     }
 
     /**
@@ -282,7 +290,11 @@ public class MZXMLSaxDataSource implements IDataSource {
 
     private Array loadArray(final IFileFragment f, final IVariableFragment var) {
         final MSXMLParser mp = getParser(f);
-        Array a = null;
+        Array a = variableToArrayCache.get(var);
+        if(a!=null) {
+            log.info("Retrieved variable data array from cache for "+var);
+            return a;
+        }
         final String varname = var.getVarname();
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.mass_values)
@@ -303,6 +315,9 @@ public class MZXMLSaxDataSource implements IDataSource {
         } else {
             this.log.warn("Unknown varname to mzXML mapping for varname {}",
                     varname);
+        }
+        if(a!=null) {
+            variableToArrayCache.put(var, a);
         }
         return a;
     }
@@ -524,7 +539,7 @@ public class MZXMLSaxDataSource implements IDataSource {
             ResourceNotAvailableException {
         this.log.debug("readSingle of {} in {}", f.getVarname(), f.getParent().getAbsolutePath());
         if (f.hasArray()) {
-            this.log.warn("{} already has an array set!", f);
+            this.log.debug("{} already has an array set!", f);
         }
         final Array a = loadArray(f.getParent(), f);
         if (a == null) {

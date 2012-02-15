@@ -148,14 +148,22 @@
         </property>
     </bean>
     
+    <bean id="workerFactory" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.WorkerFactory" scope="prototype">
+        <property name="maxRTDifference" value="60.0d"/>
+        <property name="similarityFunction" ref="timePenalizedDotProduct"/>
+        <property name="assumeSymmetricSimilarity" value="true"/>
+    </bean>
+    
     <!-- PeakCliqueAlignment -->
     <bean id="peakCliqueAlignment" class="maltcms.commands.fragments.alignment.PeakCliqueAlignment">
+        <property name="workerFactory" ref="workerFactory"/>
+        <property name="useSparseArrays" value="false"/>
         <property name="minCliqueSize" value="2"/>
         <property name="maxBBHErrors" value="0"/>
-        <property name="similarityFunction" ref="timePenalizedDotProduct"/>
+<!--        <property name="similarityFunction" ref="timePenalizedDotProduct"/>-->
         <property name="savePeakSimilarities" value="false"/>
         <property name="exportAlignedFeatures" value="false"/>
-        <property name="maxRTDifference" value="60.0d"/>
+<!--        <property name="maxRTDifference" value="60.0d"/>-->
         <property name="useUserSuppliedAnchors" value="false"/>
         <property name="saveXMLAlignment" value="true"/>
         <property name="savePlots" value="false"/>

@@ -45,6 +45,8 @@ import ucar.ma2.Range;
 import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.Logging;
+import cross.datastructures.ehcache.CacheFactory;
+import cross.datastructures.ehcache.ICacheDelegate;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -53,12 +55,13 @@ import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import java.util.UUID;
 
 /**
  * Implements {@link cross.io.IDataSource} for mzXML Files.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class MZXMLStaxDataSource implements IDataSource {
 
@@ -74,6 +77,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     private NetcdfDataSource ndf = null;
     private String source_files = "source_files";
     private int mslevel = 1;
+    private MSXMLParser parser = null;
+    private ICacheDelegate<IVariableFragment,Array> variableToArrayCache = new CacheFactory<IVariableFragment,Array>().createDefaultCache(UUID.randomUUID().toString());
 
     /**
      * Checks, if passed in file is valid mzXML, by trying to invoke the parser
@@ -184,12 +189,13 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     private MSXMLParser getParser(final String file) {
-        final MSXMLParser mp = new MSXMLParser(file);
-        int sc = mp.getMaxScanNumber();
-        EvalTools.inRangeI(1, Integer.MAX_VALUE, sc, this);
-        sc = mp.getScanCount();
-        EvalTools.inRangeI(1, Integer.MAX_VALUE, sc, this);
-        return mp;
+        if (this.parser == null) {
+            log.info("Creating new parser for file {}",file);
+            parser = new MSXMLParser(file);
+            int sc = parser.getMaxScanNumber();
+            EvalTools.inRangeI(1, Integer.MAX_VALUE, sc, this);
+        }
+        return parser;
     }
 
     /**
@@ -249,7 +255,7 @@ public class MZXMLStaxDataSource implements IDataSource {
      * @param var
      * @param mp
      * @return a Tuple2D<Array,Array> with mass_range_min as first and
-     *         mass_range_max as second array
+     * mass_range_max as second array
      */
     protected Tuple2D<Array, Array> initMinMaxMZ(final IVariableFragment var,
             final MSXMLParser mp) {
@@ -282,7 +288,11 @@ public class MZXMLStaxDataSource implements IDataSource {
 
     private Array loadArray(final IFileFragment f, final IVariableFragment var) {
         final MSXMLParser mp = getParser(f);
-        Array a = null;
+        Array a = variableToArrayCache.get(var);
+        if(a!=null) {
+            log.info("Retrieved variable data array from cache for "+var);
+            return a;
+        }
         final String varname = var.getVarname();
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.mass_values)
@@ -303,6 +313,9 @@ public class MZXMLStaxDataSource implements IDataSource {
         } else {
             throw new ResourceNotAvailableException(
                     "Unknown varname to mzXML mapping for varname " + varname);
+        }
+        if(a!=null) {
+            variableToArrayCache.put(var, a);
         }
         return a;
     }
@@ -525,7 +538,7 @@ public class MZXMLStaxDataSource implements IDataSource {
             ResourceNotAvailableException {
         this.log.info("readSingle of {} in {}", f.getVarname(), f.getParent().getAbsolutePath());
         if (f.hasArray()) {
-            this.log.warn("{} already has an array set!", f);
+            this.log.debug("{} already has an array set!", f);
         }
         final Array a = loadArray(f.getParent(), f);
         if (a == null) {
@@ -623,64 +636,56 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * @param intensity_values
-     *            the intensity_values to set
+     * @param intensity_values the intensity_values to set
      */
     public void setIntensityValuesVarName(final String intensity_values) {
         this.intensity_values = intensity_values;
     }
 
     /**
-     * @param mass_range_max
-     *            the mass_range_max to set
+     * @param mass_range_max the mass_range_max to set
      */
     public void setMassRangeMax(final String mass_range_max) {
         this.mass_range_max = mass_range_max;
     }
 
     /**
-     * @param mass_range_min
-     *            the mass_range_min to set
+     * @param mass_range_min the mass_range_min to set
      */
     public void setMassRangeMin(final String mass_range_min) {
         this.mass_range_min = mass_range_min;
     }
 
     /**
-     * @param mass_values
-     *            the mass_values to set
+     * @param mass_values the mass_values to set
      */
     public void setMassValuesVarName(final String mass_values) {
         this.mass_values = mass_values;
     }
 
     /**
-     * @param scan_acquisition_time
-     *            the scan_acquisition_time to set
+     * @param scan_acquisition_time the scan_acquisition_time to set
      */
     public void setScanAcquisitionTimeVarName(final String scan_acquisition_time) {
         this.scan_acquisition_time = scan_acquisition_time;
     }
 
     /**
-     * @param scan_index
-     *            the scan_index to set
+     * @param scan_index the scan_index to set
      */
     public void setScanIndexVarName(final String scan_index) {
         this.scan_index = scan_index;
     }
 
     /**
-     * @param source_files
-     *            the source_files to set
+     * @param source_files the source_files to set
      */
     public void setSourceFilesVarName(final String source_files) {
         this.source_files = source_files;
     }
 
     /**
-     * @param total_intensity
-     *            the total_intensity to set
+     * @param total_intensity the total_intensity to set
      */
     public void setTotalIntensityVarName(final String total_intensity) {
         this.total_intensity = total_intensity;

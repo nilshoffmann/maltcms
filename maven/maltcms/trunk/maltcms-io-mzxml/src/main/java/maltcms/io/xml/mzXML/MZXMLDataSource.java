@@ -54,7 +54,7 @@ public class MZXMLDataSource implements IDataSource {
 
     private final List<IDataSource> ds = new ArrayList<IDataSource>();
     private final Logger log = Logging.getLogger(this);
-    private final WeakHashMap<String, IDataSource> fragmentToValidReaderMap = new WeakHashMap<String, IDataSource>();
+    private final WeakHashMap<IFileFragment, IDataSource> fragmentToValidReaderMap = new WeakHashMap<IFileFragment, IDataSource>();
 
     public MZXMLDataSource() {
         final List<String> dss = Arrays.asList(
@@ -137,15 +137,17 @@ public class MZXMLDataSource implements IDataSource {
     }
 
     private IDataSource getValidReader(final IFileFragment ff) {
-        if (this.fragmentToValidReaderMap.containsKey(ff.getAbsolutePath())) {
-            return this.fragmentToValidReaderMap.get(ff.getAbsolutePath());
+        if (this.fragmentToValidReaderMap.containsKey(ff)) {
+            return this.fragmentToValidReaderMap.get(ff);
         }
         for (final IDataSource ids : this.ds) {
             try {
                 this.log.info("Checking DataSource {}", ids.getClass().getName());
                 if (ids.canRead(ff) > 0) {
-                    this.fragmentToValidReaderMap.put(ff.getAbsolutePath(), ids);
-                    return ids;
+                    IDataSource dataSource = Factory.getInstance().getObjectFactory().instantiate(ids.getClass().getName(),
+                    cross.io.IDataSource.class);
+                    this.fragmentToValidReaderMap.put(ff, dataSource);
+                    return dataSource;
                 }
             } catch (final RuntimeException e) {
             }

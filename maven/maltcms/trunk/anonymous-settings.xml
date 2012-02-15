@@ -9,13 +9,6 @@
       <id>repo</id>
     </mirror>
   </mirrors>
-    <servers>
-        <server>
-            <id>repo</id>
-            <username>maltcmsresolver</username>
-            <password>\{DESede\}o8OF0HoO+bsqUnnEmHLOBg==</password>
-        </server>
-    </servers>
   <profiles>
     <profile>
       <repositories>
@@ -25,13 +18,13 @@
           </snapshots>
           <id>central</id>
           <name>libs-releases</name>
-          <url>http://www.maltcms.de:8081/artifactory/libs-releases</url>
+          <url>http://www.maltcms.de:8081/artifactory/libs-release</url>
         </repository>
         <repository>
           <snapshots />
           <id>snapshots</id>
           <name>libs-snapshots</name>
-          <url>http://www.maltcms.de:8081/artifactory/libs-snapshots</url>
+          <url>http://www.maltcms.de:8081/artifactory/libs-snapshot</url>
         </repository>
       </repositories>
       <pluginRepositories>
@@ -41,13 +34,13 @@
           </snapshots>
           <id>central</id>
           <name>plugins-releases</name>
-          <url>http://www.maltcms.de:8081/artifactory/plugins-releases</url>
+          <url>http://www.maltcms.de:8081/artifactory/plugins-release</url>
         </pluginRepository>
         <pluginRepository>
           <snapshots />
           <id>snapshots</id>
           <name>plugins-snapshots</name>
-          <url>http://www.maltcms.de:8081/artifactory/plugins-snapshots</url>
+          <url>http://www.maltcms.de:8081/artifactory/plugins-snapshot</url>
         </pluginRepository>
       </pluginRepositories>
       <id>artifactory</id>

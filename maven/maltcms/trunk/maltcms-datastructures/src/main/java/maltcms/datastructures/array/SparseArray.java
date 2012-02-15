@@ -30,6 +30,7 @@ import ucar.ma2.ArrayDouble.D2;
 import ucar.ma2.ArrayInt.D1;
 import cern.colt.matrix.impl.SparseDoubleMatrix2D;
 import cross.datastructures.tuple.Tuple2D;
+import java.io.Serializable;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
