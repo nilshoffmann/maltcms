@@ -55,7 +55,7 @@
     <inceptionYear>2007</inceptionYear>
     <ciManagement>
         <system>hudson</system>
-        <url>http://127.0.0.1:8080/hudson/job/cross/</url>
+        <url>http://maltcms.de:8080/hudson/job/cross/</url>
     </ciManagement>
     <scm>
         <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/cross/trunk/</connection>
@@ -65,15 +65,15 @@
 
     <distributionManagement>
         <repository>
-            <id>maltcms-artifactory</id>
+            <id>maltcms.de</id>
             <name>maltcms-artifactory-releases</name>
-            <url>http://www.maltcms.de:8081/artifactory/libs-releases-local</url>
+            <url>http://www.maltcms.de:8080/artifactory/libs-release-local</url>
         </repository>
 
         <snapshotRepository>
-            <id>maltcms-artifactory</id>
+            <id>maltcms.de</id>
             <name>maltcms-artifactory-snapshots</name>
-            <url>http://www.maltcms.de:8081/artifactory/libs-snapshots-local</url>
+            <url>http://www.maltcms.de:8080/artifactory/libs-snapshot-local</url>
         </snapshotRepository>
     </distributionManagement>
     

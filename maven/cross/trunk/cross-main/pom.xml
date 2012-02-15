@@ -85,7 +85,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-execution-server</artifactId>
-            <version>1.2</version>
+            <version>1.4</version>
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-jdk14</artifactId>
@@ -96,7 +96,7 @@
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>maltcms-execution-spi</artifactId>
-            <version>1.2</version>
+            <version>1.4</version>
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-jdk14</artifactId>

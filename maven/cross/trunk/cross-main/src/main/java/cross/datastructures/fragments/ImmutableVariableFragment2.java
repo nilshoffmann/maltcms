@@ -24,6 +24,9 @@ package cross.datastructures.fragments;
 import cross.Factory;
 import cross.Logging;
 import cross.datastructures.StatsMap;
+import cross.datastructures.ehcache.CacheFactory;
+import cross.datastructures.ehcache.ICacheDelegate;
+import cross.datastructures.ehcache.ICacheElementProvider;
 import cross.datastructures.tools.EvalTools;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.misc.ArrayChunkIterator;
@@ -32,6 +35,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import ucar.ma2.Array;
@@ -63,6 +67,7 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
     private IFileFragment parent = null;
     private boolean isModified = false;
     private boolean useCachedList = false;
+    private ICacheDelegate<IVariableFragment,List<Array>> arrayCache;
 
     private ImmutableVariableFragment2(final IFileFragment ff,
             final IGroupFragment group, final String varname1,
@@ -382,8 +387,33 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         if (getIndex() == null) {
             return Collections.emptyList();
         } else {
+//            if(arrayCache==null) {
+//                CacheFactory<IVariableFragment,List<Array>> cf = new CacheFactory<IVariableFragment, List<Array>>();
+//                arrayCache = cf.createAutoRetrievalCache(this.parent.getAbsolutePath()+">"+this.varname, new ICacheElementProvider<IVariableFragment, List<Array>>() {
+//
+//                    @Override
+//                    public List<Array> provide(IVariableFragment key) {
+//                        if(useCachedList) {
+//                            log.info("Using cached list from cache");
+//                            return CachedList.getList(key);
+//                        }else{
+//                            log.info("Using uncached list from cache");
+//                            try {
+//                                return Factory.getInstance().getDataSourceFactory().getDataSourceFor(
+//                                getParent()).readIndexed(key);
+//                            } catch (IOException ex) {
+//                                log.error(ex.getLocalizedMessage());
+//                            } catch (ResourceNotAvailableException ex) {
+//                                log.error(ex.getLocalizedMessage());
+//                            }
+//                            return Collections.emptyList();
+//                        }
+//                    }
+//                });
+//            }
+//            return arrayCache.get(this);
             if (this.useCachedList) {
-                log.error("Using cached scan line list");
+                log.info("Using cached list");
                 return CachedList.getList(this);
             } else {
                 try {

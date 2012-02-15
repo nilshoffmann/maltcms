@@ -193,6 +193,7 @@ public abstract class AFragmentCommand implements IFragmentCommand {
 		csf.setBlockingWait(true);
 		if (getWorkflow().isExecuteLocal()) {
 			log.info("Creating local completion service!");
+                        csf.setMaxThreads(Factory.getInstance().getConfiguration().getInt("cross.Factory.maxthreads", 1));
 			ics = csf.createVMLocalCompletionService();
 		} else {
 			log.info("Creating mpaxs completion service!");
@@ -211,6 +212,7 @@ public abstract class AFragmentCommand implements IFragmentCommand {
 		csf.setTimeUnit(timeUnit);
 		if (getWorkflow().isExecuteLocal()) {
 			log.info("Creating local completion service!");
+                        csf.setMaxThreads(Factory.getInstance().getConfiguration().getInt("cross.Factory.maxthreads", 1));
 			ics = csf.createVMLocalCompletionService();
 		} else {
 			log.info("Creating mpaxs completion service!");
