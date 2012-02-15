@@ -93,7 +93,7 @@ public class OneWayPeakAnova implements IWorkflowElement {
 		double[] d = new double[s.size()];
 		int i = 0;
 		for (Peak p : s) {
-			d[i++] = ArrayTools.integrate(p.getMSIntensities());
+			d[i++] = ArrayTools.integrate(p.getMsIntensities());
 		}
 		return d;
 	}
@@ -105,7 +105,7 @@ public class OneWayPeakAnova implements IWorkflowElement {
 		double[] values = new double[s.size()];
 		int i = 0;
 		for (Peak p : s) {
-			values[i++] = ArrayTools.integrate(p.getMSIntensities());
+			values[i++] = ArrayTools.integrate(p.getMsIntensities());
 		}
 		return MathTools.average(values, 0, values.length - 1);
 	}
@@ -285,7 +285,7 @@ public class OneWayPeakAnova implements IWorkflowElement {
 			if (classToPeaks.containsKey(cls)) {
 				for (Peak p : classToPeaks.get(cls)) {
 					intraClsVariation += Math.pow(ArrayTools.integrate(p
-					        .getMSIntensities())
+					        .getMsIntensities())
 					        - cliqueMean, 2);
 				}
 			}

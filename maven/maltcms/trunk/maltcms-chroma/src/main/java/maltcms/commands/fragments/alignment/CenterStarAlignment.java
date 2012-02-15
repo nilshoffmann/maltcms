@@ -229,14 +229,14 @@ public class CenterStarAlignment extends AFragmentCommand {
         HashMap<IFileFragment, List<Integer>> fragmentToScanIndexMap = new HashMap<IFileFragment, List<Integer>>();
         for (final List<Peak> l : ll) {
             log.debug("Adding {} peaks: {}", l.size(), l);
-            HashMap<IFileFragment, Peak> fragToPeak = new HashMap<IFileFragment, Peak>();
+            HashMap<String, Peak> fragToPeak = new HashMap<String, Peak>();
             for (final Peak p : l) {
                 fragToPeak.put(p.getAssociation(), p);
             }
             for (final IFileFragment iff : tuple) {
                 int scanIndex = -1;
-                if (fragToPeak.containsKey(iff)) {
-                    Peak p = fragToPeak.get(iff);
+                if (fragToPeak.containsKey(iff.getName())) {
+                    Peak p = fragToPeak.get(iff.getName());
                     scanIndex = p.getScanIndex();
                 }
 

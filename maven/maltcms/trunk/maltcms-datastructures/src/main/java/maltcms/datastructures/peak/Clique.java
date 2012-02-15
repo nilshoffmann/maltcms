@@ -35,7 +35,6 @@ import org.jfree.data.statistics.BoxAndWhiskerItem;
 import org.slf4j.Logger;
 
 import cross.Logging;
-import cross.datastructures.fragments.IFileFragment;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
@@ -48,7 +47,7 @@ public class Clique {
     private long id = -1;
     private Logger log = Logging.getLogger(this);
     private double cliqueMean = 0, cliqueVar = 0;
-    private HashMap<IFileFragment, Peak> clique = new HashMap<IFileFragment, Peak>();
+    private HashMap<String, Peak> clique = new HashMap<String, Peak>();
     private Peak centroid = null;
     private int maxBBHErrors = 0;
     private int bbhErrors = 0;
@@ -174,7 +173,7 @@ public class Clique {
             bbhErrors+=diff;
             log.debug(
                     "Adding peak {} with {}/{} bbh hit(s) to clique",
-                    new Object[]{p.getAssociation().getName() + "@"
+                    new Object[]{p.getAssociation() + "@"
                     + p.getScanAcquisitionTime(), actualBidiHits,clique.size()});
             update(p);
             clique.put(p.getAssociation(), p);
@@ -246,7 +245,7 @@ public class Clique {
 
     public BoxAndWhiskerItem createRTBoxAndWhisker() {
         List<Double> l = new ArrayList<Double>();
-        for (IFileFragment f : this.clique.keySet()) {
+        for (String f : this.clique.keySet()) {
             l.add(centroid.getScanAcquisitionTime()
                     - this.clique.get(f).getScanAcquisitionTime());
         }
@@ -255,9 +254,9 @@ public class Clique {
 
     public BoxAndWhiskerItem createApexTicBoxAndWhisker() {
         List<Double> l = new ArrayList<Double>();
-        for (IFileFragment f : this.clique.keySet()) {
-            l.add(Math.log(ArrayTools.integrate(centroid.getMSIntensities()))
-                    - ArrayTools.integrate(this.clique.get(f).getMSIntensities()));
+        for (String f : this.clique.keySet()) {
+            l.add(Math.log(ArrayTools.integrate(centroid.getMsIntensities()))
+                    - ArrayTools.integrate(this.clique.get(f).getMsIntensities()));
         }
         return BoxAndWhiskerCalculator.calculateBoxAndWhiskerStatistics(l);
     }
@@ -360,13 +359,13 @@ public class Clique {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if (this.centroid != null) {
-            sb.append("Center: " + this.centroid.toString() + "\n");
+            sb.append("Center: ").append(this.centroid.toString()).append("\n");
         } else {
             sb.append("Center: null\n");
         }
-        sb.append("\tMean: " + this.cliqueMean + "\n");
-        sb.append("\tVariance: " + this.cliqueVar + "\n");
-        for (IFileFragment f : this.clique.keySet()) {
+        sb.append("\tMean: ").append(this.cliqueMean).append("\n");
+        sb.append("\tVariance: ").append(this.cliqueVar).append("\n");
+        for (String f : this.clique.keySet()) {
             if (this.clique.get(f) != null) {
                 sb.append(this.clique.get(f).toString());
             } else {
@@ -383,13 +382,13 @@ public class Clique {
 
             @Override
             public int compare(Peak o1, Peak o2) {
-                return o1.getAssociation().getName().compareTo(o2.getAssociation().getName());
+                return o1.getAssociation().compareTo(o2.getAssociation());
             }
         });
         return peaks;
     }
 
-    public double getSimilarityForPeaks(IFileFragment a, IFileFragment b) {
+    public double getSimilarityForPeaks(String a, String b) {
         return this.clique.get(a).getSimilarity(this.clique.get(b));
     }
 

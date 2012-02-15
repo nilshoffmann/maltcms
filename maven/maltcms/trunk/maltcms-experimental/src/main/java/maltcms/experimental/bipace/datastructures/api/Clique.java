@@ -45,7 +45,7 @@ public class Clique<T extends Peak> {
     private static long CLIQUEID = -1;
     private long id = -1;
 //    private double cliqueMean = 0, cliqueVar = 0;
-    private HashMap<IFileFragment, T> clique = new HashMap<IFileFragment, T>();
+    private HashMap<String, T> clique = new HashMap<String, T>();
     private int maxBBHErrors = 0;
     private int bbhErrors = 0;
     private int bidiHits = 0;
@@ -71,7 +71,7 @@ public class Clique<T extends Peak> {
         return clique.size();
     }
     
-    public Set<IFileFragment> keySet() {
+    public Set<String> keySet() {
         return clique.keySet();
     }
 
@@ -159,7 +159,7 @@ public class Clique<T extends Peak> {
             bbhErrors += diff;
             log.debug(
                     "Adding peak {} with {}/{} bbh hit(s) to clique",
-                    new Object[]{p.getAssociation().getName() + "@"
+                    new Object[]{p.getAssociation() + "@"
                         + p.getScanAcquisitionTime(), actualBidiHits, clique.
                         size()});
             clique.put(p.getAssociation(), p);
@@ -241,7 +241,7 @@ public class Clique<T extends Peak> {
                 append("\n");
         sb.append("\tVariance: ").
                 append(this.cliqueStatistics.getCliqueVariance()).append("\n");
-        for (IFileFragment f : this.clique.keySet()) {
+        for (String f : this.clique.keySet()) {
             if (this.clique.get(f) != null) {
                 sb.append(this.clique.get(f).toString());
             } else {
@@ -258,14 +258,17 @@ public class Clique<T extends Peak> {
 
             @Override
             public int compare(T o1, T o2) {
-                return o1.getAssociation().getName().compareTo(o2.getAssociation().
-                        getName());
+                return o1.getAssociation().compareTo(o2.getAssociation());
             }
         });
         return peaks;
     }
 
     public double getSimilarityForPeaks(IFileFragment a, IFileFragment b) {
+        return this.clique.get(a.getName()).getSimilarity(this.clique.get(b.getName()));
+    }
+    
+    public double getSimilarityForPeaks(String a, String b) {
         return this.clique.get(a).getSimilarity(this.clique.get(b));
     }
 

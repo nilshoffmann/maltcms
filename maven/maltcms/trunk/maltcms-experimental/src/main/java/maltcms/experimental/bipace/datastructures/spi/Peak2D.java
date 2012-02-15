@@ -44,14 +44,16 @@ public class Peak2D extends Peak {
 
     public Peak2D(String name, IFileFragment file, int scanIndex,
             Array msIntensities, double scan_acquisition_time) {
-        super(name, file, scanIndex, msIntensities, scan_acquisition_time);
+        super(scanIndex, msIntensities, scan_acquisition_time,file.getName(),true);
+        setName(name);
     }
     
     public Peak2D(String name, IFileFragment file, int scanIndex,
             Array msIntensities, double scan_acquisition_time, double rt1, double rt2) {
-        super(name, file, scanIndex, msIntensities, scan_acquisition_time);
+        super(scanIndex, msIntensities, scan_acquisition_time,file.getName(),true);
         this.retentionTime1 = rt1;
         this.retentionTime2 = rt2;
+        setName(name);
     }
 
     @Override
@@ -61,8 +63,7 @@ public class Peak2D extends Peak {
                 append(" and rt: ").append(getScanAcquisitionTime()).
                 append(" with rt1=").append(getRetentionTime1()).
                 append(" and rt2=").append(getRetentionTime2()).
-                append(" in file ").append(getAssociation().
-                getName());
+                append(" in file ").append(getAssociation());
         return sb.toString();
     }
 

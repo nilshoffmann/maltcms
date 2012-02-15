@@ -42,14 +42,14 @@ import ucar.ma2.ArrayBoolean;
 public class CliqueTable {
 
     private ArrayBoolean.D2 arr = null;
-    private HashMap<IFileFragment, Integer> placeMap = null;
+    private HashMap<String, Integer> placeMap = null;
 
     public CliqueTable(TupleND<IFileFragment> fragments, List<Clique> l) {
         arr = new ArrayBoolean.D2(l.size(), fragments.size());
-        placeMap = new LinkedHashMap<IFileFragment, Integer>();
+        placeMap = new LinkedHashMap<String, Integer>();
         int j = 0;
         for (IFileFragment f : fragments) {
-            placeMap.put(f, j++);
+            placeMap.put(f.getName(), j++);
         }
         int i = 0;
         for (Clique c : l) {
@@ -62,7 +62,7 @@ public class CliqueTable {
 
     public int getNumberOfPeaksWithinCliques(IFileFragment iff) {
         int sum = 0;
-        int j = placeMap.get(iff);
+        int j = placeMap.get(iff.getName());
 
         for (int i = 0; i < arr.getShape()[0]; i++) {
             sum += (arr.get(i, j) ? 1 : 0);
@@ -73,8 +73,8 @@ public class CliqueTable {
     public List<Clique> getCommonCliques(IFileFragment a, IFileFragment b,
             List<Clique> cliques) {
         List<Clique> commonCliques = new ArrayList<Clique>();
-        int k = placeMap.get(a);
-        int l = placeMap.get(b);
+        int k = placeMap.get(a.getName());
+        int l = placeMap.get(b.getName());
         for (int i = 0; i < arr.getShape()[0]; i++) {
             if (arr.get(i, k) && arr.get(i, l)) {
                 commonCliques.add(cliques.get(i));

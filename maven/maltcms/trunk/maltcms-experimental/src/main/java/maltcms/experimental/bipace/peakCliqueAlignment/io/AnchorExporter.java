@@ -133,8 +133,7 @@ public class AnchorExporter<T extends Peak> implements IWorkflowElement {
         for (final Clique<T> c : cliques) {
             // Matched Peaks
             for (final Peak p : c.getPeakList()) {
-                final IFileFragment association = hm.get(p.getAssociation().
-                        getName());
+                final IFileFragment association = hm.get(p.getAssociation());
                 int slot = placeMap.get(association.getName());
                 if (peakToClique.containsKey(p)) {
                     id = nextIndex[slot];

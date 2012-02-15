@@ -5,7 +5,7 @@
     <mirror>
       <mirrorOf>*</mirrorOf>
       <name>repo</name>
-      <url>http://www.maltcms.de:8081/artifactory/repo</url>
+      <url>http://maltcms.de:8080/artifactory/repo</url>
       <id>repo</id>
     </mirror>
   </mirrors>
@@ -18,13 +18,13 @@
           </snapshots>
           <id>central</id>
           <name>libs-releases</name>
-          <url>http://www.maltcms.de:8081/artifactory/libs-release</url>
+          <url>http://maltcms.de:8080/artifactory/libs-release</url>
         </repository>
         <repository>
           <snapshots />
           <id>snapshots</id>
           <name>libs-snapshots</name>
-          <url>http://www.maltcms.de:8081/artifactory/libs-snapshot</url>
+          <url>http://maltcms.de:8080/artifactory/libs-snapshot</url>
         </repository>
       </repositories>
       <pluginRepositories>
@@ -34,13 +34,13 @@
           </snapshots>
           <id>central</id>
           <name>plugins-releases</name>
-          <url>http://www.maltcms.de:8081/artifactory/plugins-release</url>
+          <url>http://maltcms.de:8080/artifactory/plugins-release</url>
         </pluginRepository>
         <pluginRepository>
           <snapshots />
           <id>snapshots</id>
           <name>plugins-snapshots</name>
-          <url>http://www.maltcms.de:8081/artifactory/plugins-snapshot</url>
+          <url>http://maltcms.de:8080/artifactory/plugins-snapshot</url>
         </pluginRepository>
       </pluginRepositories>
       <id>artifactory</id>

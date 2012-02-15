@@ -53,8 +53,8 @@ public class Peak2DSimilarityCalculator extends PeakSimilarityCalculator<Peak2D>
             // the similarity is symmetric:
             // sim(a,b) = sim(b,a)
             return getSimilarityFunction().apply(new double[]{p1rt1, p1rt2},
-                    new double[]{p2rt1, p2rt2}, p1.getMSIntensities(), p2.
-                    getMSIntensities());
+                    new double[]{p2rt1, p2rt2}, p1.getMsIntensities(), p2.
+                    getMsIntensities());
         }
         return Double.NaN;
     }

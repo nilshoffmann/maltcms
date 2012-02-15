@@ -112,7 +112,7 @@ public class CliqueFinder<T extends Peak> implements IWorkflowElement {
                 if (!iff.getName().equals(jff.getName())) {
                     for (final T p : peaks) {
                         // retrieve list of most similar peaks
-                        final T q = (T)p.getPeakWithHighestSimilarity(jff);
+                        final T q = (T)p.getPeakWithHighestSimilarity(jff.getName());
                         if (q == null) {
                             // null peaks have no bidi best hit, so they are
                             // removed

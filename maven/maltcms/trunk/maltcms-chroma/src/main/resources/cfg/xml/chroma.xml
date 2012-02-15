@@ -160,13 +160,13 @@
         <property name="useSparseArrays" value="false"/>
         <property name="minCliqueSize" value="2"/>
         <property name="maxBBHErrors" value="0"/>
-<!--        <property name="similarityFunction" ref="timePenalizedDotProduct"/>-->
         <property name="savePeakSimilarities" value="false"/>
-        <property name="exportAlignedFeatures" value="false"/>
-<!--        <property name="maxRTDifference" value="60.0d"/>-->
         <property name="useUserSuppliedAnchors" value="false"/>
         <property name="saveXMLAlignment" value="true"/>
         <property name="savePlots" value="false"/>
+        <property name="saveUnmatchedPeaks" value="false"/>
+        <property name="saveUnassignedPeaks" value="false"/>
+        <property name="saveIncompatiblePeaks" value="false"/>
     </bean>
     
 <!--     PairwiseDistanceCalculator -->

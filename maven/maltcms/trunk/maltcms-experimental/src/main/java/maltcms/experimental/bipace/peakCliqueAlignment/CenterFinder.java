@@ -54,7 +54,7 @@ public class CenterFinder<T extends Peak> implements IWorkflowElement{
         int npeaks = 0;
         for (Clique<T> c : l) {
             for (T p : c.getPeakList()) {
-                if (p.getAssociation().getName().equals(iff.getName())) {
+                if (p.getAssociation().equals(iff.getName())) {
                     npeaks++;
                 }
             }
@@ -69,8 +69,8 @@ public class CenterFinder<T extends Peak> implements IWorkflowElement{
         log.debug("Retrieving common cliques");
         for (Clique<T> c : l) {
             for (Peak p : c.getPeakList()) {
-                if (p.getAssociation().getName().equals(a.getName())
-                        || p.getAssociation().getName().equals(b.getName())) {
+                if (p.getAssociation().equals(a.getName())
+                        || p.getAssociation().equals(b.getName())) {
                     commonCliques.add(c);
                 }
             }
@@ -125,8 +125,8 @@ public class CenterFinder<T extends Peak> implements IWorkflowElement{
         int npeaks = 0;
         for (Clique<T> c : cliques) {
             for (Peak p : c.getPeakList()) {
-                cliqueNumbers[placeMap.get(p.getAssociation().getName())]++;
-                cliqueSize[placeMap.get(p.getAssociation().getName())] += c.
+                cliqueNumbers[placeMap.get(p.getAssociation())]++;
+                cliqueSize[placeMap.get(p.getAssociation())] += c.
                         getPeakList().size();
                 npeaks++;
             }

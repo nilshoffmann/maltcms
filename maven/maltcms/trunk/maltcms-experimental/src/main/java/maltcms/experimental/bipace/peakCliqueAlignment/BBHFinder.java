@@ -158,7 +158,7 @@ public class BBHFinder {
         for (final String s : fragmentToPeaks.keySet()) {
             for (final Peak p : fragmentToPeaks.get(s)) {
                 for (final IFileFragment iff : t) {
-                    final List<Peak> l = p.getPeaksSortedBySimilarity(iff);
+                    final List<Peak> l = p.getPeaksSortedBySimilarity(iff.getName());
                     // clear similarities, if a best hit hasn't been assigned
                     if (l.size() > 1) {
                         log.debug("Clearing similarities for {} and {}",

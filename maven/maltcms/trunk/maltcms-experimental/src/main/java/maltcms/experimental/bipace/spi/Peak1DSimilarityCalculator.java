@@ -49,8 +49,8 @@ public class Peak1DSimilarityCalculator extends PeakSimilarityCalculator<Peak> {
             // the similarity is symmetric:
             // sim(a,b) = sim(b,a)
             return getSimilarityFunction().apply(new double[]{rt1},
-                    new double[]{rt2}, p1.getMSIntensities(), p2.
-                    getMSIntensities());
+                    new double[]{rt2}, p1.getMsIntensities(), p2.
+                    getMsIntensities());
         }
         return Double.NaN;
     }

@@ -60,9 +60,9 @@ public class Peak implements IFeatureVector {
     private final double sat;
     private final HashMap<String, Map<Peak, Double>> sims = new HashMap<String, Map<Peak, Double>>();
     private final HashMap<String, List<Peak>> sortedPeaks = new HashMap<String, List<Peak>>();
-    private final String name;
+    private String name = "";
     private final String association;
-    private final boolean storeOnlyBestSimilarities = true;
+    private final boolean storeOnlyBestSimilarities;
 
     /**
      * Add a similarity to Peak p. Resets the sortedPeaks list for the

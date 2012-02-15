@@ -193,6 +193,13 @@
                     <version>2.5</version>
                     <configuration>
                         <encoding>${project.build.sourceEncoding}</encoding>
+						<nonFilteredFileExtensions>
+						     <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+							 <nonFilteredFileExtension>cdf</nonFilteredFileExtension>
+							 <nonFilteredFileExtension>gz</nonFilteredFileExtension>
+							 <nonFilteredFileExtension>zip</nonFilteredFileExtension>
+							 <nonFilteredFileExtension>bz2</nonFilteredFileExtension>
+            			 </nonFilteredFileExtensions>
                     </configuration>
                 </plugin>
                 <plugin>

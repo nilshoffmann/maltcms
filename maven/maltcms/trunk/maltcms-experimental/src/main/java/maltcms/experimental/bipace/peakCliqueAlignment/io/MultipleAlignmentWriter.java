@@ -72,10 +72,10 @@ public class MultipleAlignmentWriter implements IWorkflowElement {
             }
             log.debug("Adding {} peaks: {}", l.size(), l);
             for (final Peak p : l) {
-                final IFileFragment iff = p.getAssociation();
+                final String iff = p.getAssociation();
                 EvalTools.notNull(iff, this);
-                final int pos = columnMap.get(iff.getName()).intValue();
-                log.debug("Insert position for {}: {}", iff.getName(), pos);
+                final int pos = columnMap.get(iff).intValue();
+                log.debug("Insert position for {}: {}", iff, pos);
                 if (pos >= 0) {
                     if (line[pos].equals("-")) {
                         line[pos] = p.getScanIndex() + "";
@@ -128,10 +128,10 @@ public class MultipleAlignmentWriter implements IWorkflowElement {
             }
             log.debug("Adding {} peaks", l.size());
             for (final Peak p : l) {
-                final IFileFragment iff = p.getAssociation();
+                final String iff = p.getAssociation();
                 EvalTools.notNull(iff, this);
-                final int pos = columnMap.get(iff.getName()).intValue();
-                log.debug("Insert position for {}: {}", iff.getName(), pos);
+                final int pos = columnMap.get(iff).intValue();
+                log.debug("Insert position for {}: {}", iff, pos);
                 if (pos >= 0) {
                     if (line[pos].equals("-")) {
                         final double sat = p.getScanAcquisitionTime() / 60.0d;
