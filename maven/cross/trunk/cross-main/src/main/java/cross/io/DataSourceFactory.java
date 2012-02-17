@@ -56,8 +56,7 @@ public class DataSourceFactory implements IDataSourceFactory {
         DataSourceServiceLoader ids = new DataSourceServiceLoader();
         List<IDataSource> l = ids.getAvailableCommands();
         for (IDataSource source : l) {
-            System.out.println("Adding datasource provider "+source+" for formats "+source.supportedFormats());
-            log.info("Adding datasource provider {} for formats {}",source,source.supportedFormats());
+            log.debug("Adding datasource provider {} for formats {}",source,source.supportedFormats());
             Factory.getInstance().getObjectFactory().configureType(source);
             addToHashMap(source);
         }

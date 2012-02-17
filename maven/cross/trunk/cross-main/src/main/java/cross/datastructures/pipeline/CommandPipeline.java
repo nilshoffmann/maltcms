@@ -406,7 +406,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
                 final Formatter formatter = new Formatter(sb);
                 formatter.format(CommandPipeline.NUMBERFORMAT, (seconds));
                 log.info("Runtime of command {}: {} sec",
-                        cmd.getClass().getName(),
+                        cmd.getClass().getSimpleName(),
                         sb.toString());
                 Map<String,Object> statsMap = new HashMap<String,Object>();
                 statsMap.put("RUNTIME_MILLISECONDS", Double.valueOf(start/1000000.f));

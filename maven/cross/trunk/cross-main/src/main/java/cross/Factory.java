@@ -205,13 +205,13 @@ public class Factory implements ConfigurationListener {
     private void configureThreadPool(final Configuration cfg) {
         this.maxthreads = cfg.getInt("cross.Factory.maxthreads", 1);
         final int numProcessors = Runtime.getRuntime().availableProcessors();
-        this.log.info("{} processors available to current runtime",
+        this.log.debug("{} processors available to current runtime",
                 numProcessors);
         this.maxthreads = (this.maxthreads < numProcessors) ? this.maxthreads
                 : numProcessors;
         cfg.setProperty("cross.Factory.maxthreads", this.maxthreads);
         cfg.setProperty("maltcms.pipelinethreads", this.maxthreads);
-        this.log.info("Starting with Thread-Pool of size: " + this.maxthreads);
+        this.log.debug("Starting with Thread-Pool of size: " + this.maxthreads);
         initThreadPools();
     }
 

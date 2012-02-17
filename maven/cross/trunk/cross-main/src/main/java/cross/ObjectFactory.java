@@ -53,11 +53,11 @@ public class ObjectFactory implements IObjectFactory {
         userConfigLocation = (File) this.cfg.getProperty("config.basedir");
         String[] contextLocations = null;
         if (cfg.containsKey(CONTEXT_LOCATION_KEY)) {
-            log.info("Using user-defined location: {}",cfg.getStringArray(CONTEXT_LOCATION_KEY));
+            log.debug("Using user-defined location: {}",cfg.getStringArray(CONTEXT_LOCATION_KEY));
             contextLocations = cfg.getStringArray(CONTEXT_LOCATION_KEY);
         }
         if(contextLocations==null) {
-            log.warn("No pipeline configuration found! Please define! Example: -c cfg/chroma.properties");
+            log.debug("No pipeline configuration found! Please define! Example: -c cfg/chroma.properties");
 //            throw new NullPointerException();
             return;
         }
@@ -68,7 +68,7 @@ public class ObjectFactory implements IObjectFactory {
 //            contextLocations = new String[]{str};
 ////            contextLocations = new String[]{"/cfg/xml/chroma.xml"};
 //        }
-        log.info("Using context locations: {}",
+        log.debug("Using context locations: {}",
                 Arrays.toString(contextLocations));
         try {
             context = new DefaultApplicationContextFactory(contextLocations).
