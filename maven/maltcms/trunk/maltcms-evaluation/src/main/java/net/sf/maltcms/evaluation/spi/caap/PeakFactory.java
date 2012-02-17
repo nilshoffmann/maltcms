@@ -203,11 +203,10 @@ public class PeakFactory {
             }
         });
         for (File f : files) {
-            System.out.println("Processing file " + f.getName());
             FeatureMap.FeatureList fl = getFeatureList(f);
             IFileFragment frag = joinFeatures(new File(output), f.getName(), fl);
         }
-        System.out.println("Done!");
+        System.out.println("Processed "+files.length+" files!");
         System.exit(0);
     }
 }

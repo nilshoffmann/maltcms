@@ -373,7 +373,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             }
         }
 
-        throw new IllegalStateException("Could not locate default.properties!");
+        log.warn("Could not locate default.properties, using defaults from classpath!");
     }
 
     public void initClassLoader(String[] urls) {
