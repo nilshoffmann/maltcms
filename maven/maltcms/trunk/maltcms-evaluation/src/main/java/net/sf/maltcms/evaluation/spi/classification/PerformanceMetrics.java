@@ -21,7 +21,9 @@
  */
 package net.sf.maltcms.evaluation.spi.classification;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import net.sf.maltcms.evaluation.api.classification.EntityGroup;
 
 /**
@@ -35,8 +37,9 @@ public class PerformanceMetrics{
     private final double dist;
     private final String toolname;
     private final HashSet<EntityGroup> unmatchedToolEnt, unmatchedGroundTruthEnt;
+    private final HashMap<EntityGroup, EntityGroupClassificationResult> groundTruthToToolMatchResults;
 
-    public PerformanceMetrics(String toolname, int tp, int fp, int tn, int fn, int N, int M, int K, double dist, HashSet<EntityGroup> unmatchedTool, HashSet<EntityGroup> unmatchedGroundTruth) {
+    public PerformanceMetrics(String toolname, int tp, int fp, int tn, int fn, int N, int M, int K, double dist, HashSet<EntityGroup> unmatchedTool, HashSet<EntityGroup> unmatchedGroundTruth,HashMap<EntityGroup, EntityGroupClassificationResult> gtToClsRes) {
         this.toolname = toolname;
         this.tp = tp;
         this.fp = fp;//+unmatchedTool;
@@ -51,6 +54,7 @@ public class PerformanceMetrics{
         this.fn = this.realfn;// + (this.unmatchedGroundTruth);
         this.unmatchedToolEnt = unmatchedTool;
         this.unmatchedGroundTruthEnt = unmatchedGroundTruth;
+        this.groundTruthToToolMatchResults = gtToClsRes;
     }
 
     public double getDist() {
@@ -99,6 +103,10 @@ public class PerformanceMetrics{
 
     public int getUnmatchedGroundTruthEntities() {
         return this.unmatchedGroundTruth;
+    }
+    
+    public Map<EntityGroup, EntityGroupClassificationResult> getGroundTruthToToolMatchResults() {
+        return this.groundTruthToToolMatchResults;
     }
 
     public double getSensitivity() {

@@ -1359,29 +1359,33 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     }
     
     private void savePeakList(Map<String, IFileFragment> nameToFragment, Collection<Peak> peaks, String filename, String type) {
-        File output = FileTools.prepareOutput(getWorkflow().getOutputDirectory(this), filename);
+        File output = new File(getWorkflow().getOutputDirectory(this), filename);
+        output.getParentFile().mkdirs();
         BufferedWriter bw = null;
         try {
             bw = new BufferedWriter(new FileWriter(output));
-            int i = 0;
+            int i = 1;
             for (final Peak p : peaks) {
                 IFileFragment fragment = nameToFragment.get(p.getAssociation());
                 Tuple2D<Array, Array> t = MaltcmsTools.getMS(fragment, p.getScanIndex());
                 ArrayInt.D1 intens = new ArrayInt.D1(t.getSecond().getShape()[0]);
                 MAMath.copyInt(intens, t.getSecond());
-                IMetabolite im = new Metabolite(p.getName(), p.getAssociation() + "-IDX_" + p.getScanIndex() + "-RT_" + p.getScanAcquisitionTime(), getClass().getSimpleName() + "-" + type, i, "", "", "", Double.NaN, p.getScanAcquisitionTime(), "sec", -1, "", p.getName(), (ArrayDouble.D1) t.getFirst(), intens);
+                ArrayDouble.D1 massArray = new ArrayDouble.D1(t.getFirst().getShape()[0]);
+                MAMath.copyDouble(massArray, t.getFirst());
+                String name = p.getAssociation() + "-IDX_" + p.getScanIndex() + "-RT_" + p.getScanAcquisitionTime();
+                IMetabolite im = new Metabolite(p.getName().isEmpty()?name:p.getName(), p.getAssociation() + "-IDX_" + p.getScanIndex() + "-RT_" + p.getScanAcquisitionTime(), getClass().getSimpleName() + "-" + type, i++, "", "", "", Double.NaN, p.getScanAcquisitionTime(), "sec", -1, "", p.getName(), massArray, intens);
                 bw.write(im.toString());
                 bw.newLine();
             }
             bw.close();
             getWorkflow().append(new DefaultWorkflowResult(output, this, WorkflowSlot.FILEIO, nameToFragment.values().toArray(new IFileFragment[0])));
         } catch (IOException ex) {
-            Logger.getLogger(PeakCliqueAlignment.class.getName()).log(Level.SEVERE, null, ex);
+            log.warn("{}",ex);
             if(bw!=null) {
                 try{
                     bw.close();
                 }catch(IOException ex1) {
-                    Logger.getLogger(PeakCliqueAlignment.class.getName()).log(Level.SEVERE, null, ex1);
+                    log.warn("{}",ex1);
                 }
             }
         }

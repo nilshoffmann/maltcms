@@ -237,7 +237,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
 
         System.out.println(matchedToolGroups.size() + "/" + testGroup.size() + " tool entityGroups were assigned ");
         System.out.println(matchedGTGroups.size() + "/" + groundTruth.size() + " ground truth entityGroups were assigned ");
-        PerformanceMetrics pm = new PerformanceMetrics(toolname, tp, fp, tn, fn, N, M, K, dist, unmatchedToolGroups, unmatchedGTGroups);
+        PerformanceMetrics pm = new PerformanceMetrics(toolname, tp, fp, tn, fn, N, M, K, dist, unmatchedToolGroups, unmatchedGTGroups, gtToClsRes);
         return pm;
     }
 

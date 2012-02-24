@@ -44,8 +44,17 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -103,6 +112,24 @@ public class TICPeakListImporter extends AFragmentCommand {
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         TupleND<IFileFragment> retf = new TupleND<IFileFragment>();
+        //check for wildcard arguments
+        if(this.filesToRead.size()==1) {
+            log.info("Parsing filesToRead as wildcard expression");
+            String s = this.filesToRead.get(0);
+            String fullpath = FilenameUtils.getFullPath(s);
+            String wildcard = FilenameUtils.getName(s);
+            WildcardFileFilter fileFilter = new WildcardFileFilter(wildcard);       
+            Collection<File> files = FileUtils.listFiles(new File(fullpath), fileFilter, TrueFileFilter.INSTANCE); 
+            this.filesToRead.clear();
+            for(File f:files) {
+                try {
+                    filesToRead.add(f.getCanonicalPath());
+                } catch (IOException ex) {
+                    log.warn("{}",ex);
+                }
+            }
+            
+        }
         for (IFileFragment ff : t) {
 
             for (String s : this.filesToRead) {
