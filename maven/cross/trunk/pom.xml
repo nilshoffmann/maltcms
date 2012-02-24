@@ -54,8 +54,8 @@
     </developers>
     <inceptionYear>2007</inceptionYear>
     <ciManagement>
-        <system>hudson</system>
-        <url>http://maltcms.de:8080/hudson/job/cross/</url>
+        <system>jenkins</system>
+        <url>http://maltcms.de:8080/jenkins/job/cross/</url>
     </ciManagement>
     <scm>
         <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/cross/trunk/</connection>

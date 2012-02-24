@@ -24,6 +24,8 @@ package cross.datastructures.workflow;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.EvalTools;
 import java.io.File;
+import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
 
 /**
@@ -32,6 +34,7 @@ import org.jdom.Element;
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  * 
  */
+@Slf4j
 public class DefaultWorkflowResult implements IWorkflowFileResult {
 
     private File file = null;
@@ -122,7 +125,11 @@ public class DefaultWorkflowResult implements IWorkflowFileResult {
         final Element resources = new Element("resources");
         for (IFileFragment f : this.resources) {
             final Element res = new Element("resource");
-            res.setAttribute("uri", new File(f.getAbsolutePath()).toURI().toString());
+            try {
+                res.setAttribute("uri", new File(f.getAbsolutePath()).getCanonicalFile().toURI().normalize().toString());
+            } catch (IOException ex) {
+                log.warn("{}",ex);
+            }
             resources.addContent(res);
         }
         iwr.addContent(resources);

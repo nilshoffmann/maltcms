@@ -37,7 +37,10 @@ import cross.event.IEvent;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -504,18 +507,28 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
         final Element ifrge = new Element("workflowInputs");
         for (final IFileFragment ifrg : getInput()) {
             final Element ifrge0 = new Element("workflowInput");
-            ifrge0.setAttribute("uri", new File(ifrg.getAbsolutePath()).toURI().
-                    toASCIIString());
-            ifrge.addContent(ifrge0);
+            try {
+                ifrge0.setAttribute("uri", new File(ifrg.getAbsolutePath()).getCanonicalFile().toURI().normalize().
+                        toASCIIString());
+                ifrge.addContent(ifrge0);
+            } catch (IOException ex) {
+                log.warn("{}",ex);
+            }
+            
         }
         e.addContent(ifrge);
         
         final Element ofrge = new Element("workflowOutputs");
         for (final IFileFragment ofrg : tmp) {
             final Element ofrge0 = new Element("workflowOutput");
-            ofrge0.setAttribute("uri", new File(ofrg.getAbsolutePath()).toURI().
-                    toASCIIString());
-            ofrge.addContent(ofrge0);
+            try {
+                ofrge0.setAttribute("uri", new File(ofrg.getAbsolutePath()).getCanonicalFile().toURI().normalize().
+                        toASCIIString());
+                ofrge.addContent(ofrge0);
+            } catch (IOException ex) {
+                log.warn("{}",ex);
+            }
+            
         }
         e.addContent(ofrge);
         

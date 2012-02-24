@@ -25,6 +25,9 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.EvalTools;
 import cross.io.xml.IXMLSerializable;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
@@ -66,8 +69,13 @@ public class DefaultWorkflowObjectResult<T> implements IWorkflowObjectResult<T>{
         final Element resources = new Element("resources");
         for (IFileFragment f : this.resources) {
             final Element res = new Element("resource");
-            res.setAttribute("uri", new File(f.getAbsolutePath()).toURI().toString());
-            resources.addContent(res);
+            try {
+                res.setAttribute("uri", new File(f.getAbsolutePath()).getCanonicalFile().toURI().normalize().toString());
+                resources.addContent(res);
+            } catch (IOException ex) {
+                log.warn("{}",ex);
+            }
+            
         }
         if(object instanceof IXMLSerializable) {
             final Element objectElement = new Element("object");
