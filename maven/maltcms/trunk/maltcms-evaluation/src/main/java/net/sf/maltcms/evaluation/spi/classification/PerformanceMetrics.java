@@ -33,21 +33,21 @@ import net.sf.maltcms.evaluation.api.classification.EntityGroup;
  */
 public class PerformanceMetrics{
 
-    private final int tp, fp, tn, fn, realfn, N, M, unmatchedTool, unmatchedGroundTruth, K;
-    private final double dist;
-    private final String toolname;
-    private final HashSet<EntityGroup> unmatchedToolEnt, unmatchedGroundTruthEnt;
-    private final HashMap<EntityGroup, EntityGroupClassificationResult> groundTruthToToolMatchResults;
+    private int tp, fp, tn, fn, realfn, groundTruthEntities, toolEntities, unmatchedTool, unmatchedGroundTruth, K;
+    private double dist;
+    private String toolName;
+    private HashSet<EntityGroup> unmatchedToolEnt, unmatchedGroundTruthEnt;
+    private HashMap<EntityGroup, EntityGroupClassificationResult> groundTruthToToolMatchResults;
 
-    public PerformanceMetrics(String toolname, int tp, int fp, int tn, int fn, int N, int M, int K, double dist, HashSet<EntityGroup> unmatchedTool, HashSet<EntityGroup> unmatchedGroundTruth,HashMap<EntityGroup, EntityGroupClassificationResult> gtToClsRes) {
-        this.toolname = toolname;
+    public PerformanceMetrics(String toolName, int tp, int fp, int tn, int fn, int N, int M, int K, double dist, HashSet<EntityGroup> unmatchedTool, HashSet<EntityGroup> unmatchedGroundTruth,HashMap<EntityGroup, EntityGroupClassificationResult> gtToClsRes) {
+        this.toolName = toolName;
         this.tp = tp;
         this.fp = fp;//+unmatchedTool;
         this.tn = tn;
         this.realfn = fn;
-        this.N = N;
+        this.groundTruthEntities = N;
         this.K = K;
-        this.M = M;
+        this.toolEntities = M;
         this.dist = dist;
         this.unmatchedTool = unmatchedTool.size();
         this.unmatchedGroundTruth = K * unmatchedGroundTruth.size();
@@ -61,32 +61,32 @@ public class PerformanceMetrics{
         return dist;
     }
 
-    public String getToolname() {
-        return this.toolname;
+    public String getToolName() {
+        return this.toolName;
     }
 
-    public int getTP() {
+    public int getTp() {
         return this.tp;
     }
 
-    public int getFP() {
+    public int getFp() {
         return this.fp;
     }
 
-    public int getTN() {
+    public int getTn() {
         return this.tn;
     }
 
-    public int getFNWithoutUnmatchedToolEntityGroups() {
+    public int getFnWithoutUnmatchedToolEntityGroups() {
         return this.realfn;
     }
 
-    public int getFN() {
+    public int getFn() {
         return this.fn;
     }
 
     public int getToolEntities() {
-        return this.M;
+        return this.toolEntities;
     }
 
     public int getCommonEntities() {
@@ -94,7 +94,7 @@ public class PerformanceMetrics{
     }
 
     public int getGroundTruthEntities() {
-        return this.N;
+        return this.groundTruthEntities;
     }
 
     public int getUnmatchedToolEntities() {
@@ -164,7 +164,7 @@ public class PerformanceMetrics{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Toolname: " + this.toolname + "\n");
+        sb.append("Toolname: " + this.toolName + "\n");
         sb.append("TP=" + tp + "\n");
         sb.append("TN=" + tn + "\n");
         sb.append("FP=" + fp + "\n");
@@ -177,13 +177,13 @@ public class PerformanceMetrics{
         sb.append("F1 score=" + getF1() + "\n");
         sb.append("Distance to ground truth="+getDist()+"\n");
         //sb.append("Matthews Correlation Coefficient=" + getMCC() + "\n");
-        sb.append("Number of entities in ground truth=" + N + "\n");
-        sb.append("Percentage of matched ground truth entities="+((float)(N-unmatchedGroundTruth))/((float)N)+"\n");
-        sb.append("Number of entities in testGroup=" + M + "\n");
-        sb.append("Percentage of matched tool entities="+((float)(M-unmatchedTool))/((float)M)+"\n");
+        sb.append("Number of entities in ground truth=" + groundTruthEntities + "\n");
+        sb.append("Percentage of matched ground truth entities="+((float)(groundTruthEntities-unmatchedGroundTruth))/((float)groundTruthEntities)+"\n");
+        sb.append("Number of entities in testGroup=" + toolEntities + "\n");
+        sb.append("Percentage of matched tool entities="+((float)(toolEntities-unmatchedTool))/((float)toolEntities)+"\n");
         sb.append("Number of entites shared with ground truth = " + getCommonEntities()+"\n");
-        sb.append("Percentage of test vs. ground truth entities: " + ((double) M / (double) N) + "\n");
-        sb.append("Number of entities matched to ground truth = " + N + "=(tp+tn+fp+fn)=" + (tp + tn + fp + fn) + "\n");
+        sb.append("Percentage of test vs. ground truth entities: " + ((double) toolEntities / (double) groundTruthEntities) + "\n");
+        sb.append("Number of entities matched to ground truth = " + groundTruthEntities + "=(tp+tn+fp+fn)=" + (tp + tn + fp + fn) + "\n");
         sb.append("Number of unmatched testGroup entities (ignored)= " + unmatchedTool + "\n");
         sb.append("Number of unmatched groundTruth entities (counted as false negatives)= " + unmatchedGroundTruth + "\n");
         sb.append("Unmatched tool entities:\n");
@@ -199,8 +199,8 @@ public class PerformanceMetrics{
     }
 
     private double getMCC() {
-        double a = (getTP() * getTN()) - (getFP() * getFN());
-        double b = Math.sqrt((getTP() + getFP()) * (getTP() + getFN()) * (getTN() + getFP()) * (getTN() + getFN()));
+        double a = (getTp() * getTn()) - (getFp() * getFn());
+        double b = Math.sqrt((getTp() + getFp()) * (getTp() + getFn()) * (getTn() + getFp()) * (getTn() + getFn()));
         return a / b;
     }
 

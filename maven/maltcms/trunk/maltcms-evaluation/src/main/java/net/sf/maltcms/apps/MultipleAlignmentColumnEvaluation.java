@@ -187,10 +187,10 @@ public class MultipleAlignmentColumnEvaluation {
                 toolResult.add(pm.getUnmatchedGroundTruthEntities() + "");
                 toolResult.add(pm.getUnmatchedToolEntities() + "");
                 toolResult.add(pm.getCommonEntities() + "");
-                toolResult.add(pm.getTP() + "");
-                toolResult.add(pm.getTN() + "");
-                toolResult.add(pm.getFP() + "");
-                toolResult.add(pm.getFN() + "");
+                toolResult.add(pm.getTp() + "");
+                toolResult.add(pm.getTn() + "");
+                toolResult.add(pm.getFp() + "");
+                toolResult.add(pm.getFn() + "");
 //                HashMap<String, String> hm = getCategoriesFromToolName(toolName);
 //                for (String str : usercategories) {
 //                    String res = hm.get(str);

@@ -156,44 +156,44 @@ public class CemappDtwTest extends AFragmentCommandTest {
         return pdc;
     }
 
-//    @Test
-//    public void testCemappDtwTICConstrained() {
-//        File dataFolder = tf.newFolder("testCemappDtwConstrained");
-//        File inputFile1 = ZipResourceExtractor.extract(
-//                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-//        File inputFile2 = ZipResourceExtractor.extract(
-//                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
-//        File inputFile3 = ZipResourceExtractor.extract(
-//                "/cdf/1D/mannitolA.cdf.gz", dataFolder);
-//        File inputFile4 = ZipResourceExtractor.extract(
-//                "/cdf/1D/mannitolB.cdf.gz", dataFolder);
-//        File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
-//        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
-//        commands.add(new DefaultVarLoader());
-//        commands.add(new DenseArrayProducer());
-//        TICPeakFinder tpf = new TICPeakFinder();
-//        MovingAverageFilter maf = new MovingAverageFilter();
-//        maf.setWindow(10);
-//        TopHatFilter thf = new TopHatFilter();
-//        thf.setWindow(50);
-//        tpf.setFilter(Arrays.asList(maf, thf));
-//        tpf.setSnrWindow(10);
-//        tpf.setPeakThreshold(0.0d);
-//        commands.add(tpf);
-//        commands.add(new PeakCliqueAlignment());
-//        commands.add(createPairwiseDistanceCalculatorTIC(true,0,true,0.2d));
-//        
-//        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-//                inputFile1, inputFile2, inputFile3, inputFile4));
-//        try {
-//
-//            w.call();
-//            w.save();
-//        } catch (Exception ex) {
-//            Assert.fail(ex.getLocalizedMessage());
-//        }
-//
-//    }
+    @Test
+    public void testCemappDtwTICConstrained() {
+        File dataFolder = tf.newFolder("testCemappDtwConstrained");
+        File inputFile1 = ZipResourceExtractor.extract(
+                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
+        File inputFile2 = ZipResourceExtractor.extract(
+                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
+        File inputFile3 = ZipResourceExtractor.extract(
+                "/cdf/1D/mannitolA.cdf.gz", dataFolder);
+        File inputFile4 = ZipResourceExtractor.extract(
+                "/cdf/1D/mannitolB.cdf.gz", dataFolder);
+        File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
+        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        commands.add(new DefaultVarLoader());
+        commands.add(new DenseArrayProducer());
+        TICPeakFinder tpf = new TICPeakFinder();
+        MovingAverageFilter maf = new MovingAverageFilter();
+        maf.setWindow(10);
+        TopHatFilter thf = new TopHatFilter();
+        thf.setWindow(50);
+        tpf.setFilter(Arrays.asList(maf, thf));
+        tpf.setSnrWindow(10);
+        tpf.setPeakThreshold(0.0d);
+        commands.add(tpf);
+        commands.add(new PeakCliqueAlignment());
+        commands.add(createPairwiseDistanceCalculatorTIC(true,0,true,0.2d));
+        
+        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
+                inputFile1, inputFile2, inputFile3, inputFile4));
+        try {
+
+            w.call();
+            w.save();
+        } catch (Exception ex) {
+            Assert.fail(ex.getLocalizedMessage());
+        }
+
+    }
 //    
     @Test
     public void testCemappDtwMZIConstrained() {

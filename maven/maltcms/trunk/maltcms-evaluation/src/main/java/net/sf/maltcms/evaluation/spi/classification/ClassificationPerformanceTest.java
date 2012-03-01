@@ -235,8 +235,8 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         HashSet<EntityGroup> unmatchedGTGroups = new LinkedHashSet<EntityGroup>(groundTruth);
         unmatchedGTGroups.removeAll(matchedGTGroups);
 
-        System.out.println(matchedToolGroups.size() + "/" + testGroup.size() + " tool entityGroups were assigned ");
-        System.out.println(matchedGTGroups.size() + "/" + groundTruth.size() + " ground truth entityGroups were assigned ");
+        //System.out.println(matchedToolGroups.size() + "/" + testGroup.size() + " tool entityGroups were assigned ");
+        //System.out.println(matchedGTGroups.size() + "/" + groundTruth.size() + " ground truth entityGroups were assigned ");
         PerformanceMetrics pm = new PerformanceMetrics(toolname, tp, fp, tn, fn, N, M, K, dist, unmatchedToolGroups, unmatchedGTGroups, gtToClsRes);
         return pm;
     }
@@ -387,20 +387,20 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
             //minimum one tp
             if (tp > 0) {
                 EntityGroupClassificationResult egcr = new EntityGroupClassificationResult(testGroup, groundTruthEntityGroup, tp, tn, fp, fn, dist);
-                System.out.println(egcr);
+                //System.out.println(egcr);
                 if (bestGroup == null) {
                     bestGroup = egcr;
                 } else {
                     try {
                         int comp = egcr.compareTo(bestGroup);
-                        System.out.println("CompareTo returned: " + comp);
+                        //System.out.println("CompareTo returned: " + comp);
                         if (comp > 0) {
                             bestGroup = egcr;
                         } else if (comp == 0) {
-                            System.err.println("Warning: Entity groups are equal!");
+                            //System.err.println("Warning: Entity groups are equal!");
                         }
                     } catch (IllegalArgumentException iae) {
-                        System.err.println("IllegalArgumentException: " + iae.getLocalizedMessage());
+                        //System.err.println("IllegalArgumentException: " + iae.getLocalizedMessage());
                     }
                 }
             }
