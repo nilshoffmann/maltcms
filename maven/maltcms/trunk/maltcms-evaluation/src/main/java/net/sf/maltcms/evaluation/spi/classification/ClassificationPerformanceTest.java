@@ -109,7 +109,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
     }
 
     public PerformanceMetrics performTest(String toolname, List<EntityGroup> testGroup) throws IllegalArgumentException {
-        System.out.println("Performing classfication performance test for " + toolname);
+        System.out.println("Performing classification performance test for " + toolname);
         if (!checkCategories(this.groundTruth, testGroup)) {
             throw new IllegalArgumentException("Could not match categories to ground truth for tool: " + toolname + "!");
         }
@@ -145,7 +145,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         int K = testGroup.get(0).getCategories().size();
 
         int cnt = 0;
-        System.out.println("Matching " + M + " entities against ground truth!");
+        //System.out.println("Matching " + M + " entities against ground truth!");
         for (EntityGroup tgEg : testGroup) {
             //System.out.println("Entity group " + (++cnt) + "/" + testGroup.size());
             //find the ground truth group, which has the highest tp1+tn1 number
@@ -163,7 +163,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
                     int comp = gtg.compareTo(other);
                     if (comp > 0) {
                         //gtg is better than other
-                        System.err.println("Changing assignment for ground truth group " + gtEntityGroup + "\n from group " + other.getToolEntityGroup() + "\n to group: " + gtg.getToolEntityGroup() + "\n");
+                        //System.err.println("Changing assignment for ground truth group " + gtEntityGroup + "\n from group " + other.getToolEntityGroup() + "\n to group: " + gtg.getToolEntityGroup() + "\n");
                         gtToClsRes.put(gtEntityGroup, gtg);
                     } else if (comp < 0) {
                         //other is better, do nothing

@@ -175,7 +175,7 @@ public class MultipleAlignmentColumnEvaluation {
             bw.write("Results for tool: " + toolName + "\n");
             try {
                 PerformanceMetrics pm = cpt.performTest(toolName, egs);
-                toolResult.add(pm.getToolname());
+                toolResult.add(pm.getToolName());
                 toolResult.add(pm.getSensitivity() + "");//recall
                 toolResult.add(pm.getSpecificity() + "");
                 toolResult.add(pm.getPrecision() + "");
