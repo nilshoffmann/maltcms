@@ -34,7 +34,7 @@ import net.sf.maltcms.evaluation.api.classification.EntityGroup;
 public class PerformanceMetrics{
 
     private int tp, fp, tn, fn, realfn, groundTruthEntities, toolEntities, unmatchedTool, unmatchedGroundTruth, K;
-    private double dist;
+    private double dist, f1;
     private String toolName;
     private HashSet<EntityGroup> unmatchedToolEnt, unmatchedGroundTruthEnt;
     private HashMap<EntityGroup, EntityGroupClassificationResult> groundTruthToToolMatchResults;
