@@ -55,6 +55,7 @@ public class PerformanceMetrics{
         this.unmatchedToolEnt = unmatchedTool;
         this.unmatchedGroundTruthEnt = unmatchedGroundTruth;
         this.groundTruthToToolMatchResults = gtToClsRes;
+        this.f1 = 2.0d * ((getPrecision() * getRecall()) / (getPrecision() + getRecall()));
     }
 
     public double getDist() {
@@ -205,7 +206,6 @@ public class PerformanceMetrics{
     }
 
     public double getF1() {
-        double f = 2.0d * ((getPrecision() * getRecall()) / (getPrecision() + getRecall()));
-        return f;
+	return f1;
     }
 }
