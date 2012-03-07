@@ -113,6 +113,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
     private String extension = "";
     @Configurable(name = "alignment.saveLayoutImage", value = "false")
     private boolean saveLayoutImage = false;
+    private boolean sample = false;
 
     public ADynamicTimeWarp() {
         super();
@@ -301,14 +302,16 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         final AnchorPairSet aps = buildAnchorPairSet(t);
         final ArrayDouble.D1 sat_ref = getScanAcquisitionTime(t.getFirst());
         final ArrayDouble.D1 sat_query = getScanAcquisitionTime(t.getSecond());
-        samplePWDistance(
-                tuple,
-                sat_ref,
-                sat_query,
-                (int) Math.ceil(0.01 * tuple.getFirst().size()
-                * tuple.getSecond().size()), 10,
-                StringTools.removeFileExt(t.getFirst().getName()) + " "
-                + StringTools.removeFileExt(t.getSecond().getName()));
+        if (sample) {
+            samplePWDistance(
+                    tuple,
+                    sat_ref,
+                    sat_query,
+                    (int) Math.ceil(0.01 * tuple.getFirst().size()
+                    * tuple.getSecond().size()), 10,
+                    StringTools.removeFileExt(t.getFirst().getName()) + " "
+                    + StringTools.removeFileExt(t.getSecond().getName()));
+        }
         // calculate the alignment matrix
         this.alignment = align(tuple, aps, this.bandWidthPercentage, sat_ref,
                 sat_query);
@@ -428,25 +431,33 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         // diagonal_penalty);
 
         log.debug("Set up anchors!");
-        double percentDone = 0;
-        final long parts = 10;
-        long partCnt = 0;
         final long elements = this.alignment.getNumberOfStoredElements();
         log.info("Calculating {} pairwise scores/costs", elements);
-        long elemCnt = 0;
-
-        for (int i = 0; i < this.alignment.rows(); i++) {
-
-            final int[] bounds = this.alignment.getColumnBounds(i);
-            for (int j = bounds[0]; j < bounds[0] + bounds[1]; j++) {
-                calculatePWD(distance2, ref, query, sat_ref, sat_query, i, j);
-                calculateCWD(distance2, alignment2, i, j, predecessors);
-                percentDone = ArrayTools.calcPercentDone(elements, elemCnt);
-                partCnt = ArrayTools.printPercentDone(percentDone, parts,
-                        partCnt, log);
-                elemCnt++;
+        if (precalculatePairwiseDistances) {
+            for (int i = 0; i < this.alignment.rows(); i++) {
+                final int[] bounds = this.alignment.getColumnBounds(i);
+                for (int j = bounds[0]; j < bounds[0] + bounds[1]; j++) {
+                    final double sat_r = sat_ref == null ? -1 : sat_ref.get(i);
+                    final double sat_q = sat_query == null ? -1 : sat_query.get(j);
+                    this.recurrence.eval(i, j,
+                            alignment2, this.pairwiseFeatureSimilarity.getDistance(i, j,
+                            sat_r, sat_q, ref.get(i), query.get(j)), predecessors);
+                }
+            }
+        } else {
+            for (int i = 0; i < this.alignment.rows(); i++) {
+                final int[] bounds = this.alignment.getColumnBounds(i);
+                for (int j = bounds[0]; j < bounds[0] + bounds[1]; j++) {
+                    final double sat_r = sat_ref == null ? -1 : sat_ref.get(i);
+                    final double sat_q = sat_query == null ? -1 : sat_query.get(j);
+                    distance2.set(i, j, this.pairwiseFeatureSimilarity.getDistance(i, j,
+                            sat_r, sat_q, ref.get(i), query.get(j)));
+                    this.recurrence.eval(i, j,
+                            alignment2, distance2.get(i, j), predecessors);
+                }
             }
         }
+
 
         // log.info("{}%", (int) (Math.ceil(percentDone * 100.0d)));
         final long time = System.currentTimeMillis() - start;
@@ -456,30 +467,6 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
             getStatsMap().put("alignmentMatrixCalculationTime", (double) time);
         }
 
-    }
-
-    private void calculateCWD(final IArrayD2Double distance2,
-            final IArrayD2Double alignment2, final int row, final int col,
-            final byte[][] predecessors) {
-        final double cdist = this.recurrence.eval(row, col,
-                alignment2, distance2.get(row, col), predecessors);
-        if ((row == 0) && (col == 0)) {
-            log.debug("Cdist({},{})={}", new Object[]{row, col, cdist});
-        }
-    }
-
-    private void calculatePWD(final IArrayD2Double distance2,
-            final List<Array> ref, final List<Array> query,
-            final ArrayDouble.D1 sat_ref, final ArrayDouble.D1 sat_query,
-            final int row, final int col) {
-        final double sat_r = sat_ref == null ? -1 : sat_ref.get(row);
-        final double sat_q = sat_query == null ? -1 : sat_query.get(col);
-        final double dist = getPairwiseFeatureSimilarity().getDistance(row, col,
-                sat_r, sat_q, ref.get(row), query.get(col));
-        distance2.set(row, col, dist);
-        if ((row == 0) && (col == 0)) {
-            log.debug("Dist({},{})= {}", new Object[]{row, col, dist});
-        }
     }
 
     @Override
