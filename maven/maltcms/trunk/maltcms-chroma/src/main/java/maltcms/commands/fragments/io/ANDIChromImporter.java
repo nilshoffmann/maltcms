@@ -38,19 +38,21 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.tools.ArrayTools;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.ArrayInt;
 
 /**
- * 
+ *
  * Currently only generates scan_acquisition_time for plotting and alignment
  * purposes. Mapping of ordinate_values is performed by setting
  * var.total_intensity=ordinate_values.
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
-@ProvidesVariables(names = {"var.scan_acquisition_time"})
+@ProvidesVariables(names = {"var.scan_acquisition_time", "var.total_intensity", "var.mass_values", "var.intensity_values"})
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
@@ -72,7 +74,7 @@ public class ANDIChromImporter extends AFragmentCommand {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
     @Override
@@ -84,8 +86,13 @@ public class ANDIChromImporter extends AFragmentCommand {
                     new File(getWorkflow().getOutputDirectory(this),
                     iff.getName()));
             final Array a = iff.getChild(this.ordinateValuesVariable).getArray();
+            final VariableFragment tic = new VariableFragment(fret, "total_intensity");
+            tic.setArray(a);
             final Array sa = iff.getChild(this.actualSamplingIntervalVariable).
                     getArray();
+            final ArrayInt.D1 scanIndex = ArrayTools.indexArray(a.getShape()[0], 0);
+            final VariableFragment siV = new VariableFragment(fret, "scan_index");
+            siV.setArray(scanIndex);
             final ArrayDouble.D1 sat = new ArrayDouble.D1(a.getShape()[0]);
             final Array adt = iff.getChild(this.actualDelayTimeVariable).
                     getArray();
@@ -98,6 +105,23 @@ public class ANDIChromImporter extends AFragmentCommand {
             final VariableFragment vf = new VariableFragment(fret,
                     this.scanAcquisitionTimeVariable);
             vf.setArray(sat);
+            final Array mass_values = new ArrayDouble.D1(a.getShape()[0]);
+            final Array intensity_values = new ArrayDouble.D1(a.getShape()[0]);
+            for(int i = 0;i<a.getShape()[0];i++) {
+                mass_values.setDouble(i, 0);
+                intensity_values.setDouble(i,a.getDouble(i));
+            }
+            final VariableFragment massValuesV = new VariableFragment(fret, "mass_values");
+            massValuesV.setArray(mass_values);
+            final VariableFragment intensityValuesV = new VariableFragment(fret, "intensity_values");
+            intensityValuesV.setArray(intensity_values);
+            final Array mass_range_min = new ArrayDouble.D1(mass_values.getShape()[0]);
+            final Array mass_range_max = new ArrayDouble.D1(mass_values.getShape()[0]);
+            ArrayTools.fill(mass_range_max, 1.0d);
+            final VariableFragment massRangeMin = new VariableFragment(fret, "mass_range_min");
+            massRangeMin.setArray(mass_range_min);
+            final VariableFragment massRangeMax = new VariableFragment(fret, "mass_range_max");
+            massRangeMax.setArray(mass_range_max);
             fret.save();
             ret.add(fret);
         }
@@ -119,7 +143,7 @@ public class ANDIChromImporter extends AFragmentCommand {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.commands.fragments.AFragmentCommand#getDescription()
      */
     @Override
@@ -129,7 +153,7 @@ public class ANDIChromImporter extends AFragmentCommand {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
     @Override

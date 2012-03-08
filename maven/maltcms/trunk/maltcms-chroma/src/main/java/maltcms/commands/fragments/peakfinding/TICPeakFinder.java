@@ -123,6 +123,7 @@ public class TICPeakFinder extends AFragmentCommand {
     private boolean integrateRawTic = true;
     @Configurable(value = "10")
     private int peakSeparationWindow = 10;
+    private boolean removeOverlappingPeaks = true;
 //    @Configurable(value = "maltcms.commands.filters.array.MultiplicationFilter")
     private List<AArrayFilter> filter = Arrays.asList(
             (AArrayFilter) new MultiplicationFilter());
@@ -139,6 +140,7 @@ public class TICPeakFinder extends AFragmentCommand {
         final Dimension peak_number = new Dimension("peak_number",
                 extr.getShape()[0], true, false, false);
         peaks.setDimensions(new Dimension[]{peak_number});
+        Array tic = ff.getChild(ticVarName).getArray();
         final IVariableFragment mai = new VariableFragment(ff,
                 this.ticFilteredVarName);
         peaks.setArray(extr);
@@ -152,24 +154,44 @@ public class TICPeakFinder extends AFragmentCommand {
                     "peak_start_time");
             IVariableFragment peakStopRT = new VariableFragment(ff,
                     "peak_end_time");
+            IVariableFragment peakArea = new VariableFragment(ff,"peak_area");
+            IVariableFragment baseLineStartRT = new VariableFragment(ff,"baseline_start_time");
+            IVariableFragment baseLineStopRT = new VariableFragment(ff,"baseline_stop_time");
+            IVariableFragment baseLineStartValue = new VariableFragment(ff,"baseline_start_value");
+            IVariableFragment baseLineStopValue = new VariableFragment(ff,"baseline_stop_value");
             ArrayChar.D2 names = cross.datastructures.tools.ArrayTools.
                     createStringArray(
                     peaklist.size(), peaklist.size() + 1);
             ArrayDouble.D1 apexRT = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 startRT = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 stopRT = new ArrayDouble.D1(peaklist.size());
+            ArrayDouble.D1 bstartRT = new ArrayDouble.D1(peaklist.size());
+            ArrayDouble.D1 bstopRT = new ArrayDouble.D1(peaklist.size());
+            ArrayDouble.D1 bstartV = new ArrayDouble.D1(peaklist.size());
+            ArrayDouble.D1 bstopV = new ArrayDouble.D1(peaklist.size());
+            ArrayDouble.D1 area = new ArrayDouble.D1(peaklist.size());
             int i = 0;
             for (Peak1D p : peaklist) {
                 names.setString(i, "" + i);
                 apexRT.setDouble(i, p.getApexTime());
                 startRT.setDouble(i, p.getStartTime());
                 stopRT.setDouble(i, p.getStopTime());
+                area.setDouble(i,p.getArea());
+                bstartRT.setDouble(i,p.getStartTime());
+                bstartV.setDouble(i,tic.getDouble(p.getStartIndex())-correctedtic.getDouble(p.getStartIndex()));
+                bstopRT.setDouble(i,p.getStopTime());
+                bstopV.setDouble(i,tic.getDouble(p.getStopIndex())-correctedtic.getDouble(p.getStopIndex()));
                 i++;
             }
             peakNames.setArray(names);
             peakRT.setArray(apexRT);
             peakStartRT.setArray(startRT);
             peakStopRT.setArray(stopRT);
+            peakArea.setArray(area);
+            baseLineStartRT.setArray(bstartRT);
+            baseLineStopRT.setArray(bstopRT);
+            baseLineStartValue.setArray(bstartV);
+            baseLineStopValue.setArray(bstopV);
         }
 
     }
@@ -233,6 +255,7 @@ public class TICPeakFinder extends AFragmentCommand {
             final List<Integer> ts, String filename, final Array rawTIC,
             final Array baselineCorrectedTIC) {
         final ArrayList<Peak1D> pbs = new ArrayList<Peak1D>();
+        Array scanAcquisitionTime = chromatogram.getChild(satVarName).getArray();
         if (integrateTICPeaks) {
             log.info("Using TIC based peak integration");
             FirstDerivativeFilter fdf = new FirstDerivativeFilter();
@@ -258,6 +281,9 @@ public class TICPeakFinder extends AFragmentCommand {
                         rawTIC,
                         baselineCorrectedTIC, fdTIC, sdTIC, tdTIC);
                 if (pb != null) {
+                    pb.setApexTime(scanAcquisitionTime.getDouble(pb.getApexIndex()));
+                    pb.setStartTime(scanAcquisitionTime.getDouble(pb.getStartIndex()));
+                    pb.setStopTime(scanAcquisitionTime.getDouble(pb.getStopIndex()));
                     pbs.add(pb);
                 }
             }
@@ -288,7 +314,10 @@ public class TICPeakFinder extends AFragmentCommand {
             if (overlaps.size() > 0) {
                 log.info("Overlapping peaks: {}", overlaps);
             }
-            pbs.removeAll(overlaps);
+            if(removeOverlappingPeaks) {
+                log.info("Removing overlapping peaks");
+                pbs.removeAll(overlaps);
+            }
         }
         return pbs;
     }
