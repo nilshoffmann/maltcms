@@ -82,7 +82,7 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
 
 	private final Logger log = Logging.getLogger(this);
 
-	private boolean serializeJFreeChart = true;
+	private boolean serializeJFreeChart = false;
 
 	private boolean saveGraphics = true;
 
@@ -173,7 +173,7 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
 		this.fontFamily = cfg.getString(this.getClass().getName()
 		        + ".fontFamily");
 		this.serializeJFreeChart = cfg.getBoolean(this.getClass().getName()
-		        + ".serializeJFreeChart", true);
+		        + ".serializeJFreeChart", false);
 		this.saveGraphics = cfg.getBoolean(this.getClass().getName()
 		        + ".saveGraphics", true);
 		this.log.debug("configure called on {}", this.getClass().getName());

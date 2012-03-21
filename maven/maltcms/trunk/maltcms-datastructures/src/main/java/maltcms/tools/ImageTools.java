@@ -1013,8 +1013,12 @@ public class ImageTools {
                 final FileOutputStream fos = new FileOutputStream(f);
                 ImageTools.writePNG(chart, fos, imgwidth, imgheight);
             } else {
-                ImageTools.log.warn("Cannot handle image of type " + ext
-                        + "! Saving as png!");
+                if(ext.isEmpty() || ext.equals(file.getAbsolutePath())) {
+                    ImageTools.log.info("Using default image format png");
+                }else{
+                    ImageTools.log.warn("Cannot handle image of type " + ext
+                            + "! Saving as png!");
+                }
                 final File f = new File(StringTools.removeFileExt(file.
                         getAbsolutePath())
                         + ".png");

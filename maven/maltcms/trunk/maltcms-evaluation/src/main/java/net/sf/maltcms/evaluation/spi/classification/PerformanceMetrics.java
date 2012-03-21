@@ -49,8 +49,14 @@ public class PerformanceMetrics{
         this.K = K;
         this.toolEntities = M;
         this.dist = dist;
-        this.unmatchedTool = unmatchedTool.size();
-        this.unmatchedGroundTruth = K * unmatchedGroundTruth.size();
+        this.unmatchedTool = 0;////unmatchedTool.size();
+        for(EntityGroup group:unmatchedTool) {
+            this.unmatchedTool+=group.getEntities().size();
+        }
+        this.unmatchedGroundTruth = 0;//K * unmatchedGroundTruth.size();
+        for(EntityGroup group:unmatchedGroundTruth) {
+            this.unmatchedGroundTruth+=group.getEntities().size();
+        }
         this.fn = this.realfn;// + (this.unmatchedGroundTruth);
         this.unmatchedToolEnt = unmatchedTool;
         this.unmatchedGroundTruthEnt = unmatchedGroundTruth;

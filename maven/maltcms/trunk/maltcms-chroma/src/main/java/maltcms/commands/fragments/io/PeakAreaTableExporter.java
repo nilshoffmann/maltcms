@@ -26,6 +26,7 @@ import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
+import cross.exception.NotImplementedException;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -47,10 +48,11 @@ public class PeakAreaTableExporter extends AFragmentCommand {
 
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
+        throw new NotImplementedException();
         //FIXME
         //alignment auslesen
         //peak_area auslesen
-        return in;
+//        return in;
     }
 
     @Override

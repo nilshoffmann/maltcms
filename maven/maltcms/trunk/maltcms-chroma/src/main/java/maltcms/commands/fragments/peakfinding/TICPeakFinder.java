@@ -77,22 +77,29 @@ import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.BatchFilter;
 import maltcms.commands.filters.array.MultiplicationFilter;
+import net.sf.maltcms.execution.api.ICompletionService;
+import org.jfree.chart.JFreeChart;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Find Peaks based on TIC, estimates a local baseline and, based on a given
  * signal-to-noise ratio, decides whether a maximum is a peak candidate or not.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @RequiresVariables(names = {"var.total_intensity"})
 @RequiresOptionalVariables(names = {"var.scan_acquisition_time"})
-@ProvidesVariables(names = {"var.tic_peaks", "var.tic_filtered"})
+@ProvidesVariables(names = {"var.tic_peaks", "var.tic_filtered", "andichrom.var.peak_name",
+    "andichrom.dimension.peak_number", "andichrom.var.peak_retention_time", "andichrom.var.peak_start_time",
+    "andichrom.var.peak_end_time", "andichrom.var.peak_area", "andichrom.var.baseline_start_time",
+    "andichrom.var.baseline_stop_time", "andichrom.var.baseline_start_value", "andichrom.var.baseline_stop_value"})
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
@@ -134,16 +141,15 @@ public class TICPeakFinder extends AFragmentCommand {
     }
 
     private void addResults(final IFileFragment ff, final Array correctedtic,
-            final ArrayInt.D1 extr, final List<Peak1D> peaklist) {
+             final List<Peak1D> peaklist) {
         final IVariableFragment peaks = new VariableFragment(ff,
                 this.ticPeakVarName);
         final Dimension peak_number = new Dimension("peak_number",
-                extr.getShape()[0], true, false, false);
+                peaklist.size(), true, false, false);
         peaks.setDimensions(new Dimension[]{peak_number});
         Array tic = ff.getChild(ticVarName).getArray();
         final IVariableFragment mai = new VariableFragment(ff,
                 this.ticFilteredVarName);
-        peaks.setArray(extr);
         mai.setArray(correctedtic);
 
         if (!peaklist.isEmpty()) {
@@ -154,14 +160,14 @@ public class TICPeakFinder extends AFragmentCommand {
                     "peak_start_time");
             IVariableFragment peakStopRT = new VariableFragment(ff,
                     "peak_end_time");
-            IVariableFragment peakArea = new VariableFragment(ff,"peak_area");
-            IVariableFragment baseLineStartRT = new VariableFragment(ff,"baseline_start_time");
-            IVariableFragment baseLineStopRT = new VariableFragment(ff,"baseline_stop_time");
-            IVariableFragment baseLineStartValue = new VariableFragment(ff,"baseline_start_value");
-            IVariableFragment baseLineStopValue = new VariableFragment(ff,"baseline_stop_value");
-            ArrayChar.D2 names = cross.datastructures.tools.ArrayTools.
-                    createStringArray(
-                    peaklist.size(), peaklist.size() + 1);
+            IVariableFragment peakArea = new VariableFragment(ff, "peak_area");
+            IVariableFragment baseLineStartRT = new VariableFragment(ff, "baseline_start_time");
+            IVariableFragment baseLineStopRT = new VariableFragment(ff, "baseline_stop_time");
+            IVariableFragment baseLineStartValue = new VariableFragment(ff, "baseline_start_value");
+            IVariableFragment baseLineStopValue = new VariableFragment(ff, "baseline_stop_value");
+            Array peakPositions = new ArrayInt.D1(peaklist.size());
+            ArrayChar.D2 names = cross.datastructures.tools.ArrayTools.createStringArray(
+                    peaklist.size(), 1024);
             ArrayDouble.D1 apexRT = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 startRT = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 stopRT = new ArrayDouble.D1(peaklist.size());
@@ -176,13 +182,15 @@ public class TICPeakFinder extends AFragmentCommand {
                 apexRT.setDouble(i, p.getApexTime());
                 startRT.setDouble(i, p.getStartTime());
                 stopRT.setDouble(i, p.getStopTime());
-                area.setDouble(i,p.getArea());
-                bstartRT.setDouble(i,p.getStartTime());
-                bstartV.setDouble(i,tic.getDouble(p.getStartIndex())-correctedtic.getDouble(p.getStartIndex()));
-                bstopRT.setDouble(i,p.getStopTime());
-                bstopV.setDouble(i,tic.getDouble(p.getStopIndex())-correctedtic.getDouble(p.getStopIndex()));
+                area.setDouble(i, p.getArea());
+                bstartRT.setDouble(i, p.getStartTime());
+                bstartV.setDouble(i, tic.getDouble(p.getStartIndex()) - correctedtic.getDouble(p.getStartIndex()));
+                bstopRT.setDouble(i, p.getStopTime());
+                bstopV.setDouble(i, tic.getDouble(p.getStopIndex()) - correctedtic.getDouble(p.getStopIndex()));
+                peakPositions.setInt(i, p.getApexIndex());
                 i++;
             }
+            peaks.setArray(peakPositions);
             peakNames.setArray(names);
             peakRT.setArray(apexRT);
             peakStartRT.setArray(startRT);
@@ -273,14 +281,20 @@ public class TICPeakFinder extends AFragmentCommand {
                     + StringTools.removeFileExt(filename),
                     getWorkflow().getOutputDirectory(this));
             pr.configure(Factory.getInstance().getConfiguration());
-            Factory.getInstance().submitJob(pr);
+            ICompletionService<JFreeChart> ics = createCompletionService(JFreeChart.class);
+            ics.submit(pr);
+            try {
+                ics.call();
+            } catch (Exception ex) {
+                log.warn("{}", ex);
+            }
             // fall back to TIC
             for (final Integer scanApex : ts) {
                 log.debug("Adding peak at scan index {}", scanApex);
                 final Peak1D pb = getPeakBoundsByTIC(chromatogram, scanApex,
                         rawTIC,
                         baselineCorrectedTIC, fdTIC, sdTIC, tdTIC);
-                if (pb != null) {
+                if (pb != null && pb.getArea()>0) {
                     pb.setApexTime(scanAcquisitionTime.getDouble(pb.getApexIndex()));
                     pb.setStartTime(scanAcquisitionTime.getDouble(pb.getStartIndex()));
                     pb.setStopTime(scanAcquisitionTime.getDouble(pb.getStopIndex()));
@@ -294,13 +308,11 @@ public class TICPeakFinder extends AFragmentCommand {
             List<Peak1D> overlaps = new ArrayList<Peak1D>();
             for (Peak1D peak : pbs) {
                 if (l1 == null) {
-                    l1 = new Rectangle2D.Double(peak.getStartIndex(), 0, peak.
-                            getStopIndex()
+                    l1 = new Rectangle2D.Double(peak.getStartIndex(), 0, peak.getStopIndex()
                             - peak.getStartIndex(), 1);
                     prev = peak;
                 } else {
-                    Rectangle2D.Double l2 = new Rectangle2D.Double(peak.
-                            getStartIndex(), 0, peak.getStopIndex()
+                    Rectangle2D.Double l2 = new Rectangle2D.Double(peak.getStartIndex(), 0, peak.getStopIndex()
                             - peak.getStartIndex(), 1);
                     if (l1.intersects(l2) || l1.contains(l2) || l2.contains(l1)) {
                         log.warn("Peak area overlap detected!");
@@ -314,9 +326,10 @@ public class TICPeakFinder extends AFragmentCommand {
             if (overlaps.size() > 0) {
                 log.info("Overlapping peaks: {}", overlaps);
             }
-            if(removeOverlappingPeaks) {
-                log.info("Removing overlapping peaks");
-                pbs.removeAll(overlaps);
+            if (removeOverlappingPeaks) {
+                log.warn("Removal of overlapping peaks currently disabled!");
+//                log.info("Removing overlapping peaks");
+//                pbs.removeAll(overlaps);
             }
         }
         return pbs;
@@ -366,8 +379,7 @@ public class TICPeakFinder extends AFragmentCommand {
         Index intenIdx = intensity.getIndex();
         List<Tuple2D<Double, Double>> miPairs = new ArrayList<Tuple2D<Double, Double>>();
         for (int i = lb; i < ub; i++) {
-            miPairs.add(new Tuple2D<Double, Double>(masses.getDouble(massesIdx.
-                    set(i)), intensity.getDouble(intenIdx.set(i))));
+            miPairs.add(new Tuple2D<Double, Double>(masses.getDouble(massesIdx.set(i)), intensity.getDouble(intenIdx.set(i))));
         }
         Collections.sort(miPairs, new Comparator<Tuple2D<Double, Double>>() {
 
@@ -414,10 +426,12 @@ public class TICPeakFinder extends AFragmentCommand {
             baselineValues[i] = ticValues[i] - cticValues[i];
         }
         for (int i = 0; i < snrValues.length; i++) {
-            double baselineEst = MathTools.averageOfSquares(baselineValues, i
-                    - this.snrWindow, i + this.snrWindow);
-            double signalEst = MathTools.averageOfSquares(cticValues, i
-                    - this.snrWindow, i + this.snrWindow);
+//            double baselineEst = MathTools.averageOfSquares(baselineValues, i
+//                    - this.snrWindow, i + this.snrWindow);
+//            double signalEst = MathTools.averageOfSquares(cticValues, i
+//                    - this.snrWindow, i + this.snrWindow);
+            double baselineEst = baselineValues[i]*baselineValues[i];
+            double signalEst = cticValues[i]*cticValues[i];
             double snr = 20.0d * Math.log10(Math.sqrt(signalEst)
                     / Math.sqrt(baselineEst));
             snrValues[i] = Double.isInfinite(snr) ? 0 : snr;
@@ -492,12 +506,11 @@ public class TICPeakFinder extends AFragmentCommand {
                 filename));
 
         ff.addSourceFile(f);
-        addResults(ff, pprs.getCorrectedTIC(), extr, peaks);
+        addResults(ff, pprs.getCorrectedTIC(), peaks);
 
         ff.save();
         f.clearArrays();
-        DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(ff.
-                getAbsolutePath()), this, WorkflowSlot.PEAKFINDING, ff);
+        DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(ff.getAbsolutePath()), this, WorkflowSlot.PEAKFINDING, ff);
         getWorkflow().append(dwr);
         return ff;
         // }
@@ -678,12 +691,6 @@ public class TICPeakFinder extends AFragmentCommand {
      * @return
      */
     private Array applyFilters(final Array correctedtic) {
-//        final List<AArrayFilter> filters = new ArrayList<AArrayFilter>(
-//                this.filter.size());
-//        for (String s : this.filter) {
-//            filters.add(Factory.getInstance().getObjectFactory().instantiate(s,
-//                    AArrayFilter.class));
-//        }
         final Array filteredtic = BatchFilter.applyFilters(correctedtic,
                 this.filter);
         return filteredtic;
@@ -1020,8 +1027,7 @@ public class TICPeakFinder extends AFragmentCommand {
      * maximum error of epsilon.
      *
      * @param pb
-     * @param mwIndices
-     * @paramt tic
+     * @param mwIndices @paramt tic
      * @return
      */
     private double integratePeak(final Peak1D pb,
@@ -1121,8 +1127,7 @@ public class TICPeakFinder extends AFragmentCommand {
         File matFile = new File(getWorkflow().getOutputDirectory(this),
                 StringTools.removeFileExt(iff.getName())
                 + ".maltcmsAnnotation.xml");
-        MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(new File(iff.
-                getAbsolutePath()).toURI());
+        MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(new File(iff.getAbsolutePath()).toURI());
         for (Peak1D p : l) {
             maf.addPeakAnnotation(ma, this.getClass().getName(), p);
         }
@@ -1192,6 +1197,12 @@ public class TICPeakFinder extends AFragmentCommand {
                 "combinedTICandPeakChart-" + f.getName(), getWorkflow().
                 getOutputDirectory(this));
         pr.configure(Factory.getInstance().getConfiguration());
-        Factory.getInstance().submitJob(pr);
+        ICompletionService<JFreeChart> ics = createCompletionService(JFreeChart.class);
+        ics.submit(pr);
+        try {
+            ics.call();
+        } catch (Exception ex) {
+            log.warn("{}", ex);
+        }
     }
 }

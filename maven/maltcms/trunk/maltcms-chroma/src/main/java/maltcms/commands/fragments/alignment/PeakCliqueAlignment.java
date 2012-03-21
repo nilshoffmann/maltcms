@@ -167,7 +167,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     private boolean saveUnmatchedPeaks = false;
     private boolean saveIncompatiblePeaks = false;
     private boolean saveUnassignedPeaks = false;
-    
+
     public PeakCliqueAlignment() {
 //        similarityFunction = new ProductSimilarity();
 //        GaussianDifferenceSimilarity gds = new GaussianDifferenceSimilarity();
@@ -175,7 +175,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 //        ArrayCorr ac = new ArrayCorr();
 //        similarityFunction.setArraySimilarities(ac);
     }
-    
+
     @Override
     public String toString() {
         return getClass().getName();
@@ -191,12 +191,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     private TupleND<IFileFragment> addAnchors(final List<List<Peak>> al,
             final TupleND<IFileFragment> newFragments,
             final List<Clique> cliques) {
-        
+
         final String ri_names = this.anchorNames;
         final String ri_times = this.anchorTimes;
         final String ri_indices = this.anchorRetentionIndex;
         final String ri_scans = this.anchorScanIndex;
-        
+
         findCenter(newFragments, cliques);
 
         // Create Variables and arrays
@@ -237,7 +237,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         for (IFileFragment f : newFragments) {
             placeMap.put(f.getName(), cnt++);
         }
-        
+
         log.info("Setting anchors!");
         for (final Clique c : cliques) {
             // Matched Peaks
@@ -255,7 +255,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     String name = "A" + cid;
                     if (!(p.getName().equals(""))) {
                         name = name + "_" + p.getName();
-                        
+
                     }
                     // log.info("Adding anchor with name {}", name);
                     ((ArrayChar.D2) association.getChild(ri_names).getArray()).setString(id, name);
@@ -263,7 +263,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     ((ArrayDouble.D1) association.getChild(ri_times).getArray()).set(id, p.getScanAcquisitionTime());
                     nextIndex[slot]++;
                 }
-                
+
             }
             id++;
         }
@@ -297,7 +297,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
         return newFragments;
     }
-    
+
     private int getNumberOfPeaksWithinCliques(IFileFragment iff, List<Clique> l) {
         int npeaks = 0;
         for (Clique c : l) {
@@ -309,7 +309,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
         return npeaks;
     }
-    
+
     @Deprecated
     private List<Clique> getCommonCliques(IFileFragment a, IFileFragment b,
             List<Clique> l) {
@@ -325,7 +325,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
         return commonCliques;
     }
-    
+
     private double getCommonScore(IFileFragment a, IFileFragment b,
             List<Clique> commonCliques) {
         double score = 0;
@@ -366,7 +366,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 cliqueSize[placeMap.get(p.getAssociation())] += c.getPeakList().size();
                 npeaks++;
             }
-            
+
         }
 
         // which FileFragment is the best reference for alignment?
@@ -396,7 +396,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 } else {
                     log.debug("Common cliques list is empty!");
                 }
-                
+
             }
         }
         saveToCSV(fragmentScores, fragmentNames);
@@ -408,15 +408,15 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     + cliqueSize[cnt] / cliqueNumbers[cnt]);
             cnt++;
         }
-        
+
         boolean minimize = false;//costFunction.minimize();
         for (int j = 0; j < newFragments.size(); j++) {
             log.info("File: {}, value: {}", newFragments.get(j).getName(),
                     (minimize ? -fragScores[j] : fragScores[j]));
         }
-        
+
         int optIndex = 0;
-        
+
         double optVal = Double.NEGATIVE_INFINITY;
         for (int i = 0; i < fragScores.length; i++) {
             if (fragScores[i] > optVal) {
@@ -425,7 +425,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             }
 //            }
         }
-        
+
         final CSVWriter csvw = Factory.getInstance().getObjectFactory().
                 instantiate(CSVWriter.class);
         csvw.setWorkflow(getWorkflow());
@@ -434,12 +434,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).
                 getAbsolutePath(), "center-star.csv", tble,
                 WorkflowSlot.CLUSTERING);
-        
+
         log.info("{} with value {} is the center star!",
                 newFragments.get(optIndex).getName(),
                 (minimize ? -optVal : optVal));
     }
-    
+
     public void saveToCSV(final ArrayDouble.D2 distances,
             final ArrayChar.D2 names) {
         final CSVWriter csvw = Factory.getInstance().getObjectFactory().
@@ -462,7 +462,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             log.debug("{}", iff);
         }
         if (t.size() < 2) {
-            log.warn("At least two files required for peak clique assignment!");
+            log.warn("At least two files are required for peak clique alignment!");
         } else {
             final TupleND<IFileFragment> tret = identifyPeaks(t);
             for (final IFileFragment iff : tret) {
@@ -495,13 +495,13 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         for (PairwiseSimilarityWorker worker : workers) {
             ics.submit(worker);
         }
-        
+
         try {
             ics.call();
         } catch (Exception ex) {
             log.error("{}", ex);
         }
-        
+
         if (this.savePeakSimilarities) {
             PeakSimilarityVisualizer psv = new PeakSimilarityVisualizer();
 //            psv.setWorkflow(getWorkflow());
@@ -530,7 +530,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 final ArrayChar.D2 peakNames = (ArrayChar.D2) anames.getArray();
                 final Array peakScans = ascans.getArray();
                 final Index peakScansI = peakScans.getIndex();
-                
+
                 t.getChild(this.binnedIntensities).setIndex(
                         t.getChild(this.binnedScanIndex));
                 log.info("Checking user supplied anchors for: {}", t);
@@ -542,7 +542,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 } else {
                     peaks = new ArrayList<Peak>();
                 }
-                
+
                 final Index sat1 = scan_acquisition_time.getIndex();
                 final List<Array> bintens = t.getChild(
                         this.binnedIntensities).getIndexedArray();
@@ -577,7 +577,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
      * @param minCliqueSize
      * @return a list of clique objects
      */
-    private List<Clique> combineBiDiBestHits(final TupleND<IFileFragment> al,final Map<String,IFileFragment> nameToFragment,
+    private List<Clique> combineBiDiBestHits(final TupleND<IFileFragment> al, final Map<String, IFileFragment> nameToFragment,
             final HashMap<String, List<Peak>> fragmentToPeaks,
             final List<List<Peak>> ll, final int minCliqueSize) {
 
@@ -702,17 +702,17 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         log.info("Found {} unassigned peaks.", unassignedPeaks.size());
 //        }
 
-        if(saveIncompatiblePeaks) {
+        if (saveIncompatiblePeaks) {
             savePeakList(nameToFragment, incompatiblePeaks, "incompatiblePeaks.msp", "INCOMPATIBLE");
         }
-        
-        if(saveUnassignedPeaks) {
+
+        if (saveUnassignedPeaks) {
             savePeakList(nameToFragment, unassignedPeaks, "unassignedPeaks.msp", "UNASSIGNED");
         }
         for (Peak p : incompatiblePeaks) {
             log.debug("Incompatible peak: " + p);
         }
-        
+
         for (Peak p : incompatiblePeaks) {
             p.clearSimilarities();
         }
@@ -730,7 +730,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         // sort cliques by clique rt mean
         List<Clique> l = new ArrayList<Clique>(cliques);
         Collections.sort(l, new Comparator<Clique>() {
-            
+
             @Override
             public int compare(Clique o1, Clique o2) {
                 double rt1 = o1.getCliqueRTMean();
@@ -760,16 +760,16 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 li.remove();
             }
         }
-        
+
         String groupFileLocation = Factory.getInstance().getConfiguration().
                 getString("groupFileLocation", "");
-        
+
         OneWayPeakAnova owa = new OneWayPeakAnova();
         owa.setWorkflow(getWorkflow());
         owa.calcFisherRatios(l, al, groupFileLocation);
-        
+
         if (this.savePlots) {
-            
+
             DefaultBoxAndWhiskerCategoryDataset dscdRT = new DefaultBoxAndWhiskerCategoryDataset();
             for (Clique c : l) {
                 dscdRT.add(c.createRTBoxAndWhisker(), "", c.getCliqueRTMean());
@@ -787,7 +787,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     al.toArray(new IFileFragment[]{}));
             getWorkflow().append(dwr);
             Factory.getInstance().submitJob(pr);
-            
+
             DefaultBoxAndWhiskerCategoryDataset dscdTIC = new DefaultBoxAndWhiskerCategoryDataset();
             for (Clique c : l) {
                 dscdTIC.add(c.createApexTicBoxAndWhisker(), "", c.getCliqueRTMean());
@@ -808,7 +808,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             getWorkflow().append(dwr2);
             Factory.getInstance().submitJob(pr2);
         }
-        
+
         log.info("Found {} cliques", l.size());
         return l;
     }
@@ -860,7 +860,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     incompatiblePeaks.add(pk);
                     log.debug("Adding of peak {} into clique {} failed", pk, d);
                 }
-                
+
             }
             log.debug("Clique {} has {} peaks left!", c, c.getPeakList().size());
             c.clear();
@@ -874,14 +874,14 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     incompatiblePeaks.add(pk);
                     log.debug("Adding of peak {} into clique {} failed", pk, c);
                 }
-                
+
             }
             log.debug("Clique {} has {} peaks left!", d, d.getPeakList().size());
             d.clear();
         }
         return incompatiblePeaks;
     }
-    
+
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -926,7 +926,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         this.savePlots = cfg.getBoolean(this.getClass().getName() + ".savePlots",
                 false);
     }
-    
+
     public void saveSimilarityMatrix(final TupleND<IFileFragment> al,
             final HashMap<String, List<Peak>> fragmentToPeaks) {
         for (final IFileFragment iff1 : al) {
@@ -978,15 +978,15 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.PEAKMATCHING;
     }
-    
+
     private TupleND<IFileFragment> identifyPeaks(
             final TupleND<IFileFragment> originalFragments) {
         log.debug("Matching peaks");
-        final HashMap<String, IFileFragment> nameToFragment = new HashMap<String,IFileFragment>();
+        final HashMap<String, IFileFragment> nameToFragment = new HashMap<String, IFileFragment>();
         final HashMap<String, List<Peak>> fragmentToPeaks = new HashMap<String, List<Peak>>();
         final HashMap<String, Integer> columnMap = new HashMap<String, Integer>(
                 originalFragments.size());
-        
+
         final ArrayList<IFileFragment> al2 = new ArrayList<IFileFragment>();
         for (final IFileFragment iff : originalFragments) {
             final IFileFragment iff2 = Factory.getInstance().
@@ -994,7 +994,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     getOutputDirectory(this),
                     iff.getName()));
             iff2.addSourceFile(iff);
-            nameToFragment.put(iff2.getName(),iff2);
+            nameToFragment.put(iff2.getName(), iff2);
             log.debug("Created work file {}", iff2);
             al2.add(iff2);
         }
@@ -1002,17 +1002,17 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         initializePeaks(t, fragmentToPeaks, columnMap);
         log.info("Calculating all-against-all peak similarities");
         calculatePeakSimilarities(t, fragmentToPeaks);
-        
+
         log.info("Searching for bidirectional best hits");
         final long startT = System.currentTimeMillis();
         final List<Peak> unmatchedPeaks = new BBHFinder().findBiDiBestHits(t,
                 fragmentToPeaks);
-        if(saveUnmatchedPeaks) {
+        if (saveUnmatchedPeaks) {
             savePeakList(nameToFragment, unmatchedPeaks, "unmatchedPeaks.msp", "UNMATCHED");
         }
         log.info("Found bidi best hits in {} milliseconds",
                 System.currentTimeMillis() - startT);
-        
+
         final long startT2 = System.currentTimeMillis();
         final List<List<Peak>> ll = new ArrayList<List<Peak>>();
         List<Clique> cliques;
@@ -1046,6 +1046,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         log.info("Saving peak match tables!");
         savePeakMatchTable(columnMap, ll);
         savePeakMatchRTTable(columnMap, ll);
+        savePeakMatchAreaTable(columnMap, ll, nameToFragment);
         if (saveXMLAlignment) {
             log.info("Saving alignment to xml!");
             saveToXMLAlignment(t, ll);
@@ -1106,7 +1107,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 Array sidx = t.getChild(this.binnedScanIndex).getArray();
                 peakCandidates1 = ArrayTools.indexArray(sidx.getShape()[0], 0);
             }
-            
+
             t.getChild(this.massValues).setIndex(t.getChild(this.scanIndex));
             t.getChild(this.intensityValues).setIndex(t.getChild(this.scanIndex));
             // maxPeaks = Math.max(maxPeaks, peakCandidates1.getShape()[0]);
@@ -1133,7 +1134,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             final Index pc1 = peakCandidates1.getIndex();
             final Index sat1 = scan_acquisition_time.getIndex();
             final List<Peak> userDefinedAnchors = definedAnchors.get(t.getName());
-            
+
             for (int i = 0; i < peakCandidates1.getShape()[0]; i++) {
                 final int pc1i = peakCandidates1.getInt(pc1.set(i));
                 Peak p = null;
@@ -1146,14 +1147,16 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 } else {
                     p = new Peak(pc1i, indexedIntensities.get(pc1i),
                             scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
+
                 }
+                p.setPeakIndex(i);
                 peaks.add(p);
                 npeaks++;
             }
-            
+
             if ((userDefinedAnchors != null) && this.useUserSuppliedAnchors) {
                 for (final Peak p : userDefinedAnchors) {
-                    
+
                     final int n = Collections.binarySearch(peaks, p,
                             new PeakComparator());
                     if (n >= 0) {// if found in list, remove and add to anchors
@@ -1167,7 +1170,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     }
                 }
             }
-            
+
             fragmentToPeaks.put(t.getName(), peaks);
             columnMap.put(t.getName(), column++);
             // clearing space
@@ -1175,12 +1178,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
         log.debug("{} peaks present", npeaks);
     }
-    
+
     public boolean isBidiBestHitForAll(final List<Peak> peaks,
             final int numberOfFiles) {
         return isBidiBestHitForK(peaks, numberOfFiles, numberOfFiles);
     }
-    
+
     public boolean isBidiBestHitForK(final List<Peak> peaks,
             final int numberOfFiles, final int minCliqueSize) {
         int i = 0;
@@ -1196,7 +1199,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 }
             }
         }
-        
+
         if ((minCliqueSize < 2) && (minCliqueSize >= -1)) {
             log.info(
                     "Illegal value for minCliqueSize = {}, allowed values are -1, >=2 <= number of chromatograms",
@@ -1209,7 +1212,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
         return false;
     }
-    
+
     public boolean isFirstBidiBestHitForRest(final List<Peak> peaks,
             final int expectedHits) {
         int i = 0;
@@ -1231,7 +1234,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
         return false;
     }
-    
+
     private void removePeakSimilaritiesWhichHaveNoBestHits(
             final TupleND<IFileFragment> t,
             final HashMap<String, List<Peak>> fragmentToPeaks) {
@@ -1250,6 +1253,77 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 }
             }
         }
+    }
+
+    //var.tic_peaks
+//    "var.tic_peaks", "var.tic_filtered", "andichrom.var.peak_name",
+//    "andichrom.dimension.peak_number", "andichrom.var.peak_retention_time", "andichrom.var.peak_start_time",
+//    "andichrom.var.peak_end_time", "andichrom.var.peak_area","andichrom.var.baseline_start_time",
+//    "andichrom.var.baseline_stop_time","andichrom.var.baseline_start_value","andichrom.var.baseline_stop_value"
+    /**
+     * @param columnMap
+     * @param ll
+     */
+    private void savePeakMatchAreaTable(final HashMap<String, Integer> columnMap,
+            final List<List<Peak>> ll, final HashMap<String, IFileFragment> nameToFragment) {
+        final List<List<String>> rows = new ArrayList<List<String>>(ll.size());
+        List<String> headers = null;
+        final String[] headerLine = new String[columnMap.size()];
+        for (int i = 0; i < headerLine.length; i++) {
+            headerLine[i] = "";
+        }
+        headers = Arrays.asList(headerLine);
+        for (final String s : columnMap.keySet()) {
+            headers.set(columnMap.get(s), StringTools.removeFileExt(s));
+        }
+        log.debug("Adding row {}", headers);
+        rows.add(headers);
+        int rowCounter = 0;
+        for (final List<Peak> l : ll) {
+            log.debug("Adding row {}",rowCounter);
+            final String[] line = new String[columnMap.size()];
+            for (int i = 0; i < line.length; i++) {
+                line[i] = "-";
+            }
+            log.debug("Adding {} peaks", l.size());
+            for (final Peak p : l) {
+                final String iff = p.getAssociation();
+                log.debug("Adding peak {} from {}",p,iff);
+                EvalTools.notNull(iff, this);
+                IFileFragment fragment = nameToFragment.get(iff);
+                EvalTools.notNull(fragment, this);
+                final int pos = columnMap.get(iff).intValue();
+                try {
+                    Array peakAreas = fragment.getChild("peak_area").getArray();
+                    log.debug("PeakAreas for {}: {}",fragment.getName(), peakAreas.getShape()[0]);
+                    log.debug("Insert position for {}: {}", iff, pos);
+                    if (pos >= 0) {
+                        if (line[pos].equals("-")) {
+                            final double sat = p.getScanAcquisitionTime() / 60.0d;
+                            if (p.getPeakIndex() != -1) {
+                                line[pos] = peakAreas.getDouble(p.getPeakIndex()) + "";
+                            } else {
+                                line[pos] = "NaN";
+                            }
+                        } else {
+                            log.warn("Array position {} already used!", pos);
+                        }
+                    }
+                }catch(ResourceNotAvailableException rnae) {
+                    log.warn("Could not find peak_area as starting from "+fragment.getName()+"!");
+                }
+            }
+            final List<String> v = Arrays.asList(line);
+            rows.add(v);
+            log.debug("Adding row {}", v);
+            rowCounter++;
+        }
+
+        final CSVWriter csvw = new CSVWriter();
+        csvw.setWorkflow(getWorkflow());
+        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).
+                getAbsolutePath(), "multiple-alignmentArea.csv", rows,
+                WorkflowSlot.ALIGNMENT);
     }
 
     /**
@@ -1301,7 +1375,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             rows.add(v);
             log.debug("Adding row {}", v);
         }
-        
+
         final CSVWriter csvw = new CSVWriter();
         csvw.setWorkflow(getWorkflow());
         csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).
@@ -1350,14 +1424,14 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             rows.add(v);
             log.debug("Adding row {}", v);
         }
-        
+
         final CSVWriter csvw = new CSVWriter();
         csvw.setWorkflow(getWorkflow());
         csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).
                 getAbsolutePath(), "multiple-alignment.csv", rows,
                 WorkflowSlot.ALIGNMENT);
     }
-    
+
     private void savePeakList(Map<String, IFileFragment> nameToFragment, Collection<Peak> peaks, String filename, String type) {
         File output = new File(getWorkflow().getOutputDirectory(this), filename);
         output.getParentFile().mkdirs();
@@ -1373,25 +1447,25 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 ArrayDouble.D1 massArray = new ArrayDouble.D1(t.getFirst().getShape()[0]);
                 MAMath.copyDouble(massArray, t.getFirst());
                 String name = p.getAssociation() + "-IDX_" + p.getScanIndex() + "-RT_" + p.getScanAcquisitionTime();
-                IMetabolite im = new Metabolite(p.getName().isEmpty()?name:p.getName(), p.getAssociation() + "-IDX_" + p.getScanIndex() + "-RT_" + p.getScanAcquisitionTime(), getClass().getSimpleName() + "-" + type, i++, "", "", "", Double.NaN, p.getScanAcquisitionTime(), "sec", -1, "", p.getName(), massArray, intens);
+                IMetabolite im = new Metabolite(p.getName().isEmpty() ? name : p.getName(), p.getAssociation() + "-IDX_" + p.getScanIndex() + "-RT_" + p.getScanAcquisitionTime(), getClass().getSimpleName() + "-" + type, i++, "", "", "", Double.NaN, p.getScanAcquisitionTime(), "sec", -1, "", p.getName(), massArray, intens);
                 bw.write(im.toString());
                 bw.newLine();
             }
             bw.close();
             getWorkflow().append(new DefaultWorkflowResult(output, this, WorkflowSlot.FILEIO, nameToFragment.values().toArray(new IFileFragment[0])));
         } catch (IOException ex) {
-            log.warn("{}",ex);
-            if(bw!=null) {
-                try{
+            log.warn("{}", ex);
+            if (bw != null) {
+                try {
                     bw.close();
-                }catch(IOException ex1) {
-                    log.warn("{}",ex1);
+                } catch (IOException ex1) {
+                    log.warn("{}", ex1);
                 }
             }
         }
-        
+
     }
-    
+
     private void saveToXMLAlignment(final TupleND<IFileFragment> tuple,
             final List<List<Peak>> ll) {
         AlignmentFactory af = new AlignmentFactory();
@@ -1409,7 +1483,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     Peak p = fragToPeak.get(iff.getName());
                     scanIndex = p.getScanIndex();
                 }
-                
+
                 List<Integer> scans = null;
                 if (fragmentToScanIndexMap.containsKey(iff)) {
                     scans = fragmentToScanIndexMap.get(iff);
@@ -1417,11 +1491,11 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     scans = new ArrayList<Integer>();
                     fragmentToScanIndexMap.put(iff, scans);
                 }
-                
+
                 scans.add(scanIndex);
             }
         }
-        
+
         for (IFileFragment iff : fragmentToScanIndexMap.keySet()) {
             af.addScanIndexMap(a, new File(iff.getAbsolutePath()).toURI(),
                     fragmentToScanIndexMap.get(iff), false);

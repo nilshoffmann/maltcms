@@ -61,6 +61,7 @@ public class Peak implements IFeatureVector {
     private final HashMap<String, Map<Peak, Double>> sims = new HashMap<String, Map<Peak, Double>>();
     private final HashMap<String, List<Peak>> sortedPeaks = new HashMap<String, List<Peak>>();
     private String name = "";
+    private int peakIndex = -1;
     private final String association;
     private final boolean storeOnlyBestSimilarities;
 
@@ -238,7 +239,7 @@ public class Peak implements IFeatureVector {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append("Peak at position " + this.scanIndex + " and rt: " + this.sat
+        sb.append("Peak number "+this.peakIndex+" at position " + this.scanIndex + " and rt: " + this.sat
                 + " in file " + this.association);
         return sb.toString();
     }
