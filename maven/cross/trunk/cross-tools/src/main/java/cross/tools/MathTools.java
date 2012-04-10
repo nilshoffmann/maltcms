@@ -314,6 +314,9 @@ public class MathTools {
             return sum;
         }
 
+        
+        
+        
 	public static double[] weightedAverage(int r, final double[] d) {
 		double[] ret = new double[d.length];
 		for (int i = 0; i < ret.length; i++) {
