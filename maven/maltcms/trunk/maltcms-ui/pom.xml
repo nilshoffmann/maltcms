@@ -45,6 +45,11 @@
       <artifactId>jcommon</artifactId>
       <version>1.0.16</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>maltcms-datastructures-quadtree</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
     <packaging>jar</packaging>
     <properties>

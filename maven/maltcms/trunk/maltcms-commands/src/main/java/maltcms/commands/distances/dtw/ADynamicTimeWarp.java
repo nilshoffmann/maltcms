@@ -114,6 +114,9 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
     @Configurable(name = "alignment.saveLayoutImage", value = "false")
     private boolean saveLayoutImage = false;
     private boolean sample = false;
+    private boolean saveDtwMatrix = false;
+    private boolean savePairwiseSimilarityMatrix = false;
+    private boolean normalizeAlignmentValue = false;
 
     public ADynamicTimeWarp() {
         super();
@@ -296,6 +299,9 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
             final Tuple2D<IFileFragment, IFileFragment> t) {
         this.pa = new PairwiseAlignment();
         this.pa.setWorkflow(getWorkflow());
+        this.pa.setSaveCDM(saveDtwMatrix);
+        this.pa.setSavePWDM(savePairwiseSimilarityMatrix);
+        this.pa.setNormalizeByMapLength(normalizeAlignmentValue);
         this.pa.setFileFragments(t.getFirst(), t.getSecond(), this.getClass());
 
         final Tuple2D<List<Array>, List<Array>> tuple = createTuple(t);
@@ -350,11 +356,15 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
                     this.recurrence.getDiagonalWeight());
             getStatsMap().put("gap_global",
                     this.recurrence.getGlobalGapPenalty());
+            getStatsMap().put("matrixElements",(double)this.alignment.getNumberOfStoredElements());
         }
         // calculate traceback, store path etc.
         this.resF = this.pa.provideFileFragment();
         this.result = this.pa.getResult();
         this.resultVector = this.pa.getResultVector();
+        if(getStatsMap() != null) {
+            getStatsMap().put("pathLength",(double)pa.getPath().size());
+        }
         // add the pairwise alignment to bookkeeping
         // MaltcmsTools.addPairwiseAlignment(t.getFirst(), t.getSecond(),
         // this.resF, this.extension);

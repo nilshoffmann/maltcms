@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Cross/Maltcms.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  $Id$
+ *  $Id: RidgeCost0.java 426 2012-02-09 19:38:11Z nilshoffmann $
  */
 package maltcms.datastructures.ridge;
 
@@ -33,35 +33,38 @@ import cross.datastructures.tuple.Tuple2D;
  * 
  */
 @ServiceProvider(service=IRidgeCost.class)
-public class RidgeCost2 implements IRidgeCost {
+public class RidgeCost0 implements IRidgeCost {
 
-	/**
-	 * Implements a path integral over the scale space ridge, starting from the
-	 * initial position x0. Then, for each subsequent scale, the scale space
-	 * response is squared and divided by (1+(x-x0)^{2}). This has the effect of
-	 * dampening ridges, which diverge far from the x0 over the scales. However,
-	 * if a ridge first diverges and then returns back to x0, this effect is
-	 * cancelled.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return
+	 * @see
+	 * maltcms.datastructures.ridge.IRidgeCost#getCost(maltcms.datastructures
+	 * .ridge.Ridge)
 	 */
 	@Override
 	public double getCost(Ridge r) {
 		double ridgePenalty = 0;
 		Tuple2D<Point2D, Double> previous = r.getRidgePoints().get(0);
-		double x0 = previous.getFirst().getX();
-		for (int i = 0; i < r.getRidgePoints().size(); i++) {
+		int t = 0, t1 = 0;
+		for (int i = 1; i < r.getRidgePoints().size(); i++) {
 			Tuple2D<Point2D, Double> point = r.getRidgePoints().get(i);
-			ridgePenalty += getScoreContribution(x0, point.getFirst().getX(),
-			        point.getSecond().doubleValue());
+			double delta = point.getFirst().getX() - previous.getFirst().getX();
+			if (delta > 0) {// extending right
+				t1 = 1;
+			} else if (delta < 0) {// extending left
+				t1 = -1;
+			} else {// extending above
+				t1 = 0;
+			}
+
+			// same direction
+			int dt = t1 - t;
+			ridgePenalty += dt;
+			t = t1;
 		}
-
-		// return Math.abs(2.0 * ridgePenalty / getSize());
-		return ridgePenalty;
-	}
-
-	protected double getScoreContribution(double x0, double x, double fx) {
-		return Math.pow(fx, 2.0d) / (1.0d + Math.pow(x - x0, 2.0d));
+//		return ridgePenalty;
+		return Math.abs(2.0 * ridgePenalty / r.getSize());
 	}
 
 }

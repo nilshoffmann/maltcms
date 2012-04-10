@@ -37,6 +37,7 @@ import cross.tools.MathTools;
 import java.util.ArrayList;
 import java.util.Collections;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import maltcms.tools.MaltcmsTools;
@@ -45,14 +46,14 @@ import ucar.ma2.MAMath.MinMax;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
-//@Data
-public class Peak1DGroup extends Peak1D {
+@Data
+public class Peak1DGroup implements Iterable<Peak1D>{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 5613625440101236042L;
     @Getter(AccessLevel.NONE)
@@ -61,6 +62,14 @@ public class Peak1DGroup extends Peak1D {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private Tuple2D<Array, Array> apexMassSpectrum;
+    private int apexIndex = -1;
+    private int startIndex = -1;
+    private int stopIndex = -1;
+    private double apexTime = Double.NaN;
+    private double startTime = Double.NaN;
+    private double stopTime = Double.NaN;
+    private double apexIntensity = Double.NaN;
+    private double area = Double.NaN;
 
     public Peak1DGroup(IFileFragment fragment, int scanIndex, boolean raw) {
         Tuple2D<Array, Array> ms = null;
@@ -72,16 +81,8 @@ public class Peak1DGroup extends Peak1D {
         apexMassSpectrum = ms;
         MinMax mm = MAMath.getMinMax(ms.getFirst());
         Peak1D peak = PeakFactory.createPeak1DTic(fragment, scanIndex, scanIndex, scanIndex);
-        setApexIndex(peak.getApexIndex());
-        setStartIndex(peak.getStartIndex());
-        setStopIndex(peak.getStopIndex());
-        setApexTime(peak.getApexTime());
-        setStartTime(peak.getStartTime());
-        setStopTime(peak.getStopTime());
-        setApexIntensity(peak.getApexIntensity());
-        setArea(peak.getArea());
-        setStartMass(mm.min);
-        setStopMass(mm.max);
+        this.peakSet = new TreeSet<Peak1D>(new Peak1DComparator());
+        this.peakSet.add(peak);
     }
 
     public Peak1DGroup(Peak1D... p) {
@@ -95,8 +96,7 @@ public class Peak1DGroup extends Peak1D {
         double stopTime = Double.NEGATIVE_INFINITY;
         double area = 0.0d;
         double apexIntensity = 0.0d;
-        double startMass = Double.POSITIVE_INFINITY;
-        double stopMass = Double.NEGATIVE_INFINITY;
+        double mw = Double.POSITIVE_INFINITY;
         int i = 0;
         for (Peak1D peak : peakSet) {
             if (peak.getStartTime() < startTime) {
@@ -111,11 +111,8 @@ public class Peak1DGroup extends Peak1D {
             if (peak.getStopIndex() > stopIndex) {
                 stopIndex = peak.getStopIndex();
             }
-            if (peak.getStartMass() < startMass) {
-                startMass = peak.getStartMass();
-            }
-            if (peak.getStopMass() > stopMass) {
-                stopMass = peak.getStopMass();
+            if (peak.getMw() < mw) {
+                mw = peak.getMw();
             }
             area += peak.getArea();
             apexIntensity += peak.getApexIntensity();
@@ -131,30 +128,6 @@ public class Peak1DGroup extends Peak1D {
         setStopTime(stopTime);
         setApexIntensity(apexIntensity);
         setArea(area);
-        setStartMass(startMass);
-        setStopMass(stopMass);
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
-     */
-    @Override
-    public Array getFeature(String name) {
-        return super.getFeature(name);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
-     */
-    @Override
-    public List<String> getFeatureNames() {
-        return super.getFeatureNames();
     }
 
     public Tuple2D<Array, Array> getMassSpectrum(int index) {
@@ -176,7 +149,7 @@ public class Peak1DGroup extends Peak1D {
                     intensities.set(i, value);
                 }
                 //set mass in any case
-                masses.set(i, peak.getStartMass());
+                masses.set(i, peak.getMw());
                 i++;
             }
             return new Tuple2D<Array, Array>(masses, intensities);
@@ -205,55 +178,48 @@ public class Peak1DGroup extends Peak1D {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
         @Override
         public int compare(Peak1D o1, Peak1D o2) {
             //compare start masses
-            if (o1.getStartMass() < o2.getStartMass()) {
+            if (o1.getMw() < o2.getMw()) {
                 return -1;
-            } else if (o1.getStartMass() > o2.getStartMass()) {
+            } else if (o1.getMw() > o2.getMw()) {
                 return 1;
             } else {
-                //compare stop masses
-                if (o1.getStopMass() < o2.getStopMass()) {
+                //compare apex times
+                if (o1.getApexTime() < o2.getApexTime()) {
                     return -1;
-                } else if (o1.getStopMass() > o2.getStopMass()) {
+                } else if (o1.getApexTime() > o2.getApexTime()) {
                     return 1;
                 } else {
-                    //compare apex times
-                    if (o1.getApexTime() < o2.getApexTime()) {
+                    //compare start times
+                    if (o1.getStartTime() < o2.getStartTime()) {
                         return -1;
-                    } else if (o1.getApexTime() > o2.getApexTime()) {
+                    } else if (o1.getStartTime() > o2.getStartTime()) {
                         return 1;
                     } else {
-                        //compare start times
-                        if (o1.getStartTime() < o2.getStartTime()) {
+                        //compare stop times
+                        if (o1.getStopTime() < o2.getStopTime()) {
                             return -1;
-                        } else if (o1.getStartTime() > o2.getStartTime()) {
+                        } else if (o1.getStopTime() > o2.getStopTime()) {
                             return 1;
                         } else {
-                            //compare stop times
-                            if (o1.getStopTime() < o2.getStopTime()) {
+                            //compare apex intensities
+                            if (o1.getApexIntensity() < o2.getApexIntensity()) {
                                 return -1;
-                            } else if (o1.getStopTime() > o2.getStopTime()) {
+                            } else if (o1.getApexIntensity() > o2.getApexIntensity()) {
                                 return 1;
                             } else {
-                                //compare apex intensities
-                                if (o1.getApexIntensity() < o2.getApexIntensity()) {
+                                //compare areas
+                                if (o1.getArea() < o2.getArea()) {
                                     return -1;
-                                } else if (o1.getApexIntensity() > o2.getApexIntensity()) {
+                                } else if (o1.getArea() > o2.getArea()) {
                                     return 1;
                                 } else {
-                                    //compare areas
-                                    if (o1.getArea() < o2.getArea()) {
-                                        return -1;
-                                    } else if (o1.getArea() > o2.getArea()) {
-                                        return 1;
-                                    } else {
-                                        return 0;
-                                    }
+                                    return 0;
                                 }
                             }
                         }
@@ -272,7 +238,6 @@ public class Peak1DGroup extends Peak1D {
 //        return sb.toString();
 //    }
     @Override
-    @NoFeature
     public Iterator<Peak1D> iterator() {
         return Collections.unmodifiableSet(this.peakSet).iterator();
     }

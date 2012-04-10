@@ -59,7 +59,8 @@ import cross.datastructures.tools.FragmentTools;
 import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments.peakfinding.TICPeakFinder.PeakPositionsResultSet;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakPositionsResultSet;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.QuantileSnrPeakFinder;
 import maltcms.datastructures.peak.Peak1D;
 
 /**
@@ -122,14 +123,17 @@ public class EICPeakFinder extends AFragmentCommand {
             final ArrayStatsScanner ass = new ArrayStatsScanner();
             final StatsMap[] sm = ass.apply(al.toArray(new ArrayDouble.D1[]{}));
 
-            TICPeakFinder tpf = new TICPeakFinder();
-            tpf.setPeakThreshold(peakThreshold);
-            tpf.setSnrWindow(filterWindow);
-            tpf.setWorkflow(getWorkflow());
+//            TICPeakFinder tpf = new TICPeakFinder();
+//            tpf.setPeakThreshold(peakThreshold);
+//            tpf.setPeakSeparationWindow(filterWindow);
+//            tpf.setWorkflow(getWorkflow());
+            QuantileSnrPeakFinder qspf = new QuantileSnrPeakFinder();
+            qspf.setPeakSnrThreshold(peakThreshold);
+            qspf.setPeakSeparationWindow(filterWindow);
             List<List<Peak1D>> peaks = new ArrayList<List<Peak1D>>();
             int k = 0;
             for (ArrayDouble.D1 arr : al) {
-                PeakPositionsResultSet pprs = tpf.findPeakPositions(arr);
+                PeakPositionsResultSet pprs = qspf.findPeakPositions(arr);
 //                List<Peak1D> l = tpf.findPeakAreas(pprs.getTs(),f.getName(), 0, arr, f.getChild("scan_acquisition_time").getArray());
 //                for(Peak1D p1:l) {
 //                    p1.setMw(bins.get(k));

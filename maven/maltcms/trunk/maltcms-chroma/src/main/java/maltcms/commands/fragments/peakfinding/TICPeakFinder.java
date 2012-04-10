@@ -28,7 +28,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.SortedMap;
@@ -52,13 +51,9 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 
 import ucar.ma2.Array;
-import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
-import ucar.ma2.ArrayInt.D1;
 import ucar.ma2.Index;
-import ucar.ma2.MAMath;
-import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
@@ -66,8 +61,6 @@ import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IVariableFragment;
-import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowProgressResult;
@@ -75,15 +68,21 @@ import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
-import cross.tools.MathTools;
 import cross.tools.StringTools;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.filters.array.BatchFilter;
-import maltcms.commands.filters.array.MultiplicationFilter;
+import maltcms.commands.filters.array.*;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.IBaselineEstimator;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakFinderUtils;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakPositionsResultSet;
+import maltcms.datastructures.peak.normalization.IPeakNormalizer;
+import maltcms.tools.ArrayTools;
 import net.sf.maltcms.execution.api.ICompletionService;
+import org.apache.commons.math.ArgumentOutsideDomainException;
+import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
 import org.jfree.chart.JFreeChart;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -131,77 +130,34 @@ public class TICPeakFinder extends AFragmentCommand {
     @Configurable(value = "10")
     private int peakSeparationWindow = 10;
     private boolean removeOverlappingPeaks = true;
+    private IBaselineEstimator baselineEstimator = new LoessMinimaBaselineEstimator();
 //    @Configurable(value = "maltcms.commands.filters.array.MultiplicationFilter")
     private List<AArrayFilter> filter = Arrays.asList(
             (AArrayFilter) new MultiplicationFilter());
+    private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
     @Override
     public String toString() {
         return getClass().getName();
     }
 
-    private void addResults(final IFileFragment ff, final Array correctedtic,
+    private void addResults(final IFileFragment ff, final PeakPositionsResultSet pprs,
              final List<Peak1D> peaklist) {
-        final IVariableFragment peaks = new VariableFragment(ff,
-                this.ticPeakVarName);
-        final Dimension peak_number = new Dimension("peak_number",
-                peaklist.size(), true, false, false);
-        peaks.setDimensions(new Dimension[]{peak_number});
-        Array tic = ff.getChild(ticVarName).getArray();
-        final IVariableFragment mai = new VariableFragment(ff,
-                this.ticFilteredVarName);
-        mai.setArray(correctedtic);
-
-        if (!peaklist.isEmpty()) {
-            IVariableFragment peakNames = new VariableFragment(ff, "peak_name");
-            IVariableFragment peakRT = new VariableFragment(ff,
-                    "peak_retention_time");
-            IVariableFragment peakStartRT = new VariableFragment(ff,
-                    "peak_start_time");
-            IVariableFragment peakStopRT = new VariableFragment(ff,
-                    "peak_end_time");
-            IVariableFragment peakArea = new VariableFragment(ff, "peak_area");
-            IVariableFragment baseLineStartRT = new VariableFragment(ff, "baseline_start_time");
-            IVariableFragment baseLineStopRT = new VariableFragment(ff, "baseline_stop_time");
-            IVariableFragment baseLineStartValue = new VariableFragment(ff, "baseline_start_value");
-            IVariableFragment baseLineStopValue = new VariableFragment(ff, "baseline_stop_value");
-            Array peakPositions = new ArrayInt.D1(peaklist.size());
-            ArrayChar.D2 names = cross.datastructures.tools.ArrayTools.createStringArray(
-                    peaklist.size(), 1024);
-            ArrayDouble.D1 apexRT = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 startRT = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 stopRT = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 bstartRT = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 bstopRT = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 bstartV = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 bstopV = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 area = new ArrayDouble.D1(peaklist.size());
-            int i = 0;
-            for (Peak1D p : peaklist) {
-                names.setString(i, "" + i);
-                apexRT.setDouble(i, p.getApexTime());
-                startRT.setDouble(i, p.getStartTime());
-                stopRT.setDouble(i, p.getStopTime());
-                area.setDouble(i, p.getArea());
-                bstartRT.setDouble(i, p.getStartTime());
-                bstartV.setDouble(i, tic.getDouble(p.getStartIndex()) - correctedtic.getDouble(p.getStartIndex()));
-                bstopRT.setDouble(i, p.getStopTime());
-                bstopV.setDouble(i, tic.getDouble(p.getStopIndex()) - correctedtic.getDouble(p.getStopIndex()));
-                peakPositions.setInt(i, p.getApexIndex());
-                i++;
+        
+        List<Peak1D> peaks;
+        if(peaklist.isEmpty()) {
+            peaks = new ArrayList<Peak1D>(pprs.getTs().size());
+            for(Integer idx:pprs.getTs()) {
+                Peak1D pk = new Peak1D();
+                pk.setSnr(pprs.getSnrValues()[idx]);
+                pk.setApexIndex(idx);
+                pk.setFile(ff.getName());
+                peaks.add(pk);
             }
-            peaks.setArray(peakPositions);
-            peakNames.setArray(names);
-            peakRT.setArray(apexRT);
-            peakStartRT.setArray(startRT);
-            peakStopRT.setArray(stopRT);
-            peakArea.setArray(area);
-            baseLineStartRT.setArray(bstartRT);
-            baseLineStopRT.setArray(bstopRT);
-            baseLineStartValue.setArray(bstartV);
-            baseLineStopValue.setArray(bstopV);
+        }else{
+            peaks = peaklist;
         }
-
+        Peak1D.append(ff, peakNormalizers, peaks, pprs.getCorrectedTIC(), ticPeakVarName, ticFilteredVarName);
     }
 
     @Override
@@ -261,7 +217,7 @@ public class TICPeakFinder extends AFragmentCommand {
 
     public List<Peak1D> findPeakAreas(final IFileFragment chromatogram,
             final List<Integer> ts, String filename, final Array rawTIC,
-            final Array baselineCorrectedTIC) {
+            final Array baselineCorrectedTIC, final double[] snr) {
         final ArrayList<Peak1D> pbs = new ArrayList<Peak1D>();
         Array scanAcquisitionTime = chromatogram.getChild(satVarName).getArray();
         if (integrateTICPeaks) {
@@ -295,6 +251,7 @@ public class TICPeakFinder extends AFragmentCommand {
                         rawTIC,
                         baselineCorrectedTIC, fdTIC, sdTIC, tdTIC);
                 if (pb != null && pb.getArea()>0) {
+                    pb.setSnr(snr[pb.getApexIndex()]);
                     pb.setApexTime(scanAcquisitionTime.getDouble(pb.getApexIndex()));
                     pb.setStartTime(scanAcquisitionTime.getDouble(pb.getStartIndex()));
                     pb.setStopTime(scanAcquisitionTime.getDouble(pb.getStopIndex()));
@@ -335,79 +292,6 @@ public class TICPeakFinder extends AFragmentCommand {
         return pbs;
     }
 
-    private double getIntensityForMassRange(Array masses, Array intensity,
-            double minMass, double maxMass) {
-        double intensities = 0;
-        double[] massesA = (double[]) masses.get1DJavaArray(double.class);
-        int lb = Arrays.binarySearch(massesA, minMass);
-        int ub = Arrays.binarySearch(massesA, maxMass);
-        if (lb < 0) { // insert position is less than mass of interest
-            // (-(insertionPoint) - 1)
-            lb = Math.max(0, Math.min(massesA.length - 1, (-1) * (lb + 1)));
-        } else {
-            lb = Math.max(0, Math.min(massesA.length - 1, lb));
-        }
-        if (ub < 0) { // insert position is greater than mass of interest
-            ub = Math.max(0, Math.min(massesA.length, ((-1) * (ub + 1)) + 1));
-        } else {
-            ub = Math.max(0, Math.min(massesA.length, ub + 1));
-        }
-        Index intenIdx = intensity.getIndex();
-        for (int i = lb; i < ub; i++) {
-            intensities += intensity.getDouble(intenIdx.set(i));
-        }
-        return intensities;
-    }
-
-    private double getMaxMassForMassRange(Array masses, Array intensity,
-            double minMass, double maxMass) {
-        double[] massesA = (double[]) masses.get1DJavaArray(double.class);
-        int lb = Arrays.binarySearch(massesA, minMass);
-        int ub = Arrays.binarySearch(massesA, maxMass);
-        if (lb < 0) { // insert position is less than mass of interest
-            // (-(insertionPoint) - 1)
-            lb = Math.max(0, Math.min(massesA.length - 1, (-1) * (lb + 1)));
-        } else {
-            lb = Math.max(0, Math.min(massesA.length - 1, lb));
-        }
-        if (ub < 0) { // insert position is greater than mass of interest
-            ub = Math.max(0, Math.min(massesA.length, ((-1) * (ub + 1)) + 1));
-        } else {
-            ub = Math.max(0, Math.min(massesA.length, ub + 1));
-        }
-        Index massesIdx = masses.getIndex();
-        Index intenIdx = intensity.getIndex();
-        List<Tuple2D<Double, Double>> miPairs = new ArrayList<Tuple2D<Double, Double>>();
-        for (int i = lb; i < ub; i++) {
-            miPairs.add(new Tuple2D<Double, Double>(masses.getDouble(massesIdx.set(i)), intensity.getDouble(intenIdx.set(i))));
-        }
-        Collections.sort(miPairs, new Comparator<Tuple2D<Double, Double>>() {
-
-            @Override
-            public int compare(Tuple2D<Double, Double> o1,
-                    Tuple2D<Double, Double> o2) {
-                double m1 = o1.getFirst();
-                double m2 = o2.getFirst();
-                double i1 = o1.getSecond();
-                double i2 = o2.getSecond();
-                if (m1 < m2) {
-                    return -1;
-                } else if (m1 > m2) {
-                    return 1;
-                } else {
-                    if (i1 < i2) {
-                        return -1;
-                    } else if (i1 > i2) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }
-            }
-        });
-        return miPairs.get(miPairs.size() - 1).getFirst();
-    }
-
     public PeakPositionsResultSet findPeakPositions(Array tic) {
         EvalTools.notNull(tic, this);
         Array correctedtic = null;
@@ -415,89 +299,49 @@ public class TICPeakFinder extends AFragmentCommand {
         log.debug("Value\tLow\tMedian\tHigh\tDev\tGTMedian\tSNR");
         double[] ticValues = (double[]) tic.get1DJavaArray(double.class);
         correctedtic = applyFilters(tic.copy());
-        // ticValues = getMinimumBaselineEstimate((double[]) correctedtic
-        // .get1DJavaArray(double.class));
-        // correctedtic = Array.factory(ticValues);
         double[] snrValues = new double[ticValues.length];
         double[] cticValues = (double[]) correctedtic.get1DJavaArray(
                 double.class);
-        double[] baselineValues = new double[ticValues.length];
+        PolynomialSplineFunction baselineEstimatorFunction = baselineEstimator.findBaseline(cticValues);
         for (int i = 0; i < snrValues.length; i++) {
-            baselineValues[i] = ticValues[i] - cticValues[i];
-        }
-        for (int i = 0; i < snrValues.length; i++) {
-//            double baselineEst = MathTools.averageOfSquares(baselineValues, i
-//                    - this.snrWindow, i + this.snrWindow);
-//            double signalEst = MathTools.averageOfSquares(cticValues, i
-//                    - this.snrWindow, i + this.snrWindow);
-            double baselineEst = baselineValues[i]*baselineValues[i];
-            double signalEst = cticValues[i]*cticValues[i];
-            double snr = 20.0d * Math.log10(Math.sqrt(signalEst)
-                    / Math.sqrt(baselineEst));
+            double snr = Double.NEGATIVE_INFINITY;
+            try {
+                double ratio = (cticValues[i])
+                 / baselineEstimatorFunction.value(i);        
+                snr = 20.0d*Math.log10(ratio);
+            } catch (ArgumentOutsideDomainException ex) {
+                Logger.getLogger(TICPeakFinder.class.getName()).log(Level.SEVERE, null, ex);
+            }
             snrValues[i] = Double.isInfinite(snr) ? 0 : snr;
         }
         log.debug("SNR: {}", Arrays.toString(snrValues));
-        final double maxCorrectedIntensity = MAMath.getMaximum(correctedtic);
         final double threshold = this.peakThreshold;// * maxCorrectedIntensity;
         for (int i = 0; i < ticValues.length; i++) {
             log.debug("i=" + i);
-            checkExtremum(ticValues, snrValues, ts, threshold, i,
+            PeakFinderUtils.checkExtremum(cticValues, snrValues, ts, threshold, i,
                     this.peakSeparationWindow);
         }
         PeakPositionsResultSet pprs = new PeakPositionsResultSet(correctedtic,
-                createPeakCandidatesArray(tic, ts), snrValues, ts);
+                createPeakCandidatesArray(tic, ts), snrValues, ts, baselineEstimatorFunction);
         return pprs;
     }
-
-    public class PeakPositionsResultSet {
-
-        private final double[] snrValues;
-        private final List<Integer> ts;
-        private final ArrayInt.D1 peakPositions;
-        private final Array correctedTIC;
-
-        public PeakPositionsResultSet(Array correctedTIC,
-                ArrayInt.D1 peakPositions, double[] snrValues, List<Integer> ts) {
-            this.snrValues = snrValues;
-            this.ts = ts;
-            this.peakPositions = peakPositions;
-            this.correctedTIC = correctedTIC;
-        }
-
-        public D1 getPeakPositions() {
-            return peakPositions;
-        }
-
-        public double[] getSnrValues() {
-            return snrValues;
-        }
-
-        public List<Integer> getTs() {
-            return ts;
-        }
-
-        public Array getCorrectedTIC() {
-            return correctedTIC;
-        }
-    }
+    
+    
 
     private IFileFragment findPeaks(final IFileFragment f) {
-        // log.info("Looking for EIC peaks");
-        // findEICPeaks(f);
         final Array tic = f.getChild(this.ticVarName).getArray();
-//        final Array sat = f.getChild(this.satVarName).getArray();
         final PeakPositionsResultSet pprs = findPeakPositions(tic);
         final ArrayInt.D1 extr = pprs.getPeakPositions();
         final double[] snrValues = pprs.getSnrValues();
         log.info("Found {} peaks for file {}", pprs.getTs().size(), f.getName());
         List<Peak1D> peaks = Collections.emptyList();
         if (this.integratePeaks) {
-            peaks = findPeakAreas(f, pprs.getTs(), f.getName(), tic, pprs.getCorrectedTIC());
+            peaks = findPeakAreas(f, pprs.getTs(), f.getName(), tic, pprs.getCorrectedTIC(),snrValues);
             savePeakTable(peaks, f);
         }
         if (this.saveGraphics) {
             visualize(f, tic, pprs.getCorrectedTIC(), snrValues, extr,
-                    this.peakThreshold);
+                    this.peakThreshold, pprs.getBaselineEstimator());
         }
         final String filename = f.getName();
         final IFileFragment ff = Factory.getInstance().getFileFragmentFactory().
@@ -506,14 +350,13 @@ public class TICPeakFinder extends AFragmentCommand {
                 filename));
 
         ff.addSourceFile(f);
-        addResults(ff, pprs.getCorrectedTIC(), peaks);
+        addResults(ff, pprs, peaks);
 
         ff.save();
         f.clearArrays();
         DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(ff.getAbsolutePath()), this, WorkflowSlot.PEAKFINDING, ff);
         getWorkflow().append(dwr);
         return ff;
-        // }
     }
 
     // /**
@@ -545,11 +388,11 @@ public class TICPeakFinder extends AFragmentCommand {
     // correctedeic = Array.factory(eicValues);
     // final double maxCorrectedIntensity = MAMath
     // .getMaximum(correctedeic);
-    // final double threshold = this.peakThreshold
+    // final double snrEstimate = this.peakThreshold
     // * maxCorrectedIntensity;
     // for (int j = 0; j < eicValues.length; j++) {
     // // log.debug("j=" + j);
-    // checkExtremum(eicValues, ts, threshold, j, this.filterWindow);
+    // checkExtremum(eicValues, ts, snrEstimate, j, this.filterWindow);
     // }
     // if (ts.size() > 0) {
     // log.debug("Found {} peaks for file {} at mass {} to {}",
@@ -696,92 +539,9 @@ public class TICPeakFinder extends AFragmentCommand {
         return filteredtic;
     }
 
-    /**
-     * @param ticValues
-     */
-    private double[] getMinimumBaselineEstimate(final double[] ticValues) {
-        double baselineEstimate;
-        double[] estimate = new double[ticValues.length];
-        for (int i = 0; i < ticValues.length; i++) {
-            log.debug("i=" + i);
-
-            baselineEstimate = MathTools.min(ticValues, i - this.snrWindow,
-                    i + this.snrWindow);
-            final double signalEstimate = ticValues[i];
-            estimate[i] = signalEstimate - baselineEstimate;
-        }
-        return estimate;
-    }
-
     @Override
     public String getDescription() {
         return "Finds peaks based on total ion current (TIC), using a simple extremum search within a window, combined with a signal-to-noise parameter to select peaks.";
-    }
-
-    private int findLeftInclusivePeakBound(final int scanIndex,
-            final IFileFragment f, final Array baselineCorrectedTIC,
-            final Array firstDerivative, final Array secondDerivative) {
-        final Index idx = baselineCorrectedTIC.getIndex();
-        final Index fidx = firstDerivative.getIndex();
-        final Index sidx = secondDerivative.getIndex();
-        int lbound = scanIndex - 1;
-        while (lbound >= -1) {
-            // left border, no more elements
-            if (lbound == -1) {
-                return lbound + 1;
-            }
-            double val = baselineCorrectedTIC.getDouble(idx.set(lbound));
-            double fdv = firstDerivative.getDouble(fidx.set(lbound));
-            double sdv = secondDerivative.getDouble(sidx.set(lbound));
-            if (val == 0 || (fdv == 0 && sdv >= 0)) {
-                return lbound + 1;
-            } else {
-                lbound--;
-            }
-        }
-        return scanIndex;
-    }
-
-    private int findRightInclusivePeakBound(final int scanIndex,
-            final IFileFragment f, final Array baselineCorrectedTIC,
-            final Array firstDerivative, final Array secondDerivative) {
-        final Index idx = baselineCorrectedTIC.getIndex();
-        final Index fidx = firstDerivative.getIndex();
-        final Index sidx = secondDerivative.getIndex();
-        final int size = baselineCorrectedTIC.getShape()[0];
-        int rbound = scanIndex + 1;
-        while (rbound <= size) {
-            // right border, no more elements
-            if (rbound == size) {
-                return rbound - 1;
-            }
-            double val = baselineCorrectedTIC.getDouble(idx.set(rbound));
-            double fdv = firstDerivative.getDouble(fidx.set(rbound));
-            double sdv = secondDerivative.getDouble(sidx.set(rbound));
-            if (val == 0 || (fdv == 0 && sdv > 0)) {
-                return rbound - 1;
-            } else {
-                rbound++;
-            }
-        }
-        return scanIndex;
-    }
-
-    private Peak1D getPeakBoundsByTIC2(final int scanIndex,
-            final IFileFragment f, final Array baselineCorrectedTIC) {
-        FirstDerivativeFilter fdf = new FirstDerivativeFilter();
-        Array firstDerivative = fdf.apply(baselineCorrectedTIC);
-        Array secondDerivative = fdf.apply(firstDerivative);
-        int startIndex = findLeftInclusivePeakBound(scanIndex, f,
-                baselineCorrectedTIC, firstDerivative, secondDerivative);
-        int stopIndex = findRightInclusivePeakBound(scanIndex, f,
-                baselineCorrectedTIC, firstDerivative, secondDerivative);
-
-        log.debug("start: {}, stop: {}", startIndex, stopIndex);
-        final Peak1D pb = new Peak1D(startIndex, scanIndex, stopIndex);
-        pb.setFile(f.getAbsolutePath());
-        integratePeak(pb, null, f.getChild(this.ticVarName).getArray());
-        return pb;
     }
 
     private Peak1D getPeakBoundsByTIC(final IFileFragment chromatogram,
@@ -808,11 +568,7 @@ public class TICPeakFinder extends AFragmentCommand {
         rb.push(previous);
         rb.push(current);
         while ((r < size)) {
-            // if (isMinimum(rb.oldest(), rb.previous(), rb.current())) {
-            // stopIndex = r;
-            // break;
-            // }
-            if (isMinimum(rb.oldest(), rb.previous(), rb.current())) {
+            if (PeakFinderUtils.isMinimum(rb.oldest(), rb.previous(), rb.current())) {
                 // System.out.println("Found minimum on right side");
                 stopIndex = r - 2;
                 break;
@@ -823,15 +579,6 @@ public class TICPeakFinder extends AFragmentCommand {
                 stopIndex = r - 1;
                 break;
             }
-            // if (rb.previous() < rb.oldest() && rb.previous() >= rb.current())
-            // {
-            // stopIndex = r - 1;
-            // break;
-            // }
-            // if (rb.current() >= rb.oldest()) {
-            // stopIndex = r - 1;
-            // break;
-            // }
             rb.push(fdfTIC.getDouble(idx.set(Math.min(size - 1, r))));
             r++;
         }
@@ -848,16 +595,7 @@ public class TICPeakFinder extends AFragmentCommand {
         rb2.push(current);
         // decrease scan index
         while ((l >= 0)) {
-            // if (isMinimum(rb2.current(), rb2.previous(), rb2.oldest())) {
-            // startIndex = l;
-            // break;
-            // }
-            // if (rb2.previous() < rb2.oldest()
-            // && rb2.previous() >= rb2.current()) {
-            // startIndex = l;
-            // break;
-            // }
-            if (isMinimum(rb2.current(), rb2.previous(), rb2.oldest())) {
+            if (PeakFinderUtils.isMinimum(rb2.current(), rb2.previous(), rb2.oldest())) {
                 // System.out.println("Found minimum on left side");
                 startIndex = l + 2;
                 break;
@@ -868,10 +606,6 @@ public class TICPeakFinder extends AFragmentCommand {
                 startIndex = l + 1;
                 break;
             }
-            // if (rb2.current() >= rb2.oldest()) {
-            // startIndex = l + 1;
-            // break;
-            // }
             rb2.push(fdfTIC.getDouble(idx.set(Math.max(0, l))));
             l--;
         }
@@ -1042,47 +776,11 @@ public class TICPeakFinder extends AFragmentCommand {
             }
             pb.setArea(s);
             pb.setApexIntensity(tic.getDouble(ticIndex.set(pb.getApexIndex())));
+        } else {
+            log.warn("EIC based integration not implemented yet!");
         }
         log.debug("Raw peak area: {}", s);
         return s;
-    }
-
-    private boolean isAboveThreshold(final double snrdb, final double threshold) {
-        return (snrdb > threshold);
-    }
-
-    private boolean isCandidate(final int index, final double[] values,
-            final int window) {
-        final double max = MathTools.max(values, index - window, index + window);
-        final double indxVal = values[index];
-        if (max == indxVal) {
-            return true;
-        }
-        return false;
-    }
-
-    private void checkExtremum(final double[] values, final double[] snr,
-            final ArrayList<Integer> ts, final double threshold, final int i,
-            final int window) {
-        EvalTools.notNull(new Object[]{values, i, threshold}, this);
-        if ((values[i] > 0) && isAboveThreshold(snr[i], threshold)
-                && isCandidate(i, values, window)) {
-            ts.add(i);
-            log.debug(
-                    "Found extremum above snr threshold {} with value {} at scan: {}",
-                    new Object[]{threshold, values[i], i});
-        }
-    }
-
-    private boolean isMinimum(final double prev, final double current,
-            final double next) {
-        if ((current < prev) && (current < next)) {
-            return true;
-        }
-        if (current == 0) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -1093,7 +791,7 @@ public class TICPeakFinder extends AFragmentCommand {
         final List<List<String>> rows = new ArrayList<List<String>>(l.size());
         List<String> headers = null;
         final String[] headerLine = new String[]{"APEX", "START", "STOP",
-            "RT_APEX", "RT_START", "RT_STOP", "AREA", "MW", "INTENSITY"};
+            "RT_APEX", "RT_START", "RT_STOP", "AREA","AREA_NORMALIZED","NORMALIZATION_METHODS", "MW", "INTENSITY","SNR"};
         headers = Arrays.asList(headerLine);
         log.debug("Adding row {}", headers);
         rows.add(headers);
@@ -1105,8 +803,9 @@ public class TICPeakFinder extends AFragmentCommand {
             final String[] line = new String[]{pb.getApexIndex() + "",
                 pb.getStartIndex() + "", pb.getStopIndex() + "",
                 df.format(pb.getApexTime()), df.format(pb.getStartTime()),
-                df.format(pb.getStopTime()), pb.getArea() + "",
-                "" + pb.getMw(), "" + pb.getApexIntensity()};
+                df.format(pb.getStopTime()), pb.getArea() + "", pb.getNormalizedArea()+"",
+                Arrays.toString(pb.getNormalizationMethods()),
+                "" + pb.getMw(), "" + pb.getApexIntensity(),"" + pb.getSnr()};
             final List<String> v = Arrays.asList(line);
             rows.add(v);
             log.debug("Adding row {}", v);
@@ -1140,7 +839,7 @@ public class TICPeakFinder extends AFragmentCommand {
     public void visualize(final IFileFragment f, final Array intensities,
             final Array filteredIntensities,
             final double[] snr, final ArrayInt.D1 peaks,
-            final double peakThreshold) {
+            final double peakThreshold, PolynomialSplineFunction baselineEstimator) {
         Array domain = null;
         String x_label = "scan number";
         try {
@@ -1152,10 +851,19 @@ public class TICPeakFinder extends AFragmentCommand {
         }
         final ArrayDouble.D1 posx = new ArrayDouble.D1(peaks.getShape()[0]);
         final ArrayDouble.D1 posy = new ArrayDouble.D1(peaks.getShape()[0]);
-        final Array threshold = Array.factory(snr);
+        final Array snrEstimate = Array.factory(snr);
+        final Array threshold = new ArrayDouble.D1(snr.length);
+        final Array baseline = new ArrayDouble.D1(snr.length);
+        for(int i = 0;i<snr.length;i++) {
+            try {
+                baseline.setDouble(i, baselineEstimator.value(i));
+            } catch (ArgumentOutsideDomainException ex) {
+                Logger.getLogger(TICPeakFinder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         // new ArrayDouble.D1(intensities
         // .getShape()[0]);
-        // ArrayTools.fill(threshold, peakThreshold);
+        ArrayTools.fill(threshold, peakThreshold);
         final Index satIdx = domain.getIndex();
         final Index intensIdx = intensities.getIndex();
         for (int i = 0; i < peaks.getShape()[0]; i++) {
@@ -1163,13 +871,13 @@ public class TICPeakFinder extends AFragmentCommand {
             posy.set(i, intensities.getInt(intensIdx.set(peaks.get(i))));
         }
         final AChart<XYPlot> tc1 = new XYChart("SNR plot",
-                new String[]{"Signal-to-noise ratio"},
-                new Array[]{threshold}, new Array[]{domain}, posx, posy,
+                new String[]{"Signal-to-noise ratio","Threshold"},
+                new Array[]{snrEstimate,threshold}, new Array[]{domain}, posx, posy,
                 new String[]{}, x_label, "snr (db)");
         final AChart<XYPlot> tc2 = new XYChart("TICPeakFinder results for "
                 + f.getName(), new String[]{"Total Ion Count (TIC)",
-                    "Baseline Corrected TIC"},
-                new Array[]{intensities, filteredIntensities}, new Array[]{
+                    "Estimated Baseline"},
+                new Array[]{intensities, baseline}, new Array[]{
                     domain}, posx,
                 posy, new String[]{}, x_label, "counts");
         // final AChart<XYPlot> tc3 = new XYChart("Peak candidates",

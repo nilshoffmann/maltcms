@@ -17,14 +17,27 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Cross/Maltcms.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  $Id$
+ *  $Id: RankComparator.java 426 2012-02-09 19:38:11Z nilshoffmann $
  */
-package maltcms.datastructures.peak;
+package maltcms.datastructures.rank;
 
-/**
- *
- * @author nils
- */
-public enum PeakType {
-    UNDEFINED, TIC_RAW, TIC_FILTERED, EIC_RAW, EIC_FILTERED;
+import java.util.Comparator;
+
+import maltcms.datastructures.ridge.Ridge;
+
+public class RankComparator implements Comparator<Rank<Ridge>> {
+
+	private final String feature;
+	
+	public RankComparator(String feature) {
+		this.feature = feature;
+	}
+	
+	@Override
+	public int compare(Rank<Ridge> o1, Rank<Ridge> o2) {
+		double d1 = o1.getRank(this.feature);
+		double d2 = o2.getRank(this.feature);
+		return Double.compare(d1, d2);
+	}
+
 }

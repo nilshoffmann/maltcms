@@ -56,6 +56,9 @@ public class MziDtwWorkerFactory extends AWorkerFactory {
     private boolean useSparseArrays;
     private int anchorRadius;
     private IDtwSimilarityFunction similarity;
+    private boolean saveDtwMatrix;
+    private boolean savePairwiseSimilarityMatrix;
+    private boolean normalizeAlignmentValue;
 
     @Override
     public PairwiseDistanceWorker create() {
@@ -72,6 +75,9 @@ public class MziDtwWorkerFactory extends AWorkerFactory {
                 precalculatePairwiseDistances);
         mdtw.setSaveLayoutImage(saveLayoutImage);
         mdtw.setUseAnchors(useAnchors);
+        mdtw.setSaveDtwMatrix(saveDtwMatrix);
+        mdtw.setSavePairwiseSimilarityMatrix(savePairwiseSimilarityMatrix);
+        mdtw.setNormalizeAlignmentValue(normalizeAlignmentValue);
         //setup pairwise comparison function
         PairwiseFeatureSimilarity pfs = new PairwiseFeatureSimilarity();
         pfs.setSimilarityFunction(similarity);

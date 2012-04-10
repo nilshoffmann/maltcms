@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Cross/Maltcms.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  $Id$
+ *  $Id: CwtEicPeakFinder.java 426 2012-02-09 19:38:11Z nilshoffmann $
  */
 package maltcms.commands.fragments.peakfinding;
 
@@ -25,13 +25,12 @@ import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import java.io.File;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments2d.peakfinding.CwtRunnable;
+import maltcms.commands.fragments.peakfinding.cwtEicPeakFinder.CwtEicPeakFinderCallable;
 import maltcms.tools.ArrayTools;
 import net.sf.maltcms.execution.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;

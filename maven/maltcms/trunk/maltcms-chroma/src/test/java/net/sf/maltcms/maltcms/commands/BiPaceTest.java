@@ -68,7 +68,7 @@ public class BiPaceTest extends AFragmentCommandTest {
         TopHatFilter thf = new TopHatFilter();
         thf.setWindow(50);
         tpf.setFilter(Arrays.asList(maf, thf));
-        tpf.setSnrWindow(10);
+//        tpf.setSnrWindow(10);
         tpf.setPeakThreshold(0.0d);
         commands.add(tpf);
 //        commands.add(new PeakCliqueAlignment());

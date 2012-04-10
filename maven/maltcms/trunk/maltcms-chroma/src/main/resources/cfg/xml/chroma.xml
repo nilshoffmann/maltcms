@@ -99,23 +99,55 @@
     
     
     <!-- filter beans used by ticPeakFinder -->
+    <bean id="savitzkyGolayFilter" class="maltcms.commands.filters.array.SavitzkyGolayFilter" >
+        <property name="window" value="12"/>
+    </bean>
+    
     <bean id="movingAverageFilter" class="maltcms.commands.filters.array.MovingAverageFilter" >
         <property name="window" value="10"/>
     </bean>
     <bean id="topHatFilter" class="maltcms.commands.filters.array.TopHatFilter" scope="prototype">
         <property name="window" value="50"/>
     </bean>
+    
+    <bean id="loessBaselineEstimator" class="maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator" scope="prototype">
+        <property name="bandwidth" value="0.3"/>
+        <property name="accuracy" value="1.0E-12"/>
+        <property name="robustnessIterations" value="2"/>
+        <property name="minimaWindow" value="1000"/>
+    </bean>
+    
+    <bean id="ticAreaNormalizer" class="maltcms.datastructures.peak.normalization.TicAreaNormalizer">
+        <property name="ticVariableName" value="total_intensity"/>
+    </bean>
+    
     <!-- TicPeakFinder -->
     <bean id="ticPeakFinder" class="maltcms.commands.fragments.peakfinding.TICPeakFinder">
-        <property name="peakThreshold" value="0.01"/>
+        <property name="peakThreshold" value="3.0"/>
+        <property name="baselineEstimator" ref="loessBaselineEstimator"/>
         <property name="filter">
             <list>
-                <ref bean="movingAverageFilter"/>
-                <ref bean="topHatFilter"/>
+                <ref bean="savitzkyGolayFilter"/>
             </list>
         </property>
         <property name="snrWindow" value="50"/>
         <property name="peakSeparationWindow" value="10"/>
+        <property name="integratePeaks" value="false"/>
+        <property name="integrateRawTic" value="true"/>
+        <property name="saveGraphics" value="false"/>
+        <property name="peakNormalizers">
+            <list>
+                <!-- default: none, alternative: ticAreaNormalizer -->
+                <!--<ref bean="ticAreaNormalizer"/>-->
+            </list>
+        </property>
+    </bean>
+    
+    <!-- CwtTicPeakFinder -->
+    <bean id="cwtTicPeakFinder" class="maltcms.commands.fragments.peakfinding.CwtTicPeakFinder">
+        <property name="minScale" value="10"/>
+        <property name="maxScale" value="100"/>
+        <property name="minPercentile" value="5.0d"/>
         <property name="integratePeaks" value="false"/>
         <property name="integrateRawTic" value="true"/>
         <property name="saveGraphics" value="false"/>
@@ -167,6 +199,8 @@
         <property name="saveUnmatchedPeaks" value="false"/>
         <property name="saveUnassignedPeaks" value="false"/>
         <property name="saveIncompatiblePeaks" value="false"/>
+        <!-- which peak area definition to use, default: peak_area, alternative: peak_area_normalized -->
+        <property name="peakAreaVariable" value="peak_area"/>
     </bean>
     
 <!--     PairwiseDistanceCalculator -->

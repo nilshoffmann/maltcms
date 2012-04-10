@@ -45,8 +45,6 @@ import maltcms.test.AFragmentCommandTest;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import cross.commands.fragments.AFragmentCommand;
 import cross.commands.fragments.IFragmentCommand;
@@ -177,7 +175,7 @@ public class CemappDtwTest extends AFragmentCommandTest {
         TopHatFilter thf = new TopHatFilter();
         thf.setWindow(50);
         tpf.setFilter(Arrays.asList(maf, thf));
-        tpf.setSnrWindow(10);
+        //tpf.setSnrWindow(10);
         tpf.setPeakThreshold(0.0d);
         commands.add(tpf);
         commands.add(new PeakCliqueAlignment());
@@ -216,7 +214,7 @@ public class CemappDtwTest extends AFragmentCommandTest {
         TopHatFilter thf = new TopHatFilter();
         thf.setWindow(50);
         tpf.setFilter(Arrays.asList(maf, thf));
-        tpf.setSnrWindow(10);
+        //tpf.setSnrWindow(10);
         tpf.setPeakThreshold(0.0d);
         commands.add(tpf);
         commands.add(new PeakCliqueAlignment());

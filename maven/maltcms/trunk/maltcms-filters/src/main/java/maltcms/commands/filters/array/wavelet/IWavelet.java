@@ -17,14 +17,18 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Cross/Maltcms.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  $Id$
+ *  $Id: IWavelet.java 426 2012-02-09 19:38:11Z nilshoffmann $
  */
-package maltcms.datastructures.peak;
+package maltcms.commands.filters.array.wavelet;
 
 /**
+ * Interface for Wavelet implementations.
+ * @author hoffmann
  *
- * @author nils
  */
-public enum PeakType {
-    UNDEFINED, TIC_RAW, TIC_FILTERED, EIC_RAW, EIC_FILTERED;
+public interface IWavelet {
+	public abstract double applyMotherWavelet(final double t,
+	        double... params);
+
+	public abstract double getAdmissabilityConstant();
 }

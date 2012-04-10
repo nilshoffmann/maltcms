@@ -71,6 +71,8 @@ public class Metabolite implements IMetabolite {
 	private int scanIndex = -1;
 
 	private int mw;
+        
+        private double molecularWeight;
 
 	public Metabolite() {
 
@@ -94,6 +96,7 @@ public class Metabolite implements IMetabolite {
 		this.retentionTime = retentionTime1;
 		this.retentionTimeUnit = retentionTimeUnit1;
 		this.mw = mw1;
+                this.molecularWeight = mw1;
 		this.sp = sp1;
 		this.sname = shortName;
 		setMassSpectrum(masses1, intensities1);
@@ -174,6 +177,10 @@ public class Metabolite implements IMetabolite {
 
 	public int getMW() {
 		return this.mw;
+	}
+        
+        public double getMw() {
+		return this.molecularWeight;
 	}
 
 	public String getName() {
@@ -258,6 +265,12 @@ public class Metabolite implements IMetabolite {
 
 	public void setMW(final int mw1) {
 		this.mw = mw1;
+                this.molecularWeight = mw1;
+	}
+        
+        public void setMw(final double mw1) {
+		this.molecularWeight = mw1;
+                this.mw = (int)mw1;
 	}
 
 	public void setName(final String s) {
@@ -308,13 +321,17 @@ public class Metabolite implements IMetabolite {
 			        + getRetentionTime());
 			sb.append("\n");
 		}
+                if (getMw() >= 0) {
+                    sb.append("Synon: MW:" + getMw());
+                    sb.append("\n");
+                }
 		sb.append("Comments: " + getComments());
 		sb.append("\n");
 		if (getFormula() != null) {
 			sb.append("Formula: " + getFormula());
 			sb.append("\n");
 		}
-		if (getMW() > 0) {
+		if (getMW() >= 0) {
 			sb.append("MW: " + getMW());
 			sb.append("\n");
 		}

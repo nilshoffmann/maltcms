@@ -34,16 +34,14 @@ import maltcms.commands.distances.PairwiseFeatureSimilarity;
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-
 @Data
-@ServiceProvider(service=AWorkerFactory.class)
+@ServiceProvider(service = AWorkerFactory.class)
 public class TicDtwWorkerFactory extends AWorkerFactory {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8359038356253166675L;
-	
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8359038356253166675L;
     private double bandWidthPercentage;
     private double globalGapPenalty;
     private String extension;
@@ -54,6 +52,9 @@ public class TicDtwWorkerFactory extends AWorkerFactory {
     private boolean useAnchors;
     private int anchorRadius;
     private IDtwSimilarityFunction similarity;
+    private boolean saveDtwMatrix;
+    private boolean savePairwiseSimilarityMatrix;
+    private boolean normalizeAlignmentValue;
 
     @Override
     public PairwiseDistanceWorker create() {
@@ -68,6 +69,9 @@ public class TicDtwWorkerFactory extends AWorkerFactory {
                 precalculatePairwiseDistances);
         mdtw.setSaveLayoutImage(saveLayoutImage);
         mdtw.setUseAnchors(useAnchors);
+        mdtw.setSaveDtwMatrix(saveDtwMatrix);
+        mdtw.setSavePairwiseSimilarityMatrix(savePairwiseSimilarityMatrix);
+        mdtw.setNormalizeAlignmentValue(normalizeAlignmentValue);
         //setup pairwise comparison function
         PairwiseFeatureSimilarity pfs = new PairwiseFeatureSimilarity();
         pfs.setSimilarityFunction(similarity);
@@ -75,7 +79,7 @@ public class TicDtwWorkerFactory extends AWorkerFactory {
         //setup recurrence function
         DtwRecurrence dtwr = new DtwRecurrence();
         dtwr.setGlobalGapPenalty(globalGapPenalty);
-        dtwr.set(similarity.getCompressionWeight(), similarity.getExpansionWeight(),similarity.getMatchWeight());
+        dtwr.set(similarity.getCompressionWeight(), similarity.getExpansionWeight(), similarity.getMatchWeight());
         dtwr.setMinimize(false);
         mdtw.setRecurrence(dtwr);
         worker.setSimilarity(mdtw);

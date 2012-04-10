@@ -19,25 +19,18 @@
  *
  *  $Id$
  */
-package maltcms.datastructures.rank;
+package maltcms.datastructures.peak.normalization;
 
-import java.util.Comparator;
+import cross.datastructures.fragments.IFileFragment;
+import maltcms.datastructures.peak.Peak1D;
 
-import maltcms.datastructures.ridge.Ridge;
-
-public class RankComparator implements Comparator<Rank<Ridge>> {
-
-	private final String feature;
-	
-	public RankComparator(String feature) {
-		this.feature = feature;
-	}
-	
-	@Override
-	public int compare(Rank<Ridge> o1, Rank<Ridge> o2) {
-		double d1 = o1.getRank(this.feature);
-		double d2 = o2.getRank(this.feature);
-		return Double.compare(d1, d2);
-	}
-
+/**
+ *
+ * @author nilshoffmann
+ */
+public interface IPeakNormalizer {
+    
+    double getNormalizationFactor(IFileFragment fragment, Peak1D peak);
+    String getNormalizationName();
+    
 }

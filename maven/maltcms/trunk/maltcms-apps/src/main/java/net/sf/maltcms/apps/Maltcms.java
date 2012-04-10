@@ -273,12 +273,12 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 //: FILENAME>VARNAME1#INDEXVAR[RANGEBEGIN:RANGEEND]&VARNAME2...",
                 true, ',', true, true, 0, false, false, 0, "file1,...",
                 false));
-//        this.o.addOption(addOption(
-//                "D",
-//                null,
-//                "additional command line options",
-//                true, ',', true, true, 0, false, false, 0,
-//                "-DNAME1=OPTION1", false));
+        this.o.addOption(addOption(
+                "D",
+                null,
+                "additional command line options",
+                true, ',', true, true, 0, false, false, 0,
+                "-DNAME1=OPTION1", false));
         this.o.addOption(addBooleanOption(
                 "p",
                 null,
@@ -584,16 +584,17 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 if (o1.getOpt().equals("r")) {
                     cmdLineCfg.setProperty("input.basedir.recurse", true);
                 }
-//                if (o1.getOpt().equals("D")) {
-//                    for (final String s : o1.getValues()) {
-//                        final String[] split = s.split("=");
-//                        if (split.length > 1) {
-//                            cmdLineCfg.setProperty(split[0], split[1]);
-//                        } else {
-//                            this.log.warn("Could not split " + s + " at " + "=");
-//                        }
-//                    }
-//                }
+                if (o1.getOpt().equals("D")) {
+                    for (final String s : o1.getValues()) {
+                        final String[] split = s.split("=");
+                        if (split.length > 1) {
+                            cmdLineCfg.setProperty(split[0], split[1]);
+                            System.setProperty(split[0], split[1]);
+                        } else {
+                            this.log.warn("Could not split " + s + " at " + "=");
+                        }
+                    }
+                }
                 if (o1.getOpt().equals("o")) {
                     cmdLineCfg.setProperty("output.basedir", o1.getValue());
                 }

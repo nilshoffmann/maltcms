@@ -167,6 +167,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     private boolean saveUnmatchedPeaks = false;
     private boolean saveIncompatiblePeaks = false;
     private boolean saveUnassignedPeaks = false;
+    private String peakAreaVariable = "peak_area";
 
     public PeakCliqueAlignment() {
 //        similarityFunction = new ProductSimilarity();
@@ -1294,7 +1295,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 EvalTools.notNull(fragment, this);
                 final int pos = columnMap.get(iff).intValue();
                 try {
-                    Array peakAreas = fragment.getChild("peak_area").getArray();
+                    Array peakAreas = fragment.getChild(peakAreaVariable).getArray();
                     log.debug("PeakAreas for {}: {}",fragment.getName(), peakAreas.getShape()[0]);
                     log.debug("Insert position for {}: {}", iff, pos);
                     if (pos >= 0) {

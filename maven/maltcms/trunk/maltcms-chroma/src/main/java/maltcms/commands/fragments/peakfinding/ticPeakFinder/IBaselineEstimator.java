@@ -19,12 +19,14 @@
  *
  *  $Id$
  */
-package maltcms.datastructures.peak;
+package maltcms.commands.fragments.peakfinding.ticPeakFinder;
+
+import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
 
 /**
  *
- * @author nils
+ * @author nilshoffmann
  */
-public enum PeakType {
-    UNDEFINED, TIC_RAW, TIC_FILTERED, EIC_RAW, EIC_FILTERED;
+public interface IBaselineEstimator {
+    PolynomialSplineFunction findBaseline(double[] values);
 }

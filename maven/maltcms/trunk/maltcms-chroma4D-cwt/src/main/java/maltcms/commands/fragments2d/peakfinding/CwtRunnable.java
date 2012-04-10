@@ -25,7 +25,6 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Transparency;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -61,7 +60,6 @@ import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.datastructures.rank.Rank;
 import maltcms.datastructures.rank.RankSorter;
 import maltcms.datastructures.ridge.Ridge;
-import maltcms.io.csv.ColorRampReader;
 import maltcms.io.xml.bindings.annotation.MaltcmsAnnotation;
 import maltcms.tools.ImageTools;
 
@@ -656,70 +654,6 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         pe.exportPeakInformation(name, peaks);
     }
 
-    // //TODO
-    // private List<Ridge> findRidgeMaxima(List<Ridge> r,Array tic) {
-    // for(Ridge ridge:r) {
-    // Ridge s = new Ridge();
-    // }
-    // }
-    /**
-     * @param array
-     * @return
-     */
-    private static BufferedImage createColorHeatmap(ArrayDouble.D2 array) {
-        // BufferedImage bi = new
-        // BufferedImage(array.getShape()[0],array.getShape()[1],BufferedImage.TYPE_INT_RGB);
-        BufferedImage bi = ImageTools.makeImage2D(array, 256);
-        final ColorRampReader crr = new ColorRampReader();
-        final int[][] colorRamp = crr.getDefaultRamp();
-        Color[] cRamp = ImageTools.rampToColorArray(colorRamp);
-        int nsamples = 256;
-        double[] sampleTable = ImageTools.createSampleTable(nsamples);
-        // double[] bp = ImageTools.getBreakpoints(array, nsamples,
-        // Double.NEGATIVE_INFINITY);
-        // ImageTools.makeImage2D(bi.getRaster(), array, nsamples, colorRamp,
-        // 0.0d, bp);
-        sampleTable = ImageTools.mapSampleTable(sampleTable, -1, 1);
-        // System.out.println("Sampletable: " +
-        // Arrays.toString(sampleTable));
-        BufferedImage crampImg = ImageTools.createColorRampImage(sampleTable,
-                Transparency.TRANSLUCENT, cRamp);
-        BufferedImage destImg = ImageTools.applyLut(bi,
-                ImageTools.createLookupTable(crampImg, 1.0f, nsamples));
-        return destImg;
-        // return bi;
-    }
-
-    /**
-     * @param array
-     * @return
-     */
-    private static BufferedImage createAdaptiveColorHeatmap(ArrayDouble.D2 array) {
-        // BufferedImage bi = new
-        // BufferedImage(array.getShape()[0],array.getShape()[1],BufferedImage.TYPE_INT_RGB);
-        BufferedImage bi = new BufferedImage(array.getShape()[0],
-                array.getShape()[1], BufferedImage.TYPE_INT_RGB);;// ImageTools.makeImage2D(array,
-        // 256);
-        final ColorRampReader crr = new ColorRampReader();
-        final int[][] colorRamp = crr.getDefaultRamp();
-        // Color[] cRamp = ImageTools.rampToColorArray(colorRamp);
-        int nsamples = 256;
-        double[] sampleTable = ImageTools.createSampleTable(nsamples);
-        double[] bp = ImageTools.getBreakpoints(array, nsamples,
-                Double.NEGATIVE_INFINITY);
-        ImageTools.makeImage2D(bi.getRaster(), array, nsamples, colorRamp,
-                0.0d, bp);
-        // sampleTable = ImageTools.mapSampleTable(sampleTable, -1, 1);
-        // System.out.println("Sampletable: " +
-        // Arrays.toString(sampleTable));
-        // BufferedImage crampImg = ImageTools.createColorRampImage(sampleTable,
-        // Transparency.TRANSLUCENT, cRamp);
-        // BufferedImage destImg = ImageTools.applyLut(bi, ImageTools
-        // .createLookupTable(crampImg, 1.0f, nsamples));
-        return bi;
-        // return bi;
-    }
-
     private List<Integer> getPeakMaxima(ArrayDouble.D2 scaleogram, int row) {
         double[] scaleResponse = (double[]) scaleogram.slice(1, row).
                 get1DJavaArray(double.class);
@@ -889,7 +823,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         BufferedImage cramp = ImageTools.createColorRampImage(
                 ImageTools.createSampleTable(samples),
                 BufferedImage.TRANSLUCENT, Color.WHITE, Color.BLACK);
-        BufferedImage hmImg = createAdaptiveColorHeatmap(heatmap);
+        BufferedImage hmImg = CwtChartFactory.createAdaptiveColorHeatmap(heatmap);
         Graphics2D hmg2 = hmImg.createGraphics();
         // int cnt = 0;
         // System.out.println("Painting "+ridges.size()+" peak markers");

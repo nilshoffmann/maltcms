@@ -17,18 +17,17 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Cross/Maltcms.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  $Id$
+ *  $Id: IRidgeCost.java 426 2012-02-09 19:38:11Z nilshoffmann $
  */
-package maltcms.commands.filters.array.wavelet;
+package maltcms.datastructures.ridge;
 
 /**
- * Interface for Wavelet implementations.
- * @author hoffmann
- *
+ * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * 
+ * 
  */
-public interface IWavelet {
-	public abstract double applyMotherWavelet(final double t,
-	        double... params);
+public interface IRidgeCost {
 
-	public abstract double getAdmissabilityConstant();
+	public double getCost(Ridge r);
+
 }

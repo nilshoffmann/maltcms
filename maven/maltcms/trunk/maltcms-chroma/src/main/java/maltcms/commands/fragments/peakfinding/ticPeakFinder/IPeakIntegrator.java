@@ -19,15 +19,12 @@
  *
  *  $Id$
  */
-package maltcms.datastructures.ridge;
+package maltcms.commands.fragments.peakfinding.ticPeakFinder;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ * @author nilshoffmann
  */
-public interface IRidgeCost {
-
-	public double getCost(Ridge r);
-
+public interface IPeakIntegrator {
+    
 }

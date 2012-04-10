@@ -52,6 +52,8 @@ public interface IMetabolite extends IRetentionInfo {
     public double getMinMass();
 
     public int getMW();
+    
+    public double getMw();
 
     public String getShortName();
 
@@ -76,6 +78,8 @@ public interface IMetabolite extends IRetentionInfo {
     public void setMinMass(double m);
 
     public void setMW(int mw);
+    
+    public void setMw(double mw);
 
     public void setShortName(String sname);
 

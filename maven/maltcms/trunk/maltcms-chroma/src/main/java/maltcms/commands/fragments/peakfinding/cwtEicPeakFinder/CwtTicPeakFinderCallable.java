@@ -19,7 +19,7 @@
  *
  *  $Id$
  */
-package maltcms.commands.fragments.peakfinding;
+package maltcms.commands.fragments.peakfinding.cwtEicPeakFinder;
 
 import java.util.List;
 
@@ -29,7 +29,10 @@ import cross.datastructures.StatsMap;
 import cross.datastructures.Vars;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.VariableFragment;
+import java.awt.Image;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collections;
@@ -42,12 +45,14 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.FirstDerivativeFilter;
 import maltcms.commands.filters.array.MultiplicationFilter;
 import maltcms.commands.filters.array.wavelet.MexicanHatWaveletFilter;
+import maltcms.commands.fragments2d.peakfinding.CwtChartFactory;
 import maltcms.commands.scanners.ArrayStatsScanner;
-import maltcms.datastructures.peak.MaltcmsAnnotationFactory;
 import maltcms.datastructures.peak.Peak1D;
+import maltcms.datastructures.peak.PeakType;
+import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.datastructures.rank.Rank;
 import maltcms.datastructures.ridge.Ridge;
-import maltcms.io.xml.bindings.annotation.MaltcmsAnnotation;
+import maltcms.tools.ImageTools;
 import org.apache.commons.math.stat.descriptive.rank.Percentile;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -58,9 +63,9 @@ import ucar.ma2.Index;
  * 
  * 
  */
-@Slf4j
 @Data
-public class CwtEicPeakFinderCallable implements Callable<File>, Serializable {
+@Slf4j
+public class CwtTicPeakFinderCallable implements Callable<File>, Serializable {
 
     @Configurable
     private int minScale = 5;
@@ -68,9 +73,11 @@ public class CwtEicPeakFinderCallable implements Callable<File>, Serializable {
     private int maxScale = 20;
     private File input;
     private File output;
-    private double mz;
-    private double[] eic;
-    private double percentile = 5.0d;
+    private double minPercentile = 5.0d;
+    private boolean integratePeaks = true;
+    private boolean integrateRawTic = true;
+    private boolean storeScaleogram = true;
+    private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
     @Override
     public String toString() {
@@ -83,40 +90,48 @@ public class CwtEicPeakFinderCallable implements Callable<File>, Serializable {
         Index tidx = tic.getIndex();
         Array sat = f.getChild("scan_acquisition_time").getArray();
         Index sidx = sat.getIndex();
-        System.out.println("Building scans");
         List<Peak1D> p2 = new LinkedList<Peak1D>();
         for (Ridge ridge : r) {
-            System.out.println("Processing Ridge " + (index + 1) + " "
+            log.debug("Processing Ridge " + (index + 1) + " "
                     + r.size());
             Peak1D p = new Peak1D();
             p.setApexIndex(ridge.getGlobalScanIndex());
             p.setFile(f.getName());
             p.setApexIntensity(tic.getDouble(tidx.set(p.getApexIndex())));
             p.setApexTime(sat.getDouble(sidx.set(p.getApexIndex())));
-            p.setMw(mz);
             int[] scaleBounds = mhwf.getContinuousWaveletTransform().
                     getBoundsForWavelet(p.getApexIndex(), ridge.
                     getIndexOfMaximum(), tic.getShape()[0]);
+            //TODO area integration raw vs filtered (wavelet peak shapes)
+            double area = 0.0d;
+            for(int i = scaleBounds[0]; i <= scaleBounds[1];i++) {
+                area+=tic.getDouble(i);
+            }
+            p.setStartIndex(scaleBounds[0]);
+            p.setStopIndex(scaleBounds[1]);
+            //TODO SNR for wavelet ridges
+            p.setSnr(Double.NaN);
+            p.setArea(area);
             p.setStartTime(sat.getDouble(scaleBounds[0]));
             p.setStopTime(sat.getDouble(scaleBounds[1]));
+            p.setPeakType(PeakType.TIC_RAW);
             p2.add(p);
+            index++;
         }
         return p2;
     }
 
-    private void setStartAndStopTimes(Peak1D peak, Ridge r) {
-    }
-
     @Override
     public File call() {
-        Array values = Array.factory(eic);
         FileFragment ff = new FileFragment(input);
+        Array values = ff.getChild("total_intensity").getArray();
         ArrayStatsScanner ass = new ArrayStatsScanner();
         StatsMap sm = ass.apply(new Array[]{values})[0];
+        //normalize to 0..1
         MultiplicationFilter mf = new MultiplicationFilter(
                 1.0 / (sm.get(Vars.Max.name()) - sm.get(Vars.Min.name())));
         values = mf.apply(values);
-        Percentile p = new Percentile(percentile);
+        Percentile p = new Percentile(minPercentile);
         double fivePercent = p.evaluate((double[]) values.get1DJavaArray(
                 double.class));
         MexicanHatWaveletFilter cwt = new MexicanHatWaveletFilter();
@@ -144,23 +159,24 @@ public class CwtEicPeakFinderCallable implements Callable<File>, Serializable {
         for (Ridge r : ridges) {
             ranks.add(new Rank<Ridge>(r));
         }
+        //FIXME remove equal ridges
 
         filterRidgesByResponse(ranks, values);
         Collections.sort(ranks);
 
 
-        System.out.println("Found " + ridges.size() + " ridges at maxScale="
+        log.info("Found " + ridges.size() + " ridges at minScale="+minScale+", maxScale="
                 + maxScale);
-
-
+        
         List<Peak1D> peaks = createPeaksForRidges(ff, values, ridges, cwt);
-        MaltcmsAnnotationFactory maf = new MaltcmsAnnotationFactory();
-        MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(output.toURI());
-        for (Peak1D peak : peaks) {
-
-            maf.addPeakAnnotation(ma, getClass().getName(), peak);
+        FileFragment outf = new FileFragment(output);
+        if(storeScaleogram) {
+            VariableFragment scaleogramVar = new VariableFragment(outf,"cwt_scaleogram");
+            scaleogramVar.setArray(scaleogram);
         }
-        maf.save(ma, output);
+        outf.addSourceFile(ff);
+        Peak1D.append(outf, peakNormalizers, peaks, values, "tic_peaks", "tic_filtered");
+        outf.save();
         return output;
     }
 
@@ -170,7 +186,7 @@ public class CwtEicPeakFinderCallable implements Callable<File>, Serializable {
             Ridge r = rank.getRidge();
             int x = (int) r.getRidgePoints().get(0).getFirst().getX();
             double val = tic.getDouble(x);
-            // if (val >= percentile) {
+            // if (val >= minPercentile) {
             rank.addRank("response", -val);
 
         }

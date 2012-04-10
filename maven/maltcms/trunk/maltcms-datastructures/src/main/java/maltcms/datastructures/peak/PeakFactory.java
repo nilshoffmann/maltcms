@@ -84,7 +84,7 @@ public class PeakFactory {
     
     public static Peak1D createPeak1DTic(IFileFragment fragment, int startIndex, int apexIndex, int stopIndex) {
         Peak1D peak = new Peak1D();
-        peak.setPeakType(PeakType.TIC);
+        peak.setPeakType(PeakType.TIC_RAW);
         try {
             peak.setExtractedIonCurrent((double[])fragment.getChild("total_intensity").getArray().section(new int[]{startIndex}, new int[]{stopIndex-startIndex}).get1DJavaArray(double.class));
         } catch (InvalidRangeException ex) {
