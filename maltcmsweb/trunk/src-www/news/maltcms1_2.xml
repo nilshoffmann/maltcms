@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<content group="news" ident="news/maltcms1_2" nname="Maltcms 1.2 Release" publish="yes" toRoot="../" lastchanged="$Id$">
+<content group="news" ident="news/maltcms1_2" nname="Maltcms 1.2 Release" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
     <column id="content">
         <h1>Maltcms 1.2 Released on April 20th, 2012</h1>
         <p>The Modular Application Toolkit for Chromatography Mass Spectrometry project is a framework mainly for programmers
