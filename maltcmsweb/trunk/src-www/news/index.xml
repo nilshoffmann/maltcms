@@ -3,6 +3,7 @@
     <column id="content">
         <h1>News</h1>
         <ul class="plainunbulletedlist">
+            <li><ref target="news/maltcms1_2" alt="Maltcms 1.2 Released on April 20th, 2012"/></li>
             <li><ref target="news/maltcms1_1" alt="Maltcms 1.1 Released on February 10th, 2012"/></li>
             <li><ref target="news/bookChapterMetabolomics" alt="Generic Software Frameworks for GC-MS based Metabolomics"/></li>
             <li><ref target="news/perspektive2010" alt="Maui at the Perspektive 2010 Science Fair"/></li>
