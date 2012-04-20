@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content group="info" ident="info/publications" nname="Publications"
          publish="yes" toRoot="../"
-         lastchanged="$Date: 2012-01-29 16:11:44 +0100 (So, 29. Jan 2012) $ by $Author: nilshoffmann $">
+         lastchanged="$Date$ by $Author$">
     <column id="content">
         <h1>2012</h1>
         <p>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<content group="news" ident="news/netbeansMauiFeature" nname="NetBeans Maui Feature" publish="yes" toRoot="../" lastchanged="$Date: 2012-01-29 19:16:11 +0100 (So, 29. Jan 2012) $ by $Author: nilshoffmann $">
+<content group="news" ident="news/netbeansMauiFeature" nname="NetBeans Maui Feature" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
     <column id="content">
         <h1>Maui featured as a Netbeans RCP application</h1>
         <p>After a recent inquiry about our project Maui from Geertjan Wielenga, I prepared a few screenshots of the current prototype and wrote short descriptions for them.

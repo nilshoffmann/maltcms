@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<content group="developers" subgroup="tutorials" ident="developers/tutorials/programmaticWorkflow" nname="Programmatic Workflow" toRoot="../../" publish="yes" lastchanged="$Date: 2011-11-08 23:14:15 +0100 (Di, 08. Nov 2011) $ by $Author: nilshoffmann $">
+<content group="developers" subgroup="tutorials" ident="developers/tutorials/programmaticWorkflow" nname="Programmatic Workflow" toRoot="../../" publish="yes" lastchanged="$Date$ by $Author$">
     <column id="content">
         <h1>Creating a workflow for Maltcms in Java</h1>
         <p>Sometimes it may be preferable to create a custom workflow programmatically, instead of declaratively using <a href="http://www.springsource.org/spring-core" >Spring core's beans xml format</a>.</p>
