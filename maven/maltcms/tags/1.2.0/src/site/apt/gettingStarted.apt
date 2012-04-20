@@ -1,0 +1,264 @@
+Getting Started
+
+    [[1]] Please download and install {{{http://www.oracle.com/technetwork/java/javase/downloads/index.html}Java Runtime Environment (JRE) or JDK version 1.6.0 or newer}} for 
+          your specific platform and operating system.
+
+    [[2]] Then {{{./download.html}Download Maltcms}} and follow the installation instructions.
+
+Installation Instructions
+   
+    Maltcms currently has no automatic installation script. In order to set everything up correctly, please 
+    follow the instructions for your operating system.
+
+* Unix/Linux/MacOSX
+
+    Extract the downloaded zip archive to a directory of your choice. In order to have 
+    maltcms.sh available on your command prompt, set the following 
+    in your $HOME/.profile or $HOME/.bashrc (or in any other appropriate shell configuration file)
+
++------------------------------------------+
+export PATH=$PATH:/PATH/TO/EXTRACTED/ARCHIVE/
++------------------------------------------+
+
+    Maltcms can be launched via the maltcms.sh script in its home directory. 
+    This will use the java executable available via the environment
+    variable JAVA_HOME. Otherwise, the script will try to find the location of your java installation
+    by checking some preconfigured locations.
+    In case of failure, simply add a file "javahome" to the directory in which 
+    maltcms.jar is located, consisting of one line holding the absolute path to your JRE.
+
+    The scripts will prompt for the installation directory of 
+    Maltcms, if you call Maltcms from outside the installation directory and the environment variable MALTCMSDIR
+    is not set. We recommend to add 
+
++------------------------------------------+
+export MALTCMSDIR=/path/to/your/maltcms/
++------------------------------------------+
+
+    to your $HOME/.bashrc or $HOME/.profile file.
+    Alternatively, simply overwrite the environment variable within
+    maltcms.sh to set it to a fixed location.
+
+* Windows
+
+    Extract the downloaded zip archive to a directory of your choice. In order to have 
+    maltcms.bat available on your command prompt, please follow these instructions:
+
+    From your windows desktop, right-click 'My Computer' and select the 'Properties' button.
+    Then, within the 'System Properties' window, navigate to the 'Advanced' tab and select 'Environment Variables'.
+    In the new dialog 'Environment Variables', go to the 'Path' variable in the 'System Variables' section and hit the 'Edit' button.
+    Add the absolute path of the Maltcms directory to the end of the 'Variable value' like so:
+
+    Old:
+
++------------------------------------------+
+C:\Program Files;C:\Winnt;C:\Winnt\System32
++------------------------------------------+
+
+    New:
+
++------------------------------------------+
+C:\Program Files;C:\Winnt;C:\Winnt\System32;C:\Path\To\Maltcms
++------------------------------------------+
+
+    Click 'OK' will close the dialog and set the variable. 
+    If you now startup a new session of the Command Prompt, maltcms.bat should be available as a command.
+
+    The script will prompt for the installation directory of 
+    maltcms, if you call Maltcms from outside the installation directory and the environment variable MALTCMSDIR
+    is not set. We recommend to add 'MALTCMSDIR' as an additional 'System Variable', by defining a new 
+    variable in the 'Environment Variables' dialog under 'User variables' with the name 'MALTCMSDIR' and the absolute
+    path of the Maltcms installation directory as its value.
+
+* Running Maltcms
+
+    The following section requires a command prompt (shell), indicated by the prefixed '>', which should not be typed 
+    into the prompt.
+
+    You can start the 32 bit commandline version by typing
+
++------------------------------------------+
+>java -jar maltcms.jar
++------------------------------------------+
+
+    within the basedir of Maltcms, which will print out the input
+    options that you can supply.
+
+    Alternatively, on a 64 bit system and with 64 bit VM you can call
+
++------------------------------------------+
+>java -d64 -jar maltcms.jar
++------------------------------------------+
+
+    Sometimes, the default amount of memory used by the JAVA VM is 
+    not sufficient. You can then call
+
++------------------------------------------+
+>java -Xms1G -Xmx2G -jar maltcms.jar
++------------------------------------------+
+
+    where -Xms1G sets the minimum amount of memory used by the VM to 
+    1GByte of Ram and -Xmx2G sets the limit of the maximum amount of memory 
+    available to maltcms to 2GBytes. If you have more RAM installed, you can
+    always increase the latter limit.
+
+    If you use java on a 32 bit architecture and a 32 bit VM, more than 2G 
+    might not be available. Using java on 64 bit architectures
+    and with a 64 bit VM allows larger amounts of memory to be
+    allocated.
+
+    In order to define custom properties, you need to pass the -c argument to Maltcms:
+
++------------------------------------------+
+>java -Xms1G -Xmx2G -jar maltcms.jar -c myCustom.properties -i <INPUTDIR> -o <OUTPUTDIR> \
+ -f <FILES>
++------------------------------------------+
+
+    will use the file 'myCustom.properties' from the current directory.
+
+    Recommended arguments for Maltcms are:
+
++------------------------------------------+
+-i <INPUTDIR> (e.g. /vol/data)
+-o <OUTPUTDIR> (e.g. /vol/output)
+-f <FILES> (e.g. "*.cdf")
++------------------------------------------+
+
+    If no INPUTDIR is given, FILES are resolved against the current working directory.
+    If no OUTPUTDIR is given, processing results will be created below the current working directory 
+    in a directory following the convention 'USERNAME/DATETIME/'.
+
+    In order to recurse into the INPUTDIR, you can add '-r' to the command line.
+    As an alternative to defining the input directory explicitly and using a file glob expression (only *.EXT expressions
+    will currently work), you can also define a comma separated list of absolute or relative file paths. 
+    Relative paths are resolved from the current working directory. Please note that paths containing 
+    spaces can only be handled, if the whole argument (all paths separated by commas) is flanked in '"'s. 
+
+* Running ChromA/ChromA4D
+
+    ChromA: To execute the standard pipeline for GC- and LC-MS, use 
+
++------------------------------------------+
+>java -jar maltcms.jar -c cfg/chroma.properties -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
++------------------------------------------+
+
+    ChromA4D: To execute the available pipelines for GCxGC-MS, use 
+
++------------------------------------------+
+>java -jar maltcms.jar -c cfg/chroma4D.properties -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
++------------------------------------------+
+
+    If you do not supply any arguments, Maltcms will print all available arguments
+    with a short explanation.
+
++------------------------------------------+
+>maltcms.sh -- -h
++------------------------------------------+
+
+    prints command-line options for the script with explanations.
+
+Other Features
+
+* Graphical Wizard UI
+
+    As of version 1.1 of Maltcms, the graphical wizard is no longer supported. 
+
+* Extending Maltcms with custom code
+
+    Maltcms allows to add functionality by adding custom jar files
+    to the runtime classpath.
+
+    The classpath in maltcms.jar is created at 
+    build time and will not contain those jars, so you need to add them manually 
+    to the runtime classpath with the '-cp' option supplied to java, or by using the 
+    'maltcms.sh' script, which will pick these up automatically.
+
+* Scripting with Groovy
+
+    To simply use Maltcms in a higher level workflow, you can easily write scripts in the {{{http://groovy.codehaus.org/}Groovy
+    programming language}}. These scripts can be executed using the 'maltcms-groovy.sh' shell script, or by calling 
+
++------------------------------------------+
+java -cp maltcms.jar groovy.lang.GroovyShell path/to/script.groovy <ARGS>
++------------------------------------------+
+
+    from the Maltcms installation base directory, where ARGS are optional parameters to your script.
+
+* Input data formats
+
+    Currently, netCDF compatible input and output is 
+    supported, mzXML input works reliably for MS1 data, output is
+    currently redirected to netCDF format. Additionally, mzData is supported 
+    as input format, but again, output is redirected to netCDF format. 
+    Recently, read support for mzML has been added via the jmzml library.
+
+    To get some insight into the parameters used by Maltcms and possible
+    alternatives, consult the properties files in cfg/, especially
+    * alignment.properties
+    * preprocessing.properties
+    * graphics.properties
+
+    Properties and settings for individual commands in a processing pipeline 
+    are located in the respective xml file below cfg/xml/.
+
+    Custom configuration files can be provided to maltcms.sh/maltcms.bat, as well as to maltcms.jar using the -c option.
+    Those custom options then override the default values.
+
+* Example data
+
+    Example data for maltcms in netcdf format along with alignment
+    anchors can be downloaded individually from
+    {{{http://bibiserv.techfak.uni-bielefeld.de/chroma/download.html}here}}.
+
+    Alternatively, 1D and 2D chromatogram data can be downloaded
+    {{{http://sourceforge.net/projects/maltcms/files/maltcms/example-data/}here}}.
+
+* File format for Anchors
+
+    Anchor files start with a file designation in their first line:
+    Path can be omitted, if ORIGINAL_DATA_FILE and anchor file are both located 
+    in input base directory (cmdline option -i). Otherwise, the absolute path to
+    the original file has to be given.
+
++------------------------------------------+
+>NAME_OF_ORIGINAL_DATA_FILE.cdf
++------------------------------------------+
+
+    The second line defines the column names:
+
++------------------------------------------+
+Name	RI	RT	Scan
++------------------------------------------+
+
+    All following lines contain information for one anchor each:
+
++------------------------------------------+
+RI1	-	-	230
+RI2	-	-	430
++------------------------------------------+
+    etc.
+
+    Note that columns RI and RT are optional, Scan and Name are required.
+    Anchor names should be identical for matched compounds.
+
+** Full example
+
+    File Example1.txt would look like this:
+
++------------------------------------------+
+>Example1.cdf
+Name	RI	RT	Scan
+RI1	-	-	230
+RI2	-	-	430
+RI3	-	-	600
++------------------------------------------+
+	
+    File Example2.txt would look like this:
+
++------------------------------------------+
+>Example2.cdf
+Name	RI	RT	Scan
+RI1	-	-	234
+RI2	-	-	437
+RI3	-	-	598
++------------------------------------------+
