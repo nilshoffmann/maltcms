@@ -6,7 +6,7 @@
             and power-users for data preprocessing tasks, such as filtering, baseline correction, peak finding, alignment,
             and visualization of high-throughput data.
         </p>
-        Maltcms 1.2.0 has seen a large number of changes:
+        Maltcms 1.2.0 has seen a number of changes:
         <ul>
 			<li>Reworking of the TICPeakFinder for improved baseline and SNR estimation leading to better and more consistent integration results.</li>
 			<li>New Savitzky-Golay filter for local polynomial smoothing.</li>
