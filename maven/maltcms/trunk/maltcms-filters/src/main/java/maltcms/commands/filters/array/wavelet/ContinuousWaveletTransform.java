@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Cross/Maltcms.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  $Id: ContinuousWaveletTransform.java 426 2012-02-09 19:38:11Z nilshoffmann $
+ *  $Id$
  */
 package maltcms.commands.filters.array.wavelet;
 
