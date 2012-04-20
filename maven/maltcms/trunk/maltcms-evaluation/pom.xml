@@ -4,7 +4,7 @@
     <parent>
         <artifactId>maltcms-modules</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.1.1-SNAPSHOT</version>
+        <version>1.2.0</version>
     </parent>
     <artifactId>maltcms-evaluation</artifactId>
     <name>maltcms-evaluation</name>
@@ -28,8 +28,7 @@
                                 <typedef resource="instrumentation-def.properties" classpathref="maven.compile.classpath" loaderRef="instrumentation.loader" />
 
 								 We filter by our annotation 
-                                <typedef name="annotation-filter" classname="net.sf.maltcms.evaluation.api.AnnotationFilter" classpathref="maven.compile.classpath"
-                                                                        loaderref="instrumentation.loader" />
+                                <typedef name="annotation-filter" classname="net.sf.maltcms.evaluation.api.AnnotationFilter" classpathref="maven.compile.classpath" loaderref="instrumentation.loader" />
 
                                 <db4o-instrument classTargetDir="target/classes" verbose="true" >
                                     <classpath refid="maven.compile.classpath" />
