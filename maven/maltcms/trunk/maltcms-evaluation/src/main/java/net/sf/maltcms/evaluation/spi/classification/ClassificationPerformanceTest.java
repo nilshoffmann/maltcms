@@ -32,6 +32,7 @@ import maltcms.datastructures.array.IFeatureVector;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.maltcms.evaluation.api.classification.Category;
 import net.sf.maltcms.evaluation.api.classification.Entity;
 import net.sf.maltcms.evaluation.api.classification.EntityGroup;
@@ -46,6 +47,7 @@ import net.sf.maltcms.evaluation.api.classification.PeakRTFeatureVectorComparato
  *
  *
  */
+@Slf4j
 public class ClassificationPerformanceTest<T extends IFeatureVector> {
 
     private final List<EntityGroup> groundTruth;
@@ -109,7 +111,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
     }
 
     public PerformanceMetrics performTest(String toolname, List<EntityGroup> testGroup) throws IllegalArgumentException {
-        System.out.println("Performing classification performance test for " + toolname);
+        log.debug("Performing classification performance test for " + toolname);
         if (!checkCategories(this.groundTruth, testGroup)) {
             throw new IllegalArgumentException("Could not match categories to ground truth for tool: " + toolname + "!");
         }
@@ -125,16 +127,6 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         //we first try to find the ground truth EntityGroup, which best matches
         //to a given testGroup entity group
 
-//        HashSet<Entity> tp = new HashSet<Entity>();
-//        HashSet<Entity> fp = new HashSet<Entity>();
-//        HashSet<Entity> fn = new HashSet<Entity>();
-//        HashSet<Entity> tn = new HashSet<Entity>();
-        //HashSet<Entity> unmatchedTool = new HashSet<Entity>();
-        //HashSet<EntityGroup> unmatchedToolGroups = new LinkedHashSet<EntityGroup>();
-        //HashSet<Entity> matched = new HashSet<Entity>();
-//        HashSet<EntityGroup> matchedToolGroups = new HashSet<EntityGroup>();
-//        HashSet<EntityGroup> matchedGroundTruthGroups = new HashSet<EntityGroup>();
-//        HashMap<EntityGroup, EntityGroup> gtToToolGroups = new HashMap<EntityGroup, EntityGroup>();
         HashMap<EntityGroup, EntityGroupClassificationResult> gtToClsRes = new LinkedHashMap<EntityGroup, EntityGroupClassificationResult>();
 
         int M = 0;
@@ -145,16 +137,16 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         int K = testGroup.get(0).getCategories().size();
 
         int cnt = 0;
-        //System.out.println("Matching " + M + " entities against ground truth!");
+        log.debug("Matching " + M + " entities against ground truth!");
         for (EntityGroup tgEg : testGroup) {
-            //System.out.println("Entity group " + (++cnt) + "/" + testGroup.size());
+            log.debug("Entity group " + (++cnt) + "/" + testGroup.size());
             //find the ground truth group, which has the highest tp1+tn1 number
             //may be null if no tp1 and/or tn1 hits are found
             EntityGroupClassificationResult gtg = findBest(tgEg, this.groundTruth);
 
             if (gtg != null) {
-                //System.out.println("GT group: \n" + gtg.getGroundTruthEntityGroup());
-                //System.out.println("Best tool group: \n" + gtg.getToolEntityGroup());
+                log.debug("GT group: \n" + gtg.getGroundTruthEntityGroup());
+                log.debug("Best tool group: \n" + gtg.getToolEntityGroup());
                 EntityGroup gtEntityGroup = gtg.getGroundTruthEntityGroup();
                 if (gtToClsRes.containsKey(gtEntityGroup)) {
                     //System.err.println("Warning: GT EntityGroup already assigned!");
@@ -163,57 +155,19 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
                     int comp = gtg.compareTo(other);
                     if (comp > 0) {
                         //gtg is better than other
-                        //System.err.println("Changing assignment for ground truth group " + gtEntityGroup + "\n from group " + other.getToolEntityGroup() + "\n to group: " + gtg.getToolEntityGroup() + "\n");
+                        log.debug("Changing assignment for ground truth group " + gtEntityGroup + "\n from group " + other.getToolEntityGroup() + "\n to group: " + gtg.getToolEntityGroup() + "\n");
                         gtToClsRes.put(gtEntityGroup, gtg);
                     } else if (comp < 0) {
                         //other is better, do nothing
-                        //System.err.println("Retaining assignment");
+                        log.debug("Retaining assignment");
                     } else {
                         //both are equal, something fishy is happening here!
-                        //System.err.println("Warning: classification results are equal!");
+                        log.warn("Warning: classification results are equal!");
                     }
                 } else {
                     gtToClsRes.put(gtEntityGroup, gtg);
                 }
-//                if (matchedToolGroups.contains(gtg.getToolEntityGroup())) {
-//                    System.err.println("Warning: Tool EntityGroup already assigned!");
-//                    continue;
-//                }
-//                
-//                if (matchedGroundTruthGroups.contains(gtEntityGroup)) {
-//                    System.out.println("Entity group " + (++cnt) + "/" + testGroup.size());
-////                    System.err.println("Warning: tried to reassign ground truth EntityGroup to test group!");// "+gtg+" to "+tgEg);
-////                    printScoreForGroup(gtg, tgEg);
-////                    printScoreForGroup(gtg, gtToToolGroups.get(gtg));
-////                    throw new IllegalArgumentException("Warning: tried to reassign ground truth EntityGroup to test group!");
-//                    EntityGroup betterGroup = getBetterGroup(gtToToolGroups.get(gtEntityGroup), tgEg, gtEntityGroup);
-////                    System.err.println("Better group for groundTruth group:\n " + gtg + "\n is: \n" + betterGroup + "");
-//                    if (betterGroup == gtToToolGroups.get(gtEntityGroup)) {
-//                        System.err.println("Retaining assignment");
-//                        continue;
-//                    } else {
-//                        System.err.println("Changing assignment for ground truth group " + gtg + "\n from group " + gtToToolGroups.get(gtg) + "\n to group: " + tgEg + "\n");
-////                        EntityGroup toRemove = gtToToolGroups.get(gtg);
-////                        removeMatchedEntityGroup(matchedToolGroups, toRemove, gtg, matched, unmatchedTool, tp, fp, tn, fn);
-////                        gtToToolGroups.put(gtg, tgEg);
-//                        cr.add(gtg);
-//                    }
-//                } else {
-//                    matchedGroundTruthGroups.add(gtg);
-//                    gtToToolGroups.put(gtg, tgEg);
-//                }
-//                cr.add(gtg);
             }
-            //if gtg is null, there is no match at all within the group,
-            //so add tgEg.getEntities() to unmatchedTool.
-            //this could mean, that the ground truth
-            //simply does not contain any of the group entities!
-//            if (gtg != null) {
-//                //System.out.println("Adding to unmatchedTool!");
-//                //System.out.println("Unmatched EntityGroup: " + tgEg);
-//                addMatchedEntityGroup(matchedToolGroups, tgEg, gtg, matched, unmatchedTool, tp, fp, tn, fn);
-//                //unmatchedTool.addAll(tgEg.getEntities());
-//            }
         }
         HashSet<EntityGroup> matchedToolGroups = new LinkedHashSet<EntityGroup>();
         int tp = 0, tn = 0, fp = 0, fn = 0;
@@ -235,102 +189,8 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         HashSet<EntityGroup> unmatchedGTGroups = new LinkedHashSet<EntityGroup>(groundTruth);
         unmatchedGTGroups.removeAll(matchedGTGroups);
 
-        //System.out.println(matchedToolGroups.size() + "/" + testGroup.size() + " tool entityGroups were assigned ");
-        //System.out.println(matchedGTGroups.size() + "/" + groundTruth.size() + " ground truth entityGroups were assigned ");
         PerformanceMetrics pm = new PerformanceMetrics(toolname, tp, fp, tn, fn, N, M, K, dist, unmatchedToolGroups, unmatchedGTGroups, gtToClsRes);
         return pm;
-    }
-
-    private void removeMatchedEntityGroup(HashSet<EntityGroup> matchedGroups, EntityGroup toRemove, EntityGroup gtg, HashSet<Entity> matched, HashSet<Entity> unmatched, HashSet<Entity> tp, HashSet<Entity> fp, HashSet<Entity> tn, HashSet<Entity> fn) {
-        matchedGroups.remove(toRemove);
-        //				System.out.println("Matched EntityGroup: "+toAdd);
-        //System.out.println("Matched ground truth EntityGroup: "+gtg);
-        //we have a matching group
-        //reiterate to distinguish between tp1 and fp1
-        //System.out.println("Matched EntityGroup: ");
-        for (Category c : gtg.getCategories()) {
-            //get the entities for both categories
-            Entity gtEnt = gtg.getEntityForCategory(c);
-            Entity tgEgEnt = toRemove.getEntityForCategory(c);
-            matched.remove(tgEgEnt);
-            IFeatureVector gt = gtEnt.getFeatureVector();
-            IFeatureVector test = tgEgEnt.getFeatureVector();
-            if (this.ifvc.isTP(gt, test)) {
-                //true positive
-                tp.remove(tgEgEnt);
-                //System.out.println("++ (TP): "+gtEnt.getFeatureVector()+"<->"+tgEgEnt.getFeatureVector());
-                //						System.out.println("Ground Truth Entity: "+gtEnt);
-            } else if (this.ifvc.isFP(gt, test)) {
-                //false positive
-                fp.remove(tgEgEnt);
-                //System.out.println("-+ (FP): "+gtEnt.getFeatureVector()+"<->"+tgEgEnt.getFeatureVector());
-                //						System.out.println("False Positive Entity: "+tgEgEnt);
-                //						System.out.println("Ground Truth Entity: "+gtEnt);
-            } else if (this.ifvc.isTN(gt, test)) {
-                //true negative
-                tn.remove(tgEgEnt);
-                //System.out.println("+- (TN): "+gtEnt.getFeatureVector()+"<->"+tgEgEnt.getFeatureVector());
-                //						System.out.println("True Negative Entity: "+tgEgEnt);
-                //						System.out.println("Ground Truth Entity: "+gtEnt);
-            } else if (this.ifvc.isFN(gt, test)) {
-                //false negative
-                fn.remove(tgEgEnt);
-                //System.out.println("-- (FN): "+gtEnt.getFeatureVector()+"<->"+tgEgEnt.getFeatureVector());
-                //						System.out.println("False Negative Entity: "+tgEgEnt);
-                //						System.out.println("Ground Truth Entity: "+gtEnt);
-            } else {
-                System.err.println("Entity is none of the above?");
-            }
-            unmatched.add(tgEgEnt);
-        }
-    }
-
-    private void addMatchedEntityGroup(HashSet<EntityGroup> matchedGroups, EntityGroup toAdd, EntityGroup gtg, HashSet<Entity> matched, HashSet<Entity> unmatched, HashSet<Entity> tp, HashSet<Entity> fp, HashSet<Entity> tn, HashSet<Entity> fn) {
-        matchedGroups.add(toAdd);
-        //				System.out.println("Matched EntityGroup: "+toAdd);
-        //System.out.println("Matched ground truth EntityGroup: "+gtg);
-        //we have a matching group
-        //reiterate to distinguish between tp1 and fp1
-        //System.out.println("Matched EntityGroup: ");
-        for (Category c : gtg.getCategories()) {
-            //get the entities for both categories
-            Entity gtEnt = gtg.getEntityForCategory(c);
-            Entity tgEgEnt = toAdd.getEntityForCategory(c);
-            if (matched.contains(tgEgEnt) || unmatched.contains(tgEgEnt)) {
-                System.err.println("Warning: Entity already assigned!");
-            }
-            IFeatureVector gt = gtEnt.getFeatureVector();
-            IFeatureVector test = tgEgEnt.getFeatureVector();
-            if (this.ifvc.isTP(gt, test)) {
-                //true positive
-                tp.add(tgEgEnt);
-                //System.out.println("++ (TP): "+gtEnt.getFeatureVector()+"<->"+tgEgEnt.getFeatureVector());
-                //						System.out.println("Ground Truth Entity: "+gtEnt);
-            } else if (this.ifvc.isFP(gt, test)) {
-                //false positive
-                fp.add(tgEgEnt);
-                //System.out.println("-+ (FP): "+gtEnt.getFeatureVector()+"<->"+tgEgEnt.getFeatureVector());
-                //						System.out.println("False Positive Entity: "+tgEgEnt);
-                //						System.out.println("Ground Truth Entity: "+gtEnt);
-            } else if (this.ifvc.isTN(gt, test)) {
-                //true negative
-                tn.add(tgEgEnt);
-                //System.out.println("+- (TN): "+gtEnt.getFeatureVector()+"<->"+tgEgEnt.getFeatureVector());
-                //						System.out.println("True Negative Entity: "+tgEgEnt);
-                //						System.out.println("Ground Truth Entity: "+gtEnt);
-            } else if (this.ifvc.isFN(gt, test)) {
-                //false negative
-                fn.add(tgEgEnt);
-                //System.out.println("-- (FN): "+gtEnt.getFeatureVector()+"<->"+tgEgEnt.getFeatureVector());
-                //						System.out.println("False Negative Entity: "+tgEgEnt);
-                //						System.out.println("Ground Truth Entity: "+gtEnt);
-            } else {
-                System.err.println("Entity is none of the above?");
-            }
-            matched.add(tgEgEnt);
-        }
-        //System.out.println("");
-        //System.out.println("");
     }
 
     /**
@@ -404,46 +264,6 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
                     }
                 }
             }
-////                System.out.println("Distance for tool: "+dist+" tp: "+tp+" tn: "+tn+" fp: "+fp+" fn: "+fn);
-////            System.out.println("Best so far: "+minDist);
-////            if (dist < minDist) {
-////                System.out.println("Distance "+dist+" smaller than best so far: "+minDist);
-//            //require at least one tp
-//            if (tp > tpOpt) {
-////                    System.out.println("Best match for " + testGroup + " is " + groundTruthEntityGroup);
-//                bestGroup = groundTruthEntityGroup;
-//                tpOpt = tp;
-//            }else if (tp == tpOpt) {
-//                if (tn > tnOpt) {
-//                    bestGroup = groundTruthEntityGroup;
-//                    tnOpt = tn;
-//                } else if (tn == tnOpt) {
-//                    if (fp < fpOpt) {
-//                        bestGroup = groundTruthEntityGroup;
-//                        fpOpt = fp;
-//                    } else if (fp == fpOpt) {
-//                        if (fn < fnOpt) {
-//                            bestGroup = groundTruthEntityGroup;
-//                            fnOpt = fn;
-//                        } else {
-//                            if (dist < minDist) {
-//                                bestGroup = groundTruthEntityGroup;
-//                                minDist = dist;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            minDist = dist;
-//        }
-//            if ((tp + tn) > tmpCorrect) {
-//                tmpCorrect = tp + tn;
-//                bestGroup = groundTruthEntityGroup;
-//            }
-//            if ((fp + fn) < tmpFalse) {
-//                tmpFalse = fp + fn;
-//                bestGroup = (fp + fn) < (tp + tn) ? groundTruthEntityGroup : bestGroup;
-//            }
         }
         return bestGroup;
     }
@@ -467,7 +287,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
                 fn++;
             }
         }
-        System.err.println("Score of test group \n" + testGroup.toString() + "\n versus ground truth group \n" + gtGroup.toString() + "\n" + " tp = " + tp + " tn = " + tn + " fp = " + fp + " fn = " + fn);
+        log.debug("Score of test group \n" + testGroup.toString() + "\n versus ground truth group \n" + gtGroup.toString() + "\n" + " tp = " + tp + " tn = " + tn + " fp = " + fp + " fn = " + fn);
     }
 
     private EntityGroup getBetterGroup(EntityGroup gtGroup, EntityGroup testGroup1, EntityGroup testGroup2) {
@@ -508,68 +328,13 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
                         } else if (dist1 > dist2) {
                             return testGroup2;
                         }
-                        System.err.println("Group\n" + testGroup1 + "\nand\n" + testGroup2 + "\nboth can not be distinguished versus ground truth group\n" + gtGroup);
+                        log.warn("Group\n" + testGroup1 + "\nand\n" + testGroup2 + "\nboth can not be distinguished versus ground truth group\n" + gtGroup);
                         throw new IllegalArgumentException("Can not decide, which group fits better, check for feature overlap!");
                     }
 
                 }
             }
         }
-//        //better tps + tns
-//        int trues1 = cnts1[0] + cnts1[1];
-//        int trues2 = cnts2[0] + cnts2[1];
-//        if (trues1 > trues2) {
-//            return testGroup1;
-//        } else if (trues1 < trues2) {
-//            return testGroup2;
-//        } else {
-//            //lower fps+fns
-//            int false1 = cnts1[2] + cnts1[3];
-//            int false2 = cnts2[2] + cnts2[3];
-//            if (false1 > false2) {
-//                return testGroup2;
-//            } else if (false1 < false2) {
-//                return testGroup1;
-//            } else {
-////                 * 0-> tp
-////                 * 1-> tn
-////                 * 2-> fp
-////                 * 3-> fn
-//                //TP
-//                int tp1 = cnts1[0];
-//                int tp2 = cnts2[0];
-//                if (tp1 > tp2) {
-//                    return testGroup1;
-//                } else if (tp1 < tp2) {
-//                    return testGroup2;
-//                }
-//                //TN
-//                int tn1 = cnts1[1];
-//                int tn2 = cnts2[1];
-//                if (tn1 > tn2) {
-//                    return testGroup1;
-//                } else if (tn1 < tn2) {
-//                    return testGroup2;
-//                }
-//                //FP
-//                int fp1 = cnts1[2];
-//                int fp2 = cnts2[2];
-//                if (fp1 > fp2) {
-//                    return testGroup2;
-//                } else if (fp1 < fp2) {
-//                    return testGroup1;
-//                }
-//                //FN
-//                int fn1 = cnts1[3];
-//                int fn2 = cnts2[3];
-//                if (fn1 > fn2) {
-//                    return testGroup2;
-//                } else if (fn1 < fn2) {
-//                    return testGroup1;
-//                }
-//
-//            }
-//        }
     }
 
     /**
@@ -610,12 +375,12 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
                 ncat = eg.getCategories().size();
             } else {
                 if (ncat != eg.getCategories().size()) {
-                    System.err.println("Number of categories in ground truth differs! Check rows!");
+                    log.warn("Number of categories in ground truth differs! Check rows!");
                 }
             }
             for (EntityGroup tg : testGroup) {
                 if (ncat != tg.getCategories().size()) {
-                    System.err.println("Number of categories in test group differs! Check rows!");
+                    log.warn("Number of categories in test group differs! Check rows!");
                 }
                 check = checkCategories(eg, tg);
             }
@@ -631,13 +396,13 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         if (gtCats.containsAll(tgCats) && tgCats.containsAll(gtCats)) {
             return true;
         }
-        System.err.println("Categories differ between ground truth and test group!");
+        log.warn("Categories differ between ground truth and test group!");
         List<Category> gtList = new ArrayList<Category>(gtCats);
         Collections.sort(gtList);
         List<Category> tgList = new ArrayList<Category>(gtList);
         Collections.sort(tgList);
-        System.err.println("GroundTruth: " + gtList);
-        System.err.println("TestGroup:" + tgList);
+        log.warn("GroundTruth: " + gtList);
+        log.warn("TestGroup:" + tgList);
         return false;
     }
 }

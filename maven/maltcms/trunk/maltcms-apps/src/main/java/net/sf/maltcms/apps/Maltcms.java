@@ -57,9 +57,13 @@ import cross.datastructures.pipeline.ICommandSequence;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.workflow.IWorkflow;
 import cross.exception.ConstraintViolationException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.OperatingSystemMXBean;
+import java.lang.management.ThreadMXBean;
 import java.net.URLClassLoader;
-import java.util.LinkedList;
-import java.util.Properties;
+import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.PropertyConfigurator;
 
 /**
@@ -73,6 +77,7 @@ import org.apache.log4j.PropertyConfigurator;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
  */
+@Slf4j
 public class Maltcms implements Thread.UncaughtExceptionHandler {
 
     static Maltcms mcms;
@@ -96,6 +101,38 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             Maltcms.mcms = new Maltcms();
         }
         return Maltcms.mcms;
+    }
+
+    private void addVmStats(File outputDirectory) {
+        List<MemoryPoolMXBean> mbeans = ManagementFactory.getMemoryPoolMXBeans();
+        long maxUsed = 0L;
+        for (MemoryPoolMXBean mbean : mbeans) {
+            log.debug("Peak memory used: "+mbean.getType().name()+": "+String.format("%.2f",(mbean.getPeakUsage().getUsed()/(1024.0f*1024.0f)))+" MB");
+            maxUsed += mbean.getPeakUsage().getUsed();
+        }
+        log.info("Total memory used: "+String.format("%.2f",(maxUsed/(1024f*1024f)))+" MB");
+        int nmemoryPools = mbeans.size();
+        long time = 0L;
+        
+        OperatingSystemMXBean osbean = ManagementFactory.getOperatingSystemMXBean();
+        if(osbean instanceof com.sun.management.OperatingSystemMXBean) {
+            com.sun.management.OperatingSystemMXBean osmbean = (com.sun.management.OperatingSystemMXBean)osbean;
+            time = osmbean.getProcessCpuTime();
+        }
+        log.info("Total cpu time: "+String.format("%.2f",(time/1000000000f))+" sec");
+        File workflowStats = new File(new File(outputDirectory,"Factory"),"workflowStats.properties");
+        
+        PropertiesConfiguration pc;
+        try {
+            pc = new PropertiesConfiguration(workflowStats);
+            pc.setProperty("cputime_nanoseconds", time);
+            pc.setProperty("memory_pools",nmemoryPools);
+            pc.setProperty("maxUsedMemory_bytes", maxUsed);
+            pc.save();
+        } catch (ConfigurationException ex) {
+            log.error("{}",ex);
+        }
+        
     }
 
     private static void handleRuntimeException(final Logger log,
@@ -151,11 +188,11 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             props.setProperty("log4j.category.maltcms", "WARN");
             props.setProperty("log4j.category.ucar", "WARN");
             props.setProperty("log4j.category.smueller", "WARN");
-            props.setProperty("log4j.category.org.springframework.beans.factory","WARN");
+            props.setProperty("log4j.category.org.springframework.beans.factory", "WARN");
             PropertyConfigurator.configure(props);
         }
 
-        final Logger log = cross.Logging.getLogger(Maltcms.class);
+        //final Logger log = cross.Logging.getLogger(Maltcms.class);
         final int ecode = 0;
         ICommandSequence cs = null;
         try {
@@ -173,28 +210,17 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             cs = Factory.getInstance().createCommandSequence();
             final IWorkflow iw = cs.getWorkflow();
             if (cs.validate()) {
-                long start = System.nanoTime();
                 // Evaluate until empty
                 try {
                     iw.call();
-//                    while (cs.hasNext()) {
-//                        cs.next();
-//                    }
                     Maltcms.shutdown(30, log);
                     // Save configuration
                     Factory.dumpConfig("runtime.properties",
                             cs.getWorkflow().
                             getStartupDate());
                     // Save workflow
-//                        final IWorkflow iw = cs.getWorkflow();
                     iw.save();
-                    start = Math.abs(System.nanoTime() - start);
-                    final float seconds = ((float) start)
-                            / ((float) 1000000000);
-                    final StringBuilder sb = new StringBuilder();
-                    final Formatter formatter = new Formatter(sb);
-                    formatter.format(CommandPipeline.NUMBERFORMAT, (seconds));
-                    log.info("Runtime of pipeline: {} sec", sb.toString());
+                    m.addVmStats(iw.getOutputDirectory());
                     System.exit(ecode);
                 } catch (final Throwable t) {
                     Maltcms.handleRuntimeException(log, t, cs);
@@ -203,8 +229,6 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 throw new ConstraintViolationException(
                         "Pipeline is invalid, but strict checking was requested!");
             }
-
-//            }
         } catch (final Throwable t) {
             Maltcms.handleRuntimeException(log, t, cs);
         }
@@ -233,7 +257,6 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             log.error(e.getLocalizedMessage());
         }
     }
-    private final Logger log = cross.Logging.getLogger(this.getClass());
     private static final String licence = "Maltcms is licensed under the terms of the GNU LESSER GENERAL PUBLIC LICENSE (LGPL) Version 3 as of 29 June 2007\nLibraries used by Maltcms can be licensed under different conditions, please consult the licenses directory for more information!";
     private final Options o;
 

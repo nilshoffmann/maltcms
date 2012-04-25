@@ -191,7 +191,7 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
 			this.file = FileTools.prepareOutput(this.outputDir
 			        .getAbsolutePath(), fname, ext);
 		}
-		System.out.println("Filename: " + this.file.getAbsolutePath());
+		log.debug("Filename: " + this.file.getAbsolutePath());
 		return this.file;
 	}
 
