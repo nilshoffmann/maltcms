@@ -87,82 +87,6 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
     @Setter(AccessLevel.NONE)
     private int cnt;
 
-    /**
-     * Load the given commands and initialize them.
-     * 
-     * @param commands
-     */
-//    protected ArrayList<IFragmentCommand> addToList(
-//            final TupleND<IFileFragment> inputFragments,
-//            final Collection<Tuple2D<String, String>> commands)
-//            throws ConstraintViolationException {
-//        EvalTools.notNull(commands, this);
-//        EvalTools.notNull(inputFragments, this);
-//        final ArrayList<IFragmentCommand> al = new ArrayList<IFragmentCommand>();
-//        // TODO add support for pipeline constraint checking
-//        // prerequisites for a correct pipeline:
-//        // a: input files must provide initially created variables, which are
-//        // required by first command
-//        // or first command does not require any variables -> mimick by
-//        // DefaultVarLoader
-//        // currently, smallest initial set is total_intensity, mass_values,
-//        // intensity_values,scan_index
-//        // scan_acquisition_time
-//        // b: later commands in the pipeline may require variables which are
-//        // created further
-//        // upstream and not by their immediate predecessor
-//        // c: downstream commands can only be executed, if all required
-//        // variables are provided
-//        // upstream
-//        // d: optional variables may be requested, but do not lead to
-//        // termination, if they
-//        // are not provided
-//        final HashSet<String> providedVariables = new HashSet<String>();
-//        for (final Tuple2D<String, String> s : commands) {
-//            log.debug("Adding command " + s.getFirst());
-//            final IFragmentCommand cmd = loadCommand(s.getFirst(), s.getSecond());
-////            cmdToConfig.put(cmd, s.getSecond());
-//            // ClassSpy cs = new ClassSpy(s);
-//            EvalTools.notNull(
-//                    cmd,
-//                    "Instantiation of AFragmentCommand failed, check to remove explicit constructors in class "
-//                    + s);
-//            if (this.checkCommandDependencies) {
-//                // required variables
-//                final Collection<String> requiredVars = AnnotationInspector.getRequiredVariables(cmd);
-//                // optional variables
-//                final Collection<String> optionalVars = AnnotationInspector.getOptionalRequiredVariables(cmd);
-//                // get variables provided from the past
-//                getPersistentVariables(inputFragments, requiredVars,
-//                        providedVariables);
-//                getPersistentVariables(inputFragments, optionalVars,
-//                        providedVariables);
-//                // check dependencies
-//                // The following method throws a RuntimeException, when its
-//                // constraints are not met, e.g. requiredVariables are not
-//                // present, leading to a termination
-//                checkRequiredVariables(cmd, requiredVars, providedVariables);
-//                checkOptionalVariables(cmd, optionalVars, providedVariables);
-//            }
-//
-//            // provided variables
-//            final Collection<String> createdVars = AnnotationInspector.getProvidedVariables(cmd);
-//            for (final String var : createdVars) {
-//                if (!var.isEmpty() && !providedVariables.contains(var)) {
-//                    log.debug("Adding new variable {}, provided by {}",
-//                            var, cmd.getClass().getName());
-//                    providedVariables.add(var);
-//                } else {
-//                    log.warn(
-//                            "Potential name clash, variable {} already provided!",
-//                            var);
-//                }
-//            }
-//            al.add(cmd);
-//            EvalTools.notNull(cmd, this);
-//        }
-//        return al;
-//    }
     protected Collection<String> checkOptionalVariables(
             final IFragmentCommand cmd, final Collection<String> optionalVars,
             final HashSet<String> providedVariables) {
@@ -227,24 +151,6 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
     public void configure(final Configuration cfg) {
         log.warn(
                 "CommandPipeline does not support configuration via configure anylonger. Please use a Spring xml file!");
-//        this.checkCommandDependencies = cfg.getBoolean(this.getClass().getName()
-//                + ".checkCommandDependencies", true);
-//        final List<?> pipeline = Factory.getInstance().getConfiguration().getList("pipeline");
-//        final List<?> pipelineProperties = Factory.getInstance().getConfiguration().getList("pipeline.properties");
-//        if ((pipeline != null) && !pipeline.isEmpty()) {// generic for elements
-//            // in pipeline
-//            final List<String> ls = StringTools.toStringList(pipeline);
-//            final List<String> lsp = StringTools.toStringList(pipelineProperties);
-//            final ArrayList<Tuple2D<String, String>> al = new ArrayList<Tuple2D<String, String>>();
-//            for (int i = 0; i < ls.size(); i++) {
-//                al.add(new Tuple2D<String, String>(ls.get(i),
-//                        lsp.isEmpty() ? null : lsp.get(i)));
-//            }
-//            this.pipeline = al;
-//        } else {
-//            throw new IllegalArgumentException(
-//                    "Could not create command sequence!");
-//        }
     }
 
     /**
