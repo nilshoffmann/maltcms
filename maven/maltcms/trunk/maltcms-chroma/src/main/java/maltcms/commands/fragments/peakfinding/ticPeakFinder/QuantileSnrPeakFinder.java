@@ -52,10 +52,11 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
     private double peakSnrThreshold = 75.0;
     private int peakSeparationWindow = 10;
     //default value is the median
-    private double percentile = 50;
-    private double snrPercentile = 95;
+    private double lowerPercentile = 5.0;
+    private double upperPercentile = 95.0;
     private int baselineFilterWindow = 500;
     private int baselineEstimationMinimaWindow = 1000;
+    private int meanEstimationWindow = 100;
     
     protected Array applyFilters(final Array correctedtic) {
         final Array filteredtic = BatchFilter.applyFilters(correctedtic,
@@ -75,7 +76,7 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
         // .get1DJavaArray(double.class));
         // correctedtic = Array.factory(ticValues);
         baselineFilter.setWindow(baselineFilterWindow);
-        int meanEstimationWindow = 100;
+        int meanEstimationWindow = this.meanEstimationWindow;
         double[] snrValues = new double[ticValues.length];
         double[] baselineEstimate = (double[])baselineFilter.apply(correctedtic).get1DJavaArray(double.class);
         double[] cticValues = (double[]) correctedtic.get1DJavaArray(
@@ -86,23 +87,8 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
         StandardDeviation sd = new StandardDeviation();
         for (int i = 0; i < snrValues.length; i++) {
             stats.addValue(cticValues[i]);
-            //double normalized = stats.getVariance()/((stats.getPercentile(95.0)-stats.getPercentile(5.0)));
-            double normalized = ((stats.getPercentile(95.0)-stats.getPercentile(5.0)))/stats.getPercentile(5.0);
-//            double baselineEst = MathTools.averageOfSquares(medianValues, i
-//                    - this.snrWindow, i + this.snrWindow);
-//            double signalEst = MathTools.averageOfSquares(cticValues, i
-//                    - this.snrWindow, i + this.snrWindow);
-            //int segment = (int)(i/segLen);
-            //double noiseEst = lowerPercentile[segment];//*noiseEstimates[segment];//snrEstimate*snrEstimate;
-            //baselineValues[i]*medianValues[i];
-            //double signalEst = upperPercentile[segment]-lowerPercentile[segment];//medianValues[segment];//cticValues[i];//*cticValues[i];
-//            double snr = 20.0d * Math.log10(Math.sqrt(signalEst)
-//                    / Math.sqrt(baselineEst));
-            //double snr = 20.0d * Math.log10((cticValues[i]-signalEst)*(cticValues[i]-signalEst)
-              //      / noiseEst*noiseEst);
-            //double baseline = (cticValues[i] - baselineEstimate[i]);
+            double normalized = ((stats.getPercentile(upperPercentile)-stats.getPercentile(lowerPercentile)))/stats.getPercentile(lowerPercentile);
             double snr = 20.0d * Math.log10(normalized);
-//            double snrSignal = 20.0d * Math.log10(cticValues[i]/noiseEst);
             snrValues[i] = Double.isInfinite(snr) ? 0 : snr;
             
         }

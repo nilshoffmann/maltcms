@@ -177,7 +177,7 @@ public class ANDIMSExporter extends AFragmentCommand {
                     copyData(f, outf, ivf.getName(), ivf.getDataType().
                             getClassType(), ivf.getDimensions());
                 } catch (IllegalArgumentException iae) {
-                    LoggerFactory.getLogger(this.getClass()).warn("Exception while trying to add Variable " + ivf.
+                    log.warn("Exception while trying to add Variable " + ivf.
                             getName() + " to FileFragment " + f.getName(),
                             iae);
                 }
@@ -216,11 +216,16 @@ public class ANDIMSExporter extends AFragmentCommand {
 
     private void copyData(IFileFragment source, IFileFragment target,
             String varname, Class<?> elementType, Dimension... d) {
-        IVariableFragment targetV = new VariableFragment(target, varname);
+        IVariableFragment targetV = null;
+        if(target.hasChildren(varname)) {
+            targetV = target.getChild(varname);
+        }else{
+            targetV = new VariableFragment(target, varname);    
+        }
         int[] shape = new int[d.length];
         int i = 0;
         for (Dimension dim : d) {
-            System.out.println("Checking dimension: " + dim);
+            log.info("Checking dimension: {}", dim);
             shape[i] = dim.getLength();
         }
         try {

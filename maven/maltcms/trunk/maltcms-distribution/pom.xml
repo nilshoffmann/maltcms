@@ -83,17 +83,46 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
                 <executions>
                     <execution>
                         <id>set-file-perms</id>
                         <phase>package</phase>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <echo message="Correcting file permissions in ${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}" />
 <!--                                <unzip src="${project.build.directory}/${project.artifactId}-${project.version}/lib/maltcms-resources-${project.version}.jar" dest="${project.build.directory}/${project.artifactId}-${project.version}/" />-->
-                                <chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/scripts/" perm="ugo+rx" />
-                                <chmod includes="*.sh,*.bat,*.jar" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/" perm="ugo+rx" />
-                            </tasks>
+<!--                                <chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/scripts/" perm="ugo+rx" />-->
+<!--                                <chmod includes="*.sh,*.bat,*.jar" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/" perm="ugo+rx" />-->
+                                <zip destfile="${project.build.directory}/${project.artifactId}-${project.version}-bin.zip">
+                                    <zipfileset dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/" prefix="${project.artifactId}-${project.version}" filemode="755">
+                                        <include name="*.sh"/>
+                                        <include name="scripts/*.sh"/>
+                                    </zipfileset>    
+                                    <zipfileset dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/" prefix="${project.artifactId}-${project.version}">
+                                        <include name="**"/>
+                                        <exclude name="*.sh"/>
+                                        <exclude name="scripts/*.sh"/>
+                                    </zipfileset>    
+                                    
+                                </zip>
+<!--                                <tar destfile="${project.build.directory}/${project.artifactId}-${project.version}-bin.tar.gz" 
+                                     basedir="${project.build.directory}/${project.artifactId}-${project.version}-bin/"
+                                     includes="**"
+                                     compression="gzip">
+                                    <tarfileset dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/" filemode="755">
+                                        <include name="*.sh"/>
+                                        <include name="scripts/*.sh"/>
+                                    </tarfileset>
+                                    <tarfileset dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/">
+                                        <include name="**"/>
+                                        <exclude name="*.sh"/>
+                                        <exclude name="scripts/*.sh"/>
+                                    </tarfileset>
+                                </tar>-->
+                                <attachartifact file="${project.build.directory}/${project.artifactId}-${project.version}-bin.zip" type="zip"/>
+<!--                                <attachartifact file="${project.build.directory}/${project.artifactId}-${project.version}-bin.tar.gz" type="tar.gz"/>-->
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
