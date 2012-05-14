@@ -122,9 +122,9 @@ public class FileFragment implements IFileFragment {
     private long fID = 0;
     private long nextGID = 0;
     private long gID = 0;
-    private HashSet<Dimension> dims = null;
+    private Set<Dimension> dims = null;
     private Map<String, IVariableFragment> children = null;
-    private HashSet<IFileFragment> sourcefiles = new HashSet<IFileFragment>();
+    private Set<IFileFragment> sourcefiles = new LinkedHashSet<IFileFragment>();
     private final String fileExtension = ".cdf";
     private String filename = "";
     private final Fragment fragment = new Fragment();
@@ -1067,5 +1067,15 @@ public class FileFragment implements IFileFragment {
         out.writeObject(this.f.getAbsolutePath());
         out.flush();
         out.close();
+    }
+
+    /**
+     * The registered dimensions of this FileFragment as an unmodifiable Set.
+     * 
+     * @return 
+     */
+    @Override
+    public Set<Dimension> getDimensions() {
+        return Collections.unmodifiableSet(this.dims);
     }
 }

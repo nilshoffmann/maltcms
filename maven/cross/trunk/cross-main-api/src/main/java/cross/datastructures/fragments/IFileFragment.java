@@ -26,6 +26,7 @@ import java.io.Externalizable;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 import org.jdom.Element;
 import ucar.nc2.Dimension;
 
@@ -112,6 +113,12 @@ public interface IFileFragment extends IGroupFragment, IFragment,
     public abstract IVariableFragment getChild(String varname,
             boolean loadStructureOnly) throws ResourceNotAvailableException;
 
+    /**
+     * The registered dimensions of this FileFragment.
+     * @return 
+     */
+    public abstract Set<Dimension> getDimensions();
+    
     /**
      * The unique ID (between runs) of this FileFragment.
      *
