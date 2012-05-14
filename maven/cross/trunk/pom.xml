@@ -268,8 +268,7 @@
                                 <show>public</show>
                                 <links>
                                     <link>http://docs.oracle.com/javase/6/docs/api/</link>
-                        <!-- version 4.1 api not available -->
-                                    <link>http://www.unidata.ucar.edu/software/netcdf-java/v4.0/javadoc/</link>
+                                    <link>http://www.unidata.ucar.edu/software/netcdf-java/v4.2/javadoc/</link>
                                 </links>
                             </configuration>
                         </plugin>

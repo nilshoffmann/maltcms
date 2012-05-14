@@ -40,10 +40,5 @@
             <artifactId>netcdf</artifactId>
             <version>4.2</version>
         </dependency>
-<!--        <dependency>
-            <groupId>edu.ucar.unidata</groupId>
-            <artifactId>netcdf-unidatacommon</artifactId>
-            <version>4.1</version>
-        </dependency>-->
     </dependencies>
 </project>
