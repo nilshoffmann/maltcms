@@ -43,6 +43,7 @@ import cross.datastructures.fragments.IFragment;
 import cross.datastructures.fragments.IGroupFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.exception.ResourceNotAvailableException;
+import java.util.*;
 
 /**
  * Concrete implementation of an Experiment containing a 1-dimensional
@@ -484,4 +485,9 @@ public class Experiment1D implements IExperiment1D {
         this.ff.addAttribute(atrbt);
     }
 
+    @Override
+    public Set<Dimension> getDimensions() {
+        return this.ff.getDimensions();
+    }
+    
 }

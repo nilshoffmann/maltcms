@@ -46,6 +46,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
 import org.slf4j.LoggerFactory;
+import ucar.ma2.ArrayChar;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
@@ -216,6 +217,9 @@ public class ANDIMSExporter extends AFragmentCommand {
 
     private void copyData(IFileFragment source, IFileFragment target,
             String varname, Class<?> elementType, Dimension... d) {
+        if(d.length==0) {
+            log.warn("No dimensions given, skipping variable {}",varname);
+        }
         IVariableFragment targetV = null;
         if(target.hasChildren(varname)) {
             targetV = target.getChild(varname);
@@ -225,7 +229,7 @@ public class ANDIMSExporter extends AFragmentCommand {
         int[] shape = new int[d.length];
         int i = 0;
         for (Dimension dim : d) {
-            log.info("Checking dimension: {}", dim);
+            log.debug("Checking dimension: {}", dim);
             shape[i] = dim.getLength();
         }
         try {
@@ -241,7 +245,12 @@ public class ANDIMSExporter extends AFragmentCommand {
                     new Attribute[]{}));
             targetV.setDimensions(d);
         } catch (ResourceNotAvailableException r) {
-            Array a = Array.factory(elementType, shape);
+            Array a;
+            if(char.class.equals(elementType)) {
+                a = new ArrayChar(shape);
+            }else{
+                a = Array.factory(elementType, shape);
+            }
             targetV.setArray(a);
             targetV.setDimensions(d);
         }

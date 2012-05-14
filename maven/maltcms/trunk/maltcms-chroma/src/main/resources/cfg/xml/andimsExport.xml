@@ -35,7 +35,7 @@
         <property name="checkCommandDependencies" value="true"/>
         <property name="commands">
             <list>
-                <ref bean="defaultVarLoader" />
+<!--                <ref bean="defaultVarLoader" /> -->
 				<ref bean="andimsExporter" />
             </list>
         </property>    
