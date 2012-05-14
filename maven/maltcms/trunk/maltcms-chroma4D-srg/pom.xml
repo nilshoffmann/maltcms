@@ -24,7 +24,7 @@
     <dependency>
       <groupId>edu.ucar.unidata</groupId>
       <artifactId>netcdf</artifactId>
-      <version>4.1</version>
+      <version>4.2</version>
     </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -103,18 +103,6 @@
             <artifactId>maltcms-chroma4D</artifactId>
             <version>${project.version}</version>
         </dependency>
-      <dependency>
-        <artifactId>cross-main</artifactId>
-        <groupId>net.sf.maltcms</groupId>
-        <type>jar</type>
-        <version>1.2.2</version>
-        <exclusions>
-          <exclusion>
-            <artifactId>commons-logging</artifactId>
-            <groupId>commons-logging</groupId>
-          </exclusion>
-        </exclusions>
-      </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

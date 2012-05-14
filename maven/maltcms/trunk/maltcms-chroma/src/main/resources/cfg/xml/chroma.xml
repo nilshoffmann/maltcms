@@ -114,7 +114,8 @@
         <property name="bandwidth" value="0.3"/>
         <property name="accuracy" value="1.0E-12"/>
         <property name="robustnessIterations" value="2"/>
-        <property name="minimaWindow" value="1000"/>
+		<!-- set to < 1/10th of the number of scans in the chromatogram --> 
+        <property name="minimaWindow" value="100"/>
     </bean>
     
     <bean id="ticAreaNormalizer" class="maltcms.datastructures.peak.normalization.TicAreaNormalizer">
@@ -255,7 +256,22 @@
     </bean>
     
    <!--  ChromatogramWarp -->
-    <bean id="chromatogramWarp" class="maltcms.commands.fragments.warp.ChromatogramWarp2"></bean>
+    <bean id="chromatogramWarp" class="maltcms.commands.fragments.warp.ChromatogramWarp2">
+        <property name="indexedVars">
+            <list><!-- uncomment the following two to recalculate the mass spectra to the aligned time -->
+                <!-- <value>mass_values</value> -->
+                <!-- <value>intensity_values</value> -->
+            </list>
+        </property>
+        <property name="plainVars">
+            <list>
+                <value>scan_acquisition_time</value>
+				<!-- uncomment the following line if you just want to have alignment corrected retention time -->
+                <value>total_intensity</value>
+            </list>
+        </property>
+        <property name="averageCompressions" value="false"/>
+    </bean>
     <bean id="ticHeatmapCoplotBeforeAlignment" class="maltcms.commands.fragments.visualization.TICHeatmapCoplot"></bean>
     <bean id="ticHeatmapCoplotAfterAlignment" class="maltcms.commands.fragments.visualization.TICHeatmapCoplot"></bean>
     <bean id="eicHeatmapCoplotBeforeAlignment" class="maltcms.commands.fragments.visualization.EICHeatmapCoplot"></bean>

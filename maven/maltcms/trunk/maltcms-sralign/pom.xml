@@ -13,7 +13,7 @@
         <dependency>
             <groupId>edu.ucar.unidata</groupId>
             <artifactId>netcdf</artifactId>
-            <version>4.1</version>
+            <version>4.2</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

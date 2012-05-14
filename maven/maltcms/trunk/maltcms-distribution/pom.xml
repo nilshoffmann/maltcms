@@ -76,7 +76,7 @@
                         <descriptor>src/assemble/install.xml</descriptor>
                     </descriptors>
 		    <!--<updateOnly>true</updateOnly>-->
-                    <attach>true</attach>
+                    <attach>false</attach>
                 </configuration>
             </plugin>
             <!-- Antrun plugin -->
@@ -94,6 +94,7 @@
 <!--                                <unzip src="${project.build.directory}/${project.artifactId}-${project.version}/lib/maltcms-resources-${project.version}.jar" dest="${project.build.directory}/${project.artifactId}-${project.version}/" />-->
 <!--                                <chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/scripts/" perm="ugo+rx" />-->
 <!--                                <chmod includes="*.sh,*.bat,*.jar" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/" perm="ugo+rx" />-->
+								<copy file="${project.build.directory}/${project.artifactId}.jar" toDir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/"/>
                                 <zip destfile="${project.build.directory}/${project.artifactId}-${project.version}-bin.zip">
                                     <zipfileset dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/" prefix="${project.artifactId}-${project.version}" filemode="755">
                                         <include name="*.sh"/>

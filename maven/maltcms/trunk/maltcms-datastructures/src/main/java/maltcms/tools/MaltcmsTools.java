@@ -955,7 +955,7 @@ public class MaltcmsTools {
             throws ResourceNotAvailableException {
         IVariableFragment matrix = f.getChild(Factory.getInstance().getConfiguration().getString("var.pairwise_distance_matrix",
                 "pairwise_distance_matrix"));
-        System.out.println(matrix.getArray());
+        //System.out.println(matrix.getArray());
         return matrix.getParent();
         // Collection<IFileFragment> c = f.getSourceFiles();
         // MaltcmsTools.log.error("Checking fragment {} with source files {}", f

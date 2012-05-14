@@ -395,7 +395,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 }
             }
         }
-
+        //TODO really use the default.properties from the classpath
         log.warn("Could not locate default.properties, using defaults from classpath!");
     }
 

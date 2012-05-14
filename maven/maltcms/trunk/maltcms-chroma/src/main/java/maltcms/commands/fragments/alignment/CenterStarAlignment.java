@@ -119,15 +119,12 @@ public class CenterStarAlignment extends AFragmentCommand {
         final IFileFragment pwd = MaltcmsTools.getPairwiseDistanceFragment(t);
         final ArrayDouble.D2 pwdist = (ArrayDouble.D2) pwd.getChild(
                 this.pairwiseDistanceMatrixVariableName).getArray();
-        System.out.println("pwdist: " + pwdist);
         final ArrayChar.D2 names1 = (ArrayChar.D2) pwd.getChild(
                 this.pairwiseDistanceNamesVariableName).getArray();
-        System.out.println("pwnames: " + names1);
         log.debug("Trying to access variable: {}",
                 this.minimizingArrayCompVariableName);
         final ArrayInt.D0 minimizeDistA = (ArrayInt.D0) pwd.getChild(
                 this.minimizingArrayCompVariableName).getArray();
-        System.out.println("minArrayComp: " + minimizeDistA);
         if (minimizeDistA.get() == 0) {
             this.minimizeDist = false;
         } else {
@@ -146,7 +143,7 @@ public class CenterStarAlignment extends AFragmentCommand {
                 getAbsolutePath(), "center-star.csv", tble,
                 WorkflowSlot.CLUSTERING);
 
-        log.info("Center sequence is: {}", centerSeq);
+        log.info("Center sequence is: {}", centerSeq.getName());
         final TupleND<IFileFragment> alignments = MaltcmsTools.
                 getAlignmentsFromFragment(pwd);
         final List<IFileFragment> warpedFiles = saveAlignment(this.getClass(),
@@ -155,7 +152,7 @@ public class CenterStarAlignment extends AFragmentCommand {
                 centerSeq);
 
         for (final IFileFragment iff : warpedFiles) {
-            log.info("Saving warped file {}", iff.getAbsolutePath());
+            log.debug("Saving warped file {}", iff.getAbsolutePath());
             iff.save();
             iff.clearArrays();
         }
@@ -292,7 +289,7 @@ public class CenterStarAlignment extends AFragmentCommand {
             }
         }
         for (int i = 0; i < rows; i++) {
-            log.info("Sum of values for {}={}", names.getString(i),
+            log.debug("Sum of values for {}={}", names.getString(i),
                     sums[i]);
         }
 
@@ -545,7 +542,7 @@ public class CenterStarAlignment extends AFragmentCommand {
                 this), top.getName());
         newTop.addSourceFile(top);
         warped.add(newTop);
-        log.info("Ref is {}", refname);
+        log.info("Reference is {}", refname);
         for (final IFileFragment iff : alignment) {
             // log.info("Processing {}", iff.getAbsolutePath());
             final IFileFragment lhs = FragmentTools.getLHSFile(iff);
@@ -555,14 +552,14 @@ public class CenterStarAlignment extends AFragmentCommand {
             // log.info("lhs: {}, rhs: {}", lhs.getAbsolutePath(), rhs
             // .getAbsolutePath());
             if (lhsName.equals(refname)) {
-                log.info("Warping {} to lhs", rhs.getAbsolutePath());
+                log.info("Warping {} to lhs", rhs.getName());
                 FileFragment nrhs = new FileFragment(getWorkflow().
                         getOutputDirectory(this), rhs.getName());
                 nrhs.addSourceFile(rhs);
                 warped.add(nrhs);
                 repOnLHS.add(iff);
             } else if (refname.equals(rhsName)) {
-                log.info("Warping {} to rhs", lhs.getAbsolutePath());
+                log.info("Warping {} to rhs", lhs.getName());
                 FileFragment nlhs = new FileFragment(getWorkflow().
                         getOutputDirectory(this), lhs.getName());
                 nlhs.addSourceFile(lhs);
