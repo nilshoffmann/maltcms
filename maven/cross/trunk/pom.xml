@@ -4,7 +4,7 @@
     <groupId>net.sf.maltcms</groupId>
     <artifactId>cross</artifactId>
     <packaging>pom</packaging>
-    <version>1.2.7</version>
+    <version>1.2.8-SNAPSHOT</version>
     <name>Cross</name>
     <url>http://maltcms.sourceforge.net/maven/cross/${project.version}</url>
     <issueManagement>
@@ -58,9 +58,9 @@
         <url>http://maltcms.de:8080/jenkins/job/cross/</url>
     </ciManagement>
     <scm>
-        <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/cross/tags/cross-1.2.7</connection>
-        <developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/cross/tags/cross-1.2.7</developerConnection>
-        <url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/cross/tags/cross-1.2.7</url>
+        <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/cross/trunk/</connection>
+        <developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/cross/trunk/</developerConnection>
+        <url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/cross/trunk/</url>
     </scm>
 
     <distributionManagement>
