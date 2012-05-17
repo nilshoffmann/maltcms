@@ -25,7 +25,12 @@
       <artifactId>jrapStAX</artifactId>
       <version>4</version>
     </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>jakarta-regexp</groupId>
+            <artifactId>jakarta-regexp</artifactId>
+            <version>1.4</version>
+        </dependency>
+    </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
