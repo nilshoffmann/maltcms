@@ -4,7 +4,7 @@
     <groupId>net.sf.maltcms</groupId>
     <artifactId>cross</artifactId>
     <packaging>pom</packaging>
-    <version>1.2.8-SNAPSHOT</version>
+    <version>1.2.7-SNAPSHOT</version>
     <name>Cross</name>
     <url>http://maltcms.sourceforge.net/maven/cross/${project.version}</url>
     <issueManagement>
