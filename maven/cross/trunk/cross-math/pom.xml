@@ -4,11 +4,11 @@
   <parent>
     <artifactId>cross</artifactId>
     <groupId>net.sf.maltcms</groupId>
-    <version>1.2.8-SNAPSHOT</version>
+    <version>1.2.7-SNAPSHOT</version>
   </parent>
   <groupId>net.sf.maltcms</groupId>
   <artifactId>cross-math</artifactId>
-  <version>1.2.8-SNAPSHOT</version>
+  <version>1.2.7-SNAPSHOT</version>
   <name>cross-math</name>
   <url>http://maven.apache.org</url>
   <properties>
