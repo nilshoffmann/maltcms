@@ -19,8 +19,8 @@
                 </li>
             </ul>
         </div>
-        <download href="http://sourceforge.net/projects/maltcms/files/maui/1.0/beta/" title="Download" text="Try Maui 1.0 Beta" provider="Provided by sourceforge.net"/>
-        <download href="http://sourceforge.net/projects/maltcms/files/maltcms/maltcms-1.2/" title="Download" text="Get Maltcms 1.2" provider="Provided by sourceforge.net"/>
+        <download href="http://sf.net/projects/maltcms/files/maui/1.0/beta2/" title="Download" text="Try Maui 1.0 Beta2" provider="Provided by sourceforge.net"/>
+        <download href="http://sf.net/projects/maltcms/files/maltcms/maltcms-1.2/" title="Download" text="Get Maltcms 1.2" provider="Provided by sourceforge.net"/>
         <siteimage/>
     </header>
     <categories>
@@ -43,8 +43,8 @@
 
         <group nname="Maltcms" ident="users">
             <ref target="users/features" />
-			<!--	<ref target="users/tutorials" /> -->
             <ref target="users/support" />
+            <a href="http://sf.net/apps/trac/maltcms/" title="Wiki">Wiki</a>
         </group>
 
         <group nname="Maui" ident="maui">
@@ -52,13 +52,11 @@
         </group>
 
         <group nname="Developers" ident="developers">
-<!--			<ref target="developers/concepts" />-->
-			<ref target="developers/api" />
-<!--			<ref target="styleGuide/styleGuide" />-->
-            <a href="http://sourceforge.net/projects/maltcms/" title="Project Website">Project
+            <ref target="developers/api" />
+            <a href="http://sf.net/projects/maltcms/" title="Project Website">Project
                 Home
             </a>
-            <a href="http://sourceforge.net/apps/trac/maltcms/" title="Trac">Trac</a>
+            <a href="http://sf.net/apps/trac/maltcms/" title="Trac">Wiki</a>
             <group nname="Tutorials" ident="tutorials">
                 <ref target="developers/tutorials/programmaticWorkflow" />
             </group>

@@ -3,17 +3,13 @@
 <column id="content">
             <h1>Maui - Maltcms User Interface</h1>
             Maui is an application for visualization, exploration and processing of raw data from GC/LC-MS and GCxGC-MS experiments.
-            <h1>Release 1.0 beta</h1>
+            <h1>Release 1.0 beta2</h1>
             <h2>Available Features</h2>
             <ul>
                 <li>chromatogram view (1D and 2D) with interactive selection of mass spectra and database query</li>
                 <li>integration of custom scripts for raw data and csv type data via Groovy</li>
                 <li>charting of csv and raw data</li>
                 <li>import and visualization of Maltcms processing results</li>
-            </ul>
-            <h2>Confirmed Features for Final Release 1.0 (first half of 2012)</h2>
-            <ul>
-                <li>pipeline editor and runner for Maltcms</li>
                 <li>interactive peak exploration</li>
                 <li>manual refinement of peak lists</li>
                 <li>statistical evaluation of peak tables</li>
@@ -21,6 +17,19 @@
                 <li>3D viewer with interactive peak exploration for 2D chromatograms based on <a href="http://code.google.com/p/jzy3d/">jzy3D</a></li>
                 <li>GNU-R integration</li>
                 <li>3D PCA viewer</li>
+                <li>pipeline runner for Maltcms</li>
+            </ul>
+            <h2>Confirmed Features for Final Release 1.0 (second half of 2012)</h2>
+            <ul>
+                <li>pipeline editor for Maltcms</li>
+            </ul>
+            <h2>1.0 beta2 Downloads</h2>
+            <ul>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta2/maui-windows.exe">Windows</a></li>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta2/maui-linux.sh">Linux</a></li>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta2/maui-macosx.tgz">MacOS X</a></li>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta2/maui-solaris.sh">Solaris</a></li>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta2/maui.zip">Platform independent zip</a></li>
             </ul>
             <h2>1.0 beta Downloads</h2>
             <ul>
