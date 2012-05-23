@@ -24,6 +24,7 @@
         <h1>News</h1>
         <div class="block">
         <ul class="plainunbulletedlist">
+	    <li><a href="http://www.cebitec.uni-bielefeld.de/~hoffmann/asms2012.pdf">Poster on Maltcms and Maui</a> at <a href="http://www.asms.org/Conferences/AnnualConference/GeneralInformation/tabid/127/Default.aspx">ASMS 2012</a></li>
             <li><ref target="news/maltcms1_2" alt="Maltcms 1.2 Released on April 20th, 2012"/></li>
             <li><ref target="news/maltcms1_1" alt="Maltcms 1.1 Released on February 10th, 2012"/></li>
             <li><ref target="news/bookChapterMetabolomics" alt="Generic Software Frameworks for GC-MS based Metabolomics"/></li>
