@@ -1,7 +1,6 @@
 #!/bin/bash
 SCRIPTFILE=$(readlink -f $0)
 SCRIPTDIR=$(dirname $SCRIPTFILE)
-echo "$SCRIPTDIR"
 
 export JARCH=""
 export JBIN="\/vol\/java-1.6.0\/bin"
@@ -44,32 +43,17 @@ else
 fi
 
 if [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]];  then
-    export JAVA_LOCATION="$JAVA_HOME"
+   	echo "Found java from JAVA_HOME!"
+	export JAVA_LOCATION="$JAVA_HOME"
 else
-	ARCH=`uname -a`
-	OSTYPE=`uname -s`
-	case "$OSTYPE" in
-	    SunOS)
-		   	export JAVA_LOCATION="/vol/java-1.6/bin/java"
-			;;
-		Darwin)
-		    export JAVA_LOCATION="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java"
-		    ;;
-		Linux)
-		    export JAVA_LOCATION="/usr/lib/jvm/java-6-sun/bin/java"
-		    ;;
-		*)
-			echo "Unknown OS: $OSTYPE, querying environment!"
-			if [[ $(env java) -eq 0 ]]; then
-				echo "Found java from environment!"
-				export JAVA_LOCATION="$(readlink -f $(which java))"
-			else
-				echo "No java could be found! Please check your JAVA installation and that JAVA_HOME points to its location!"
-				exit 1
-			fi
-		    ;;
-
-	esac
+	JAVA_TMP=$(which java)
+	if [[ "$?" -eq "0" ]]; then
+		echo "Found java from environment!"
+		export JAVA_LOCATION="$(readlink -f $(which java))"
+	else
+		echo "No java could be found! Please check your JAVA installation and that JAVA_HOME points to its location!"
+		exit 1
+	fi
 fi
 
 function printHelp {

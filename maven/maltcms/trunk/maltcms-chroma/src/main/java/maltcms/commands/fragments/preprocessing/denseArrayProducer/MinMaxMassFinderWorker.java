@@ -55,20 +55,17 @@ public class MinMaxMassFinderWorker implements Callable<double[]>, Serializable 
     public double[] call() throws Exception {
         Double min = Double.MAX_VALUE;
         Double max = Double.MIN_VALUE;
-//        final boolean ignoreMinMaxMassArrays = Factory.getInstance().getConfiguration().getBoolean(
-//                "maltcms.tools.MaltcmsTools.ignoreMinMaxMassArrays",
-//                true);
         boolean useFallback = true;
         final IFileFragment f = new ImmutableFileFragment(fileToLoad);
         if (!ignoreMinMaxMassArrays) {
             try {
-                log.info(
+                log.debug(
                         "Trying to load children from file {}", f);
                 final IVariableFragment vmin = f.getChild(minMassVariableName);
                 final IVariableFragment vmax = f.getChild(maxMassVariableName);
                 min = Math.min(MAMath.getMinimum(vmin.getArray()), min);
                 max = Math.max(MAMath.getMaximum(vmax.getArray()), max);
-                log.info("Min={},Max={}", min, max);
+                log.debug("Min={},Max={}", min, max);
                 useFallback = false;
             } catch (final ResourceNotAvailableException e) {
                 log.debug(
@@ -90,12 +87,12 @@ public class MinMaxMassFinderWorker implements Callable<double[]>, Serializable 
             final MAMath.MinMax mm = MAMath.getMinMax(a);
             min = Math.min(min, mm.min);
             max = Math.max(max, mm.max);
-            log.info(" From fallback: Min={},Max={}", min, max);
+            log.debug(" From fallback: Min={},Max={}", min, max);
         }
         EvalTools.neqD(min, Double.MAX_VALUE, MinMaxMassFinderWorker.class);
         EvalTools.neqD(max, Double.MIN_VALUE, MinMaxMassFinderWorker.class);
-        MaltcmsTools.log.info("Found minimum mass: {} and maximum mass {}",
-                min, max);
+        log.info("Found minimum mass: {} and maximum mass {} for file {}",
+                new Object[]{min, max, f.getName()});
         Factory.getInstance().getConfiguration().setProperty(
                 "maltcms.commands.filters.DenseArrayProducer.min_mass", min);
         Factory.getInstance().getConfiguration().setProperty(

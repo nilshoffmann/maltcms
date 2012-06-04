@@ -777,7 +777,7 @@ public class NetcdfDataSource implements IDataSource {
                         vf.setDimensions(dim);
 
                         // SET DATA TYPE
-                        final DataType dt = vf.getDataType() == null ? DataType.DOUBLE
+                        final DataType dt = vf.getDataType() == null ? DataType.getType(vf.getArray().getElementType())
                                 : vf.getDataType();
                         v.setDataType(dt);
 
