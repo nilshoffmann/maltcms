@@ -60,6 +60,10 @@ public class EhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
         return null;
     }
 
+    @Override
+    public void close() {
+        cacheManager.getEhcache(cacheName).dispose();
+    }
     
     public Ehcache getCache() {
         return cacheManager.getEhcache(cacheName);

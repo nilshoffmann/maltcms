@@ -73,4 +73,9 @@ class AutoRetrievalEhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
     public String getName() {
         return cacheName;
     }
+
+    @Override
+    public void close() {
+        cacheManager.getCache(cacheName).dispose();
+    }
 }

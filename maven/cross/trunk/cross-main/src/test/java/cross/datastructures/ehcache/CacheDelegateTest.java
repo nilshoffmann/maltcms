@@ -21,10 +21,15 @@
  */
 package cross.datastructures.ehcache;
 
+import cross.datastructures.ehcache.db4o.Db4oCacheDelegate;
+import java.util.Comparator;
 import java.util.Random;
 import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import ucar.ma2.Array;
 
 /**
  *
@@ -32,11 +37,14 @@ import org.junit.Test;
  */
 public class CacheDelegateTest {
 
-    private int narrays = 2000;
+    private int narrays = 50;
     private Integer[] indices;
     private int maxRepetitions = 20;
     private long seed = 1920712093679568761L;
     private Random r;
+    
+    @Rule
+    public TemporaryFolder tf = new TemporaryFolder();
 
     public CacheDelegateTest() {
     }
@@ -45,6 +53,38 @@ public class CacheDelegateTest {
     public void setUp() {
     }
 
+    private ICacheDelegate<Integer, Array> createDb4oCache(String name, boolean sorted) {
+        System.out.println("Setting up cache!");
+        int arraySize = 1000;
+        CacheFactory<Integer, Array> cf = new CacheFactory<Integer, Array>();
+        ICacheDelegate<Integer, Array> delegate;
+        if(sorted) {
+            delegate = cf.createDb4oDefaultCache(tf.newFolder("db4ocache"),
+                name);
+        }else{
+            delegate = cf.createDb4oSortedCache(tf.newFolder("db4ocache"), name, new Comparator<Integer>() {
+
+                @Override
+                public int compare(Integer t, Integer t1) {
+                    return t.intValue()-t1.intValue();
+                }
+            });
+        }
+        //cf.getCacheFor(name).setSampledStatisticsEnabled(true);
+        indices = new Integer[narrays];
+        for (int i = 0; i < narrays; i++) {
+            double[] a = new double[arraySize];
+            for (int j = 0; j < arraySize; j++) {
+                a[j] = Math.random() * 1023890213;
+            }
+            indices[i] = Integer.valueOf(i);
+            delegate.put(indices[i], Array.factory(a));
+
+        }
+        System.out.println("Finished creating cache!");
+        return delegate;
+    }
+    
     private ICacheDelegate<Integer, double[]> createCache(String name) {
         System.out.println("Setting up cache!");
         int arraySize = 1000;
@@ -184,5 +224,34 @@ public class CacheDelegateTest {
                 + CacheFactory.getCacheFor(delegate.getName()).getStatistics());
         CacheFactory.getCacheFor(delegate.getName()).getCacheManager().
                 removeCache(delegate.getName());
+    }
+    
+    @Test
+    public void db4oSequential() {
+        ICacheDelegate<Integer, Array> delegate = createDb4oCache(
+                "cachedDb4oSequential",true);
+        //simulate sequential access
+       // for (int j = 0; j < maxRepetitions; j++) {
+            for (int i = 0; i < narrays; i++) {
+                delegate.get(i);
+            }
+        //}
+        delegate.close();
+        System.out.println("Statistics for db4o sequential access: ");
+    }
+    
+    @Test
+    public void db4oRandomAccess() {
+        ICacheDelegate<Integer, Array> delegate = createDb4oCache(
+                "cachedDb4oRandomAccess",false);
+        //simulate random access
+        r = new Random(seed);
+       // for (int j = 0; j < maxRepetitions; j++) {
+            for (int i = 0; i < narrays; i++) {
+                delegate.get(indices[r.nextInt(narrays)]);
+            }
+       // }
+        delegate.close();
+        System.out.println("Statistics for db4o sequential access: ");
     }
 }

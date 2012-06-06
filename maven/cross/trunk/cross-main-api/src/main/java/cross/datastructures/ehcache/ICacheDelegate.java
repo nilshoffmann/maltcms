@@ -33,4 +33,6 @@ public interface ICacheDelegate<K, V> {
 
     String getName();
     
+    void close();
+    
 }

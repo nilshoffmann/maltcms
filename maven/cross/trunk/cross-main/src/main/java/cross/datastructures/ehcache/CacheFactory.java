@@ -21,6 +21,9 @@
  */
 package cross.datastructures.ehcache;
 
+import cross.datastructures.ehcache.db4o.Db4oCacheManager;
+import java.io.File;
+import java.util.Comparator;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 
@@ -46,4 +49,13 @@ public class CacheFactory<K,V> {
         return CacheManager.getInstance().getEhcache(cacheName);
     }
     
+    public ICacheDelegate<K,V> createDb4oDefaultCache(File basedir, String cacheName) {
+        Db4oCacheManager dbcm = new Db4oCacheManager(basedir);
+        return dbcm.getCache(cacheName);
+    }
+    
+    public ICacheDelegate<K,V> createDb4oSortedCache(File basedir, String cacheName, Comparator<K> comparator) {
+        Db4oCacheManager dbcm = new Db4oCacheManager(basedir);
+        return dbcm.getCache(cacheName, comparator);
+    }
 }
