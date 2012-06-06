@@ -108,7 +108,8 @@ public class InputDataFactory implements IInputDataFactory {
                         @Override
                         public boolean accept(final File dir1, final String name) {
                             return name.endsWith(StringTools.getFileExtension(
-                                    InputDataFactory.this.input[0]));
+                                    InputDataFactory.this.input[0])) || name.toLowerCase().endsWith(StringTools.getFileExtension(
+                                    InputDataFactory.this.input[0]).toLowerCase());
                         }
                     };
                     log.debug("Assuming input under: {}", dir.
