@@ -80,6 +80,12 @@ public interface IFileFragment extends IGroupFragment, IFragment,
      * @throws java.lang.IllegalStateException
      */
     public abstract void clearArrays() throws IllegalStateException;
+    
+    /**
+     * Resets all dimensions of this fragment. Does not set Dimensions to null
+     * in IVariableFragments having these Dimensions!
+     */
+    public abstract void clearDimensions();
 
     /**
      * Return this FileFragment's storage location as string representation.

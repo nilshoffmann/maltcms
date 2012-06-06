@@ -394,11 +394,16 @@ public class FileFragment implements IFileFragment {
                     ivf.setArray(null);
                     ivf.setIndexedArray(null);
                 } catch (final UnsupportedOperationException uoe) {
-                    this.log.debug("IVariable");
+                    this.log.debug("Can not clear arrays on immutable IVariable {}",ivf.getName());
                 }
             }
         }
         // FragmentTools.setSourceFiles(this, sf);
+    }
+    
+    @Override
+    public void clearDimensions() {
+        this.dims.clear();
     }
 
     /**
