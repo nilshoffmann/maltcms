@@ -120,6 +120,16 @@ public class Experiment1D implements IExperiment1D {
 		this.ff.clearArrays();
 	}
 
+        /*
+	 * (non-Javadoc)
+	 * 
+	 * @see cross.datastructures.fragments.IFileFragment#clearDimensions()
+	 */
+	@Override
+	public void clearDimensions() {
+		this.ff.clearDimensions();
+	}
+        
 	/**
 	 * @param arg0
 	 * @param arg1

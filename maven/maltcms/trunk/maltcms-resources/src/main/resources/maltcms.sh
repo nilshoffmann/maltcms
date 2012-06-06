@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 SCRIPTFILE=$(readlink -f $0)
 SCRIPTDIR=$(dirname $SCRIPTFILE)
 
@@ -23,7 +23,7 @@ else
 		read MALTCMSUSRDIR;
 		if [ -z "$MALTCMSUSRDIR" ]; then
 			echo "No user defined directory for Maltcms installation entered, no default given, exiting!";
-			exit 1;
+				exit 1;
 		else
 			if [ -f "$MALTCMSUSRDIR/maltcms.jar" ]; then
 				echo "Found maltcms location below $MALTCMSUSRDIR!"
@@ -57,17 +57,17 @@ else
 fi
 
 function printHelp {
-			echo -e "Usage: $0 [-64] [-mx ARG] [-ms ARG] [-exec ARG|--execute ARG] [-DKEY=VALUE] [-?|--help] [MALTCMSARGS]"
-			echo -e "\t-64 -> uses 64bit jvm"
-			echo -e "\t-mx ARG -> uses -XmxARG as maximum heapsize"
-			echo -e "\t-ms ARG -> uses -XmsARG as minimum heapsize"
-			echo -e "\t-profile -> profile the current session"
+			echo -e "Usage: $0 [-64] [-mx ARG] [-ms ARG] [-exec ARG|--execute ARG] [-DKEY=VALUE] [--help] [-?|-h] [MALTCMSARGS]"
+			echo -e "\t-64 -> use 64bit jvm"
+			echo -e "\t-mx ARG -> use -XmxARG as maximum heapsize"
+			echo -e "\t-ms ARG -> use -XmsARG as minimum heapsize"
 			echo -e "\t-exec ARG|--execute ARG -> execute the given base class,"
 		       	echo -e "\t\t\tif it contains a main method"
 			echo -e "\t\t\te.g. '-exec mypackage.MyClass'"
 			echo -e "\t-DKEY=VALUE -> set system property KEY to value VALUE,"
 			echo -e "\t\t\tmay appear multiple times"
-			echo -e "\t-?|--help -> display this help"
+			echo -e "\t--help -> display this help"
+			echo -e "\t-?|-h -> display maltcms help"
 			echo -e "\tMALTCMSARGS -> hand all remaining arguments over to Maltcms"
 			exit -1
 }
@@ -90,10 +90,6 @@ while [ $# -gt 0 ]; do
 			export EXEC="$1"
 			shift
 			;;
-		-profile)
-			export PROFILE="-agentlib:hprof=heap=sites,file=hprof.out,format=b,cpu=samples,interval=20"
-			shift
-			;;		
 		-mx)	
 			shift
 			export MXSIZE="$1"
@@ -104,24 +100,23 @@ while [ $# -gt 0 ]; do
 			export MSSIZE="$1"
 			shift
 			;;
-        -"?"|--help)
+        	--help)
 			printHelp $0
-			shift
 			;;
-		-D*)
+		-D* | -XX* | -agent*)
 			echo "Java environment argument: $1"
 			if [ -z "$ENVARGS" ]; then
-	            ENVARGS="$1"
-	        else
-	            ENVARGS="$ENVARGS $1"
+		            ENVARGS="$1"
+		        else
+	        	    ENVARGS="$ENVARGS $1"
 			fi
 			shift
 			;;
 		*)
 			if [ -z "$MALTCMSARGS" ]; then
-	            MALTCMSARGS="$1"
-	        else
-	            MALTCMSARGS="$MALTCMSARGS $1"
+	  		    MALTCMSARGS="$1"
+		        else
+		            MALTCMSARGS="$MALTCMSARGS $1"
 			fi
 			shift
 			;;	

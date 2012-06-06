@@ -107,7 +107,10 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         List<MemoryPoolMXBean> mbeans = ManagementFactory.getMemoryPoolMXBeans();
         long maxUsed = 0L;
         for (MemoryPoolMXBean mbean : mbeans) {
+            log.debug("Peak memory initial: "+mbean.getType().name()+": "+String.format("%.2f",(mbean.getPeakUsage().getInit()/(1024.0f*1024.0f)))+" MB");
             log.debug("Peak memory used: "+mbean.getType().name()+": "+String.format("%.2f",(mbean.getPeakUsage().getUsed()/(1024.0f*1024.0f)))+" MB");
+            log.debug("Peak memory comitted: "+mbean.getType().name()+": "+String.format("%.2f",(mbean.getPeakUsage().getCommitted()/(1024.0f*1024.0f)))+" MB");
+            log.debug("Peak memory max: "+mbean.getType().name()+": "+String.format("%.2f",(mbean.getPeakUsage().getMax()/(1024.0f*1024.0f)))+" MB");
             maxUsed += mbean.getPeakUsage().getUsed();
         }
         log.info("Total memory used: "+String.format("%.2f",(maxUsed/(1024f*1024f)))+" MB");
@@ -240,7 +243,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 "https://sourceforge.net/tracker/?func=add&group_id=251287&atid=1126545");
         log.error("Your report will help improve Maltcms, thank you!");
         log.error(
-                "Please attach the following dump of Maltcms' configuration to your report!");
+                "Please attach Maltcms' configuration, maltcms.log, and the runtime properties to your report!");
     }
 
     private static void shutdown(final long seconds, final Logger log) {
@@ -257,7 +260,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             log.error(e.getLocalizedMessage());
         }
     }
-    private static final String licence = "Maltcms is licensed under the terms of the GNU LESSER GENERAL PUBLIC LICENSE (LGPL) Version 3 as of 29 June 2007\nLibraries used by Maltcms can be licensed under different conditions, please consult the licenses directory for more information!";
+    private static final String licence = "Maltcms is licensed under the terms of the GNU LESSER GENERAL PUBLIC LICENSE (LGPL) Version 3 as of 29 June 2007\nLibraries used by Maltcms can be licensed under different conditions, please consult the licenses directory for more information!\nMore information may be found at http://maltcms.sf.net !";
     private final Options o;
 
     /**
@@ -592,7 +595,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 cmdLineCfg.setProperty("input.basedir", cl.getOptionValue("i"));
             } else {
                 cmdLineCfg.setProperty("input.basedir",
-                        defaultCfg.getString("user.home"));
+                        defaultCfg.getString("user.dir"));
             }
             for (final Option o1 : opts) {
                 if (o1.getOpt().equals("p")) {

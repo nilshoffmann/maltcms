@@ -95,6 +95,7 @@
         <property name="normalizeScans" value="true"/> 
         <property name="normalizeMeanVariance" value="false"/>
         <property name="massBinResolution" value="1.0d"/>
+        <property name="ignoreMinMaxMassArrays" value="false"/>
     </bean>
     
     
