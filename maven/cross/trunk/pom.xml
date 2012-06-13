@@ -65,13 +65,13 @@
 
     <distributionManagement>
         <repository>
-            <id>maltcms.de</id>
+            <id>maltcms-release</id>
             <name>maltcms-artifactory-releases</name>
             <url>http://www.maltcms.de:8080/artifactory/libs-release-local</url>
         </repository>
 
         <snapshotRepository>
-            <id>maltcms.de</id>
+            <id>maltcms-snapshot</id>
             <name>maltcms-artifactory-snapshots</name>
             <url>http://www.maltcms.de:8080/artifactory/libs-snapshot-local</url>
         </snapshotRepository>
@@ -125,6 +125,11 @@
                         <encoding>${project.build.sourceEncoding}</encoding>
                     </configuration>
                 </plugin>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+	                <artifactId>maven-jar-plugin</artifactId>
+			<version>2.4</version>
+		</plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
@@ -152,6 +157,19 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.2.1</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.7</version>
+                    <configuration>
+                        <retryFailedDeploymentCount>3</retryFailedDeploymentCount>
+                    </configuration>
+                </plugin>
+		<plugin>
+	                <groupId>org.codehaus.mojo</groupId>
+        	        <artifactId>nbm-maven-plugin</artifactId>
+                	<version>3.7</version>
+		</plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-plugin</artifactId>
@@ -308,7 +326,8 @@
         <module>cross-tools</module>
         <module>cross-main-api</module>
         <module>cross-math</module>
-    </modules>
+    <module>cross-nbm</module>
+  </modules>
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -330,7 +349,7 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util-lookup</artifactId>
-            <version>RELEASE701</version>
+            <version>RELEASE71</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -367,4 +386,3 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>
-

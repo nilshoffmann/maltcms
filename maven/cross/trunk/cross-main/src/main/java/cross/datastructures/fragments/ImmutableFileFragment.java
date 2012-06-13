@@ -511,4 +511,9 @@ public class ImmutableFileFragment implements IFileFragment {
     public Set<Dimension> getDimensions() {
         return this.frag.getDimensions();
     }
+
+    @Override
+    public void clearDimensions() {
+        throw new UnsupportedOperationException();
+    }
 }
