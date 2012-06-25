@@ -341,7 +341,7 @@
         <module>maltcms-io-csv</module>
         <module>maltcms-spectratyping</module>
         <module>maltcms-distribution</module>
-    </modules>
+  </modules>
     <dependencies>
         <dependency>
             <groupId>net.sf.maltcms</groupId>

@@ -35,39 +35,11 @@
         <property name="checkCommandDependencies" value="true"/>
         <property name="commands">
             <list>
-                <!-- uncomment to explicitly load default and additional variables -->
-<!--                <ref bean="defaultVarLoader" /> -->
-		<ref bean="andimsExporter" />
+                <ref bean="dataFileVariablePrinter" />
             </list>
         </property>    
     </bean>
-               <!-- commands -->
-               
-    <!-- DefaultVarLoader, loads default variables, see cfg/cv/cv_maltcms.properties for default values for these -->
-    <bean id="defaultVarLoader" class="maltcms.commands.fragments.preprocessing.DefaultVarLoader">
-        <property name="defaultVariables">
-            <list>
-                <!-- uncomment to explicitly load default variables -->
-                <!--
-                <value>scan_index</value>
-                <value>mass_values</value>
-                <value>intensity_values</value>
-                <value>total_intensity</value>
-                <value>mass_range_min</value>
-                <value>mass_range_min</value>
-                <value>scan_acquisition_time</value> -->
-            </list>
-        </property>
-        <property name="additionalVariables">
-            <list>
-                <!-- uncomment to explicitly load additional variables -->
-                <!--
-                <value>retention_scans</value>
-                <value>source_files</value> -->
-            </list>
-        </property>
-    </bean>
-    <!-- ANDIMSExporter, exports internal data format to ANDI-MS compliant output -->
-    <bean id="andimsExporter" class="maltcms.commands.fragments.io.ANDIMSExporter" />
-    
+    <!-- commands -->
+    <!-- prints structure of data files -->
+    <bean id="dataFileVariablePrinter" class="maltcms.commands.fragments.io.DataFileVariablePrinter"/>
 </beans>

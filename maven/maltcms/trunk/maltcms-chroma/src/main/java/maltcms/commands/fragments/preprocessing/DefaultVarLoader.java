@@ -21,6 +21,7 @@
  */
 package maltcms.commands.fragments.preprocessing;
 
+import cross.Factory;
 import java.io.File;
 
 
@@ -30,15 +31,20 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.preprocessing.defaultVarLoader.DefaultVarLoaderWorker;
 import net.sf.maltcms.execution.api.ICompletionService;
+import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Load variables defined by the option default.variables. Additionally tries to
- * load vars defined in the option additional.variables (see
+ * Load variables defined by the option default.variables. 
+ * 
+ * Additionally tries toload vars defined in the option additional.variables (see
  * cfg/maltcmsvars.properties).
  * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
@@ -50,7 +56,12 @@ import org.openide.util.lookup.ServiceProvider;
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class DefaultVarLoader extends AFragmentCommand {
-
+    
+    private List<String> defaultVariables = Collections.emptyList();
+    private List<String> additionalVariables = Collections.emptyList();
+    private int startIndex = -1;
+    private int stopIndex = -1;
+    
     @Override
     public String toString() {
         return getClass().getName();
@@ -69,8 +80,10 @@ public class DefaultVarLoader extends AFragmentCommand {
             IFileFragment workFragment = createWorkFragment(f);
             //create a new worker
             DefaultVarLoaderWorker worker = new DefaultVarLoaderWorker();
-            worker.setFileToLoad(new File(f.getAbsolutePath()));
-            worker.setFileToSave(new File(workFragment.getAbsolutePath()));
+            worker.setFileToLoad(f.toString());
+            worker.setFileToSave(workFragment.getAbsolutePath());
+            worker.setDefaultVariables(defaultVariables);
+            worker.setAdditionalVariables(additionalVariables);
             //submit to completion service
             ics.submit(worker);
         }

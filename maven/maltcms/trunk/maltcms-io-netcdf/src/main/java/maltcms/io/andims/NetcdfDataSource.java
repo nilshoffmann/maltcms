@@ -687,6 +687,7 @@ public class NetcdfDataSource implements IDataSource {
 
             final HashMap<String, Dimension> dimensions = new HashMap<String, Dimension>();
             for (Dimension dim : parent.getDimensions()) {
+                log.debug("Adding dimension: {}",dim);
                 addDimension(dimensions, dim.getName(), nfw, dim);
             }
             boolean skipVarForMissingData = false;
@@ -724,13 +725,20 @@ public class NetcdfDataSource implements IDataSource {
                         dim = vf.getDimensions();
                         final Dimension[] dimC = new Dimension[dim.length];
                         int i = 0;
+                        int[] shape = vf.getArray().getShape();
                         for (final Dimension element : dim) {
                             this.log.debug("Checking Dimension {}", element);
-                            dimC[i++] = addDimension(nfw, dimensions, vf,
+                            if(shape[i]!=element.getLength()) {
+                                this.log.error("Correcting dimension {} to length {}!",element.getName(),shape[i]);
+                                element.setLength(shape[i]);
+                            }
+                            dimC[i] = addDimension(nfw, dimensions, vf,
                                     element);
+                            i++;
                         }
                         dim = dimC;
                     }
+                    log.debug("Defined dimensions: {}",Arrays.deepToString(dim));
                     if (!skipVarForMissingData) {
                         // HANDLE GROUPS
                         final Group rootGroup = nfw.getRootGroup();
@@ -858,10 +866,10 @@ public class NetcdfDataSource implements IDataSource {
                     vf.setIndexedArray(null);
                 } catch (final IOException e) {
                     log.error("IOException while writing variable '{}'",varname);
-                    e.printStackTrace();
+                    log.error("{}",e);
                 } catch (final InvalidRangeException e) {
-                    log.warn("InvalidRangeException writing variable '{}' with dimensions '{}'",varname,Arrays.toString(vf.getDimensions()));
-                    e.printStackTrace();
+                    log.error("InvalidRangeException writing variable '{}' with dimensions '{}' and contents: '{}'",new Object[]{varname,Arrays.toString(vf.getDimensions()),vf.getArray()});
+                    log.error("{}",e);
                 }
                 cnt++;
             }
@@ -876,8 +884,10 @@ public class NetcdfDataSource implements IDataSource {
                         ncmlFile)), null);
             } catch (final FileNotFoundException e1) {
                 this.log.error(e1.getLocalizedMessage());
+                this.log.error("{}",e1);
             } catch (final IOException e1) {
                 this.log.error(e1.getLocalizedMessage());
+                this.log.error("{}",e1);
             }
         }
         f.setFile(nfw.getLocation());
@@ -887,6 +897,7 @@ public class NetcdfDataSource implements IDataSource {
             return true;
         } catch (final IOException e) {
             this.log.error(e.getLocalizedMessage());
+            this.log.error("{}",e);
             return false;
         }
 

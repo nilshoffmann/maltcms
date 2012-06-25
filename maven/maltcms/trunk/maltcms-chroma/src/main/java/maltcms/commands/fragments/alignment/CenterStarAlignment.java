@@ -152,7 +152,8 @@ public class CenterStarAlignment extends AFragmentCommand {
                 centerSeq);
 
         for (final IFileFragment iff : warpedFiles) {
-            log.debug("Saving warped file {}", iff.getAbsolutePath());
+            log.info("Saving warped file {}", iff.getAbsolutePath());
+            log.info("Source files {}, dimensions: {}", iff.getChild("source_files").getArray(),Arrays.deepToString(iff.getChild("source_files").getDimensions()));
             iff.save();
             iff.clearArrays();
         }

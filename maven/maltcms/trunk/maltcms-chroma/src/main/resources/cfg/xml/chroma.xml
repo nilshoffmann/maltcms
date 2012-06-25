@@ -29,13 +29,15 @@
     <description>
         This file defines elements of the default ChromA pipeline.
     </description>
-    <!-- a command pipeline consists a list of 
+    <!-- a command pipeline consists of a list of 
      commands to be executed -->
     <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
         <property name="checkCommandDependencies" value="true"/>
         <property name="commands">
             <list>
                 <ref bean="csvAnchorReader" />
+                <!-- uncomment and define scans to extract for processing -->
+                <ref bean="scanExtractor" />
                 <ref bean="defaultVarLoader" />
                 <ref bean="massFilter" />
                 <ref bean="ticHeatmapCoplotBeforeAlignment"/>
@@ -46,7 +48,6 @@
                 <ref bean="pairwiseDistanceCalculator" />
                 <ref bean="centerStarAlignment" />
                 <ref bean="chromatogramWarp" />
-
                 <ref bean="ticHeatmapCoplotAfterAlignment"/>
 <!--                <ref bean="eicHeatmapCoplotAfterAlignment"/>-->
             </list>
@@ -59,9 +60,39 @@
 
     </bean>
     
-    <!-- DefaultVarLoader, loads default variables -->
+    <!-- ScanExtractor, extracts pre-defined scans between startScan and endScan (inclusive)
+         Will correct indexing to start at 0.
+    -->
+    <bean id="scanExtractor" class="maltcms.commands.fragments.preprocessing.ScanExtractor">
+        <!-- start with first scan: 0 -->
+        <property name="startScan" value="0"/>
+        <!-- -1: determine endScan automatically -->
+        <property name="endScan" value="-1"/>
+    </bean>
+    
+    <!-- DefaultVarLoader, loads default variables, see cfg/cv/cv_maltcms.properties for default values for these -->
     <bean id="defaultVarLoader" class="maltcms.commands.fragments.preprocessing.DefaultVarLoader">
-        
+        <property name="defaultVariables">
+            <list>
+                <!-- uncomment to explicitly load default variables -->
+                <!--
+                <value>scan_index</value>
+                <value>mass_values</value>
+                <value>intensity_values</value>
+                <value>total_intensity</value>
+                <value>mass_range_min</value>
+                <value>mass_range_min</value>
+                <value>scan_acquisition_time</value> -->
+            </list>
+        </property>
+        <property name="additionalVariables">
+            <list>
+                <!-- uncomment to explicitly load additional variables -->
+                <!--
+                <value>retention_scans</value>
+                <value>source_files</value> -->
+            </list>
+        </property>
     </bean>
     
     <!-- MassFilter, removes intensities associated to specified masses in raw data -->

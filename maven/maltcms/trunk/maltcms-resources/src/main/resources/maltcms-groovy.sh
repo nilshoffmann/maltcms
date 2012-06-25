@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
-SCRIPTFILE=$(readlink -f $0)
-SCRIPTDIR=$(dirname $SCRIPTFILE)
+SCRIPTFILE="$0"
+# Follow relative symlinks to resolve script location
+while [ -h "$SCRIPTFILE" ] ; do
+    ls=`ls -ld "$SCRIPTFILE"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+        SCRIPTFILE="$link"
+    else
+        SCRIPTFILE=`dirname "$SCRIPTFILE"`"/$link"
+    fi
+done
+#store the directory from which we were invoked
+WORKINGDIR="`pwd`"
+#change to the resolved scriptfile location
+cd "`dirname \"$SCRIPTFILE\"`"
+SCRIPTDIR="`pwd -P`"
+cd "$WORKINGDIR"
 #Check, whether we are called from a maltcms installation
 if [ -f "$SCRIPTDIR/maltcms.jar" ]; then
         echo -e "Found maltcms in script home directory $SCRIPTDIR";

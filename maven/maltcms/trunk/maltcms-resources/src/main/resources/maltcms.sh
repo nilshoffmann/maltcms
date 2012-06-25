@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
-SCRIPTFILE=$(readlink -f $0)
-SCRIPTDIR=$(dirname $SCRIPTFILE)
+SCRIPTFILE="$0"
+# Follow relative symlinks to resolve script location
+while [ -h "$SCRIPTFILE" ] ; do
+    ls=`ls -ld "$SCRIPTFILE"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+        SCRIPTFILE="$link"
+    else
+        SCRIPTFILE=`dirname "$SCRIPTFILE"`"/$link"
+    fi
+done
+#store the directory from which we were invoked
+WORKINGDIR="`pwd`"
+#change to the resolved scriptfile location
+cd "`dirname \"$SCRIPTFILE\"`"
+SCRIPTDIR="`pwd -P`"
+cd "$WORKINGDIR"
 
 export JARCH=""
 export JBIN="\/vol\/java-1.6.0\/bin"
