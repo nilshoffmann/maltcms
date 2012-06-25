@@ -202,7 +202,7 @@ public class FragmentStringParser {
 		final String[] fileNameVarNameRest = s.split(">", 0);// seperate
 		// filename and
 		// vars
-
+                
 		final String[] vars = fileNameVarNameRest[1].split("&", 0);// seperate
 		// varnames
 

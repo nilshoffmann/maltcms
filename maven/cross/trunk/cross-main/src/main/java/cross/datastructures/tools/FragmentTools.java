@@ -449,7 +449,8 @@ public class FragmentTools {
 			final String var = iter.next().toString();
 			if (!var.equals("") && !var.trim().isEmpty()) {
 				FragmentTools.log.debug("Loading var {}", var);
-				ff.getChild(var).getArray();
+				Array a = ff.getChild(var).getArray();
+                                FragmentTools.log.debug("{} ",a);
 			}
 		}
 	}

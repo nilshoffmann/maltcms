@@ -65,13 +65,13 @@
 
     <distributionManagement>
         <repository>
-            <id>maltcms-release</id>
+            <id>maltcms.de</id>
             <name>maltcms-artifactory-releases</name>
             <url>http://www.maltcms.de:8080/artifactory/libs-release-local</url>
         </repository>
 
         <snapshotRepository>
-            <id>maltcms-snapshot</id>
+            <id>maltcms.de</id>
             <name>maltcms-artifactory-snapshots</name>
             <url>http://www.maltcms.de:8080/artifactory/libs-snapshot-local</url>
         </snapshotRepository>
@@ -326,7 +326,6 @@
         <module>cross-tools</module>
         <module>cross-main-api</module>
         <module>cross-math</module>
-    <module>cross-nbm</module>
   </modules>
     <dependencies>
         <dependency>

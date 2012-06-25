@@ -35,6 +35,7 @@ import java.util.*;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import ucar.ma2.ArrayChar;
+import ucar.ma2.DataType;
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 
@@ -86,21 +87,26 @@ public class FileFragment implements IFileFragment {
         sb.append("Contents of File " + ff.getAbsolutePath() + "\n");
         sb.append("Attributes:\n");
         for (final Attribute a : attrs) {
-            sb.append(a.toString() + "\n");
+            sb.append("\t"+a.toString() + "\n");
         }
         sb.append("Variables and Groups: \n");
         synchronized (ff) {
             for (final IVariableFragment vf : ff) {
+                sb.append(vf.toString()+ "(DataType = "+vf.getDataType()+")"+":\n");
+                sb.append("\tDimensions: ");
                 final StringBuffer dims = new StringBuffer();
+                dims.append("(");
                 final Dimension[] dimA = vf.getDimensions();
                 if (dimA != null) {
                     for (final Dimension d : dimA) {
-                        dims.append(d + " x ");
+                        sb.append(d.getName()+",");
+                        dims.append(d.getLength() + " x ");
                     }
+                    sb.replace(sb.length()-1, sb.length(), "");
                     dims.replace(dims.length() - 3, dims.length(), "");
+                    dims.append(")");
                 }
-                sb.append(vf.toString() + "; Dimensions = " + dims
-                        + " DataType = " + vf.getDataType() + "\n");
+                sb.append(" "+dims+"\n");
             }
         }
         return sb.toString();
@@ -122,7 +128,7 @@ public class FileFragment implements IFileFragment {
     private long fID = 0;
     private long nextGID = 0;
     private long gID = 0;
-    private Set<Dimension> dims = null;
+    private LinkedHashMap<String,Dimension> dims = null;
     private Map<String, IVariableFragment> children = null;
     private Set<IFileFragment> sourcefiles = new LinkedHashSet<IFileFragment>();
     private final String fileExtension = ".cdf";
@@ -136,7 +142,7 @@ public class FileFragment implements IFileFragment {
         this.sourcefiles = new LinkedHashSet<IFileFragment>();
         this.fID = FileFragment.FID++;
         this.children = Collections.synchronizedMap(new LinkedHashMap<String, IVariableFragment>());
-        this.dims = new LinkedHashSet<Dimension>();
+        this.dims = new LinkedHashMap<String,Dimension>();
         setFile(getDefaultFilename());
     }
 
@@ -212,8 +218,13 @@ public class FileFragment implements IFileFragment {
     @Override
     public void addDimensions(final Dimension... dims1) {
         for (final Dimension d : dims1) {
-            if (!this.dims.contains(d)) {
-                this.dims.add(d);
+            if (!this.dims.containsKey(d.getName())) {
+                this.dims.put(d.getName(),d);
+            }else{
+                Dimension known = this.dims.get(d.getName());
+                log.warn("Replacing dimension {} with {}",known,d);
+                this.dims.remove(d.getName());
+                this.dims.put(d.getName(),d);
             }
         }
     }
@@ -259,24 +270,28 @@ public class FileFragment implements IFileFragment {
             return;
         }
         final List<IFileFragment> c = new ArrayList<IFileFragment>();
-        c.addAll(files);
+        for(IFileFragment f:files) {
+            if(f!=null) {
+                c.add(f);
+            }
+        }
         int ml = 128;
-        for (final IFileFragment f : c) {
-            if (f.getAbsolutePath().length() > ml) {
+        for (final IFileFragment file : c) {
+            if (file.getAbsolutePath().length() > ml) {
                 ml *= 2;
             }
         }
         final ArrayChar.D2 a = cross.datastructures.tools.ArrayTools.createStringArray(c.size(), ml);
-        final Dimension d1 = new Dimension("source_file_number", c.size(), true);
-        final Dimension d2 = new Dimension("source_file_max_chars", ml, true);
+        final Dimension d1 = new Dimension("source_file_number", a.getShape()[0], true);
+        final Dimension d2 = new Dimension("source_file_max_chars", a.getShape()[1], true);
         int i = 0;
-        for (final IFileFragment f : c) {
+        for (final IFileFragment file : c) {
             //Logging.getLogger(this).info("Resolved path to source file is: " + resolveURI(f));
-            Logging.getLogger(this).debug("Setting source file {} on {}", f,
+            Logging.getLogger(this).debug("Setting source file {} on {}", file,
                     this);
             //a.setString(i++, f.getAbsolutePath());
             
-            a.setString(i++, resolve(f,this));
+            a.setString(i++, resolve(file,this));
             
         }
         final String sfvar = Factory.getInstance().getConfiguration().getString("var.source_files", "source_files");
@@ -349,7 +364,7 @@ public class FileFragment implements IFileFragment {
         }
         final Element dimensions = new Element("dimensions");
         int id = 0;
-        for (final Dimension d : this.dims) {
+        for (final Dimension d : this.dims.values()) {
             final int length = d.getLength();
             final String name = d.getName();
             final Element dim = new Element("dimension");
@@ -847,7 +862,7 @@ public class FileFragment implements IFileFragment {
         in.close();
         this.sourcefiles = new HashSet<IFileFragment>();
         this.children = Collections.synchronizedMap(new HashMap<String, IVariableFragment>());
-        this.dims = new HashSet<Dimension>();
+        this.dims = new LinkedHashMap<String,Dimension>();
 
     }
 
@@ -1081,6 +1096,6 @@ public class FileFragment implements IFileFragment {
      */
     @Override
     public Set<Dimension> getDimensions() {
-        return Collections.unmodifiableSet(this.dims);
+        return Collections.unmodifiableSet(new LinkedHashSet<Dimension>(this.dims.values()));
     }
 }
