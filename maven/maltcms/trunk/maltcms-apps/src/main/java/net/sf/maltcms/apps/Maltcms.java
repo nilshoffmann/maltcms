@@ -357,16 +357,15 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         PropertiesConfiguration cfg = null;
 
         //check for commandline argument -DmaltcmsDefaultConfig
-        final String defaultProps = System.getProperty("maltcmsDefaultConfig");
+        final String defaultProps = System.getProperty("maltcms.home");
         if (defaultProps != null) {
-            File propertyFile = new File(defaultProps);
+            File propertyFile = new File(defaultProps,"cfg/default.properties");
             //is it a file?
             if (propertyFile.exists() && propertyFile.isFile()) {
                 try {
                     cfg = new PropertiesConfiguration(propertyFile);
                     cc.addConfiguration(cfg);
                     log.debug("Using default.properties at {}", propertyFile.getAbsolutePath());
-                    return;
                 } catch (final ConfigurationException e) {
 
                     e.printStackTrace();
@@ -377,7 +376,6 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     try {
                         cfg = new PropertiesConfiguration(propRes);
                         cc.addConfiguration(cfg);
-                        return;
                     } catch (final ConfigurationException e) {
 
                         e.printStackTrace();
@@ -391,15 +389,23 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 try {
                     cfg = new PropertiesConfiguration(f);
                     cc.addConfiguration(cfg);
-                    log.debug("Using default.properties at {}", f.getAbsolutePath());
-                    return;
+                    log.info("Using default.properties below {} at {}", System.getProperty("user.dir"),f.getAbsolutePath());
+                } catch (ConfigurationException ex) {
+                    java.util.logging.Logger.getLogger(Maltcms.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                log.warn("Could not locate default.properties, using defaults from classpath!");
+                try {
+                    cfg = new PropertiesConfiguration(getClass().getClassLoader().getResource("cfg/default.properties"));
+                    log.info("Can include external properties: {}",cfg.getIncludesAllowed());
+                    cc.addConfiguration(cfg);
                 } catch (ConfigurationException ex) {
                     java.util.logging.Logger.getLogger(Maltcms.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
         //TODO really use the default.properties from the classpath
-        log.warn("Could not locate default.properties, using defaults from classpath!");
+        
     }
 
     public void initClassLoader(String[] urls) {
@@ -647,7 +653,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                         userConfigLocation = new File(new File(System.getProperty(
                                 "user.dir")), cl.getOptionValue("c"));
                     }
-                    cfg.setProperty("config.basedir", userConfigLocation.getParentFile());
+                    cfg.setProperty("pipeline.properties", userConfigLocation.getAbsolutePath());
+                    cfg.setProperty("config.basedir", userConfigLocation.getParentFile().getAbsolutePath());
                     cfg.addConfiguration(new PropertiesConfiguration(cl.getOptionValue("c")));
                 } catch (final ConfigurationException e) {
                     this.log.error(e.getLocalizedMessage());

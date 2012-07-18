@@ -587,7 +587,7 @@ public class NetcdfDataSource implements IDataSource {
                     // if read with ranges is valid: keep ranges as before
                     f.setRange(r);
                 } catch (final InvalidRangeException e) {
-                    this.log.error(e.getLocalizedMessage());
+                    this.log.warn("Defined range list {} is invalid for variable {}, falling back to default range defined in file!",new Object[]{l,f.getName()});
                     a = v.read();
                     // replace ranges with valid ranges from file
                     f.setRange(v.getRanges().toArray(new Range[]{}));

@@ -37,7 +37,7 @@
             <list>
                 <ref bean="csvAnchorReader" />
                 <!-- uncomment and define scans to extract for processing -->
-                <ref bean="scanExtractor" />
+                <!--<ref bean="scanExtractor" />-->
                 <ref bean="defaultVarLoader" />
                 <ref bean="massFilter" />
                 <ref bean="ticHeatmapCoplotBeforeAlignment"/>

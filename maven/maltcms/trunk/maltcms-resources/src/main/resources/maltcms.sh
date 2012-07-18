@@ -32,20 +32,30 @@ if [ -f "$SCRIPTDIR/maltcms.jar" ]; then
 	MALTCMSUSRDIR="$SCRIPTDIR";
 else
 #no, so check environment variable
-	echo -e "Checking for maltcms location MALTCMSDIR from environment.";
-	if [ -z "$MALTCMSDIR" ]; then
-		echo "Please enter path to Maltcms installation or add MALTCMSDIR to your bash profile:"
-		read MALTCMSUSRDIR;
-		if [ -z "$MALTCMSUSRDIR" ]; then
-			echo "No user defined directory for Maltcms installation entered, no default given, exiting!";
-				exit 1;
+        if [ -n "$MALTCMS_HOME" ]; then
+                if [ -f "$MALTCMS_HOME/maltcms.jar" ]; then
+                    echo "Found maltcms location below $MALTCMS_HOME!"
+                    MALTCMSUSRDIR="$MALTCMS_HOME";
 		else
-			if [ -f "$MALTCMSUSRDIR/maltcms.jar" ]; then
+                    echo "Maltcms does not seem to exist under $MALTCMS_HOME!";
+                    exit 1
+                fi
+        elif [ -n "$MALTCMSDIR" ]; then
+            #MALTCMSDIR is deprecated, please use MALTCMS_HOME to indicate installation directory of maltcms
+            echo -e "WARNING: Checking for maltcms location MALTCMSDIR from environment."
+            echo -e "WARNING: MALTCMSDIR is DEPRECATED, please set maltcms installation location in environment variable MALTCMS_HOME!";
+            if [ -f "$MALTCMSUSRDIR/maltcms.jar" ]; then
 				echo "Found maltcms location below $MALTCMSUSRDIR!"
 			else
 				echo "Maltcms does not seem to exist under $MALTCMSUSRDIR!";
 				exit 1
 			fi
+                
+		echo "Please enter path to Maltcms installation or add MALTCMSDIR to your bash profile:"
+		read MALTCMSUSRDIR;
+		if [ -z "$MALTCMSUSRDIR" ]; then
+			echo "No user defined directory for Maltcms installation entered, no default given, exiting!";
+				exit 1;
 		fi
 	else
 		if [ -f "$MALTCMSDIR/maltcms.jar" ]; then
@@ -152,10 +162,10 @@ if [ -n "$CLASSPATH" ]; then
 	USRCLASSPATH="$CLASSPATH:$USRCLSPATH"
 fi
 #set up arguments
-ARGS="-Xmx$MXSIZE -Xms$MSSIZE"
+ARGS="-Xmx$MXSIZE -Xms$MSSIZE -Dmaltcms.home=$MALTCMSUSRDIR"
 if [ -n "$ENVARGS" ]; then
 	echo "Using system properties: $ENVARGS"
-	ARGS="$ENVARGS"
+	ARGS="$ARGS $ENVARGS"
 fi
 if [ -n "$PROFILE" ]; then
 	echo "Using profiler to collect runtime execution statistics"

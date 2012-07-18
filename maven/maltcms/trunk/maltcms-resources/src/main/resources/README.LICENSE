@@ -7,42 +7,69 @@ All licenses can be found in the licenses/ directory.
 
 Individual licenses for the libraries used are given below:
 
-Apache Jakarta Commons, Apache Licence 2.0 
+Apache License 2.0 
+    * batik-{
+	awt-util,css,dom,ext,gui-util,gvt,parser,svg-dom,svggen,util,xml
+	}-1.6-1.jar
+    * commons-beanuntils-1.7.0.jar
+    * commons-beanutils-core-1.8.0.jar
+    * commons-cli-1.2.jar
+    * commons-codec-1.4.jar
+    * commons-collections-3.2.1.jar
+    * commons-configuration-1.6.jar
+    * commons-digester-1.8.jar
+    * commons-io-2.1.jar
+    * commons-lang-2.4.jar
+    * commons-math-2.2.jar
     * commons-cli-1.0.jar
     * commons-collections-3.2.jar
     * commons-configuration-1.3.jar
     * commons-lang-2.3.jar 
+    * ehcache-core-2.4.6.jar
+    * groovy-all-1.8.5.jar
+    * jakarta-regexp-1.4.jar
+    * jmzml-1.6.4.jar
+    * Spring Framework 3.0.6 
+	spring-{aop,asm,beans,context,core,expression}-3.0.6.RELEASE.jar
+    * xercesImpl-2.5.0.jar
 
-NetCDF java, Lesser GPL 
-    * bufr.jar
-    * commons-codec-1.3.jar
-    * commons-httpclient-3.0.jar
-    * commons-logging-1.0.4.jar
-    * gnu-regexp-1.1.4.jar
-    * gnujaxp.jar
-    * grib-5.0.04.jar
-    * jdom.jar
-    * jpeg2000.jar
-    * lucene.jar
-    * netcdf-2.2.18.jar
-    * nlog4j-1.2.21.jar
-    * prefsAll.jar
-    * resourcesOptional.jar
-    * slf4j-jdk14.jar
-    * slf4j-log4j12-1.1.0.jar
-    * visadNoDods.jar
-    * xercesImpl.jar
-    * xml-apis.jar 
+Apache-Style
+    * jdom-1.1.jar
 
-Images 
-    * Java Advanced Imaging, JRL License, non-commercial, JDL License, commercial
-          o jai_codec.jar
-          o jai_core.jar 
-    * "JFree", Lesser GPL
-          o jfreechart-1.0.3.jar
-          o jcommon-1.0.6.jar 
+MIT-Style
+    * netcdf-java-4.2.jar
+
+GPL v2
+    * db4o-all-8.0.jar (with db4o Opensource Compatibility License (dOCL))
+	requires commercial license in commercial, non-GPL or other products 
+	with an OpenSource license mentioned in dOCL document.
+	Reference: http://www.db4o.com/about/productinformation/packages/
+    * jaxb-{api,impl,xjc}-2.1.jar 
+	(and CDDL 1.1, http://glassfish.java.net/public/CDDL+GPL_1_1.html)
+
+L-GPL
+    * jrap-3.0.jar
+    * jrapStAX-4.jar
+    * jxl-2.6.10.jar
+    * jfreechart-1.0.13.jar
+    * jcommon-1.0.6.jar 
+
+Eclipse Public License 1.0
+    * h2-1.3.163.jar
+This software contains unmodified binary redistributions for H2 database engine (http://www.h2database.com/),
+which is dual licensed and available under a modified version of the MPL 1.1 (Mozilla Public License)
+or under the (unmodified) EPL 1.0 (Eclipse Public License).
+An original copy of the license agreement can be found at: http://www.h2database.com/html/license.html
+
+
+
+Java Research License, non-commercial, JDL License, commercial
+    * jai_codec-1.1.3.jar
+    * jai_core-1.1.3.jar 
+
 ColorRamps
-	* http://ozviz.wasp.uwa.edu.au/~pbourke/texture_colour/colourramp/
+    * http://ozviz.wasp.uwa.edu.au/~pbourke/texture_colour/colourramp/
+
 Colt Library (http://acs.lbl.gov/~hoschek/colt/)
     * Packages cern.colt* , cern.jet*, cern.clhep
         Copyright (c) 1999 CERN - European Organization for Nuclear Research.
