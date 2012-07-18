@@ -22,7 +22,6 @@
 package cross.datastructures.fragments;
 
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.StatsMap;
 import cross.datastructures.tools.EvalTools;
 import cross.exception.ResourceNotAvailableException;
@@ -33,8 +32,8 @@ import java.lang.ref.SoftReference;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
-import org.slf4j.Logger;
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
 import ucar.ma2.IndexIterator;
@@ -50,9 +49,9 @@ import ucar.nc2.Dimension;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
  */
+@Slf4j
 public class VariableFragment implements IVariableFragment {
 
-    private final Logger log = Logging.getLogger(this.getClass());
     private final Fragment fragment = new Fragment();
     private final String varname;
     private Dimension[] dims;
@@ -201,7 +200,7 @@ public class VariableFragment implements IVariableFragment {
      */
     @Override
     public void appendXML(final Element e) {
-        this.log.debug("Appending xml for variable " + getVarname());
+        log.debug("Appending xml for variable " + getVarname());
         final String vname = "variable";
         final Element var = new Element(vname);
         this.fragment.appendXML(var);
@@ -312,7 +311,7 @@ public class VariableFragment implements IVariableFragment {
      */
     @Override
     public Array getArray() {
-        this.log.debug("Ranges of {}={}", getVarname(), Arrays.deepToString(getRange()));
+        log.debug("Ranges of {}={}", getVarname(), Arrays.deepToString(getRange()));
         if (getArrayRef() == null) {
             if (this.al == null) {
                 try {
@@ -320,11 +319,11 @@ public class VariableFragment implements IVariableFragment {
                     setArrayInternal(Factory.getInstance().getDataSourceFactory().getDataSourceFor(
                             getParent()).readSingle(this));
                 } catch (final IOException io) {
-                    this.log.error("Could not load Array for variable {}",
+                    log.error("Could not load Array for variable {}",
                             getVarname());
-                    this.log.error(io.getLocalizedMessage());
+                    log.error(io.getLocalizedMessage());
                 } catch (final ResourceNotAvailableException e) {
-                    this.log.error(e.getLocalizedMessage());
+                    log.error(e.getLocalizedMessage());
                 }
             } else {
                 if (this.isModified) {
@@ -428,10 +427,10 @@ public class VariableFragment implements IVariableFragment {
                         setIndexedArrayInternal(Factory.getInstance().getDataSourceFactory().getDataSourceFor(
                                 getParent()).readIndexed(this));
                     } catch (final IOException e) {
-                        this.log.error(e.getLocalizedMessage());
+                        log.error(e.getLocalizedMessage());
                         return null;
                     } catch (final ResourceNotAvailableException e) {
-                        this.log.error(e.getLocalizedMessage());
+                        log.error(e.getLocalizedMessage());
                         return null;
                     }
                 }
@@ -548,12 +547,12 @@ public class VariableFragment implements IVariableFragment {
     public void setArray(final Array a1) {
         this.isModified = true;
         // EvalTools.notNull(a1, this);
-        // if (this.log.isDebugEnabled()) {
-        this.log.debug("Set array on VariableFragment {} as child of {}",
+        // if (log.isDebugEnabled()) {
+        log.debug("Set array on VariableFragment {} as child of {}",
                 toString(), getParent().getAbsolutePath());
-        // this.log.info("{}", a1);
+        // log.info("{}", a1);
         // } else {
-        // this.log.info("{}>{} set array", getParent().getName(),
+        // log.info("{}>{} set array", getParent().getName(),
         // getVarname());
         // }
         // Copying prevents accidental modification
@@ -637,7 +636,7 @@ public class VariableFragment implements IVariableFragment {
     @Override
     public void setIndex(final IVariableFragment index1) {
         if ((index1 != null) && (this.index != null)) {
-            this.log.debug("Setting index from {} to {}", this.index, index1);
+            log.debug("Setting index from {} to {}", this.index, index1);
         }
         this.index = index1;
         // this.al = null;
@@ -653,7 +652,7 @@ public class VariableFragment implements IVariableFragment {
     @Override
     public void setIndexedArray(final List<Array> al1) {
         this.isModified = true;
-        this.log.debug(
+        log.debug(
                 "Set indexed array on VariableFragment {} as child of {}",
                 toString(), getParent().getAbsolutePath());
         synchronized (this) {

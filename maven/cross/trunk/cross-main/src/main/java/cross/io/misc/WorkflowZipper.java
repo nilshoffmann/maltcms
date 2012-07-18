@@ -23,7 +23,6 @@ package cross.io.misc;
 
 import cross.Factory;
 import cross.IConfigurable;
-import cross.Logging;
 import cross.datastructures.tools.FileTools;
 import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowFileResult;
@@ -33,228 +32,219 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 /**
- * If configured to do so, zips all elements of a given <code>IWorkflow</code>
- * matching the given <code>FileFilter</code>. Marks directories and files which
- * are unmatched for deletion on exit of the virtual machine if configured.
- * 
+ * If configured to do so, zips all elements of a given
+ * <code>IWorkflow</code> matching the given
+ * <code>FileFilter</code>. Marks directories and files which are unmatched for
+ * deletion on exit of the virtual machine if configured.
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
+@Slf4j
 public class WorkflowZipper implements IConfigurable {
 
-	private IWorkflow iw = null;
-	private FileFilter ff = null;
+    private IWorkflow iw = null;
+    private FileFilter ff = null;
+    private boolean zipWorkflow = true;
+    private boolean deleteOnExit = false;
+    private HashSet<String> zipEntries = new HashSet<String>();
 
-	private final Logger log = Logging.getLogger(this.getClass());
-	private boolean zipWorkflow = true;
-	private boolean deleteOnExit = false;
+    private void addZipEntry(final int bufsize, final ZipOutputStream zos,
+            final byte[] input_buffer, final File file) throws IOException {
+        log.debug("Adding zip entry for file {}", file);
+        if (file.exists() && file.isFile()) {
+            // Use the file name for the ZipEntry name.
+            final ZipEntry zip_entry = new ZipEntry(file.getName());
+            if (this.zipEntries.contains(file.getName())) {
+                log.info("Skipping duplicate zip entry {}", file.getName());
+                return;
+            } else {
+                this.zipEntries.add(file.getName());
+            }
+            zos.putNextEntry(zip_entry);
 
-	private HashSet<String> zipEntries = new HashSet<String>();
+            // Create a buffered input stream from the file stream.
+            final FileInputStream in = new FileInputStream(file);
+            final BufferedInputStream source = new BufferedInputStream(in,
+                    bufsize);
 
-	private void addZipEntry(final int bufsize, final ZipOutputStream zos,
-	        final byte[] input_buffer, final File file) throws IOException {
-		this.log.debug("Adding zip entry for file {}", file);
-		if (file.exists() && file.isFile()) {
-			// Use the file name for the ZipEntry name.
-			final ZipEntry zip_entry = new ZipEntry(file.getName());
-			if (this.zipEntries.contains(file.getName())) {
-				this.log
-				        .info("Skipping duplicate zip entry {}", file.getName());
-				return;
-			} else {
-				this.zipEntries.add(file.getName());
-			}
-			zos.putNextEntry(zip_entry);
+            // Read from source into buffer and write, thereby compressing
+            // on the fly
+            int len = 0;
+            while ((len = source.read(input_buffer, 0, bufsize)) != -1) {
+                zos.write(input_buffer, 0, len);
+            }
+            zos.flush();
+            source.close();
+            zos.closeEntry();
+        } else {
+            log.warn("Skipping nonexistant file or directory {}", file);
+        }
+    }
 
-			// Create a buffered input stream from the file stream.
-			final FileInputStream in = new FileInputStream(file);
-			final BufferedInputStream source = new BufferedInputStream(in,
-			        bufsize);
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
+     * )
+     */
+    @Override
+    public void configure(final Configuration cfg) {
+        this.zipWorkflow = cfg.getBoolean(this.getClass().getName()
+                + ".zipWorkflow", true);
+        this.deleteOnExit = cfg.getBoolean(this.getClass().getName()
+                + ".deleteOnExit", false);
+    }
 
-			// Read from source into buffer and write, thereby compressing
-			// on the fly
-			int len = 0;
-			while ((len = source.read(input_buffer, 0, bufsize)) != -1) {
-				zos.write(input_buffer, 0, len);
-			}
-			zos.flush();
-			source.close();
-			zos.closeEntry();
-		} else {
-			this.log.warn("Skipping nonexistant file or directory {}", file);
-		}
-	}
+    /**
+     * @return the deleteOnExit
+     */
+    public boolean isDeleteOnExit() {
+        return this.deleteOnExit;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
-	 * )
-	 */
-	@Override
-	public void configure(final Configuration cfg) {
-		this.zipWorkflow = cfg.getBoolean(this.getClass().getName()
-		        + ".zipWorkflow", true);
-		this.deleteOnExit = cfg.getBoolean(this.getClass().getName()
-		        + ".deleteOnExit", false);
-	}
+    /**
+     * @return the zipWorkflow
+     */
+    public boolean isZipWorkflow() {
+        return this.zipWorkflow;
+    }
 
-	/**
-	 * @return the deleteOnExit
-	 */
-	public boolean isDeleteOnExit() {
-		return this.deleteOnExit;
-	}
+    /**
+     * Saves the currently assigned workflow elements, matching currently
+     * assigned FileFilter to File. Marks all files for deletion on exit.
+     *
+     * @param f
+     * @return
+     */
+    public boolean save(final File f) {
+        if (this.zipWorkflow) {
+            this.zipEntries.clear();
+            final int bufsize = 1024;
+            final File zipFile = f;
+            ZipOutputStream zos;
+            try {
+                final FileOutputStream fos = new FileOutputStream(zipFile);
+                zos = new ZipOutputStream(new BufferedOutputStream(fos));
+                log.info("Created zip output stream");
+                final byte[] input_buffer = new byte[bufsize];
+                final Iterator<IWorkflowResult> iter = this.iw.getResults();
+                File basedir = FileTools.prependDefaultDirsWithPrefix("", null,
+                        this.iw.getStartupDate());
+                log.info("marked basedir for deletion on exit: {}",
+                        basedir);
+                if (this.deleteOnExit) {
+                    basedir.deleteOnExit();
+                }
+                log.info("setting basedir to parent file: {}", basedir.getParentFile());
+                basedir = basedir.getParentFile();
+                while (iter.hasNext()) {
+                    final IWorkflowResult iwr = iter.next();
+                    if (iwr instanceof IWorkflowFileResult) {
+                        final IWorkflowFileResult iwfr = (IWorkflowFileResult) iwr;
+                        final File file = iwfr.getFile();
+                        log.info("Retrieving file result {}", file);
+                        // mark file for deletion
+                        final File parent = file.getParentFile();
+                        log.info("Retrieving parent of file result {}",
+                                parent);
+                        // Also delete the parent directory in which file was
+                        // contained,
+                        // unless it is the base directory + possibly additional
+                        // defaultDirs
+                        if (parent.getAbsolutePath().startsWith(
+                                basedir.getAbsolutePath())
+                                && !parent.getAbsolutePath().equals(
+                                basedir.getAbsolutePath())) {
+                            log.info("Marking file and parent for deletion");
+                            if (this.deleteOnExit) {
+                                parent.deleteOnExit();
+                                file.deleteOnExit();
+                            }
+                        }
+                        if (file.getAbsolutePath().startsWith(
+                                basedir.getAbsolutePath())) {
+                            log.info("Marking file for deletion");
+                            if (this.deleteOnExit) {
+                                file.deleteOnExit();
+                            }
+                        }
+                        if ((this.ff != null) && !this.ff.accept(file)) {
+                            // Skip file if file filter does not accept it
+                            continue;
+                        } else {
+                            log.info("Adding zip entry!");
+                            addZipEntry(bufsize, zos, input_buffer, file);
+                        }
+                    }
 
-	/**
-	 * @return the zipWorkflow
-	 */
-	public boolean isZipWorkflow() {
-		return this.zipWorkflow;
-	}
+                }
+                final File runtimeProps = FileTools.prependDefaultDirsWithPrefix("", null, this.iw.getStartupDate());
+                log.info("Saving config to {}", runtimeProps);
+                Factory.saveConfiguration(Factory.getInstance().getConfiguration(), runtimeProps);
+                if (runtimeProps.exists() && runtimeProps.canRead()) {
+                    log.info("Marking file for deletion");
+                    if (this.deleteOnExit) {
+                        runtimeProps.deleteOnExit();
+                    }
+                    addZipEntry(bufsize, zos, input_buffer, runtimeProps);
+                }
 
-	/**
-	 * Saves the currently assigned workflow elements, matching currently
-	 * assigned FileFilter to File. Marks all files for deletion on exit.
-	 * 
-	 * @param f
-	 * @return
-	 */
-	public boolean save(final File f) {
-		if (this.zipWorkflow) {
-			this.zipEntries.clear();
-			final int bufsize = 1024;
-			final File zipFile = f;
-			ZipOutputStream zos;
-			try {
-				final FileOutputStream fos = new FileOutputStream(zipFile);
-				zos = new ZipOutputStream(new BufferedOutputStream(fos));
-				this.log.info("Created zip output stream");
-				final byte[] input_buffer = new byte[bufsize];
-				final Iterator<IWorkflowResult> iter = this.iw.getResults();
-				File basedir = FileTools.prependDefaultDirsWithPrefix("", null,
-				        this.iw.getStartupDate());
-				this.log.info("marked basedir for deletion on exit: {}",
-				        basedir);
-				if (this.deleteOnExit) {
-					basedir.deleteOnExit();
-				}
-				this.log.info("setting basedir to parent file: {}", basedir
-				        .getParentFile());
-				basedir = basedir.getParentFile();
-				while (iter.hasNext()) {
-					final IWorkflowResult iwr = iter.next();
-					if (iwr instanceof IWorkflowFileResult) {
-						final IWorkflowFileResult iwfr = (IWorkflowFileResult) iwr;
-						final File file = iwfr.getFile();
-						this.log.info("Retrieving file result {}", file);
-						// mark file for deletion
-						final File parent = file.getParentFile();
-						this.log.info("Retrieving parent of file result {}",
-						        parent);
-						// Also delete the parent directory in which file was
-						// contained,
-						// unless it is the base directory + possibly additional
-						// defaultDirs
-						if (parent.getAbsolutePath().startsWith(
-						        basedir.getAbsolutePath())
-						        && !parent.getAbsolutePath().equals(
-						                basedir.getAbsolutePath())) {
-							this.log
-							        .info("Marking file and parent for deletion");
-							if (this.deleteOnExit) {
-								parent.deleteOnExit();
-								file.deleteOnExit();
-							}
-						}
-						if (file.getAbsolutePath().startsWith(
-						        basedir.getAbsolutePath())) {
-							this.log.info("Marking file for deletion");
-							if (this.deleteOnExit) {
-								file.deleteOnExit();
-							}
-						}
-						if ((this.ff != null) && !this.ff.accept(file)) {
-							// Skip file if file filter does not accept it
-							continue;
-						} else {
-							this.log.info("Adding zip entry!");
-							addZipEntry(bufsize, zos, input_buffer, file);
-						}
-					}
+                try {
+                    zos.flush();
+                    zos.close();
+                } catch (final IOException e) {
+                    throw new RuntimeException(e);
+                    // log.error(e.getLocalizedMessage());
+                    // return false;
+                }
+            } catch (final IOException e) {
+                throw new RuntimeException(e);
+                // log.error(e.getLocalizedMessage());
+                // return false;
+            }
+            return true;
+        } else {
+            log.debug("Configured to not zip Workflow results!");
+            return false;
+        }
+    }
 
-				}
-				final File runtimeProps = FileTools
-				        .prependDefaultDirsWithPrefix("", null, this.iw
-				                .getStartupDate());
-				this.log.info("Saving config to {}", runtimeProps);
-				Factory.saveConfiguration(Factory.getInstance()
-				        .getConfiguration(), runtimeProps);
-				if (runtimeProps.exists() && runtimeProps.canRead()) {
-					this.log.info("Marking file for deletion");
-					if (this.deleteOnExit) {
-						runtimeProps.deleteOnExit();
-					}
-					addZipEntry(bufsize, zos, input_buffer, runtimeProps);
-				}
+    public boolean save(final File parentDir, final String filename) {
+        return save(new File(parentDir, filename));
+    }
 
-				try {
-					zos.flush();
-					zos.close();
-				} catch (final IOException e) {
-					throw new RuntimeException(e);
-					// this.log.error(e.getLocalizedMessage());
-					// return false;
-				}
-			} catch (final IOException e) {
-				throw new RuntimeException(e);
-				// this.log.error(e.getLocalizedMessage());
-				// return false;
-			}
-			return true;
-		} else {
-			this.log.debug("Configured to not zip Workflow results!");
-			return false;
-		}
-	}
+    /**
+     * @param deleteOnExit the deleteOnExit to set
+     */
+    public void setDeleteOnExit(final boolean deleteOnExit) {
+        this.deleteOnExit = deleteOnExit;
+    }
 
-	public boolean save(final File parentDir, final String filename) {
-		return save(new File(parentDir, filename));
-	}
+    /**
+     * @param fileFilter
+     */
+    public void setFileFilter(final FileFilter fileFilter) {
+        this.ff = fileFilter;
 
-	/**
-	 * @param deleteOnExit
-	 *            the deleteOnExit to set
-	 */
-	public void setDeleteOnExit(final boolean deleteOnExit) {
-		this.deleteOnExit = deleteOnExit;
-	}
+    }
 
-	/**
-	 * @param fileFilter
-	 */
-	public void setFileFilter(final FileFilter fileFilter) {
-		this.ff = fileFilter;
+    /**
+     * @param workflow
+     */
+    public void setIWorkflow(final IWorkflow workflow) {
+        this.iw = workflow;
+    }
 
-	}
-
-	/**
-	 * @param workflow
-	 */
-	public void setIWorkflow(final IWorkflow workflow) {
-		this.iw = workflow;
-	}
-
-	/**
-	 * @param zipWorkflow
-	 *            the zipWorkflow to set
-	 */
-	public void setZipWorkflow(final boolean zipWorkflow) {
-		this.zipWorkflow = zipWorkflow;
-	}
+    /**
+     * @param zipWorkflow the zipWorkflow to set
+     */
+    public void setZipWorkflow(final boolean zipWorkflow) {
+        this.zipWorkflow = zipWorkflow;
+    }
 }

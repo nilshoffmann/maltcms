@@ -22,14 +22,13 @@
 package cross.io.misc;
 
 import cross.IConfigurable;
-import cross.Logging;
 import cross.tools.StringTools;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 /**
  * Filter matching Image and Text-File formats (configurable).
@@ -37,9 +36,9 @@ import org.slf4j.Logger;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class DefaultConfigurableFileFilter implements FileFilter, IConfigurable {
 
-	private final Logger log = Logging.getLogger(this);
 	private List<String> fileTypesToKeep = StringTools.toStringList(Arrays
 	        .asList(new String[] { "png", "jpg", "jpeg", "svg", "txt",
 	                "properties", "csv", "tsv" }));
@@ -55,10 +54,10 @@ public class DefaultConfigurableFileFilter implements FileFilter, IConfigurable 
 		// First match path suffixes
 		for (final String s : this.suffixesToMatch) {
 			if (!s.isEmpty()) {
-				this.log.debug("Checking {} against suffix {}", f.getParent(),
+				log.debug("Checking {} against suffix {}", f.getParent(),
 				        s);
 				if (f.getParent().endsWith(s)) {
-					this.log.debug("FileFilter matched on suffix {}", s);
+					log.debug("FileFilter matched on suffix {}", s);
 					return true;
 				} else {
 					this.log
@@ -72,7 +71,7 @@ public class DefaultConfigurableFileFilter implements FileFilter, IConfigurable 
 		for (final String s : this.prefixesToMatch) {
 			if (!s.isEmpty()) {
 				if (f.getName().startsWith(s)) {
-					this.log.debug("FileFilter matched on prefix {}", s);
+					log.debug("FileFilter matched on prefix {}", s);
 					return true;
 				}
 			}
@@ -82,7 +81,7 @@ public class DefaultConfigurableFileFilter implements FileFilter, IConfigurable 
 		        .getAbsolutePath());
 		for (final String s : this.fileTypesToKeep) {
 			if (extension.equalsIgnoreCase(s)) {
-				this.log.debug("FileFilter matched on {}", extension);
+				log.debug("FileFilter matched on {}", extension);
 				return true;
 			}
 		}

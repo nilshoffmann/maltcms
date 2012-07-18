@@ -27,116 +27,115 @@ import java.util.concurrent.*;
 
 /**
  * Proxy for different ExecutorService implementations.
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 public class ExecutorsManager implements ExecutorService {
 
-	public enum ExecutorType {
-		SINGLETON, CACHED, FIXED
-	}
+    public enum ExecutorType {
 
-	private ExecutorService es = null;// Executors.newFixedThreadPool(this.maxThreads);
-
-	private int maxThreads = 1;;
+        SINGLETON, CACHED, FIXED
+    }
+    private ExecutorService es = null;// Executors.newFixedThreadPool(this.maxThreads);
+    private int maxThreads = 1;
+    ;
 
 	private final ExecutorType type = ExecutorType.FIXED;
 
-	/**
-	 * 
-	 * @param et
-	 */
-	public ExecutorsManager(final ExecutorType et) {
-		if (this.type.equals(ExecutorType.SINGLETON)) {
-			this.es = Executors.newSingleThreadExecutor();
-		} else if (this.type.equals(ExecutorType.CACHED)) {
-			this.es = Executors.newCachedThreadPool();
-		} else {
-			this.es = Executors.newFixedThreadPool(this.maxThreads);
-		}
-	}
+    /**
+     *
+     * @param et
+     */
+    public ExecutorsManager(final ExecutorType et) {
+        if (this.type.equals(ExecutorType.SINGLETON)) {
+            this.es = Executors.newSingleThreadExecutor();
+        } else if (this.type.equals(ExecutorType.CACHED)) {
+            this.es = Executors.newCachedThreadPool();
+        } else {
+            this.es = Executors.newFixedThreadPool(this.maxThreads);
+        }
+    }
 
-	/**
-	 * @param nthreads
-	 */
-	public ExecutorsManager(final int nthreads) {
-		this.maxThreads = nthreads;
-		this.es = Executors.newFixedThreadPool(this.maxThreads);
-	}
-
-    @Override
-	public boolean awaitTermination(final long timeout, final TimeUnit unit)
-	        throws InterruptedException {
-		return this.es.awaitTermination(timeout, unit);
-	}
+    /**
+     * @param nthreads
+     */
+    public ExecutorsManager(final int nthreads) {
+        this.maxThreads = nthreads;
+        this.es = Executors.newFixedThreadPool(this.maxThreads);
+    }
 
     @Override
-	public void execute(final Runnable command) {
-		this.es.execute(command);
-	}
+    public boolean awaitTermination(final long timeout, final TimeUnit unit)
+            throws InterruptedException {
+        return this.es.awaitTermination(timeout, unit);
+    }
 
     @Override
-	public <T> List<Future<T>> invokeAll(
-	        final Collection<? extends Callable<T>> tasks)
-	        throws InterruptedException {
-		return this.es.invokeAll(tasks);
-	}
+    public void execute(final Runnable command) {
+        this.es.execute(command);
+    }
 
     @Override
-	public <T> List<Future<T>> invokeAll(
-	        final Collection<? extends Callable<T>> tasks, final long timeout,
-	        final TimeUnit unit) throws InterruptedException {
-		return this.es.invokeAll(tasks, timeout, unit);
-	}
+    public <T> List<Future<T>> invokeAll(
+            final Collection<? extends Callable<T>> tasks)
+            throws InterruptedException {
+        return this.es.invokeAll(tasks);
+    }
 
     @Override
-	public <T> T invokeAny(final Collection<? extends Callable<T>> tasks)
-	        throws InterruptedException, ExecutionException {
-		return this.es.invokeAny(tasks);
-	}
+    public <T> List<Future<T>> invokeAll(
+            final Collection<? extends Callable<T>> tasks, final long timeout,
+            final TimeUnit unit) throws InterruptedException {
+        return this.es.invokeAll(tasks, timeout, unit);
+    }
 
     @Override
-	public <T> T invokeAny(final Collection<? extends Callable<T>> tasks,
-	        final long timeout, final TimeUnit unit)
-	        throws InterruptedException, ExecutionException, TimeoutException {
-		return this.es.invokeAny(tasks, timeout, unit);
-	}
+    public <T> T invokeAny(final Collection<? extends Callable<T>> tasks)
+            throws InterruptedException, ExecutionException {
+        return this.es.invokeAny(tasks);
+    }
 
     @Override
-	public boolean isShutdown() {
-		return this.es.isShutdown();
-	}
+    public <T> T invokeAny(final Collection<? extends Callable<T>> tasks,
+            final long timeout, final TimeUnit unit)
+            throws InterruptedException, ExecutionException, TimeoutException {
+        return this.es.invokeAny(tasks, timeout, unit);
+    }
 
     @Override
-	public boolean isTerminated() {
-		return this.es.isTerminated();
-	}
+    public boolean isShutdown() {
+        return this.es.isShutdown();
+    }
 
     @Override
-	public void shutdown() {
-		this.es.shutdown();
-	}
+    public boolean isTerminated() {
+        return this.es.isTerminated();
+    }
 
     @Override
-	public List<Runnable> shutdownNow() {
-		return this.es.shutdownNow();
-	}
+    public void shutdown() {
+        this.es.shutdown();
+    }
 
     @Override
-	public <T> Future<T> submit(final Callable<T> task) {
-		return this.es.submit(task);
-	}
+    public List<Runnable> shutdownNow() {
+        return this.es.shutdownNow();
+    }
 
     @Override
-	public Future<?> submit(final Runnable task) {
-		return this.es.submit(task);
-	}
+    public <T> Future<T> submit(final Callable<T> task) {
+        return this.es.submit(task);
+    }
 
     @Override
-	public <T> Future<T> submit(final Runnable task, final T result) {
-		return this.es.submit(task, result);
-	}
+    public Future<?> submit(final Runnable task) {
+        return this.es.submit(task);
+    }
 
+    @Override
+    public <T> Future<T> submit(final Runnable task, final T result) {
+        return this.es.submit(task, result);
+    }
 }

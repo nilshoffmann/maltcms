@@ -22,26 +22,24 @@
 package cross.io;
 
 import cross.IConfigurable;
-import cross.Logging;
 import cross.ObjectFactory;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
 import cross.tools.StringTools;
 import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  * 
  * 
  */
+@Slf4j
 public class AFragmentCommandServiceLoader implements IConfigurable {
 
 	@Configurable
 	private List<String> fragmentCommands = Collections.emptyList();
-
-	private Logger log = Logging.getLogger(this);
 
 	public static class ClassNameLexicalComparator implements
 	        Comparator<AFragmentCommand> {

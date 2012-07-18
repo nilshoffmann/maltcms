@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 import ucar.ma2.InvalidRangeException;
@@ -44,6 +45,7 @@ import ucar.ma2.Range;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
  */
+@Slf4j
 public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
 
     private class SRefA extends SoftReference<Array> {
@@ -122,7 +124,7 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
             final Integer keyr = this.lru.removeLast();
             this.cache.remove(keyr);
         }
-        Logging.getLogger(this).debug("Number of referenced Elements: {}",
+        log.debug("Number of referenced Elements: {}",
                 this.cache.size());
     }
 
@@ -178,7 +180,7 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
             this.cacheMiss++;
             if (this.prefetchOnMiss) {
                 final int upperBound = Math.min(this.size, this.cacheSize);
-                Logging.getLogger(this).info("Prefetching: from {} to {}",
+                log.info("Prefetching: from {} to {}",
                         arg0, arg0 + upperBound);
                 final List<Array> l = load(arg0, Math.min(
                         arg0 + upperBound - 1, this.size - 1));
@@ -192,7 +194,7 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
             }
         }
         updateQueue();
-        Logging.getLogger(this).debug(
+        log.debug(
                 "CACHE ACCESS: HITS=" + this.cacheHit + " MISSES="
                 + this.cacheMiss + " GCED=" + this.cacheGCed
                 + " LRUED=" + this.cacheLRU + " LRUPURGED="
@@ -214,9 +216,9 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
             this.size = Factory.getInstance().getDataSourceFactory().getDataSourceFor(this.ivf.getParent()).readStructure(
                     this.ivf.getIndex()).getDimensions()[0].getLength();
         } catch (final IOException ex) {
-            Logging.getLogger(this).warn(ex.getLocalizedMessage());
+            log.warn(ex.getLocalizedMessage());
         } catch (final ResourceNotAvailableException ex) {
-            Logging.getLogger(this).warn(ex.getLocalizedMessage());
+            log.warn(ex.getLocalizedMessage());
         }
         if ((offset > 0) && (size >= 0)) {
             this.size = Math.min(this.size, size);
@@ -362,9 +364,9 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
                 this.cache.remove(sv.key);
                 this.cacheSoftRefRemoved++;
             } catch (final IllegalArgumentException ex) {
-                Logging.getLogger(this).warn(ex.getLocalizedMessage());
+                log.warn(ex.getLocalizedMessage());
             } catch (final InterruptedException ex) {
-                Logging.getLogger(this).warn(ex.getLocalizedMessage());
+                log.warn(ex.getLocalizedMessage());
             }
         }
     }

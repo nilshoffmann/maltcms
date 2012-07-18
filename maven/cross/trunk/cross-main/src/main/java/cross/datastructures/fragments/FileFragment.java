@@ -32,10 +32,10 @@ import cross.io.IDataSource;
 import cross.tools.StringTools;
 import java.io.*;
 import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import ucar.ma2.ArrayChar;
-import ucar.ma2.DataType;
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 
@@ -59,6 +59,7 @@ import ucar.nc2.Dimension;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class FileFragment implements IFileFragment {
 
     // public static final String SOURCE_FILES = "source_files";
@@ -122,7 +123,6 @@ public class FileFragment implements IFileFragment {
     }
     public IDataSource ds = null;
     static long FID = 0;
-    private final Logger log = Logging.getLogger(this.getClass());
     private File f = null;
     private String rep = "";
     private long fID = 0;
@@ -180,22 +180,22 @@ public class FileFragment implements IFileFragment {
     public synchronized void addChildren(final IVariableFragment... fragments) {
         for (final IVariableFragment vf : fragments) {
             if (this.children.containsKey(vf.getVarname())) {
-                this.log.debug("VariableFragment " + vf.getVarname()
+                log.debug("VariableFragment " + vf.getVarname()
                         + " already known!");
                 throw new IllegalArgumentException(
                         "Can not add a child more than once, call getImmediateChild() to obtain a reference!");
             }
             // else {
             // IGroupFragment gf = vf.getGroup();
-            this.log.debug("Adding VariableFragment {} as child of {} to {}",
+            log.debug("Adding VariableFragment {} as child of {} to {}",
                     new Object[]{vf.getVarname(),
                         vf.getParent().getAbsolutePath(),
                         getAbsolutePath()});
             this.children.put(vf.getVarname(), vf);
             if (vf.getParent().getAbsolutePath().equals(getAbsolutePath())) {
-                this.log.debug("Parent FileFragment is this!");
+                log.debug("Parent FileFragment is this!");
             } else {
-                this.log.debug("Parent FileFragment is {}", vf.getParent().getAbsolutePath());
+                log.debug("Parent FileFragment is {}", vf.getParent().getAbsolutePath());
             }
             // if(!gf.hasChild(vf)) {
             // gf.addChildren(vf);
@@ -245,11 +245,11 @@ public class FileFragment implements IFileFragment {
                             "Cannot reference self as source file!");
                 } else {
                     if (this.sourcefiles.contains(f1)) {
-                        this.log.debug(
+                        log.debug(
                                 "Sourcefile {} already set, not overwriting!",
                                 f1.getName());
                     } else {
-                        this.log.debug(
+                        log.debug(
                                 "Adding sourcefile {} to FileFragment {}", f1.getAbsolutePath(), this.getAbsolutePath());
                         this.sourcefiles.add(f1);
                     }
@@ -353,7 +353,7 @@ public class FileFragment implements IFileFragment {
      */
     @Override
     public void appendXML(final Element e) {
-        this.log.debug("Appending xml for fileFragment " + getName());
+        log.debug("Appending xml for fileFragment " + getName());
         final Element fileFragment = new Element("file");
         this.fragment.appendXML(fileFragment);
         final Element sourceFiles = new Element("sourceFiles");
@@ -401,7 +401,7 @@ public class FileFragment implements IFileFragment {
         // Collection<IFileFragment> sf = getSourceFiles();
         for (final IVariableFragment ivf : this) {
             if (ivf.isModified()) {
-                this.log.debug(
+                log.debug(
                         "Can not clear arrays on {}, Variable was modified!",
                         ivf.getVarname());
             } else {
@@ -409,7 +409,7 @@ public class FileFragment implements IFileFragment {
                     ivf.setArray(null);
                     ivf.setIndexedArray(null);
                 } catch (final UnsupportedOperationException uoe) {
-                    this.log.debug("Can not clear arrays on immutable IVariable {}",ivf.getName());
+                    log.debug("Can not clear arrays on immutable IVariable {}",ivf.getName());
                 }
             }
         }
@@ -529,7 +529,7 @@ public class FileFragment implements IFileFragment {
             throws ResourceNotAvailableException {
         // return child if already in memory
         if (this.children.containsKey(varname)) {
-            this.log.debug("Found {} as direct child of {} in memory", varname,
+            log.debug("Found {} as direct child of {} in memory", varname,
                     this.getAbsolutePath());
             return getImmediateChild(varname);
         } else {
@@ -547,15 +547,15 @@ public class FileFragment implements IFileFragment {
                     Factory.getInstance().getDataSourceFactory().getDataSourceFor(this).readSingle(vf);
                 }
                 EvalTools.notNull(vf, this);
-                this.log.debug("Found {} as direct child of {} in file",
+                log.debug("Found {} as direct child of {} in file",
                         varname, this.getAbsolutePath());
                 return vf;
             } catch (final FileNotFoundException fnf) {
-                this.log.info(fnf.getLocalizedMessage());
+                log.info(fnf.getLocalizedMessage());
             } catch (final ResourceNotAvailableException rna) {
-                this.log.info(rna.getLocalizedMessage());
+                log.info(rna.getLocalizedMessage());
             } catch (final IOException e) {
-                this.log.info(e.getLocalizedMessage());
+                log.info(e.getLocalizedMessage());
             }
             this.children.remove(varname);
             vf = null;
@@ -567,20 +567,20 @@ public class FileFragment implements IFileFragment {
             // if source_files has not been initialized yet, load it
             if (!varname.equals(sourceFileVarName)
                     && this.sourcefiles.isEmpty()) {
-                this.log.info("Trying to load source files from file: {}", this);
+                log.info("Trying to load source files from file: {}", this);
                 final HashSet<IFileFragment> hs = new HashSet<IFileFragment>(
                         FragmentTools.getSourceFiles(this));
                 this.sourcefiles.addAll(hs);
             }
             // loop over all active source_files
             for (final IFileFragment ff : getSourceFiles()) {
-                this.log.debug("Checking source file {} for variable {}", ff,
+                log.debug("Checking source file {} for variable {}", ff,
                         varname);
                 // call getChild recursively
                 try {
                     // vf = ff.getChild(varname);
                     vf = ff.getChild(varname, true);
-                    this.log.debug("Variable {} found in {}", vf.getVarname(),
+                    log.debug("Variable {} found in {}", vf.getVarname(),
                             ff.getAbsolutePath());
                     // add as child
                     addChildren(vf);
@@ -726,7 +726,7 @@ public class FileFragment implements IFileFragment {
     @Override
     public synchronized boolean hasChild(final String varname) {
         if (this.children.containsKey(varname)) {
-            this.log.debug("Variable {} already contained as child of {}",
+            log.debug("Variable {} already contained as child of {}",
                     varname, this.getAbsolutePath());
             return true;
         }
@@ -744,7 +744,7 @@ public class FileFragment implements IFileFragment {
     public boolean hasChildren(final IVariableFragment... vf) {
         for (final IVariableFragment frag : vf) {
             if (!hasChild(frag)) {
-                this.log.warn("Requested variable {} not contained in {}", frag.getVarname(), getAbsolutePath());
+                log.warn("Requested variable {} not contained in {}", frag.getVarname(), getAbsolutePath());
                 return false;
             }
         }
@@ -762,7 +762,7 @@ public class FileFragment implements IFileFragment {
     public boolean hasChildren(final String... s) {
         for (final String name : s) {
             if (!hasChild(name)) {
-                this.log.warn("Requested variable {} not contained in {}",
+                log.warn("Requested variable {} not contained in {}",
                         name, getAbsolutePath());
                 return false;
             }
@@ -789,7 +789,7 @@ public class FileFragment implements IFileFragment {
     // if (this.f == null) {
     // final String filename = getDefaultFilename();
     // setFile(new File(filename).getAbsolutePath());
-    // this.log.debug("Created FileFragment {}", this.f.getAbsoluteFile());
+    // log.debug("Created FileFragment {}", this.f.getAbsoluteFile());
     // }
     //
     // }
@@ -879,7 +879,7 @@ public class FileFragment implements IFileFragment {
         if (this.children.containsKey(variableFragment.getVarname())) {
             this.children.remove(variableFragment.getVarname());
         } else {
-            this.log.warn("Could not remove {}, no child of {}",
+            log.warn("Could not remove {}, no child of {}",
                     variableFragment.getVarname(), this.getAbsolutePath());
         }
     }
@@ -971,16 +971,16 @@ public class FileFragment implements IFileFragment {
     public void setFile(final File f1) {
         if ((this.f != null) && f1.getAbsolutePath().equals(getAbsolutePath())) {
             // Nothing to be done
-            this.log.debug("File equals current path!");
+            log.debug("File equals current path!");
         } else {
             if ((this.f != null)
                     && FileFragment.fileMap.containsKey(getAbsolutePath())) {
-                this.log.debug("Removing binding to file {}", getAbsolutePath());
+                log.debug("Removing binding to file {}", getAbsolutePath());
                 FileFragment.fileMap.remove(this.f.getAbsolutePath());
             }
             this.f = f1;
             this.filename = this.f.getName();
-            this.log.debug("Setting file to {}", this.f.getAbsolutePath());
+            log.debug("Setting file to {}", this.f.getAbsolutePath());
             FileFragment.fileMap.put(getAbsolutePath(), this);
         }
     }

@@ -22,13 +22,12 @@
 package cross.io.misc;
 
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tools.EvalTools;
 import cross.exception.NotImplementedException;
 import cross.exception.ResourceNotAvailableException;
 import java.io.IOException;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import ucar.ma2.Array;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
@@ -40,12 +39,12 @@ import ucar.nc2.Dimension;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class ArrayChunkIterator implements IArrayChunkIterator {
 
 	private final IVariableFragment ivf;
 	private int chunksize = 1024;
 	private int chunk = 0;
-	private final Logger log = Logging.getLogger(this);
 
 	public ArrayChunkIterator(final IVariableFragment ivf1, final int chunksize1) {
 		this.chunksize = chunksize1;
@@ -55,7 +54,7 @@ public class ArrayChunkIterator implements IArrayChunkIterator {
 				Factory.getInstance().getDataSourceFactory().getDataSourceFor(
 				        this.ivf.getParent()).readStructure(ivf1);
 			} catch (final IOException iex) {
-				this.log.warn(iex.getLocalizedMessage());
+				log.warn(iex.getLocalizedMessage());
 			}
 		}
 	}
@@ -102,11 +101,11 @@ public class ArrayChunkIterator implements IArrayChunkIterator {
 				        .getDataSourceFor(this.ivf.getParent()).readSingle(
 				                this.ivf);
 			} catch (final InvalidRangeException e) {
-				this.log.warn(e.getLocalizedMessage());
+				log.warn(e.getLocalizedMessage());
 			} catch (final ResourceNotAvailableException e) {
-				this.log.warn(e.getLocalizedMessage());
+				log.warn(e.getLocalizedMessage());
 			} catch (final IOException e) {
-				this.log.warn(e.getLocalizedMessage());
+				log.warn(e.getLocalizedMessage());
 			} finally {
 				// reset range
 				this.ivf.setRange(r);
@@ -117,9 +116,9 @@ public class ArrayChunkIterator implements IArrayChunkIterator {
 				        .getDataSourceFor(this.ivf.getParent()).readSingle(
 				                this.ivf);
 			} catch (final ResourceNotAvailableException e) {
-				this.log.warn(e.getLocalizedMessage());
+				log.warn(e.getLocalizedMessage());
 			} catch (final IOException e) {
-				this.log.warn(e.getLocalizedMessage());
+				log.warn(e.getLocalizedMessage());
 			}
 		}
 		return a;

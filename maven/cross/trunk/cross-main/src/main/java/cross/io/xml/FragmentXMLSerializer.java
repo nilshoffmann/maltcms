@@ -37,6 +37,7 @@ import java.io.*;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.jdom.*;
@@ -49,28 +50,26 @@ import ucar.nc2.Dimension;
 /**
  * Serializes a FileFragment and it's children structurally, with array data,
  * but array data is currently experimental.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
+@Slf4j
 public class FragmentXMLSerializer implements IDataSource {
 
     private enum Mode {
 
         UNDEF, DOUBLE, FLOAT, LONG, INTEGER, BYTE, SHORT, BOOLEAN, OBJECT, STRING
     }
-    private final Logger log = Logging.getLogger(this.getClass());
 
-    ;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * cross.io.IDataSource#canRead(cross.datastructures.fragments.IFileFragment
-	 * )
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * cross.io.IDataSource#canRead(cross.datastructures.fragments.IFileFragment
+     * )
+     */
+    @Override
     public int canRead(final IFileFragment ff) {
         if (ff.getAbsolutePath().endsWith("maltcms.xml")) {
             return 1;
@@ -80,7 +79,7 @@ public class FragmentXMLSerializer implements IDataSource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.commons.configuration.event.ConfigurationListener#
      * configurationChanged
      * (org.apache.commons.configuration.event.ConfigurationEvent)
@@ -92,7 +91,7 @@ public class FragmentXMLSerializer implements IDataSource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * cross.io.IDataSource#configure(org.apache.commons.configuration.Configuration
      * )
@@ -104,13 +103,13 @@ public class FragmentXMLSerializer implements IDataSource {
 
     public IFileFragment deserialize(final String location) throws IOException {
         final File f = new File(location);
-        this.log.info("Deserializing {}", f.getAbsolutePath());
+        log.info("Deserializing {}", f.getAbsolutePath());
         final SAXBuilder parser = new SAXBuilder();
         IFileFragment ff = null;
         try {
             final Document doc = parser.build(new BufferedInputStream(
                     new FileInputStream(f)));
-            this.log.debug("{}", doc.toString());
+            log.debug("{}", doc.toString());
             final Element root = doc.getRootElement();
             ff = handleFile(root);
 
@@ -127,7 +126,7 @@ public class FragmentXMLSerializer implements IDataSource {
             try {
                 size = attributes.getAttribute("size").getIntValue();
             } catch (final DataConversionException e) {
-                this.log.error(e.getLocalizedMessage());
+                log.error(e.getLocalizedMessage());
             }
             final ucar.nc2.Attribute[] attribA = new ucar.nc2.Attribute[size];
             int cnt = 0;
@@ -249,7 +248,7 @@ public class FragmentXMLSerializer implements IDataSource {
                 }
             }
         } catch (final IOException e) {
-            this.log.warn("Could not read data for {}", name);
+            log.warn("Could not read data for {}", name);
         }
         return a;
     }
@@ -259,7 +258,7 @@ public class FragmentXMLSerializer implements IDataSource {
         final Attribute filename1 = file.getAttribute("filename");
         final Attribute dirname = file.getAttribute("dirname");
         // Attribute resourceLocation = file.getAttribute("resourceLocation");
-        this.log.debug("Associated file is {} {}", dirname.getValue(),
+        log.debug("Associated file is {} {}", dirname.getValue(),
                 filename1.getValue());
         final File f = new File(dirname.getValue(), filename1.getValue());
         final IFileFragment ff1 = Factory.getInstance().getFileFragmentFactory().create(f);
@@ -326,9 +325,9 @@ public class FragmentXMLSerializer implements IDataSource {
                     r = new Range(r_name.getValue(), r_first.getIntValue(),
                             r_last.getIntValue(), r_stride.getIntValue());
                 } catch (final DataConversionException e) {
-                    this.log.error(e.getLocalizedMessage());
+                    log.error(e.getLocalizedMessage());
                 } catch (final InvalidRangeException e) {
-                    this.log.error(e.getLocalizedMessage());
+                    log.error(e.getLocalizedMessage());
                 }
                 // if (r_name != null) {
                 // r.setName(r_name.getValue());
@@ -377,7 +376,7 @@ public class FragmentXMLSerializer implements IDataSource {
                     dims[i++] = new Dimension(d_name.getValue(), d_length.getIntValue(), d_shared.getBooleanValue(),
                             d_unlimited.getBooleanValue(), d_variableLength.getBooleanValue());
                 } catch (final DataConversionException e) {
-                    this.log.error(e.getLocalizedMessage());
+                    log.error(e.getLocalizedMessage());
                 }
             }
         }
@@ -386,7 +385,7 @@ public class FragmentXMLSerializer implements IDataSource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * cross.io.IDataSource#readAll(cross.datastructures.fragments.IFileFragment
      * )
@@ -395,7 +394,7 @@ public class FragmentXMLSerializer implements IDataSource {
     public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
             ResourceNotAvailableException {
         final File file = FileTools.getFile(f);
-        this.log.info("Deserializing {}", file.getAbsolutePath());
+        log.info("Deserializing {}", file.getAbsolutePath());
         final SAXBuilder parser = new SAXBuilder();
         try {
             final Document doc = parser.build(new BufferedInputStream(
@@ -411,14 +410,14 @@ public class FragmentXMLSerializer implements IDataSource {
             }
             return al;
         } catch (final JDOMException e) {
-            this.log.error(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
         }
         return new ArrayList<Array>(0);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.io.IDataSource#readIndexed(cross.datastructures.fragments.
      * IVariableFragment)
      */
@@ -430,7 +429,7 @@ public class FragmentXMLSerializer implements IDataSource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.io.IDataSource#readSingle(cross.datastructures.fragments.
      * IVariableFragment)
      */
@@ -438,7 +437,7 @@ public class FragmentXMLSerializer implements IDataSource {
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException {
         final File file = FileTools.getFile(f.getParent());
-        this.log.info("Deserializing {}", file.getAbsolutePath());
+        log.info("Deserializing {}", file.getAbsolutePath());
         final SAXBuilder parser = new SAXBuilder();
         try {
             final Document doc = parser.build(new BufferedInputStream(
@@ -454,7 +453,7 @@ public class FragmentXMLSerializer implements IDataSource {
             }
 
         } catch (final JDOMException e) {
-            this.log.error(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
         }
         throw new ResourceNotAvailableException("Could not locate variable "
                 + f.getVarname() + " in file " + file.getAbsolutePath());
@@ -462,7 +461,7 @@ public class FragmentXMLSerializer implements IDataSource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.io.IDataSource#readStructure(cross.datastructures.fragments.
      * IFileFragment)
      */
@@ -474,7 +473,7 @@ public class FragmentXMLSerializer implements IDataSource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.io.IDataSource#readStructure(cross.datastructures.fragments.
      * IVariableFragment)
      */
@@ -499,7 +498,7 @@ public class FragmentXMLSerializer implements IDataSource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.io.IDataSource#supportedFormats()
      */
     @Override
@@ -509,7 +508,7 @@ public class FragmentXMLSerializer implements IDataSource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * cross.io.IDataSource#write(cross.datastructures.fragments.IFileFragment)
      */
@@ -519,7 +518,7 @@ public class FragmentXMLSerializer implements IDataSource {
             serialize(f);
             return true;
         } catch (final IOException ioex) {
-            this.log.error("{}", ioex.getLocalizedMessage());
+            log.error("{}", ioex.getLocalizedMessage());
             return false;
         }
     }

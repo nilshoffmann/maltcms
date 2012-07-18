@@ -24,9 +24,7 @@ package cross.datastructures.fragments;
 import cross.Factory;
 import cross.Logging;
 import cross.datastructures.StatsMap;
-import cross.datastructures.ehcache.CacheFactory;
 import cross.datastructures.ehcache.ICacheDelegate;
-import cross.datastructures.ehcache.ICacheElementProvider;
 import cross.datastructures.tools.EvalTools;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.misc.ArrayChunkIterator;
@@ -35,7 +33,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
+import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import ucar.ma2.Array;
@@ -54,9 +52,9 @@ import ucar.nc2.Dimension;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
  */
+@Slf4j
 public class ImmutableVariableFragment2 implements IVariableFragment {
 
-    private final Logger log = Logging.getLogger(this.getClass());
     private final Fragment fragment = new Fragment();
     private final String varname;
     private Dimension[] dims;
@@ -176,7 +174,7 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
      */
     @Override
     public void appendXML(final Element e) {
-        this.log.debug("Appending xml for variable " + getVarname());
+        log.debug("Appending xml for variable " + getVarname());
         final String vname = "variable";
         final Element var = new Element(vname);
         this.fragment.appendXML(var);
@@ -285,18 +283,18 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
      */
     @Override
     public Array getArray() {
-        this.log.debug("Ranges of {}={}", getVarname(), Arrays.deepToString(getRange()));
+        log.debug("Ranges of {}={}", getVarname(), Arrays.deepToString(getRange()));
         if (this.getIndex() == null) {
             try {
                 final Array a = Factory.getInstance().getDataSourceFactory().getDataSourceFor(getParent()).readSingle(this);
                 adjustConsistency(a);
                 return a;
             } catch (final IOException io) {
-                this.log.error("Could not load Array for variable {}",
+                log.error("Could not load Array for variable {}",
                         getVarname());
-                this.log.error(io.getLocalizedMessage());
+                log.error(io.getLocalizedMessage());
             } catch (final ResourceNotAvailableException e) {
-                this.log.error(e.getLocalizedMessage());
+                log.error(e.getLocalizedMessage());
             }
             return null;
         } else {
@@ -421,10 +419,10 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
                             getParent()).readIndexed(this);
                     return l;
                 } catch (final IOException e) {
-                    this.log.error(e.getLocalizedMessage());
+                    log.error(e.getLocalizedMessage());
                     return Collections.emptyList();
                 } catch (final ResourceNotAvailableException e) {
-                    this.log.error(e.getLocalizedMessage());
+                    log.error(e.getLocalizedMessage());
                     return Collections.emptyList();
                 }
             }
@@ -590,7 +588,7 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
     @Override
     public void setIndex(final IVariableFragment index1) {
         if ((index1 != null) && (this.index != null)) {
-            this.log.debug("Setting index from {} to {}", this.index, index1);
+            log.debug("Setting index from {} to {}", this.index, index1);
         }
         this.index = index1;
         // this.al = null;

@@ -21,11 +21,10 @@
  */
 package cross.datastructures.fragments;
 
-import cross.Logging;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
-import org.slf4j.Logger;
 
 /**
  * Represents a VariableFragment group with a given (unique) name.
@@ -33,10 +32,10 @@ import org.slf4j.Logger;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class NamedGroupFragment extends Fragment implements IGroupFragment {
 
 	// protected static long GROUPID = 0;
-	private final Logger log = Logging.getLogger(this.getClass());
 
 	private ConcurrentHashMap<String, IVariableFragment> children = null;
 
@@ -61,7 +60,7 @@ public class NamedGroupFragment extends Fragment implements IGroupFragment {
     @Override
 	public synchronized void addChildren(final IVariableFragment... fragments) {
 		for (final IVariableFragment vf : fragments) {
-			this.log.debug("Adding " + vf.getVarname() + " to group "
+			log.debug("Adding " + vf.getVarname() + " to group "
 			        + getName());
 			this.children.put(vf.getVarname(), vf);
 		}
@@ -69,7 +68,7 @@ public class NamedGroupFragment extends Fragment implements IGroupFragment {
 
 	@Override
 	public void appendXML(final Element e) {
-		this.log.debug("Appending xml for named group " + getName());
+		log.debug("Appending xml for named group " + getName());
 		final Element group = new Element("namedGroup");
 		super.appendAttributes(group);
 		group.setAttribute("size", "" + this.children.size());

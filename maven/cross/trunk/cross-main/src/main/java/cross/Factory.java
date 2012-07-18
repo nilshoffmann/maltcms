@@ -45,6 +45,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,6 +56,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import org.apache.commons.configuration.*;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
@@ -71,9 +74,9 @@ import org.slf4j.LoggerFactory;
  * data needed by those commands later in the chain. If you need branching
  * behaviour, consider setting named properties for later pipeline elements to
  * use, or set up multiple instances of Maltcms with different configurations.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class Factory implements ConfigurationListener {
 
@@ -81,13 +84,11 @@ public class Factory implements ConfigurationListener {
 
     /**
      * NEVER SYNCHRONIZE THIS METHOD, IT WILL BLOCK EVERYHTING WITHIN THE QUEUE!
-     * 
-     * @param time
-     *            to wait until termination of each ThreadPool
-     * @param u
-     *            the unit of time
-     * @throws InterruptedException
-     *             thrown if interruption of waiting on termination occurs
+     *
+     * @param time to wait until termination of each ThreadPool
+     * @param u the unit of time
+     * @throws InterruptedException thrown if interruption of waiting on
+     * termination occurs
      */
     public static void awaitTermination(final long time, final TimeUnit u)
             throws InterruptedException {
@@ -106,16 +107,44 @@ public class Factory implements ConfigurationListener {
 
     /**
      * Write current configuration to file.
-     * 
+     *
      * @param filename
      */
     public static void dumpConfig(final String filename, final Date d) {
+        //retrieve global, joint configuration
         final Configuration cfg = Factory.getInstance().getConfiguration();
-        final File location = new File(FileTools.prependDefaultDirsWithPrefix(
-                "", Factory.class, d), filename);
-        Factory.getInstance().log.error("Saving configuration to: ");
-        Factory.getInstance().log.error("{}", location.getAbsolutePath());
-        Factory.saveConfiguration(cfg, location);
+        //retrieve pipeline.properties location
+        final File pipelinePropertiesFile = new File(cfg.getString("pipeline.properties"));
+        //resolve and retrieve pipeline.xml location
+        final File pipelineXml;
+        try {
+            pipelineXml = new File(new URI(cfg.getString("pipeline.xml").replace("config.basedir", pipelinePropertiesFile.getParent())));
+            //setup output location
+            final File location = new File(FileTools.prependDefaultDirsWithPrefix(
+                    "", Factory.class, d), filename);
+            //location for pipeline.properties dump
+            final File pipelinePropertiesFileDump = new File(location.getParentFile(), pipelinePropertiesFile.getName());
+
+            PropertiesConfiguration pipelineProperties = new PropertiesConfiguration(pipelinePropertiesFile);
+            PropertiesConfiguration newPipelineProperties = new PropertiesConfiguration(pipelinePropertiesFileDump);
+            //copy configuration to dump configuration
+            newPipelineProperties.copy(pipelineProperties);
+            //correct pipeline.xml location
+            newPipelineProperties.setProperty("pipeline.xml", "file:${config.basedir}/" + pipelineXml.getName());
+            newPipelineProperties.save();
+            //copy pipeline.xml to dump location
+            FileUtils.copyFile(pipelineXml, new File(location.getParentFile(), pipelineXml.getName()));
+            Factory.getInstance().log.error("Saving configuration to: ");
+            Factory.getInstance().log.error("{}", location.getAbsolutePath());
+            Factory.saveConfiguration(cfg, location);
+        } catch (IOException ex) {
+            Factory.getInstance().log.error("{}", ex);
+        } catch (URISyntaxException ex) {
+            Factory.getInstance().log.error("{}", ex);
+        } catch (ConfigurationException ex) {
+            Factory.getInstance().log.error("{}", ex);
+        }
+
     }
 
     public static Factory getInstance() {
@@ -153,9 +182,6 @@ public class Factory implements ConfigurationListener {
     private int maxthreads = 1;
     private transient ExecutorService auxPool;
 
-    public void bootstrap(final Configuration cfg) {
-    }
-
     /**
      * Listen to ConfigurationEvents.
      */
@@ -170,7 +196,7 @@ public class Factory implements ConfigurationListener {
     /**
      * Call configure before retrieving an instance of ArrayFactory. This
      * ensures, that the factory is instantiated with a fixed config.
-     * 
+     *
      * @param config
      */
     public void configure(final Configuration config) {
@@ -192,14 +218,6 @@ public class Factory implements ConfigurationListener {
         getDataSourceFactory().configure(config1);
         getWorkflowFactory().configure(config1);
         getInputDataFactory().configure(config1);
-//        FileTools.inputBasedirectory = new File(config1.getString(
-//                "input.basedir", ""));
-//        FileTools.outputBasedirectory = new File(config1.getString(
-//                "output.basedir", ""));
-//        FileTools.omitUserTimePrefix = config1.getBoolean("omitUserTimePrefix",
-//                false);
-//        FileTools.overwrite = config1.getBoolean("output.overwrite", false);
-        // instantiate DataSourceFactory
     }
 
     private void configureThreadPool(final Configuration cfg) {
@@ -217,7 +235,7 @@ public class Factory implements ConfigurationListener {
 
     /**
      * Build the command sequence, aka pipeline for command execution.
-     * 
+     *
      * @return a command sequence initialized according to current configuration
      */
     public ICommandSequence createCommandSequence() {
@@ -227,7 +245,7 @@ public class Factory implements ConfigurationListener {
 
     /**
      * Build the command sequence, aka pipeline for command execution.
-     * 
+     *
      * @return a command sequence initialized according to current configuration
      */
     public ICommandSequence createCommandSequence(final TupleND<IFileFragment> t) {
@@ -348,7 +366,7 @@ public class Factory implements ConfigurationListener {
 
     /**
      * Shutdown the factory's thread pool.
-     * 
+     *
      */
     public void shutdown() {
         if ((this.es == null) || (this.auxPool == null)) {
@@ -362,7 +380,7 @@ public class Factory implements ConfigurationListener {
     }
 
     /**
-     * 
+     *
      */
     public List<Runnable> shutdownNow() {
         if ((this.es == null) || (this.auxPool == null)) {
@@ -381,9 +399,8 @@ public class Factory implements ConfigurationListener {
 
     /**
      * Jobs submitted via this method will be run by the auxiliary thread pool.
-     * 
-     * @param c
-     *            the Callable of any type to submit
+     *
+     * @param c the Callable of any type to submit
      * @return a Future of the same type as the Callable
      */
     public Future<?> submitJob(final Callable<?> c) {
@@ -392,9 +409,8 @@ public class Factory implements ConfigurationListener {
 
     /**
      * Submit a Runnable job to the Factory
-     * 
-     * @param r
-     *            the Runnable to submit
+     *
+     * @param r the Runnable to submit
      */
     public void submitJob(final Runnable r) {
         submitJobMe(r);

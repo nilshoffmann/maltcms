@@ -65,126 +65,44 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
      * 
      */
     private static final long serialVersionUID = 7387727704189206255L;
-    //accessible fields
+    /**
+     * accessible fields with generated getters and setters
+     */
     public static final String NUMBERFORMAT = "%.2f";
     private List<IFragmentCommand> commands = Collections.emptyList();
     private TupleND<IFileFragment> input;
     private IWorkflow workflow;
     private boolean checkCommandDependencies = true;
+    private ICommandSequenceValidator validator = new DefaultCommandSequenceValidator();
+    
+    /**
+     * Private fields
+     */
+    //execution server instance
     @Getter
     @Setter(value = AccessLevel.NONE)
     private Impaxs executionServer;
-//    private Collection<Tuple2D<String, String>> pipeline = Collections.emptyList();
-//    private HashMap<IFragmentCommand, String> cmdToConfig = new HashMap<IFragmentCommand, String>();
-    //private fields
+    
+    //iterator for fragment commands
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private Iterator<IFragmentCommand> iter;
+    
+    //intermediate results
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private TupleND<IFileFragment> tmp;
+    
+    //counter of processed fragment commands
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private int cnt;
-
-    protected Collection<String> checkOptionalVariables(
-            final IFragmentCommand cmd, final Collection<String> optionalVars,
-            final HashSet<String> providedVariables) {
-        if (optionalVars.size() == 0) {
-            log.debug("No optional variables declared!");
-            return optionalVars;
-        }
-        boolean checkOpt = true;
-        for (final String var : optionalVars) {
-            if (!var.isEmpty() && !providedVariables.contains(var)) {
-                log.warn(
-                        "Variable {} requested as optional by {} not declared as created by previous commands!",
-                        var, cmd.getClass().getName());
-                checkOpt = false;
-            }
-
-        }
-        if (checkOpt && (optionalVars.size() > 0)) {
-            log.debug(
-                    "Command {} has access to all optional requested variables!",
-                    cmd.getClass().getName());
-        }
-        return optionalVars;
-    }
-
-    protected Collection<String> checkRequiredVariables(
-            final IFragmentCommand cmd, final Collection<String> requiredVars,
-            final HashSet<String> providedVariables)
-            throws ConstraintViolationException {
-        if (requiredVars.size() == 0) {
-            log.debug("No required variables declared!");
-            return requiredVars;
-        }
-        boolean check = true;
-        final Collection<String> failedVars = new ArrayList<String>();
-        for (final String var : requiredVars) {
-            log.debug("Checking variable {}", var);
-            if (!var.isEmpty() && !providedVariables.contains(var)) {
-                log.warn(
-                        "Variable {} requested by {} not declared as created by previous commands!",
-                        var, cmd.getClass().getName());
-                check = false;
-                failedVars.add(var);
-            }
-        }
-        if (check) {
-            if (requiredVars.size() > 0) {
-                log.debug(
-                        "Command {} has access to all required variables!", cmd.
-                        getClass().getName());
-            }
-            return requiredVars;
-        } else {
-            throw new ConstraintViolationException("Command "
-                    + cmd.getClass().getName()
-                    + " requires non-existing variables: "
-                    + failedVars.toString());
-        }
-    }
 
     @Override
     public void configure(final Configuration cfg) {
         log.warn(
                 "CommandPipeline does not support configuration via configure anylonger. Please use a Spring xml file!");
     }
-
-    /**
-     * @param inputFragments
-     * @param providedVariables
-     * @return
-     */
-    private void getPersistentVariables(
-            final TupleND<IFileFragment> inputFragments,
-            final Collection<String> requiredVariables,
-            final HashSet<String> providedVariables) {
-
-        for (final IFileFragment ff : inputFragments) {
-            for (final String s : requiredVariables) {
-                // resolve the variables name
-                final String vname = Factory.getInstance().getConfiguration().
-                        getString(s);
-                if ((vname != null) && !vname.isEmpty()) {
-                    try {
-                        final IVariableFragment ivf = ff.getChild(vname, true);
-                        log.debug("Retrieved var {}", ivf.getVarname());
-                        if (!providedVariables.contains(s)) {
-                            providedVariables.add(s);
-                        }
-                    } catch (final ResourceNotAvailableException rnae) {
-                        log.debug(
-                                "Could not find variable {} as child of {}",
-                                vname, ff.getAbsolutePath());
-                    }
-                }
-            }
-        }
-    }
-
 
     /*
      * (non-Javadoc)
@@ -199,58 +117,18 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
     @Override
     public boolean validate() {
         if (this.checkCommandDependencies) {
+            boolean valid = false;
             try {
-                checkCommandDependencies(input, commands);
-                return true;
+                valid = validator.isValid(this);
+                //checkCommandDependencies(input, commands);
+                return valid;
             } catch (ConstraintViolationException cve) {
                 log.warn("Pipeline validation failed: " + cve.
                         getLocalizedMessage());
-                return false;
+                return valid;
             }
         }
         return true;
-    }
-
-    protected void checkCommandDependencies(
-            TupleND<IFileFragment> inputFragments,
-            List<IFragmentCommand> commands) {
-        final HashSet<String> providedVariables = new HashSet<String>();
-        for (IFragmentCommand cmd : commands) {
-            if (this.checkCommandDependencies) {
-                // required variables
-                final Collection<String> requiredVars = AnnotationInspector.
-                        getRequiredVariables(cmd);
-                // optional variables
-                final Collection<String> optionalVars = AnnotationInspector.
-                        getOptionalRequiredVariables(cmd);
-                // get variables provided from the past
-                getPersistentVariables(inputFragments, requiredVars,
-                        providedVariables);
-                getPersistentVariables(inputFragments, optionalVars,
-                        providedVariables);
-                // check dependencies
-                // The following method throws a RuntimeException, when its
-                // constraints are not met, e.g. requiredVariables are not
-                // present, leading to a termination
-                checkRequiredVariables(cmd, requiredVars, providedVariables);
-                checkOptionalVariables(cmd, optionalVars, providedVariables);
-            }
-
-            // provided variables
-            final Collection<String> createdVars = AnnotationInspector.
-                    getProvidedVariables(cmd);
-            for (final String var : createdVars) {
-                if (!var.isEmpty() && !providedVariables.contains(var)) {
-                    log.debug("Adding new variable {}, provided by {}",
-                            var, cmd.getClass().getName());
-                    providedVariables.add(var);
-                } else {
-                    log.warn(
-                            "Variable {} is shadowed!",
-                            var);
-                }
-            }
-        }
     }
 
     @Override
@@ -264,6 +142,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
      * @param clsname
      * @return
      */
+    @Deprecated
     protected IFragmentCommand loadCommand(final String clsname,
             final String propertiesFileName) {
         EvalTools.notNull(clsname, this);
@@ -391,21 +270,15 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
         this.workflow = iw1;
     }
 
-    /**
-     * Set a pipeline directly. Every tuple in the collection consists of the
-     * String of the AFragmentCommand to run and the properties file location
-     * used to configure that AFragmentCommand.
-     * 
-     * @param s
-     */
-//    public void setPipeline(final Collection<Tuple2D<String, String>> s) {
-//        this.pipeline = new ArrayList<Tuple2D<String, String>>(s);
-//    }
-
     /*
      * (non-Javadoc)
      * 
      * @see cross.io.xml.IXMLSerializable#appendXML(org.jdom.Element)
+     */
+    /**
+     * Appends workflowInputs, workflowOutputs and workflowCommands elements 
+     * to given Element parameter.
+     * @param e 
      */
     @Override
     public void appendXML(Element e) {

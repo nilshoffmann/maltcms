@@ -50,7 +50,7 @@ public class ObjectFactory implements IObjectFactory {
     public void configure(final Configuration cfg) {
         this.cfg = new PropertiesConfiguration();
         ConfigurationUtils.copy(cfg, this.cfg);
-        userConfigLocation = (File) this.cfg.getProperty("config.basedir");
+        userConfigLocation = new File(this.cfg.getString("config.basedir"));
         String[] contextLocations = null;
         if (cfg.containsKey(CONTEXT_LOCATION_KEY)) {
             log.debug("Using user-defined location: {}",cfg.getStringArray(CONTEXT_LOCATION_KEY));

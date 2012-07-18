@@ -66,11 +66,8 @@ This will create a zip release of the project below maltcms-distribution/target.
 	Creating a release version *
 --------------------------------------------------------------------------------
 Prerequisites:
-Ensure that there are no SNAPSHOT dependencies for cross-main, cross-ui and 
-other cross modules. If so, please first check out a clean copy of cross,
-create a tagged release and take note of the release number (e.g. cross-1.2.4)
-Then update the dependencies to cross in the pom.xml (in the same directory as 
-this file) with the new release number.
+Ensure that there are no SNAPSHOT dependencies to
+other modules. 
 
 License Headers:
 Check, that all new files all have the maltcms license header, provided 

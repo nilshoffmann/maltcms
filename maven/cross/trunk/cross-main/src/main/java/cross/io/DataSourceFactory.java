@@ -155,7 +155,7 @@ public class DataSourceFactory implements IDataSourceFactory {
     public void setDataSources(final List<String> dataSources) {
         this.dataSources = dataSources;
         for (final String s : this.dataSources) {
-            Logging.getLogger(this.getClass()).info(
+           log.debug(
                     "Trying to load IDataSource {}", s);
             EvalTools.notNull(s, this);
             final IDataSource ids = Factory.getInstance().getObjectFactory().

@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 
 /**
@@ -40,9 +41,9 @@ import org.slf4j.Logger;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+@Slf4j
 public class FileTools {
 
-    private static Logger log = Logging.getLogger(FileTools.class);
     public static final SimpleDateFormat sdf = new SimpleDateFormat(
             "MM-dd-yyyy_HH-mm-ss", Locale.US);
     
@@ -72,10 +73,10 @@ public class FileTools {
 
     protected static File checkFileReadable(final IFileFragment ff)
             throws IOException {
-        FileTools.log.debug("Trying to locate {}", ff.getName());
+        log.debug("Trying to locate {}", ff.getName());
         final File outF = new File(ff.getAbsolutePath()).getCanonicalFile();
         if (outF.exists()) {
-            FileTools.log.debug("Found {} in directory {}", ff.getName(), outF.getParent());
+            log.debug("Found {} in directory {}", ff.getName(), outF.getParent());
             // knownFiles.put(outF.getAbsolutePath(), outF);
             return outF;
         } else {
@@ -86,24 +87,24 @@ public class FileTools {
 
     protected static File createFile(final IFileFragment f) throws IOException {
         File file = null;
-        FileTools.log.debug("File extension: {}", StringTools.getFileExtension(f.getAbsolutePath()));
+        log.debug("File extension: {}", StringTools.getFileExtension(f.getAbsolutePath()));
         IFileFragment ff = f;
         try {
             file = FileTools.findFile(f);
-            FileTools.log.info("File exists, checking, whether we should overwrite or create new file in temporary location!");
+            log.info("File exists, checking, whether we should overwrite or create new file in temporary location!");
             if (Factory.getInstance().getConfiguration().getBoolean(
                     "output.overwrite")) {
-                FileTools.log.info("Option output.overwrite=true in default.properties is set, overwriting existing file!");
+                log.info("Option output.overwrite=true in default.properties is set, overwriting existing file!");
                 file.delete();
                 file = new File(file.getAbsolutePath());
             } else {
-                FileTools.log.info(
+                log.info(
                         "File {} already exists, creating file in temporary location!",
                         f.getAbsolutePath());
                 final String tmpdir = System.getProperty("java.io.tmpdir");
                 final File tmp = new File(tmpdir);
                 file = new File(tmp, file.getName());
-                FileTools.log.debug("Setting {} as source file of {}", f.getAbsolutePath(), file.getAbsolutePath());
+                log.debug("Setting {} as source file of {}", f.getAbsolutePath(), file.getAbsolutePath());
                 ff = Factory.getInstance().getFileFragmentFactory().create(file);
                 ff.addSourceFile(f);
             }
@@ -112,9 +113,9 @@ public class FileTools {
             // ff.setFile(file.getAbsolutePath());
             // f.setFile(file.getAbsolutePath());
         } catch (final IOException ioex) {
-            FileTools.log.debug(ioex.getLocalizedMessage());
+            log.debug(ioex.getLocalizedMessage());
             // create the file and it's parent directories atomically
-            FileTools.log.debug("File does not exist, creating atomically!");
+            log.debug("File does not exist, creating atomically!");
             file = new File(f.getAbsolutePath());
             file.getParentFile().mkdirs();
             file.createNewFile();
@@ -203,10 +204,10 @@ public class FileTools {
 
     public static File prepareOutput(final IFileFragment parent)
             throws IOException {
-        // FileTools.log.debug("Saving file to directory: "
+        // log.debug("Saving file to directory: "
         // + FileTools.getDirname(parent.getAbsolutePath()));
         final File f = FileTools.createFile(parent);
-        FileTools.log.debug("Writing to file " + f.getAbsolutePath() + "\n");
+        log.debug("Writing to file " + f.getAbsolutePath() + "\n");
         return f;
     }
 
