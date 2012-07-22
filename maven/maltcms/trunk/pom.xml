@@ -336,7 +336,7 @@
         <module>maltcms-io-mzdata</module>
         <module>maltcms-io-mzml</module>
         <module>maltcms-io-openms-featurexml</module>
-        <module>maltcms-test-data</module>
+        <!--<module>maltcms-test-data</module>-->
         <module>maltcms-evaluation</module>
         <module>maltcms-io-csv</module>
         <module>maltcms-spectratyping</module>
