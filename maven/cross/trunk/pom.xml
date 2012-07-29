@@ -55,7 +55,7 @@
     <inceptionYear>2007</inceptionYear>
     <ciManagement>
         <system>jenkins</system>
-        <url>http://maltcms.de:8080/jenkins/job/cross/</url>
+        <url>https://maltcms.de:9443/jenkins/job/cross/</url>
     </ciManagement>
     <scm>
         <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/cross/trunk/</connection>
@@ -67,13 +67,13 @@
         <repository>
             <id>maltcms.de</id>
             <name>maltcms-artifactory-releases</name>
-            <url>http://www.maltcms.de:8080/artifactory/libs-release-local</url>
+            <url>http://maltcms.de:8080/artifactory/libs-release-local</url>
         </repository>
 
         <snapshotRepository>
             <id>maltcms.de</id>
             <name>maltcms-artifactory-snapshots</name>
-            <url>http://www.maltcms.de:8080/artifactory/libs-snapshot-local</url>
+            <url>http://maltcms.de:8080/artifactory/libs-snapshot-local</url>
         </snapshotRepository>
     </distributionManagement>
     
