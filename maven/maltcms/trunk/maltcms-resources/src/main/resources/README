@@ -65,7 +65,7 @@ C:\Program Files;C:\Winnt;C:\Winnt\System32
 C:\Program Files;C:\Winnt;C:\Winnt\System32;C:\Path\To\Maltcms
 +------------------------------------------+
 
-    Click 'OK' will close the dialog and set the variable. 
+    Clicking 'OK' will close the dialog and set the variable. 
     If you now startup a new session of the Command Prompt, maltcms.bat should be available as a command.
 
     The script will prompt for the installation directory of 
@@ -139,17 +139,21 @@ C:\Program Files;C:\Winnt;C:\Winnt\System32;C:\Path\To\Maltcms
     spaces can only be handled, if the whole argument (all paths separated by commas) is flanked in '"'s. 
 
 * Running ChromA/ChromA4D
+    
+    Pipeline location: As of Maltcms 1.2.1, pipeline .properties files have been relocated 
+    to cfg/pipelines and have been renamed to .mpl (Maltcms PipeLine) to better distinguish 
+    them from standard configuration files. 
 
     ChromA: To execute the standard pipeline for GC- and LC-MS, use 
 
 +------------------------------------------+
->java -jar maltcms.jar -c cfg/chroma.properties -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
+>java -jar maltcms.jar -c cfg/pipelines/chroma.mpl -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
 +------------------------------------------+
 
     ChromA4D: To execute the available pipelines for GCxGC-MS, use 
 
 +------------------------------------------+
->java -jar maltcms.jar -c cfg/chroma4D.properties -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
+>java -jar maltcms.jar -c cfg/pipelines/chroma4D.mpl -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
 +------------------------------------------+
 
     If you do not supply any arguments, Maltcms will print all available arguments
@@ -198,12 +202,15 @@ java -cp maltcms.jar groovy.lang.GroovyShell path/to/script.groovy <ARGS>
 
     To get some insight into the parameters used by Maltcms and possible
     alternatives, consult the properties files in cfg/, especially
-    * alignment.properties
-    * preprocessing.properties
+    * factory.properties
     * graphics.properties
+    * io.properties
+    and for logging options
+    * log4j.properties
+    * logging.properties
 
     Properties and settings for individual commands in a processing pipeline 
-    are located in the respective xml file below cfg/xml/.
+    are located in the respective xml file below cfg/pipelines/xml/.
 
     Custom configuration files can be provided to maltcms.sh/maltcms.bat, as well as to maltcms.jar using the -c option.
     Those custom options then override the default values.

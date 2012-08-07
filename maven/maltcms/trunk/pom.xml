@@ -351,7 +351,7 @@
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>cross-main</artifactId>
-            <version>1.2.8-SNAPSHOT</version>
+            <version>1.2.8</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-logging</artifactId>
@@ -366,7 +366,7 @@
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>cross-ui</artifactId>
-            <version>1.2.8-SNAPSHOT</version>
+            <version>1.2.8</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-logging</artifactId>
