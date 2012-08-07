@@ -27,7 +27,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -52,7 +51,6 @@ import org.slf4j.Logger;
 
 import cross.Factory;
 import cross.annotations.AnnotationInspector;
-import cross.datastructures.pipeline.CommandPipeline;
 import cross.datastructures.pipeline.ICommandSequence;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.workflow.IWorkflow;
@@ -60,10 +58,11 @@ import cross.exception.ConstraintViolationException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.OperatingSystemMXBean;
-import java.lang.management.ThreadMXBean;
 import java.net.URLClassLoader;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration.CombinedConfiguration;
+import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.log4j.PropertyConfigurator;
 
 /**
@@ -208,6 +207,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     cfg.getString("application.version"));
             EvalTools.notNull(cfg, cfg);
             log.info("Configuring Factory");
+            log.info("Using pipeline definition at {}",cfg.getString("pipeline.xml"));
             Factory.getInstance().configure(cfg);
             // Set up the command sequence
             cs = Factory.getInstance().createCommandSequence();
@@ -299,12 +299,12 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 //: FILENAME>VARNAME1#INDEXVAR[RANGEBEGIN:RANGEEND]&VARNAME2...",
                 true, ',', true, true, 0, false, false, 0, "file1,...",
                 false));
-        this.o.addOption(addOption(
-                "D",
-                null,
-                "additional command line options",
-                true, ',', true, true, 0, false, false, 0,
-                "-DNAME1=OPTION1", false));
+//        this.o.addOption(addOption(
+//                "D",
+//                null,
+//                "additional command line options",
+//                true, ',', true, true, 0, false, false, 0,
+//                "-DNAME1=OPTION1", false));
         this.o.addOption(addBooleanOption(
                 "p",
                 null,
@@ -348,34 +348,32 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
 
     /**
      *
-     * @param cc the default configuration, within the subdirectory cfg/, from
-     * where you call Maltcms from
      */
-    public void addDefaultConfiguration(final CompositeConfiguration cc) {
-        EvalTools.notNull(cc, this);
+    public PropertiesConfiguration getDefaultConfiguration() {
+        //EvalTools.notNull(cc, this);
 
         PropertiesConfiguration cfg = null;
 
-        //check for commandline argument -DmaltcmsDefaultConfig
-        final String defaultProps = System.getProperty("maltcms.home");
-        if (defaultProps != null) {
-            File propertyFile = new File(defaultProps,"cfg/default.properties");
+        //check for commandline argument/environment variable maltcms.home
+        final String maltcmsHome = System.getProperty("maltcms.home");
+        if (maltcmsHome != null) {
+            File propertyFile = new File(maltcmsHome,"cfg/default.properties");
             //is it a file?
             if (propertyFile.exists() && propertyFile.isFile()) {
                 try {
                     cfg = new PropertiesConfiguration(propertyFile);
-                    cc.addConfiguration(cfg);
+                    //cc.addConfiguration(cfg);
                     log.debug("Using default.properties at {}", propertyFile.getAbsolutePath());
                 } catch (final ConfigurationException e) {
 
                     e.printStackTrace();
                 }
             } else {//it is a classpath resource
-                URL propRes = Maltcms.class.getClassLoader().getResource(defaultProps);
+                URL propRes = Maltcms.class.getClassLoader().getResource(maltcmsHome);
                 if (propRes != null) {
                     try {
                         cfg = new PropertiesConfiguration(propRes);
-                        cc.addConfiguration(cfg);
+                        //cc.addConfiguration(cfg);
                     } catch (final ConfigurationException e) {
 
                         e.printStackTrace();
@@ -388,7 +386,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             if (f.exists()) {
                 try {
                     cfg = new PropertiesConfiguration(f);
-                    cc.addConfiguration(cfg);
+                    //cc.addConfiguration(cfg);
                     log.info("Using default.properties below {} at {}", System.getProperty("user.dir"),f.getAbsolutePath());
                 } catch (ConfigurationException ex) {
                     java.util.logging.Logger.getLogger(Maltcms.class.getName()).log(Level.SEVERE, null, ex);
@@ -398,14 +396,17 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 try {
                     cfg = new PropertiesConfiguration(getClass().getClassLoader().getResource("cfg/default.properties"));
                     log.info("Can include external properties: {}",cfg.getIncludesAllowed());
-                    cc.addConfiguration(cfg);
+                    //cc.addConfiguration(cfg);
                 } catch (ConfigurationException ex) {
                     java.util.logging.Logger.getLogger(Maltcms.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
-        //TODO really use the default.properties from the classpath
-        
+        if(cfg==null) {
+            throw new NullPointerException("Could not locate default configuration!");
+        }else{
+            return cfg;
+        }
     }
 
     public void initClassLoader(String[] urls) {
@@ -538,20 +539,18 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         }
     }
 
-    /**
-     * Builds a composite configuration, adding default configuration and then
-     * the system configuration.
-     *
-     * @return
-     */
-    public CompositeConfiguration getDefaultConfig() {
-        final CompositeConfiguration cfg = new CompositeConfiguration();
-        // add defaults last, so if first config redeclares a property it is
-        // used.
-        addDefaultConfiguration(cfg);
-        cfg.addConfiguration(new SystemConfiguration());
-        return cfg;
-    }
+//    /**
+//     * Builds a composite configuration, adding default configuration and then
+//     * the system configuration.
+//     *
+//     * @return
+//     */
+//    public CompositeConfiguration getDefaultConfig() {
+//        final CompositeConfiguration cfg = new CompositeConfiguration();
+//        addDefaultConfiguration(cfg);
+//        //add runtime config
+//        return cfg;
+//    }
 
     /**
      * Builds the final composite configuration from all available configuration
@@ -566,8 +565,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         this.log.debug("{}", Arrays.toString(args));
         final CommandLineParser clp = new GnuParser();
         final CompositeConfiguration cfg = new CompositeConfiguration();
-        final CompositeConfiguration defaultCfg = getDefaultConfig();
-        // addDefaultConfiguration(defaultCfg);
+        final PropertiesConfiguration defaultCfg = getDefaultConfiguration();
         final PropertiesConfiguration cmdLineCfg = new PropertiesConfiguration();
         boolean printOptions = false;
         String[] showPropertiesOptions = null;
@@ -601,7 +599,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 cmdLineCfg.setProperty("input.basedir", cl.getOptionValue("i"));
             } else {
                 cmdLineCfg.setProperty("input.basedir",
-                        defaultCfg.getString("user.dir"));
+                        System.getProperty("user.dir","."));
             }
             for (final Option o1 : opts) {
                 if (o1.getOpt().equals("p")) {
@@ -616,17 +614,17 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 if (o1.getOpt().equals("r")) {
                     cmdLineCfg.setProperty("input.basedir.recurse", true);
                 }
-                if (o1.getOpt().equals("D")) {
-                    for (final String s : o1.getValues()) {
-                        final String[] split = s.split("=");
-                        if (split.length > 1) {
-                            cmdLineCfg.setProperty(split[0], split[1]);
-                            System.setProperty(split[0], split[1]);
-                        } else {
-                            this.log.warn("Could not split " + s + " at " + "=");
-                        }
-                    }
-                }
+//                if (o1.getOpt().equals("D")) {
+//                    for (final String s : o1.getValues()) {
+//                        final String[] split = s.split("=");
+//                        if (split.length > 1) {
+//                            cmdLineCfg.setProperty(split[0], split[1]);
+//                            System.setProperty(split[0], split[1]);
+//                        } else {
+//                            this.log.warn("Could not split " + s + " at " + "=");
+//                        }
+//                    }
+//                }
                 if (o1.getOpt().equals("o")) {
                     cmdLineCfg.setProperty("output.basedir", o1.getValue());
                 }
@@ -643,8 +641,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             if (printHelp) {
                 printHelp(defaultCfg);
             }
-            // add cmdLine first -> most important settings
-            cfg.addConfiguration(cmdLineCfg);
+            // add system configuration, -D options override default options
+            cfg.addConfiguration(new SystemConfiguration());            
             if (cl.hasOption("c")) {
                 try {
                     File userConfigLocation = new File(cl.getOptionValue("c"));
@@ -655,6 +653,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     }
                     cfg.setProperty("pipeline.properties", userConfigLocation.getAbsolutePath());
                     cfg.setProperty("config.basedir", userConfigLocation.getParentFile().getAbsolutePath());
+                    //user options override default options
                     cfg.addConfiguration(new PropertiesConfiguration(cl.getOptionValue("c")));
                 } catch (final ConfigurationException e) {
                     this.log.error(e.getLocalizedMessage());
@@ -664,8 +663,11 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
 //                this.log.info("Using config location from classpath!");
 //                cfg.setProperty("config.basedir", "");
             }
-            // add defaults last
+            // cmdLine options override default options and system options
+            cfg.addConfiguration(cmdLineCfg);
+            // add defaults as fallback
             cfg.addConfiguration(defaultCfg);
+            
 //            if (cl.hasOption("g")) {
 //                this.runGui = true;
 //            }
@@ -685,7 +687,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             printOptions(cfg);
             System.exit(0);
         }
-        return cfg;
+        return new CompositeConfiguration(Arrays.asList(cfg));
     }
 
     /**
