@@ -95,17 +95,13 @@ Creating a tagged release:
 >mvn -Dmaven.test.skip=false install
 If all tests succeed, continue, otherwise, correct errors and go back to 2.
 4. Prepare release
+Create a ssh shell 
+>ssh -t MYSOURCEFORGEUSERNAME,cross@shell.sf.net create
 >mvn release:prepare -Dusername=MYSOURCEFORGEUSERNAME =Dpassword=MYSOURCEFORGEPASSWD
 If everything looks fine:
 5. Perform release
 >mvn release:perform 
-6. Create site
->cd target/checkout
->mvn site
-7. Check that site content is okay
-8. Deploy site
->ant site-deploy
-9. Relax ;-)
+6. Relax ;-)
 
 --------------------------------------------------------------------------------
 	Deploying a snapshot to the artifactory repository *
