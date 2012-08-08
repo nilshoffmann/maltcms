@@ -164,7 +164,11 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>2.2.1</version>
+                    <version>2.3.1</version>
+                    <configuration>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <preparationGoals>clean install</preparationGoals>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -245,9 +249,9 @@
                             </target>
 
                             <target name="upload" description="Upload results of build to sourceforge" depends="release,credentials">
-									<echo message="Do not forget to supply -Dusername -Dpassword to ant when running the upload target!" /> 
-									<scp todir="${sf.username},maltcms@web.sourceforge.net:htdocs/" password="${sf.username.password}" sftp="true" trust="true" verbose="true"> 
-										<fileset dir="${release_dir}/site/" /> </scp> 
+                                                                                                                       									<echo message="Do not forget to supply -Dusername -Dpassword to ant when running the upload target!" /> 
+                                                                                                                       									<scp todir="${sf.username},maltcms@web.sourceforge.net:htdocs/" password="${sf.username.password}" sftp="true" trust="true" verbose="true"> 
+                                                                                                                                      										<fileset dir="${release_dir}/site/" /> </scp> 
                                 <exec command="rsync" inputstring="">
                                     <arg value="-avtruP" />
                                     <arg value="-e ssh " />
@@ -267,7 +271,7 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.0</version>
                 <configuration>
-<!--                        <templateFile>src/site/siteTemplate.vm</templateFile>-->
+                    <!--                        <templateFile>src/site/siteTemplate.vm</templateFile>-->
                     <reportPlugins>
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
@@ -277,7 +281,7 @@
                                 <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
                                 <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
                             </configuration>
-              <!-- simpler configuration without reportSets available for usual cases -->
+                            <!-- simpler configuration without reportSets available for usual cases -->
                             <reports>
                                 <report>dependencies</report>
                                 <report>project-team</report>
@@ -299,29 +303,36 @@
                                 </links>
                             </configuration>
                         </plugin>
-<!--                            <plugin>
-                                <groupId>org.codehaus.mojo</groupId>
-                                <artifactId>jxr-maven-plugin</artifactId>
-                                <version>2.3</version>
-                                <configuration>
-                                    <aggregate>true</aggregate>
-                                </configuration>
-                            </plugin> -->
-<!--                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-changelog-plugin</artifactId>
-                                <version>2.2</version>
-                            </plugin>-->
-<!--                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-checkstyle-plugin</artifactId>
-                                <version>2.7</version>
-                                <configuration>
-                                    <configLocation>config/sun_checks.xml</configLocation>
-                                </configuration>
-                            </plugin>-->
+                        <!--                            <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>jxr-maven-plugin</artifactId>
+                            <version>2.3</version>
+                            <configuration>
+                                <aggregate>true</aggregate>
+                            </configuration>
+                        </plugin> -->
+                        <!--                            <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-changelog-plugin</artifactId>
+                            <version>2.2</version>
+                        </plugin>-->
+                        <!--                            <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-checkstyle-plugin</artifactId>
+                            <version>2.7</version>
+                            <configuration>
+                                <configLocation>config/sun_checks.xml</configLocation>
+                            </configuration>
+                        </plugin>-->
                     </reportPlugins>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.wagon</groupId>
+                        <artifactId>wagon-ssh</artifactId>
+                        <version>2.2</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
@@ -335,7 +346,7 @@
         <module>cross-tools</module>
         <module>cross-main-api</module>
         <module>cross-math</module>
-  </modules>
+    </modules>
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
