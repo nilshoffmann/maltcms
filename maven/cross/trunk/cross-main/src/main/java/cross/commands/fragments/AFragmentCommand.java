@@ -42,8 +42,8 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.maltcms.execution.api.ICompletionService;
-import net.sf.maltcms.execution.spi.CompletionServiceFactory;
+import net.sf.mpaxs.api.ICompletionService;
+import net.sf.mpaxs.spi.concurrent.CompletionServiceFactory;
 import org.apache.commons.configuration.Configuration;
 import org.jdom.Element;
 
@@ -190,10 +190,10 @@ public abstract class AFragmentCommand implements IFragmentCommand {
         if (getWorkflow().isExecuteLocal()) {
             log.info("Creating local completion service!");
             csf.setMaxThreads(Factory.getInstance().getConfiguration().getInt("cross.Factory.maxthreads", 1));
-            ics = csf.createVMLocalCompletionService();
+            ics = csf.newLocalCompletionService();
         } else {
             log.info("Creating mpaxs completion service!");
-            ics = new CompletionServiceFactory<T>().createMpaxsCompletionService();
+            ics = new CompletionServiceFactory<T>().newDistributedCompletionService();
         }
         return ics;
     }
@@ -208,10 +208,10 @@ public abstract class AFragmentCommand implements IFragmentCommand {
         if (getWorkflow().isExecuteLocal()) {
             log.info("Creating local completion service!");
             csf.setMaxThreads(Factory.getInstance().getConfiguration().getInt("cross.Factory.maxthreads", 1));
-            ics = csf.createVMLocalCompletionService();
+            ics = csf.newLocalCompletionService();
         } else {
             log.info("Creating mpaxs completion service!");
-            ics = new CompletionServiceFactory<T>().createMpaxsCompletionService();
+            ics = new CompletionServiceFactory<T>().newDistributedCompletionService();
         }
         return ics;
     }
