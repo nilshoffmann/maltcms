@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<content group="news" ident="news/netbeansRcpTraining" nname="Netbeans RCP Training 2011" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
+<content group="news" ident="news/netbeansRcpTraining" nname="Netbeans RCP Training 2010" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
     <column id="content"> 
         <h1>Netbeans RCP Training at Bielefeld University</h1>
         <p>Geertjan Wielenga and Aljoscha Rittner recently gave a great three day introductory course on core Netbeans RCP technologies to a group of twenty people at Bielefeld University. During the course, Geertjan asked for presentations of existing applications based on Netbeans RCP, 

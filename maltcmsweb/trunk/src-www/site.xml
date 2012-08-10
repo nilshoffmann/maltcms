@@ -35,6 +35,9 @@
         <group nname="Home" ident="home">
             <ref target="home/index" />
             <ref target="home/gettingStarted" />
+            <ref target="info/publications" />
+            <ref target="info/license" />
+            <ref target="info/contact" />
             
             <group nname="News" ident="news">
                 <ref target="news/index" />
@@ -84,6 +87,7 @@
 <!--    News -->
     <xi:include href="news/index.xml" parse="xml"/>
     <xi:include href="news/netbeansRcpTraining.xml" parse="xml"/>
+    <xi:include href="news/netbeansRcpTraining2.xml" parse="xml"/>
     <xi:include href="news/netbeansMauiFeature.xml" parse="xml"/>
     <xi:include href="news/perspektive2010.xml" parse="xml"/>
     <xi:include href="news/maltcms1_2.xml" parse="xml"/>

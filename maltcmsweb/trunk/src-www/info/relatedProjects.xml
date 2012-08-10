@@ -12,6 +12,9 @@
 			<a href="http://bibiserv.techfak.uni-bielefeld.de/chroma/" title="ChromA Webapp"
 				>ChromA webapplication</a>
 		</p>
+		<p>
+			<ref target="maui/index" alt="Maui"/>
+		</p>
 		<h1>Related Projects</h1>
 		<p>
 			<a href="http://metlin.scripps.edu/download/" title="XCMS software"
@@ -28,6 +31,9 @@
 		<p>
 			<a href="http://www.metalign.wur.nl/UK/" title="MetAlign software"
 				>MetAlign</a>
+		</p>
+		<p>
+			<a href="http://www.openchrom.net" title="OpenChrom software">OpenChrom</a>
 		</p>
 		<h2>
 			If you think your project is missing, please visit

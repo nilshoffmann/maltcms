@@ -26,11 +26,9 @@
         <ul class="plainunbulletedlist">
 	    <li><a href="http://www.cebitec.uni-bielefeld.de/~hoffmann/asms2012.pdf">Poster on Maltcms and Maui</a> at <a href="http://www.asms.org/Conferences/AnnualConference/GeneralInformation/tabid/127/Default.aspx">ASMS 2012</a></li>
             <li><ref target="news/maltcms1_2" alt="Maltcms 1.2 Released on April 20th, 2012"/></li>
+            <li><ref target="news/netbeansRcpTraining2" alt="Yet another Netbeans RCP Training at Bielefeld University"/></li>
             <li><ref target="news/maltcms1_1" alt="Maltcms 1.1 Released on February 10th, 2012"/></li>
             <li><ref target="news/bookChapterMetabolomics" alt="Generic Software Frameworks for GC-MS based Metabolomics"/></li>
-            <li><ref target="news/perspektive2010" alt="Maui at the Perspektive 2010 Science Fair"/></li>
-            <li><ref target="news/netbeansRcpTraining" alt="Netbeans RCP Training at Bielefeld University"/></li>
-            <li><ref target="news/netbeansMauiFeature" alt="Maui featured as a Netbeans RCP application"/></li>
         </ul>
         </div>
         <h1>Future Developments</h1>
@@ -44,7 +42,7 @@
             </p>
             <p>
                 An early preview and some screenshots of Maui are now featured on 
-                <a href="http://blogs.sun.com/geertjan/entry/metabolomics_and_proteomics_on_the">Geertjan Wielenga's blog</a>.
+                <a href="https://blogs.oracle.com/geertjan/entry/metabolomics_and_proteomics_on_the">Geertjan Wielenga's blog</a>.
             </p>
         </div>
     </column>
