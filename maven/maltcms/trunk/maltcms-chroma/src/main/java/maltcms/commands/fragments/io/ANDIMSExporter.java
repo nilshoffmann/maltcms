@@ -50,19 +50,21 @@ import ucar.ma2.ArrayChar;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class ANDIMSExporter extends AFragmentCommand {
     
+    private boolean skipAggregatedVariables = true;
+
     @Override
     public String toString() {
         return getClass().getName();
     }
-    
+
     /*
      * (non-Javadoc)
      *
@@ -173,14 +175,16 @@ public class ANDIMSExporter extends AFragmentCommand {
                 copyData(f, outf, vi.name, vi.elementType, vi.dimensions);
             }
 
-            for (IVariableFragment ivf : FragmentTools.getAggregatedVariables(f)) {
-                try {
-                    copyData(f, outf, ivf.getName(), ivf.getDataType().
-                            getClassType(), ivf.getDimensions());
-                } catch (IllegalArgumentException iae) {
-                    log.warn("Exception while trying to add Variable " + ivf.
-                            getName() + " to FileFragment " + f.getName(),
-                            iae);
+            if (!skipAggregatedVariables) {
+                for (IVariableFragment ivf : FragmentTools.getAggregatedVariables(f)) {
+                    try {
+                        copyData(f, outf, ivf.getName(), ivf.getDataType().
+                                getClassType(), ivf.getDimensions());
+                    } catch (IllegalArgumentException iae) {
+                        log.warn("Exception while trying to add Variable " + ivf.
+                                getName() + " to FileFragment " + f.getName(),
+                                iae);
+                    }
                 }
             }
 
@@ -217,14 +221,14 @@ public class ANDIMSExporter extends AFragmentCommand {
 
     private void copyData(IFileFragment source, IFileFragment target,
             String varname, Class<?> elementType, Dimension... d) {
-        if(d.length==0) {
-            log.warn("No dimensions given, skipping variable {}",varname);
+        if (d.length == 0) {
+            log.warn("No dimensions given, skipping variable {}", varname);
         }
         IVariableFragment targetV = null;
-        if(target.hasChildren(varname)) {
+        if (target.hasChildren(varname)) {
             targetV = target.getChild(varname);
-        }else{
-            targetV = new VariableFragment(target, varname);    
+        } else {
+            targetV = new VariableFragment(target, varname);
         }
         int[] shape = new int[d.length];
         int i = 0;
@@ -246,9 +250,9 @@ public class ANDIMSExporter extends AFragmentCommand {
             targetV.setDimensions(d);
         } catch (ResourceNotAvailableException r) {
             Array a;
-            if(char.class.equals(elementType)) {
+            if (char.class.equals(elementType)) {
                 a = new ArrayChar(shape);
-            }else{
+            } else {
                 a = Array.factory(elementType, shape);
             }
             targetV.setArray(a);

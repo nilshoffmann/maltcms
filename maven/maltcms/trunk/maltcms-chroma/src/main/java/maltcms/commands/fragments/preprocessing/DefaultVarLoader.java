@@ -37,7 +37,7 @@ import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.preprocessing.defaultVarLoader.DefaultVarLoaderWorker;
-import net.sf.maltcms.execution.api.ICompletionService;
+import net.sf.mpaxs.api.ICompletionService;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
 

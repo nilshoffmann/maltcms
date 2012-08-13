@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import net.sf.maltcms.execution.api.ICompletionService;
-import net.sf.maltcms.execution.spi.MaltcmsCompletionService;
-import net.sf.maltcms.execution.spi.MaltcmsResubmissionCompletionService;
+import net.sf.mpaxs.api.ICompletionService;
+import net.sf.mpaxs.spi.concurrent.MpaxsCompletionService;
+import net.sf.mpaxs.spi.concurrent.MpaxsResubmissionCompletionService;
 
 /**
  *
@@ -38,8 +38,8 @@ public abstract class APipeline<T extends Serializable> implements IPipeline<T> 
 
     private List<Callable<T>> pipelines = new ArrayList<Callable<T>>();
     private final String name = UUID.randomUUID().toString();
-    protected ICompletionService<T> ics = new MaltcmsResubmissionCompletionService<T>(
-            new MaltcmsCompletionService<T>());
+    protected ICompletionService<T> ics = new MpaxsResubmissionCompletionService<T>(
+            new MpaxsCompletionService<T>());
 
     public String getName() {
         return name;

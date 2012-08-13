@@ -1,11 +1,19 @@
-Author: 
-	Nils Hoffmann 
-	Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+##########################################################################
+# Maltcms ${project.version}
+##########################################################################
 
-This distribution is licensed under the terms of the Lesser GPL, v3.
-All licenses can be found in the licenses/ directory.
+Maltcms ${project.version} is licensed under the terms of the Lesser GPL, v3.
+A copy of that license can be found in the licenses/ directory of this
+distribution.
 
-Individual licenses for the libraries used are given below:
+Individual licenses for the libraries used by Maltcms are given below.
+All original licenses can be found in the licenses/ directory.
+
+Please see the website for further information at 
+    
+    http://maltcms.sf.net/maven/maltcms/${project.version}.
+
+List of licenses of third-party libraries used by Maltcms:
 
 Apache License 2.0 
     * batik-{

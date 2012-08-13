@@ -13,17 +13,13 @@ done
 #store the directory from which we were invoked
 WORKINGDIR="`pwd`"
 #change to the resolved scriptfile location
-cd "`dirname \"$SCRIPTFILE\"`"
+cd "`dirname \"$SCRIPTFILE\"`/.."
 SCRIPTDIR="`pwd -P`"
 cd "$WORKINGDIR"
 
-export JARCH=""
 export JBIN="\/vol\/java-1.6.0\/bin"
 export EXEC="net.sf.maltcms.apps.Maltcms"
 export MALTCMSARGS=""
-export MSSIZE="128M"
-export MXSIZE="2G"
-export PROFILE=""
 export USRCLSPATH=""
 
 #Check, whether we are called from a maltcms installation
@@ -74,7 +70,7 @@ else
 	JAVA_TMP=$(which java)
 	if [[ "$?" -eq "0" ]]; then
 		echo "Found java from environment!"
-		export JAVA_LOCATION="$(readlink -f $(which java))"
+		export JAVA_LOCATION="$(which java)"
 	else
 		echo "No java could be found! Please check your JAVA installation and that JAVA_HOME points to its location!"
 		exit 1
@@ -82,10 +78,10 @@ else
 fi
 
 function printHelp {
-			echo -e "Usage: $0 [-64] [-mx ARG] [-ms ARG] [-exec ARG|--execute ARG] [-DKEY=VALUE] [--help] [-?|-h] [MALTCMSARGS]"
-			echo -e "\t-64 -> use 64bit jvm"
-			echo -e "\t-mx ARG -> use -XmxARG as maximum heapsize"
-			echo -e "\t-ms ARG -> use -XmsARG as minimum heapsize"
+			echo -e "Usage: $0 [-d64] [-XmxARG] [-XmsARG] [-exec ARG|--execute ARG] [-DKEY=VALUE] [--help] [-?|-h] [MALTCMSARGS]"
+			echo -e "\t-64 -> use 64bit jvm (default on 64 bit OS)"
+			echo -e "\t-XmxARG -> maximum heapsize (M for MBytes, G for GBytes)"
+			echo -e "\t-XmsARG -> minimum heapsize"
 			echo -e "\t-exec ARG|--execute ARG -> execute the given base class,"
 		       	echo -e "\t\t\tif it contains a main method"
 			echo -e "\t\t\te.g. '-exec mypackage.MyClass'"
@@ -106,29 +102,15 @@ ENVARGS="-Dlog4j.configuration=file://$MALTCMSUSRDIR/cfg/log4j.properties -Djava
 
 while [ $# -gt 0 ]; do
 	case "$1" in
-		-64)
-			export JARCH="-d64"
-			shift
-			;;
 		-exec|--execute)
 			shift
 			export EXEC="$1"
 			shift
 			;;
-		-mx)	
-			shift
-			export MXSIZE="$1"
-			shift
-			;;
-		-ms)
-			shift
-			export MSSIZE="$1"
-			shift
-			;;
         	--help)
 			printHelp $0
 			;;
-		-D* | -XX* | -agent*)
+		-D* | -XX* | -agent* | -X* | -d*)
 			echo "Java environment argument: $1"
 			if [ -z "$ENVARGS" ]; then
 		            ENVARGS="$1"
@@ -148,7 +130,7 @@ while [ $# -gt 0 ]; do
 	esac
 done
 
-echo -e "Running a $JARCH VM with -Xms$MSSIZE -Xmx$MXSIZE"
+#echo -e "Running a $JARCH VM with -Xms$MSSIZE -Xmx$MXSIZE"
 # set up classpath
 for i in $(ls $MALTCMSUSRDIR/lib/*.jar);
 do
@@ -164,15 +146,11 @@ fi
 #set up arguments
 ARGS="-Xmx$MXSIZE -Xms$MSSIZE -Dmaltcms.home=$MALTCMSUSRDIR"
 if [ -n "$ENVARGS" ]; then
-	echo "Using system properties: $ENVARGS"
+	#echo "Using system properties: $ENVARGS"
 	ARGS="$ARGS $ENVARGS"
 fi
-if [ -n "$PROFILE" ]; then
-	echo "Using profiler to collect runtime execution statistics"
-	ARGS="$ARGS $PROFILE"
-fi
 ARGS="$ARGS -cp $USRCLSPATH $EXEC $MALTCMSARGS"
-#echo -e "Executing $JAVA_LOCATION/bin/java $ENVARGS -cp lib/*.jar $EXEC $MALTCMSARGS"
+echo -e "Executing $JAVA_LOCATION $ARGS"
 $JAVA_LOCATION $ARGS
 exit $?
 

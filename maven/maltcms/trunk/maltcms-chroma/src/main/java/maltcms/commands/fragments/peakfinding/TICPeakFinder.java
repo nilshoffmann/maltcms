@@ -80,7 +80,7 @@ import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakFinderUtils;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakPositionsResultSet;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.tools.ArrayTools;
-import net.sf.maltcms.execution.api.ICompletionService;
+import net.sf.mpaxs.api.ICompletionService;
 import org.apache.commons.math.ArgumentOutsideDomainException;
 import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
 import org.jfree.chart.JFreeChart;

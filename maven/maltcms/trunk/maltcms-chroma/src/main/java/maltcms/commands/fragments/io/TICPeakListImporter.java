@@ -68,7 +68,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class TICPeakListImporter extends AFragmentCommand {
 
     @Configurable
-    private List<String> filesToRead;
+    private List<String> filesToRead = Collections.emptyList();
     @Configurable(type = int.class, value = "0")
     private int scanIndexOffset = 0;
     @Configurable(type = String.class, value = "SCAN")

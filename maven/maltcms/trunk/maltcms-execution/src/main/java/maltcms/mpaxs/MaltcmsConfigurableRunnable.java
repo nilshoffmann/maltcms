@@ -23,8 +23,8 @@ package maltcms.mpaxs;
 
 import java.io.File;
 import java.net.URI;
-import net.sf.maltcms.execution.api.concurrent.ConfigurableRunnable;
-import net.sf.maltcms.execution.api.job.Progress;
+import net.sf.mpaxs.api.concurrent.ConfigurableRunnable;
+import net.sf.mpaxs.api.job.Progress;
 
 /**
  *

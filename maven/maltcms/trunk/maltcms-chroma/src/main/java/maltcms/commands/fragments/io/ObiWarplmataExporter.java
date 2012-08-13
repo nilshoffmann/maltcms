@@ -58,10 +58,10 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class ObiWarplmataExporter extends AFragmentCommand {
 
-    private String scanAcquisitionTimeVariableName;
-    private String binnedIntensitiesVariableName;
-    private String binnedScanIndexVariableName;
-    private String binnedMassesVariableName;
+    private String scanAcquisitionTimeVariableName = "scan_acquisition_time";
+    private String binnedIntensitiesVariableName = "binned_intensity_values";
+    private String binnedScanIndexVariableName = "binned_scan_index";
+    private String binnedMassesVariableName = "binned_mass_values";
 
     @Override
     public String toString() {

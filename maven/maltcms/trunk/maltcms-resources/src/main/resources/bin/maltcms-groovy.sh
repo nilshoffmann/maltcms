@@ -13,7 +13,7 @@ done
 #store the directory from which we were invoked
 WORKINGDIR="`pwd`"
 #change to the resolved scriptfile location
-cd "`dirname \"$SCRIPTFILE\"`"
+cd "`dirname \"$SCRIPTFILE\"`/.."
 SCRIPTDIR="`pwd -P`"
 cd "$WORKINGDIR"
 #Check, whether we are called from a maltcms installation

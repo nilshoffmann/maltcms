@@ -60,8 +60,11 @@ import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.net.URLClassLoader;
 import java.util.*;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.ehcache.config.generator.ConfigurationUtil;
 import org.apache.commons.configuration.CombinedConfiguration;
+import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -582,6 +585,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 cmdLineCfg.setProperty("anchors.use", "true");
                 cmdLineCfg.setProperty("anchors.location",
                         cl.getOptionValues("a"));
+                System.out.println("Using anchors from location: "+cl.getOptionValues("a"));
             }
             if (cl.hasOption("e")) {
                 initClassLoader(cl.getOptionValues("e"));
@@ -614,28 +618,12 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 if (o1.getOpt().equals("r")) {
                     cmdLineCfg.setProperty("input.basedir.recurse", true);
                 }
-//                if (o1.getOpt().equals("D")) {
-//                    for (final String s : o1.getValues()) {
-//                        final String[] split = s.split("=");
-//                        if (split.length > 1) {
-//                            cmdLineCfg.setProperty(split[0], split[1]);
-//                            System.setProperty(split[0], split[1]);
-//                        } else {
-//                            this.log.warn("Could not split " + s + " at " + "=");
-//                        }
-//                    }
-//                }
                 if (o1.getOpt().equals("o")) {
                     cmdLineCfg.setProperty("output.basedir", o1.getValue());
                 }
                 if (o1.getOpt().equals("f")) {
                     cmdLineCfg.setProperty("input.dataInfo",
                             cl.getOptionValues("f"));
-                    // o1.setValueSeparator(',');
-                    // this.log.info("{}",o1.getValuesList());
-                    // String[] s = o1.getValues();
-                    // this.log.info("{}",Arrays.toString(s));
-                    // processVariables(s, cmdLineCfg);
                 }
             }
             if (printHelp) {
@@ -794,25 +782,11 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      *
      * @param cfg
      */
-    protected void printOptions(final Configuration cfg) {
-        EvalTools.notNull(cfg, this);
+    protected void printOptions(@NonNull final Configuration cfg) {
+//        EvalTools.notNull(cfg, this);
         this.log.info("Current properties:");
-        final Iterator<?> iter = cfg.getKeys();
-        while (iter.hasNext()) {
-            final String s = (String) iter.next();
-            List<?> l = cfg.getList(s);
-            if (l.size() == 1) {
-                this.log.info("{} = ", s, l.get(0));
-            } else {
-                this.log.info("{} = ", s, l);
-            }
-
-        }
-        // if (cfg.containsKey("show.properties.exit")) {
-        // if (cfg.getBoolean("show.properties.exit")) {
+        this.log.info("{}",ConfigurationUtils.toString(cfg));
         System.exit(0);
-        // }
-        // }
     }
 
     /**
@@ -822,9 +796,9 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * @param s
      * @param cfg
      */
-    public void processVariables(final String[] s, final Configuration cfg) {
-        EvalTools.notNull(s, this);
-        EvalTools.notNull(cfg, this);
+    public void processVariables(@NonNull final String[] s, @NonNull final Configuration cfg) {
+//        EvalTools.notNull(s, this);
+//        EvalTools.notNull(cfg, this);
         final String prefix = "";
         final StringBuilder builder = new StringBuilder();
         for (int i = 0; i < s.length; i++) {

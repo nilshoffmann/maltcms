@@ -868,7 +868,7 @@ public class NetcdfDataSource implements IDataSource {
                     log.error("IOException while writing variable '{}'",varname);
                     log.error("{}",e);
                 } catch (final InvalidRangeException e) {
-                    log.error("InvalidRangeException writing variable '{}' with dimensions '{}' and contents: '{}'",new Object[]{varname,Arrays.toString(vf.getDimensions()),vf.getArray()});
+                    log.error("InvalidRangeException writing variable '{}' with dimensions '{}'",new Object[]{varname,Arrays.toString(vf.getDimensions())});
                     log.error("{}",e);
                 }
                 cnt++;

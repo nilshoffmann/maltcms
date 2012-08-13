@@ -43,7 +43,6 @@ import ucar.ma2.MAMath.MinMax;
 import ucar.nc2.Dimension;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
-import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
 import uk.ac.ebi.jmzml.model.mzml.Run;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.model.mzml.SpectrumList;
@@ -59,9 +58,21 @@ import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import java.math.BigInteger;
+import java.util.LinkedList;
+import java.util.logging.Level;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.DataType;
+import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
+import uk.ac.ebi.jmzml.model.mzml.ChromatogramList;
+import uk.ac.ebi.jmzml.model.mzml.FileDescription;
+import uk.ac.ebi.jmzml.model.mzml.SourceFile;
+import uk.ac.ebi.jmzml.model.mzml.SourceFileList;
+import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
+import uk.ac.ebi.jmzml.xml.xxindex.MzMLIndexer;
+import uk.ac.ebi.jmzml.xml.xxindex.MzMLIndexerFactory;
 
-@ServiceProvider(service=IDataSource.class)
+@ServiceProvider(service = IDataSource.class)
 public class MZMLDataSource implements IDataSource {
 
     private final Logger log = Logging.getLogger(this.getClass());
@@ -83,6 +94,9 @@ public class MZMLDataSource implements IDataSource {
     private NetcdfDataSource ndf = null;
     @Configurable(name = "var.source_files", value = "source_files")
     private String source_files = "source_files";
+    @Configurable(name = "var.modulation_time", value = "modulation_time")
+    private String modulation_time = "modulation_time";
+    private String modulationTimeAccession = "MS:1002042";
     private static WeakHashMap<IFileFragment, MzMLUnmarshaller> fileToIndex = new WeakHashMap<IFileFragment, MzMLUnmarshaller>();
 
     @Override
@@ -124,6 +138,7 @@ public class MZMLDataSource implements IDataSource {
                 "mass_range_max");
         this.source_files = configuration.getString("var.source_files",
                 "source_files");
+        this.modulation_time = configuration.getString("var.modulation_time", "modulation_time");
         this.ndf = new NetcdfDataSource();
         this.ndf.configure(configuration);
     }
@@ -132,8 +147,9 @@ public class MZMLDataSource implements IDataSource {
         if (MZMLDataSource.fileToIndex.containsKey(ff)) {
             return MZMLDataSource.fileToIndex.get(ff);
         }
-        MzMLUnmarshaller um = new MzMLUnmarshaller(new File(ff.getAbsolutePath()), true);
+        MzMLUnmarshaller um = new MzMLUnmarshaller(new File(ff.getAbsolutePath()), false);
         MZMLDataSource.fileToIndex.put(ff, um);
+        log.debug("mzML file {} is indexed: {}", ff.getAbsolutePath(), um.isIndexedmzML());
         return um;
     }
 
@@ -142,10 +158,23 @@ public class MZMLDataSource implements IDataSource {
         return run;
     }
 
-    private Spectrum getSpectrum(Run run, int idx) {
-        SpectrumList cl = run.getSpectrumList();
-        Spectrum s = cl.getSpectrum().get(idx);
-        return s;
+    private SourceFileList getSourceFiles(MzMLUnmarshaller mzmlu) {
+        log.info("Retrieving fileDescription/sourceFileList from mzML");
+        FileDescription fd = mzmlu.unmarshalFromXpath("/fileDescription", FileDescription.class);
+        SourceFileList sfl = fd.getSourceFileList();
+        return sfl;
+    }
+
+    private Spectrum getSpectrum(MzMLUnmarshaller um, int idx) {
+        try {
+            return um.getSpectrumById(um.getSpectrumIDFromSpectrumIndex(BigInteger.valueOf(idx)));
+    //        SpectrumList cl = run.getSpectrumList();
+    //        return s;
+    //        return s;
+        } catch (MzMLUnmarshallerException ex) {
+            java.util.logging.Logger.getLogger(MZMLDataSource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ResourceNotAvailableException(ex);
+        }
     }
 
     private Array getMassValues(final Spectrum s) {
@@ -199,6 +228,13 @@ public class MZMLDataSource implements IDataSource {
         try {
             CVParam rtp = findParam(s.getScanList().getScan().get(0).getCvParam(), "MS:1000016");
             rt = Double.parseDouble(rtp.getValue());
+            String unit = getRTUnit(s);
+            if (unit.equalsIgnoreCase("minutes")) {
+                rt /= 60.0;
+            } else if (unit.equalsIgnoreCase("hours")) {
+                rt /= 3600.0;
+            }
+
         } catch (ResourceNotAvailableException rne) {
         }
         return rt;
@@ -220,10 +256,10 @@ public class MZMLDataSource implements IDataSource {
      * @param var
      * @param run
      * @return a Tuple2D<Array,Array> with mass_range_min as first and
-     *         mass_range_max as second array
+     * mass_range_max as second array
      */
     protected Tuple2D<Array, Array> initMinMaxMZ(final IVariableFragment var,
-            final Run run) {
+            final Run run, final MzMLUnmarshaller um) {
         this.log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
                     this.mass_range_max});
         int scans = getScanCount(run);
@@ -238,7 +274,7 @@ public class MZMLDataSource implements IDataSource {
         double min_mass = Double.MAX_VALUE;
         double max_mass = Double.MIN_VALUE;
         for (int i = start; i < scans; i++) {
-            Spectrum spec = getSpectrum(run, i);
+            Spectrum spec = getSpectrum(um, i);
             Array a = getMassValues(spec);
             final Tuple2D<Double, Double> t = getMinMaxMassRange(a);
             min_mass = Math.min(min_mass, t.getFirst());
@@ -252,28 +288,40 @@ public class MZMLDataSource implements IDataSource {
     }
 
     private Array loadArray(final IFileFragment f, final IVariableFragment var) {
-        final Run r = getRun(getUnmarshaller(f), f);
+        MzMLUnmarshaller mzu = getUnmarshaller(f);
+        final Run r = getRun(mzu, f);
         Array a = null;
-        final String varname = var.getVarname();
-        // Read mass_values or intensity_values for whole chromatogram
+        final String varname = var.getName();
+        log.info("Trying to read variable " + var.getName());
+        List<CVParam> parameters = r.getCvParam();
+        System.out.println("Run has " + parameters.size() + " cvparams!");
+        for (CVParam param : parameters) {
+            System.out.println("CVParam: " + param.toString());
+        }
+        if (varname.equals(this.source_files)) {
+            a = readSourceFiles(f, mzu);
+            // Read mass_values or intensity_values for whole chromatogram
+        }
         if (varname.equals(this.mass_values)
                 || varname.equals(this.intensity_values)) {
-            a = readMZI(var, r);
+            a = readMZI(var, r, mzu);
         } else if (varname.equals(this.scan_index)) {
-            a = readScanIndex(var, r);
+            a = readScanIndex(var, r, mzu);
             // read total_intensity
         } else if (varname.equals(this.total_intensity)) {
             a = readTotalIntensitiesArray(var, r);
             // read min and max_mass_range
         } else if (varname.equals(this.mass_range_min)
                 || varname.equals(this.mass_range_max)) {
-            a = readMinMaxMassValueArray(var, r);
+            a = readMinMaxMassValueArray(var, r, mzu);
             // read scan_acquisition_time
         } else if (varname.equals(this.scan_acquisition_time)) {
-            a = readScanAcquisitionTimeArray(var, r);
+            a = readScanAcquisitionTimeArray(var, r, mzu);
+        } else if (varname.equals(this.modulation_time)) {
+            a = readModulationTimeArray(var, r);
         } else {
             throw new ResourceNotAvailableException(
-                    "Unknown varname to mzXML mapping for varname " + varname);
+                    "Unknown variable name to mzML mapping for " + varname);
         }
         return a;
     }
@@ -293,6 +341,7 @@ public class MZMLDataSource implements IDataSource {
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
+        MzMLUnmarshaller um = getUnmarshaller(f.getParent());
         if (f.getVarname().equals(this.mass_values)) {
             final ArrayList<Array> al = new ArrayList<Array>();
             final Run run = getRun(getUnmarshaller(f.getParent()), f.getParent());
@@ -306,7 +355,7 @@ public class MZMLDataSource implements IDataSource {
                 }
             }
             for (int i = start; i < len; i++) {
-                al.add(getMassValues(getSpectrum(run, i)));
+                al.add(getMassValues(getSpectrum(um, i)));
             }
             return al;
         }
@@ -323,7 +372,7 @@ public class MZMLDataSource implements IDataSource {
                 }
             }
             for (int i = start; i < len; i++) {
-                al.add(getIntensityValues(getSpectrum(run, i)));
+                al.add(getIntensityValues(getSpectrum(um, i)));
             }
             return al;
         }
@@ -331,10 +380,21 @@ public class MZMLDataSource implements IDataSource {
         return new ArrayList<Array>();
     }
 
+    private Array readSourceFiles(final IFileFragment f, final MzMLUnmarshaller mzmu) {
+        SourceFileList sfl = getSourceFiles(mzmu);
+        List<String> sourceFilePaths = new LinkedList<String>();
+        for (SourceFile sfs : sfl.getSourceFile()) {
+            sourceFilePaths.add(sfs.getLocation());
+        }
+        Array a = Array.makeArray(DataType.STRING, new LinkedList<String>(sourceFilePaths));
+        log.info("Returning source files: ", a);
+        return a;
+    }
+
     private Array readMinMaxMassValueArray(final IVariableFragment var,
-            final Run run) {
+            final Run run, final MzMLUnmarshaller um) {
         this.log.debug("readMinMaxMassValueArray");
-        final Tuple2D<Array, Array> t = initMinMaxMZ(var, run);
+        final Tuple2D<Array, Array> t = initMinMaxMZ(var, run, um);
         if (var.getVarname().equals(this.mass_range_min)) {
             return t.getFirst();
         }
@@ -345,7 +405,7 @@ public class MZMLDataSource implements IDataSource {
                 "Method accepts only one of mass_range_min or mass_range_max as varname!");
     }
 
-    private Array readMZI(final IVariableFragment var, final Run run) {
+    private Array readMZI(final IVariableFragment var, final Run run, final MzMLUnmarshaller um) {
         // if(!f.hasArray()) {
         int npeaks = 0;
         int start = 0;
@@ -356,7 +416,7 @@ public class MZMLDataSource implements IDataSource {
             scans = r[0].length();
         }
         for (int i = start; i < scans; i++) {
-            npeaks += getMassValues(getSpectrum(run, i)).getShape()[0];
+            npeaks += getMassValues(getSpectrum(um, i)).getShape()[0];
         }
 
         if (var.getVarname().equals(this.mass_values)) {
@@ -364,7 +424,7 @@ public class MZMLDataSource implements IDataSource {
             npeaks = 0;
             for (int i = start; i < scans; i++) {
                 this.log.debug("Reading scan {} of {}", (i + 1), scans);
-                final Array b = getMassValues(getSpectrum(run, i));
+                final Array b = getMassValues(getSpectrum(um, i));
                 Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
                 npeaks += b.getShape()[0];
             }
@@ -375,7 +435,7 @@ public class MZMLDataSource implements IDataSource {
             npeaks = 0;
             for (int i = start; i < scans; i++) {
                 this.log.debug("Reading scan {} of {}", (i + 1), scans);
-                final Array b = getIntensityValues(getSpectrum(run, i));
+                final Array b = getIntensityValues(getSpectrum(um, i));
                 Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
                 npeaks += b.getShape()[0];
                 this.log.debug("npeaks after: {}", npeaks);
@@ -390,7 +450,7 @@ public class MZMLDataSource implements IDataSource {
     }
 
     private Array readScanAcquisitionTimeArray(final IVariableFragment var,
-            final Run run) {
+            final Run run, final MzMLUnmarshaller um) {
         this.log.debug("readScanAcquisitionTimeArray");
         int scans = getScanCount(run);
         int start = 0;
@@ -401,14 +461,14 @@ public class MZMLDataSource implements IDataSource {
         }
         final ArrayDouble.D1 sat = new ArrayDouble.D1(scans);
         for (int i = start; i < scans; i++) {
-            sat.set(i, getRT(getSpectrum(run, i)));
+            sat.set(i, getRT(getSpectrum(um, i)));
             this.log.debug("RT({})={}", i, sat.get(i));
         }
         // f.setArray(sat);
         return sat;
     }
 
-    private Array readScanIndex(final IVariableFragment var, final Run run) {
+    private Array readScanIndex(final IVariableFragment var, final Run run, final MzMLUnmarshaller um) {
         int npeaks = 0;
         int scans = getScanCount(run);
         int start = 0;
@@ -420,7 +480,7 @@ public class MZMLDataSource implements IDataSource {
         this.log.debug("Creating index array with {} elements", scans);
         final ArrayInt.D1 scan_index = new ArrayInt.D1(scans);
         for (int i = start; i < scans; i++) {
-            final int peaks = getMassValues(getSpectrum(run, i)).getShape()[0];
+            final int peaks = getMassValues(getSpectrum(um, i)).getShape()[0];
             // current npeaks is index into larger arrays for current scan
             this.log.debug("Scan {} from {} to {}", new Object[]{i, npeaks,
                         (npeaks + peaks - 1)});
@@ -429,6 +489,29 @@ public class MZMLDataSource implements IDataSource {
         }
         EvalTools.notNull(scan_index, this);
         return scan_index;
+    }
+
+    private Array readModulationTimeArray(IVariableFragment var, Run r) {
+        List<CVParam> parameters = r.getCvParam();
+        System.out.println("Run has " + parameters.size() + " cvparams!");
+        for (CVParam param : parameters) {
+            System.out.println("CVParam: " + param.toString());
+            if (param.getAccession().equalsIgnoreCase(modulationTimeAccession)) {
+                log.info("Found modulation time parameter as attribute of run");
+                ArrayDouble.D0 a = new ArrayDouble.D0();
+                a.set(Double.parseDouble(param.getValue()));
+                String rtUnit = param.getUnitName();
+                if (rtUnit.equalsIgnoreCase("second")) {
+                } else if (rtUnit.equalsIgnoreCase("minute")) {
+                    //convert to seconds
+                    a.set(a.get() / 60.0);
+                } else {
+                    throw new RuntimeException("Could not convert modulation time unit: " + rtUnit + "!");
+                }
+                return a;
+            }
+        }
+        throw new ResourceNotAvailableException("Unknown variable name to mzML mapping for " + var.getName());
     }
 
     @Override
@@ -481,7 +564,8 @@ public class MZMLDataSource implements IDataSource {
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
-        final Run run = getRun(getUnmarshaller(f.getParent()), f.getParent());
+        MzMLUnmarshaller um = getUnmarshaller(f.getParent());
+        final Run run = getRun(um, f.getParent());
         final int scancount = getScanCount(run);
         final String varname = f.getVarname();
         // Read mass_values or intensity_values for whole chromatogram
@@ -498,16 +582,20 @@ public class MZMLDataSource implements IDataSource {
             int npeaks = 0;
             try {
                 for (int i = 0; i < scancount; i++) {
-                    npeaks += getMassValues(getSpectrum(run, i)).getShape()[0];
+                    npeaks += getMassValues(getSpectrum(um, i)).getShape()[0];
                 }
                 final Dimension[] dims = new Dimension[]{new Dimension(
                     "point_number", npeaks, true)};
                 f.setDimensions(dims);
             } catch (final NullPointerException npe) {
                 throw new ResourceNotAvailableException(
-                        "Could not rap header of file "
+                        "Could not read header of file "
                         + f.getParent().getAbsolutePath());
             }
+        } else if (varname.equals(this.modulation_time)) {
+            Array a = readModulationTimeArray(f, run);
+            final Dimension[] dims = new Dimension[]{new Dimension(this.modulation_time, 1, true, false, false)};
+            f.setDimensions(dims);
         } else {
             throw new ResourceNotAvailableException(
                     "Unknown varname to mzML mapping for varname " + varname);
@@ -519,11 +607,18 @@ public class MZMLDataSource implements IDataSource {
             final Run run) {
         // Current assumption is, that global time for ms scans correspond to
         // chromatogram times
-        Chromatogram c = run.getChromatogramList().getChromatogram().get(0);
+        ChromatogramList cl = run.getChromatogramList();
+        if (cl == null || cl.getCount().equals(BigInteger.ZERO) || cl.getChromatogram().isEmpty()) {
+            throw new ResourceNotAvailableException("No chromatograms defined in mzML file {}" + var.getParent().getName());
+        }
+        if (cl.getChromatogram().size() > 1) {
+            log.warn("mzML file {} contains more than one chromatogram, defaulting to first!", var.getParent().getName());
+        }
+        Chromatogram c = cl.getChromatogram().get(0);
         BinaryDataArray timeArray = c.getBinaryDataArrayList().getBinaryDataArray().get(0);
         BinaryDataArray intensitiesArray = c.getBinaryDataArrayList().getBinaryDataArray().get(1);
         // TODO add a unit check
-        String rtUnit = "seconds";
+        String rtUnit = "second";
         try {
             CVParam rtUnitP = findParam(timeArray.getCvParam(), "MS:1000595");
             rtUnit = rtUnitP.getUnitName();
@@ -535,6 +630,17 @@ public class MZMLDataSource implements IDataSource {
             intensA.set(i, intensities[i].doubleValue());
         }
         return intensA;
+    }
+    
+    private double convertTimeValue(double value, String unit) {
+        if(unit.equalsIgnoreCase("second")) {
+            return value;
+        }else if(unit.equalsIgnoreCase("minute")) {
+            return value/=60.0d;
+        }else if(unit.equalsIgnoreCase("hour")) {
+            return value/=3600.0d;
+        }
+        throw new UnsupportedOperationException("Don't know how to convert "+unit+" to seconds!");
     }
 
     @Override

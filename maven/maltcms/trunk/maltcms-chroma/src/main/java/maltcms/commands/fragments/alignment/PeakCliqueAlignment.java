@@ -95,7 +95,7 @@ import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.ms.Metabolite;
 import maltcms.io.xml.bindings.alignment.Alignment;
 import maltcms.tools.MaltcmsTools;
-import net.sf.maltcms.execution.api.ICompletionService;
+import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.MAMath;
 
@@ -907,25 +907,25 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         this.intensityValues = cfg.getString(
                 "var.intensity_values", "intensity_values");
         this.ticPeaks = cfg.getString("var.tic_peaks", "tic_peaks");
-        this.minCliqueSize = cfg.getInt(this.getClass().getName()
-                + ".minCliqueSize", -1);
-//        final String aldist = "maltcms.commands.distances.ArrayLp";
-//        this.costFunction = Factory.getInstance().getObjectFactory().instantiate(
-//                cfg.getString(this.getClass().getName()
-//                + ".costFunction", aldist),
-//                IArrayDoubleComp.class);
-        this.useUserSuppliedAnchors = cfg.getBoolean(this.getClass().getName()
-                + ".useUserSuppliedAnchors", false);
-        this.savePeakSimilarities = cfg.getBoolean(this.getClass().getName()
-                + ".savePeakSimilarities", false);
-//        this.maxRTDifference = cfg.getDouble(this.getClass().getName()
-//                + ".maxRTDifference", 60.0d);
-        this.saveXMLAlignment = cfg.getBoolean(
-                this.getClass().getName() + ".saveXMLAlignment", true);
-        this.maxBBHErrors = cfg.getInt(
-                this.getClass().getName() + ".maxBBHErrors", 0);
-        this.savePlots = cfg.getBoolean(this.getClass().getName() + ".savePlots",
-                false);
+//        this.minCliqueSize = cfg.getInt(this.getClass().getName()
+//                + ".minCliqueSize", -1);
+////        final String aldist = "maltcms.commands.distances.ArrayLp";
+////        this.costFunction = Factory.getInstance().getObjectFactory().instantiate(
+////                cfg.getString(this.getClass().getName()
+////                + ".costFunction", aldist),
+////                IArrayDoubleComp.class);
+//        this.useUserSuppliedAnchors = cfg.getBoolean(this.getClass().getName()
+//                + ".useUserSuppliedAnchors", false);
+//        this.savePeakSimilarities = cfg.getBoolean(this.getClass().getName()
+//                + ".savePeakSimilarities", false);
+////        this.maxRTDifference = cfg.getDouble(this.getClass().getName()
+////                + ".maxRTDifference", 60.0d);
+//        this.saveXMLAlignment = cfg.getBoolean(
+//                this.getClass().getName() + ".saveXMLAlignment", true);
+//        this.maxBBHErrors = cfg.getInt(
+//                this.getClass().getName() + ".maxBBHErrors", 0);
+//        this.savePlots = cfg.getBoolean(this.getClass().getName() + ".savePlots",
+//                false);
     }
 
     public void saveSimilarityMatrix(final TupleND<IFileFragment> al,
@@ -1000,7 +1000,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             al2.add(iff2);
         }
         final TupleND<IFileFragment> t = new TupleND<IFileFragment>(al2);
-        initializePeaks(t, fragmentToPeaks, columnMap);
+        initializePeaks(originalFragments, fragmentToPeaks, columnMap);
         log.info("Calculating all-against-all peak similarities");
         calculatePeakSimilarities(t, fragmentToPeaks);
 
@@ -1079,6 +1079,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         int npeaks = 0;
         HashMap<String, List<Peak>> definedAnchors = new HashMap<String, List<Peak>>();
         if (this.useUserSuppliedAnchors) {
+            log.debug("Checking for user-supplied anchors!");
             definedAnchors = checkUserSuppliedAnchors(originalFileFragments);
             for (final IFileFragment iff : originalFileFragments) {
                 definedAnchors.put(iff.getName(), new ArrayList<Peak>(0));
@@ -1156,6 +1157,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             }
 
             if ((userDefinedAnchors != null) && this.useUserSuppliedAnchors) {
+                log.info("Using user-defined anchors!");
                 for (final Peak p : userDefinedAnchors) {
 
                     final int n = Collections.binarySearch(peaks, p,

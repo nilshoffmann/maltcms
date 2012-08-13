@@ -63,7 +63,7 @@ import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.AWorkerFact
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.PairwiseDistanceResult;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.PairwiseDistanceWorker;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.ApplicationContextWorkerFactory;
-import net.sf.maltcms.execution.api.ICompletionService;
+import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

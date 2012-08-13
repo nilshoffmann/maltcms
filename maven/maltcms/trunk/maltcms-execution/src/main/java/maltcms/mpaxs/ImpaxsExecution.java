@@ -23,12 +23,12 @@ package maltcms.mpaxs;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.sf.maltcms.execution.spi.CompletionServiceFactory;
-import net.sf.maltcms.execution.spi.ComputeServerFactory;
-import net.sf.maltcms.execution.api.ICompletionService;
-import net.sf.maltcms.execution.api.ConfigurationKeys;
-import net.sf.maltcms.execution.api.ExecutionType;
-import net.sf.maltcms.execution.api.Impaxs;
+import net.sf.mpaxs.spi.concurrent.CompletionServiceFactory;
+import net.sf.mpaxs.spi.concurrent.ComputeServerFactory;
+import net.sf.mpaxs.api.ICompletionService;
+import net.sf.mpaxs.api.ConfigurationKeys;
+import net.sf.mpaxs.api.ExecutionType;
+import net.sf.mpaxs.api.Impaxs;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
@@ -43,7 +43,7 @@ public class ImpaxsExecution {
         Impaxs impxs = ComputeServerFactory.getComputeServer();
         impxs.startMasterServer(pc);
         final ICompletionService<String> mcs = new CompletionServiceFactory<String>().
-                createMpaxsCompletionService();
+                newDistributedCompletionService();
         
         mcs.submit(new TestCallable());
         mcs.submit(new TestCallable());
@@ -59,7 +59,7 @@ public class ImpaxsExecution {
         }
 
         final ICompletionService<String> mcs2 = new CompletionServiceFactory<String>().
-                createVMLocalCompletionService();
+                newLocalCompletionService();
         mcs2.submit(new TestCallable());
         mcs2.submit(new TestCallable());
         mcs2.submit(new TestCallable());

@@ -1,13 +1,3 @@
-##########################################################################
-# Maltcms ${project.version}
-##########################################################################
-
-Licensing information can be found in the distribution file LICENSE.
-
-Further information may be found at 
-    
-    http://maltcms.sf.net/maven/maltcms/${project.version}.
-
 Getting Started
 
 
@@ -287,17 +277,22 @@ Input data formats
     located in input base directory (cmdline option -i). Otherwise, the
     absolute path to the original file has to be given.
 
++------------------------------------------+
 >NAME_OF_ORIGINAL_DATA_FILE.cdf
++------------------------------------------+
 
     The second line defines the column names, separated by 'tab' (\t):
 
++------------------------------------------+
 Name	RI	RT	Scan
++------------------------------------------+
 
     All following lines contain information for one anchor each:
 
++------------------------------------------+
 RI1	-	-	230
 RI2	-	-	430
-
++------------------------------------------+
     etc.
 
     Note that columns RI and RT are optional, Scan and Name are required.
@@ -308,16 +303,20 @@ RI2	-	-	430
 
     File Example1.txt would look like this:
 
++------------------------------------------+
 >Example1.cdf
 Name	RI	RT	Scan
 RI1	-	-	230
 RI2	-	-	430
 RI3	-	-	600
++------------------------------------------+
 	
     File Example2.txt would look like this:
 
++------------------------------------------+
 >Example2.cdf
 Name	RI	RT	Scan
 RI1	-	-	234
 RI2	-	-	437
 RI3	-	-	598
++------------------------------------------+

@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.peakfinding.cwtEicPeakFinder.CwtTicPeakFinderCallable;
 import maltcms.commands.fragments2d.peakfinding.CwtChartFactory;
 import maltcms.tools.ImageTools;
-import net.sf.maltcms.execution.api.ICompletionService;
+import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.ArrayDouble;
 

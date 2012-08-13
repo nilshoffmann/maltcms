@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -47,7 +46,7 @@ import maltcms.experimental.bipace.datastructures.spi.PairwisePeakListSimilariti
 import maltcms.experimental.bipace.api.IPeakListProvider;
 import maltcms.experimental.bipace.api.PeakSimilarityCalculator;
 import maltcms.experimental.bipace.peakCliqueAlignment.CliqueFinder;
-import net.sf.maltcms.execution.spi.MaltcmsCompletionService;
+import net.sf.mpaxs.spi.concurrent.MpaxsCompletionService;
 
 /**
  *
@@ -68,7 +67,7 @@ public class BiPace<T extends Peak> implements Callable<BiPaceResult<T>> {
         //prepare and shuffle input
         TupleND<IFileFragment> fragments = prepareInput();
         //create a completion service for pairwise similarity calculation
-        MaltcmsCompletionService<PairwisePeakListSimilarities> completionService = new MaltcmsCompletionService<PairwisePeakListSimilarities>(
+        MpaxsCompletionService<PairwisePeakListSimilarities> completionService = new MpaxsCompletionService<PairwisePeakListSimilarities>(
                 Executors.newFixedThreadPool(numberOfThreads), numberOfThreads,
                 TimeUnit.MINUTES, false);
         TupleND<PeakList<T>> peakLists = preparePeakLists(fragments);
@@ -99,7 +98,7 @@ public class BiPace<T extends Peak> implements Callable<BiPaceResult<T>> {
 
     private void calculatePairwiseSimilarities(
             TupleND<PeakList<T>> peakLists,
-            MaltcmsCompletionService<PairwisePeakListSimilarities> completionService) throws RejectedExecutionException, NullPointerException {
+            MpaxsCompletionService<PairwisePeakListSimilarities> completionService) throws RejectedExecutionException, NullPointerException {
         HashMap<UUID, Tuple2D<PeakList<T>, PeakList<T>>> taskMap = new HashMap<UUID, Tuple2D<PeakList<T>, PeakList<T>>>();
         //calculate pairwise similarities between peak lists for all unique pairs of chromatograms
         for (Tuple2D<PeakList<T>, PeakList<T>> t : peakLists.getPairs()) {

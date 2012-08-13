@@ -51,8 +51,10 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
+import java.util.Collections;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration.ConfigurationUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -76,49 +78,19 @@ public class CSVAnchorReader extends AFragmentCommand {
         return getClass().getName();
     }
     
-    public static void main(final String[] args) {
-        // Maltcms m = Maltcms.getInstance();
-        // Logger log = cross.Logging.getLogger(Maltcms.class);
-        // ArrayFactory.configure(m.parseCommandLine(args));
-        // ArrayFactory.appendCommand(CSVAnchorReader.class.getName());
-        // ICommandSequence cs = ArrayFactory.createCommandSequence();
-        // EvalTools.notNull(cs);
-        // while (cs.hasNext()) {
-        // cs.next();
-        // }
-        // Configuration cfg = ArrayFactory.getConfiguration();
-        // if (cfg.getBoolean("pipeline.save.after.end")) {
-        // log.info("Saving FileFragments");
-        // TupleND<FileFragment> t = cs.next();
-        // for (FileFragment ff : t) {
-        // ff.save();
-        // }
-        // }
-        // ArrayFactory.shutdown();
-        // try {
-        // ArrayFactory.awaitTermination(10000, TimeUnit.SECONDS);
-        // } catch (InterruptedException e) {
-        // log.error(e.getLocalizedMessage());
-        // }
-        // for (FileFragment f : FileFragment.fileMap.values()) {
-        // System.out.println(f);
-        // }
-        // System.exit(0);
-    }
     private final String omit = "-";
     private boolean time = false;
     private boolean index = true;
-    private List<String> location = null;
+    private List<String> location = Collections.emptyList();
     private String fileDesignation = ">";
     private String basedir = "";
-    private boolean scan;
+    private boolean scan = false;
     private int max_names_length = Integer.MIN_VALUE;
-    private String anchorNamesVariableName;
-    private String anchorTimesVariableName;
-    private String anchorRetentionIndexVariableName;
-    private String anchorScanIndexVariableName;
-    private boolean useAnchors;
-    private String satVariableName;
+    private String anchorNamesVariableName = "retention_index_names";
+    private String anchorTimesVariableName = "retention_times";
+    private String anchorRetentionIndexVariableName = "retention_indices";
+    private String anchorScanIndexVariableName = "retention_scans";
+    private String satVariableName = "scan_acquisition_time";
 
     /**
      * Simply return the same FileFragments as were received. apply will add the
@@ -128,7 +100,7 @@ public class CSVAnchorReader extends AFragmentCommand {
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         // EvalTools.notNull(this.location);
-        if (this.useAnchors && (this.location != null)) {
+        if (!this.location.isEmpty()) {
             log.info("Using anchors!");
             return applyCSVReader(this.location);
             // apply(this.location);
@@ -277,6 +249,7 @@ public class CSVAnchorReader extends AFragmentCommand {
 
     @Override
     public void configure(final Configuration cfg) {
+        System.out.println("Configure called on CSVAnchorReader:"+ConfigurationUtils.toString(cfg));
         if (cfg.containsKey("csvri.retention.time")) {
             this.time = cfg.getBoolean("csvri.retention.time");
         }
@@ -316,7 +289,7 @@ public class CSVAnchorReader extends AFragmentCommand {
                 "var.anchors.retention_scans", "retention_scans");
         this.satVariableName = cfg.getString("var.scan_acquisition_time",
                 "scan_acquisition_time");
-        this.useAnchors = cfg.getBoolean("anchors.use", false);
+//        this.useAnchors = cfg.getBoolean("anchors.use", false);
 
     }
 

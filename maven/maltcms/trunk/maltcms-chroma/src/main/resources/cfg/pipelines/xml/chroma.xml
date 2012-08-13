@@ -50,6 +50,7 @@
                 <ref bean="chromatogramWarp" />
                 <ref bean="ticHeatmapCoplotAfterAlignment"/>
 <!--                <ref bean="eicHeatmapCoplotAfterAlignment"/>-->
+                <ref bean="andimsExporter" />
             </list>
         </property>    
     </bean>
@@ -309,5 +310,10 @@
     <bean id="eicHeatmapCoplotBeforeAlignment" class="maltcms.commands.fragments.visualization.EICHeatmapCoplot"></bean>
     <bean id="eicHeatmapCoplotAfterAlignment" class="maltcms.commands.fragments.visualization.EICHeatmapCoplot"></bean>
 
+    <!-- ANDIMSExporter, exports internal data format to ANDI-MS compliant output -->
+    <bean id="andimsExporter" class="maltcms.commands.fragments.io.ANDIMSExporter">
+        <!-- skip variables created by other fragment commands, not included in AndiMS specification? -->
+        <property name="skipAggregatedVariables" value="true"/>
+    </bean>
     
 </beans>

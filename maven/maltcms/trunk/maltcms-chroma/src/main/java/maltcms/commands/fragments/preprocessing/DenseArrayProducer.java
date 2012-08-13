@@ -43,7 +43,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.preprocessing.denseArrayProducer.DenseArrayProducerWorker;
 import maltcms.commands.fragments.preprocessing.denseArrayProducer.MinMaxMassFinderWorker;
-import net.sf.maltcms.execution.api.ICompletionService;
+import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

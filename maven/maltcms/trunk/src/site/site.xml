@@ -30,7 +30,7 @@
 <!--            <item name="Road Map" href="roadmap.html" />-->
         </menu>
     
-<!--        <menu ref="modules" />-->
+        <menu ref="modules" />
 
         <menu ref="reports"/>
         <footer>
