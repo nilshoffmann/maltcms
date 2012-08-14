@@ -174,7 +174,7 @@ Running Maltcms
     To execute the standard pipeline for GC- and LC-MS, use 
 
 +------------------------------------------+
->java -jar maltcms.jar -c cfg/pipelines/chroma.mpl -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
+>maltcms.sh -c cfg/pipelines/chroma.mpl -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
 +------------------------------------------+
 
 ** ChromA4D
@@ -182,7 +182,7 @@ Running Maltcms
     To execute the available pipelines for GCxGC-MS, use 
 
 +------------------------------------------+
->java -jar maltcms.jar -c cfg/pipelines/chroma4D.mpl -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
+>maltcms.sh -c cfg/pipelines/chroma4D.mpl -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
 +------------------------------------------+
 
     If you do not supply any arguments, Maltcms will print all available 
@@ -222,7 +222,7 @@ Other Features
     script, or by calling 
 
 +------------------------------------------+
-java -cp maltcms.jar groovy.lang.GroovyShell path/to/script.groovy <ARGS>
+maltcms.sh -exec path/to/script.groovy <ARGS>
 +------------------------------------------+
 
     from the Maltcms installation base directory, where ARGS are optional
@@ -272,6 +272,9 @@ Input data formats
 
 * File format for Anchors
 
+    Note: Lines with "+------------------------------------------+" should not
+    be copied!
+
     Anchor files start with a file designation in their first line:
     Path can be omitted, if ORIGINAL_DATA_FILE and anchor file are both
     located in input base directory (cmdline option -i). Otherwise, the
@@ -293,6 +296,7 @@ Name	RI	RT	Scan
 RI1	-	-	230
 RI2	-	-	430
 +------------------------------------------+
+
     etc.
 
     Note that columns RI and RT are optional, Scan and Name are required.

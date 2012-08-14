@@ -9,7 +9,7 @@
   <artifactId>maltcms-resources</artifactId>
   <name>maltcms-resources</name>
   <url>http://maltcms.sourceforge.net</url>
-    <build>
+<!--    <build>
 	<resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -19,7 +19,7 @@
         </excludes>
       </resource>
     </resources>
-    </build>
+    </build>-->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

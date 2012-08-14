@@ -75,7 +75,11 @@
    
    <bean id="deltaMassesVisualizer" class="maltcms.commands.fragments2d.visualization.DeltaMasses"></bean>
    
-   <bean id="gradientVisualizer" class="maltcms.commands.fragments2d.visualization.GradientVisualizer"></bean>
+   <bean id="gradientSim" class="maltcms.math.functions.similarities.ArrayCos"/>
+   
+   <bean id="gradientVisualizer" class="maltcms.commands.fragments2d.visualization.GradientVisualizer">
+       <property name="similarity" ref="gradientSim"/>
+   </bean>
    
    <bean id="massSpectrumVisualizer" class="maltcms.commands.fragments2d.visualization.MassSpectrumVisualization"></bean>
    

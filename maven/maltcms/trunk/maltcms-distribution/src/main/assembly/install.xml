@@ -54,7 +54,7 @@
         </dependencySet>
 
         <dependencySet>
-            <!-- unpack resources jar -->
+             <!--unpack resources jar--> 
             <useTransitiveDependencies>false</useTransitiveDependencies>
             <unpack>true</unpack>
             <includes>
@@ -64,6 +64,12 @@
                 <excludes>
                     <exclude>META-INF/**</exclude>
                 </excludes>
+                <includes>
+                    <include>**/cfg/**</include>
+                    <include>**/bin/**</include>
+                    <include>**/res/**</include>
+                    <include>**/licenses/**</include>
+                </includes>
             </unpackOptions>
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>
@@ -82,6 +88,7 @@
                 <include>net.sf.maltcms:maltcms-chroma4D-cwt:jar</include>
                 <include>net.sf.maltcms:maltcms-evaluation:jar</include>
                 <include>net.sf.maltcms:maltcms-spectratyping:jar</include>
+                <!--<include>net.sf.maltcms:maltcms-resources:jar</include>-->
             </includes>
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>

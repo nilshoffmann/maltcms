@@ -49,6 +49,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.math.functions.similarities.ArrayDotMap;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -88,9 +89,9 @@ public class GradientVisualizer extends AFragmentCommand {
     private double doubleFillValue;
     @Configurable(name = "images.thresholdLow", value = "0")
     private double threshold = 0;
-    @Configurable(value = "maltcms.commands.distances.ArrayCos")
-    private String distClass = "maltcms.commands.distances.ArrayCos";
-    private IArraySimilarity similarity;
+//    @Configurable(value = "maltcms.commands.distances.ArrayCos")
+//    private String distClass = "maltcms.commands.distances.ArrayCos";
+    private IArraySimilarity similarity = new ArrayCos();
     @Configurable(value = "false")
     private boolean absolut = false;
 
@@ -207,12 +208,12 @@ public class GradientVisualizer extends AFragmentCommand {
         this.doubleFillValue = cfg.getDouble(
                 "ucar.nc2.NetcdfFile.fillValueDouble", 9.9692099683868690e+36);
         this.threshold = cfg.getDouble("images.thresholdLow", 0.0d);
-        distClass = cfg.getString(this.getClass().getName() + ".distance",
-                "maltcms.commands.distances.ArrayCos");
-        if (distClass != null) {
-            this.similarity = Factory.getInstance().getObjectFactory().
-                    instantiate(distClass, IArraySimilarity.class);
-        }
+//        distClass = cfg.getString(this.getClass().getName() + ".distance",
+//                "maltcms.commands.distances.ArrayCos");
+//        if (distClass != null) {
+//            this.similarity = Factory.getInstance().getObjectFactory().
+//                    instantiate(distClass, IArraySimilarity.class);
+//        }
         this.absolut = cfg.getBoolean(this.getClass().getName() + ".absolut",
                 false);
     }
