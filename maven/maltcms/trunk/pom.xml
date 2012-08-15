@@ -54,6 +54,13 @@
                 <role>Testing</role>
             </roles>
         </developer>
+        <developer>
+            <name>Rolf Hilker</name>
+            <roles>
+                <role>UI Developer</role>
+                <role>Testing</role>
+            </roles>
+        </developer>
     </developers>
     <inceptionYear>2007</inceptionYear>
     <ciManagement>
@@ -169,7 +176,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.8</version>
+                    <version>2.8.1</version>
                     <configuration>
                         <!-- Default configuration for all reports -->
                         <show>public</show>
@@ -243,13 +250,18 @@
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>1.7</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.1</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.0</version>
+                <!--<version>3.1</version>-->
                 <configuration>
                     <moduleExcludes>
                         
@@ -276,7 +288,7 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-javadoc-plugin</artifactId>
-                            <version>2.8.1</version>
+                            <!--<version>2.8.1</version>-->
                             <configuration>
                                 <show>public</show>
                                 <links>
@@ -302,7 +314,7 @@
                                 <type>date</type>
                                 <dates>
                                     <date implementation="java.lang.String">2012-04-21</date>
-                                    <date implementation="java.lang.String">2012-08-08</date>
+                                    <date implementation="java.lang.String">2012-08-15</date>
                                 </dates>
                                 <dateFormat>yyyy-MM-dd</dateFormat>
                             </configuration>
@@ -328,24 +340,44 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            <!--            
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pdf-plugin</artifactId>
-                <version>1.1</version>
+                <groupId>de.akquinet.jbosscc.latex</groupId>
+                <artifactId>maven-latex-plugin</artifactId>
+                <version>1.2</version>
+                <configuration>
+                    <settings>
+                        <!-- all tex main documents in this folder (including subfolders) will be processed -->
+                        <texDirectory>${basedir}/src/site/tex</texDirectory>
+                        <!-- the generated artifacts will be copied to this folder relative to ${project.reporting.outputDirectory} -->
+                        <outputDirectory>.</outputDirectory> 
+                        <!-- the working directory, for temporary files and LaTeX processing relative to ${project.build.directory} -->
+                        <tempDirectory>m2latex</tempDirectory>
+                        <!-- clean up the working directory in the end? May be used for debugging -->
+                        <cleanUp>true</cleanUp>
+                        <!-- path to the TeX scripts, if none, it must be on the system path -->
+                        <texPath/>
+                        <!-- the latex command -->
+                        <texCommand>pdflatex</texCommand>
+                        <!-- the bibtex command -->
+                        <bibtexCommand>bibtex</bibtexCommand>
+                        <!-- the arguments to use when calling latex -->
+                        <texCommandArgs>
+                            <texCommandArg>-interaction=nonstopmode</texCommandArg>
+                            <texCommandArg>--src-specials</texCommandArg>
+                        </texCommandArgs>
+                    </settings>
+                </configuration>
                 <executions>
+                    <!-- execute latex goal automatically during the site phase -->
                     <execution>
-                        <id>pdf</id>
                         <phase>site</phase>
                         <goals>
-                            <goal>pdf</goal>
+                            <goal>latex</goal>
                         </goals>
-                        <configuration>
-                            <outputDirectory>target/</outputDirectory>
-                        </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
+
+            </plugin>
         </plugins>
         
     </build>

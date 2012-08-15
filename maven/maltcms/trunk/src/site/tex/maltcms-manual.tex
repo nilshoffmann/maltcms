@@ -1,0 +1,68 @@
+\documentclass[10pt,a4paper,onecolumn,twoside,titlepage,headsepline,open=any]{scrbook}
+\usepackage[utf8x]{inputenc}
+\usepackage{ucs}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\renewcommand{\rmdefault}{ppl} % rm
+\renewcommand{\familydefault}{\sfdefault}
+\linespread{1.05}        % Palatino needs more leading
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[automark]{scrpage2}    % Kopfzeile definieren
+\ohead{}
+\chead{\headmark}                           % Lebender Header in die Mitte
+\pagestyle{scrheadings} 
+
+
+\author{Nils Hoffmann}
+\title{The Modular Application Toolkit for Chromatography-Mass Spectrometry\\\vspace{1ex}\begin{Large}
+User Guide\\
+Version 1.2.1-SNAPSHOT
+\end{Large}}
+\date{\today}
+\begin{document}
+\frontmatter    %römische Nummerierung aktivieren
+\maketitle       % Titel
+\chapter*{Preface}
+\section*{Intended Audience}
+This guide is aimed at novice as well as at experienced users of the Maltcms framework wishing to get a step-by-step introduction
+to setting up and running processing workflows for raw data from chromatography-mass spectrometry experiments. 
+
+Additionally, this guide provides programmers and power-users with the required knowledge for extending Maltcms with custom functionality. 
+\section*{License agreement}
+Maltcms is dual licensed under the terms of the \href{http://www.gnu.org/licenses/lgpl.html}{Lesser Gnu Public License (L-GPL) v3} or, 
+at the licensee's choice, the \href{http://www.eclipse.org/legal/epl-v10.html}{Eclipse Public License (EPL) 1.0}.
+
+\begin{flushleft}
+\includegraphics[scale=0.2]{../resources/images/lgpl-v3.pdf} 
+\end{flushleft}
+
+\noindent This manual is licensed under the terms of the \href{http://creativecommons.org/licenses/by-sa/3.0/deed.en}{Creative Commons Attribution Share Alike 3.0 license}. Thus, you may reproduce, alter, extend or modify the present document to your needs, as long as you comply with the license terms. 
+\begin{flushleft}
+\includegraphics[scale=1]{../resources/images/by-sa.pdf} 
+\end{flushleft}
+
+\section*{Availability}
+The Maltcms distribution is available from \url{maltcms.sf.net}.
+
+\noindent A selection of raw sample data, required for the instructional examples, is available \href{http://sourceforge.net/projects/maltcms/files/maltcms/example-data/}{here}.
+
+\section*{Acknowledgements}
+We would like to thank the developers and testers of Maltcms, namely S\"oren M\"uller, Rolf Hilker, Mathias Wilhelm and Kai-Bernd Stadermann for their contributions.
+
+We would further like to thank Professor Dr. Jens Stoye of the Genome Informatics Group and Professor Dr. Karsten Niehaus of the Metabolome and Proteome Group at Bielefeld University for their expert advice and continued support.
+%\listoffigures    %Abbildungsverzeichnis
+%\listoftables     % Tabellenverzeichnis
+\tableofcontents   %Inhaltsverzeichnis
+ 
+\mainmatter    %Arabische Seitenummerierung
+\include{intro/chapter}
+\include{usage/chapter}
+\include{concepts/chapter}
+\include{samples/chapter}
+\end{document}
