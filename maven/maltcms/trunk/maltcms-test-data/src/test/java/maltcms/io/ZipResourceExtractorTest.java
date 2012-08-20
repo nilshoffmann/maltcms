@@ -21,6 +21,7 @@
  */
 package maltcms.io;
 
+import maltcms.test.ExtractHelper;
 import java.io.File;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,6 +62,34 @@ public class ZipResourceExtractorTest {
         System.out.println("File exists");
         Assert.assertTrue(unzippedFile.length()>0);
         System.out.println("File size is != 0: "+unzippedFile.length());
+    }
+    
+    @Test
+    public void testExtractHelper() {
+        ExtractHelper.FType type = ExtractHelper.FType.CDF_1D;
+        File[] files = ExtractHelper.extractAllForType(tf.newFolder(type.name()), type);
+        for(File f:files) {
+            Assert.assertTrue(f.exists() && f.isFile());
+            Assert.assertTrue(f.length()>0);
+        }
+        type = ExtractHelper.FType.MZML;
+        files = ExtractHelper.extractAllForType(tf.newFolder(type.name()), type);
+        for(File f:files) {
+            Assert.assertTrue(f.exists() && f.isFile());
+            Assert.assertTrue(f.length()>0);
+        }
+        type = ExtractHelper.FType.MZXML;
+        files = ExtractHelper.extractAllForType(tf.newFolder(type.name()), type);
+        for(File f:files) {
+            Assert.assertTrue(f.exists() && f.isFile());
+            Assert.assertTrue(f.length()>0);
+        }
+        type = ExtractHelper.FType.MZDATA;
+        files = ExtractHelper.extractAllForType(tf.newFolder(type.name()), type);
+        for(File f:files) {
+            Assert.assertTrue(f.exists() && f.isFile());
+            Assert.assertTrue(f.length()>0);
+        }
     }
 
 }

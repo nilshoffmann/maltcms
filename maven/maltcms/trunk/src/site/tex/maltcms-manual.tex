@@ -6,11 +6,24 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{makeidx}
-\usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{
+   colorlinks=true,
+   urlcolor=cyan,
+   pdfborder= 0 0 0
+}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{listings}
+\usepackage[toc,acronym]{glossaries}
 \usepackage[T1]{fontenc}
-\renewcommand{\rmdefault}{ppl} % rm
-\renewcommand{\familydefault}{\sfdefault}
+\usepackage{palatino}
+\usepackage{helvet}
+%the following font may need to be installed seperately
+\usepackage{inconsolata}
+%\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\ttdefault}{inconsolata}
 \linespread{1.05}        % Palatino needs more leading
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 \usepackage[automark]{scrpage2}    % Kopfzeile definieren
@@ -18,6 +31,23 @@
 \chead{\headmark}                           % Lebender Header in die Mitte
 \pagestyle{scrheadings} 
 
+\definecolor{codebg}{RGB}{255,255,240}
+\definecolor{textfg}{RGB}{60,110,60}
+\definecolor{middlegray}{rgb}{0.5,0.5,0.5}
+\definecolor{lightgray}{rgb}{0.8,0.8,0.8}
+\definecolor{darkred}{rgb}{0.6,0.1,0.1}
+\definecolor{yac}{rgb}{0.6,0.6,0.1}
+
+\lstset{language=Java,numbers=left,backgroundcolor=\color{codebg},keywordstyle=\bfseries\ttfamily\color{darkred},
+   stringstyle=\color{textfg}\ttfamily,
+   commentstyle=\color{middlegray}\ttfamily,
+   emph={square}, 
+   emphstyle=\color{blue}\texttt,
+   emph={[2]root,base},
+   emphstyle={[2]\color{yac}\texttt},
+   showstringspaces=false,
+   flexiblecolumns=false}
+%
 
 \author{Nils Hoffmann}
 \title{The Modular Application Toolkit for Chromatography-Mass Spectrometry\\\vspace{1ex}\begin{Large}
@@ -25,39 +55,28 @@ User Guide\\
 Version 1.2.1-SNAPSHOT
 \end{Large}}
 \date{\today}
+
+%include glossary definitions
+\include{glossary}
+%include acronym definitions
+\include{acronyms}
+
+\makeglossaries
+\makeindex
+
+%include hyphenation patterns
+\include{hyphenation}
+
 \begin{document}
 \frontmatter    %römische Nummerierung aktivieren
 \maketitle       % Titel
-\chapter*{Preface}
-\section*{Intended Audience}
-This guide is aimed at novice as well as at experienced users of the Maltcms framework wishing to get a step-by-step introduction
-to setting up and running processing workflows for raw data from chromatography-mass spectrometry experiments. 
+\include{preface}
 
-Additionally, this guide provides programmers and power-users with the required knowledge for extending Maltcms with custom functionality. 
-\section*{License agreement}
-Maltcms is dual licensed under the terms of the \href{http://www.gnu.org/licenses/lgpl.html}{Lesser Gnu Public License (L-GPL) v3} or, 
-at the licensee's choice, the \href{http://www.eclipse.org/legal/epl-v10.html}{Eclipse Public License (EPL) 1.0}.
-
-\begin{flushleft}
-\includegraphics[scale=0.2]{../resources/images/lgpl-v3.pdf} 
-\end{flushleft}
-
-\noindent This manual is licensed under the terms of the \href{http://creativecommons.org/licenses/by-sa/3.0/deed.en}{Creative Commons Attribution Share Alike 3.0 license}. Thus, you may reproduce, alter, extend or modify the present document to your needs, as long as you comply with the license terms. 
-\begin{flushleft}
-\includegraphics[scale=1]{../resources/images/by-sa.pdf} 
-\end{flushleft}
-
-\section*{Availability}
-The Maltcms distribution is available from \url{maltcms.sf.net}.
-
-\noindent A selection of raw sample data, required for the instructional examples, is available \href{http://sourceforge.net/projects/maltcms/files/maltcms/example-data/}{here}.
-
-\section*{Acknowledgements}
-We would like to thank the developers and testers of Maltcms, namely S\"oren M\"uller, Rolf Hilker, Mathias Wilhelm and Kai-Bernd Stadermann for their contributions.
-
-We would further like to thank Professor Dr. Jens Stoye of the Genome Informatics Group and Professor Dr. Karsten Niehaus of the Metabolome and Proteome Group at Bielefeld University for their expert advice and continued support.
 %\listoffigures    %Abbildungsverzeichnis
 %\listoftables     % Tabellenverzeichnis
+
+\lstinputlisting[firstline=52,lastline=75,float,caption=Programmatic assembly of a workflow,label=lst:myWorkflow]{../../../maltcms-chroma/src/main/java/net/sf/maltcms/tutorials/MyWorkflow.java}
+
 \tableofcontents   %Inhaltsverzeichnis
  
 \mainmatter    %Arabische Seitenummerierung
@@ -65,4 +84,8 @@ We would further like to thank Professor Dr. Jens Stoye of the Genome Informatic
 \include{usage/chapter}
 \include{concepts/chapter}
 \include{samples/chapter}
+\backmatter
+\chapter{Appendix}
+\lstlistoflistings
+\printglossaries
 \end{document}

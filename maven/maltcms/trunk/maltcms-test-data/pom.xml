@@ -9,26 +9,5 @@
     </parent>
     <artifactId>maltcms-test-data</artifactId>
     <name>maltcms-test-data</name>
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io-netcdf</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io-mzxml</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io-mzml</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io-mzdata</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+    <dependencies></dependencies>
 </project>

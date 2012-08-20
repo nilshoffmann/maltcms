@@ -147,7 +147,7 @@ public class MZMLDataSource implements IDataSource {
         if (MZMLDataSource.fileToIndex.containsKey(ff)) {
             return MZMLDataSource.fileToIndex.get(ff);
         }
-        MzMLUnmarshaller um = new MzMLUnmarshaller(new File(ff.getAbsolutePath()), false);
+        MzMLUnmarshaller um = new MzMLUnmarshaller(new File(ff.getAbsolutePath()));
         MZMLDataSource.fileToIndex.put(ff, um);
         log.debug("mzML file {} is indexed: {}", ff.getAbsolutePath(), um.isIndexedmzML());
         return um;
@@ -167,7 +167,7 @@ public class MZMLDataSource implements IDataSource {
 
     private Spectrum getSpectrum(MzMLUnmarshaller um, int idx) {
         try {
-            return um.getSpectrumById(um.getSpectrumIDFromSpectrumIndex(BigInteger.valueOf(idx)));
+            return um.getSpectrumById(um.getSpectrumIDFromSpectrumIndex(Integer.valueOf(idx)));
     //        SpectrumList cl = run.getSpectrumList();
     //        return s;
     //        return s;

@@ -1,0 +1,147 @@
+This is makeindex, version 2.15 [TeX Live 2009] (kpathsea + Thai support).
+Scanning input file maltcms-manual.tex...
+!! Input index error (file = maltcms-manual.tex, line = 1):
+   -- Unknown index keyword \documentclass[10pt,a4paper,onecolumn,twoside,titlepage,headsepline,open=any].
+!! Input index error (file = maltcms-manual.tex, line = 2):
+   -- Unknown index keyword \usepackage[utf8x].
+!! Input index error (file = maltcms-manual.tex, line = 3):
+   -- Unknown index keyword \usepackage.
+!! Input index error (file = maltcms-manual.tex, line = 4):
+   -- Unknown index keyword \usepackage[english].
+!! Input index error (file = maltcms-manual.tex, line = 5):
+   -- Unknown index keyword \usepackage.
+!! Input index error (file = maltcms-manual.tex, line = 6):
+   -- Unknown index keyword \usepackage.
+!! Input index error (file = maltcms-manual.tex, line = 7):
+   -- Unknown index keyword \usepackage.
+!! Input index error (file = maltcms-manual.tex, line = 8):
+   -- Unknown index keyword \usepackage.
+!! Input index error (file = maltcms-manual.tex, line = 9):
+   -- Unknown index keyword \usepackage.
+!! Input index error (file = maltcms-manual.tex, line = 10):
+   -- Unknown index keyword \usepackage.
+!! Input index error (file = maltcms-manual.tex, line = 11):
+   -- Unknown index keyword \usepackage.
+!! Input index error (file = maltcms-manual.tex, line = 12):
+   -- Unknown index keyword \usepackage[usenames,dvipsnames,svgnames,table].
+!! Input index error (file = maltcms-manual.tex, line = 13):
+   -- Unknown index keyword \usepackage.
+!! Input index error (file = maltcms-manual.tex, line = 14):
+   -- Unknown index keyword \usepackage[xindy,toc].
+!! Input index error (file = maltcms-manual.tex, line = 15):
+   -- Unknown index keyword \usepackage[T1].
+!! Input index error (file = maltcms-manual.tex, line = 16):
+   -- Unknown index keyword \usepackage.
+!! Input index error (file = maltcms-manual.tex, line = 17):
+   -- Unknown index keyword \usepackage.
+!! Input index error (file = maltcms-manual.tex, line = 18):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 19):
+   -- Unknown index keyword \usepackage.
+!! Input index error (file = maltcms-manual.tex, line = 20):
+   -- Unknown index keyword %\renewcommand.
+!! Input index error (file = maltcms-manual.tex, line = 21):
+   -- Unknown index keyword \renewcommand.
+!! Input index error (file = maltcms-manual.tex, line = 22):
+   -- Unknown index keyword \linespread.
+!! Input index error (file = maltcms-manual.tex, line = 23):
+   -- Unknown index keyword \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm].
+!! Input index error (file = maltcms-manual.tex, line = 24):
+   -- Unknown index keyword \usepackage[automark].
+!! Input index error (file = maltcms-manual.tex, line = 25):
+   -- Unknown index keyword \ohead.
+!! Input index error (file = maltcms-manual.tex, line = 26):
+   -- Unknown index keyword \chead.
+!! Input index error (file = maltcms-manual.tex, line = 27):
+   -- Unknown index keyword \pagestyle.
+!! Input index error (file = maltcms-manual.tex, line = 29):
+   -- Unknown index keyword \definecolor.
+!! Input index error (file = maltcms-manual.tex, line = 30):
+   -- Unknown index keyword \definecolor.
+!! Input index error (file = maltcms-manual.tex, line = 31):
+   -- Unknown index keyword \definecolor.
+!! Input index error (file = maltcms-manual.tex, line = 32):
+   -- Unknown index keyword \definecolor.
+!! Input index error (file = maltcms-manual.tex, line = 33):
+   -- Unknown index keyword \definecolor.
+!! Input index error (file = maltcms-manual.tex, line = 34):
+   -- Unknown index keyword \definecolor.
+!! Input index error (file = maltcms-manual.tex, line = 36):
+   -- Unknown index keyword \lstset.
+!! Input index error (file = maltcms-manual.tex, line = 37):
+   -- Unknown index keyword stringstyle=\color.
+!! Input index error (file = maltcms-manual.tex, line = 38):
+   -- Unknown index keyword commentstyle=\color.
+!! Input index error (file = maltcms-manual.tex, line = 39):
+   -- Unknown index keyword emph=.
+!! Input index error (file = maltcms-manual.tex, line = 40):
+   -- Unknown index keyword emphstyle=\color.
+!! Input index error (file = maltcms-manual.tex, line = 41):
+   -- Unknown index keyword emph=.
+!! Input index error (file = maltcms-manual.tex, line = 42):
+   -- Unknown index keyword emphstyle=.
+!! Input index error (file = maltcms-manual.tex, line = 43):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 44):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 45):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 47):
+   -- Unknown index keyword \author.
+!! Input index error (file = maltcms-manual.tex, line = 48):
+   -- Unknown index keyword \title.
+!! Input index error (file = maltcms-manual.tex, line = 49):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 50):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 51):
+   -- Unknown index keyword \end.
+!! Input index error (file = maltcms-manual.tex, line = 52):
+   -- Unknown index keyword \date.
+!! Input index error (file = maltcms-manual.tex, line = 54):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 55):
+   -- Unknown index keyword \include.
+!! Input index error (file = maltcms-manual.tex, line = 56):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 57):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 59):
+   -- Unknown index keyword \begin.
+!! Input index error (file = maltcms-manual.tex, line = 60):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 61):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 63):
+   -- Unknown index keyword \include.
+!! Input index error (file = maltcms-manual.tex, line = 65):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 66):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 68):
+   -- Unknown index keyword \lstinputlisting[firstline=52,lastline=75,float,caption=Programmaticassemblyofaworkflow,label=lst:myWorkflow].
+!! Input index error (file = maltcms-manual.tex, line = 70):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 72):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 73):
+   -- Unknown index keyword \include.
+!! Input index error (file = maltcms-manual.tex, line = 74):
+   -- Unknown index keyword \include.
+!! Input index error (file = maltcms-manual.tex, line = 75):
+   -- Unknown index keyword \include.
+!! Input index error (file = maltcms-manual.tex, line = 76):
+   -- Unknown index keyword \include.
+!! Input index error (file = maltcms-manual.tex, line = 77):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 78):
+   -- Unknown index keyword \chapter.
+!! Input index error (file = maltcms-manual.tex, line = 79):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 80):
+   -- Missing arguments -- need two (premature LFD).
+!! Input index error (file = maltcms-manual.tex, line = 81):
+   -- Unknown index keyword \end.
+done (0 entries accepted, 71 rejected).
+Nothing written in maltcms-manual.ind.
+Transcript written in glossary.
