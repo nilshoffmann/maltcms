@@ -38,7 +38,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.sf.maltcms.math.Combinatorics;
+import cross.math.Combinatorics;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.LoggerFactory;
