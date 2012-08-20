@@ -42,18 +42,17 @@ import org.springframework.context.ApplicationContext;
 public class ObjectFactory implements IObjectFactory {
 
     private Configuration cfg = new PropertiesConfiguration();
-    private File userConfigLocation = null;
+    private File userConfigLocation = new File(".");
     private ApplicationContext context = null;
     public static final String CONTEXT_LOCATION_KEY = "pipeline.xml";
 
     @Override
     public void configure(final Configuration cfg) {
-        this.cfg = new PropertiesConfiguration();
-        ConfigurationUtils.copy(cfg, this.cfg);
-        userConfigLocation = new File(this.cfg.getString("config.basedir"));
+        this.cfg = cfg;
+        userConfigLocation = new File(this.cfg.getString("config.basedir","."));
         String[] contextLocations = null;
-        if (cfg.containsKey(CONTEXT_LOCATION_KEY)) {
-            log.debug("Using user-defined location: {}",cfg.getStringArray(CONTEXT_LOCATION_KEY));
+        if (this.cfg.containsKey(CONTEXT_LOCATION_KEY)) {
+            log.debug("Using user-defined location: {}",this.cfg.getStringArray(CONTEXT_LOCATION_KEY));
             contextLocations = cfg.getStringArray(CONTEXT_LOCATION_KEY);
         }
         if(contextLocations==null) {
@@ -61,17 +60,10 @@ public class ObjectFactory implements IObjectFactory {
 //            throw new NullPointerException();
             return;
         }
-//        } else {
-//            String str = new File(System.getProperty(
-//                "user.dir"),"cfg/xml/chroma.xml").getAbsolutePath();
-//            log.info("Using fallback default location: {}",str);
-//            contextLocations = new String[]{str};
-////            contextLocations = new String[]{"/cfg/xml/chroma.xml"};
-//        }
         log.debug("Using context locations: {}",
                 Arrays.toString(contextLocations));
         try {
-            context = new DefaultApplicationContextFactory(contextLocations).
+            context = new DefaultApplicationContextFactory(contextLocations, this.cfg).
                     createApplicationContext();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -117,7 +109,7 @@ public class ObjectFactory implements IObjectFactory {
         if (context != null) {
             try {
                 t = context.getBean(c);
-                log.info("Retrieved bean {} from context!");
+                log.info("Retrieved bean {} from context!",t.getClass().getName());
                 return t;
             } catch (NoSuchBeanDefinitionException nsbde) {
                 log.debug("Could not create bean {} from context! Reason:\n {}",
@@ -127,7 +119,7 @@ public class ObjectFactory implements IObjectFactory {
                         c.getName(), be.getLocalizedMessage());
             }
         }
-        log.info("Using regular configuration mechanism!");
+        log.info("Using regular configuration mechanism on instance of type "+c.getName());
         return configureType(instantiateType(c), this.cfg);
     }
 

@@ -19,11 +19,16 @@
  *
  *  $Id$
  */
-package net.sf.maltcms.math;
+package cross.math;
 
 import java.util.Iterator;
 
 /**
+ * Implementation of {@see Iterator} for {@code int[]}, returning, for a 
+ * given number of {@see Partition}s in increasing order, an array of item indices
+ * for each partition for the current iteration. Allows to enumerate all items 
+ * of supplied partitions of arbitrary size in a defined order.
+ * 
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
 public class CombinationIterator implements Iterator<int[]> {
@@ -32,6 +37,10 @@ public class CombinationIterator implements Iterator<int[]> {
     private long size = -1;
     private long cnt = 0;
 
+    /**
+     * Create a new CombinationIterator with given Partitions.
+     * @param p 
+     */
     public CombinationIterator(Partition... p) {
         this.partitions = p;
         this.size = size();
@@ -57,11 +66,18 @@ public class CombinationIterator implements Iterator<int[]> {
         return ret;
     }
 
+    /**
+     * @throws UnsupportedOperationException
+     */
     @Override
     public void remove() {  
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * Returns the number of combinations of all partitions and their elements.
+     * @return 
+     */
     public long size() {
 //        System.out.print("Size: ");
         if (this.size == -1) {
@@ -76,6 +92,9 @@ public class CombinationIterator implements Iterator<int[]> {
         return size;
     }
     
+    /**
+     * Resets the iterator to initial value.
+     */
     public void reset() {
         this.cnt = 0;
         for(Partition p:partitions) {

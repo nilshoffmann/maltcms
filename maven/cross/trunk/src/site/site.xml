@@ -21,7 +21,7 @@
             <item name="Maltcms Home" href="http://maltcms.sf.net" />
         </links>
     
-<!--        <menu ref="modules" />-->
+        <menu ref="modules" />
 
         <menu ref="reports"/>
         <footer>

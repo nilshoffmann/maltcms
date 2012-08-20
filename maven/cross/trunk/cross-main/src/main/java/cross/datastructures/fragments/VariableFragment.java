@@ -122,12 +122,14 @@ public class VariableFragment implements IVariableFragment {
         VariableFragment nf = new VariableFragment(ff, vf.getVarname());
         vf.getParent().getChild(vf.getVarname(), true);
         Dimension[] d = vf.getDimensions();
-        Dimension[] nd = new Dimension[d.length];
-        int i = 0;
-        for (Dimension dim : d) {
-            nd[i++] = new Dimension(dim.getName(), dim);
+        if(d!=null) {
+            Dimension[] nd = new Dimension[d.length];
+            int i = 0;
+            for (Dimension dim : d) {
+                nd[i++] = new Dimension(dim.getName(), dim);
+            }
+            nf.setDimensions(nd);
         }
-        nf.setDimensions(nd);
         nf.setDataType(vf.getDataType());
         return nf;
     }

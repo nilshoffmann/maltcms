@@ -19,18 +19,22 @@
  *
  *  $Id$
  */
-package net.sf.maltcms.math;
+package cross.math;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import net.sf.maltcms.datastructures.CachedLazyList;
-import net.sf.maltcms.datastructures.IElementProvider;
+import cross.datastructures.collections.CachedLazyList;
+import cross.datastructures.collections.IElementProvider;
+import java.util.Arrays;
+import lombok.extern.slf4j.Slf4j;
 
 /**
+ * Utility class with methods for combinatorics.
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
+@Slf4j
 public class Combinatorics {
 
     private static double[] faculty = null;
@@ -62,9 +66,9 @@ public class Combinatorics {
     
     /**
      * Returns a lazily instantiated list (allows for an almost arbitrary number 
-     * of combinations) of all unique object combinations, s.t. 
-     * for (a,b)=(b,a) only (a,b) is returned. The list is backed by a @see CombinationProvider
-     * wrapping a @CombinationIterator to feed a @CachedLazyList.
+     * of combinations< {@code Integer.maxValue()}) of all unique object combinations, s.t. 
+     * for (a,b)=(b,a) only (a,b) is returned. The list is backed by a {@see CombinationProvider}
+     * wrapping a {@see CombinationIterator} to feed a {@see CachedLazyList}.
      * 
      * @param data
      * @return 
@@ -93,11 +97,11 @@ public class Combinatorics {
             } else {
                 parts[i] = new Partition(partitionSize[i]);
             }
-//            System.out.println("|Partition " + i + "|=" + partitionSize[i] + "=" + Arrays.toString(data.get(i)));
+            log.debug("|Partition {}| = {}; contents = {}",new Object[]{i, partitionSize[i],Arrays.toString(data.get(i)) });
         }
 
         CombinationIterator pi = new CombinationIterator(parts);
-        System.out.println("No. of choices: " + pi.size());
+        log.info("No. of choices: {}", pi.size());
         // list holding returned choices
         IElementProvider<Object[]> iep = new CombinationProvider(pi, data);
         List<Object[]> l = CachedLazyList.getList(iep);//new ArrayList<Object[]>();

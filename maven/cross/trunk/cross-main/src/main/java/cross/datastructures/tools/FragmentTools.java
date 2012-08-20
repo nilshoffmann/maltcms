@@ -25,7 +25,9 @@ import cross.Factory;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.fragments.ImmutableFileFragment;
 import cross.datastructures.fragments.VariableFragment;
+import cross.datastructures.tuple.TupleND;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
@@ -320,13 +322,17 @@ public class FragmentTools {
     public static Collection<String> getStringArray(final IFileFragment ff,
             final String variableName) {
         IVariableFragment vf;
-
-        vf = ff.getChild(variableName);
-        log.info("Retrieved VariableFragment");
-        final Array a = vf.getArray();
-        log.info("Retrieved Array");
-        EvalTools.notNull(a, FragmentTools.class);
-        return ArrayTools.getStringsFromArray(a);
+        try {
+            vf = ff.getChild(variableName);
+            log.info("Retrieved VariableFragment");
+            final Array a = vf.getArray();
+            log.info("Retrieved Array");
+            EvalTools.notNull(a, FragmentTools.class);
+            return ArrayTools.getStringsFromArray(a);
+        } catch (ResourceNotAvailableException ex) {
+            log.warn("{}", ex);
+            return Collections.emptyList();
+        }
     }
 
     @Deprecated
@@ -539,9 +545,10 @@ public class FragmentTools {
     /**
      * Retrieve all accessible {@link IVariableFragment} instances starting from
      * the given {@link IFileFragment} and traversing the ancestor tree in
-     * breadth-first order, adding all immediate @ link IVariableFragment}
-     * instances to the list first, before exploring the next ancestor
-     * (source_files).
+     * breadth-first order, adding all immediate
+     *
+     * @{link IVariableFragment} instances to the list first, before exploring
+     * the next ancestor (source_files).
      *
      * @param fragment
      * @return
@@ -669,7 +676,7 @@ public class FragmentTools {
     /**
      * Returns a list of the variables provided by the {@link IDataSource} for
      * the given file fragment. Any errors encountered by the DataSource are
-     * thrown as an IOException.
+     * thrown as an {@link IOException}.
      *
      * @param fragment
      * @return
@@ -680,4 +687,44 @@ public class FragmentTools {
         IDataSourceFactory dsf = Factory.getInstance().getDataSourceFactory();
         return dsf.getDataSourceFor(fragment).readStructure(fragment);
     }
+    
+    /**
+     * Returns a {@link TupleND} of {@link ImmutableFileFragment}s from the given files.
+     * @param files
+     * @return 
+     */
+    public static TupleND<IFileFragment> immutable(File...files) {
+        TupleND<IFileFragment> t = new TupleND<IFileFragment>();
+        for(File f:files) {
+            t.add(new ImmutableFileFragment(f));
+        }
+        return t;
+    }
+    
+    /**
+     * Returns a {@link TupleND} of {@link ImmutableFileFragment}s from the given files.
+     * @param files
+     * @return 
+     */
+    public static TupleND<IFileFragment> immutable(Collection<File> files) {
+        TupleND<IFileFragment> t = new TupleND<IFileFragment>();
+        for(File f:files) {
+            t.add(new ImmutableFileFragment(f));
+        }
+        return t;
+    }
+    
+    /**
+     * Returns a {@link TupleND} of {@link FileFragment}s from the given files.
+     * @param files
+     * @return 
+     */
+    public static TupleND<IFileFragment> mutable(Collection<File> files) {
+        TupleND<IFileFragment> t = new TupleND<IFileFragment>();
+        for(File f:files) {
+            t.add(new FileFragment(f));
+        }
+        return t;
+    }
+    
 }

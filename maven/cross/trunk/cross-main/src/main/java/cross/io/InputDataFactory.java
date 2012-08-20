@@ -30,6 +30,7 @@ import cross.tools.StringTools;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import lombok.AccessLevel;
@@ -156,12 +157,12 @@ public class InputDataFactory implements IInputDataFactory {
 
                     final String[] children = files.toArray(new String[]{});// dir.list(filter);
                     if (children == null) {
-                        log.error("Could not locate directory "
+                        log.error("Could not find directory "
                                 + dir.getAbsolutePath() + ", aborting!");
                         System.exit(-1);
                     } else if (children.length == 0) {
-                        log.error("Could not locate files in "
-                                + dir.getAbsolutePath() + ", aborting!");
+                        log.error("Could not find "+Arrays.toString(input)+" in "
+                                + dir.getAbsolutePath() +", aborting!");
                         System.exit(-1);
                     } else {
                         for (int i = 0; i < children.length; i++) {
@@ -174,7 +175,7 @@ public class InputDataFactory implements IInputDataFactory {
                 }
             }
             if (this.input.length == 0) {
-                Factory.getInstance().log.error("Could not split dataInfo!");
+                Factory.getInstance().log.error("{} could not be tokenized!",Arrays.toString(input));
                 System.exit(-1);
             }
 

@@ -77,8 +77,6 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     private boolean saveHTML = false;
     @Configurable
     private boolean saveTEXT = false;
-//    @Configurable
-//    private boolean saveInFragmentCommandDir = false;
     private Date date = new Date();
     private Configuration cfg = new PropertiesConfiguration();
     private boolean executeLocal = true;
@@ -108,30 +106,10 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     @Override
     public void appendXML(final Element e) {
         log.debug("Appending xml for DefaultWorkflow " + getName());
-        // Element workflow = new Element("workflow");
-        // workflow.setAttribute("class", this.getClass().getCanonicalName());
-        // workflow.setAttribute("name", name);
         getCommandSequence().appendXML(e);
         for (final IWorkflowResult wr : this.al) {
             wr.appendXML(e);
-//            final Element iwr = new Element("workflowElementResult");
-//            iwr.setAttribute("class", wr.getClass().getCanonicalName());
-//            iwr.setAttribute("slot", wr.getWorkflowSlot().name());
-//            iwr.setAttribute("generator", wr.getWorkflowElement().getClass().
-//                    getCanonicalName());
-//
-//            if (wr instanceof IWorkflowFileResult) {
-//                final Element resources = new Element("resources");
-//                final Element resource = new Element("resource");
-//                resource.setAttribute("file",
-//                        ((IWorkflowFileResult) wr).getFile().getAbsolutePath());
-//                resources.addContent(resource);
-//                iwr.addContent(resources);
-//            }
-//
-//            e.addContent(iwr);
         }
-        // e.addContent(workflow);
     }
 
     /*
@@ -152,8 +130,6 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         this.fileFilter = cfg.getString(this.getClass().getName()
                 + ".resultFileFilter", DefaultConfigurableFileFilter.class.
                 getName());
-//        this.saveInFragmentCommandDir = cfg.getBoolean(this.getClass().getName()
-//                + ".saveInFragmentCommandDir", true);
     }
 
     @Override
@@ -432,13 +408,6 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         this.date = date1;
     }
 
-//    /**
-//     * @param al
-//     *            the IWorkflowResult List to set
-//     */
-//    public void setWorkflowResult(final ArrayList<IWorkflowResult> al) {
-//        this.al = al;
-//    }
     /**
      * @param xslPathPrefix
      *            the xslPathPrefix to set
@@ -491,9 +460,6 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                 i++;
             }
             if (activeCommand != null) {
-//                if (saveInFragmentCommandDir) {
-//                    return getOutputDirectory(activeCommand);
-//                } else {
                 File dir = new File(getOutputDirectory(activeCommand), iwe.
                         getClass().getSimpleName());
                 if (!dir.exists()) {
@@ -501,13 +467,9 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                 }
                 log.info("Output dir for object of type {}: {}",iwe.getClass().getSimpleName(),this.outputDirectory);
                 return dir;
-//                }
             }
         } else if (iwe instanceof IWorkflowElement) {
             if (activeCommand != null) {
-//                if (saveInFragmentCommandDir) {
-//                    return getOutputDirectory(activeCommand);
-//                } else {
                 File dir = new File(getOutputDirectory(activeCommand), iwe.
                         getClass().getSimpleName());
                 if (!dir.exists()) {
@@ -515,7 +477,6 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                 }
                 log.info("Output dir for object of type {}: {}",iwe.getClass().getSimpleName(),this.outputDirectory);
                 return dir;
-//                }
             }
         }
 

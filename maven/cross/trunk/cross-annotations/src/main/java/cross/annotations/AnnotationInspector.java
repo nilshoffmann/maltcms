@@ -30,12 +30,15 @@ import org.slf4j.LoggerFactory;
 /**
  * Class which provides static utility methods to test for presence of specific
  * cross.annotations.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-public class AnnotationInspector {
+public final class AnnotationInspector {
 
     static Logger log = LoggerFactory.getLogger(AnnotationInspector.class);
+
+    private AnnotationInspector() {
+    }
 
     public static Collection<String> getOptionalRequiredVariables(
             final Class<?> c) {
@@ -115,40 +118,74 @@ public class AnnotationInspector {
     }
 
     public static String getDefaultValueFor(final Class<?> c, final String name) {
-        final Field[] f = c.getDeclaredFields();
-        for (final Field fld : f) {
-            if (fld.isAnnotationPresent(Configurable.class)) {
-                String key = fld.getAnnotation(Configurable.class).name();
-                AnnotationInspector.log.info("Key: {}", key);
-                if (key.isEmpty()) {
-                    key = c.getName() + "." + fld.getName();
-                }
-                AnnotationInspector.log.info("Key: {}", key);
-                if (key.endsWith(name)) {
-                    AnnotationInspector.log.info("Key: {}", key);
-                    return fld.getAnnotation(Configurable.class).value();
-                }
-            }
+        Field fld = getFieldForName(c, name);
+        if (fld == null) {
+            return "";
         }
-        return "";
+        String dval = fld.getAnnotation(Configurable.class).value();
+        AnnotationInspector.log.info("Returning default value: {}", dval);
+        return dval;
+
+    }
+
+    public static String getNameFor(final Class<?> c, final String name) {
+        Field fld = getFieldForName(c, name);
+        if (fld == null) {
+            return "";
+        }
+        return getNameFor(c, fld);
+    }
+
+    public static String getNameFor(final Class<?> c, Field fld) {
+        return normalizeName(c, fld);
+    }
+
+    public static String getDescriptionFor(final Class<?> c, final String name) {
+        Field fld = getFieldForName(c, name);
+        if (fld == null) {
+            return "";
+        }
+        String descr = fld.getAnnotation(Configurable.class).description();
+        AnnotationInspector.log.info("Returning description: {}", descr);
+        return descr;
     }
 
     public static Class<?> getTypeFor(final Class<?> c, final String name) {
+        Field fld = getFieldForName(c, name);
+        if (fld == null) {
+            return null;
+        }
+        AnnotationInspector.log.info("Returning type of field: {}", fld.getType());
+        return fld.getType();
+    }
+
+    private static Field getFieldForName(Class<?> c, String name) {
         final Field[] f = c.getDeclaredFields();
         for (final Field fld : f) {
             if (fld.isAnnotationPresent(Configurable.class)) {
-                Class<?> clazz = fld.getAnnotation(Configurable.class).type();
-                String key = fld.getAnnotation(Configurable.class).name();
-                if (key.endsWith(name)) {
-                    if (clazz == null) {
-                        return String.class;
-                    }
-                    return clazz;
+                String internalName = fld.getName();
+                if (internalName.endsWith(name)) {
+                    AnnotationInspector.log.info("Returning field: {}", normalizeName(c, fld));
+                    return fld;
                 }
-
+                String externalName = fld.getAnnotation(Configurable.class).name();
+                if (externalName.isEmpty()) {
+                    externalName = normalizeName(c, fld);
+                }
+                if (externalName.endsWith(name)) {
+                    AnnotationInspector.log.info("Returning field: {}", externalName);
+                    return fld;
+                }
             }
         }
+
         return null;
+    }
+
+    private static String normalizeName(Class<?> c, Field f) {
+        String name = c.getName() + "." + f.getName();
+        AnnotationInspector.log.info("Returning normalized name: {}", name);
+        return name;
     }
 
     private static void inspectFields(final Class<?> c,

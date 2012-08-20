@@ -19,12 +19,14 @@
  *
  *  $Id$
  */
-package net.sf.maltcms.math;
+package cross.math;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Utilitiy methods for sets with common names.
+ * 
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
 public class SetOperations {

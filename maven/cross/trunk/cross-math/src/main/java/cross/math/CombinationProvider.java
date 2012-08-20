@@ -19,15 +19,15 @@
  *
  *  $Id$
  */
-package net.sf.maltcms.math;
+package cross.math;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.sf.maltcms.datastructures.IElementProvider;
+import cross.datastructures.collections.IElementProvider;
 
 /**
+ * Implementation of {@see IElementProvider} for {@code Object[]}.
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
-
  *
  */
 public class CombinationProvider implements IElementProvider<Object[]> {

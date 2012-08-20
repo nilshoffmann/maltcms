@@ -19,7 +19,7 @@
  *
  *  $Id$
  */
-package net.sf.maltcms.datastructures;
+package cross.datastructures.collections;
 
 import java.util.List;
 

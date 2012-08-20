@@ -95,7 +95,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
 
     @Override
     public void configure(final Configuration cfg) {
-        log.warn(
+        log.debug(
                 "CommandPipeline does not support configuration via configure anylonger. Please use a Spring xml file!");
     }
 

@@ -52,7 +52,18 @@ public @interface Configurable {
 	/**
 	 * The class of the annotated object. Returns Object.class by default.
 	 * 
+         * @see AnnotationInspector will now retrieve the type information directly
+         * from the annotated field.
+         * 
 	 * @return
 	 */
+        @Deprecated
 	Class<?> type() default Object.class;
+        
+        /**
+         * The description of the annotated object. Returns an empty String by
+         * default.
+         * @return 
+         */
+        String description() default "";
 }

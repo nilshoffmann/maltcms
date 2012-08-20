@@ -19,17 +19,18 @@
  *
  *  $Id$
  */
-package net.sf.maltcms.datastructures;
+package cross.datastructures.collections;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.*;
 
 /**
- * Implementation of a cached list for indexed data access.
+ * Implementation of a read-only cached list for indexed data access.
  * 
- * @TODO A future version of this will be generic, using a DataProvider to load
- *       T instances.
+ * Backed by a soft-reference cache hash map using LRU cache eviction strategy.
+ * All list-related modification methods throw {@see UnsupportedOperationException}.
+ * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
