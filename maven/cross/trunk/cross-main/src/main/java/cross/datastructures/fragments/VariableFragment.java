@@ -174,7 +174,7 @@ public class VariableFragment implements IVariableFragment {
             // setDimensions(ArrayTools.getDefaultDimensions(a));
             // }
             setDataType(DataType.getType(a.getElementType()));
-            final Dimension[] d = getDimensions();
+//            final Dimension[] d = getDimensions();
             // if (d != null) {// adjust dimension size to that of the array
             // final int[] shape = a.getShape();
             // EvalTools.eqI(d.length, shape.length, this);// check for equal
@@ -185,9 +185,9 @@ public class VariableFragment implements IVariableFragment {
             // i++;
             // }
             // } else {
-            if (d != null) {
-                setDimensions(cross.datastructures.tools.ArrayTools.getDefaultDimensions(a));
-            }
+//            if (d == null) {
+//                setDimensions(cross.datastructures.tools.ArrayTools.getDefaultDimensions(a));
+//            }
             // }
         }
 
@@ -563,6 +563,9 @@ public class VariableFragment implements IVariableFragment {
             this.aref = null;
         } else {
             clear();
+        }
+        if(getDimensions() == null) {
+            setDimensions(cross.datastructures.tools.ArrayTools.getDefaultDimensions(a));
         }
         adjustConsistency();
         // synchronized (this) {

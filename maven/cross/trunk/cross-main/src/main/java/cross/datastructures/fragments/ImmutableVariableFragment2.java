@@ -467,6 +467,10 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         return this.varname;
     }
 
+    /**
+     * This method will always return true!
+     * @return 
+     */
     /*
      * (non-Javadoc)
      *

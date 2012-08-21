@@ -200,7 +200,7 @@ public class ImmutableFileFragment implements IFileFragment {
     @Override
     public IVariableFragment getChild(final String varname)
             throws ResourceNotAvailableException {
-        return new ImmutableVariableFragment(this.frag.getChild(varname));
+        return this.frag.getChild(varname, false);
     }
 
     /**
@@ -214,7 +214,7 @@ public class ImmutableFileFragment implements IFileFragment {
     public IVariableFragment getChild(final String varname,
             final boolean loadStructureOnly)
             throws ResourceNotAvailableException {
-        return new ImmutableVariableFragment(this.frag.getChild(varname));
+        return this.frag.getChild(varname, loadStructureOnly);
     }
 
     /**
