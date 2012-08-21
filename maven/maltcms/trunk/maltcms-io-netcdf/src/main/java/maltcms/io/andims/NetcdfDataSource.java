@@ -211,7 +211,7 @@ public class NetcdfDataSource implements IDataSource {
     public IVariableFragment convert(final IFileFragment ff, final Variable v,
             final IVariableFragment ivf) {
         final DataType dt = v.getDataType();
-        final List<?> dimensions = v.getDimensions();
+        final List<Dimension> dimensions = v.getDimensions();
         final Dimension[] d = new Dimension[dimensions.size()];
         int i = 0;
         for (final Object o : dimensions) {
@@ -220,7 +220,7 @@ public class NetcdfDataSource implements IDataSource {
             }
         }
         final String name = v.getName();
-        final List<?> ranges = v.getRanges();
+        final List<Range> ranges = v.getRanges();
 
         IVariableFragment vf = null;
         if (ivf == null) {
@@ -256,7 +256,7 @@ public class NetcdfDataSource implements IDataSource {
     protected Dimension[] getDimensionArray(final NetcdfFile nf,
             final Variable v) {
         EvalTools.notNull(v, this);
-        final List<?> l = v.getDimensions();
+        final List<Dimension> l = v.getDimensions();
         final ArrayList<Dimension> al = new ArrayList<Dimension>();
         for (final Object o : l) {
             if (o instanceof String) {
@@ -273,7 +273,7 @@ public class NetcdfDataSource implements IDataSource {
     protected ArrayList<Dimension> getDimensionList(final NetcdfFile nf,
             final Variable v) {
         EvalTools.notNull(v, this);
-        final List<?> l = v.getDimensions();
+        final List<Dimension> l = v.getDimensions();
         final ArrayList<Dimension> al = new ArrayList<Dimension>();
         for (final Object o : l) {
             if (o instanceof String) {

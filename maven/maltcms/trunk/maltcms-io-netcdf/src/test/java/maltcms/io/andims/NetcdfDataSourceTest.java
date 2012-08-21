@@ -267,6 +267,10 @@ public class NetcdfDataSourceTest {
         Dimension dim4 = new Dimension("dim4", 214);
         ff.addDimensions(dim4);
         
+        VariableFragment ivf3 = new VariableFragment(ff, "variable3");
+        ArrayInt.D2 arr3 = new ArrayInt.D2(25, 17);
+        ivf3.setArray(arr3);
+        
         System.out.println("Defined dimensions: "+ff.getDimensions());
         
         boolean b = getDataSource().write(ff);
@@ -278,6 +282,14 @@ public class NetcdfDataSourceTest {
             getDataSource().readStructure(readFragment);
         } catch (IOException ex) {
             Logger.getLogger(NetcdfDataSourceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Assert.assertFalse(readFragment.getDimensions().contains(dim4));
+        System.out.println("Stored dimensions: "+readFragment.getDimensions());
+        System.out.println("Stored variables: ");
+        for(IVariableFragment v:readFragment) {
+            System.out.println("Variable: "+v.toString());
+            System.out.println("\tDataType: "+v.getDataType());
+            System.out.println("\tDimensions: "+Arrays.toString(v.getDimensions()));
         }
         //check global attributes
         Assert.assertEquals(readFragment.getAttribute("software").getStringValue(),"maltcms");
@@ -295,10 +307,10 @@ public class NetcdfDataSourceTest {
         }
         IndexIterator ii1 = ivf1.getArray().getIndexIterator();
         IndexIterator rii1 = rivf1.getArray().getIndexIterator();
-        System.out.println("Original shape: "+Arrays.toString(ivf1.getArray().getShape()));
-        System.out.println("Restored shape: "+Arrays.toString(rivf1.getArray().getShape()));
-        Assert.assertEquals(ivf1.getArray().getShape()[0], rivf1.getArray().getShape()[0]);
-        Assert.assertEquals(ivf1.getArray().getShape()[1], rivf1.getArray().getShape()[1]);
+//        System.out.println("Original shape: "+Arrays.toString(ivf1.getArray().getShape()));
+//        System.out.println("Restored shape: "+Arrays.toString(rivf1.getArray().getShape()));
+//        Assert.assertEquals(ivf1.getArray().getShape()[0], rivf1.getArray().getShape()[0]);
+//        Assert.assertEquals(ivf1.getArray().getShape()[1], rivf1.getArray().getShape()[1]);
         while(ii1.hasNext() && rii1.hasNext()) {
             Assert.assertEquals(ii1.getDoubleNext(), rii1.getDoubleNext());
         }
@@ -320,6 +332,11 @@ public class NetcdfDataSourceTest {
         while(ii2.hasNext() && rii2.hasNext()) {
             Assert.assertEquals(ii2.getDoubleNext(), rii2.getDoubleNext());
         }
+        
+        IVariableFragment rivf3 = readFragment.getChild("variable3");
+        Array ria3 = rivf3.getArray();
+        Assert.assertEquals(arr3.getShape()[0], ria3.getShape()[0]);
+        Assert.assertEquals(arr3.getShape()[1], ria3.getShape()[1]);
         
         for(Dimension dim:readFragment.getDimensions()) {
             Assert.assertNotSame(dim.getName(),dim4.getName());
