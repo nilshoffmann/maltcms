@@ -564,7 +564,7 @@ public class VariableFragment implements IVariableFragment {
         } else {
             clear();
         }
-        if(getDimensions() == null) {
+        if(getDimensions() == null && this.a != null) {
             setDimensions(cross.datastructures.tools.ArrayTools.getDefaultDimensions(a));
         }
         adjustConsistency();

@@ -931,16 +931,22 @@ public class FileFragment implements IFileFragment {
     public boolean save() {
         EvalTools.notNull(this.f, this);
         // FIXME all output currently redirected to netcdf
-        final String ext = StringTools.getFileExtension(this.f.getName());
+        final String ext = StringTools.getFileExtension(this.f.getName()).toLowerCase();
         final String filename = StringTools.removeFileExt(this.f.getName());
         final String path = this.f.getParent();
-        if (!ext.equals("nc") && !ext.equals("cdf")) {
-            final String source = this.f.getAbsolutePath();
+        //FIXME this should be configured more centrally
+        final String[] netcdfExts = new String[]{"nc", "nc.gz","nc.z","nc.zip","nc.gzip","nc.bz2","cdf","cdf.gz","cdf.z","cdf.zip","cdf.gzip","cdf.bz2"};
+        System.out.println("Looking for file extension: "+ext+" in "+Arrays.toString(netcdfExts));
+        int idx = Arrays.binarySearch(netcdfExts, ext);
+        if (idx<0) {
+            System.out.println("Did not find extension!");
+//            final String source = this.f.getAbsolutePath();
             final File f1 = new File(path, filename + ".cdf");
             setFile(f1);
-            // addSourceFile(Factory.getInstance().getFileFragmentFactory().getFragment(source));
-            // addSourceFile(new FileFragment(this.f, null, null));
+        }else{
+            System.out.println("Found extension!");
         }
+        
         if (Factory.getInstance().getDataSourceFactory().getDataSourceFor(this).write(this)) {
             clearArrays();
             return true;

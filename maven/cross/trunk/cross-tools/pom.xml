@@ -8,6 +8,7 @@
   <artifactId>cross-tools</artifactId>
   <packaging>jar</packaging>
   <name>cross-tools</name>
+    <dependencies></dependencies>
 </project>
 
 
