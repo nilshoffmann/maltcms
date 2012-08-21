@@ -7,7 +7,7 @@ package maltcms.test;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-import maltcms.io.ZipResourceExtractor;
+import cross.io.misc.ZipResourceExtractor;
 
 /**
  *

@@ -12,13 +12,13 @@ import cross.datastructures.fragments.VariableFragment;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.Assert;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.test.ExtractHelper;
+import maltcms.test.SetupLogging;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Rule;
@@ -34,8 +34,12 @@ import ucar.nc2.Dimension;
  *
  * @author hoffmann
  */
+@Slf4j
 public class NetcdfDataSourceTest {
 
+    @Rule
+    public SetupLogging sl = new SetupLogging();
+    
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
     File[] files1D;
@@ -307,10 +311,10 @@ public class NetcdfDataSourceTest {
         }
         IndexIterator ii1 = ivf1.getArray().getIndexIterator();
         IndexIterator rii1 = rivf1.getArray().getIndexIterator();
-//        System.out.println("Original shape: "+Arrays.toString(ivf1.getArray().getShape()));
-//        System.out.println("Restored shape: "+Arrays.toString(rivf1.getArray().getShape()));
-//        Assert.assertEquals(ivf1.getArray().getShape()[0], rivf1.getArray().getShape()[0]);
-//        Assert.assertEquals(ivf1.getArray().getShape()[1], rivf1.getArray().getShape()[1]);
+        log.info("Original shape: {}",Arrays.toString(ivf1.getArray().getShape()));
+        log.info("Restored shape: {}",Arrays.toString(rivf1.getArray().getShape()));
+        Assert.assertEquals(ivf1.getArray().getShape()[0], rivf1.getArray().getShape()[0]);
+        Assert.assertEquals(ivf1.getArray().getShape()[1], rivf1.getArray().getShape()[1]);
         while(ii1.hasNext() && rii1.hasNext()) {
             Assert.assertEquals(ii1.getDoubleNext(), rii1.getDoubleNext());
         }

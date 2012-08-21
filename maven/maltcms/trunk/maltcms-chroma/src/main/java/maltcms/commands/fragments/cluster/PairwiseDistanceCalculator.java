@@ -22,15 +22,9 @@
 package maltcms.commands.fragments.cluster;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import maltcms.datastructures.fragments.PairwiseDistances;
 import maltcms.io.csv.CSVWriter;
 
@@ -46,15 +40,11 @@ import cross.annotations.ProvidesVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.threads.CallableCompletionService;
-import cross.datastructures.threads.ExecutorsManager;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowProgressResult;
 import cross.datastructures.workflow.DefaultWorkflowResult;
-import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
-import cross.exception.ConstraintViolationException;
 import cross.datastructures.tools.EvalTools;
 import java.util.Collections;
 import lombok.Data;
@@ -62,7 +52,6 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.AWorkerFactory;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.PairwiseDistanceResult;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.PairwiseDistanceWorker;
-import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.ApplicationContextWorkerFactory;
 import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
 

@@ -6,9 +6,8 @@ package maltcms.commands.filters.array;
 
 import cross.datastructures.fragments.ImmutableFileFragment;
 import java.io.File;
-import maltcms.io.ZipResourceExtractor;
+import cross.io.misc.ZipResourceExtractor;
 import org.junit.*;
-import static org.junit.Assert.*;
 import org.junit.rules.TemporaryFolder;
 import ucar.ma2.Array;
 

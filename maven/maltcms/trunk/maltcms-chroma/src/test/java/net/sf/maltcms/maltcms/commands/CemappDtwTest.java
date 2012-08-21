@@ -36,7 +36,7 @@ import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.TicDtwWorke
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
-import maltcms.io.ZipResourceExtractor;
+import cross.io.misc.ZipResourceExtractor;
 import maltcms.math.functions.DtwPairwiseSimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.math.functions.similarities.ArrayLp;

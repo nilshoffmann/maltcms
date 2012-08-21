@@ -9,5 +9,12 @@
     </parent>
     <artifactId>maltcms-test-data</artifactId>
     <name>maltcms-test-data</name>
-    <dependencies></dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>net.sf.maltcms.test</groupId>
+            <artifactId>maltcms-test-defaults</artifactId>
+            <version>1.2.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

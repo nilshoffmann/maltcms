@@ -21,24 +21,7 @@
  */
 package maltcms.commands.fragments2d.peakfinding;
 
-import cross.commands.fragments.IFragmentCommand;
-import cross.datastructures.fragments.FileFragment;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.pipeline.CommandPipeline;
-import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.DefaultWorkflow;
-import cross.datastructures.workflow.IWorkflow;
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
-import maltcms.io.ZipResourceExtractor;
 import maltcms.test.AFragmentCommandTest;
-import org.apache.log4j.BasicConfigurator;
-import org.junit.After;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 /**
  *

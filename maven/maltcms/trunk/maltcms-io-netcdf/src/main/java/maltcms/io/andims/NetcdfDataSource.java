@@ -78,7 +78,7 @@ public class NetcdfDataSource implements IDataSource {
     @Deprecated
     private static long secondsUntilCleanup = 360;
     private final Logger log = Logging.getLogger(this.getClass());
-    private final String[] fileEnding = new String[]{"nc", "cdf"};
+    private final String[] fileEnding = new String[]{"nc", "nc.gz","nc.z","nc.zip","nc.gzip","nc.bz2","cdf","cdf.gz","cdf.z","cdf.zip","cdf.gzip","cdf.bz2"};
     private boolean updateAttributes = false;
     @Deprecated
     private boolean useNetcdfFileCache = false;
@@ -134,10 +134,10 @@ public class NetcdfDataSource implements IDataSource {
             throw new RuntimeException("Could not determine File extension of "
                     + ff);
         }
-        final String fileending = ff.getName().substring(dotindex + 1);
+        final String filename = ff.getName();
         // System.out.println("fileending: "+fileending);
         for (final String s : this.fileEnding) {
-            if (s.equalsIgnoreCase(fileending)) {
+            if (filename.toLowerCase().endsWith(s)) {
                 return 1;
             }
         }
@@ -221,7 +221,7 @@ public class NetcdfDataSource implements IDataSource {
         }
         final String name = v.getName();
         final List<Range> ranges = v.getRanges();
-
+        log.debug("Given Ranges for Variable v: {}",ranges);
         IVariableFragment vf = null;
         if (ivf == null) {
             if (ff.hasChild(name)) {
@@ -253,39 +253,39 @@ public class NetcdfDataSource implements IDataSource {
         return null;
     }
 
-    protected Dimension[] getDimensionArray(final NetcdfFile nf,
-            final Variable v) {
-        EvalTools.notNull(v, this);
-        final List<Dimension> l = v.getDimensions();
-        final ArrayList<Dimension> al = new ArrayList<Dimension>();
-        for (final Object o : l) {
-            if (o instanceof String) {
-                final Dimension d = nf.findDimension((String) o);
-                al.add(d);
-            } else if (o instanceof Dimension) {
-                al.add((Dimension) o);
-            }
+//    protected Dimension[] getDimensionArray(final NetcdfFile nf,
+//            final Variable v) {
+//        EvalTools.notNull(v, this);
+//        final List<Dimension> l = v.getDimensions();
+//        final ArrayList<Dimension> al = new ArrayList<Dimension>();
+//        for (final Object o : l) {
+//            if (o instanceof String) {
+//                final Dimension d = nf.findDimension((String) o);
+//                al.add(d);
+//            } else if (o instanceof Dimension) {
+//                al.add((Dimension) o);
+//            }
+//
+//        }
+//        return toDimensionArray(al);
+//    }
 
-        }
-        return toDimensionArray(al);
-    }
-
-    protected ArrayList<Dimension> getDimensionList(final NetcdfFile nf,
-            final Variable v) {
-        EvalTools.notNull(v, this);
-        final List<Dimension> l = v.getDimensions();
-        final ArrayList<Dimension> al = new ArrayList<Dimension>();
-        for (final Object o : l) {
-            if (o instanceof String) {
-                final Dimension d = nf.findDimension((String) o);
-                al.add(d);
-            } else if (o instanceof Dimension) {
-                al.add((Dimension) o);
-            }
-
-        }
-        return al;
-    }
+//    protected ArrayList<Dimension> getDimensionList(final NetcdfFile nf,
+//            final Variable v) {
+//        EvalTools.notNull(v, this);
+//        final List<Dimension> l = v.getDimensions();
+//        final ArrayList<Dimension> al = new ArrayList<Dimension>();
+//        for (final Object o : l) {
+//            if (o instanceof String) {
+//                final Dimension d = nf.findDimension((String) o);
+//                al.add(d);
+//            } else if (o instanceof Dimension) {
+//                al.add((Dimension) o);
+//            }
+//
+//        }
+//        return al;
+//    }
 
     /**
      * Attributes are small metadata.
@@ -585,7 +585,7 @@ public class NetcdfDataSource implements IDataSource {
             if (r != null) {
                 final List<Range> l = Arrays.asList(r);
                 try {
-                    this.log.debug("Using specified range to read partially");
+                    this.log.debug("Using specified range to read partially: {}",l);
                     a = v.read(l);
                     // if read with ranges is valid: keep ranges as before
                     f.setRange(r);
@@ -598,8 +598,10 @@ public class NetcdfDataSource implements IDataSource {
             } else {
                 this.log.debug("No range set, reading completely");
                 a = v.read();
+                List<Range> ranges = v.getRanges();
+                this.log.debug("Ranges from file: {}",ranges);
                 // update ranges to those from file
-                f.setRange(v.getRanges().toArray(new Range[]{}));
+                f.setRange(ranges.toArray(new Range[ranges.size()]));
             }
             nd.close();
             if (a == null) {
@@ -735,14 +737,12 @@ public class NetcdfDataSource implements IDataSource {
                         for (final Dimension element : dim) {
                             this.log.debug("Checking Dimension {}", element);
                             if (shape[i] != element.getLength()) {
-                                throw new ConstraintViolationException("Dimension and array shape mismatch!: "+element+" vs "+shape[i]);
-                                //this.log.error("Correcting dimension {} to length {}!", element.getName(), shape[i]);
-                                //element.setLength(shape[i]);
+                                //throw new ConstraintViolationException("Dimension and array shape mismatch!: "+element+" vs "+shape[i]);
+                                this.log.warn("Correcting dimension {} to length {}!", element.getName(), shape[i]);
+                                element.setLength(shape[i]);
                             }
-                            System.out.println("Dim before: "+element);
                             dimC[i] = addDimension(nfw, dimensions, vf,
                                     element);
-                            System.out.println("Dim after: "+element);
                             i++;
                         }
                         dim = dimC;
@@ -829,16 +829,11 @@ public class NetcdfDataSource implements IDataSource {
     }
 
     private void updateIVariableFragment(final Variable v, final DataType dt,
-            final Dimension[] d, final List<?> ranges,
+            final Dimension[] d, final List<Range> ranges,
             final IVariableFragment vf) {
         vf.setDimensions(d);
         vf.setDataType(dt);
-        final Range[] r = new Range[ranges.size()];
-        final int i = 0;
-        for (final Object o : ranges) {
-            r[i] = (Range) o;
-        }
-        vf.setRange(r);
+        vf.setRange(ranges.toArray(new Range[ranges.size()]));
         final List<?> attrs = v.getAttributes();
         final ucar.nc2.Attribute[] attributes = new ucar.nc2.Attribute[attrs.size()];
         int cnt = 0;

@@ -21,8 +21,11 @@
  */
 package maltcms.io;
 
+import cross.io.misc.ZipResourceExtractor;
 import maltcms.test.ExtractHelper;
 import java.io.File;
+import lombok.extern.slf4j.Slf4j;
+import maltcms.test.SetupLogging;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -33,10 +36,14 @@ import org.junit.Assert;
  *
  * @author nilshoffmann
  */
+@Slf4j
 public class ZipResourceExtractorTest {
     
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
+    
+    @Rule
+    public SetupLogging sl = new SetupLogging();
     
     @Test
     public void testExtract1D() {
@@ -46,9 +53,9 @@ public class ZipResourceExtractorTest {
         File unzippedFile = new File(outputFolder,"glucoseA.cdf");
         Assert.assertTrue(outputFile.getAbsolutePath().equals(unzippedFile.getAbsolutePath()));
         Assert.assertTrue(unzippedFile.exists());
-        System.out.println("File exists");
+        log.info("File exists");
         Assert.assertTrue(unzippedFile.length()>0);
-        System.out.println("File size is != 0: "+unzippedFile.length());
+        log.info("File size is != 0: {}",unzippedFile.length());
     }
     
     @Test
@@ -59,9 +66,9 @@ public class ZipResourceExtractorTest {
         File unzippedFile = new File(outputFolder,"090306_37_FAME_Standard_1.cdf");
         Assert.assertTrue(outputFile.getAbsolutePath().equals(unzippedFile.getAbsolutePath()));
         Assert.assertTrue(unzippedFile.exists());
-        System.out.println("File exists");
+        log.info("File exists");
         Assert.assertTrue(unzippedFile.length()>0);
-        System.out.println("File size is != 0: "+unzippedFile.length());
+        log.info("File size is != 0: {}",unzippedFile.length());
     }
     
     @Test

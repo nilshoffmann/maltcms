@@ -33,7 +33,7 @@ import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
-import maltcms.io.ZipResourceExtractor;
+import cross.io.misc.ZipResourceExtractor;
 import maltcms.test.AFragmentCommandTest;
 
 import org.junit.Rule;

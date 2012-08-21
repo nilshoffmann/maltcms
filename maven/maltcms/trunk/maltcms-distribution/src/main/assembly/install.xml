@@ -37,9 +37,9 @@
         <dependencySet>
             <unpack>false</unpack>
             <excludes>
-                <!-- exclude other dependencies for unpacking -->
-                <exclude>commons-math:commons-math:jar:1.2</exclude>
-                <!-- <exclude>net.sf.maltcms:maltcms-resources:jar</exclude>
+                 <!--exclude other dependencies for unpacking--> 
+<!--                <exclude>commons-math:commons-math:jar:1.2</exclude>
+                 <exclude>net.sf.maltcms:maltcms-resources:jar</exclude>
                 <exclude>net.sf.maltcms:maltcms-chroma:jar</exclude>
                 <exclude>net.sf.maltcms:maltcms-chroma4D:jar</exclude>
                 <exclude>net.sf.maltcms:maltcms-chroma4D-srg:jar</exclude>

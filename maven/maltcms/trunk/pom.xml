@@ -153,6 +153,9 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>2.4</version>
+                    <configuration>
+                        <skipIfEmpty>true</skipIfEmpty>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -383,6 +386,8 @@
     </build>
    
     <modules>
+        <module>maltcms-test-defaults</module>
+        <module>maltcms-test-data</module>
         <module>maltcms-apps</module>
         <module>maltcms-chroma</module>
         <module>maltcms-chroma4D</module>
@@ -392,7 +397,6 @@
         <module>maltcms-commands</module>
         <module>maltcms-datastructures</module>
         <module>maltcms-datastructures-quadtree</module>
-        <module>maltcms-math</module>
         <module>maltcms-datastructures-api</module>
         <module>maltcms-execution</module>
         <module>maltcms-io</module>
@@ -401,6 +405,7 @@
         <module>maltcms-experimental</module>
         <module>maltcms-statistics</module>
         <module>maltcms-sralign</module>
+        <module>maltcms-spectratyping</module>
         <module>maltcms-xml-alignment</module>
         <module>maltcms-xml-annotation</module>
         <module>maltcms-resources</module>
@@ -408,13 +413,11 @@
         <module>maltcms-io-mzxml</module>
         <module>maltcms-io-mzdata</module>
         <module>maltcms-io-mzml</module>
-        <module>maltcms-io-openms-featurexml</module>
-        <module>maltcms-test-data</module>
-        <module>maltcms-evaluation</module>
-        <module>maltcms-io-csv</module>
-        <module>maltcms-spectratyping</module>
-        <module>maltcms-distribution</module>
         <module>maltcms-io-mz5</module>
+        <module>maltcms-io-csv</module>
+        <module>maltcms-io-openms-featurexml</module>
+        <module>maltcms-evaluation</module>
+        <module>maltcms-distribution</module>
     </modules>
     <dependencies>
         <dependency>

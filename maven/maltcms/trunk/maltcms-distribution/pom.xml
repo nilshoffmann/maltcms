@@ -44,6 +44,7 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
+                            <skipIfEmpty>false</skipIfEmpty>
                             <archive>
                                 <index>true</index>
                                 <manifest>

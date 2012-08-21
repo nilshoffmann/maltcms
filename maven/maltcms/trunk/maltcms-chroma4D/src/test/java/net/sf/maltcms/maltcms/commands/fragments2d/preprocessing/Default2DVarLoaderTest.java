@@ -29,7 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import junit.framework.Assert;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
-import maltcms.io.ZipResourceExtractor;
+import cross.io.misc.ZipResourceExtractor;
 import maltcms.test.AFragmentCommandTest;
 import org.junit.After;
 import org.junit.Rule;
