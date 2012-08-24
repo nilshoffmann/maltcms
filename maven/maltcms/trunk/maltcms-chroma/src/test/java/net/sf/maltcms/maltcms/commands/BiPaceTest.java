@@ -41,6 +41,11 @@ import org.junit.rules.TemporaryFolder;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
+import java.util.LinkedList;
+import maltcms.commands.filters.array.AArrayFilter;
+import maltcms.commands.filters.array.SavitzkyGolayFilter;
+import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 
 /**
  *
@@ -63,15 +68,22 @@ public class BiPaceTest extends AFragmentCommandTest {
         commands.add(new DefaultVarLoader());
         commands.add(new DenseArrayProducer());
         TICPeakFinder tpf = new TICPeakFinder();
-        MovingAverageFilter maf = new MovingAverageFilter();
-        maf.setWindow(10);
-        TopHatFilter thf = new TopHatFilter();
-        thf.setWindow(50);
-        tpf.setFilter(Arrays.asList(maf, thf));
-//        tpf.setSnrWindow(10);
-        tpf.setPeakThreshold(0.0d);
+        SavitzkyGolayFilter sgf = new SavitzkyGolayFilter();
+        sgf.setWindow(12);
+        List<AArrayFilter> filters = new LinkedList<AArrayFilter>();
+        filters.add(sgf);
+        tpf.setFilter(filters);
+        LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();
+        lmbe.setBandwidth(0.3);
+        lmbe.setAccuracy(1.0E-12);
+        lmbe.setRobustnessIterations(2);
+        lmbe.setMinimaWindow(100);
+        tpf.setBaselineEstimator(lmbe);
+        tpf.setSnrWindow(50);
+        tpf.setPeakSeparationWindow(10);
+        tpf.setPeakThreshold(3.0d);
         commands.add(tpf);
-//        commands.add(new PeakCliqueAlignment());
+        commands.add(new PeakCliqueAlignment());
         IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
                 inputFile1, inputFile2));
         try {
@@ -79,6 +91,7 @@ public class BiPaceTest extends AFragmentCommandTest {
             w.call();
             w.save();
         } catch (Exception ex) {
+            ex.printStackTrace();
             Assert.fail(ex.getLocalizedMessage());
         }
 

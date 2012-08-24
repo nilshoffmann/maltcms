@@ -96,7 +96,7 @@ import maltcms.datastructures.quadTree.QuadTree;
  * 
  * 
  */
-@ServiceProvider(service=maltcms.commands.fragments2d.peakfinding.picking.IPeakPicking.class)
+@ServiceProvider(service=IPeakPicking.class)
 @Data
 public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
 

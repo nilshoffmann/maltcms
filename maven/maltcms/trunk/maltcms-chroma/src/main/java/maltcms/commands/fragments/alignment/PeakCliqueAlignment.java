@@ -130,10 +130,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     private String scanIndex = "scan_index";
     @Configurable(name = "var.intensity_values")
     private String intensityValues = "intensity_values";
-    @Configurable
-    private boolean useUserSuppliedAnchors = false;
-    @Configurable
-    private int minCliqueSize = -1;
     @Configurable(name = "var.retention_index_names")
     private String anchorNames = "retention_index_names";
     @Configurable(name = "var.retention_times")
@@ -142,40 +138,43 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     private String anchorRetentionIndex = "retention_indices";
     @Configurable(name = "var.retention_scans")
     private String anchorScanIndex = "retention_scans";
-    // private boolean keepOnlyBiDiBestHitsForAll = true;
     @Configurable(name = "var.binned_intensity_values")
     private String binnedIntensities = "binned_intensity_values";
     @Configurable(name = "var.binned_scan_index")
     private String binnedScanIndex = "binned_scan_index";
     @Configurable(name = "var.scan_acquisition_time")
     private String scanAcquisitionTime = "scan_acquisition_time";
+    @Configurable(name="var.peak_area")
+    private String peakAreaVariable = "peak_area";
+    @Configurable
+    private boolean useUserSuppliedAnchors = false;
+    @Configurable
+    private int minCliqueSize = -1;
     @Configurable
     private boolean savePeakSimilarities = false;
-//    @Configurable
-//    private double maxRTDifference = 60.0d;
     @Configurable
     private boolean saveXMLAlignment = true;
     @Configurable
     private int maxBBHErrors = 0;
     @Configurable
     private boolean savePlots = false;
+    @Configurable
+    private boolean saveUnmatchedPeaks = false;
+    @Configurable
+    private boolean saveIncompatiblePeaks = false;
+    @Configurable
+    private boolean saveUnassignedPeaks = false;
+    @Configurable
     private boolean useSparseArrays = false;
+    @Configurable
+    private WorkerFactory workerFactory = new WorkerFactory();
+    
+    /*
+     * private scope
+     */
     @Getter(value = AccessLevel.PRIVATE)
     @Setter(value = AccessLevel.PRIVATE)
     private HashMap<Peak, Clique> peakToClique = new HashMap<Peak, Clique>();
-    private WorkerFactory workerFactory = new WorkerFactory();
-    private boolean saveUnmatchedPeaks = false;
-    private boolean saveIncompatiblePeaks = false;
-    private boolean saveUnassignedPeaks = false;
-    private String peakAreaVariable = "peak_area";
-
-    public PeakCliqueAlignment() {
-//        similarityFunction = new ProductSimilarity();
-//        GaussianDifferenceSimilarity gds = new GaussianDifferenceSimilarity();
-//        similarityFunction.setScalarSimilarities(gds);
-//        ArrayCorr ac = new ArrayCorr();
-//        similarityFunction.setArraySimilarities(ac);
-    }
 
     @Override
     public String toString() {
@@ -907,25 +906,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         this.intensityValues = cfg.getString(
                 "var.intensity_values", "intensity_values");
         this.ticPeaks = cfg.getString("var.tic_peaks", "tic_peaks");
-//        this.minCliqueSize = cfg.getInt(this.getClass().getName()
-//                + ".minCliqueSize", -1);
-////        final String aldist = "maltcms.commands.distances.ArrayLp";
-////        this.costFunction = Factory.getInstance().getObjectFactory().instantiate(
-////                cfg.getString(this.getClass().getName()
-////                + ".costFunction", aldist),
-////                IArrayDoubleComp.class);
-//        this.useUserSuppliedAnchors = cfg.getBoolean(this.getClass().getName()
-//                + ".useUserSuppliedAnchors", false);
-//        this.savePeakSimilarities = cfg.getBoolean(this.getClass().getName()
-//                + ".savePeakSimilarities", false);
-////        this.maxRTDifference = cfg.getDouble(this.getClass().getName()
-////                + ".maxRTDifference", 60.0d);
-//        this.saveXMLAlignment = cfg.getBoolean(
-//                this.getClass().getName() + ".saveXMLAlignment", true);
-//        this.maxBBHErrors = cfg.getInt(
-//                this.getClass().getName() + ".maxBBHErrors", 0);
-//        this.savePlots = cfg.getBoolean(this.getClass().getName() + ".savePlots",
-//                false);
+        this.peakAreaVariable = cfg.getString("var.peak_area","peak_area");
     }
 
     public void saveSimilarityMatrix(final TupleND<IFileFragment> al,
@@ -1001,7 +982,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
         final TupleND<IFileFragment> t = new TupleND<IFileFragment>(al2);
         initializePeaks(originalFragments, fragmentToPeaks, columnMap);
-        log.info("Calculating all-against-all peak similarities");
+        log.debug("Calculating all-against-all peak similarities");
         calculatePeakSimilarities(t, fragmentToPeaks);
 
         log.info("Searching for bidirectional best hits");

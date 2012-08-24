@@ -59,6 +59,8 @@ import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.distances.dtw.MZIDynamicTimeWarp;
+import maltcms.commands.fragments.warp.PathWarp;
 
 /**
  * Abstract base class for clustering algorithms based on similarity or distance
@@ -128,7 +130,9 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         sb.append("</graphml>");
         return sb.toString();
     }
-    boolean normalize_scans = false;
+    
+    @Configurable
+    private boolean normalize_scans = false;
     private TupleND<IFileFragment> inputFiles = null;
     private IFileFragment consensus = null;
     private double[][] dist = null;
@@ -140,20 +144,21 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     private HashMap<Integer, IFileFragment> fragments = null;
     private HashMap<Integer, Tuple2D<String, String>> nameToNameLookup = null;
     @Configurable(name = "guide.tree.distance")
-    private PairwiseFeatureSequenceSimilarity chromatogramDistanceFunctionClass = null;
+    private PairwiseFeatureSequenceSimilarity chromatogramDistanceFunctionClass = new MZIDynamicTimeWarp();
     private String[] clusterNames;
     @Configurable(name = "var.pairwise_distance_matrix")
     private String pairwiseDistanceMatrixVariableName = "pairwise_distance_matrix";
-    // private int initial_names;
     @Configurable(name = "var.pairwise_distance_names")
     private String pairwiseDistanceNamesVariableName = "pairwise_distance_names";
     @Configurable(name = "var.minimizing_array_comp")
     private String minimizingArrayCompVariableName = "minimizing_array_comp";
     @Configurable(name = "maltcms.commands.fragments.warp.AWarp")
-    private AFragmentCommand chromatogramWarpCommandClass = null;
+    private AFragmentCommand chromatogramWarpCommandClass = new PathWarp();
     // minimize or maximize
     private boolean minimizeDist = true;
+    @Configurable
     private boolean drawTICs;
+    @Configurable
     private boolean drawEICs;
     private List<IFileFragment> alignments = new ArrayList<IFileFragment>();
     private ArrayDouble.D2 pwds = null;
@@ -287,19 +292,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
                 "var.pairwise_distance_matrix", "pairwise_distance_matrix");
         this.pairwiseDistanceNamesVariableName = cfg.getString(
                 "var.pairwise_distance_names", "pairwise_distance_names");
-        this.chromatogramDistanceFunctionClass = Factory.getInstance().getObjectFactory().instantiate(
-                cfg.getString("guide.tree.distance",
-                "maltcms.commands.distances.dtw.MZIDynamicTimeWarp"),
-                PairwiseFeatureSequenceSimilarity.class);
-        this.chromatogramWarpCommandClass = Factory.getInstance().getObjectFactory().instantiate(
-                cfg.getString("maltcms.commands.fragments.warp.AWarp",
-                "maltcms.commands.fragments.warp.PathWarp"),
-                AFragmentCommand.class);
-
         this.minimizingArrayCompVariableName = cfg.getString(
                 "var.minimizing_array_comp", "minimizing_array_comp");
-        this.normalize_scans = cfg.getBoolean(this.getClass().getName()
-                + ".normalizeScans", false);
         this.minArrayComp = cfg.getString("var.minimizing_array_comp",
                 "minimizing_array_comp");
     }

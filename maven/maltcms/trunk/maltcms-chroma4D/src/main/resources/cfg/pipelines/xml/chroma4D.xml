@@ -31,6 +31,7 @@
     </description>
     
     <import resource="chroma4D-base.xml"/>
+    <import resource="chroma4D-cwt.xml"/>
     <import resource="chroma4D-srg.xml"/>
     <!--    <import resource="chroma4D-cwt.xml"/>-->
     

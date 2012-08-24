@@ -59,6 +59,9 @@ import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 import cross.Factory;
+import cross.annotations.Configurable;
+import cross.annotations.RequiresOptionalVariables;
+import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
@@ -79,41 +82,51 @@ import org.openide.util.lookup.ServiceProvider;
  * Draw the pairwise distance and/or cumulative distance matrix used for
  * alignment.
  * 
+ * TODO implement visualization of anchors.
+ * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
+@RequiresVariables(names={"var.total_intensity","var.pairwise_distance_matrix", "var.pairwise_distance_alignment_names"})
+@RequiresOptionalVariables(names={"var.anchors.retention_index_names","var.anchors.retention_scans"})
 public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
 
-    Thread t = null;
+    private final String description = "Creates a plot of the pairwise distance and alignment matrices created during alignment.";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
+    
     private String filename;
-    private String format = "png";
-    private int chromatogramHeight = 200;
-    private String left_chromatogram_var;
-    private String top_chromatogram_var;
     private String reference_file_name;
     private String query_file_name;
+    
+    @Configurable
+    private String format = "png";
+    @Configurable
+    private int chromatogramHeight = 200;
+    @Configurable
+    private String left_chromatogram_var = "total_intensity";
+    @Configurable
+    private String top_chromatogram_var = "total_intensity";
+    @Configurable(name="")
     private String path_i;
+    @Configurable(name="")
     private String path_j;
-    private String mz_var;
-    private String inten_var;
-    private String scan_index_var;
-    private String mass_range_min_var;
-    private String mass_range_max_var;
-    private boolean full_spec;
+    @Configurable
+    private boolean full_spec = false;
+    @Configurable
     private String colorramp_location = "res/colorRamps/bw.csv";
+    @Configurable
     private int sampleSize = 1024;
-    private boolean pairsWithFirstElement;
-    private boolean drawPath;
-    private ArrayList<String> matrix_vars;
+    @Configurable
+    private boolean pairsWithFirstElement = false;
+    @Configurable
+    private boolean drawPath = true;
+    @Configurable
+    private List<String> matrix_vars = Arrays.asList("cumulative_distance", "pairwise_distance");
+    @Configurable
     private int fontsize = 30;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     protected BufferedImage addSpectra(final String queryName,
             final String refName, final Array query, final Array ref,
@@ -337,51 +350,17 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t1) {
         final IFileFragment iff = MaltcmsTools.getPairwiseDistanceFragment(t1);
         TupleND<IFileFragment> pwdt = MaltcmsTools.getPairwiseAlignments(iff);
-        // if (iff == null) {// No alignment has been calculated in this run
-        // log.info("Running stand-alone");
-        //
-        // // ignore the input variables, we will use the ones we were
-        // // configured
-        // // for
-        //
-        // for (final IFileFragment f : t1) {
-        // createImage(f);
-        // }
-        // } else {
-        // pwdt = MaltcmsTools.getPairwiseDistanceFragments(iff);
         for (final IFileFragment ff : pwdt) {
             createImage(ff);
         }
-        // }
         return t1;
     }
 
     @Override
     public void configure(final Configuration cfg) {
-        this.format = cfg.getString(this.getClass().getName() + ".format",
-                "PNG");
-        this.matrix_vars = StringTools.toStringList(cfg.getList(this.getClass().
-                getName()
-                + ".matrixVariables", new ArrayList<String>(Arrays.asList(
-                "cumulative_distance", "pairwise_distance"))));
-        this.left_chromatogram_var = cfg.getString(this.getClass().getName()
-                + ".left_chromatogram_var", "total_intensity");
-        this.top_chromatogram_var = cfg.getString(this.getClass().getName()
-                + ".top_chromatogram_var", "total_intensity");
-        this.chromatogramHeight = cfg.getInt(this.getClass().getName()
-                + ".chromatogram_height", 200);
         this.path_i = cfg.getString("var.warp_path_i", "warp_path_i");
         this.path_j = cfg.getString("var.warp_path_j", "warp_path_j");
-        this.colorramp_location = cfg.getString("images.colorramp",
-                "res/colorRamps/bw.csv");
-        this.sampleSize = cfg.getInt("images.samples", 1024);
-        this.pairsWithFirstElement = cfg.getBoolean(
-                "maltcms.commands.fragments.PairwiseDistanceCalculator"
-                + ".pairsWithFirstElement", true);
-        this.drawPath = Factory.getInstance().getConfiguration().getBoolean(
-                this.getClass().getName() + ".draw_path", true);
-        this.fontsize = Factory.getInstance().getConfiguration().getInt(
-                this.getClass().getName() + ".fontsize", 30);
+        
     }
 
     protected void createAlignmentMatrixImage(final Array a,
@@ -575,21 +554,6 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
                 log.warn("Could not load variable {}", s);
             }
         }
-    }
-
-    @Override
-    public String getDescription() {
-        return "Creates a plot of the pairwise distance and alignment matrices created during alignment.";
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.VISUALIZATION;
     }
 
     protected int mapToBin(final double value, final double maxval,

@@ -24,8 +24,6 @@ package maltcms.commands.fragments.visualization;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
-import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -34,7 +32,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.JPanel;
 
 import maltcms.commands.filters.array.AdditionFilter;
 import maltcms.commands.filters.array.NormalizationFilter;
@@ -60,6 +57,9 @@ import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 import cross.Factory;
+import cross.annotations.Configurable;
+import cross.annotations.RequiresOptionalVariables;
+import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.StatsMap;
 import cross.datastructures.Vars;
@@ -73,7 +73,10 @@ import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FragmentTools;
 import cross.tools.StringTools;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -84,37 +87,59 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
+
+//"var.pairwise_distance_matrix"
+//var.pairwise_distance_alignment_names
 @Slf4j
 @Data
 @ServiceProvider(service=AFragmentCommand.class)
+@RequiresVariables(names={"var.total_intensity",
+    "var.scan_acquisition_time","var.pairwise_distance_matrix", "var.pairwise_distance_alignment_names"})
+@RequiresOptionalVariables(names={"var.anchors.retention_index_names","var.anchors.retention_scans"})
 public class PairwiseAlignmentVisualizer extends AFragmentCommand {
 
-    protected boolean showMZs = false;
+    private final String description = "Creates different plots for pairwise alignments of chromatograms.";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
+    
+    @Configurable
     private boolean normalize = false;
+    @Configurable
     private boolean normalize_global = false;
+    @Configurable
     private int mapheight = 100;
+    @Configurable(name="var.total_intensity")
     private String total_intensity = "total_intensity";
+    @Configurable(name="var.scan_acquisition_time")
     private String scan_acquisition_time = "scan_acquisition_time";
-    private BufferedImage ima;
-    private BufferedImage imb;
-    private BufferedImage map;
+    @Configurable
     private boolean substract_start_time = true;
-    private final JPanel jp = new JPanel();
+    @Configurable
     private boolean pairsWithFirstElement;
+    @Configurable
     private boolean showChromatogramHeatmap = false;
+    @Configurable
     private int chromheight = 100;
+    @Configurable
     private String timeUnit = "min";
+    @Configurable
     private boolean createMapTICChart = true;
+    @Configurable
     private boolean createComparativeTICChart = true;
+    @Configurable
     private boolean createDifferentialTICChart = true;
+    @Configurable
     private boolean createRatioTICChart = true;
+    @Configurable
     private boolean createSuperimposedTICChart = true;
+    @Configurable
     private String y_axis_label = "TIC";
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
+    
+    @Getter(AccessLevel.PRIVATE)@Setter(AccessLevel.PRIVATE)
+    private BufferedImage ima;
+    @Getter(AccessLevel.PRIVATE)@Setter(AccessLevel.PRIVATE)
+    private BufferedImage imb;
+    @Getter(AccessLevel.PRIVATE)@Setter(AccessLevel.PRIVATE)
+    private BufferedImage map;
     
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
@@ -127,8 +152,6 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
             log.info(query.toString());
             setFragments(ref, query, ff);
         }
-        // }
-
         return t;
     }
 
@@ -146,37 +169,8 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     public void configure(final Configuration cfg) {
         this.total_intensity = cfg.getString("var.total_intensity",
                 "total_intensity");
-        this.y_axis_label = cfg.getString(this.getClass().getName()
-                + ".y_axis_label", "TIC");
         this.scan_acquisition_time = cfg.getString("var.scan_acquisition_time",
                 "scan_acquisition_time");
-        this.substract_start_time = cfg.getBoolean(this.getClass().getName()
-                + ".substract_start_time", true);
-        this.mapheight = cfg.getInt(this.getClass().getName() + ".mapheight",
-                100);
-        this.chromheight = cfg.getInt(this.getClass().getName()
-                + ".chromheight", 100);
-        this.normalize = cfg.getBoolean(this.getClass().getName()
-                + ".normalize", false);
-        this.normalize_global = cfg.getBoolean(this.getClass().getName()
-                + ".normalize_global", false);
-        this.pairsWithFirstElement = cfg.getBoolean(
-                "maltcms.commands.fragments.PairwiseDistanceCalculator"
-                + ".pairsWithFirstElement", true);
-        this.showChromatogramHeatmap = cfg.getBoolean(this.getClass().getName()
-                + ".showChromatogramHeatmap");
-        this.timeUnit = cfg.getString(this.getClass().getName() + ".timeUnit",
-                "min");
-        this.createMapTICChart = cfg.getBoolean(this.getClass().getName()
-                + ".createMapTICChart", true);
-        this.createComparativeTICChart = cfg.getBoolean(this.getClass().getName()
-                + ".createComparativeTICChart", true);
-        this.createDifferentialTICChart = cfg.getBoolean(this.getClass().getName()
-                + ".createDifferentialTICChart", true);
-        this.createRatioTICChart = cfg.getBoolean(this.getClass().getName()
-                + ".createRatioTICChart", true);
-        this.createSuperimposedTICChart = cfg.getBoolean(this.getClass().getName()
-                + ".createSuperimposedTICChart", true);
     }
 
     public BufferedImage createMapImage(final List<Tuple2DI> l,
@@ -291,25 +285,6 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
             al.add(xyp);
         }
         return al;
-    }
-
-    @Override
-    public String getDescription() {
-        return "Creates different plots for pairwise alignments of chromatograms.";
-    }
-
-    public JPanel getJPanel() {
-        return this.jp;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.VISUALIZATION;
     }
 
     public void makeComparativeTICChart(final AChart<XYPlot> tc1,
@@ -543,23 +518,23 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         Factory.getInstance().submitJob(pl);
     }
 
-    protected void repaint() {
-        final Graphics g2 = getJPanel().getGraphics();
-        if ((this.ima != null) && (this.imb != null) && (this.map != null)) {
-            int yoffset = 0;
-            g2.drawImage(this.ima, 0, yoffset, this.ima.getWidth(), this.ima.
-                    getHeight(), null);
-            yoffset += this.ima.getHeight();
-            g2.drawImage(this.map, 0, yoffset, this.map.getWidth(), this.map.
-                    getHeight(), null);
-            yoffset += this.map.getHeight();
-            g2.drawImage(this.imb, 0, yoffset, this.imb.getWidth(), this.imb.
-                    getHeight(), null);
-            yoffset += this.imb.getHeight();
-            this.jp.setPreferredSize(new Dimension(this.map.getWidth(),
-                    yoffset));
-        }
-    }
+//    protected void repaint() {
+//        final Graphics g2 = getJPanel().getGraphics();
+//        if ((this.ima != null) && (this.imb != null) && (this.map != null)) {
+//            int yoffset = 0;
+//            g2.drawImage(this.ima, 0, yoffset, this.ima.getWidth(), this.ima.
+//                    getHeight(), null);
+//            yoffset += this.ima.getHeight();
+//            g2.drawImage(this.map, 0, yoffset, this.map.getWidth(), this.map.
+//                    getHeight(), null);
+//            yoffset += this.map.getHeight();
+//            g2.drawImage(this.imb, 0, yoffset, this.imb.getWidth(), this.imb.
+//                    getHeight(), null);
+//            yoffset += this.imb.getHeight();
+//            this.jp.setPreferredSize(new Dimension(this.map.getWidth(),
+//                    yoffset));
+//        }
+//    }
 
     public void setFragments(final IFileFragment filea1,
             final IFileFragment fileb1, final IFileFragment alignment) {

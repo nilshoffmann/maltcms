@@ -37,6 +37,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.*;
 import ucar.nc2.Attribute;
@@ -57,21 +58,19 @@ import ucar.nc2.Dimension;
 @ServiceProvider(service=AFragmentCommand.class)
 public class ScanExtractor extends AFragmentCommand {
 
+    private final String description = "Allows definition of a start and end modulation period to be extracted from a raw GCxGC-MS chromatogram.";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.GENERAL_PREPROCESSING;
+    
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";
     @Configurable(name = "var.scan_acquisition_time", value = "scan_acquisition_time")
     private String scanAcquisitionTimeVar = "scan_acquisition_time";
     @Configurable(name = "var.scan_index")
     private String scanIndexVar = "scan_index";
-    @Configurable(value = "-1", type = Integer.class)
+    @Configurable(value = "-1")
     private int startScan = -1;
-    @Configurable(value = "-1", type = Integer.class)
+    @Configurable(value = "-1")
     private int endScan = -1;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     protected Array get1DArraySubset(Array a, int startIndex, int endIndex) {
         int scans = endIndex-startIndex+1;
@@ -88,6 +87,13 @@ public class ScanExtractor extends AFragmentCommand {
             int idx = iter.getIntNext();
             iter.setIntCurrent(idx-startIndex);
         }
+    }
+    
+    @Override
+    public void configure(Configuration config) {
+        this.totalIntensityVar = config.getString("var.total_intensity", "total_intensity");
+        this.scanAcquisitionTimeVar = config.getString("var.scan_acquisition_time", "scan_acquisition_time");
+        this.scanIndexVar = config.getString("var.scan_index", "scan_index");
     }
 
     /**
@@ -112,16 +118,6 @@ public class ScanExtractor extends AFragmentCommand {
             throw new IllegalArgumentException("startScan must not be greater than or equal to endScan: "+ranges[0]+">="+ranges[1]);
         }
         return ranges;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see cross.commands.fragments.AFragmentCommand#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return "Allows definition of a start and end modulation period to be extracted from a raw GCxGC-MS chromatogram.";
     }
 
     private Dimension[] adaptDimensions(IVariableFragment source, int[] targetShape) {
@@ -202,16 +198,6 @@ public class ScanExtractor extends AFragmentCommand {
             res.add(work);
         }
         return res;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.GENERAL_PREPROCESSING;
     }
 }
 

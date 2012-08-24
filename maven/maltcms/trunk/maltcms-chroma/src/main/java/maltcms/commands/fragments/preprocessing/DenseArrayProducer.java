@@ -63,17 +63,29 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class DenseArrayProducer extends AFragmentCommand {
 
+    private final String description = "Creates a binned representation of a chromatogram.";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.GENERAL_PREPROCESSING;
+    
+    @Configurable(name = "var.mass_values")
+    private String massValues = "mass_values";
+    @Configurable(name = "var.intensity_values")
+    private String intensityValues = "intensity_values";
+    @Configurable(name = "var.scan_index")
+    private String scanIndex = "scan_index";
+    @Configurable(name = "var.total_intensity")
+    private String totalIntensity = "total_intensity";
+    @Configurable(name = "var.binned_intensity_values")
+    private String binnedIntensityValues = "binned_intensity_values";
+    @Configurable(name = "var.binned_mass_values")
+    private String binnedMassValues = "binned_mass_values";
+    @Configurable(name = "var.binned_scan_index")
+    private String binnedScanIndex = "binned_scan_index";
+    @Configurable(name = "var.mass_range_min")
+    private String massRangeMin = "mass_range_min";
+    @Configurable(name = "var.mass_range_max")
+    private String massRangeMax = "mass_range_max";
     @Configurable
     private boolean normalizeScans = false;
-    private String massValues = "mass_values";
-    private String intensityValues = "intensity_values";
-    private String scanIndex = "scan_index";
-    private String totalIntensity = "total_intensity";
-    private String binnedIntensityValues = "binned_intensity_values";
-    private String binnedMassValues = "binned_mass_values";
-    private String binnedScanIndex = "binned_scan_index";
-    private String massRangeMin = "mass_range_min";
-    private String massRangeMax = "mass_range_max";
     @Configurable
     private List<Double> maskedMasses = null;
     @Configurable
@@ -82,23 +94,16 @@ public class DenseArrayProducer extends AFragmentCommand {
     private boolean ignoreMinMaxMassArrays = false;
     @Configurable
     private boolean normalizeMeanVariance = false;
+    @Configurable
     private boolean normalizeEicsToUnity = false;
+    @Configurable
     private double massBinResolution = 1.0d;
 
     @Override
-    public String toString() {
-        return getClass().getName();
-    }
-
-    @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-
-
         log.debug("Creating dense arrays!");
         log.debug("Looking for minimum and maximum values!");
-//        final double[] minmax = null;
         //this needs to be done for all fragments before we can do anything else
-        //currently not parallelized
         ICompletionService<double[]> massRangeCompletionService = createCompletionService(
                 double[].class);
 
@@ -111,10 +116,9 @@ public class DenseArrayProducer extends AFragmentCommand {
             mmmfw.setFileToLoad(new File(f.getAbsolutePath()));
             massRangeCompletionService.submit(mmmfw);
         }
-        List<double[]> massRangeResults = new ArrayList<double[]>();
         double[] massRange = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
         try {
-            massRangeResults = massRangeCompletionService.call();
+            List<double[]> massRangeResults = massRangeCompletionService.call();
             EvalTools.geq(1, massRangeResults.size(),
                     DenseArrayProducer.class);
             for (double[] result : massRangeResults) {
@@ -176,32 +180,5 @@ public class DenseArrayProducer extends AFragmentCommand {
                 "binned_mass_values");
         this.binnedScanIndex = cfg.getString("var.binned_scan_index",
                 "binned_scan_index");
-        this.normalizeScans = cfg.getBoolean(this.getClass().getName()
-                + ".normalizeScans", false);
-        this.normalizeMeanVariance = cfg.getBoolean(this.getClass().getName()
-                + ".normalizeMeanVariance", false);
-//		this.nthreads = cfg.getInt("cross.Factory.maxthreads", 5);
-        this.maskedMasses = MaltcmsTools.parseMaskedMassesList(cfg.getList(this.
-                getClass().getName()
-                + ".maskMasses", Collections.emptyList()));
-        this.invertMaskedMasses = cfg.getBoolean(this.getClass().getName()
-                + ".invertMaskedMasses", false);
-        this.massBinResolution = cfg.getDouble(
-                "dense_arrays.massBinResolution", 1.0d);
-    }
-
-    @Override
-    public String getDescription() {
-        return "Creates a binned representation of a chromatogram.";
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.GENERAL_PREPROCESSING;
     }
 }

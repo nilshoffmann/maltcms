@@ -65,17 +65,4 @@
         <property name="saveGraphics" value="true"/>
     </bean>
     
-    
-        
-    
-<!--    <bean id="spectraTypeComparison" class="maltcms.commands.fragments.spectratyping.VBetaFamilyComparison">
-        <property name="controlFile"></property>
-        <property name="intervals">
-            <list>
-                <value>2200,2800</value>
-                <value>3500,4000</value>
-            </list>
-        </property>
-    </bean>-->
-    
 </beans>

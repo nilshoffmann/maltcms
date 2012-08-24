@@ -58,8 +58,6 @@ import org.openide.util.lookup.ServiceProvider;
 @Data
 @RequiresVariables(names = {"var.total_intensity", "var.modulation_time",
     "var.scan_rate", "var.second_column_scan_index"})
-@RequiresOptionalVariables(names = {""})
-@ProvidesVariables(names = {""})
 @ServiceProvider(service = AFragmentCommand.class)
 public class CreateHorizontalTicVector extends AFragmentCommand {
 
@@ -76,11 +74,6 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
     @Configurable(name = "var.second_column_scan_index",
     value = "second_column_scan_index")
     private String secondColumnScanIndexVar = "second_column_scan_index";
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     /**
      * {@inheritDoc}

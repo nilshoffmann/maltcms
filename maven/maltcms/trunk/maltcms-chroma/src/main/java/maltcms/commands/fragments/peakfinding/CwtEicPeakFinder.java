@@ -21,6 +21,8 @@
  */
 package maltcms.commands.fragments.peakfinding;
 
+import cross.annotations.Configurable;
+import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
@@ -43,88 +45,46 @@ import ucar.ma2.Array;
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
+@RequiresVariables(names={"var.binned_mass_values","var.binned_intensity_values","var.binned_scan_index"})
 public class CwtEicPeakFinder extends AFragmentCommand {
 
-    @Override
-    public String getDescription() {
-        return "Finds EIC peaks using  Continuous Wavelet Transform.";
-    }
+    private final String description = "Finds EIC peaks using  Continuous Wavelet Transform.";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;
     
-    //FIXME this is wrong!
-    public int convertToScans(double duration) {
-        return 1;
-    }
+    @Configurable(name="var.binned_mass_values")
+    private String binnedMassValues = "binned_mass_values";
+    @Configurable(name="var.binned_intensity_values")
+    private String binnedIntensityValues = "binned_intensity_values";
+    @Configurable(name="var.binned_scan_index")
+    private String binnedScanIndex = "binned_scan_index";
 
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-        System.out.println("Received " + t.size() + " input files");
-        // MasterServerFactory msf = new MasterServerFactory();
-        // Impaxs ms = msf.getMasterServerImplementations().get(0);
-        // ms.startMasterServer(this.rmiServerConfigFile);
-        // JobMonitor jm = new JobMonitor(ms,t.size());
-        // ms.addJobEventListener(jm);
-        // ExecutorService es = Executors.newSingleThreadExecutor();
-        ICompletionService<File> ics = createCompletionService(File.class);
         int cnt = 0;
         for (IFileFragment f : t) {
-            IVariableFragment biv = f.getChild("binned_intensity_values");
-            IVariableFragment scanIndex = f.getChild("binned_scan_index");
+            IVariableFragment biv = f.getChild(binnedIntensityValues);
+            IVariableFragment bmv = f.getChild(binnedMassValues);
+            IVariableFragment scanIndex = f.getChild(binnedScanIndex);
             biv.setIndex(scanIndex);
             List<Array> eics = ArrayTools.tilt(biv.getIndexedArray());
-            for(Array eic:eics) {
+            Array mzs = bmv.getIndexedArray().get(0);
+            ICompletionService<File> ics = createCompletionService(File.class);
+            for(int i = 0;i<eics.size();i++) {
+                Array eic = eics.get(i);
                 CwtEicPeakFinderCallable cwt = new CwtEicPeakFinderCallable();
                 cwt.setInput(new File(f.getAbsolutePath()));
+                cwt.setEic((double[])eic.get1DJavaArray(double.class));
+                cwt.setMz(mzs.getDouble(i));
                 cwt.setMinScale(5);
+                ics.submit(cwt);
             }
-            
-            
-            System.out.println("Opening file: " + f.getAbsolutePath());
-            // create ConfigurableRunnable config
-//            File runtimeConfig = createRuntimeConfiguration(cnt, f, cwt);
-
-            // create job config
-//            File jobConfig = createJobConfiguration(runtimeConfig, cnt);
-            // try {
-            // Job j = new Job(jobConfig.getAbsolutePath());
-//            cwt.configure(runtimeConfig);
-            log.info("Running cwt peak finder");
-//            File featureFile = cwt.call();
-//            getWorkflow().append(new DefaultWorkflowResult(featureFile, this,
-//                    WorkflowSlot.FILEIO, f));
-            // jm.addJob(j.getId());
-            // ms.submitJob(j);
-            // } catch (MalformedURLException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // } catch (ClassNotFoundException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // } catch (InstantiationException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // } catch (IllegalAccessException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // } catch (IOException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // }
+            try {
+                ics.call();
+            } catch (Exception ex) {
+                log.warn("Exception caught: ",ex);
+            }
             cnt++;
         }
-        // es.submit(jm);
-        // es.shutdown();
-        // try {
-        // es.awaitTermination(20, TimeUnit.MINUTES);
-        // } catch (InterruptedException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-
         return t;
-    }
-
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.PEAKFINDING;
     }
 }

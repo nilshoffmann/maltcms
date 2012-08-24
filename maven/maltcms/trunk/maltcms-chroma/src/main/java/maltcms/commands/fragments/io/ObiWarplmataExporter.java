@@ -21,6 +21,7 @@
  */
 package maltcms.commands.fragments.io;
 
+import cross.annotations.Configurable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,12 +29,9 @@ import java.util.List;
 
 import maltcms.io.csv.CSVWriter;
 
-import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
-import cross.Logging;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
@@ -58,15 +56,17 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class ObiWarplmataExporter extends AFragmentCommand {
 
+    private final String description = "Creates compatible lmata matrix files for use with Obi-Warp (http://obi-warp.sourceforge.net/)";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;
+    
+    @Configurable
     private String scanAcquisitionTimeVariableName = "scan_acquisition_time";
+    @Configurable
     private String binnedIntensitiesVariableName = "binned_intensity_values";
+    @Configurable
     private String binnedScanIndexVariableName = "binned_scan_index";
+    @Configurable
     private String binnedMassesVariableName = "binned_mass_values";
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     /*
      * (non-Javadoc)
@@ -126,25 +126,5 @@ public class ObiWarplmataExporter extends AFragmentCommand {
             lines.clear();
         }
         return t;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.commands.fragments.AFragmentCommand#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return "Creates compatible lmata matrix files for use with Obi-Warp (http://obi-warp.sourceforge.net/)";
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.FILECONVERSION;
     }
 }

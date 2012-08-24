@@ -46,6 +46,7 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
 import cross.Factory;
 import cross.annotations.Configurable;
+import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.StatsMap;
 import cross.datastructures.fragments.IFileFragment;
@@ -65,13 +66,20 @@ import maltcms.datastructures.peak.Peak1D;
 
 /**
  * Work in progress. EIC peak finder, EIC are individual ion channels.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 @Data
+@RequiresVariables(names = {"var.binned_mass_values",
+    "var.binned_intensity_values", "var.binned_scan_index",
+    "var.scan_acquisition_time", "var.mass_values", "var.intensity_values",
+    "var.scan_index"})
 public class EICPeakFinder extends AFragmentCommand {
+
+    private final String description = "Finds peaks within on mass channels.";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;
 
     protected static double calcEstimatedCrossCorrelation(final Array a,
             final Array b, final double meana, final double meanb,
@@ -98,11 +106,6 @@ public class EICPeakFinder extends AFragmentCommand {
     private double peakThreshold = 0.01d;
     @Configurable(value = "20")
     private int filterWindow = 20;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
@@ -248,14 +251,6 @@ public class EICPeakFinder extends AFragmentCommand {
 
     }
 
-    @Override
-    public void configure(Configuration cfg) {
-        this.peakThreshold = cfg.getDouble(this.getClass().getName()
-                + ".peakThreshold", 1.0d);
-        this.filterWindow = cfg.getInt(this.getClass().getName()
-                + ".filterWindow", 10);
-    }
-
     protected void calcEstimatedAutoCorrelation(final Array a, final Array b,
             final double mean, final double variance, final int lag,
             final ArrayDouble.D1 acr) {
@@ -283,7 +278,6 @@ public class EICPeakFinder extends AFragmentCommand {
             final ArrayDouble.D1 ad2, final double meana, final double meanb,
             final double vara, final double varb) {
         final Callable<Tuple2D<Tuple2D<Integer, Integer>, Double>> c = new Callable<Tuple2D<Tuple2D<Integer, Integer>, Double>>() {
-
             @Override
             public Tuple2D<Tuple2D<Integer, Integer>, Double> call()
                     throws Exception {
@@ -296,11 +290,6 @@ public class EICPeakFinder extends AFragmentCommand {
             }
         };
         return c;
-    }
-
-    @Override
-    public String getDescription() {
-        return "Finds peaks within on mass channels.";
     }
 
     protected Tuple2D<Integer, Double> getMaxAutocorrelation(final Array a,
@@ -321,15 +310,5 @@ public class EICPeakFinder extends AFragmentCommand {
         }
         return new Tuple2D<Integer, Double>(Integer.valueOf(maxindex), Double.
                 valueOf(max));
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.PEAKFINDING;
     }
 }

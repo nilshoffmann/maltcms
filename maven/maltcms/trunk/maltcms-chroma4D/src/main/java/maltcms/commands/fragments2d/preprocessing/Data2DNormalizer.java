@@ -82,11 +82,6 @@ public class Data2DNormalizer extends AFragmentCommand {
     private int topHatFilterWindow = 5;
 
     @Override
-    public String toString() {
-        return getClass().getName();
-    }
-
-    @Override
     public String getDescription() {
         return "Normalizes 2D / GCxGC-MS data";
     }
@@ -226,20 +221,8 @@ public class Data2DNormalizer extends AFragmentCommand {
                 "modulation_time");
         this.secondScanIndexVar = cfg.getString("var.second_column_scan_index",
                 "second_column_scan_index");
-        this.applyMovingAverage = cfg.getBoolean(this.getClass().getName()
-                + ".applyMovingAverage", false);
-        this.movingAverageWindow = cfg.getInt(this.getClass().getName()
-                + ".movingAverageWindow", 3);
-        this.applyMovingMedian = cfg.getBoolean(this.getClass().getName()
-                + ".applyMovingMedian", true);
-        this.movingMedianWindow = cfg.getInt(this.getClass().getName()
-                + ".movingMedianWindow", 3);
-        this.applyTopHatFilter = cfg.getBoolean(this.getClass().getName()
-                + ".applyTopHatFilter", true);
-        this.topHatFilterWindow = cfg.getInt(this.getClass().getName()
-                + ".topHatFilterWindow", 5);
     }
-
+    
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;

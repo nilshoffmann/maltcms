@@ -22,6 +22,7 @@
 package maltcms.commands.fragments2d.preprocessing;
 
 import cross.annotations.Configurable;
+import cross.annotations.ProvidesVariables;
 import maltcms.datastructures.ms.Chromatogram2D;
 
 import org.apache.commons.configuration.Configuration;
@@ -49,18 +50,22 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
+/**
+ * Reduces a GCxGC-MS chromatogram to its one-dimensional representation by summing over 
+ * modulations.
+ * 
+ * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ */
+/*
+ * TODO declare provided and required variables
+ */
 @Slf4j
 @Data
 @ServiceProvider(service=AFragmentCommand.class)
 public class GCGCToGCMSConverter extends AFragmentCommand {
 
-    @Configurable(value="5",type=double.class)
+    @Configurable(value="5")
     private double snrthreshold = 5;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
     
     @Override
     public String getDescription() {
@@ -71,13 +76,6 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
         for (IFileFragment ff : t) {
-//			final int scanRate = ff.getChild(this.scanRateVar).getArray()
-//			        .getInt(Index.scalarIndexImmutable);
-//			final int modulationTime = ff.getChild(this.modulationTimeVar)
-//			        .getArray().getInt(Index.scalarIndexImmutable);
-//			final int scansPerModulation = scanRate * modulationTime;
-//			this.log.debug("SPM: {}", scansPerModulation);
-
             IFileFragment retF = new FileFragment(getWorkflow().getOutputDirectory(this), ff.getName());
 //            retF.addSourceFile(ff);
             ArrayStatsScanner ass = new ArrayStatsScanner();
@@ -187,7 +185,6 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
      */
     @Override
     public void configure(Configuration cfg) {
-        super.configure(cfg);
         this.snrthreshold = cfg.getDouble(getClass().getName()+".snrthreshold", 5);
     }
 

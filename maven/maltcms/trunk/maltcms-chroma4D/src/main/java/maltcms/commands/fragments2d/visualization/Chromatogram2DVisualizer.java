@@ -58,7 +58,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Creates an image.
+ * Creates an image for a two-dimensional chromatogram.
  * 
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
@@ -73,6 +73,9 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class Chromatogram2DVisualizer extends AFragmentCommand {
 
+    private final String description = "2D chromatogram visualization";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
+    
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";
     @Configurable(name = "var.second_column_scan_index",
@@ -101,12 +104,7 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
     private double threshold = 0;
     @Configurable(value = "false")
     private boolean substractMean = false;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
-
+    
     /**
      * {@inheritDoc}
      */
@@ -239,32 +237,11 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
                 "modulation_time");
         this.secondScanIndexVar = cfg.getString("var.second_column_scan_index",
                 "second_column_scan_index");
-        this.colorrampLocation = cfg.getString("images.colorramp",
-                "res/colorRamps/bcgyr.csv");
         this.doubleFillValue = cfg.getDouble(
                 "ucar.nc2.NetcdfFile.fillValueDouble", 9.9692099683868690e+36);
         this.secondColumnTimeVar = cfg.getString("var.second_column_time",
                 "second_column_time");
         this.scanAcquTime = cfg.getString("var.scan_acquisition_time",
                 "scan_acquisition_time");
-        this.threshold = cfg.getDouble("images.thresholdLow", 0.0d);
-        this.substractMean = cfg.getBoolean(this.getClass().getName()
-                + ".substractMean", false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getDescription() {
-        return "2D chromatogram visualization";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return null;
     }
 }

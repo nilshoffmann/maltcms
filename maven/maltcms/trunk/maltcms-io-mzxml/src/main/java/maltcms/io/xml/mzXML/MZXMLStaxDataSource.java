@@ -49,6 +49,7 @@ import cross.datastructures.ehcache.CacheFactory;
 import cross.datastructures.ehcache.ICacheDelegate;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.fragments.ImmutableVariableFragment2;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
@@ -78,7 +79,7 @@ public class MZXMLStaxDataSource implements IDataSource {
     private String source_files = "source_files";
     private int mslevel = 1;
     private MSXMLParser parser = null;
-    private ICacheDelegate<IVariableFragment,Array> variableToArrayCache = new CacheFactory<IVariableFragment,Array>().createDefaultCache(UUID.randomUUID().toString());
+    private ICacheDelegate<IVariableFragment,Array> variableToArrayCache = CacheFactory.createDefaultCache(UUID.randomUUID().toString());
 
     /**
      * Checks, if passed in file is valid mzXML, by trying to invoke the parser
@@ -245,7 +246,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 
     private IVariableFragment getVariable(final IFileFragment f,
             final String name) {
-        return (f.hasChild(name) ? f.getChild(name) : new VariableFragment(f,
+        return (f.hasChild(name) ? f.getChild(name) : new ImmutableVariableFragment2(f,
                 name));
     }
 

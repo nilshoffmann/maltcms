@@ -90,34 +90,18 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class TICHeatmapCoplot extends AFragmentCommand {
 
-    @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv")
+    private final String description = "Generates a stacked heatmap plot of TICs (bird's eye view) with shared time axis and a coplot with a shared intensity axis (overlay)";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
+    
+    @Configurable(name = "images.colorramp")
     private String colorRampLocation = "res/colorRamps/bcgyr.csv";
-    @Configurable(name = "var.total_intensity", value = "total_intensity")
+    @Configurable(name = "var.total_intensity")
     private String totalIntensityVar = "total_intensity";
-    @Configurable(name = "var.scan_acquisition_time",
-    value = "scan_acquisition_time")
+    @Configurable(name = "var.scan_acquisition_time")
     private String scanAcquisitionTimeVar = "scan_acquisition_time";
 
     @Override
-    public String toString() {
-        return getClass().getName();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.commands.fragments.AFragmentCommand#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return "Generates a stacked heatmap plot of TICs (bird's eye view) with shared time axis and a coplot with a shared intensity axis (overlay)";
-    }
-
-    @Override
     public void configure(Configuration cfg) {
-        super.configure(cfg);
-        this.colorRampLocation = cfg.getString("images.colorramp",
-                "res/colorRamps/bcgyr.csv");
         this.totalIntensityVar = cfg.getString("var.total_intensity");
         this.scanAcquisitionTimeVar = cfg.getString("var.scan_acquisition_time");
     }
@@ -451,15 +435,5 @@ public class TICHeatmapCoplot extends AFragmentCommand {
                 : ref.getChild(satVar).getArray();
         return drawTIC(outputDir, heightPerTIC, maxLength, a, filename, sat,
                 anchors, anchorNames);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.VISUALIZATION;
     }
 }

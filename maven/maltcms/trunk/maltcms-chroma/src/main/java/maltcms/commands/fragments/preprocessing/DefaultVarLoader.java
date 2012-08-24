@@ -21,7 +21,7 @@
  */
 package maltcms.commands.fragments.preprocessing;
 
-import cross.Factory;
+import cross.annotations.Configurable;
 import java.io.File;
 
 
@@ -31,14 +31,12 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.preprocessing.defaultVarLoader.DefaultVarLoaderWorker;
 import net.sf.mpaxs.api.ICompletionService;
-import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -57,15 +55,17 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class DefaultVarLoader extends AFragmentCommand {
     
-    private List<String> defaultVariables = Collections.emptyList();
-    private List<String> additionalVariables = Collections.emptyList();
-    private int startIndex = -1;
-    private int stopIndex = -1;
+    private final String description = "Loads default and additional variables as defined in the configuration.";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;
     
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
+    @Configurable
+    private List<String> defaultVariables = Collections.emptyList();
+    @Configurable
+    private List<String> additionalVariables = Collections.emptyList();
+    @Configurable
+    private int startIndex = -1;
+    @Configurable
+    private int stopIndex = -1;
 
     @Override
     public TupleND<IFileFragment> apply(
@@ -91,20 +91,5 @@ public class DefaultVarLoader extends AFragmentCommand {
         TupleND<IFileFragment> ret = postProcess(ics, inputFileFragments);
         log.debug("Returning {} FileFragments!", ret.size());
         return ret;
-    }
-
-    @Override
-    public String getDescription() {
-        return "Loads default and additional variables as defined in the configuration.";
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.FILECONVERSION;
     }
 }

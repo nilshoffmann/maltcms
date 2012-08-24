@@ -46,18 +46,11 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Data
-@RequiresVariables(names = {})
-@RequiresOptionalVariables(names = {})
 @ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
 public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
 
     private boolean scale = true;
     private int k = 1;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
@@ -79,11 +72,11 @@ public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
                 queryname + "_" + refname + "-tv").getIndexedArray();
 
         if (this.scale) {
-            for (int i = 0; i < k; i++) {
+//            for (int i = 0; i < k; i++) {
                 log.info("Scaling");
                 scanlineRef = ArrayTools2.sqrt(scanlineRef);
                 scanlineQuery = ArrayTools2.sqrt(scanlineQuery);
-            }
+//            }
         }
 
         return new Tuple2D<List<Array>, List<Array>>(scanlineRef, scanlineQuery);

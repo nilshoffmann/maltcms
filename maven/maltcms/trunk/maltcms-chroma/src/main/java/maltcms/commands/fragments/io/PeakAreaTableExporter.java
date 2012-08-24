@@ -38,7 +38,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  */
 @RequiresVariables(names={"var.tic_peaks"})
-@ServiceProvider(service=AFragmentCommand.class)
+//@ServiceProvider(service=AFragmentCommand.class)
 public class PeakAreaTableExporter extends AFragmentCommand {
 
     @Override

@@ -59,11 +59,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * ModulationTimeEstimator tries to find the spike-like peaks in GCxGC MS data
- * (Leco exported to netcdf ANDIMS), in order to estimate the second retention
- * time parameter.
+ * ModulationTimeEstimator tries to find the spike-like modulation peaks in
+ * GCxGC MS data (Leco exported to netcdf ANDIMS), in order to estimate the
+ * second retention time parameter.
  * 
- * Use @see Default2DVarLoader instead with flag estimateModulationTime=true
+ * Use {@see Default2DVarLoader} instead with flag estimateModulationTime=true
  * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 

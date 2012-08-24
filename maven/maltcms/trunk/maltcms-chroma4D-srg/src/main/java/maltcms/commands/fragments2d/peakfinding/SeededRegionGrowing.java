@@ -170,42 +170,27 @@ public class SeededRegionGrowing extends AFragmentCommand {
     private boolean doNormalization = false;
     @Configurable(value = "false", type = boolean.class)
     private boolean doIntegration = false;
-//    @Configurable(value = "0.999d", type = double.class)
-//    private double separationDistance = 0.999d;
     @Configurable(value = "0.99d", type = double.class)
     private double secondSeedMinDistance = 0.99d;
     private boolean seedNotInRegion = false;
-//    private boolean useMeanMsInSeparation = false;
     private int scansPerModulation = 0;
-//	private int scanLineCount = 0;
-//    private IScalarArraySimilarity similarity;
-//    private IScalarArraySimilarity separationSimilarity;
+    @Configurable
     private IScalarArraySimilarity similaritySecondRun;
+    @Configurable
     private IPeakPicking peakPicking;
+    @Configurable
     private IRegionGrowing regionGrowing;
+    @Configurable
     private IBidirectionalBestHit bbh;
+    @Configurable
     private IPeakIdentification identification;
+    @Configurable
     private IPeakIntegration integration;
+    @Configurable
     private IPeakExporter peakExporter;
+    @Configurable
     private PeakSeparator peakSeparator = new PeakSeparator();
     private List<List<Peak2D>> peakLists = new ArrayList<List<Peak2D>>();
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
-
-    public SeededRegionGrowing() {
-//        similarity = new ProductSimilarity();
-//        similarity.setArraySimilarities(new ArrayCos());
-//        GaussianDifferenceSimilarity gds1 = new GaussianDifferenceSimilarity();
-//        gds1.setTolerance(15.0);
-//        GaussianDifferenceSimilarity gds2 = new GaussianDifferenceSimilarity();
-//        gds1.setTolerance(1.0);
-//        similarity.setScalarSimilarities(gds1,gds2);
-//        similaritySecondRun = similarity;
-//        separationSimilarity = similarity;
-    }
 
     /**
      * {@inheritDoc}
@@ -484,69 +469,6 @@ public class SeededRegionGrowing extends AFragmentCommand {
         this.doubleFillValue = cfg.getDouble(
                 "ucar.nc2.NetcdfFile.fillValueDouble", 9.9692099683868690e+36);
         this.threshold = cfg.getDouble("images.thresholdLow", 0.0d);
-
-        // TODO: This dist class is used to determine second seeds. Maybe it is better to use a time penalized dist class here?
-        // But if so, you have to change scan index difference to time difference in line 372
-//        this.distClass = cfg.getString(
-//                this.getClass().getName() + ".distClass",
-//                "maltcms.commands.distances.ArrayCos");
-//        this.distance = Factory.getInstance().getObjectFactory().instantiate(
-//                this.distClass, IArrayDoubleComp.class);
-//        this.distance.configure(cfg);
-
-        final String bbhClass = cfg.getString(
-                this.getClass().getName() + ".bbhClass",
-                "maltcms.commands.fragments2d.peakfinding.bbh.FastBidirectionalBestHit");
-        this.bbh = Factory.getInstance().getObjectFactory().instantiate(
-                bbhClass, IBidirectionalBestHit.class);
-        this.bbh.configure(cfg);
-        this.doBBH = cfg.getBoolean(this.getClass().getName() + ".doBBH", true);
-
-        final String peakExporterClass = cfg.getString(this.getClass().getName()
-                + ".exportClass",
-                "maltcms.commands.fragments2d.peakfinding.output.PeakExporter");
-        this.peakExporter = Factory.getInstance().getObjectFactory().instantiate(
-                peakExporterClass, IPeakExporter.class, cfg);
-
-        this.doIntegration = cfg.getBoolean(
-                this.getClass().getName() + ".doIntegration", false);
-        final String peakIntegrationClass = cfg.getString(this.getClass().
-                getName() + ".integrationClass",
-                "maltcms.commands.fragments2d.peakfinding.output.PeakIntegration");
-        this.integration = Factory.getInstance().getObjectFactory().instantiate(
-                peakIntegrationClass, IPeakIntegration.class, cfg);
-
-        final String identificationClass = cfg.getString(this.getClass().getName()
-                + ".indentificationClass",
-                "maltcms.commands.fragments2d.peakfinding.output.PeakIdentification");
-        this.identification = Factory.getInstance().getObjectFactory().
-                instantiate(identificationClass, IPeakIdentification.class,
-                cfg);
-
-        String ppClass = cfg.getString(
-                this.getClass().getName() + ".pickingClass",
-                "maltcms.commands.fragments2d.peakfinding.picking.SimplePeakPicking");
-        this.peakPicking = Factory.getInstance().getObjectFactory().instantiate(
-                ppClass, IPeakPicking.class, cfg);
-
-        String regionGrowingClass = cfg.getString(
-                this.getClass().getName() + ".srgClass",
-                "maltcms.commands.fragments2d.peakfinding.srg.OneByOneRegionGrowing");
-        this.regionGrowing = Factory.getInstance().getObjectFactory().
-                instantiate(regionGrowingClass, IRegionGrowing.class, cfg);
-        // this.srgMinDist = this.regionGrowing.getMinDist();
-//        this.separationDistance = cfg.getDouble(this.getClass().getName()
-//                + ".separationDistance", 0.999d);
-//        this.peakSeparator.setMinDist(this.separationDistance);
-        this.separate = cfg.getBoolean(this.getClass().getName() + ".separate",
-                true);
-        this.secondSeedMinDistance = cfg.getDouble(this.getClass().getName()
-                + ".secondSeedMinDistance", 0.99d);
-        this.secondRun = cfg.getBoolean(this.getClass().getName()
-                + ".secondRun", true);
-
-        this.doNormalization = cfg.getBoolean(this.getClass().getName()
-                + ".doNormalization", false);
     }
 
     /**

@@ -41,6 +41,7 @@ import ucar.ma2.DataType;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import cross.Factory;
+import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.commands.fragments.AFragmentCommand;
@@ -54,7 +55,6 @@ import cross.datastructures.tools.EvalTools;
 import java.util.Collections;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.configuration.ConfigurationUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -79,17 +79,29 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
     
     private final String omit = "-";
+    @Configurable(name="csvri.retention.time")
     private boolean time = false;
+    @Configurable(name="csvri.retention.index")
     private boolean index = true;
-    private List<String> location = Collections.emptyList();
-    private String fileDesignation = ">";
-    private String basedir = "";
+    @Configurable(name="csvri.retention.scan")
     private boolean scan = false;
+    @Configurable
+    private List<String> location = Collections.emptyList();
+    @Configurable(name = "csvri.filemarker")
+    private String fileDesignation = ">";
+    @Configurable
+    private String basedir = "";
+    @Configurable
     private int max_names_length = Integer.MIN_VALUE;
+    @Configurable(name = "var.retention_index_names")
     private String anchorNamesVariableName = "retention_index_names";
+    @Configurable(name = "var.retention_times")
     private String anchorTimesVariableName = "retention_times";
+    @Configurable(name = "var.retention_indices")
     private String anchorRetentionIndexVariableName = "retention_indices";
+    @Configurable(name = "var.retention_scans")
     private String anchorScanIndexVariableName = "retention_scans";
+    @Configurable(name = "var.scan_acquisition_time")
     private String satVariableName = "scan_acquisition_time";
 
     /**
@@ -249,7 +261,6 @@ public class CSVAnchorReader extends AFragmentCommand {
 
     @Override
     public void configure(final Configuration cfg) {
-        System.out.println("Configure called on CSVAnchorReader:"+ConfigurationUtils.toString(cfg));
         if (cfg.containsKey("csvri.retention.time")) {
             this.time = cfg.getBoolean("csvri.retention.time");
         }
@@ -266,8 +277,8 @@ public class CSVAnchorReader extends AFragmentCommand {
                 if (o instanceof String) {
                     loc.add((String) o);
                 } else {
-                    System.err.println("Property Object is not an instance of String! "
-                            + o);
+                    log.warn("Property Object is not an instance of String! {}"
+                            , o);
                 }
             }
             this.location = loc;
@@ -289,7 +300,6 @@ public class CSVAnchorReader extends AFragmentCommand {
                 "var.anchors.retention_scans", "retention_scans");
         this.satVariableName = cfg.getString("var.scan_acquisition_time",
                 "scan_acquisition_time");
-//        this.useAnchors = cfg.getBoolean("anchors.use", false);
 
     }
 

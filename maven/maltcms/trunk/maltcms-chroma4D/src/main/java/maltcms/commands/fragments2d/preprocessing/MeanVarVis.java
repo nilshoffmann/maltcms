@@ -74,9 +74,6 @@ import org.openide.util.lookup.ServiceProvider;
     "var.used_mass_values", "var.maxms_1d_vertical_index",
     "var.maxms_1d_vertical", "var.total_intensity_1d",
     "var.scan_acquisition_time_1d"})
-// "var.v_total_intensity",
-@RequiresOptionalVariables(names = {""})
-@ProvidesVariables(names = {""})
 @ServiceProvider(service=AFragmentCommand.class)
 public class MeanVarVis extends AFragmentCommand {
 
@@ -120,11 +117,6 @@ public class MeanVarVis extends AFragmentCommand {
     private boolean differentVisualizations = false;
     @Configurable(value = "false")
     private boolean useLogScale = false;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
     
     /**
      * {@inheritDoc}
@@ -225,13 +217,6 @@ public class MeanVarVis extends AFragmentCommand {
                 "var.maxms_1d_vertical_index", "maxms_1d_vertical_index");
         this.usedMassValuesVar = cfg.getString("var.used_mass_values",
                 "used_mass_values");
-
-        this.format = cfg.getString(this.getClass().getName() + ".format",
-                "png");
-        this.differentVisualizations = cfg.getBoolean(this.getClass().getName()
-                + "differentVisualizations", false);
-        this.useLogScale = cfg.getBoolean(this.getClass().getName()
-                + ".useLogScale", false);
     }
 
     /**

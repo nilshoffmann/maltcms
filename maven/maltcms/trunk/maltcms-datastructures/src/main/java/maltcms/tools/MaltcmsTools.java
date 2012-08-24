@@ -1394,11 +1394,11 @@ public class MaltcmsTools {
         final Array b = si.getArray();
         EvalTools.notNull(b, MaltcmsTools.class);
         // Retrieve original mass_values
-        final IVariableFragment mz = ff.getChild(mass_values);
+        final IVariableFragment mz = ff.getChild(mass_values,true);
         // Manually set index
         mz.setIndex(si);
         // Retrieve original intensity_values
-        final IVariableFragment inten = ff.getChild(intensity_values);
+        final IVariableFragment inten = ff.getChild(intensity_values,true);
         // Manually set index
         inten.setIndex(si);
         // Read mass_values with index
@@ -1431,7 +1431,7 @@ public class MaltcmsTools {
         // Check, that size is at least 1 and at most largest integer
         EvalTools.inRangeI(1, Integer.MAX_VALUE, size, MaltcmsTools.class);
         MaltcmsTools.log.debug("Creating dense arrays with " + size
-                + " elements!");
+                + " elements and resolution of {}!",massBinResolution);
         // Create new index array with size = number of scans
         final ArrayInt.D1 retIndexArray = new ArrayInt.D1(mza.size());
         final ArrayList<Array> retMZa = new ArrayList<Array>(mza.size());
@@ -1466,7 +1466,7 @@ public class MaltcmsTools {
         if (!f.hasChild(binned_mass_values)) {
             final IVariableFragment mzRetDense = new VariableFragment(f,
                     binned_mass_values);
-            // mzRetDense.setIndex(siRetDense);
+            mzRetDense.setIndex(f.getChild(binned_scan_index));
             // mzRetDense.setArray(ArrayTools.glue(retMZa));
             mzRetDense.setIndexedArray(retMZa);
         }
@@ -1479,6 +1479,7 @@ public class MaltcmsTools {
         if (!f.hasChild(binned_intensity_values)) {
             final IVariableFragment intenRetDense = new VariableFragment(f,
                     binned_intensity_values);
+            intenRetDense.setIndex(f.getChild(binned_scan_index));
             // intenRetDense.setIndex(siRetDense);
             intenRetDense.setIndexedArray(retIntena);
 
@@ -1486,7 +1487,7 @@ public class MaltcmsTools {
             final Array a = intenRetDense.getArray();
             MaltcmsTools.log.debug("{}", a);
             MaltcmsTools.log.debug("{}", retIndexArray);
-            intenRetDense.setIndex(f.getChild(binned_scan_index));
+            
             final List<Array> al = intenRetDense.getIndexedArray();
             MaltcmsTools.log.debug("{}", al);
         }

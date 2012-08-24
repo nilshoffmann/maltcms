@@ -25,37 +25,37 @@ import java.util.Arrays;
 
 import ucar.ma2.Array;
 
-// Erzeugt sortierte Java Arrays aus ma2 Arrays
+// Erzeugt sortierte Java Arrays aus ma2 Arrays
 /**
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
  */
 public class SortedJavArrays {
 
-	private double[] sortedjavarray1;
-	private double[] sortedjavarray2;
+    private double[] sortedjavarray1;
+    private double[] sortedjavarray2;
 
-	public double[] getSortedjavarray1() {
-		return this.sortedjavarray1;
-	}
+    public double[] getSortedjavarray1() {
+        return this.sortedjavarray1;
+    }
 
-	public double[] getSortedjavarray2() {
-		return this.sortedjavarray2;
-	}
+    public double[] getSortedjavarray2() {
+        return this.sortedjavarray2;
+    }
 
-	public void setSortedjavarray1(final double[] sortedjavarray11) {
-		this.sortedjavarray1 = sortedjavarray11;
-	}
+    public void setSortedjavarray1(final double[] sortedjavarray11) {
+        this.sortedjavarray1 = sortedjavarray11;
+    }
 
-	public void setSortedjavarray2(final double[] sortedjavarray21) {
-		this.sortedjavarray2 = sortedjavarray21;
-	}
+    public void setSortedjavarray2(final double[] sortedjavarray21) {
+        this.sortedjavarray2 = sortedjavarray21;
+    }
 
-	public void sort(final Array a1, final Array b1) {
-		final Array a = a1.copy();
-		this.sortedjavarray1 = (double[]) a.copyTo1DJavaArray();
-		Arrays.sort(this.sortedjavarray1);
-		final Array b = b1.copy();
-		this.sortedjavarray2 = (double[]) b.copyTo1DJavaArray();
-		Arrays.sort(this.sortedjavarray2);
-	}
+    public void sort(final Array a1, final Array b1) {
+        final Array a = a1.copy();
+        this.sortedjavarray1 = (double[]) a.copyTo1DJavaArray();
+        Arrays.sort(this.sortedjavarray1);
+        final Array b = b1.copy();
+        this.sortedjavarray2 = (double[]) b.copyTo1DJavaArray();
+        Arrays.sort(this.sortedjavarray2);
+    }
 }

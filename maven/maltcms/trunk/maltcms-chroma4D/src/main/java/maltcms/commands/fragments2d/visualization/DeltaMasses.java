@@ -192,6 +192,6 @@ public class DeltaMasses extends AFragmentCommand {
      */
     @Override
     public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.STATISTICS;
+        return WorkflowSlot.VISUALIZATION;
     }
 }

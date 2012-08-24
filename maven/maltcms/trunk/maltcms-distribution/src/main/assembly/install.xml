@@ -48,6 +48,7 @@
                 <exclude>net.sf.maltcms:maltcms-spectratyping:jar</exclude>-->
                 <exclude>net.sf.maltcms:*:pom</exclude>
             </excludes>
+            <outputFileNameMapping>${artifact.artifactId}-${artifact.baseVersion}.${artifact.extension}</outputFileNameMapping>
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>
             <outputDirectory>lib/</outputDirectory>
@@ -82,6 +83,7 @@
             <useProjectArtifact>true</useProjectArtifact>
             <unpack>true</unpack>
             <includes>
+                <include>net.sf.maltcms:cross-main:jar</include>
                 <include>net.sf.maltcms:maltcms-chroma:jar</include>
                 <include>net.sf.maltcms:maltcms-chroma4D:jar</include>
                 <include>net.sf.maltcms:maltcms-chroma4D-srg:jar</include>

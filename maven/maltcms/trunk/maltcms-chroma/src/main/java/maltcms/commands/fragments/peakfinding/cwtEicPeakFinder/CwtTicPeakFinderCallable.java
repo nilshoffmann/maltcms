@@ -71,12 +71,19 @@ public class CwtTicPeakFinderCallable implements Callable<File>, Serializable {
     private int minScale = 5;
     @Configurable
     private int maxScale = 20;
+    @Configurable
     private File input;
+    @Configurable
     private File output;
+    @Configurable
     private double minPercentile = 5.0d;
+    @Configurable
     private boolean integratePeaks = true;
+    @Configurable
     private boolean integrateRawTic = true;
+    @Configurable
     private boolean storeScaleogram = true;
+    @Configurable
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
     @Override

@@ -66,8 +66,6 @@ import org.openide.util.lookup.ServiceProvider;
     "var.mass_values", "var.intensity_values", "var.scan_index",
     "var.mass_range_min", "var.mass_range_max", "var.modulation_time",
     "var.scan_rate"})
-@RequiresOptionalVariables(names = {""})
-@ProvidesVariables(names = {""})
 @ServiceProvider(service = AFragmentCommand.class)
 public class GradientVisualizer extends AFragmentCommand {
 
@@ -89,16 +87,9 @@ public class GradientVisualizer extends AFragmentCommand {
     private double doubleFillValue;
     @Configurable(name = "images.thresholdLow", value = "0")
     private double threshold = 0;
-//    @Configurable(value = "maltcms.commands.distances.ArrayCos")
-//    private String distClass = "maltcms.commands.distances.ArrayCos";
     private IArraySimilarity similarity = new ArrayCos();
     @Configurable(value = "false")
     private boolean absolut = false;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     /**
      * {@inheritDoc}
@@ -117,13 +108,6 @@ public class GradientVisualizer extends AFragmentCommand {
             final int scansPerModulation = scanRate * modulationTime;
             ff.getChild(this.totalIntensityVar).setIndex(
                     ff.getChild(this.secondScanIndexVar));
-
-//			if (this.distance instanceof ArrayVarNormLp) {
-//				log.info("Setting variance");
-//				((ArrayVarNormLp) this.distance)
-//						.setVarianceArray((ArrayDouble.D1) ff.getChild(
-//								"var_intensity_values").getArray());
-//			}
             if (this.similarity instanceof ArrayDotMap) {
                 log.info("Setting std");
                 ((ArrayDotMap) this.similarity).setStdArray((ArrayDouble.D1) ff.
@@ -203,19 +187,9 @@ public class GradientVisualizer extends AFragmentCommand {
                 "modulation_time");
         this.secondScanIndexVar = cfg.getString("var.second_column_scan_index",
                 "second_column_scan_index");
-        this.colorrampLocation = cfg.getString("images.colorramp",
-                "res/colorRamps/bcgyr.csv");
         this.doubleFillValue = cfg.getDouble(
                 "ucar.nc2.NetcdfFile.fillValueDouble", 9.9692099683868690e+36);
         this.threshold = cfg.getDouble("images.thresholdLow", 0.0d);
-//        distClass = cfg.getString(this.getClass().getName() + ".distance",
-//                "maltcms.commands.distances.ArrayCos");
-//        if (distClass != null) {
-//            this.similarity = Factory.getInstance().getObjectFactory().
-//                    instantiate(distClass, IArraySimilarity.class);
-//        }
-        this.absolut = cfg.getBoolean(this.getClass().getName() + ".absolut",
-                false);
     }
 
     /**

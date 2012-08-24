@@ -24,23 +24,22 @@ package smueller.tools;
 import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 
-// Ein paar Tools f�r Arrays
+// Ein paar Tools f�r Arrays
 /**
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
  */
 public class ArrayTools {
 
-	public static double calcmax(final Array a) {
-		return MAMath.getMaximum(a);
-	}
+    public static double calcmax(final Array a) {
+        return MAMath.getMaximum(a);
+    }
 
-	public static double calcmin(final Array a) {
-		return MAMath.getMinimum(a);
+    public static double calcmin(final Array a) {
+        return MAMath.getMinimum(a);
 
-	}
+    }
 
-	public static int countChar(final String s, final char c) {
-		return s.replaceAll("[^" + c + "]", "").length();
-	}
-
+    public static int countChar(final String s, final char c) {
+        return s.replaceAll("[^" + c + "]", "").length();
+    }
 }

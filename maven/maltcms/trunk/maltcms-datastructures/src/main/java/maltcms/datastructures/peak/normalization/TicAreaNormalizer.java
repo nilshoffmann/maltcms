@@ -37,7 +37,7 @@ import maltcms.tools.ArrayTools;
 public class TicAreaNormalizer implements IPeakNormalizer {
 
     private String ticVariableName = "total_intensity";
-    private ICacheDelegate<IFileFragment,Double> fragmentToArea = new CacheFactory<IFileFragment,Double>().createAutoRetrievalCache("TicAreaNormalizerCache", new ICacheElementProvider<IFileFragment,Double>() {
+    private ICacheDelegate<IFileFragment,Double> fragmentToArea = CacheFactory.createAutoRetrievalCache("TicAreaNormalizerCache", new ICacheElementProvider<IFileFragment,Double>() {
 
         @Override
         public Double provide(IFileFragment key) {

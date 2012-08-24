@@ -22,30 +22,16 @@
 package maltcms.commands.fragments2d.peakfinding;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
-import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationUtils;
-import org.apache.commons.configuration.PropertiesConfiguration;
-
-import ucar.ma2.ArrayDouble;
-import cross.Factory;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
-import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
-import cross.io.IDataSourceFactory;
-import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -67,12 +53,9 @@ public class CwtPeakFinder extends AFragmentCommand {
     @Configurable
     private double minRelativeIntensity = 0.000002;
     @Configurable
-    private String rmiServerConfigFile = "";
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
+    private double modulationTime = 5.0;
+    @Configurable
+    private double scanRate = 100.0d;
 
     // public List<Point> getMaxima(double[] d, int x) {
     // LinkedList<Point> l = new LinkedList<Point>();
@@ -190,14 +173,14 @@ public class CwtPeakFinder extends AFragmentCommand {
     // // e.printStackTrace();
     // // }
     // }
-    private ArrayDouble.D1 toArrayDouble(List<double[]> l) {
-        ArrayDouble.D1 a = new ArrayDouble.D1(l.size());
-        int i = 0;
-        for (double[] d : l) {
-            a.set(i++, d[2]);
-        }
-        return a;
-    }
+//    private ArrayDouble.D1 toArrayDouble(List<double[]> l) {
+//        ArrayDouble.D1 a = new ArrayDouble.D1(l.size());
+//        int i = 0;
+//        for (double[] d : l) {
+//            a.set(i++, d[2]);
+//        }
+//        return a;
+//    }
 
     // private List<Tuple2D<Point2D, Double>> findDiffs(double[] seedlings,
     // double[] newSeedlings, int scaleIndx) {
@@ -206,56 +189,56 @@ public class CwtPeakFinder extends AFragmentCommand {
     //
     // return l;
     // }
-    public static void main(String[] args) {
-        if (args.length == 0) {
-            System.err.println("No arguments given!");
-            System.exit(1);
-        }
-        Factory fac = Factory.getInstance();
-        fac.getConfiguration().setProperty("var.modulation_time.default", 5.0d);
-        fac.getConfiguration().setProperty("var.scan_rate.default", 50.0d);
-        IDataSourceFactory dsf = fac.getDataSourceFactory();
-        dsf.setDataSources(Arrays.asList(new String[]{
-                    "maltcms.io.andims.NetcdfDataSource"}));
-        List<File> inputfiles = new LinkedList<File>();
-        for (String s : args) {
-            File f = new File(s);
-            if (f.getName().startsWith("*")) {
-                final String ext = StringTools.getFileExtension(f.getName());
-                String[] files = f.getParentFile().list(new FilenameFilter() {
-
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return name.endsWith(ext);
-                    }
-                });
-                for (String str : files) {
-                    inputfiles.add(new File(f.getParentFile(), str));
-                }
-
-                System.out.println(Arrays.toString(files));
-                // final List<Scan2D> scans = new ArrayList<Scan2D>();
-
-            } else {
-                inputfiles.add(f);
-            }
-            // CwtPeakFinder cwt = new CwtPeakFinder();
-            // cwt.apply(new TupleND<IFileFragment>(new FileFragment(new
-            // File(
-            // s))));
-        }
-        CwtPeakFinder cwt = new CwtPeakFinder();
-        long start = System.currentTimeMillis();
-        TupleND<IFileFragment> t = new TupleND<IFileFragment>();
-        for (File f : inputfiles) {
-            t.add(new FileFragment(f));
-            System.out.println("Adding file: " + f);
-        }
-        cwt.apply(t);
-        start = System.currentTimeMillis() - start;
-        System.out.println("Runtime total: " + (start / 1000)
-                + " s, avg. per file: " + (start / t.size()) / 1000.0d);
-    }
+//    public static void main(String[] args) {
+//        if (args.length == 0) {
+//            System.err.println("No arguments given!");
+//            System.exit(1);
+//        }
+//        Factory fac = Factory.getInstance();
+//        fac.getConfiguration().setProperty("var.modulation_time.default", 5.0d);
+//        fac.getConfiguration().setProperty("var.scan_rate.default", 50.0d);
+//        IDataSourceFactory dsf = fac.getDataSourceFactory();
+//        dsf.setDataSources(Arrays.asList(new String[]{
+//                    "maltcms.io.andims.NetcdfDataSource"}));
+//        List<File> inputfiles = new LinkedList<File>();
+//        for (String s : args) {
+//            File f = new File(s);
+//            if (f.getName().startsWith("*")) {
+//                final String ext = StringTools.getFileExtension(f.getName());
+//                String[] files = f.getParentFile().list(new FilenameFilter() {
+//
+//                    @Override
+//                    public boolean accept(File dir, String name) {
+//                        return name.endsWith(ext);
+//                    }
+//                });
+//                for (String str : files) {
+//                    inputfiles.add(new File(f.getParentFile(), str));
+//                }
+//
+//                System.out.println(Arrays.toString(files));
+//                // final List<Scan2D> scans = new ArrayList<Scan2D>();
+//
+//            } else {
+//                inputfiles.add(f);
+//            }
+//            // CwtPeakFinder cwt = new CwtPeakFinder();
+//            // cwt.apply(new TupleND<IFileFragment>(new FileFragment(new
+//            // File(
+//            // s))));
+//        }
+//        CwtPeakFinder cwt = new CwtPeakFinder();
+//        long start = System.currentTimeMillis();
+//        TupleND<IFileFragment> t = new TupleND<IFileFragment>();
+//        for (File f : inputfiles) {
+//            t.add(new FileFragment(f));
+//            System.out.println("Adding file: " + f);
+//        }
+//        cwt.apply(t);
+//        start = System.currentTimeMillis() - start;
+//        System.out.println("Runtime total: " + (start / 1000)
+//                + " s, avg. per file: " + (start / t.size()) / 1000.0d);
+//    }
 
     /*
      * (non-Javadoc)
@@ -274,118 +257,70 @@ public class CwtPeakFinder extends AFragmentCommand {
      */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-        System.out.println("Received " + t.size() + " input files");
-        // MasterServerFactory msf = new MasterServerFactory();
-        // Impaxs ms = msf.getMasterServerImplementations().get(0);
-        // ms.startMasterServer(this.rmiServerConfigFile);
-        // JobMonitor jm = new JobMonitor(ms,t.size());
-        // ms.addJobEventListener(jm);
-        // ExecutorService es = Executors.newSingleThreadExecutor();
+        ICompletionService<File> ics = createCompletionService(File.class);
         int cnt = 0;
         for (IFileFragment f : t) {
             CwtRunnable cwt = new CwtRunnable();
+            cwt.setMaxRidgeCost(maxRidgeCost);
+            cwt.setMaxScale(maxScale);
+            cwt.setMinRelativeIntensity(minRelativeIntensity);
+            cwt.setMinScale(minScale);
+            cwt.setModulationTime(modulationTime);
+            cwt.setScanRate(scanRate);
             cwt.setInputFile(new File(f.getAbsolutePath()));
-            System.out.println("Opening file: " + f.getAbsolutePath());
-            // create ConfigurableRunnable config
-//            File runtimeConfig = createRuntimeConfiguration(cnt, f, cwt);
-
-            // create job config
-//            File jobConfig = createJobConfiguration(runtimeConfig, cnt);
-            // try {
-            // Job j = new Job(jobConfig.getAbsolutePath());
-//            cwt.configure(runtimeConfig);
             log.info("Running cwt peak finder");
-            File featureFile = cwt.call();
-            getWorkflow().append(new DefaultWorkflowResult(featureFile, this,
-                    WorkflowSlot.FILEIO, f));
-            // jm.addJob(j.getId());
-            // ms.submitJob(j);
-            // } catch (MalformedURLException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // } catch (ClassNotFoundException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // } catch (InstantiationException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // } catch (IllegalAccessException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // } catch (IOException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // }
+            ics.submit(cwt);
             cnt++;
         }
-        // es.submit(jm);
-        // es.shutdown();
-        // try {
-        // es.awaitTermination(20, TimeUnit.MINUTES);
-        // } catch (InterruptedException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
+        try {
+            List<File> results = ics.call();
+        } catch (Exception ex) {
+            log.warn("Exception while waiting for results!",ex);
+        }
+        
 
         return t;
     }
 
-    /**
-     * @param cnt
-     * @param f
-     * @param cwt
-     * @return
-     */
-    private File createRuntimeConfiguration(int cnt, IFileFragment f,
-            CwtRunnable cwt) {
-        PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setProperty(cwt.getClass().getName() + ".minScale", this.minScale);
-        pc.setProperty(cwt.getClass().getName() + ".maxScale", this.maxScale);
-        pc.setProperty(cwt.getClass().getName() + ".maxRidgeCost",
-                this.maxRidgeCost);
-        pc.setProperty(cwt.getClass().getName() + ".minRelativeIntensity",
-                this.minRelativeIntensity);
-        pc.setProperty(cwt.getClass().getName() + ".inputFile",
-                f.getAbsolutePath());
-        if (getWorkflow() == null) {
-            pc.setProperty(cwt.getClass().getName() + ".outputDir", getClass().
-                    getName());
-        } else {
-            pc.setProperty(cwt.getClass().getName() + ".outputDir",
-                    getWorkflow().getOutputDirectory(this));
-        }
-        File configOutput = new File(pc.getString(cwt.getClass().getName()
-                + ".outputDir"), cwt.getClass().getName() + "_" + cnt
-                + ".properties");
-        if (!configOutput.getParentFile().exists()) {
-            configOutput.getParentFile().mkdirs();
-        }
-        pc.setProperty("var.modulation_time.default", 5.0d);
-        pc.setProperty("var.scan_rate.default", 100.0d);
-        try {
-            ConfigurationUtils.dump(pc, new PrintStream(configOutput));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return configOutput;
-    }
-
-    private File createJobConfiguration(File configFile, int cnt) {
-        PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setProperty("JAR_PATH",
-                "/vol/maltcms/codebase/chroma4DCWTPeakfinder.jar");
-        pc.setProperty("STARTUP_CLASS", CwtRunnable.class.getName());
-        pc.setProperty("CONFIGURATION_FILE", configFile.getAbsolutePath());
-        File outf = new File(configFile.getParentFile(), "job-" + cnt
-                + "-cfg.txt");
-        try {
-            ConfigurationUtils.dump(pc, new PrintStream(outf));
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return outf;
-    }
+//    /**
+//     * @param cnt
+//     * @param f
+//     * @param cwt
+//     * @return
+//     */
+//    private File createRuntimeConfiguration(int cnt, IFileFragment f,
+//            CwtRunnable cwt) {
+//        PropertiesConfiguration pc = new PropertiesConfiguration();
+//        pc.setProperty(cwt.getClass().getName() + ".minScale", this.minScale);
+//        pc.setProperty(cwt.getClass().getName() + ".maxScale", this.maxScale);
+//        pc.setProperty(cwt.getClass().getName() + ".maxRidgeCost",
+//                this.maxRidgeCost);
+//        pc.setProperty(cwt.getClass().getName() + ".minRelativeIntensity",
+//                this.minRelativeIntensity);
+//        pc.setProperty(cwt.getClass().getName() + ".inputFile",
+//                f.getAbsolutePath());
+//        if (getWorkflow() == null) {
+//            pc.setProperty(cwt.getClass().getName() + ".outputDir", getClass().
+//                    getName());
+//        } else {
+//            pc.setProperty(cwt.getClass().getName() + ".outputDir",
+//                    getWorkflow().getOutputDirectory(this));
+//        }
+//        File configOutput = new File(pc.getString(cwt.getClass().getName()
+//                + ".outputDir"), cwt.getClass().getName() + "_" + cnt
+//                + ".properties");
+//        if (!configOutput.getParentFile().exists()) {
+//            configOutput.getParentFile().mkdirs();
+//        }
+//        pc.setProperty("var.modulation_time.default", 5.0d);
+//        pc.setProperty("var.scan_rate.default", 100.0d);
+//        try {
+//            ConfigurationUtils.dump(pc, new PrintStream(configOutput));
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        return configOutput;
+//    }
 
     /*
      * (non-Javadoc)
@@ -395,18 +330,5 @@ public class CwtPeakFinder extends AFragmentCommand {
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.PEAKFINDING;
-    }
-
-    @Override
-    public void configure(Configuration cfg) {
-        super.configure(cfg);
-        this.minScale = cfg.getInt(getClass().getName() + ".minScale", 2);
-        this.maxScale = cfg.getInt(getClass().getName() + ".maxScale", 20);
-        this.maxRidgeCost = cfg.getDouble(getClass().getName()
-                + ".maxRidgeCost", 0.2);
-        this.minRelativeIntensity = cfg.getDouble(getClass().getName()
-                + ".minRelativeIntensity", 0.000003);
-        this.rmiServerConfigFile = cfg.getString(getClass().getName()
-                + ".rmiServerConfigFile");
     }
 }

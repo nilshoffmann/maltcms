@@ -64,7 +64,6 @@ import org.openide.util.lookup.ServiceProvider;
 @Slf4j
 @Data
 @RequiresVariables(names = {"var.modulation_time", "var.scan_rate"})
-@RequiresOptionalVariables(names = {""})
 @ProvidesVariables(names = {"var.mean_ms_intensity", "var.var_ms_intensity",
     "var.sd_ms_intensity", "var.v_total_intensity", "var.v_mass_values",
     "var.v_total_intensity_1d", "var.meanms_1d_horizontal_index",
@@ -107,11 +106,6 @@ public class MeanVarProducer extends AFragmentCommand {
     private double minStandardDeviationQuantil = 0.01d;
     @Configurable(value = "-1.0d")
     private double minStandardDeviation = -1.0d;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
     
     /**
      * {@inheritDoc}

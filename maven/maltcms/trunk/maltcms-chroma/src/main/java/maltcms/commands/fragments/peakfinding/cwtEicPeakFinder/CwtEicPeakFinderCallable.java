@@ -66,10 +66,15 @@ public class CwtEicPeakFinderCallable implements Callable<File>, Serializable {
     private int minScale = 5;
     @Configurable
     private int maxScale = 20;
+    @Configurable
     private File input;
+    @Configurable
     private File output;
+    @Configurable
     private double mz;
+    @Configurable
     private double[] eic;
+    @Configurable
     private double minPercentile = 5.0d;
 
     @Override

@@ -70,7 +70,6 @@ import org.openide.util.lookup.ServiceProvider;
     "var.second_column_time", "var.second_column_scan_index",
     "var.total_intensity"})
 @RequiresOptionalVariables(names = {"var.v_total_intensity"})
-@ProvidesVariables(names = {""})
 @ServiceProvider(service = AFragmentCommand.class)
 public class DTW2DTicVisualizer extends AFragmentCommand {
 
@@ -102,11 +101,6 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
     value = "maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer")
     private String visualizerClass = "maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer";
     private IVisualization visualizer;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     /**
      * {@inheritDoc}

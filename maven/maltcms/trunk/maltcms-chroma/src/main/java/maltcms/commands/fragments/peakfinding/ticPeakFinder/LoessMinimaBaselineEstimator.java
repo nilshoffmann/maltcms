@@ -21,6 +21,7 @@
  */
 package maltcms.commands.fragments.peakfinding.ticPeakFinder;
 
+import cross.annotations.Configurable;
 import java.util.ArrayList;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -36,9 +37,13 @@ import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
 @Data
 public class LoessMinimaBaselineEstimator implements IBaselineEstimator{
 
+    @Configurable
     private double bandwidth = LoessInterpolator.DEFAULT_BANDWIDTH;
+    @Configurable
     private double accuracy = LoessInterpolator.DEFAULT_ACCURACY;
+    @Configurable
     private int robustnessIterations = LoessInterpolator.DEFAULT_ROBUSTNESS_ITERS;
+    @Configurable
     private int minimaWindow = 100;
     
     @Override

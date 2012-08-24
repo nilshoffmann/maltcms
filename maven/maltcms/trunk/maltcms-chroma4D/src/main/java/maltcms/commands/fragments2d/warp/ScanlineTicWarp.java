@@ -57,11 +57,6 @@ public class ScanlineTicWarp extends ADynamicTimeWarp {
     value = "second_column_scan_index")
     private String secondColumnScanIndexVar = "second_column_scan_index";
 
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
-
     /**
      * {@inheritDoc}
      */

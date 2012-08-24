@@ -104,36 +104,36 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class TICPeakFinder extends AFragmentCommand {
 
-    @Configurable(value = "0.01d")
+    @Configurable
     private double peakThreshold = 0.01d;
-//    @Configurable(value = "0.1d")
-//    private double epsilon = 0.1d;
-    @Configurable(value = "false")
+    @Configurable
     private boolean saveGraphics = false;
-    @Configurable(value = "false")
+    @Configurable
     private boolean integratePeaks = false;
-    @Configurable(value = "true")
+    @Configurable
     private boolean integrateTICPeaks = true;
-    @Configurable(value = "50")
+    @Configurable
     private int snrWindow = 50;
-    @Configurable(name = "var.total_intensity", value = "total_intensity")
+    @Configurable(name = "var.total_intensity")
     private String ticVarName = "total_intensity";
-    @Configurable(name = "var.scan_acquisition_time",
-    value = "scan_acquisition_time")
+    @Configurable(name = "var.scan_acquisition_time")
     private String satVarName = "scan_acquisition_time";
-    @Configurable(value = "tic_peaks")
+    @Configurable
     private String ticPeakVarName = "tic_peaks";
-    @Configurable(value = "tic_filtered")
+    @Configurable
     private String ticFilteredVarName = "tic_filtered";
-    @Configurable(value = "true")
+    @Configurable
     private boolean integrateRawTic = true;
-    @Configurable(value = "10")
+    @Configurable
     private int peakSeparationWindow = 10;
+    @Configurable
     private boolean removeOverlappingPeaks = true;
+    @Configurable
     private IBaselineEstimator baselineEstimator = new LoessMinimaBaselineEstimator();
-//    @Configurable(value = "maltcms.commands.filters.array.MultiplicationFilter")
+    @Configurable
     private List<AArrayFilter> filter = Arrays.asList(
             (AArrayFilter) new MultiplicationFilter());
+    @Configurable
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
     @Override
@@ -180,15 +180,6 @@ public class TICPeakFinder extends AFragmentCommand {
     public void configure(final Configuration cfg) {
         log.debug("Configure called on TICPeakFinder");
         this.ticPeakVarName = cfg.getString("var.tic_peaks", "tic_peaks");
-        this.peakThreshold = cfg.getDouble(this.getClass().getName()
-                + ".peakThreshold", 1.0d);
-        this.snrWindow = cfg.getInt(this.getClass().getName()
-                + ".snrWindow", 10);
-//        this.filter = StringTools.toStringList(cfg.getList(
-//                this.getClass().getName() + ".filter",
-//                Arrays.asList("maltcms.commands.filters.array.MultiplicationFilter")));
-//        this.epsilon = cfg.getDouble(this.getClass().getName()
-//                + ".mass_epsilon", 0.1d);
         this.ticVarName = cfg.getString("var.total_intensity",
                 "total_intensity");
         this.satVarName = cfg.getString("var.scan_acquisition_time",
@@ -196,12 +187,6 @@ public class TICPeakFinder extends AFragmentCommand {
         this.ticPeakVarName = cfg.getString("var.tic_peaks", "tic_peaks");
         this.ticFilteredVarName = cfg.getString("var.tic_filtered",
                 "tic_filtered");
-        this.saveGraphics = cfg.getBoolean(this.getClass().getName()
-                + ".saveGraphics", false);
-        this.integratePeaks = cfg.getBoolean(this.getClass().getName()
-                + ".integratePeaks", true);
-        this.integrateTICPeaks = cfg.getBoolean(this.getClass().getName()
-                + ".integrateTICPeaks", true);
     }
 
     private ArrayInt.D1 createPeakCandidatesArray(final Array tic,

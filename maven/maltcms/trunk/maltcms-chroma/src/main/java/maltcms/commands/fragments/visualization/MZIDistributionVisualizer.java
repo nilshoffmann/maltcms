@@ -59,15 +59,14 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class MZIDistributionVisualizer extends AFragmentCommand {
 
+    private final String description = "Creates plot of distribution of mass values versus intensity values in a chromatogram.";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
+    
     protected IFileFragment filea;
     private String x_var = "mass_values";
     private String y_var = "intensity_values";
     private final boolean one_for_each = true;
 
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
@@ -131,11 +130,6 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
                 "mass_values");
         this.y_var = cfg.getString(this.getClass().getName() + ".y_var",
                 "intensity_values");
-    }
-
-    @Override
-    public String getDescription() {
-        return "Creates plot of distribution of mass values versus intensity values in a chromatogram.";
     }
 
     /*

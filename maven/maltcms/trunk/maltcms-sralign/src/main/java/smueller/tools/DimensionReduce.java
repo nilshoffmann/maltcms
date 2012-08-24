@@ -31,33 +31,33 @@ import cross.tools.MathTools;
  */
 public class DimensionReduce {
 
-	public static Array paa(final Array a1, final int windowsize) {
-		final Array a = a1.copy();
-		final int[] dimension = { ((int) a.getSize() / windowsize) + 1 };
-		final Array reduced = Array.factory(a.getElementType(), dimension);
-		final IndexIterator ii4 = a.getIndexIterator();
-		final IndexIterator red = reduced.getIndexIterator();
-		double save = 0;
-		int counter;
-		final double[] window = new double[windowsize];
+    public static Array paa(final Array a1, final int windowsize) {
+        final Array a = a1.copy();
+        final int[] dimension = {((int) a.getSize() / windowsize) + 1};
+        final Array reduced = Array.factory(a.getElementType(), dimension);
+        final IndexIterator ii4 = a.getIndexIterator();
+        final IndexIterator red = reduced.getIndexIterator();
+        double save = 0;
+        int counter;
+        final double[] window = new double[windowsize];
 
-		// Setzt Fenster der Gr��e w �ber Daten, und findet Median darin.
-		// Dieser
-		// ist neuer Wert im reduzierten Array
-		while (ii4.hasNext()) {
-			for (counter = 0; counter < windowsize; counter++) {
-				if (ii4.hasNext()) {
-					window[counter] = ii4.getDoubleNext();
-				} else {
-					counter = windowsize;
-				}
-			}
-			save = MathTools.median(window);
-			counter = 0;
-			red.setDoubleNext(save);
-			save = 0;
-		}
+        // Setzt Fenster der Gr��e w �ber Daten, und findet Median darin.
+        // Dieser
+        // ist neuer Wert im reduzierten Array
+        while (ii4.hasNext()) {
+            for (counter = 0; counter < windowsize; counter++) {
+                if (ii4.hasNext()) {
+                    window[counter] = ii4.getDoubleNext();
+                } else {
+                    counter = windowsize;
+                }
+            }
+            save = MathTools.median(window);
+            counter = 0;
+            red.setDoubleNext(save);
+            save = 0;
+        }
 
-		return reduced;
-	}
+        return reduced;
+    }
 }

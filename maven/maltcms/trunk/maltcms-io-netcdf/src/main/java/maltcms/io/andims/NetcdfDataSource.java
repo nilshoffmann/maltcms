@@ -50,6 +50,7 @@ import ucar.nc2.Variable;
 import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.fragments.ImmutableVariableFragment2;
 import cross.datastructures.fragments.VariableFragment;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
@@ -227,7 +228,7 @@ public class NetcdfDataSource implements IDataSource {
             if (ff.hasChild(name)) {
                 vf = ff.getChild(name, true);
             } else {
-                vf = new VariableFragment(ff, name);
+                vf = new ImmutableVariableFragment2(ff, name);
             }
         } else {
             vf = ivf;
@@ -866,14 +867,15 @@ public class NetcdfDataSource implements IDataSource {
                             nfw.flush();
                         }
                     }
-                    vf.setArray(null);
-                    vf.setIndexedArray(null);
+                    vf.clear();
+                    vf.setIsModified(false);
                 } catch (final IOException e) {
-                    log.error("IOException while writing variable '{}'", varname);
-                    log.error("{}", e);
+                    log.warn("IOException while writing variable '{}'", varname);
+                    log.debug("{}", e.getLocalizedMessage());
+                    throw new RuntimeException(e);
                 } catch (final InvalidRangeException e) {
-                    log.error("InvalidRangeException writing variable '{}' with dimensions '{}'", new Object[]{varname, Arrays.toString(vf.getDimensions())});
-                    log.error("{}", e);
+                    log.warn("InvalidRangeException writing variable '{}' with dimensions '{}'", new Object[]{varname, Arrays.toString(vf.getDimensions())});
+                    log.debug("{}", e.getLocalizedMessage());
                 }
                 cnt++;
             }

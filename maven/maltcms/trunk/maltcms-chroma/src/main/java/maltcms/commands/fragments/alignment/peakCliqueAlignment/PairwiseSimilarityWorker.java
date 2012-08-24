@@ -46,7 +46,7 @@ public class PairwiseSimilarityWorker implements Callable<Integer>, Serializable
 
     @Override
     public Integer call() {
-        log.info(name);
+        log.debug(name);
         EvalTools.notNull(lhsPeaks, this);
         EvalTools.notNull(rhsPeaks, this);
         int elemCnt = 0;

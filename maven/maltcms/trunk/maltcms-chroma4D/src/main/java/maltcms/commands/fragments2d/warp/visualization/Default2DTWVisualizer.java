@@ -93,11 +93,6 @@ public class Default2DTWVisualizer implements IVisualization {
     private int currentrasterline = -1;
     private int binSize = 256;
 
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
-
     /**
      * {@inheritDoc}
      */

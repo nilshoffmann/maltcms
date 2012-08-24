@@ -56,7 +56,6 @@ import lombok.extern.slf4j.Slf4j;
     "var.total_intensity", "var.mass_values", "var.intensity_values",
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",
     "var.modulation_time", "var.scan_rate"})
-@RequiresOptionalVariables(names = {""})
 @ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
 public class ScanlineMeanMSWarp extends ADynamicTimeWarp {
 
@@ -94,11 +93,6 @@ public class ScanlineMeanMSWarp extends ADynamicTimeWarp {
     private boolean scale = true;
     @Configurable(value = "filter")
     private boolean filter = true;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     /**
      * {@inheritDoc}

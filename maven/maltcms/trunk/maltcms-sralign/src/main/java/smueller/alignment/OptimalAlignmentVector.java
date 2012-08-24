@@ -29,57 +29,55 @@ import java.util.Vector;
  */
 public class OptimalAlignmentVector implements Cloneable {
 
-	private final Vector<AlignedPairVector> align = new Vector<AlignedPairVector>();
+    private final Vector<AlignedPairVector> align = new Vector<AlignedPairVector>();
 
-	public OptimalAlignmentVector() {
+    public OptimalAlignmentVector() {
+    }
 
-	}
+    public void addAlChars(final boolean a) {
+        final AlignedPairVector ss = new AlignedPairVector(a);
+        this.align.add(ss);
+    }
 
-	public void addAlChars(final boolean a) {
-		final AlignedPairVector ss = new AlignedPairVector(a);
-		this.align.add(ss);
-	}
+    public void addAlChars(final char a, final char b) {
+        final AlignedPairVector ss = new AlignedPairVector(a, b);
+        this.align.add(ss);
+    }
 
-	public void addAlChars(final char a, final char b) {
-		final AlignedPairVector ss = new AlignedPairVector(a, b);
-		this.align.add(ss);
-	}
+    public void addAlChars(final char a, final char b, final int c, final int d) {
+        final AlignedPairVector ss = new AlignedPairVector(a, b, c, d);
+        this.align.add(ss);
+    }
 
-	public void addAlChars(final char a, final char b, final int c, final int d) {
-		final AlignedPairVector ss = new AlignedPairVector(a, b, c, d);
-		this.align.add(ss);
-	}
+    public void addALChars(final AlignedPairVector ss) {
+        this.align.add(ss);
+    }
 
-	public void addALChars(final AlignedPairVector ss) {
-		this.align.add(ss);
-	}
+    public void changeAlChars(final int a, final int b) {
+        final AlignedPairVector ss = new AlignedPairVector();
+        getCharPair(countAlChars() - 1);
+        ss.setC(a);
+        ss.setD(b);
+    }
 
-	public void changeAlChars(final int a, final int b) {
-		final AlignedPairVector ss = new AlignedPairVector();
-		getCharPair(countAlChars() - 1);
-		ss.setC(a);
-		ss.setD(b);
-	}
+    @Override
+    public Object clone() {
 
-	@Override
-	public Object clone() {
+        final OptimalAlignmentVector cloneAlignme = new OptimalAlignmentVector();
+        for (int i = 0; i < this.countAlChars(); i++) {
+            cloneAlignme.addALChars((AlignedPairVector) this.getCharPair(i)
+                    .clone());
+            // System.out.println(11);
+        }
+        return cloneAlignme;
 
-		final OptimalAlignmentVector cloneAlignme = new OptimalAlignmentVector();
-		for (int i = 0; i < this.countAlChars(); i++) {
-			cloneAlignme.addALChars((AlignedPairVector) this.getCharPair(i)
-			        .clone());
-			// System.out.println(11);
-		}
-		return cloneAlignme;
+    }
 
-	}
+    public int countAlChars() {
+        return this.align.size();
+    }
 
-	public int countAlChars() {
-		return this.align.size();
-	}
-
-	public AlignedPairVector getCharPair(final int i) {
-		return this.align.get(i);
-	}
-
+    public AlignedPairVector getCharPair(final int i) {
+        return this.align.get(i);
+    }
 }

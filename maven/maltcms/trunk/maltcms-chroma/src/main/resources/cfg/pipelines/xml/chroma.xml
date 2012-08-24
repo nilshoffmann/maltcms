@@ -29,6 +29,7 @@
     <description>
         This file defines elements of the default ChromA pipeline.
     </description>
+    
     <!-- a command pipeline consists of a list of 
      commands to be executed -->
     <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">

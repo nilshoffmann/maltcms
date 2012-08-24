@@ -67,41 +67,22 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class TICPeakListImporter extends AFragmentCommand {
 
+    private final String description = "Imports tic peak data from csv files";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.FILEIO;
+    
     @Configurable
     private List<String> filesToRead = Collections.emptyList();
-    @Configurable(type = int.class, value = "0")
+    @Configurable
     private int scanIndexOffset = 0;
-    @Configurable(type = String.class, value = "SCAN")
+    @Configurable(value = "SCAN")
     private String scanIndexColumnName = "SCAN";
     @Configurable(value = "var.tic_peaks")
     private String ticPeakVarName = "tic_peaks";
 
     @Override
-    public String toString() {
-        return getClass().getName();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.commands.fragments.AFragmentCommand#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return "Imports tic peak data from csv files";
-    }
-
-    @Override
     public void configure(Configuration cfg) {
         super.configure(cfg);
-        filesToRead = StringTools.toStringList(cfg.getList(this.getClass().
-                getName()
-                + ".filesToRead", Collections.emptyList()));
         ticPeakVarName = cfg.getString("var.tic_peaks", "tic_peaks");
-        scanIndexColumnName = cfg.getString(
-                getClass().getName() + ".scanIndexColumnName", "SCAN");
-        scanIndexOffset = cfg.getInt(getClass().getName() + ".scanIndexOffset",
-                0);
     }
 
     /*
@@ -172,15 +153,5 @@ public class TICPeakListImporter extends AFragmentCommand {
 
         }
         return retf;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.FILEIO;
     }
 }

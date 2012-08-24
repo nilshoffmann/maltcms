@@ -76,20 +76,25 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=AFragmentCommand.class)
 public class ChromatogramVisualizer extends AFragmentCommand {
 
+    private final String description = "Creates two-dimensional heat map plots of chromatograms.";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
+    
+    @Configurable(name="var.mass_values")
     private String mzVariableName = "mass_values";
+    @Configurable(name="var.scan_acquisition_time")
     private String scanAcquisitionTimeVariableName = "scan_acquisition_time";
+    @Configurable
     private String format = "png";
-    @Configurable(name = "images.colorramp")
+    @Configurable
     private String colorrampLocation = "res/colorRamps/bcgyr.csv";
+    @Configurable
     private int sampleSize = 1024;
+    @Configurable
     private double lowThreshold = 0.0d;
+    @Configurable
     private boolean substractStartTime = false;
+    @Configurable
     private String timeUnit = "min";
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
     
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
@@ -209,18 +214,9 @@ public class ChromatogramVisualizer extends AFragmentCommand {
 
     @Override
     public void configure(final Configuration cfg) {
-        super.configure(cfg);
         this.scanAcquisitionTimeVariableName = cfg.getString(
                 "var.scan_acquisition_time", "scan_acquisition_time");
         this.mzVariableName = cfg.getString("var.mass_values", "mass_values");
-        this.colorrampLocation = cfg.getString(this.getClass().getName()
-                + ".colorrampLocation", "res/colorRamps/bcgyr.csv");
-        this.lowThreshold = cfg.getDouble("images.thresholdLow", 0.0d);
-        this.sampleSize = cfg.getInt("images.samples", 1024);
-        this.substractStartTime = cfg.getBoolean(this.getClass().getName()
-                + ".substract_start_time", false);
-        this.timeUnit = cfg.getString(this.getClass().getName() + ".timeUnit",
-                "min");
     }
 
     private Array filterBaseline(final Array tic, final int median_window) {
@@ -271,141 +267,5 @@ public class ChromatogramVisualizer extends AFragmentCommand {
 
         }
         return correctedtic;
-    }
-
-    /**
-     * @return the colorrampLocation
-     */
-    public String getColorrampLocation() {
-        return this.colorrampLocation;
-    }
-
-    @Override
-    public String getDescription() {
-        return "Creates two-dimensional heat map plots of chromatograms.";
-    }
-
-    /**
-     * @return the format
-     */
-    public String getFormat() {
-        return this.format;
-    }
-
-    /**
-     * @return the lowThreshold
-     */
-    public double getLowThreshold() {
-        return this.lowThreshold;
-    }
-
-    /**
-     * @return the mzVariableName
-     */
-    public String getMzVariableName() {
-        return this.mzVariableName;
-    }
-
-    /**
-     * @return the sampleSize
-     */
-    public int getSampleSize() {
-        return this.sampleSize;
-    }
-
-    /**
-     * @return the scanAcquisitionTimeVariableName
-     */
-    public String getScanAcquisitionTimeVariableName() {
-        return this.scanAcquisitionTimeVariableName;
-    }
-
-    /**
-     * @return the timeUnit
-     */
-    public String getTimeUnit() {
-        return this.timeUnit;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.VISUALIZATION;
-    }
-
-    /**
-     * @return the substractStartTime
-     */
-    public boolean isSubstractStartTime() {
-        return this.substractStartTime;
-    }
-
-    /**
-     * @param colorrampLocation
-     *            the colorrampLocation to set
-     */
-    public void setColorrampLocation(final String colorrampLocation) {
-        this.colorrampLocation = colorrampLocation;
-    }
-
-    /**
-     * @param format
-     *            the format to set
-     */
-    public void setFormat(final String format) {
-        this.format = format;
-    }
-
-    /**
-     * @param lowThreshold
-     *            the lowThreshold to set
-     */
-    public void setLowThreshold(final double lowThreshold) {
-        this.lowThreshold = lowThreshold;
-    }
-
-    /**
-     * @param mzVariableName
-     *            the mzVariableName to set
-     */
-    public void setMzVariableName(final String mzVariableName) {
-        this.mzVariableName = mzVariableName;
-    }
-
-    /**
-     * @param sampleSize
-     *            the sampleSize to set
-     */
-    public void setSampleSize(final int sampleSize) {
-        this.sampleSize = sampleSize;
-    }
-
-    /**
-     * @param scanAcquisitionTimeVariableName
-     *            the scanAcquisitionTimeVariableName to set
-     */
-    public void setScanAcquisitionTimeVariableName(
-            final String scanAcquisitionTimeVariableName) {
-        this.scanAcquisitionTimeVariableName = scanAcquisitionTimeVariableName;
-    }
-
-    /**
-     * @param substractStartTime
-     *            the substractStartTime to set
-     */
-    public void setSubstractStartTime(final boolean substractStartTime) {
-        this.substractStartTime = substractStartTime;
-    }
-
-    /**
-     * @param timeUnit
-     *            the timeUnit to set
-     */
-    public void setTimeUnit(final String timeUnit) {
-        this.timeUnit = timeUnit;
     }
 }

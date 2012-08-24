@@ -21,6 +21,7 @@
  */
 package maltcms.commands.fragments.peakfinding;
 
+import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
@@ -47,17 +48,21 @@ import ucar.ma2.ArrayDouble;
 @ServiceProvider(service = AFragmentCommand.class)
 public class CwtTicPeakFinder extends AFragmentCommand {
 
-    private int minScale = 10;
-    private int maxScale = 100;
-    private double minPercentile = 5.0d;
-    private boolean integratePeaks = true;
-    private boolean integrateRawTic = true;
-    private boolean saveGraphics = false;
+    private final String description = "Finds TIC peaks using Continuous Wavelet Transform.";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;
     
-    @Override
-    public String getDescription() {
-        return "Finds TIC peaks using Continuous Wavelet Transform.";
-    }
+    @Configurable
+    private int minScale = 10;
+    @Configurable
+    private int maxScale = 100;
+    @Configurable
+    private double minPercentile = 5.0d;
+    @Configurable
+    private boolean integratePeaks = true;
+    @Configurable
+    private boolean integrateRawTic = true;
+    @Configurable
+    private boolean saveGraphics = false;
 
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
@@ -92,10 +97,5 @@ public class CwtTicPeakFinder extends AFragmentCommand {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.PEAKFINDING;
     }
 }

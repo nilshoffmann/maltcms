@@ -60,8 +60,6 @@ import org.openide.util.lookup.ServiceProvider;
     "var.region_index_list",
     // "var.warp_path_i", "var.warp_path_j",
     "var.boundary_index_list"})
-@RequiresOptionalVariables(names = {""})
-@ProvidesVariables(names = {""})
 @ServiceProvider(service = AFragmentCommand.class)
 public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
 
@@ -72,11 +70,6 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
     private String regionIndexListVar = "region_index_list";
     @Configurable(value = "false")
     private boolean fillPeakArea = false;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     /**
      * {@inheritDoc}

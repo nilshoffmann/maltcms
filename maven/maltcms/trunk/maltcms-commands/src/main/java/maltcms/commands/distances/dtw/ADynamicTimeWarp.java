@@ -375,7 +375,9 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         if (this.saveLayoutImage) {
             saveLayoutImage(aps, StringTools.removeFileExt(forwardAlignment.getName()));
         }
-
+        this.alignment = null;
+        this.distance = null;
+        this.predecessors = null;
         t.getFirst().clearArrays();
         t.getSecond().clearArrays();
         return forwardAlignment;

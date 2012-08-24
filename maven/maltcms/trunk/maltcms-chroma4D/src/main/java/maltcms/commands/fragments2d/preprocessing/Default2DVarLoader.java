@@ -133,61 +133,16 @@ public class Default2DVarLoader extends AFragmentCommand {
                     new File(getWorkflow().getOutputDirectory(this),
                     ff.getName()));
             fret.addSourceFile(ff);
-
-//            try {
-//                ff.getChild(this.scanRateVar, true);
-//            } catch (ResourceNotAvailableException ex) {
-//                log.debug("{}", ex);
-//                log.info("Creating {}", this.scanRateVar);
             createScanRate(ff, fret);
-//            }
-//            try {
-//                ff.getChild(this.modulationTimeVar, true);
-//            } catch (ResourceNotAvailableException ex) {
-//                log.debug("{}", ex);
-//                log.info("Creating {}", this.modulationTimeVar);
             createModulation(ff, fret);
-//            }
-
-//            try {
-//                ff.getChild(this.totalIntensity1dVar);
-//            } catch (ResourceNotAvailableException ex) {
-//                log.debug("{}", ex);
-//                log.info("Creating {}", this.totalIntensity1dVar);
             create1DTic(ff, fret);
-//            }
-
-//            try {
-//                ff.getChild(this.secondColumnScanIndexVar, true);
-//            } catch (ResourceNotAvailableException ex) {
-//                log.debug("{}", ex);
-//                log.info("Creating {}", this.secondColumnScanIndexVar);
             createSecondColumnIndex(ff, fret);
-//            }
-
-//            try {
-//                ff.getChild(this.secondColumnTimeVar);
-//            } catch (ResourceNotAvailableException ex) {
-//                log.debug("{}", ex);
-//                log.info("Creating {}", this.secondColumnTimeVar);
             createSecondColumnTime(ff, fret);
-//            }
-
-
-//            try {
-//                ff.getChild(this.totalIntensity2dVar);
-//            } catch (ResourceNotAvailableException ex) {
-//                log.debug("{}", ex);
-//                log.info("Creating {}", this.totalIntensity2dVar);
             createTIC2D(ff, fret);
-
-//            }
-
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
                     new File(fret.getAbsolutePath()), this, getWorkflowSlot(),
                     ff);
             getWorkflow().append(dwr);
-
             fret.save();
             ret.add(fret);
         }
@@ -264,8 +219,8 @@ public class Default2DVarLoader extends AFragmentCommand {
         this.massValuesVar = cfg.getString("var.mass_values", "mass_values");
         this.scanIndexVar = cfg.getString("var.scan_index", "scan_index");
 
-        this.scanRate = cfg.getDouble("var.scan_rate.default", 200.0d);
-        this.modulationTime = cfg.getDouble("var.modulation_time.default", 5.0d);
+//        this.scanRate = cfg.getDouble("var.scan_rate.default", 200.0d);
+//        this.modulationTime = cfg.getDouble("var.modulation_time.default", 5.0d);
     }
 
     /**

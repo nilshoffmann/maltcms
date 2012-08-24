@@ -33,12 +33,10 @@ import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
-import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Implementation of Pairwise Dynamic-Time-Warping for time-series data. This
@@ -63,11 +61,6 @@ public class ScanlineFilterTicWarp extends ADynamicTimeWarp {
     private String secondColumnScanIndexVar = "second_column_scan_index";
     @Configurable(value = "false")
     private final boolean transpose = false;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     /**
      * {@inheritDoc}

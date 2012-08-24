@@ -22,8 +22,7 @@
 package smueller.datastructure;
 
 // Berechnen der Breakpoints, die festlegen in welchem Intervall ein Buchstabe
-// zugeordnet wird
-
+// zugeordnet wird
 import smueller.SymbolicRepresentationAlignment;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
@@ -33,69 +32,76 @@ import ucar.ma2.IndexIterator;
  */
 public class BreakPoints {
 
-	private final double[] common;
+    private final double[] common;
 
-	// Berechne gemeinsame Breakpoints
-	public BreakPoints(final Array c, final Array d) {
-		final double[] a = calcbreakpoints(c, SymbolicRepresentationAlignment
-		        .getSorti().getSortedjavarray1(),
-		        SymbolicRepresentationAlignment.getAlphabetgr());
-		final double[] b = calcbreakpoints(d, SymbolicRepresentationAlignment
-		        .getSorti().getSortedjavarray2(),
-		        SymbolicRepresentationAlignment.getAlphabetgr());
-		this.common = new double[a.length];
-		for (int i = 0; i < this.common.length; i++) {
-			this.common[i] = (a[i] + b[i]) / 2;
-		}
-	}
+    // Berechne gemeinsame Breakpoints
+    public BreakPoints(final Array c, final Array d) {
+        final double[] a = calcbreakpoints(c, SymbolicRepresentationAlignment
+                .getSorti().getSortedjavarray1(),
+                SymbolicRepresentationAlignment.getAlphabetgr());
+        final double[] b = calcbreakpoints(d, SymbolicRepresentationAlignment
+                .getSorti().getSortedjavarray2(),
+                SymbolicRepresentationAlignment.getAlphabetgr());
+        this.common = new double[a.length];
+        for (int i = 0; i < this.common.length; i++) {
+            this.common[i] = (a[i] + b[i]) / 2;
+        }
+    }
 
-	public double[] calcbreakpoints(final Array a1, final double[] sortiert,
-	        final int alphabetgr) {
-		final Array a = a1.copy();
-		double total = 0;
-		double save = 0;
-		final IndexIterator ii1 = a.getIndexIterator();
-		// Gesamtintensit�t berechnen
-		while (ii1.hasNext()) {
-			total = total + ii1.getDoubleNext();
-		}
-		// Festlegen, bis zu welchem Wert aufsummiert werden muss
-		total = (total / (alphabetgr));
-		double save2 = total;
-		final double[] bps = new double[alphabetgr + 1];
-		int pos = 0;
-		// Aufsummieren, bis Schwellwert erreicht, Wert zum �berschreiten der
-		// Schwelle merken und als Breakpoint sichern
-		for (int j = 0; j < sortiert.length; j++) {
-			if (save < save2) {
-				save = save + sortiert[j];
-			}
+    public double[] calcbreakpoints(final Array a1, final double[] sortiert,
+            final int alphabetgr) {
+        final Array a = a1.copy();
+        double total = 0;
+        double save = 0;
+        final IndexIterator ii1 = a.getIndexIterator();
+        // Gesamtintensit�t berechnen
 
-			else {
-				save = save + sortiert[j];
-				save2 = save2 + total;
-				bps[pos] = sortiert[j - 1];
-				pos++;
+        while (ii1.hasNext()) {
+            total = total + ii1.getDoubleNext();
+        }
+        // Festlegen, bis zu welchem Wert aufsummiert werden muss
 
-			}
+        total = (total / (alphabetgr));
+        double save2 = total;
+        final double[] bps = new double[alphabetgr + 1];
+        int pos = 0;
+        // Aufsummieren, bis Schwellwert erreicht, Wert zum �berschreiten der
 
-		}
-		// Wenn Letzter Breakpoint auf Grund zu kleinem Wertebereich nicht mehr
-		// gesetzt, dann sorge daf�r dass zumindest 1 Wert
-		// den gr��ten Buchstaben bekommt
-		if ((bps[alphabetgr - 2] == 0.0) && (bps[alphabetgr - 3] != 0.0)) {
-			bps[alphabetgr - 2] = sortiert[sortiert.length - 1] - 0.01;
-		}
-		// System.out.println("--------");
-		// Max und Min den Breakpoints mitgeben
-		bps[alphabetgr] = Math.round(sortiert[0] * 100) / 100.00;
-		bps[alphabetgr - 1] = Math.round(sortiert[sortiert.length - 1] * 100) / 100.00;
+        // Schwelle merken und als Breakpoint sichern
 
-		return bps;
+        for (int j = 0; j < sortiert.length; j++) {
+            if (save < save2) {
+                save = save + sortiert[j];
+            } else {
+                save = save + sortiert[j];
+                save2 = save2 + total;
+                bps[pos] = sortiert[j - 1];
+                pos++;
 
-	}
+            }
 
-	public double[] getCommon() {
-		return this.common;
-	}
+        }
+        // Wenn Letzter Breakpoint auf Grund zu kleinem Wertebereich nicht mehr
+
+        // gesetzt, dann sorge daf�r dass zumindest 1 Wert
+
+        // den gr��ten Buchstaben bekommt
+
+        if ((bps[alphabetgr - 2] == 0.0) && (bps[alphabetgr - 3] != 0.0)) {
+            bps[alphabetgr - 2] = sortiert[sortiert.length - 1] - 0.01;
+        }
+        // System.out.println("--------");
+
+        // Max und Min den Breakpoints mitgeben
+
+        bps[alphabetgr] = Math.round(sortiert[0] * 100) / 100.00;
+        bps[alphabetgr - 1] = Math.round(sortiert[sortiert.length - 1] * 100) / 100.00;
+
+        return bps;
+
+    }
+
+    public double[] getCommon() {
+        return this.common;
+    }
 }

@@ -83,12 +83,13 @@ public class ANDIMSExporter extends AFragmentCommand {
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         for (IFileFragment f : t) {
-            try {
-                Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).
-                        readStructure(f);
-            } catch (final IOException e) {
-                throw new RuntimeException(e.fillInStackTrace());
-            }
+//            try {
+//                Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).
+//                        readStructure(f);
+//            } catch (final IOException e) {
+//                throw new RuntimeException(e.fillInStackTrace());
+//            }
+            log.info("Processing {}",f.getName());
             IFileFragment outf = Factory.getInstance().getFileFragmentFactory().
                     create(new File(getWorkflow().getOutputDirectory(this), f.
                     getName()));
@@ -108,6 +109,7 @@ public class ANDIMSExporter extends AFragmentCommand {
             } catch (IOException e) {
                 throw new RuntimeException(e.fillInStackTrace());
             }
+            //FIXME amalgamate attributes over all ancestors???
             List<Attribute> lattributes = deepestAncestors.get(0).getAttributes();
             int scans = f.getChild("scan_index").getArray().getShape()[0];
             int points = f.getChild("mass_values", true).getArray().getShape()[0];

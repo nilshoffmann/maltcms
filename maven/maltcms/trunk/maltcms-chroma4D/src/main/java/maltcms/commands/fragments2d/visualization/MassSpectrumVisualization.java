@@ -60,8 +60,6 @@ import org.openide.util.lookup.ServiceProvider;
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",
     "var.modulation_time", "var.scan_rate", "var.modulation_time",
     "var.scan_rate"})
-@RequiresOptionalVariables(names = {""})
-@ProvidesVariables(names = {""})
 @ServiceProvider(service = AFragmentCommand.class)
 public class MassSpectrumVisualization extends AFragmentCommand {
 
@@ -71,12 +69,7 @@ public class MassSpectrumVisualization extends AFragmentCommand {
     private String scanRateVar = "scan_rate";
     @Configurable(value = "0")
     private int[] indices = new int[]{0};
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
-
+    
     /**
      * {@inheritDoc}
      */
@@ -109,14 +102,6 @@ public class MassSpectrumVisualization extends AFragmentCommand {
                             new File(getWorkflow().getOutputDirectory(this),
                             StringTools.removeFileExt(ff.getName())
                             + "_ms-" + index + ".png"), 1024, 768);
-
-                    // final PlotRunner pl = new PlotRunner(plot.create(),
-                    // title,
-                    // StringTools.removeFileExt(ff.getName()) + "_ms-"
-                    // + index, getWorkflow().getOutputDirectory(
-                    // this));
-                    // pl.configure(Factory.getInstance().getConfiguration());
-                    // Factory.getInstance().submitJob(pl);
                 } else {
                     log.error("Index {} out of range.", index);
                 }
@@ -133,14 +118,14 @@ public class MassSpectrumVisualization extends AFragmentCommand {
         this.modulationVar = cfg.getString("var.modulation_time",
                 "modulation_time");
         this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
-        String[] indA = cfg.getStringArray(this.getClass().getName()
-                + ".indices");
-        this.indices = new int[indA.length];
-        int c = 0;
-        for (String i : indA) {
-            log.info("Writing {} in array", i);
-            this.indices[c++] = Integer.parseInt(i);
-        }
+//        String[] indA = cfg.getStringArray(this.getClass().getName()
+//                + ".indices");
+//        this.indices = new int[indA.length];
+//        int c = 0;
+//        for (String i : indA) {
+//            log.info("Writing {} in array", i);
+//            this.indices[c++] = Integer.parseInt(i);
+//        }
     }
 
     /**
@@ -148,7 +133,7 @@ public class MassSpectrumVisualization extends AFragmentCommand {
      */
     @Override
     public String getDescription() {
-        return "Visualize one mass spectra.";
+        return "Visualize one mass spectrum.";
     }
 
     /**

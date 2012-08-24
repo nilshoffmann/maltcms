@@ -67,24 +67,14 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class EICHeatmapCoplot extends TICHeatmapCoplot {
 
+    private final String description = "Generates a stacked heatmap plot of EICs (bird's eye view) with shared time axis";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
+    
     @Configurable
     private List<String> drawEICs;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.commands.fragments.AFragmentCommand#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return "Generates a stacked heatmap plot of EICs (bird's eye view) with shared time axis";
-    }
-
+    @Configurable
+    private double eicBinSize = 1.0d;
+    
     /*
      * (non-Javadoc)
      * 
@@ -93,8 +83,7 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         final File[] files = drawEICs(getWorkflow().getOutputDirectory(this),
-                t, Factory.getInstance().getConfiguration().getString(
-                "var.scan_acquisition_time", "scan_acquisition_time"),
+                t, getScanAcquisitionTimeVar(),
                 null, "");
         for (final File file : files) {
             final DefaultWorkflowResult dwrut = new DefaultWorkflowResult(file,
@@ -219,26 +208,6 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
         for (int i = 0; i < l.size(); i++) {
             d[i] = Double.parseDouble(l.get(i));
         }
-        final double binsize = Factory.getInstance().getConfiguration().
-                getDouble(ImageTools.class.getName() + ".eicBinSize", 1.0d);
-        return drawEICs(outputDir, t, satVar, ref, d, binsize, filePrefix);
-    }
-
-    @Override
-    public void configure(Configuration cfg) {
-        this.drawEICs = StringTools.toStringList(cfg.getList(this.getClass().
-                getName()
-                + ".drawEICs", Arrays.asList(new String[]{"117.0", "217.0",
-                    "268.0", "313.0", "350.0"})));
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.VISUALIZATION;
+        return drawEICs(outputDir, t, satVar, ref, d, eicBinSize, filePrefix);
     }
 }

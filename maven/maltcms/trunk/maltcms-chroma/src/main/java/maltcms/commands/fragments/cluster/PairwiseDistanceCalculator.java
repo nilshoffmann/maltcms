@@ -56,7 +56,7 @@ import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Calculates pariwise scores or costs between time series of possibly different
+ * Calculates pairwise scores or costs between time series of different
  * lengths.
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
@@ -68,7 +68,8 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class PairwiseDistanceCalculator extends AFragmentCommand {
 
-    boolean minimizingLocalDistance = false;
+    @Configurable
+    private boolean minimizingLocalDistance = false;
     @Configurable
     private boolean pairsWithFirstElement = false;
     @Configurable

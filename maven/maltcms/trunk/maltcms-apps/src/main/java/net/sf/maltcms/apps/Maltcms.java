@@ -27,7 +27,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
@@ -51,10 +50,13 @@ import org.slf4j.Logger;
 
 import cross.Factory;
 import cross.annotations.AnnotationInspector;
+import cross.applicationContext.ReflectionApplicationContextGenerator;
 import cross.datastructures.pipeline.ICommandSequence;
 import cross.datastructures.tools.EvalTools;
+import cross.datastructures.workflow.DefaultWorkflow;
 import cross.datastructures.workflow.IWorkflow;
 import cross.exception.ConstraintViolationException;
+import cross.exception.ExitVmException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.OperatingSystemMXBean;
@@ -62,10 +64,7 @@ import java.net.URLClassLoader;
 import java.util.*;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.ehcache.config.generator.ConfigurationUtil;
-import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.ConfigurationUtils;
-import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.log4j.PropertyConfigurator;
 
 /**
@@ -139,6 +138,15 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         }
 
     }
+    
+    private static void handleExitVmException(final Logger log,
+            final ExitVmException npe) {
+        int ecode;
+        Maltcms.shutdown(1, log);
+        log.error(npe.getLocalizedMessage());
+        ecode = 1;
+        System.exit(ecode);
+    }
 
     private static void handleRuntimeException(final Logger log,
             final Throwable npe, final ICommandSequence ics) {
@@ -203,9 +211,6 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         try {
             final Maltcms m = Maltcms.getInstance();
             final CompositeConfiguration cfg = m.parseCommandLine(args);
-//            if (m.isRunGui()) {
-//                PipelineWizard.main(args);
-//            } else {
             log.info("Running Maltcms version {}",
                     cfg.getString("application.version"));
             EvalTools.notNull(cfg, cfg);
@@ -228,6 +233,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     iw.save();
                     m.addVmStats(iw.getOutputDirectory());
                     System.exit(ecode);
+                } catch (final ExitVmException e) {
+                    Maltcms.handleExitVmException(log, e);
                 } catch (final Throwable t) {
                     Maltcms.handleRuntimeException(log, t, cs);
                 }
@@ -235,24 +242,33 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 throw new ConstraintViolationException(
                         "Pipeline is invalid, but strict checking was requested!");
             }
+        } catch (final ExitVmException e) {
+            Maltcms.handleExitVmException(log, e);
         } catch (final Throwable t) {
             Maltcms.handleRuntimeException(log, t, cs);
         }
     }
 
     public static void printBugTrackMessage(final Logger log, final ICommandSequence cs) {
-        log.error("Maltcms has caught an unexpected exception while executing.");
-        log.error("Please read the exception message for hints on what went wrong.");
-        log.error("If the message does not give hints on how to avoid the exception,");
-        log.error("please submit a bug report including this output to:");
+        log.error("#############################################################################");
+        log.error("# Maltcms has caught an unexpected exception while executing.");
+        log.error("# Please read the exception message carefully for hints on what");
+        log.error("# went wrong.");
+        log.error("# If the message does not give hints on how to avoid the exception,");
+        log.error("# please submit a bug report including this output to:");
         log.error(
-                "https://sourceforge.net/tracker/?func=add&group_id=251287&atid=1126545");
-        log.error(
-                "Please attach Maltcms' runtime configuration, maltcms.log, and the runtime properties to your report!");
-        log.error("By default, the log file is created within the directory from which maltcms is called,");
-        log.error("while the runtime properties and pipeline are located in ");
-        log.error(new File(cs.getWorkflow().getOutputDirectory(), "factory") + " .");
-        log.error("Your report will help improve Maltcms, thank you!");
+                "# http://sf.net/p/maltcms/maltcms-bugs");
+        log.error("#");
+        log.error("# Please attach Maltcms' log file (maltcms.log) and the runtime");
+        log.error("# properties and pipeline configuration to your report. ");
+        log.error("# By default, the log file is created within the directory from which"
+                + "");
+        log.error("# maltcms is called, while the runtime properties and pipeline are");
+        log.error("# located in ");
+        log.error("# "+new File(cs.getWorkflow().getOutputDirectory(), "Factory").getAbsolutePath());
+        log.error("# ");
+        log.error("# Your report will help improve Maltcms, thank you!");
+        log.error("#############################################################################");
     }
 
     private static void shutdown(final long seconds, final Logger log) {
@@ -563,7 +579,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         final PropertiesConfiguration defaultCfg = getDefaultConfiguration();
         final PropertiesConfiguration cmdLineCfg = new PropertiesConfiguration();
         boolean printOptions = false;
-        boolean createBeanXML = false;
+        String[] beans = null;
+        
         try {
             final CommandLine cl = clp.parse(this.o, args);
             final Option[] opts = cl.getOptions();
@@ -594,7 +611,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 }
             }
             if (cl.hasOption("b")) {
-                createBeanXML = cl.hasOption("b");
+                beans = cl.getOptionValues("b");
             }
             if (cl.hasOption("i")) {
                 cmdLineCfg.setProperty("input.basedir", cl.getOptionValue("i"));
@@ -643,7 +660,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 } catch (final ConfigurationException e) {
                     this.log.error(e.getLocalizedMessage());
                 }
-            } else {
+            } else if(!cl.hasOption("b")) {
                 throw new ParseException("-c argument is mandatory!");
             }
             // cmdLine options override default options and system options
@@ -656,9 +673,13 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             printHelp(defaultCfg);
             System.exit(1);
         }
+        if (beans!=null) {
+            handleCreateBeanXML(cfg, beans);
+            System.exit(0);
+        }
         if (printOptions) {
             printOptions(cfg);
-            System.exit(0);
+            System.exit(1);
         }
         return new CompositeConfiguration(Arrays.asList(cfg));
     }
@@ -808,5 +829,25 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     @Override
     public void uncaughtException(final Thread t, final Throwable e) {
         Maltcms.handleRuntimeException(this.log, e, null);
+    }
+
+    private void handleCreateBeanXML(Configuration cfg, String...beans) {
+        File outputDir = new File(cfg.getString("output.basedir","."),"pipelines");
+        outputDir.mkdirs();
+        File xmlDir = new File(outputDir,"xml");
+        xmlDir.mkdirs();
+        File contextFile = new File(xmlDir,"customContext.xml"); 
+        LinkedList<String> beanList = new LinkedList<String>();
+//        beanList.add(IWorkflow.class.getCanonicalName());
+//        beanList.add(ICommandSequence.class.getCanonicalName());
+        beanList.addAll(Arrays.asList(beans));
+        ReflectionApplicationContextGenerator.createContextXml(contextFile, "3.0", "prototype", beanList.toArray(new String[beanList.size()]));
+        try {
+            PropertiesConfiguration pc = new PropertiesConfiguration(new File(outputDir,"customPipeline.mpl"));
+            pc.setProperty("pipeline.xml", "file:${config.basedir}/xml/"+contextFile.getName());
+            pc.save();
+        } catch (ConfigurationException ex) {
+            java.util.logging.Logger.getLogger(Maltcms.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

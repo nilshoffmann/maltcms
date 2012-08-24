@@ -21,6 +21,7 @@
  */
 package maltcms.commands.fragments.io;
 
+import cross.annotations.Configurable;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -49,12 +50,11 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class VariableDataExporter extends AFragmentCommand {
 
+    private final String description = "Exports one-dimensional variables to csv format ";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.FILEIO;
+    
+    @Configurable
     private ArrayList<String> varNames = new ArrayList<String>(0);
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
@@ -70,30 +70,5 @@ public class VariableDataExporter extends AFragmentCommand {
             }
         }
         return t;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cross.commands.fragments.AFragmentCommand#configure(org.apache.commons
-     * .configuration.Configuration)
-     */
-    @Override
-    public void configure(final Configuration cfg) {
-        super.configure(cfg);
-        this.varNames = StringTools.toStringList(cfg.getList(this.getClass().
-                getName()
-                + ".variables"));
-    }
-
-    @Override
-    public String getDescription() {
-        return "Exports one-dimensional variables to csv format ";
-    }
-
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.FILEIO;
     }
 }

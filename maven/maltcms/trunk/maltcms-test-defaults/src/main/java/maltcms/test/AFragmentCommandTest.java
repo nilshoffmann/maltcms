@@ -36,6 +36,7 @@ import cross.datastructures.pipeline.CommandPipeline;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflow;
 import cross.datastructures.workflow.IWorkflow;
+import org.junit.Rule;
 
 /**
  *
@@ -43,26 +44,29 @@ import cross.datastructures.workflow.IWorkflow;
  */
 public abstract class AFragmentCommandTest {
     
+    @Rule
+    public SetupLogging sl = new SetupLogging();
+    
     public IWorkflow createWorkflow(File outputDirectory, List<IFragmentCommand> commands, List<File> inputFiles) {
-    	Properties props = new Properties();
-        props.setProperty("log4j.rootLogger", "INFO, A1");
-        props.setProperty("log4j.appender.A1",
-                "org.apache.log4j.ConsoleAppender");
-        props.setProperty("log4j.appender.A1.layout",
-                "org.apache.log4j.PatternLayout");
-        props.setProperty("log4j.appender.A1.layout.ConversionPattern",
-                "%m%n");
-        props.setProperty("log4j.category.cross", "WARN");
-        props.setProperty("log4j.category.cross.datastructures.pipeline",
-                "INFO");
-        props.setProperty("log4j.category.maltcms.commands.fragments",
-                "INFO");
-        props.setProperty("log4j.category.maltcms.commands.fragments2d",
-                "INFO");
-        props.setProperty("log4j.category.maltcms", "WARN");
-        props.setProperty("log4j.category.ucar", "WARN");
-        props.setProperty("log4j.category.smueller", "WARN");
-        PropertyConfigurator.configure(props);
+//    	Properties props = new Properties();
+//        props.setProperty("log4j.rootLogger", "INFO, A1");
+//        props.setProperty("log4j.appender.A1",
+//                "org.apache.log4j.ConsoleAppender");
+//        props.setProperty("log4j.appender.A1.layout",
+//                "org.apache.log4j.PatternLayout");
+//        props.setProperty("log4j.appender.A1.layout.ConversionPattern",
+//                "%m%n");
+//        props.setProperty("log4j.category.cross", "WARN");
+//        props.setProperty("log4j.category.cross.datastructures.pipeline",
+//                "INFO");
+//        props.setProperty("log4j.category.maltcms.commands.fragments",
+//                "INFO");
+//        props.setProperty("log4j.category.maltcms.commands.fragments2d",
+//                "INFO");
+//        props.setProperty("log4j.category.maltcms", "WARN");
+//        props.setProperty("log4j.category.ucar", "WARN");
+//        props.setProperty("log4j.category.smueller", "WARN");
+//        PropertyConfigurator.configure(props);
     	CommandPipeline cp = new CommandPipeline();
         List<IFileFragment> fragments = new ArrayList<IFileFragment>();
         for(File f:inputFiles) {

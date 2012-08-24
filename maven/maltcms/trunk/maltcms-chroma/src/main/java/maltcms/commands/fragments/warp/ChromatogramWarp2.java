@@ -77,6 +77,9 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=AFragmentCommand.class)
 public class ChromatogramWarp2 extends AFragmentCommand {
 
+    private final String description = "Warps Chromatograms to a given reference, according to alignment paths.";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.WARPING;
+    
     @Configurable
     private List<String> indexedVars = Arrays.asList("mass_values",
             "intensity_values");
@@ -85,10 +88,9 @@ public class ChromatogramWarp2 extends AFragmentCommand {
             "scan_acquisition_time");
     @Configurable
     private String indexVar = "scan_index";
-    @Configurable(name = "var.anchors.retention_scans", type = String.class)
+    @Configurable(name = "var.anchors.retention_scans")
     private String anchorScanIndexVariableName = "retention_scans";
-    @Configurable(name = "var.anchors.retention_index_names",
-    type = String.class)
+    @Configurable(name = "var.anchors.retention_index_names")
     private String anchorNameVariableName = "retention_index_names";
     @Configurable(name = "var.multiple_alignment")
     private String multipleAlignmentVariableName = "multiple_alignment";
@@ -98,22 +100,12 @@ public class ChromatogramWarp2 extends AFragmentCommand {
     private String multipleAlignmentTypeVariableName = "multiple_alignment_type";
     @Configurable(name = "var.multiple_alignment_creator")
     private String multipleAlignmentCreatorVariableName = "multiple_alignment_creator";
-    // @Configurable
-    // private String alignmentReference = "";
-    //
-    // @Configurable
-    // private boolean warpToFirst = true;
     @Configurable
     private boolean averageCompressions = false;
     @Configurable
     private String alignmentLocation = "";
     @Configurable(name = "var.scan_acquisition_time")
     private String satvar = "scan_acquisition_time";
-    
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
 
     private AlignmentTable buildTableFromFragment(IFileFragment f) {
         try {
@@ -167,8 +159,8 @@ public class ChromatogramWarp2 extends AFragmentCommand {
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         TupleND<IFileFragment> wt = createWorkFragments(t);
-        log.info("{}", t);
-        log.info("{}", wt);
+        log.debug("{}", t);
+        log.debug("{}", wt);
         IFileFragment ref = null;
         // TODO enable arbitrary reference selection
         AlignmentTable at = null;
@@ -180,7 +172,8 @@ public class ChromatogramWarp2 extends AFragmentCommand {
             log.info("Using alignmentLocation");
             at = new AlignmentTable(new File(this.alignmentLocation));
         }
-
+        log.info("Warping 1D variables: {}",plainVars);
+        log.info("Warping 2D variables: {}",indexedVars);
         EvalTools.notNull(at, this);
         String refname = at.getRefName();
 
@@ -191,20 +184,6 @@ public class ChromatogramWarp2 extends AFragmentCommand {
             }
         }
         EvalTools.notNull(refOrig, this);
-        // if (warpToFirst) {
-        // ref = wt.get(0);
-        // System.out.println("Warping to " + ref.getName());
-        // }
-        // if (alignmentReference != null && !alignmentReference.isEmpty()) {
-        // for (IFileFragment f : wt) {
-        // if (f.getName().contains(this.alignmentReference)
-        // || f.getAbsolutePath()
-        // .contains(this.alignmentReference)) {
-        // ref = f;
-        // ref.save();
-        // }
-        // }
-        // }
 
         log.info("Reference is {}", refOrig);
         for (int i = 0; i < wt.size(); i++) {
@@ -325,90 +304,12 @@ public class ChromatogramWarp2 extends AFragmentCommand {
 
     @Override
     public void configure(final Configuration cfg) {
-        this.indexedVars = StringTools.toStringList(cfg.getList(this.getClass().
-                getName() + ".indexedVars"));
-        this.indexVar = cfg.getString(this.getClass().getName() + ".indexVar",
-                "scan_index");
-        this.plainVars = StringTools.toStringList(cfg.getList(this.getClass().
-                getName() + ".plainVars"));
-        log.info("{}", this.plainVars);
         this.anchorScanIndexVariableName = cfg.getString(
                 "var.anchors.retention_scans", "retention_scans");
         this.anchorNameVariableName = cfg.getString(
                 "var.anchors.retention_names", "retention_names");
-        this.averageCompressions = cfg.getBoolean(this.getClass().getName()
-                + ".averageCompressions", false);
-        this.alignmentLocation = cfg.getString(this.getClass().getName()
-                + ".alignmentLocation");
-        // this.warpToFirst = cfg.getBoolean(this.getClass().getName()
-        // + ".warpToFirst", true);
         this.satvar = cfg.getString("var.scan_acquisition_time",
                 "scan_acquisition_time");
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.commands.fragments.AFragmentCommand#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return "Warps Chromatograms to a given reference, according to alignment paths.";
-    }
-
-    /**
-     * @return the indexedVars
-     */
-    public List<String> getIndexedVars() {
-        return this.indexedVars;
-    }
-
-    /**
-     * @return the indexVar
-     */
-    public String getIndexVar() {
-        return this.indexVar;
-    }
-
-    /**
-     * @return the plainVars
-     */
-    public List<String> getPlainVars() {
-        return this.plainVars;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.WARPING;
-    }
-
-    /**
-     * @param indexedVars
-     *            the indexedVars to set
-     */
-    public void setIndexedVars(final List<String> indexedVars) {
-        this.indexedVars = indexedVars;
-    }
-
-    /**
-     * @param indexVar
-     *            the indexVar to set
-     */
-    public void setIndexVar(final String indexVar) {
-        this.indexVar = indexVar;
-    }
-
-    /**
-     * @param plainVars
-     *            the plainVars to set
-     */
-    public void setPlainVars(final List<String> plainVars) {
-        this.plainVars = plainVars;
     }
 
     /**
@@ -429,7 +330,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
     public IFileFragment warp(final IFileFragment ref,
             final IFileFragment querySource, final IFileFragment queryTarget,
             final List<Tuple2DI> path, final boolean toLHS, final IWorkflow iw) {
-        log.info("Warping {}, saving in {}",
+        log.debug("Warping {}, saving in {}",
                 querySource.getAbsolutePath(), queryTarget.getAbsolutePath());
         warp2D(queryTarget, ref, querySource, path, this.indexedVars, toLHS);
         warp1D(queryTarget, ref, querySource, path, this.plainVars, toLHS);

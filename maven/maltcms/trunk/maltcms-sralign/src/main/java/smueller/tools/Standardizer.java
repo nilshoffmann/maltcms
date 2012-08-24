@@ -32,137 +32,136 @@ import cross.tools.MathTools;
  */
 public class Standardizer {
 
-	private double median;
-	private double min;
-	private double max;
+    private double median;
+    private double min;
+    private double max;
 
-	// Abziehen des Median, teilen durch Standardabweichung f�r alle
-	// Arraywerte,
-	// addiert minimum um im pos. wertebereich zu bleiben
-	public Array cleanbase(final Array a1, final double median1,
-	        final double deviation) {
-		final Array a = a1.copy();
-		final IndexIterator ii4 = a.getIndexIterator();
-		final IndexIterator ii5 = a.getIndexIterator();
-		while (ii4.hasNext()) {
+    // Abziehen des Median, teilen durch Standardabweichung f�r alle
+    // Arraywerte,
+    // addiert minimum um im pos. wertebereich zu bleiben
+    public Array cleanbase(final Array a1, final double median1,
+            final double deviation) {
+        final Array a = a1.copy();
+        final IndexIterator ii4 = a.getIndexIterator();
+        final IndexIterator ii5 = a.getIndexIterator();
+        while (ii4.hasNext()) {
 
-			final double save = ((ii4.getDoubleNext() - median1));
-			ii4.setDoubleCurrent(save);
-		}
-		final double min2 = smueller.tools.ArrayTools.calcmin(a);
-		if (min2 < 0) {
-			while (ii5.hasNext()) {
-				final double save = ii5.getDoubleNext() + Math.abs(min2);
-				ii5.setDoubleCurrent(save);
-			}
-		}
+            final double save = ((ii4.getDoubleNext() - median1));
+            ii4.setDoubleCurrent(save);
+        }
+        final double min2 = smueller.tools.ArrayTools.calcmin(a);
+        if (min2 < 0) {
+            while (ii5.hasNext()) {
+                final double save = ii5.getDoubleNext() + Math.abs(min2);
+                ii5.setDoubleCurrent(save);
+            }
+        }
 
-		return a;
-	}
+        return a;
+    }
 
-	public Array cleanbaseline(final Array a1) {
-		final Array a = a1.copy();
-		// Globale Medianberechnung, verbraucht viel zus�tzl. Speicher, weil
-		// in
-		// Java Array kopiert werden muss.
-		SymbolicRepresentationAlignment.getSorti().setSortedjavarray1(
-		        (double[]) a.copyTo1DJavaArray());
-		this.median = MathTools.median(SymbolicRepresentationAlignment
-		        .getSorti().getSortedjavarray1());
-		SymbolicRepresentationAlignment.getSorti().setSortedjavarray1(null);
-		final double standarddev = standardDeviation(a, this.median);
-		Array b = a;
-		b = cleanbase(a, this.median, standarddev);
-		return b;
-	}
+    public Array cleanbaseline(final Array a1) {
+        final Array a = a1.copy();
+        // Globale Medianberechnung, verbraucht viel zus�tzl. Speicher, weil
+        // in
+        // Java Array kopiert werden muss.
+        SymbolicRepresentationAlignment.getSorti().setSortedjavarray1(
+                (double[]) a.copyTo1DJavaArray());
+        this.median = MathTools.median(SymbolicRepresentationAlignment
+                .getSorti().getSortedjavarray1());
+        SymbolicRepresentationAlignment.getSorti().setSortedjavarray1(null);
+        final double standarddev = standardDeviation(a, this.median);
+        Array b = a;
+        b = cleanbase(a, this.median, standarddev);
+        return b;
+    }
 
-	public double getMax() {
-		return this.max;
-	}
+    public double getMax() {
+        return this.max;
+    }
 
-	public double getMedian() {
-		return this.median;
-	}
+    public double getMedian() {
+        return this.median;
+    }
 
-	public double getMin() {
-		return this.min;
-	}
+    public double getMin() {
+        return this.min;
+    }
 
-	// zieht logarithmus
-	public Array logData(final Array a1) {
-		final Array a = a1.copy();
-		final IndexIterator ii4 = a.getIndexIterator();
-		while (ii4.hasNext()) {
-			final double save = (Math.log(ii4.getDoubleNext()));
-			ii4.setDoubleCurrent(save);
-			// System.out.println("Wert " + " :" + save);
-		}
-		return a;
-	}
+    // zieht logarithmus
+    public Array logData(final Array a1) {
+        final Array a = a1.copy();
+        final IndexIterator ii4 = a.getIndexIterator();
+        while (ii4.hasNext()) {
+            final double save = (Math.log(ii4.getDoubleNext()));
+            ii4.setDoubleCurrent(save);
+            // System.out.println("Wert " + " :" + save);
+        }
+        return a;
+    }
 
-	// Berechnung des globalen Mittelwertes
-	public double mean(final Array a) {
-		final IndexIterator ii1 = a.getIndexIterator();
-		double i = 0;
-		while (ii1.hasNext()) {
-			i = i + ii1.getDoubleNext();
-		}
-		i = i / a.getSize();
-		return i;
-	}
+    // Berechnung des globalen Mittelwertes
+    public double mean(final Array a) {
+        final IndexIterator ii1 = a.getIndexIterator();
+        double i = 0;
+        while (ii1.hasNext()) {
+            i = i + ii1.getDoubleNext();
+        }
+        i = i / a.getSize();
+        return i;
+    }
 
-	// setzt alle negativen Arraywerte auf 0
-	public Array nullData(final Array a1) {
-		final Array a = a1.copy();
-		final IndexIterator ii4 = a.getIndexIterator();
-		while (ii4.hasNext()) {
-			final double save = ii4.getDoubleNext();
-			if (save > 0) {
-				ii4.setDoubleCurrent(save);
-			} else {
-				ii4.setDoubleCurrent(0);
-				// System.out.println("Wert " + " :" + save);
-			}
-		}
-		return a;
-	}
+    // setzt alle negativen Arraywerte auf 0
+    public Array nullData(final Array a1) {
+        final Array a = a1.copy();
+        final IndexIterator ii4 = a.getIndexIterator();
+        while (ii4.hasNext()) {
+            final double save = ii4.getDoubleNext();
+            if (save > 0) {
+                ii4.setDoubleCurrent(save);
+            } else {
+                ii4.setDoubleCurrent(0);
+                // System.out.println("Wert " + " :" + save);
+            }
+        }
+        return a;
+    }
 
-	// Standardisierung, skalieren auf Wertebereich 0-1
-	public Array scale(final Array a1) {
-		final Array a = a1.copy();
-		final IndexIterator ii4 = a.getIndexIterator();
-		this.max = smueller.tools.ArrayTools.calcmax(a);
-		this.min = smueller.tools.ArrayTools.calcmin(a);
+    // Standardisierung, skalieren auf Wertebereich 0-1
+    public Array scale(final Array a1) {
+        final Array a = a1.copy();
+        final IndexIterator ii4 = a.getIndexIterator();
+        this.max = smueller.tools.ArrayTools.calcmax(a);
+        this.min = smueller.tools.ArrayTools.calcmin(a);
 
-		int counter = 0;
-		final double minmax = 1 / (this.max - this.min);
-		System.out.println("Larifari" + Math.round(minmax) + "Min" + this.min
-		        + "max" + this.max);
-		while (ii4.hasNext()) {
-			final double save = ((ii4.getDoubleNext() - this.min) * minmax);
-			ii4.setDoubleCurrent(save);
-			counter++;
-			// System.out.println("Wert " + counter + " :" + save);
+        int counter = 0;
+        final double minmax = 1 / (this.max - this.min);
+        System.out.println("Larifari" + Math.round(minmax) + "Min" + this.min
+                + "max" + this.max);
+        while (ii4.hasNext()) {
+            final double save = ((ii4.getDoubleNext() - this.min) * minmax);
+            ii4.setDoubleCurrent(save);
+            counter++;
+            // System.out.println("Wert " + counter + " :" + save);
 
-		}
-		return a;
-	}
+        }
+        return a;
+    }
 
-	// Berechnung der Standardabweichung
-	public double standardDeviation(final Array a, final double meanvalue) {
-		final IndexIterator ii2 = a.getIndexIterator();
-		double i = 0;
-		double counter = 0;
-		while (ii2.hasNext()) {
-			final double calc = ii2.getDoubleNext();
-			i = i + ((calc - meanvalue) * (calc - meanvalue));
-			counter++;
-		}
+    // Berechnung der Standardabweichung
+    public double standardDeviation(final Array a, final double meanvalue) {
+        final IndexIterator ii2 = a.getIndexIterator();
+        double i = 0;
+        double counter = 0;
+        while (ii2.hasNext()) {
+            final double calc = ii2.getDoubleNext();
+            i = i + ((calc - meanvalue) * (calc - meanvalue));
+            counter++;
+        }
 
-		counter = 1 / (counter - 1);
-		i = (i * counter);
-		i = Math.sqrt(i);
-		return i;
-	}
-
+        counter = 1 / (counter - 1);
+        i = (i * counter);
+        i = Math.sqrt(i);
+        return i;
+    }
 }

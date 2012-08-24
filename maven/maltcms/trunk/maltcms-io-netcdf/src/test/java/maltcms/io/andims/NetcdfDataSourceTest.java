@@ -238,7 +238,7 @@ public class NetcdfDataSourceTest {
      */
     @Test
     public void testSupportedFormats() {
-        String[] fileEnding = new String[]{"nc", "cdf"};
+        String[] fileEnding = new String[]{"nc", "nc.gz","nc.z","nc.zip","nc.gzip","nc.bz2","cdf","cdf.gz","cdf.z","cdf.zip","cdf.gzip","cdf.bz2"};
         Assert.assertEquals(new NetcdfDataSource().supportedFormats(), Arrays.asList(fileEnding));
     }
     

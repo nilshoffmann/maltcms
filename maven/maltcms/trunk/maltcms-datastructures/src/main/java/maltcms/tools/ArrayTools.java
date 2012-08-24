@@ -52,6 +52,8 @@ import ucar.ma2.InvalidRangeException;
 import ucar.ma2.MAMath;
 import cross.Factory;
 import cross.Logging;
+import cross.datastructures.collections.CachedLazyList;
+import cross.datastructures.collections.IElementProvider;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.Tuple2DI;
 import cross.exception.ConstraintViolationException;
@@ -59,9 +61,9 @@ import cross.datastructures.tools.EvalTools;
 
 /**
  * Utility class providing methods for Sparse and Dense Arrays.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class ArrayTools {
 
@@ -120,7 +122,7 @@ public class ArrayTools {
 
     /**
      * This factory is usable for scalar values and primitive array instances.
-     * 
+     *
      * @param o
      * @return
      */
@@ -312,7 +314,7 @@ public class ArrayTools {
     /**
      * Returns a Tuple2D holding an ArrayInt.D1 as scan indices to the arrays
      * held in the Tuple2D, mass values and intensity values.
-     * 
+     *
      * @param al
      * @return
      */
@@ -346,7 +348,7 @@ public class ArrayTools {
      * Takes a Tuple of two initially null or intialized arrays which are the
      * binned representations. Requires minimum and maximum mass values, number
      * of bins, resolution and the fillvalue for empty bins.
-     * 
+     *
      * @param source_ind
      * @param source_val
      * @param tiv
@@ -463,7 +465,7 @@ public class ArrayTools {
 
     /**
      * Calculates A-B elementwise.
-     * 
+     *
      * @param a
      * @param b
      * @return
@@ -486,7 +488,7 @@ public class ArrayTools {
 
     /**
      * Calculates A/B elementwise.
-     * 
+     *
      * @param a
      * @param b
      * @return
@@ -509,7 +511,7 @@ public class ArrayTools {
 
     /**
      * Calculates A*B elementwise.
-     * 
+     *
      * @param a
      * @param b
      * @return
@@ -533,7 +535,7 @@ public class ArrayTools {
     /**
      * Divides values in array by 60, convenience method for second to minute
      * conversion.
-     * 
+     *
      * @param a
      * @return
      */
@@ -544,7 +546,7 @@ public class ArrayTools {
     /**
      * Expansion, as used in Dynamic Time Warping, defined as copying the
      * expanded element length times.
-     * 
+     *
      * @param source
      * @param length
      * @return
@@ -568,7 +570,7 @@ public class ArrayTools {
 
     /**
      * Fill array a with double value d.
-     * 
+     *
      * @param a
      * @param d
      */
@@ -581,7 +583,7 @@ public class ArrayTools {
 
     /**
      * Fill array a with Double value d.
-     * 
+     *
      * @param a
      * @param d
      */
@@ -591,7 +593,7 @@ public class ArrayTools {
 
     /**
      * Fill array a with int value i.
-     * 
+     *
      * @param a
      * @param i
      */
@@ -604,7 +606,7 @@ public class ArrayTools {
 
     /**
      * Fill array a with Integer value i.
-     * 
+     *
      * @param a
      * @param i
      */
@@ -615,7 +617,7 @@ public class ArrayTools {
     /**
      * Restore List of Array objects from contiguous representation, using an
      * index array containing the offsets for each individual array.
-     * 
+     *
      * @param indices
      * @param values
      * @return
@@ -660,7 +662,7 @@ public class ArrayTools {
 
     /**
      * Return a list, which is more generally typed than the input list.
-     * 
+     *
      * @param al
      * @return
      */
@@ -708,7 +710,7 @@ public class ArrayTools {
 
     /**
      * Compute total number of elements for all Sparse arrays in list.
-     * 
+     *
      * @param al
      * @return
      */
@@ -730,7 +732,7 @@ public class ArrayTools {
     /**
      * Returns the number of elements required for a one-dimensional
      * representation of multidimensional array.
-     * 
+     *
      * @param a
      * @return
      */
@@ -750,7 +752,7 @@ public class ArrayTools {
     /**
      * Create an index array with given size, whose integer indexing begins at
      * begin_index.
-     * 
+     *
      * @param size
      * @param begin_index
      * @return
@@ -790,7 +792,7 @@ public class ArrayTools {
 
     /**
      * Sum over all values of all arrays within a list.
-     * 
+     *
      * @param valuesvalues
      * @return
      */
@@ -1215,7 +1217,7 @@ public class ArrayTools {
 
     /**
      * Calculates A + B elementwise.
-     * 
+     *
      * @param a
      * @param b
      * @return
@@ -1243,38 +1245,96 @@ public class ArrayTools {
      * Creates a new Array containing all values of elements in al along every
      * dimension.
      * 
+     * The list returned is a CachedList implementation. It creates the tilted 
+     * arrays lazily from the original supplied list.
+     * 
      * @param al
      * @return
      */
     public static List<Array> tilt(final List<Array> al) {
         EvalTools.notNull(al, ArrayTools.class);
         final int size = al.get(0).getShape()[0];
-        final ArrayList<Array> ret = new ArrayList<Array>();
-        final int nscans = al.size();
-        // initialize new arrays
-        for (int i = 0; i < size; i++) {
-            ret.add(Array.factory(al.get(0).getElementType(),
-                    new int[]{nscans}));
-        }
-        for (int scans = 0; scans < nscans; scans++) {
-            final Array source = al.get(scans);
-            final Index sidx = source.getIndex();
-            // iterate over elements in each ArrayDouble.D1
-            for (int i = 0; i < size; i++) {
-                final Index ridx = ret.get(i).getIndex();
-                // get array for dim i, set value at scan to value of dim i in
-                // source
-                ret.get(i).setDouble(ridx.set(scans),
-                        source.getDouble(sidx.set(i)));
+        final CachedLazyList<Array> cll = new CachedLazyList<Array>(new IElementProvider<Array>() {
+            private final List<Array> originalList = al;
+            private final int lazySize = size;
+
+            @Override
+            public int size() {
+                return lazySize;
             }
-        }
-        return ret;
+
+            @Override
+            public Array get(int index) {
+                final int nscans = originalList.size();
+                Array ret = Array.factory(al.get(0).getElementType(),
+                        new int[]{nscans});
+                for (int scans = 0; scans < nscans; scans++) {
+                    final Array source = al.get(scans);
+                    // iterate over elements in each ArrayDouble.D1
+                    //for (int i = 0; i < size; i++) {
+                    // get array for dim i, set value at scan to value of dim i in
+                    // source
+                    ret.setDouble(scans, source.getDouble(index));
+                    //}
+                }
+                return ret;
+            }
+
+            @Override
+            public List<Array> get(int start, int stop) {
+                final ArrayList<Array> ret = new ArrayList<Array>();
+                final int nscans = originalList.size();
+                // initialize new arrays
+                for (int i = 0; i < stop-start; i++) {
+                    ret.add(Array.factory(al.get(0).getElementType(),
+                            new int[]{nscans}));
+                }
+                for (int scans = 0; scans < nscans; scans++) {
+                    final Array source = al.get(scans);
+                    final Index sidx = source.getIndex();
+                    // iterate over elements in each ArrayDouble.D1
+                    for (int i = start; i <= stop; i++) {
+                        // get array for dim i, set value at scan to value of dim i in
+                        // source
+                        ret.get(i).setDouble(scans,
+                                source.getDouble(i));
+                    }
+                }
+                return ret;
+            }
+
+            @Override
+            public void reset() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
+//        final ArrayList<Array> ret = new ArrayList<Array>();
+//        final int nscans = al.size();
+//        // initialize new arrays
+//        for (int i = 0; i < size; i++) {
+//            ret.add(Array.factory(al.get(0).getElementType(),
+//                    new int[]{nscans}));
+//        }
+//        for (int scans = 0; scans < nscans; scans++) {
+//            final Array source = al.get(scans);
+//            final Index sidx = source.getIndex();
+//            // iterate over elements in each ArrayDouble.D1
+//            for (int i = 0; i < size; i++) {
+//                final Index ridx = ret.get(i).getIndex();
+//                // get array for dim i, set value at scan to value of dim i in
+//                // source
+//                ret.get(i).setDouble(ridx.set(scans),
+//                        source.getDouble(sidx.set(i)));
+//            }
+//        }
+//        return ret;
+        return cll;
     }
 
     /**
      * Creates a new Array containing all values of elements in al along every
      * dimension.
-     * 
+     *
      * @param al
      * @return
      */
@@ -1361,7 +1421,7 @@ public class ArrayTools {
      * Given an array and a list of indices within that array, removes all
      * values at those indices and returns a new array where the respective
      * values have been set to a definable minimum value.
-     * 
+     *
      * @param a
      * @param removeIndices
      * @return

@@ -22,6 +22,7 @@
  */
 package maltcms.commands.fragments.peakfinding.ticPeakFinder;
 
+import cross.annotations.Configurable;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.MathTools;
 import java.util.ArrayList;
@@ -45,17 +46,25 @@ import ucar.ma2.Array;
 @Data
 public class QuantileSnrPeakFinder implements IPeakFinder {
 
+    @Configurable
     private List<AArrayFilter> filter = Arrays.asList(
             (AArrayFilter) new MultiplicationFilter());
+    @Configurable
     private TopHatFilter baselineFilter = new TopHatFilter();
     
+    @Configurable
     private double peakSnrThreshold = 75.0;
+    @Configurable
     private int peakSeparationWindow = 10;
-    //default value is the median
+    @Configurable
     private double lowerPercentile = 5.0;
+    @Configurable
     private double upperPercentile = 95.0;
+    @Configurable
     private int baselineFilterWindow = 500;
+    @Configurable
     private int baselineEstimationMinimaWindow = 1000;
+    @Configurable
     private int meanEstimationWindow = 100;
     
     protected Array applyFilters(final Array correctedtic) {
@@ -76,7 +85,6 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
         // .get1DJavaArray(double.class));
         // correctedtic = Array.factory(ticValues);
         baselineFilter.setWindow(baselineFilterWindow);
-        int meanEstimationWindow = this.meanEstimationWindow;
         double[] snrValues = new double[ticValues.length];
         double[] baselineEstimate = (double[])baselineFilter.apply(correctedtic).get1DJavaArray(double.class);
         double[] cticValues = (double[]) correctedtic.get1DJavaArray(

@@ -27,100 +27,99 @@ package smueller.alignment;
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
  */
 public class AlignedPairVector implements Cloneable {
-	private char a = ' ';
-	private char b = ' ';
-	private int c;
-	private int d;
-	private int e;
-	private int f;
-	private boolean done;
 
-	public AlignedPairVector() {
+    private char a = ' ';
+    private char b = ' ';
+    private int c;
+    private int d;
+    private int e;
+    private int f;
+    private boolean done;
 
-	}
+    public AlignedPairVector() {
+    }
 
-	public AlignedPairVector(final boolean done1) {
-		this.done = done1;
-	}
+    public AlignedPairVector(final boolean done1) {
+        this.done = done1;
+    }
 
-	public AlignedPairVector(final char a1, final char b1, final int c1,
-	        final int d1) {
-		this.a = a1;
-		this.b = b1;
-		this.c = c1;
-		this.d = d1;
-	}
+    public AlignedPairVector(final char a1, final char b1, final int c1,
+            final int d1) {
+        this.a = a1;
+        this.b = b1;
+        this.c = c1;
+        this.d = d1;
+    }
 
-	public AlignedPairVector(final int c1, final int d1) {
-		this.c = c1;
-		this.d = d1;
-	}
+    public AlignedPairVector(final int c1, final int d1) {
+        this.c = c1;
+        this.d = d1;
+    }
 
-	@Override
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (final CloneNotSupportedException cNSE) {
-			System.err.println("Klonen fehlgeschlagen");
-			return null;
-		}
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (final CloneNotSupportedException cNSE) {
+            System.err.println("Klonen fehlgeschlagen");
+            return null;
+        }
 
-	}
+    }
 
-	public char getA() {
-		return this.a;
-	}
+    public char getA() {
+        return this.a;
+    }
 
-	public char getB() {
-		return this.b;
-	}
+    public char getB() {
+        return this.b;
+    }
 
-	public int getC() {
-		return this.c;
-	}
+    public int getC() {
+        return this.c;
+    }
 
-	public int getD() {
-		return this.d;
-	}
+    public int getD() {
+        return this.d;
+    }
 
-	public int getE() {
-		return this.e;
-	}
+    public int getE() {
+        return this.e;
+    }
 
-	public int getF() {
-		return this.f;
-	}
+    public int getF() {
+        return this.f;
+    }
 
-	public boolean isDone() {
-		return this.done;
-	}
+    public boolean isDone() {
+        return this.done;
+    }
 
-	public void setA(final char a1) {
-		this.a = a1;
-	}
+    public void setA(final char a1) {
+        this.a = a1;
+    }
 
-	public void setB(final char b1) {
-		this.b = b1;
-	}
+    public void setB(final char b1) {
+        this.b = b1;
+    }
 
-	public void setC(final int c1) {
-		this.c = c1;
-	}
+    public void setC(final int c1) {
+        this.c = c1;
+    }
 
-	public void setD(final int d1) {
-		this.d = d1;
-	}
+    public void setD(final int d1) {
+        this.d = d1;
+    }
 
-	public void setDone(final boolean done1) {
-		this.done = done1;
-	}
+    public void setDone(final boolean done1) {
+        this.done = done1;
+    }
 
-	public void setE(final int e1) {
-		this.e = e1;
-	}
+    public void setE(final int e1) {
+        this.e = e1;
+    }
 
-	public void setF(final int f1) {
-		this.f = f1;
-	}
-
+    public void setF(final int f1) {
+        this.f = f1;
+    }
 }

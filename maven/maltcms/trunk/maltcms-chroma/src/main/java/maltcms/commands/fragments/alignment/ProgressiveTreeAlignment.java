@@ -69,20 +69,18 @@ public class ProgressiveTreeAlignment extends AFragmentCommand {
         // Build a tree, based on a clustering algorithm
         // For each pair of leaves, align the sequences and create a consensus,
         // then proceed and align sequences to consensus sequences etc.
-        final AFragmentCommand ica = Factory.getInstance().getObjectFactory().instantiate(this.guideTreeClass, AFragmentCommand.class);
-        ica.setWorkflow(getWorkflow());
+        AFragmentCommand ica = Factory.getInstance().getObjectFactory().instantiate(this.guideTreeClass, AFragmentCommand.class);
+        initSubCommand(ica);
         ((IClusteringAlgorithm) ica).init(pwd, t);
         final TupleND<IFileFragment> tple = ica.apply(t);
         return tple;
-        // Third
-        // return t;
     }
 
     @Override
     public void configure(final Configuration cfg) {
-        this.guideTreeClass = cfg.getString(getClass().getName()
-                + ".guideTreeClass",
-                "maltcms.commands.fragments.cluster.CompleteLinkageAlgorithm");
+//        this.guideTreeClass = cfg.getString(getClass().getName()
+//                + ".guideTreeClass",
+//                "maltcms.commands.fragments.cluster.CompleteLinkageAlgorithm");
     }
 
     @Override

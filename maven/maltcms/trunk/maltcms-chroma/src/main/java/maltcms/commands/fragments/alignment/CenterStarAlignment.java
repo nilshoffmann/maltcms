@@ -151,9 +151,10 @@ public class CenterStarAlignment extends AFragmentCommand {
                 getString("var.total_intensity", "total_intensity"),
                 centerSeq);
 
+        log.info("Saving alignment files!");
         for (final IFileFragment iff : warpedFiles) {
-            log.info("Saving warped file {}", iff.getAbsolutePath());
-            log.info("Source files {}, dimensions: {}", iff.getChild("source_files").getArray(),Arrays.deepToString(iff.getChild("source_files").getDimensions()));
+            log.debug("Saving warped file {}", iff.getAbsolutePath());
+            log.debug("Source files {}, dimensions: {}", iff.getChild("source_files").getArray(),Arrays.deepToString(iff.getChild("source_files").getDimensions()));
             iff.save();
             iff.clearArrays();
         }
@@ -168,10 +169,6 @@ public class CenterStarAlignment extends AFragmentCommand {
                 "var.pairwise_distance_names", "pairwise_distance_names");
         this.minimizingArrayCompVariableName = cfg.getString(
                 "var.minimizing_array_comp", "minimizing_array_comp");
-        this.alignToFirst = cfg.getBoolean(this.getClass().getName()
-                + ".alignToFirst", false);
-        this.centerSequence = cfg.getString(this.getClass().getName()
-                + ".centerSequence", "");
     }
 
     private void addMultipleAlignment(final IFileFragment f,
@@ -553,14 +550,14 @@ public class CenterStarAlignment extends AFragmentCommand {
             // log.info("lhs: {}, rhs: {}", lhs.getAbsolutePath(), rhs
             // .getAbsolutePath());
             if (lhsName.equals(refname)) {
-                log.info("Warping {} to lhs", rhs.getName());
+                log.info("Projecting {} to {} (lhs)", rhs.getName(),refname);
                 FileFragment nrhs = new FileFragment(getWorkflow().
                         getOutputDirectory(this), rhs.getName());
                 nrhs.addSourceFile(rhs);
                 warped.add(nrhs);
                 repOnLHS.add(iff);
             } else if (refname.equals(rhsName)) {
-                log.info("Warping {} to rhs", lhs.getName());
+                log.info("Projecting {} to {} (rhs)", lhs.getName(),refname);
                 FileFragment nlhs = new FileFragment(getWorkflow().
                         getOutputDirectory(this), lhs.getName());
                 nlhs.addSourceFile(lhs);

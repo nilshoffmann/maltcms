@@ -21,6 +21,7 @@
  */
 package maltcms.commands.fragments.visualization;
 
+import cross.annotations.Configurable;
 import hep.aida.ref.Histogram1D;
 
 import java.io.BufferedWriter;
@@ -41,22 +42,29 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * Visualizes value distribution of a matrix.
+ * 
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
  */
-@RequiresVariables(names = {"pairwise_distance"})
+@RequiresVariables(names = {"var.pairwise_distance"})
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class ScoreDistributionVisualizer extends AFragmentCommand {
 
+    private final String description = "Generates a histogram plot of score distributions from variable pairwise_distance";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
+    
+    @Configurable(name="var.pairwise_distance")
+    private String pairwiseDistanceVariable = "pairwise_distance";
+    
     @Override
-    public String toString() {
-        return getClass().getName();
+    public void configure(Configuration config) {
+        this.pairwiseDistanceVariable = config.getString("var.pairwise_distance", "pairwise_distance");
     }
     
     /*
@@ -68,7 +76,7 @@ public class ScoreDistributionVisualizer extends AFragmentCommand {
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         for (final IFileFragment iff : t) {
             try {
-                final IVariableFragment pwd = iff.getChild("pairwise_distance");
+                final IVariableFragment pwd = iff.getChild(pairwiseDistanceVariable);
                 final Array arr = pwd.getArray();
                 final double[] dbl = (double[]) arr.copyTo1DJavaArray();
                 final Histogram1D h = new Histogram1D(iff.getName(), dbl);
@@ -99,25 +107,5 @@ public class ScoreDistributionVisualizer extends AFragmentCommand {
             }
         }
         return t;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.commands.fragments.AFragmentCommand#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return "Generates a histogram plot of score distributions from variable pairwise_distance";
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.VISUALIZATION;
     }
 }

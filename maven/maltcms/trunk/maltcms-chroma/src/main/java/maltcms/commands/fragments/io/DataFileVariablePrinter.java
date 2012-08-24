@@ -23,8 +23,6 @@ package maltcms.commands.fragments.io;
 
 
 import cross.Factory;
-import org.apache.commons.configuration.Configuration;
-
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
@@ -47,25 +45,8 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class DataFileVariablePrinter extends AFragmentCommand {
 
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.commands.fragments.AFragmentCommand#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return "Prints available variables for provided file fragments";
-    }
-
-    @Override
-    public void configure(Configuration cfg) {
-        super.configure(cfg);
-    }
+    private final String description = "Prints available variables for provided file fragments";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.FILEIO;
 
     /*
      * (non-Javadoc)
@@ -83,18 +64,7 @@ public class DataFileVariablePrinter extends AFragmentCommand {
             }
             log.info("{}",FileFragment.printFragment(f));
         }
-        
         return t;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.FILEIO;
     }
 }
 

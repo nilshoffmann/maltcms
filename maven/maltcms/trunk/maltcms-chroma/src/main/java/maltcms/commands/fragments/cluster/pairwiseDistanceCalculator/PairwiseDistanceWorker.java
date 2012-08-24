@@ -22,15 +22,13 @@
 package maltcms.commands.fragments.cluster.pairwiseDistanceCalculator;
 
 import cross.Factory;
+import cross.annotations.Configurable;
 import cross.datastructures.StatsMap;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.Tuple2D;
-import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.IWorkflow;
-import cross.datastructures.workflow.IWorkflowElement;
-import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
 import java.io.File;
 import java.io.Serializable;
@@ -54,7 +52,6 @@ public class PairwiseDistanceWorker implements
     private PairwiseFeatureSequenceSimilarity similarity;
     private IWorkflow workflow;
     private Tuple2D<File, File> input;
-//    private IWorkflowElement workflowElement;
     private File outputDirectory;
     private int jobNumber;
     private int nJobs;

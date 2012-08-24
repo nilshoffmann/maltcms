@@ -43,14 +43,8 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class Ident2DTWVisualizer extends Default2DTWVisualizer {
 
-    // private Logger log = Logging.getLogger(this.getClass());
     private int currentrasterline = -1;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
-
+    
     /**
      * {@inheritDoc}
      */
@@ -91,13 +85,5 @@ public class Ident2DTWVisualizer extends Default2DTWVisualizer {
         return ci(outputintensities, outputintensitiescounter, imageheight, sb.
                 getFirst(), sb.getSecond().getFirst(),
                 sb.getSecond().getSecond());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void configure(final Configuration cfg) {
-        super.configure(cfg);
     }
 }

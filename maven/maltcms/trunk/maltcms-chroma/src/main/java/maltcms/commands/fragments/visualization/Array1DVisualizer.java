@@ -62,22 +62,27 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=AFragmentCommand.class)
 public class Array1DVisualizer extends AFragmentCommand {
 
+    private final String description = "Creates plots of 1-dimensional variables.";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
+    
+    @Configurable(name="var.total_intensity")
     private String variableName = "total_intensity";
+    @Configurable(name="var.scan_acquisition_time")
     private String scanAcquisitionTimeVariableName = "scan_acquisition_time";
     @Configurable(name = "maltcms.commands.fragments.visualization.x_axis_label")
     private String xAxisLabel = "Scans";
     @Configurable(name = "maltcms.commands.fragments.visualization.y_axis_label")
     private String yAxisLabel = "Counts";
+    @Configurable
     private boolean pairwise = false;
+    @Configurable
     private boolean pairwiseWithFirst = true;
+    @Configurable
     private boolean substractStartTime = true;
+    @Configurable
     private boolean allInOneChart = false;
+    @Configurable
     private String timeUnit = "s";
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
     
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
@@ -158,97 +163,9 @@ public class Array1DVisualizer extends AFragmentCommand {
     @Override
     public void configure(final Configuration cfg) {
         this.variableName = cfg.getString(this.getClass().getName()
-                + ".variable", "total_intensity");
-        this.xAxisLabel = cfg.getString(this.getClass().getName()
-                + ".x_axis_label", "domain");
-        this.yAxisLabel = cfg.getString(this.getClass().getName()
-                + ".y_axis_label", "values");
+                + ".variableName", "total_intensity");
         this.scanAcquisitionTimeVariableName = cfg.getString(
                 "var.scan_acquisition_time", "scan_acquisition_time");
-        this.allInOneChart = cfg.getBoolean(this.getClass().getName()
-                + ".allInOneChart", false);
-        this.substractStartTime = cfg.getBoolean(this.getClass().getName()
-                + ".substract_start_time", true);
-        this.timeUnit = cfg.getString(this.getClass().getName() + ".timeUnit",
-                "min");
-    }
-
-    @Override
-    public String getDescription() {
-        return "Creates plots of 1-dimensional variables.";
-    }
-
-    /**
-     * @return the scanAcquisitionTimeVariableName
-     */
-    public String getScanAcquisitionTimeVariableName() {
-        return this.scanAcquisitionTimeVariableName;
-    }
-
-    /**
-     * @return the timeUnit
-     */
-    public String getTimeUnit() {
-        return this.timeUnit;
-    }
-
-    /**
-     * @return the variableName
-     */
-    public String getVariableName() {
-        return this.variableName;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.VISUALIZATION;
-    }
-
-    /**
-     * @return the xAxisLabel
-     */
-    public String getXAxisLabel() {
-        return this.xAxisLabel;
-    }
-
-    /**
-     * @return the yAxisLabel
-     */
-    public String getYAxisLabel() {
-        return this.yAxisLabel;
-    }
-
-    /**
-     * @return the allInOneChart
-     */
-    public boolean isAllInOneChart() {
-        return this.allInOneChart;
-    }
-
-    /**
-     * @return the pairwise
-     */
-    public boolean isPairwise() {
-        return this.pairwise;
-    }
-
-    /**
-     * @return the pairwiseWithFirst
-     */
-    public boolean isPairwiseWithFirst() {
-        return this.pairwiseWithFirst;
-    }
-
-    /**
-     * @return the substractStartTime
-     */
-    public boolean isSubstractStartTime() {
-        return this.substractStartTime;
     }
 
     protected void pairwise(final TupleND<IFileFragment> t) {
@@ -420,83 +337,5 @@ public class Array1DVisualizer extends AFragmentCommand {
             }
 
         }
-    }
-
-    /**
-     * @param allInOneChart
-     *            the allInOneChart to set
-     */
-    public void setAllInOneChart(final boolean allInOneChart) {
-        this.allInOneChart = allInOneChart;
-    }
-
-    /**
-     * @param pairwise
-     *            the pairwise to set
-     */
-    public void setPairwise(final boolean pairwise) {
-        this.pairwise = pairwise;
-    }
-
-    /**
-     * @param pairwiseWithFirst
-     *            the pairwiseWithFirst to set
-     */
-    public void setPairwiseWithFirst(final boolean pairwiseWithFirst) {
-        this.pairwiseWithFirst = pairwiseWithFirst;
-    }
-
-    /**
-     * @param scanAcquisitionTimeVariableName
-     *            the scanAcquisitionTimeVariableName to set
-     */
-    public void setScanAcquisitionTimeVariableName(
-            final String scanAcquisitionTimeVariableName) {
-        this.scanAcquisitionTimeVariableName = scanAcquisitionTimeVariableName;
-    }
-
-    // protected void orbit(TupleND<FileFragment> t) {
-    // for (FileFragment ff : t) {
-    // Array a = ff.getChild(variableName).getArray();
-    // }
-    // }
-    /**
-     * @param substractStartTime
-     *            the substractStartTime to set
-     */
-    public void setSubstractStartTime(final boolean substractStartTime) {
-        this.substractStartTime = substractStartTime;
-    }
-
-    /**
-     * @param timeUnit
-     *            the timeUnit to set
-     */
-    public void setTimeUnit(final String timeUnit) {
-        this.timeUnit = timeUnit;
-    }
-
-    /**
-     * @param variableName
-     *            the variableName to set
-     */
-    public void setVariableName(final String variableName) {
-        this.variableName = variableName;
-    }
-
-    /**
-     * @param axisLabel
-     *            the xAxisLabel to set
-     */
-    public void setXAxisLabel(final String axisLabel) {
-        this.xAxisLabel = axisLabel;
-    }
-
-    /**
-     * @param axisLabel
-     *            the yAxisLabel to set
-     */
-    public void setYAxisLabel(final String axisLabel) {
-        this.yAxisLabel = axisLabel;
     }
 }

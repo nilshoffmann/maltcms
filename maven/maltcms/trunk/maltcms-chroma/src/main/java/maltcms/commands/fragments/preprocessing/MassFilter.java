@@ -71,6 +71,9 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=AFragmentCommand.class)
 public class MassFilter extends AFragmentCommand {
 
+    private final String description = "Removes defined masses and associated intensities from chromatogram.";
+    private final WorkflowSlot workflowSlot = WorkflowSlot.GENERAL_PREPROCESSING;
+    
     @Configurable
     private List<String> excludeMasses = new LinkedList<String>();
     @Configurable(name = "mass_epsilon")
@@ -85,38 +88,16 @@ public class MassFilter extends AFragmentCommand {
     private String totalIntensVar = "total_intensity";
     @Configurable
     private boolean invert = false;
-
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
     
     @Override
     public void configure(Configuration cfg) {
         super.configure(cfg);
-        this.epsilon = cfg.getDouble(this.getClass().getName()
-                + ".mass_epsilon", 0.1d);
-        this.excludeMasses = StringTools.toStringList(cfg.getList(this.getClass().
-                getName()
-                + ".excludeMasses", Collections.emptyList()));
         this.massValuesVar = cfg.getString("var.mass_values", "mass_values");
         this.intensValuesVar = cfg.getString("var.intensity_values",
                 "intensity_values");
         this.scanIndexVar = cfg.getString("var.scan_index", "scan_index");
         this.totalIntensVar = cfg.getString("var.total_intensity",
                 "total_intensity");
-        this.invert = cfg.getBoolean(this.getClass().getName() + ".invert",
-                false);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.commands.fragments.AFragmentCommand#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return "Removes defined masses and associated intensities from chromatogram.";
     }
 
     /*
@@ -126,11 +107,6 @@ public class MassFilter extends AFragmentCommand {
      */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-
-        // return if we have nothing to do
-        // if (exclMass.isEmpty()) {
-        // return t;
-        // }
 
         // create new ProgressResult
         DefaultWorkflowProgressResult dwpr = new DefaultWorkflowProgressResult(
@@ -234,13 +210,4 @@ public class MassFilter extends AFragmentCommand {
         return rett;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-     */
-    @Override
-    public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.GENERAL_PREPROCESSING;
-    }
 }
