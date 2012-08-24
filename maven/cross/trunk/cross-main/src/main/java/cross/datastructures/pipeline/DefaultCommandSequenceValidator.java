@@ -93,7 +93,7 @@ class DefaultCommandSequenceValidator implements ICommandSequenceValidator {
                             var, cmd.getClass().getName());
                     providedVariables.add(var);
                 } else {
-                    log.warn(
+                    log.debug(
                             "Variable {} is shadowed!",
                             var);
                 }
@@ -120,7 +120,7 @@ class DefaultCommandSequenceValidator implements ICommandSequenceValidator {
         boolean checkOpt = true;
         for (final String var : optionalVars) {
             if (!var.isEmpty() && !providedVariables.contains(var)) {
-                log.warn(
+                log.debug(
                         "Variable {} requested as optional by {} not declared as created by previous commands!",
                         var, cmd.getClass().getName());
                 checkOpt = false;

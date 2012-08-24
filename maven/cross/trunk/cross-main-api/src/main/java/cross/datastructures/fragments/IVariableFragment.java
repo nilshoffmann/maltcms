@@ -42,6 +42,11 @@ public interface IVariableFragment extends IFragment {
     @Override
     public abstract void appendXML(Element e);
 
+    /**
+     * Clear all associated array data and other resources.
+     */
+    public abstract void clear();
+    
     @Override
     public abstract int compare(IFragment o1, IFragment o2);
 

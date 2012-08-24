@@ -21,16 +21,15 @@
  */
 package cross.applicationContext;
 
+import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractRefreshableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 /**
@@ -41,7 +40,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 @Data
 public class DefaultApplicationContextFactory {
 
-    private final String[] applicationContextPaths;
+    private final List<String> applicationContextPaths;
     private final Configuration configuration;
 
     public ApplicationContext createApplicationContext() throws BeansException {
@@ -49,12 +48,8 @@ public class DefaultApplicationContextFactory {
         try {
             final ConfiguringBeanPostProcessor cbp = new ConfiguringBeanPostProcessor();
             cbp.setConfiguration(configuration);
-//            context = new ClassPathXmlApplicationContext("/cross-bootstrap.xml");
-//            context.refresh();
-            context = new FileSystemXmlApplicationContext(
-                    applicationContextPaths,context);
+            context = new FileSystemXmlApplicationContext(applicationContextPaths.toArray(new String[applicationContextPaths.size()]), context);
             context.addBeanFactoryPostProcessor(new BeanFactoryPostProcessor() {
-
                 @Override
                 public void postProcessBeanFactory(ConfigurableListableBeanFactory clbf) throws BeansException {
                     clbf.addBeanPostProcessor(cbp);

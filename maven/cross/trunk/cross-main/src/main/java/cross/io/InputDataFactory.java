@@ -24,8 +24,10 @@ package cross.io;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.ImmutableFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.exception.ConstraintViolationException;
+import cross.exception.ExitVmException;
 import cross.tools.StringTools;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -188,6 +190,6 @@ public class InputDataFactory implements IInputDataFactory {
             }
             return new TupleND<IFileFragment>(this.initialFiles);
         }
-        throw new ConstraintViolationException("No input data given, aborting!");
+        throw new ExitVmException("No input data given, aborting!");
     }
 }

@@ -39,10 +39,8 @@ import ucar.nc2.Dimension;
  * of IVariableFragment, which is provided to the constructor.
  *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * @deprecated Use {@link cross.datastructures.fragments.ImmutableVariableFragment2}
  * instead
  */
-@Deprecated
 public class ImmutableVariableFragment implements IVariableFragment {
 
     private final IVariableFragment vf;
@@ -377,5 +375,10 @@ public class ImmutableVariableFragment implements IVariableFragment {
     @Override
     public String getName() {
         return this.vf.getName();
+    }
+
+    @Override
+    public void clear() {
+        this.vf.clear();
     }
 }

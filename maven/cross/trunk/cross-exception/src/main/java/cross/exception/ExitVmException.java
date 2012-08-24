@@ -19,19 +19,29 @@
  *
  *  $Id$
  */
-package cross;
-
-import java.io.Serializable;
-import org.apache.commons.configuration.Configuration;
+package cross.exception;
 
 /**
- * Interface for objects which are configurable.
- * Configuration will be performed by a Spring ApplicationContext 
- * instance.
+ * ExitVmException is thrown, if essential required constraints are not met, initiating 
+ * an orderly shutdown.
+ * 
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * 
  */
-public interface IConfigurable extends Serializable {
+public class ExitVmException extends RuntimeException {
 
-    public void configure(Configuration cfg);
+    private static final long serialVersionUID = 8608712358705128763L;
+    
+    public ExitVmException(String message) {
+        super(message);
+    }
+
+    public ExitVmException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ExitVmException(Throwable cause) {
+        super(cause);
+    }
+    
 }

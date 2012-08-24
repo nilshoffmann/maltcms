@@ -211,7 +211,7 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private void init(final int offset, final int size) {
+        private void init(final int offset, final int size) {
         try {
             this.size = Factory.getInstance().getDataSourceFactory().getDataSourceFor(this.ivf.getParent()).readStructure(
                     this.ivf.getIndex()).getDimensions()[0].getLength();
@@ -228,7 +228,10 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
 
     @Override
     public boolean isEmpty() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if(this.size<1) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isPrefetchOnMiss() {

@@ -27,6 +27,7 @@ import cross.datastructures.tools.EvalTools;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.*;
@@ -35,35 +36,36 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 
 /**
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Slf4j
 public class ObjectFactory implements IObjectFactory {
 
     private Configuration cfg = new PropertiesConfiguration();
-    private File userConfigLocation = new File(".");
     private ApplicationContext context = null;
     public static final String CONTEXT_LOCATION_KEY = "pipeline.xml";
 
     @Override
     public void configure(final Configuration cfg) {
         this.cfg = cfg;
-        userConfigLocation = new File(this.cfg.getString("config.basedir","."));
         String[] contextLocations = null;
         if (this.cfg.containsKey(CONTEXT_LOCATION_KEY)) {
-            log.debug("Using user-defined location: {}",this.cfg.getStringArray(CONTEXT_LOCATION_KEY));
+            log.debug("Using user-defined location: {}", this.cfg.getStringArray(CONTEXT_LOCATION_KEY));
             contextLocations = cfg.getStringArray(CONTEXT_LOCATION_KEY);
         }
-        if(contextLocations==null) {
-            log.debug("No pipeline configuration found! Please define! Example: -c cfg/chroma.properties");
-//            throw new NullPointerException();
+        if (contextLocations == null) {
+            log.debug("No pipeline configuration found! Please define! Example: -c cfg/pipelines/chroma.mpl");
             return;
         }
         log.debug("Using context locations: {}",
                 Arrays.toString(contextLocations));
         try {
-            context = new DefaultApplicationContextFactory(contextLocations, this.cfg).
+            String[] defaultLocations = cfg.getStringArray("cross.applicationContext.defaultLocations");
+            log.debug("Using default context locations: {}",Arrays.toString(defaultLocations));
+            LinkedList<String> applicationContextLocations = new LinkedList<String>(Arrays.asList(defaultLocations));
+            applicationContextLocations.addAll(Arrays.asList(contextLocations));
+            context = new DefaultApplicationContextFactory(applicationContextLocations, this.cfg).
                     createApplicationContext();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -98,7 +100,7 @@ public class ObjectFactory implements IObjectFactory {
     /**
      * Create a new Instance of c, configure automatically, if c is an instance
      * of IConfigurable
-     * 
+     *
      * @param <T>
      * @param c
      * @return
@@ -109,7 +111,7 @@ public class ObjectFactory implements IObjectFactory {
         if (context != null) {
             try {
                 t = context.getBean(c);
-                log.info("Retrieved bean {} from context!",t.getClass().getName());
+                log.info("Retrieved bean {} from context!", t.getClass().getName());
                 return t;
             } catch (NoSuchBeanDefinitionException nsbde) {
                 log.debug("Could not create bean {} from context! Reason:\n {}",
@@ -119,7 +121,7 @@ public class ObjectFactory implements IObjectFactory {
                         c.getName(), be.getLocalizedMessage());
             }
         }
-        log.info("Using regular configuration mechanism on instance of type "+c.getName());
+        log.info("Using regular configuration mechanism on instance of type " + c.getName());
         return configureType(instantiateType(c), this.cfg);
     }
 
@@ -137,7 +139,7 @@ public class ObjectFactory implements IObjectFactory {
 
     /**
      * Instantiate a class, given by a classname and the class of Type T.
-     * 
+     *
      * @param <T>
      * @param classname
      * @param cls
@@ -155,7 +157,7 @@ public class ObjectFactory implements IObjectFactory {
     /**
      * Instantiate a class, given a classname and the class of Type t and
      * configure with configuration from configurationFile.
-     * 
+     *
      * @param <T>
      * @param classname
      * @param cls
@@ -168,10 +170,6 @@ public class ObjectFactory implements IObjectFactory {
         CompositeConfiguration cc = new CompositeConfiguration();
         try {
             File configFileLocation = new File(configurationFile);
-            //resolve non-absolute paths
-//                        if(!configFileLocation.isAbsolute()) {
-//                            configFileLocation = new File(this.userConfigLocation,configFileLocation.getPath());
-//                        }
             cc.addConfiguration(new PropertiesConfiguration(configFileLocation.
                     getAbsolutePath()));
         } catch (ConfigurationException e) {
@@ -180,15 +178,12 @@ public class ObjectFactory implements IObjectFactory {
         cc.addConfiguration(this.cfg);
 
         return instantiate(classname, cls, cc);
-
-        // throw new IllegalArgumentException("Could not instantiate class "
-        // + cls.getName());
     }
 
     /**
      * Instantiate a class, given a classname and the class of Type t and
      * configure with configuration from config.
-     * 
+     *
      * @param <T>
      * @param classname
      * @param cls
@@ -205,7 +200,7 @@ public class ObjectFactory implements IObjectFactory {
      * Load a class by its name. Tries to locate the given class name on the
      * user class path and on the default java class path. Currently only
      * supports loading of classes from local storage.
-     * 
+     *
      * @param name
      * @return
      */

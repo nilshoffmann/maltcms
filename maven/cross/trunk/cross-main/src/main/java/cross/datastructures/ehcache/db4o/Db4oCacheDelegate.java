@@ -69,7 +69,18 @@ public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
     
     @Override
     public void put(final K key, final V value) {
-        container.store(new TypedEntry<K, V>(key, value));
+        TypedEntry<K,V> te = getTypedEntry(key);
+        if(te==null) {
+            if(value!=null) {
+                container.store(new TypedEntry<K, V>(key, value));
+            }
+        }else {
+            if(value == null) {
+                container.delete(te);
+            }else{
+                te.setValue(value);
+            }
+        }
     }
 
     @Override
@@ -82,6 +93,18 @@ public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
             return null;
         }
         return os.get(0).getValue();
+    }
+    
+    
+    private TypedEntry<K,V> getTypedEntry(final K key) {
+        ObjectSet<TypedEntry<K,V>> os = container.query(new TypedEntryPredicate<K, V>(key),new TypedEntryComparator<K, V>(comparator));
+        if(os.size()>1) {
+            throw new IllegalStateException("Cache contains more than one element for key: "+key);
+        }
+        if(os.isEmpty()) {
+            return null;
+        }
+        return os.get(0);
     }
 
     @Override

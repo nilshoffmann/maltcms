@@ -25,6 +25,7 @@ import cross.datastructures.StatsMap;
 import cross.datastructures.tools.EvalTools;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.jdom.Element;
 import ucar.nc2.Attribute;
 
@@ -38,6 +39,7 @@ public class Fragment implements IFragment {
     
     private StatsMap stats;
     private Metadata attributes = new Metadata();
+    private final UUID uid = UUID.randomUUID();
 
     /**
      * Append attributes to Element e.
@@ -207,4 +209,27 @@ public class Fragment implements IFragment {
     public void addAttribute(Attribute a) {
         this.attributes.add(a);
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 89 * hash + (this.uid != null ? this.uid.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Fragment other = (Fragment) obj;
+        if (this.uid != other.uid && (this.uid == null || !this.uid.equals(other.uid))) {
+            return false;
+        }
+        return true;
+    }
+ 
 }

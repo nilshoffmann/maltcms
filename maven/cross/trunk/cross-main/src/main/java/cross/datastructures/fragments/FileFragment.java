@@ -24,6 +24,8 @@ package cross.datastructures.fragments;
 import cross.Factory;
 import cross.Logging;
 import cross.datastructures.StatsMap;
+import cross.datastructures.ehcache.CacheFactory;
+import cross.datastructures.ehcache.ICacheDelegate;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
 import cross.datastructures.tools.FragmentTools;
@@ -35,6 +37,7 @@ import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
 import org.slf4j.Logger;
+import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
@@ -43,21 +46,21 @@ import ucar.nc2.Dimension;
  * FileFragment can be considered the root element of a Tree of
  * VariableFragments, where each VariableFragment represents one Variable within
  * the (possibly not yet existing) File F.
- * 
+ *
  * FileFragments should be created and registered by calling
  * <i>FragmentTools.create(String filename)</i> or appropriate <i>get(...)</i>
  * methods, which create and return a new FileFragment, if not previously
  * existent, or return the Fragment matching the given filename.
- * 
+ *
  * Filenames can be local or global, since the IO-mechanism decides, whether a
  * file given by filename already exists in input or output location. Files
  * already existing in output location are overwritten by default, but this
  * behavior can be changed by setting the configuration option output.overwrite
  * to false. Then, files are created in the default location for temporary
  * files.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 public class FileFragment implements IFileFragment {
@@ -88,26 +91,26 @@ public class FileFragment implements IFileFragment {
         sb.append("Contents of File " + ff.getAbsolutePath() + "\n");
         sb.append("Attributes:\n");
         for (final Attribute a : attrs) {
-            sb.append("\t"+a.toString() + "\n");
+            sb.append("\t" + a.toString() + "\n");
         }
         sb.append("Variables and Groups: \n");
         synchronized (ff) {
             for (final IVariableFragment vf : ff) {
-                sb.append(vf.toString()+ "(DataType = "+vf.getDataType()+")"+":\n");
+                sb.append(vf.toString() + "(DataType = " + vf.getDataType() + ")" + ":\n");
                 sb.append("\tDimensions: ");
                 final StringBuffer dims = new StringBuffer();
                 dims.append("(");
                 final Dimension[] dimA = vf.getDimensions();
                 if (dimA != null) {
                     for (final Dimension d : dimA) {
-                        sb.append(d.getName()+",");
+                        sb.append(d.getName() + ",");
                         dims.append(d.getLength() + " x ");
                     }
-                    sb.replace(sb.length()-1, sb.length(), "");
+                    sb.replace(sb.length() - 1, sb.length(), "");
                     dims.replace(dims.length() - 3, dims.length(), "");
                     dims.append(")");
                 }
-                sb.append(" "+dims+"\n");
+                sb.append(" " + dims + "\n");
             }
         }
         return sb.toString();
@@ -128,7 +131,7 @@ public class FileFragment implements IFileFragment {
     private long fID = 0;
     private long nextGID = 0;
     private long gID = 0;
-    private LinkedHashMap<String,Dimension> dims = null;
+    private LinkedHashMap<String, Dimension> dims = null;
     private Map<String, IVariableFragment> children = null;
     private Set<IFileFragment> sourcefiles = new LinkedHashSet<IFileFragment>();
     private final String fileExtension = ".cdf";
@@ -142,7 +145,7 @@ public class FileFragment implements IFileFragment {
         this.sourcefiles = new LinkedHashSet<IFileFragment>();
         this.fID = FileFragment.FID++;
         this.children = Collections.synchronizedMap(new LinkedHashMap<String, IVariableFragment>());
-        this.dims = new LinkedHashMap<String,Dimension>();
+        this.dims = new LinkedHashMap<String, Dimension>();
         setFile(getDefaultFilename());
     }
 
@@ -179,19 +182,19 @@ public class FileFragment implements IFileFragment {
     @Override
     public synchronized void addChildren(final IVariableFragment... fragments) {
         for (final IVariableFragment vf : fragments) {
-            if (this.children.containsKey(vf.getVarname())) {
-                log.debug("VariableFragment " + vf.getVarname()
+            if (this.children.containsKey(vf.getName())) {
+                log.debug("VariableFragment " + vf.getName()
                         + " already known!");
                 throw new IllegalArgumentException(
                         "Can not add a child more than once, call getImmediateChild() to obtain a reference!");
             }
             // else {
             // IGroupFragment gf = vf.getGroup();
-            log.debug("Adding VariableFragment {} as child of {} to {}",
-                    new Object[]{vf.getVarname(),
+            log.debug("Adding {} {} as child of {} to {}",
+                    new Object[]{vf.getClass().getSimpleName(),vf.getName(),
                         vf.getParent().getAbsolutePath(),
                         getAbsolutePath()});
-            this.children.put(vf.getVarname(), vf);
+            this.children.put(vf.getName(), vf);
             if (vf.getParent().getAbsolutePath().equals(getAbsolutePath())) {
                 log.debug("Parent FileFragment is this!");
             } else {
@@ -219,12 +222,14 @@ public class FileFragment implements IFileFragment {
     public void addDimensions(final Dimension... dims1) {
         for (final Dimension d : dims1) {
             if (!this.dims.containsKey(d.getName())) {
-                this.dims.put(d.getName(),d);
-            }else{
+                this.dims.put(d.getName(), d);
+            } else {
                 Dimension known = this.dims.get(d.getName());
-                log.warn("Replacing dimension {} with {}",known,d);
-                this.dims.remove(d.getName());
-                this.dims.put(d.getName(),d);
+                if(known.getLength() != d.getLength()) {
+                    log.warn("Replacing dimension {} with {}", known, d);
+                    this.dims.remove(d.getName());
+                    this.dims.put(d.getName(), d);
+                }
             }
         }
     }
@@ -270,8 +275,8 @@ public class FileFragment implements IFileFragment {
             return;
         }
         final List<IFileFragment> c = new ArrayList<IFileFragment>();
-        for(IFileFragment f:files) {
-            if(f!=null) {
+        for (IFileFragment f : files) {
+            if (f != null) {
                 c.add(f);
             }
         }
@@ -290,9 +295,9 @@ public class FileFragment implements IFileFragment {
             Logging.getLogger(this).debug("Setting source file {} on {}", file,
                     this);
             //a.setString(i++, f.getAbsolutePath());
-            
-            a.setString(i++, resolve(file,this));
-            
+
+            a.setString(i++, resolve(file, this));
+
         }
         final String sfvar = Factory.getInstance().getConfiguration().getString("var.source_files", "source_files");
         IVariableFragment vf = null;
@@ -310,25 +315,25 @@ public class FileFragment implements IFileFragment {
     }
 
     private String resolve(IFileFragment targetFile, IFileFragment baseFile) {
-        if(isRootFile(targetFile)) {
+        if (isRootFile(targetFile)) {
             return targetFile.getAbsolutePath();
         }
         try {
             String relativePath = FileTools.getRelativeFile(targetFile, baseFile).getPath();
             return relativePath;
         } catch (IOException ex) {
-            Logging.getLogger(this).error("Failed to resolve relative path for {}!",targetFile.getAbsolutePath());
+            Logging.getLogger(this).error("Failed to resolve relative path for {}!", targetFile.getAbsolutePath());
             return targetFile.getAbsolutePath();
         }
     }
 
     private boolean isRootFile(IFileFragment parentFile) {
-        try{
+        try {
             FragmentTools.getSourceFiles(parentFile);
-            Logging.getLogger(this).info("File {} is NOT root file!",parentFile.getAbsolutePath());
+            Logging.getLogger(this).info("File {} is NOT root file!", parentFile.getAbsolutePath());
             return false;
-        }catch(ResourceNotAvailableException rnae) {
-            Logging.getLogger(this).info("File {} is a root file!",parentFile.getAbsolutePath());
+        } catch (ResourceNotAvailableException rnae) {
+            Logging.getLogger(this).info("File {} is a root file!", parentFile.getAbsolutePath());
             return true;
         }
     }
@@ -399,23 +404,30 @@ public class FileFragment implements IFileFragment {
     @Override
     public void clearArrays() throws IllegalStateException {
         // Collection<IFileFragment> sf = getSourceFiles();
+        List<IVariableFragment> toRemove = new LinkedList<IVariableFragment>();
         for (final IVariableFragment ivf : this) {
             if (ivf.isModified()) {
-                log.debug(
-                        "Can not clear arrays on {}, Variable was modified!",
-                        ivf.getVarname());
+                log.warn(
+                        "Can not clear arrays for {} on {}, {} was modified!",
+                        new Object[]{ivf.getParent().getAbsolutePath(), ivf.getName(), ivf.getClass().getSimpleName()});
             } else {
-                try {
-                    ivf.setArray(null);
-                    ivf.setIndexedArray(null);
-                } catch (final UnsupportedOperationException uoe) {
-                    log.debug("Can not clear arrays on immutable IVariable {}",ivf.getName());
-                }
+                toRemove.add(ivf);
+//                try {
+//                    ivf.setArray(null);
+//                    ivf.setIndexedArray(null);
+//                } catch (final UnsupportedOperationException uoe) {
+//                    log.debug("Can not clear arrays on immutable IVariable {}", ivf.getName());
+//                }
             }
         }
+        for(IVariableFragment v:toRemove) {
+            log.debug("Removing child {}",v.getName());
+            children.remove(v.getName());
+        }
+        CacheFactory.removeCache(getAbsolutePath()+"-cache");
         // FragmentTools.setSourceFiles(this, sf);
     }
-    
+
     @Override
     public void clearDimensions() {
         this.dims.clear();
@@ -425,8 +437,9 @@ public class FileFragment implements IFileFragment {
      * @param arg0
      * @param arg1
      * @return
-     * @see cross.datastructures.fragments.Fragment#compare(cross.datastructures.fragments.IFragment,
-     *      cross.datastructures.fragments.IFragment)
+     * @see
+     * cross.datastructures.fragments.Fragment#compare(cross.datastructures.fragments.IFragment,
+     * cross.datastructures.fragments.IFragment)
      */
     @Override
     public int compare(final IFragment arg0, final IFragment arg1) {
@@ -443,19 +456,6 @@ public class FileFragment implements IFileFragment {
         return this.fragment.compareTo(arg0);
     }
 
-    /**
-     * @param obj
-     * @return
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        if(obj instanceof IFileFragment) {
-            return this.fragment.equals(obj);
-        }
-        return false;
-    }
-
     /*
      * (non-Javadoc)
      *
@@ -469,7 +469,8 @@ public class FileFragment implements IFileFragment {
     /**
      * @param a
      * @return
-     * @see cross.datastructures.fragments.Fragment#getAttribute(ucar.nc2.Attribute)
+     * @see
+     * cross.datastructures.fragments.Fragment#getAttribute(ucar.nc2.Attribute)
      */
     @Override
     public Attribute getAttribute(final Attribute a) {
@@ -491,7 +492,8 @@ public class FileFragment implements IFileFragment {
     /**
      * @param name
      * @return
-     * @see cross.datastructures.fragments.Fragment#getAttribute(java.lang.String)
+     * @see
+     * cross.datastructures.fragments.Fragment#getAttribute(java.lang.String)
      */
     @Override
     public Attribute getAttribute(final String name) {
@@ -499,8 +501,7 @@ public class FileFragment implements IFileFragment {
     }
 
     /**
-     * @return
-     * @see cross.datastructures.fragments.Fragment#getAttributes()
+     * @return @see cross.datastructures.fragments.Fragment#getAttributes()
      */
     @Override
     public List<Attribute> getAttributes() {
@@ -521,7 +522,7 @@ public class FileFragment implements IFileFragment {
      * @param varnem
      * @param loadStructureOnly
      * @see cross.datastructures.fragments.IFileFragment#getChild(String,
-     *      boolean)
+     * boolean)
      */
     @Override
     public synchronized IVariableFragment getChild(final String varname,
@@ -664,8 +665,7 @@ public class FileFragment implements IFileFragment {
     }
 
     /**
-     * @return
-     * @see cross.datastructures.fragments.Fragment#getStats()
+     * @return @see cross.datastructures.fragments.Fragment#getStats()
      */
     @Override
     public StatsMap getStats() {
@@ -675,7 +675,8 @@ public class FileFragment implements IFileFragment {
     /**
      * @param a
      * @return
-     * @see cross.datastructures.fragments.Fragment#hasAttribute(ucar.nc2.Attribute)
+     * @see
+     * cross.datastructures.fragments.Fragment#hasAttribute(ucar.nc2.Attribute)
      */
     @Override
     public boolean hasAttribute(final Attribute a) {
@@ -685,7 +686,8 @@ public class FileFragment implements IFileFragment {
     /**
      * @param name
      * @return
-     * @see cross.datastructures.fragments.Fragment#hasAttribute(java.lang.String)
+     * @see
+     * cross.datastructures.fragments.Fragment#hasAttribute(java.lang.String)
      */
     @Override
     public boolean hasAttribute(final String name) {
@@ -768,15 +770,6 @@ public class FileFragment implements IFileFragment {
             }
         }
         return true;
-    }
-
-    /**
-     * @return
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        return this.fragment.hashCode();
     }
 
     // /**
@@ -862,7 +855,7 @@ public class FileFragment implements IFileFragment {
         in.close();
         this.sourcefiles = new HashSet<IFileFragment>();
         this.children = Collections.synchronizedMap(new HashMap<String, IVariableFragment>());
-        this.dims = new LinkedHashMap<String,Dimension>();
+        this.dims = new LinkedHashMap<String, Dimension>();
 
     }
 
@@ -935,19 +928,20 @@ public class FileFragment implements IFileFragment {
         final String filename = StringTools.removeFileExt(this.f.getName());
         final String path = this.f.getParent();
         //FIXME this should be configured more centrally
-        final String[] netcdfExts = new String[]{"nc", "nc.gz","nc.z","nc.zip","nc.gzip","nc.bz2","cdf","cdf.gz","cdf.z","cdf.zip","cdf.gzip","cdf.bz2"};
-        System.out.println("Looking for file extension: "+ext+" in "+Arrays.toString(netcdfExts));
+        final String[] netcdfExts = new String[]{"nc", "nc.gz", "nc.z", "nc.zip", "nc.gzip", "nc.bz2", "cdf", "cdf.gz", "cdf.z", "cdf.zip", "cdf.gzip", "cdf.bz2"};
+        log.debug("Looking for file extension: {} in {}", ext, Arrays.toString(netcdfExts));
         int idx = Arrays.binarySearch(netcdfExts, ext);
-        if (idx<0) {
-            System.out.println("Did not find extension!");
+        if (idx < 0) {
+            log.debug("Did not find extension!");
 //            final String source = this.f.getAbsolutePath();
             final File f1 = new File(path, filename + ".cdf");
             setFile(f1);
-        }else{
-            System.out.println("Found extension!");
+        } else {
+            log.debug("Found extension!");
         }
-        
+
         if (Factory.getInstance().getDataSourceFactory().getDataSourceFor(this).write(this)) {
+            log.debug("Save of {} succeeded, clearing arrays!",getName());
             clearArrays();
             return true;
         }
@@ -956,13 +950,14 @@ public class FileFragment implements IFileFragment {
 
     /**
      * @param a
-     * @see cross.datastructures.fragments.Fragment#setAttributes(ucar.nc2.Attribute[])
+     * @see
+     * cross.datastructures.fragments.Fragment#setAttributes(ucar.nc2.Attribute[])
      */
     @Override
     public void setAttributes(final Attribute... a) {
         this.fragment.setAttributes(a);
     }
-    
+
     @Override
     public void addAttribute(Attribute a) {
         this.fragment.addAttribute(a);
@@ -1014,7 +1009,8 @@ public class FileFragment implements IFileFragment {
 
     /**
      * @param stats1
-     * @see cross.datastructures.fragments.Fragment#setStats(cross.datastructures.StatsMap)
+     * @see
+     * cross.datastructures.fragments.Fragment#setStats(cross.datastructures.StatsMap)
      */
     @Override
     public void setStats(final StatsMap stats1) {
@@ -1097,11 +1093,37 @@ public class FileFragment implements IFileFragment {
 
     /**
      * The registered dimensions of this FileFragment as an unmodifiable Set.
-     * 
-     * @return 
+     *
+     * @return
      */
     @Override
     public Set<Dimension> getDimensions() {
         return Collections.unmodifiableSet(new LinkedHashSet<Dimension>(this.dims.values()));
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 79 * hash + (int) (this.fID ^ (this.fID >>> 32));
+        hash = 79 * hash + (this.fragment != null ? this.fragment.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FileFragment other = (FileFragment) obj;
+        if (this.fID != other.fID) {
+            return false;
+        }
+        if (this.fragment != other.fragment && (this.fragment == null || !this.fragment.equals(other.fragment))) {
+            return false;
+        }
+        return true;
     }
 }

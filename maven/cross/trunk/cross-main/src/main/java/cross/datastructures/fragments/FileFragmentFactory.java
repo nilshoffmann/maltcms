@@ -30,11 +30,13 @@ import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
 import org.apache.commons.configuration.Configuration;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
  */
+@ServiceProvider(service=IFileFragmentFactory.class)
 public class FileFragmentFactory implements IFileFragmentFactory {
 
     @Configurable(name = "input.basedir")

@@ -21,15 +21,21 @@
  */
 package cross.datastructures.ehcache;
 
-import cross.datastructures.ehcache.db4o.Db4oCacheDelegate;
+import cross.datastructures.fragments.FileFragment;
+import cross.datastructures.fragments.VariableFragment;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
+import junit.framework.Assert;
 import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayInt;
 
 /**
  *
@@ -56,13 +62,12 @@ public class CacheDelegateTest {
     private ICacheDelegate<Integer, Array> createDb4oCache(String name, boolean sorted) {
         System.out.println("Setting up cache!");
         int arraySize = 1000;
-        CacheFactory<Integer, Array> cf = new CacheFactory<Integer, Array>();
         ICacheDelegate<Integer, Array> delegate;
         if(sorted) {
-            delegate = cf.createDb4oDefaultCache(tf.newFolder("db4ocache"),
+            delegate = CacheFactory.createDb4oDefaultCache(tf.newFolder("db4ocache"),
                 name);
         }else{
-            delegate = cf.createDb4oSortedCache(tf.newFolder("db4ocache"), name, new Comparator<Integer>() {
+            delegate = CacheFactory.createDb4oSortedCache(tf.newFolder("db4ocache"), name, new Comparator<Integer>() {
 
                 @Override
                 public int compare(Integer t, Integer t1) {
@@ -88,10 +93,9 @@ public class CacheDelegateTest {
     private ICacheDelegate<Integer, double[]> createCache(String name) {
         System.out.println("Setting up cache!");
         int arraySize = 1000;
-        CacheFactory<Integer, double[]> cf = new CacheFactory<Integer, double[]>();
-        ICacheDelegate<Integer, double[]> delegate = cf.createDefaultCache(
+        ICacheDelegate<Integer, double[]> delegate = CacheFactory.createDefaultCache(
                 name);
-        cf.getCacheFor(name).setSampledStatisticsEnabled(true);
+        CacheFactory.getCacheFor(name).setSampledStatisticsEnabled(true);
         indices = new Integer[narrays];
         for (int i = 0; i < narrays; i++) {
             double[] a = new double[arraySize];
@@ -104,6 +108,29 @@ public class CacheDelegateTest {
         }
         System.out.println("Finished creating cache!");
         return delegate;
+    }
+    
+    @Test
+    public void cachedVariableFragment() {
+        FileFragment ff = new FileFragment();
+        VariableFragment vf1 = new VariableFragment(ff, "a");
+        vf1.setArray(new ArrayDouble.D2(10,39));
+        VariableFragment vfIndex = new VariableFragment(ff, "index");
+        vfIndex.setArray(new ArrayInt.D1(20));
+        VariableFragment vf2 = new VariableFragment(ff, "b", vfIndex);
+        List<Array> l = new ArrayList<Array>();
+        Array indexArray = vfIndex.getArray();
+        int offset = 0;
+        for (int i = 0; i < 20; i++) {
+            l.add(new ArrayDouble.D1(10));
+            indexArray.setInt(i, offset);
+            offset+=10;
+        }
+        vf2.setIndexedArray(l);
+        Assert.assertNotNull(vf1.getArray());
+        Assert.assertNotNull(vf2.getIndexedArray());
+        Assert.assertEquals(20,vf2.getIndexedArray().size());
+        Assert.assertNotNull(vfIndex.getArray());
     }
 
     @Test

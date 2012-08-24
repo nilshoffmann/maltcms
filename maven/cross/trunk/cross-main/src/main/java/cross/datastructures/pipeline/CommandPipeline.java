@@ -45,6 +45,7 @@ import net.sf.mpaxs.api.ExecutionFactory;
 import net.sf.mpaxs.api.Impaxs;
 import org.apache.commons.configuration.Configuration;
 import org.jdom.Element;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Implementation of ICommandSequence for a linear sequence of commands.
@@ -54,6 +55,7 @@ import org.jdom.Element;
  */
 @Slf4j
 @Data
+@ServiceProvider(service=ICommandSequence.class)
 public final class CommandPipeline implements ICommandSequence, IConfigurable {
 
     /**

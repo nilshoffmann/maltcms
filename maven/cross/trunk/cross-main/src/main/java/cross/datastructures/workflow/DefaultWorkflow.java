@@ -49,6 +49,7 @@ import org.jdom.Element;
 import org.jdom.ProcessingInstruction;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * A default implementation of {@link cross.datastructures.workflow.IWorkflow}.
@@ -58,6 +59,7 @@ import org.jdom.output.XMLOutputter;
  * 
  */
 @Slf4j
+@ServiceProvider(service=IWorkflow.class)
 public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
 
     /**

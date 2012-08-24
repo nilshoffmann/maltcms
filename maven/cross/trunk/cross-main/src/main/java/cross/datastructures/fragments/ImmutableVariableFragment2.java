@@ -22,9 +22,10 @@
 package cross.datastructures.fragments;
 
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.StatsMap;
+import cross.datastructures.ehcache.CacheFactory;
 import cross.datastructures.ehcache.ICacheDelegate;
+import cross.datastructures.ehcache.ICacheElementProvider;
 import cross.datastructures.tools.EvalTools;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.misc.ArrayChunkIterator;
@@ -33,9 +34,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
-import org.slf4j.Logger;
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
 import ucar.ma2.IndexIterator;
@@ -65,7 +67,7 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
     private IFileFragment parent = null;
     private boolean isModified = false;
     private boolean useCachedList = false;
-    private ICacheDelegate<IVariableFragment,List<Array>> arrayCache;
+    private ICacheDelegate<IVariableFragment, List<Array>> volatileCache;
 
     private ImmutableVariableFragment2(final IFileFragment ff,
             final IGroupFragment group, final String varname1,
@@ -110,6 +112,34 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         this(parent2, varname2, null, null, null);
     }
 
+    private ICacheDelegate<IVariableFragment, List<Array>> getCache() {
+        if (this.volatileCache == null) {
+            this.volatileCache = CacheFactory.createVolatileAutoRetrievalCache("immutable-variable-fragment-cache", new ICacheElementProvider<IVariableFragment, List<Array>>() {
+                @Override
+                public List<Array> provide(IVariableFragment key) {
+                    if (key.getIndex() == null) {
+                        final Array a;
+                        try {
+                            a = Factory.getInstance().getDataSourceFactory().getDataSourceFor(getParent()).readSingle(key);
+                            return Arrays.asList(a);
+                        } catch (IOException ex) {
+                            log.error("Caught IOException while trying to read array data for " + key.getName(), ex);
+                        }
+                        return Collections.emptyList();
+                    } else {
+                        try {
+                            return Factory.getInstance().getDataSourceFactory().getDataSourceFor(getParent()).readIndexed(key);//CachedList.getList(key,0,4096);
+                        } catch (IOException ex) {
+                            log.error("Caught IOException while trying to read array data for " + key.getName(), ex);
+                        }
+                    }
+                    return Collections.emptyList();
+                }
+            }, 10, 0);
+        }
+        return this.volatileCache;
+    }
+
     // private IGroupFragment gf = null;
     // private boolean protect = false;
     /**
@@ -121,16 +151,17 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
      */
     public static IVariableFragment createCompatible(IFileFragment ff,
             IVariableFragment vf) {
-        ImmutableVariableFragment2 nf = new ImmutableVariableFragment2(ff, vf.getVarname());
-        vf.getParent().getChild(vf.getVarname(), true);
+        ImmutableVariableFragment2 nf = new ImmutableVariableFragment2(ff, vf.getName());
+        //vf.getParent().getChild(vf.getName(), true);
         Dimension[] d = vf.getDimensions();
         Dimension[] nd = new Dimension[d.length];
         int i = 0;
         for (Dimension dim : d) {
             nd[i++] = new Dimension(dim.getName(), dim);
         }
-        nf.setDimensions(nd);
-        nf.setDataType(vf.getDataType());
+        nf.dims = nd;
+        nf.dataType = vf.getDataType();
+        //nf.ranges = vf.getRange();
         return nf;
     }
 
@@ -147,21 +178,21 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
     }
 
     protected void adjustConsistency(Array a) {
-        setDataType(DataType.getType(a.getElementType()));
-        final Dimension[] d = getDimensions();
-        // if (d != null) {// adjust dimension size to that of the array
-        // final int[] shape = a.getShape();
-        // EvalTools.eqI(d.length, shape.length, this);// check for equal
-        // // number of elements
-        // int i = 0;
-        // for (final Dimension dim : d) {
-        // dim.setLength(shape[i]);
-        // i++;
-        // }
-        // } else {
-        if (d != null) {
-            setDimensions(cross.datastructures.tools.ArrayTools.getDefaultDimensions(a));
-        }
+//        setDataType(DataType.getType(a.getElementType()));
+//        final Dimension[] d = getDimensions();
+//        // if (d != null) {// adjust dimension size to that of the array
+//        // final int[] shape = a.getShape();
+//        // EvalTools.eqI(d.length, shape.length, this);// check for equal
+//        // // number of elements
+//        // int i = 0;
+//        // for (final Dimension dim : d) {
+//        // dim.setLength(shape[i]);
+//        // i++;
+//        // }
+//        // } else {
+//        if (d == null) {
+//            setDimensions(cross.datastructures.tools.ArrayTools.getDefaultDimensions(a));
+//        }
         // }
     }
 
@@ -226,6 +257,10 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         e.addContent(data);
     }
 
+    @Override
+    public void clear() {
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -263,19 +298,6 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         return -1;
     }
 
-    /**
-     * @param obj
-     * @return
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj instanceof IVariableFragment) {
-            return this.fragment.equals(obj);
-        }
-        return false;
-    }
-
     /*
      * (non-Javadoc)
      *
@@ -286,22 +308,36 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         log.debug("Ranges of {}={}", getVarname(), Arrays.deepToString(getRange()));
         if (this.getIndex() == null) {
             try {
-                final Array a = Factory.getInstance().getDataSourceFactory().getDataSourceFor(getParent()).readSingle(this);
-                adjustConsistency(a);
+                List<Array> l = getCache().get(this);
+                log.debug("Retrieved {} from cache.",l);
+                if (l == null || l.isEmpty()) {
+                    return null;
+                }
+                Array a = getCache().get(this).get(0);
+//                adjustConsistency(a);
                 return a;
-            } catch (final IOException io) {
-                log.error("Could not load Array for variable {}",
-                        getVarname());
-                log.error(io.getLocalizedMessage());
+//            } catch (final IOException io) {
+//                log.error("Could not load Array for variable {}",
+//                        getVarname());
+//                log.error(io.getLocalizedMessage());
             } catch (final ResourceNotAvailableException e) {
                 log.error(e.getLocalizedMessage());
             }
             return null;
         } else {
-            final List<Array> l = getIndexedArray();
-            final Array a = cross.datastructures.tools.ArrayTools.glue(l);
-            adjustConsistency(a);
-            return a;
+            try {
+                final List<Array> l = getIndexedArray();
+                if (l == null || l.isEmpty()) {
+                    return null;
+                }
+                log.warn("Requested single array from indexed variable: will glue indexed arrays!");
+                final Array a = cross.datastructures.tools.ArrayTools.glue(l);
+//                adjustConsistency(a);
+                return a;
+            } catch (final ResourceNotAvailableException e) {
+                log.error(e.getLocalizedMessage());
+            }
+            return null;
         }
     }
 
@@ -392,10 +428,10 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
 //                    @Override
 //                    public List<Array> provide(IVariableFragment key) {
 //                        if(useCachedList) {
-//                            log.info("Using cached list from cache");
+//                            log.info("Using cached list from volatileCache");
 //                            return CachedList.getList(key);
 //                        }else{
-//                            log.info("Using uncached list from cache");
+//                            log.info("Using uncached list from volatileCache");
 //                            try {
 //                                return Factory.getInstance().getDataSourceFactory().getDataSourceFor(
 //                                getParent()).readIndexed(key);
@@ -410,22 +446,33 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
 //                });
 //            }
 //            return arrayCache.get(this);
-            if (this.useCachedList) {
-                log.info("Using cached list");
-                return CachedList.getList(this);
-            } else {
-                try {
-                    final List<Array> l = Factory.getInstance().getDataSourceFactory().getDataSourceFor(
-                            getParent()).readIndexed(this);
-                    return l;
-                } catch (final IOException e) {
-                    log.error(e.getLocalizedMessage());
-                    return Collections.emptyList();
-                } catch (final ResourceNotAvailableException e) {
-                    log.error(e.getLocalizedMessage());
+//            if (this.useCachedList) {
+//                log.info("Using cached list");
+//                return CachedList.getList(this);
+//            } else {
+//                try {
+//                    final List<Array> l = Factory.getInstance().getDataSourceFactory().getDataSourceFor(
+//                            getParent()).readIndexed(this);
+//                    return l;
+//                } catch (final IOException e) {
+//                    log.error(e.getLocalizedMessage());
+//                    return Collections.emptyList();
+//                } catch (final ResourceNotAvailableException e) {
+//                    log.error(e.getLocalizedMessage());
+//                    return Collections.emptyList();
+//                }
+//            }
+            try {
+                List<Array> l = getCache().get(this);
+                if (l == null || l.isEmpty()) {
                     return Collections.emptyList();
                 }
+                return l;
+            } catch (final ResourceNotAvailableException e) {
+                log.error(e.getLocalizedMessage());
             }
+            //adjustConsistency(l.get(0));
+            return Collections.emptyList();
         }
     }
 
@@ -469,7 +516,8 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
 
     /**
      * This method will always return true!
-     * @return 
+     *
+     * @return
      */
     /*
      * (non-Javadoc)
@@ -501,19 +549,6 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
     @Override
     public boolean hasAttribute(final String name) {
         return this.fragment.hasAttribute(name);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see cross.datastructures.fragments.IVariableFragment#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final String name = getParent().getName() + ">" + getVarname();
-        final int code = (name).hashCode();
-        // System.out.println("HashCode for "+name+" = "+code);
-        return code;
     }
 
     /*
@@ -683,5 +718,35 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
     @Override
     public String getName() {
         return this.varname;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 41 * hash + (this.fragment != null ? this.fragment.hashCode() : 0);
+        hash = 41 * hash + (this.varname != null ? this.varname.hashCode() : 0);
+        hash = 41 * hash + (this.parent != null ? this.parent.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ImmutableVariableFragment2 other = (ImmutableVariableFragment2) obj;
+        if (this.fragment != other.fragment && (this.fragment == null || !this.fragment.equals(other.fragment))) {
+            return false;
+        }
+        if ((this.varname == null) ? (other.varname != null) : !this.varname.equals(other.varname)) {
+            return false;
+        }
+        if (this.parent != other.parent && (this.parent == null || !this.parent.equals(other.parent))) {
+            return false;
+        }
+        return true;
     }
 }

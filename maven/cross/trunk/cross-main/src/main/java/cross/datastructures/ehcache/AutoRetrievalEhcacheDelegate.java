@@ -26,12 +26,14 @@ import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 
 /**
- * Transparent cache, which also knows how to create objects of the given 
- * type via the @{link cross.datastructures.ehcache.ICacheElementProvider},
- * if their key is not present in the in-memory cache.
+ * Transparent cache, which also knows how to create objects of the given type
+ * via the
  *
- * Please note that Ehcache only allows Serializable objects to be 
- * externalized to disk, should the in-memory cache overflow.
+ * @{link cross.datastructures.ehcache.ICacheElementProvider}, if their key is
+ * not present in the in-memory cache.
+ *
+ * Please note that Ehcache only allows Serializable objects to be externalized
+ * to disk, should the in-memory cache overflow.
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
@@ -56,10 +58,14 @@ class AutoRetrievalEhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
     @Override
     public V get(final K key) {
         Element element = getCache().get(key);
+        V v = null;
         if (element != null) {
-            return (V) element.getValue();
+            v = (V) element.getValue();
+            if(v != null) {
+                return v;
+            }
         }
-        V v = provider.provide(key);
+        v = provider.provide(key);
         put(key, v);
         return v;
 

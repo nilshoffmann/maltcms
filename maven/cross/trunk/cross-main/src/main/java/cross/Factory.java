@@ -33,9 +33,6 @@ import cross.datastructures.threads.ExecutorsManager.ExecutorType;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
 import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.IWorkflow;
-import cross.datastructures.workflow.IWorkflowFactory;
-import cross.datastructures.workflow.WorkflowFactory;
 import cross.exception.ConstraintViolationException;
 import cross.io.DataSourceFactory;
 import cross.io.IDataSourceFactory;
@@ -56,7 +53,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import org.apache.commons.configuration.*;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
@@ -171,7 +167,6 @@ public class Factory implements ConfigurationListener {
         }
     }
     private DataSourceFactory dsf = null;
-    private WorkflowFactory wf = null;
     private InputDataFactory idf = null;
     private ObjectFactory of = null;
     private IFileFragmentFactory fff = null;
@@ -216,7 +211,6 @@ public class Factory implements ConfigurationListener {
         // configure ObjectFactory
         getObjectFactory().configure(config1);
         getDataSourceFactory().configure(config1);
-        getWorkflowFactory().configure(config1);
         getInputDataFactory().configure(config1);
     }
 
@@ -251,8 +245,7 @@ public class Factory implements ConfigurationListener {
     public ICommandSequence createCommandSequence(final TupleND<IFileFragment> t) {
         final ICommandSequence cd = getObjectFactory().instantiate(
                 CommandPipeline.class);
-        final IWorkflow iw = getWorkflowFactory().getDefaultWorkflowInstance(
-                new Date(), cd);
+        //final IWorkflow iw = getObjectFactory().instantiate(IWorkflow.class);
         File outputDir = new File(getConfiguration().getString(
                 "output.basedir", System.getProperty("user.dir")));
         //add username and timestamp as subdirectories
@@ -262,7 +255,7 @@ public class Factory implements ConfigurationListener {
             String userName = System.getProperty("user.name", "default");
             outputDir = new File(outputDir, userName);
             outputDir = new File(outputDir, dateFormat.format(
-                    iw.getStartupDate()));
+                    cd.getWorkflow().getStartupDate()));
         } else if (outputDir.exists()) {
             if (outputDir.listFiles().length != 0 && getConfiguration().
                     getBoolean("output.overwrite", false)) {
@@ -282,15 +275,14 @@ public class Factory implements ConfigurationListener {
             }
         }
         outputDir.mkdirs();
-        iw.setOutputDirectory(outputDir);
-        cd.setWorkflow(iw);
+        cd.getWorkflow().setOutputDirectory(outputDir);
         if (t == null) {
             cd.setInput(getInputDataFactory().prepareInputData(getConfiguration().
                     getStringArray("input.dataInfo")));
         } else {
             cd.setInput(t);
         }
-        log.info("Workflow {} output: {}", iw.getName(), iw.getOutputDirectory());
+        log.info("Workflow {} output: {}", cd.getWorkflow().getName(),  cd.getWorkflow().getOutputDirectory());
         return cd;
     }
 
@@ -348,15 +340,6 @@ public class Factory implements ConfigurationListener {
             this.of.configure(getConfiguration());
         }
         return this.of;
-    }
-
-    public IWorkflowFactory getWorkflowFactory() {
-        if (this.wf == null) {
-            this.wf = getObjectFactory().instantiate(
-                    "cross.datastructures.workflow.WorkflowFactory",
-                    WorkflowFactory.class, getConfiguration());
-        }
-        return this.wf;
     }
 
     private void initThreadPools() {

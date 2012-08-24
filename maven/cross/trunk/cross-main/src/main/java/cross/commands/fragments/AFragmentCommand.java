@@ -106,7 +106,8 @@ public abstract class AFragmentCommand implements IFragmentCommand {
 
     /**
      * As of release 1.2.2, please use the spring beans based configuration for
-     * AFragmentCommand instances.
+     * AFragmentCommand instances. Only configuration of variable name mappings
+     * should be performed using configure.
      *
      * @param cfg
      * @deprecated
@@ -271,5 +272,10 @@ public abstract class AFragmentCommand implements IFragmentCommand {
     @Override
     public void removeListener(final IListener<IEvent<IWorkflowResult>> l) {
         this.eventSource.removeListener(l);
+    }
+    
+    @Override
+    public String toString() {
+        return getClass().getName();
     }
 }
