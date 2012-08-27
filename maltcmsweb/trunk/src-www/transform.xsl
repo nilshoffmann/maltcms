@@ -242,6 +242,25 @@
         </xsl:for-each>
     </xsl:template>
 
+    <xsl:template name="MESSAGETEMPLATE" match="message">
+        <xsl:param name="PAGENAME"/>
+        <xsl:param name="GROUPNAME" />
+        <xsl:param name="PATHTOROOT" />
+	<xsl:element name="div">
+                <xsl:attribute name="class">
+                    <xsl:value-of select="./@class"/>
+                </xsl:attribute>
+		<h1><xsl:value-of select="./@title"/></h1>
+                <p>
+		<xsl:apply-templates>
+                    <xsl:with-param name="PAGENAME" select="$PAGENAME" />
+                    <xsl:with-param name="GROUPNAME" select="$GROUPNAME" />
+                    <xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
+                </xsl:apply-templates>
+		</p>
+	</xsl:element>
+    </xsl:template>
+	
     <xsl:template name="DOWNLOADTEMPLATE">
         <xsl:param name="PATHTOROOT"/>
         <div class="download">
@@ -454,10 +473,6 @@
             <xsl:variable name="LASTCHANGED">
                 <xsl:value-of select=".././@lastchanged" />
             </xsl:variable>
-            <div id="colfooter">
-                Changed on
-                <xsl:value-of select="$LASTCHANGED" />
-            </div>
             <xsl:element name="div">
                 <xsl:attribute name="id">
                     <xsl:text>colcontent</xsl:text>
@@ -468,6 +483,10 @@
                     <xsl:with-param name="PATHTOROOT" select="$PATHTOROOT" />
                 </xsl:apply-templates>
             </xsl:element>
+            <div id="colfooter">
+                Changed on
+                <xsl:value-of select="$LASTCHANGED" />
+            </div>
         </xsl:element>
     </xsl:template>
 
