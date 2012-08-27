@@ -7,7 +7,7 @@
         <p>
             <ul style="list-style-type: disc; list-style-position: outside">
                 <li>
-                    <a href="http://www.biomedcentral.com" title="Combining peak- and chromatogram-based retention time alignment algorithms for multiple chromatography-mass spectrometry datasets">Nils Hoffmann, Matthias Keck, Heiko Neuweger, Mathias Wilhelm, Petra H&#246;gy, Karsten Niehaus, Jens Stoye (2012). BMC Bioinformatics (accepted)</a>,
+                    <a href="http://www.biomedcentral.com/1471-2105/13/214" title="Combining peak- and chromatogram-based retention time alignment algorithms for multiple chromatography-mass spectrometry datasets">Nils Hoffmann, Matthias Keck, Heiko Neuweger, Mathias Wilhelm, Petra H&#246;gy, Karsten Niehaus, Jens Stoye (2012). BMC Bioinformatics, 2012 Aug 27;13(214)</a>,
 		    <a href="https://sf.net/projects/maltcms/files/pub/bipaceCemapp/bipaceCemappEvaluation.zip">Evaluation data and scripts</a>
                 </li>
             </ul>
