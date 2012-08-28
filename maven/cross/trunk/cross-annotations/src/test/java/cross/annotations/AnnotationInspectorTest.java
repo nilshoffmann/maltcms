@@ -68,7 +68,7 @@ public class AnnotationInspectorTest {
     public void testGetDefaultValueFor() {
         String expected1 = "10";
         assertEquals(expected1, AnnotationInspector.getDefaultValueFor(AnnotatedObject.class, "field1"));
-        assertEquals("",AnnotationInspector.getDefaultValueFor(AnnotatedObject.class, "field2"));
+        assertEquals("", AnnotationInspector.getDefaultValueFor(AnnotatedObject.class, "field2"));
         String expected3 = "field3value";
         assertEquals(expected3, AnnotationInspector.getDefaultValueFor(AnnotatedObject.class, "field3"));
     }

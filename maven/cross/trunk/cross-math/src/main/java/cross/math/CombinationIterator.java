@@ -24,11 +24,13 @@ package cross.math;
 import java.util.Iterator;
 
 /**
- * Implementation of {@see Iterator} for {@code int[]}, returning, for a 
- * given number of {@see Partition}s in increasing order, an array of item indices
- * for each partition for the current iteration. Allows to enumerate all items 
- * of supplied partitions of arbitrary size in a defined order.
- * 
+ * Implementation of {
+ *
+ * @see Iterator} for {@code int[]}, returning, for a given number of {
+ * @see Partition}s in increasing order, an array of item indices for each
+ * partition for the current iteration. Allows to enumerate all items of
+ * supplied partitions of arbitrary size in a defined order.
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
 public class CombinationIterator implements Iterator<int[]> {
@@ -39,7 +41,8 @@ public class CombinationIterator implements Iterator<int[]> {
 
     /**
      * Create a new CombinationIterator with given Partitions.
-     * @param p 
+     *
+     * @param p
      */
     public CombinationIterator(Partition... p) {
         this.partitions = p;
@@ -70,13 +73,14 @@ public class CombinationIterator implements Iterator<int[]> {
      * @throws UnsupportedOperationException
      */
     @Override
-    public void remove() {  
+    public void remove() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
      * Returns the number of combinations of all partitions and their elements.
-     * @return 
+     *
+     * @return
      */
     public long size() {
 //        System.out.print("Size: ");
@@ -91,13 +95,13 @@ public class CombinationIterator implements Iterator<int[]> {
 //        System.out.print(" = "+this.size+"\n");
         return size;
     }
-    
+
     /**
      * Resets the iterator to initial value.
      */
     public void reset() {
         this.cnt = 0;
-        for(Partition p:partitions) {
+        for (Partition p : partitions) {
             p.reset();
         }
     }

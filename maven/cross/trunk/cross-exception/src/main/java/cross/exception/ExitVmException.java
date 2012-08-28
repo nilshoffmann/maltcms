@@ -22,16 +22,16 @@
 package cross.exception;
 
 /**
- * ExitVmException is thrown, if essential required constraints are not met, initiating 
- * an orderly shutdown.
- * 
+ * ExitVmException is thrown, if essential required constraints are not met,
+ * initiating an orderly shutdown.
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class ExitVmException extends RuntimeException {
 
     private static final long serialVersionUID = 8608712358705128763L;
-    
+
     public ExitVmException(String message) {
         super(message);
     }
@@ -43,5 +43,4 @@ public class ExitVmException extends RuntimeException {
     public ExitVmException(Throwable cause) {
         super(cause);
     }
-    
 }

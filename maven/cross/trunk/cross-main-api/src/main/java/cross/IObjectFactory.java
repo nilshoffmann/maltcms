@@ -75,9 +75,8 @@ public interface IObjectFactory extends IConfigurable {
      * @return
      */
     <T> T instantiate(final String classname, final Class<T> cls, final Configuration config);
-    
-    <T> Map<String, T> getObjectsOfType(final Class<T> cls);
-    
-    <T> T getNamedObject(final String name, final Class<T> cls);
 
+    <T> Map<String, T> getObjectsOfType(final Class<T> cls);
+
+    <T> T getNamedObject(final String name, final Class<T> cls);
 }

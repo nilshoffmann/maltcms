@@ -38,7 +38,7 @@ import org.jdom.Element;
  */
 @Slf4j
 @Data
-public class DefaultWorkflowObjectResult<T> implements IWorkflowObjectResult<T>{
+public class DefaultWorkflowObjectResult<T> implements IWorkflowObjectResult<T> {
 
     private T object = null;
     private WorkflowSlot workflowSlot = null;
@@ -46,9 +46,8 @@ public class DefaultWorkflowObjectResult<T> implements IWorkflowObjectResult<T>{
     private IFileFragment[] resources = null;
 
     public DefaultWorkflowObjectResult() {
-        
     }
-    
+
     public DefaultWorkflowObjectResult(final T t, final IWorkflowElement iwe1,
             final WorkflowSlot ws1, IFileFragment... resources) {
         this();
@@ -73,19 +72,18 @@ public class DefaultWorkflowObjectResult<T> implements IWorkflowObjectResult<T>{
                 res.setAttribute("uri", new File(f.getAbsolutePath()).getCanonicalFile().toURI().normalize().toString());
                 resources.addContent(res);
             } catch (IOException ex) {
-                log.warn("{}",ex);
+                log.warn("{}", ex);
             }
-            
+
         }
-        if(object instanceof IXMLSerializable) {
+        if (object instanceof IXMLSerializable) {
             final Element objectElement = new Element("object");
-            ((IXMLSerializable)object).appendXML(objectElement);
+            ((IXMLSerializable) object).appendXML(objectElement);
             iwr.addContent(objectElement);
-        }else{
+        } else {
             log.warn("Object is does not implement cross.io.xml.IXMLSerializable!");
         }
         iwr.addContent(resources);
         e.addContent(iwr);
     }
-    
 }

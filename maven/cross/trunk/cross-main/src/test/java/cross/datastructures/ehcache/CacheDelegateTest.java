@@ -21,6 +21,8 @@
  */
 package cross.datastructures.ehcache;
 
+import cross.datastructures.cache.ICacheDelegate;
+import cross.datastructures.cache.CacheFactory;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.VariableFragment;
 import java.util.ArrayList;
@@ -48,13 +50,21 @@ public class CacheDelegateTest {
     private int maxRepetitions = 20;
     private long seed = 1920712093679568761L;
     private Random r;
-    
+    /**
+     *
+     */
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
 
+    /**
+     *
+     */
     public CacheDelegateTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
     }
@@ -63,15 +73,14 @@ public class CacheDelegateTest {
         System.out.println("Setting up cache!");
         int arraySize = 1000;
         ICacheDelegate<Integer, Array> delegate;
-        if(sorted) {
+        if (sorted) {
             delegate = CacheFactory.createDb4oDefaultCache(tf.newFolder("db4ocache"),
-                name);
-        }else{
+                    name);
+        } else {
             delegate = CacheFactory.createDb4oSortedCache(tf.newFolder("db4ocache"), name, new Comparator<Integer>() {
-
                 @Override
                 public int compare(Integer t, Integer t1) {
-                    return t.intValue()-t1.intValue();
+                    return t.intValue() - t1.intValue();
                 }
             });
         }
@@ -89,7 +98,7 @@ public class CacheDelegateTest {
         System.out.println("Finished creating cache!");
         return delegate;
     }
-    
+
     private ICacheDelegate<Integer, double[]> createCache(String name) {
         System.out.println("Setting up cache!");
         int arraySize = 1000;
@@ -109,12 +118,15 @@ public class CacheDelegateTest {
         System.out.println("Finished creating cache!");
         return delegate;
     }
-    
+
+    /**
+     *
+     */
     @Test
     public void cachedVariableFragment() {
         FileFragment ff = new FileFragment();
         VariableFragment vf1 = new VariableFragment(ff, "a");
-        vf1.setArray(new ArrayDouble.D2(10,39));
+        vf1.setArray(new ArrayDouble.D2(10, 39));
         VariableFragment vfIndex = new VariableFragment(ff, "index");
         vfIndex.setArray(new ArrayInt.D1(20));
         VariableFragment vf2 = new VariableFragment(ff, "b", vfIndex);
@@ -124,15 +136,18 @@ public class CacheDelegateTest {
         for (int i = 0; i < 20; i++) {
             l.add(new ArrayDouble.D1(10));
             indexArray.setInt(i, offset);
-            offset+=10;
+            offset += 10;
         }
         vf2.setIndexedArray(l);
         Assert.assertNotNull(vf1.getArray());
         Assert.assertNotNull(vf2.getIndexedArray());
-        Assert.assertEquals(20,vf2.getIndexedArray().size());
+        Assert.assertEquals(20, vf2.getIndexedArray().size());
         Assert.assertNotNull(vfIndex.getArray());
     }
 
+    /**
+     *
+     */
     @Test
     public void cachedSequentialReadLru() {
         ICacheDelegate<Integer, double[]> delegate = createCache(
@@ -153,6 +168,9 @@ public class CacheDelegateTest {
                 removeCache(delegate.getName());
     }
 
+    /**
+     *
+     */
     @Test
     public void cachedSequentialReadLfu() {
         ICacheDelegate<Integer, double[]> delegate = createCache(
@@ -173,6 +191,9 @@ public class CacheDelegateTest {
                 removeCache(delegate.getName());
     }
 
+    /**
+     *
+     */
     @Test
     public void cachedSequentialReadFifo() {
         ICacheDelegate<Integer, double[]> delegate = createCache(
@@ -193,6 +214,9 @@ public class CacheDelegateTest {
                 removeCache(delegate.getName());
     }
 
+    /**
+     *
+     */
     @Test
     public void cachedRandomReadLru() {
         ICacheDelegate<Integer, double[]> delegate = createCache(
@@ -213,6 +237,9 @@ public class CacheDelegateTest {
                 removeCache(delegate.getName());
     }
 
+    /**
+     *
+     */
     @Test
     public void cachedRandomReadLfu() {
         ICacheDelegate<Integer, double[]> delegate = createCache(
@@ -233,6 +260,9 @@ public class CacheDelegateTest {
                 removeCache(delegate.getName());
     }
 
+    /**
+     *
+     */
     @Test
     public void cachedRandomReadFifo() {
         ICacheDelegate<Integer, double[]> delegate = createCache(
@@ -252,32 +282,38 @@ public class CacheDelegateTest {
         CacheFactory.getCacheFor(delegate.getName()).getCacheManager().
                 removeCache(delegate.getName());
     }
-    
+
+    /**
+     *
+     */
     @Test
     public void db4oSequential() {
         ICacheDelegate<Integer, Array> delegate = createDb4oCache(
-                "cachedDb4oSequential",true);
+                "cachedDb4oSequential", true);
         //simulate sequential access
-       // for (int j = 0; j < maxRepetitions; j++) {
-            for (int i = 0; i < narrays; i++) {
-                delegate.get(i);
-            }
+        // for (int j = 0; j < maxRepetitions; j++) {
+        for (int i = 0; i < narrays; i++) {
+            delegate.get(i);
+        }
         //}
         delegate.close();
         System.out.println("Statistics for db4o sequential access: ");
     }
-    
+
+    /**
+     *
+     */
     @Test
     public void db4oRandomAccess() {
         ICacheDelegate<Integer, Array> delegate = createDb4oCache(
-                "cachedDb4oRandomAccess",false);
+                "cachedDb4oRandomAccess", false);
         //simulate random access
         r = new Random(seed);
-       // for (int j = 0; j < maxRepetitions; j++) {
-            for (int i = 0; i < narrays; i++) {
-                delegate.get(indices[r.nextInt(narrays)]);
-            }
-       // }
+        // for (int j = 0; j < maxRepetitions; j++) {
+        for (int i = 0; i < narrays; i++) {
+            delegate.get(indices[r.nextInt(narrays)]);
+        }
+        // }
         delegate.close();
         System.out.println("Statistics for db4o sequential access: ");
     }

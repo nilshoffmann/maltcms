@@ -26,23 +26,22 @@ import org.apache.commons.configuration.Configuration;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 public class SaveConfigurationEvent extends ConfigurationEvent {
 
-	/**
-	 * @param v
-	 * @param ies
-	 */
-	public SaveConfigurationEvent(final Configuration v,
-	        final IEventSource<Configuration> ies) {
-		super(v, ies);
-	}
+    /**
+     * @param v
+     * @param ies
+     */
+    public SaveConfigurationEvent(final Configuration v,
+            final IEventSource<Configuration> ies) {
+        super(v, ies);
+    }
 
-	@Override
-	public String getEventName() {
-		return "EVENT_CONFIGURATION_SAVE";
-	}
-
+    @Override
+    public String getEventName() {
+        return "EVENT_CONFIGURATION_SAVE";
+    }
 }

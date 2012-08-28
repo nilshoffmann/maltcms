@@ -38,11 +38,13 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Default implementation for command sequence validation.
- * 
- * Set @see checkInheritedVariables(false) if you do NOT want to 
- * check variables from previous, referenced pipeline result FileFragments. 
- * This will however defeat the purpose of pipeline validation.
- * 
+ *
+ * Set
+ *
+ * @see checkInheritedVariables(false) if you do NOT want to check variables
+ * from previous, referenced pipeline result FileFragments. This will however
+ * defeat the purpose of pipeline validation.
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
@@ -199,7 +201,7 @@ class DefaultCommandSequenceValidator implements ICommandSequenceValidator {
                 if ((vname != null) && !vname.isEmpty()) {
                     try {
                         final IVariableFragment ivf = ff.getChild(vname, true);
-                        log.debug("Retrieved var {}", ivf.getVarname());
+                        log.debug("Retrieved var {}", ivf.getName());
                         if (!providedVariables.contains(s)) {
                             providedVariables.add(s);
                         }

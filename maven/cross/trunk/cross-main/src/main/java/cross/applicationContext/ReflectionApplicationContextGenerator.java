@@ -77,6 +77,13 @@ import org.w3c.dom.Element;
 @Slf4j
 public class ReflectionApplicationContextGenerator {
 
+    /**
+     *
+     * @param outputFile
+     * @param springVersion
+     * @param defaultScope
+     * @param classes
+     */
     public static void createContextXml(File outputFile, String springVersion, String defaultScope, String... classes) {
         //generate the application context XML
         ReflectionApplicationContextGenerator generator = new ReflectionApplicationContextGenerator(springVersion, defaultScope);
@@ -111,6 +118,11 @@ public class ReflectionApplicationContextGenerator {
         writeToFile(document, outputFile);
     }
 
+    /**
+     *
+     * @param document
+     * @param outputFile
+     */
     public static void writeToFile(Document document, File outputFile) {
         try {
             TransformerFactory transfac = TransformerFactory.newInstance();
@@ -143,6 +155,10 @@ public class ReflectionApplicationContextGenerator {
         }
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         String[] classes = args;
         String springVersion = "3.0";
@@ -252,6 +268,11 @@ public class ReflectionApplicationContextGenerator {
         return this;
     }
 
+    /**
+     *
+     * @param serviceInterfaceName
+     * @return
+     */
     public List<?> getServiceProviders(String serviceInterfaceName) {
         try {
             return createServiceProviderElements(Class.forName(serviceInterfaceName));
@@ -261,6 +282,11 @@ public class ReflectionApplicationContextGenerator {
         }
     }
 
+    /**
+     *
+     * @param clazz
+     * @return
+     */
     public List<?> createElement(Class<?> clazz) {
         if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
             return createServiceProviderElements(clazz);
@@ -283,6 +309,11 @@ public class ReflectionApplicationContextGenerator {
         return Collections.emptyList();
     }
 
+    /**
+     *
+     * @param serviceInterface
+     * @return
+     */
     public List<?> createServiceProviderElements(Class<?> serviceInterface) {
         if (classToObject.containsKey(serviceInterface)) {
             return classToObject.get(serviceInterface);
@@ -295,6 +326,11 @@ public class ReflectionApplicationContextGenerator {
         return spis;
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     public static String toLowerCaseName(String s) {
         return s.substring(0, 1).toLowerCase() + s.substring(1);
     }
@@ -325,6 +361,13 @@ public class ReflectionApplicationContextGenerator {
         return classToElement.get(id);
     }
 
+    /**
+     *
+     * @param method
+     * @param javaClass
+     * @param obj
+     * @param properties
+     */
     public void checkMutableProperties(Method method, Class<?> javaClass, Object obj, List<ObjectProperty> properties) {
         if (method.getName().startsWith("get") || method.getName().startsWith("is")) {
             String methodBaseName = method.getName().startsWith("get") ? method.getName().substring(3) : method.getName().substring(2);
@@ -391,15 +434,31 @@ public class ReflectionApplicationContextGenerator {
         }
     }
 
+    /**
+     *
+     */
     public class BeanDescriptor {
 
         private final ReflectionApplicationContextGenerator generator;
         private final String scope;
         private final Class<?> clazz;
         private final Object obj;
+        /**
+         *
+         */
         public String id;
+        /**
+         *
+         */
         public List<ObjectProperty> properties = new ArrayList<ObjectProperty>();
 
+        /**
+         *
+         * @param generator
+         * @param obj
+         * @param scope
+         * @param id
+         */
         public BeanDescriptor(ReflectionApplicationContextGenerator generator, Object obj, String scope, String id) {
             this.generator = generator;
             this.clazz = obj.getClass();
@@ -408,6 +467,11 @@ public class ReflectionApplicationContextGenerator {
             this.id = id;
         }
 
+        /**
+         *
+         * @param document
+         * @return
+         */
         public Element createElement(Document document) {
             Class<?> javaClass = clazz;
             System.out.println("Building bean element for " + javaClass.getName());
@@ -481,8 +545,8 @@ public class ReflectionApplicationContextGenerator {
                 }
                 if (append) {
                     beanElement.appendChild(propertyElement);
-                }else{
-                    Comment comment = document.createComment("<property name=\""+p.name+"\" ref=\"\"/>");
+                } else {
+                    Comment comment = document.createComment("<property name=\"" + p.name + "\" ref=\"\"/>");
                     beanElement.appendChild(comment);
                 }
             }
@@ -490,10 +554,22 @@ public class ReflectionApplicationContextGenerator {
         }
     }
 
+    /**
+     *
+     */
     public class ObjectProperty {
 
+        /**
+         *
+         */
         public String name;
+        /**
+         *
+         */
         public String type;
+        /**
+         *
+         */
         public String value;
     }
 }

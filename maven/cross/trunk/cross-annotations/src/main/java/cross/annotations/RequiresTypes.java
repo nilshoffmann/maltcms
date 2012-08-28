@@ -27,9 +27,10 @@ import java.lang.annotation.*;
  *
  * @author nils
  */
-@Target(value = { ElementType.TYPE })
+@Target(value = {ElementType.TYPE})
 @Retention(value = RetentionPolicy.RUNTIME)
 @Inherited
 public @interface RequiresTypes {
+
     Class[] values();
 }

@@ -36,15 +36,17 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
-
+ *
  *
  */
 @Deprecated
 public class PropertyFileGenerator {
 
     /**
-     * Creates a property file for the given class, containing
-     * those fields, which are annotated by {@Configurable}.
+     * Creates a property file for the given class, containing those fields,
+     * which are annotated by {
+     *
+     * @Configurable}.
      * @param className
      * @param basedir
      */
@@ -71,8 +73,10 @@ public class PropertyFileGenerator {
     }
 
     /**
-     * Creates a property object for the given class, containing
-     * those fields, which are annotated by {@Configurable}.
+     * Creates a property object for the given class, containing those fields,
+     * which are annotated by {
+     *
+     * @Configurable}.
      * @param c
      */
     public static PropertiesConfiguration createProperties(Class<?> c) {
@@ -124,7 +128,7 @@ public class PropertyFileGenerator {
                         "java -cp maltcms.jar " + PropertyFileGenerator.class,
                         options);
             }
-            for (String provider:providers) {
+            for (String provider : providers) {
                 createProperties(provider, basedir);
             }
         } catch (ParseException ex) {

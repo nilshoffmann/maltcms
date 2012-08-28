@@ -26,17 +26,21 @@ import java.io.Serializable;
 
 /**
  * Interface definition for command sequence validation.
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 public interface ICommandSequenceValidator extends Serializable {
+
     /**
-     * Determines, whether a given commandSequence is valid or not.
-     * Returns true for a valid commandSequence and false for an invalid one.
-     * May throw a @see ConstraintViolationException if validation fails due to
-     * unmet constraints, e.g. for unavailable variables @see cross.annotations.RequiresVariables.
+     * Determines, whether a given commandSequence is valid or not. Returns true
+     * for a valid commandSequence and false for an invalid one. May throw a
+     *
+     * @see ConstraintViolationException if validation fails due to unmet
+     * constraints, e.g. for unavailable variables
+     * @see cross.annotations.RequiresVariables.
      * @param commandSequence
      * @throws ConstraintViolationException
-     * @return 
+     * @return
      */
     boolean isValid(ICommandSequence commandSequence) throws ConstraintViolationException;
 }

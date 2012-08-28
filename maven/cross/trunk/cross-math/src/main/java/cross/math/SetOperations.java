@@ -26,7 +26,7 @@ import java.util.Set;
 
 /**
  * Utilitiy methods for sets with common names.
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
 public class SetOperations {
@@ -50,6 +50,6 @@ public class SetOperations {
     }
 
     public static <T> Set<T> symmetricDifference(Set<T> a, Set<T> b) {
-        return union(complement(a,b),complement(b,a));
+        return union(complement(a, b), complement(b, a));
     }
 }

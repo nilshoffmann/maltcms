@@ -27,55 +27,51 @@ import java.util.concurrent.Executors;
 
 /**
  * EventSource of Type V, where V can be any Object produced by the EventSource.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  * @param <V>
  */
 public class EventSource<V> implements IEventSource<V> {
 
-	private final LinkedHashSet<IListener<IEvent<V>>> listenerMap;
+    private final LinkedHashSet<IListener<IEvent<V>>> listenerMap;
+    private ExecutorService es = Executors.newCachedThreadPool();
 
-	private ExecutorService es = Executors.newCachedThreadPool();
+    public EventSource(int nThreads) {
+        this();
+        this.es = Executors.newFixedThreadPool(nThreads);
+    }
 
-	public EventSource(int nThreads) {
-		this();
-		this.es = Executors.newFixedThreadPool(nThreads);
-	}
-
-	public EventSource() {
-		this.listenerMap = new LinkedHashSet<IListener<IEvent<V>>>();
-	}
-
-    @Override
-	public void addListener(final IListener<IEvent<V>> l) {
-		if (this.listenerMap.contains(l)) {
-			// System.out.println("IListener already known, ignoring!");
-		} else {
-			// System.out.println("Adding listener!");
-			this.listenerMap.add(l);
-		}
-	}
+    public EventSource() {
+        this.listenerMap = new LinkedHashSet<IListener<IEvent<V>>>();
+    }
 
     @Override
-	public void fireEvent(final IEvent<V> e) {
-		for (final IListener<IEvent<V>> lst : this.listenerMap) {
-			es.submit(new Runnable() {
+    public void addListener(final IListener<IEvent<V>> l) {
+        if (this.listenerMap.contains(l)) {
+            // System.out.println("IListener already known, ignoring!");
+        } else {
+            // System.out.println("Adding listener!");
+            this.listenerMap.add(l);
+        }
+    }
 
+    @Override
+    public void fireEvent(final IEvent<V> e) {
+        for (final IListener<IEvent<V>> lst : this.listenerMap) {
+            es.submit(new Runnable() {
                 @Override
-				public void run() {
-					lst.listen(e);
-				}
-
-			});
-		}
-	}
+                public void run() {
+                    lst.listen(e);
+                }
+            });
+        }
+    }
 
     @Override
-	public void removeListener(final IListener<IEvent<V>> l) {
-		if (this.listenerMap.contains(l)) {
-			this.listenerMap.remove(l);
-		}
-	}
-
+    public void removeListener(final IListener<IEvent<V>> l) {
+        if (this.listenerMap.contains(l)) {
+            this.listenerMap.remove(l);
+        }
+    }
 }

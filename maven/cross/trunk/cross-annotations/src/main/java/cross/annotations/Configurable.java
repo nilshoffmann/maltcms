@@ -26,44 +26,45 @@ import java.lang.annotation.*;
 /**
  * Marker annotation for member variables, which should be made available to
  * Configuration.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Documented
-@Target(value = { ElementType.FIELD })
+@Target(value = {ElementType.FIELD})
 @Retention(value = RetentionPolicy.RUNTIME)
 @Inherited
 public @interface Configurable {
 
-	/**
-	 * The name of the annotated object. Returns an empty String by default.
-	 * 
-	 * @return
-	 */
-	String name() default "";
+    /**
+     * The name of the annotated object. Returns an empty String by default.
+     *
+     * @return
+     */
+    String name() default "";
 
-	/**
-	 * The value of the annotated object. Returns an empty String by default.
-	 * 
-	 * @return
-	 */
-	String value() default "";
+    /**
+     * The value of the annotated object. Returns an empty String by default.
+     *
+     * @return
+     */
+    String value() default "";
 
-	/**
-	 * The class of the annotated object. Returns Object.class by default.
-	 * 
-         * @see AnnotationInspector will now retrieve the type information directly
-         * from the annotated field.
-         * 
-	 * @return
-	 */
-        @Deprecated
-	Class<?> type() default Object.class;
-        
-        /**
-         * The description of the annotated object. Returns an empty String by
-         * default.
-         * @return 
-         */
-        String description() default "";
+    /**
+     * The class of the annotated object. Returns Object.class by default.
+     *
+     * @see AnnotationInspector will now retrieve the type information directly
+     * from the annotated field.
+     *
+     * @return
+     */
+    @Deprecated
+    Class<?> type() default Object.class;
+
+    /**
+     * The description of the annotated object. Returns an empty String by
+     * default.
+     *
+     * @return
+     */
+    String description() default "";
 }

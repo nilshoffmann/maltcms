@@ -22,7 +22,6 @@
 package cross.io.xml;
 
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IFragment;
 import cross.datastructures.fragments.IVariableFragment;
@@ -43,7 +42,6 @@ import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.jdom.*;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
-import org.slf4j.Logger;
 import ucar.ma2.*;
 import ucar.nc2.Dimension;
 
@@ -447,7 +445,7 @@ public class FragmentXMLSerializer implements IDataSource {
             for (final Object o : l) {
                 final Element group = (Element) o;
                 final String name = group.getAttribute("name").getValue();
-                if (name.equals(f.getVarname())) {
+                if (name.equals(f.getName())) {
                     return handleData(name, f.getDimensions(), group.getChild("data"));
                 }
             }
@@ -456,7 +454,7 @@ public class FragmentXMLSerializer implements IDataSource {
             log.error(e.getLocalizedMessage());
         }
         throw new ResourceNotAvailableException("Could not locate variable "
-                + f.getVarname() + " in file " + file.getAbsolutePath());
+                + f.getName() + " in file " + file.getAbsolutePath());
     }
 
     /*

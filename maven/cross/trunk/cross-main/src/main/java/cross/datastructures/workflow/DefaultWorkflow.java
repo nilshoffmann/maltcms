@@ -53,17 +53,18 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * A default implementation of {@link cross.datastructures.workflow.IWorkflow}.
- * Is a source of <code>IEvent<IWorkflowResult></code> events.
- * 
+ * Is a source of
+ * <code>IEvent<IWorkflowResult></code> events.
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
-@ServiceProvider(service=IWorkflow.class)
+@ServiceProvider(service = IWorkflow.class)
 public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1781229121330043626L;
     private ArrayList<IWorkflowResult> al = new ArrayList<IWorkflowResult>();
@@ -254,7 +255,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
             doc.addContent(writeXML());
             final XMLOutputter outp = new XMLOutputter(Format.getPrettyFormat());
             try {
-                final File f = new File(getOutputDirectory(), getName()+".xml");//new File(wflname);
+                final File f = new File(getOutputDirectory(), getName() + ".xml");//new File(wflname);
                 final File dir = f.getParentFile();
                 dir.mkdirs();
                 f.createNewFile();
@@ -356,8 +357,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     }
 
     /**
-     * @param commandSequence
-     *            the ICommandSequence to set
+     * @param commandSequence the ICommandSequence to set
      */
     @Override
     public void setCommandSequence(final ICommandSequence ics) {
@@ -379,16 +379,14 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     }
 
     /**
-     * @param iwres
-     *            the EventSource<IWorkflowResult> to set
+     * @param iwres the EventSource<IWorkflowResult> to set
      */
     public void setEventSource(final IEventSource<IWorkflowResult> iwres) {
         this.iwres = iwres;
     }
 
     /**
-     * @param fileFilter
-     *            the fileFilter to set
+     * @param fileFilter the fileFilter to set
      */
     public void setFileFilter(final String fileFilter) {
         this.fileFilter = fileFilter;
@@ -411,8 +409,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     }
 
     /**
-     * @param xslPathPrefix
-     *            the xslPathPrefix to set
+     * @param xslPathPrefix the xslPathPrefix to set
      */
     public void setXslPathPrefix(final String xslPathPrefix) {
         this.xslPathPrefix = xslPathPrefix;
@@ -456,7 +453,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                             "%0" + digits + "d", i)
                             + "_" + iwa.getClass().getSimpleName());
                     outputFile.mkdirs();
-                    log.info("Output dir for object of type {}: {}",iwe.getClass().getSimpleName(),this.outputDirectory);
+                    log.info("Output dir for object of type {}: {}", iwe.getClass().getSimpleName(), this.outputDirectory);
                     return outputFile;
                 }
                 i++;
@@ -467,7 +464,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
-                log.info("Output dir for object of type {}: {}",iwe.getClass().getSimpleName(),this.outputDirectory);
+                log.info("Output dir for object of type {}: {}", iwe.getClass().getSimpleName(), this.outputDirectory);
                 return dir;
             }
         } else if (iwe instanceof IWorkflowElement) {
@@ -477,7 +474,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
-                log.info("Output dir for object of type {}: {}",iwe.getClass().getSimpleName(),this.outputDirectory);
+                log.info("Output dir for object of type {}: {}", iwe.getClass().getSimpleName(), this.outputDirectory);
                 return dir;
             }
         }
@@ -485,7 +482,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         File outputFile = new File(outputDirectory,
                 iwe.getClass().getSimpleName());
         outputFile.mkdirs();
-        log.info("Output dir for object of type {}: {}",iwe.getClass().getSimpleName(),this.outputDirectory);
+        log.info("Output dir for object of type {}: {}", iwe.getClass().getSimpleName(), this.outputDirectory);
         return outputFile;
     }
 
@@ -613,7 +610,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         }
         return l;
     }
-    
+
     @Override
     public <T> List<IWorkflowObjectResult> getResultsOfType(IWorkflowElement afc,
             Class<? extends T> c) {
@@ -626,7 +623,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                 if (iwfr.getWorkflowElement().getClass().getCanonicalName().
                         equals(afc.getClass().getCanonicalName())) {
                     if (c.isAssignableFrom(iwfr.getObject().getClass())) {
-                        l.add((IWorkflowObjectResult)iwr);
+                        l.add((IWorkflowObjectResult) iwr);
                     }
                 }
             }
@@ -647,7 +644,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     @Override
     public TupleND<IFileFragment> call() throws Exception {
         TupleND<IFileFragment> results = null;
-        if(commandSequence.isCheckCommandDependencies() && !commandSequence.validate()){
+        if (commandSequence.isCheckCommandDependencies() && !commandSequence.validate()) {
             throw new ConstraintViolationException("Pipeline validation failed! Check output for details!");
         }
         while (commandSequence.hasNext()) {
@@ -664,7 +661,6 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     @Override
     public void setOutputDirectory(File f) {
         this.outputDirectory = f;
-        log.info("Workflow output base directory: "+this.outputDirectory);
+        log.info("Workflow output base directory: " + this.outputDirectory);
     }
-
 }

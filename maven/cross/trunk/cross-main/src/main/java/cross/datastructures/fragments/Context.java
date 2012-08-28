@@ -26,16 +26,17 @@ import cross.datastructures.Vars;
 /**
  * Context associated to a {@link cross.datastructures.fragments.Fragment} by
  * name. Currently unused.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface Context {
-	public Double get(String s);
 
-	public String getQualifiedName(Vars v);
+    public Double get(String s);
 
-	public boolean has(String s);
+    public String getQualifiedName(Vars v);
 
-	public void set(String s, Double d);
+    public boolean has(String s);
+
+    public void set(String s, Double d);
 }

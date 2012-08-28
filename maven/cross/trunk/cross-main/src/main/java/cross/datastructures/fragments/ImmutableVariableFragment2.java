@@ -23,9 +23,6 @@ package cross.datastructures.fragments;
 
 import cross.Factory;
 import cross.datastructures.StatsMap;
-import cross.datastructures.ehcache.CacheFactory;
-import cross.datastructures.ehcache.ICacheDelegate;
-import cross.datastructures.ehcache.ICacheElementProvider;
 import cross.datastructures.tools.EvalTools;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.misc.ArrayChunkIterator;
@@ -34,8 +31,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
 import ucar.ma2.Array;
@@ -67,7 +62,7 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
     private IFileFragment parent = null;
     private boolean isModified = false;
     private boolean useCachedList = false;
-    private ICacheDelegate<IVariableFragment, List<Array>> volatileCache;
+//    private ICacheDelegate<IVariableFragment, List<Array>> volatileCache;
 
     private ImmutableVariableFragment2(final IFileFragment ff,
             final IGroupFragment group, final String varname1,
@@ -107,41 +102,43 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         // System.out.println("Created Info: "+this.toString());
     }
 
+    /**
+     *
+     * @param parent2
+     * @param varname2
+     */
     public ImmutableVariableFragment2(final IFileFragment parent2,
             final String varname2) {
         this(parent2, varname2, null, null, null);
     }
 
-    private ICacheDelegate<IVariableFragment, List<Array>> getCache() {
-        if (this.volatileCache == null) {
-            this.volatileCache = CacheFactory.createVolatileAutoRetrievalCache("immutable-variable-fragment-cache", new ICacheElementProvider<IVariableFragment, List<Array>>() {
-                @Override
-                public List<Array> provide(IVariableFragment key) {
-                    if (key.getIndex() == null) {
-                        final Array a;
-                        try {
-                            a = Factory.getInstance().getDataSourceFactory().getDataSourceFor(getParent()).readSingle(key);
-                            return Arrays.asList(a);
-                        } catch (IOException ex) {
-                            log.error("Caught IOException while trying to read array data for " + key.getName(), ex);
-                        }
-                        return Collections.emptyList();
-                    } else {
-                        try {
-                            return Factory.getInstance().getDataSourceFactory().getDataSourceFor(getParent()).readIndexed(key);//CachedList.getList(key,0,4096);
-                        } catch (IOException ex) {
-                            log.error("Caught IOException while trying to read array data for " + key.getName(), ex);
-                        }
-                    }
-                    return Collections.emptyList();
-                }
-            }, 10, 0);
-        }
-        return this.volatileCache;
-    }
-
-    // private IGroupFragment gf = null;
-    // private boolean protect = false;
+//    private ICacheDelegate<IVariableFragment, List<Array>> getCache() {
+//        if (this.volatileCache == null) {
+//            this.volatileCache = CacheFactory.createVolatileAutoRetrievalCache("immutable-variable-fragment-cache", new ICacheElementProvider<IVariableFragment, List<Array>>() {
+//                @Override
+//                public List<Array> provide(IVariableFragment key) {
+//                    if (key.getIndex() == null) {
+//                        final Array a;
+//                        try {
+//                            a = Factory.getInstance().getDataSourceFactory().getDataSourceFor(getParent()).readSingle(key);
+//                            return Arrays.asList(a);
+//                        } catch (IOException ex) {
+//                            log.error("Caught IOException while trying to read array data for " + key.getName(), ex);
+//                        }
+//                        return Collections.emptyList();
+//                    } else {
+////                        try {
+//                            return CachedList.getList(key,0,2048);
+////                        } catch (IOException ex) {
+////                            log.error("Caught IOException while trying to read array data for " + key.getName(), ex);
+////                        }
+//                    }
+////                    return Collections.emptyList();
+//                }
+//            }, 240, 0);
+//        }
+//        return this.volatileCache;
+//    }
     /**
      * Creates a VariableFragment compatible in type, name and dimensions to vf.
      * Does not copy Range or array data!
@@ -152,7 +149,6 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
     public static IVariableFragment createCompatible(IFileFragment ff,
             IVariableFragment vf) {
         ImmutableVariableFragment2 nf = new ImmutableVariableFragment2(ff, vf.getName());
-        //vf.getParent().getChild(vf.getName(), true);
         Dimension[] d = vf.getDimensions();
         Dimension[] nd = new Dimension[d.length];
         int i = 0;
@@ -161,7 +157,6 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         }
         nf.dims = nd;
         nf.dataType = vf.getDataType();
-        //nf.ranges = vf.getRange();
         return nf;
     }
 
@@ -171,29 +166,16 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         this(ff, null, varname1, dims1, dt, ranges1);
     }
 
+    /**
+     *
+     * @param parent2
+     * @param varname2
+     * @param ifrg
+     */
     public ImmutableVariableFragment2(final IFileFragment parent2,
             final String varname2, final IVariableFragment ifrg) {
         this(parent2, varname2, null, null, null);
         setIndex(ifrg);
-    }
-
-    protected void adjustConsistency(Array a) {
-//        setDataType(DataType.getType(a.getElementType()));
-//        final Dimension[] d = getDimensions();
-//        // if (d != null) {// adjust dimension size to that of the array
-//        // final int[] shape = a.getShape();
-//        // EvalTools.eqI(d.length, shape.length, this);// check for equal
-//        // // number of elements
-//        // int i = 0;
-//        // for (final Dimension dim : d) {
-//        // dim.setLength(shape[i]);
-//        // i++;
-//        // }
-//        // } else {
-//        if (d == null) {
-//            setDimensions(cross.datastructures.tools.ArrayTools.getDefaultDimensions(a));
-//        }
-        // }
     }
 
     /*
@@ -205,11 +187,11 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
      */
     @Override
     public void appendXML(final Element e) {
-        log.debug("Appending xml for variable " + getVarname());
+        log.debug("Appending xml for variable " + getName());
         final String vname = "variable";
         final Element var = new Element(vname);
         this.fragment.appendXML(var);
-        var.setAttribute("name", getVarname());
+        var.setAttribute("name", getName());
         var.setAttribute("dataType", getDataType().getClassType().getName());
 
         final Dimension[] dims1 = getDimensions();
@@ -241,7 +223,7 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
             var.addContent(ranges1);
         }
         if (this.index != null) {
-            var.setAttribute("indexVariable", this.index.getVarname());
+            var.setAttribute("indexVariable", this.index.getName());
         }
         e.addContent(var);
 
@@ -259,6 +241,7 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
 
     @Override
     public void clear() {
+//        this.volatileCache.put(this, null);
     }
 
     /*
@@ -276,11 +259,6 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
     /*
      * (non-Javadoc)
      *
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
-    /*
-     * (non-Javadoc)
-     *
      * @see
      * cross.datastructures.fragments.IVariableFragment#compareTo(java.lang.
      * Object)
@@ -288,11 +266,9 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
     @Override
     public int compareTo(final Object o) {
         if (o instanceof ImmutableVariableFragment2) {
-            final String lhs = getParent().getName() + ">" + getVarname();
+            final String lhs = getParent().getName() + ">" + getName();
             final String rhs = ((IVariableFragment) o).getParent().getName()
-                    + ">" + ((IVariableFragment) o).getVarname();
-            // return
-            // this.toString().compareTo(((VariableFragment)o).toString());
+                    + ">" + ((IVariableFragment) o).getName();
             return lhs.compareTo(rhs);
         }
         return -1;
@@ -305,23 +281,15 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
      */
     @Override
     public Array getArray() {
-        log.debug("Ranges of {}={}", getVarname(), Arrays.deepToString(getRange()));
+        log.debug("Ranges of {}={}", getName(), Arrays.deepToString(getRange()));
         if (this.getIndex() == null) {
             try {
-                List<Array> l = getCache().get(this);
-                log.debug("Retrieved {} from cache.",l);
-                if (l == null || l.isEmpty()) {
-                    return null;
-                }
-                Array a = getCache().get(this).get(0);
-//                adjustConsistency(a);
-                return a;
-//            } catch (final IOException io) {
-//                log.error("Could not load Array for variable {}",
-//                        getVarname());
-//                log.error(io.getLocalizedMessage());
-            } catch (final ResourceNotAvailableException e) {
-                log.error(e.getLocalizedMessage());
+                return Factory.getInstance().getDataSourceFactory().getDataSourceFor(
+                        getParent()).readSingle(this);
+            } catch (IOException ex) {
+                log.warn("", ex);
+            } catch (ResourceNotAvailableException ex) {
+                log.warn("", ex);
             }
             return null;
         } else {
@@ -332,7 +300,6 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
                 }
                 log.warn("Requested single array from indexed variable: will glue indexed arrays!");
                 final Array a = cross.datastructures.tools.ArrayTools.glue(l);
-//                adjustConsistency(a);
                 return a;
             } catch (final ResourceNotAvailableException e) {
                 log.error(e.getLocalizedMessage());
@@ -375,6 +342,11 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
      * (non-Javadoc)
      *
      * @see cross.datastructures.fragments.IVariableFragment#getChunkIterator()
+     */
+    /**
+     *
+     * @param chunksize
+     * @return
      */
     @Override
     public ArrayChunkIterator getChunkIterator(final int chunksize) {
@@ -421,58 +393,22 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         if (getIndex() == null) {
             return Collections.emptyList();
         } else {
-//            if(arrayCache==null) {
-//                CacheFactory<IVariableFragment,List<Array>> cf = new CacheFactory<IVariableFragment, List<Array>>();
-//                arrayCache = cf.createAutoRetrievalCache(this.parent.getAbsolutePath()+">"+this.varname, new ICacheElementProvider<IVariableFragment, List<Array>>() {
-//
-//                    @Override
-//                    public List<Array> provide(IVariableFragment key) {
-//                        if(useCachedList) {
-//                            log.info("Using cached list from volatileCache");
-//                            return CachedList.getList(key);
-//                        }else{
-//                            log.info("Using uncached list from volatileCache");
-//                            try {
-//                                return Factory.getInstance().getDataSourceFactory().getDataSourceFor(
-//                                getParent()).readIndexed(key);
-//                            } catch (IOException ex) {
-//                                log.error(ex.getLocalizedMessage());
-//                            } catch (ResourceNotAvailableException ex) {
-//                                log.error(ex.getLocalizedMessage());
-//                            }
-//                            return Collections.emptyList();
-//                        }
-//                    }
-//                });
-//            }
-//            return arrayCache.get(this);
-//            if (this.useCachedList) {
-//                log.info("Using cached list");
-//                return CachedList.getList(this);
-//            } else {
-//                try {
-//                    final List<Array> l = Factory.getInstance().getDataSourceFactory().getDataSourceFor(
-//                            getParent()).readIndexed(this);
-//                    return l;
-//                } catch (final IOException e) {
-//                    log.error(e.getLocalizedMessage());
-//                    return Collections.emptyList();
-//                } catch (final ResourceNotAvailableException e) {
-//                    log.error(e.getLocalizedMessage());
-//                    return Collections.emptyList();
-//                }
-//            }
-            try {
-                List<Array> l = getCache().get(this);
-                if (l == null || l.isEmpty()) {
+            if (this.useCachedList) {
+                log.info("Using cached list");
+                return CachedList.getList(this);
+            } else {
+                try {
+                    final List<Array> l = Factory.getInstance().getDataSourceFactory().getDataSourceFor(
+                            getParent()).readIndexed(this);
+                    return l;
+                } catch (final IOException e) {
+                    log.error(e.getLocalizedMessage());
+                    return Collections.emptyList();
+                } catch (final ResourceNotAvailableException e) {
+                    log.error(e.getLocalizedMessage());
                     return Collections.emptyList();
                 }
-                return l;
-            } catch (final ResourceNotAvailableException e) {
-                log.error(e.getLocalizedMessage());
             }
-            //adjustConsistency(l.get(0));
-            return Collections.emptyList();
         }
     }
 
@@ -561,6 +497,10 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         return this.isModified;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isUseCachedList() {
         return this.useCachedList;
     }
@@ -679,6 +619,10 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         this.fragment.setStats(stats1);
     }
 
+    /**
+     *
+     * @param b
+     */
     public void setUseCachedList(final boolean b) {
         this.useCachedList = b;
     }
@@ -688,12 +632,16 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
      *
      * @see cross.datastructures.fragments.IVariableFragment#toString()
      */
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         // if (this.rep == null) {
         final StringBuilder sb = new StringBuilder();
         // sb.append(getParent().getAbsolutePath() + ">");
-        sb.append(getVarname());
+        sb.append(getName());
         if (getRange() != null) {
             for (final Range r : getRange()) {
                 if (r != null) {
@@ -720,6 +668,10 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         return this.varname;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int hashCode() {
         int hash = 7;
@@ -729,6 +681,11 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
         return hash;
     }
 
+    /**
+     *
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

@@ -49,17 +49,17 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Implementation of ICommandSequence for a linear sequence of commands.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 @Data
-@ServiceProvider(service=ICommandSequence.class)
+@ServiceProvider(service = ICommandSequence.class)
 public final class CommandPipeline implements ICommandSequence, IConfigurable {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 7387727704189206255L;
     /**
@@ -71,7 +71,6 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
     private IWorkflow workflow;
     private boolean checkCommandDependencies = true;
     private ICommandSequenceValidator validator = new DefaultCommandSequenceValidator();
-    
     /**
      * Private fields
      */
@@ -79,17 +78,14 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
     @Getter
     @Setter(value = AccessLevel.NONE)
     private Impaxs executionServer;
-    
     //iterator for fragment commands
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private Iterator<IFragmentCommand> iter;
-    
     //intermediate results
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private TupleND<IFileFragment> tmp;
-    
     //counter of processed fragment commands
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -135,7 +131,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
 
     /**
      * Load and configure a given command.
-     * 
+     *
      * @param clsname
      * @return
      */
@@ -193,8 +189,8 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
                 log.info("Runtime of command {}: {} sec",
                         cmd.getClass().getSimpleName(),
                         sb.toString());
-                Map<String,Object> statsMap = new HashMap<String,Object>();
-                statsMap.put("RUNTIME_MILLISECONDS", Double.valueOf(start/1000000.f));
+                Map<String, Object> statsMap = new HashMap<String, Object>();
+                statsMap.put("RUNTIME_MILLISECONDS", Double.valueOf(start / 1000000.f));
                 DefaultWorkflowStatisticsResult dwsr = new DefaultWorkflowStatisticsResult();
                 dwsr.setWorkflowElement(cmd);
                 dwsr.setWorkflowSlot(WorkflowSlot.STATISTICS);
@@ -210,7 +206,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
             }
             //shutdown master server in case of any uncaught exceptions
         } catch (Exception e) {
-        	log.error("Caught exception while executing pipeline: ",e);
+            log.error("Caught exception while executing pipeline: ", e);
             shutdownMasterServer();
             throw new RuntimeException(e);
         }
@@ -273,9 +269,10 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
      * @see cross.io.xml.IXMLSerializable#appendXML(org.jdom.Element)
      */
     /**
-     * Appends workflowInputs, workflowOutputs and workflowCommands elements 
-     * to given Element parameter.
-     * @param e 
+     * Appends workflowInputs, workflowOutputs and workflowCommands elements to
+     * given Element parameter.
+     *
+     * @param e
      */
     @Override
     public void appendXML(Element e) {
@@ -288,12 +285,12 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
                         toASCIIString());
                 ifrge.addContent(ifrge0);
             } catch (IOException ex) {
-                log.warn("{}",ex);
+                log.warn("{}", ex);
             }
-            
+
         }
         e.addContent(ifrge);
-        
+
         final Element ofrge = new Element("workflowOutputs");
         for (final IFileFragment ofrg : tmp) {
             final Element ofrge0 = new Element("workflowOutput");
@@ -302,12 +299,12 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
                         toASCIIString());
                 ofrge.addContent(ofrge0);
             } catch (IOException ex) {
-                log.warn("{}",ex);
+                log.warn("{}", ex);
             }
-            
+
         }
         e.addContent(ofrge);
-        
+
         final Element cmds = new Element("workflowCommands");
         for (final IFragmentCommand wr : getCommands()) {
             final Element iwr = new Element("workflowCommand");

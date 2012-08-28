@@ -36,7 +36,7 @@ import ucar.nc2.Attribute;
  *
  */
 public class Fragment implements IFragment {
-    
+
     private StatsMap stats;
     private Metadata attributes = new Metadata();
     private final UUID uid = UUID.randomUUID();
@@ -59,11 +59,7 @@ public class Fragment implements IFragment {
                 if (a.isString()) {
                     attr.setAttribute(a.getName(), a.getStringValue());
                 } else if (a.isArray()) {
-                    // throw new NotImplementedException();// "Attributes
-                    // containing array data
-                    // are not yet
-                    // implemented, only
-                    // strings!");
+                    attr.setAttribute(a.getName(), a.toString());
                 }
                 group.addContent(attr);
             }
@@ -74,6 +70,10 @@ public class Fragment implements IFragment {
      * (non-Javadoc)
      *
      * @see cross.io.misc.IXMLSerializable#appendXML(org.jdom.Element)
+     */
+    /**
+     *
+     * @param e
      */
     @Override
     public void appendXML(final Element e) {
@@ -96,7 +96,7 @@ public class Fragment implements IFragment {
         if (arg0 instanceof IFragment) {
             return (compare(this, (IFragment) arg0));
         }
-        
+
         return -1;
     }
 
@@ -204,12 +204,16 @@ public class Fragment implements IFragment {
         EvalTools.notNull(stats1, this);
         this.stats = stats1;
     }
-    
+
     @Override
     public void addAttribute(Attribute a) {
         this.attributes.add(a);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int hashCode() {
         int hash = 5;
@@ -217,6 +221,11 @@ public class Fragment implements IFragment {
         return hash;
     }
 
+    /**
+     *
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -231,5 +240,4 @@ public class Fragment implements IFragment {
         }
         return true;
     }
- 
 }

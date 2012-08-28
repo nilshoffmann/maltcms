@@ -28,118 +28,113 @@ import org.jdom.Element;
 
 /**
  * Represents a VariableFragment group with a given (unique) name.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 public class NamedGroupFragment extends Fragment implements IGroupFragment {
 
-	// protected static long GROUPID = 0;
+    // protected static long GROUPID = 0;
+    private ConcurrentHashMap<String, IVariableFragment> children = null;
+    private String name = "";
+    private long id = -1;
+    private final IGroupFragment parentGroup;
 
-	private ConcurrentHashMap<String, IVariableFragment> children = null;
+    public NamedGroupFragment(final IGroupFragment parent, final String name1) {
+        this.children = new ConcurrentHashMap<String, IVariableFragment>();
+        this.parentGroup = parent;
+        this.id = parent.nextGID();
+        this.name = (name1 == null) ? "" + this.id : name1;
+    }
 
-	private String name = "";
-
-	private long id = -1;
-
-	private final IGroupFragment parentGroup;
-
-	public NamedGroupFragment(final IGroupFragment parent, final String name1) {
-		this.children = new ConcurrentHashMap<String, IVariableFragment>();
-		this.parentGroup = parent;
-		this.id = parent.nextGID();
-		this.name = (name1 == null) ? "" + this.id : name1;
-	}
-
-	/**
-	 * Add a number of children.
-	 * 
-	 * @param fragments
-	 */
+    /**
+     * Add a number of children.
+     *
+     * @param fragments
+     */
     @Override
-	public synchronized void addChildren(final IVariableFragment... fragments) {
-		for (final IVariableFragment vf : fragments) {
-			log.debug("Adding " + vf.getVarname() + " to group "
-			        + getName());
-			this.children.put(vf.getVarname(), vf);
-		}
-	}
-
-	@Override
-	public void appendXML(final Element e) {
-		log.debug("Appending xml for named group " + getName());
-		final Element group = new Element("namedGroup");
-		super.appendAttributes(group);
-		group.setAttribute("size", "" + this.children.size());
-		group.setAttribute("groupID", "" + this.id);
-		e.addContent(group);
-		for (final IVariableFragment vf : this.children.values()) {
-			vf.appendXML(group);
-		}
-
-	}
+    public synchronized void addChildren(final IVariableFragment... fragments) {
+        for (final IVariableFragment vf : fragments) {
+            log.debug("Adding " + vf.getName() + " to group "
+                    + getName());
+            this.children.put(vf.getName(), vf);
+        }
+    }
 
     @Override
-	public IVariableFragment getChild(final String varname) {
-		if (hasChild(varname)) {
-			return this.children.get(varname);
-		} else {
-			throw new IllegalArgumentException("No child with name " + varname
-			        + "!");
-		}
+    public void appendXML(final Element e) {
+        log.debug("Appending xml for named group " + getName());
+        final Element group = new Element("namedGroup");
+        super.appendAttributes(group);
+        group.setAttribute("size", "" + this.children.size());
+        group.setAttribute("groupID", "" + this.id);
+        e.addContent(group);
+        for (final IVariableFragment vf : this.children.values()) {
+            vf.appendXML(group);
+        }
 
-	}
-
-    @Override
-	public String getName() {
-		return this.name;
-	}
+    }
 
     @Override
-	public IGroupFragment getParent() {
-		return this.parentGroup;
-	}
+    public IVariableFragment getChild(final String varname) {
+        if (hasChild(varname)) {
+            return this.children.get(varname);
+        } else {
+            throw new IllegalArgumentException("No child with name " + varname
+                    + "!");
+        }
+
+    }
 
     @Override
-	public int getSize() {
-		return this.children.size();
-	}
+    public String getName() {
+        return this.name;
+    }
 
     @Override
-	public boolean hasChild(final IVariableFragment vf) {
-		return hasChild(vf.getVarname());
-	}
+    public IGroupFragment getParent() {
+        return this.parentGroup;
+    }
 
     @Override
-	public boolean hasChild(final String varname) {
-		return this.children.containsKey(varname);
-	}
+    public int getSize() {
+        return this.children.size();
+    }
 
     @Override
-	public Iterator<IVariableFragment> iterator() {
-		return this.children.values().iterator();
-	}
+    public boolean hasChild(final IVariableFragment vf) {
+        return hasChild(vf.getName());
+    }
 
     @Override
-	public long nextGID() {
-		return this.parentGroup.nextGID();
-	}
+    public boolean hasChild(final String varname) {
+        return this.children.containsKey(varname);
+    }
 
     @Override
-	public void setID(final long id1) {
-		if (this.id == -1) {
-			this.id = id1;
-		}
-	}
+    public Iterator<IVariableFragment> iterator() {
+        return this.children.values().iterator();
+    }
 
-	@Override
-	public String toString() {
-		final StringBuffer sb = new StringBuffer();
-		for (final IVariableFragment vf : this.children.values()) {
-			sb.append(vf.getVarname());
-		}
-		return "Members of group: " + this.name + "\n" + sb.toString();
-	}
+    @Override
+    public long nextGID() {
+        return this.parentGroup.nextGID();
+    }
 
+    @Override
+    public void setID(final long id1) {
+        if (this.id == -1) {
+            this.id = id1;
+        }
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer();
+        for (final IVariableFragment vf : this.children.values()) {
+            sb.append(vf.getName());
+        }
+        return "Members of group: " + this.name + "\n" + sb.toString();
+    }
 }

@@ -70,5 +70,4 @@ public interface IWorkflowFactory extends IConfigurable {
      * @return
      */
     IWorkflow getNewWorkflowInstance(final Date startup, final String name, final ICommandSequence ics, final Configuration cfg);
-
 }

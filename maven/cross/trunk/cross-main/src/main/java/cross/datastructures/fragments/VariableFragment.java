@@ -21,15 +21,16 @@
  */
 package cross.datastructures.fragments;
 
+import com.db4o.collections.ActivatableArrayList;
 import cross.datastructures.StatsMap;
-import cross.datastructures.ehcache.CacheFactory;
-import cross.datastructures.ehcache.ICacheDelegate;
+import cross.datastructures.cache.CacheFactory;
+import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.tools.ArrayTools;
 import cross.datastructures.tools.EvalTools;
 import cross.io.misc.ArrayChunkIterator;
 import cross.io.misc.Base64;
+import cross.tools.StringTools;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -62,11 +63,11 @@ public class VariableFragment implements IVariableFragment {
     private IFileFragment parent = null;
 //    private Array a = null;
 //    private SoftReference<Array> aref = null;
-//    private ActivatableArrayList<Array> al = null;
+//    private List<Array> al = null;
     private boolean isModified = false;
     private boolean useCachedList = false;
-    private transient ICacheDelegate<IVariableFragment,List<Array>> persistentCache;
-    
+    private transient ICacheDelegate<IVariableFragment, List<Array>> persistentCache;
+
     private VariableFragment(final IFileFragment ff,
             final IGroupFragment group, final String varname1,
             final Dimension[] dims1, final DataType dt, final Range[] r) {
@@ -106,10 +107,10 @@ public class VariableFragment implements IVariableFragment {
     public VariableFragment(final IFileFragment parent2, final String varname2) {
         this(parent2, varname2, null, null, null);
     }
-    
-    private ICacheDelegate<IVariableFragment,List<Array>> getCache() {
-        if(this.persistentCache == null) {
-             this.persistentCache = CacheFactory.createDefaultCache("variable-fragment-cache");
+
+    private ICacheDelegate<IVariableFragment, List<Array>> getCache() {
+        if (this.persistentCache == null) {
+            this.persistentCache = CacheFactory.createDb4oDefaultCache(new File(getParent().getAbsolutePath()).getParentFile(), StringTools.removeFileExt(getParent().getName()) + "-variable-fragment-cache");
         }
         return this.persistentCache;
     }
@@ -125,10 +126,10 @@ public class VariableFragment implements IVariableFragment {
      */
     public static IVariableFragment createCompatible(IFileFragment ff,
             IVariableFragment vf) {
-        VariableFragment nf = new VariableFragment(ff, vf.getVarname());
-        vf.getParent().getChild(vf.getVarname(), true);
+        VariableFragment nf = new VariableFragment(ff, vf.getName());
+        vf.getParent().getChild(vf.getName(), true);
         Dimension[] d = vf.getDimensions();
-        if(d!=null) {
+        if (d != null) {
             Dimension[] nd = new Dimension[d.length];
             int i = 0;
             for (Dimension dim : d) {
@@ -152,70 +153,17 @@ public class VariableFragment implements IVariableFragment {
     }
 
     protected Array getArrayRef() {
-//        if (isModified()) {
-//            return this.a;
-//        } else {
-//            if (this.aref != null) {
-//                return this.aref.get();
-//            }
-//        }
-//        List<Array> l = getCache().get(cacheKey);
-//        if(l == null || l.isEmpty()) {
-//            return null;
-//        }else{
-//            return l.get(0);
-//        }
-        
         List<Array> l = getCache().get(this);
-        if(l!=null) {
-            if(l.size()==1) {
+        if (l != null) {
+            if (l.size() == 1) {
                 return l.get(0);
-            }else if(l.size()>1) {
+            } else if (l.size() > 1) {
                 log.warn("Glueing array list of arrays! This is very inefficient!");
                 return ArrayTools.glue(l);
             }
         }
         return null;
-        //return null;
     }
-
-//    protected void adjustConsistency() {
-//        Array a = getArrayRef();
-//        if (a != null) {
-////            Array a = getArrayRef();
-//            // setDataType(DataType.getType(a.getElementType()));
-//            // final Dimension[] d = getDimensions();
-//            // if (d != null) {// adjust dimension size to that of the array
-//            // final int[] shape = a.getShape();
-//            // EvalTools.eqI(d.length, shape.length, this);// check for equal
-//            // // number of elements
-//            // int i = 0;
-//            // for (final Dimension dim : d) {
-//            // dim.setLength(shape[i]);
-//            // i++;
-//            // }
-//            // } else {
-//            // setDimensions(ArrayTools.getDefaultDimensions(a));
-//            // }
-//            setDataType(DataType.getType(a.getElementType()));
-////            final Dimension[] d = getDimensions();
-//            // if (d != null) {// adjust dimension size to that of the array
-//            // final int[] shape = a.getShape();
-//            // EvalTools.eqI(d.length, shape.length, this);// check for equal
-//            // // number of elements
-//            // int i = 0;
-//            // for (final Dimension dim : d) {
-//            // dim.setLength(shape[i]);
-//            // i++;
-//            // }
-//            // } else {
-////            if (d == null) {
-////                setDimensions(cross.datastructures.tools.ArrayTools.getDefaultDimensions(a));
-////            }
-//            // }
-//        }
-//
-//    }
 
     /*
      * (non-Javadoc)
@@ -226,11 +174,11 @@ public class VariableFragment implements IVariableFragment {
      */
     @Override
     public void appendXML(final Element e) {
-        log.debug("Appending xml for variable " + getVarname());
+        log.debug("Appending xml for variable " + getName());
         final String vname = "variable";
         final Element var = new Element(vname);
         this.fragment.appendXML(var);
-        var.setAttribute("name", getVarname());
+        var.setAttribute("name", getName());
         var.setAttribute("dataType", getDataType().getClassType().getName());
 
         final Dimension[] dims1 = getDimensions();
@@ -262,7 +210,7 @@ public class VariableFragment implements IVariableFragment {
             var.addContent(ranges1);
         }
         if (this.index != null) {
-            var.setAttribute("indexVariable", this.index.getVarname());
+            var.setAttribute("indexVariable", this.index.getName());
         }
         e.addContent(var);
 
@@ -307,9 +255,9 @@ public class VariableFragment implements IVariableFragment {
     @Override
     public int compareTo(final Object o) {
         if (o instanceof VariableFragment) {
-            final String lhs = getParent().getName() + ">" + getVarname();
+            final String lhs = getParent().getName() + ">" + getName();
             final String rhs = ((IVariableFragment) o).getParent().getName()
-                    + ">" + ((IVariableFragment) o).getVarname();
+                    + ">" + ((IVariableFragment) o).getName();
             // return
             // this.toString().compareTo(((VariableFragment)o).toString());
             return lhs.compareTo(rhs);
@@ -324,39 +272,6 @@ public class VariableFragment implements IVariableFragment {
      */
     @Override
     public Array getArray() {
-//        log.debug("Ranges of {}={}", getVarname(), Arrays.deepToString(getRange()));
-//        if (getArrayRef() == null) {
-//            if (this.al == null) {
-//                try {
-//                    this.isModified = false;
-//                    setArrayInternal(Factory.getInstance().getDataSourceFactory().getDataSourceFor(
-//                            getParent()).readSingle(this));
-//                } catch (final IOException io) {
-//                    log.error("Could not load Array for variable {}",
-//                            getVarname());
-//                    log.error(io.getLocalizedMessage());
-//                } catch (final ResourceNotAvailableException e) {
-//                    log.error(e.getLocalizedMessage());
-//                }
-//            } else {
-//                if (this.isModified) {
-//                    this.a = cross.datastructures.tools.ArrayTools.glue(this.al);
-//                } else {
-//                    setArrayInternal(cross.datastructures.tools.ArrayTools.glue(this.al));
-//                }
-//            }
-//        }
-//        return getArrayRef();
-//        List<Array> l = getCache().get(cacheKey);
-//        if(l!=null) {
-//            if(l.size()==1) {
-//                return l.get(0);
-//            }else if(l.size()>1) {
-//                log.warn("Glueing array list of arrays! This is very inefficient!");
-//                return ArrayTools.glue(l);
-//            }
-//        }
-//        return null;
         return getArrayRef();
     }
 
@@ -437,7 +352,7 @@ public class VariableFragment implements IVariableFragment {
      */
     @Override
     public List<Array> getIndexedArray() {
-        if(getIndex()==null) {
+        if (getIndex() == null) {
             return Collections.emptyList();
         }
         List<Array> l = getCache().get(this);
@@ -515,7 +430,7 @@ public class VariableFragment implements IVariableFragment {
     public boolean hasArray() {
 //        return (getArrayRef() == null) ? ((this.al == null) ? false : true)
 //                : true;
-        return getArrayRef()!=null;
+        return getArrayRef() != null;
     }
 
     /**
@@ -550,6 +465,10 @@ public class VariableFragment implements IVariableFragment {
         return this.isModified;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isUseCachedList() {
         return this.useCachedList;
     }
@@ -579,13 +498,17 @@ public class VariableFragment implements IVariableFragment {
 //        } else {
 //            clear();
 //        }
-        if(a1==null) {
+        if (a1 == null) {
 //            persistentCache.put(cacheKey, null);
 //            clear();
-        }else{
-            getCache().put(this, Arrays.asList(a1));
+        } else {
+            ActivatableArrayList<Array> list = new ActivatableArrayList<Array>();
+            list.add(a1);
+            getCache().put(this, list);
+            //this.al = new ArrayList<Array>(1);
+            //this.al.add(a1);
             setDataType(DataType.getType(a1.getElementType()));
-            if(getDimensions()==null) {
+            if (getDimensions() == null) {
                 setDimensions(cross.datastructures.tools.ArrayTools.getDefaultDimensions(a1));
             }
         }
@@ -613,7 +536,6 @@ public class VariableFragment implements IVariableFragment {
 //                    "Variable Fragment was already modified externally!");
 //        }
 //    }
-
     @Override
     public void addAttribute(Attribute a) {
         this.fragment.addAttribute(a);
@@ -681,7 +603,7 @@ public class VariableFragment implements IVariableFragment {
      */
     @Override
     public void setIndexedArray(final List<Array> al1) throws IllegalStateException {
-        if(al1!=null && this.index == null) {
+        if (al1 != null && this.index == null) {
             throw new IllegalStateException("Please call setIndex first before adding indexed data!");
         }
         this.isModified = true;
@@ -693,9 +615,15 @@ public class VariableFragment implements IVariableFragment {
         }
     }
 
+    /**
+     *
+     * @param al1
+     */
     protected void setIndexedArrayInternal(final List<Array> al1) {
         if (al1 != null && !al1.isEmpty()) {
-            getCache().put(this,al1);
+            System.out.println("Received list of type: " + al1.getClass().getName());
+            //this.al = al1;
+            getCache().put(this, new ActivatableArrayList<Array>(al1));
             setDataType(DataType.getType(al1.get(0).getElementType()));
             //this.al = new ActivatableArrayList<Array>(al1);
         } else {
@@ -710,11 +638,12 @@ public class VariableFragment implements IVariableFragment {
      */
     @Override
     public void clear() {
+//        this.persistentCache.put(this, null);
         this.isModified = false;
 //        this.al = null;
 //        this.a = null;
 //        this.aref = null;
-        
+
     }
 
     /*
@@ -751,6 +680,10 @@ public class VariableFragment implements IVariableFragment {
         this.fragment.setStats(stats1);
     }
 
+    /**
+     *
+     * @param b
+     */
     public void setUseCachedList(final boolean b) {
         this.useCachedList = b;
     }
@@ -760,12 +693,16 @@ public class VariableFragment implements IVariableFragment {
      *
      * @see cross.datastructures.fragments.IVariableFragment#toString()
      */
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         // if (this.rep == null) {
         final StringBuilder sb = new StringBuilder();
         // sb.append(getParent().getAbsolutePath() + ">");
-        sb.append(getVarname());
+        sb.append(getName());
         if (getRange() != null) {
             for (final Range r : getRange()) {
                 if (r != null) {
@@ -792,6 +729,10 @@ public class VariableFragment implements IVariableFragment {
         return this.varname;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int hashCode() {
         int hash = 5;
@@ -801,6 +742,11 @@ public class VariableFragment implements IVariableFragment {
         return hash;
     }
 
+    /**
+     *
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -821,5 +767,4 @@ public class VariableFragment implements IVariableFragment {
         }
         return true;
     }
-    
 }

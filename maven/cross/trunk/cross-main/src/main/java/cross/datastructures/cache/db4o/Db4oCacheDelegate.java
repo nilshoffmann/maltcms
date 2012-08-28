@@ -19,7 +19,7 @@
  *
  *  $Id$
  */
-package cross.datastructures.ehcache.db4o;
+package cross.datastructures.cache.db4o;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
@@ -28,13 +28,13 @@ import com.db4o.activation.Activator;
 import com.db4o.config.annotations.Indexed;
 import com.db4o.query.Predicate;
 import com.db4o.ta.Activatable;
-import cross.datastructures.ehcache.ICacheDelegate;
+import cross.datastructures.cache.ICacheDelegate;
 import java.util.Comparator;
 
 /**
- * Implementation of a cache delegate for typed caches backed by
- * <a href="http://www.db4o.com/">db4o</a>.
- * 
+ * Implementation of a cache delegate for typed caches backed by <a
+ * href="http://www.db4o.com/">db4o</a>.
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
@@ -47,18 +47,17 @@ public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
             final ObjectContainer container, final Comparator<K> comparator) {
         this.cacheName = cacheName;
         this.container = container;
-        if(comparator==null) {
+        if (comparator == null) {
             this.comparator = new Comparator<K>() {
-
                 @Override
                 public int compare(K t, K t1) {
                     return 0;
                 }
             };
-        }else{
+        } else {
             this.comparator = comparator;
         }
-        
+
     }
 
     @Override
@@ -66,18 +65,18 @@ public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
         container.commit();
         container.close();
     }
-    
+
     @Override
     public void put(final K key, final V value) {
-        TypedEntry<K,V> te = getTypedEntry(key);
-        if(te==null) {
-            if(value!=null) {
+        TypedEntry<K, V> te = getTypedEntry(key);
+        if (te == null) {
+            if (value != null) {
                 container.store(new TypedEntry<K, V>(key, value));
             }
-        }else {
-            if(value == null) {
+        } else {
+            if (value == null) {
                 container.delete(te);
-            }else{
+            } else {
                 te.setValue(value);
             }
         }
@@ -85,23 +84,22 @@ public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
 
     @Override
     public V get(final K key) {
-        ObjectSet<TypedEntry<K,V>> os = container.query(new TypedEntryPredicate<K, V>(key),new TypedEntryComparator<K, V>(comparator));
-        if(os.size()>1) {
-            throw new IllegalStateException("Cache contains more than one element for key: "+key);
+        ObjectSet<TypedEntry<K, V>> os = container.query(new TypedEntryPredicate<K, V>(key), new TypedEntryComparator<K, V>(comparator));
+        if (os.size() > 1) {
+            throw new IllegalStateException("Cache contains more than one element for key: " + key);
         }
-        if(os.isEmpty()) {
+        if (os.isEmpty()) {
             return null;
         }
         return os.get(0).getValue();
     }
-    
-    
-    private TypedEntry<K,V> getTypedEntry(final K key) {
-        ObjectSet<TypedEntry<K,V>> os = container.query(new TypedEntryPredicate<K, V>(key),new TypedEntryComparator<K, V>(comparator));
-        if(os.size()>1) {
-            throw new IllegalStateException("Cache contains more than one element for key: "+key);
+
+    private TypedEntry<K, V> getTypedEntry(final K key) {
+        ObjectSet<TypedEntry<K, V>> os = container.query(new TypedEntryPredicate<K, V>(key), new TypedEntryComparator<K, V>(comparator));
+        if (os.size() > 1) {
+            throw new IllegalStateException("Cache contains more than one element for key: " + key);
         }
-        if(os.isEmpty()) {
+        if (os.isEmpty()) {
             return null;
         }
         return os.get(0);
@@ -111,11 +109,11 @@ public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
     public String getName() {
         return cacheName;
     }
-    
-    public class TypedEntryComparator<K,V> implements Comparator<TypedEntry<K,V>> {
-        
+
+    public class TypedEntryComparator<K, V> implements Comparator<TypedEntry<K, V>> {
+
         private Comparator<K> comparator;
-        
+
         public TypedEntryComparator(Comparator<K> comparator) {
             this.comparator = comparator;
         }
@@ -124,21 +122,20 @@ public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
         public int compare(TypedEntry<K, V> t, TypedEntry<K, V> t1) {
             return this.comparator.compare(t.getKey(), t1.getKey());
         }
-        
     }
-    
-    public class TypedEntryPredicate<K,V> extends Predicate<TypedEntry<K,V>> {
+
+    public class TypedEntryPredicate<K, V> extends Predicate<TypedEntry<K, V>> {
 
         private final K key;
-        
+
         public TypedEntryPredicate(K key) {
             this.key = key;
         }
-        
+
         @Override
-        public boolean match(TypedEntry<K,V> et) {
+        public boolean match(TypedEntry<K, V> et) {
             return et.getKey().equals(key);
-        }     
+        }
     }
 
     public class TypedEntry<K, V> implements Activatable {

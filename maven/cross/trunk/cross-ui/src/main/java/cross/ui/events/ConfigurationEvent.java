@@ -27,18 +27,17 @@ import org.apache.commons.configuration.Configuration;
 
 public class ConfigurationEvent extends AEvent<Configuration> {
 
-	/**
-	 * @param v
-	 * @param ies
-	 */
-	public ConfigurationEvent(final Configuration v,
-	        final IEventSource<Configuration> ies) {
-		super(v, ies);
-	}
+    /**
+     * @param v
+     * @param ies
+     */
+    public ConfigurationEvent(final Configuration v,
+            final IEventSource<Configuration> ies) {
+        super(v, ies);
+    }
 
-	@Override
-	public String getEventName() {
-		return "EVENT_CONFIGURATION";
-	}
-
+    @Override
+    public String getEventName() {
+        return "EVENT_CONFIGURATION";
+    }
 }

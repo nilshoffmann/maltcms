@@ -54,9 +54,7 @@ public interface IDataSourceFactory extends IConfigurable {
     List<String> getSupportedFormats();
 
     /**
-     * @param dataSources
-     * the dataSources to set
+     * @param dataSources the dataSources to set
      */
     void setDataSources(final List<String> dataSources);
-
 }

@@ -26,7 +26,9 @@ import java.util.List;
 import cross.datastructures.collections.IElementProvider;
 
 /**
- * Implementation of {@see IElementProvider} for {@code Object[]}.
+ * Implementation of {
+ *
+ * @see IElementProvider} for {@code Object[]}.
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  *
  */
@@ -54,13 +56,13 @@ public class CombinationProvider implements IElementProvider<Object[]> {
      */
     @Override
     public Object[] get(int idx) {
-        if(idx>size()) {
+        if (idx > size()) {
             throw new IndexOutOfBoundsException();
         }
 //        System.out.println("LastIdx: "+lastIdx+" currentIdx: "+idx);
-        if(Math.abs(idx-lastIdx)>1 || idx<=lastIdx) {
+        if (Math.abs(idx - lastIdx) > 1 || idx <= lastIdx) {
             ci.reset();
-            for(int i = 0;i<idx;i++) {
+            for (int i = 0; i < idx; i++) {
                 get(i);
             }
             //throw new IllegalArgumentException("Random access is not implemented!");

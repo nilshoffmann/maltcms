@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility class with methods for combinatorics.
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
 @Slf4j
@@ -63,15 +64,18 @@ public class Combinatorics {
         }
         return s;
     }
-    
+
     /**
-     * Returns a lazily instantiated list (allows for an almost arbitrary number 
-     * of combinations< {@code Integer.maxValue()}) of all unique object combinations, s.t. 
-     * for (a,b)=(b,a) only (a,b) is returned. The list is backed by a {@see CombinationProvider}
-     * wrapping a {@see CombinationIterator} to feed a {@see CachedLazyList}.
-     * 
+     * Returns a lazily instantiated list (allows for an almost arbitrary number
+     * of combinations< {@code Integer.maxValue()}) of all unique object
+     * combinations, s.t. for (a,b)=(b,a) only (a,b) is returned. The list is
+     * backed by a {@see CombinationProvider} wrapping a {@see
+     * CombinationIterator} to feed a {@see CachedLazyList}.
+     *
+
+     *
      * @param data
-     * @return 
+     * @return
      */
     public static List<Object[]> getKPartiteChoices(List<Object[]> data) {
         //element counter
@@ -97,7 +101,7 @@ public class Combinatorics {
             } else {
                 parts[i] = new Partition(partitionSize[i]);
             }
-            log.debug("|Partition {}| = {}; contents = {}",new Object[]{i, partitionSize[i],Arrays.toString(data.get(i)) });
+            log.debug("|Partition {}| = {}; contents = {}", new Object[]{i, partitionSize[i], Arrays.toString(data.get(i))});
         }
 
         CombinationIterator pi = new CombinationIterator(parts);
@@ -109,10 +113,12 @@ public class Combinatorics {
     }
 
     /**
-     * Faculty function. Below 171!, the exact value is returned. Otherwise, 
-     * the approximate faculty is returned faculty(n) := (n+0.5)*ln(n) - n + ln(2PI)/2
+     * Faculty function. Below 171!, the exact value is returned. Otherwise, the
+     * approximate faculty is returned faculty(n) := (n+0.5)*ln(n) - n +
+     * ln(2PI)/2
+     *
      * @param n
-     * @return 
+     * @return
      */
     public static double faculty(int n) {
         if (n >= 171) {

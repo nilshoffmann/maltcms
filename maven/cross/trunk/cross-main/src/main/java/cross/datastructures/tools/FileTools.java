@@ -22,7 +22,6 @@
 package cross.datastructures.tools;
 
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.tools.StringTools;
@@ -33,29 +32,26 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 
 /**
  * Utility class to ease handling of files and directories.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 public class FileTools {
 
     public static final SimpleDateFormat sdf = new SimpleDateFormat(
             "MM-dd-yyyy_HH-mm-ss", Locale.US);
-    
+
 //    public static File inputBasedirectory = new File(".");
 //    public static File outputBasedirectory = new File(".");
 //    public static boolean omitUserTimePrefix = false;
 //    public static boolean overwrite = false;
-
     public static void deleteDirectory(File directory) {
-
     }
-    
+
     private static File appendCreatorNameToBaseDir(final File base,
             String prefix, final Class<?> creator) {
         File creatordir = base;
@@ -141,7 +137,7 @@ public class FileTools {
 
     public static File getDefaultDirs(final File baseDirectory, final Date d) {
         File outputBasedir = new File(Factory.getInstance().getConfiguration().getString("output.basedir", ""));
-        if(baseDirectory!=null) {
+        if (baseDirectory != null) {
             outputBasedir = baseDirectory;
         }
         final boolean omitUserTimePrefix = Factory.getInstance().getConfiguration().getBoolean("omitUserTimePrefix", false);
@@ -160,7 +156,7 @@ public class FileTools {
             return datedir;
         }
     }
-    
+
     public static File getDefaultDirs(final Date d) {
         return getDefaultDirs(null, d);
     }
@@ -232,10 +228,10 @@ public class FileTools {
     public static File prepareOutput(final File dir, final String filename) {
         return prepareOutput(dir.getAbsolutePath(), filename);
     }
-    
+
     public static File prependDefaultDirsWithPrefix(File baseDir, String prefix, final Class<?> creator, final Date d) {
         return FileTools.appendCreatorNameToBaseDir(
-                FileTools.getDefaultDirs(baseDir,d), prefix, creator);
+                FileTools.getDefaultDirs(baseDir, d), prefix, creator);
     }
 
     public static File prependDefaultDirsWithPrefix(String prefix,
@@ -258,7 +254,8 @@ public class FileTools {
      * @param target the target directory
      * @param base the base directory
      * @return target's path relative to the base directory
-     * @throws IOException if an error occurs while resolving the files' canonical names
+     * @throws IOException if an error occurs while resolving the files'
+     * canonical names
      */
     public static File getRelativeFile(File target, File base) throws IOException {
         String[] baseComponents = base.getCanonicalPath().split(Pattern.quote(File.separator));

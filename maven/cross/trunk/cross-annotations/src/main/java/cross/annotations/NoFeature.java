@@ -27,11 +27,11 @@ import java.lang.annotation.*;
  * Marker annotation which should be added to methods indicating, that this
  * method should not be considered when searching for feature type methods. Used
  * by {@link maltcms.db.predicates.PublicMemberGetters}.
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
+ *
  */
-@Target(value = { ElementType.METHOD })
+@Target(value = {ElementType.METHOD})
 @Retention(value = RetentionPolicy.RUNTIME)
 @Inherited
 public @interface NoFeature {

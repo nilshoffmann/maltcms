@@ -22,12 +22,14 @@
 package cross.datastructures.fragments;
 
 import cross.datastructures.StatsMap;
+import cross.datastructures.tools.EvalTools;
 import cross.exception.ResourceNotAvailableException;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
+import lombok.NonNull;
 import org.jdom.Element;
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
@@ -53,7 +55,6 @@ public class ImmutableFileFragment implements IFileFragment {
     }
 
     public ImmutableFileFragment(final IFileFragment f) {
-        // EvalTools.notNull(f, this);
         this.frag = f;
     }
 
@@ -208,7 +209,8 @@ public class ImmutableFileFragment implements IFileFragment {
      * @param loadStructureOnly
      * @return
      * @throws ResourceNotAvailableException
-     * @see {@link cross.datastructures.fragments.IFileFragment#getChild(String, boolean)}
+     * @see
+     * {@link cross.datastructures.fragments.IFileFragment#getChild(String, boolean)}
      */
     @Override
     public IVariableFragment getChild(final String varname,
@@ -492,6 +494,11 @@ public class ImmutableFileFragment implements IFileFragment {
      *
      * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
      */
+    /**
+     *
+     * @param out
+     * @throws IOException
+     */
     @Override
     public void writeExternal(final ObjectOutput out) throws IOException {
         // store id
@@ -501,11 +508,11 @@ public class ImmutableFileFragment implements IFileFragment {
         out.flush();
         out.close();
     }
-    
+
     /**
      * The registered dimensions of this FileFragment as an unmodifiable Set.
-     * 
-     * @return 
+     *
+     * @return
      */
     @Override
     public Set<Dimension> getDimensions() {

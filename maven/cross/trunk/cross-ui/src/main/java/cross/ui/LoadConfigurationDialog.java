@@ -32,47 +32,44 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 public class LoadConfigurationDialog {
 
-	private File cwd = null;
+    private File cwd = null;
+    private static LoadConfigurationDialog lcd = null;
 
-	private static LoadConfigurationDialog lcd = null;
+    public static LoadConfigurationDialog getInstance() {
+        if (LoadConfigurationDialog.lcd == null) {
+            LoadConfigurationDialog.lcd = new LoadConfigurationDialog();
+        }
+        return LoadConfigurationDialog.lcd;
+    }
+    private final Logger log = LoggerFactory.getLogger(LoadConfigurationDialog.class);
 
-	public static LoadConfigurationDialog getInstance() {
-		if (LoadConfigurationDialog.lcd == null) {
-			LoadConfigurationDialog.lcd = new LoadConfigurationDialog();
-		}
-		return LoadConfigurationDialog.lcd;
-	}
+    private LoadConfigurationDialog() {
+    }
 
-	private final Logger log = LoggerFactory.getLogger(LoadConfigurationDialog.class);
+    public Configuration loadConfiguration(final FileFilter ff) {
+        final JFileChooser jfc = new JFileChooser(this.cwd);
+        PropertiesConfiguration pc = new PropertiesConfiguration();
+        jfc.setFileFilter(ff);
+        final int ret = jfc.showOpenDialog(null);
+        switch (ret) {
+            case JFileChooser.APPROVE_OPTION: {
+                final File f = jfc.getSelectedFile();
+                this.cwd = f.getParentFile();
+                try {
+                    pc = new PropertiesConfiguration(f);
+                } catch (final ConfigurationException e) {
+                    this.log.error(e.getLocalizedMessage());
+                }
 
-	private LoadConfigurationDialog() {
+            }
 
-	}
-
-	public Configuration loadConfiguration(final FileFilter ff) {
-		final JFileChooser jfc = new JFileChooser(this.cwd);
-		PropertiesConfiguration pc = new PropertiesConfiguration();
-		jfc.setFileFilter(ff);
-		final int ret = jfc.showOpenDialog(null);
-		switch (ret) {
-			case JFileChooser.APPROVE_OPTION: {
-				final File f = jfc.getSelectedFile();
-				this.cwd = f.getParentFile();
-				try {
-					pc = new PropertiesConfiguration(f);
-				} catch (final ConfigurationException e) {
-					this.log.error(e.getLocalizedMessage());
-				}
-
-			}
-
-		}
-		jfc.setVisible(false);
-		return pc;
-	}
+        }
+        jfc.setVisible(false);
+        return pc;
+    }
 }

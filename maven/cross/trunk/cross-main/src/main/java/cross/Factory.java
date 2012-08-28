@@ -282,7 +282,7 @@ public class Factory implements ConfigurationListener {
         } else {
             cd.setInput(t);
         }
-        log.info("Workflow {} output: {}", cd.getWorkflow().getName(),  cd.getWorkflow().getOutputDirectory());
+        log.info("Workflow {} output: {}", cd.getWorkflow().getName(), cd.getWorkflow().getOutputDirectory());
         return cd;
     }
 

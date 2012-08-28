@@ -34,9 +34,9 @@ import java.util.List;
 
 /**
  * Abstract sequence of commands on FileFragment objects.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface ICommandSequence extends Iterator<TupleND<IFileFragment>>,
         IListener<IEvent<IWorkflowResult>>, IXMLSerializable {
@@ -74,9 +74,8 @@ public interface ICommandSequence extends Iterator<TupleND<IFileFragment>>,
     public abstract void setInput(TupleND<IFileFragment> t);
 
     public abstract void setWorkflow(IWorkflow iw);
-    
-    public abstract boolean isCheckCommandDependencies();
-    
-    public abstract void setCheckCommandDependencies(boolean checkCommandDependencies);
 
+    public abstract boolean isCheckCommandDependencies();
+
+    public abstract void setCheckCommandDependencies(boolean checkCommandDependencies);
 }

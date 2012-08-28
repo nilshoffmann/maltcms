@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 
 /**
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Slf4j
@@ -93,7 +93,7 @@ public class InputDataFactory implements IInputDataFactory {
 
     /**
      * Preprocess input data (files and variables).
-     * 
+     *
      * @return
      */
     @Override
@@ -107,7 +107,6 @@ public class InputDataFactory implements IInputDataFactory {
                     final File dir = new File(this.basedir);
                     final boolean recurse = this.recurse;
                     final FilenameFilter filter = new FilenameFilter() {
-
                         @Override
                         public boolean accept(final File dir1, final String name) {
                             return name.endsWith(StringTools.getFileExtension(
@@ -163,8 +162,8 @@ public class InputDataFactory implements IInputDataFactory {
                                 + dir.getAbsolutePath() + ", aborting!");
                         System.exit(-1);
                     } else if (children.length == 0) {
-                        log.error("Could not find "+Arrays.toString(input)+" in "
-                                + dir.getAbsolutePath() +", aborting!");
+                        log.error("Could not find " + Arrays.toString(input) + " in "
+                                + dir.getAbsolutePath() + ", aborting!");
                         System.exit(-1);
                     } else {
                         for (int i = 0; i < children.length; i++) {
@@ -177,7 +176,7 @@ public class InputDataFactory implements IInputDataFactory {
                 }
             }
             if (this.input.length == 0) {
-                Factory.getInstance().log.error("{} could not be tokenized!",Arrays.toString(input));
+                Factory.getInstance().log.error("{} could not be tokenized!", Arrays.toString(input));
                 System.exit(-1);
             }
 

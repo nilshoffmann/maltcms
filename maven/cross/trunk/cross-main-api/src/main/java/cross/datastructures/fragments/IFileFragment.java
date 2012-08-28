@@ -32,7 +32,7 @@ import ucar.nc2.Dimension;
 
 /**
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IFileFragment extends IGroupFragment, IFragment,
         Externalizable {
@@ -80,7 +80,7 @@ public interface IFileFragment extends IGroupFragment, IFragment,
      * @throws java.lang.IllegalStateException
      */
     public abstract void clearArrays() throws IllegalStateException;
-    
+
     /**
      * Resets all dimensions of this fragment. Does not set Dimensions to null
      * in IVariableFragments having these Dimensions!
@@ -109,8 +109,9 @@ public interface IFileFragment extends IGroupFragment, IFragment,
     /**
      * Return the child with name varname. If varname is not found in local
      * structure, try to locate it in sourcefiles. First hit wins. Otherwise
-     * throw IllegalArgumentException. If <code>loadStructureOnly</code> is true,
-     * only the variable structure is retrieved, not the data.
+     * throw IllegalArgumentException. If
+     * <code>loadStructureOnly</code> is true, only the variable structure is
+     * retrieved, not the data.
      *
      * @param varname
      * @param loadStructureOnly
@@ -121,10 +122,11 @@ public interface IFileFragment extends IGroupFragment, IFragment,
 
     /**
      * The registered dimensions of this FileFragment.
-     * @return 
+     *
+     * @return
      */
     public abstract Set<Dimension> getDimensions();
-    
+
     /**
      * The unique ID (between runs) of this FileFragment.
      *

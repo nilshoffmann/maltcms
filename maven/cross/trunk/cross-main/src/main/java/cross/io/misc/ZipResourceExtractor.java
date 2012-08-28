@@ -38,7 +38,7 @@ import lombok.Cleanup;
 public class ZipResourceExtractor {
 
     public static File extract(String resourcePath, File destDir) {
-        System.out.println("Extracting "+resourcePath+" to directory: "+destDir);
+        System.out.println("Extracting " + resourcePath + " to directory: " + destDir);
         if (!destDir.exists()) {
             destDir.mkdirs();
         }
@@ -87,7 +87,7 @@ public class ZipResourceExtractor {
             Logger.getLogger(ZipResourceExtractor.class.getName()).
                     log(Level.SEVERE, null, ex);
         }
-        
+
         return outputFile;
     }
 }

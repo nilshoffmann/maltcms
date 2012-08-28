@@ -30,12 +30,11 @@ import cross.event.IEventSource;
 
 /**
  * Cover interface (c++: typedef) for IFragmentCommand.
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
+ *
  */
 public interface IFragmentCommand extends
         ICommand<TupleND<IFileFragment>, TupleND<IFileFragment>>,
         IEventSource<IWorkflowResult>, IWorkflowElement {
-
 }

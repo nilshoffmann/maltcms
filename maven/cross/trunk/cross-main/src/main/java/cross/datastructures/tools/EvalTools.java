@@ -398,7 +398,7 @@ public class EvalTools {
     }
 
     public static void isNull(final Object o, final Object caller) throws ConstraintViolationException {
-        if(o!=null) {
+        if (o != null) {
             throw new ConstraintViolationException("Called from " + caller.toString() + ": "
                     + "Argument was not null!");
         }

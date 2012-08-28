@@ -18,7 +18,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 public class ConfiguringBeanPostProcessor implements BeanPostProcessor {
 
     private Configuration configuration;
-    
+
     @Override
     public Object postProcessBeforeInitialization(Object o, String string) throws BeansException {
         return o;
@@ -26,11 +26,10 @@ public class ConfiguringBeanPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object o, String string) throws BeansException {
-       if(o instanceof IConfigurable) {
+        if (o instanceof IConfigurable) {
 //           System.out.println("Configuring bean "+o.getClass().getName());
-           ((IConfigurable)o).configure(configuration);
-       }
-       return o;
+            ((IConfigurable) o).configure(configuration);
+        }
+        return o;
     }
-    
 }

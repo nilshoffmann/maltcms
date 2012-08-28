@@ -23,13 +23,12 @@ package cross.datastructures.tuple;
 
 /**
  * Typed specialization of Tuple2D for Integer.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 public class Tuple2DI extends Tuple2D<Integer, Integer> {
 
-	public Tuple2DI(final Integer a, final Integer b) {
-		super(a, b);
-	}
-
+    public Tuple2DI(final Integer a, final Integer b) {
+        super(a, b);
+    }
 }

@@ -27,9 +27,10 @@ import java.util.Collection;
 
 /**
  * Interface for factories creating IFileFragments.
+ *
  * @author nilshoffmann
  */
-public interface IFileFragmentFactory extends IConfigurable{
+public interface IFileFragmentFactory extends IConfigurable {
 
     IFileFragment create(final File f);
 
@@ -62,5 +63,4 @@ public interface IFileFragmentFactory extends IConfigurable{
      * @return
      */
     IFileFragment fromString(final String dataInfo);
-
 }

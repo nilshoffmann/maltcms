@@ -32,7 +32,7 @@ import ucar.nc2.Dimension;
 
 /**
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IVariableFragment extends IFragment {
 
@@ -46,7 +46,7 @@ public interface IVariableFragment extends IFragment {
      * Clear all associated array data and other resources.
      */
     public abstract void clear();
-    
+
     @Override
     public abstract int compare(IFragment o1, IFragment o2);
 
@@ -121,7 +121,8 @@ public interface IVariableFragment extends IFragment {
     /**
      * Return the name of this VariableFragment.
      *
-     * Use <code>getName()</code> instead.
+     * Use
+     * <code>getName()</code> instead.
      *
      * @return
      */
@@ -142,6 +143,10 @@ public interface IVariableFragment extends IFragment {
      */
     public abstract boolean hasArray();
 
+    /**
+     *
+     * @return
+     */
     @Override
     public abstract int hashCode();
 
@@ -207,6 +212,10 @@ public interface IVariableFragment extends IFragment {
      */
     public abstract void setRange(Range[] ranges1);
 
+    /**
+     *
+     * @return
+     */
     @Override
     public abstract String toString();
 }

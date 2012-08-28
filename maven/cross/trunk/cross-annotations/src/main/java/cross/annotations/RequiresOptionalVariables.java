@@ -26,13 +26,14 @@ import java.lang.annotation.*;
 /**
  * Annotation which should be added to AFragmentCommand instances, declaring,
  * which variables, as given by their names, the annotated class needs.
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
+ *
  */
-@Target(value = { ElementType.TYPE })
+@Target(value = {ElementType.TYPE})
 @Retention(value = RetentionPolicy.RUNTIME)
 @Inherited
 public @interface RequiresOptionalVariables {
-	String[] names() default "";
+
+    String[] names() default "";
 }

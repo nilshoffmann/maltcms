@@ -29,21 +29,21 @@ import java.util.Map;
 /**
  * StatsMap stores values corresponding to Vars, associated to a given Fragment
  * (not mandatory).
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class StatsMap extends HashMap<String, Double> {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 2231266409133039440L;
     private IFragment association = null;
     private String label = null;
 
     /**
-     * 
+     *
      */
     public StatsMap() {
         super();
@@ -92,8 +92,7 @@ public class StatsMap extends HashMap<String, Double> {
     }
 
     /**
-     * @param label
-     *            the label to set
+     * @param label the label to set
      */
     public void setLabel(final String label1) {
         this.label = label1;

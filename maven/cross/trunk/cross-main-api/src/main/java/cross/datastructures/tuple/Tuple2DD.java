@@ -24,38 +24,37 @@ package cross.datastructures.tuple;
 /**
  * Typed specialization of Tuple2D for Double, providing additional methods for
  * arithmetic with Tuple2DD.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class Tuple2DD extends Tuple2D<Double, Double> {
 
-	public static Tuple2D<Double, Double> diff(
-	        final Tuple2D<Double, Double> t1, final Tuple2D<Double, Double> t2) {
-		return new Tuple2DD(t1.getFirst() - t2.getFirst(), t1.getSecond()
-		        - t2.getSecond());
-	}
+    public static Tuple2D<Double, Double> diff(
+            final Tuple2D<Double, Double> t1, final Tuple2D<Double, Double> t2) {
+        return new Tuple2DD(t1.getFirst() - t2.getFirst(), t1.getSecond()
+                - t2.getSecond());
+    }
 
-	public static Double dot(final Tuple2D<Double, Double> t1,
-	        final Tuple2D<Double, Double> t2) {
-		return t1.getFirst() * t2.getFirst() + t1.getSecond() * t2.getSecond();
-	}
+    public static Double dot(final Tuple2D<Double, Double> t1,
+            final Tuple2D<Double, Double> t2) {
+        return t1.getFirst() * t2.getFirst() + t1.getSecond() * t2.getSecond();
+    }
 
-	public static Double len(final Tuple2D<Double, Double> t1) {
-		return 1.0f / Math.sqrt(Tuple2DD.dot(t1, t1));
-	}
+    public static Double len(final Tuple2D<Double, Double> t1) {
+        return 1.0f / Math.sqrt(Tuple2DD.dot(t1, t1));
+    }
 
-	public static Tuple2D<Double, Double> mult(
-	        final Tuple2D<Double, Double> l1, final Double mult) {
-		return new Tuple2DD(l1.getFirst() * mult, l1.getSecond() * mult);
-	}
+    public static Tuple2D<Double, Double> mult(
+            final Tuple2D<Double, Double> l1, final Double mult) {
+        return new Tuple2DD(l1.getFirst() * mult, l1.getSecond() * mult);
+    }
 
-	public static Tuple2D<Double, Double> trans(final Tuple2D<Double, Double> t1) {
-		return new Tuple2DD(t1.getSecond(), t1.getFirst());
-	}
+    public static Tuple2D<Double, Double> trans(final Tuple2D<Double, Double> t1) {
+        return new Tuple2DD(t1.getSecond(), t1.getFirst());
+    }
 
-	public Tuple2DD(final Double t1, final Double t2) {
-		super(t1, t2);
-	}
-
+    public Tuple2DD(final Double t1, final Double t2) {
+        super(t1, t2);
+    }
 }

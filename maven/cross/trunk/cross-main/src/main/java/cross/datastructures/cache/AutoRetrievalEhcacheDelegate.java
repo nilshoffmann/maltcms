@@ -19,7 +19,7 @@
  *
  *  $Id$
  */
-package cross.datastructures.ehcache;
+package cross.datastructures.cache;
 
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
@@ -61,7 +61,7 @@ class AutoRetrievalEhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
         V v = null;
         if (element != null) {
             v = (V) element.getValue();
-            if(v != null) {
+            if (v != null) {
                 return v;
             }
         }

@@ -27,9 +27,10 @@ import java.util.concurrent.Callable;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
-public interface IRemoteCallable extends Remote{
+public interface IRemoteCallable extends Remote {
+
     <T> T invoke(Callable<T> c) throws RemoteException;
 }

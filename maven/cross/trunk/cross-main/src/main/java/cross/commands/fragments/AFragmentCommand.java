@@ -67,11 +67,21 @@ public abstract class AFragmentCommand implements IFragmentCommand {
     private IWorkflow workflow = null;
     private DefaultWorkflowProgressResult progress = null;
 
+    /**
+     *
+     * @param fragmentCommand
+     */
     public void initSubCommand(AFragmentCommand fragmentCommand) {
         fragmentCommand.setWorkflow(workflow);
         fragmentCommand.configure(workflow.getConfiguration());
     }
 
+    /**
+     *
+     * @param ics
+     * @param t
+     * @return
+     */
     public TupleND<IFileFragment> postProcess(ICompletionService<File> ics,
             final TupleND<IFileFragment> t) {
         TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
@@ -84,7 +94,8 @@ public abstract class AFragmentCommand implements IFragmentCommand {
             // append results to workflow for bookkeeping
             addWorkflowResults(ret);
         } catch (Exception ex) {
-            log.warn("{} tasks failed with exception:\n{}", ics.getFailedTasks().size(), ex.getLocalizedMessage());
+            log.error("Caught exception while executing workers: ", ex);
+            throw new RuntimeException(ex);
         }
         return ret;
     }
@@ -100,6 +111,10 @@ public abstract class AFragmentCommand implements IFragmentCommand {
         this.eventSource.addListener(l);
     }
 
+    /**
+     *
+     * @param e
+     */
     @Override
     public void appendXML(final Element e) {
     }
@@ -126,6 +141,10 @@ public abstract class AFragmentCommand implements IFragmentCommand {
         this.eventSource.fireEvent(e);
     }
 
+    /**
+     *
+     * @return
+     */
     public abstract String getDescription();
 
     /**
@@ -177,12 +196,24 @@ public abstract class AFragmentCommand implements IFragmentCommand {
         return retFragments;
     }
 
+    /**
+     *
+     * @param <T>
+     * @param serviceObjectType
+     * @return
+     */
     public <T extends Serializable> ICompletionService<T> createCompletionService(
             Class<? extends T> serviceObjectType) {
         return createNonBlockingCompletionService(serviceObjectType, 1000,
                 TimeUnit.MILLISECONDS);
     }
 
+    /**
+     *
+     * @param <T>
+     * @param serviceObjectType
+     * @return
+     */
     public <T extends Serializable> ICompletionService<T> createBlockingCompletionService(
             Class<? extends T> serviceObjectType) {
         ICompletionService<T> ics = null;
@@ -199,6 +230,14 @@ public abstract class AFragmentCommand implements IFragmentCommand {
         return ics;
     }
 
+    /**
+     *
+     * @param <T>
+     * @param serviceObjectType
+     * @param timeOut
+     * @param timeUnit
+     * @return
+     */
     public <T extends Serializable> ICompletionService<T> createNonBlockingCompletionService(
             Class<? extends T> serviceObjectType, long timeOut,
             TimeUnit timeUnit) {
@@ -217,24 +256,41 @@ public abstract class AFragmentCommand implements IFragmentCommand {
         return ics;
     }
 
+    /**
+     *
+     * @param fragments
+     */
     public void addWorkflowResults(IFileFragment... fragments) {
         for (IFileFragment fragment : fragments) {
             addWorkflowResult(fragment);
         }
     }
 
+    /**
+     *
+     * @param fragments
+     */
     public void addWorkflowResults(TupleND<IFileFragment> fragments) {
         for (IFileFragment fragment : fragments) {
             addWorkflowResult(fragment);
         }
     }
 
+    /**
+     *
+     * @param fragment
+     */
     public void addWorkflowResult(IFileFragment fragment) {
         getWorkflow().append(
                 new DefaultWorkflowResult(new File(fragment.getAbsolutePath()),
                 this, getWorkflowSlot(), fragment));
     }
 
+    /**
+     *
+     * @param fragment
+     * @param resources
+     */
     public void addWorkflowResult(IFileFragment fragment,
             IFileFragment... resources) {
         getWorkflow().append(
@@ -242,6 +298,12 @@ public abstract class AFragmentCommand implements IFragmentCommand {
                 this, getWorkflowSlot(), resources));
     }
 
+    /**
+     *
+     * @param fragment
+     * @param slot
+     * @param resources
+     */
     public void addWorkflowResult(IFileFragment fragment, WorkflowSlot slot,
             IFileFragment... resources) {
         getWorkflow().append(
@@ -249,6 +311,13 @@ public abstract class AFragmentCommand implements IFragmentCommand {
                 this, slot, resources));
     }
 
+    /**
+     *
+     * @param fragment
+     * @param producer
+     * @param slot
+     * @param resources
+     */
     public void addWorkflowResult(IFileFragment fragment,
             IWorkflowElement producer, WorkflowSlot slot,
             IFileFragment... resources) {
@@ -257,8 +326,12 @@ public abstract class AFragmentCommand implements IFragmentCommand {
                 producer, slot, resources));
     }
 
+    /**
+     *
+     * @param size
+     */
     public void initProgress(int size) {
-        EvalTools.isNull(progress,this);
+        EvalTools.isNull(progress, this);
         setProgress(
                 new DefaultWorkflowProgressResult(
                 size, this, getWorkflowSlot()));
@@ -273,7 +346,11 @@ public abstract class AFragmentCommand implements IFragmentCommand {
     public void removeListener(final IListener<IEvent<IWorkflowResult>> l) {
         this.eventSource.removeListener(l);
     }
-    
+
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return getClass().getName();

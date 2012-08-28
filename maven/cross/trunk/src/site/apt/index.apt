@@ -5,3 +5,36 @@ Welcome to Cross
     * {{{http://sourceforge.net/apps/trac/maltcms/}Wiki and Bugtracker}}
 
     * {{{https://sourceforge.net/projects/maltcms/support}Help}}
+
+Changes for version 1.2.11:
+
+New features
+
+    * <<<cross.applicationContext>>>
+        * <<<ConfiguringBeanPostProcessor>>>
+          Applies to instances of <<<cross.IConfigurable>>>. Please note that
+          <<<configure(Configuration cfg)>>> is called AFTER instantiation and 
+          configuration of the objects by the application context. Thus, 
+          settings provided via an xml configuration file could be overridden by 
+          an entry in the global properties-based configuration. Implementors 
+          should thus only use the configuration interface for custom
+          initialization that can not be performed otherwise using spring.
+
+    * <<<cross.datastructures.fragments>>>
+        * <<<VariableFragment>>>
+          Does not support lazy loading anymore, use it only for data creation.
+          Uses a cache implementation using db4o local database storage to avoid 
+          keeping large arrays in memory.
+        * <<<CachedList>>>
+          Fixed an issue, when <<<CachedList>>> would not reset the range of the 
+          referenced index variable.
+
+Deprecated Classes
+
+    <<<cross.Logging>>> has been removed. Please use <<<@Slf4j>>> annotation on your 
+    classes and use the field <<<log.[info,warn,debug]>>> etc. for your logging
+    statements.
+
+    <<<cross.datastructures.fragments.IVariableFragment.getVarname()>>> is
+    deprecated and references to it have already been removed throughout cross
+    and maltcms. Please use <<<getName()>>> instead.

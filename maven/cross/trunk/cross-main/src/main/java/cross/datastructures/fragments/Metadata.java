@@ -30,49 +30,76 @@ import ucar.nc2.Attribute;
 /**
  * Objects of this type hold netcdf associated metadata as Attributes,
  * accessible by name.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class Metadata implements Iterable<Attribute> {
 
-	protected HashMap<String, Attribute> hm = new HashMap<String, Attribute>();
+    /**
+     *
+     */
+    protected HashMap<String, Attribute> hm = new HashMap<String, Attribute>();
 
-	public Metadata() {
+    public Metadata() {
+    }
 
-	}
+    public Metadata(final List<Attribute> l) {
+        this();
+        for (final Attribute a : l) {
+            add(a);
+        }
+    }
 
-	public Metadata(final List<Attribute> l) {
-		this();
-		for (final Attribute a : l) {
-			add(a);
-		}
-	}
+    /**
+     *
+     * @param a
+     */
+    public void add(final Attribute a) {
+        final Attribute b = new Attribute(a.getName(), a);
+        this.hm.put(b.getName(), b);
+    }
 
-	public void add(final Attribute a) {
-		final Attribute b = new Attribute(a.getName(), a);
-		this.hm.put(b.getName(), b);
-	}
+    /**
+     *
+     * @return
+     */
+    public Collection<Attribute> asCollection() {
+        return this.hm.values();
+    }
 
-	public Collection<Attribute> asCollection() {
-		return this.hm.values();
-	}
+    /**
+     *
+     * @param name
+     * @return
+     */
+    public Attribute get(final String name) {
+        return this.hm.get(name);
+    }
 
-	public Attribute get(final String name) {
-		return this.hm.get(name);
-	}
+    /**
+     *
+     * @param name
+     * @return
+     */
+    public boolean has(final String name) {
+        return this.hm.containsKey(name);
+    }
 
-	public boolean has(final String name) {
-		return this.hm.containsKey(name);
-	}
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Iterator<Attribute> iterator() {
+        return this.hm.values().iterator();
+    }
 
-	@Override
-	public Iterator<Attribute> iterator() {
-		return this.hm.values().iterator();
-	}
-
-	public Collection<String> keySet() {
-		return this.hm.keySet();
-	}
-
+    /**
+     *
+     * @return
+     */
+    public Collection<String> keySet() {
+        return this.hm.keySet();
+    }
 }

@@ -19,20 +19,13 @@
  *
  *  $Id$
  */
-package cross.datastructures.ehcache;
+package cross.datastructures.cache;
 
 /**
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-public interface ICacheDelegate<K, V> {
+public interface ICacheElementProvider<K, V> {
 
-    void put(K key, V value);
-
-    V get(K key);
-
-    String getName();
-    
-    void close();
-    
+    V provide(K key);
 }

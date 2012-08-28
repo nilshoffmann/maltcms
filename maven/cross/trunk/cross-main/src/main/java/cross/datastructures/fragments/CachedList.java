@@ -23,7 +23,6 @@ package cross.datastructures.fragments;
 
 import cross.Factory;
 import cross.IConfigurable;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.exception.ResourceNotAvailableException;
 import java.io.IOException;
@@ -37,7 +36,7 @@ import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
 
 /**
- *  Implementation of a cached list for indexed data access.
+ * Implementation of a cached list for indexed data access.
  *
  * @TODO A future version of this will be generic, using a DataProvider to load
  * T instances.
@@ -156,7 +155,7 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
     @Override
     public Array get(final int arg0) {
         final int arg = arg0;
-        if ((arg < 0) || (arg > this.size - 1)) {
+        if ((arg < 0) || (arg < offset) || (arg > this.size - 1)) {
             throw new IndexOutOfBoundsException("Index out of bounds: " + arg0);
         }
         final Integer key = Integer.valueOf(arg);
@@ -211,7 +210,7 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-        private void init(final int offset, final int size) {
+    private void init(final int offset, final int size) {
         try {
             this.size = Factory.getInstance().getDataSourceFactory().getDataSourceFor(this.ivf.getParent()).readStructure(
                     this.ivf.getIndex()).getDimensions()[0].getLength();
@@ -220,15 +219,15 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
         } catch (final ResourceNotAvailableException ex) {
             log.warn(ex.getLocalizedMessage());
         }
-        if ((offset > 0) && (size >= 0)) {
-            this.size = Math.min(this.size, size);
+        if ((offset >= 0 && offset < size) && (size > 0)) {
             this.offset = offset;
+            this.size = Math.min(this.size, this.offset + size);
         }
     }
 
     @Override
     public boolean isEmpty() {
-        if(this.size<1) {
+        if (this.size < 1) {
             return true;
         }
         return false;
@@ -241,8 +240,7 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
     @Override
     public Iterator<Array> iterator() {
         return new Iterator<Array>() {
-
-            private int start = 0;
+            private int start = offset;
             private final int end = size();
 
             @Override
@@ -283,6 +281,7 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
 
     private List<Array> load(final int from, final int to)
             throws ResourceNotAvailableException {
+        Range[] originalRange = this.ivf.getIndex().getRange();
         try {
             // keep range as is since we still reference original data
             final Range[] r = new Range[]{new Range(from + this.offset, to
@@ -292,6 +291,7 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
             // read array
             final List<Array> a = Factory.getInstance().getDataSourceFactory().getDataSourceFor(this.ivf.getParent()).readIndexed(
                     this.ivf);
+
             return a;
         } catch (final IOException ex) {
             throw new ResourceNotAvailableException(ex);
@@ -299,64 +299,134 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
             throw new ResourceNotAvailableException(ex);
         } catch (final InvalidRangeException ex) {
             throw new ResourceNotAvailableException(ex);
+        } finally {
+            //restore original range
+            this.ivf.getIndex().setRange(originalRange);
         }
     }
 
+    /**
+     *
+     * @param arg0
+     * @return
+     */
     @Override
     public Array remove(final int arg0) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     *
+     * @param arg0
+     * @return
+     */
     @Override
     public boolean remove(final Object arg0) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     *
+     * @param arg0
+     * @return
+     */
     @Override
     public boolean removeAll(final Collection<?> arg0) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     *
+     * @param arg0
+     * @return
+     */
     @Override
     public boolean retainAll(final Collection<?> arg0) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     *
+     * @param arg0
+     * @param arg1
+     * @return
+     */
     @Override
     public Array set(final int arg0, final Array arg1) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     *
+     * @param cachesize
+     */
     public void setCacheSize(final int cachesize) {
         this.cacheSize = cachesize;
     }
 
+    /**
+     *
+     * @param prefetchOnMiss
+     */
     public void setPrefetchOnMiss(final boolean prefetchOnMiss) {
         this.prefetchOnMiss = prefetchOnMiss;
     }
 
+    /**
+     *
+     * @param ivf
+     */
     public void setVariableFragment(final IVariableFragment ivf) {
         this.ivf = ivf;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int size() {
         return this.size;
     }
 
+    /**
+     *
+     * @param arg0
+     * @param arg1
+     * @return
+     */
     @Override
     public List<Array> subList(final int arg0, final int arg1) {
         return CachedList.getList(this.ivf, arg0, arg1 - arg0);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Object[] toArray() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return toArray(new Array[size()]);
     }
 
+    /**
+     *
+     * @param <T>
+     * @param arg0
+     * @return
+     */
     @Override
     public <T> T[] toArray(final T[] arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Array[] arrays = null;
+        if (arg0 == null || arg0.length == 0 || arg0.length != size()) {
+            arrays = new Array[size()];
+        } else {
+            arrays = (Array[]) arg0;
+        }
+        for (int i = 0; i < arrays.length; i++) {
+            arrays[i] = get(i);
+        }
+        return (T[]) arrays;
     }
 
     private void updateQueue() {

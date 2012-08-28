@@ -96,10 +96,11 @@ public interface IFragment extends Comparable<Object>, Comparator<IFragment>,
 
     /**
      * Add an attribute
-     * @param a 
+     *
+     * @param a
      */
     public abstract void addAttribute(Attribute a);
-    
+
     /**
      * Set attributes on a fragment.
      *

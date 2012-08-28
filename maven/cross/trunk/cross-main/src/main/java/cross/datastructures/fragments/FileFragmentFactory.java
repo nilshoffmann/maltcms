@@ -36,18 +36,27 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
  */
-@ServiceProvider(service=IFileFragmentFactory.class)
+@ServiceProvider(service = IFileFragmentFactory.class)
 public class FileFragmentFactory implements IFileFragmentFactory {
 
     @Configurable(name = "input.basedir")
     private String inputBasedir = "";
     private FragmentStringParser fsp;
 
+    /**
+     *
+     * @param cfg
+     */
     @Override
     public void configure(final Configuration cfg) {
         this.inputBasedir = cfg.getString("input.basedir", "");
     }
 
+    /**
+     *
+     * @param f
+     * @return
+     */
     @Override
     public IFileFragment create(final File f) {
         if (FileFragment.hasFragment(f.getAbsolutePath())) {
@@ -56,6 +65,12 @@ public class FileFragmentFactory implements IFileFragmentFactory {
         return new FileFragment(f);
     }
 
+    /**
+     *
+     * @param f
+     * @param sourceFiles
+     * @return
+     */
     @Override
     public IFileFragment create(final File f,
             final IFileFragment... sourceFiles) {
@@ -64,11 +79,24 @@ public class FileFragmentFactory implements IFileFragmentFactory {
         return iff;
     }
 
+    /**
+     *
+     * @param dirname
+     * @param filename
+     * @return
+     */
     @Override
     public IFileFragment create(final String dirname, final String filename) {
         return create(dirname, filename, new LinkedList<IFileFragment>());
     }
 
+    /**
+     *
+     * @param dirname
+     * @param filename
+     * @param sourceFiles
+     * @return
+     */
     @Override
     public IFileFragment create(final String dirname, final String filename,
             final IFileFragment... sourceFiles) {
@@ -77,6 +105,13 @@ public class FileFragmentFactory implements IFileFragmentFactory {
         return iff;
     }
 
+    /**
+     *
+     * @param dir
+     * @param filename
+     * @param sourceFiles
+     * @return
+     */
     @Override
     public IFileFragment create(final File dir, final String filename,
             final IFileFragment... sourceFiles) {
@@ -85,6 +120,14 @@ public class FileFragmentFactory implements IFileFragmentFactory {
         return iff;
     }
 
+    /**
+     *
+     * @param dirname
+     * @param filename
+     * @param resourceFiles
+     * @return
+     * @throws IllegalArgumentException
+     */
     @Override
     public IFileFragment create(final String dirname, final String filename,
             final Collection<IFileFragment> resourceFiles)
@@ -124,6 +167,11 @@ public class FileFragmentFactory implements IFileFragmentFactory {
         return ff;
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     @Override
     public IFileFragment create(final String s) {
         String filename = "";

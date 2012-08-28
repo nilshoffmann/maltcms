@@ -244,7 +244,7 @@ public class FragmentTools {
         EvalTools.notNull(
                 new Object[]{ivf, ivf.getParent(), ivf.getIndex()},
                 FragmentTools.class);
-        return FragmentTools.getIndexed(ivf.getParent(), ivf.getVarname(), ivf.getIndex().getVarname(), i);
+        return FragmentTools.getIndexed(ivf.getParent(), ivf.getName(), ivf.getIndex().getName(), i);
     }
 
     /**
@@ -335,6 +335,13 @@ public class FragmentTools {
         }
     }
 
+    /**
+     *
+     * @param ff
+     * @param variableName
+     * @return
+     * @deprecated
+     */
     @Deprecated
     public static String getStringVar(final IFileFragment ff,
             final String variableName) {
@@ -350,6 +357,15 @@ public class FragmentTools {
         return null;
     }
 
+    /**
+     *
+     * @param parent
+     * @param varname
+     * @param indexname
+     * @return
+     * @throws ResourceNotAvailableException
+     * @deprecated
+     */
     @Deprecated
     /**
      * See {@link IFileFragment} and {@link IVariableFragment}.
@@ -687,44 +703,48 @@ public class FragmentTools {
         IDataSourceFactory dsf = Factory.getInstance().getDataSourceFactory();
         return dsf.getDataSourceFor(fragment).readStructure(fragment);
     }
-    
+
     /**
-     * Returns a {@link TupleND} of {@link ImmutableFileFragment}s from the given files.
+     * Returns a {@link TupleND} of {@link ImmutableFileFragment}s from the
+     * given files.
+     *
      * @param files
-     * @return 
+     * @return
      */
-    public static TupleND<IFileFragment> immutable(File...files) {
+    public static TupleND<IFileFragment> immutable(File... files) {
         TupleND<IFileFragment> t = new TupleND<IFileFragment>();
-        for(File f:files) {
+        for (File f : files) {
             t.add(new ImmutableFileFragment(f));
         }
         return t;
     }
-    
+
     /**
-     * Returns a {@link TupleND} of {@link ImmutableFileFragment}s from the given files.
+     * Returns a {@link TupleND} of {@link ImmutableFileFragment}s from the
+     * given files.
+     *
      * @param files
-     * @return 
+     * @return
      */
     public static TupleND<IFileFragment> immutable(Collection<File> files) {
         TupleND<IFileFragment> t = new TupleND<IFileFragment>();
-        for(File f:files) {
+        for (File f : files) {
             t.add(new ImmutableFileFragment(f));
         }
         return t;
     }
-    
+
     /**
      * Returns a {@link TupleND} of {@link FileFragment}s from the given files.
+     *
      * @param files
-     * @return 
+     * @return
      */
     public static TupleND<IFileFragment> mutable(Collection<File> files) {
         TupleND<IFileFragment> t = new TupleND<IFileFragment>();
-        for(File f:files) {
+        for (File f : files) {
             t.add(new FileFragment(f));
         }
         return t;
     }
-    
 }

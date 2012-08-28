@@ -19,7 +19,7 @@
  *
  *  $Id$
  */
-package cross.datastructures.ehcache;
+package cross.datastructures.cache;
 
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
@@ -27,12 +27,12 @@ import net.sf.ehcache.Element;
 
 /**
  *
- * Implementation of a cache delegate for typed caches backed by
- * <a href="http://www.ehcache.org">ehcache</a>.
- * 
- * Please note that Ehcache only allows Serializable objects to be 
- * externalized to disk, should the in-memory cache overflow.
- * 
+ * Implementation of a cache delegate for typed caches backed by <a
+ * href="http://www.ehcache.org">ehcache</a>.
+ *
+ * Please note that Ehcache only allows Serializable objects to be externalized
+ * to disk, should the in-memory cache overflow.
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 public class EhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
@@ -64,7 +64,7 @@ public class EhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
     public void close() {
         cacheManager.getEhcache(cacheName).dispose();
     }
-    
+
     public Ehcache getCache() {
         return cacheManager.getEhcache(cacheName);
     }
@@ -73,5 +73,4 @@ public class EhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
     public String getName() {
         return cacheName;
     }
-
 }

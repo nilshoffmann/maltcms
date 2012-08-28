@@ -26,23 +26,22 @@ import org.apache.commons.configuration.Configuration;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 public class LoadConfigurationEvent extends ConfigurationEvent {
 
-	/**
-	 * @param v
-	 * @param ies
-	 */
-	public LoadConfigurationEvent(final Configuration v,
-	        final IEventSource<Configuration> ies) {
-		super(v, ies);
-	}
+    /**
+     * @param v
+     * @param ies
+     */
+    public LoadConfigurationEvent(final Configuration v,
+            final IEventSource<Configuration> ies) {
+        super(v, ies);
+    }
 
-	@Override
-	public String getEventName() {
-		return "EVENT_CONFIGURATION_LOAD";
-	}
-
+    @Override
+    public String getEventName() {
+        return "EVENT_CONFIGURATION_LOAD";
+    }
 }

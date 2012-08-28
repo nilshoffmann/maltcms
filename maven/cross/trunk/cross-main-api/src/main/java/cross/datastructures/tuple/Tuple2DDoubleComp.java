@@ -26,27 +26,26 @@ import java.util.Comparator;
 /**
  * Comparator which can be used to sort collections of Tuple2D<Double,Double>
  * based on the first element of the tuple.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
- * 
+ *
+ *
  */
 public class Tuple2DDoubleComp implements Comparator<Tuple2D<Double, Double>> {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public int compare(final Tuple2D<Double, Double> o1,
-	        final Tuple2D<Double, Double> o2) {
-		if (o1.getFirst() > o2.getFirst()) {
-			return 1;
-		} else if (o1.getFirst() < o2.getFirst()) {
-			return -1;
-		}
-		return 0;
-	}
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+     */
+    @Override
+    public int compare(final Tuple2D<Double, Double> o1,
+            final Tuple2D<Double, Double> o2) {
+        if (o1.getFirst() > o2.getFirst()) {
+            return 1;
+        } else if (o1.getFirst() < o2.getFirst()) {
+            return -1;
+        }
+        return 0;
+    }
 }

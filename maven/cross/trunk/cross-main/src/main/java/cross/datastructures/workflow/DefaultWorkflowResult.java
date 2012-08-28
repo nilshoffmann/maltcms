@@ -29,10 +29,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
 
 /**
- * Default implementation of an <code>IWorkflowResult</code>.
- * 
+ * Default implementation of an
+ * <code>IWorkflowResult</code>.
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
+ *
  */
 @Slf4j
 public class DefaultWorkflowResult implements IWorkflowFileResult {
@@ -116,7 +117,7 @@ public class DefaultWorkflowResult implements IWorkflowFileResult {
      */
     @Override
     public void appendXML(Element e) {
-        
+
         final Element iwr = new Element("workflowElementResult");
         iwr.setAttribute("class", getClass().getCanonicalName());
         iwr.setAttribute("slot", getWorkflowSlot().name());
@@ -128,7 +129,7 @@ public class DefaultWorkflowResult implements IWorkflowFileResult {
             try {
                 res.setAttribute("uri", new File(f.getAbsolutePath()).getCanonicalFile().toURI().normalize().toString());
             } catch (IOException ex) {
-                log.warn("{}",ex);
+                log.warn("{}", ex);
             }
             resources.addContent(res);
         }

@@ -28,10 +28,12 @@ import java.util.List;
  * @author nilshoffmann
  */
 public interface IElementProvider<T> {
-    
+
     int size();
+
     T get(int i);
+
     List<T> get(int start, int stop);
+
     void reset();
-    
 }

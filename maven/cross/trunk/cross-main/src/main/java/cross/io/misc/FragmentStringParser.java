@@ -22,7 +22,6 @@
 package cross.io.misc;
 
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -32,7 +31,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
 
@@ -200,7 +198,7 @@ public class FragmentStringParser {
         log.info("Checking if Variables were given explicitly");
         final String[] fileNameVarNameRest = s.split(">", 0);// seperate
         if (fileNameVarNameRest.length == 1) {
-            final IFileFragment ff = Factory.getInstance().getFileFragmentFactory().create(s.substring(0, s.length()-1));
+            final IFileFragment ff = Factory.getInstance().getFileFragmentFactory().create(s.substring(0, s.length() - 1));
             return ff;
         }
         // filename and

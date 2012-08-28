@@ -29,12 +29,11 @@ import cross.datastructures.fragments.IFileFragment;
  */
 public interface IWorkflowObjectResult<T> extends IWorkflowResult {
 
-	public T getObject();
+    public T getObject();
 
-	public void setObject(T t);
+    public void setObject(T t);
 
-	public IFileFragment[] getResources();
+    public IFileFragment[] getResources();
 
-	public void setResources(IFileFragment... resources);
-    
+    public void setResources(IFileFragment... resources);
 }

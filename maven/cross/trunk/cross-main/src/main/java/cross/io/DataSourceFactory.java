@@ -22,7 +22,6 @@
 package cross.io;
 
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.EvalTools;
@@ -33,13 +32,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 
 /**
- * Factory managing objects of type <code>IDataSource</code>. Objects can be
- * registered within cfg/io.properties, key "cross.io.IDataSource". Or by
- * defining them as service implementations of @code{cross.io.IDataSource} in a
+ * Factory managing objects of type
+ * <code>IDataSource</code>. Objects can be registered within cfg/io.properties,
+ * key "cross.io.IDataSource". Or by defining them as service implementations of @code{cross.io.IDataSource} in a
  * jar files manifest.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 public class DataSourceFactory implements IDataSourceFactory {
@@ -56,7 +55,7 @@ public class DataSourceFactory implements IDataSourceFactory {
         DataSourceServiceLoader ids = new DataSourceServiceLoader();
         List<IDataSource> l = ids.getAvailableCommands();
         for (IDataSource source : l) {
-            log.debug("Adding datasource provider {} for formats {}",source,source.supportedFormats());
+            log.debug("Adding datasource provider {} for formats {}", source, source.supportedFormats());
             Factory.getInstance().getObjectFactory().configureType(source);
             addToHashMap(source);
         }
@@ -64,7 +63,7 @@ public class DataSourceFactory implements IDataSourceFactory {
 
     /**
      * Adds IDataSource to internal HashMap
-     * 
+     *
      * @param ids
      */
     private void addToHashMap(final IDataSource ids) {
@@ -89,7 +88,7 @@ public class DataSourceFactory implements IDataSourceFactory {
      * Returns a compatible IDataSource for given IFileFragment. First hit wins,
      * if multiple DataSource implementations are registered for the same file
      * type.
-     * 
+     *
      * @param ff
      * @return
      */
@@ -137,7 +136,7 @@ public class DataSourceFactory implements IDataSourceFactory {
 
     /**
      * Returns a list of supported file extensions
-     * 
+     *
      * @return
      */
     @Override
@@ -148,14 +147,13 @@ public class DataSourceFactory implements IDataSourceFactory {
     }
 
     /**
-     * @param dataSources
-     *            the dataSources to set
+     * @param dataSources the dataSources to set
      */
     @Override
     public void setDataSources(final List<String> dataSources) {
         this.dataSources = dataSources;
         for (final String s : this.dataSources) {
-           log.debug(
+            log.debug(
                     "Trying to load IDataSource {}", s);
             EvalTools.notNull(s, this);
             final IDataSource ids = Factory.getInstance().getObjectFactory().

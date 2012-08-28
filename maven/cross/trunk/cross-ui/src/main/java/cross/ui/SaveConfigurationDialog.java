@@ -35,8 +35,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 public class SaveConfigurationDialog {
 
@@ -64,7 +64,7 @@ public class SaveConfigurationDialog {
                 final File f = jfc.getSelectedFile();
                 this.cwd = f.getParentFile();
                 try {
-                    ConfigurationUtils.dump(cfg,new PrintWriter(new FileWriter(f)));
+                    ConfigurationUtils.dump(cfg, new PrintWriter(new FileWriter(f)));
                 } catch (IOException ex) {
                     java.util.logging.Logger.getLogger(SaveConfigurationDialog.class.getName()).log(Level.SEVERE, null, ex);
                 }

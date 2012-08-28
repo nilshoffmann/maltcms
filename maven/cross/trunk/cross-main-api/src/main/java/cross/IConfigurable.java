@@ -25,11 +25,11 @@ import java.io.Serializable;
 import org.apache.commons.configuration.Configuration;
 
 /**
- * Interface for objects which are configurable.
- * Configuration will be performed by a Spring ApplicationContext 
- * instance.
+ * Interface for objects which are configurable. Configuration will be performed
+ * by a Spring ApplicationContext instance.
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IConfigurable extends Serializable {
 

@@ -27,20 +27,20 @@ import javax.swing.filechooser.FileFilter;
 
 public class PropertiesFileFilter extends FileFilter {
 
-	@Override
-	public boolean accept(final File f) {
-            if(f.isDirectory()) {
-                return true;
-            }
-		final String ext = StringTools.getFileExtension(f.getAbsolutePath());
-		if (ext.equals("properties")) {
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public boolean accept(final File f) {
+        if (f.isDirectory()) {
+            return true;
+        }
+        final String ext = StringTools.getFileExtension(f.getAbsolutePath());
+        if (ext.equals("properties")) {
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public String getDescription() {
-		return ".properties";
-	}
+    @Override
+    public String getDescription() {
+        return ".properties";
+    }
 }

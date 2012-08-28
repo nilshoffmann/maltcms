@@ -27,12 +27,14 @@ import java.util.*;
 
 /**
  * Implementation of a read-only cached list for indexed data access.
- * 
+ *
  * Backed by a soft-reference cache hash map using LRU cache eviction strategy.
- * All list-related modification methods throw {@see UnsupportedOperationException}.
- * 
+ * All list-related modification methods throw {
+ *
+ * @see UnsupportedOperationException}.
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class CachedLazyList<T> implements List<T> {
 
@@ -72,7 +74,7 @@ public class CachedLazyList<T> implements List<T> {
     private int cacheLRU = 0;
     private int cacheLRUPURGELAST = 0;
     private int cacheSoftRefRemoved = 0;
-    
+
     public CachedLazyList(IElementProvider<T> iep) {
         this.ivf = iep;
     }
@@ -217,7 +219,6 @@ public class CachedLazyList<T> implements List<T> {
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
-
             private int start = 0;
             private final int end = size();
 
@@ -300,7 +301,7 @@ public class CachedLazyList<T> implements List<T> {
     public Object[] toArray() {
 //        Object[] o = new Object[];
         Object[] result = new Object[size];
-        for (int i = 0;i<size;i++) {
+        for (int i = 0; i < size; i++) {
             result[i] = get(i);
         }
         return result;
@@ -314,7 +315,7 @@ public class CachedLazyList<T> implements List<T> {
                     a.getClass().getComponentType(), size);
         }
         Object[] result = a;
-        for (int i = 0;i<size;i++) {
+        for (int i = 0; i < size; i++) {
             result[i] = get(i);
         }
 

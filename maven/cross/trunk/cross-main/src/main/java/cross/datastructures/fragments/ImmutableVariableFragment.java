@@ -38,13 +38,16 @@ import ucar.nc2.Dimension;
  * UnsupportedOperationException. All other operations delegate to an instance
  * of IVariableFragment, which is provided to the constructor.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * instead
+ * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE instead
  */
 public class ImmutableVariableFragment implements IVariableFragment {
 
     private final IVariableFragment vf;
 
+    /**
+     *
+     * @param vf2
+     */
     public ImmutableVariableFragment(final IVariableFragment vf2) {
         this.vf = vf2;
         EvalTools.notNull(vf2, this);
@@ -138,6 +141,11 @@ public class ImmutableVariableFragment implements IVariableFragment {
      * @see
      * cross.datastructures.fragments.IVariableFragment#getChunkIterator(int)
      */
+    /**
+     *
+     * @param chunksize
+     * @return
+     */
     @Override
     public ArrayChunkIterator getChunkIterator(final int chunksize) {
         throw new UnsupportedOperationException();
@@ -212,7 +220,7 @@ public class ImmutableVariableFragment implements IVariableFragment {
      */
     @Override
     public String getVarname() {
-        return this.vf.getVarname();
+        return this.vf.getName();
     }
 
     /**

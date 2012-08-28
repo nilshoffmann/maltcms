@@ -62,7 +62,7 @@ public class ObjectFactory implements IObjectFactory {
                 Arrays.toString(contextLocations));
         try {
             String[] defaultLocations = cfg.getStringArray("cross.applicationContext.defaultLocations");
-            log.debug("Using default context locations: {}",Arrays.toString(defaultLocations));
+            log.debug("Using default context locations: {}", Arrays.toString(defaultLocations));
             LinkedList<String> applicationContextLocations = new LinkedList<String>(Arrays.asList(defaultLocations));
             applicationContextLocations.addAll(Arrays.asList(contextLocations));
             context = new DefaultApplicationContextFactory(applicationContextLocations, this.cfg).

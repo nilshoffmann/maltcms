@@ -32,73 +32,75 @@ import org.apache.commons.configuration.Configuration;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @Slf4j
 public class AFragmentCommandServiceLoader implements IConfigurable {
 
-	@Configurable
-	private List<String> fragmentCommands = Collections.emptyList();
+    @Configurable
+    private List<String> fragmentCommands = Collections.emptyList();
 
-	public static class ClassNameLexicalComparator implements
-	        Comparator<AFragmentCommand> {
-		@Override
-		public int compare(AFragmentCommand o1, AFragmentCommand o2) {
-			return o1.getClass().getName().compareTo(o2.getClass().getName());
-		}
-	}
+    public static class ClassNameLexicalComparator implements
+            Comparator<AFragmentCommand> {
 
-	/**
-	 * Returns the available implementations of @see{IFragmentCommand}. Elements
-	 * are sorted according to lexical order on their classnames.
-	 * 
-	 * @return
-	 */
-	public List<AFragmentCommand> getAvailableCommands() {
-		ServiceLoader<AFragmentCommand> sl = ServiceLoader
-		        .load(AFragmentCommand.class);
-		HashSet<AFragmentCommand> s = new HashSet<AFragmentCommand>();
-		for (AFragmentCommand ifc : sl) {
-			s.add(ifc);
-		}
-		return createSortedListFromSet(s, new ClassNameLexicalComparator());
-	}
+        @Override
+        public int compare(AFragmentCommand o1, AFragmentCommand o2) {
+            return o1.getClass().getName().compareTo(o2.getClass().getName());
+        }
+    }
 
-	public List<AFragmentCommand> getAvailableUserCommands(ObjectFactory of) {
-		HashSet<AFragmentCommand> s = new HashSet<AFragmentCommand>();
-		for (String uc : fragmentCommands) {
-			try {
-				AFragmentCommand af = of
-				        .instantiate(uc, AFragmentCommand.class);
-				s.add(af);
-			} catch (IllegalArgumentException iae) {
-				log.warn(iae.getLocalizedMessage());
-			}
-		}
-		return createSortedListFromSet(s, new ClassNameLexicalComparator());
-	}
+    /**
+     * Returns the available implementations of
+     *
+     * @see{IFragmentCommand}. Elements are sorted according to lexical order on
+     * their classnames.
+     *
+     * @return
+     */
+    public List<AFragmentCommand> getAvailableCommands() {
+        ServiceLoader<AFragmentCommand> sl = ServiceLoader
+                .load(AFragmentCommand.class);
+        HashSet<AFragmentCommand> s = new HashSet<AFragmentCommand>();
+        for (AFragmentCommand ifc : sl) {
+            s.add(ifc);
+        }
+        return createSortedListFromSet(s, new ClassNameLexicalComparator());
+    }
 
-	public List<AFragmentCommand> createSortedListFromSet(
-	        Set<AFragmentCommand> s, Comparator<AFragmentCommand> comp) {
-		ArrayList<AFragmentCommand> al = new ArrayList<AFragmentCommand>();
-		al.addAll(s);
-		Collections.sort(al, comp);
-		return al;
-	}
+    public List<AFragmentCommand> getAvailableUserCommands(ObjectFactory of) {
+        HashSet<AFragmentCommand> s = new HashSet<AFragmentCommand>();
+        for (String uc : fragmentCommands) {
+            try {
+                AFragmentCommand af = of
+                        .instantiate(uc, AFragmentCommand.class);
+                s.add(af);
+            } catch (IllegalArgumentException iae) {
+                log.warn(iae.getLocalizedMessage());
+            }
+        }
+        return createSortedListFromSet(s, new ClassNameLexicalComparator());
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
-	 * )
-	 */
-	@Override
-	public void configure(Configuration cfg) {
-		fragmentCommands = StringTools.toStringList(cfg.getList(getClass()
-		        .getName()
-		        + ".fragmentCommands"));
-	}
+    public List<AFragmentCommand> createSortedListFromSet(
+            Set<AFragmentCommand> s, Comparator<AFragmentCommand> comp) {
+        ArrayList<AFragmentCommand> al = new ArrayList<AFragmentCommand>();
+        al.addAll(s);
+        Collections.sort(al, comp);
+        return al;
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
+     * )
+     */
+    @Override
+    public void configure(Configuration cfg) {
+        fragmentCommands = StringTools.toStringList(cfg.getList(getClass()
+                .getName()
+                + ".fragmentCommands"));
+    }
 }
