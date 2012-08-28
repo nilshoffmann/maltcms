@@ -31,9 +31,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Multiply a value with all values of an array.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)

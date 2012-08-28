@@ -38,16 +38,17 @@ import smueller.alignment.OptimalAlignmentVector;
 import smueller.tools.SymbolConvert;
 import ucar.ma2.Array;
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.tuple.Tuple2DI;
 import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import lombok.extern.slf4j.Slf4j;
 
-// Speichern der optimalen Alignments in einem vom User gew�hlten Format
+// Speichern der optimalen Alignments in einem vom User gewählten Format
 /**
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
  */
+@Slf4j
 public class AlignmentOutput {
 
     private FileWriter outputStream = null;
@@ -64,16 +65,16 @@ public class AlignmentOutput {
         pa.setNumberOfScansReference(a.length());
         pa.setNumberOfScansQuery(b.length());
         final double[][] matrx = ali.getMatrix();
-        // Logging.getLogger(this).info(Arrays.deepToString(matrx));
-        Logging.getLogger(this).info("MATRX {}x{}", matrx.length,
+        // log.info(Arrays.deepToString(matrx));
+        log.info("MATRX {}x{}", matrx.length,
                 matrx[0].length);
         EvalTools.notNull(matrx, this);
         final ArrayFactory f = Factory.getInstance().getObjectFactory()
                 .instantiate(ArrayFactory.class);
         pa.setAlignment(f.create(Array.factory(matrx)));
         final double[][] pwdm = ali.getPairwiseDistance();
-        // Logging.getLogger(this).info(Arrays.deepToString(pwdm));
-        Logging.getLogger(this).info("PWDM {}x{}", pwdm.length, pwdm[0].length);
+        // log.info(Arrays.deepToString(pwdm));
+        log.info("PWDM {}x{}", pwdm.length, pwdm[0].length);
         EvalTools.notNull(pwdm, this);
         pa.setPairwiseDistances(f.create(Array.factory(pwdm)));
         pa.setIsMinimizing(true);
@@ -212,10 +213,19 @@ public class AlignmentOutput {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<Tuple2DI> getAl() {
         return this.al;
     }
 
+    /**
+     *
+     * @param path
+     * @return
+     */
     public ArrayList<Tuple2DI> getAsPairList(final int[][] path) {
         this.al = new ArrayList<Tuple2DI>(path.length);
         for (int i = 0; i < path.length; i++) {
@@ -228,11 +238,30 @@ public class AlignmentOutput {
         return this.al;
     }
 
+    /**
+     *
+     * @return
+     */
     public PairwiseAlignment getResult() {
         return this.result;
     }
 
     // Speichern der Files
+    /**
+     *
+     * @param a
+     * @param b
+     * @param all
+     * @param matrix
+     * @param format
+     * @param dima
+     * @param location
+     * @param alnumber
+     * @param ali
+     * @param aoriglen
+     * @param boriglen
+     * @param iw
+     */
     public void writefile(final String a, final String b,
             final Vector<OptimalAlignmentVector> all, final double[][] matrix,
             final String format, final double[][] dima, final String location,

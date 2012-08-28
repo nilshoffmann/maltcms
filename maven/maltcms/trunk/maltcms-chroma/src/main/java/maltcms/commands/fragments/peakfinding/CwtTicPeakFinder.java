@@ -50,7 +50,6 @@ public class CwtTicPeakFinder extends AFragmentCommand {
 
     private final String description = "Finds TIC peaks using Continuous Wavelet Transform.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;
-    
     @Configurable
     private int minScale = 10;
     @Configurable
@@ -67,7 +66,7 @@ public class CwtTicPeakFinder extends AFragmentCommand {
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         ICompletionService<File> ics = createCompletionService(File.class);
-        initProgress(t.size()*2);
+        initProgress(t.size() * 2);
         for (IFileFragment f : t) {
             CwtTicPeakFinderCallable cwt = new CwtTicPeakFinderCallable();
             cwt.setInput(new File(f.getAbsolutePath()));
@@ -84,17 +83,18 @@ public class CwtTicPeakFinder extends AFragmentCommand {
         try {
             List<File> results = ics.call();
             TupleND<IFileFragment> resultFragments = new TupleND<IFileFragment>();
-            for(File file:results) {
+            for (File file : results) {
                 FileFragment f = new FileFragment(file);
-                if(saveGraphics) {
-                    BufferedImage bi = CwtChartFactory.createColorHeatmap((ArrayDouble.D2)f.getChild("cwt_scaleogram").getArray());
-                    ImageTools.saveImage(bi, "scaleogram-"+f.getName(), "png", getWorkflow().getOutputDirectory(), this, f);
+                if (saveGraphics) {
+                    BufferedImage bi = CwtChartFactory.createColorHeatmap((ArrayDouble.D2) f.getChild("cwt_scaleogram").getArray());
+                    ImageTools.saveImage(bi, "scaleogram-" + f.getName(), "png", getWorkflow().getOutputDirectory(), this, f);
                 }
                 resultFragments.add(f);
                 getProgress().nextStep();
             }
             return resultFragments;
         } catch (Exception ex) {
+            log.error("Caught exception while executing workers: ", ex);
             throw new RuntimeException(ex);
         }
     }

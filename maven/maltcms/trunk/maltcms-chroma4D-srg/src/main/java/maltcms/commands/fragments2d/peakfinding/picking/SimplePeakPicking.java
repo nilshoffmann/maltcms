@@ -36,7 +36,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j

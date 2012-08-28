@@ -30,54 +30,56 @@ public class EditDistance {
 
     /**
      * Calculates the Edit-Distance on Strings a and b.
+     *
      * @param a
      * @param b
      * @return
      */
     public double getDistance(String a, String b) {
         //check, if a or b are empty
-        if(a.isEmpty() && !b.isEmpty()) {
+        if (a.isEmpty() && !b.isEmpty()) {
             return b.length();
-        }else if(!a.isEmpty() && b.isEmpty()) {
+        } else if (!a.isEmpty() && b.isEmpty()) {
             return a.length();
         }
         //calculate edit distance matrix
-        int[][] editDistanceMatrix = calculateEditDistanceMatrix(a,b);
+        int[][] editDistanceMatrix = calculateEditDistanceMatrix(a, b);
         //print the matrix
-        printMatrix(editDistanceMatrix,a,b);
+        printMatrix(editDistanceMatrix, a, b);
         //recover trace (only one)
         String editSequence = traceback(editDistanceMatrix);
         //print the alignment
-        printAlignment(a,b,editSequence);
-        return editDistanceMatrix[editDistanceMatrix.length-1][editDistanceMatrix[0].length-1];
+        printAlignment(a, b, editSequence);
+        return editDistanceMatrix[editDistanceMatrix.length - 1][editDistanceMatrix[0].length - 1];
     }
 
     /**
      * Calculates the edit distance matrix of strings a and b.
+     *
      * @param a
      * @param b
      * @return
      */
     public int[][] calculateEditDistanceMatrix(String a, String b) {
         //define shape of array
-        int rows = a.length()+1;
-        int cols = b.length()+1;
+        int rows = a.length() + 1;
+        int cols = b.length() + 1;
         //initialize array
         int[][] d = new int[rows][cols];
-        int diag,ins,del;
+        int diag, ins, del;
         //d[0][0] = 0 => arrays are initialized with 0 in java
-        for(int i=0;i<rows;i++) {
-            for(int j=0;j<cols;j++) {
-                if(i>0 && j>0){//most common case
-                    diag = d[i-1][j-1]+(a.charAt(i-1)==b.charAt(j-1)?0:1);
-                    del = d[i-1][j]+1;//deletion
-                    ins = d[i][j-1]+1;//insertion
-                    d[i][j] = Math.min(diag,Math.min(ins,del));
-                }else if(i==0 && j>0) {//column initialization
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (i > 0 && j > 0) {//most common case
+                    diag = d[i - 1][j - 1] + (a.charAt(i - 1) == b.charAt(j - 1) ? 0 : 1);
+                    del = d[i - 1][j] + 1;//deletion
+                    ins = d[i][j - 1] + 1;//insertion
+                    d[i][j] = Math.min(diag, Math.min(ins, del));
+                } else if (i == 0 && j > 0) {//column initialization
                     d[i][j] = j;//gap in column, insertion
-                }else if(j==0 && i>0) {//row initialization
+                } else if (j == 0 && i > 0) {//row initialization
                     d[i][j] = i;//gap in row, deletion
-                }else {//only once
+                } else {//only once
                     d[i][j] = 0;
                 }
             }
@@ -87,6 +89,7 @@ public class EditDistance {
 
     /**
      * Prints the alignment of Strings a and b, given an edit sequence.
+     *
      * @param a
      * @param b
      * @param editSequence
@@ -98,40 +101,40 @@ public class EditDistance {
         EditOperation editOp = EditOperation.C;
         int ai = 0;
         int bj = 0;
-        for(int i = 0;i<editSequence.length();i++) {
-            editOp = EditOperation.valueOf(editSequence.substring(i, i+1));
+        for (int i = 0; i < editSequence.length(); i++) {
+            editOp = EditOperation.valueOf(editSequence.substring(i, i + 1));
 
-            switch(editOp) {
+            switch (editOp) {
                 case C:
-                    System.out.println("EditOp:"+editOp.toString()+" i: "+a.substring(ai,ai+1)+" j: "+b.substring(bj,bj+1));
-                    as.append(a.substring(ai, ai+1));
-                    bs.append(b.substring(bj, bj+1));
+                    System.out.println("EditOp:" + editOp.toString() + " i: " + a.substring(ai, ai + 1) + " j: " + b.substring(bj, bj + 1));
+                    as.append(a.substring(ai, ai + 1));
+                    bs.append(b.substring(bj, bj + 1));
                     ai++;
                     bj++;
                     break;
                 case S:
-                    System.out.println("EditOp:"+editOp.toString()+" i: "+a.substring(ai,ai+1)+" j: "+b.substring(bj,bj+1));
-                    as.append(a.substring(ai, ai+1));
-                    bs.append(b.substring(bj, bj+1));
+                    System.out.println("EditOp:" + editOp.toString() + " i: " + a.substring(ai, ai + 1) + " j: " + b.substring(bj, bj + 1));
+                    as.append(a.substring(ai, ai + 1));
+                    bs.append(b.substring(bj, bj + 1));
                     ai++;
                     bj++;
                     break;
                 case D:
-                    System.out.println("EditOp:"+editOp.toString()+" i: "+a.substring(ai,ai+1)+" j: -");
-                    as.append(a.substring(ai, ai+1));
+                    System.out.println("EditOp:" + editOp.toString() + " i: " + a.substring(ai, ai + 1) + " j: -");
+                    as.append(a.substring(ai, ai + 1));
                     bs.append("-");
                     ai++;
                     break;
                 case I:
-                    System.out.println("EditOp:"+editOp.toString()+" i: -"+" j: "+b.substring(bj,bj+1));
-                    bs.append(b.substring(bj, bj+1));
+                    System.out.println("EditOp:" + editOp.toString() + " i: -" + " j: " + b.substring(bj, bj + 1));
+                    bs.append(b.substring(bj, bj + 1));
                     as.append("-");
                     bj++;
                     break;
             }
         }
         StringBuilder alignment = new StringBuilder();
-        alignment.append(as.toString()+"\n");
+        alignment.append(as.toString() + "\n");
         alignment.append(bs.toString());
         String al = alignment.toString();
         System.out.println(al);
@@ -139,55 +142,58 @@ public class EditDistance {
     }
 
     /**
-     * Returns a String encoding an optimal edit sequence,
-     * recovered from the edit matrix d.
+     * Returns a String encoding an optimal edit sequence, recovered from the
+     * edit matrix d.
+     *
      * @param d
      * @return
      */
     public String traceback(int[][] d) {
-        int j = d[0].length-1;
-        int i = d.length-1;
-        double diag,ins,del;
+        int j = d[0].length - 1;
+        int i = d.length - 1;
+        double diag, ins, del;
         double min;
-        StringBuilder sb = new StringBuilder(i+j+1);
+        StringBuilder sb = new StringBuilder(i + j + 1);
         double subst = 0;
-        while(i!=0 || j!=0) {//repeat until we run out of left or right bound or both
-            if(i>0 && j==0) {//first column deletions
+        while (i != 0 || j != 0) {//repeat until we run out of left or right bound or both
+            if (i > 0 && j == 0) {//first column deletions
                 sb.append(EditOperation.D.name());
                 i--;
-            }else if(i==0 && j>0) {//first row insertions
+            } else if (i == 0 && j > 0) {//first row insertions
                 sb.append(EditOperation.I.name());
                 j--;
-            }else if(i>0 && j>0){//all other cases
-                diag = d[i-1][j-1];//diagonal
-                subst = d[i][j] - d[i-1][j-1];
-                del = d[i-1][j];//deletion
-                ins = d[i][j-1];//insertion
-                min = Math.min(Math.min(diag,ins),del);//min of all predecessors
-                if(min == diag) {//min is diagonal
-                    sb.append(subst==1?EditOperation.S.name():EditOperation.C.name());
+            } else if (i > 0 && j > 0) {//all other cases
+                diag = d[i - 1][j - 1];//diagonal
+                subst = d[i][j] - d[i - 1][j - 1];
+                del = d[i - 1][j];//deletion
+                ins = d[i][j - 1];//insertion
+                min = Math.min(Math.min(diag, ins), del);//min of all predecessors
+                if (min == diag) {//min is diagonal
+                    sb.append(subst == 1 ? EditOperation.S.name() : EditOperation.C.name());
                     i--;
                     j--;
-                }else if(min == ins) {//
+                } else if (min == ins) {//
                     sb.append(EditOperation.I.name());
                     j--;
-                }else if(min == del) {
+                } else if (min == del) {
                     sb.append(EditOperation.D.name());
                     i--;
                 }
             }
         }
         String esequence = sb.reverse().toString();
-        System.out.println("EditSequence: "+esequence);
+        System.out.println("EditSequence: " + esequence);
         return esequence;
     }
 
-    enum EditOperation{
-        C,S,D,I;
+    enum EditOperation {
+
+        C, S, D, I;
     }
 
     /**
      * Pretty-print an alignment matrix with gaps.
+     *
      * @param d
      * @param a
      * @param b
@@ -195,14 +201,14 @@ public class EditDistance {
     private void printMatrix(int[][] d, String a, String b) {
         StringBuilder sb = new StringBuilder();
         sb.append("\t-\t");
-        for(int j = 0; j<b.length();j++) {
-            sb.append(b.charAt(j)+((j==b.length()-1)?"":"\t"));
+        for (int j = 0; j < b.length(); j++) {
+            sb.append(b.charAt(j) + ((j == b.length() - 1) ? "" : "\t"));
         }
         sb.append("\n");
-        for(int i=0 ;i<a.length()+1;i++) {
-            sb.append((i==0?"-\t":a.charAt(i-1)+"\t"));
-            for(int j=0;j<b.length()+1;j++) {
-                sb.append(((int)d[i][j])+(j==b.length()?"":"\t"));
+        for (int i = 0; i < a.length() + 1; i++) {
+            sb.append((i == 0 ? "-\t" : a.charAt(i - 1) + "\t"));
+            for (int j = 0; j < b.length() + 1; j++) {
+                sb.append(((int) d[i][j]) + (j == b.length() ? "" : "\t"));
             }
             sb.append("\n");
         }

@@ -30,13 +30,11 @@ import lombok.Data;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Implementation of the Savitzky-Golay Filter. The current implementation 
- * will only work for the values tabulated in the paper.
- * Reference: 
- * Savitzky,A. and Golay,M.J.E. (1964)
- * Smoothing and Differentiation of Data by Simplified Least Squares Procedures.
- * Analytical Chemistry, 36, 1627–1639.
- * 
+ * Implementation of the Savitzky-Golay Filter. The current implementation will
+ * only work for the values tabulated in the paper. Reference: Savitzky,A. and
+ * Golay,M.J.E. (1964) Smoothing and Differentiation of Data by Simplified Least
+ * Squares Procedures. Analytical Chemistry, 36, 1627–1639.
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  *
  *
@@ -61,18 +59,18 @@ public class SavitzkyGolayFilter extends AArrayFilter {
         }
         //prepare filter coefficients
         double[] filterCoeffs = new double[pointNumber];
-        for(int i = 0;i<window;i++) {
-            filterCoeffs[window+i] = coefficients[index][i];
-            filterCoeffs[window-i] = coefficients[index][i];
+        for (int i = 0; i < window; i++) {
+            filterCoeffs[window + i] = coefficients[index][i];
+            filterCoeffs[window - i] = coefficients[index][i];
         }
         //convolve signal with coefficients
-        double[] filtered = convolve(filterCoeffs,(double[])a.get1DJavaArray(double.class));
+        double[] filtered = convolve(filterCoeffs, (double[]) a.get1DJavaArray(double.class));
         //normalize
-        for(int j = 0;j<filtered.length;j++) {
-            filtered[j]/=(double)norms[index];
+        for (int j = 0; j < filtered.length; j++) {
+            filtered[j] /= (double) norms[index];
         }
         return Array.factory(filtered);
-    
+
     }
 
     /**
@@ -95,16 +93,16 @@ public class SavitzkyGolayFilter extends AArrayFilter {
             filterArray[i + d.length] = d[d.length - 1];
         }
         for (int i = 0; i < d.length; i++) {
-            filterArray[i+offset] = d[i];
+            filterArray[i + offset] = d[i];
         }
-        for (int i = offset; i <filterArray.length-offset; i++) {
+        for (int i = offset; i < filterArray.length - offset; i++) {
             double sum = 0.0d;
             //System.out.println("Convolution from: "+(i-offset)+" to "+(i+offset));
             for (int j = 0; j < filterCoeffs.length; j++) {
-                
-                sum += filterCoeffs[j]*filterArray[(i-offset) + j];
+
+                sum += filterCoeffs[j] * filterArray[(i - offset) + j];
             }
-            ret[i-offset] = sum;
+            ret[i - offset] = sum;
         }
         return ret;
     }

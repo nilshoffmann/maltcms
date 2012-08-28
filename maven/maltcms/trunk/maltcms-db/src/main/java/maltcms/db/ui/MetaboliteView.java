@@ -68,7 +68,7 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
         metaboliteView = new JTable();
         //metaboliteView.setCellRenderer(new MetaboliteListCellRenderer());
         //metaboliteView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        mlsl = new MetaboliteListSelectionListener(this, this.mvm,metaboliteView);
+        mlsl = new MetaboliteListSelectionListener(this, this.mvm, metaboliteView);
         //metaboliteView.getSelectionModel().addListSelectionListener(mlsl);
         metaboliteView.addMouseListener(mlsl);
         //mvm.addListDataListener(mld);
@@ -84,7 +84,6 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
 
     public void setEnabled(final boolean b) {
         Runnable r = new Runnable() {
-
             public void run() {
                 metaboliteView.setEnabled(b);
 

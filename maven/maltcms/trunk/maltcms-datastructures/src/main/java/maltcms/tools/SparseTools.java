@@ -29,36 +29,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import lombok.extern.slf4j.Slf4j;
 
 import maltcms.datastructures.array.Sparse;
 
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
-import cross.Logging;
 
 /**
  * Class providing static utility methods for
  * {@link maltcms.datastructures.array.Sparse} arrays.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  * @deprecated You can use the usual array operations on Sparse array instances.
  */
+@Slf4j
 public class SparseTools {
 
-	protected static final ExecutorService es = Executors.newFixedThreadPool(4);
-
-	public static final Map<Sparse, Double> normalized = Collections
-	        .synchronizedMap(new HashMap<Sparse, Double>());
-
-	private static Logger log = Logging.getLogger(SparseTools.class);
+    protected static final ExecutorService es = Executors.newFixedThreadPool(4);
+    public static final Map<Sparse, Double> normalized = Collections
+            .synchronizedMap(new HashMap<Sparse, Double>());
 
 //	public static double arccos(final Sparse s, final Sparse t) {
 //		return Math.acos(SparseTools.cos(s, t));
 //	}
-
-
 //	public static double cos(final Sparse s, final Sparse t) {
 //		synchronized (SparseTools.normalized) {
 //			if (!SparseTools.normalized.containsKey(s)) {
@@ -92,50 +87,49 @@ public class SparseTools {
 //		// System.out.println("acos="+acos);
 //		return cos;
 //	}
+    public static Array[] create(final List<Array> indices,
+            final List<Array> values, final int minindex, final int maxindex,
+            final int nbins, final double massPrecision) {
+        // FutureTask<Array[]> future = new FutureTask<Array[]>(
+        // new Callable<Array[]>() {
+        // public Array[] call() {
+        if (indices.size() == values.size()) {
+            final Iterator<Array> idx = indices.iterator();
+            final Iterator<Array> vls = values.iterator();
+            final Array[] s = new Array[indices.size()];
+            int i = 0;
+            log.info("Building {} Sparse Arrays!", values.size());
+            while (idx.hasNext() && vls.hasNext()) {
+                try {
+                    final Array a = idx.next();
+                    final Array b = vls.next();
+                    idx.remove();
+                    vls.remove();
+                    // System.out.println("Sparse array "+i);
+                    s[i++] = new Sparse(a, b, minindex, maxindex, nbins,
+                            massPrecision);
+                } catch (final ClassCastException cce) {
+                    cce.printStackTrace();
+                }
+            }
+            return s;
+        }
+        throw new IllegalArgumentException(
+                "Number of elements in argument lists differ!");
+    }
 
-	public static Array[] create(final List<Array> indices,
-	        final List<Array> values, final int minindex, final int maxindex,
-	        final int nbins, final double massPrecision) {
-		// FutureTask<Array[]> future = new FutureTask<Array[]>(
-		// new Callable<Array[]>() {
-		// public Array[] call() {
-		if (indices.size() == values.size()) {
-			final Iterator<Array> idx = indices.iterator();
-			final Iterator<Array> vls = values.iterator();
-			final Array[] s = new Array[indices.size()];
-			int i = 0;
-			SparseTools.log.info("Building {} Sparse Arrays!", values.size());
-			while (idx.hasNext() && vls.hasNext()) {
-				try {
-					final Array a = idx.next();
-					final Array b = vls.next();
-					idx.remove();
-					vls.remove();
-					// System.out.println("Sparse array "+i);
-					s[i++] = new Sparse(a, b, minindex, maxindex, nbins,
-					        massPrecision);
-				} catch (final ClassCastException cce) {
-					cce.printStackTrace();
-				}
-			}
-			return s;
-		}
-		throw new IllegalArgumentException(
-		        "Number of elements in argument lists differ!");
-	}
-
-	public static List<Array> createAsList(final List<Array> indices,
-	        final List<Array> values, final int minindex, final int maxindex,
-	        final int nbins, final double massPrecision) {
-		final Array[] a = SparseTools.create(indices, values, minindex,
-		        maxindex, nbins, massPrecision);
-		SparseTools.log.info("Length of Array[] created: {}", a.length);
-		final ArrayList<Array> arr = new ArrayList<Array>(a.length);
-		for (final Array element : a) {
-			arr.add(element);
-		}
-		return arr;
-	}
+    public static List<Array> createAsList(final List<Array> indices,
+            final List<Array> values, final int minindex, final int maxindex,
+            final int nbins, final double massPrecision) {
+        final Array[] a = SparseTools.create(indices, values, minindex,
+                maxindex, nbins, massPrecision);
+        log.info("Length of Array[] created: {}", a.length);
+        final ArrayList<Array> arr = new ArrayList<Array>(a.length);
+        for (final Array element : a) {
+            arr.add(element);
+        }
+        return arr;
+    }
 
 //	public static double dist(final Sparse s, final Sparse t, final double type) {
 //		final ArrayLp alp = new ArrayLp();
@@ -146,37 +140,34 @@ public class SparseTools {
 //		final ArrayDot ad = new ArrayDot();
 //		return ad.apply(0, 0, -1, -1, s, t);
 //	}
-
-	public static Sparse mult(final Sparse s, final double d) {
-		final IndexIterator sk = s.getIndexIterator();
-		while (sk.hasNext()) {
-			sk.setDoubleCurrent(sk.getDoubleNext() * d);
-		}
-		return s;
-	}
+    public static Sparse mult(final Sparse s, final double d) {
+        final IndexIterator sk = s.getIndexIterator();
+        while (sk.hasNext()) {
+            sk.setDoubleCurrent(sk.getDoubleNext() * d);
+        }
+        return s;
+    }
 
 //	public static double norm(final Sparse s) {
 //		final double norm = Math.sqrt(SparseTools.dot(s, s));
 //		// System.out.println(norm);
 //		return norm;
 //	}
+    public static Sparse randomGaussian(final int minindex, final int size,
+            final double mean, final double stddev) {
+        final Sparse s = new Sparse(size, minindex, minindex + size - 1);
+        for (int i = 0; i < size; i++) {
+            s.set(i, (ArrayTools.nextGaussian() - mean) * stddev);
+        }
+        return s;
+    }
 
-	public static Sparse randomGaussian(final int minindex, final int size,
-	        final double mean, final double stddev) {
-		final Sparse s = new Sparse(size, minindex, minindex + size - 1);
-		for (int i = 0; i < size; i++) {
-			s.set(i, (ArrayTools.nextGaussian() - mean) * stddev);
-		}
-		return s;
-	}
-
-	public static Sparse randomUniform(final int minindex, final int size,
-	        final double mean, final double scale) {
-		final Sparse s = new Sparse(size, minindex, minindex + size - 1);
-		for (int i = 0; i < size; i++) {
-			s.set(i, (ArrayTools.nextUniform() - mean) * scale);
-		}
-		return s;
-	}
-
+    public static Sparse randomUniform(final int minindex, final int size,
+            final double mean, final double scale) {
+        final Sparse s = new Sparse(size, minindex, minindex + size - 1);
+        for (int i = 0; i < size; i++) {
+            s.set(i, (ArrayTools.nextUniform() - mean) * scale);
+        }
+        return s;
+    }
 }

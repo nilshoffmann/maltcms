@@ -71,10 +71,14 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
     private double massBinResolution = 1.0d;
     private double minMass = 0;
     private double maxMass = 1000;
-    private List<double[]> minMaxIntensities = new ArrayList<double[]>(); 
+    private List<double[]> minMaxIntensities = new ArrayList<double[]>();
     private File fileToLoad;
     private File fileToSave;
 
+    /**
+     *
+     * @return @throws Exception
+     */
     @Override
     public File call() throws Exception {
         EvalTools.notNull(fileToLoad, this);
@@ -88,38 +92,45 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
         MaltcmsTools.prepareDenseArraysMZI(input, output,
                 scanIndex, massValues, intensityValues,
                 binnedScanIndex, binnedMassValues,
-                binnedIntensityValues, minMass, maxMass,null);
+                binnedIntensityValues, minMass, maxMass, null);
         log.debug("Loaded scans for file {}, stored in {}", fileToLoad, fileToSave);
         log.debug("Source Files of f={} : {}", output, output.getSourceFiles());
         final int bins = MaltcmsTools.getNumberOfIntegerMassBins(minMass, maxMass, massBinResolution);
-        if(normalizeEicsToUnity) {
-        	minMaxIntensities = findMinMaxIntensities(output,bins);
+        if (normalizeEicsToUnity) {
+            minMaxIntensities = findMinMaxIntensities(output, bins);
         }
         maskMasses(output, minMass, maxMass, massBinResolution, bins, maskedMasses, invertMaskedMasses, binnedIntensityValues, binnedScanIndex, totalIntensity);
-        normalizeScans(output, normalizeScans, normalizeEicsToZeroMeanUnitVariance, binnedIntensityValues, binnedScanIndex,minMaxIntensities);
+        normalizeScans(output, normalizeScans, normalizeEicsToZeroMeanUnitVariance, binnedIntensityValues, binnedScanIndex, minMaxIntensities);
         //save working fragment
         output.save();
         return new File(output.getAbsolutePath());
     }
 
-    protected List<double[]> findMinMaxIntensities(IFileFragment output,int massBins) {
-		List<double[]> minMaxList = new ArrayList<double[]>(massBins);
-		log.info("Identifiying minimum and maximum intensities on mass traces");
-		for(int i = 0;i<massBins;i++) {
-			minMaxList.add(new double[]{Double.POSITIVE_INFINITY,Double.NEGATIVE_INFINITY});
-		}
-		IVariableFragment binnedIntensities = output.getChild("binned_intensity_values");
-		binnedIntensities.setIndex(output.getChild("binned_scan_index"));
-		for(Array a:binnedIntensities.getIndexedArray()) {
-			EvalTools.eqI(a.getShape()[0], massBins, this);
-			for(int i = 0;i<massBins;i++) {
-				minMaxList.get(i)[0] = Math.min(a.getDouble(i), minMaxList.get(i)[0]);
-				minMaxList.get(i)[1] = Math.max(a.getDouble(i), minMaxList.get(i)[1]);
-			}
-		}
-		return minMaxList;
-	}
-	/**
+    /**
+     *
+     * @param output
+     * @param massBins
+     * @return
+     */
+    protected List<double[]> findMinMaxIntensities(IFileFragment output, int massBins) {
+        List<double[]> minMaxList = new ArrayList<double[]>(massBins);
+        log.info("Identifiying minimum and maximum intensities on mass traces");
+        for (int i = 0; i < massBins; i++) {
+            minMaxList.add(new double[]{Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY});
+        }
+        IVariableFragment binnedIntensities = output.getChild("binned_intensity_values");
+        binnedIntensities.setIndex(output.getChild("binned_scan_index"));
+        for (Array a : binnedIntensities.getIndexedArray()) {
+            EvalTools.eqI(a.getShape()[0], massBins, this);
+            for (int i = 0; i < massBins; i++) {
+                minMaxList.get(i)[0] = Math.min(a.getDouble(i), minMaxList.get(i)[0]);
+                minMaxList.get(i)[1] = Math.max(a.getDouble(i), minMaxList.get(i)[1]);
+            }
+        }
+        return minMaxList;
+    }
+
+    /**
      * @param minMass
      * @param maxMass
      * @param f
@@ -193,58 +204,58 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
      */
     protected void normalizeScans(final IFileFragment f, final boolean normalizeScans, boolean normalizeEicsToMeanVariance, String binnedIntensityVariable, String binnedScanIndexVariable, List<double[]> minMaxIntensities) {
 //        if (normalizeScans || normalizeMeanVariance) {
-            final IVariableFragment ivf = f.getChild(binnedIntensityVariable);
-            final IVariableFragment sidx = f.getChild(binnedScanIndexVariable);
-            ivf.setIndex(sidx);
-            final List<Array> intens = ivf.getIndexedArray();
+        final IVariableFragment ivf = f.getChild(binnedIntensityVariable);
+        final IVariableFragment sidx = f.getChild(binnedScanIndexVariable);
+        ivf.setIndex(sidx);
+        final List<Array> intens = ivf.getIndexedArray();
 
-            final List<Array> normIntens = new ArrayList<Array>();
-            if (normalizeEicsToMeanVariance) {
-                log.info("Normalizing by subtracting mean and dividing by variance!");
-                final List<Array> tilted = ArrayTools.tilt(intens);
-                final ArrayStatsScanner ass = Factory.getInstance().getObjectFactory().instantiate(ArrayStatsScanner.class);
-                StatsMap[] sm = ass.apply(tilted.toArray(new Array[]{}));
-                ArrayDouble.D1 mean = new ArrayDouble.D1(tilted.size());
-                ArrayDouble.D1 var = new ArrayDouble.D1(tilted.size());
-                for (int i = 0; i < tilted.size(); i++) {
-                    mean.set(i, -sm[i].get(Vars.Mean.name()));
-                    var.set(i, sm[i].get(Vars.Variance.name()));
-                }
-                for (final Array a : intens) {
-                        normIntens.add(ArrayTools.div(ArrayTools.diff(a, mean),
-                                var));
-                }
-            } else if(normalizeEicsToUnity) {
-            	log.info("Normalizing by subtracting min and dividing by max-min!");
-                final List<Array> tilted = ArrayTools.tilt(intens);
-                final ArrayStatsScanner ass = Factory.getInstance().getObjectFactory().instantiate(ArrayStatsScanner.class);
-                StatsMap[] sm = ass.apply(tilted.toArray(new Array[]{}));
-                ArrayDouble.D1 min = new ArrayDouble.D1(tilted.size());
-                ArrayDouble.D1 max = new ArrayDouble.D1(tilted.size());
-                for (int i = 0; i < tilted.size(); i++) {
-                    min.set(i, -sm[i].get(Vars.Min.name()));
-                    max.set(i, sm[i].get(Vars.Max.name())+min.get(i));
-                }
-                for (final Array a : intens) {
-                        normIntens.add(ArrayTools.div(ArrayTools.diff(a, min),
-                                max));
-                }
-            }	
-            if (normalizeScans) {
-                log.info("Normalizing scans to length 1");
-                for (int i = 0; i<normIntens.size(); i++) {
-                	final Array a = normIntens.get(i);
-                    final MAVector ma = new MAVector(a);
-                    final double norm = ma.norm();
-                    log.debug("Norm: {}", norm);
-                    if (norm == 0.0) {
-                        normIntens.set(i,a);
-                    } else {
-                        normIntens.set(i,ArrayTools.mult(a, 1.0d / norm));
-                    }
+        final List<Array> normIntens = new ArrayList<Array>();
+        if (normalizeEicsToMeanVariance) {
+            log.info("Normalizing by subtracting mean and dividing by variance!");
+            final List<Array> tilted = ArrayTools.tilt(intens);
+            final ArrayStatsScanner ass = Factory.getInstance().getObjectFactory().instantiate(ArrayStatsScanner.class);
+            StatsMap[] sm = ass.apply(tilted.toArray(new Array[]{}));
+            ArrayDouble.D1 mean = new ArrayDouble.D1(tilted.size());
+            ArrayDouble.D1 var = new ArrayDouble.D1(tilted.size());
+            for (int i = 0; i < tilted.size(); i++) {
+                mean.set(i, -sm[i].get(Vars.Mean.name()));
+                var.set(i, sm[i].get(Vars.Variance.name()));
+            }
+            for (final Array a : intens) {
+                normIntens.add(ArrayTools.div(ArrayTools.diff(a, mean),
+                        var));
+            }
+        } else if (normalizeEicsToUnity) {
+            log.info("Normalizing by subtracting min and dividing by max-min!");
+            final List<Array> tilted = ArrayTools.tilt(intens);
+            final ArrayStatsScanner ass = Factory.getInstance().getObjectFactory().instantiate(ArrayStatsScanner.class);
+            StatsMap[] sm = ass.apply(tilted.toArray(new Array[]{}));
+            ArrayDouble.D1 min = new ArrayDouble.D1(tilted.size());
+            ArrayDouble.D1 max = new ArrayDouble.D1(tilted.size());
+            for (int i = 0; i < tilted.size(); i++) {
+                min.set(i, -sm[i].get(Vars.Min.name()));
+                max.set(i, sm[i].get(Vars.Max.name()) + min.get(i));
+            }
+            for (final Array a : intens) {
+                normIntens.add(ArrayTools.div(ArrayTools.diff(a, min),
+                        max));
+            }
+        }
+        if (normalizeScans) {
+            log.info("Normalizing scans to length 1");
+            for (int i = 0; i < normIntens.size(); i++) {
+                final Array a = normIntens.get(i);
+                final MAVector ma = new MAVector(a);
+                final double norm = ma.norm();
+                log.debug("Norm: {}", norm);
+                if (norm == 0.0) {
+                    normIntens.set(i, a);
+                } else {
+                    normIntens.set(i, ArrayTools.mult(a, 1.0d / norm));
                 }
             }
-            ivf.setIndexedArray(normIntens);
+        }
+        ivf.setIndexedArray(normIntens);
 //        }
     }
 }

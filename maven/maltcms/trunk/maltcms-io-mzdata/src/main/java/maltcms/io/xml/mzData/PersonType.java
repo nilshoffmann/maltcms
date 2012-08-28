@@ -28,14 +28,12 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Data type for operator identification information.
- * 
- * <p>
- * Java class for personType complex type.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
+ *
+ * <p> Java class for personType complex type.
+ *
+ * <p> The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name=&quot;personType&quot;&gt;
  *   &lt;complexContent&gt;
@@ -49,81 +47,77 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "personType", propOrder = { "name", "institution",
-        "contactInfo" })
+@XmlType(name = "personType", propOrder = {"name", "institution",
+    "contactInfo"})
 public class PersonType {
 
-	@XmlElement(required = true)
-	protected String name;
-	@XmlElement(required = true)
-	protected String institution;
-	protected String contactInfo;
+    @XmlElement(required = true)
+    protected String name;
+    @XmlElement(required = true)
+    protected String institution;
+    protected String contactInfo;
 
-	/**
-	 * Gets the value of the contactInfo property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getContactInfo() {
-		return this.contactInfo;
-	}
+    /**
+     * Gets the value of the contactInfo property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getContactInfo() {
+        return this.contactInfo;
+    }
 
-	/**
-	 * Gets the value of the institution property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getInstitution() {
-		return this.institution;
-	}
+    /**
+     * Gets the value of the institution property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getInstitution() {
+        return this.institution;
+    }
 
-	/**
-	 * Gets the value of the name property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getName() {
-		return this.name;
-	}
+    /**
+     * Gets the value of the name property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getName() {
+        return this.name;
+    }
 
-	/**
-	 * Sets the value of the contactInfo property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setContactInfo(final String value) {
-		this.contactInfo = value;
-	}
+    /**
+     * Sets the value of the contactInfo property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setContactInfo(final String value) {
+        this.contactInfo = value;
+    }
 
-	/**
-	 * Sets the value of the institution property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setInstitution(final String value) {
-		this.institution = value;
-	}
+    /**
+     * Sets the value of the institution property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setInstitution(final String value) {
+        this.institution = value;
+    }
 
-	/**
-	 * Sets the value of the name property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setName(final String value) {
-		this.name = value;
-	}
-
+    /**
+     * Sets the value of the name property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setName(final String value) {
+        this.name = value;
+    }
 }

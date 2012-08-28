@@ -26,10 +26,9 @@ import cross.datastructures.fragments.IFileFragment;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
+ *
  */
 public interface IFileFragmentModifier extends IConfigurable {
 
-	public void modify(IFileFragment iff);
-
+    public void modify(IFileFragment iff);
 }

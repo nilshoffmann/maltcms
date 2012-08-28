@@ -35,14 +35,12 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * The structure tha captures the generation of a peak list (including the
  * underlying acquisitions)
- * 
- * <p>
- * Java class for spectrumType complex type.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
+ *
+ * <p> Java class for spectrumType complex type.
+ *
+ * <p> The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name=&quot;spectrumType&quot;&gt;
  *   &lt;complexContent&gt;
@@ -62,167 +60,157 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "spectrumType", propOrder = { "spectrumDesc", "supDesc",
-        "mzArrayBinary", "intenArrayBinary", "supDataArrayBinaryOrSupDataArray" })
-@XmlSeeAlso( { maltcms.io.xml.mzData.MzData.SpectrumList.Spectrum.class })
+@XmlType(name = "spectrumType", propOrder = {"spectrumDesc", "supDesc",
+    "mzArrayBinary", "intenArrayBinary", "supDataArrayBinaryOrSupDataArray"})
+@XmlSeeAlso({maltcms.io.xml.mzData.MzData.SpectrumList.Spectrum.class})
 public class SpectrumType {
 
-	@XmlElement(required = true)
-	protected SpectrumDescType spectrumDesc;
-	protected List<SupDescType> supDesc;
-	@XmlElement(required = true)
-	protected PeakListBinaryType mzArrayBinary;
-	@XmlElement(required = true)
-	protected PeakListBinaryType intenArrayBinary;
-	@XmlElements( {
-	        @XmlElement(name = "supDataArray", type = SupDataType.class),
-	        @XmlElement(name = "supDataArrayBinary", type = SupDataBinaryType.class) })
-	protected List<Object> supDataArrayBinaryOrSupDataArray;
-	@XmlAttribute(required = true)
-	protected int id;
+    @XmlElement(required = true)
+    protected SpectrumDescType spectrumDesc;
+    protected List<SupDescType> supDesc;
+    @XmlElement(required = true)
+    protected PeakListBinaryType mzArrayBinary;
+    @XmlElement(required = true)
+    protected PeakListBinaryType intenArrayBinary;
+    @XmlElements({
+        @XmlElement(name = "supDataArray", type = SupDataType.class),
+        @XmlElement(name = "supDataArrayBinary", type = SupDataBinaryType.class)})
+    protected List<Object> supDataArrayBinaryOrSupDataArray;
+    @XmlAttribute(required = true)
+    protected int id;
 
-	/**
-	 * Gets the value of the id property.
-	 * 
-	 */
-	public int getId() {
-		return this.id;
-	}
+    /**
+     * Gets the value of the id property.
+     *
+     */
+    public int getId() {
+        return this.id;
+    }
 
-	/**
-	 * Gets the value of the intenArrayBinary property.
-	 * 
-	 * @return possible object is {@link PeakListBinaryType }
-	 * 
-	 */
-	public PeakListBinaryType getIntenArrayBinary() {
-		return this.intenArrayBinary;
-	}
+    /**
+     * Gets the value of the intenArrayBinary property.
+     *
+     * @return possible object is {@link PeakListBinaryType }
+     *
+     */
+    public PeakListBinaryType getIntenArrayBinary() {
+        return this.intenArrayBinary;
+    }
 
-	/**
-	 * Gets the value of the mzArrayBinary property.
-	 * 
-	 * @return possible object is {@link PeakListBinaryType }
-	 * 
-	 */
-	public PeakListBinaryType getMzArrayBinary() {
-		return this.mzArrayBinary;
-	}
+    /**
+     * Gets the value of the mzArrayBinary property.
+     *
+     * @return possible object is {@link PeakListBinaryType }
+     *
+     */
+    public PeakListBinaryType getMzArrayBinary() {
+        return this.mzArrayBinary;
+    }
 
-	/**
-	 * Gets the value of the spectrumDesc property.
-	 * 
-	 * @return possible object is {@link SpectrumDescType }
-	 * 
-	 */
-	public SpectrumDescType getSpectrumDesc() {
-		return this.spectrumDesc;
-	}
+    /**
+     * Gets the value of the spectrumDesc property.
+     *
+     * @return possible object is {@link SpectrumDescType }
+     *
+     */
+    public SpectrumDescType getSpectrumDesc() {
+        return this.spectrumDesc;
+    }
 
-	/**
-	 * Gets the value of the supDataArrayBinaryOrSupDataArray property.
-	 * 
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a
-	 * snapshot. Therefore any modification you make to the returned list will
-	 * be present inside the JAXB object. This is why there is not a
-	 * <CODE>set</CODE> method for the supDataArrayBinaryOrSupDataArray
-	 * property.
-	 * 
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getSupDataArrayBinaryOrSupDataArray().add(newItem);
-	 * </pre>
-	 * 
-	 * 
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list
+    /**
+     * Gets the value of the supDataArrayBinaryOrSupDataArray property.
+     *
+     * <p> This accessor method returns a reference to the live list, not a
+     * snapshot. Therefore any modification you make to the returned list will
+     * be present inside the JAXB object. This is why there is not a
+     * <CODE>set</CODE> method for the supDataArrayBinaryOrSupDataArray
+     * property.
+     *
+     * <p> For example, to add a new item, do as follows:
+     *
+     * <pre>
+     * getSupDataArrayBinaryOrSupDataArray().add(newItem);
+     * </pre>
+     *
+     *
+     * <p> Objects of the following type(s) are allowed in the list
 	 * {@link SupDataType } {@link SupDataBinaryType }
-	 * 
-	 * 
-	 */
-	public List<Object> getSupDataArrayBinaryOrSupDataArray() {
-		if (this.supDataArrayBinaryOrSupDataArray == null) {
-			this.supDataArrayBinaryOrSupDataArray = new ArrayList<Object>();
-		}
-		return this.supDataArrayBinaryOrSupDataArray;
-	}
+     *
+     *
+     */
+    public List<Object> getSupDataArrayBinaryOrSupDataArray() {
+        if (this.supDataArrayBinaryOrSupDataArray == null) {
+            this.supDataArrayBinaryOrSupDataArray = new ArrayList<Object>();
+        }
+        return this.supDataArrayBinaryOrSupDataArray;
+    }
 
-	/**
-	 * Gets the value of the supDesc property.
-	 * 
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a
-	 * snapshot. Therefore any modification you make to the returned list will
-	 * be present inside the JAXB object. This is why there is not a
-	 * <CODE>set</CODE> method for the supDesc property.
-	 * 
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getSupDesc().add(newItem);
-	 * </pre>
-	 * 
-	 * 
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list
+    /**
+     * Gets the value of the supDesc property.
+     *
+     * <p> This accessor method returns a reference to the live list, not a
+     * snapshot. Therefore any modification you make to the returned list will
+     * be present inside the JAXB object. This is why there is not a
+     * <CODE>set</CODE> method for the supDesc property.
+     *
+     * <p> For example, to add a new item, do as follows:
+     *
+     * <pre>
+     * getSupDesc().add(newItem);
+     * </pre>
+     *
+     *
+     * <p> Objects of the following type(s) are allowed in the list
 	 * {@link SupDescType }
-	 * 
-	 * 
-	 */
-	public List<SupDescType> getSupDesc() {
-		if (this.supDesc == null) {
-			this.supDesc = new ArrayList<SupDescType>();
-		}
-		return this.supDesc;
-	}
+     *
+     *
+     */
+    public List<SupDescType> getSupDesc() {
+        if (this.supDesc == null) {
+            this.supDesc = new ArrayList<SupDescType>();
+        }
+        return this.supDesc;
+    }
 
-	/**
-	 * Sets the value of the id property.
-	 * 
-	 */
-	public void setId(final int value) {
-		this.id = value;
-	}
+    /**
+     * Sets the value of the id property.
+     *
+     */
+    public void setId(final int value) {
+        this.id = value;
+    }
 
-	/**
-	 * Sets the value of the intenArrayBinary property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link PeakListBinaryType }
-	 * 
-	 */
-	public void setIntenArrayBinary(final PeakListBinaryType value) {
-		this.intenArrayBinary = value;
-	}
+    /**
+     * Sets the value of the intenArrayBinary property.
+     *
+     * @param value allowed object is {@link PeakListBinaryType }
+     *
+     */
+    public void setIntenArrayBinary(final PeakListBinaryType value) {
+        this.intenArrayBinary = value;
+    }
 
-	/**
-	 * Sets the value of the mzArrayBinary property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link PeakListBinaryType }
-	 * 
-	 */
-	public void setMzArrayBinary(final PeakListBinaryType value) {
-		this.mzArrayBinary = value;
-	}
+    /**
+     * Sets the value of the mzArrayBinary property.
+     *
+     * @param value allowed object is {@link PeakListBinaryType }
+     *
+     */
+    public void setMzArrayBinary(final PeakListBinaryType value) {
+        this.mzArrayBinary = value;
+    }
 
-	/**
-	 * Sets the value of the spectrumDesc property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link SpectrumDescType }
-	 * 
-	 */
-	public void setSpectrumDesc(final SpectrumDescType value) {
-		this.spectrumDesc = value;
-	}
-
+    /**
+     * Sets the value of the spectrumDesc property.
+     *
+     * @param value allowed object is {@link SpectrumDescType }
+     *
+     */
+    public void setSpectrumDesc(final SpectrumDescType value) {
+        this.spectrumDesc = value;
+    }
 }

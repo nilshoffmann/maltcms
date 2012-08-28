@@ -45,17 +45,16 @@ import ucar.ma2.Array;
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
-@RequiresVariables(names={"var.binned_mass_values","var.binned_intensity_values","var.binned_scan_index"})
+@RequiresVariables(names = {"var.binned_mass_values", "var.binned_intensity_values", "var.binned_scan_index"})
 public class CwtEicPeakFinder extends AFragmentCommand {
 
     private final String description = "Finds EIC peaks using  Continuous Wavelet Transform.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;
-    
-    @Configurable(name="var.binned_mass_values")
+    @Configurable(name = "var.binned_mass_values")
     private String binnedMassValues = "binned_mass_values";
-    @Configurable(name="var.binned_intensity_values")
+    @Configurable(name = "var.binned_intensity_values")
     private String binnedIntensityValues = "binned_intensity_values";
-    @Configurable(name="var.binned_scan_index")
+    @Configurable(name = "var.binned_scan_index")
     private String binnedScanIndex = "binned_scan_index";
 
     @Override
@@ -69,11 +68,11 @@ public class CwtEicPeakFinder extends AFragmentCommand {
             List<Array> eics = ArrayTools.tilt(biv.getIndexedArray());
             Array mzs = bmv.getIndexedArray().get(0);
             ICompletionService<File> ics = createCompletionService(File.class);
-            for(int i = 0;i<eics.size();i++) {
+            for (int i = 0; i < eics.size(); i++) {
                 Array eic = eics.get(i);
                 CwtEicPeakFinderCallable cwt = new CwtEicPeakFinderCallable();
                 cwt.setInput(new File(f.getAbsolutePath()));
-                cwt.setEic((double[])eic.get1DJavaArray(double.class));
+                cwt.setEic((double[]) eic.get1DJavaArray(double.class));
                 cwt.setMz(mzs.getDouble(i));
                 cwt.setMinScale(5);
                 ics.submit(cwt);
@@ -81,7 +80,8 @@ public class CwtEicPeakFinder extends AFragmentCommand {
             try {
                 ics.call();
             } catch (Exception ex) {
-                log.warn("Exception caught: ",ex);
+                log.error("Caught exception while executing workers: ", ex);
+                throw new RuntimeException(ex);
             }
             cnt++;
         }

@@ -64,7 +64,7 @@ import net.sf.maltcms.evaluation.spi.xcalibur.XLSIOProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
-
+ *
  *
  */
 public class Eval {
@@ -236,7 +236,7 @@ public class Eval {
     public class PeakPredicate extends Predicate<Peak> {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = -1948551337371019623L;
 
@@ -249,7 +249,7 @@ public class Eval {
     public class CreatorPredicate extends Predicate<Creator> {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = -3543269480153995134L;
         private String name;
@@ -276,7 +276,7 @@ public class Eval {
     public class AggregatePeakPredicate extends PeakPredicate {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = -6754630453106703429L;
         private Predicate<Peak>[] p;
@@ -304,7 +304,7 @@ public class Eval {
     public class ByCreatorNamePeakPredicate extends PeakPredicate {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = 1L;
         private final String name;
@@ -327,7 +327,7 @@ public class Eval {
     public class ByCreatorNamePeakNamePredicate extends PeakPredicate {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = 6463510990923985730L;
         private final String name;
@@ -354,7 +354,7 @@ public class Eval {
     public class ChromatogramPredicate extends Predicate<Chromatogram> {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = -55691937902127499L;
 
@@ -370,7 +370,7 @@ public class Eval {
     public class ChromatogramNamePredicate extends Predicate<Chromatogram> {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = -2493853621255366827L;
         private final String name;
@@ -394,7 +394,7 @@ public class Eval {
     public class ChromatogramPeakPredicate extends PeakPredicate {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = 5009287857661674974L;
         private final String file;
@@ -420,7 +420,7 @@ public class Eval {
     public class CreatorPeakPredicate extends PeakPredicate {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = -3734257468780932748L;
         private final String creator;
@@ -445,7 +445,7 @@ public class Eval {
     public class ChromatogramCreatorPeakPredicate extends Predicate<Peak> {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = 5009287857661674974L;
         private final String file;
@@ -474,11 +474,11 @@ public class Eval {
     public class ChromatogramCreatorPeakNamePeakPredicate extends Predicate<Peak> {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = 4469891680424542881L;
         /**
-         * 
+         *
          */
         private final String file;
         private final String creator;
@@ -510,7 +510,7 @@ public class Eval {
     public class ByCreatorNameFilenameRTPeakPredicate extends PeakPredicate {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = -3389850465308219316L;
         private final double rt, maxrtdev;

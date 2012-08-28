@@ -26,6 +26,10 @@ package smueller.datastructure;
  */
 public class NewDistanceMatrix extends DistanceMatrix {
 
+    /**
+     *
+     * @param bp
+     */
     public NewDistanceMatrix(final double[] bp) {
         super(bp);
         final int l = bp.length - 2;

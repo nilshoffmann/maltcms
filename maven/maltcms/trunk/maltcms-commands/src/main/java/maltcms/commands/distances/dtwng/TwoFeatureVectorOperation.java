@@ -28,18 +28,16 @@ import org.apache.commons.configuration.Configuration;
 import cross.IConfigurable;
 
 /**
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
 public abstract class TwoFeatureVectorOperation implements IConfigurable {
 
-	public abstract double apply(IFeatureVector f1, IFeatureVector f2);
+    public abstract double apply(IFeatureVector f1, IFeatureVector f2);
 
-	public abstract boolean isMinimize();
+    public abstract boolean isMinimize();
 
-	@Override
-	public void configure(Configuration cfg) {
-
-	}
-
+    @Override
+    public void configure(Configuration cfg) {
+    }
 }

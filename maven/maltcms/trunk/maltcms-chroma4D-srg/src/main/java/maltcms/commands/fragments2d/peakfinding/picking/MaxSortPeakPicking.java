@@ -37,7 +37,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -81,7 +81,6 @@ public class MaxSortPeakPicking implements IPeakPicking {
     private List<Point> getKMax(final List<ArrayDouble.D1> intensities,
             List<Point> peaks, int count) {
         Comparator<Point> c = new Comparator<Point>() {
-
             @Override
             public int compare(Point o1, Point o2) {
                 return -1
@@ -96,7 +95,7 @@ public class MaxSortPeakPicking implements IPeakPicking {
         for (int i = 0; i < Math.min(count, peaks.size()); i++) {
             finalPeaks.add(peaks.get(i));
         }
-        
+
         Collections.sort(finalPeaks, new PointComparator());
 
         return finalPeaks;
@@ -119,7 +118,7 @@ public class MaxSortPeakPicking implements IPeakPicking {
                 this.maxDy);
         return getKMax(intensities, peaks, this.k);
     }
-    
+
     public class PointComparator implements Comparator<Point> {
 
         @Override

@@ -51,13 +51,13 @@ import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.MAMath;
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.collections.CachedLazyList;
 import cross.datastructures.collections.IElementProvider;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.Tuple2DI;
 import cross.exception.ConstraintViolationException;
 import cross.datastructures.tools.EvalTools;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility class providing methods for Sparse and Dense Arrays.
@@ -65,9 +65,9 @@ import cross.datastructures.tools.EvalTools;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
  */
+@Slf4j
 public class ArrayTools {
 
-    private static Logger log = Logging.getLogger(ArrayTools.class);
     private static Random random;
 
     public static double calcPercentDone(final long elements, final long elemCnt) {
@@ -1244,10 +1244,10 @@ public class ArrayTools {
     /**
      * Creates a new Array containing all values of elements in al along every
      * dimension.
-     * 
-     * The list returned is a CachedList implementation. It creates the tilted 
+     *
+     * The list returned is a CachedList implementation. It creates the tilted
      * arrays lazily from the original supplied list.
-     * 
+     *
      * @param al
      * @return
      */
@@ -1285,7 +1285,7 @@ public class ArrayTools {
                 final ArrayList<Array> ret = new ArrayList<Array>();
                 final int nscans = originalList.size();
                 // initialize new arrays
-                for (int i = 0; i < stop-start; i++) {
+                for (int i = 0; i < stop - start; i++) {
                     ret.add(Array.factory(al.get(0).getElementType(),
                             new int[]{nscans}));
                 }

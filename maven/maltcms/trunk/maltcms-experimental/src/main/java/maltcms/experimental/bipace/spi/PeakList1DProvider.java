@@ -31,11 +31,10 @@ import maltcms.experimental.bipace.api.IPeakListProvider;
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-public class PeakList1DProvider implements IPeakListProvider<Peak>{
+public class PeakList1DProvider implements IPeakListProvider<Peak> {
 
     @Override
     public PeakList<Peak> getPeaks(IFileFragment fragment) {
         throw new NotImplementedException();
     }
-    
 }

@@ -33,14 +33,12 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Structure allowing the use of controlled or uncontrolled vocabulary
- * 
- * <p>
- * Java class for paramType complex type.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
+ *
+ * <p> Java class for paramType complex type.
+ *
+ * <p> The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name=&quot;paramType&quot;&gt;
  *   &lt;complexContent&gt;
@@ -53,49 +51,46 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "paramType", propOrder = { "cvParamOrUserParam" })
-@XmlSeeAlso( {
-        maltcms.io.xml.mzData.SpectrumSettingsType.AcqSpecification.Acquisition.class,
-        maltcms.io.xml.mzData.SpectrumSettingsType.SpectrumInstrument.class,
-        DescriptionType.class })
+@XmlType(name = "paramType", propOrder = {"cvParamOrUserParam"})
+@XmlSeeAlso({
+    maltcms.io.xml.mzData.SpectrumSettingsType.AcqSpecification.Acquisition.class,
+    maltcms.io.xml.mzData.SpectrumSettingsType.SpectrumInstrument.class,
+    DescriptionType.class})
 public class ParamType {
 
-	@XmlElements( { @XmlElement(name = "cvParam", type = CvParamType.class),
-	        @XmlElement(name = "userParam", type = UserParamType.class) })
-	protected List<Object> cvParamOrUserParam;
+    @XmlElements({
+        @XmlElement(name = "cvParam", type = CvParamType.class),
+        @XmlElement(name = "userParam", type = UserParamType.class)})
+    protected List<Object> cvParamOrUserParam;
 
-	/**
-	 * Gets the value of the cvParamOrUserParam property.
-	 * 
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a
-	 * snapshot. Therefore any modification you make to the returned list will
-	 * be present inside the JAXB object. This is why there is not a
-	 * <CODE>set</CODE> method for the cvParamOrUserParam property.
-	 * 
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getCvParamOrUserParam().add(newItem);
-	 * </pre>
-	 * 
-	 * 
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list
+    /**
+     * Gets the value of the cvParamOrUserParam property.
+     *
+     * <p> This accessor method returns a reference to the live list, not a
+     * snapshot. Therefore any modification you make to the returned list will
+     * be present inside the JAXB object. This is why there is not a
+     * <CODE>set</CODE> method for the cvParamOrUserParam property.
+     *
+     * <p> For example, to add a new item, do as follows:
+     *
+     * <pre>
+     * getCvParamOrUserParam().add(newItem);
+     * </pre>
+     *
+     *
+     * <p> Objects of the following type(s) are allowed in the list
 	 * {@link CvParamType } {@link UserParamType }
-	 * 
-	 * 
-	 */
-	public List<Object> getCvParamOrUserParam() {
-		if (this.cvParamOrUserParam == null) {
-			this.cvParamOrUserParam = new ArrayList<Object>();
-		}
-		return this.cvParamOrUserParam;
-	}
-
+     *
+     *
+     */
+    public List<Object> getCvParamOrUserParam() {
+        if (this.cvParamOrUserParam == null) {
+            this.cvParamOrUserParam = new ArrayList<Object>();
+        }
+        return this.cvParamOrUserParam;
+    }
 }

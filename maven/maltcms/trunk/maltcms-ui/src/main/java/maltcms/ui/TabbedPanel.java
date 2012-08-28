@@ -43,142 +43,135 @@ import cross.datastructures.tools.EvalTools;
 /**
  * Visual class displaying the proposed partitioning of an array with a given
  * set of anchors.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class TabbedPanel extends JPanel implements ActionListener {
 
-	protected class RepaintRunnable implements Runnable {
+    protected class RepaintRunnable implements Runnable {
 
-		private Graphics2D g2 = null;
+        private Graphics2D g2 = null;
 
-		public void run() {
-			if ((this.g2 != null) && (getContent() != null)) {
-				final BufferedImage bi = getContent();
-				this.g2.drawImage(bi, 0, 0, getWidth(), getHeight(), 0, 0, bi
-				        .getWidth(), bi.getHeight(), null);
-				this.g2.dispose();
-			}
-		}
+        public void run() {
+            if ((this.g2 != null) && (getContent() != null)) {
+                final BufferedImage bi = getContent();
+                this.g2.drawImage(bi, 0, 0, getWidth(), getHeight(), 0, 0, bi
+                        .getWidth(), bi.getHeight(), null);
+                this.g2.dispose();
+            }
+        }
 
-		public void setGraphics(final Graphics g) {
-			this.g2 = (Graphics2D) g;
-		}
-
-	}
-
-	/**
-     * 
+        public void setGraphics(final Graphics g) {
+            this.g2 = (Graphics2D) g;
+        }
+    }
+    /**
+     *
      */
-	private static final long serialVersionUID = 7611857256393422827L;
+    private static final long serialVersionUID = 7611857256393422827L;
+    // private double zoom = 1.0d;
+    private PartitionedArray pa = null;
+    private Dimension paSize = null;
+    private BufferedImage paIm = null;
+    private RepaintRunnable rr = null;
+    private AnchorPairSet aps = null;
 
-	// private double zoom = 1.0d;
-	private PartitionedArray pa = null;
+    public TabbedPanel(final PartitionedArray pa1, final AnchorPairSet aps1) {
+        this.pa = pa1;
+        this.aps = aps1;
+        this.paSize = pa1.getEnclosingRectangle().getSize();
+        this.paIm = new BufferedImage(this.paSize.width, this.paSize.height,
+                BufferedImage.TYPE_INT_ARGB);
+        createPAIm(this.paIm);
+    }
 
-	private Dimension paSize = null;
+    public void actionPerformed(final ActionEvent evt) {
+        // System.out.println("IEvent received!");
+        // System.out.println(evt.toString());
+        // System.out.println(this.zoom);
+        // if(evt.getActionCommand().equals("ZOOMIN")) {
+        // this.zoom = (this.zoom<1000.0d)?this.zoom*2.0d:this.zoom;
+        // }else if (evt.getActionCommand().equals("ZOOMOUT")) {
+        // this.zoom = (this.zoom>1.0d)?this.zoom/2.0d:this.zoom;
+        // }
+        // System.out.println(this.zoom);
+        // RepaintManager.currentManager(this).markCompletelyDirty(this);
+    }
 
-	private BufferedImage paIm = null;
+    public void createPAIm(final BufferedImage bi) {
 
-	private RepaintRunnable rr = null;
+        final Graphics2D g2 = (Graphics2D) bi.getGraphics();
+        final Color c = g2.getColor();
+        final Rectangle rect = this.pa.getEnclosingRectangle();
 
-	private AnchorPairSet aps = null;
+        this.paSize = rect.getBounds().getSize();
+        // System.out.println(this.paSize);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                1.0f));
+        g2.setColor(Color.BLACK);
+        g2.fill(rect);
+        setPreferredSize(new Dimension(getWidth(), getHeight()));
+        setMaximumSize(new Dimension(getWidth(), getHeight()));
 
-	public TabbedPanel(final PartitionedArray pa1, final AnchorPairSet aps1) {
-		this.pa = pa1;
-		this.aps = aps1;
-		this.paSize = pa1.getEnclosingRectangle().getSize();
-		this.paIm = new BufferedImage(this.paSize.width, this.paSize.height,
-		        BufferedImage.TYPE_INT_ARGB);
-		createPAIm(this.paIm);
-	}
+        final Color[] cls = new Color[]{Color.GREEN, Color.CYAN};
+        final Composite comp = g2.getComposite();
+        final Composite alpha = AlphaComposite.getInstance(
+                AlphaComposite.SRC_OVER, 0.7f);
+        final Shape r = this.pa.getShape();
+        EvalTools.notNull(r, this);
+        g2.setComposite(alpha);
+        g2.setColor(Color.WHITE);
+        g2.fill(rect);
+        g2.setColor(Color.RED);
+        g2.fill(r);
+        for (int i = 0; i < this.pa.rows(); i++) {
+            for (int j = 0; j < this.pa.columns(); j++) {
+                if (this.pa.inRange(i, j)) {
+                    g2.setColor(cls[(i + j) % cls.length]);
+                    g2.fillRect(j, i, 1, 1);
+                }
+            }
+        }
+        // g2.setColor(Color.BLUE);
+        // g2.setComposite(alpha);
+        for (final Tuple2D<Integer, Integer> t : this.aps
+                .getCorrespondingScans()) {
+            g2.setColor(cls[(t.getFirst() + t.getSecond()) % cls.length]);
+            g2.fillRect(t.getSecond(), t.getFirst(), 1, 1);
+        }
 
-	public void actionPerformed(final ActionEvent evt) {
-		// System.out.println("IEvent received!");
-		// System.out.println(evt.toString());
-		// System.out.println(this.zoom);
-		// if(evt.getActionCommand().equals("ZOOMIN")) {
-		// this.zoom = (this.zoom<1000.0d)?this.zoom*2.0d:this.zoom;
-		// }else if (evt.getActionCommand().equals("ZOOMOUT")) {
-		// this.zoom = (this.zoom>1.0d)?this.zoom/2.0d:this.zoom;
-		// }
-		// System.out.println(this.zoom);
-		// RepaintManager.currentManager(this).markCompletelyDirty(this);
-	}
+        g2.dispose();
+    }
 
-	public void createPAIm(final BufferedImage bi) {
+    public BufferedImage getContent() {
+        return this.paIm;
+    }
 
-		final Graphics2D g2 = (Graphics2D) bi.getGraphics();
-		final Color c = g2.getColor();
-		final Rectangle rect = this.pa.getEnclosingRectangle();
+    @Override
+    public Dimension getMaximumSize() {
+        return super.getMaximumSize();
+    }
 
-		this.paSize = rect.getBounds().getSize();
-		// System.out.println(this.paSize);
-		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-		        1.0f));
-		g2.setColor(Color.BLACK);
-		g2.fill(rect);
-		setPreferredSize(new Dimension(getWidth(), getHeight()));
-		setMaximumSize(new Dimension(getWidth(), getHeight()));
+    @Override
+    public Dimension getPreferredSize() {
+        return super.getPreferredSize();
+    }
 
-		final Color[] cls = new Color[] { Color.GREEN, Color.CYAN };
-		final Composite comp = g2.getComposite();
-		final Composite alpha = AlphaComposite.getInstance(
-		        AlphaComposite.SRC_OVER, 0.7f);
-		final Shape r = this.pa.getShape();
-		EvalTools.notNull(r, this);
-		g2.setComposite(alpha);
-		g2.setColor(Color.WHITE);
-		g2.fill(rect);
-		g2.setColor(Color.RED);
-		g2.fill(r);
-		for (int i = 0; i < this.pa.rows(); i++) {
-			for (int j = 0; j < this.pa.columns(); j++) {
-				if (this.pa.inRange(i, j)) {
-					g2.setColor(cls[(i + j) % cls.length]);
-					g2.fillRect(j, i, 1, 1);
-				}
-			}
-		}
-		// g2.setColor(Color.BLUE);
-		// g2.setComposite(alpha);
-		for (final Tuple2D<Integer, Integer> t : this.aps
-		        .getCorrespondingScans()) {
-			g2.setColor(cls[(t.getFirst() + t.getSecond()) % cls.length]);
-			g2.fillRect(t.getSecond(), t.getFirst(), 1, 1);
-		}
+    @Override
+    protected void paintComponent(final Graphics g) {
 
-		g2.dispose();
-	}
-
-	public BufferedImage getContent() {
-		return this.paIm;
-	}
-
-	@Override
-	public Dimension getMaximumSize() {
-		return super.getMaximumSize();
-	}
-
-	@Override
-	public Dimension getPreferredSize() {
-		return super.getPreferredSize();
-	}
-
-	@Override
-	protected void paintComponent(final Graphics g) {
-
-		super.paintComponent(g);
-		if (this.rr == null) {
-			this.rr = new RepaintRunnable();
-		}
-		this.rr.setGraphics(g);
-		// AffineTransform graphicsTransl =
-		// AffineTransform.getTranslateInstance(getWidth()/2,getHeight()/2);
-		// AffineTransform graphicsScale =
-		// AffineTransform.getScaleInstance(zoom, zoom);
-		// g2.setTransform(graphicsTransl);
-		this.rr.run();
-		g.dispose();
-	}
+        super.paintComponent(g);
+        if (this.rr == null) {
+            this.rr = new RepaintRunnable();
+        }
+        this.rr.setGraphics(g);
+        // AffineTransform graphicsTransl =
+        // AffineTransform.getTranslateInstance(getWidth()/2,getHeight()/2);
+        // AffineTransform graphicsScale =
+        // AffineTransform.getScaleInstance(zoom, zoom);
+        // g2.setTransform(graphicsTransl);
+        this.rr.run();
+        g.dispose();
+    }
 }

@@ -25,18 +25,16 @@ import java.io.File;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
-import org.slf4j.Logger;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.query.Predicate;
+import lombok.extern.slf4j.Slf4j;
 
-import cross.Logging;
-
+@Slf4j
 public class QueryCallable<T> implements Callable<ObjectSet<T>> {
 
-    private Logger log = Logging.getLogger(this);
     protected Predicate<T> llap;
     protected ObjectSet<T> los;
     protected String lloc;

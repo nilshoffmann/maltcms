@@ -32,7 +32,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Combinded distance of {@link ArrayCos} and {@link ArrayLp}.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Data
@@ -58,5 +58,4 @@ public class ArrayCosLp implements IArraySimilarity {
         final double dist = (lpd / dim) * (1.0d - cosd);
         return SimilarityTools.asSimilarity(dist);
     }
-
 }

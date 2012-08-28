@@ -30,20 +30,19 @@ import cross.exception.ResourceNotAvailableException;
 /**
  * Interface representing an experiment. Delegate/Facade to cover a real
  * IFileFragment.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IExperiment extends IConfigurable, IFileFragment {
 
-	public IFileFragment getFileFragment();
+    public IFileFragment getFileFragment();
 
-	public HashMap<String, String> getMetadata();
+    public HashMap<String, String> getMetadata();
 
-	public void setFileFragment(IFileFragment ff);
+    public void setFileFragment(IFileFragment ff);
 
-	public void setMetadata(String key, String value);
+    public void setMetadata(String key, String value);
 
-	public String getMetadata(String key) throws ResourceNotAvailableException;
-
+    public String getMetadata(String key) throws ResourceNotAvailableException;
 }

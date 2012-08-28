@@ -23,40 +23,38 @@ package net.sf.maltcms.evaluation.spi.xcalibur;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
-
+ *
  *
  */
 public class Creator {
 
-	private String name;
-	
-	private String creatorVersion;
-	
-	public Creator(String name, String creatorVersion) {
-		this.name = name;
-		this.creatorVersion = creatorVersion;
-	}
+    private String name;
+    private String creatorVersion;
 
-	public String getName() {
-    	return name;
+    public Creator(String name, String creatorVersion) {
+        this.name = name;
+        this.creatorVersion = creatorVersion;
     }
 
-	public void setName(String name) {
-    	this.name = name;
+    public String getName() {
+        return name;
     }
 
-	public String getCreatorVersion() {
-    	return creatorVersion;
+    public void setName(String name) {
+        this.name = name;
     }
 
-	public void setCreatorVersion(String creatorVersion) {
-    	this.creatorVersion = creatorVersion;
+    public String getCreatorVersion() {
+        return creatorVersion;
     }
-	
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getName()+" "+getCreatorVersion());
-		return sb.toString();
-	}
-	
+
+    public void setCreatorVersion(String creatorVersion) {
+        this.creatorVersion = creatorVersion;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getName() + " " + getCreatorVersion());
+        return sb.toString();
+    }
 }

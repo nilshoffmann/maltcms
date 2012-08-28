@@ -41,12 +41,12 @@ import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
 
 /**
  * Will compute a list of bidirectional best hits.
- * 
+ *
  * FIXME: Es gibt fälle, bei denen ein bbh mit score 0.88 gefunden wird, obwohl
  * es nicht die gleichen peaks sind. Das sind nah beieinander liegende peaks,
  * welche in den anderen chromatogrammen nicht vorkommen. irgendwie muss das
  * fixiert werden
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -81,9 +81,8 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
 
     /**
      * Adds a peak list to a internal peak list.
-     * 
-     * @param peakList
-     *            peak list
+     *
+     * @param peakList peak list
      */
     public void addPeakLists(final List<Peak2D> peakList) {
         this.doneList.add(new HashMap<Integer, Boolean>());
@@ -129,11 +128,9 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
 
     /**
      * Will find the best hit in list of peak p.
-     * 
-     * @param p
-     *            peak
-     * @param list
-     *            list
+     *
+     * @param p peak
+     * @param list list
      * @return <code>-1</code> if no one was found
      */
     private int findBidiBestHist(final Peak2D p, final List<Peak2D> list) {
@@ -176,9 +173,9 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
 
     /**
      * Getter.
-     * 
+     *
      * @return a list of all bidirectional best hits. List contains the indices
-     *         of peak in the peaklist.
+     * of peak in the peaklist.
      */
     @Override
     public List<List<Point>> getBidiBestHitList(

@@ -26,5 +26,4 @@ package maltcms.commands.fragments.peakfinding.ticPeakFinder;
  * @author nilshoffmann
  */
 public interface IPeakIntegrator {
-    
 }

@@ -26,37 +26,35 @@ import cross.datastructures.fragments.IFileFragment;
 /**
  * Concrete Implementation containing a 2-dimensional chromatogram, e.g. from
  * GCxGC-MS.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class Experiment2D extends Experiment1D implements IExperiment2D {
 
-	/**
-     * 
+    /**
+     *
      */
-	public Experiment2D() {
-		super();
-	}
+    public Experiment2D() {
+        super();
+    }
 
-	/**
-	 * @param ff1
-	 */
-	public Experiment2D(IFileFragment ff1) {
-		super(ff1);
-	}
+    /**
+     * @param ff1
+     */
+    public Experiment2D(IFileFragment ff1) {
+        super(ff1);
+    }
+    private IChromatogram2D ic2d = null;
 
-	private IChromatogram2D ic2d = null;
+    @Override
+    public IChromatogram2D getChromatogram2D() {
+        return this.ic2d;
+    }
 
-	@Override
-	public IChromatogram2D getChromatogram2D() {
-		return this.ic2d;
-	}
-
-	@Override
-	public void setChromatogram2D(final IChromatogram2D ic) {
-		this.ic2d = ic;
-		setChromatogram(new Chromatogram1D(ic.getParent()));
-	}
-
+    @Override
+    public void setChromatogram2D(final IChromatogram2D ic) {
+        this.ic2d = ic;
+        setChromatogram(new Chromatogram1D(ic.getParent()));
+    }
 }

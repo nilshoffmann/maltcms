@@ -44,23 +44,22 @@ import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 
 /**
- * 
- * ScanExtractor allows to extract a contiguous number of mass spectral scans 
- * from a GC/LC-MS file. This is useful for skipping lead-in scans that should be removed 
- * prior to processing or to skip data that was written incorrectly.
- * 
+ *
+ * ScanExtractor allows to extract a contiguous number of mass spectral scans
+ * from a GC/LC-MS file. This is useful for skipping lead-in scans that should
+ * be removed prior to processing or to skip data that was written incorrectly.
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
+ *
  */
 @Slf4j
 @Data
-@ProvidesVariables(names = {"var.scan_index", "var.scan_acquisition_time","var.mass_values","var.intensity_values","var.total_intensity"})
-@ServiceProvider(service=AFragmentCommand.class)
+@ProvidesVariables(names = {"var.scan_index", "var.scan_acquisition_time", "var.mass_values", "var.intensity_values", "var.total_intensity"})
+@ServiceProvider(service = AFragmentCommand.class)
 public class ScanExtractor extends AFragmentCommand {
 
     private final String description = "Allows definition of a start and end modulation period to be extracted from a raw GCxGC-MS chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.GENERAL_PREPROCESSING;
-    
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";
     @Configurable(name = "var.scan_acquisition_time", value = "scan_acquisition_time")
@@ -73,22 +72,22 @@ public class ScanExtractor extends AFragmentCommand {
     private int endScan = -1;
 
     protected Array get1DArraySubset(Array a, int startIndex, int endIndex) {
-        int scans = endIndex-startIndex+1;
+        int scans = endIndex - startIndex + 1;
         try {
-            return a.section(new int[]{startIndex},new int[]{scans});
+            return a.section(new int[]{startIndex}, new int[]{scans});
         } catch (InvalidRangeException ex) {
             throw new IllegalArgumentException(ex);
         }
     }
-    
+
     protected void correctIndex(Array indexArray, int startIndex) {
         IndexIterator iter = indexArray.getIndexIterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int idx = iter.getIntNext();
-            iter.setIntCurrent(idx-startIndex);
+            iter.setIntCurrent(idx - startIndex);
         }
     }
-    
+
     @Override
     public void configure(Configuration config) {
         this.totalIntensityVar = config.getString("var.total_intensity", "total_intensity");
@@ -98,30 +97,31 @@ public class ScanExtractor extends AFragmentCommand {
 
     /**
      * int[] contains startScan, endScan
+     *
      * @param ff
      * @param startScan
      * @param endScan
      * @return
      */
     protected int[] checkRanges(IFileFragment ff, int startScan, int endScan) {
-        log.debug("startScan: {}, endScan: {}",startScan,endScan);
+        log.debug("startScan: {}, endScan: {}", startScan, endScan);
         final int totalScans = ff.getChild(this.scanIndexVar).getArray().getShape()[0];
-        log.debug("total scans: "+totalScans);
+        log.debug("total scans: " + totalScans);
         int[] ranges = new int[]{0, 0};
         ranges[0] = Math.max(0, startScan);
-        if(endScan<0) {
-            ranges[1] = totalScans-1;
-        }else{
-            ranges[1] = Math.max(startScan+1, Math.min(totalScans - 1, endScan));
+        if (endScan < 0) {
+            ranges[1] = totalScans - 1;
+        } else {
+            ranges[1] = Math.max(startScan + 1, Math.min(totalScans - 1, endScan));
         }
-        if(ranges[0]>=ranges[1]) {
-            throw new IllegalArgumentException("startScan must not be greater than or equal to endScan: "+ranges[0]+">="+ranges[1]);
+        if (ranges[0] >= ranges[1]) {
+            throw new IllegalArgumentException("startScan must not be greater than or equal to endScan: " + ranges[0] + ">=" + ranges[1]);
         }
         return ranges;
     }
 
     private Dimension[] adaptDimensions(IVariableFragment source, int[] targetShape) {
-        log.info("Adapting dimensions for {} with shape {}",source.getName(),Arrays.toString(targetShape));
+        log.info("Adapting dimensions for {} with shape {}", source.getName(), Arrays.toString(targetShape));
         Dimension[] dimsSource = source.getDimensions();
         if (dimsSource.length != targetShape.length) {
             throw new ConstraintViolationException("Number of dimensions and target shape differ!");
@@ -144,44 +144,41 @@ public class ScanExtractor extends AFragmentCommand {
         for (IFileFragment ff : t) {
             final IFileFragment work = createWorkFragment(ff);
             int[] ranges = checkRanges(ff, startScan, endScan);
-            log.info("Reading 1D data from x: {} to {} for {}",new Object[]{ranges[0],ranges[1],ff.getName()});
+            log.info("Reading 1D data from x: {} to {} for {}", new Object[]{ranges[0], ranges[1], ff.getName()});
             Array sat = get1DArraySubset(ff.getChild(scanAcquisitionTimeVar).getArray(), ranges[0], ranges[1]);
             Array tic = get1DArraySubset(ff.getChild(totalIntensityVar).getArray(), ranges[0], ranges[1]);
-            Array indexSubset = get1DArraySubset(ff.getChild(scanIndexVar).getArray(), ranges[0], ranges[1]);
-            log.debug("scan_index: {}",indexSubset);
-            IVariableFragment indexSubsetVar = new VariableFragment(work, "scan_index");
-            indexSubsetVar.setArray(indexSubset);
+
             IVariableFragment massesVar = ff.getChild("mass_values");
             IVariableFragment originalScanIndexVar = ff.getChild("scan_index");
-            try {
-                originalScanIndexVar.setRange(new Range[]{new Range(ranges[0],ranges[1])});
-            } catch (InvalidRangeException ex) {
-                Logger.getLogger(ScanExtractor.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
             massesVar.setIndex(originalScanIndexVar);
-            List<Array> massSubset = massesVar.getIndexedArray();
-            log.debug("Retrieved {} mass value arrays",massSubset.size());
+            List<Array> massSubset = massesVar.getIndexedArray().subList(ranges[0], ranges[1]);
+            log.info("Retrieved {} mass value arrays", massSubset.size());
             int massDim = ArrayTools.getSizeForFlattenedArrays(massSubset);
             IVariableFragment intensVar = ff.getChild("intensity_values");
             intensVar.setIndex(originalScanIndexVar);
-            List<Array> intensSubset = intensVar.getIndexedArray();
+            List<Array> intensSubset = intensVar.getIndexedArray().subList(ranges[0], ranges[1]);
+            int scanDim = intensSubset.size();
+            log.info("Subset list has {} scans!", scanDim);
 
             //correct the index array for new offset
-            int minIndex = (int) MAMath.getMinimum(indexSubset);
-            IndexIterator iter = indexSubset.getIndexIterator();
-            while (iter.hasNext()) {
-                int current = iter.getIntNext();
-                if (minIndex > current) {
-                    throw new ConstraintViolationException("MinIndex " + minIndex + " is larger than current index " + current + "!");
-                }
-                iter.setIntCurrent(current - minIndex);
+            ArrayInt.D1 scanIndexArray = new ArrayInt.D1(intensSubset.size());
+            int offset = 0;
+            for (int i = 0; i < intensSubset.size(); i++) {
+                scanIndexArray.set(i, offset);
+                offset += intensSubset.get(i).getShape()[0];
             }
 
+            IVariableFragment indexSubsetVar = new VariableFragment(work, "scan_index");
+            indexSubsetVar.setArray(scanIndexArray);
+            indexSubsetVar.setDimensions(adaptDimensions(originalScanIndexVar, new int[]{scanDim}));
 
             IVariableFragment targetMasses = new VariableFragment(work, massesVar.getName());
-            targetMasses.setIndexedArray(massSubset);
+            targetMasses.setIndex(indexSubsetVar);
+            targetMasses.setIndexedArray(massSubset.subList(ranges[0], ranges[1]));
             targetMasses.setDimensions(adaptDimensions(massesVar, new int[]{massDim}));
             IVariableFragment targetIntensities = new VariableFragment(work, intensVar.getName());
+            targetIntensities.setIndex(indexSubsetVar);
             targetIntensities.setIndexedArray(intensSubset);
             targetIntensities.setDimensions(adaptDimensions(intensVar, new int[]{massDim}));
 
@@ -200,4 +197,3 @@ public class ScanExtractor extends AFragmentCommand {
         return res;
     }
 }
-

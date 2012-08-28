@@ -34,39 +34,63 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 
 /**
- * Refinement of PairwiseFeatureSequenceSimilarity, adding necessary methods for alignment
- * with DTW.
- * 
+ * Refinement of PairwiseFeatureSequenceSimilarity, adding necessary methods for
+ * alignment with DTW.
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IDynamicTimeWarp extends PairwiseFeatureSequenceSimilarity {
 
     /**
-     * 
+     *
      * @param tuple
      * @param ris
      * @param maxdev
-     * @param sat_ref
-     *            scan_acquisition_time array for reference
-     * @param sat_query
-     *            scan_acquisition_time array for query
+     * @param sat_ref scan_acquisition_time array for reference
+     * @param sat_query scan_acquisition_time array for query
      * @return
      */
     public abstract IArrayD2Double align(
             Tuple2D<List<Array>, List<Array>> tuple, AnchorPairSet ris,
             double maxdev, ArrayDouble.D1 sat_ref, ArrayDouble.D1 sat_query);
 
+    /**
+     *
+     * @param t
+     * @return
+     */
     public Tuple2D<List<Array>, List<Array>> createTuple(
             Tuple2D<IFileFragment, IFileFragment> t);
 
+    /**
+     *
+     * @return
+     */
     public abstract DtwRecurrence getRecurrence();
 
+    /**
+     *
+     * @return
+     */
     public abstract PairwiseFeatureSimilarity getPairwiseFeatureSimilarity();
 
+    /**
+     *
+     * @param cd
+     */
     public abstract void setRecurrence(DtwRecurrence cd);
 
+    /**
+     *
+     * @param a
+     * @param b
+     */
     public abstract void setFileFragments(IFileFragment a, IFileFragment b);
 
+    /**
+     *
+     * @param psd
+     */
     public abstract void setPairwiseFeatureSimilarity(PairwiseFeatureSimilarity psd);
 }

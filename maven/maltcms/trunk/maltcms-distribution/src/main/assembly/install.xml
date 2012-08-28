@@ -28,8 +28,8 @@
     <id>bin</id>
     <formats>
         <format>dir</format>
-<!--        <format>zip</format>-->
-<!--        <format>tar.gz</format>-->
+        <!--        <format>zip</format>-->
+        <!--        <format>tar.gz</format>-->
     </formats>
     <includeBaseDirectory>true</includeBaseDirectory>
     <dependencySets>
@@ -37,8 +37,8 @@
         <dependencySet>
             <unpack>false</unpack>
             <excludes>
-                 <!--exclude other dependencies for unpacking--> 
-<!--                <exclude>commons-math:commons-math:jar:1.2</exclude>
+                <!--exclude other dependencies for unpacking--> 
+                <!--                <exclude>commons-math:commons-math:jar:1.2</exclude>
                  <exclude>net.sf.maltcms:maltcms-resources:jar</exclude>
                 <exclude>net.sf.maltcms:maltcms-chroma:jar</exclude>
                 <exclude>net.sf.maltcms:maltcms-chroma4D:jar</exclude>
@@ -55,7 +55,7 @@
         </dependencySet>
 
         <dependencySet>
-             <!--unpack resources jar--> 
+            <!--unpack resources jar--> 
             <useTransitiveDependencies>false</useTransitiveDependencies>
             <unpack>true</unpack>
             <includes>

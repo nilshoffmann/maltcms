@@ -30,138 +30,131 @@ import cross.datastructures.tuple.Tuple2D;
 
 /**
  * Interface for all scan line data holder.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 public interface IScanLine extends IConfigurable {
 
-	/**
-	 * Getter.
-	 * 
-	 * @return mass bin size
-	 */
-	int getBinsSize();
+    /**
+     * Getter.
+     *
+     * @return mass bin size
+     */
+    int getBinsSize();
 
-	/**
-	 * Getter.
-	 * 
-	 * @return <code>false</code> if no modulation will be cached
-	 */
-	boolean getCacheModulation();
+    /**
+     * Getter.
+     *
+     * @return <code>false</code> if no modulation will be cached
+     */
+    boolean getCacheModulation();
 
-	/**
-	 * Getter.
-	 * 
-	 * @return last scan index
-	 */
-	int getLastIndex();
+    /**
+     * Getter.
+     *
+     * @return last scan index
+     */
+    int getLastIndex();
 
-	/**
-	 * Getter for one mass spectra. If the requested mass spectra is out of
-	 * bound, then this method will return null.
-	 * 
-	 * @param x
-	 *            scanline number
-	 * @param y
-	 *            mass spectra inside this scanline
-	 * @return array representing one mass spectra
-	 */
-	Array getMassSpectra(final int x, final int y);
+    /**
+     * Getter for one mass spectra. If the requested mass spectra is out of
+     * bound, then this method will return null.
+     *
+     * @param x scanline number
+     * @param y mass spectra inside this scanline
+     * @return array representing one mass spectra
+     */
+    Array getMassSpectra(final int x, final int y);
 
-	Tuple2D<Array, Array> getSparseMassSpectra(final int x, final int y);
+    Tuple2D<Array, Array> getSparseMassSpectra(final int x, final int y);
 
-	/**
-	 * This Method is a wrapper for getMassPectra(int, int).
-	 * 
-	 * @param p
-	 *            point of requested mass spectra
-	 * @return mass spectra
-	 */
-	Array getMassSpectra(final Point p);
+    /**
+     * This Method is a wrapper for getMassPectra(int, int).
+     *
+     * @param p point of requested mass spectra
+     * @return mass spectra
+     */
+    Array getMassSpectra(final Point p);
 
-	Tuple2D<Array, Array> getSparseMassSpectra(final Point p);
+    Tuple2D<Array, Array> getSparseMassSpectra(final Point p);
 
-	/**
-	 * Getter.
-	 * 
-	 * @return scan line count
-	 */
-	int getScanLineCount();
+    /**
+     * Getter.
+     *
+     * @return scan line count
+     */
+    int getScanLineCount();
 
-	/**
-	 * This method will create a {@link List} of {@link Array} containing the
-	 * mass spectra of scanline x. All this mass spectra are normalized to one
-	 * size.
-	 * 
-	 * @param x
-	 *            scan line number
-	 * @return list of mass spectra
-	 */
-	List<Array> getScanlineMS(final int x);
+    /**
+     * This method will create a {@link List} of {@link Array} containing the
+     * mass spectra of scanline x. All this mass spectra are normalized to one
+     * size.
+     *
+     * @param x scan line number
+     * @return list of mass spectra
+     */
+    List<Array> getScanlineMS(final int x);
 
-	List<Tuple2D<Array, Array>> getScanlineSparseMS(final int x);
+    List<Tuple2D<Array, Array>> getScanlineSparseMS(final int x);
 
-	/**
-	 * Getter.
-	 * 
-	 * @return scans per modulation
-	 */
-	int getScansPerModulation();
+    /**
+     * Getter.
+     *
+     * @return scans per modulation
+     */
+    int getScansPerModulation();
 
-	/**
-	 * Setter.
-	 * 
-	 * @param size
-	 *            mass bin size
-	 */
-	void setBinSize(final int size);
+    /**
+     * Setter.
+     *
+     * @param size mass bin size
+     */
+    void setBinSize(final int size);
 
-	/**
-	 * Setter. Default value is <code>true</code>.
-	 * 
-	 * @param cacheMod
-	 *            <code>true</code> if all modulations should be cached
-	 */
-	void setCacheModulations(final boolean cacheMod);
+    /**
+     * Setter. Default value is
+     * <code>true</code>.
+     *
+     * @param cacheMod <code>true</code> if all modulations should be cached
+     */
+    void setCacheModulations(final boolean cacheMod);
 
-	/**
-	 * Setter.
-	 * 
-	 * @param index
-	 *            last scan index
-	 */
-	void setLastIndex(final int index);
+    /**
+     * Setter.
+     *
+     * @param index last scan index
+     */
+    void setLastIndex(final int index);
 
-	/**
-	 * Will show some information about the usage.
-	 */
-	void showStat();
+    /**
+     * Will show some information about the usage.
+     */
+    void showStat();
 
-	/**
-	 * Map a global scan index to a Point of x,y coordinates.
-	 * 
-	 * @param scanIndex
-	 * @return
-	 */
-	Point mapIndex(int scanIndex);
+    /**
+     * Map a global scan index to a Point of x,y coordinates.
+     *
+     * @param scanIndex
+     * @return
+     */
+    Point mapIndex(int scanIndex);
 
-	/**
-	 * Map a Point to a global scan index.
-	 * 
-	 * @param p
-	 * @return
-	 */
-	int mapPoint(Point p);
+    /**
+     * Map a Point to a global scan index.
+     *
+     * @param p
+     * @return
+     */
+    int mapPoint(Point p);
 
-	/**
-	 * Map two coordinates x,y to a global scan index.
-	 * 
-	 * @param x
-	 * @param y
-	 * @return
-	 */
-	int mapPoint(int x, int y);
+    /**
+     * Map two coordinates x,y to a global scan index.
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    int mapPoint(int x, int y);
 
-	public void clear();
-
+    public void clear();
 }

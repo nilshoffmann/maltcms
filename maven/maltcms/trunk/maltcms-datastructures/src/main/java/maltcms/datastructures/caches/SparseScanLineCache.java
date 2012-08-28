@@ -30,33 +30,32 @@ import java.util.List;
 import maltcms.tools.ArrayTools2;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
-import cross.Logging;
 import cross.annotations.RequiresVariables;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class is a dataholder for mass spectra. This class will cache all mass
  * spectra which were read an hold a {@link SoftReference} to it.
- * 
+ *
  * TODO: Change to {@link AScanLineCache}
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",
     "var.modulation_time", "var.scan_rate"})
+@Slf4j
 public class SparseScanLineCache implements IScanLine {
 
-    private final Logger log = Logging.getLogger(this);
     private String intensityValuesVar = "intensity_values";
     private String scanIndexVar = "scan_index";
     private String massValuesVar = "mass_values";
@@ -87,9 +86,8 @@ public class SparseScanLineCache implements IScanLine {
     /**
      * This constructor will automatically set the number of scans per
      * modulation and the last index.
-     * 
-     * @param iff1
-     *            file fragment
+     *
+     * @param iff1 file fragment
      */
     protected SparseScanLineCache(final IFileFragment iff1) {
         this.iff = iff1;
@@ -103,13 +101,10 @@ public class SparseScanLineCache implements IScanLine {
 
     /**
      * Default constructor.
-     * 
-     * @param iff1
-     *            file fragment
-     * @param scansPerModulation1
-     *            scans per modulation
-     * @param lastIndex1
-     *            index of the last scan
+     *
+     * @param iff1 file fragment
+     * @param scansPerModulation1 scans per modulation
+     * @param lastIndex1 index of the last scan
      */
     protected SparseScanLineCache(final IFileFragment iff1,
             final int scansPerModulation1, final int lastIndex1) {
@@ -176,7 +171,7 @@ public class SparseScanLineCache implements IScanLine {
 
     /**
      * Getter.
-     * 
+     *
      * @return bin size
      */
     public int getBinsSize() {
@@ -185,7 +180,7 @@ public class SparseScanLineCache implements IScanLine {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     public boolean getCacheModulation() {
@@ -194,7 +189,7 @@ public class SparseScanLineCache implements IScanLine {
 
     /**
      * Getter.
-     * 
+     *
      * @return last index
      */
     public int getLastIndex() {
@@ -228,11 +223,9 @@ public class SparseScanLineCache implements IScanLine {
 
     /**
      * Returns normalized Arrays.
-     * 
-     * @param massValuesA
-     *            mass values
-     * @param massIntensitiesA
-     *            mass intensities
+     *
+     * @param massValuesA mass values
+     * @param massIntensitiesA mass intensities
      * @return length normalized array
      */
     private List<Array> getNormalizedArray(final List<Tuple2D<Array, Array>> mss) {
@@ -248,7 +241,7 @@ public class SparseScanLineCache implements IScanLine {
 
     /**
      * Getter.
-     * 
+     *
      * @return scan line count
      */
     public int getScanLineCount() {
@@ -257,9 +250,8 @@ public class SparseScanLineCache implements IScanLine {
 
     /**
      * Getter.
-     * 
-     * @param x
-     *            scan line number
+     *
+     * @param x scan line number
      * @return complete ms list of this scan line
      */
     public List<Array> getScanlineMS(final int x) {
@@ -276,9 +268,8 @@ public class SparseScanLineCache implements IScanLine {
 
     /**
      * Getter. Will load the scanline from a given {@link IFileFragment}.
-     * 
-     * @param x
-     *            scan line number
+     *
+     * @param x scan line number
      * @return complete ms list of the scan line
      */
     private synchronized List<Tuple2D<Array, Array>> loadScanline(final int x) {
@@ -324,9 +315,8 @@ public class SparseScanLineCache implements IScanLine {
 
     /**
      * Setter.
-     * 
-     * @param size
-     *            bin size
+     *
+     * @param size bin size
      */
     public void setBinSize(final int size) {
         this.binSize = size;
@@ -341,9 +331,8 @@ public class SparseScanLineCache implements IScanLine {
 
     /**
      * Setter.
-     * 
-     * @param index
-     *            last index
+     *
+     * @param index last index
      */
     public void setLastIndex(final int index) {
         this.lastIndex = index;

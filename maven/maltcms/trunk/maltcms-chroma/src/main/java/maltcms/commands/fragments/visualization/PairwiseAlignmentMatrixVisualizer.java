@@ -81,26 +81,24 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Draw the pairwise distance and/or cumulative distance matrix used for
  * alignment.
- * 
+ *
  * TODO implement visualization of anchors.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
-@RequiresVariables(names={"var.total_intensity","var.pairwise_distance_matrix", "var.pairwise_distance_alignment_names"})
-@RequiresOptionalVariables(names={"var.anchors.retention_index_names","var.anchors.retention_scans"})
+@RequiresVariables(names = {"var.total_intensity", "var.pairwise_distance_matrix", "var.pairwise_distance_alignment_names"})
+@RequiresOptionalVariables(names = {"var.anchors.retention_index_names", "var.anchors.retention_scans"})
 public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
 
     private final String description = "Creates a plot of the pairwise distance and alignment matrices created during alignment.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
-    
     private String filename;
     private String reference_file_name;
     private String query_file_name;
-    
     @Configurable
     private String format = "png";
     @Configurable
@@ -109,9 +107,9 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
     private String left_chromatogram_var = "total_intensity";
     @Configurable
     private String top_chromatogram_var = "total_intensity";
-    @Configurable(name="")
+    @Configurable(name = "")
     private String path_i;
-    @Configurable(name="")
+    @Configurable(name = "")
     private String path_j;
     @Configurable
     private boolean full_spec = false;
@@ -128,6 +126,23 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
     @Configurable
     private int fontsize = 30;
 
+    /**
+     *
+     * @param queryName
+     * @param refName
+     * @param query
+     * @param ref
+     * @param bi
+     * @param specwidth1
+     * @param colorlegendwidth
+     * @param colorlegendheight
+     * @param margin
+     * @param colorTable
+     * @param minimize
+     * @param refAnchors
+     * @param queryAnchors
+     * @return
+     */
     protected BufferedImage addSpectra(final String queryName,
             final String refName, final Array query, final Array ref,
             final BufferedImage bi, final int specwidth1,
@@ -292,6 +307,16 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
         return bout;
     }
 
+    /**
+     *
+     * @param name
+     * @param a
+     * @param height
+     * @param fg
+     * @param bg
+     * @param anchorPositions
+     * @return
+     */
     protected BufferedImage addSpectrumImage(final String name, final Array a,
             final int height, final Color fg, final Color bg,
             final List<Integer> anchorPositions) {
@@ -360,9 +385,21 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
     public void configure(final Configuration cfg) {
         this.path_i = cfg.getString("var.warp_path_i", "warp_path_i");
         this.path_j = cfg.getString("var.warp_path_j", "warp_path_j");
-        
+
     }
 
+    /**
+     *
+     * @param a
+     * @param di
+     * @param rF
+     * @param qF
+     * @param reference
+     * @param query
+     * @param path
+     * @param output
+     * @param minimize
+     */
     protected void createAlignmentMatrixImage(final Array a,
             final IVariableFragment di, final IFileFragment rF,
             final IFileFragment qF, final Array reference, final Array query,
@@ -556,6 +593,14 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
         }
     }
 
+    /**
+     *
+     * @param value
+     * @param maxval
+     * @param minval
+     * @param numbins
+     * @return
+     */
     protected int mapToBin(final double value, final double maxval,
             final double minval, final int numbins) {
         return (int) Math.floor(value / (maxval - minval)) * numbins;

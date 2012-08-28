@@ -53,21 +53,20 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Plot 1-dimensional arrays, possibly with an additional array providing domain
  * values.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class Array1DVisualizer extends AFragmentCommand {
 
     private final String description = "Creates plots of 1-dimensional variables.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
-    
-    @Configurable(name="var.total_intensity")
+    @Configurable(name = "var.total_intensity")
     private String variableName = "total_intensity";
-    @Configurable(name="var.scan_acquisition_time")
+    @Configurable(name = "var.scan_acquisition_time")
     private String scanAcquisitionTimeVariableName = "scan_acquisition_time";
     @Configurable(name = "maltcms.commands.fragments.visualization.x_axis_label")
     private String xAxisLabel = "Scans";
@@ -83,7 +82,7 @@ public class Array1DVisualizer extends AFragmentCommand {
     private boolean allInOneChart = false;
     @Configurable
     private String timeUnit = "s";
-    
+
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         if (this.pairwise) {

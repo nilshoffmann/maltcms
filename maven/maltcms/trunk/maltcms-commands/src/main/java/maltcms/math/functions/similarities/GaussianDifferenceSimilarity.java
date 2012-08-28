@@ -30,7 +30,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
-@ServiceProvider(service=IScalarSimilarity.class)
+@ServiceProvider(service = IScalarSimilarity.class)
 public class GaussianDifferenceSimilarity implements
         IScalarSimilarity {
 
@@ -39,9 +39,10 @@ public class GaussianDifferenceSimilarity implements
 
     /**
      * Calculates the scalar
+     *
      * @param time1
      * @param time2
-     * @return 
+     * @return
      */
     @Override
     public double apply(double time1, double time2) {
@@ -57,5 +58,4 @@ public class GaussianDifferenceSimilarity implements
         }
         return weight;
     }
-
 }

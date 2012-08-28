@@ -47,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Warps two chromatogramms according to their mean mass spectra of the scan
  * lines.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -199,9 +199,8 @@ public class ScanlineMeanMSWarp extends ADynamicTimeWarp {
 
     /**
      * Getter.
-     * 
-     * @param slc
-     *            scanline cache
+     *
+     * @param slc scanline cache
      * @return list of mean mass spectras
      */
     private List<Array> getMeanMSForScanline(final IScanLine slc) {

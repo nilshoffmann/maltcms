@@ -91,7 +91,6 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
             final int progv = progress;
             log.debug("Progress: {}", progress);
             final Runnable r = new Runnable() {
-
                 @Override
                 public void run() {
                     setProgress(progv);
@@ -104,7 +103,6 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
         progress = (int) ((step / nsteps) * 100.0f);
         final int progv = progress;
         final Runnable r = new Runnable() {
-
             @Override
             public void run() {
                 setProgress(progv);
@@ -131,8 +129,8 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
      * @see cross.event.IListener#listen(cross.event.IEvent)
      */
     /**
-     * Relay method, calling all registered Listeners, if an event is
-     * received from a Workflow.
+     * Relay method, calling all registered Listeners, if an event is received
+     * from a Workflow.
      */
     @Override
     public void listen(final IEvent<IWorkflowResult> v) {

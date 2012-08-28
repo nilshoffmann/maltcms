@@ -339,9 +339,8 @@ public class MSPFormatMetaboliteParser {
                     File f = new File(s);
                     ArrayList<IMetabolite> al = gmp.parse(f);
                     ObjectSet<IMetabolite> numMet = db.query(new Predicate<IMetabolite>() {
-
                         /**
-                         * 
+                         *
                          */
                         private static final long serialVersionUID = -3537350989202183850L;
 
@@ -360,7 +359,7 @@ public class MSPFormatMetaboliteParser {
                         // Predicate<IMetabolite>() {
 
                         /**
-                         * 
+                         *
                          */
                         // private static final long serialVersionUID =
                         // -8580415202887162014L;

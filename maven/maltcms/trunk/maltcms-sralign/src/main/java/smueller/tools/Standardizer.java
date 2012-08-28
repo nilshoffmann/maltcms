@@ -39,6 +39,13 @@ public class Standardizer {
     // Abziehen des Median, teilen durch Standardabweichung f�r alle
     // Arraywerte,
     // addiert minimum um im pos. wertebereich zu bleiben
+    /**
+     *
+     * @param a1
+     * @param median1
+     * @param deviation
+     * @return
+     */
     public Array cleanbase(final Array a1, final double median1,
             final double deviation) {
         final Array a = a1.copy();
@@ -60,6 +67,11 @@ public class Standardizer {
         return a;
     }
 
+    /**
+     *
+     * @param a1
+     * @return
+     */
     public Array cleanbaseline(final Array a1) {
         final Array a = a1.copy();
         // Globale Medianberechnung, verbraucht viel zus�tzl. Speicher, weil
@@ -76,19 +88,36 @@ public class Standardizer {
         return b;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getMax() {
         return this.max;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getMedian() {
         return this.median;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getMin() {
         return this.min;
     }
 
     // zieht logarithmus
+    /**
+     *
+     * @param a1
+     * @return
+     */
     public Array logData(final Array a1) {
         final Array a = a1.copy();
         final IndexIterator ii4 = a.getIndexIterator();
@@ -101,6 +130,11 @@ public class Standardizer {
     }
 
     // Berechnung des globalen Mittelwertes
+    /**
+     *
+     * @param a
+     * @return
+     */
     public double mean(final Array a) {
         final IndexIterator ii1 = a.getIndexIterator();
         double i = 0;
@@ -112,6 +146,11 @@ public class Standardizer {
     }
 
     // setzt alle negativen Arraywerte auf 0
+    /**
+     *
+     * @param a1
+     * @return
+     */
     public Array nullData(final Array a1) {
         final Array a = a1.copy();
         final IndexIterator ii4 = a.getIndexIterator();
@@ -128,6 +167,11 @@ public class Standardizer {
     }
 
     // Standardisierung, skalieren auf Wertebereich 0-1
+    /**
+     *
+     * @param a1
+     * @return
+     */
     public Array scale(final Array a1) {
         final Array a = a1.copy();
         final IndexIterator ii4 = a.getIndexIterator();
@@ -149,6 +193,12 @@ public class Standardizer {
     }
 
     // Berechnung der Standardabweichung
+    /**
+     *
+     * @param a
+     * @param meanvalue
+     * @return
+     */
     public double standardDeviation(final Array a, final double meanvalue) {
         final IndexIterator ii2 = a.getIndexIterator();
         double i = 0;

@@ -33,7 +33,7 @@ import net.sf.maltcms.evaluation.api.Category;
  *
  * @author nilshoffmann
  */
-public class MultipleAlignment implements Map<Category, AlignmentColumn>{
+public class MultipleAlignment implements Map<Category, AlignmentColumn> {
 
     @Override
     public String toString() {
@@ -114,8 +114,5 @@ public class MultipleAlignment implements Map<Category, AlignmentColumn>{
     public void clear() {
         map.clear();
     }
-    
-    private LinkedHashMap<Category,AlignmentColumn> map = new LinkedHashMap<Category, AlignmentColumn>();
-    
-    
+    private LinkedHashMap<Category, AlignmentColumn> map = new LinkedHashMap<Category, AlignmentColumn>();
 }

@@ -23,18 +23,17 @@ package maltcms.datastructures.ms;
 
 /**
  * Interface for alignment anchors.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IAnchor extends Comparable<IAnchor> {
 
-	public abstract String getName();
+    public abstract String getName();
 
-	public abstract int getScanIndex();
+    public abstract int getScanIndex();
 
-	public abstract void setName(String s);
+    public abstract void setName(String s);
 
-	public abstract void setScanIndex(int scan);
-
+    public abstract void setScanIndex(int scan);
 }

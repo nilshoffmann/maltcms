@@ -33,10 +33,9 @@ public class FilePipeline extends APipeline<File> {
 
     @Override
     public List<File> call() throws Exception {
-        for(Callable<File> pipe:getPipelines()) {
+        for (Callable<File> pipe : getPipelines()) {
             ics.submit(pipe);
         }
         return ics.call();
     }
-    
 }

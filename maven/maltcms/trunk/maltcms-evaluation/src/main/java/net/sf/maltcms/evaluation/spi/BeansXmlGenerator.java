@@ -55,7 +55,6 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
     private final File template;
     private final File outputDirectory;
     private final HashMap<String, String> tokenMap;
-    
     private static org.slf4j.Logger log = LoggerFactory.getLogger(BeansXmlGenerator.class);
 
     public BeansXmlGenerator(LinkedHashMap<String, List<?>> parameterMap,
@@ -95,11 +94,11 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
             pc.save();
             File outputFile = new File(instanceDirectory,
                     instanceId.toString() + ".xml");
-            
+
             tokenMap.put("paramsLocation", pcFile.getAbsolutePath());
             try {
                 writeStreamToFile(template.toURI().toURL().openStream(),
-                        outputFile,tokenMap);
+                        outputFile, tokenMap);
                 return outputFile;
             } catch (IOException ex) {
                 log.error("Caught exception while trying to create " + outputFile.
@@ -125,10 +124,10 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
             try {
                 while ((line = bis.readLine()) != null) {
                     String tmp = line;
-                    for(String key:tokenMap.keySet()) {
-                        if(tmp.contains(key)) {
-                            System.out.println("Replacing "+key+" with value "+tokenMap.get(key));
-                            tmp = tmp.replaceAll("\\$\\{"+key+"\\}", tokenMap.get(key));
+                    for (String key : tokenMap.keySet()) {
+                        if (tmp.contains(key)) {
+                            System.out.println("Replacing " + key + " with value " + tokenMap.get(key));
+                            tmp = tmp.replaceAll("\\$\\{" + key + "\\}", tokenMap.get(key));
                         }
                     }
                     bos.write(tmp);

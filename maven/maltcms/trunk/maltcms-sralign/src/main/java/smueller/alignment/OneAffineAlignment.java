@@ -34,6 +34,11 @@ public class OneAffineAlignment extends Alignment {
     // Horizontale Matrix
     private double[][] hor;
 
+    /**
+     *
+     * @param ref1
+     * @param query1
+     */
     public OneAffineAlignment(final IFileFragment ref1,
             final IFileFragment query1) {
         super(ref1, query1);
@@ -41,6 +46,11 @@ public class OneAffineAlignment extends Alignment {
 
     // �berschriebene Methode zur Matrixberechnung, um affine Gapkosten nach
     // Gotoh zu ber�cksichtigen
+    /**
+     *
+     * @param u
+     * @param v
+     */
     @Override
     public void computeMatrix(final String u, final String v) {
         this.seq1 = u;

@@ -43,16 +43,16 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Shorthand class for peaks.
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
+ *
  */
 @Data
 @Slf4j
 public class Peak implements IFeatureVector {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -4337180586706400884L;
     private final int scanIndex;
@@ -101,7 +101,7 @@ public class Peak implements IFeatureVector {
                     hm.put(p, similarity);
                     this.sims.put(p.getAssociation(), hm);
                 }
-                this.sortedPeaks.put(best.getAssociation(),Arrays.asList(best));
+                this.sortedPeaks.put(best.getAssociation(), Arrays.asList(best));
 //                if (this.sortedPeaks.containsKey(p.getAssociation())) {
 //                    this.sortedPeaks.remove(p.getAssociation());
 //                }
@@ -151,7 +151,6 @@ public class Peak implements IFeatureVector {
 
                 // al.addAll(s);
                 Collections.sort(al, new Comparator<Entry<Peak, Double>>() {
-
                     @Override
                     public int compare(final Entry<Peak, Double> o1,
                             final Entry<Peak, Double> o2) {
@@ -239,7 +238,7 @@ public class Peak implements IFeatureVector {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append("Peak number "+this.peakIndex+" at position " + this.scanIndex + " and rt: " + this.sat
+        sb.append("Peak number " + this.peakIndex + " at position " + this.scanIndex + " and rt: " + this.sat
                 + " in file " + this.association);
         return sb.toString();
     }
@@ -258,7 +257,7 @@ public class Peak implements IFeatureVector {
             return Array.factory(this.scanIndex);
         } else if (name.equals("binned_intensity_values")) {
             return this.msIntensities;
-        } 
+        }
         throw new ResourceNotAvailableException("No such feature: " + name);
     }
 
@@ -275,7 +274,7 @@ public class Peak implements IFeatureVector {
 
     @Override
     public boolean equals(Object o) {
-        if(o instanceof Peak) {
+        if (o instanceof Peak) {
             return toString().equals(o.toString());
         }
         return false;

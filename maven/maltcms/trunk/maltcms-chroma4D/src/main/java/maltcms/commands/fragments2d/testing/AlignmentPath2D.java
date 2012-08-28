@@ -74,22 +74,46 @@ public class AlignmentPath2D {
 
     }
 
+    /**
+     *
+     * @param lhsHorizontal
+     * @return
+     */
     public List<Integer> getRHSPointHorizontal(final Integer lhsHorizontal) {
         return this.LHStoRHShorizontalMap.get(lhsHorizontal);
     }
 
+    /**
+     *
+     * @param rhsHorizontal
+     * @return
+     */
     public List<Integer> getLHSPointHorizontal(final Integer rhsHorizontal) {
         return this.RHStoLHShorizontalMap.get(rhsHorizontal);
     }
 
+    /**
+     *
+     * @param lhsVertical
+     * @return
+     */
     public List<Integer> getRHSPointVerticals(final Integer lhsVertical) {
         return this.LHStoRHSverticalMap.get(lhsVertical);
     }
 
+    /**
+     *
+     * @param rhsVertical
+     * @return
+     */
     public List<Integer> getLHSPointVertical(final Integer rhsVertical) {
         return this.RHStoLHSverticalMap.get(rhsVertical);
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Point> getHorizontalList() {
         return this.horizontalList;
     }

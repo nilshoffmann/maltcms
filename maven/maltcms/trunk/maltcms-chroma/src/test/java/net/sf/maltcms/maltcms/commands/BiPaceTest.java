@@ -52,10 +52,16 @@ import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineE
  * @author nilshoffmann
  */
 public class BiPaceTest extends AFragmentCommandTest {
-    
+
+    /**
+     *
+     */
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
 
+    /**
+     *
+     */
     @Test
     public void testChromA() {
         File dataFolder = tf.newFolder("chromaTestData");

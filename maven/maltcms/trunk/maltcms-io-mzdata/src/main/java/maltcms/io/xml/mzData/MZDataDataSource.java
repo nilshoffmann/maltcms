@@ -36,7 +36,6 @@ import maltcms.io.xml.mzData.MzData.SpectrumList.Spectrum;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -44,7 +43,6 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.Range;
 import ucar.nc2.Dimension;
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
@@ -54,13 +52,14 @@ import cross.io.IDataSource;
 import cross.io.misc.Base64Util;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.MAMath;
 
-@ServiceProvider(service=IDataSource.class)
+@Slf4j
+@ServiceProvider(service = IDataSource.class)
 public class MZDataDataSource implements IDataSource {
 
-    private final Logger log = Logging.getLogger(this);
     private final String[] fileEnding = new String[]{"mzdata", "mzdata.xml"};
     private String mass_values = "mass_values";
     private String intensity_values = "intensity_values";
@@ -211,7 +210,7 @@ public class MZDataDataSource implements IDataSource {
      * @param var
      * @param mp
      * @return a Tuple2D<Array,Array> with mass_range_min as first and
-     *         mass_range_max as second array
+     * mass_range_max as second array
      */
     protected Tuple2D<Array, Array> initMinMaxMZ(final IVariableFragment var,
             final MzData mp) {
@@ -243,7 +242,7 @@ public class MZDataDataSource implements IDataSource {
     private Array loadArray(final IFileFragment f, final IVariableFragment var) {
         final MzData mzd = unmarshal(f);
         Array a = null;
-        final String varname = var.getVarname();
+        final String varname = var.getName();
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.mass_values)
                 || varname.equals(this.intensity_values)) {
@@ -282,7 +281,7 @@ public class MZDataDataSource implements IDataSource {
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
-        if (f.getVarname().equals(this.mass_values)) {
+        if (f.getName().equals(this.mass_values)) {
             final ArrayList<Array> al = new ArrayList<Array>();
             final MzData mzd = unmarshal(f.getParent());
             int start = 0;
@@ -300,7 +299,7 @@ public class MZDataDataSource implements IDataSource {
             }
             return al;
         }
-        if (f.getVarname().equals(this.intensity_values)) {
+        if (f.getName().equals(this.intensity_values)) {
             final ArrayList<Array> al = new ArrayList<Array>();
             final MzData mzd = unmarshal(f.getParent());
             int start = 0;
@@ -326,10 +325,10 @@ public class MZDataDataSource implements IDataSource {
             final MzData mp) {
         this.log.debug("readMinMaxMassValueArray");
         final Tuple2D<Array, Array> t = initMinMaxMZ(var, mp);
-        if (var.getVarname().equals(this.mass_range_min)) {
+        if (var.getName().equals(this.mass_range_min)) {
             return t.getFirst();
         }
-        if (var.getVarname().equals(this.mass_range_max)) {
+        if (var.getName().equals(this.mass_range_max)) {
             return t.getSecond();
         }
         throw new IllegalArgumentException(
@@ -350,7 +349,7 @@ public class MZDataDataSource implements IDataSource {
             npeaks += getNumPeaks(mp, i);
         }
 
-        if (var.getVarname().equals(this.mass_values)) {
+        if (var.getName().equals(this.mass_values)) {
             final Array a = new ArrayDouble.D1(npeaks);
             npeaks = 0;
             for (int i = start; i < scans; i++) {
@@ -361,7 +360,7 @@ public class MZDataDataSource implements IDataSource {
             }
             return a;
             // f.setArray(a);
-        } else if (var.getVarname().equals(this.intensity_values)) {
+        } else if (var.getName().equals(this.intensity_values)) {
             final Array a = new ArrayDouble.D1(npeaks);
             npeaks = 0;
             for (int i = start; i < scans; i++) {
@@ -375,7 +374,7 @@ public class MZDataDataSource implements IDataSource {
             // f.setArray(a);
         }
         throw new IllegalArgumentException(
-                "Don't know how to handle variable: " + var.getVarname());
+                "Don't know how to handle variable: " + var.getName());
         // }
         // return f.getArray();
     }
@@ -425,14 +424,14 @@ public class MZDataDataSource implements IDataSource {
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException {
-        this.log.debug("readSingle of {} in {}", f.getVarname(), f.getParent().getAbsolutePath());
+        this.log.debug("readSingle of {} in {}", f.getName(), f.getParent().getAbsolutePath());
         if (f.hasArray()) {
             this.log.warn("{} already has an array set!", f);
         }
         final Array a = loadArray(f.getParent(), f);
         if (a == null) {
             throw new ResourceNotAvailableException("Could not find variable "
-                    + f.getVarname() + " in file " + f.getParent().getName());
+                    + f.getName() + " in file " + f.getParent().getName());
         }
         // f.setArray(a);
         return a;
@@ -474,7 +473,7 @@ public class MZDataDataSource implements IDataSource {
             throws IOException, ResourceNotAvailableException {
         final MzData mp = unmarshal(f.getParent());
         final int scancount = getScanCount(mp);
-        final String varname = f.getVarname();
+        final String varname = f.getName();
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.scan_index)
                 || varname.equals(this.total_intensity)

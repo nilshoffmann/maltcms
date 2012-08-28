@@ -24,7 +24,7 @@ public class SetupLogging extends TestWatcher {
     public SetupLogging() {
         this(SetupLogging.class.getResource("/log4j.properties"));
     }
-    
+
     public SetupLogging(Properties props) {
         this.config = props;
         PropertyConfigurator.configure(config);
@@ -51,5 +51,4 @@ public class SetupLogging extends TestWatcher {
     public Properties getConfig() {
         return config;
     }
-    
 }

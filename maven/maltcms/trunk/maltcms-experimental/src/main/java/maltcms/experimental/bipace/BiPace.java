@@ -128,7 +128,7 @@ public class BiPace<T extends Peak> implements Callable<BiPaceResult<T>> {
             List<T> peakListB = t.getSecond().getPeaks();
             // all-against-all peak list comparison
             // l^{2} for l=max(|lhsPeaks|,|rhsPeaks|)
-            int minElements = Math.max(peakListA.size(),peakListB.size());
+            int minElements = Math.max(peakListA.size(), peakListB.size());
             IntArrayList alist = new IntArrayList(minElements);
             IntArrayList blist = new IntArrayList(minElements);
             DoubleArrayList reslist = new DoubleArrayList(minElements);

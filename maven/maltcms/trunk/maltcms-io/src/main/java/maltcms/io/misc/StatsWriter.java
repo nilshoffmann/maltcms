@@ -26,10 +26,8 @@ import java.io.File;
 import maltcms.io.csv.CSVWriter;
 
 import org.jdom.Element;
-import org.slf4j.Logger;
 
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.StatsMap;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IFragment;
@@ -38,103 +36,102 @@ import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Writes StatsMap objects to CSV Files.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
+@Slf4j
 public class StatsWriter implements IWorkflowElement {
 
-	private IWorkflow iwf;
+    private IWorkflow iwf;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.io.misc.IXMLSerializable#appendXML(org.jdom.Element)
-	 */
-	@Override
-	public void appendXML(final Element e) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.io.misc.IXMLSerializable#appendXML(org.jdom.Element)
+     */
+    @Override
+    public void appendXML(final Element e) {
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
+     */
+    @Override
+    public IWorkflow getWorkflow() {
+        return this.iwf;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
-	 */
-	@Override
-	public IWorkflow getWorkflow() {
-		return this.iwf;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
+     */
+    @Override
+    public WorkflowSlot getWorkflowSlot() {
+        return WorkflowSlot.STATISTICS;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-	 */
-	@Override
-	public WorkflowSlot getWorkflowSlot() {
-		return WorkflowSlot.STATISTICS;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @seecross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
+     * datastructures.workflow.IWorkflow)
+     */
+    @Override
+    public void setWorkflow(final IWorkflow iw) {
+        this.iwf = iw;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seecross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
-	 * datastructures.workflow.IWorkflow)
-	 */
-	@Override
-	public void setWorkflow(final IWorkflow iw) {
-		this.iwf = iw;
+    }
 
-	}
+    public void write(final IFileFragment ff) {
 
-	public void write(final IFileFragment ff) {
+        final StatsMap sm = ff.getStats();
+        write(sm);
+        for (final IVariableFragment vf : ff) {
+            write(vf.getStats());
+        }
+    }
 
-		final StatsMap sm = ff.getStats();
-		write(sm);
-		for (final IVariableFragment vf : ff) {
-			write(vf.getStats());
-		}
-	}
-
-	public void write(final StatsMap... sm) {
-		final Logger log = Logging.getLogger(StatsWriter.class);
-		if (sm != null) {
-			log.info("Writing " + sm.length + " statsMaps to file!");
-			// String outdir = ArrayFactory.getConfiguration().getString(
-			// "output.basedir", "")
-			// + "/stats";
-			for (final StatsMap map : sm) {
-				if (map != null) {
-					final IFragment f = map.getAssociation();
-					final CSVWriter csvw = Factory.getInstance()
-					        .getObjectFactory().instantiate(CSVWriter.class);
-					csvw.setWorkflow(getWorkflow());
-					// if (f instanceof IGroupFragment) {
-					// csvw.write(f
-					// , map);
-					if (f instanceof IVariableFragment) {
-						final IFileFragment parent = ((IVariableFragment) f)
-						        .getParent();
-						final String basename = StringTools
-						        .removeFileExt(parent.getAbsolutePath());
-						final String path = new File(parent.getAbsolutePath())
-						        .getParent();
-						csvw.writeStatsMap(path,
-						        basename + "-"
-						                + ((IVariableFragment) f).getVarname()
-						                + ".csv", map);
-					} else if (f instanceof IFileFragment) {
-						csvw.writeStatsMap((IFileFragment) f, map);
-					}
-				}
-			}
-		} else {
-			log.warn("StatsMap[] was null!");
-		}
-	}
-
+    public void write(final StatsMap... sm) {
+        if (sm != null) {
+            log.info("Writing " + sm.length + " statsMaps to file!");
+            // String outdir = ArrayFactory.getConfiguration().getString(
+            // "output.basedir", "")
+            // + "/stats";
+            for (final StatsMap map : sm) {
+                if (map != null) {
+                    final IFragment f = map.getAssociation();
+                    final CSVWriter csvw = Factory.getInstance()
+                            .getObjectFactory().instantiate(CSVWriter.class);
+                    csvw.setWorkflow(getWorkflow());
+                    // if (f instanceof IGroupFragment) {
+                    // csvw.write(f
+                    // , map);
+                    if (f instanceof IVariableFragment) {
+                        final IFileFragment parent = ((IVariableFragment) f)
+                                .getParent();
+                        final String basename = StringTools
+                                .removeFileExt(parent.getAbsolutePath());
+                        final String path = new File(parent.getAbsolutePath())
+                                .getParent();
+                        csvw.writeStatsMap(path,
+                                basename + "-"
+                                + ((IVariableFragment) f).getName()
+                                + ".csv", map);
+                    } else if (f instanceof IFileFragment) {
+                        csvw.writeStatsMap((IFileFragment) f, map);
+                    }
+                }
+            }
+        } else {
+            log.warn("StatsMap[] was null!");
+        }
+    }
 }

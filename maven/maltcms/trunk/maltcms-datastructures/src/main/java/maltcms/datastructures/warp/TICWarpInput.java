@@ -33,54 +33,50 @@ import cross.datastructures.tools.FragmentTools;
 
 /**
  * Specialization for TICs.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class TICWarpInput implements IWarpInput {
-	private List<Tuple2DI> path = null;
 
-	private IFileFragment targetFile = null;
+    private List<Tuple2DI> path = null;
+    private IFileFragment targetFile = null;
+    private IFileFragment refFile = null;
+    private IFileFragment queryFile = null;
+    private Tuple2D<List<Array>, List<Array>> tuple = null;
 
-	private IFileFragment refFile = null;
+    public TICWarpInput(final IFileFragment ff, final IWorkflow iw) {
+        this.path = MaltcmsTools.getWarpPath(ff);
+        this.refFile = FragmentTools.getLHSFile(ff);
+        this.queryFile = FragmentTools.getRHSFile(ff);
+        this.targetFile = FragmentTools.createFragment(this.refFile,
+                this.queryFile, iw.getOutputDirectory(this));
+        this.tuple = MaltcmsTools
+                .prepareInputArraysTICasList(new Tuple2D<IFileFragment, IFileFragment>(
+                this.refFile, this.queryFile));
+    }
 
-	private IFileFragment queryFile = null;
+    public String getAlgorithm() {
+        return "TIC";
+    }
 
-	private Tuple2D<List<Array>, List<Array>> tuple = null;
+    public Tuple2D<List<Array>, List<Array>> getArrays() {
+        return this.tuple;
+    }
 
-	public TICWarpInput(final IFileFragment ff, final IWorkflow iw) {
-		this.path = MaltcmsTools.getWarpPath(ff);
-		this.refFile = FragmentTools.getLHSFile(ff);
-		this.queryFile = FragmentTools.getRHSFile(ff);
-		this.targetFile = FragmentTools.createFragment(this.refFile,
-		        this.queryFile, iw.getOutputDirectory(this));
-		this.tuple = MaltcmsTools
-		        .prepareInputArraysTICasList(new Tuple2D<IFileFragment, IFileFragment>(
-		                this.refFile, this.queryFile));
-	}
+    public IFileFragment getFileFragment() {
+        return this.targetFile;
+    }
 
-	public String getAlgorithm() {
-		return "TIC";
-	}
+    public List<Tuple2DI> getPath() {
+        return this.path;
+    }
 
-	public Tuple2D<List<Array>, List<Array>> getArrays() {
-		return this.tuple;
-	}
+    public IFileFragment getQueryFileFragment() {
+        return this.queryFile;
+    }
 
-	public IFileFragment getFileFragment() {
-		return this.targetFile;
-	}
-
-	public List<Tuple2DI> getPath() {
-		return this.path;
-	}
-
-	public IFileFragment getQueryFileFragment() {
-		return this.queryFile;
-	}
-
-	public IFileFragment getReferenceFileFragment() {
-		return this.refFile;
-	}
-
+    public IFileFragment getReferenceFileFragment() {
+        return this.refFile;
+    }
 }

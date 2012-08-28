@@ -44,15 +44,15 @@ public class ImpaxsExecution {
         impxs.startMasterServer(pc);
         final ICompletionService<String> mcs = new CompletionServiceFactory<String>().
                 newDistributedCompletionService();
-        
+
         mcs.submit(new TestCallable());
         mcs.submit(new TestCallable());
         mcs.submit(new TestCallable());
         mcs.submit(new TestCallable());
         mcs.submit(new TestCallable());
-        
+
         try {
-            System.out.println("MCS1 Results (RMI execution): "+ mcs.call());
+            System.out.println("MCS1 Results (RMI execution): " + mcs.call());
         } catch (Exception ex) {
             Logger.getLogger(ImpaxsExecution.class.getName()).
                     log(Level.SEVERE, null, ex);
@@ -65,9 +65,9 @@ public class ImpaxsExecution {
         mcs2.submit(new TestCallable());
         mcs2.submit(new TestCallable());
         mcs2.submit(new TestCallable());
-        
+
         try {
-            System.out.println("MCS2 Results (local execution): "+mcs2.call());
+            System.out.println("MCS2 Results (local execution): " + mcs2.call());
         } catch (Exception ex) {
             Logger.getLogger(ImpaxsExecution.class.getName()).
                     log(Level.SEVERE, null, ex);
@@ -75,5 +75,4 @@ public class ImpaxsExecution {
         impxs.stopMasterServer();
         System.exit(0);
     }
-
 }

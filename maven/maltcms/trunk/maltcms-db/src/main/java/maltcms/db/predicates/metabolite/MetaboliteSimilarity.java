@@ -65,7 +65,6 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
     private final List<Tuple2D<Double, IMetabolite>> matches = new ArrayList<Tuple2D<Double, IMetabolite>>();
     private final Comparator<Tuple2D<Double, IMetabolite>> comparator = Collections.
             reverseOrder(new Comparator<Tuple2D<Double, IMetabolite>>() {
-
         @Override
         public int compare(Tuple2D<Double, IMetabolite> t,
                 Tuple2D<Double, IMetabolite> t1) {

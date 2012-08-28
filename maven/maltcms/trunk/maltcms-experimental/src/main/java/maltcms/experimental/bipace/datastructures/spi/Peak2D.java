@@ -44,13 +44,13 @@ public class Peak2D extends Peak {
 
     public Peak2D(String name, IFileFragment file, int scanIndex,
             Array msIntensities, double scan_acquisition_time) {
-        super(scanIndex, msIntensities, scan_acquisition_time,file.getName(),true);
+        super(scanIndex, msIntensities, scan_acquisition_time, file.getName(), true);
         setName(name);
     }
-    
+
     public Peak2D(String name, IFileFragment file, int scanIndex,
             Array msIntensities, double scan_acquisition_time, double rt1, double rt2) {
-        super(scanIndex, msIntensities, scan_acquisition_time,file.getName(),true);
+        super(scanIndex, msIntensities, scan_acquisition_time, file.getName(), true);
         this.retentionTime1 = rt1;
         this.retentionTime2 = rt2;
         setName(name);
@@ -75,9 +75,9 @@ public class Peak2D extends Peak {
      */
     @Override
     public Array getFeature(String name) {
-        if(name.equals("first_column_time")) {
+        if (name.equals("first_column_time")) {
             return Array.factory(retentionTime1);
-        }else if(name.equals("second_column_time")) {
+        } else if (name.equals("second_column_time")) {
             return Array.factory(retentionTime2);
         }
         return super.getFeature(name);
@@ -90,7 +90,7 @@ public class Peak2D extends Peak {
      */
     @Override
     public List<String> getFeatureNames() {
-        return Arrays.asList("first_column_time","second_column_time","scan_acquisition_time", "scan_index",
+        return Arrays.asList("first_column_time", "second_column_time", "scan_acquisition_time", "scan_index",
                 "binned_intensity_values");
     }
 }

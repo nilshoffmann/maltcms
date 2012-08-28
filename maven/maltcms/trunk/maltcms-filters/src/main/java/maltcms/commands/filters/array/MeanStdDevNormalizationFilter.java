@@ -30,9 +30,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Normalize all values of an array given a normalization string.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)

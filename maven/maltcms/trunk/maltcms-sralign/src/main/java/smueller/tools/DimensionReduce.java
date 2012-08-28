@@ -31,6 +31,12 @@ import cross.tools.MathTools;
  */
 public class DimensionReduce {
 
+    /**
+     *
+     * @param a1
+     * @param windowsize
+     * @return
+     */
     public static Array paa(final Array a1, final int windowsize) {
         final Array a = a1.copy();
         final int[] dimension = {((int) a.getSize() / windowsize) + 1};

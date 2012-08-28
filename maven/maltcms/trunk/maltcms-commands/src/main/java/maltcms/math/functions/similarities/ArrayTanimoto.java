@@ -21,7 +21,6 @@
  */
 package maltcms.math.functions.similarities;
 
-
 import ucar.ma2.Array;
 import ucar.ma2.MAVector;
 import lombok.Data;
@@ -30,7 +29,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Implementation of Tanimoto score.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Data
@@ -56,5 +55,4 @@ public class ArrayTanimoto implements IArraySimilarity {
 
         return score;
     }
-
 }

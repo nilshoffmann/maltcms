@@ -27,35 +27,34 @@ import com.db4o.ObjectContainer;
 
 public class QueryDBTest extends TestCase {
 
-	protected ObjectContainer oc = null; 
-	
-	public QueryDBTest(String name) {
-		super(name);
-	}
+    protected ObjectContainer oc = null;
 
-	protected void setUp() throws Exception {
-		super.setUp();
-		//oc = Db4o.openFile("res/metabolites.db4o");
-	}
+    public QueryDBTest(String name) {
+        super(name);
+    }
 
-	public void testQueryDB() {
+    protected void setUp() throws Exception {
+        super.setUp();
+        //oc = Db4o.openFile("res/metabolites.db4o");
+    }
+
+    public void testQueryDB() {
 //		fail("Not yet implemented");
-	}
+    }
 
-	public void testGetCallable() {
+    public void testGetCallable() {
 //		fail("Not yet implemented");
-	}
+    }
 
-	public void testGetCallableCollectionOfMNumRangePredicateCollectionOfMStringMatchPredicate() {
+    public void testGetCallableCollectionOfMNumRangePredicateCollectionOfMStringMatchPredicate() {
 //		fail("Not yet implemented");
-	}
+    }
 
-	public void testInvoke() {
+    public void testInvoke() {
 //		fail("Not yet implemented");
-	}
+    }
 
-	public void testShutdown() {
+    public void testShutdown() {
 //		fail("Not yet implemented");
-	}
-
+    }
 }

@@ -63,7 +63,6 @@ import org.apache.commons.configuration.SystemConfiguration;
 import org.slf4j.Logger;
 
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowFileResult;
@@ -71,11 +70,13 @@ import cross.datastructures.workflow.IWorkflowResult;
 import cross.event.IEvent;
 import cross.event.IListener;
 import cross.datastructures.tools.FileTools;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
+ *
  */
+@Slf4j
 @Deprecated
 public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
         IListener<IEvent<IWorkflowResult>>, Runnable, PropertyChangeListener,
@@ -134,7 +135,6 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
     }
     private final PropertiesConfiguration cfg;
     private PropertiesConfiguration defaultConfig;
-    private final Logger log = Logging.getLogger(this);
     private JProgressBar progressBar = null;
     private JList jl = null;
     private DefaultListModel dlm = null;
@@ -250,7 +250,6 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
             this.log.debug("Received event: {}", dwr.getFile().getAbsolutePath());
             if (this.dlm != null) {
                 final Runnable r = new Runnable() {
-
                     @Override
                     public void run() {
                         if (!LocalHostLauncher.this.buffer.isEmpty()) {
@@ -293,7 +292,6 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
             final int progress = (Integer) evt.getNewValue();
             this.log.debug("progress event with value: {}", progress);
             SwingUtilities.invokeLater(new Runnable() {
-
                 @Override
                 public void run() {
                     LocalHostLauncher.this.progressBar.setValue(progress);
@@ -365,7 +363,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
             LocalHostLauncher.handleRuntimeException(this.log, e1, this,
                     this.startup);
         }
-        
+
     }
 
     /*

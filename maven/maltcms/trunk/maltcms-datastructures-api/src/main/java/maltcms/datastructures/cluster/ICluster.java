@@ -23,36 +23,35 @@ package maltcms.datastructures.cluster;
 
 /**
  * Interface for general, n-ary clusters.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface ICluster {
 
-	public double getDistanceToParent();
+    public double getDistanceToParent();
 
-	public int getID();
+    public int getID();
 
-	public String getLabelString();
+    public String getLabelString();
 
-	public String getName();
+    public String getName();
 
-	public int getSize();
+    public int getSize();
 
-	public void setDistances(double[] d);
+    public void setDistances(double[] d);
 
-	public void setDistanceToParent(double d);
+    public void setDistanceToParent(double d);
 
-	public void setID(int id);
+    public void setID(int id);
 
-	public void setLabelString(String s);
+    public void setLabelString(String s);
 
-	public void setName(String name);
+    public void setName(String name);
 
-	public void setSize(int size);
+    public void setSize(int size);
 
-	public String toNewick();
+    public String toNewick();
 
-	public String toString();
-
+    public String toString();
 }

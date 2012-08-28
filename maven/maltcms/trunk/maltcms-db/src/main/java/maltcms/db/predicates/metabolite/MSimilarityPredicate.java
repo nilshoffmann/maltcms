@@ -29,7 +29,7 @@ import cross.datastructures.tuple.Tuple2D;
 public class MSimilarityPredicate extends MetabolitePredicate {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -3684834963267981958L;
     private final MetaboliteSimilarity s;

@@ -46,10 +46,10 @@ import ucar.ma2.ArrayDouble;
  */
 @Slf4j
 @Data
-public class CenterFinder<T extends Peak> implements IWorkflowElement{
-    
+public class CenterFinder<T extends Peak> implements IWorkflowElement {
+
     private IWorkflow workflow;
-    
+
     public int getNumberOfPeaksWithinCliques(IFileFragment iff, List<Clique<T>> l) {
         int npeaks = 0;
         for (Clique<T> c : l) {
@@ -243,7 +243,5 @@ public class CenterFinder<T extends Peak> implements IWorkflowElement{
 
     @Override
     public void appendXML(Element e) {
-        
     }
-    
 }

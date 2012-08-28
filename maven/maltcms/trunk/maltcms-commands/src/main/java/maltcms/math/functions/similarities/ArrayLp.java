@@ -31,26 +31,26 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Lp-norm based distance between arrays.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayLp implements IArraySimilarity {
 
-	private double p = 2.0d;
-	private boolean normalizeByLength = false;
-	private double sqrtn = Double.NaN;
+    private double p = 2.0d;
+    private boolean normalizeByLength = false;
+    private double sqrtn = Double.NaN;
 
-	@Override
+    @Override
     public double apply(final Array t1, final Array t2) {
-	double value = 0.0d;
-	for(int i = 0;i<t1.getShape()[0];i++) {
-		double diff = t1.getDouble(i)-t2.getDouble(i);
-		value+=(diff*diff);
-	}
-	return -Math.sqrt(value);
+        double value = 0.0d;
+        for (int i = 0; i < t1.getShape()[0]; i++) {
+            double diff = t1.getDouble(i) - t2.getDouble(i);
+            value += (diff * diff);
+        }
+        return -Math.sqrt(value);
 //        final double val = Math.pow(MAMath.sumDouble(ArrayTools.pow(
 //                ArrayTools.diff(t1, t2), 2.0d)), 1.0d / this.p);
 //        if (this.normalizeByLength) {

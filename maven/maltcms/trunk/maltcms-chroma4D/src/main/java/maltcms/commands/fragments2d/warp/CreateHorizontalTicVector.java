@@ -51,7 +51,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Creates all reference-query horizontal tic scanlines vectors.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -189,11 +189,9 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
 
     /**
      * Getter.
-     * 
-     * @param ff
-     *            file fragment
-     * @param spm
-     *            scans per modulation
+     *
+     * @param ff file fragment
+     * @param spm scans per modulation
      * @return scanlines
      */
     private List<Array> getScanlineFor(final IFileFragment ff, final int spm) {

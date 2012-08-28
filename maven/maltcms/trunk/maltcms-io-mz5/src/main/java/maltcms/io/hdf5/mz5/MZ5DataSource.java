@@ -21,13 +21,6 @@
  */
 package maltcms.io.hdf5.mz5;
 
-
-import maltcms.io.andims.NetcdfDataSource;
-
-import org.slf4j.Logger;
-
-import cross.Logging;
-import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.exception.ResourceNotAvailableException;
@@ -35,12 +28,14 @@ import cross.io.IDataSource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
-@ServiceProvider(service=IDataSource.class)
+@Slf4j
+@ServiceProvider(service = IDataSource.class)
 public class MZ5DataSource implements IDataSource {
 
     @Override
@@ -92,7 +87,6 @@ public class MZ5DataSource implements IDataSource {
     public void configurationChanged(ConfigurationEvent ce) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
 //    private final Logger log = Logging.getLogger(this.getClass());
 //    private final String[] fileEnding = new String[]{"mzml", "mzml.xml"};
 //    @Configurable(name = "var.mass_values", value = "mass_values")
@@ -113,6 +107,4 @@ public class MZ5DataSource implements IDataSource {
 //    @Configurable(name = "var.source_files", value = "source_files")
 //    private String source_files = "source_files";
 //    private static WeakHashMap<IFileFragment, MzMLUnmarshaller> fileToIndex = new WeakHashMap<IFileFragment, MzMLUnmarshaller>();
-
-    
 }

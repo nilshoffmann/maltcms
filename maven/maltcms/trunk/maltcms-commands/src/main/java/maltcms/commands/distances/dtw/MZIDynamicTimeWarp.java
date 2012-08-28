@@ -42,9 +42,9 @@ import org.openide.util.lookup.ServiceProvider;
  * Implementation of Pairwise Dynamic-Time-Warping for time-series data with an
  * evenly gridded array of mass over charge (mz) vs intensity for each
  * time-point (scan).
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 @Data
@@ -55,7 +55,6 @@ public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
     private int numberOfEICsToSelect = 0;
     @Configurable
     private boolean useSparseArrays = false;
-
     @Configurable(name = "var.mass_values")
     protected String mass_values = "mass_values";
     @Configurable(name = "var.intensity_values")
@@ -73,6 +72,7 @@ public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
      * maltcms.commands.distances.dtw.ADynamicTimeWarp#configure(org.apache.
      * commons.configuration.Configuration)
      */
+
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -80,7 +80,7 @@ public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
                 + ".numberOfEICsToSelect", 0);
         this.useSparseArrays = cfg.getBoolean(this.getClass().getName()
                 + ".useSparseArrays", false);
-                this.mass_values = cfg.getString("var.mass_values", "mass_values");
+        this.mass_values = cfg.getString("var.mass_values", "mass_values");
         this.intensity_values = cfg.getString("var.intensity_values",
                 "intensity_values");
         this.mass_range_min = cfg.getString("var.mass_range_min",
@@ -170,5 +170,4 @@ public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
         this.query_num_scans = intens2.size();
         return tuple;
     }
- 
 }

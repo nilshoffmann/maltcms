@@ -51,6 +51,10 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
 
+/**
+ *
+ * @author hoffmann
+ */
 @Slf4j
 @Data
 @ProvidesVariables(names = {"var.excluded_masses",
@@ -81,6 +85,10 @@ public class Data2DNormalizer extends AFragmentCommand {
     @Configurable
     private int topHatFilterWindow = 5;
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getDescription() {
         return "Normalizes 2D / GCxGC-MS data";
@@ -106,9 +114,9 @@ public class Data2DNormalizer extends AFragmentCommand {
             ff.getChild(this.totalIntensityVar).setIndex(index);
             List<Array> intensities = ff.getChild(this.totalIntensityVar).
                     getIndexedArray();
-            
+
             Array tic = createImage(intensities, scansPerModulation, ff, "beforeFilter");
-            
+
             log.info("Filtering signal with {} modulations.", intensities.size());
             Array filteredIntensities = filterSignal(tic);
 
@@ -222,7 +230,11 @@ public class Data2DNormalizer extends AFragmentCommand {
         this.secondScanIndexVar = cfg.getString("var.second_column_scan_index",
                 "second_column_scan_index");
     }
-    
+
+    /**
+     *
+     * @return
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;

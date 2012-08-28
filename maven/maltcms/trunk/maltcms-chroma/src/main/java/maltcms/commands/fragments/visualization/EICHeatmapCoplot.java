@@ -58,8 +58,8 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @RequiresVariables(names = {"var.total_intensity", "var.scan_acquisition_time"})
 @Slf4j
@@ -69,12 +69,11 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
 
     private final String description = "Generates a stacked heatmap plot of EICs (bird's eye view) with shared time axis";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
-    
     @Configurable
     private List<String> drawEICs;
     @Configurable
     private double eicBinSize = 1.0d;
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -113,7 +112,7 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
                 for (int i = 0; i < eics.length; i++) {
                     final IVariableFragment ivf = new VariableFragment(iff,
                             filePrefix + "_eic_" + eics[i]);
-                    log.debug("Adding eic var {}", ivf.getVarname());
+                    log.debug("Adding eic var {}", ivf.getName());
                     log.debug("to {}", iff.toString());
                     final Array eic = MaltcmsTools.getEIC(iff, eics[i], eics[i]
                             + binsize, true, false);

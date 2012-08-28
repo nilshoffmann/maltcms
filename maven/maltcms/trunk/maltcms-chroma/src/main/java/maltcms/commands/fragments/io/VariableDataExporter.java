@@ -41,9 +41,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Writes 1D-variables to csv files, one entry per row.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @Slf4j
@@ -52,7 +52,6 @@ public class VariableDataExporter extends AFragmentCommand {
 
     private final String description = "Exports one-dimensional variables to csv format ";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILEIO;
-    
     @Configurable
     private ArrayList<String> varNames = new ArrayList<String>(0);
 

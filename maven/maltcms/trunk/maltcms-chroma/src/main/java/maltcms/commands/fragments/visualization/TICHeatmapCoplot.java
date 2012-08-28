@@ -78,8 +78,8 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @RequiresVariables(names = {"var.total_intensity", "var.scan_acquisition_time"})
 @RequiresOptionalVariables(names = {"var.anchors.retention_index_names",
@@ -92,7 +92,6 @@ public class TICHeatmapCoplot extends AFragmentCommand {
 
     private final String description = "Generates a stacked heatmap plot of TICs (bird's eye view) with shared time axis and a coplot with a shared intensity axis (overlay)";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
-    
     @Configurable(name = "images.colorramp")
     private String colorRampLocation = "res/colorRamps/bcgyr.csv";
     @Configurable(name = "var.total_intensity")
@@ -127,6 +126,16 @@ public class TICHeatmapCoplot extends AFragmentCommand {
         return t;
     }
 
+    /**
+     *
+     * @param outputDir
+     * @param t
+     * @param ticvar
+     * @param satVar
+     * @param ref
+     * @param filename
+     * @return
+     */
     protected File drawTICSJFreeChart(final File outputDir,
             final TupleND<IFileFragment> t, final String ticvar,
             final String satVar, final IFileFragment ref, final String filename) {
@@ -141,7 +150,6 @@ public class TICHeatmapCoplot extends AFragmentCommand {
         int length = 0;
         TreeMap<IFileFragment, TreeMap<Double, Double>> fragToVals = new TreeMap<IFileFragment, TreeMap<Double, Double>>(
                 new Comparator<IFileFragment>() {
-
                     @Override
                     public int compare(IFileFragment o1, IFileFragment o2) {
                         return o1.getName().compareTo(o2.getName());
@@ -216,7 +224,6 @@ public class TICHeatmapCoplot extends AFragmentCommand {
         XYPlot xyp = new XYPlot(cd, na, new SymbolAxis("file", colnames), xyb);
         xyb.setBlockWidth(1);
         xyb.setSeriesToolTipGenerator(0, new XYToolTipGenerator() {
-
             @Override
             public String generateToolTip(XYDataset xyd, int i, int i1) {
                 return "[" + colnames[xyd.getX(i, i1).intValue()] + ":"
@@ -251,7 +258,6 @@ public class TICHeatmapCoplot extends AFragmentCommand {
         final int[][] colorRamp = crr.readColorRamp(this.colorRampLocation);
         // Sort Arrays according to lexicographical order of names
         Collections.sort(a, new Comparator<Tuple2D<String, Array>>() {
-
             @Override
             public int compare(final Tuple2D<String, Array> o1,
                     final Tuple2D<String, Array> o2) {
@@ -395,6 +401,16 @@ public class TICHeatmapCoplot extends AFragmentCommand {
         return null;
     }
 
+    /**
+     *
+     * @param outputDir
+     * @param t
+     * @param ticvar
+     * @param satVar
+     * @param ref
+     * @param filename
+     * @return
+     */
     protected File drawTICS(final File outputDir,
             final TupleND<IFileFragment> t, final String ticvar,
             final String satVar, final IFileFragment ref, final String filename) {

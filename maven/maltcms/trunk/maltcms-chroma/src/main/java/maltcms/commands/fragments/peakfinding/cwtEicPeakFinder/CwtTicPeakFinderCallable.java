@@ -60,8 +60,8 @@ import ucar.ma2.Index;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @Data
 @Slf4j
@@ -111,8 +111,8 @@ public class CwtTicPeakFinderCallable implements Callable<File>, Serializable {
                     getIndexOfMaximum(), tic.getShape()[0]);
             //TODO area integration raw vs filtered (wavelet peak shapes)
             double area = 0.0d;
-            for(int i = scaleBounds[0]; i <= scaleBounds[1];i++) {
-                area+=tic.getDouble(i);
+            for (int i = scaleBounds[0]; i <= scaleBounds[1]; i++) {
+                area += tic.getDouble(i);
             }
             p.setStartIndex(scaleBounds[0]);
             p.setStopIndex(scaleBounds[1]);
@@ -172,13 +172,13 @@ public class CwtTicPeakFinderCallable implements Callable<File>, Serializable {
         Collections.sort(ranks);
 
 
-        log.info("Found " + ridges.size() + " ridges at minScale="+minScale+", maxScale="
+        log.info("Found " + ridges.size() + " ridges at minScale=" + minScale + ", maxScale="
                 + maxScale);
-        
+
         List<Peak1D> peaks = createPeaksForRidges(ff, values, ridges, cwt);
         FileFragment outf = new FileFragment(output);
-        if(storeScaleogram) {
-            VariableFragment scaleogramVar = new VariableFragment(outf,"cwt_scaleogram");
+        if (storeScaleogram) {
+            VariableFragment scaleogramVar = new VariableFragment(outf, "cwt_scaleogram");
             scaleogramVar.setArray(scaleogram);
         }
         outf.addSourceFile(ff);

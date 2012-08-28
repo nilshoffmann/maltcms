@@ -49,7 +49,7 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.tools.MathTools;
 
 /**
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
 @Data
@@ -298,7 +298,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
     /**
      * Adds VariableFragments and arrays corresponding to path to parent
      * FileFragment.
-     * 
+     *
      * @param parent
      * @param al
      * @param ia

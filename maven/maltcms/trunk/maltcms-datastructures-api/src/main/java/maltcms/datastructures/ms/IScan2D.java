@@ -42,5 +42,4 @@ public interface IScan2D extends IScan1D {
     void setSecondColumnScanAcquisitionTime(final double sat);
 
     void setSecondColumnScanIndex(final int a);
-    
 }

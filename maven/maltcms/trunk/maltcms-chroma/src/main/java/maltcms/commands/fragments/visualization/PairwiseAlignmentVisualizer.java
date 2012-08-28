@@ -83,33 +83,31 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Plots a pairwise alignment, by displaying both time series' tics, connected
  * by lines depicting the path obtained from alignment.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
-
 //"var.pairwise_distance_matrix"
 //var.pairwise_distance_alignment_names
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
-@RequiresVariables(names={"var.total_intensity",
-    "var.scan_acquisition_time","var.pairwise_distance_matrix", "var.pairwise_distance_alignment_names"})
-@RequiresOptionalVariables(names={"var.anchors.retention_index_names","var.anchors.retention_scans"})
+@ServiceProvider(service = AFragmentCommand.class)
+@RequiresVariables(names = {"var.total_intensity",
+    "var.scan_acquisition_time", "var.pairwise_distance_matrix", "var.pairwise_distance_alignment_names"})
+@RequiresOptionalVariables(names = {"var.anchors.retention_index_names", "var.anchors.retention_scans"})
 public class PairwiseAlignmentVisualizer extends AFragmentCommand {
 
     private final String description = "Creates different plots for pairwise alignments of chromatograms.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
-    
     @Configurable
     private boolean normalize = false;
     @Configurable
     private boolean normalize_global = false;
     @Configurable
     private int mapheight = 100;
-    @Configurable(name="var.total_intensity")
+    @Configurable(name = "var.total_intensity")
     private String total_intensity = "total_intensity";
-    @Configurable(name="var.scan_acquisition_time")
+    @Configurable(name = "var.scan_acquisition_time")
     private String scan_acquisition_time = "scan_acquisition_time";
     @Configurable
     private boolean substract_start_time = true;
@@ -133,14 +131,16 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     private boolean createSuperimposedTICChart = true;
     @Configurable
     private String y_axis_label = "TIC";
-    
-    @Getter(AccessLevel.PRIVATE)@Setter(AccessLevel.PRIVATE)
+    @Getter(AccessLevel.PRIVATE)
+    @Setter(AccessLevel.PRIVATE)
     private BufferedImage ima;
-    @Getter(AccessLevel.PRIVATE)@Setter(AccessLevel.PRIVATE)
+    @Getter(AccessLevel.PRIVATE)
+    @Setter(AccessLevel.PRIVATE)
     private BufferedImage imb;
-    @Getter(AccessLevel.PRIVATE)@Setter(AccessLevel.PRIVATE)
+    @Getter(AccessLevel.PRIVATE)
+    @Setter(AccessLevel.PRIVATE)
     private BufferedImage map;
-    
+
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final IFileFragment iff = MaltcmsTools.getPairwiseDistanceFragment(t);
@@ -173,6 +173,14 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
                 "scan_acquisition_time");
     }
 
+    /**
+     *
+     * @param l
+     * @param upper_width
+     * @param lower_width
+     * @param height
+     * @return
+     */
     public BufferedImage createMapImage(final List<Tuple2DI> l,
             final int upper_width, final int lower_width, final int height) {
         log.info("Creating map visualization!");
@@ -201,6 +209,14 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         return bim;
     }
 
+    /**
+     *
+     * @param l
+     * @param lhs
+     * @param rhs
+     * @param height
+     * @return
+     */
     public BufferedImage createSuperimposedImage(final List<Tuple2DI> l,
             final Array lhs, final Array rhs, final int height) {
         log.info("Creating superimposed image!");
@@ -254,6 +270,13 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         return bi;
     }
 
+    /**
+     *
+     * @param iff
+     * @param domain
+     * @param yVals
+     * @return
+     */
     public Collection<XYAnnotation> getAnnotations(final IFileFragment iff,
             final Array domain, final Array yVals) {
         final ArrayList<XYAnnotation> al = new ArrayList<XYAnnotation>();
@@ -287,6 +310,19 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         return al;
     }
 
+    /**
+     *
+     * @param tc1
+     * @param tc2
+     * @param ref
+     * @param query
+     * @param x_label
+     * @param y_label
+     * @param c1
+     * @param c2
+     * @param minY
+     * @param maxY
+     */
     public void makeComparativeTICChart(final AChart<XYPlot> tc1,
             final AChart<XYPlot> tc2, final IFileFragment ref,
             final IFileFragment query, final String x_label,
@@ -328,6 +364,19 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         Factory.getInstance().submitJob(pl);
     }
 
+    /**
+     *
+     * @param map1
+     * @param ref
+     * @param query
+     * @param lhs
+     * @param rhs
+     * @param lhs_domain
+     * @param x_label
+     * @param y_label
+     * @param c1
+     * @param c2
+     */
     public void makeDifferentialTICChart(final List<Tuple2DI> map1,
             final IFileFragment ref, final IFileFragment query,
             final Array lhs, final Array rhs, final Array lhs_domain,
@@ -373,6 +422,19 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         Factory.getInstance().submitJob(pl);
     }
 
+    /**
+     *
+     * @param tc1
+     * @param tc2
+     * @param alignment
+     * @param tc1Domain
+     * @param tc2Domain
+     * @param x_label
+     * @param filea1
+     * @param fileb1
+     * @param c1
+     * @param c2
+     */
     public void makeMapChart(final AChart<XYPlot> tc1,
             final AChart<XYPlot> tc2, final IFileFragment alignment,
             final Array tc1Domain, final Array tc2Domain, final String x_label,
@@ -424,6 +486,19 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         Factory.getInstance().submitJob(pl);
     }
 
+    /**
+     *
+     * @param map1
+     * @param ref
+     * @param query
+     * @param lhs
+     * @param rhs
+     * @param lhs_domain
+     * @param x_label
+     * @param y_label
+     * @param c1
+     * @param c2
+     */
     public void makeRatioTICChart(final List<Tuple2DI> map1,
             final IFileFragment ref, final IFileFragment query,
             final Array lhs, final Array rhs, final Array lhs_domain,
@@ -469,6 +544,19 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         Factory.getInstance().submitJob(pl);
     }
 
+    /**
+     *
+     * @param map1
+     * @param ref
+     * @param query
+     * @param lhs
+     * @param rhs
+     * @param lhs_domain
+     * @param x_label
+     * @param y_label
+     * @param c1
+     * @param c2
+     */
     public void makeSuperimposedChart(final List<Tuple2DI> map1,
             final IFileFragment ref, final IFileFragment query,
             final Array lhs, final Array rhs, final Array lhs_domain,
@@ -535,7 +623,12 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
 //                    yoffset));
 //        }
 //    }
-
+    /**
+     *
+     * @param filea1
+     * @param fileb1
+     * @param alignment
+     */
     public void setFragments(final IFileFragment filea1,
             final IFileFragment fileb1, final IFileFragment alignment) {
         log.info("Preparing variables to be read!");
@@ -685,6 +778,12 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
 
     }
 
+    /**
+     *
+     * @param a1im
+     * @param b1im
+     * @param map1
+     */
     public void setImages(final BufferedImage a1im, final BufferedImage b1im,
             final BufferedImage map1) {
         this.ima = a1im;

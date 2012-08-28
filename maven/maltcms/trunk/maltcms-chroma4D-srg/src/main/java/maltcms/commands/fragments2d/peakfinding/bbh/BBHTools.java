@@ -60,19 +60,16 @@ public class BBHTools {
 
     /**
      * Creates a filtered BBH List.
-     * 
+     *
      * This method will change the y component of the Point of the BBH list.
      * This is needed to assure the correctness of the export by
      * {@link IPeakExporter} (method exportDetailedBBH)
-     * 
-     * @param i
-     *            ith chromatogram
-     * @param j
-     *            jth chromatogram
-     * @param bidiBestHits
-     *            full BBH list
+     *
+     * @param i ith chromatogram
+     * @param j jth chromatogram
+     * @param bidiBestHits full BBH list
      * @return BBH list containing only the peaks of the ith and jth
-     *         chromatogram
+     * chromatogram
      */
     public static List<List<Point>> getBidiBestList(final int i, final int j,
             final List<List<Point>> bidiBestHits) {
@@ -95,17 +92,12 @@ public class BBHTools {
     /**
      * This Method will call all methods of {@link IPeakExporter}. Furthermore
      * it creates all pairwise BBH information.
-     * 
-     * @param bidiBestHitList
-     *            bidirection best hit list
-     * @param peaklist
-     *            peaklist
-     * @param bbh
-     *            bidirectional best hits class
-     * @param peakExporter
-     *            peak exporter
-     * @param chromatogramNames
-     *            names of the chromatograms
+     *
+     * @param bidiBestHitList bidirection best hit list
+     * @param peaklist peaklist
+     * @param bbh bidirectional best hits class
+     * @param peakExporter peak exporter
+     * @param chromatogramNames names of the chromatograms
      */
     public static void exportBBHInformation(List<List<Point>> bidiBestHitList,
             List<List<Peak2D>> peaklist, IBidirectionalBestHit bbh,

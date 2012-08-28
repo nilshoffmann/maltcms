@@ -28,17 +28,16 @@ import maltcms.datastructures.IFileFragmentModifier;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
+ *
  */
 public interface IPairwiseFeatureVectorSequenceOperation<RESULT> extends
         IFileFragmentModifier {
 
-	public abstract RESULT apply(List<IFeatureVector> l1,
-	        List<IFeatureVector> l2);
+    public abstract RESULT apply(List<IFeatureVector> l1,
+            List<IFeatureVector> l2);
 
-	public abstract void setPairwiseFeatureVectorOperation(
-	        TwoFeatureVectorOperation pao);
+    public abstract void setPairwiseFeatureVectorOperation(
+            TwoFeatureVectorOperation pao);
 
-	public TwoFeatureVectorOperation getPairwiseFeatureVectorOperation();
-
+    public TwoFeatureVectorOperation getPairwiseFeatureVectorOperation();
 }

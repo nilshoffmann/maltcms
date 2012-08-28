@@ -45,6 +45,7 @@ import org.jdom.Element;
 @Slf4j
 @Data
 public class XmlAlignmentWriter implements IWorkflowElement {
+
     private IWorkflow workflow;
 
     public void saveToXMLAlignment(final TupleND<IFileFragment> tuple,
@@ -88,8 +89,7 @@ public class XmlAlignmentWriter implements IWorkflowElement {
                 WorkflowSlot.ALIGNMENT, tuple.toArray(new IFileFragment[]{}));
         getWorkflow().append(dwr);
     }
-    
-    
+
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.ALIGNMENT;
@@ -97,7 +97,5 @@ public class XmlAlignmentWriter implements IWorkflowElement {
 
     @Override
     public void appendXML(Element e) {
-        
     }
-    
 }

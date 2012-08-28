@@ -28,16 +28,15 @@ import ucar.ma2.Array;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 public class ArrayStatsMap implements IMutableFeatureVector {
 
-	/**
-     * 
+    /**
+     *
      */
     private static final long serialVersionUID = -8374451195942782968L;
-
     private DefaultFeatureVector featureVector = new DefaultFeatureVector();
 
     @Override
@@ -59,7 +58,4 @@ public class ArrayStatsMap implements IMutableFeatureVector {
     public void addFeature(String name, Array a) {
         featureVector.addFeature(name, a);
     }
-
-
-
 }

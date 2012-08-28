@@ -45,13 +45,14 @@ import net.sf.maltcms.evaluation.spi.xcalibur.Peak;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
-
+ *
  *
  */
 public class EntityGroupBuilder {
 
     /**
      * Peak association in xcalibur reports is via peak/compound name.
+     *
      * @param e
      * @param oc
      * @return list of EntityGroups, possibly not in any particular order
@@ -80,17 +81,14 @@ public class EntityGroupBuilder {
     }
 
     /**
-     * Peak association in csv files is via row, header has names of files, used as
-     * categories
-     * Format:
-     * FILE1\tFILE2\tFILE3...
-     * FEAT1_1\tFEAT2_1\tFEAT3_1...
-     * FEAT1_2\tFEAT2_2\tFEAT3_2...
-     * ...
-     * where FEATY_X is the value of the grouped feature,e.g. class label,
-     * time point or comparable things 
+     * Peak association in csv files is via row, header has names of files, used
+     * as categories Format: FILE1\tFILE2\tFILE3... FEAT1_1\tFEAT2_1\tFEAT3_1...
+     * FEAT1_2\tFEAT2_2\tFEAT3_2... ... where FEATY_X is the value of the
+     * grouped feature,e.g. class label, time point or comparable things
+     *
      * @param par
-     * @return list of EntityGroups in order of row appearance in source file par
+     * @return list of EntityGroups in order of row appearance in source file
+     * par
      */
     public List<EntityGroup> buildCSVPeakAssociationGroups(File par) {
         CSVReader csvr = new CSVReader();
@@ -132,16 +130,14 @@ public class EntityGroupBuilder {
     }
 
     /**
-     * Peak association in csv files via column, first element in row has name of file
-     * Format:
-     * FILE1\tFEAT1_1\tFEAT2_1...
-     * FILE2\tFEAT1_2\tFEAT2_2...
-     * FILE3\tFEAT1_3\tFEAT2_3...
-     * ...
-     * where FEATY_X is the value of the grouped feature,e.g. class label,
-     * time point or comparable things 
+     * Peak association in csv files via column, first element in row has name
+     * of file Format: FILE1\tFEAT1_1\tFEAT2_1... FILE2\tFEAT1_2\tFEAT2_2...
+     * FILE3\tFEAT1_3\tFEAT2_3... ... where FEATY_X is the value of the grouped
+     * feature,e.g. class label, time point or comparable things
+     *
      * @param par
-     * @return list of EntityGroups in order of row appearance in source file par
+     * @return list of EntityGroups in order of row appearance in source file
+     * par
      */
     public List<EntityGroup> buildCSVTablePeakAssociationGroups(File par) {
         CSVReader csvr = new CSVReader();

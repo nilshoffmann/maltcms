@@ -33,10 +33,9 @@ import cross.datastructures.fragments.IFileFragment;
 
 public interface IRegionGrowing extends IConfigurable {
 
-	List<PeakArea2D> getAreasFor(List<Point> seeds, IFileFragment ff, IScanLine slc);
+    List<PeakArea2D> getAreasFor(List<Point> seeds, IFileFragment ff, IScanLine slc);
 
-	double getMinDist();
-	
-	List<ArrayDouble.D1> getIntensities();
-	
+    double getMinDist();
+
+    List<ArrayDouble.D1> getIntensities();
 }

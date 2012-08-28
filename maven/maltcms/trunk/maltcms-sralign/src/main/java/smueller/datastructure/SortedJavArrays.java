@@ -34,22 +34,43 @@ public class SortedJavArrays {
     private double[] sortedjavarray1;
     private double[] sortedjavarray2;
 
+    /**
+     *
+     * @return
+     */
     public double[] getSortedjavarray1() {
         return this.sortedjavarray1;
     }
 
+    /**
+     *
+     * @return
+     */
     public double[] getSortedjavarray2() {
         return this.sortedjavarray2;
     }
 
+    /**
+     *
+     * @param sortedjavarray11
+     */
     public void setSortedjavarray1(final double[] sortedjavarray11) {
         this.sortedjavarray1 = sortedjavarray11;
     }
 
+    /**
+     *
+     * @param sortedjavarray21
+     */
     public void setSortedjavarray2(final double[] sortedjavarray21) {
         this.sortedjavarray2 = sortedjavarray21;
     }
 
+    /**
+     *
+     * @param a1
+     * @param b1
+     */
     public void sort(final Array a1, final Array b1) {
         final Array a = a1.copy();
         this.sortedjavarray1 = (double[]) a.copyTo1DJavaArray();

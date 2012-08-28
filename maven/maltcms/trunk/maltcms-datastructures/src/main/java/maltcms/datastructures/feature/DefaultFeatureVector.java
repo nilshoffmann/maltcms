@@ -32,51 +32,48 @@ import ucar.ma2.Array;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
+ *
  */
 public class DefaultFeatureVector implements IFeatureVector {
 
-	/**
-     * 
+    /**
+     *
      */
-	private static final long serialVersionUID = -2245293151270164895L;
+    private static final long serialVersionUID = -2245293151270164895L;
+    private Map<String, Integer> featureToIndex = new HashMap<String, Integer>();
+    private List<Array> datalist = new ArrayList<Array>();
 
-	private Map<String, Integer> featureToIndex = new HashMap<String, Integer>();
+    @Override
+    public Array getFeature(String name) {
+        final int idx = getFeatureIndex(name);
+        if (idx >= 0) {
+            return this.datalist.get(idx);
+        }
+        return null;
+    }
 
-	private List<Array> datalist = new ArrayList<Array>();
+    private int getFeatureIndex(String name) {
+        if (featureToIndex.containsKey(name)) {
+            return this.featureToIndex.get(name).intValue();
+        }
+        return -1;
+    }
 
-	@Override
-	public Array getFeature(String name) {
-		final int idx = getFeatureIndex(name);
-		if (idx >= 0) {
-			return this.datalist.get(idx);
-		}
-		return null;
-	}
+    public void addFeature(String name, Array a) {
+        final int idx = getFeatureIndex(name);
+        if (idx >= 0) {
+            this.datalist.set(idx, a);
+        } else {
+            this.featureToIndex.put(name, this.datalist.size());
+            this.datalist.add(a);
+        }
+    }
 
-	private int getFeatureIndex(String name) {
-		if (featureToIndex.containsKey(name)) {
-			return this.featureToIndex.get(name).intValue();
-		}
-		return -1;
-	}
-
-	public void addFeature(String name, Array a) {
-		final int idx = getFeatureIndex(name);
-		if (idx >= 0) {
-			this.datalist.set(idx, a);
-		} else {
-			this.featureToIndex.put(name, this.datalist.size());
-			this.datalist.add(a);
-		}
-	}
-
-	@Override
-	public List<String> getFeatureNames() {
-		final List<String> l = new ArrayList<String>();
-		l.addAll(this.featureToIndex.keySet());
-		Collections.sort(l);
-		return l;
-	}
-
+    @Override
+    public List<String> getFeatureNames() {
+        final List<String> l = new ArrayList<String>();
+        l.addAll(this.featureToIndex.keySet());
+        Collections.sort(l);
+        return l;
+    }
 }

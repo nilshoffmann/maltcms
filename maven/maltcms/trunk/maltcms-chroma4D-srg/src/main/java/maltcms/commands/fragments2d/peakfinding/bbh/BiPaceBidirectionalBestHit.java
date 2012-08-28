@@ -43,14 +43,25 @@ public class BiPaceBidirectionalBestHit implements IBidirectionalBestHit {
     @Override
     public List<List<Point>> getBidiBestHitList(List<List<Peak2D>> peaklists) {
         List<List<Point>> bbhs = new ArrayList<List<Point>>();
-        findBBHs(peaklists,bbhs);
+        findBBHs(peaklists, bbhs);
         return bbhs;
     }
-    
+
+    /**
+     *
+     * @param peaklists
+     * @param bbhs
+     */
     protected void findBBHs(List<List<Peak2D>> peaklists, List<List<Point>> bbhs) {
         throw new NotImplementedException();
     }
 
+    /**
+     *
+     * @param p1
+     * @param p2
+     * @return
+     */
     @Override
     public double sim(Peak2D p1, Peak2D p2) {
         double sim = Double.NEGATIVE_INFINITY;
@@ -66,10 +77,17 @@ public class BiPaceBidirectionalBestHit implements IBidirectionalBestHit {
         return sim;
     }
 
+    /**
+     *
+     */
     @Override
     public void clear() {
     }
 
+    /**
+     *
+     * @param c
+     */
     @Override
     public void configure(Configuration c) {
     }

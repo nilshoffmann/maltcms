@@ -57,10 +57,19 @@ public class ModulationTimeEstimatorTask implements Callable<Double>,
     private int numberOfScans = 5000;
     private int offset = 0;
 
+    /**
+     *
+     * @return
+     */
     public Double call() {
         return estimateModulationTime(new FileFragment(input));
     }
 
+    /**
+     *
+     * @param source
+     * @return
+     */
     protected double estimateModulationTime(final IFileFragment source) {
         IVariableFragment totalIntensity = source.getChild("total_intensity",
                 true);
@@ -101,7 +110,7 @@ public class ModulationTimeEstimatorTask implements Callable<Double>,
      * Find maxima in array a, returning an array containing all maxima, with
      * the same shape as a, and an array maximaDiff, which contains all
      * differences between maxima, of size (#of maxima - 1).
-     * 
+     *
      * @param a
      * @param maximaIndices
      * @return
@@ -164,6 +173,13 @@ public class ModulationTimeEstimatorTask implements Callable<Double>,
 
     }
 
+    /**
+     *
+     * @param prev
+     * @param current
+     * @param next
+     * @return
+     */
     public boolean isCandidate(final double prev, final double current,
             final double next) {
         final boolean b = (prev < current) && (current > next);
@@ -171,6 +187,14 @@ public class ModulationTimeEstimatorTask implements Callable<Double>,
         return b;
     }
 
+    /**
+     *
+     * @param a
+     * @param mean
+     * @param variance
+     * @param lag
+     * @return
+     */
     public double calcEstimatedAutoCorrelation(final Array a,
             final double mean, final double variance, final int lag) {
         EvalTools.eqI(a.getRank(), 1, this);

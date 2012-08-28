@@ -45,8 +45,8 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @RequiresVariables(names = {"var.binned_mass_values",
     "var.binned_intensity_values", "var.binned_scan_index",
@@ -58,7 +58,6 @@ public class ObiWarplmataExporter extends AFragmentCommand {
 
     private final String description = "Creates compatible lmata matrix files for use with Obi-Warp (http://obi-warp.sourceforge.net/)";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;
-    
     @Configurable
     private String scanAcquisitionTimeVariableName = "scan_acquisition_time";
     @Configurable

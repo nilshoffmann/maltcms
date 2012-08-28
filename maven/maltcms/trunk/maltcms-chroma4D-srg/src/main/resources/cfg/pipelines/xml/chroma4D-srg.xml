@@ -27,7 +27,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" xmlns:util="http://www.springframework.org/schema/util">
     <description>
-            This file defines elements of the ChromA4D SRG seeded region growing.
+        This file defines elements of the ChromA4D SRG seeded region growing.
     </description>
     
     <bean id="identificationSim" class="maltcms.math.functions.similarities.ArrayCos"/>
@@ -191,7 +191,7 @@
         <!-- <property name="myProperty" value="#{systemProperties.myProperty}"/>-->
     </bean>
    
-   <bean id="rt1SecondRunSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
+    <bean id="rt1SecondRunSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
         <property name="tolerance" value="15.0"/>
         <property name="threshold" value="0.0"/>
     </bean>

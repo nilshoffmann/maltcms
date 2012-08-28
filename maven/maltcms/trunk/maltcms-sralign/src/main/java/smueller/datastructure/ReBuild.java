@@ -31,6 +31,12 @@ import ucar.ma2.IndexIterator;
  */
 public class ReBuild {
 
+    /**
+     *
+     * @param a1
+     * @param m
+     * @return
+     */
     public static Array addbaseclean(final Array a1, final double m) {
         final Array a = a1.copy();
         final IndexIterator ii = a.getIndexIterator();
@@ -44,6 +50,11 @@ public class ReBuild {
         return a;
     }
 
+    /**
+     *
+     * @param str
+     * @return
+     */
     public static Array strToDoubArray(final String str) {
 
         final int[] dimension = {((str.length() - 1) * (SymbolicRepresentationAlignment
@@ -136,6 +147,11 @@ public class ReBuild {
         return rebuild;
     }
 
+    /**
+     *
+     * @param a1
+     * @return
+     */
     public static Array unlog(final Array a1) {
         final Array a = a1.copy();
         final IndexIterator ii = a.getIndexIterator();
@@ -146,6 +162,13 @@ public class ReBuild {
         return a;
     }
 
+    /**
+     *
+     * @param a1
+     * @param min
+     * @param max
+     * @return
+     */
     public static Array unscale(final Array a1, final double min,
             final double max) {
         final Array a = a1.copy();

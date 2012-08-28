@@ -27,11 +27,11 @@ import java.io.Serializable;
  *
  * @author nilshoffmann
  */
-public class TestRunnable implements Runnable, Serializable{
+public class TestRunnable implements Runnable, Serializable {
 
     @Override
     public void run() {
-        for(int i = 0;i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
@@ -39,5 +39,4 @@ public class TestRunnable implements Runnable, Serializable{
             }
         }
     }
-
 }

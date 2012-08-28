@@ -25,24 +25,23 @@ import cross.IConfigurable;
 
 /**
  * Interface giving access to specific scans within an experiment.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  * @param <T extends IScan> provides concrete implementations of an IScan
  */
 public interface IScanProvider<T extends IScan> extends IConfigurable, Iterable<T> {
 
-	/**
-	 * 
-	 * @param i the scan index to retrieve
-	 * @return the IScan
-	 */
-	public T getScan(int i);
-	
-	/**
-	 * 
-	 * @return the number of scans
-	 */
-	public int getNumberOfScans();
+    /**
+     *
+     * @param i the scan index to retrieve
+     * @return the IScan
+     */
+    public T getScan(int i);
 
+    /**
+     *
+     * @return the number of scans
+     */
+    public int getNumberOfScans();
 }

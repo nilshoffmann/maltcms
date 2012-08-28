@@ -30,22 +30,21 @@ import cross.datastructures.tuple.Tuple2DI;
 
 /**
  * Parameter Object encapsulating required data for Warp after alignment.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IWarpInput {
 
-	public abstract String getAlgorithm();
+    public abstract String getAlgorithm();
 
-	public abstract Tuple2D<List<Array>, List<Array>> getArrays();
+    public abstract Tuple2D<List<Array>, List<Array>> getArrays();
 
-	public abstract IFileFragment getFileFragment();
+    public abstract IFileFragment getFileFragment();
 
-	public abstract List<Tuple2DI> getPath();
+    public abstract List<Tuple2DI> getPath();
 
-	public abstract IFileFragment getQueryFileFragment();
+    public abstract IFileFragment getQueryFileFragment();
 
-	public abstract IFileFragment getReferenceFileFragment();
-
+    public abstract IFileFragment getReferenceFileFragment();
 }

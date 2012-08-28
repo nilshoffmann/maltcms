@@ -21,7 +21,6 @@
  */
 package maltcms.commands.fragments.io;
 
-
 import cross.Factory;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.FileFragment;
@@ -35,10 +34,10 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Prints available variables for provided file fragments.
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @Slf4j
 @Data
@@ -55,16 +54,15 @@ public class DataFileVariablePrinter extends AFragmentCommand {
      */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-        for(IFileFragment f:t) {
+        for (IFileFragment f : t) {
             try {
                 Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).
                         readStructure(f);
             } catch (final IOException e) {
                 throw new RuntimeException(e.fillInStackTrace());
             }
-            log.info("{}",FileFragment.printFragment(f));
+            log.info("{}", FileFragment.printFragment(f));
         }
         return t;
     }
 }
-

@@ -46,5 +46,4 @@ public interface IClique<T extends IFeatureVector> {
     int size();
 
     IMutableFeatureVector getArrayStatsMap();
-
 }

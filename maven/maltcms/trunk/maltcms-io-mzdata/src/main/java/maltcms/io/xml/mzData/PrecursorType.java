@@ -29,14 +29,12 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * The method of precursor ion selection and activation
- * 
- * <p>
- * Java class for precursorType complex type.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
+ *
+ * <p> Java class for precursorType complex type.
+ *
+ * <p> The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name=&quot;precursorType&quot;&gt;
  *   &lt;complexContent&gt;
@@ -51,94 +49,91 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "precursorType", propOrder = { "ionSelection", "activation" })
+@XmlType(name = "precursorType", propOrder = {"ionSelection", "activation"})
 public class PrecursorType {
 
-	@XmlElement(required = true)
-	protected ParamType ionSelection;
-	@XmlElement(required = true)
-	protected ParamType activation;
-	@XmlAttribute(required = true)
-	protected int msLevel;
-	@XmlAttribute(required = true)
-	protected int spectrumRef;
+    @XmlElement(required = true)
+    protected ParamType ionSelection;
+    @XmlElement(required = true)
+    protected ParamType activation;
+    @XmlAttribute(required = true)
+    protected int msLevel;
+    @XmlAttribute(required = true)
+    protected int spectrumRef;
 
-	/**
-	 * Gets the value of the activation property.
-	 * 
-	 * @return possible object is {@link ParamType }
-	 * 
-	 */
-	public ParamType getActivation() {
-		return this.activation;
-	}
+    /**
+     * Gets the value of the activation property.
+     *
+     * @return possible object is {@link ParamType }
+     *
+     */
+    public ParamType getActivation() {
+        return this.activation;
+    }
 
-	/**
-	 * Gets the value of the ionSelection property.
-	 * 
-	 * @return possible object is {@link ParamType }
-	 * 
-	 */
-	public ParamType getIonSelection() {
-		return this.ionSelection;
-	}
+    /**
+     * Gets the value of the ionSelection property.
+     *
+     * @return possible object is {@link ParamType }
+     *
+     */
+    public ParamType getIonSelection() {
+        return this.ionSelection;
+    }
 
-	/**
-	 * Gets the value of the msLevel property.
-	 * 
-	 */
-	public int getMsLevel() {
-		return this.msLevel;
-	}
+    /**
+     * Gets the value of the msLevel property.
+     *
+     */
+    public int getMsLevel() {
+        return this.msLevel;
+    }
 
-	/**
-	 * Gets the value of the spectrumRef property.
-	 * 
-	 */
-	public int getSpectrumRef() {
-		return this.spectrumRef;
-	}
+    /**
+     * Gets the value of the spectrumRef property.
+     *
+     */
+    public int getSpectrumRef() {
+        return this.spectrumRef;
+    }
 
-	/**
-	 * Sets the value of the activation property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link ParamType }
-	 * 
-	 */
-	public void setActivation(final ParamType value) {
-		this.activation = value;
-	}
+    /**
+     * Sets the value of the activation property.
+     *
+     * @param value allowed object is {@link ParamType }
+     *
+     */
+    public void setActivation(final ParamType value) {
+        this.activation = value;
+    }
 
-	/**
-	 * Sets the value of the ionSelection property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link ParamType }
-	 * 
-	 */
-	public void setIonSelection(final ParamType value) {
-		this.ionSelection = value;
-	}
+    /**
+     * Sets the value of the ionSelection property.
+     *
+     * @param value allowed object is {@link ParamType }
+     *
+     */
+    public void setIonSelection(final ParamType value) {
+        this.ionSelection = value;
+    }
 
-	/**
-	 * Sets the value of the msLevel property.
-	 * 
-	 */
-	public void setMsLevel(final int value) {
-		this.msLevel = value;
-	}
+    /**
+     * Sets the value of the msLevel property.
+     *
+     */
+    public void setMsLevel(final int value) {
+        this.msLevel = value;
+    }
 
-	/**
-	 * Sets the value of the spectrumRef property.
-	 * 
-	 */
-	public void setSpectrumRef(final int value) {
-		this.spectrumRef = value;
-	}
-
+    /**
+     * Sets the value of the spectrumRef property.
+     *
+     */
+    public void setSpectrumRef(final int value) {
+        this.spectrumRef = value;
+    }
 }

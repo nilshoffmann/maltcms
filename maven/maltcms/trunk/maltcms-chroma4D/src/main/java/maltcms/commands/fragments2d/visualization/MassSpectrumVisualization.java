@@ -51,7 +51,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Visualization for one mass spectra.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -69,7 +69,7 @@ public class MassSpectrumVisualization extends AFragmentCommand {
     private String scanRateVar = "scan_rate";
     @Configurable(value = "0")
     private int[] indices = new int[]{0};
-    
+
     /**
      * {@inheritDoc}
      */

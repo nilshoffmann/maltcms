@@ -55,8 +55,8 @@ import net.sf.maltcms.evaluation.spi.classification.PerformanceMetrics;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 public class MultipleAlignmentRowEvaluation {
 
@@ -66,8 +66,9 @@ public class MultipleAlignmentRowEvaluation {
 //    private final List<String> toolNames;
 
     /**
-     * Creates a new Eval object given a ground truth file and
-     * an array of tool result files.
+     * Creates a new Eval object given a ground truth file and an array of tool
+     * result files.
+     *
      * @param outputDir
      * @param groundTruth
      * @param toolResults
@@ -109,9 +110,9 @@ public class MultipleAlignmentRowEvaluation {
     }
 
     /**
-     * Run evaluation on all given instances of tool results against 
-     * the configured ground truth, with a maximum deviation of delta.
-     * 
+     * Run evaluation on all given instances of tool results against the
+     * configured ground truth, with a maximum deviation of delta.
+     *
      * @param delta
      */
     public void eval(final double delta) {
@@ -270,7 +271,6 @@ public class MultipleAlignmentRowEvaluation {
                     System.exit(1);
                 }
                 testFiles = basedir.listFiles(new java.io.FileFilter() {
-
                     @Override
                     public boolean accept(File pathname) {
                         return pathname.getAbsolutePath().endsWith(".csv");

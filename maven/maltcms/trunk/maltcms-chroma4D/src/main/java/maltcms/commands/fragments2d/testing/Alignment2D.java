@@ -52,7 +52,7 @@ import maltcms.math.functions.DtwPairwiseSimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
 
 /**
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @RequiresVariables(names = {"var.maxms_1d_horizontal",
@@ -85,11 +85,18 @@ public class Alignment2D extends AFragmentCommand {
     @Configurable(value = "false")
     private boolean scale = false;
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return getClass().getName();
     }
-    
+
+    /**
+     *
+     */
     public Alignment2D() {
         FeatureVectorDtwSimilarity sim = new FeatureVectorDtwSimilarity();
         DtwPairwiseSimilarity idsf = new DtwPairwiseSimilarity();
@@ -101,7 +108,7 @@ public class Alignment2D extends AFragmentCommand {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -111,7 +118,7 @@ public class Alignment2D extends AFragmentCommand {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -238,7 +245,7 @@ public class Alignment2D extends AFragmentCommand {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -248,9 +255,8 @@ public class Alignment2D extends AFragmentCommand {
 
     /**
      * Getter.
-     * 
-     * @param ff
-     *            file fragment
+     *
+     * @param ff file fragment
      * @return scanlines
      */
     protected List<Array> getScanlineFor(final IFileFragment ff) {

@@ -66,7 +66,7 @@ import maltcms.datastructures.ms.IMetabolite;
 
 /**
  * Implementation of an peak exporter.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -465,7 +465,6 @@ public class PeakExporter implements IPeakExporter {
 
         final List<Integer> masses = new ArrayList<Integer>(table.keySet());
         Collections.sort(masses, new Comparator<Integer>() {
-
             @Override
             public int compare(final Integer o1, final Integer o2) {
                 return Double.compare(o1, o2);

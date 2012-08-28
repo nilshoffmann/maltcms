@@ -74,7 +74,7 @@ public class DefaultVarLoaderWorker implements Callable<File>, Serializable {
     }
 
     private IVariableFragment createVariable(IFileFragment output, IVariableFragment sourceVar) {
-        IVariableFragment targetVar = output.hasChildren(sourceVar.getName())?output.getChild(sourceVar.getName()):VariableFragment.createCompatible(output, sourceVar);
+        IVariableFragment targetVar = output.hasChildren(sourceVar.getName()) ? output.getChild(sourceVar.getName()) : VariableFragment.createCompatible(output, sourceVar);
         if (sourceVar.getIndex() != null) {
             IVariableFragment sourceIndexVar = sourceVar.getIndex();
             IVariableFragment targetIndexVar = null;

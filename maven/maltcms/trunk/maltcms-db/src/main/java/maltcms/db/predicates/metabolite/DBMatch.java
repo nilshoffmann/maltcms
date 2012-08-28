@@ -46,11 +46,11 @@ public class DBMatch implements Comparable {
         }
         return 0;
     }
-    
-    public static List<Tuple2D<Double,IMetabolite>> asMatchList(Collection<DBMatch> c) {
-        List<Tuple2D<Double,IMetabolite>> l = new ArrayList<Tuple2D<Double,IMetabolite>>();
-        for(DBMatch dbm:c) {
-            l.add(new Tuple2D<Double,IMetabolite>(dbm.getMatchScore(),dbm.getMetabolite()));
+
+    public static List<Tuple2D<Double, IMetabolite>> asMatchList(Collection<DBMatch> c) {
+        List<Tuple2D<Double, IMetabolite>> l = new ArrayList<Tuple2D<Double, IMetabolite>>();
+        for (DBMatch dbm : c) {
+            l.add(new Tuple2D<Double, IMetabolite>(dbm.getMatchScore(), dbm.getMetabolite()));
         }
         return l;
     }

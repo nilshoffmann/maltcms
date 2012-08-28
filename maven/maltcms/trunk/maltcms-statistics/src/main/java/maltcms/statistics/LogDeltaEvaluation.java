@@ -41,10 +41,8 @@ import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYBarDataset;
-import org.slf4j.Logger;
 
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.workflow.DefaultWorkflowResult;
@@ -52,10 +50,11 @@ import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class LogDeltaEvaluation implements IWorkflowElement {
 
-    private final Logger log = Logging.getLogger(this);
     private IWorkflow workflow;
     private boolean logNaturalis = true;
     private List<Peak2DClique> peakCliques;

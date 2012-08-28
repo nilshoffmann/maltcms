@@ -63,7 +63,7 @@ public class PairwiseSimilarityWorker implements Callable<Integer>, Serializable
                 if (Math.abs(rt1 - rt2) < this.maxRTDifference) {
                     // the similarity is symmetric:
                     // sim(a,b) = sim(b,a)
-                    final Double d = similarityFunction.apply(new double[]{rt1}, new double[]{rt2},p1.getMsIntensities(),p2.getMsIntensities());
+                    final Double d = similarityFunction.apply(new double[]{rt1}, new double[]{rt2}, p1.getMsIntensities(), p2.getMsIntensities());
                     p1.addSimilarity(p2, d);
                     p2.addSimilarity(p1, d);
                 }

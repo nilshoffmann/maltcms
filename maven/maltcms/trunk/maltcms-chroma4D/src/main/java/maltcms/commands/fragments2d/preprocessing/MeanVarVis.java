@@ -61,7 +61,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * This class will visualize the computed mean, variance and standard deviation
  * of every chromatogram.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -74,7 +74,7 @@ import org.openide.util.lookup.ServiceProvider;
     "var.used_mass_values", "var.maxms_1d_vertical_index",
     "var.maxms_1d_vertical", "var.total_intensity_1d",
     "var.scan_acquisition_time_1d"})
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class MeanVarVis extends AFragmentCommand {
 
     @Configurable(name = "var.var_intensity_values", value = "var_intensity_values")
@@ -117,7 +117,7 @@ public class MeanVarVis extends AFragmentCommand {
     private boolean differentVisualizations = false;
     @Configurable(value = "false")
     private boolean useLogScale = false;
-    
+
     /**
      * {@inheritDoc}
      */
@@ -136,7 +136,7 @@ public class MeanVarVis extends AFragmentCommand {
                     + "_standardDeviation", this.useLogScale, ff);
             boolean visualize = true;
             double[] quantil = ArrayTools.getQuantilValue(ff, sd, new double[]{0.001, 0.002,
-                        0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5},visualize, this);
+                        0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5}, visualize, this);
 
             // 1D TIC VIS
             final Array tic1do = ff.getChild(this.totalIntensity1dVar).getArray();
@@ -222,8 +222,7 @@ public class MeanVarVis extends AFragmentCommand {
     /**
      * Visualization of horizontal and vertical mean and max mass spectras.
      *
-     * @param ff
-     *            file fragment
+     * @param ff file fragment
      */
     private void meanMaxMSVisualization(final IFileFragment ff) {
         final List<Integer> sdd = new ArrayList<Integer>();
@@ -319,16 +318,11 @@ public class MeanVarVis extends AFragmentCommand {
     /**
      * Creates an chart.
      *
-     * @param array
-     *            array containing the intensities
-     * @param name
-     *            titel of this chart
-     * @param filename
-     *            filename
-     * @param useLog
-     *            use logarithmic scale
-     * @param resource
-     *            IFileFragment as resource for the data
+     * @param array array containing the intensities
+     * @param name titel of this chart
+     * @param filename filename
+     * @param useLog use logarithmic scale
+     * @param resource IFileFragment as resource for the data
      */
     private void createChartXY(final Array array, final String name,
             final String filename, final boolean useLog, IFileFragment resource) {
@@ -346,18 +340,12 @@ public class MeanVarVis extends AFragmentCommand {
     /**
      * Creates an image of a list of arrays.
      *
-     * @param filename
-     *            filename
-     * @param title
-     *            title
-     * @param aa
-     *            list of arrays
-     * @param colorRamp
-     *            color ramp
-     * @param lowThreshold
-     *            threshold
-     * @param elem
-     *            workflow element
+     * @param filename filename
+     * @param title title
+     * @param aa list of arrays
+     * @param colorRamp color ramp
+     * @param lowThreshold threshold
+     * @param elem workflow element
      */
     private void createImage(final String filename, final String title,
             final List<Array> aa, final int[][] colorRamp,

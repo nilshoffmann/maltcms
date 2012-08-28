@@ -27,16 +27,16 @@ import cross.IConfigurable;
 /**
  * Interface to define classes, comparing arrays, especially mass spectra by
  * some function and returning a double value as result.
- * 
+ *
  * @author nilshoffmann
- * 
+ *
  */
 public interface IDtwSimilarityFunction extends IConfigurable {
 
     /**
      * if i1 && i2 > 0 => apply distance to indices only else apply to all
      * elements of array
-     * 
+     *
      * @param i1
      * @param i2
      * @param t1
@@ -51,11 +51,11 @@ public interface IDtwSimilarityFunction extends IConfigurable {
     public double getMatchWeight();
 
     public double getExpansionWeight();
-    
+
     public void setCompressionWeight(double d);
-    
+
     public void setMatchWeight(double d);
-    
+
     public void setExpansionWeight(double d);
 
     public abstract boolean minimize();

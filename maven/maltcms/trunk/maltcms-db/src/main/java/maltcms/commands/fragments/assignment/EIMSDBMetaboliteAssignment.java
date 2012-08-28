@@ -22,7 +22,7 @@
 package maltcms.commands.fragments.assignment;
 
 /**
- * 
+ *
  */
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -57,8 +57,8 @@ import maltcms.db.predicates.metabolite.MetaboliteSimilarity;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.scan_acquisition_time", "var.tic_peaks"})

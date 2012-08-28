@@ -41,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
  * Implementation of pairwise Dynamic-Time-Warping for time-series data. This
  * class will use a the warped horizontal scanlines as a vector of double
  * (intensities).
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -52,6 +52,11 @@ public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
     private boolean scale = true;
     private int k = 1;
 
+    /**
+     *
+     * @param t
+     * @return
+     */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
             Tuple2D<IFileFragment, IFileFragment> t) {
@@ -73,9 +78,9 @@ public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
 
         if (this.scale) {
 //            for (int i = 0; i < k; i++) {
-                log.info("Scaling");
-                scanlineRef = ArrayTools2.sqrt(scanlineRef);
-                scanlineQuery = ArrayTools2.sqrt(scanlineQuery);
+            log.info("Scaling");
+            scanlineRef = ArrayTools2.sqrt(scanlineRef);
+            scanlineQuery = ArrayTools2.sqrt(scanlineQuery);
 //            }
         }
 

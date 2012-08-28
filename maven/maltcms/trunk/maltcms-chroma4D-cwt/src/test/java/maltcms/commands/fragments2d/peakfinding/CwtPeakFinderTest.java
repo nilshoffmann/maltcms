@@ -28,7 +28,6 @@ import maltcms.test.AFragmentCommandTest;
  * @author nilshoffmann
  */
 public class CwtPeakFinderTest extends AFragmentCommandTest {
-
 //    @Rule
 //    public TemporaryFolder tf = new TemporaryFolder();
 //

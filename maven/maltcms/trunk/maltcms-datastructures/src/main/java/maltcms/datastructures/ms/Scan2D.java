@@ -31,16 +31,16 @@ import ucar.ma2.ArrayInt;
 /**
  * Specialization of Scan1D, adding second column times and indices, indicating
  * the modulation periods scans belong to.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
- *         FIXME add support for IFeatureVector, extend Scan1D functionality
- * 
+ *
+ * FIXME add support for IFeatureVector, extend Scan1D functionality
+ *
  */
 public class Scan2D extends Scan1D implements IScan2D {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -5785157824205744680L;
     private double fctime = -1, sctime = -1;

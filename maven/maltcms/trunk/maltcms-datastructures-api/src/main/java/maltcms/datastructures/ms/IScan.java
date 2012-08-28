@@ -26,9 +26,9 @@ import ucar.ma2.Array;
 
 /**
  * Interface representing a Scan (usually an MS scan).
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IScan extends IFeatureVector {
 

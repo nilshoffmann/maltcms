@@ -37,9 +37,9 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Estimate a local baseline using a windowed median and perform baseline
  * subtraction.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @Slf4j

@@ -60,7 +60,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Does the Peak Integration on basis of the unique masses.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -89,11 +89,9 @@ public class PeakIntegration implements IPeakIntegration {
 
     /**
      * Determines the start and end position of the peak in a specific scanline.
-     * 
-     * @param scanline
-     *            scanline
-     * @param pa
-     *            peakarea
+     *
+     * @param scanline scanline
+     * @param pa peakarea
      * @return start and end of this peak
      */
     private int[] getStartAndEnd(final int scanline, final PeakArea2D pa) {

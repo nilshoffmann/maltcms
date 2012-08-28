@@ -45,7 +45,6 @@ import maltcms.datastructures.ms.IScan1D;
 import maltcms.datastructures.ms.RetentionInfo;
 import maltcms.io.csv.CSVWriter;
 
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayBoolean;
@@ -59,7 +58,6 @@ import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.StatsMap;
 import cross.datastructures.fragments.*;
 import cross.datastructures.tools.EvalTools;
@@ -68,23 +66,25 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.Tuple2DDoubleComp;
 import cross.datastructures.tuple.Tuple2DI;
 import cross.datastructures.tuple.TupleND;
+import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
 import cross.tools.StringTools;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility class providing many comfort methods, providing more direct access to
  * andims compatible variables. Sort of an abstraction layer.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
+@Slf4j
 public class MaltcmsTools {
 
     private enum RoundMode {
 
         RINT, RFLOORINT, ROPINT;
     }
-    public static final Logger log = Logging.getLogger(MaltcmsTools.class);
     private static RoundMode binMZMode = RoundMode.RFLOORINT;
 
     // private static HashMap<String, IFileFragment> pairwiseAlignments = new
@@ -111,15 +111,11 @@ public class MaltcmsTools {
      * Calculates the normalized index of mz, by subtracting minmz and dividing
      * by maxmz-minmz.
      *
-     * @param mz
-     *            mass value to bin
-     * @param minmz
-     *            minimum mz of all mass values over all chromatograms, can be
-     *            zero
-     * @param maxmz
-     *            maximum mz of all mass values over all chromatograms
-     * @param resolution
-     *            multiplication factor to scale the mass range
+     * @param mz mass value to bin
+     * @param minmz minimum mz of all mass values over all chromatograms, can be
+     * zero
+     * @param maxmz maximum mz of all mass values over all chromatograms
+     * @param resolution multiplication factor to scale the mass range
      * @return an integer bin for mz, starting at 0
      */
     public static int binMZ(final double mz, final double minmz,
@@ -170,6 +166,11 @@ public class MaltcmsTools {
         // return binMZFloor(mz);
     }
 
+    /**
+     *
+     * @param mz
+     * @return
+     */
     public static int binMZFloor(final double mz) {
         return (int) Math.floor(mz);
     }
@@ -189,6 +190,16 @@ public class MaltcmsTools {
         return preComma;
     }
 
+    /**
+     *
+     * @param denseArrays
+     * @param binary_mass_values
+     * @param mass_values
+     * @param intensity_values
+     * @param scan_index
+     * @param maskedMasses
+     * @return
+     */
     public static IFileFragment buildBinaryMassVectors(
             final IFileFragment denseArrays, final String binary_mass_values,
             final String mass_values, final String intensity_values,
@@ -237,7 +248,7 @@ public class MaltcmsTools {
      *
      * @param arrays
      * @return a tuple containing the index offsets as first array and the
-     *         flattened masses and intensities within the second tuple
+     * flattened masses and intensities within the second tuple
      */
     public static Tuple2D<Array, Tuple2D<Array, Array>> chrom2crs(
             final Chromatogram1D chrom) {
@@ -263,6 +274,12 @@ public class MaltcmsTools {
                 new Tuple2D<Array, Array>(ms, is));
     }
 
+    /**
+     *
+     * @param intensities
+     * @param eics
+     * @return
+     */
     public static List<Array> copyEics(final List<Array> intensities,
             final Integer[] eics) {
         final ArrayList<Array> al = new ArrayList<Array>(intensities.size());
@@ -285,6 +302,13 @@ public class MaltcmsTools {
         return al;
     }
 
+    /**
+     *
+     * @param file
+     * @param masses
+     * @param intensities
+     * @return
+     */
     public static Tuple2D<VariableFragment, Tuple2D<VariableFragment, VariableFragment>> createFlattenedArrays(
             final IFileFragment file, final List<Array> masses,
             final List<Array> intensities) {
@@ -334,6 +358,13 @@ public class MaltcmsTools {
                 new_intensities));
     }
 
+    /**
+     *
+     * @param file
+     * @param varname
+     * @param values
+     * @return
+     */
     public static IVariableFragment createIntegratedValueArray(
             final IFileFragment file, final String varname,
             final List<Array> values) {
@@ -360,6 +391,12 @@ public class MaltcmsTools {
         intensity.setArray(a);
     }
 
+    /**
+     *
+     * @param file
+     * @param scans
+     * @return
+     */
     public static Tuple2D<IVariableFragment, IVariableFragment> createMinMaxMassValueArrays(
             final IFileFragment file, final List<Array> scans) {
         EvalTools.notNull(new Object[]{file, scans}, MaltcmsTools.class);
@@ -410,6 +447,16 @@ public class MaltcmsTools {
                 new_mass_range_min, new_mass_range_max);
     }
 
+    /**
+     *
+     * @param index
+     * @param values
+     * @param minindex
+     * @param maxindex
+     * @param nbins
+     * @param massBinResolution
+     * @return
+     */
     public static Sparse createSparse(final IVariableFragment index,
             final IVariableFragment values, final int minindex,
             final int maxindex, final int nbins, final double massBinResolution) {
@@ -424,6 +471,14 @@ public class MaltcmsTools {
         throw new IllegalArgumentException("Cannot create Sparse Index Array!");
     }
 
+    /**
+     *
+     * @param ff
+     * @param mmin
+     * @param mmax
+     * @param fallback
+     * @return
+     */
     public static Tuple2D<Double, Double> findGlobalMinMax(
             final TupleND<IFileFragment> ff, final String mmin,
             final String mmax, final String fallback) {
@@ -479,6 +534,12 @@ public class MaltcmsTools {
         return new Tuple2D<Double, Double>(min, max);
     }
 
+    /**
+     *
+     * @param ff1
+     * @param ff2
+     * @return
+     */
     public static Tuple2D<List<IAnchor>, List<IAnchor>> getAnchors(
             final IFileFragment ff1, final IFileFragment ff2) {
         final List<IAnchor> l1 = MaltcmsTools.prepareAnchors(ff1);
@@ -523,9 +584,15 @@ public class MaltcmsTools {
         return t;
     }
 
+    /**
+     *
+     * @param iff
+     * @param i
+     * @return
+     */
     public static Tuple2D<Array, Array> getBinnedMS(final IFileFragment iff,
             final int i) {
-        Logging.getLogger(MaltcmsTools.class).info("Reading scan {}", i);
+        log.info("Reading scan {}", i);
         final String sindex = Factory.getInstance().getConfiguration().getString("var.binned_scan_index", "binned_scan_index");
         final Array masses = FragmentTools.getIndexed(iff, Factory.getInstance().getConfiguration().getString(
                 "var.binned_mass_values", "binned_mass_values"),
@@ -536,6 +603,11 @@ public class MaltcmsTools {
         return new Tuple2D<Array, Array>(masses, intensities);
     }
 
+    /**
+     *
+     * @param ff
+     * @return
+     */
     public static Tuple2D<List<Array>, List<Array>> getBinnedMZIs(
             final IFileFragment ff) {
         final String mz = Factory.getInstance().getConfiguration().getString(
@@ -565,6 +637,17 @@ public class MaltcmsTools {
     // }
     // return null;
     // }
+    /**
+     *
+     * @param f
+     * @param eicStart
+     * @param eicStop
+     * @param normalize
+     * @param keepMaxInBin
+     * @param start
+     * @param nscans
+     * @return
+     */
     public static Array getEIC(final IFileFragment f, final double eicStart,
             final double eicStop, final boolean normalize,
             final boolean keepMaxInBin, int start, int nscans) {
@@ -626,6 +709,15 @@ public class MaltcmsTools {
         return eic;
     }
 
+    /**
+     *
+     * @param f
+     * @param eicStart
+     * @param eicStop
+     * @param normalize
+     * @param keepMaxInBin
+     * @return
+     */
     public static Array getEIC(final IFileFragment f, final double eicStart,
             final double eicStop, final boolean normalize,
             final boolean keepMaxInBin) {
@@ -634,6 +726,12 @@ public class MaltcmsTools {
         return getEIC(f, eicStart, eicStop, normalize, keepMaxInBin, 0, si.getShape()[0]);
     }
 
+    /**
+     *
+     * @param pwdFile
+     * @param varname
+     * @return
+     */
     public static TupleND<IFileFragment> getFileFragmentsFromStringArray(
             final IFileFragment pwdFile, final String varname) {
         final Collection<String> s = FragmentTools.getStringArray(pwdFile,
@@ -674,11 +772,22 @@ public class MaltcmsTools {
         return -1;
     }
 
+    /**
+     *
+     * @param intens
+     * @return
+     */
     public static int getIndexOfMaxIntensity(final Array intens) {
         final int[] ranksByIntensity = MaltcmsTools.ranksByIntensity(intens);
         return ranksByIntensity[0];
     }
 
+    /**
+     *
+     * @param intens
+     * @param k
+     * @return
+     */
     public static int[] getTopKIndicesOfMaxIntensity(final Array intens,
             final int k) {
         final int[] ranksByIntensity = MaltcmsTools.ranksByIntensity(intens);
@@ -823,7 +932,6 @@ public class MaltcmsTools {
         }
         Collections.sort(peakingMasses,
                 new Comparator<Tuple2D<Double, Double>>() {
-
                     @Override
                     public int compare(Tuple2D<Double, Double> o1,
                             Tuple2D<Double, Double> o2) {
@@ -838,6 +946,13 @@ public class MaltcmsTools {
         return peakingMasses;
     }
 
+    /**
+     *
+     * @param refMass
+     * @param testMass
+     * @param epsilon
+     * @return
+     */
     public static boolean isMassWithinEpsilon(final double refMass,
             final double testMass, final double epsilon) {
         if (Math.abs(refMass - testMass) <= epsilon) {
@@ -846,6 +961,12 @@ public class MaltcmsTools {
         return false;
     }
 
+    /**
+     *
+     * @param intens
+     * @param epsilon
+     * @return
+     */
     public static double getMaxMassIntensity(final Array intens,
             final double epsilon) {
         final Index idx = intens.getIndex();
@@ -853,6 +974,11 @@ public class MaltcmsTools {
         return maxIntens;
     }
 
+    /**
+     *
+     * @param f
+     * @return
+     */
     public static Tuple2D<Double, Double> getMinMaxMassRange(
             final IFileFragment f) {
         EvalTools.notNull(f, MaltcmsTools.class);
@@ -875,18 +1001,29 @@ public class MaltcmsTools {
 
         return new Tuple2D<Double, Double>(mm.min, mm.max);
     }
-    
-    public static Tuple2D<Double,Double> getMinMaxMassRange(Collection<IFileFragment> fragments) {
+
+    /**
+     *
+     * @param fragments
+     * @return
+     */
+    public static Tuple2D<Double, Double> getMinMaxMassRange(Collection<IFileFragment> fragments) {
         double min_mass = Double.POSITIVE_INFINITY;
         double max_mass = Double.NEGATIVE_INFINITY;
         for (final IFileFragment t : fragments) {
             final Tuple2D<Double, Double> tple = MaltcmsTools.getMinMaxMassRange(t);
-            min_mass = Math.min(tple.getFirst(),min_mass);
-            max_mass = Math.max(tple.getSecond(),max_mass);
+            min_mass = Math.min(tple.getFirst(), min_mass);
+            max_mass = Math.max(tple.getSecond(), max_mass);
         }
-        return new Tuple2D<Double,Double>(min_mass,max_mass);
+        return new Tuple2D<Double, Double>(min_mass, max_mass);
     }
 
+    /**
+     *
+     * @param reference
+     * @param query
+     * @return
+     */
     public static Tuple2D<Double, Double> getMinMaxMassRange(
             final IFileFragment reference, final IFileFragment query) {
         EvalTools.notNull(new Object[]{reference, query}, MaltcmsTools.class);
@@ -896,9 +1033,15 @@ public class MaltcmsTools {
                 Math.min(a.getFirst(), b.getFirst()), Math.max(a.getSecond(), b.getSecond()));
     }
 
+    /**
+     *
+     * @param iff
+     * @param i
+     * @return
+     */
     public static Tuple2D<Array, Array> getMS(final IFileFragment iff,
             final int i) {
-        Logging.getLogger(MaltcmsTools.class).info("Reading scan {}", i);
+        log.info("Reading scan {}", i);
         final String sindex = Factory.getInstance().getConfiguration().getString("var.scan_index", "scan_index");
         final Array masses = FragmentTools.getIndexed(iff, Factory.getInstance().getConfiguration().getString("var.mass_values",
                 "mass_values"), sindex, i);
@@ -907,6 +1050,11 @@ public class MaltcmsTools {
         return new Tuple2D<Array, Array>(masses, intensities);
     }
 
+    /**
+     *
+     * @param ff
+     * @return
+     */
     public static Tuple2D<List<Array>, List<Array>> getMZIs(
             final IFileFragment ff) {
         final String mz = Factory.getInstance().getConfiguration().getString(
@@ -924,12 +1072,24 @@ public class MaltcmsTools {
         return new Tuple2D<List<Array>, List<Array>>(mzs, is);
     }
 
+    /**
+     *
+     * @param minMass
+     * @param maxMass
+     * @param resolution
+     * @return
+     */
     public static int getNumberOfIntegerMassBins(final double minMass,
             final double maxMass, final double resolution) {
         return (int) Math.ceil(((Math.ceil(maxMass) - Math.floor(minMass)) + 1)
                 * resolution);
     }
 
+    /**
+     *
+     * @param iff
+     * @return
+     */
     public static int getNumberOfBinnedScans(final IFileFragment iff) {
         final IVariableFragment scan_index = iff.getChild(Factory.getInstance().getConfiguration().getString("var.binned_scan_index",
                 "binned_scan_index"));
@@ -937,6 +1097,11 @@ public class MaltcmsTools {
         return scan_index.getArray().getShape()[0];
     }
 
+    /**
+     *
+     * @param iff
+     * @return
+     */
     public static int getNumberOfScans(final IFileFragment iff) {
         final IVariableFragment scan_index = iff.getChild(Factory.getInstance().getConfiguration().getString("var.scan_index", "scan_index"));
         return scan_index.getArray().getShape()[0];
@@ -947,6 +1112,13 @@ public class MaltcmsTools {
     // // FIXME: replace "" by ?
     // return MaltcmsTools.getPairwiseAlignment(ref, query, "");
     // }
+    /**
+     *
+     * @param f
+     * @param pwdExtension
+     * @return
+     * @throws ResourceNotAvailableException
+     */
     public static IFileFragment getPairwiseDistanceFragment(
             final IFileFragment f, final String pwdExtension)
             throws ResourceNotAvailableException {
@@ -980,12 +1152,25 @@ public class MaltcmsTools {
         // + ".cdf!");
     }
 
+    /**
+     *
+     * @param t
+     * @return
+     * @throws ResourceNotAvailableException
+     */
     public static IFileFragment getPairwiseDistanceFragment(
             final TupleND<IFileFragment> t)
             throws ResourceNotAvailableException {
         return getPairwiseDistanceFragment(t, "");
     }
 
+    /**
+     *
+     * @param t
+     * @param pwdExtension
+     * @return
+     * @throws ResourceNotAvailableException
+     */
     public static IFileFragment getPairwiseDistanceFragment(
             final TupleND<IFileFragment> t, final String pwdExtension)
             throws ResourceNotAvailableException {
@@ -993,12 +1178,17 @@ public class MaltcmsTools {
         return MaltcmsTools.getPairwiseDistanceFragment(t.get(0), pwdExtension);
     }
 
+    /**
+     *
+     * @param pwd
+     * @return
+     */
     public static TupleND<IFileFragment> getAlignmentsFromFragment(
             final IFileFragment pwd) {
 //        final TupleND<IFileFragment> tpl = new TupleND<IFileFragment>();
         final String varname = Factory.getInstance().getConfiguration().getString("var.pairwise_distance_alignment_names",
                 "pairwise_distance_alignment_names");
-        return getFileFragmentsFromStringArray(pwd,varname);
+        return getFileFragmentsFromStringArray(pwd, varname);
 //        try {
 //            final ArrayChar.D2 aliNames = (ArrayChar.D2) pwd.getChild(
 //                    varname).getArray();
@@ -1016,6 +1206,11 @@ public class MaltcmsTools {
 //        return tpl;
     }
 
+    /**
+     *
+     * @param pwdf
+     * @return
+     */
     public static TupleND<IFileFragment> getPairwiseAlignments(
             final IFileFragment pwdf) {
         final String varname = Factory.getInstance().getConfiguration().getString("var.pairwise_distance_alignment_names",
@@ -1024,11 +1219,25 @@ public class MaltcmsTools {
         return t;
     }
 
+    /**
+     *
+     * @param pwdf
+     * @param ref
+     * @param query
+     * @return
+     */
     public static IFileFragment getPairwiseAlignment(final IFileFragment pwdf,
             final IFileFragment ref, final IFileFragment query) {
         return MaltcmsTools.getPairwiseAlignment(MaltcmsTools.getPairwiseAlignments(pwdf), ref, query);
     }
 
+    /**
+     *
+     * @param pwalignments
+     * @param ref
+     * @param query
+     * @return
+     */
     public static IFileFragment getPairwiseAlignment(
             final TupleND<IFileFragment> pwalignments, final IFileFragment ref,
             final IFileFragment query) {
@@ -1091,6 +1300,12 @@ public class MaltcmsTools {
     // .getFileFragmentsFromStringArray(pwdFile, varname);
     // return t;
     // }
+    /**
+     *
+     * @param iff
+     * @param scan
+     * @return
+     */
     public static double getScanAcquisitionTime(final IFileFragment iff,
             final int scan) {
         final String sat = Factory.getInstance().getConfiguration().getString(
@@ -1102,6 +1317,11 @@ public class MaltcmsTools {
         return d;
     }
 
+    /**
+     *
+     * @param f
+     * @return
+     */
     public static Array getTIC(final IFileFragment f) {
         EvalTools.notNull(f, MaltcmsTools.class);
         final String tics = Factory.getInstance().getConfiguration().getString(
@@ -1111,6 +1331,12 @@ public class MaltcmsTools {
         return v.getArray();
     }
 
+    /**
+     *
+     * @param iff
+     * @param scan
+     * @return
+     */
     public static double getTIC(final IFileFragment iff, final int scan) {
         final String sat = Factory.getInstance().getConfiguration().getString(
                 "var.total_intensity", "total_intensity");
@@ -1121,6 +1347,11 @@ public class MaltcmsTools {
         return d;
     }
 
+    /**
+     *
+     * @param ff
+     * @return
+     */
     public static List<Tuple2DI> getWarpPath(final IFileFragment ff) {
         final String wpi = Factory.getInstance().getConfiguration().getString(
                 "var.warp_path_i", "warp_path_i");
@@ -1159,6 +1390,12 @@ public class MaltcmsTools {
     // }
     // return false;
     // }
+    /**
+     *
+     * @param eics1
+     * @param eics2
+     * @return
+     */
     public static Integer[] pairedEICs(
             final List<Tuple2D<Double, Double>> eics1,
             final List<Tuple2D<Double, Double>> eics2) {
@@ -1178,6 +1415,11 @@ public class MaltcmsTools {
         return arr;
     }
 
+    /**
+     *
+     * @param l
+     * @return
+     */
     public static List<Double> parseMaskedMassesList(final List<?> l) {
         if (l.size() > 0) {
             MaltcmsTools.log.info("Masking the following masses:");
@@ -1204,6 +1446,11 @@ public class MaltcmsTools {
         return al;
     }
 
+    /**
+     *
+     * @param ff
+     * @return
+     */
     public static List<IAnchor> prepareAnchors(final IFileFragment ff) {
         EvalTools.notNull(ff, MaltcmsTools.class);
         final ArrayList<IAnchor> al = new ArrayList<IAnchor>();
@@ -1334,6 +1581,16 @@ public class MaltcmsTools {
         return al;
     }
 
+    /**
+     *
+     * @param ff
+     * @param index_name
+     * @param mz_name
+     * @param intens_name
+     * @param mass_range_min_name
+     * @param mass_range_max_name
+     * @return
+     */
     public static List<Array> prepareArraysMZIasList(final IFileFragment ff,
             final String index_name, final String mz_name,
             final String intens_name, final String mass_range_min_name,
@@ -1380,7 +1637,22 @@ public class MaltcmsTools {
         return SparseTools.createAsList(mza, intena, (min), (max), MaltcmsTools.getNumberOfIntegerMassBins(min, max, massResolution),
                 massResolution);
     }
-    
+
+    /**
+     *
+     * @param ff
+     * @param f
+     * @param scan_index
+     * @param mass_values
+     * @param intensity_values
+     * @param binned_scan_index
+     * @param binned_mass_values
+     * @param binned_intensity_values
+     * @param min_mass
+     * @param max_mass
+     * @param outputDir
+     * @return
+     */
     public static IFileFragment prepareDenseArraysMZI(final IFileFragment ff, final IFileFragment f,
             final String scan_index, final String mass_values,
             final String intensity_values, final String binned_scan_index,
@@ -1394,11 +1666,11 @@ public class MaltcmsTools {
         final Array b = si.getArray();
         EvalTools.notNull(b, MaltcmsTools.class);
         // Retrieve original mass_values
-        final IVariableFragment mz = ff.getChild(mass_values,true);
+        final IVariableFragment mz = ff.getChild(mass_values, true);
         // Manually set index
         mz.setIndex(si);
         // Retrieve original intensity_values
-        final IVariableFragment inten = ff.getChild(intensity_values,true);
+        final IVariableFragment inten = ff.getChild(intensity_values, true);
         // Manually set index
         inten.setIndex(si);
         // Read mass_values with index
@@ -1431,7 +1703,7 @@ public class MaltcmsTools {
         // Check, that size is at least 1 and at most largest integer
         EvalTools.inRangeI(1, Integer.MAX_VALUE, size, MaltcmsTools.class);
         MaltcmsTools.log.debug("Creating dense arrays with " + size
-                + " elements and resolution of {}!",massBinResolution);
+                + " elements and resolution of {}!", massBinResolution);
         // Create new index array with size = number of scans
         final ArrayInt.D1 retIndexArray = new ArrayInt.D1(mza.size());
         final ArrayList<Array> retMZa = new ArrayList<Array>(mza.size());
@@ -1462,6 +1734,8 @@ public class MaltcmsTools {
             final IVariableFragment siRetDense = new VariableFragment(f,
                     binned_scan_index);
             siRetDense.setArray(retIndexArray);
+        } else {
+            throw new ConstraintViolationException("FileFragment " + f.getName() + "already has a child named " + binned_scan_index);
         }
         if (!f.hasChild(binned_mass_values)) {
             final IVariableFragment mzRetDense = new VariableFragment(f,
@@ -1469,6 +1743,8 @@ public class MaltcmsTools {
             mzRetDense.setIndex(f.getChild(binned_scan_index));
             // mzRetDense.setArray(ArrayTools.glue(retMZa));
             mzRetDense.setIndexedArray(retMZa);
+        } else {
+            throw new ConstraintViolationException("FileFragment " + f.getName() + "already has a child named " + binned_mass_values);
         }
 
         // intensities
@@ -1484,12 +1760,14 @@ public class MaltcmsTools {
             intenRetDense.setIndexedArray(retIntena);
 
             // intenRetDense.setArray(ArrayTools.glue(retIntena));
-            final Array a = intenRetDense.getArray();
-            MaltcmsTools.log.debug("{}", a);
-            MaltcmsTools.log.debug("{}", retIndexArray);
-            
-            final List<Array> al = intenRetDense.getIndexedArray();
-            MaltcmsTools.log.debug("{}", al);
+            //final Array a = intenRetDense.getArray();
+            //MaltcmsTools.log.debug("{}", a);
+            //MaltcmsTools.log.debug("{}", retIndexArray);
+
+//            final List<Array> al = intenRetDense.getIndexedArray();
+            //MaltcmsTools.log.debug("{}", al);
+        } else {
+            throw new ConstraintViolationException("FileFragment " + f.getName() + "already has a child named " + binned_intensity_values);
         }
         // index
         EvalTools.notNull(retIndexArray, MaltcmsTools.class);
@@ -1503,10 +1781,24 @@ public class MaltcmsTools {
         // intenRetDense.setIndex(siRetDense);
 
         EvalTools.notNull(f, MaltcmsTools.class);
-        MaltcmsTools.log.debug("{}", f);
+        //MaltcmsTools.log.debug("{}", f);
         return f;
     }
 
+    /**
+     *
+     * @param ff
+     * @param scan_index
+     * @param mass_values
+     * @param intensity_values
+     * @param binned_scan_index
+     * @param binned_mass_values
+     * @param binned_intensity_values
+     * @param min_mass
+     * @param max_mass
+     * @param outputDir
+     * @return
+     */
     public static IFileFragment prepareDenseArraysMZI(final IFileFragment ff,
             final String scan_index, final String mass_values,
             final String intensity_values, final String binned_scan_index,
@@ -1572,6 +1864,11 @@ public class MaltcmsTools {
         return unalignedEICFragments;
     }
 
+    /**
+     *
+     * @param t
+     * @return
+     */
     public static Tuple2D<List<Array>, List<Array>> prepareInputArraysTICasList(
             final Tuple2D<IFileFragment, IFileFragment> t) {
         EvalTools.notNull(new Object[]{t, t.getFirst(), t.getSecond()}, t);
@@ -1588,6 +1885,16 @@ public class MaltcmsTools {
         return tuple;
     }
 
+    /**
+     *
+     * @param ff
+     * @param scan_index
+     * @param mass_values
+     * @param intensity_values
+     * @param min_mass
+     * @param max_mass
+     * @return
+     */
     public static List<Array> prepareSparseMZI(final IFileFragment ff,
             final String scan_index, final String mass_values,
             final String intensity_values, final Double min_mass,
@@ -1636,6 +1943,11 @@ public class MaltcmsTools {
         return l;
     }
 
+    /**
+     *
+     * @param arrays
+     * @return
+     */
     public static Tuple2D<ArrayDouble.D1, ArrayDouble.D1> calculateMeanVarSparse(
             final List<Array> arrays) {
         int bins = arrays.get(0).getShape()[0];
@@ -1682,6 +1994,15 @@ public class MaltcmsTools {
         return new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(mean, var);
     }
 
+    /**
+     *
+     * @param f
+     * @param intensities
+     * @param k
+     * @param creator
+     * @param outputDir
+     * @return
+     */
     public static List<Tuple2D<Double, Double>> rankEICsByVariance(
             final IFileFragment f, final List<Array> intensities, final int k,
             final Class<?> creator, final File outputDir) {
@@ -1701,10 +2022,20 @@ public class MaltcmsTools {
         return vals1.subList(0, Math.min(vals1.size() - 1, k - 1));
     }
 
+    /**
+     *
+     * @param intensities
+     * @return
+     */
     public static int[] ranksByIntensity(final Array intensities) {
         return ranksByIntensity(intensities, 1.0d);
     }
 
+    /**
+     *
+     * @param ff
+     * @return
+     */
     public static ArrayDouble.D1 getMassesToFilterByCoefficientOfVariation(
             IFileFragment ff) {
         ChromatogramFactory cf = Factory.getInstance().getObjectFactory().instantiate(ChromatogramFactory.class);
@@ -1785,6 +2116,11 @@ public class MaltcmsTools {
         return massesToFilter;
     }
 
+    /**
+     *
+     * @param ff
+     * @return
+     */
     public static ArrayList<Integer> getMassesToFilterByCoefficientOfVariation2(
             IFileFragment ff) {
         ChromatogramFactory cf = Factory.getInstance().getObjectFactory().instantiate(ChromatogramFactory.class);
@@ -1867,8 +2203,7 @@ public class MaltcmsTools {
      * channel with highest intensity is at intensities.getShape()[0]-1.
      *
      * @param intensities
-     * @param intensityRangeToCover
-     *            between 0 and 1
+     * @param intensityRangeToCover between 0 and 1
      * @return
      */
     public static int[] ranksByIntensity(final Array intensities,
@@ -1888,7 +2223,6 @@ public class MaltcmsTools {
         }
         // reverse comparator
         Collections.sort(l, Collections.reverseOrder(new Comparator<Tuple2D<Integer, Double>>() {
-
             @Override
             public int compare(final Tuple2D<Integer, Double> o1,
                     final Tuple2D<Integer, Double> o2) {
@@ -1916,11 +2250,18 @@ public class MaltcmsTools {
         return ranks;
     }
 
+    /**
+     *
+     */
     public static void setBinMZbyConfig() {
         MaltcmsTools.setBinMZDefault(Factory.getInstance().getConfiguration().getString("MaltcmsTools.binMZ.mode",
                 RoundMode.RFLOORINT.name()));
     }
 
+    /**
+     *
+     * @param s
+     */
     public static void setBinMZDefault(final String s) {
         MaltcmsTools.binMZMode = RoundMode.valueOf(s);
     }
@@ -1937,7 +2278,7 @@ public class MaltcmsTools {
     /**
      * @param masses
      * @return FIXME this could be implemented more efficiently Complexity:
-     *         every element in masses needs to be checked once
+     * every element in masses needs to be checked once
      */
     public static List<Integer> findMaskedMasses(final Array masses,
             final List<Double> maskedMasses, final double epsilon) {
@@ -1994,6 +2335,10 @@ public class MaltcmsTools {
         return sorted;
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         List<Integer> l = Arrays.asList(1, 2, 3, 4, 5, 5, 5, 6, 3, 3, 2, 2, 1,
                 1);

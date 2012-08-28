@@ -30,11 +30,10 @@ import java.util.Set;
 import maltcms.datastructures.array.IFeatureVector;
 
 /**
- * A group of Entity objects which all share the same 
- * class label, meaning they are grouped by some algorithm
- * as related entities.
- * 
- * 
+ * A group of Entity objects which all share the same class label, meaning they
+ * are grouped by some algorithm as related entities.
+ *
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  *
  *

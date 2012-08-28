@@ -144,7 +144,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     private String binnedScanIndex = "binned_scan_index";
     @Configurable(name = "var.scan_acquisition_time")
     private String scanAcquisitionTime = "scan_acquisition_time";
-    @Configurable(name="var.peak_area")
+    @Configurable(name = "var.peak_area")
     private String peakAreaVariable = "peak_area";
     @Configurable
     private boolean useUserSuppliedAnchors = false;
@@ -168,7 +168,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     private boolean useSparseArrays = false;
     @Configurable
     private WorkerFactory workerFactory = new WorkerFactory();
-    
     /*
      * private scope
      */
@@ -499,7 +498,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         try {
             ics.call();
         } catch (Exception ex) {
-            log.error("{}", ex);
+            log.error("Caught exception while executing workers: ", ex);
+            throw new RuntimeException(ex);
         }
 
         if (this.savePeakSimilarities) {
@@ -730,7 +730,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         // sort cliques by clique rt mean
         List<Clique> l = new ArrayList<Clique>(cliques);
         Collections.sort(l, new Comparator<Clique>() {
-
             @Override
             public int compare(Clique o1, Clique o2) {
                 double rt1 = o1.getCliqueRTMean();
@@ -906,9 +905,14 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         this.intensityValues = cfg.getString(
                 "var.intensity_values", "intensity_values");
         this.ticPeaks = cfg.getString("var.tic_peaks", "tic_peaks");
-        this.peakAreaVariable = cfg.getString("var.peak_area","peak_area");
+        this.peakAreaVariable = cfg.getString("var.peak_area", "peak_area");
     }
 
+    /**
+     *
+     * @param al
+     * @param fragmentToPeaks
+     */
     public void saveSimilarityMatrix(final TupleND<IFileFragment> al,
             final HashMap<String, List<Peak>> fragmentToPeaks) {
         for (final IFileFragment iff1 : al) {
@@ -939,6 +943,10 @@ public class PeakCliqueAlignment extends AFragmentCommand {
      *
      * @see cross.commands.fragments.AFragmentCommand#getDescription()
      */
+    /**
+     *
+     * @return
+     */
     @Override
     public String getDescription() {
         return "Assigns peak candidates as pairs and groups them into cliques of size k";
@@ -955,6 +963,10 @@ public class PeakCliqueAlignment extends AFragmentCommand {
      * (non-Javadoc)
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
+     */
+    /**
+     *
+     * @return
      */
     @Override
     public WorkflowSlot getWorkflowSlot() {
@@ -1163,11 +1175,24 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         log.debug("{} peaks present", npeaks);
     }
 
+    /**
+     *
+     * @param peaks
+     * @param numberOfFiles
+     * @return
+     */
     public boolean isBidiBestHitForAll(final List<Peak> peaks,
             final int numberOfFiles) {
         return isBidiBestHitForK(peaks, numberOfFiles, numberOfFiles);
     }
 
+    /**
+     *
+     * @param peaks
+     * @param numberOfFiles
+     * @param minCliqueSize
+     * @return
+     */
     public boolean isBidiBestHitForK(final List<Peak> peaks,
             final int numberOfFiles, final int minCliqueSize) {
         int i = 0;
@@ -1197,6 +1222,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         return false;
     }
 
+    /**
+     *
+     * @param peaks
+     * @param expectedHits
+     * @return
+     */
     public boolean isFirstBidiBestHitForRest(final List<Peak> peaks,
             final int expectedHits) {
         int i = 0;
@@ -1264,7 +1295,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         rows.add(headers);
         int rowCounter = 0;
         for (final List<Peak> l : ll) {
-            log.debug("Adding row {}",rowCounter);
+            log.debug("Adding row {}", rowCounter);
             final String[] line = new String[columnMap.size()];
             for (int i = 0; i < line.length; i++) {
                 line[i] = "-";
@@ -1272,14 +1303,14 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             log.debug("Adding {} peaks", l.size());
             for (final Peak p : l) {
                 final String iff = p.getAssociation();
-                log.debug("Adding peak {} from {}",p,iff);
+                log.debug("Adding peak {} from {}", p, iff);
                 EvalTools.notNull(iff, this);
                 IFileFragment fragment = nameToFragment.get(iff);
                 EvalTools.notNull(fragment, this);
                 final int pos = columnMap.get(iff).intValue();
                 try {
                     Array peakAreas = fragment.getChild(peakAreaVariable).getArray();
-                    log.debug("PeakAreas for {}: {}",fragment.getName(), peakAreas.getShape()[0]);
+                    log.debug("PeakAreas for {}: {}", fragment.getName(), peakAreas.getShape()[0]);
                     log.debug("Insert position for {}: {}", iff, pos);
                     if (pos >= 0) {
                         if (line[pos].equals("-")) {
@@ -1293,8 +1324,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                             log.warn("Array position {} already used!", pos);
                         }
                     }
-                }catch(ResourceNotAvailableException rnae) {
-                    log.warn("Could not find peak_area as starting from "+fragment.getName()+"!");
+                } catch (ResourceNotAvailableException rnae) {
+                    log.warn("Could not find peak_area as starting from " + fragment.getName() + "!");
                 }
             }
             final List<String> v = Arrays.asList(line);

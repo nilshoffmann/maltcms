@@ -44,12 +44,10 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.LookupPaintScale;
 import org.jfree.chart.title.PaintScaleLegend;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.datastructures.StatsMap;
 import cross.datastructures.Vars;
@@ -65,7 +63,7 @@ import lombok.extern.slf4j.Slf4j;
  * first, second, both or no chromatogram. Both, the image and the plot,
  * contains a differential color plot of the total intensity from both
  * chromatograms.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -186,11 +184,9 @@ public class Default2DTWVisualizer implements IVisualization {
     /**
      * Creates the samples table and the breakpoint table for reference and
      * query arrays.
-     * 
-     * @param scanlinesi
-     *            scanlines of the reference
-     * @param scanlinesj
-     *            scanlines of the query
+     *
+     * @param scanlinesi scanlines of the reference
+     * @param scanlinesj scanlines of the query
      * @return {smaple table,{breakpoints i, breakpoints j}}
      */
     protected Tuple2D<double[], Tuple2D<double[], double[]>> getSampleAndBreakpointTable(
@@ -241,19 +237,13 @@ public class Default2DTWVisualizer implements IVisualization {
 
     /**
      * Creates the image.
-     * 
-     * @param outputintensities
-     *            output intensities
-     * @param outputintensitiescounter
-     *            counter for the output intensities
-     * @param imageheight
-     *            image height
-     * @param samples
-     *            samples
-     * @param breakpointsi
-     *            break points for reference
-     * @param breakpointsj
-     *            break points for query
+     *
+     * @param outputintensities output intensities
+     * @param outputintensitiescounter counter for the output intensities
+     * @param imageheight image height
+     * @param samples samples
+     * @param breakpointsi break points for reference
+     * @param breakpointsj break points for query
      * @return image
      */
     protected BufferedImage ci(
@@ -364,15 +354,11 @@ public class Default2DTWVisualizer implements IVisualization {
 
     /**
      * Will create an array int[3] containing the rgb values for the raster.
-     * 
-     * @param ci
-     *            current intensity of the first series
-     * @param maxci
-     *            maximum intensity of the first series
-     * @param cj
-     *            current intensity of the second series
-     * @param maxcj
-     *            maximum intensity of the second series
+     *
+     * @param ci current intensity of the first series
+     * @param maxci maximum intensity of the first series
+     * @param cj current intensity of the second series
+     * @param maxcj maximum intensity of the second series
      * @return rgb color array
      */
     protected int[] getRasterColor(final double ci, final double maxci,
@@ -546,18 +532,13 @@ public class Default2DTWVisualizer implements IVisualization {
 
     /**
      * Adding a marker to the given plot.
-     * 
-     * @param plot
-     *            plot
-     * @param x
-     *            x
-     * @param y
-     *            y
-     * @param isI
-     *            <code>true</code> then the marker will be painted in red,
-     *            otherwise green
-     * @param id
-     *            peak id
+     *
+     * @param plot plot
+     * @param x x
+     * @param y y
+     * @param isI <code>true</code> then the marker will be painted in red,
+     * otherwise green
+     * @param id peak id
      */
     private void addMarker(final XYPlot plot, final double x, final double y,
             final boolean isI, final int id) {
@@ -585,7 +566,7 @@ public class Default2DTWVisualizer implements IVisualization {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override

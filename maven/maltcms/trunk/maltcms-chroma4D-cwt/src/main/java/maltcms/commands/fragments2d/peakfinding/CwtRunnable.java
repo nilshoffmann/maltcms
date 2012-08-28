@@ -93,15 +93,15 @@ import maltcms.datastructures.quadTree.QuadTree;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
-@ServiceProvider(service=IPeakPicking.class)
+@ServiceProvider(service = IPeakPicking.class)
 @Data
 public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -517839315109598824L;
     @Configurable(value = "5", type = int.class)
@@ -129,6 +129,10 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
      * (non-Javadoc)
      * 
      * @see java.lang.Runnable#run()
+     */
+    /**
+     *
+     * @return
      */
     @Override
     public File call() {
@@ -1135,6 +1139,11 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         return new ArrayList<Ridge>(filtered);
     }
 
+    /**
+     *
+     * @param ffO
+     * @return
+     */
     @Override
     public List<Point> findPeaks(IFileFragment ffO) {
         this.inputFile = new File(ffO.getAbsolutePath());
@@ -1149,6 +1158,14 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         return l;
     }
 
+    /**
+     *
+     * @param ff
+     * @param p
+     * @param dx
+     * @param dy
+     * @return
+     */
     @Override
     public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
         if (this.ridgeTree == null) {
@@ -1164,6 +1181,10 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         return list;
     }
 
+    /**
+     *
+     * @param pc
+     */
     @Override
     public void configure(Configuration pc) {
 //		this.minScale = pc.getInt(getClass().getName() + ".minScale", 2);

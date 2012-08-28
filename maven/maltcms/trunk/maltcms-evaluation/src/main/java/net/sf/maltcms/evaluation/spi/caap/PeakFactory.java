@@ -102,7 +102,6 @@ public class PeakFactory {
         List<FeatureType> featureList = fl.getFeature();
         features = featureList.size();
         Collections.sort(featureList, new Comparator<FeatureType>() {
-
             @Override
             public int compare(FeatureType t, FeatureType t1) {
                 double deltaRt = PeakFactory.getRt(t) - PeakFactory.getRt(t1);
@@ -148,7 +147,7 @@ public class PeakFactory {
             tic.set(scanIdx, ft.getIntensity());
             scanIdx++;
         }
-        
+
         String fragName = StringTools.removeFileExt(filename) + ".cdf";
         IFileFragment chromMS = new FileFragment(outputDir, fragName);
         VariableFragment mv = new VariableFragment(chromMS, "mass_values");
@@ -196,7 +195,6 @@ public class PeakFactory {
         //args[2] is file suffix
         final String suff = args[2];
         File[] files = inputDir.listFiles(new FileFilter() {
-
             @Override
             public boolean accept(File pathname) {
                 return pathname.getName().endsWith(suff);
@@ -206,7 +204,7 @@ public class PeakFactory {
             FeatureMap.FeatureList fl = getFeatureList(f);
             IFileFragment frag = joinFeatures(new File(output), f.getName(), fl);
         }
-        System.out.println("Processed "+files.length+" files!");
+        System.out.println("Processed " + files.length + " files!");
         System.exit(0);
     }
 }

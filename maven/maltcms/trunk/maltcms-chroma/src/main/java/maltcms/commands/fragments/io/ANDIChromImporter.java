@@ -107,9 +107,9 @@ public class ANDIChromImporter extends AFragmentCommand {
             vf.setArray(sat);
             final Array mass_values = new ArrayDouble.D1(a.getShape()[0]);
             final Array intensity_values = new ArrayDouble.D1(a.getShape()[0]);
-            for(int i = 0;i<a.getShape()[0];i++) {
+            for (int i = 0; i < a.getShape()[0]; i++) {
                 mass_values.setDouble(i, 0);
-                intensity_values.setDouble(i,a.getDouble(i));
+                intensity_values.setDouble(i, a.getDouble(i));
             }
             final VariableFragment massValuesV = new VariableFragment(fret, "mass_values");
             massValuesV.setArray(mass_values);

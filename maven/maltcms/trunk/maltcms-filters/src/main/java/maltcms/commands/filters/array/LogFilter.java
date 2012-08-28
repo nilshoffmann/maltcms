@@ -30,9 +30,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Applies log10 or ln to all elements of an array.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -45,7 +45,6 @@ public class LogFilter extends AArrayFilter {
     public LogFilter() {
         super();
         this.aef = new AElementFilter() {
-
             @Override
             public Double apply(final Double t) {
                 return Math.log10(t);
@@ -57,7 +56,6 @@ public class LogFilter extends AArrayFilter {
         this();
         if (natural) {
             this.aef = new AElementFilter() {
-
                 @Override
                 public Double apply(final Double t) {
                     return Math.log(t);
@@ -65,7 +63,6 @@ public class LogFilter extends AArrayFilter {
             };
         } else {
             this.aef = new AElementFilter() {
-
                 @Override
                 public Double apply(final Double t) {
                     return Math.log10(t);

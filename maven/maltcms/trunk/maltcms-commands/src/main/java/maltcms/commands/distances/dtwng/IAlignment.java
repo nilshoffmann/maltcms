@@ -27,31 +27,30 @@ import java.util.List;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
+ *
  */
 public interface IAlignment extends
         IPairwiseFeatureVectorSequenceOperation<Double> {
 
-	public List<Point> getMap();
+    public List<Point> getMap();
 
-	public String getLeftHandSideId();
+    public String getLeftHandSideId();
 
-	public String getRightHandSideId();
+    public String getRightHandSideId();
 
-	public void setRightHandSideId(String rhsid);
+    public void setRightHandSideId(String rhsid);
 
-	public void setLeftHandSideId(String lhsid);
+    public void setLeftHandSideId(String lhsid);
 
-	public void setConstraints(Area a);
-	
-	public Area getConstraints();
+    public void setConstraints(Area a);
 
-	public void setDefaultValue(double d);
+    public Area getConstraints();
 
-	public double getDefaultValue();
-	
-	public void setOptimizationFunction(IOptimizationFunction iof);
+    public void setDefaultValue(double d);
 
-	public IOptimizationFunction getOptimizationFunction();
+    public double getDefaultValue();
 
+    public void setOptimizationFunction(IOptimizationFunction iof);
+
+    public IOptimizationFunction getOptimizationFunction();
 }

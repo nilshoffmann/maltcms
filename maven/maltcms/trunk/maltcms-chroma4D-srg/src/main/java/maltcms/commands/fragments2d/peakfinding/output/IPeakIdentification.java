@@ -26,17 +26,15 @@ import cross.IConfigurable;
 
 /**
  * Supports a method to identify a peak.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 public interface IPeakIdentification extends IConfigurable {
 
-	/**
-	 * Tries to identify the peak an set his name.
-	 * 
-	 * @param peak
-	 *            peak
-	 */
-	void setName(final Peak2D peak);
-
+    /**
+     * Tries to identify the peak an set his name.
+     *
+     * @param peak peak
+     */
+    void setName(final Peak2D peak);
 }

@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Basically the same as {@link Default2DTWVisualizer} but dont uses the warp
  * path.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Ident2DTWVisualizer extends Default2DTWVisualizer {
 
     private int currentrasterline = -1;
-    
+
     /**
      * {@inheritDoc}
      */

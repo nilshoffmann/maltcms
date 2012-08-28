@@ -29,14 +29,12 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * Description of the software, and the way in which it was used to generate the
  * peak list.
- * 
- * <p>
- * Java class for dataProcessingType complex type.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
+ *
+ * <p> Java class for dataProcessingType complex type.
+ *
+ * <p> The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name=&quot;dataProcessingType&quot;&gt;
  *   &lt;complexContent&gt;
@@ -56,84 +54,76 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "dataProcessingType", propOrder = { "software",
-        "processingMethod" })
+@XmlType(name = "dataProcessingType", propOrder = {"software",
+    "processingMethod"})
 public class DataProcessingType {
 
-	/**
-	 * <p>
-	 * Java class for anonymous complex type.
-	 * 
-	 * <p>
-	 * The following schema fragment specifies the expected content contained
-	 * within this class.
-	 * 
-	 * <pre>
-	 * &lt;complexType&gt;
-	 *   &lt;complexContent&gt;
-	 *     &lt;extension base=&quot;{}softwareType&quot;&gt;
-	 *     &lt;/extension&gt;
-	 *   &lt;/complexContent&gt;
-	 * &lt;/complexType&gt;
-	 * </pre>
-	 * 
-	 * 
-	 */
-	@XmlAccessorType(XmlAccessType.FIELD)
-	@XmlType(name = "")
-	public static class Software extends SoftwareType {
+    /**
+     * <p> Java class for anonymous complex type.
+     *
+     * <p> The following schema fragment specifies the expected content
+     * contained within this class.
+     *
+     * <pre>
+     * &lt;complexType&gt;
+     *   &lt;complexContent&gt;
+     *     &lt;extension base=&quot;{}softwareType&quot;&gt;
+     *     &lt;/extension&gt;
+     *   &lt;/complexContent&gt;
+     * &lt;/complexType&gt;
+     * </pre>
+     *
+     *
+     */
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "")
+    public static class Software extends SoftwareType {
+    }
+    @XmlElement(required = true)
+    protected DataProcessingType.Software software;
+    protected ParamType processingMethod;
 
-	}
+    /**
+     * Gets the value of the processingMethod property.
+     *
+     * @return possible object is {@link ParamType }
+     *
+     */
+    public ParamType getProcessingMethod() {
+        return this.processingMethod;
+    }
 
-	@XmlElement(required = true)
-	protected DataProcessingType.Software software;
+    /**
+     * Gets the value of the software property.
+     *
+     * @return possible object is {@link DataProcessingType.Software }
+     *
+     */
+    public DataProcessingType.Software getSoftware() {
+        return this.software;
+    }
 
-	protected ParamType processingMethod;
+    /**
+     * Sets the value of the processingMethod property.
+     *
+     * @param value allowed object is {@link ParamType }
+     *
+     */
+    public void setProcessingMethod(final ParamType value) {
+        this.processingMethod = value;
+    }
 
-	/**
-	 * Gets the value of the processingMethod property.
-	 * 
-	 * @return possible object is {@link ParamType }
-	 * 
-	 */
-	public ParamType getProcessingMethod() {
-		return this.processingMethod;
-	}
-
-	/**
-	 * Gets the value of the software property.
-	 * 
-	 * @return possible object is {@link DataProcessingType.Software }
-	 * 
-	 */
-	public DataProcessingType.Software getSoftware() {
-		return this.software;
-	}
-
-	/**
-	 * Sets the value of the processingMethod property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link ParamType }
-	 * 
-	 */
-	public void setProcessingMethod(final ParamType value) {
-		this.processingMethod = value;
-	}
-
-	/**
-	 * Sets the value of the software property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link DataProcessingType.Software }
-	 * 
-	 */
-	public void setSoftware(final DataProcessingType.Software value) {
-		this.software = value;
-	}
-
+    /**
+     * Sets the value of the software property.
+     *
+     * @param value allowed object is {@link DataProcessingType.Software }
+     *
+     */
+    public void setSoftware(final DataProcessingType.Software value) {
+        this.software = value;
+    }
 }

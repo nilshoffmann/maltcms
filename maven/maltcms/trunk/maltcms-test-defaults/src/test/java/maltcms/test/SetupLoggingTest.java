@@ -15,10 +15,10 @@ import org.junit.Rule;
  */
 @Slf4j
 public class SetupLoggingTest {
-    
-    @Rule 
+
+    @Rule
     public SetupLogging sl = new SetupLogging();
-    
+
     public SetupLoggingTest() {
     }
 

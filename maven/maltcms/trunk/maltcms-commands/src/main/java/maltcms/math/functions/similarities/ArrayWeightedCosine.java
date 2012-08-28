@@ -29,8 +29,8 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
@@ -54,5 +54,4 @@ public class ArrayWeightedCosine implements IArraySimilarity {
         }
         return v;
     }
-
 }

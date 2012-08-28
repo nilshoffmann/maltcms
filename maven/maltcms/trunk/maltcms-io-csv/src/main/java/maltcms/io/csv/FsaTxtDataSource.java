@@ -78,20 +78,20 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
 /**
- * Implementation of {@link cross.io.IDataSource} for csv files containing 
+ * Implementation of {@link cross.io.IDataSource} for csv files containing
  * variables in columns and values in rows.
- * 
- * The following is an example, following the naming scheme of ANDI-MS.
- * The columns will be mapped to variables scan_index, scan_acquisition_time,
- * total_intensity, mass_values and intensity_values. The last two are lists 
- * of values with each value separated by a colon character :
- * 
+ *
+ * The following is an example, following the naming scheme of ANDI-MS. The
+ * columns will be mapped to variables scan_index, scan_acquisition_time,
+ * total_intensity, mass_values and intensity_values. The last two are lists of
+ * values with each value separated by a colon character :
+ *
  * Not all variables need to be present in a csv file.
- * 
- * scan_index   scan_acquisition_time   total_intensity mass_values intensity_values
- * 
+ *
+ * scan_index scan_acquisition_time total_intensity mass_values intensity_values
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 @ServiceProvider(service = IDataSource.class)
@@ -111,18 +111,18 @@ public class FsaTxtDataSource implements IDataSource {
 
         String dimname = element.getName();
 
-        if (this.pointDimensionVars.contains(vf.getVarname())) {
+        if (this.pointDimensionVars.contains(vf.getName())) {
             dimname = this.pointDimensionName;
             log.debug("Renaming dimension {} to {} for variable {}",
                     new Object[]{element.getName(), dimname,
-                        vf.getVarname()});
+                        vf.getName()});
         }
 
-        if (this.scanDimensionVars.contains(vf.getVarname())) {
+        if (this.scanDimensionVars.contains(vf.getName())) {
             dimname = this.scanDimensionName;
             log.debug("Renaming dimension {} to {} for variable {}",
                     new Object[]{element.getName(), dimname,
-                        vf.getVarname()});
+                        vf.getName()});
         }
 
         Dimension d = null;
@@ -251,7 +251,7 @@ public class FsaTxtDataSource implements IDataSource {
             try {
                 al.add(readStructure(iv));
             } catch (ResourceNotAvailableException rnae) {
-                log.error("Resource not available: {}",rnae.getLocalizedMessage());
+                log.error("Resource not available: {}", rnae.getLocalizedMessage());
             }
         }
         return al;

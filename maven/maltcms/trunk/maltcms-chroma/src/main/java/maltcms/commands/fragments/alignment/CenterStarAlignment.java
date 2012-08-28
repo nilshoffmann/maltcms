@@ -67,9 +67,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Implementation of the center star approximation for multiple alignment.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @RequiresVariables(names = {"var.minimizing_array_comp",
     "var.pairwise_distance_matrix", "var.pairwise_distance_names"})
@@ -78,7 +78,7 @@ import org.openide.util.lookup.ServiceProvider;
     "var.multiple_alignment_creator"})
 @Data
 @Slf4j
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class CenterStarAlignment extends AFragmentCommand {
 
     @Configurable(name = "var.pairwise_distance_matrix",
@@ -104,11 +104,15 @@ public class CenterStarAlignment extends AFragmentCommand {
     @Configurable
     private String centerSequence = "";
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return getClass().getName();
     }
-    
+
     /*
      * (non-Javadoc)
      *
@@ -154,7 +158,7 @@ public class CenterStarAlignment extends AFragmentCommand {
         log.info("Saving alignment files!");
         for (final IFileFragment iff : warpedFiles) {
             log.debug("Saving warped file {}", iff.getAbsolutePath());
-            log.debug("Source files {}, dimensions: {}", iff.getChild("source_files").getArray(),Arrays.deepToString(iff.getChild("source_files").getDimensions()));
+            log.debug("Source files {}, dimensions: {}", iff.getChild("source_files").getArray(), Arrays.deepToString(iff.getChild("source_files").getDimensions()));
             iff.save();
             iff.clearArrays();
         }
@@ -313,6 +317,10 @@ public class CenterStarAlignment extends AFragmentCommand {
         return centerSeq;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getDescription() {
         return "Creates a multiple alignment by selecting a reference chromatogram based on highest overall similarity or lowest overall distance of reference to other chromatograms.";
@@ -324,7 +332,6 @@ public class CenterStarAlignment extends AFragmentCommand {
 //    public String getMinimizingArrayCompVariableName() {
 //        return this.minimizingArrayCompVariableName;
 //    }
-
     private IFileFragment getOriginalFileFor(final IFileFragment iff) {
         // final List<IFileFragment> l = Factory.getInstance()
         // .getInputDataFactory().getInitialFiles();
@@ -369,7 +376,6 @@ public class CenterStarAlignment extends AFragmentCommand {
 //    public String getPairwiseDistanceMatrixVariableName() {
 //        return this.pairwiseDistanceMatrixVariableName;
 //    }
-
 //    /**
 //     * @return the pairwiseDistanceNamesVariableName
 //     */
@@ -382,6 +388,10 @@ public class CenterStarAlignment extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /**
+     *
+     * @return
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.ALIGNMENT;
@@ -393,7 +403,6 @@ public class CenterStarAlignment extends AFragmentCommand {
 //    public boolean isMinimizeDist() {
 //        return this.minimizeDist;
 //    }
-
     private List<IFileFragment> saveAlignment(final Class<?> creator,
             final TupleND<IFileFragment> t,
             final TupleND<IFileFragment> alignments, final String ticvar,
@@ -550,14 +559,14 @@ public class CenterStarAlignment extends AFragmentCommand {
             // log.info("lhs: {}, rhs: {}", lhs.getAbsolutePath(), rhs
             // .getAbsolutePath());
             if (lhsName.equals(refname)) {
-                log.info("Projecting {} to {} (lhs)", rhs.getName(),refname);
+                log.info("Projecting {} to {} (lhs)", rhs.getName(), refname);
                 FileFragment nrhs = new FileFragment(getWorkflow().
                         getOutputDirectory(this), rhs.getName());
                 nrhs.addSourceFile(rhs);
                 warped.add(nrhs);
                 repOnLHS.add(iff);
             } else if (refname.equals(rhsName)) {
-                log.info("Projecting {} to {} (rhs)", lhs.getName(),refname);
+                log.info("Projecting {} to {} (rhs)", lhs.getName(), refname);
                 FileFragment nlhs = new FileFragment(getWorkflow().
                         getOutputDirectory(this), lhs.getName());
                 nlhs.addSourceFile(lhs);
@@ -771,36 +780,31 @@ public class CenterStarAlignment extends AFragmentCommand {
         getWorkflow().append(dwr);
         warped.add(ifwarped);
     }
-
     /**
-     * @param minimizeDist
-     *            the minimizeDist to set
+     * @param minimizeDist the minimizeDist to set
      */
 //    public void setMinimizeDist(final boolean minimizeDist) {
 //        this.minimizeDist = minimizeDist;
 //    }
-
     /**
-     * @param minimizingArrayCompVariableName
-     *            the minimizingArrayCompVariableName to set
+     * @param minimizingArrayCompVariableName the
+     * minimizingArrayCompVariableName to set
      */
 //    public void setMinimizingArrayCompVariableName(
 //            final String minimizingArrayCompVariableName) {
 //        this.minimizingArrayCompVariableName = minimizingArrayCompVariableName;
 //    }
-
     /**
-     * @param pairwiseDistanceMatrixVariableName
-     *            the pairwiseDistanceMatrixVariableName to set
+     * @param pairwiseDistanceMatrixVariableName the
+     * pairwiseDistanceMatrixVariableName to set
      */
 //    public void setPairwiseDistanceMatrixVariableName(
 //            final String pairwiseDistanceMatrixVariableName) {
 //        this.pairwiseDistanceMatrixVariableName = pairwiseDistanceMatrixVariableName;
 //    }
-
     /**
-     * @param pairwiseDistanceNamesVariableName
-     *            the pairwiseDistanceNamesVariableName to set
+     * @param pairwiseDistanceNamesVariableName the
+     * pairwiseDistanceNamesVariableName to set
      */
 //    public void setPairwiseDistanceNamesVariableName(
 //            final String pairwiseDistanceNamesVariableName) {

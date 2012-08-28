@@ -45,7 +45,7 @@ public class Task implements ITask<ITaskResult> {
 
     private static final long serialVersionUID = 986719239076016L;
     private final List<String> commandLine;
-    private final HashMap<String,String> additionalEnvironment = new HashMap<String,String>();
+    private final HashMap<String, String> additionalEnvironment = new HashMap<String, String>();
     private final File workingDirectory;
     private final List<IPostProcessor> postProcessors;
     private final File outputDirectory;
@@ -83,16 +83,16 @@ public class Task implements ITask<ITaskResult> {
             throw new RuntimeException(
                     "Task finished with non-zero exit status: " + status + "\n Commandline: " + commandLine + ", working directory: " + workingDirectory);
         }
-        for(IPostProcessor postProcessor:postProcessors) {
+        for (IPostProcessor postProcessor : postProcessors) {
             postProcessor.process(this);
         }
         //one of the post processors may have removed the output directory
         //if not, return the correct workflow result output
-        if(outputDirectory.exists()) {
+        if (outputDirectory.exists()) {
             return new MaltcmsTaskResult(outputDirectory);
         }
         Logger.getLogger(Task.class.getName()).
-                log(Level.INFO,"Output directory for task "+getTaskId()+" was removed by post processor!");
+                log(Level.INFO, "Output directory for task " + getTaskId() + " was removed by post processor!");
         //otherwise return the singleton empty result
         return DefaultTaskResult.EMPTY;
     }

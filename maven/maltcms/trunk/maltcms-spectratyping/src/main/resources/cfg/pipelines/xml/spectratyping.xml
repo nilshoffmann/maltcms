@@ -27,17 +27,17 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <description>
-            This file defines elements of the default spectratyping pipeline.
+        This file defines elements of the default spectratyping pipeline.
     </description>
     <!-- a command pipeline consists a list of 
-     commands to be executed -->
+    commands to be executed -->
     <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
         <property name="checkCommandDependencies" value="true"/>
         <property name="commands">
             <list>
                 <ref bean="ticPeakFinder" />
                 <ref bean="pairwiseDistanceCalculator"/>
-<!--                <ref bean="spectraTypeComparison"/>-->
+                <!--                <ref bean="spectraTypeComparison"/>-->
             </list>
         </property>    
     </bean>

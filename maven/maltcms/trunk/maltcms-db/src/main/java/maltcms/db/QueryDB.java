@@ -55,8 +55,9 @@ public class QueryDB<T> {
     }
 
     /**
-     * Returns a QueryCallable built according to the arguments supplied to the 
+     * Returns a QueryCallable built according to the arguments supplied to the
      * constructor of this object.
+     *
      * @return
      */
     public QueryCallable<T> getCallable() {
@@ -68,9 +69,8 @@ public class QueryDB<T> {
 
     public Predicate<T> getDefaultPredicate() {
         Predicate<T> matchAll = new Predicate<T>() {
-
             /**
-             * 
+             *
              */
             private static final long serialVersionUID = -8580415202887162014L;
 
@@ -83,8 +83,10 @@ public class QueryDB<T> {
     }
 
     /**
-     * Use if you want to use a different set of Predicates than defined at construction time.
-     * Supplied Predicates will be passed on to QueryCallable, but will not be used as new defaults.
+     * Use if you want to use a different set of Predicates than defined at
+     * construction time. Supplied Predicates will be passed on to
+     * QueryCallable, but will not be used as new defaults.
+     *
      * @param c1
      * @param c2
      * @return
@@ -94,8 +96,9 @@ public class QueryDB<T> {
     }
 
     /**
-     * Submits the QueryCallable qf to the ExecutorService es and 
-     * returns a Future to retrieve results.
+     * Submits the QueryCallable qf to the ExecutorService es and returns a
+     * Future to retrieve results.
+     *
      * @param qc
      * @return
      */
@@ -104,8 +107,9 @@ public class QueryDB<T> {
     }
 
     /**
-     * Submits the QueryCallable constructed according to current
-     * settings and returns Future to retrieve results.
+     * Submits the QueryCallable constructed according to current settings and
+     * returns Future to retrieve results.
+     *
      * @return
      */
     public Future<ObjectSet<T>> invoke() {
@@ -114,6 +118,7 @@ public class QueryDB<T> {
 
     /**
      * Allows to set the predicate used for matching by this QueryDB object.
+     *
      * @param p
      */
     public void setPredicate(Predicate<T> p) {

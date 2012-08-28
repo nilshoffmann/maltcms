@@ -31,7 +31,7 @@
     </description>
     
     <!-- a command pipeline consists of a list of 
-     commands to be executed -->
+    commands to be executed -->
     <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
         <property name="checkCommandDependencies" value="true"/>
         <property name="commands">
@@ -42,7 +42,7 @@
                 <ref bean="defaultVarLoader" />
                 <ref bean="massFilter" />
                 <ref bean="ticHeatmapCoplotBeforeAlignment"/>
-<!--                <ref bean="eicHeatmapCoplotBeforeAlignment"/>-->
+                <!--                <ref bean="eicHeatmapCoplotBeforeAlignment"/>-->
                 <ref bean="denseArrayProducer" />
                 <ref bean="ticPeakFinder" />
                 <ref bean="peakCliqueAlignment" />
@@ -50,12 +50,12 @@
                 <ref bean="centerStarAlignment" />
                 <ref bean="chromatogramWarp" />
                 <ref bean="ticHeatmapCoplotAfterAlignment"/>
-<!--                <ref bean="eicHeatmapCoplotAfterAlignment"/>-->
+                <!--                <ref bean="eicHeatmapCoplotAfterAlignment"/>-->
                 <ref bean="andimsExporter" />
             </list>
         </property>    
     </bean>
-               <!-- commands -->
+    <!-- commands -->
                
     <!-- CSVAnchorReader, reads pre-defined alignment anchors -->
     <bean id="csvAnchorReader" class="maltcms.commands.fragments.io.CSVAnchorReader">
@@ -102,12 +102,12 @@
         <property name="epsilon" value="1.0"/>
         <property name="excludeMasses">
             <list>
-            <!-- <value>73</value> -->
-            <!-- <value>74</value> --> 
-            <!-- <value>75</value> --> 
-            <!-- <value>147</value> --> 
-            <!-- <value>148</value> --> 
-            <!-- <value>149</value> --> 
+                <!-- <value>73</value> -->
+                <!-- <value>74</value> --> 
+                <!-- <value>75</value> --> 
+                <!-- <value>147</value> --> 
+                <!-- <value>148</value> --> 
+                <!-- <value>149</value> --> 
             </list>
         </property>
     </bean>
@@ -116,12 +116,12 @@
     <bean id="denseArrayProducer" class="maltcms.commands.fragments.preprocessing.DenseArrayProducer">
         <property name="maskedMasses">
             <list>
-            <!-- <value>73</value> -->
-            <!-- <value>74</value> --> 
-            <!-- <value>75</value> --> 
-            <!-- <value>147</value> --> 
-            <!-- <value>148</value> --> 
-            <!-- <value>149</value> --> 
+                <!-- <value>73</value> -->
+                <!-- <value>74</value> --> 
+                <!-- <value>75</value> --> 
+                <!-- <value>147</value> --> 
+                <!-- <value>148</value> --> 
+                <!-- <value>149</value> --> 
             </list>
         </property> 
         <property name="invertMaskedMasses" value="false"/>  
@@ -148,7 +148,7 @@
         <property name="bandwidth" value="0.3"/>
         <property name="accuracy" value="1.0E-12"/>
         <property name="robustnessIterations" value="2"/>
-		<!-- set to < 1/10th of the number of scans in the chromatogram --> 
+        <!-- set to < 1/10th of the number of scans in the chromatogram --> 
         <property name="minimaWindow" value="100"/>
     </bean>
     
@@ -238,7 +238,7 @@
         <property name="peakAreaVariable" value="peak_area"/>
     </bean>
     
-<!--     PairwiseDistanceCalculator -->
+    <!--     PairwiseDistanceCalculator -->
     <bean id="pairwiseDistanceCalculator" class="maltcms.commands.fragments.cluster.PairwiseDistanceCalculator">
         <property name="pairsWithFirstElement" value="false"/> 
         <property name="workerFactory" ref="mziDtwWorkerFactory"/>
@@ -289,7 +289,7 @@
         <property name="centerSequence" value=""/>
     </bean>
     
-   <!--  ChromatogramWarp -->
+    <!--  ChromatogramWarp -->
     <bean id="chromatogramWarp" class="maltcms.commands.fragments.warp.ChromatogramWarp2">
         <property name="indexedVars">
             <list><!-- uncomment the following two to recalculate the mass spectra to the aligned time -->
@@ -300,7 +300,7 @@
         <property name="plainVars">
             <list>
                 <value>scan_acquisition_time</value>
-				<!-- uncomment the following line if you just want to have alignment corrected retention time -->
+                <!-- uncomment the following line if you just want to have alignment corrected retention time -->
                 <value>total_intensity</value>
             </list>
         </property>

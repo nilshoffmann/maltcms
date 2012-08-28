@@ -44,217 +44,200 @@ import cross.datastructures.tools.EvalTools;
 public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
         IWorkflowElement {
 
-	/**
-	 * Static factory method which reconstructs a PairwiseDistances object from
-	 * the given FileFragment.
-	 * 
-	 * @param pwd
-	 *            the FileFragment from which to construct PairwiseDistances
-	 * @return
-	 */
-	public static PairwiseDistances fromFileFragment(final IFileFragment pwdFrag) {
-		final PairwiseDistances pwd = new PairwiseDistances();
-		pwd.pwDistFileFragment = pwdFrag;
-		return pwd;
-	}
+    /**
+     * Static factory method which reconstructs a PairwiseDistances object from
+     * the given FileFragment.
+     *
+     * @param pwd the FileFragment from which to construct PairwiseDistances
+     * @return
+     */
+    public static PairwiseDistances fromFileFragment(final IFileFragment pwdFrag) {
+        final PairwiseDistances pwd = new PairwiseDistances();
+        pwd.pwDistFileFragment = pwdFrag;
+        return pwd;
+    }
+    private IFileFragment pwDistFileFragment;
+    private ArrayDouble.D2 pairwiseDistances;
+    private String pwDistMatrixVariableName = "pairwise_distance_matrix";
+    private String pwDistVariableName = "pairwise_distance_names";
+    private String pwDistAlignmentsVarName = "pairwise_distance_alignment_names";
+    private String name = "pairwise_distances.cdf";
+    private boolean minimize;
+    private String minArrayComp = "minimizing_array_comp";
+    private ucar.ma2.ArrayChar.D2 names;
+    private TupleND<IFileFragment> alignments;
+    private IWorkflow iw;
 
-	private IFileFragment pwDistFileFragment;
+    @Override
+    public void configure(final Configuration cfg) {
+        this.pwDistMatrixVariableName = cfg.getString(
+                "var.pairwise_distance_matrix", "pairwise_distance_matrix");
+        this.pwDistVariableName = cfg.getString("var.pairwise_distance_names",
+                "pairwise_distance_names");
+        this.pwDistAlignmentsVarName = cfg.getString(
+                "var.pairwise_distance_alignment_names",
+                "pairwise_distance_alignment_names");
+        this.name = cfg.getString("pairwise_distances_file_name",
+                "pairwise_distances.cdf");
 
-	private ArrayDouble.D2 pairwiseDistances;
+    }
 
-	private String pwDistMatrixVariableName = "pairwise_distance_matrix";
+    public TupleND<IFileFragment> getAlignments() {
+        return this.alignments;
+    }
 
-	private String pwDistVariableName = "pairwise_distance_names";
+    public IWorkflow getWorkflow() {
+        return this.iw;
+    }
 
-	private String pwDistAlignmentsVarName = "pairwise_distance_alignment_names";
+    /**
+     * @return the minArrayComp
+     */
+    public String getMinArrayComp() {
+        return this.minArrayComp;
+    }
 
-	private String name = "pairwise_distances.cdf";
+    /**
+     * @return the pairwiseDistances
+     */
+    public ArrayDouble.D2 getPairwiseDistances() {
+        return this.pairwiseDistances;
+    }
 
-	private boolean minimize;
+    public String getPwDistAlignmentsVarName() {
+        return this.pwDistAlignmentsVarName;
+    }
 
-	private String minArrayComp = "minimizing_array_comp";
+    /**
+     * @return the pwDistMatrixVariableName
+     */
+    public String getPwDistMatrixVariableName() {
+        return this.pwDistMatrixVariableName;
+    }
 
-	private ucar.ma2.ArrayChar.D2 names;
+    /**
+     * @return the pwDistVariableName
+     */
+    public String getPwDistVariableName() {
+        return this.pwDistVariableName;
+    }
 
-	private TupleND<IFileFragment> alignments;
+    /**
+     * @return the minimize
+     */
+    public boolean isMinimize() {
+        return this.minimize;
+    }
 
-	private IWorkflow iw;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * maltcms.experimental.datastructures.IFileFragmentModifier#decorate(cross
+     * .datastructures.fragments.IFileFragment)
+     */
+    @Override
+    public void modify(IFileFragment f) {
+        final IVariableFragment pwd = new VariableFragment(f,
+                this.pwDistMatrixVariableName);
+        pwd.setArray(this.pairwiseDistances);
+        final IVariableFragment na = new VariableFragment(f,
+                this.pwDistVariableName);
+        na.setArray(this.names);
+        final IVariableFragment minimizing = new VariableFragment(f,
+                this.minArrayComp);
+        final ArrayInt.D0 ab = new ArrayInt.D0();
+        ab.set(this.minimize ? 1 : 0);
+        minimizing.setArray(ab);
+        final IVariableFragment alignments = new VariableFragment(f,
+                this.pwDistAlignmentsVarName);
+        int maxlength = 128;
+        for (final IFileFragment iff : this.alignments) {
+            if (iff.getAbsolutePath().length() > maxlength) {
+                maxlength = iff.getAbsolutePath().length();
+            }
+        }
+        final ArrayChar.D2 anames = cross.datastructures.tools.ArrayTools.createStringArray(
+                this.alignments.getSize(), maxlength);
+        int i = 0;
+        for (final IFileFragment iff : this.alignments) {
+            anames.setString(i++, iff.getAbsolutePath());
+        }
+        alignments.setArray(anames);
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		this.pwDistMatrixVariableName = cfg.getString(
-		        "var.pairwise_distance_matrix", "pairwise_distance_matrix");
-		this.pwDistVariableName = cfg.getString("var.pairwise_distance_names",
-		        "pairwise_distance_names");
-		this.pwDistAlignmentsVarName = cfg.getString(
-		        "var.pairwise_distance_alignment_names",
-		        "pairwise_distance_alignment_names");
-		this.name = cfg.getString("pairwise_distances_file_name",
-		        "pairwise_distances.cdf");
+    public void setAlignments(final TupleND<IFileFragment> t) {
+        this.alignments = t;
+    }
 
-	}
+    public void setWorkflow(final IWorkflow iw1) {
+        this.iw = iw1;
+    }
 
-	public TupleND<IFileFragment> getAlignments() {
-		return this.alignments;
-	}
+    /**
+     * @param minArrayComp the minArrayComp to set
+     */
+    public void setMinArrayComp(final String minArrayComp) {
+        this.minArrayComp = minArrayComp;
+    }
 
-	public IWorkflow getWorkflow() {
-		return this.iw;
-	}
+    /**
+     * @param minimize the minimize to set
+     */
+    public void setMinimize(final boolean minimize) {
+        this.minimize = minimize;
+    }
 
-	/**
-	 * @return the minArrayComp
-	 */
-	public String getMinArrayComp() {
-		return this.minArrayComp;
-	}
+    public void setName(final String name1) {
+        this.name = name1;
+    }
 
-	/**
-	 * @return the pairwiseDistances
-	 */
-	public ArrayDouble.D2 getPairwiseDistances() {
-		return this.pairwiseDistances;
-	}
+    public void setNames(final ucar.ma2.ArrayChar.D2 names1) {
+        EvalTools.notNull(names1, this);
+        this.names = names1;
+    }
 
-	public String getPwDistAlignmentsVarName() {
-		return this.pwDistAlignmentsVarName;
-	}
+    public void setPairwiseDistances(final D2 pairwiseDistances1) {
+        EvalTools.notNull(pairwiseDistances1, this);
+        this.pairwiseDistances = pairwiseDistances1;
+    }
 
-	/**
-	 * @return the pwDistMatrixVariableName
-	 */
-	public String getPwDistMatrixVariableName() {
-		return this.pwDistMatrixVariableName;
-	}
+    public void setPwDistAlignmentsVarName(final String pwDistAlignmentsVarName) {
+        this.pwDistAlignmentsVarName = pwDistAlignmentsVarName;
+    }
 
-	/**
-	 * @return the pwDistVariableName
-	 */
-	public String getPwDistVariableName() {
-		return this.pwDistVariableName;
-	}
+    /**
+     * @param pwDistMatrixVariableName the pwDistMatrixVariableName to set
+     */
+    public void setPwDistMatrixVariableName(
+            final String pwDistMatrixVariableName) {
+        this.pwDistMatrixVariableName = pwDistMatrixVariableName;
+    }
 
-	/**
-	 * @return the minimize
-	 */
-	public boolean isMinimize() {
-		return this.minimize;
-	}
+    /**
+     * @param pwDistVariableName the pwDistVariableName to set
+     */
+    public void setPwDistVariableName(final String pwDistVariableName) {
+        this.pwDistVariableName = pwDistVariableName;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maltcms.experimental.datastructures.IFileFragmentModifier#decorate(cross
-	 * .datastructures.fragments.IFileFragment)
-	 */
-	@Override
-	public void modify(IFileFragment f) {
-		final IVariableFragment pwd = new VariableFragment(f,
-		        this.pwDistMatrixVariableName);
-		pwd.setArray(this.pairwiseDistances);
-		final IVariableFragment na = new VariableFragment(f,
-		        this.pwDistVariableName);
-		na.setArray(this.names);
-		final IVariableFragment minimizing = new VariableFragment(f,
-		        this.minArrayComp);
-		final ArrayInt.D0 ab = new ArrayInt.D0();
-		ab.set(this.minimize ? 1 : 0);
-		minimizing.setArray(ab);
-		final IVariableFragment alignments = new VariableFragment(f,
-		        this.pwDistAlignmentsVarName);
-		int maxlength = 128;
-		for (final IFileFragment iff : this.alignments) {
-			if (iff.getAbsolutePath().length() > maxlength) {
-				maxlength = iff.getAbsolutePath().length();
-			}
-		}
-		final ArrayChar.D2 anames = cross.datastructures.tools.ArrayTools.createStringArray(
-		        this.alignments.getSize(), maxlength);
-		int i = 0;
-		for (final IFileFragment iff : this.alignments) {
-			anames.setString(i++, iff.getAbsolutePath());
-		}
-		alignments.setArray(anames);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
+     */
+    @Override
+    public WorkflowSlot getWorkflowSlot() {
+        return WorkflowSlot.CLUSTERING;
+    }
 
-	public void setAlignments(final TupleND<IFileFragment> t) {
-		this.alignments = t;
-	}
-
-	public void setWorkflow(final IWorkflow iw1) {
-		this.iw = iw1;
-	}
-
-	/**
-	 * @param minArrayComp
-	 *            the minArrayComp to set
-	 */
-	public void setMinArrayComp(final String minArrayComp) {
-		this.minArrayComp = minArrayComp;
-	}
-
-	/**
-	 * @param minimize
-	 *            the minimize to set
-	 */
-	public void setMinimize(final boolean minimize) {
-		this.minimize = minimize;
-	}
-
-	public void setName(final String name1) {
-		this.name = name1;
-	}
-
-	public void setNames(final ucar.ma2.ArrayChar.D2 names1) {
-		EvalTools.notNull(names1, this);
-		this.names = names1;
-	}
-
-	public void setPairwiseDistances(final D2 pairwiseDistances1) {
-		EvalTools.notNull(pairwiseDistances1, this);
-		this.pairwiseDistances = pairwiseDistances1;
-	}
-
-	public void setPwDistAlignmentsVarName(final String pwDistAlignmentsVarName) {
-		this.pwDistAlignmentsVarName = pwDistAlignmentsVarName;
-	}
-
-	/**
-	 * @param pwDistMatrixVariableName
-	 *            the pwDistMatrixVariableName to set
-	 */
-	public void setPwDistMatrixVariableName(
-	        final String pwDistMatrixVariableName) {
-		this.pwDistMatrixVariableName = pwDistMatrixVariableName;
-	}
-
-	/**
-	 * @param pwDistVariableName
-	 *            the pwDistVariableName to set
-	 */
-	public void setPwDistVariableName(final String pwDistVariableName) {
-		this.pwDistVariableName = pwDistVariableName;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-	 */
-	@Override
-	public WorkflowSlot getWorkflowSlot() {
-		return WorkflowSlot.CLUSTERING;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see cross.io.xml.IXMLSerializable#appendXML(org.jdom.Element)
-	 */
-	@Override
-	public void appendXML(Element e) {
-		throw new NotImplementedException();
-	}
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cross.io.xml.IXMLSerializable#appendXML(org.jdom.Element)
+     */
+    @Override
+    public void appendXML(Element e) {
+        throw new NotImplementedException();
+    }
 }

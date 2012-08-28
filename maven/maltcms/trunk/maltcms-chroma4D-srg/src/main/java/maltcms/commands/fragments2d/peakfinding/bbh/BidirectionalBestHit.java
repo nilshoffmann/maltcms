@@ -41,7 +41,7 @@ import maltcms.math.functions.similarities.ArrayCos;
 
 /**
  * Will compute a list of bidirectional best hits.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -56,6 +56,10 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
     private IScalarArraySimilarity similarity;
     private final List<Map<Integer, Boolean>> doneList;
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return getClass().getName();
@@ -74,9 +78,8 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
 
     /**
      * Adds a peak list to a internal peak list.
-     * 
-     * @param peakList
-     *            peak list
+     *
+     * @param peakList peak list
      */
     public void addPeakLists(final List<Peak2D> peakList) {
         this.peaklists.add(peakList);
@@ -98,6 +101,12 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
 //                this.distClass, IArrayDoubleComp.class);
     }
 
+    /**
+     *
+     * @param p
+     * @param np
+     * @return
+     */
     @Override
     public double sim(Peak2D p, Peak2D np) {
         double sim = Double.NEGATIVE_INFINITY;
@@ -117,13 +126,10 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
 
     /**
      * Will find the best hit in list of peak p.
-     * 
-     * @param p
-     *            peak
-     * @param list
-     *            list
-     * @param done
-     *            donelist to skip calculation
+     *
+     * @param p peak
+     * @param list list
+     * @param done donelist to skip calculation
      * @return <code>-1</code> if no one was found
      */
     private int findBidiBestHist(final Peak2D p, final List<Peak2D> list,
@@ -157,9 +163,9 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
 
     /**
      * Getter.
-     * 
+     *
      * @return a list of all bidirectional best hits. List contains the indices
-     *         of peak in the peaklist.
+     * of peak in the peaklist.
      */
     @Override
     public List<List<Point>> getBidiBestHitList(List<List<Peak2D>> peaklists) {
@@ -229,13 +235,16 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
 
     /**
      * Getter.
-     * 
+     *
      * @return peak list
      */
     public List<List<Peak2D>> getPeakLists() {
         return this.peaklists;
     }
 
+    /**
+     *
+     */
     @Override
     public void clear() {
     }

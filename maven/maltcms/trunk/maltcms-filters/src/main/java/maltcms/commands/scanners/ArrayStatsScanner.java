@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.commands.ICommand;
 import cross.datastructures.StatsMap;
@@ -39,11 +38,11 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Scans a number of arrays for statistics, such as mean and variance, storing
  * results for each array in a HashMap indexed by Elements of
- * 
+ *
  * @link{cross.Vars} .
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
@@ -222,16 +221,14 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
     }
 
     /**
-     * @param ignoreNegativeInfinity
-     *            the ignoreNegativeInfinity to set
+     * @param ignoreNegativeInfinity the ignoreNegativeInfinity to set
      */
     public void setIgnoreNegativeInfinity(final boolean ignoreNegativeInfinity) {
         this.ignoreNegativeInfinity = ignoreNegativeInfinity;
     }
 
     /**
-     * @param ignorePositiveInfinity
-     *            the ignorePositiveInfinity to set
+     * @param ignorePositiveInfinity the ignorePositiveInfinity to set
      */
     public void setIgnorePositiveInfinity(final boolean ignorePositiveInfinity) {
         this.ignorePositiveInfinity = ignorePositiveInfinity;

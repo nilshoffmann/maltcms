@@ -31,14 +31,12 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Description of a supplemental data array
- * 
- * <p>
- * Java class for supDescType complex type.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
+ *
+ * <p> Java class for supDescType complex type.
+ *
+ * <p> The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name=&quot;supDescType&quot;&gt;
  *   &lt;complexContent&gt;
@@ -52,83 +50,78 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "supDescType", propOrder = { "supDataDesc", "supSourceFile" })
+@XmlType(name = "supDescType", propOrder = {"supDataDesc", "supSourceFile"})
 public class SupDescType {
 
-	protected DescriptionType supDataDesc;
-	protected List<SourceFileType> supSourceFile;
-	@XmlAttribute(required = true)
-	protected int supDataArrayRef;
+    protected DescriptionType supDataDesc;
+    protected List<SourceFileType> supSourceFile;
+    @XmlAttribute(required = true)
+    protected int supDataArrayRef;
 
-	/**
-	 * Gets the value of the supDataArrayRef property.
-	 * 
-	 */
-	public int getSupDataArrayRef() {
-		return this.supDataArrayRef;
-	}
+    /**
+     * Gets the value of the supDataArrayRef property.
+     *
+     */
+    public int getSupDataArrayRef() {
+        return this.supDataArrayRef;
+    }
 
-	/**
-	 * Gets the value of the supDataDesc property.
-	 * 
-	 * @return possible object is {@link DescriptionType }
-	 * 
-	 */
-	public DescriptionType getSupDataDesc() {
-		return this.supDataDesc;
-	}
+    /**
+     * Gets the value of the supDataDesc property.
+     *
+     * @return possible object is {@link DescriptionType }
+     *
+     */
+    public DescriptionType getSupDataDesc() {
+        return this.supDataDesc;
+    }
 
-	/**
-	 * Gets the value of the supSourceFile property.
-	 * 
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a
-	 * snapshot. Therefore any modification you make to the returned list will
-	 * be present inside the JAXB object. This is why there is not a
-	 * <CODE>set</CODE> method for the supSourceFile property.
-	 * 
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getSupSourceFile().add(newItem);
-	 * </pre>
-	 * 
-	 * 
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list
+    /**
+     * Gets the value of the supSourceFile property.
+     *
+     * <p> This accessor method returns a reference to the live list, not a
+     * snapshot. Therefore any modification you make to the returned list will
+     * be present inside the JAXB object. This is why there is not a
+     * <CODE>set</CODE> method for the supSourceFile property.
+     *
+     * <p> For example, to add a new item, do as follows:
+     *
+     * <pre>
+     * getSupSourceFile().add(newItem);
+     * </pre>
+     *
+     *
+     * <p> Objects of the following type(s) are allowed in the list
 	 * {@link SourceFileType }
-	 * 
-	 * 
-	 */
-	public List<SourceFileType> getSupSourceFile() {
-		if (this.supSourceFile == null) {
-			this.supSourceFile = new ArrayList<SourceFileType>();
-		}
-		return this.supSourceFile;
-	}
+     *
+     *
+     */
+    public List<SourceFileType> getSupSourceFile() {
+        if (this.supSourceFile == null) {
+            this.supSourceFile = new ArrayList<SourceFileType>();
+        }
+        return this.supSourceFile;
+    }
 
-	/**
-	 * Sets the value of the supDataArrayRef property.
-	 * 
-	 */
-	public void setSupDataArrayRef(final int value) {
-		this.supDataArrayRef = value;
-	}
+    /**
+     * Sets the value of the supDataArrayRef property.
+     *
+     */
+    public void setSupDataArrayRef(final int value) {
+        this.supDataArrayRef = value;
+    }
 
-	/**
-	 * Sets the value of the supDataDesc property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link DescriptionType }
-	 * 
-	 */
-	public void setSupDataDesc(final DescriptionType value) {
-		this.supDataDesc = value;
-	}
-
+    /**
+     * Sets the value of the supDataDesc property.
+     *
+     * @param value allowed object is {@link DescriptionType }
+     *
+     */
+    public void setSupDataDesc(final DescriptionType value) {
+        this.supDataDesc = value;
+    }
 }

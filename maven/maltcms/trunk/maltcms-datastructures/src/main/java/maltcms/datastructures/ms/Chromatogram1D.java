@@ -22,7 +22,6 @@
 package maltcms.datastructures.ms;
 
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.CachedList;
 import cross.datastructures.fragments.IFileFragment;
@@ -33,16 +32,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 
 /**
  * Concrete Implementation of a 1-dimensional chromatogram.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
+@Slf4j
 public class Chromatogram1D implements IChromatogram1D {
 
     private IFileFragment parent;
@@ -115,8 +116,7 @@ public class Chromatogram1D implements IChromatogram1D {
     }
 
     /**
-     * @param scan
-     *            scan index to load
+     * @param scan scan index to load
      */
     @Override
     public Scan1D getScan(final int scan) {
@@ -144,7 +144,6 @@ public class Chromatogram1D implements IChromatogram1D {
     public Iterator<IScan1D> iterator() {
 
         final Iterator<IScan1D> iter = new Iterator<IScan1D>() {
-
             private int currentPos = 0;
 
             @Override
@@ -201,7 +200,7 @@ public class Chromatogram1D implements IChromatogram1D {
 
         if (idx
                 >= 0) {// exact hit
-            Logging.getLogger(this).info("sat {}, scan_index {}",
+            log.info("sat {}, scan_index {}",
                     scan_acquisition_time, idx);
             return idx;
         } else {// imprecise hit, find closest element
@@ -209,11 +208,11 @@ public class Chromatogram1D implements IChromatogram1D {
             double previous = d[Math.max(0, (-idx))];
             if (Math.abs(scan_acquisition_time - previous) < Math.abs(
                     scan_acquisition_time - current)) {
-                Logging.getLogger(this).info("sat {}, scan_index {}",
+                log.info("sat {}, scan_index {}",
                         scan_acquisition_time, (-idx) + 1);
                 return (-idx) + 1;
             } else {
-                Logging.getLogger(this).info("sat {}, scan_index {}",
+                log.info("sat {}, scan_index {}",
                         scan_acquisition_time, -idx);
                 return (-idx);
             }

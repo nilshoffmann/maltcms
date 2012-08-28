@@ -62,7 +62,7 @@ public class PeakPositionsResultSet {
     public Array getCorrectedTIC() {
         return correctedTIC;
     }
-    
+
     public PolynomialSplineFunction getBaselineEstimator() {
         return baselineEstimator;
     }

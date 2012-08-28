@@ -35,63 +35,58 @@ import cross.datastructures.tuple.Tuple2D;
  * This feature vector keeps direct copies of mass and intensity values, as
  * opposed to DefaultBinnedMSFeatureVector, which requests them possibly from a
  * CachedList backed implementation.
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
 public class FastBinnedMSFeatureVector implements IFeatureVector {
 
-	/**
-     * 
+    /**
+     *
      */
-	private static final long serialVersionUID = 2026476569387259118L;
+    private static final long serialVersionUID = 2026476569387259118L;
+    private final Array binnedMasses;
+    private final Array binnedIntens;
+    private final ArrayDouble.D0 sat;
+    private final ArrayDouble.D0 tic;
 
-	private final Array binnedMasses;
+    public FastBinnedMSFeatureVector(IFileFragment iff, int i) {// ArrayDouble.D0
+        // tic,
+        // ArrayDouble.D0
+        // scanAcquisition,
+        // Array
+        // binnedMasses,
+        // Array
+        // binnedIntens)
+        // {
+        Tuple2D<Array, Array> t = MaltcmsTools.getBinnedMS(iff, i);
+        ArrayDouble.D0 sata = new ArrayDouble.D0();
+        sata.set(MaltcmsTools.getScanAcquisitionTime(iff, i));
+        ArrayDouble.D0 tica = new ArrayDouble.D0();
+        tica.set(MaltcmsTools.getTIC(iff, i));
+        this.tic = tica;
+        this.sat = sata;
+        this.binnedMasses = t.getFirst();
+        this.binnedIntens = t.getSecond();
+    }
 
-	private final Array binnedIntens;
+    @Override
+    public Array getFeature(String string) {
+        if (string.equals("binned_mass_values")) {
+            return this.binnedMasses;
+        } else if (string.equals("binned_intensity_values")) {
+            return this.binnedIntens;
+        } else if (string.equals("total_intensity")) {
+            return this.tic;
+        } else if (string.equals("scan_acquisition_time")) {
+            return this.sat;
+        }
+        throw new IllegalArgumentException("Unknown feature name: " + string);
 
-	private final ArrayDouble.D0 sat;
+    }
 
-	private final ArrayDouble.D0 tic;
-
-	public FastBinnedMSFeatureVector(IFileFragment iff, int i) {// ArrayDouble.D0
-		// tic,
-		// ArrayDouble.D0
-		// scanAcquisition,
-		// Array
-		// binnedMasses,
-		// Array
-		// binnedIntens)
-		// {
-		Tuple2D<Array, Array> t = MaltcmsTools.getBinnedMS(iff, i);
-		ArrayDouble.D0 sata = new ArrayDouble.D0();
-		sata.set(MaltcmsTools.getScanAcquisitionTime(iff, i));
-		ArrayDouble.D0 tica = new ArrayDouble.D0();
-		tica.set(MaltcmsTools.getTIC(iff, i));
-		this.tic = tica;
-		this.sat = sata;
-		this.binnedMasses = t.getFirst();
-		this.binnedIntens = t.getSecond();
-	}
-
-	@Override
-	public Array getFeature(String string) {
-		if (string.equals("binned_mass_values")) {
-			return this.binnedMasses;
-		} else if (string.equals("binned_intensity_values")) {
-			return this.binnedIntens;
-		} else if (string.equals("total_intensity")) {
-			return this.tic;
-		} else if (string.equals("scan_acquisition_time")) {
-			return this.sat;
-		}
-		throw new IllegalArgumentException("Unknown feature name: " + string);
-
-	}
-
-	@Override
-	public List<String> getFeatureNames() {
-		return Arrays.asList("binned_mass_values", "binned_intensity_values",
-		        "total_intensity", "scan_acquisition_time");
-	}
-
+    @Override
+    public List<String> getFeatureNames() {
+        return Arrays.asList("binned_mass_values", "binned_intensity_values",
+                "total_intensity", "scan_acquisition_time");
+    }
 }

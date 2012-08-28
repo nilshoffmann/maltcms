@@ -23,14 +23,13 @@ package maltcms.datastructures.ms;
 
 /**
  * Interface representing an experiment containing a 1-dimensional chromatogram.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IExperiment1D extends IExperiment {
 
-	public IChromatogram1D getChromatogram();
+    public IChromatogram1D getChromatogram();
 
-	public void setChromatogram(IChromatogram1D c);
-
+    public void setChromatogram(IChromatogram1D c);
 }

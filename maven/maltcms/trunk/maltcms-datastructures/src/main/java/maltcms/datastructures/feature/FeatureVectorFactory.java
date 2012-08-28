@@ -35,106 +35,104 @@ import maltcms.datastructures.ms.IScan1D;
 
 /**
  * Implementation of a Factory for some common FeatureVector types.
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
 public class FeatureVectorFactory {
 
-	private final static FeatureVectorFactory fvf = new FeatureVectorFactory();
+    private final static FeatureVectorFactory fvf = new FeatureVectorFactory();
 
-	private FeatureVectorFactory() {
+    private FeatureVectorFactory() {
+    }
 
-	}
+    public static FeatureVectorFactory getInstance() {
+        return FeatureVectorFactory.fvf;
+    }
 
-	public static FeatureVectorFactory getInstance() {
-		return FeatureVectorFactory.fvf;
-	}
+    public List<IFeatureVector> createMSFeatureVectorList(IFileFragment iff) {
+        List<IFeatureVector> l = new ArrayList<IFeatureVector>();
+        Chromatogram1D c = new Chromatogram1D(iff);
+        for (IScan1D s : c) {
+            l.add(s);
+        }
+        return l;
+    }
 
-	public List<IFeatureVector> createMSFeatureVectorList(IFileFragment iff) {
-		List<IFeatureVector> l = new ArrayList<IFeatureVector>();
-		Chromatogram1D c = new Chromatogram1D(iff);
-		for (IScan1D s : c) {
-			l.add(s);
-		}
-		return l;
-	}
-
-	public List<IFeatureVector> createBinnedMSFeatureVectorList(
-	        IFileFragment iff, int start, int stop, boolean useFastFeatureVector) {
-		List<IFeatureVector> l = new ArrayList<IFeatureVector>();
-		int ns = Math.min(stop, MaltcmsTools.getNumberOfBinnedScans(iff));
+    public List<IFeatureVector> createBinnedMSFeatureVectorList(
+            IFileFragment iff, int start, int stop, boolean useFastFeatureVector) {
+        List<IFeatureVector> l = new ArrayList<IFeatureVector>();
+        int ns = Math.min(stop, MaltcmsTools.getNumberOfBinnedScans(iff));
 //		System.out.println("Reading from " + start + " to " + stop);
-		if (useFastFeatureVector) {
-			for (int i = start; i < ns; i++) {
+        if (useFastFeatureVector) {
+            for (int i = start; i < ns; i++) {
 //				System.out.println("Reading scan " + i);
-				IFeatureVector fbmf;
-				fbmf = new FastBinnedMSFeatureVector(iff, i);
-				l.add(fbmf);
-			}
-		} else {
-			Tuple2D<List<Array>, List<Array>> t = MaltcmsTools
-			        .getBinnedMZIs(iff);
-			for (int i = start; i < ns; i++) {
+                IFeatureVector fbmf;
+                fbmf = new FastBinnedMSFeatureVector(iff, i);
+                l.add(fbmf);
+            }
+        } else {
+            Tuple2D<List<Array>, List<Array>> t = MaltcmsTools
+                    .getBinnedMZIs(iff);
+            for (int i = start; i < ns; i++) {
 //				System.out.println("Reading scan " + i);
-				IFeatureVector fbmf;
-				fbmf = new DefaultBinnedMSFeatureVector(iff, i, t);
-				l.add(fbmf);
-			}
-		}
+                IFeatureVector fbmf;
+                fbmf = new DefaultBinnedMSFeatureVector(iff, i, t);
+                l.add(fbmf);
+            }
+        }
 
-		return l;
-	}
+        return l;
+    }
 
-	public List<IFeatureVector> createBinnedMSFeatureVectorList(
-	        IFileFragment iff, boolean useFastFeatureVector) {
-		int ns = MaltcmsTools.getNumberOfBinnedScans(iff);
-		return createBinnedMSFeatureVectorList(iff, 0, ns, useFastFeatureVector);
-	}
+    public List<IFeatureVector> createBinnedMSFeatureVectorList(
+            IFileFragment iff, boolean useFastFeatureVector) {
+        int ns = MaltcmsTools.getNumberOfBinnedScans(iff);
+        return createBinnedMSFeatureVectorList(iff, 0, ns, useFastFeatureVector);
+    }
 
-	public List<IFeatureVector> createFeatureVectorList(List<Array> la) {
-		List<IFeatureVector> l = new ArrayList<IFeatureVector>();
-		int i = 0;
-		for (Array a : la) {
-			DefaultFeatureVector dfv = new DefaultFeatureVector();
-			dfv.addFeature("FEATURE" + i, a);
-			l.add(dfv);
-		}
-		return l;
-	}
+    public List<IFeatureVector> createFeatureVectorList(List<Array> la) {
+        List<IFeatureVector> l = new ArrayList<IFeatureVector>();
+        int i = 0;
+        for (Array a : la) {
+            DefaultFeatureVector dfv = new DefaultFeatureVector();
+            dfv.addFeature("FEATURE" + i, a);
+            l.add(dfv);
+        }
+        return l;
+    }
 
-	public DefaultFeatureVector createFeatureVector(Array a, String featureName) {
-		return addFeatureToFeatureVector(null, a, featureName);
-	}
+    public DefaultFeatureVector createFeatureVector(Array a, String featureName) {
+        return addFeatureToFeatureVector(null, a, featureName);
+    }
 
-	public DefaultFeatureVector addFeatureToFeatureVector(
-	        DefaultFeatureVector ifv, Array a, String featureName) {
-		DefaultFeatureVector dfv = ifv;
-		if (ifv == null) {
-			dfv = new DefaultFeatureVector();
-		}
-		dfv.addFeature(featureName, a);
-		return dfv;
-	}
+    public DefaultFeatureVector addFeatureToFeatureVector(
+            DefaultFeatureVector ifv, Array a, String featureName) {
+        DefaultFeatureVector dfv = ifv;
+        if (ifv == null) {
+            dfv = new DefaultFeatureVector();
+        }
+        dfv.addFeature(featureName, a);
+        return dfv;
+    }
 
-	public List<DefaultFeatureVector> addFeaturesToFeatureVectorList(
-	        List<DefaultFeatureVector> l, List<Array> la, String featureName) {
-		EvalTools.eqI(l.size(), la.size(), this);
-		int i = 0;
-		for (Array a : la) {
-			DefaultFeatureVector dfv = l.get(i++);
-			addFeatureToFeatureVector(dfv, a, featureName);
-		}
-		return l;
-	}
+    public List<DefaultFeatureVector> addFeaturesToFeatureVectorList(
+            List<DefaultFeatureVector> l, List<Array> la, String featureName) {
+        EvalTools.eqI(l.size(), la.size(), this);
+        int i = 0;
+        for (Array a : la) {
+            DefaultFeatureVector dfv = l.get(i++);
+            addFeatureToFeatureVector(dfv, a, featureName);
+        }
+        return l;
+    }
 
-	public List<IFeatureVector> createFeatureVectorList(List<Array> la,
-	        String featureName) {
-		List<IFeatureVector> l = new ArrayList<IFeatureVector>();
-		for (Array a : la) {
-			DefaultFeatureVector dfv = createFeatureVector(a, featureName);
-			l.add(dfv);
-		}
-		return l;
-	}
-
+    public List<IFeatureVector> createFeatureVectorList(List<Array> la,
+            String featureName) {
+        List<IFeatureVector> l = new ArrayList<IFeatureVector>();
+        for (Array a : la) {
+            DefaultFeatureVector dfv = createFeatureVector(a, featureName);
+            l.add(dfv);
+        }
+        return l;
+    }
 }

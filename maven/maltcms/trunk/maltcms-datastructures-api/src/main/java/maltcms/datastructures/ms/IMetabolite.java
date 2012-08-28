@@ -27,9 +27,9 @@ import cross.datastructures.tuple.Tuple2D;
 
 /**
  * Interface representing a Metabolite.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IMetabolite extends IRetentionInfo {
 
@@ -52,7 +52,7 @@ public interface IMetabolite extends IRetentionInfo {
     public double getMinMass();
 
     public int getMW();
-    
+
     public double getMw();
 
     public String getShortName();
@@ -78,7 +78,7 @@ public interface IMetabolite extends IRetentionInfo {
     public void setMinMass(double m);
 
     public void setMW(int mw);
-    
+
     public void setMw(double mw);
 
     public void setShortName(String sname);

@@ -29,14 +29,12 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Description of the source file, including location and type.
- * 
- * <p>
- * Java class for sourceFileType complex type.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
+ *
+ * <p> Java class for sourceFileType complex type.
+ *
+ * <p> The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name=&quot;sourceFileType&quot;&gt;
  *   &lt;complexContent&gt;
@@ -50,82 +48,78 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "sourceFileType", propOrder = { "nameOfFile", "pathToFile",
-        "fileType" })
+@XmlType(name = "sourceFileType", propOrder = {"nameOfFile", "pathToFile",
+    "fileType"})
 public class SourceFileType {
 
-	@XmlElement(required = true)
-	protected String nameOfFile;
-	@XmlElement(required = true)
-	@XmlSchemaType(name = "anyURI")
-	protected String pathToFile;
-	protected String fileType;
+    @XmlElement(required = true)
+    protected String nameOfFile;
+    @XmlElement(required = true)
+    @XmlSchemaType(name = "anyURI")
+    protected String pathToFile;
+    protected String fileType;
 
-	/**
-	 * Gets the value of the fileType property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getFileType() {
-		return this.fileType;
-	}
+    /**
+     * Gets the value of the fileType property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getFileType() {
+        return this.fileType;
+    }
 
-	/**
-	 * Gets the value of the nameOfFile property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getNameOfFile() {
-		return this.nameOfFile;
-	}
+    /**
+     * Gets the value of the nameOfFile property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getNameOfFile() {
+        return this.nameOfFile;
+    }
 
-	/**
-	 * Gets the value of the pathToFile property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getPathToFile() {
-		return this.pathToFile;
-	}
+    /**
+     * Gets the value of the pathToFile property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getPathToFile() {
+        return this.pathToFile;
+    }
 
-	/**
-	 * Sets the value of the fileType property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setFileType(final String value) {
-		this.fileType = value;
-	}
+    /**
+     * Sets the value of the fileType property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setFileType(final String value) {
+        this.fileType = value;
+    }
 
-	/**
-	 * Sets the value of the nameOfFile property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setNameOfFile(final String value) {
-		this.nameOfFile = value;
-	}
+    /**
+     * Sets the value of the nameOfFile property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setNameOfFile(final String value) {
+        this.nameOfFile = value;
+    }
 
-	/**
-	 * Sets the value of the pathToFile property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setPathToFile(final String value) {
-		this.pathToFile = value;
-	}
-
+    /**
+     * Sets the value of the pathToFile property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setPathToFile(final String value) {
+        this.pathToFile = value;
+    }
 }

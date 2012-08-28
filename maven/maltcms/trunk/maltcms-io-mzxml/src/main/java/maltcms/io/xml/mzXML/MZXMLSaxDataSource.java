@@ -31,7 +31,6 @@ import maltcms.io.andims.NetcdfDataSource;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.slf4j.Logger;
 import org.systemsbiology.jrap.MSXMLParser;
 import org.systemsbiology.jrap.Scan;
 import org.systemsbiology.jrap.ScanHeader;
@@ -44,9 +43,8 @@ import ucar.ma2.MAMath;
 import ucar.ma2.Range;
 import ucar.nc2.Dimension;
 import cross.Factory;
-import cross.Logging;
-import cross.datastructures.ehcache.CacheFactory;
-import cross.datastructures.ehcache.ICacheDelegate;
+import cross.datastructures.cache.CacheFactory;
+import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
@@ -56,16 +54,17 @@ import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implements {@link cross.io.IDataSource} for mzXML Files.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
+@Slf4j
 public class MZXMLSaxDataSource implements IDataSource {
 
-    private final Logger log = Logging.getLogger(this.getClass());
     private final String[] fileEnding = new String[]{"mzxml", "mzxml.xml"};
     private String mass_values = "mass_values";
     private String intensity_values = "intensity_values";
@@ -78,7 +77,7 @@ public class MZXMLSaxDataSource implements IDataSource {
     private String source_files = "source_files";
     private int mslevel;
     private MSXMLParser parser = null;
-    private ICacheDelegate<IVariableFragment,Array> variableToArrayCache = CacheFactory.createDefaultCache(UUID.randomUUID().toString());
+    private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = CacheFactory.createDefaultCache(UUID.randomUUID().toString());
 
     /**
      * Checks, if passed in file is valid mzXML, by trying to invoke the parser
@@ -189,8 +188,8 @@ public class MZXMLSaxDataSource implements IDataSource {
     }
 
     private MSXMLParser getParser(final String file) {
-        if(this.parser == null) {
-            log.info("Creating new parser for file {}",file);
+        if (this.parser == null) {
+            log.info("Creating new parser for file {}", file);
             parser = new MSXMLParser(file);
             int sc = parser.getScanCount();
             EvalTools.inRangeI(1, Integer.MAX_VALUE, sc, this);
@@ -256,7 +255,7 @@ public class MZXMLSaxDataSource implements IDataSource {
      * @param var
      * @param mp
      * @return a Tuple2D<Array,Array> with mass_range_min as first and
-     *         mass_range_max as second array
+     * mass_range_max as second array
      */
     protected Tuple2D<Array, Array> initMinMaxMZ(final IVariableFragment var,
             final MSXMLParser mp) {
@@ -291,11 +290,11 @@ public class MZXMLSaxDataSource implements IDataSource {
     private Array loadArray(final IFileFragment f, final IVariableFragment var) {
         final MSXMLParser mp = getParser(f);
         Array a = variableToArrayCache.get(var);
-        if(a!=null) {
-            log.info("Retrieved variable data array from cache for "+var);
+        if (a != null) {
+            log.info("Retrieved variable data array from cache for " + var);
             return a;
         }
-        final String varname = var.getVarname();
+        final String varname = var.getName();
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.mass_values)
                 || varname.equals(this.intensity_values)) {
@@ -316,7 +315,7 @@ public class MZXMLSaxDataSource implements IDataSource {
             this.log.warn("Unknown varname to mzXML mapping for varname {}",
                     varname);
         }
-        if(a!=null) {
+        if (a != null) {
             variableToArrayCache.put(var, a);
         }
         return a;
@@ -341,8 +340,8 @@ public class MZXMLSaxDataSource implements IDataSource {
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
         this.log.debug("{}", f.getParent().toString());
-        if (f.getVarname().equals("mass_values")
-                || f.getVarname().equals("intensity_values")) {
+        if (f.getName().equals("mass_values")
+                || f.getName().equals("intensity_values")) {
             this.log.debug("Reading {} and {}", this.mass_values,
                     this.intensity_values);
             // Tuple2D<ArrayList<Array>, ArrayList<Array>> t = MaltcmsTools
@@ -366,10 +365,10 @@ public class MZXMLSaxDataSource implements IDataSource {
             final MSXMLParser mp) {
         this.log.debug("readMinMaxMassValueArray");
         final Tuple2D<Array, Array> t = initMinMaxMZ(var, mp);
-        if (var.getVarname().equals(this.mass_range_min)) {
+        if (var.getName().equals(this.mass_range_min)) {
             return t.getFirst();
         }
-        if (var.getVarname().equals(this.mass_range_max)) {
+        if (var.getName().equals(this.mass_range_max)) {
             return t.getSecond();
         }
         throw new IllegalArgumentException(
@@ -394,7 +393,7 @@ public class MZXMLSaxDataSource implements IDataSource {
         }
         final ArrayDouble.D1 a = new ArrayDouble.D1(npeaks);
 
-        if (var.getVarname().equals(this.mass_values)) {
+        if (var.getName().equals(this.mass_values)) {
             npeaks = 0;
             for (int i = start; i < scans; i++) {
                 this.log.debug("Reading scan {} of {}", (i + 1), scans);
@@ -410,7 +409,7 @@ public class MZXMLSaxDataSource implements IDataSource {
                 }
             }
             // f.setArray(a);
-        } else if (var.getVarname().equals(this.intensity_values)) {
+        } else if (var.getName().equals(this.intensity_values)) {
             npeaks = 0;
             for (int i = start; i < scans; i++) {
                 this.log.debug("Reading scan {} of {}", (i + 1), scans);
@@ -442,7 +441,7 @@ public class MZXMLSaxDataSource implements IDataSource {
             scans = r[0].length();
         }
         final ArrayList<Array> al = new ArrayList<Array>();
-        if (var.getVarname().equals(this.mass_values)) {
+        if (var.getName().equals(this.mass_values)) {
             int npeaks = 0;
             for (int i = start; i < scans; i++) {
                 this.log.debug("Reading scan {} of {}", (i + 1), scans);
@@ -459,7 +458,7 @@ public class MZXMLSaxDataSource implements IDataSource {
                     al.add(a);
                 }
             }
-        } else if (var.getVarname().equals(this.intensity_values)) {
+        } else if (var.getName().equals(this.intensity_values)) {
             int npeaks = 0;
             for (int i = start; i < scans; i++) {
                 this.log.debug("Reading scan {} of {}", (i + 1), scans);
@@ -537,14 +536,14 @@ public class MZXMLSaxDataSource implements IDataSource {
      */
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException {
-        this.log.debug("readSingle of {} in {}", f.getVarname(), f.getParent().getAbsolutePath());
+        this.log.debug("readSingle of {} in {}", f.getName(), f.getParent().getAbsolutePath());
         if (f.hasArray()) {
             this.log.debug("{} already has an array set!", f);
         }
         final Array a = loadArray(f.getParent(), f);
         if (a == null) {
             throw new ResourceNotAvailableException("Could not find variable "
-                    + f.getVarname() + " in file " + f.getParent().getName());
+                    + f.getName() + " in file " + f.getParent().getName());
         }
         // f.setArray(a);
         return a;
@@ -579,7 +578,7 @@ public class MZXMLSaxDataSource implements IDataSource {
             throws IOException, ResourceNotAvailableException {
         final MSXMLParser mp = getParser(f.getParent());
         final int scancount = getScans(mp, this.mslevel);
-        final String varname = f.getVarname();
+        final String varname = f.getName();
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.scan_index)
                 || varname.equals(this.total_intensity)
@@ -638,64 +637,56 @@ public class MZXMLSaxDataSource implements IDataSource {
     }
 
     /**
-     * @param intensity_values
-     *            the intensity_values to set
+     * @param intensity_values the intensity_values to set
      */
     public void setIntensityValuesVarName(final String intensity_values) {
         this.intensity_values = intensity_values;
     }
 
     /**
-     * @param mass_range_max
-     *            the mass_range_max to set
+     * @param mass_range_max the mass_range_max to set
      */
     public void setMassRangeMax(final String mass_range_max) {
         this.mass_range_max = mass_range_max;
     }
 
     /**
-     * @param mass_range_min
-     *            the mass_range_min to set
+     * @param mass_range_min the mass_range_min to set
      */
     public void setMassRangeMin(final String mass_range_min) {
         this.mass_range_min = mass_range_min;
     }
 
     /**
-     * @param mass_values
-     *            the mass_values to set
+     * @param mass_values the mass_values to set
      */
     public void setMassValuesVarName(final String mass_values) {
         this.mass_values = mass_values;
     }
 
     /**
-     * @param scan_acquisition_time
-     *            the scan_acquisition_time to set
+     * @param scan_acquisition_time the scan_acquisition_time to set
      */
     public void setScanAcquisitionTimeVarName(final String scan_acquisition_time) {
         this.scan_acquisition_time = scan_acquisition_time;
     }
 
     /**
-     * @param scan_index
-     *            the scan_index to set
+     * @param scan_index the scan_index to set
      */
     public void setScanIndexVarName(final String scan_index) {
         this.scan_index = scan_index;
     }
 
     /**
-     * @param source_files
-     *            the source_files to set
+     * @param source_files the source_files to set
      */
     public void setSourceFilesVarName(final String source_files) {
         this.source_files = source_files;
     }
 
     /**
-     * @param total_intensity
-     *            the total_intensity to set
+     * @param total_intensity the total_intensity to set
      */
     public void setTotalIntensityVarName(final String total_intensity) {
         this.total_intensity = total_intensity;

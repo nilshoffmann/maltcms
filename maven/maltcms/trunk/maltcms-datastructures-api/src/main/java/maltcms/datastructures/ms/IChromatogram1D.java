@@ -24,16 +24,13 @@ package maltcms.datastructures.ms;
 import maltcms.datastructures.ms.IChromatogram;
 import maltcms.datastructures.ms.IScan1D;
 
-
 /**
  * Interface representing a 1-dimensional chromatogram.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IChromatogram1D extends IChromatogram, IScan1DProvider {
-
 //	@Override
 //	public Scan1D getScan(int scan);
-
 }

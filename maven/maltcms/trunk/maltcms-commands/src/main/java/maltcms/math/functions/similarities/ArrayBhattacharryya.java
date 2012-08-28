@@ -21,7 +21,6 @@
  */
 package maltcms.math.functions.similarities;
 
-
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import lombok.Data;
@@ -62,5 +61,4 @@ public class ArrayBhattacharryya implements IArraySimilarity {
         throw new IllegalArgumentException("Arrays shapes are incompatible! "
                 + t1.getShape()[0] + " != " + t2.getShape()[0]);
     }
-
 }

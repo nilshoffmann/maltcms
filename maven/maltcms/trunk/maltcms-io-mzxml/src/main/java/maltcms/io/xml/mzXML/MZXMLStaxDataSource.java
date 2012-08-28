@@ -31,7 +31,6 @@ import maltcms.io.andims.NetcdfDataSource;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.slf4j.Logger;
 import org.systemsbiology.jrap.stax.MSXMLParser;
 import org.systemsbiology.jrap.stax.Scan;
 import org.systemsbiology.jrap.stax.ScanHeader;
@@ -44,19 +43,18 @@ import ucar.ma2.MAMath;
 import ucar.ma2.Range;
 import ucar.nc2.Dimension;
 import cross.Factory;
-import cross.Logging;
-import cross.datastructures.ehcache.CacheFactory;
-import cross.datastructures.ehcache.ICacheDelegate;
+import cross.datastructures.cache.CacheFactory;
+import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
-import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implements {@link cross.io.IDataSource} for mzXML Files.
@@ -64,9 +62,9 @@ import java.util.UUID;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
  */
+@Slf4j
 public class MZXMLStaxDataSource implements IDataSource {
 
-    private final Logger log = Logging.getLogger(this.getClass());
     private final String[] fileEnding = new String[]{"mzxml", "mzxml.xml"};
     private String mass_values = "mass_values";
     private String intensity_values = "intensity_values";
@@ -79,7 +77,7 @@ public class MZXMLStaxDataSource implements IDataSource {
     private String source_files = "source_files";
     private int mslevel = 1;
     private MSXMLParser parser = null;
-    private ICacheDelegate<IVariableFragment,Array> variableToArrayCache = CacheFactory.createDefaultCache(UUID.randomUUID().toString());
+    private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = CacheFactory.createDefaultCache(UUID.randomUUID().toString());
 
     /**
      * Checks, if passed in file is valid mzXML, by trying to invoke the parser
@@ -191,7 +189,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 
     private MSXMLParser getParser(final String file) {
         if (this.parser == null) {
-            log.info("Creating new parser for file {}",file);
+            log.info("Creating new parser for file {}", file);
             parser = new MSXMLParser(file);
             int sc = parser.getMaxScanNumber();
             EvalTools.inRangeI(1, Integer.MAX_VALUE, sc, this);
@@ -290,11 +288,11 @@ public class MZXMLStaxDataSource implements IDataSource {
     private Array loadArray(final IFileFragment f, final IVariableFragment var) {
         final MSXMLParser mp = getParser(f);
         Array a = variableToArrayCache.get(var);
-        if(a!=null) {
-            log.info("Retrieved variable data array from cache for "+var);
+        if (a != null) {
+            log.info("Retrieved variable data array from cache for " + var);
             return a;
         }
-        final String varname = var.getVarname();
+        final String varname = var.getName();
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.mass_values)
                 || varname.equals(this.intensity_values)) {
@@ -315,7 +313,7 @@ public class MZXMLStaxDataSource implements IDataSource {
             throw new ResourceNotAvailableException(
                     "Unknown varname to mzXML mapping for varname " + varname);
         }
-        if(a!=null) {
+        if (a != null) {
             variableToArrayCache.put(var, a);
         }
         return a;
@@ -340,8 +338,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
         this.log.debug("{}", f.getParent().toString());
-        if (f.getVarname().equals("mass_values")
-                || f.getVarname().equals("intensity_values")) {
+        if (f.getName().equals("mass_values")
+                || f.getName().equals("intensity_values")) {
             this.log.debug("Reading {} and {}", this.mass_values,
                     this.intensity_values);
             // Tuple2D<ArrayList<Array>, ArrayList<Array>> t = MaltcmsTools
@@ -365,10 +363,10 @@ public class MZXMLStaxDataSource implements IDataSource {
             final MSXMLParser mp) {
         this.log.debug("readMinMaxMassValueArray");
         final Tuple2D<Array, Array> t = initMinMaxMZ(var, mp);
-        if (var.getVarname().equals(this.mass_range_min)) {
+        if (var.getName().equals(this.mass_range_min)) {
             return t.getFirst();
         }
-        if (var.getVarname().equals(this.mass_range_max)) {
+        if (var.getName().equals(this.mass_range_max)) {
             return t.getSecond();
         }
         throw new IllegalArgumentException(
@@ -394,7 +392,7 @@ public class MZXMLStaxDataSource implements IDataSource {
         }
         final ArrayDouble.D1 a = new ArrayDouble.D1(npeaks);
 
-        if (var.getVarname().equals(this.mass_values)) {
+        if (var.getName().equals(this.mass_values)) {
             npeaks = 0;
             for (int i = start; i < scans; i++) {
                 this.log.debug("Reading scan {} of {}", (i + 1), scans);
@@ -410,7 +408,7 @@ public class MZXMLStaxDataSource implements IDataSource {
                 }
             }
             // f.setArray(a);
-        } else if (var.getVarname().equals(this.intensity_values)) {
+        } else if (var.getName().equals(this.intensity_values)) {
             npeaks = 0;
             for (int i = start; i < scans; i++) {
                 this.log.debug("Reading scan {} of {}", (i + 1), scans);
@@ -442,7 +440,7 @@ public class MZXMLStaxDataSource implements IDataSource {
             scans = r[0].length();
         }
         final ArrayList<Array> al = new ArrayList<Array>();
-        if (var.getVarname().equals(this.mass_values)) {
+        if (var.getName().equals(this.mass_values)) {
             int npeaks = 0;
             for (int i = start; i < scans; i++) {
                 this.log.debug("Reading scan {} of {}", (i + 1), scans);
@@ -459,7 +457,7 @@ public class MZXMLStaxDataSource implements IDataSource {
                     al.add(a);
                 }
             }
-        } else if (var.getVarname().equals(this.intensity_values)) {
+        } else if (var.getName().equals(this.intensity_values)) {
             int npeaks = 0;
             for (int i = start; i < scans; i++) {
                 this.log.debug("Reading scan {} of {}", (i + 1), scans);
@@ -537,14 +535,14 @@ public class MZXMLStaxDataSource implements IDataSource {
      */
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException {
-        this.log.info("readSingle of {} in {}", f.getVarname(), f.getParent().getAbsolutePath());
+        this.log.info("readSingle of {} in {}", f.getName(), f.getParent().getAbsolutePath());
         if (f.hasArray()) {
             this.log.debug("{} already has an array set!", f);
         }
         final Array a = loadArray(f.getParent(), f);
         if (a == null) {
             throw new ResourceNotAvailableException("Could not find variable "
-                    + f.getVarname() + " in file " + f.getParent().getName());
+                    + f.getName() + " in file " + f.getParent().getName());
         }
         // f.setArray(a);
         return a;
@@ -579,7 +577,7 @@ public class MZXMLStaxDataSource implements IDataSource {
             throws IOException, ResourceNotAvailableException {
         final MSXMLParser mp = getParser(f.getParent());
         final int scancount = getScans(mp, this.mslevel);
-        final String varname = f.getVarname();
+        final String varname = f.getName();
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.scan_index)
                 || varname.equals(this.total_intensity)

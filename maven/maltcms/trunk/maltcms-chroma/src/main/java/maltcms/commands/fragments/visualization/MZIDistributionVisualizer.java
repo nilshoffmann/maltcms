@@ -50,9 +50,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Plot the distribution of values looking at mz bin values.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 @Data
@@ -61,12 +61,10 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
 
     private final String description = "Creates plot of distribution of mass values versus intensity values in a chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
-    
     protected IFileFragment filea;
     private String x_var = "mass_values";
     private String y_var = "intensity_values";
     private final boolean one_for_each = true;
-
 
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {

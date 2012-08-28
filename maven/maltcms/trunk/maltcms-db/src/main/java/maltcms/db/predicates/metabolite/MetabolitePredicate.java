@@ -33,14 +33,14 @@ import java.util.List;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
-
+ *
  *
  */
 public abstract class MetabolitePredicate extends Predicate<IMetabolite>
         implements IMatchPredicate<IMetabolite> {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 4401086253537298137L;
 
@@ -59,5 +59,4 @@ public abstract class MetabolitePredicate extends Predicate<IMetabolite>
     public void setTargetType(Class<IMetabolite> c) {
         this.im.setTargetType(c);
     }
-    
 }

@@ -35,9 +35,9 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Objects of this type are used to calculate the cumulative distance within the
  * {@link maltcms.commands.distances.dtw.ADynamicTimeWarp} Implementations.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 @Data

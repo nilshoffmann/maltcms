@@ -34,16 +34,14 @@ import maltcms.commands.distances.PairwiseFeatureSimilarity;
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-
 @Data
-@ServiceProvider(service=AWorkerFactory.class)
+@ServiceProvider(service = AWorkerFactory.class)
 public class MziDtwWorkerFactory extends AWorkerFactory {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 626200987946759092L;
-	
+    /**
+     *
+     */
+    private static final long serialVersionUID = 626200987946759092L;
     private double bandWidthPercentage;
     private double globalGapPenalty;
     private String extension;
@@ -60,6 +58,10 @@ public class MziDtwWorkerFactory extends AWorkerFactory {
     private boolean savePairwiseSimilarityMatrix;
     private boolean normalizeAlignmentValue;
 
+    /**
+     *
+     * @return
+     */
     @Override
     public PairwiseDistanceWorker create() {
         PairwiseDistanceWorker worker = new PairwiseDistanceWorker();
@@ -85,7 +87,7 @@ public class MziDtwWorkerFactory extends AWorkerFactory {
         //setup recurrence function
         DtwRecurrence dtwr = new DtwRecurrence();
         dtwr.setGlobalGapPenalty(globalGapPenalty);
-        dtwr.set(similarity.getCompressionWeight(), similarity.getExpansionWeight(),similarity.getMatchWeight());
+        dtwr.set(similarity.getCompressionWeight(), similarity.getExpansionWeight(), similarity.getMatchWeight());
         dtwr.setMinimize(false);
         mdtw.setRecurrence(dtwr);
         worker.setSimilarity(mdtw);

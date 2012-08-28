@@ -22,10 +22,10 @@
 package maltcms.datastructures.ms;
 
 /**
- * Interface adding retention index 2d and time 2d  info.
- * 
+ * Interface adding retention index 2d and time 2d info.
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IRetentionInfo2D {
 

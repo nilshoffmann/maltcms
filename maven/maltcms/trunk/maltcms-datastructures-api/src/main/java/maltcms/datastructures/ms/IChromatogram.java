@@ -29,23 +29,22 @@ import cross.datastructures.fragments.IFileFragment;
 
 /**
  * Interface representing a Chromatogram.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-public interface IChromatogram extends IConfigurable{
+public interface IChromatogram extends IConfigurable {
 
-	public IFileFragment getParent();
+    public IFileFragment getParent();
 
-	public int getNumberOfScans();
+    public int getNumberOfScans();
 
-	public List<Array> getIntensities();
+    public List<Array> getIntensities();
 
-	public List<Array> getMasses();
+    public List<Array> getMasses();
 
-	public String getScanAcquisitionTimeUnit();
+    public String getScanAcquisitionTimeUnit();
 
-	public Array getScanAcquisitionTime();
+    public Array getScanAcquisitionTime();
 
-	public int getIndexFor(double scan_acquisition_time);
-
+    public int getIndexFor(double scan_acquisition_time);
 }

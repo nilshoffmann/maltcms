@@ -31,18 +31,18 @@
     </description>
     
     <!-- a command pipeline consists of a list of 
-     commands to be executed -->
+    commands to be executed -->
     <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
         <property name="checkCommandDependencies" value="true"/>
         <property name="commands">
             <list>
                 <!-- uncomment to explicitly load default and additional variables -->
-<!--                <ref bean="defaultVarLoader" /> -->
-		<ref bean="andimsExporter" />
+                <!--                <ref bean="defaultVarLoader" /> -->
+                <ref bean="andimsExporter" />
             </list>
         </property>    
     </bean>
-               <!-- commands -->
+    <!-- commands -->
                
     <!-- DefaultVarLoader, loads default variables, see cfg/cv/cv_maltcms.properties for default values for these -->
     <bean id="defaultVarLoader" class="maltcms.commands.fragments.preprocessing.DefaultVarLoader">

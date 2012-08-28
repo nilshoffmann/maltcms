@@ -61,29 +61,28 @@ import org.openide.util.lookup.ServiceProvider;
  * Class reading retention indices/anchors/identified compounds from files with
  * specialized tab-separated structure. Should be reworked to blend in with the
  * other IO-Provider Classes and should thus implement IDataSource.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @RequiresOptionalVariables(names = {"var.scan_acquisition_time"})
 @ProvidesVariables(names = {"var.anchors.retention_index_names",
     "var.anchors.retention_scans"})
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class CSVAnchorReader extends AFragmentCommand {
 
     @Override
     public String toString() {
         return getClass().getName();
     }
-    
     private final String omit = "-";
-    @Configurable(name="csvri.retention.time")
+    @Configurable(name = "csvri.retention.time")
     private boolean time = false;
-    @Configurable(name="csvri.retention.index")
+    @Configurable(name = "csvri.retention.index")
     private boolean index = true;
-    @Configurable(name="csvri.retention.scan")
+    @Configurable(name = "csvri.retention.scan")
     private boolean scan = false;
     @Configurable
     private List<String> location = Collections.emptyList();
@@ -136,7 +135,6 @@ public class CSVAnchorReader extends AFragmentCommand {
                         getAbsolutePath());
                 if (f.isDirectory()) {
                     final String[] files = f.list(new FilenameFilter() {
-
                         @Override
                         public boolean accept(final File dir, final String name) {
                             if (name.endsWith(".txt") || name.endsWith(".tsv")) {
@@ -277,8 +275,7 @@ public class CSVAnchorReader extends AFragmentCommand {
                 if (o instanceof String) {
                     loc.add((String) o);
                 } else {
-                    log.warn("Property Object is not an instance of String! {}"
-                            , o);
+                    log.warn("Property Object is not an instance of String! {}", o);
                 }
             }
             this.location = loc;
@@ -481,16 +478,15 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
-     * @param anchorNamesVariableName
-     *            the anchorNamesVariableName to set
+     * @param anchorNamesVariableName the anchorNamesVariableName to set
      */
     public void setAnchorNamesVariableName(final String anchorNamesVariableName) {
         this.anchorNamesVariableName = anchorNamesVariableName;
     }
 
     /**
-     * @param anchorRetentionIndexVariableName
-     *            the anchorRetentionIndexVariableName to set
+     * @param anchorRetentionIndexVariableName the
+     * anchorRetentionIndexVariableName to set
      */
     public void setAnchorRetentionIndexVariableName(
             final String anchorRetentionIndexVariableName) {
@@ -498,8 +494,7 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
-     * @param anchorScanIndexVariableName
-     *            the anchorScanIndexVariableName to set
+     * @param anchorScanIndexVariableName the anchorScanIndexVariableName to set
      */
     public void setAnchorScanIndexVariableName(
             final String anchorScanIndexVariableName) {
@@ -507,32 +502,28 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
-     * @param anchorTimesVariableName
-     *            the anchorTimesVariableName to set
+     * @param anchorTimesVariableName the anchorTimesVariableName to set
      */
     public void setAnchorTimesVariableName(final String anchorTimesVariableName) {
         this.anchorTimesVariableName = anchorTimesVariableName;
     }
 
     /**
-     * @param basedir
-     *            the basedir to set
+     * @param basedir the basedir to set
      */
     public void setBasedir(final String basedir) {
         this.basedir = basedir;
     }
 
     /**
-     * @param fileDesignation
-     *            the fileDesignation to set
+     * @param fileDesignation the fileDesignation to set
      */
     public void setFileDesignation(final String fileDesignation) {
         this.fileDesignation = fileDesignation;
     }
 
     /**
-     * @param location
-     *            the location to set
+     * @param location the location to set
      */
     public void setLocation(final List<String> location) {
         this.location = location;

@@ -28,13 +28,12 @@ import net.sf.maltcms.evaluation.api.classification.EntityGroup;
  * @author nilshoffmann
  */
 public class EntityGroupClassificationResult implements Comparable<EntityGroupClassificationResult> {
-    
+
     private final EntityGroup toolEntityGroup;
     private final EntityGroup groundTruthEntityGroup;
-    
     private final int tp, tn, fp, fn;
     private final double dist;
-    
+
     public EntityGroupClassificationResult(EntityGroup toolEntityGroup, EntityGroup groundTruthEntityGroup, int tp, int tn, int fp, int fn, double dist) {
         this.toolEntityGroup = toolEntityGroup;
         this.groundTruthEntityGroup = groundTruthEntityGroup;
@@ -79,20 +78,20 @@ public class EntityGroupClassificationResult implements Comparable<EntityGroupCl
     }
 
     /**
-     * 
+     *
      * @param o
      * @throws IllegalArgumentException
-     * @return 
+     * @return
      */
     @Override
-    public int compareTo(EntityGroupClassificationResult o) throws IllegalArgumentException{
+    public int compareTo(EntityGroupClassificationResult o) throws IllegalArgumentException {
         final int WORSE = -1;
         final int BETTER = 1;
         final int EQUAL = 0;
-        if(o.getGroundTruthEntityGroup().equals(this.groundTruthEntityGroup)) {
+        if (o.getGroundTruthEntityGroup().equals(this.groundTruthEntityGroup)) {
             if (tp > o.getTp()) {
                 return BETTER;
-            }else if (tp == o.getTp()) {
+            } else if (tp == o.getTp()) {
                 if (tn > o.getTn()) {
                     return BETTER;
                 } else if (tn == o.getTn()) {
@@ -101,12 +100,12 @@ public class EntityGroupClassificationResult implements Comparable<EntityGroupCl
                     } else if (fp == o.getFp()) {
                         if (fn < o.getFn()) {
                             return BETTER;
-                        } else if(fn == o.getFn()){
+                        } else if (fn == o.getFn()) {
                             if (dist < o.getDist()) {
                                 return BETTER;
-                            }else if(dist>o.getDist()){
+                            } else if (dist > o.getDist()) {
                                 return WORSE;
-                            }else{
+                            } else {
                                 return EQUAL;
                             }
                         } else {
@@ -116,7 +115,7 @@ public class EntityGroupClassificationResult implements Comparable<EntityGroupCl
                 }
             }
             return WORSE;
-        }else{
+        } else {
             throw new IllegalArgumentException("Can not compare EntityGroupClassificationResults with different ground truth assignments!");
         }
     }
@@ -166,5 +165,4 @@ public class EntityGroupClassificationResult implements Comparable<EntityGroupCl
         hash = 11 * hash + (int) (Double.doubleToLongBits(this.dist) ^ (Double.doubleToLongBits(this.dist) >>> 32));
         return hash;
     }
-
 }

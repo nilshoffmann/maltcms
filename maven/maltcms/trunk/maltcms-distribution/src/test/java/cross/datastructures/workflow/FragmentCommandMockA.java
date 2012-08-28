@@ -35,13 +35,13 @@ import lombok.extern.slf4j.Slf4j;
 public class FragmentCommandMockA extends AFragmentCommand {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 7454449407054696377L;
 
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
-        log.info("Running {}",getClass().getName());
+        log.info("Running {}", getClass().getName());
         TupleND<IFileFragment> out = createWorkFragments(in);
         for (IFileFragment ff : out) {
             VariableFragment vf1 = new VariableFragment(ff, "variable1");

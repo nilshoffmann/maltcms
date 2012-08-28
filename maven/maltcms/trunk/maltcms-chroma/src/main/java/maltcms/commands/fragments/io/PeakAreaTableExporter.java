@@ -37,7 +37,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  *
  */
-@RequiresVariables(names={"var.tic_peaks"})
+@RequiresVariables(names = {"var.tic_peaks"})
 //@ServiceProvider(service=AFragmentCommand.class)
 public class PeakAreaTableExporter extends AFragmentCommand {
 
@@ -59,5 +59,4 @@ public class PeakAreaTableExporter extends AFragmentCommand {
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.FILEIO;
     }
-    
 }

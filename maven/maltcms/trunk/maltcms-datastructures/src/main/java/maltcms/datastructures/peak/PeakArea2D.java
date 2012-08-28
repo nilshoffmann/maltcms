@@ -32,7 +32,7 @@ import ucar.ma2.Array;
 
 /**
  * Reprensents a singel snake.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 public class PeakArea2D {
@@ -58,18 +58,13 @@ public class PeakArea2D {
 
     /**
      * Default constructor.
-     * 
-     * @param seed
-     *            seed point
-     * @param ms
-     *            mass spectra of the seed point
-     * @param intensity
-     *            intensity of the seed point
-     * @param sindex
-     *            scan index of the seed point
-     * @param spm
-     *            scans per modulation is used to build an index to search
-     *            efficiently in current region and border list
+     *
+     * @param seed seed point
+     * @param ms mass spectra of the seed point
+     * @param intensity intensity of the seed point
+     * @param sindex scan index of the seed point
+     * @param spm scans per modulation is used to build an index to search
+     * efficiently in current region and border list
      */
     public PeakArea2D(final Point seed, final Array ms, final double intensity,
             final int sindex, final int spm) {
@@ -112,11 +107,10 @@ public class PeakArea2D {
 
     /**
      * Check, if the point p is in the active list or not.
-     * 
-     * @param p
-     *            point
+     *
+     * @param p point
      * @return <code>true</code> if p is in active point list, else
-     *         <code>false</code>
+     * <code>false</code>
      */
     private boolean activeContains(final Point p) {
         return this.activeMap.containsKey(getIndex(p));
@@ -124,9 +118,8 @@ public class PeakArea2D {
 
     /**
      * Adds a point to list of active points.
-     * 
-     * @param p
-     *            point
+     *
+     * @param p point
      */
     public void addActivePoint(final Point p) {
         if (!this.activeMap.containsKey(getIndex(p))) {
@@ -137,11 +130,9 @@ public class PeakArea2D {
 
     /**
      * Setter.
-     * 
-     * @param mass
-     *            mass
-     * @param value
-     *            area sum
+     *
+     * @param mass mass
+     * @param value area sum
      */
     public void addAreaIntensity(final Integer mass, final Double value) {
         this.areaUniqueMassIntensities.put(mass, value);
@@ -149,9 +140,8 @@ public class PeakArea2D {
 
     /**
      * Add a point to this list of boundaries.
-     * 
-     * @param p
-     *            boundary point
+     *
+     * @param p boundary point
      */
     public void addBoundaryPoint(final Point p) {
         this.boundary.add(p);
@@ -160,9 +150,8 @@ public class PeakArea2D {
 
     /**
      * Adds all neighbours of p to the active point list.
-     * 
-     * @param p
-     *            center
+     *
+     * @param p center
      * @return active list is not empty
      */
     public boolean addNeighOf(final Point p) {
@@ -175,13 +164,10 @@ public class PeakArea2D {
 
     /**
      * Will add the point p to the list.
-     * 
-     * @param point
-     *            point
-     * @param ms
-     *            mass spectra of this point
-     * @param intensity
-     *            intensity of this point
+     *
+     * @param point point
+     * @param ms mass spectra of this point
+     * @param intensity intensity of this point
      */
     public void addRegionPoint(final Point point, final Array ms,
             final double intensity) {
@@ -202,11 +188,10 @@ public class PeakArea2D {
 
     /**
      * Checks if the point p is in the boundary list of this snake.
-     * 
-     * @param p
-     *            point
+     *
+     * @param p point
      * @return <code>true</code> if p is in boundary list, else
-     *         <code>false</code>
+     * <code>false</code>
      */
     private boolean boundaryContains(final Point p) {
         return this.boundaryMap.containsKey(getIndex(p));
@@ -214,7 +199,7 @@ public class PeakArea2D {
 
     /**
      * Getter.
-     * 
+     *
      * @return sum of area unique mass intensitites
      */
     public Map<Integer, Double> getAreaIntensities() {
@@ -223,7 +208,7 @@ public class PeakArea2D {
 
     /**
      * Getter.
-     * 
+     *
      * @return sum of intensities over the peak area
      */
     public double getAreaIntensity() {
@@ -232,7 +217,7 @@ public class PeakArea2D {
 
     /**
      * Getter. ATTENTION: This method will clear the current boundary list.
-     * 
+     *
      * @return a list of all boundary points
      */
     public List<Point> getBoundaryPoints() {
@@ -244,7 +229,7 @@ public class PeakArea2D {
 
     /**
      * Getter. This method will not clear the current boundary list.
-     * 
+     *
      * @return a list of all boundary points
      */
     public List<Point> getBoundaryPointsCopy() {
@@ -253,7 +238,7 @@ public class PeakArea2D {
 
     /**
      * Getter.
-     * 
+     *
      * @return size of boundary point list
      */
     public int getBoundaryPointsSize() {
@@ -262,7 +247,7 @@ public class PeakArea2D {
 
     /**
      * Getter.
-     * 
+     *
      * @return scan index of the seed point
      */
     public int getIndex() {
@@ -271,9 +256,8 @@ public class PeakArea2D {
 
     /**
      * Index mapping from NxN to N.
-     * 
-     * @param p
-     *            point
+     *
+     * @param p point
      * @return index
      */
     private int getIndex(final Point p) {
@@ -282,7 +266,7 @@ public class PeakArea2D {
 
     /**
      * Getter.
-     * 
+     *
      * @return maximum height difference between seed and area points
      */
     public int getMaxHeight() {
@@ -291,7 +275,7 @@ public class PeakArea2D {
 
     /**
      * Getter.
-     * 
+     *
      * @return maximum width between seed point and area points
      */
     public int getMaxWidth() {
@@ -300,7 +284,7 @@ public class PeakArea2D {
 
     /**
      * Getter.
-     * 
+     *
      * @return mean mass spectra of this peak area
      */
     public Array getMeanMS() {
@@ -309,14 +293,12 @@ public class PeakArea2D {
 
     /**
      * Getter.
-     * 
-     * @param p
-     *            center point
-     * @param allNeighbours
-     *            <code>true</code> if all neighbours should be returned, else
-     *            <code>false</code>
+     *
+     * @param p center point
+     * @param allNeighbours <code>true</code> if all neighbours should be
+     * returned, else <code>false</code>
      * @return list of points. ATTENTION: Could contain point which are out of
-     *         bounds.
+     * bounds.
      */
     private List<Point> getNeighbours(final Point p, final boolean allNeighbours) {
         final List<Point> neigh = new ArrayList<Point>();
@@ -339,7 +321,7 @@ public class PeakArea2D {
 
     /**
      * Getter.
-     * 
+     *
      * @return list
      */
     public List<Point> getRegionPoints() {
@@ -348,7 +330,7 @@ public class PeakArea2D {
 
     /**
      * Getter.
-     * 
+     *
      * @return seed intensity
      */
     public double getSeedIntensity() {
@@ -357,7 +339,7 @@ public class PeakArea2D {
 
     /**
      * Getter.
-     * 
+     *
      * @return seed mass spectra
      */
     public Array getSeedMS() {
@@ -366,7 +348,7 @@ public class PeakArea2D {
 
     /**
      * Getter.
-     * 
+     *
      * @return sedd point
      */
     public Point getSeedPoint() {
@@ -375,9 +357,9 @@ public class PeakArea2D {
 
     /**
      * Checks, if this snake has an not empty list of active points.
-     * 
+     *
      * @return <code>true</code> is the active point list is not empty, else
-     *         <code>false</code>
+     * <code>false</code>
      */
     public boolean hasActivePoints() {
         return !this.activeList.isEmpty();
@@ -385,7 +367,7 @@ public class PeakArea2D {
 
     /**
      * Pops the first active point in the active list.
-     * 
+     *
      * @return first point
      */
     public Point popActivePoint() {
@@ -400,9 +382,8 @@ public class PeakArea2D {
 
     /**
      * Contains.
-     * 
-     * @param point
-     *            point
+     *
+     * @param point point
      * @return true if yes, else false
      */
     public boolean regionContains(final Point point) {
@@ -422,7 +403,7 @@ public class PeakArea2D {
 
     /**
      * Getter.
-     * 
+     *
      * @return size of the peak area
      */
     public int size() {

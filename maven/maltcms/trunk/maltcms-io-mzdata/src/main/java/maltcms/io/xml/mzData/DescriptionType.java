@@ -28,14 +28,12 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Extension of 'paramType' with an added free-text comment attribute.
- * 
- * <p>
- * Java class for descriptionType complex type.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
+ *
+ * <p> Java class for descriptionType complex type.
+ *
+ * <p> The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name=&quot;descriptionType&quot;&gt;
  *   &lt;complexContent&gt;
@@ -45,35 +43,33 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "descriptionType")
 public class DescriptionType extends ParamType {
 
-	@XmlAttribute
-	protected String comment;
+    @XmlAttribute
+    protected String comment;
 
-	/**
-	 * Gets the value of the comment property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getComment() {
-		return this.comment;
-	}
+    /**
+     * Gets the value of the comment property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getComment() {
+        return this.comment;
+    }
 
-	/**
-	 * Sets the value of the comment property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setComment(final String value) {
-		this.comment = value;
-	}
-
+    /**
+     * Sets the value of the comment property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setComment(final String value) {
+        this.comment = value;
+    }
 }

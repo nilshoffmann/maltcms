@@ -32,9 +32,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Calculates Spearman's rank correlation as similarity between arrays.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
@@ -48,21 +48,21 @@ public class ArrayRankCorr implements IArraySimilarity {
     public double apply(final Array t1, final Array t2) {
         // SpearmansCorrelation sc = new SpearmansCorrelation();
         double[] t1a = null, t2a = null;
-	/*
-        if (arrayCache.containsKey(t1)) {
-            t1a = arrayCache.get(t1);
-        } else {
-            t1a = (double[]) t1.get1DJavaArray(double.class);
-            arrayCache.put(t1, t1a);
-        }
-        if (arrayCache.containsKey(t2)) {
-            t2a = arrayCache.get(t2);
-        } else {
-            t2a = (double[]) t2.get1DJavaArray(double.class);
-            arrayCache.put(t2, t2a);
-        }
-	*/
-	t1a = (double[]) t1.get1DJavaArray(double.class);
+        /*
+         if (arrayCache.containsKey(t1)) {
+         t1a = arrayCache.get(t1);
+         } else {
+         t1a = (double[]) t1.get1DJavaArray(double.class);
+         arrayCache.put(t1, t1a);
+         }
+         if (arrayCache.containsKey(t2)) {
+         t2a = arrayCache.get(t2);
+         } else {
+         t2a = (double[]) t2.get1DJavaArray(double.class);
+         arrayCache.put(t2, t2a);
+         }
+         */
+        t1a = (double[]) t1.get1DJavaArray(double.class);
         t2a = (double[]) t2.get1DJavaArray(double.class);
         double pcv = sc.correlation(t1a, t2a);
         if (this.returnCoeffDetermination) {
@@ -70,5 +70,4 @@ public class ArrayRankCorr implements IArraySimilarity {
         }
         return pcv;
     }
-
 }

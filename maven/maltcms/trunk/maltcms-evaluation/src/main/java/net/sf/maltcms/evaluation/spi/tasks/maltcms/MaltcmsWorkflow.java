@@ -26,5 +26,4 @@ package net.sf.maltcms.evaluation.spi.tasks.maltcms;
  * @author nilshoffmann
  */
 public class MaltcmsWorkflow {
-    
 }

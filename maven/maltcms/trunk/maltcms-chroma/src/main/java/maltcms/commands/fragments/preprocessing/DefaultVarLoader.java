@@ -40,13 +40,13 @@ import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Load variables defined by the option default.variables. 
- * 
- * Additionally tries toload vars defined in the option additional.variables (see
- * cfg/maltcmsvars.properties).
- * 
+ * Load variables defined by the option default.variables.
+ *
+ * Additionally tries toload vars defined in the option additional.variables
+ * (see cfg/maltcmsvars.properties).
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @ProvidesVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.scan_acquisition_time", "var.total_intensity"})
@@ -54,10 +54,9 @@ import org.openide.util.lookup.ServiceProvider;
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class DefaultVarLoader extends AFragmentCommand {
-    
+
     private final String description = "Loads default and additional variables as defined in the configuration.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;
-    
     @Configurable
     private List<String> defaultVariables = Collections.emptyList();
     @Configurable

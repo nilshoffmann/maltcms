@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>maltcms-modules</artifactId>
-    <groupId>net.sf.maltcms</groupId>
-    <version>1.2.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>maltcms-io-mzxml</artifactId>
-  <name>maltcms-io-mzxml</name>
-  <url>http://maltcms.sourceforge.net</url>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>maltcms-modules</artifactId>
+        <groupId>net.sf.maltcms</groupId>
+        <version>1.2.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>maltcms-io-mzxml</artifactId>
+    <name>maltcms-io-mzxml</name>
+    <url>http://maltcms.sourceforge.net</url>
     <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>maltcms-io-netcdf</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.sf.sashimi</groupId>
-      <artifactId>jrap</artifactId>
-      <version>3.0</version>
-    </dependency>
-    <dependency>
-      <groupId>net.sf.sashimi</groupId>
-      <artifactId>jrapStAX</artifactId>
-      <version>4</version>
-    </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-io-netcdf</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.sashimi</groupId>
+            <artifactId>jrap</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.sashimi</groupId>
+            <artifactId>jrapStAX</artifactId>
+            <version>4</version>
+        </dependency>
         <dependency>
             <groupId>jakarta-regexp</groupId>
             <artifactId>jakarta-regexp</artifactId>

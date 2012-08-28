@@ -51,6 +51,10 @@ public class MinMaxMassFinderWorker implements Callable<double[]>, Serializable 
     private String maxMassVariableName = "mass_range_max";
     private String fallbackVariableName = "mass_values";
 
+    /**
+     *
+     * @return @throws Exception
+     */
     @Override
     public double[] call() throws Exception {
         Double min = Double.MAX_VALUE;

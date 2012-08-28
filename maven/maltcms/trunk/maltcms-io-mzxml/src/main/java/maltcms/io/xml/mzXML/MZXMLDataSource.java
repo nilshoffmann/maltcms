@@ -35,25 +35,25 @@ import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.exception.NotImplementedException;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.tools.StringTools;
+import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
-@ServiceProvider(service=IDataSource.class)
+@Slf4j
+@ServiceProvider(service = IDataSource.class)
 public class MZXMLDataSource implements IDataSource {
 
     private final List<IDataSource> ds = new ArrayList<IDataSource>();
-    private final Logger log = Logging.getLogger(this);
     private final WeakHashMap<IFileFragment, IDataSource> fragmentToValidReaderMap = new WeakHashMap<IFileFragment, IDataSource>();
 
     public MZXMLDataSource() {
@@ -145,7 +145,7 @@ public class MZXMLDataSource implements IDataSource {
                 this.log.info("Checking DataSource {}", ids.getClass().getName());
                 if (ids.canRead(ff) > 0) {
                     IDataSource dataSource = Factory.getInstance().getObjectFactory().instantiate(ids.getClass().getName(),
-                    cross.io.IDataSource.class);
+                            cross.io.IDataSource.class);
                     this.fragmentToValidReaderMap.put(ff, dataSource);
                     return dataSource;
                 }

@@ -49,6 +49,10 @@ public class MyWorkflow {
         return dw;
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         //Download the test files from 
         //http://sf.net/projects/maltcms/files/maltcms/example-data/
@@ -56,14 +60,12 @@ public class MyWorkflow {
                 new File("glucoseA.cdf"),
                 new File("glucoseB.cdf"),
                 new File("mannitolA.cdf"),
-                new File("mannitolB.cdf")
-        );
+                new File("mannitolB.cdf"));
         List<IFragmentCommand> cmds = Arrays.asList(new IFragmentCommand[]{
-            new DefaultVarLoader(),
-            new DenseArrayProducer(),
-            new TICPeakFinder(),
-            new PeakCliqueAlignment()}
-        );
+                    new DefaultVarLoader(),
+                    new DenseArrayProducer(),
+                    new TICPeakFinder(),
+                    new PeakCliqueAlignment()});
         IWorkflow w = createWorkflow(
                 cmds,
                 inputFiles);

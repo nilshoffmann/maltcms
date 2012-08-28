@@ -84,7 +84,7 @@ import maltcms.tools.ImageTools;
 
 /**
  * Peakpicking + integration + identification + normalization + evaluation...
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -269,9 +269,8 @@ public class SeededRegionGrowing extends AFragmentCommand {
 
     /**
      * Returns the truncates names of the input files
-     * 
-     * @param t
-     *            list of input file fragments
+     *
+     * @param t list of input file fragments
      * @return list of strings
      */
     private List<String> getNamesFor(final TupleND<IFileFragment> t) {
@@ -287,12 +286,10 @@ public class SeededRegionGrowing extends AFragmentCommand {
      * uses the {@link IPeakPicking} class to find seeds. After extending the
      * region towards its maximum, the {@link PeakSeparator} will try to merge
      * or separate the resulting {@link PeakArea2D}s.
-     * 
-     * @param ff
-     *            file fragement to generate the {@link IScanLine}
-     * @param seeds
-     *            initial seeds. If this parameter is <code>null</code> then the
-     *            {@link IPeakPicking} class will be used to determine seeds.
+     *
+     * @param ff file fragement to generate the {@link IScanLine}
+     * @param seeds initial seeds. If this parameter is <code>null</code> then
+     * the {@link IPeakPicking} class will be used to determine seeds.
      * @return List of resulting peaks
      */
     private List<Peak2D> runSRG(IFileFragment ff, List<Point> seeds) {
@@ -325,7 +322,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
 //            this.peakSeparator.startSeparationFor(peakAreaList,
 //                    null, null, slc,
 //                    this.regionGrowing.getIntensities(), false);
-            
+
             this.peakSeparator.startSeparationFor(peakAreaList, slc,
                     this.regionGrowing.getIntensities(), getRetentiontime(ff));
         }
@@ -340,13 +337,11 @@ public class SeededRegionGrowing extends AFragmentCommand {
     /**
      * This methode tries to find missing peaks in all chromatograms. It uses
      * internally the private variable peakLists. TODO: More
-     * 
-     * @param bidiBestHitList
-     *            bidirection best hit list
-     * @param t
-     *            file fragment
+     *
+     * @param bidiBestHitList bidirection best hit list
+     * @param t file fragment
      * @return altered bidirection best hit list if some new peaks were found,
-     *         or the same list als bidiBestHitList
+     * or the same list als bidiBestHitList
      */
     private List<List<Point>> startSecondRun(List<List<Point>> bidiBestHitList,
             final TupleND<IFileFragment> t) {
@@ -473,17 +468,12 @@ public class SeededRegionGrowing extends AFragmentCommand {
 
     /**
      * Save the given {@link BufferedImage} and serialize it.
-     * 
-     * @param image
-     *            image
-     * @param name
-     *            name
-     * @param title
-     *            title of the plot
-     * @param peakList
-     *            peaks
-     * @param times
-     *            first and second retention time
+     *
+     * @param image image
+     * @param name name
+     * @param title title of the plot
+     * @param peakList peaks
+     * @param times first and second retention time
      */
     private void createAndSaveImage(final BufferedImage image,
             final String name, final String title, final List<Peak2D> peakList,
@@ -520,13 +510,10 @@ public class SeededRegionGrowing extends AFragmentCommand {
     /**
      * Creates and writes a csv containing all needed information about the
      * peak.
-     * 
-     * @param pas
-     *            list of all snakes
-     * @param times
-     *            first and second retention time
-     * @param ff
-     *            file fragment
+     *
+     * @param pas list of all snakes
+     * @param times first and second retention time
+     * @param ff file fragment
      * @return ff
      */
     private List<Peak2D> createPeaklist(final List<PeakArea2D> pas,
@@ -558,7 +545,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
     /**
      * Adds additional information to the peaklist ps such as integration on
      * special mzs and identification by db search.
-     * 
+     *
      * @param ps
      * @param ff
      * @return
@@ -587,11 +574,9 @@ public class SeededRegionGrowing extends AFragmentCommand {
 
     /**
      * Index map.
-     * 
-     * @param x
-     *            x coordinate
-     * @param y
-     *            y coordinate
+     *
+     * @param x x coordinate
+     * @param y y coordinate
      * @return index
      */
     private int idx(final int x, final int y) {
@@ -608,9 +593,8 @@ public class SeededRegionGrowing extends AFragmentCommand {
 
     /**
      * Getter.
-     * 
-     * @param ff
-     *            file fragment
+     *
+     * @param ff file fragment
      * @return first and second retentiontime
      */
     private Tuple2D<ArrayDouble.D1, ArrayDouble.D1> getRetentiontime(
@@ -639,7 +623,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
 
     /**
      * ATTENTION: NOT FIXED YET. METHOD WILL NOT DO WHAT IT SHOULD
-     * 
+     *
      * @param ps
      * @param ff
      */
@@ -684,15 +668,11 @@ public class SeededRegionGrowing extends AFragmentCommand {
 
     /**
      * Saves all information about peaks and the peakarea.
-     * 
-     * @param ff
-     *            file fragment
-     * @param fret
-     *            returning file fragment
-     * @param peakAreaList
-     *            peak area list
-     * @param colorRamp
-     *            color ramp
+     *
+     * @param ff file fragment
+     * @param fret returning file fragment
+     * @param peakAreaList peak area list
+     * @param colorRamp color ramp
      * @return peak list
      */
     private List<Peak2D> savePeaks(final IFileFragment ff,
@@ -813,8 +793,17 @@ public class SeededRegionGrowing extends AFragmentCommand {
     // }
     // return tic2d;
     // }
+    /**
+     *
+     */
     public class PeakComparator implements Comparator<Peak2D> {
 
+        /**
+         *
+         * @param o1
+         * @param o2
+         * @return
+         */
         @Override
         public int compare(Peak2D o1, Peak2D o2) {
             Point p1 = o1.getPeakArea().getSeedPoint();
@@ -827,8 +816,17 @@ public class SeededRegionGrowing extends AFragmentCommand {
         }
     }
 
+    /**
+     *
+     */
     public class PeakAreaComparator implements Comparator<PeakArea2D> {
 
+        /**
+         *
+         * @param o1
+         * @param o2
+         * @return
+         */
         @Override
         public int compare(PeakArea2D o1, PeakArea2D o2) {
             Point p1 = o1.getSeedPoint();

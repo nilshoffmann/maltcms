@@ -30,10 +30,8 @@ import lombok.Data;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
-public class Result<T extends Serializable> implements Serializable{
-    
+public class Result<T extends Serializable> implements Serializable {
+
     private T result;
-    
     private UUID producerId;
-    
 }

@@ -34,10 +34,20 @@ public class SymbolConvert {
 
     private static String alphabet;
 
+    /**
+     *
+     * @return
+     */
     public static String getAlphabet() {
         return SymbolConvert.alphabet;
     }
 
+    /**
+     *
+     * @param reduced1
+     * @param bp
+     * @return
+     */
     public static Array symbolic(final Array reduced1, final double[] bp) {
         final Array reduced = reduced1.copy();
         // erzeuge neues Array f�r Daten in Stringrep.

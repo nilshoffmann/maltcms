@@ -21,7 +21,6 @@
  */
 package maltcms.math.functions.similarities;
 
-
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import lombok.Data;
@@ -30,9 +29,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Hamming distance between binary vectors.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
@@ -53,5 +52,4 @@ public class ArrayHamming implements IArraySimilarity {
         }
         return SimilarityTools.asSimilarity(d);
     }
-
 }

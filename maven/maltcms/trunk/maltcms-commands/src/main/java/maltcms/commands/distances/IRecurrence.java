@@ -27,9 +27,9 @@ import cross.IConfigurable;
 /**
  * Interface for classes performing a recurring operation, e.g. dynamic
  * programming.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IRecurrence extends IConfigurable {
 

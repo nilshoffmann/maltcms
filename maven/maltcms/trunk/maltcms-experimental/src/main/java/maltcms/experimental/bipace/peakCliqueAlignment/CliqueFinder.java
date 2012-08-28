@@ -56,11 +56,11 @@ public class CliqueFinder<T extends Peak> implements IWorkflowElement {
 
     public List<Clique<T>> findCliques(final TupleND<IFileFragment> t,
             final HashMap<String, List<T>> fragmentToPeaks,
-            final List<List<T>> ll,final HashMap<T, Clique<T>> peakToClique) {
+            final List<List<T>> ll, final HashMap<T, Clique<T>> peakToClique) {
         List<Clique<T>> cliques;
         if (this.minCliqueSize == -1 || this.minCliqueSize == t.size()) {
             log.info("Combining bidirectional best hits if present in all files");
-            cliques = combineBiDiBestHits(t, fragmentToPeaks, ll, t.size(),peakToClique);
+            cliques = combineBiDiBestHits(t, fragmentToPeaks, ll, t.size(), peakToClique);
         } else {
             if (this.minCliqueSize > t.size()) {
                 log.info("Resetting minimum group size to: {}, was: {}",
@@ -70,11 +70,11 @@ public class CliqueFinder<T extends Peak> implements IWorkflowElement {
             log.info("Combining bidirectional best hits, minimum group size: {}",
                     this.minCliqueSize);
             cliques = combineBiDiBestHits(t, fragmentToPeaks, ll,
-                    this.minCliqueSize,peakToClique);
+                    this.minCliqueSize, peakToClique);
         }
         return cliques;
     }
-    
+
     /**
      * @param al
      * @param fragmentToPeaks
@@ -112,7 +112,7 @@ public class CliqueFinder<T extends Peak> implements IWorkflowElement {
                 if (!iff.getName().equals(jff.getName())) {
                     for (final T p : peaks) {
                         // retrieve list of most similar peaks
-                        final T q = (T)p.getPeakWithHighestSimilarity(jff.getName());
+                        final T q = (T) p.getPeakWithHighestSimilarity(jff.getName());
                         if (q == null) {
                             // null peaks have no bidi best hit, so they are
                             // removed
@@ -228,7 +228,6 @@ public class CliqueFinder<T extends Peak> implements IWorkflowElement {
         // sort cliques by clique rt mean
         List<Clique<T>> l = new ArrayList<Clique<T>>(cliques);
         Collections.sort(l, new Comparator<Clique<T>>() {
-
             @Override
             public int compare(Clique<T> o1, Clique<T> o2) {
                 return o1.getCliqueStatistics().compareCliques(o1, o2);
@@ -332,6 +331,5 @@ public class CliqueFinder<T extends Peak> implements IWorkflowElement {
 
     @Override
     public void appendXML(Element e) {
-        
     }
 }

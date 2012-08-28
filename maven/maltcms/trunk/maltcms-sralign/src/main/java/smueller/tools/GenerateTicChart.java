@@ -34,6 +34,13 @@ import ucar.ma2.Array;
  */
 public class GenerateTicChart {
 
+    /**
+     *
+     * @param name
+     * @param besch
+     * @param a
+     * @return
+     */
     public static AChart<XYPlot> generatePlot(final String name,
             final String besch, final Array a) {
         final String[] beschr = new String[1];

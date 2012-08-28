@@ -23,9 +23,8 @@ package maltcms.datastructures.ms;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 public interface IScan1DProvider extends IScanProvider<IScan1D> {
-
 }

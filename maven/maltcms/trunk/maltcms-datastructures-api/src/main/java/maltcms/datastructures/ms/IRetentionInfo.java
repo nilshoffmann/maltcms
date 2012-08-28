@@ -23,9 +23,9 @@ package maltcms.datastructures.ms;
 
 /**
  * Interface extending a simple anchor, adding retention index and time info.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IRetentionInfo extends IAnchor {
 

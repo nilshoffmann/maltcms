@@ -30,5 +30,4 @@ import ucar.ma2.Array;
 public interface IPeakFinder {
 
     PeakPositionsResultSet findPeakPositions(Array tic);
-
 }

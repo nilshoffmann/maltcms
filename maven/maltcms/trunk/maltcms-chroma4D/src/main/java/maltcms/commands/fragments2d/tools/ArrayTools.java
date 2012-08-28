@@ -50,14 +50,10 @@ public class ArrayTools {
     /**
      * Visualization of the sorted standard deviation.
      *
-     * @param ff
-     *            file fragment
-     * @param sd
-     *            standard deviation
-     * @param quantil
-     *            array quantils
-     * @param visualize
-     *            visualize sorted array
+     * @param ff file fragment
+     * @param sd standard deviation
+     * @param quantil array quantils
+     * @param visualize visualize sorted array
      */
     public static double[] getQuantilValue(final IFileFragment ff,
             final Array sd, final double[] quantil, final boolean visualize,
@@ -73,7 +69,6 @@ public class ArrayTools {
             stdL.add(new Tuple2D<Integer, Integer>(c++, stdC));
         }
         Collections.sort(stdL, new Comparator<Tuple2D<Integer, Integer>>() {
-
             @Override
             public int compare(final Tuple2D<Integer, Integer> o1,
                     final Tuple2D<Integer, Integer> o2) {

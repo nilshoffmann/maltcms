@@ -25,10 +25,10 @@ import java.util.HashSet;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
-
+ *
  *
  */
-public final class PerformanceMetrics{
+public final class PerformanceMetrics {
 
     private final int tp, fp, tn, fn, realfn, N, M, unmatchedTool, unmatchedGroundTruth, K;
     private final double dist;
@@ -85,7 +85,7 @@ public final class PerformanceMetrics{
     }
 
     public int getCommonEntities() {
-        return this.tp+this.tn;
+        return this.tp + this.tn;
     }
 
     public int getGroundTruthEntities() {
@@ -115,11 +115,11 @@ public final class PerformanceMetrics{
     }
 
     public double getFPR() {
-        return 1-getSpecificity();
+        return 1 - getSpecificity();
     }
 
     public double getFNR() {
-        return 1-getSensitivity();
+        return 1 - getSensitivity();
     }
 
     public double getAccuracy() {
@@ -166,25 +166,25 @@ public final class PerformanceMetrics{
         //sb.append("Accuracy=" + getAccuracy() + "\n");
         //sb.append("Gain=" + getGain() + "\n");
         sb.append("F1 score=" + getF1() + "\n");
-        sb.append("Distance to ground truth="+getDist()+"\n");
+        sb.append("Distance to ground truth=" + getDist() + "\n");
         //sb.append("Matthews Correlation Coefficient=" + getMCC() + "\n");
         sb.append("Number of entities in ground truth=" + N + "\n");
-        sb.append("Percentage of matched ground truth entities="+((float)(N-unmatchedGroundTruth))/((float)N)+"\n");
+        sb.append("Percentage of matched ground truth entities=" + ((float) (N - unmatchedGroundTruth)) / ((float) N) + "\n");
         sb.append("Number of entities in testGroup=" + M + "\n");
-        sb.append("Percentage of matched tool entities="+((float)(M-unmatchedTool))/((float)M)+"\n");
-        sb.append("Number of entites shared with ground truth = " + getCommonEntities()+"\n");
+        sb.append("Percentage of matched tool entities=" + ((float) (M - unmatchedTool)) / ((float) M) + "\n");
+        sb.append("Number of entites shared with ground truth = " + getCommonEntities() + "\n");
         sb.append("Percentage of test vs. ground truth entities: " + ((double) M / (double) N) + "\n");
         sb.append("Number of entities matched to ground truth = " + N + "=(tp+tn+fp+fn)=" + (tp + tn + fp + fn) + "\n");
         sb.append("Number of unmatched testGroup entities (ignored)= " + unmatchedTool + "\n");
         sb.append("Number of unmatched groundTruth entities (counted as false negatives)= " + unmatchedGroundTruth + "\n");
         sb.append("Unmatched tool entities:\n");
-        for(EntityGroup eg:unmatchedToolEnt) {
-            sb.append(eg+"\n");
+        for (EntityGroup eg : unmatchedToolEnt) {
+            sb.append(eg + "\n");
         }
         sb.append("Unmatched ground truth entities:\n");
-        
-        for(EntityGroup eg:unmatchedGroundTruthEnt) {
-            sb.append(eg+"\n");
+
+        for (EntityGroup eg : unmatchedGroundTruthEnt) {
+            sb.append(eg + "\n");
         }
         return sb.toString();
     }

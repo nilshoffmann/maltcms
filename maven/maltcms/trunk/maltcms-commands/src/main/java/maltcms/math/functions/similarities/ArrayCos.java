@@ -29,9 +29,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Cosine similarity between arrays.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
@@ -47,5 +47,4 @@ public class ArrayCos implements IArraySimilarity {
         throw new IllegalArgumentException("Arrays shapes are incompatible! "
                 + t1.getShape()[0] + " != " + t2.getShape()[0]);
     }
-
 }

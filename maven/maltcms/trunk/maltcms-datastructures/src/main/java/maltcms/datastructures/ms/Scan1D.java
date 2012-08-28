@@ -31,85 +31,84 @@ import ucar.ma2.IndexIterator;
 
 /**
  * Implementation of a 1-dimensional scan.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class Scan1D implements IScan1D {
 
-	/**
-     * 
+    /**
+     *
      */
-	private static final long serialVersionUID = 2937381605461829269L;
-	private final ArrayInt.D0 scanNumber = new ArrayInt.D0();
-	private final ArrayDouble.D0 scanAcquisitionTime = new ArrayDouble.D0();
-	private final ArrayDouble.D0 total_intensity = new ArrayDouble.D0();
-	private Array masses = null;
-	private Array intensities = null;
+    private static final long serialVersionUID = 2937381605461829269L;
+    private final ArrayInt.D0 scanNumber = new ArrayInt.D0();
+    private final ArrayDouble.D0 scanAcquisitionTime = new ArrayDouble.D0();
+    private final ArrayDouble.D0 total_intensity = new ArrayDouble.D0();
+    private Array masses = null;
+    private Array intensities = null;
 
-	public Scan1D(final Array masses1, final Array intensities1,
-	        final int scanNumber1, final double scanAcquisitionTime1) {
-		this.masses = masses1;
-		this.intensities = intensities1;
-		this.scanNumber.set(scanNumber1);
-		this.scanAcquisitionTime.set(scanAcquisitionTime1);
-		this.total_intensity.set(integrate(this.intensities));
-	}
+    public Scan1D(final Array masses1, final Array intensities1,
+            final int scanNumber1, final double scanAcquisitionTime1) {
+        this.masses = masses1;
+        this.intensities = intensities1;
+        this.scanNumber.set(scanNumber1);
+        this.scanAcquisitionTime.set(scanAcquisitionTime1);
+        this.total_intensity.set(integrate(this.intensities));
+    }
 
-	@Override
-	public Array getFeature(final String name) {
-		if (name.equals("mass_values")) {
-			return this.masses;
-		} else if (name.equals("intensity_values")) {
-			return this.intensities;
-		} else if (name.equals("scan_index")) {
-			return this.scanNumber;
-		} else if (name.equals("scan_acquisition_time")) {
-			return this.scanAcquisitionTime;
-		} else if (name.equals("total_intensity")) {
-			return this.total_intensity;
-		}
-		throw new IllegalArgumentException("Feature name " + name + " unknown!");
-	}
+    @Override
+    public Array getFeature(final String name) {
+        if (name.equals("mass_values")) {
+            return this.masses;
+        } else if (name.equals("intensity_values")) {
+            return this.intensities;
+        } else if (name.equals("scan_index")) {
+            return this.scanNumber;
+        } else if (name.equals("scan_acquisition_time")) {
+            return this.scanAcquisitionTime;
+        } else if (name.equals("total_intensity")) {
+            return this.total_intensity;
+        }
+        throw new IllegalArgumentException("Feature name " + name + " unknown!");
+    }
 
-	@Override
-	public List<String> getFeatureNames() {
-		return Arrays.asList(new String[] { "mass_values", "intensity_values",
-		        "scan_index", "scan_acquisition_time", "total_intensity" });
-	}
+    @Override
+    public List<String> getFeatureNames() {
+        return Arrays.asList(new String[]{"mass_values", "intensity_values",
+                    "scan_index", "scan_acquisition_time", "total_intensity"});
+    }
 
-	@Override
-	public Array getIntensities() {
-		return this.intensities;
-	}
+    @Override
+    public Array getIntensities() {
+        return this.intensities;
+    }
 
-	@Override
-	public Array getMasses() {
-		return this.masses;
-	}
+    @Override
+    public Array getMasses() {
+        return this.masses;
+    }
 
-	@Override
-	public double getScanAcquisitionTime() {
-		return this.scanAcquisitionTime.get();
-	}
+    @Override
+    public double getScanAcquisitionTime() {
+        return this.scanAcquisitionTime.get();
+    }
 
-	@Override
-	public int getScanIndex() {
-		return this.scanNumber.get();
-	}
+    @Override
+    public int getScanIndex() {
+        return this.scanNumber.get();
+    }
 
-	@Override
-	public double getTotalIntensity() {
-		return this.total_intensity.get();
-	}
+    @Override
+    public double getTotalIntensity() {
+        return this.total_intensity.get();
+    }
 
-	private double integrate(final Array intensities) {
-		double d = 0;
-		final IndexIterator ii = this.intensities.getIndexIterator();
-		while (ii.hasNext()) {
-			d += ii.getDoubleNext();
-		}
-		return d;
-	}
-
+    private double integrate(final Array intensities) {
+        double d = 0;
+        final IndexIterator ii = this.intensities.getIndexIterator();
+        while (ii.hasNext()) {
+            d += ii.getDoubleNext();
+        }
+        return d;
+    }
 }

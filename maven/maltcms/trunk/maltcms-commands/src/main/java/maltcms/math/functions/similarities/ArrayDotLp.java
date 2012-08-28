@@ -21,7 +21,6 @@
  */
 package maltcms.math.functions.similarities;
 
-
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 
@@ -31,7 +30,7 @@ import ucar.ma2.Array;
 
 /**
  * @author hoffmann
- * 
+ *
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
@@ -46,5 +45,4 @@ public class ArrayDotLp implements IArraySimilarity {
         final double d = this.lp.apply(t1, t2);
         return SimilarityTools.asSimilarity(d) * dotv;
     }
-
 }

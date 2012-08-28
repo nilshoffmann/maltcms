@@ -33,44 +33,43 @@ import cross.datastructures.fragments.IVariableFragment;
 /**
  * FeatureVector implementation, which directly accesses the IFileFragment
  * required at construction time.
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
 public class MaltcmsFeatureVector implements IFeatureVector {
 
-	/**
-     * 
+    /**
+     *
      */
-	private static final long serialVersionUID = 1423070246312970401L;
-	private IFileFragment iff = null;
-	private int index = -1;
+    private static final long serialVersionUID = 1423070246312970401L;
+    private IFileFragment iff = null;
+    private int index = -1;
 
-	public void addFeatures(IFileFragment iff, int i) {
-		this.iff = iff;
-		this.index = i;
-	}
+    public void addFeatures(IFileFragment iff, int i) {
+        this.iff = iff;
+        this.index = i;
+    }
 
-	@Override
-	public Array getFeature(String name) {
-		if (this.iff.getChild(name).getIndex() == null) {
-			Array a = this.iff.getChild(name).getArray();
-			try {
-				return a.section(new int[] { this.index },
-				        new int[] { this.index });
-			} catch (InvalidRangeException ex) {
-				System.err.println(ex.getLocalizedMessage());
-			}
-		}
-		return this.iff.getChild(name).getIndexedArray().get(this.index);
-	}
+    @Override
+    public Array getFeature(String name) {
+        if (this.iff.getChild(name).getIndex() == null) {
+            Array a = this.iff.getChild(name).getArray();
+            try {
+                return a.section(new int[]{this.index},
+                        new int[]{this.index});
+            } catch (InvalidRangeException ex) {
+                System.err.println(ex.getLocalizedMessage());
+            }
+        }
+        return this.iff.getChild(name).getIndexedArray().get(this.index);
+    }
 
-	@Override
-	public List<String> getFeatureNames() {
-		ArrayList<String> names = new ArrayList<String>();
-		for (IVariableFragment ivf : this.iff) {
-			names.add(ivf.getVarname());
-		}
-		return names;
-	}
-
+    @Override
+    public List<String> getFeatureNames() {
+        ArrayList<String> names = new ArrayList<String>();
+        for (IVariableFragment ivf : this.iff) {
+            names.add(ivf.getName());
+        }
+        return names;
+    }
 }

@@ -27,16 +27,16 @@ package maltcms.datastructures.peak;
  */
 public interface IPeakGroup1DProvider<T extends Peak1D> extends Iterable<T> {
 
-	/**
-	 * 
-	 * @param i the scan index to retrieve
-	 * @return the Peak1D
-	 */
-	public T getPeak(int i);
-	
-	/**
-	 * 
-	 * @return the number of peaks
-	 */
-	public int getNumberOfPeaks();
+    /**
+     *
+     * @param i the scan index to retrieve
+     * @return the Peak1D
+     */
+    public T getPeak(int i);
+
+    /**
+     *
+     * @return the number of peaks
+     */
+    public int getNumberOfPeaks();
 }

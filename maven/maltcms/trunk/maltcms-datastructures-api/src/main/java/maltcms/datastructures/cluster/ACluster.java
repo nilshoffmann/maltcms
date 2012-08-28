@@ -23,93 +23,87 @@ package maltcms.datastructures.cluster;
 
 /**
  * Abstract base class for general, n-ary clusters.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public abstract class ACluster implements ICluster {
 
-	private String name;
+    private String name;
+    private double distanceToParent = 0.0d;
+    private String labelstring = "\\tlput";
+    private int id;
+    private int size = 1;
+    private double[] dist;
 
-	private double distanceToParent = 0.0d;
+    public double getDistanceTo(final ICluster bc) {
+        return getDistanceTo(bc.getID());
+    }
 
-	private String labelstring = "\\tlput";
+    public double getDistanceTo(final int i) {
+        return this.dist[i];
+    }
 
-	private int id;
+    public double getDistanceToParent() {
+        return this.distanceToParent;
+    }
 
-	private int size = 1;
+    public int getID() {
+        return this.id;
+    }
 
-	private double[] dist;
+    public String getLabelString() {
+        return this.labelstring;
+    }
 
-	public double getDistanceTo(final ICluster bc) {
-		return getDistanceTo(bc.getID());
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public double getDistanceTo(final int i) {
-		return this.dist[i];
-	}
+    public int getSize() {
+        return this.size;
+    }
 
-	public double getDistanceToParent() {
-		return this.distanceToParent;
-	}
+    public String printDistances() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("ICluster " + getID() + " has distance to parent: "
+                + getDistanceToParent());
+        return sb.toString();
+    }
 
-	public int getID() {
-		return this.id;
-	}
+    public void setDistances(final double[] d) {
+        this.dist = d;
+    }
 
-	public String getLabelString() {
-		return this.labelstring;
-	}
+    public void setDistanceTo(final ICluster bc, final double d) {
+        setDistanceTo(bc.getID(), d);
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public void setDistanceTo(final int i, final double d) {
+        this.dist[i] = d;
+    }
 
-	public int getSize() {
-		return this.size;
-	}
+    public void setDistanceToParent(final double d) {
+        this.distanceToParent = d;
+    }
 
-	public String printDistances() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("ICluster " + getID() + " has distance to parent: "
-		        + getDistanceToParent());
-		return sb.toString();
-	}
+    public void setID(final int id1) {
+        this.id = id1;
+    }
 
-	public void setDistances(final double[] d) {
-		this.dist = d;
-	}
+    public void setLabelString(final String s) {
+        this.labelstring = s;
+    }
 
-	public void setDistanceTo(final ICluster bc, final double d) {
-		setDistanceTo(bc.getID(), d);
-	}
+    public void setName(final ICluster lc, final ICluster rc) {
+        this.name = "(" + lc.getName() + " " + rc.getName() + ")";
+    }
 
-	public void setDistanceTo(final int i, final double d) {
-		this.dist[i] = d;
-	}
+    public void setName(final String name1) {
+        this.name = name1;
+    }
 
-	public void setDistanceToParent(final double d) {
-		this.distanceToParent = d;
-	}
-
-	public void setID(final int id1) {
-		this.id = id1;
-	}
-
-	public void setLabelString(final String s) {
-		this.labelstring = s;
-	}
-
-	public void setName(final ICluster lc, final ICluster rc) {
-		this.name = "(" + lc.getName() + " " + rc.getName() + ")";
-	}
-
-	public void setName(final String name1) {
-		this.name = name1;
-	}
-
-	public void setSize(final int size1) {
-		this.size = size1;
-	}
-
+    public void setSize(final int size1) {
+        this.size = size1;
+    }
 }

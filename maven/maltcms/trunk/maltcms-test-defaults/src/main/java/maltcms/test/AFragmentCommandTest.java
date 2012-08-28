@@ -43,10 +43,10 @@ import org.junit.Rule;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 public abstract class AFragmentCommandTest {
-    
+
     @Rule
     public SetupLogging sl = new SetupLogging();
-    
+
     public IWorkflow createWorkflow(File outputDirectory, List<IFragmentCommand> commands, List<File> inputFiles) {
 //    	Properties props = new Properties();
 //        props.setProperty("log4j.rootLogger", "INFO, A1");
@@ -67,15 +67,15 @@ public abstract class AFragmentCommandTest {
 //        props.setProperty("log4j.category.ucar", "WARN");
 //        props.setProperty("log4j.category.smueller", "WARN");
 //        PropertyConfigurator.configure(props);
-    	CommandPipeline cp = new CommandPipeline();
+        CommandPipeline cp = new CommandPipeline();
         List<IFileFragment> fragments = new ArrayList<IFileFragment>();
-        for(File f:inputFiles) {
+        for (File f : inputFiles) {
             fragments.add(new FileFragment(f));
         }
         cp.setCommands(commands);
         cp.setInput(new TupleND<IFileFragment>(fragments));
-        System.out.println("Workflow using commands "+commands);
-        System.out.println("Workflow using inputFiles "+inputFiles);
+        System.out.println("Workflow using commands " + commands);
+        System.out.println("Workflow using inputFiles " + inputFiles);
         DefaultWorkflow dw = new DefaultWorkflow();
         dw.setStartupDate(new Date());
         dw.setName("testWorkflow");
@@ -84,5 +84,4 @@ public abstract class AFragmentCommandTest {
         dw.setOutputDirectory(outputDirectory);
         return dw;
     }
-    
 }

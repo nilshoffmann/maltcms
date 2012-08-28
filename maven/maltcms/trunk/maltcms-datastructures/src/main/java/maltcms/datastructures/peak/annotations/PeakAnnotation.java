@@ -30,11 +30,8 @@ import maltcms.datastructures.ms.IMetabolite;
  */
 @Data
 public class PeakAnnotation {
-    
+
     private double score = Double.NaN;
-    
     private String database = "";
-    
     private IMetabolite metabolite;
-    
 }

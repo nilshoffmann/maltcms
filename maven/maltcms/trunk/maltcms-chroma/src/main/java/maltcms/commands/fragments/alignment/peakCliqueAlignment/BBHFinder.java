@@ -39,7 +39,7 @@ import maltcms.datastructures.peak.Peak;
  */
 @Slf4j
 public class BBHFinder {
- 
+
     /**
      * @param al
      * @param fragmentToPeaks
@@ -91,5 +91,4 @@ public class BBHFinder {
         log.info("Removed {} unmatched peaks!", peaks);
         return unmatchedPeaks;
     }
-    
 }

@@ -36,13 +36,27 @@ public class AlignedPairVector implements Cloneable {
     private int f;
     private boolean done;
 
+    /**
+     *
+     */
     public AlignedPairVector() {
     }
 
+    /**
+     *
+     * @param done1
+     */
     public AlignedPairVector(final boolean done1) {
         this.done = done1;
     }
 
+    /**
+     *
+     * @param a1
+     * @param b1
+     * @param c1
+     * @param d1
+     */
     public AlignedPairVector(final char a1, final char b1, final int c1,
             final int d1) {
         this.a = a1;
@@ -51,11 +65,20 @@ public class AlignedPairVector implements Cloneable {
         this.d = d1;
     }
 
+    /**
+     *
+     * @param c1
+     * @param d1
+     */
     public AlignedPairVector(final int c1, final int d1) {
         this.c = c1;
         this.d = d1;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Object clone() {
         try {
@@ -67,58 +90,114 @@ public class AlignedPairVector implements Cloneable {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public char getA() {
         return this.a;
     }
 
+    /**
+     *
+     * @return
+     */
     public char getB() {
         return this.b;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getC() {
         return this.c;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getD() {
         return this.d;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getE() {
         return this.e;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getF() {
         return this.f;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isDone() {
         return this.done;
     }
 
+    /**
+     *
+     * @param a1
+     */
     public void setA(final char a1) {
         this.a = a1;
     }
 
+    /**
+     *
+     * @param b1
+     */
     public void setB(final char b1) {
         this.b = b1;
     }
 
+    /**
+     *
+     * @param c1
+     */
     public void setC(final int c1) {
         this.c = c1;
     }
 
+    /**
+     *
+     * @param d1
+     */
     public void setD(final int d1) {
         this.d = d1;
     }
 
+    /**
+     *
+     * @param done1
+     */
     public void setDone(final boolean done1) {
         this.done = done1;
     }
 
+    /**
+     *
+     * @param e1
+     */
     public void setE(final int e1) {
         this.e = e1;
     }
 
+    /**
+     *
+     * @param f1
+     */
     public void setF(final int f1) {
         this.f = f1;
     }

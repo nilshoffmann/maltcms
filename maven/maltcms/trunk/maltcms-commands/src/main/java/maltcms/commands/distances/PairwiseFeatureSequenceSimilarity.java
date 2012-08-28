@@ -32,31 +32,56 @@ import cross.datastructures.workflow.IWorkflowElement;
 /**
  * Interface to allow the values of comparison of multiple arrays to also be
  * used as a cost/score measure.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface PairwiseFeatureSequenceSimilarity extends
         ICommand<Tuple2D<Array[], Array[]>, Array[]>, IWorkflowElement {
 
+    /**
+     *
+     * @param a
+     * @param b
+     * @return
+     */
     public abstract IFileFragment apply(IFileFragment a, IFileFragment b);
 
+    /**
+     *
+     * @return
+     */
     public abstract ArrayDouble.D0 getResult();
 
+    /**
+     *
+     * @return
+     */
     public abstract IFileFragment getResultFileFragment();
 
+    /**
+     *
+     * @return
+     */
     public abstract ArrayDouble.D1 getResultVector();
 
+    /**
+     *
+     * @return
+     */
     public abstract StatsMap getStatsMap();
 
     /**
      * Returns true, if this LDF is a distance between Arrays, false if LDF is a
      * similarity.
-     * 
+     *
      * @return
      */
     public abstract boolean minimize();
 
+    /**
+     *
+     * @param sm
+     */
     public abstract void setStatsMap(StatsMap sm);
-
 }

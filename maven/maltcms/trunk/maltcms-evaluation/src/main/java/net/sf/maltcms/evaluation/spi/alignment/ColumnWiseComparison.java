@@ -26,5 +26,4 @@ package net.sf.maltcms.evaluation.spi.alignment;
  * @author nilshoffmann
  */
 public class ColumnWiseComparison {
-    
 }

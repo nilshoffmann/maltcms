@@ -28,9 +28,9 @@ import ucar.ma2.IndexIterator;
 
 /**
  * Calculate first derivative on array stored in a new array.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)

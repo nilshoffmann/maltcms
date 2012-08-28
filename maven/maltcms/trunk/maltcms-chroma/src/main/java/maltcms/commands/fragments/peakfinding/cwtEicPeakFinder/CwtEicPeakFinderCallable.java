@@ -55,8 +55,8 @@ import ucar.ma2.Index;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @Data
 @Slf4j

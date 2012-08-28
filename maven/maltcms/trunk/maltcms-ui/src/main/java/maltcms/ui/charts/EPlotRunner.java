@@ -33,92 +33,84 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.Plot;
 import org.slf4j.Logger;
 
-import cross.Logging;
 import cross.tools.StringTools;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class is an extension of the normal {@link PlotRunner} and will generate
  * a serialized file. Do not use the inherit constructor from {@link PlotRunner}
  * . It will throw a {@link RuntimeException}.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
+@Slf4j
 public class EPlotRunner extends PlotRunner {
 
-	private Logger log = Logging.getLogger(this);
+    private JFreeChart chart = null;
 
-	private JFreeChart chart = null;
+    /**
+     * Old constructor.
+     *
+     * @param plot1 plot
+     * @param title1 title
+     * @param filename1 filename
+     * @param outputdir output directory
+     */
+    public EPlotRunner(final Plot plot1, final String title1,
+            final String filename1, final File outputdir) {
+        super(plot1, title1, filename1, outputdir);
+        throw new RuntimeException(
+                "Use the original PlotRunner instead of the EPlotRunner.");
+    }
 
-	/**
-	 * Old constructor.
-	 * 
-	 * @param plot1
-	 *            plot
-	 * @param title1
-	 *            title
-	 * @param filename1
-	 *            filename
-	 * @param outputdir
-	 *            output directory
-	 */
-	public EPlotRunner(final Plot plot1, final String title1,
-	        final String filename1, final File outputdir) {
-		super(plot1, title1, filename1, outputdir);
-		throw new RuntimeException(
-		        "Use the original PlotRunner instead of the EPlotRunner.");
-	}
+    /**
+     * Default constructor.
+     *
+     * @param ichart this chart will be plotted
+     * @param ifilename filename of background image
+     */
+    public EPlotRunner(final JFreeChart ichart, final String ifilename,
+            final File outputdir) {
+        super(ichart.getPlot(), ichart.getTitle().toString(), ifilename,
+                outputdir);
+        this.chart = ichart;
+    }
 
-	/**
-	 * Default constructor.
-	 * 
-	 * @param ichart
-	 *            this chart will be plotted
-	 * @param ifilename
-	 *            filename of background image
-	 */
-	public EPlotRunner(final JFreeChart ichart, final String ifilename,
-	        final File outputdir) {
-		super(ichart.getPlot(), ichart.getTitle().toString(), ifilename,
-		        outputdir);
-		this.chart = ichart;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void configure(final Configuration cfg) {
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void configure(final Configuration cfg) {
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JFreeChart call() throws Exception {
+        this.log
+                .info("#############################################################################");
+        final String s = this.getClass().getName();
+        this.log.info("# {} running", s);
+        this.log
+                .info("#############################################################################");
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public JFreeChart call() throws Exception {
-		this.log
-		        .info("#############################################################################");
-		final String s = this.getClass().getName();
-		this.log.info("# {} running", s);
-		this.log
-		        .info("#############################################################################");
-
-		if (isSerializeJFreeChart()) {
-			try {
-				final ObjectOutputStream oos = new ObjectOutputStream(
-				        new BufferedOutputStream(new FileOutputStream(
-				                StringTools.removeFileExt(getFile()
-				                        .getAbsolutePath())
-				                        + ".serialized")));
-				oos.writeObject(this.chart);
-				oos.flush();
-				oos.close();
-			} catch (final FileNotFoundException e) {
-				log.warn("{}", e.getLocalizedMessage());
-			} catch (final IOException e) {
-				log.warn("{}", e.getLocalizedMessage());
-			}
-		}
-		return this.chart;
-	}
-
+        if (isSerializeJFreeChart()) {
+            try {
+                final ObjectOutputStream oos = new ObjectOutputStream(
+                        new BufferedOutputStream(new FileOutputStream(
+                        StringTools.removeFileExt(getFile()
+                        .getAbsolutePath())
+                        + ".serialized")));
+                oos.writeObject(this.chart);
+                oos.flush();
+                oos.close();
+            } catch (final FileNotFoundException e) {
+                log.warn("{}", e.getLocalizedMessage());
+            } catch (final IOException e) {
+                log.warn("{}", e.getLocalizedMessage());
+            }
+        }
+        return this.chart;
+    }
 }

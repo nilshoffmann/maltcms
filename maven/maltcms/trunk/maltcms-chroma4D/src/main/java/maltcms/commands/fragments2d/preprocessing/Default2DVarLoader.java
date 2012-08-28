@@ -115,6 +115,10 @@ public class Default2DVarLoader extends AFragmentCommand {
     private String scanNumberDimension = "scan_number";
     private boolean estimateModulationTime = false;
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return getClass().getName();

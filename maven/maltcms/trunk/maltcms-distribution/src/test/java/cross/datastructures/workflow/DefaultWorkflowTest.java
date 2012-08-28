@@ -47,12 +47,10 @@ public class DefaultWorkflowTest {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
-    
     public File inputDirectory;
     public File outputDirectory;
     public String[] fileExtensions = new String[]{"cdf", "nc"};
     public boolean checkCommandDependencies = true;
-    
     public DefaultWorkflow dw;
 
     @Before
@@ -61,12 +59,12 @@ public class DefaultWorkflowTest {
         outputDirectory = folder.newFolder("output");
         dw = getDefaultWorkflow();
     }
-    
+
     @After
     public void tearDown() throws Exception {
 //       folder.
     }
-    
+
     public List<File> getDefaultTestFiles() {
         File[] files = new File[4];
         for (int i = 0; i < files.length; i++) {
@@ -94,7 +92,7 @@ public class DefaultWorkflowTest {
         cp.setCommands(commands);
         List<IFileFragment> files = new ArrayList<IFileFragment>();
         for (File file : inputFiles) {
-            log.info("Adding input file: {}",file.getAbsolutePath());
+            log.info("Adding input file: {}", file.getAbsolutePath());
             files.add(new FileFragment(file));
         }
         cp.setInput(new TupleND<IFileFragment>(files));
@@ -106,7 +104,7 @@ public class DefaultWorkflowTest {
     public DefaultWorkflow getDefaultWorkflow() {
         log.info("Building test command sequence");
         CommandPipeline cp = getDefaultCommandSequence(
-                getDefaultFragmentCommands(),getDefaultTestFiles());
+                getDefaultFragmentCommands(), getDefaultTestFiles());
         log.info("Creating workflow");
         DefaultWorkflow dw = new DefaultWorkflow();
         dw.setExecuteLocal(true);
@@ -119,12 +117,11 @@ public class DefaultWorkflowTest {
         log.info("Testing workflow!");
         try {
             TupleND<IFileFragment> tpl = dw.call();
-            for(IFileFragment ff:tpl) {
-                log.info("Workflow created fragment: {}",ff.getAbsolutePath());
+            for (IFileFragment ff : tpl) {
+                log.info("Workflow created fragment: {}", ff.getAbsolutePath());
             }
         } catch (Exception e) {
             fail();
         }
     }
-    
 }

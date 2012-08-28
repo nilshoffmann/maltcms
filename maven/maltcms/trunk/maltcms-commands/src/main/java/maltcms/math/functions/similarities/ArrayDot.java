@@ -29,7 +29,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Dot product as similarity measure between arrays.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
@@ -48,5 +48,4 @@ public class ArrayDot implements IArraySimilarity {
         }
         throw new IllegalArgumentException("Arrays shapes are incompatible!");
     }
-
 }

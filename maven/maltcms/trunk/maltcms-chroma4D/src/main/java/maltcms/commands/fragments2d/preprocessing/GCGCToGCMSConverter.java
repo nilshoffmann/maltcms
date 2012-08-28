@@ -51,9 +51,9 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
 /**
- * Reduces a GCxGC-MS chromatogram to its one-dimensional representation by summing over 
- * modulations.
- * 
+ * Reduces a GCxGC-MS chromatogram to its one-dimensional representation by
+ * summing over modulations.
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
 /*
@@ -61,12 +61,16 @@ import ucar.ma2.ArrayInt;
  */
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class GCGCToGCMSConverter extends AFragmentCommand {
 
-    @Configurable(value="5")
+    @Configurable(value = "5")
     private double snrthreshold = 5;
-    
+
+    /**
+     *
+     * @return
+     */
     @Override
     public String getDescription() {
         return "GCxGC-MS data to GC-MS data by simple scan-wise summation.";
@@ -106,7 +110,7 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
                         double mass = masses.getDouble(j);
                         minMass = Math.min(mass, minMass);
                         maxMass = Math.max(mass, maxMass);
-                        
+
                         if (modulationMS.containsKey(mass)) {
                             modulationMS.put(mass, modulationMS.get(masses.getDouble(j)) + intens);
                         } else {
@@ -126,14 +130,14 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
                 double median = MathTools.median((int[]) intenValues.getStorage());
                 StatsMap sm = ass.apply(new Array[]{intenValues})[0];
                 double stdev = Math.sqrt(sm.get(Vars.Variance.name()));
-                double snr = - (20.0d * Math.log10(median / stdev));
-                System.out.println("Median: "+median+" stdev: "+stdev+" snr: "+snr);
+                double snr = -(20.0d * Math.log10(median / stdev));
+                System.out.println("Median: " + median + " stdev: " + stdev + " snr: " + snr);
                 for (int l = 0; l < intenValues.getShape()[0]; l++) {
 
                     if (snr < (this.snrthreshold)) {
                         intenValues.setInt(l, 0);
-                    }else{
-                        intenValues.setInt(l, (int)Math.max(0, intenValues.getInt(l)-median));
+                    } else {
+                        intenValues.setInt(l, (int) Math.max(0, intenValues.getInt(l) - median));
                     }
                     ticv += intenValues.getInt(l);
                 }
@@ -185,9 +189,13 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
      */
     @Override
     public void configure(Configuration cfg) {
-        this.snrthreshold = cfg.getDouble(getClass().getName()+".snrthreshold", 5);
+        this.snrthreshold = cfg.getDouble(getClass().getName() + ".snrthreshold", 5);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;

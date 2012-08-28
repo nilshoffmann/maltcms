@@ -31,28 +31,56 @@ public class OptimalAlignmentVector implements Cloneable {
 
     private final Vector<AlignedPairVector> align = new Vector<AlignedPairVector>();
 
+    /**
+     *
+     */
     public OptimalAlignmentVector() {
     }
 
+    /**
+     *
+     * @param a
+     */
     public void addAlChars(final boolean a) {
         final AlignedPairVector ss = new AlignedPairVector(a);
         this.align.add(ss);
     }
 
+    /**
+     *
+     * @param a
+     * @param b
+     */
     public void addAlChars(final char a, final char b) {
         final AlignedPairVector ss = new AlignedPairVector(a, b);
         this.align.add(ss);
     }
 
+    /**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param d
+     */
     public void addAlChars(final char a, final char b, final int c, final int d) {
         final AlignedPairVector ss = new AlignedPairVector(a, b, c, d);
         this.align.add(ss);
     }
 
+    /**
+     *
+     * @param ss
+     */
     public void addALChars(final AlignedPairVector ss) {
         this.align.add(ss);
     }
 
+    /**
+     *
+     * @param a
+     * @param b
+     */
     public void changeAlChars(final int a, final int b) {
         final AlignedPairVector ss = new AlignedPairVector();
         getCharPair(countAlChars() - 1);
@@ -60,6 +88,10 @@ public class OptimalAlignmentVector implements Cloneable {
         ss.setD(b);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Object clone() {
 
@@ -73,10 +105,19 @@ public class OptimalAlignmentVector implements Cloneable {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public int countAlChars() {
         return this.align.size();
     }
 
+    /**
+     *
+     * @param i
+     * @return
+     */
     public AlignedPairVector getCharPair(final int i) {
         return this.align.get(i);
     }

@@ -80,7 +80,7 @@ public class DTWNew {
         cfg.setProperty("alignment.save.pairwise.distance.matrix", true);
         cfg.setProperty("alignment.algorithm.distance",
                 "maltcms.commands.distances.ArrayCos");
-        cfg.setProperty("alignment.algorithm.windowsize",0.05);
+        cfg.setProperty("alignment.algorithm.windowsize", 0.05);
         cfg.setProperty(
                 "maltcms.commands.distances.ArrayCos.compression_weight", 1.0);
         cfg.setProperty("maltcms.commands.distances.ArrayCos.expansion_weight",
@@ -168,10 +168,10 @@ public class DTWNew {
         //System.out.println("Old: " + pl2);
         System.out.println("New value: " + v);
         System.out.println("Old value: " + adtw.getResult().get());
-        String s2 = getStringFromFile(((IWorkflowFileResult)l.get(0)).getFile());
+        String s2 = getStringFromFile(((IWorkflowFileResult) l.get(0)).getFile());
         EditDistance ed = new EditDistance();
-        double d = ed.getDistance(s1,s2);
-        System.out.println("Edit distance: "+d);
+        double d = ed.getDistance(s1, s2);
+        System.out.println("Edit distance: " + d);
 
     }
 
@@ -180,7 +180,7 @@ public class DTWNew {
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
             String line = "";
-            while((line=br.readLine())!=null) {
+            while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
             return sb.toString();
@@ -189,5 +189,4 @@ public class DTWNew {
         }
         return "";
     }
-
 }

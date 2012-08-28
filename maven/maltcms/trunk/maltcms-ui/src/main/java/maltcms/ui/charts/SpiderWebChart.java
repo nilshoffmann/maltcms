@@ -29,55 +29,52 @@ import cross.datastructures.tools.EvalTools;
 
 /**
  * Chart displaying a plot of different variables organized as a spider's web.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class SpiderWebChart extends AChart<SpiderWebPlot> {
 
-	public static CategoryDataset createCategoryDataset(
-	        final String[] collabels, final String[] rowlabels,
-	        final double[][] data) {
-		final DefaultCategoryDataset cd = new DefaultCategoryDataset();
-		EvalTools.eqI(collabels.length, data[0].length, cd);
-		EvalTools.eqI(rowlabels.length, data.length, cd);
-		for (int i = 0; i < collabels.length; i++) {
-			for (int j = 0; j < rowlabels.length; j++) {
-				cd.addValue(data[j][i], rowlabels[j], collabels[i]);
-			}
-		}
-		return cd;
-	}
+    public static CategoryDataset createCategoryDataset(
+            final String[] collabels, final String[] rowlabels,
+            final double[][] data) {
+        final DefaultCategoryDataset cd = new DefaultCategoryDataset();
+        EvalTools.eqI(collabels.length, data[0].length, cd);
+        EvalTools.eqI(rowlabels.length, data.length, cd);
+        for (int i = 0; i < collabels.length; i++) {
+            for (int j = 0; j < rowlabels.length; j++) {
+                cd.addValue(data[j][i], rowlabels[j], collabels[i]);
+            }
+        }
+        return cd;
+    }
+    private String title = "";
+    private CategoryDataset cd = null;
 
-	private String title = "";
+    public SpiderWebChart(final String title1, final CategoryDataset cd1) {
+        this.title = title1;
+        this.cd = cd1;
+    }
 
-	private CategoryDataset cd = null;
+    public SpiderWebChart(final String title1, final String[] collabels,
+            final String[] rowlabels, final double[][] data) {
+        this(title1, SpiderWebChart.createCategoryDataset(collabels, rowlabels,
+                data));
+    }
 
-	public SpiderWebChart(final String title1, final CategoryDataset cd1) {
-		this.title = title1;
-		this.cd = cd1;
-	}
+    @Override
+    public SpiderWebPlot create() {
+        final SpiderWebPlot swp = new SpiderWebPlot(this.cd);
+        return swp;
+    }
 
-	public SpiderWebChart(final String title1, final String[] collabels,
-	        final String[] rowlabels, final double[][] data) {
-		this(title1, SpiderWebChart.createCategoryDataset(collabels, rowlabels,
-		        data));
-	}
+    @Override
+    public String getTitle() {
+        return this.title;
+    }
 
-	@Override
-	public SpiderWebPlot create() {
-		final SpiderWebPlot swp = new SpiderWebPlot(this.cd);
-		return swp;
-	}
-
-	@Override
-	public String getTitle() {
-		return this.title;
-	}
-
-	@Override
-	public void setTitle(final String s) {
-		this.title = s;
-	}
-
+    @Override
+    public void setTitle(final String s) {
+        this.title = s;
+    }
 }

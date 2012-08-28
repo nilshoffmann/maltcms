@@ -42,7 +42,7 @@ import org.jdom.xpath.XPath;
 public class MaltcmsTaskResult extends DefaultTaskResult {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -4395347427746465402L;
     private final File workflow;
@@ -76,5 +76,4 @@ public class MaltcmsTaskResult extends DefaultTaskResult {
                     log(Level.SEVERE, null, ex);
         }
     }
-
 }

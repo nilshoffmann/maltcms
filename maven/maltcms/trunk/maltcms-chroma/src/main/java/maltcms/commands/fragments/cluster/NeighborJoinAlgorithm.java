@@ -34,12 +34,12 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Implementation of NeighborJoining by Saitou and Nei (cite...) FIXME add
  * citation
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
 
     public static void main(final String[] args) {

@@ -32,9 +32,9 @@ import lombok.Data;
 
 /**
  * AArrayFilter applicable to Array objects, returning Array objects.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 public abstract class AArrayFilter implements ICommand<Array, Array> {

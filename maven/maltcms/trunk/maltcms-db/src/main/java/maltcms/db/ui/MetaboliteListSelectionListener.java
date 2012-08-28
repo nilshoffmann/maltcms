@@ -101,17 +101,16 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
             System.out.println("Creating new Frame");
             msframe = new JFrame("Mass Spectra");
             msframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            msframe.add(getJToolBar(),BorderLayout.PAGE_START);
+            msframe.add(getJToolBar(), BorderLayout.PAGE_START);
 
         }
         return msframe;
     }
 
     private JToolBar getJToolBar() {
-        if(toolbar == null) {
+        if (toolbar == null) {
             toolbar = new JToolBar();
-            toolbar.add(new AbstractAction("Clear"){
-
+            toolbar.add(new AbstractAction("Clear") {
                 @Override
                 public void actionPerformed(ActionEvent ae) {
                     series.clear();
@@ -128,7 +127,6 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
             System.out.println("Series for " + m.getName() + " already created!");
         } else {
             Runnable r = new Runnable() {
-
                 @Override
                 public void run() {
                     series.put(m.getName(), createXYSeries(m));
@@ -251,14 +249,12 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
             if (m != null) {
                 System.out.println(m.getMassSpectrum().getSecond());
                 Runnable fr = new Runnable() {
-
                     @Override
                     public void run() {
                         JPopupMenu jpm = new JPopupMenu();
                         boolean contained = series.containsKey(m.getName());
                         if (!contained) {
                             jpm.add(new AbstractAction("Add to chart") {
-
                                 @Override
                                 public void actionPerformed(ActionEvent ae) {
                                     addMetaboliteToChart(m);
@@ -266,7 +262,6 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
                             });
                         } else {
                             jpm.add(new AbstractAction("Remove from chart") {
-
                                 @Override
                                 public void actionPerformed(ActionEvent ae) {
                                     removeMetaboliteFromChart(m);

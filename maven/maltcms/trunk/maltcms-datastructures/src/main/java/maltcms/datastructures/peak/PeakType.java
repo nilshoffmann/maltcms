@@ -26,5 +26,6 @@ package maltcms.datastructures.peak;
  * @author nils
  */
 public enum PeakType {
+
     UNDEFINED, TIC_RAW, TIC_FILTERED, EIC_RAW, EIC_FILTERED;
 }

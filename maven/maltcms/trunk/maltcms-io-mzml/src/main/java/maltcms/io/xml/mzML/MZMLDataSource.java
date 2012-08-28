@@ -32,7 +32,6 @@ import maltcms.io.andims.NetcdfDataSource;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -45,15 +44,12 @@ import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.Run;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
-import uk.ac.ebi.jmzml.model.mzml.SpectrumList;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
-import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
@@ -62,6 +58,7 @@ import cross.tools.StringTools;
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.logging.Level;
+import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.DataType;
 import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
@@ -70,13 +67,11 @@ import uk.ac.ebi.jmzml.model.mzml.FileDescription;
 import uk.ac.ebi.jmzml.model.mzml.SourceFile;
 import uk.ac.ebi.jmzml.model.mzml.SourceFileList;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
-import uk.ac.ebi.jmzml.xml.xxindex.MzMLIndexer;
-import uk.ac.ebi.jmzml.xml.xxindex.MzMLIndexerFactory;
 
+@Slf4j
 @ServiceProvider(service = IDataSource.class)
 public class MZMLDataSource implements IDataSource {
 
-    private final Logger log = Logging.getLogger(this.getClass());
     private final String[] fileEnding = new String[]{"mzml", "mzml.xml"};
     @Configurable(name = "var.mass_values", value = "mass_values")
     private String mass_values = "mass_values";
@@ -169,9 +164,9 @@ public class MZMLDataSource implements IDataSource {
     private Spectrum getSpectrum(MzMLUnmarshaller um, int idx) {
         try {
             return um.getSpectrumById(um.getSpectrumIDFromSpectrumIndex(Integer.valueOf(idx)));
-    //        SpectrumList cl = run.getSpectrumList();
-    //        return s;
-    //        return s;
+            //        SpectrumList cl = run.getSpectrumList();
+            //        return s;
+            //        return s;
         } catch (MzMLUnmarshallerException ex) {
             java.util.logging.Logger.getLogger(MZMLDataSource.class.getName()).log(Level.SEVERE, null, ex);
             throw new ResourceNotAvailableException(ex);
@@ -343,7 +338,7 @@ public class MZMLDataSource implements IDataSource {
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
         MzMLUnmarshaller um = getUnmarshaller(f.getParent());
-        if (f.getVarname().equals(this.mass_values)) {
+        if (f.getName().equals(this.mass_values)) {
             final ArrayList<Array> al = new ArrayList<Array>();
             final Run run = getRun(getUnmarshaller(f.getParent()), f.getParent());
             int start = 0;
@@ -360,7 +355,7 @@ public class MZMLDataSource implements IDataSource {
             }
             return al;
         }
-        if (f.getVarname().equals(this.intensity_values)) {
+        if (f.getName().equals(this.intensity_values)) {
             final ArrayList<Array> al = new ArrayList<Array>();
             final Run run = getRun(getUnmarshaller(f.getParent()), f.getParent());
             int start = 0;
@@ -396,10 +391,10 @@ public class MZMLDataSource implements IDataSource {
             final Run run, final MzMLUnmarshaller um) {
         this.log.debug("readMinMaxMassValueArray");
         final Tuple2D<Array, Array> t = initMinMaxMZ(var, run, um);
-        if (var.getVarname().equals(this.mass_range_min)) {
+        if (var.getName().equals(this.mass_range_min)) {
             return t.getFirst();
         }
-        if (var.getVarname().equals(this.mass_range_max)) {
+        if (var.getName().equals(this.mass_range_max)) {
             return t.getSecond();
         }
         throw new IllegalArgumentException(
@@ -420,7 +415,7 @@ public class MZMLDataSource implements IDataSource {
             npeaks += getMassValues(getSpectrum(um, i)).getShape()[0];
         }
 
-        if (var.getVarname().equals(this.mass_values)) {
+        if (var.getName().equals(this.mass_values)) {
             final Array a = new ArrayDouble.D1(npeaks);
             npeaks = 0;
             for (int i = start; i < scans; i++) {
@@ -431,7 +426,7 @@ public class MZMLDataSource implements IDataSource {
             }
             return a;
             // f.setArray(a);
-        } else if (var.getVarname().equals(this.intensity_values)) {
+        } else if (var.getName().equals(this.intensity_values)) {
             final Array a = new ArrayDouble.D1(npeaks);
             npeaks = 0;
             for (int i = start; i < scans; i++) {
@@ -445,7 +440,7 @@ public class MZMLDataSource implements IDataSource {
             // f.setArray(a);
         }
         throw new IllegalArgumentException(
-                "Don't know how to handle variable: " + var.getVarname());
+                "Don't know how to handle variable: " + var.getName());
         // }
         // return f.getArray();
     }
@@ -518,14 +513,14 @@ public class MZMLDataSource implements IDataSource {
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException {
-        this.log.debug("readSingle of {} in {}", f.getVarname(), f.getParent().getAbsolutePath());
+        this.log.debug("readSingle of {} in {}", f.getName(), f.getParent().getAbsolutePath());
         if (f.hasArray()) {
             this.log.warn("{} already has an array set!", f);
         }
         final Array a = loadArray(f.getParent(), f);
         if (a == null) {
             throw new ResourceNotAvailableException("Could not find variable "
-                    + f.getVarname() + " in file " + f.getParent().getName());
+                    + f.getName() + " in file " + f.getParent().getName());
         }
         // f.setArray(a);
         return a;
@@ -568,7 +563,7 @@ public class MZMLDataSource implements IDataSource {
         MzMLUnmarshaller um = getUnmarshaller(f.getParent());
         final Run run = getRun(um, f.getParent());
         final int scancount = getScanCount(run);
-        final String varname = f.getVarname();
+        final String varname = f.getName();
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.scan_index)
                 || varname.equals(this.total_intensity)
@@ -632,16 +627,16 @@ public class MZMLDataSource implements IDataSource {
         }
         return intensA;
     }
-    
+
     private double convertTimeValue(double value, String unit) {
-        if(unit.equalsIgnoreCase("second")) {
+        if (unit.equalsIgnoreCase("second")) {
             return value;
-        }else if(unit.equalsIgnoreCase("minute")) {
-            return value/=60.0d;
-        }else if(unit.equalsIgnoreCase("hour")) {
-            return value/=3600.0d;
+        } else if (unit.equalsIgnoreCase("minute")) {
+            return value /= 60.0d;
+        } else if (unit.equalsIgnoreCase("hour")) {
+            return value /= 3600.0d;
         }
-        throw new UnsupportedOperationException("Don't know how to convert "+unit+" to seconds!");
+        throw new UnsupportedOperationException("Don't know how to convert " + unit + " to seconds!");
     }
 
     @Override

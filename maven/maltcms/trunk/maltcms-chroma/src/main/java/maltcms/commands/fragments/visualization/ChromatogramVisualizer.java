@@ -65,23 +65,22 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Visualizes a chromatogram as a heat map, based on the empirical distribution
  * of intensity values, using a user defined sample model and color model.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @RequiresVariables(names = {"var.scan_acquisition_time", "var.mass_values",
     "var.binned_intensity_values", "var.binned_scan_index"})
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class ChromatogramVisualizer extends AFragmentCommand {
 
     private final String description = "Creates two-dimensional heat map plots of chromatograms.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
-    
-    @Configurable(name="var.mass_values")
+    @Configurable(name = "var.mass_values")
     private String mzVariableName = "mass_values";
-    @Configurable(name="var.scan_acquisition_time")
+    @Configurable(name = "var.scan_acquisition_time")
     private String scanAcquisitionTimeVariableName = "scan_acquisition_time";
     @Configurable
     private String format = "png";
@@ -95,7 +94,7 @@ public class ChromatogramVisualizer extends AFragmentCommand {
     private boolean substractStartTime = false;
     @Configurable
     private String timeUnit = "min";
-    
+
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ColorRampReader crr = new ColorRampReader();

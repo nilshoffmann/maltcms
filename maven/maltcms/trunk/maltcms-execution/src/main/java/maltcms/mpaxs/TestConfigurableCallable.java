@@ -29,7 +29,7 @@ import net.sf.mpaxs.api.job.Progress;
  *
  * @author nilshoffmann
  */
-public class TestConfigurableCallable implements ConfigurableRunnable<Long>{
+public class TestConfigurableCallable implements ConfigurableRunnable<Long> {
 
     private Progress progress = new Progress();
     private long finished = -1l;
@@ -41,7 +41,6 @@ public class TestConfigurableCallable implements ConfigurableRunnable<Long>{
 
     @Override
     public void configure(File pathToConfig) {
-
     }
 
     @Override
@@ -52,15 +51,14 @@ public class TestConfigurableCallable implements ConfigurableRunnable<Long>{
     @Override
     public void run() {
         progress.setMessage("Starting computation");
-        for(int i = 0;i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
                 //Logger.getLogger(TestConfigurableCallable.class.getName()).log(Level.SEVERE, null, ex);
             }
-            progress.setProgress(i*10);
+            progress.setProgress(i * 10);
         }
         finished = System.nanoTime();
     }
-
 }

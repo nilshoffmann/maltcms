@@ -33,9 +33,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Add a given double to elements of an array.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -52,7 +52,6 @@ public class AdditionFilter extends AArrayFilter {
     public AdditionFilter(final double add) {
         this();
         this.aef = new AElementFilter() {
-
             @Override
             public Double apply(final Double d) {
                 return d + add;
@@ -81,7 +80,6 @@ public class AdditionFilter extends AArrayFilter {
     public void configure(final Configuration cfg) {
         this.add = cfg.getDouble(this.getClass().getName() + ".add");
         this.aef = new AElementFilter() {
-
             @Override
             public Double apply(Double t) {
                 return Double.valueOf(t.doubleValue() + add);

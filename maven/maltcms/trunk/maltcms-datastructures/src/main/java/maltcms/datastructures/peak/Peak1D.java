@@ -158,7 +158,6 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
     public Iterator<Peak1D> iterator() {
         final Peak1D thisPeak = this;
         return new Iterator<Peak1D>() {
-
             private Peak1D peak = thisPeak;
             private boolean hasNext = true;
 

@@ -96,10 +96,28 @@ public class ModulationExtractor extends AFragmentCommand {
         this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
     }
 
+    /**
+     *
+     * @param a
+     * @param modulationStart
+     * @param modulationEnd
+     * @param scansPerModulation
+     * @return
+     */
     protected Array get1DArraySubset(Array a, int modulationStart, int modulationEnd, int scansPerModulation) {
         return get1DArraySubset(a, modulationStart, modulationEnd, 0, scansPerModulation - 1, scansPerModulation);
     }
 
+    /**
+     *
+     * @param a
+     * @param modulationStart
+     * @param modulationEnd
+     * @param intraModulationStart
+     * @param intraModulationStop
+     * @param scansPerModulation
+     * @return
+     */
     protected Array get1DArraySubset(Array a, int modulationStart, int modulationEnd, int intraModulationStart, int intraModulationStop, int scansPerModulation) {
         int elementsPerModulation = intraModulationStop - intraModulationStart + 1;
         int modulations = modulationEnd - modulationStart + 1;
@@ -114,12 +132,18 @@ public class ModulationExtractor extends AFragmentCommand {
                 Array.arraycopy(slice, 0, ret, targetOffset, copyRange);
                 targetOffset += (copyRange);
             } catch (InvalidRangeException ex) {
-                log.warn("InvalidRangeException:",ex);
+                log.warn("InvalidRangeException:", ex);
             }
         }
         return ret;
     }
 
+    /**
+     *
+     * @param ff
+     * @param interModulationIndex
+     * @return
+     */
     protected int modulationIndexToScanIndex(IFileFragment ff, int interModulationIndex) {
         final double srv = ff.getChild(this.scanRateVar).getArray().getDouble(Index.scalarIndexImmutable);
         final double modT = ff.getChild(this.modulationTimeVar).getArray().getDouble(Index.scalarIndexImmutable);
@@ -127,6 +151,13 @@ public class ModulationExtractor extends AFragmentCommand {
         return interModulationIndex * spm;
     }
 
+    /**
+     *
+     * @param ff
+     * @param interModulationIndex
+     * @param intraModulationIndex
+     * @return
+     */
     protected int intraModulationIndexToScanIndex(IFileFragment ff, int interModulationIndex, int intraModulationIndex) {
         return modulationIndexToScanIndex(ff, interModulationIndex) + intraModulationIndex;
     }
@@ -166,6 +197,10 @@ public class ModulationExtractor extends AFragmentCommand {
      * (non-Javadoc)
      *
      * @see cross.commands.fragments.AFragmentCommand#getDescription()
+     */
+    /**
+     *
+     * @return
      */
     @Override
     public String getDescription() {
@@ -246,6 +281,10 @@ public class ModulationExtractor extends AFragmentCommand {
      * (non-Javadoc)
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
+     */
+    /**
+     *
+     * @return
      */
     @Override
     public WorkflowSlot getWorkflowSlot() {

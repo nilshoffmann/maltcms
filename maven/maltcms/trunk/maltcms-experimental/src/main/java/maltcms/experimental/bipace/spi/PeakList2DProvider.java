@@ -38,23 +38,22 @@ import maltcms.experimental.bipace.api.IPeakListProvider;
 @Data
 public class PeakList2DProvider implements IPeakListProvider<Peak2D> {
 
-    private Map<String,PeakList<Peak2D>> map;
-    
-    public PeakList2DProvider(List<Tuple2D<IFileFragment,List<Peak2D>>> peaks) {
-        map = new HashMap<String,PeakList<Peak2D>>(peaks.size());
+    private Map<String, PeakList<Peak2D>> map;
+
+    public PeakList2DProvider(List<Tuple2D<IFileFragment, List<Peak2D>>> peaks) {
+        map = new HashMap<String, PeakList<Peak2D>>(peaks.size());
         int i = 0;
-        for(Tuple2D<IFileFragment,List<Peak2D>> t:peaks){
+        for (Tuple2D<IFileFragment, List<Peak2D>> t : peaks) {
             PeakList<Peak2D> pl = new PeakList<Peak2D>();
             pl.setFragment(t.getFirst());
             pl.setPeaks(t.getSecond());
             pl.setIndex(i++);
-            map.put(t.getFirst().getAbsolutePath(),pl);
+            map.put(t.getFirst().getAbsolutePath(), pl);
         }
     }
-    
+
     @Override
     public PeakList<Peak2D> getPeaks(IFileFragment fragment) {
         return map.get(fragment.getAbsolutePath());
     }
-    
 }

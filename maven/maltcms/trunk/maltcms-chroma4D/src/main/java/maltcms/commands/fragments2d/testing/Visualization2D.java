@@ -44,7 +44,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -63,6 +63,14 @@ public class Visualization2D {
     private boolean normalize = true;
     private int binSize = 256;
 
+    /**
+     *
+     * @param scanlinesi
+     * @param scanlinesj
+     * @param horizontal
+     * @param vertical
+     * @return
+     */
     public BufferedImage createImage(List<Array> scanlinesi,
             List<Array> scanlinesj, final List<Point> horizontal,
             final List<Point> vertical) {
@@ -92,6 +100,15 @@ public class Visualization2D {
                 sb.getSecond().getFirst(), sb.getSecond().getSecond());
     }
 
+    /**
+     *
+     * @param scanlinesi
+     * @param scanlinesj
+     * @param warpPath
+     * @param holdi
+     * @param holdj
+     * @return
+     */
     public Tuple2D<List<Array>, List<Array>> createNewScanlines(
             List<Array> scanlinesi, List<Array> scanlinesj,
             List<Point> warpPath, final boolean holdi, final boolean holdj) {
@@ -184,6 +201,15 @@ public class Visualization2D {
         return new Tuple2D<List<Array>, List<Array>>(scanlinesi, scanlinesj);
     }
 
+    /**
+     *
+     * @param scanlinesi
+     * @param scanlinesj
+     * @param samples
+     * @param breakpointsi
+     * @param breakpointsj
+     * @return
+     */
     protected BufferedImage ci(final List<Array> scanlinesi,
             final List<Array> scanlinesj, final double[] samples,
             final double[] breakpointsi, final double[] breakpointsj) {
@@ -250,15 +276,11 @@ public class Visualization2D {
 
     /**
      * Will create an array int[3] containing the rgb values for the raster.
-     * 
-     * @param ci
-     *            current intensity of the first series
-     * @param maxci
-     *            maximum intensity of the first series
-     * @param cj
-     *            current intensity of the second series
-     * @param maxcj
-     *            maximum intensity of the second series
+     *
+     * @param ci current intensity of the first series
+     * @param maxci maximum intensity of the first series
+     * @param cj current intensity of the second series
+     * @param maxcj maximum intensity of the second series
      * @return rgb color array
      */
     protected int[] getRasterColor(final double ci, final double maxci,
@@ -276,11 +298,9 @@ public class Visualization2D {
     /**
      * Creates the samples table and the breakpoint table for reference and
      * query arrays.
-     * 
-     * @param scanlinesi
-     *            scanlines of the reference
-     * @param scanlinesj
-     *            scanlines of the query
+     *
+     * @param scanlinesi scanlines of the reference
+     * @param scanlinesj scanlines of the query
      * @return {smaple table,{breakpoints i, breakpoints j}}
      */
     protected Tuple2D<double[], Tuple2D<double[], double[]>> getSampleAndBreakpointTable(

@@ -29,8 +29,8 @@ import maltcms.datastructures.peak.Peak1D;
  * @author nilshoffmann
  */
 public interface IPeakNormalizer {
-    
+
     double getNormalizationFactor(IFileFragment fragment, Peak1D peak);
+
     String getNormalizationName();
-    
 }

@@ -33,63 +33,58 @@ import org.jfree.chart.plot.XYPlot;
 /**
  * Combines Different plots (favorably XYPlots) to share a common domain, such
  * that they are vertically stacked (default).
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class CombinedDomainXYChart extends AChart<XYPlot> {
 
-	private String title = "";
+    private String title = "";
+    private String x_axis = "";
+    private List<XYPlot> subplots = new ArrayList<XYPlot>();
+    private CombinedDomainXYPlot cdxyp = null;
+    private int gap = 10;
 
-	private String x_axis = "";
+    public CombinedDomainXYChart(final String title1,
+            final String domain_axis_name, final boolean headless,
+            final List<XYPlot> subplots1) {
+        this.title = title1;
+        this.x_axis = domain_axis_name;
+        this.subplots = subplots1;
+    }
 
-	private List<XYPlot> subplots = new ArrayList<XYPlot>();
+    @Override
+    public XYPlot create() {
+        this.cdxyp = new CombinedDomainXYPlot(new NumberAxis(this.x_axis));
+        this.cdxyp.setGap(this.gap);
+        for (final XYPlot p : this.subplots) {
+            // p.setDomainAxis(null);
+            // p.getDomainAxis().setLowerMargin(0.0d);
+            // p.getDomainAxis().setUpperMargin(0.0d);
+            // p.getRangeAxis().setLowerMargin(0.0d);
+            // p.getRangeAxis().setUpperMargin(0.0d);
+            this.cdxyp.add(p, p.getWeight());
+        }
 
-	private CombinedDomainXYPlot cdxyp = null;
+        // this.cdxyp.setDomainCrosshairVisible(true);
+        // this.cdxyp.setRangeCrosshairLockedOnData(true);
+        // this.cdxyp.setRangeCrosshairVisible(true);
+        this.cdxyp.setSeriesRenderingOrder(SeriesRenderingOrder.FORWARD);
+        this.cdxyp.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
+        return this.cdxyp;
+    }
 
-	private int gap = 10;
+    @Override
+    public String getTitle() {
+        return this.title;
+    }
 
-	public CombinedDomainXYChart(final String title1,
-	        final String domain_axis_name, final boolean headless,
-	        final List<XYPlot> subplots1) {
-		this.title = title1;
-		this.x_axis = domain_axis_name;
-		this.subplots = subplots1;
-	}
+    public void setGap(final int i) {
+        this.gap = i;
+    }
 
-	@Override
-	public XYPlot create() {
-		this.cdxyp = new CombinedDomainXYPlot(new NumberAxis(this.x_axis));
-		this.cdxyp.setGap(this.gap);
-		for (final XYPlot p : this.subplots) {
-			// p.setDomainAxis(null);
-			// p.getDomainAxis().setLowerMargin(0.0d);
-			// p.getDomainAxis().setUpperMargin(0.0d);
-			// p.getRangeAxis().setLowerMargin(0.0d);
-			// p.getRangeAxis().setUpperMargin(0.0d);
-			this.cdxyp.add(p, p.getWeight());
-		}
-
-		// this.cdxyp.setDomainCrosshairVisible(true);
-		// this.cdxyp.setRangeCrosshairLockedOnData(true);
-		// this.cdxyp.setRangeCrosshairVisible(true);
-		this.cdxyp.setSeriesRenderingOrder(SeriesRenderingOrder.FORWARD);
-		this.cdxyp.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
-		return this.cdxyp;
-	}
-
-	@Override
-	public String getTitle() {
-		return this.title;
-	}
-
-	public void setGap(final int i) {
-		this.gap = i;
-	}
-
-	@Override
-	public void setTitle(final String s) {
-		this.title = s;
-	}
-
+    @Override
+    public void setTitle(final String s) {
+        this.title = s;
+    }
 }

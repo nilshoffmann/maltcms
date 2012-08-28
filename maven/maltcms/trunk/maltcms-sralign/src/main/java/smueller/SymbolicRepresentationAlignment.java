@@ -64,7 +64,6 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 import net.sf.maltcms.apps.Maltcms;
 import cross.Factory;
-import cross.Logging;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.StatsMap;
@@ -101,40 +100,75 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     private static String format;
     private static String location;
 
+    /**
+     *
+     * @return
+     */
     public static OneAffineAlignment getAl() {
         return SymbolicRepresentationAlignment.al;
     }
 
+    /**
+     *
+     * @return
+     */
     public static int getAlphabetgr() {
         return SymbolicRepresentationAlignment.alphabetgr;
     }
 
+    /**
+     *
+     * @return
+     */
     public static BreakPoints getBpois() {
         return SymbolicRepresentationAlignment.bpois;
     }
 
+    /**
+     *
+     * @return
+     */
     public static DistanceMatrix getDistmatrix() {
         return SymbolicRepresentationAlignment.distmatrix;
     }
 
+    /**
+     *
+     * @return
+     */
     public static int getFenstergr() {
         return SymbolicRepresentationAlignment.fenstergr;
     }
 
+    /**
+     *
+     * @return
+     */
     public static double getGapinit() {
         return SymbolicRepresentationAlignment.gapinit;
     }
 
+    /**
+     *
+     * @return
+     */
     public static SortedJavArrays getSorti() {
         return SymbolicRepresentationAlignment.sorti;
     }
 
+    /**
+     *
+     * @return
+     */
     public static Standardizer getStand() {
         return SymbolicRepresentationAlignment.stand;
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(final String[] args) {
-        final Logger log = Logging.getLogger(Maltcms.class);
         final Maltcms m = Maltcms.getInstance();
         final Configuration cfg = m.parseCommandLine(args);
         EvalTools.notNull(cfg, cfg);
@@ -476,6 +510,10 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
         drawAlignedTICS(t, alignments);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getDescription() {
         return "Calculates alignment on symbolic representation of time series, using affine gap costs.";
@@ -485,6 +523,10 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
      * (non-Javadoc)
      * 
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
+     */
+    /**
+     *
+     * @return
      */
     @Override
     public WorkflowSlot getWorkflowSlot() {
@@ -522,6 +564,12 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
         return names;
     }
 
+    /**
+     *
+     * @param pwdist
+     * @param distances
+     * @param names
+     */
     public void saveToCSV(final IFileFragment pwdist,
             final ArrayDouble.D2 distances, final ArrayChar.D2 names) {
         final CSVWriter csvw = Factory.getInstance().getObjectFactory()

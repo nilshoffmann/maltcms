@@ -35,9 +35,8 @@ import maltcms.experimental.bipace.datastructures.api.Clique;
  */
 @Data
 public class BiPaceResult<T extends Peak> {
-    
-    private Map<T,Clique<T>> peakToClique = new HashMap<T,Clique<T>>();
+
+    private Map<T, Clique<T>> peakToClique = new HashMap<T, Clique<T>>();
     private List<Clique<T>> cliques;
     private Set<PeakList> unmatchedPeaks;
-    
 }

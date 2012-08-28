@@ -48,9 +48,9 @@ import org.jdom.Element;
 @Slf4j
 @Data
 public class MultipleAlignmentWriter implements IWorkflowElement {
-    
+
     private IWorkflow workflow;
-    
+
     public void savePeakMatchTable(final HashMap<String, Integer> columnMap,
             final List<List<Peak>> ll) {
         final List<List<String>> rows = new ArrayList<List<String>>(ll.size());
@@ -95,7 +95,7 @@ public class MultipleAlignmentWriter implements IWorkflowElement {
                 getAbsolutePath(), "multiple-alignment.csv", rows,
                 WorkflowSlot.ALIGNMENT);
     }
-    
+
     /**
      * @param columnMap
      * @param ll
@@ -153,7 +153,6 @@ public class MultipleAlignmentWriter implements IWorkflowElement {
                 WorkflowSlot.ALIGNMENT);
     }
 
-
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.ALIGNMENT;
@@ -161,8 +160,5 @@ public class MultipleAlignmentWriter implements IWorkflowElement {
 
     @Override
     public void appendXML(Element e) {
-        
     }
-    
-    
 }

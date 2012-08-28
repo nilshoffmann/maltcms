@@ -30,13 +30,12 @@ import ucar.ma2.Array;
 public interface IScalarArraySimilarity {
 
     public double apply(double[] s1, double[] s2, Array a1, Array a2);
-    
+
     public IScalarSimilarity[] getScalarSimilarities();
-    
+
     public void setScalarSimilarities(IScalarSimilarity... scalarSimilarities);
-    
+
     public IArraySimilarity[] getArraySimilarities();
-    
+
     public void setArraySimilarities(IArraySimilarity... arraySimilarities);
-    
 }

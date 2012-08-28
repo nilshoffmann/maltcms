@@ -41,9 +41,10 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.db4o</groupId>
             <artifactId>db4o-all</artifactId>
-            <version>8.0</version>
+            <groupId>com.db4o</groupId>
+            <type>jar</type>
+            <version>8.0.249</version>
         </dependency>
     </dependencies>
     <properties>

@@ -30,7 +30,6 @@ import maltcms.experimental.bipace.PeakList;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 public interface IPeakListProvider<T extends Peak> {
-    
+
     public PeakList<T> getPeaks(IFileFragment fragment);
-    
 }

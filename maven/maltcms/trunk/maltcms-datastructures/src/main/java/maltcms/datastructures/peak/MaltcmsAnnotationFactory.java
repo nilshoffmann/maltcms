@@ -40,8 +40,8 @@ import maltcms.io.xml.bindings.annotation.ResourceType;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 public class MaltcmsAnnotationFactory {
 

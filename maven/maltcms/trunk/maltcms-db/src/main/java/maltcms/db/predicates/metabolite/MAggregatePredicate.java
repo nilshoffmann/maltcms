@@ -27,18 +27,19 @@ import java.util.Collection;
 import maltcms.datastructures.ms.IMetabolite;
 
 /**
- * Implementation of a combined Predicate for IMetabolite instances.
- * An arbitrary number of Numerical or String Predicates can be used 
- * in order to work as a Predicate when querying a db container 
- * for contained Metabolites. Metabolites will only be returned,
- * if all MetabolitePredicates apply to this Metabolite (return true for evalOn).
+ * Implementation of a combined Predicate for IMetabolite instances. An
+ * arbitrary number of Numerical or String Predicates can be used in order to
+ * work as a Predicate when querying a db container for contained Metabolites.
+ * Metabolites will only be returned, if all MetabolitePredicates apply to this
+ * Metabolite (return true for evalOn).
+ *
  * @author hoffmann
  *
  */
 public class MAggregatePredicate extends MetabolitePredicate {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -2688853916226964219L;
     private Collection<MetabolitePredicate> mpl;
@@ -53,9 +54,8 @@ public class MAggregatePredicate extends MetabolitePredicate {
     public MAggregatePredicate() {
         this.mpl = new ArrayList<MetabolitePredicate>();
         this.mpl.add(new MetabolitePredicate() {
-
             /**
-             * 
+             *
              */
             private static final long serialVersionUID = 2855317514847457027L;
 

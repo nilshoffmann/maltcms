@@ -31,24 +31,19 @@ import cross.datastructures.workflow.IWorkflow;
 
 /**
  * Provides some methods to do a peak integration.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 public interface IPeakIntegration extends IConfigurable {
 
-	/**
-	 * Integrate the peak area and adds the sum to the PeakArea.
-	 * 
-	 * @param peak
-	 *            peak
-	 * @param ff
-	 *            file fragment
-	 * @param otic
-	 *            tic for integration
-	 * @param workflow
-	 *            workflow
-	 */
-	void integrate(final Peak2D peak, final IFileFragment ff,
-			final List<Array> otic, final IWorkflow workflow);
-
+    /**
+     * Integrate the peak area and adds the sum to the PeakArea.
+     *
+     * @param peak peak
+     * @param ff file fragment
+     * @param otic tic for integration
+     * @param workflow workflow
+     */
+    void integrate(final Peak2D peak, final IFileFragment ff,
+            final List<Array> otic, final IWorkflow workflow);
 }

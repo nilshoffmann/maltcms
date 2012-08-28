@@ -38,65 +38,63 @@ import org.junit.Assert;
  */
 @Slf4j
 public class ZipResourceExtractorTest {
-    
+
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
-    
     @Rule
     public SetupLogging sl = new SetupLogging();
-    
+
     @Test
     public void testExtract1D() {
         File outputFolder = tf.newFolder(
                 "cdf");
         File outputFile = ZipResourceExtractor.extract("/cdf/1D/glucoseA.cdf.gz", outputFolder);
-        File unzippedFile = new File(outputFolder,"glucoseA.cdf");
+        File unzippedFile = new File(outputFolder, "glucoseA.cdf");
         Assert.assertTrue(outputFile.getAbsolutePath().equals(unzippedFile.getAbsolutePath()));
         Assert.assertTrue(unzippedFile.exists());
         log.info("File exists");
-        Assert.assertTrue(unzippedFile.length()>0);
-        log.info("File size is != 0: {}",unzippedFile.length());
+        Assert.assertTrue(unzippedFile.length() > 0);
+        log.info("File size is != 0: {}", unzippedFile.length());
     }
-    
+
     @Test
     public void testExtract2D() {
         File outputFolder = tf.newFolder(
                 "cdf");
         File outputFile = ZipResourceExtractor.extract("/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", outputFolder);
-        File unzippedFile = new File(outputFolder,"090306_37_FAME_Standard_1.cdf");
+        File unzippedFile = new File(outputFolder, "090306_37_FAME_Standard_1.cdf");
         Assert.assertTrue(outputFile.getAbsolutePath().equals(unzippedFile.getAbsolutePath()));
         Assert.assertTrue(unzippedFile.exists());
         log.info("File exists");
-        Assert.assertTrue(unzippedFile.length()>0);
-        log.info("File size is != 0: {}",unzippedFile.length());
+        Assert.assertTrue(unzippedFile.length() > 0);
+        log.info("File size is != 0: {}", unzippedFile.length());
     }
-    
+
     @Test
     public void testExtractHelper() {
         ExtractHelper.FType type = ExtractHelper.FType.CDF_1D;
         File[] files = ExtractHelper.extractAllForType(tf.newFolder(type.name()), type);
-        for(File f:files) {
+        for (File f : files) {
             Assert.assertTrue(f.exists() && f.isFile());
-            Assert.assertTrue(f.length()>0);
+            Assert.assertTrue(f.length() > 0);
         }
         type = ExtractHelper.FType.MZML;
         files = ExtractHelper.extractAllForType(tf.newFolder(type.name()), type);
-        for(File f:files) {
+        for (File f : files) {
             Assert.assertTrue(f.exists() && f.isFile());
-            Assert.assertTrue(f.length()>0);
+            Assert.assertTrue(f.length() > 0);
         }
         type = ExtractHelper.FType.MZXML;
         files = ExtractHelper.extractAllForType(tf.newFolder(type.name()), type);
-        for(File f:files) {
+        for (File f : files) {
             Assert.assertTrue(f.exists() && f.isFile());
-            Assert.assertTrue(f.length()>0);
+            Assert.assertTrue(f.length() > 0);
         }
         type = ExtractHelper.FType.MZDATA;
         files = ExtractHelper.extractAllForType(tf.newFolder(type.name()), type);
-        for(File f:files) {
+        for (File f : files) {
             Assert.assertTrue(f.exists() && f.isFile());
-            Assert.assertTrue(f.length()>0);
+            Assert.assertTrue(f.length() > 0);
         }
     }
-
 }

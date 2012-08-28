@@ -33,15 +33,14 @@ import ucar.ma2.Array;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
-@ServiceProvider(service=IDtwSimilarityFunction.class)
+@ServiceProvider(service = IDtwSimilarityFunction.class)
 public class DtwPairwiseSimilarity implements IDtwSimilarityFunction {
 
     private double expansionWeight = 1.0;
     private double matchWeight = 1.0;
     private double compressionWeight = 1.0;
-    
     private IArraySimilarity denseMassSpectraSimilarity = new ArrayCorr();
-    
+
     @Override
     public double apply(int i1, int i2, double time1, double time2, Array t1,
             Array t2) {
@@ -55,7 +54,5 @@ public class DtwPairwiseSimilarity implements IDtwSimilarityFunction {
 
     @Override
     public void configure(Configuration cfg) {
-        
     }
-    
 }

@@ -16,10 +16,10 @@ import ucar.ma2.Array;
  * @author nilshoffmann
  */
 public class SavitzkyGolayFilterTest {
-    
+
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
-    
+
     public SavitzkyGolayFilterTest() {
     }
 
@@ -30,15 +30,15 @@ public class SavitzkyGolayFilterTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
-    
+
     /**
      * Test of apply method, of class SavitzkyGolayFilter.
      */
@@ -47,13 +47,12 @@ public class SavitzkyGolayFilterTest {
         File outputFolder = tf.newFolder(
                 "cdf");
         File outputFile = ZipResourceExtractor.extract("/cdf/1D/glucoseA.cdf.gz", outputFolder);
-        File unzippedFile = new File(outputFolder,"glucoseA.cdf");
+        File unzippedFile = new File(outputFolder, "glucoseA.cdf");
         ImmutableFileFragment ff = new ImmutableFileFragment(unzippedFile);
         Array tic = ff.getChild("total_intensity").getArray();
         SavitzkyGolayFilter instance = new SavitzkyGolayFilter();
         instance.setWindow(2);
         Array result = instance.apply(tic);
-        
-    }
 
+    }
 }

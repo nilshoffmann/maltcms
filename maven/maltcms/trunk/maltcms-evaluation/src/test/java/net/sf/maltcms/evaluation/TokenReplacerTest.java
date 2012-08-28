@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
  * @author nilshoffmann
  */
 public class TokenReplacerTest {
-    
+
     public TokenReplacerTest() {
     }
 
@@ -43,19 +43,19 @@ public class TokenReplacerTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @Test
     public void testReplacement() {
         String base = "blasdjlaselihda";
-        String s = base+"${KEY}";
+        String s = base + "${KEY}";
         String value = "VALUE";
         String s2 = s.replaceAll("\\$\\{KEY\\}", value);
         System.out.println(s2);
-        assertEquals(base+value, s2);
+        assertEquals(base + value, s2);
     }
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:

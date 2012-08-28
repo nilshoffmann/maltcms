@@ -51,10 +51,10 @@ import ucar.ma2.MAMath.MinMax;
  */
 @Slf4j
 @Data
-public class PeakSimilarityVisualizer implements IWorkflowElement{
+public class PeakSimilarityVisualizer implements IWorkflowElement {
 
     private IWorkflow workflow;
-    
+
     public void visualizePeakSimilarities(
             final HashMap<String, List<Peak>> hm, final int samples,
             final String prefix) {
@@ -150,6 +150,5 @@ public class PeakSimilarityVisualizer implements IWorkflowElement{
 
     @Override
     public void appendXML(Element e) {
-
     }
 }

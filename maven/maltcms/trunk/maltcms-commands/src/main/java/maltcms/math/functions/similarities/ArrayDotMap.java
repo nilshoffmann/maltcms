@@ -34,7 +34,7 @@ import ucar.ma2.IndexIterator;
 /**
  * Calculates the dotmap, but instead of the weighting by mz bin this class uses
  * the standard deviation.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Data
@@ -85,9 +85,8 @@ public class ArrayDotMap implements IArraySimilarity {
 
     /**
      * Setter.
-     * 
-     * @param stdArray
-     *            variance for each mass bin
+     *
+     * @param stdArray variance for each mass bin
      */
     public void setStdArray(final ArrayDouble.D1 stdArray) {
         this.std = (ArrayDouble.D1) stdArray.copy();

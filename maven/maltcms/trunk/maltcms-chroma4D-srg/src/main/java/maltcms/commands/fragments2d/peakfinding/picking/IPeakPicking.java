@@ -28,14 +28,13 @@ import cross.IConfigurable;
 import cross.datastructures.fragments.IFileFragment;
 
 /**
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 public interface IPeakPicking extends IConfigurable {
 
-	List<Point> findPeaks(IFileFragment ffO);
+    List<Point> findPeaks(IFileFragment ffO);
 
-	List<Point> findPeaksNear(IFileFragment ff, Point p, int dx,
-			int dy);
-
+    List<Point> findPeaksNear(IFileFragment ff, Point p, int dx,
+            int dy);
 }

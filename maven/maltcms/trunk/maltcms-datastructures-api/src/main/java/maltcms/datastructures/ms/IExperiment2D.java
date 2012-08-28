@@ -23,14 +23,13 @@ package maltcms.datastructures.ms;
 
 /**
  * Interface representing a 2-dimensional chromatogram.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IExperiment2D extends IExperiment1D {
 
-	public IChromatogram2D getChromatogram2D();
+    public IChromatogram2D getChromatogram2D();
 
-	public void setChromatogram2D(IChromatogram2D ic);
-
+    public void setChromatogram2D(IChromatogram2D ic);
 }

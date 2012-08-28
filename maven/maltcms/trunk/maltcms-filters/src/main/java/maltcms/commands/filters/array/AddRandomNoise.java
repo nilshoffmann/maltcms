@@ -34,9 +34,9 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Add additive gaussian noise to array values with given mean and std
  * deviation.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)

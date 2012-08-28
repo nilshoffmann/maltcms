@@ -54,19 +54,18 @@ import lombok.extern.slf4j.Slf4j;
  * Objects of this class are used in
  * {@link maltcms.commands.distances.dtw.ADynamicTimeWarp} to calculate the
  * distance/similiarity between scans, as configured.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 @Data
 public class PairwiseFeatureSimilarity implements IConfigurable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2087449317783907180L;
-	
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2087449317783907180L;
     @Configurable(name = "alignment.algorithm.distance")
     private IDtwSimilarityFunction similarityFunction = null;
     @Configurable(name = "cross.Factory.maxthreads")
@@ -102,7 +101,7 @@ public class PairwiseFeatureSimilarity implements IConfigurable {
      * This method can be called for precalculation of all
      * distances/similarites. Values are set within the paramter ArrayDouble.D2
      * d and can be retrieved from it.
-     * 
+     *
      * @param d
      * @param ref
      * @param query
@@ -161,6 +160,10 @@ public class PairwiseFeatureSimilarity implements IConfigurable {
         }
     }
 
+    /**
+     *
+     * @param cfg
+     */
     @Override
     public void configure(final Configuration cfg) {
 //        final String aldist = "maltcms.commands.distances.ArrayLp";
@@ -168,20 +171,18 @@ public class PairwiseFeatureSimilarity implements IConfigurable {
 //                cfg.getString("alignment.algorithm.distance", aldist),
 //                IDtwSimilarityFunction.class);
 //        log.info("Using {}", this.costFunction.getClass().getName());
-
         // this.nthreads = cfg.getInt("cross.Factory.maxthreads", 1);
     }
 
     /**
      * Returns the IDtwSimilarityFunction Object used to calculate pairwise
      * distances/similarities.
-     * 
+     *
      * @return
      */
 //    public IDtwSimilarityFunction getDistance() {
 //        return this.similarityFunction;
 //    }
-
     public double getDistance(final int i, final int j, final double time_i,
             final double time_j, final Array a, final Array b) {
         double d = 0.0d;

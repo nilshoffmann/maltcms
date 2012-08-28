@@ -61,13 +61,13 @@ import org.netbeans.spi.wizard.WizardException;
 import org.netbeans.spi.wizard.WizardPage;
 import org.netbeans.spi.wizard.WizardPage.WizardResultProducer;
 
-import cross.Logging;
 import cross.event.AEvent;
 import cross.event.EventSource;
 import cross.event.IEvent;
 import cross.event.IEventSource;
 import cross.event.IListener;
 import cross.ui.ConfigurationEditor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
@@ -75,6 +75,7 @@ import cross.ui.ConfigurationEditor;
  *
  *
  */
+@Slf4j
 public class PipelineWizard implements WizardResultProducer, HyperlinkListener,
         IEventSource<Configuration> {
 
@@ -737,7 +738,7 @@ public class PipelineWizard implements WizardResultProducer, HyperlinkListener,
                 try {
                     cfg.save(f);
                 } catch (ConfigurationException e) {
-                    Logging.getLogger(this.getClass()).warn("{}",
+                    log.warn("{}",
                             e.getLocalizedMessage());
                 }
             }
@@ -801,10 +802,10 @@ public class PipelineWizard implements WizardResultProducer, HyperlinkListener,
                     try {
                         Desktop.getDesktop().browse(e.getURL().toURI());
                     } catch (IOException e1) {
-                        Logging.getLogger(this.getClass()).warn("{}",
+                        log.warn("{}",
                                 e1.getLocalizedMessage());
                     } catch (URISyntaxException e1) {
-                        Logging.getLogger(this.getClass()).warn("{}",
+                        log.warn("{}",
                                 e1.getLocalizedMessage());
                     }
                 } else {

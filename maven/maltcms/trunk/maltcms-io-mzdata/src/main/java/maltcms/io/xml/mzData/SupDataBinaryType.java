@@ -29,14 +29,12 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Extension of binary data group for supplemental data
- * 
- * <p>
- * Java class for supDataBinaryType complex type.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
+ *
+ * <p> Java class for supDataBinaryType complex type.
+ *
+ * <p> The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name=&quot;supDataBinaryType&quot;&gt;
  *   &lt;complexContent&gt;
@@ -50,79 +48,76 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "supDataBinaryType", propOrder = { "arrayName", "data" })
+@XmlType(name = "supDataBinaryType", propOrder = {"arrayName", "data"})
 public class SupDataBinaryType {
 
-	@XmlElement(required = true)
-	protected String arrayName;
-	@XmlElement(required = true)
-	protected maltcms.io.xml.mzData.PeakListBinaryType.Data data;
-	@XmlAttribute(required = true)
-	protected int id;
+    @XmlElement(required = true)
+    protected String arrayName;
+    @XmlElement(required = true)
+    protected maltcms.io.xml.mzData.PeakListBinaryType.Data data;
+    @XmlAttribute(required = true)
+    protected int id;
 
-	/**
-	 * Gets the value of the arrayName property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getArrayName() {
-		return this.arrayName;
-	}
+    /**
+     * Gets the value of the arrayName property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getArrayName() {
+        return this.arrayName;
+    }
 
-	/**
-	 * Gets the value of the data property.
-	 * 
-	 * @return possible object is
+    /**
+     * Gets the value of the data property.
+     *
+     * @return possible object is
 	 *         {@link maltcms.io.xml.mzData.PeakListBinaryType.Data }
-	 * 
-	 */
-	public maltcms.io.xml.mzData.PeakListBinaryType.Data getData() {
-		return this.data;
-	}
+     *
+     */
+    public maltcms.io.xml.mzData.PeakListBinaryType.Data getData() {
+        return this.data;
+    }
 
-	/**
-	 * Gets the value of the id property.
-	 * 
-	 */
-	public int getId() {
-		return this.id;
-	}
+    /**
+     * Gets the value of the id property.
+     *
+     */
+    public int getId() {
+        return this.id;
+    }
 
-	/**
-	 * Sets the value of the arrayName property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setArrayName(final String value) {
-		this.arrayName = value;
-	}
+    /**
+     * Sets the value of the arrayName property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setArrayName(final String value) {
+        this.arrayName = value;
+    }
 
-	/**
-	 * Sets the value of the data property.
-	 * 
-	 * @param value
-	 *            allowed object is
+    /**
+     * Sets the value of the data property.
+     *
+     * @param value allowed object is
 	 *            {@link maltcms.io.xml.mzData.PeakListBinaryType.Data }
-	 * 
-	 */
-	public void setData(
-	        final maltcms.io.xml.mzData.PeakListBinaryType.Data value) {
-		this.data = value;
-	}
+     *
+     */
+    public void setData(
+            final maltcms.io.xml.mzData.PeakListBinaryType.Data value) {
+        this.data = value;
+    }
 
-	/**
-	 * Sets the value of the id property.
-	 * 
-	 */
-	public void setId(final int value) {
-		this.id = value;
-	}
-
+    /**
+     * Sets the value of the id property.
+     *
+     */
+    public void setId(final int value) {
+        this.id = value;
+    }
 }

@@ -28,5 +28,6 @@ import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
  * @author nilshoffmann
  */
 public interface IBaselineEstimator {
+
     PolynomialSplineFunction findBaseline(double[] values);
 }

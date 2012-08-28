@@ -28,7 +28,7 @@ import maltcms.datastructures.ms.IMetabolite;
 public class MStringMatchPredicate extends MetabolitePredicate {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 7126522681487993030L;
     protected String match;

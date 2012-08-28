@@ -32,8 +32,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @RequiresOptionalVariables(names = {"var.tic_peaks"})
 @Slf4j
@@ -44,7 +44,7 @@ public class MSPExporter extends AFragmentCommand {
     public String toString() {
         return getClass().getName();
     }
-    
+
     /*
      * (non-Javadoc)
      * 

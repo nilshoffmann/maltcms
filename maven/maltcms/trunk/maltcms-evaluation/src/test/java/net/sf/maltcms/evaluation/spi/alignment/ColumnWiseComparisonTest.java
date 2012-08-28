@@ -89,13 +89,13 @@ public class ColumnWiseComparisonTest {
             }
         }
         for (int i = 0; i < evaluationResults.length; i++) {
-            System.out.println(AlignmentColumnComparator.names[i]+" = "+evaluationResults[i]);
+            System.out.println(AlignmentColumnComparator.names[i] + " = " + evaluationResults[i]);
         }
-        
-        float prec = evaluationResults[AlignmentColumnComparator.TP]/(float)(evaluationResults[AlignmentColumnComparator.TP]+evaluationResults[AlignmentColumnComparator.FP]);
-        System.out.println("Precision: "+(prec));
-        float recall = evaluationResults[AlignmentColumnComparator.TP]/(float)(evaluationResults[AlignmentColumnComparator.TP]+evaluationResults[AlignmentColumnComparator.FN]);
-        System.out.println("Recall: "+(recall));
-        
+
+        float prec = evaluationResults[AlignmentColumnComparator.TP] / (float) (evaluationResults[AlignmentColumnComparator.TP] + evaluationResults[AlignmentColumnComparator.FP]);
+        System.out.println("Precision: " + (prec));
+        float recall = evaluationResults[AlignmentColumnComparator.TP] / (float) (evaluationResults[AlignmentColumnComparator.TP] + evaluationResults[AlignmentColumnComparator.FN]);
+        System.out.println("Recall: " + (recall));
+
     }
 }

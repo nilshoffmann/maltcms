@@ -57,7 +57,7 @@ import ucar.ma2.ArrayChar;
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class ANDIMSExporter extends AFragmentCommand {
-    
+
     private boolean skipAggregatedVariables = true;
 
     @Override
@@ -89,7 +89,7 @@ public class ANDIMSExporter extends AFragmentCommand {
 //            } catch (final IOException e) {
 //                throw new RuntimeException(e.fillInStackTrace());
 //            }
-            log.info("Processing {}",f.getName());
+            log.info("Processing {}", f.getName());
             IFileFragment outf = Factory.getInstance().getFileFragmentFactory().
                     create(new File(getWorkflow().getOutputDirectory(this), f.
                     getName()));
@@ -267,6 +267,10 @@ public class ANDIMSExporter extends AFragmentCommand {
      * (non-Javadoc)
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
+     */
+    /**
+     *
+     * @return
      */
     @Override
     public WorkflowSlot getWorkflowSlot() {

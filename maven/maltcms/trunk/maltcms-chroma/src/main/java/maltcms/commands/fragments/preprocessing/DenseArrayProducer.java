@@ -50,9 +50,9 @@ import org.openide.util.lookup.ServiceProvider;
  * Creates bins of fixed size (currently 1) from a given set of spectra with
  * masses and intensities. Can filter mass channels, whose intensity is then
  * removed from the chromatogram.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @ProvidesVariables(names = {"var.binned_mass_values",
     "var.binned_intensity_values", "var.binned_scan_index"})
@@ -65,7 +65,6 @@ public class DenseArrayProducer extends AFragmentCommand {
 
     private final String description = "Creates a binned representation of a chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.GENERAL_PREPROCESSING;
-    
     @Configurable(name = "var.mass_values")
     private String massValues = "mass_values";
     @Configurable(name = "var.intensity_values")

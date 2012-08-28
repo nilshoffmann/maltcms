@@ -58,20 +58,19 @@ public abstract class CliqueStatistics<T extends Peak> {
         }
         return 0;
     }
-    
+
     public int compareCliques(Clique<T> c1, Clique<T> c2) {
         double[] mean1 = c1.getCliqueStatistics().getCliqueMean();
         double[] mean2 = c2.getCliqueStatistics().getCliqueMean();
-        for(int j = 0;j<mean1.length;j++) {
-            if(mean1[j]<mean2[j]) {
+        for (int j = 0; j < mean1.length; j++) {
+            if (mean1[j] < mean2[j]) {
                 return -1;
-            }else if(mean1[j]>mean2[j]) {
+            } else if (mean1[j] > mean2[j]) {
                 return 1;
             }
         }
         return 0;
     }
-    
 //    String groupFileLocation = Factory.getInstance().getConfiguration().
 //                getString("groupFileLocation", "");
 //

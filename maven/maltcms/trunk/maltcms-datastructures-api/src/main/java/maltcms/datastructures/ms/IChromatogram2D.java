@@ -25,26 +25,25 @@ import java.awt.Point;
 
 /**
  * Interface representing a 2-dimensional chromatogram.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public interface IChromatogram2D extends IChromatogram, IScan2DProvider {
 
-	public IScan2D getScan2D(int globalScan, int localScan);
+    public IScan2D getScan2D(int globalScan, int localScan);
 
-	public int getNumberOfModulations();
+    public int getNumberOfModulations();
 
-	public int getNumberOfScansPerModulation();
+    public int getNumberOfScansPerModulation();
 
-	public int getNumberOf2DScans();
+    public int getNumberOf2DScans();
 
-	public double getModulationDuration();
+    public double getModulationDuration();
 
-	public String getSecondColumnScanAcquisitionTimeUnit();
+    public String getSecondColumnScanAcquisitionTimeUnit();
 
-	public Point getPointFor(int scan);
+    public Point getPointFor(int scan);
 
-	public Point getPointFor(double scan_acquisition_time);
-
+    public Point getPointFor(double scan_acquisition_time);
 }

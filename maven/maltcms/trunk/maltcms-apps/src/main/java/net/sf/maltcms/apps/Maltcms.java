@@ -84,10 +84,18 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     static Maltcms mcms;
     private boolean runGui = false;
 
+    /**
+     *
+     * @return
+     */
     public boolean isRunGui() {
         return this.runGui;
     }
 
+    /**
+     *
+     * @param runGui
+     */
     public void setRunGui(boolean runGui) {
         this.runGui = runGui;
     }
@@ -138,7 +146,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         }
 
     }
-    
+
     private static void handleExitVmException(final Logger log,
             final ExitVmException npe) {
         int ecode;
@@ -249,6 +257,11 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         }
     }
 
+    /**
+     *
+     * @param log
+     * @param cs
+     */
     public static void printBugTrackMessage(final Logger log, final ICommandSequence cs) {
         log.error("#############################################################################");
         log.error("# Maltcms has caught an unexpected exception while executing.");
@@ -265,7 +278,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 + "");
         log.error("# maltcms is called, while the runtime properties and pipeline are");
         log.error("# located in ");
-        log.error("# "+new File(cs.getWorkflow().getOutputDirectory(), "Factory").getAbsolutePath());
+        log.error("# " + new File(cs.getWorkflow().getOutputDirectory(), "Factory").getAbsolutePath());
         log.error("# ");
         log.error("# Your report will help improve Maltcms, thank you!");
         log.error("#############################################################################");
@@ -357,6 +370,14 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 "class1,class2, ...", false));
     }
 
+    /**
+     *
+     * @param s
+     * @param l
+     * @param descr
+     * @param required
+     * @return
+     */
     protected Option addBooleanOption(final String s, final String l,
             final String descr, final boolean required) {
         return addOption(s, l, descr, false, (char) 0, false, false, 0, false,
@@ -426,6 +447,10 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         }
     }
 
+    /**
+     *
+     * @param urls
+     */
     public void initClassLoader(String[] urls) {
         URL maltcmsLocation = getClass().getProtectionDomain().getCodeSource().
                 getLocation();
@@ -580,7 +605,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         final PropertiesConfiguration cmdLineCfg = new PropertiesConfiguration();
         boolean printOptions = false;
         String[] beans = null;
-        
+
         try {
             final CommandLine cl = clp.parse(this.o, args);
             final Option[] opts = cl.getOptions();
@@ -591,8 +616,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             if (cl.hasOption("a")) {
                 cmdLineCfg.setProperty("anchors.use", "true");
                 cmdLineCfg.setProperty("anchors.location",
-                    cl.getOptionValues("a"));
-                log.info("Using anchors from location: {}",cl.getOptionValues("a"));
+                        cl.getOptionValues("a"));
+                log.info("Using anchors from location: {}", cl.getOptionValues("a"));
             }
             if (cl.hasOption("e")) {
                 initClassLoader(cl.getOptionValues("e"));
@@ -660,7 +685,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 } catch (final ConfigurationException e) {
                     this.log.error(e.getLocalizedMessage());
                 }
-            } else if(!cl.hasOption("b")) {
+            } else if (!cl.hasOption("b")) {
                 throw new ParseException("-c argument is mandatory!");
             }
             // cmdLine options override default options and system options
@@ -673,7 +698,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             printHelp(defaultCfg);
             System.exit(1);
         }
-        if (beans!=null) {
+        if (beans != null) {
             handleCreateBeanXML(cfg, beans);
             System.exit(0);
         }
@@ -826,25 +851,30 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * java.lang.Thread.UncaughtExceptionHandler#uncaughtException(java.lang
      * .Thread, java.lang.Throwable)
      */
+    /**
+     *
+     * @param t
+     * @param e
+     */
     @Override
     public void uncaughtException(final Thread t, final Throwable e) {
         Maltcms.handleRuntimeException(this.log, e, null);
     }
 
-    private void handleCreateBeanXML(Configuration cfg, String...beans) {
-        File outputDir = new File(cfg.getString("output.basedir","."),"pipelines");
+    private void handleCreateBeanXML(Configuration cfg, String... beans) {
+        File outputDir = new File(cfg.getString("output.basedir", "."), "pipelines");
         outputDir.mkdirs();
-        File xmlDir = new File(outputDir,"xml");
+        File xmlDir = new File(outputDir, "xml");
         xmlDir.mkdirs();
-        File contextFile = new File(xmlDir,"customContext.xml"); 
+        File contextFile = new File(xmlDir, "customContext.xml");
         LinkedList<String> beanList = new LinkedList<String>();
 //        beanList.add(IWorkflow.class.getCanonicalName());
 //        beanList.add(ICommandSequence.class.getCanonicalName());
         beanList.addAll(Arrays.asList(beans));
         ReflectionApplicationContextGenerator.createContextXml(contextFile, "3.0", "prototype", beanList.toArray(new String[beanList.size()]));
         try {
-            PropertiesConfiguration pc = new PropertiesConfiguration(new File(outputDir,"customPipeline.mpl"));
-            pc.setProperty("pipeline.xml", "file:${config.basedir}/xml/"+contextFile.getName());
+            PropertiesConfiguration pc = new PropertiesConfiguration(new File(outputDir, "customPipeline.mpl"));
+            pc.setProperty("pipeline.xml", "file:${config.basedir}/xml/" + contextFile.getName());
             pc.save();
         } catch (ConfigurationException ex) {
             java.util.logging.Logger.getLogger(Maltcms.class.getName()).log(Level.SEVERE, null, ex);

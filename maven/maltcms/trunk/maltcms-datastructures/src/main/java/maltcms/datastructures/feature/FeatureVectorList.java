@@ -34,50 +34,46 @@ import maltcms.datastructures.IFileFragmentModifier;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 public class FeatureVectorList<T extends IFeatureVector> implements
         IFileFragmentModifier {
 
-	private final List<T> l;
+    private final List<T> l;
+    private final List<String> featureNames;
 
-	private final List<String> featureNames;
+    public FeatureVectorList(List<T> l, List<String> featureNames) {
+        this.l = l;
+        this.featureNames = featureNames;
+    }
 
-	public FeatureVectorList(List<T> l, List<String> featureNames) {
-		this.l = l;
-		this.featureNames = featureNames;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * maltcms.experimental.datastructures.IFileFragmentModifier#modify(cross
+     * .datastructures.fragments.IFileFragment)
+     */
+    @Override
+    public void modify(IFileFragment iff) {
+        HashSet<String> features = new HashSet<String>();
+        for (String name : this.featureNames) {
+            for (T t : l) {
+            }
+        }
+        throw new NotImplementedException();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maltcms.experimental.datastructures.IFileFragmentModifier#modify(cross
-	 * .datastructures.fragments.IFileFragment)
-	 */
-	@Override
-	public void modify(IFileFragment iff) {
-		HashSet<String> features = new HashSet<String>();
-		for (String name : this.featureNames) {
-			for (T t : l) {
-
-			}
-		}
-		throw new NotImplementedException();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
-	 * )
-	 */
-	@Override
-	public void configure(Configuration cfg) {
-		// TODO Auto-generated method stub
-
-	}
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
+     * )
+     */
+    @Override
+    public void configure(Configuration cfg) {
+        // TODO Auto-generated method stub
+    }
 }

@@ -33,37 +33,36 @@ import ucar.ma2.Array;
 
 /**
  * Calculates Pearson's product moment correlation as similarity between arrays.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayCov implements IArraySimilarity {
 
- //   private final WeakHashMap<Array, double[]> arrayCache = new WeakHashMap<Array, double[]>();
-
+    //   private final WeakHashMap<Array, double[]> arrayCache = new WeakHashMap<Array, double[]>();
     private boolean returnCoeffDetermination = false;
 
     @Override
     public double apply(final Array t1, final Array t2) {
         Covariance pc = new Covariance();
         double[] t1a = null, t2a = null;
-   	/*
-	if (arrayCache.containsKey(t1)) {
-            t1a = arrayCache.get(t1);
-        } else {
-            t1a = (double[]) t1.get1DJavaArray(double.class);
-            arrayCache.put(t1, t1a);
-        }
-        if (arrayCache.containsKey(t2)) {
-            t2a = arrayCache.get(t2);
-        } else {
-            t2a = (double[]) t2.get1DJavaArray(double.class);
-            arrayCache.put(t2, t2a);
-        }
-	*/
-	t1a = (double[]) t1.get1DJavaArray(double.class);
+        /*
+         if (arrayCache.containsKey(t1)) {
+         t1a = arrayCache.get(t1);
+         } else {
+         t1a = (double[]) t1.get1DJavaArray(double.class);
+         arrayCache.put(t1, t1a);
+         }
+         if (arrayCache.containsKey(t2)) {
+         t2a = arrayCache.get(t2);
+         } else {
+         t2a = (double[]) t2.get1DJavaArray(double.class);
+         arrayCache.put(t2, t2a);
+         }
+         */
+        t1a = (double[]) t1.get1DJavaArray(double.class);
         t2a = (double[]) t2.get1DJavaArray(double.class);
         double pcv = pc.covariance(t1a, t2a);
         if (this.returnCoeffDetermination) {
@@ -71,5 +70,4 @@ public class ArrayCov implements IArraySimilarity {
         }
         return pcv;
     }
-
 }

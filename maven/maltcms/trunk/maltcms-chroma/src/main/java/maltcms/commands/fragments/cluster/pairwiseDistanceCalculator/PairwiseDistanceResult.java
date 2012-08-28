@@ -33,8 +33,9 @@ import lombok.Data;
  */
 @Data
 public class PairwiseDistanceResult implements Serializable {
+
     private static final long serialVersionUID = 60123098123486L;
-    private final Tuple2D<File,File> input;
+    private final Tuple2D<File, File> input;
     private final File alignment;
     private final double value;
     private final StatsMap statsMap;

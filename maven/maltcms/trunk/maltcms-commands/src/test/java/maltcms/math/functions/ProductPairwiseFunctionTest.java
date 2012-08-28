@@ -21,7 +21,6 @@
  */
 package maltcms.math.functions;
 
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 
@@ -51,7 +50,6 @@ public class ProductPairwiseFunctionTest extends TestCase {
 //    		File file = new File(f,name+".cdf");
 //    		ZipResourceExtractor.extract("/cdf/1D/"+name+".cdf", file);
 //    	}
-
 //        List<Tuple2D<double[], Array>> i1 = new ArrayList<Tuple2D<double[], Array>>();
 //        int nfeatures = 200;
 //        int nvectors = 50;
@@ -192,7 +190,5 @@ public class ProductPairwiseFunctionTest extends TestCase {
 //                }
 //            }
 //        }
-
-
     }
 }

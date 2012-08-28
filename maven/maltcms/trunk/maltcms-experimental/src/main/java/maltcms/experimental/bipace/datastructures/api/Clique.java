@@ -36,8 +36,8 @@ import maltcms.datastructures.peak.Peak;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @Slf4j
 public class Clique<T extends Peak> {
@@ -54,11 +54,11 @@ public class Clique<T extends Peak> {
     public Clique() {
         this.id = ++CLIQUEID;
     }
-    
+
     public CliqueStatistics<T> getCliqueStatistics() {
         return cliqueStatistics;
     }
-    
+
     public void setCliqueStatistics(CliqueStatistics<T> cliqueStatistics) {
         this.cliqueStatistics = cliqueStatistics;
     }
@@ -70,15 +70,17 @@ public class Clique<T extends Peak> {
     public int size() {
         return clique.size();
     }
-    
+
     public Set<String> keySet() {
         return clique.keySet();
     }
 
     /**
-     * Returns false, if a peak did not meet the criteria to be added to the clique.
-     * Returns true, if a peak is either already contained in the clique, or if it
-     * has been successfully added, due to satisfaction of all required criteria.
+     * Returns false, if a peak did not meet the criteria to be added to the
+     * clique. Returns true, if a peak is either already contained in the
+     * clique, or if it has been successfully added, due to satisfaction of all
+     * required criteria.
+     *
      * @param p
      * @return
      * @throws IllegalArgumentException
@@ -255,7 +257,6 @@ public class Clique<T extends Peak> {
     public List<T> getPeakList() {
         List<T> peaks = new ArrayList<T>(this.clique.values());
         Collections.sort(peaks, new Comparator<T>() {
-
             @Override
             public int compare(T o1, T o2) {
                 return o1.getAssociation().compareTo(o2.getAssociation());
@@ -267,7 +268,7 @@ public class Clique<T extends Peak> {
     public double getSimilarityForPeaks(IFileFragment a, IFileFragment b) {
         return this.clique.get(a.getName()).getSimilarity(this.clique.get(b.getName()));
     }
-    
+
     public double getSimilarityForPeaks(String a, String b) {
         return this.clique.get(a).getSimilarity(this.clique.get(b));
     }

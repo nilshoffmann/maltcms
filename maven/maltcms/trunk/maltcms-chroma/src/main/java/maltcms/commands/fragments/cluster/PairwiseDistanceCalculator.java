@@ -56,8 +56,7 @@ import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Calculates pairwise scores or costs between time series of different
- * lengths.
+ * Calculates pairwise scores or costs between time series of different lengths.
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
@@ -118,6 +117,10 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
                 + ".pwdExtension", "");
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getDescription() {
         return "Calculates pairwise distances/similarities between time series.";
@@ -127,6 +130,10 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
      * (non-Javadoc)
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
+     */
+    /**
+     *
+     * @return
      */
     @Override
     public WorkflowSlot getWorkflowSlot() {
@@ -182,6 +189,12 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
         }
     }
 
+    /**
+     *
+     * @param t
+     * @param pdc
+     * @return
+     */
     protected TupleND<IFileFragment> pairwiseDistances(
             final TupleND<IFileFragment> t, final PairwiseDistanceCalculator pdc) {
         EvalTools.notNull(t, this);
@@ -235,6 +248,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
             results = ccs.call();
         } catch (Exception ex) {
             log.error("Caught exception while executing workers: ", ex);
+            throw new RuntimeException(ex);
         }
         log.info("{} workers succeeded, {} failed!", results.size(), ccs.getFailedTasks().size());
         for (final PairwiseDistanceResult tpl : results) {
@@ -296,6 +310,12 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
         return tple;
     }
 
+    /**
+     *
+     * @param pwdist
+     * @param distances
+     * @param names
+     */
     public void saveToCSV(final IFileFragment pwdist,
             final ArrayDouble.D2 distances, final ArrayChar.D2 names) {
         final CSVWriter csvw = Factory.getInstance().getObjectFactory().instantiate(CSVWriter.class);

@@ -30,15 +30,31 @@ import ucar.ma2.MAMath;
  */
 public class ArrayTools {
 
+    /**
+     *
+     * @param a
+     * @return
+     */
     public static double calcmax(final Array a) {
         return MAMath.getMaximum(a);
     }
 
+    /**
+     *
+     * @param a
+     * @return
+     */
     public static double calcmin(final Array a) {
         return MAMath.getMinimum(a);
 
     }
 
+    /**
+     *
+     * @param s
+     * @param c
+     * @return
+     */
     public static int countChar(final String s, final char c) {
         return s.replaceAll("[^" + c + "]", "").length();
     }

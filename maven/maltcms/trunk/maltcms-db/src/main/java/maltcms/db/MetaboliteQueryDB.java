@@ -58,9 +58,8 @@ public class MetaboliteQueryDB extends QueryDB<IMetabolite> {
                 String[] predicates = new String[args.length - 1];
                 System.arraycopy(args, 1, predicates, 0, predicates.length);
                 MAggregatePredicateFactory mapf = new MAggregatePredicateFactory(new MetabolitePredicate() {
-
                     /**
-                     * 
+                     *
                      */
                     private static final long serialVersionUID = -3219329449275655325L;
 
@@ -103,9 +102,8 @@ public class MetaboliteQueryDB extends QueryDB<IMetabolite> {
     @Override
     public Predicate<IMetabolite> getDefaultPredicate() {
         return new Predicate<IMetabolite>() {
-
             /**
-             * 
+             *
              */
             private static final long serialVersionUID = 7856118698961191698L;
 

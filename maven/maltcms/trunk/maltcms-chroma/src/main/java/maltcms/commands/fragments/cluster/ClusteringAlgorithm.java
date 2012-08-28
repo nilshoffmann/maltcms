@@ -65,9 +65,9 @@ import maltcms.commands.fragments.warp.PathWarp;
 /**
  * Abstract base class for clustering algorithms based on similarity or distance
  * matrices.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 @Data
@@ -78,7 +78,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     public String toString() {
         return getClass().getName();
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -130,7 +130,6 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         sb.append("</graphml>");
         return sb.toString();
     }
-    
     @Configurable
     private boolean normalize_scans = false;
     private TupleND<IFileFragment> inputFiles = null;
@@ -699,8 +698,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
-     * @param chromatogramDistanceFunctionClass
-     *            the chromatogramDistanceFunctionClass to set
+     * @param chromatogramDistanceFunctionClass the
+     * chromatogramDistanceFunctionClass to set
      */
     public void setChromatogramDistanceFunction(
             final PairwiseFeatureSequenceSimilarity chromatogramDistanceFunction) {
@@ -708,8 +707,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
-     * @param chromatogramWarpCommandClass
-     *            the chromatogramWarpCommandClass to set
+     * @param chromatogramWarpCommandClass the chromatogramWarpCommandClass to
+     * set
      */
     public void setChromatogramWarpCommand(
             final AFragmentCommand chromatogramWarpCommand) {
@@ -717,16 +716,14 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
-     * @param cluster
-     *            the cluster to set
+     * @param cluster the cluster to set
      */
     public void setCluster(final HashMap<Integer, BinaryCluster> cluster) {
         this.cluster = cluster;
     }
 
     /**
-     * @param clusterNames
-     *            the clusterNames to set
+     * @param clusterNames the clusterNames to set
      */
     public void setClusterNames(final String[] clusterNames) {
         this.clusterNames = clusterNames;
@@ -743,16 +740,14 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
-     * @param dist
-     *            the dist to set
+     * @param dist the dist to set
      */
     public void setDist(final double[][] dist) {
         this.dist = dist;
     }
 
     /**
-     * @param fragments
-     *            the fragments to set
+     * @param fragments the fragments to set
      */
     public void setFragments(final HashMap<Integer, IFileFragment> fragments) {
         this.fragments = fragments;
@@ -772,16 +767,15 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
-     * @param minimizeDist
-     *            the minimizeDist to set
+     * @param minimizeDist the minimizeDist to set
      */
     public void setMinimizeDist(final boolean minimizeDist) {
         this.minimizeDist = minimizeDist;
     }
 
     /**
-     * @param minimizingArrayCompVariableName
-     *            the minimizingArrayCompVariableName to set
+     * @param minimizingArrayCompVariableName the
+     * minimizingArrayCompVariableName to set
      */
     public void setMinimizingArrayCompVariableName(
             final String minimizingArrayCompVariableName) {
@@ -789,16 +783,15 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
-     * @param names
-     *            the names to set
+     * @param names the names to set
      */
     public void setNames(final String[] names) {
         this.names = names;
     }
 
     /**
-     * @param pairwiseDistanceMatrixVariableName
-     *            the pairwiseDistanceMatrixVariableName to set
+     * @param pairwiseDistanceMatrixVariableName the
+     * pairwiseDistanceMatrixVariableName to set
      */
     public void setPairwiseDistanceMatrixVariableName(
             final String pairwiseDistanceMatrixVariableName) {
@@ -806,8 +799,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
-     * @param pairwiseDistanceNamesVariableName
-     *            the pairwiseDistanceNamesVariableName to set
+     * @param pairwiseDistanceNamesVariableName the
+     * pairwiseDistanceNamesVariableName to set
      */
     public void setPairwiseDistanceNamesVariableName(
             final String pairwiseDistanceNamesVariableName) {

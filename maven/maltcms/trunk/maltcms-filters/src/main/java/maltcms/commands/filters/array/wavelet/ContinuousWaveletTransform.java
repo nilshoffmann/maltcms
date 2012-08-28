@@ -24,10 +24,10 @@ package maltcms.commands.filters.array.wavelet;
 import java.util.List;
 
 /**
- * Implementation of ContinuousWaveletTransform.
- * Allows to calculate transformation and reconstruction
- * using a given implementation of a wavelet for real 
- * valued input.
+ * Implementation of ContinuousWaveletTransform. Allows to calculate
+ * transformation and reconstruction using a given implementation of a wavelet
+ * for real valued input.
+ *
  * @author hoffmann
  *
  */
@@ -61,7 +61,7 @@ public final class ContinuousWaveletTransform {
     public final int[] getBoundsForWavelet(final double tau, final double scale, final int length) {
         final int mint = Math.max(0, (int) (tau - scale + 1));
         final int maxt = Math.min(length - 1, (int) (tau + scale - 1));
-        return new int[]{mint,maxt};
+        return new int[]{mint, maxt};
     }
 
     public final double[] applyInverseTransform(

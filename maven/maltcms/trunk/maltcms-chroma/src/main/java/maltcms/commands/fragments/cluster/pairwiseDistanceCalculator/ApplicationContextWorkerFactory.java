@@ -30,20 +30,20 @@ import org.springframework.context.ApplicationContextAware;
 
 /**
  *
- * Use this if you are instantiating a workflow containing PairwiseDistanceCalculator
- * using any of the spring xml bean configuration files.
- * 
+ * Use this if you are instantiating a workflow containing
+ * PairwiseDistanceCalculator using any of the spring xml bean configuration
+ * files.
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
-@ServiceProvider(service=AWorkerFactory.class)
+@ServiceProvider(service = AWorkerFactory.class)
 public class ApplicationContextWorkerFactory extends AWorkerFactory implements ApplicationContextAware {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8253151151321756579L;
-	
+    /**
+     *
+     */
+    private static final long serialVersionUID = 8253151151321756579L;
     private ApplicationContext context;
     private String beanId;
 

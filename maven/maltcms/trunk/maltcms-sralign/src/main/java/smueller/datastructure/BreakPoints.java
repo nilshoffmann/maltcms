@@ -35,6 +35,11 @@ public class BreakPoints {
     private final double[] common;
 
     // Berechne gemeinsame Breakpoints
+    /**
+     *
+     * @param c
+     * @param d
+     */
     public BreakPoints(final Array c, final Array d) {
         final double[] a = calcbreakpoints(c, SymbolicRepresentationAlignment
                 .getSorti().getSortedjavarray1(),
@@ -48,6 +53,13 @@ public class BreakPoints {
         }
     }
 
+    /**
+     *
+     * @param a1
+     * @param sortiert
+     * @param alphabetgr
+     * @return
+     */
     public double[] calcbreakpoints(final Array a1, final double[] sortiert,
             final int alphabetgr) {
         final Array a = a1.copy();
@@ -101,6 +113,10 @@ public class BreakPoints {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public double[] getCommon() {
         return this.common;
     }

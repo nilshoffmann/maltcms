@@ -34,25 +34,24 @@ import ucar.ma2.Array;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
-@ServiceProvider(service=IDtwSimilarityFunction.class)
+@ServiceProvider(service = IDtwSimilarityFunction.class)
 public class DtwTimePenalizedPairwiseSimilarity implements IDtwSimilarityFunction {
 
     private double expansionWeight = 1.0;
     private double matchWeight = 1.0;
     private double compressionWeight = 1.0;
-    
     private IScalarSimilarity retentionTimeSimilarity = new GaussianDifferenceSimilarity();
     private IArraySimilarity denseMassSpectraSimilarity = new ArrayCorr();
-    
+
     @Override
     public double apply(int i1, int i2, double time1, double time2, Array t1,
             Array t2) {
-        final double  rtScore = retentionTimeSimilarity.apply(time1, time2);
-        if(rtScore==Double.NEGATIVE_INFINITY || rtScore==Double.NaN) {
+        final double rtScore = retentionTimeSimilarity.apply(time1, time2);
+        if (rtScore == Double.NEGATIVE_INFINITY || rtScore == Double.NaN) {
             return Double.NEGATIVE_INFINITY;
         }
         double score = denseMassSpectraSimilarity.apply(t1, t2);
-        return rtScore*score;
+        return rtScore * score;
     }
 
     @Override
@@ -62,7 +61,5 @@ public class DtwTimePenalizedPairwiseSimilarity implements IDtwSimilarityFunctio
 
     @Override
     public void configure(Configuration cfg) {
-        
     }
-    
 }

@@ -29,7 +29,7 @@ import maltcms.datastructures.ms.IMetabolite;
 public class MNumRangePredicate extends MetabolitePredicate {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 4384503672151011994L;
     private Number lB, uB;

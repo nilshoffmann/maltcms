@@ -21,37 +21,35 @@
  */
 package net.sf.maltcms.apps;
 
-import net.sf.maltcms.apps.Maltcms;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
 import cross.Factory;
-import cross.Logging;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Copy the named Variables given on the command line from a source file to an
  * output file in a different directory.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
+@Slf4j
 public class FileCopy {
 
     public static void main(final String[] args) {
-        final Logger log = Logging.getLogger(FileCopy.class);
         final Maltcms m = Maltcms.getInstance();
         log.info("Starting Maltcms");
         Factory.getInstance().configure(m.parseCommandLine(args));
@@ -73,7 +71,7 @@ public class FileCopy {
             for (final IVariableFragment vf : al) {
                 log.info("Retrieving Variable {}", vf);
                 final IVariableFragment toplevel = fcopy.getChild(
-                        vf.getVarname());
+                        vf.getName());
                 if (toplevel.getIndex() != null) {
                     final List<Array> arraysI = toplevel.getIndexedArray();
                     EvalTools.notNull(arraysI, arraysI);

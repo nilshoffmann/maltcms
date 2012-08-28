@@ -151,45 +151,45 @@
     
 
     <dependencies>
-<!--        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>cross-annotations</artifactId>
-            <version>1.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>cross-event</artifactId>
-            <version>1.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>cross-exception</artifactId>
-            <version>1.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>cross-main-api</artifactId>
-            <version>1.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>cross-tools</artifactId>
-            <version>1.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>cross-main</artifactId>
-            <version>1.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>cross-ui</artifactId>
-            <version>1.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>cross-math</artifactId>
-            <version>1.2.8-SNAPSHOT</version>-->
+        <!--        <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cross-annotations</artifactId>
+        <version>1.2.8-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cross-event</artifactId>
+        <version>1.2.8-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cross-exception</artifactId>
+        <version>1.2.8-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cross-main-api</artifactId>
+        <version>1.2.8-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cross-tools</artifactId>
+        <version>1.2.8-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cross-main</artifactId>
+        <version>1.2.8-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cross-ui</artifactId>
+        <version>1.2.8-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cross-math</artifactId>
+        <version>1.2.8-SNAPSHOT</version>-->
         <!--</dependency>-->
         <dependency>
             <groupId>${project.groupId}</groupId>

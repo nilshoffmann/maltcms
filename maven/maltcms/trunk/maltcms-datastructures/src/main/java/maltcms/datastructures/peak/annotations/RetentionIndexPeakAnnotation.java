@@ -29,5 +29,6 @@ import lombok.Data;
  */
 @Data
 public class RetentionIndexPeakAnnotation extends PeakAnnotation {
+
     private double retentionIndex = Double.NaN;
 }

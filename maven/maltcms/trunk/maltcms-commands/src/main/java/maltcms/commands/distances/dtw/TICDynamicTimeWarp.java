@@ -39,9 +39,9 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Dynamic Time Warp on univariate Time Series, e.g. the total ion current
  * (TIC).
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @ServiceProvider(service = PairwiseFeatureSequenceSimilarity.class)
@@ -57,12 +57,21 @@ public class TICDynamicTimeWarp extends ADynamicTimeWarp {
      * maltcms.commands.distances.dtw.ADynamicTimeWarp#configure(org.apache.
      * commons.configuration.Configuration)
      */
+    /**
+     *
+     * @param cfg
+     */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.arrayVariable = cfg.getString("var.total_intensity", "total_intensity");
     }
 
+    /**
+     *
+     * @param t
+     * @return
+     */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
             final Tuple2D<IFileFragment, IFileFragment> t) {

@@ -30,17 +30,48 @@ import cross.datastructures.fragments.IFileFragment;
  */
 public class Alignment {
 
-    protected IFileFragment ref, query;
+    /**
+     *
+     */
+    protected IFileFragment ref,
+            /**
+             *
+             */
+            query;
+    /**
+     *
+     */
     protected double[][] matrix;
+    /**
+     *
+     */
     protected double[][] pwd;
     private double[][] kostenfunktion;
     // 3Dim-Array, welches das Backtracking und finden aller optimalen
     // Alignments erm�glicht
+    /**
+     *
+     */
     protected int[][][] pathway;
+    /**
+     *
+     */
     protected double x;
+    /**
+     *
+     */
     protected double y;
+    /**
+     *
+     */
     protected double z;
+    /**
+     *
+     */
     protected String seq1;
+    /**
+     *
+     */
     protected String seq2;
     int k = 0;
     int counter = 0;
@@ -52,6 +83,11 @@ public class Alignment {
     OptimalAlignmentVector oav1 = new OptimalAlignmentVector();
     OptimalAlignmentVector oav2 = new OptimalAlignmentVector();
 
+    /**
+     *
+     * @param ref1
+     * @param query1
+     */
     public Alignment(final IFileFragment ref1, final IFileFragment query1) {
         this.ref = ref1;
         this.query = query1;
@@ -59,6 +95,9 @@ public class Alignment {
     }
 
     // Gibt alle optimalen Alignments i.d. Konsole aus
+    /**
+     *
+     */
     public void ausgabe() {
         String str1 = "";
         String str2 = "";
@@ -85,6 +124,11 @@ public class Alignment {
     }
 
     // Buchstaben Zahlen zuordnen, um die Kostenmatrix ansprechen zu k�nnen
+    /**
+     *
+     * @param a
+     * @return
+     */
     public int chartoNumber(final char a) {
         int numb = 0;
 
@@ -126,6 +170,9 @@ public class Alignment {
     }
 
     // Klont den aktuellen OAV und und f�gt ihm den Vektor hinzu
+    /**
+     *
+     */
     public void cloneAl() {
         final OptimalAlignmentVector zuKopieren = this.allalignments
                 .get(this.counter);
@@ -134,6 +181,11 @@ public class Alignment {
         this.allalignments.add(alKopie);
     }
 
+    /**
+     *
+     * @param u
+     * @param v
+     */
     public void computeMatrix(final String u, final String v) {
         this.seq1 = u;
         this.seq2 = v;
@@ -242,6 +294,11 @@ public class Alignment {
     }
 
     // Alle optimalen Alignments erstellen
+    /**
+     *
+     * @param u
+     * @param v
+     */
     public void createAlignments(final String u, final String v) {
         this.seq1 = u;
         this.seq2 = v;
@@ -343,6 +400,9 @@ public class Alignment {
     }
 
     // Matrix in der Konsole ausgeben
+    /**
+     *
+     */
     public void drawMatrix() {
         final int m = this.seq1.length();
         final int n = this.seq2.length();
@@ -361,6 +421,9 @@ public class Alignment {
     }
 
     // Zeichnet alle 3 Dimensionen der Pfadmatrix
+    /**
+     *
+     */
     public void drawPathway() {
         final int m = this.seq1.length();
         final int n = this.seq2.length();
@@ -382,62 +445,127 @@ public class Alignment {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public Vector<OptimalAlignmentVector> getAllalignments() {
         return this.allalignments;
     }
 
+    /**
+     *
+     * @return
+     */
     public double[][] getMatrix() {
         return this.matrix;
     }
 
+    /**
+     *
+     * @return
+     */
     public double[][] getPairwiseDistance() {
         return this.pwd;
     }
 
+    /**
+     *
+     * @return
+     */
     public int[][][] getPathway() {
         return this.pathway;
     }
 
+    /**
+     *
+     * @return
+     */
     public IFileFragment getQuery() {
         return this.query;
     }
 
+    /**
+     *
+     * @return
+     */
     public IFileFragment getRef() {
         return this.ref;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getSeq1() {
         return this.seq1;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getSeq2() {
         return this.seq2;
     }
 
+    /**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @return
+     */
     public double mini(final double a, final double b, final double c) {
         return Math.min(a, Math.min(b, c));
     }
 
+    /**
+     *
+     * @param kostenfunktion1
+     */
     public void setKostenfunktion(final double[][] kostenfunktion1) {
         this.kostenfunktion = kostenfunktion1;
     }
 
+    /**
+     *
+     * @param query1
+     */
     public void setQuery(final IFileFragment query1) {
         this.query = query1;
     }
 
+    /**
+     *
+     * @param ref1
+     */
     public void setRef(final IFileFragment ref1) {
         this.ref = ref1;
     }
 
+    /**
+     *
+     * @param seq11
+     */
     public void setSeq1(final String seq11) {
         this.seq1 = seq11;
     }
 
+    /**
+     *
+     * @param seq21
+     */
     public void setSeq2(final String seq21) {
         this.seq2 = seq21;
     }
 
+    /**
+     *
+     * @param i
+     * @param j
+     * @return
+     */
     public double vergleiche(final int i, final int j) {
         return this.kostenfunktion[i][j];
     }

@@ -33,9 +33,15 @@ import ucar.nc2.Variable;
  */
 public class NetcdfJavaTest {
 
+    /**
+     *
+     */
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
 
+    /**
+     *
+     */
     @Test
     public void testWriteRead() {
         File outputFolder = tf.newFolder("testOutput");
@@ -71,7 +77,7 @@ public class NetcdfJavaTest {
             //unused dimension 
             Dimension dim4 = new Dimension("dim4", 214);
             nfw.addDimension(nfw.getRootGroup(), dim4);
-            
+
             nfw.create();
             try {
                 nfw.write(ivf1.getFullNameEscaped(), arr1);
@@ -117,7 +123,7 @@ public class NetcdfJavaTest {
             for (int i = 0; i < dims2.size(); i++) {
                 Dimension left = dims2.get(i);
                 Dimension right = rdims2.get(i);
-                Assert.assertEquals(left,right);
+                Assert.assertEquals(left, right);
             }
             IndexIterator ii2 = arr2.getIndexIterator();
             IndexIterator rii2 = rivf2.read().getIndexIterator();

@@ -44,8 +44,16 @@ import maltcms.commands.distances.dtwng.FeatureVectorDtwSimilarity;
 import maltcms.math.functions.DtwPairwiseSimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
 
+/**
+ *
+ * @author hoffmann
+ */
 public class DTWTest {
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
 //		Maltcms m = Maltcms.getInstance();
 //		CompositeConfiguration cfg = m.parseCommandLine(new String[] { "-f",

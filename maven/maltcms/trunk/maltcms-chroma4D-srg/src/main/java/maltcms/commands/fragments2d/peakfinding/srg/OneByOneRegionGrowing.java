@@ -43,6 +43,10 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
 
+/**
+ *
+ * @author hoffmann
+ */
 @Slf4j
 @Data
 public class OneByOneRegionGrowing implements IRegionGrowing {
@@ -77,11 +81,22 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
     private IScanLine slc;
     private IFileFragment ff;
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
+    /**
+     *
+     * @param seeds
+     * @param ff
+     * @param slc
+     * @return
+     */
     @Override
     public List<PeakArea2D> getAreasFor(List<Point> seeds, IFileFragment ff,
             IScanLine slc) {
@@ -114,14 +129,13 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
 
     /**
      * Will do the region growing for on seed.
-     * 
-     * @param seed
-     *            inital seed
+     *
+     * @param seed inital seed
      * @return {@link PeakArea2D} if the peak area size exceeds a specific
-     *         threshold, otherwise <code>null</code>
+     * threshold, otherwise <code>null</code>
      */
     private PeakArea2D regionGrowing(final Point seed) {
-        System.out.println("Building peak area of seed "+seed);
+        System.out.println("Building peak area of seed " + seed);
         final long start = System.currentTimeMillis();
         final PeakArea2D pa = new PeakArea2D(seed,
                 slc.getMassSpectra(seed).copy(),
@@ -192,15 +206,11 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
 
     /**
      * This method add a given point ap to the region or the boundary list.
-     * 
-     * @param snake
-     *            snake
-     * @param ap
-     *            active point
-     * @param slc
-     *            scan line cache
-     * @param meanMS
-     *            mean mass spectra
+     *
+     * @param snake snake
+     * @param ap active point
+     * @param slc scan line cache
+     * @param meanMS mean mass spectra
      */
     private void check(final PeakArea2D snake, final Point ap,
             final IScanLine slc, final Array meanMS) {
@@ -227,11 +237,9 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
 
     /**
      * Getter.
-     * 
-     * @param seedMS
-     *            seed ms
-     * @param neighMS
-     *            neighbour ms
+     *
+     * @param seedMS seed ms
+     * @param neighMS neighbour ms
      * @return true if dist is low enough, otherwise false
      */
     private boolean isNear(final Array seedMS, final Array neighMS) {
@@ -251,11 +259,9 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
 
     /**
      * Index map.
-     * 
-     * @param x
-     *            x coordinate
-     * @param y
-     *            y coordinate
+     *
+     * @param x x coordinate
+     * @param y y coordinate
      * @return index
      */
     private int idx(final int x, final int y) {
@@ -265,11 +271,10 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
     /**
      * Tries to find the used_mass_values array and converts it to an List of
      * Integer.
-     * 
+     *
      * TODO: Duplicated method. See MeanVarVis - Should be one in ArrayTools?
-     * 
-     * @param ff
-     *            file fragment
+     *
+     * @param ff file fragment
      */
     private void getFilter() {
         if (this.filterMS) {
@@ -306,6 +311,10 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
         }
     }
 
+    /**
+     *
+     * @param cfg
+     */
     @Override
     public void configure(Configuration cfg) {
         this.minPeakSize = cfg.getInt(this.getClass().getName()
@@ -324,11 +333,19 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
                 this.getClass().getName() + ".minDist", 0.99d);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public double getMinDist() {
         return this.minDistance;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public List<D1> getIntensities() {
         ff.getChild(this.totalIntensityVar).setIndex(

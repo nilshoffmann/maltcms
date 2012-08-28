@@ -61,9 +61,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Provides various methods to write arrays and other data to csv files.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 @Data

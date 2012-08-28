@@ -47,7 +47,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Visualizes value distribution of a matrix.
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
 @RequiresVariables(names = {"var.pairwise_distance"})
@@ -58,15 +58,14 @@ public class ScoreDistributionVisualizer extends AFragmentCommand {
 
     private final String description = "Generates a histogram plot of score distributions from variable pairwise_distance";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
-    
-    @Configurable(name="var.pairwise_distance")
+    @Configurable(name = "var.pairwise_distance")
     private String pairwiseDistanceVariable = "pairwise_distance";
-    
+
     @Override
     public void configure(Configuration config) {
         this.pairwiseDistanceVariable = config.getString("var.pairwise_distance", "pairwise_distance");
     }
-    
+
     /*
      * (non-Javadoc)
      * 

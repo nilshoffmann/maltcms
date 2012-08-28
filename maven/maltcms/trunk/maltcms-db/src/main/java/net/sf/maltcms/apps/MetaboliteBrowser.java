@@ -66,7 +66,6 @@ public final class MetaboliteBrowser extends JFrame {
     private MetaboliteViewModel mvm;
 
     public MetaboliteBrowser() {
-
     }
 
     private class Credentials {
@@ -135,7 +134,6 @@ public final class MetaboliteBrowser extends JFrame {
 //        Maltcms m = Maltcms.getInstance();
 //        Factory.getInstance().configure(m.getDefaultConfig());
         SwingUtilities.invokeLater(new Runnable() {
-
             public void run() {
                 System.out.println("Using the following methods "
                         + "for data display:");
@@ -160,7 +158,6 @@ public final class MetaboliteBrowser extends JFrame {
         final Credentials c = mb.new Credentials();
         // if (args.length == 0) {
         Runnable r = new Runnable() {
-
             @Override
             public void run() {
                 JPanel jp1 = new JPanel();
@@ -170,15 +167,13 @@ public final class MetaboliteBrowser extends JFrame {
                 jp1.add(jl, BorderLayout.WEST);
                 jp1.add(jtf, BorderLayout.CENTER);
                 final JButton openFile = new JButton(new AbstractAction("...") {
-
                     @Override
                     public void actionPerformed(ActionEvent ae) {
                         JFileChooser jfc = new JFileChooser();
                         jfc.setFileFilter(new FileFilter() {
-
                             @Override
                             public boolean accept(File file) {
-                                if(file.isDirectory()) {
+                                if (file.isDirectory()) {
                                     return true;
                                 }
                                 return file.getName().toLowerCase().endsWith("db4o");
@@ -191,7 +186,7 @@ public final class MetaboliteBrowser extends JFrame {
                         });
                         int res = jfc.showOpenDialog(mb);
                         if (res == JFileChooser.APPROVE_OPTION) {
-                            if(jfc.getSelectedFile().isDirectory()) {
+                            if (jfc.getSelectedFile().isDirectory()) {
                                 jfc.setVisible(false);
                                 actionPerformed(ae);
                             }
@@ -208,19 +203,17 @@ public final class MetaboliteBrowser extends JFrame {
                 JPanel jp = new JPanel();
                 jp.add(jp1, BorderLayout.NORTH);
                 final JFrame jf = new JFrame("Open database");
-                jf.setLayout(new GridLayout(3,1));
+                jf.setLayout(new GridLayout(3, 1));
                 //jp.add(jp2, BorderLayout.CENTER);
                 JButton jb = new JButton(new AbstractAction("Open") {
-
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         Runnable r = new Runnable() {
-
                             @Override
                             public void run() {
                                 c.setPassword(new String(jpf.getPassword()));
                                 c.setLocation(jtf.getText());
-                                mb.setTitle("MetaboliteBrowser: "+jtf.getText());
+                                mb.setTitle("MetaboliteBrowser: " + jtf.getText());
                                 if (c.getLocation() == null) {
                                     System.err.println("No db selected, exiting!");
                                     System.exit(1);
@@ -261,7 +254,7 @@ public final class MetaboliteBrowser extends JFrame {
                         SwingUtilities.invokeLater(r);
                     }
                 });
-                
+
 //                jf.add(jb, BorderLayout.SOUTH);
                 jf.add(jp);
                 jf.add(jp2);
@@ -345,7 +338,6 @@ public final class MetaboliteBrowser extends JFrame {
 
         // Checkbox Action: Add or remove a single table header
         ActionListener checkBoxAction = new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (((JCheckBoxMenuItem) e.getSource()).isSelected()) {

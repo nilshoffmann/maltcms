@@ -30,11 +30,10 @@ import java.util.Set;
 import maltcms.datastructures.array.IFeatureVector;
 
 /**
- * A group of Entity objects which all share the same 
- * class label, meaning they are grouped by some algorithm
- * as related entities.
- * 
- * 
+ * A group of Entity objects which all share the same class label, meaning they
+ * are grouped by some algorithm as related entities.
+ *
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  *
  *
@@ -108,19 +107,19 @@ public class EntityGroup implements Comparable<EntityGroup> {
 
     @Override
     public int compareTo(EntityGroup o) {
-        if(equals(o)) {
+        if (equals(o)) {
             return 0;
         }
         Set<Category> s = getCategories();
-        for(Category c:s) {
+        for (Category c : s) {
             IFeatureVector ifv = getEntityForCategory(c).getFeatureVector();
             IFeatureVector ofv = o.getEntityForCategory(c).getFeatureVector();
             List<String> features = ifv.getFeatureNames();
             LinkedHashSet<String> commonFeatures = new LinkedHashSet<String>(features);
             commonFeatures.retainAll(ofv.getFeatureNames());
-            for(String featureName:commonFeatures) {
+            for (String featureName : commonFeatures) {
                 int v = ifv.getFeature(featureName).toString().compareTo(ofv.getFeature(featureName).toString());
-                if(v!=0) {
+                if (v != 0) {
                     return v;
                 }
             }

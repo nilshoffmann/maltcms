@@ -32,14 +32,12 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  * Software information (the software that produced the peak list).
- * 
- * <p>
- * Java class for softwareType complex type.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
+ *
+ * <p> Java class for softwareType complex type.
+ *
+ * <p> The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name=&quot;softwareType&quot;&gt;
  *   &lt;complexContent&gt;
@@ -54,105 +52,100 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "softwareType", propOrder = { "name", "version", "comments" })
-@XmlSeeAlso( { maltcms.io.xml.mzData.DataProcessingType.Software.class })
+@XmlType(name = "softwareType", propOrder = {"name", "version", "comments"})
+@XmlSeeAlso({maltcms.io.xml.mzData.DataProcessingType.Software.class})
 public class SoftwareType {
 
-	@XmlElement(required = true)
-	protected String name;
-	@XmlElement(required = true)
-	protected String version;
-	protected String comments;
-	@XmlAttribute
-	@XmlSchemaType(name = "dateTime")
-	protected XMLGregorianCalendar completionTime;
+    @XmlElement(required = true)
+    protected String name;
+    @XmlElement(required = true)
+    protected String version;
+    protected String comments;
+    @XmlAttribute
+    @XmlSchemaType(name = "dateTime")
+    protected XMLGregorianCalendar completionTime;
 
-	/**
-	 * Gets the value of the comments property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getComments() {
-		return this.comments;
-	}
+    /**
+     * Gets the value of the comments property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getComments() {
+        return this.comments;
+    }
 
-	/**
-	 * Gets the value of the completionTime property.
-	 * 
-	 * @return possible object is {@link XMLGregorianCalendar }
-	 * 
-	 */
-	public XMLGregorianCalendar getCompletionTime() {
-		return this.completionTime;
-	}
+    /**
+     * Gets the value of the completionTime property.
+     *
+     * @return possible object is {@link XMLGregorianCalendar }
+     *
+     */
+    public XMLGregorianCalendar getCompletionTime() {
+        return this.completionTime;
+    }
 
-	/**
-	 * Gets the value of the name property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getName() {
-		return this.name;
-	}
+    /**
+     * Gets the value of the name property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getName() {
+        return this.name;
+    }
 
-	/**
-	 * Gets the value of the version property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getVersion() {
-		return this.version;
-	}
+    /**
+     * Gets the value of the version property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getVersion() {
+        return this.version;
+    }
 
-	/**
-	 * Sets the value of the comments property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setComments(final String value) {
-		this.comments = value;
-	}
+    /**
+     * Sets the value of the comments property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setComments(final String value) {
+        this.comments = value;
+    }
 
-	/**
-	 * Sets the value of the completionTime property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link XMLGregorianCalendar }
-	 * 
-	 */
-	public void setCompletionTime(final XMLGregorianCalendar value) {
-		this.completionTime = value;
-	}
+    /**
+     * Sets the value of the completionTime property.
+     *
+     * @param value allowed object is {@link XMLGregorianCalendar }
+     *
+     */
+    public void setCompletionTime(final XMLGregorianCalendar value) {
+        this.completionTime = value;
+    }
 
-	/**
-	 * Sets the value of the name property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setName(final String value) {
-		this.name = value;
-	}
+    /**
+     * Sets the value of the name property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setName(final String value) {
+        this.name = value;
+    }
 
-	/**
-	 * Sets the value of the version property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setVersion(final String value) {
-		this.version = value;
-	}
-
+    /**
+     * Sets the value of the version property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setVersion(final String value) {
+        this.version = value;
+    }
 }

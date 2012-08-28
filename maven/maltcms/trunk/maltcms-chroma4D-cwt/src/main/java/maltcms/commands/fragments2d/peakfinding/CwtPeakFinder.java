@@ -36,8 +36,8 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @Slf4j
 @Data
@@ -181,7 +181,6 @@ public class CwtPeakFinder extends AFragmentCommand {
 //        }
 //        return a;
 //    }
-
     // private List<Tuple2D<Point2D, Double>> findDiffs(double[] seedlings,
     // double[] newSeedlings, int scaleIndx) {
     // List<Tuple2D<Point2D, Double>> l = new LinkedList<Tuple2D<Point2D,
@@ -245,6 +244,10 @@ public class CwtPeakFinder extends AFragmentCommand {
      * 
      * @see cross.commands.fragments.AFragmentCommand#getDescription()
      */
+    /**
+     *
+     * @return
+     */
     @Override
     public String getDescription() {
         return "Finds peak locations and extents in intensity profiles using the continuous wavelet transform.";
@@ -275,9 +278,9 @@ public class CwtPeakFinder extends AFragmentCommand {
         try {
             List<File> results = ics.call();
         } catch (Exception ex) {
-            log.warn("Exception while waiting for results!",ex);
+            log.warn("Exception while waiting for results!", ex);
         }
-        
+
 
         return t;
     }
@@ -326,6 +329,10 @@ public class CwtPeakFinder extends AFragmentCommand {
      * (non-Javadoc)
      * 
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
+     */
+    /**
+     *
+     * @return
      */
     @Override
     public WorkflowSlot getWorkflowSlot() {

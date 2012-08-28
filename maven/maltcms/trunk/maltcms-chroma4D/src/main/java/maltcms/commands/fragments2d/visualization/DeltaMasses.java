@@ -48,7 +48,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Computes relative deltamasses.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -56,17 +56,21 @@ import org.openide.util.lookup.ServiceProvider;
 @RequiresVariables(names = {""})
 @RequiresOptionalVariables(names = {""})
 @ProvidesVariables(names = {""})
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class DeltaMasses extends AFragmentCommand {
 
     private final String colorrampLocation = "res/colorRamps/bcgyr.csv";
     private final double lowThreshold = 0.0d;
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return getClass().getName();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -135,21 +139,14 @@ public class DeltaMasses extends AFragmentCommand {
 
     /**
      * Creates an image of a list of arrays.
-     * 
-     * @param filename
-     *            filename
-     * @param title
-     *            title
-     * @param aa
-     *            list of arrays
-     * @param colorRamp
-     *            color ramp
-     * @param lowThreshold
-     *            threshold
-     * @param creator
-     *            creator class
-     * @param elem
-     *            workflow element
+     *
+     * @param filename filename
+     * @param title title
+     * @param aa list of arrays
+     * @param colorRamp color ramp
+     * @param lowThreshold threshold
+     * @param creator creator class
+     * @param elem workflow element
      */
     private void createImage(final String filename, final String title,
             final List<Array> aa, final int[][] colorRamp,
@@ -164,11 +161,9 @@ public class DeltaMasses extends AFragmentCommand {
 
     /**
      * Creates a dense array.
-     * 
-     * @param dma
-     *            delta masses
-     * @param maxSize
-     *            max size
+     *
+     * @param dma delta masses
+     * @param maxSize max size
      * @return new array
      */
     private Array getArray(final Map<Integer, Integer> dma, final int maxSize) {

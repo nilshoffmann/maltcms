@@ -81,6 +81,16 @@ public class EICPeakFinder extends AFragmentCommand {
     private final String description = "Finds peaks within on mass channels.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;
 
+    /**
+     *
+     * @param a
+     * @param b
+     * @param meana
+     * @param meanb
+     * @param variancea
+     * @param varianceb
+     * @return
+     */
     protected static double calcEstimatedCrossCorrelation(final Array a,
             final Array b, final double meana, final double meanb,
             final double variancea, final double varianceb) {
@@ -251,6 +261,15 @@ public class EICPeakFinder extends AFragmentCommand {
 
     }
 
+    /**
+     *
+     * @param a
+     * @param b
+     * @param mean
+     * @param variance
+     * @param lag
+     * @param acr
+     */
     protected void calcEstimatedAutoCorrelation(final Array a, final Array b,
             final double mean, final double variance, final int lag,
             final ArrayDouble.D1 acr) {
@@ -292,6 +311,12 @@ public class EICPeakFinder extends AFragmentCommand {
         return c;
     }
 
+    /**
+     *
+     * @param a
+     * @param b
+     * @return
+     */
     protected Tuple2D<Integer, Double> getMaxAutocorrelation(final Array a,
             final Array b) {
         final Index ia = a.getIndex();

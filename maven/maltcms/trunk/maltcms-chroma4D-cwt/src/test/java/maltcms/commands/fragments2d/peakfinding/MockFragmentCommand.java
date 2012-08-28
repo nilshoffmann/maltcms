@@ -39,7 +39,7 @@ public class MockFragmentCommand extends AFragmentCommand {
 
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
-        System.out.println("Running fragment command "+getClass().getName());
+        System.out.println("Running fragment command " + getClass().getName());
         return in;
     }
 
@@ -47,5 +47,4 @@ public class MockFragmentCommand extends AFragmentCommand {
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;
     }
-    
 }

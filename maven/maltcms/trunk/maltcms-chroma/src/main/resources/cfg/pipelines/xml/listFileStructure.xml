@@ -31,7 +31,7 @@
     </description>
     
     <!-- a command pipeline consists of a list of 
-     commands to be executed -->
+    commands to be executed -->
     <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
         <property name="checkCommandDependencies" value="true"/>
         <property name="commands">

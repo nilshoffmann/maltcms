@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  *
  * Factory for pairwise DTW alignment layout constraints.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
  */

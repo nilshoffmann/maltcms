@@ -37,17 +37,17 @@ import ucar.ma2.InvalidRangeException;
  * @author nils
  */
 public class PeakFactory {
-    
+
     public static Peak1D createPeak1DEicRaw(File file, int startIndex, int apexIndex, int stopIndex, double startMass, double stopMass) {
         return createPeak1DEicRaw(new FileFragment(file), startIndex, apexIndex, stopIndex, startMass, stopMass);
     }
-    
+
     public static Peak1D createPeak1DEicRaw(IFileFragment fragment, int startIndex, int apexIndex, int stopIndex, double startMass, double stopMass) {
         Peak1D peak = new Peak1D();
         peak.setPeakType(PeakType.EIC_RAW);
-        peak.setExtractedIonCurrent((double[])MaltcmsTools.getEIC(fragment, startMass, stopMass, false, false, startIndex, stopIndex-startIndex).get1DJavaArray(double.class));
+        peak.setExtractedIonCurrent((double[]) MaltcmsTools.getEIC(fragment, startMass, stopMass, false, false, startIndex, stopIndex - startIndex).get1DJavaArray(double.class));
         peak.setArea(MathTools.sum(peak.getExtractedIonCurrent()));
-        peak.setApexIntensity(peak.getExtractedIonCurrent()[apexIndex-startIndex]);
+        peak.setApexIntensity(peak.getExtractedIonCurrent()[apexIndex - startIndex]);
         peak.setFile(fragment.getAbsolutePath());
         peak.setStartIndex(startIndex);
         peak.setApexIndex(apexIndex);
@@ -57,11 +57,10 @@ public class PeakFactory {
         peak.setStopTime(MaltcmsTools.getScanAcquisitionTime(fragment, stopIndex));
         return peak;
     }
-    
+
 //    public static Peak1D createPeak1DEicBinned(File file, int startIndex, int apexIndex, int stopIndex, double startMass, double stopMass) {
 //        return createPeak1DEicBinned(new FileFragment(file), startIndex, apexIndex, stopIndex, startMass, stopMass);
 //    }
-    
 //    public static Peak1D createPeak1DEicBinned(IFileFragment fragment, int startIndex, int apexIndex, int stopIndex, double startMass, double stopMass) {
 //        Peak1D peak = new Peak1D();
 //        peak.setPeakType(PeakType.EIC_BINNED);
@@ -77,21 +76,20 @@ public class PeakFactory {
 //        peak.setStopTime(MaltcmsTools.getScanAcquisitionTime(fragment, stopIndex));
 //        return peak;
 //    }
-    
     public static Peak1D createPeak1DTic(File file, int startIndex, int apexIndex, int stopIndex) {
         return createPeak1DTic(new FileFragment(file), startIndex, apexIndex, stopIndex);
     }
-    
+
     public static Peak1D createPeak1DTic(IFileFragment fragment, int startIndex, int apexIndex, int stopIndex) {
         Peak1D peak = new Peak1D();
         peak.setPeakType(PeakType.TIC_RAW);
         try {
-            peak.setExtractedIonCurrent((double[])fragment.getChild("total_intensity").getArray().section(new int[]{startIndex}, new int[]{stopIndex-startIndex}).get1DJavaArray(double.class));
+            peak.setExtractedIonCurrent((double[]) fragment.getChild("total_intensity").getArray().section(new int[]{startIndex}, new int[]{stopIndex - startIndex}).get1DJavaArray(double.class));
         } catch (InvalidRangeException ex) {
             Logger.getLogger(PeakFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
         peak.setArea(MathTools.sum(peak.getExtractedIonCurrent()));
-        peak.setApexIntensity(peak.getExtractedIonCurrent()[apexIndex-startIndex]);
+        peak.setApexIntensity(peak.getExtractedIonCurrent()[apexIndex - startIndex]);
         peak.setFile(fragment.getAbsolutePath());
         peak.setStartIndex(startIndex);
         peak.setApexIndex(apexIndex);
@@ -101,7 +99,6 @@ public class PeakFactory {
         peak.setStopTime(MaltcmsTools.getScanAcquisitionTime(fragment, stopIndex));
         return peak;
     }
-    
 //    public static Peak2D createPeak2DTic(IChromatogram2D chromatogram2D, PeakArea2D peakArea2D) {
 //        Peak2D peak2D = new Peak2D();
 //        peak2D.setPeakType(PeakType.TIC);
@@ -112,5 +109,4 @@ public class PeakFactory {
 //        peak2D.setArea(peak2D.getExtractedIonCurrent()[0]);
 //        peak2D.setA;
 //    }
-    
 }

@@ -49,7 +49,7 @@ import maltcms.db.predicates.metabolite.MetaboliteSimilarity;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
-
+ *
  *
  */
 public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
@@ -144,7 +144,7 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
         Future<ObjectSet<IMetabolite>> c = mqdb.invoke(mqdb.getCallable());
         try {
             ObjectSet<IMetabolite> os = c.get();
-            return ssp.getSimilaritiesAboveThreshold().subList(0, k-1);
+            return ssp.getSimilaritiesAboveThreshold().subList(0, k - 1);
         } catch (InterruptedException ex) {
             Logger.getLogger(RawMSQuery.class.getName()).log(Level.SEVERE, null,
                     ex);

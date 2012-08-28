@@ -65,21 +65,20 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Use Objects of this class to apply an alignment, warping a source
  * chromatogram to the time/scans of reference chromatogram.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @RequiresVariables(names = {"var.multiple_alignment",
     "var.multiple_alignment_names", "var.multiple_alignment_type",
     "var.multiple_alignment_creator"})
 @Slf4j
 @Data
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class ChromatogramWarp2 extends AFragmentCommand {
 
     private final String description = "Warps Chromatograms to a given reference, according to alignment paths.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.WARPING;
-    
     @Configurable
     private List<String> indexedVars = Arrays.asList("mass_values",
             "intensity_values");
@@ -124,6 +123,13 @@ public class ChromatogramWarp2 extends AFragmentCommand {
         return null;
     }
 
+    /**
+     *
+     * @param ref
+     * @param copy
+     * @param iw
+     * @return
+     */
     public IFileFragment copyReference(final IFileFragment ref,
             final IFileFragment copy, final IWorkflow iw) {
         IVariableFragment ivf = null;
@@ -172,8 +178,8 @@ public class ChromatogramWarp2 extends AFragmentCommand {
             log.info("Using alignmentLocation");
             at = new AlignmentTable(new File(this.alignmentLocation));
         }
-        log.info("Warping 1D variables: {}",plainVars);
-        log.info("Warping 2D variables: {}",indexedVars);
+        log.info("Warping 1D variables: {}", plainVars);
+        log.info("Warping 2D variables: {}", indexedVars);
         EvalTools.notNull(at, this);
         String refname = at.getRefName();
 
@@ -320,7 +326,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
      * finding. The returned FileFragment will have processedFile as its source
      * file, not originalFile, since we want to keep additional information,
      * which we already found out.
-     * 
+     *
      * @param ref
      * @param query
      * @param path
@@ -342,19 +348,13 @@ public class ChromatogramWarp2 extends AFragmentCommand {
     /**
      * Warp non-indexed arrays, which are for example scan_acquisisition_time,
      * tic etc.
-     * 
-     * @param warpedB
-     *            target IFileFragment to store warped arrays
-     * @param ref
-     *            reference IFileFragment
-     * @param toBeWarped
-     *            the to-be-warped IFileFragment
-     * @param path
-     *            alignment path of alignment between a and b
-     * @param plainVars
-     *            list of variable names, which should be warped
-     * @param toLHS
-     *            warp to left hand side
+     *
+     * @param warpedB target IFileFragment to store warped arrays
+     * @param ref reference IFileFragment
+     * @param toBeWarped the to-be-warped IFileFragment
+     * @param path alignment path of alignment between a and b
+     * @param plainVars list of variable names, which should be warped
+     * @param toLHS warp to left hand side
      * @return FileFragment containing warped data
      */
     public IFileFragment warp1D(final IFileFragment warpedB,
@@ -413,20 +413,14 @@ public class ChromatogramWarp2 extends AFragmentCommand {
     /**
      * Warp indexed arrays, which are lists of 1D arrays, so pseudo 2D. In this
      * case limited to mass_values and intensity_values.
-     * 
-     * @param warpedB
-     *            target IFileFragment to store warped arrays
-     * @param ref
-     *            reference IFileFragment
-     * @param toBeWarped
-     *            the to-be-warped IFileFragment
-     * @param path
-     *            alignment path of alignment between a and b
-     * @param plainVars
-     *            list of variable names, which should be warped
-     * @param toLHS
-     *            whether warping should be done from right to left (true) or
-     *            vice versa (false)
+     *
+     * @param warpedB target IFileFragment to store warped arrays
+     * @param ref reference IFileFragment
+     * @param toBeWarped the to-be-warped IFileFragment
+     * @param path alignment path of alignment between a and b
+     * @param plainVars list of variable names, which should be warped
+     * @param toLHS whether warping should be done from right to left (true) or
+     * vice versa (false)
      * @return FileFragment containing warped data
      */
     public IFileFragment warp2D(final IFileFragment warpedB,
@@ -594,6 +588,14 @@ public class ChromatogramWarp2 extends AFragmentCommand {
         return warpedB;
     }
 
+    /**
+     *
+     * @param lhs
+     * @param al
+     * @param rhs
+     * @param average
+     * @return
+     */
     public static Array projectToLHS(final Array lhs, final List<Tuple2DI> al,
             final Array rhs, final boolean average) {
         final Array rhsm = Array.factory(lhs.getElementType(), lhs.getShape());
@@ -606,6 +608,14 @@ public class ChromatogramWarp2 extends AFragmentCommand {
         return rhsm;
     }
 
+    /**
+     *
+     * @param rhs
+     * @param al
+     * @param lhs
+     * @param average
+     * @return
+     */
     public static Array projectToRHS(final Array rhs, final List<Tuple2DI> al,
             final Array lhs, final boolean average) {
         final Array lhsm = Array.factory(rhs.getElementType(), rhs.getShape());
@@ -623,7 +633,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
      * from processedFile and stores them in warped file. If toLHS is true,
      * assumes target scale of warp on left side of path, processedFile should
      * contain the data to the right side of the path.
-     * 
+     *
      * @param queryTarget
      * @param processedFile
      * @param path

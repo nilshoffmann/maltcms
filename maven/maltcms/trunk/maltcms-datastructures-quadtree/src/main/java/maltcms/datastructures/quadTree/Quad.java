@@ -23,7 +23,7 @@ package maltcms.datastructures.quadTree;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
-
+ *
  *
  */
 public enum Quad {

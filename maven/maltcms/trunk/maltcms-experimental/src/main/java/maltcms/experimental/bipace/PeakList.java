@@ -32,12 +32,9 @@ import maltcms.datastructures.peak.Peak;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
-public class PeakList<T extends Peak> implements Serializable{
-    
+public class PeakList<T extends Peak> implements Serializable {
+
     private IFileFragment fragment;
-    
     private List<T> peaks;
-    
     private int index;
-    
 }

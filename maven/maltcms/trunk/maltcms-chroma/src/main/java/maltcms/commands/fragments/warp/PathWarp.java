@@ -74,7 +74,6 @@ public class PathWarp extends AFragmentCommand {
 
     private final String description = "Warps binned mass spectra according to a given alignment map. Merges aligned mass spectra to mean mass spectra.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.WARPING;
-
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String total_intensity = "total_intensity";
     @Configurable(name = "var.anchors.retention_scans",
@@ -96,6 +95,12 @@ public class PathWarp extends AFragmentCommand {
     value = "5")
     private int minScansBetweenAnchors = 5;
 
+    /**
+     *
+     * @param m
+     * @param tf
+     * @return
+     */
     public IFileFragment apply(final MZIWarpInput m, final IFileFragment tf) {
         processIndexedArrays(m, tf);
         processArrays(m, tf);
@@ -198,6 +203,11 @@ public class PathWarp extends AFragmentCommand {
         }
     }
 
+    /**
+     *
+     * @param m
+     * @param tf
+     */
     public void processArrays(final MZIWarpInput m, final IFileFragment tf) {
         final ArrayList<String> al = FragmentTools.getDefaultVars();
         for (final String s : al) {
@@ -219,6 +229,11 @@ public class PathWarp extends AFragmentCommand {
         }
     }
 
+    /**
+     *
+     * @param m
+     * @param tf
+     */
     public void processIndexedArrays(final MZIWarpInput m,
             final IFileFragment tf) {
 
@@ -301,6 +316,14 @@ public class PathWarp extends AFragmentCommand {
         // }
     }
 
+    /**
+     *
+     * @param m
+     * @param tf
+     * @param refScanNo
+     * @param queryScanNo
+     * @param minScansBetweenAnchors
+     */
     public void processRIs(final MZIWarpInput m, final IFileFragment tf,
             final int refScanNo, final int queryScanNo,
             final int minScansBetweenAnchors) {

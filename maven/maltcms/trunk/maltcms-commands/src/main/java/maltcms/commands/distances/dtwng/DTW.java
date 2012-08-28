@@ -55,326 +55,318 @@ import cross.datastructures.tools.FragmentTools;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
+ *
  */
 public class DTW implements IAlignment, Serializable {
 
-	/**
-     * 
+    /**
+     *
      */
-	private static final long serialVersionUID = -4958589994859792653L;
+    private static final long serialVersionUID = -4958589994859792653L;
+    private String leftHandSideId, rightHandSideId;
+    private TwoFeatureVectorOperation similarity = new FeatureVectorDtwSimilarity();
+    private List<Point> alignmentMap = Collections.emptyList();
+    private Area area = null;
+    private double defaultValue = Double.NEGATIVE_INFINITY;
+    private IOptimizationFunction optimizationFunction = new ThreePredecessorsOptimization();
 
-	private String leftHandSideId, rightHandSideId;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * maltcms.experimental.operation.PairwiseFeatureVectorSequenceOperation
+     * #apply(java.util.List, java.util.List)
+     */
+    @Override
+    public Double apply(List<IFeatureVector> l1, List<IFeatureVector> l2) {
+        final ArrayFactory f = Factory.getInstance().getObjectFactory()
+                .instantiate(ArrayFactory.class);
+        final IArrayD2Double alignment = f.create(l1.size(), l2.size(),
+                this.defaultValue, this.area);
+        final IArrayD2Double pwvalues = f.createSharedLayout(alignment);
+        // saveImage(this.lhsID + "-" + this.rhsID + "_layout", alignment,
+        // new ArrayList<Point>());
+        optimizationFunction.init(l1, l2, alignment, pwvalues, this.similarity);
+        double percentDone = 0;
+        long elemCnt = 0;
+        long elements = alignment.getNumberOfStoredElements();
+        long partCnt = 0;
+        int[] point = new int[]{0, 0};
+        for (int i = 0; i < alignment.rows(); i++) {
+            final int[] bounds = alignment.getColumnBounds(i);
+            for (int j = bounds[0]; j < bounds[0] + bounds[1]; j++) {
+                percentDone = ArrayTools.calcPercentDone(elements, elemCnt);
+                partCnt = ArrayTools.printPercentDone(percentDone, 10, partCnt,
+                        System.out);
+                elemCnt++;
+                point[0] = i;
+                point[1] = j;
+                optimizationFunction.apply(point);
+            }
+        }
+        // ((ThreePredecessorsOptimization) iof).showCumScoreMatrix();
+        // ((ThreePredecessorsOptimization) iof).showPwScoreMatrix();
+        percentDone = ArrayTools.calcPercentDone(elements, elemCnt);
+        ArrayTools.printPercentDone(percentDone, 10, partCnt, System.out);
+        this.alignmentMap = optimizationFunction.getTrace();
+        System.out.println("Number of Points in trace: "
+                + this.alignmentMap.size());
 
-	private TwoFeatureVectorOperation similarity = new FeatureVectorDtwSimilarity();
+        // minimum of four points for each polynomial
 
-	private List<Point> alignmentMap = Collections.emptyList();
+        // UnivariateRealInterpolator interpolator = new SplineInterpolator();
+        // try {
+        //
+        List<double[]> l = new ArrayList<double[]>();
+        // create list of all aligned points
+        for (int i = 0; i < this.alignmentMap.size() - 1; i++) {
+            Point p = this.alignmentMap.get(i);
+            l.add(new double[]{p.x, p.y, pwvalues.get(p.x, p.y)});
+        }
 
-	private Area area = null;
+        ContinuityArgmaxNodeBuilder canb10 = new ContinuityArgmaxNodeBuilder(10);
+        List<Point> interp10 = canb10.eval(l, 3);
 
-	private double defaultValue = Double.NEGATIVE_INFINITY;
+        ContinuityArgmaxNodeBuilder canb20 = new ContinuityArgmaxNodeBuilder(20);
+        List<Point> interp20 = canb20.eval(l, 3);
 
-	private IOptimizationFunction optimizationFunction = new ThreePredecessorsOptimization();
+        ContinuityArgmaxNodeBuilder canb100 = new ContinuityArgmaxNodeBuilder(
+                100);
+        List<Point> interp100 = canb100.eval(l, 3);
+        // remove start and end point -> fixed anchors
+        // double[] start = l.remove(0);
+        // double[] end = l.remove(l.size() - 1);
+        // List<double[]> anchors = new ArrayList<double[]>();
+        //
+        // Point q = this.alignmentMap.get(this.alignmentMap.size() - 1);
+        // if (q.getX() == p.getX() || q.getY() == p.getY()) {
+        // l.remove(l.size() - 1);
+        // }
+        // l.add(q);
+        // System.out.println("Number of Surviving Points: " + l.size());
+        // double[] x = new double[l.size()];
+        // double[] y = new double[l.size()];
+        // for (int i = 0; i < l.size(); i++) {
+        // x[i] = l.get(i).getX();
+        // y[i] = l.get(i).getY();
+        // }
+        // UnivariateRealFunction function = interpolator.interpolate(x, y);
+        // List<Point> interp = new ArrayList<Point>();
+        // for (int i = 0; i < alignment.rows(); i += 10) {
+        // Point ip = new Point(i, (int) (Math.round(function
+        // .value((double) i))));
+        // interp.add(ip);
+        // }
+        // if (interp.get(interp.size() - 1).x != alignment.columns() - 1) {
+        // Point ip = new Point(alignment.columns() - 1,
+        // (int) (Math.round(function.value((double) alignment
+        // .columns() - 1))));
+        // interp.add(ip);
+        // }
+        BufferedImage bi = createImage(alignment);
+        addAlignmentMap(bi, this.alignmentMap, Color.WHITE);
+        // addAlignmentMap(bi, l, Color.LIGHT_GRAY);
+        addAlignmentMap(bi, interp10, Color.RED);
+        addAlignmentMap(bi, interp20, Color.BLUE);
+        addAlignmentMap(bi, interp100, Color.GREEN);
+        saveImage(this.leftHandSideId + "-" + this.rightHandSideId
+                + "_interpolatedLayoutWithTrace", bi);
+        // } catch (MathException e) {
+        //
+        // e.printStackTrace();
+        // }
+        BufferedImage rp = createRecurrencePlot(pwvalues, 0.99);
+        saveImage("recurrencePlot-" + this.leftHandSideId + "-"
+                + this.rightHandSideId, rp);
+        saveImage(this.leftHandSideId + "-" + this.rightHandSideId
+                + "_layoutWithTrace", alignment, this.alignmentMap);
+        return optimizationFunction.getOptimalValue();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maltcms.experimental.operation.PairwiseFeatureVectorSequenceOperation
-	 * #apply(java.util.List, java.util.List)
-	 */
-	@Override
-	public Double apply(List<IFeatureVector> l1, List<IFeatureVector> l2) {
-		final ArrayFactory f = Factory.getInstance().getObjectFactory()
-				.instantiate(ArrayFactory.class);
-		final IArrayD2Double alignment = f.create(l1.size(), l2.size(),
-				this.defaultValue, this.area);
-		final IArrayD2Double pwvalues = f.createSharedLayout(alignment);
-		// saveImage(this.lhsID + "-" + this.rhsID + "_layout", alignment,
-		// new ArrayList<Point>());
-		optimizationFunction.init(l1, l2, alignment, pwvalues, this.similarity);
-		double percentDone = 0;
-		long elemCnt = 0;
-		long elements = alignment.getNumberOfStoredElements();
-		long partCnt = 0;
-		int[] point = new int[] { 0, 0 };
-		for (int i = 0; i < alignment.rows(); i++) {
-			final int[] bounds = alignment.getColumnBounds(i);
-			for (int j = bounds[0]; j < bounds[0] + bounds[1]; j++) {
-				percentDone = ArrayTools.calcPercentDone(elements, elemCnt);
-				partCnt = ArrayTools.printPercentDone(percentDone, 10, partCnt,
-						System.out);
-				elemCnt++;
-				point[0] = i;
-				point[1] = j;
-				optimizationFunction.apply(point);
-			}
-		}
-		// ((ThreePredecessorsOptimization) iof).showCumScoreMatrix();
-		// ((ThreePredecessorsOptimization) iof).showPwScoreMatrix();
-		percentDone = ArrayTools.calcPercentDone(elements, elemCnt);
-		ArrayTools.printPercentDone(percentDone, 10, partCnt, System.out);
-		this.alignmentMap = optimizationFunction.getTrace();
-		System.out.println("Number of Points in trace: "
-				+ this.alignmentMap.size());
+    private void saveImage(String name, IArrayD2Double alignment,
+            List<Point> l, Color mapColor) {
+        BufferedImage bi = createImage(alignment);
+        addAlignmentMap(bi, l, mapColor);
+        saveImage(name, bi);
+    }
 
-		// minimum of four points for each polynomial
+    private void saveImage(String name, BufferedImage bi) {
+        try {
+            ImageIO.write(bi, "PNG", new File(Factory.getInstance()
+                    .getConfiguration().getString("output.basedir"), name
+                    + ".png"));
+        } catch (IOException ex) {
+            Logger.getLogger(DTW.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-		// UnivariateRealInterpolator interpolator = new SplineInterpolator();
-		// try {
-		//
-		List<double[]> l = new ArrayList<double[]>();
-		// create list of all aligned points
-		for (int i = 0; i < this.alignmentMap.size() - 1; i++) {
-			Point p = this.alignmentMap.get(i);
-			l.add(new double[] { p.x, p.y, pwvalues.get(p.x, p.y) });
-		}
+    private BufferedImage createImage(IArrayD2Double alignment) {
+        final ArrayFactory f = Factory.getInstance().getObjectFactory()
+                .instantiate(ArrayFactory.class);
+        BufferedImage bi = f.createLayoutImage(alignment);
+        return bi;
+    }
 
-		ContinuityArgmaxNodeBuilder canb10 = new ContinuityArgmaxNodeBuilder(10);
-		List<Point> interp10 = canb10.eval(l, 3);
+    private BufferedImage createRecurrencePlot(IArrayD2Double pwd,
+            double threshold) {
+        BufferedImage bi = createImage(pwd);
+        Graphics2D g2 = bi.createGraphics();
+        Color hit = Color.BLACK;
+        Color miss = Color.WHITE;
+        for (int x = 0; x < bi.getWidth(); x++) {
+            for (int y = 0; y < bi.getHeight(); y++) {
+                if (pwd.get(y, x) > threshold) {
+                    g2.setColor(hit);
+                    g2.fillRect(x, y, 1, 1);
+                } else {
+                    g2.setColor(miss);
+                    g2.fillRect(x, y, 1, 1);
+                }
+            }
+        }
+        return bi;
+    }
 
-		ContinuityArgmaxNodeBuilder canb20 = new ContinuityArgmaxNodeBuilder(20);
-		List<Point> interp20 = canb20.eval(l, 3);
+    private void addAlignmentMap(BufferedImage bi, List<Point> l, Color mapColor) {
+        Color c = mapColor;
+        Graphics2D g2 = (Graphics2D) bi.getGraphics();
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                0.3f));
+        g2.setColor(c);
+        Point last = null;
+        for (Point p : l) {
+            if (last == null) {
+                last = p;
+            } else {
+                g2.fillRect(last.y, last.x, p.y - last.y, p.x - last.x);
+                last = p;
+            }
+        }
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                0.8f));
+        GeneralPath gp = new GeneralPath();
+        gp.moveTo(0, 0);
+        for (Point p : l) {
+            gp.lineTo(p.getY(), p.getX());
+        }
+        g2.setColor(c);
+        g2.draw(gp);
+    }
 
-		ContinuityArgmaxNodeBuilder canb100 = new ContinuityArgmaxNodeBuilder(
-				100);
-		List<Point> interp100 = canb100.eval(l, 3);
-		// remove start and end point -> fixed anchors
-		// double[] start = l.remove(0);
-		// double[] end = l.remove(l.size() - 1);
-		// List<double[]> anchors = new ArrayList<double[]>();
-		//
-		// Point q = this.alignmentMap.get(this.alignmentMap.size() - 1);
-		// if (q.getX() == p.getX() || q.getY() == p.getY()) {
-		// l.remove(l.size() - 1);
-		// }
-		// l.add(q);
-		// System.out.println("Number of Surviving Points: " + l.size());
-		// double[] x = new double[l.size()];
-		// double[] y = new double[l.size()];
-		// for (int i = 0; i < l.size(); i++) {
-		// x[i] = l.get(i).getX();
-		// y[i] = l.get(i).getY();
-		// }
-		// UnivariateRealFunction function = interpolator.interpolate(x, y);
-		// List<Point> interp = new ArrayList<Point>();
-		// for (int i = 0; i < alignment.rows(); i += 10) {
-		// Point ip = new Point(i, (int) (Math.round(function
-		// .value((double) i))));
-		// interp.add(ip);
-		// }
-		// if (interp.get(interp.size() - 1).x != alignment.columns() - 1) {
-		// Point ip = new Point(alignment.columns() - 1,
-		// (int) (Math.round(function.value((double) alignment
-		// .columns() - 1))));
-		// interp.add(ip);
-		// }
-		BufferedImage bi = createImage(alignment);
-		addAlignmentMap(bi, this.alignmentMap, Color.WHITE);
-		// addAlignmentMap(bi, l, Color.LIGHT_GRAY);
-		addAlignmentMap(bi, interp10, Color.RED);
-		addAlignmentMap(bi, interp20, Color.BLUE);
-		addAlignmentMap(bi, interp100, Color.GREEN);
-		saveImage(this.leftHandSideId + "-" + this.rightHandSideId
-				+ "_interpolatedLayoutWithTrace", bi);
-		// } catch (MathException e) {
-		//
-		// e.printStackTrace();
-		// }
-		BufferedImage rp = createRecurrencePlot(pwvalues, 0.99);
-		saveImage("recurrencePlot-" + this.leftHandSideId + "-"
-				+ this.rightHandSideId, rp);
-		saveImage(this.leftHandSideId + "-" + this.rightHandSideId
-				+ "_layoutWithTrace", alignment, this.alignmentMap);
-		return optimizationFunction.getOptimalValue();
-	}
+    private void saveImage(String name, IArrayD2Double alignment, List<Point> l) {
+        saveImage(name, alignment, l, Color.WHITE);
+    }
 
-	private void saveImage(String name, IArrayD2Double alignment,
-			List<Point> l, Color mapColor) {
-		BufferedImage bi = createImage(alignment);
-		addAlignmentMap(bi, l, mapColor);
-		saveImage(name, bi);
-	}
+    @Override
+    public List<Point> getMap() {
+        return this.alignmentMap;
+    }
 
-	private void saveImage(String name, BufferedImage bi) {
-		try {
-			ImageIO.write(bi, "PNG", new File(Factory.getInstance()
-					.getConfiguration().getString("output.basedir"), name
-					+ ".png"));
-		} catch (IOException ex) {
-			Logger.getLogger(DTW.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
+    @Override
+    public String getLeftHandSideId() {
+        return this.leftHandSideId;
+    }
 
-	private BufferedImage createImage(IArrayD2Double alignment) {
-		final ArrayFactory f = Factory.getInstance().getObjectFactory()
-				.instantiate(ArrayFactory.class);
-		BufferedImage bi = f.createLayoutImage(alignment);
-		return bi;
-	}
+    @Override
+    public String getRightHandSideId() {
+        return this.rightHandSideId;
+    }
 
-	private BufferedImage createRecurrencePlot(IArrayD2Double pwd,
-			double threshold) {
-		BufferedImage bi = createImage(pwd);
-		Graphics2D g2 = bi.createGraphics();
-		Color hit = Color.BLACK;
-		Color miss = Color.WHITE;
-		for (int x = 0; x < bi.getWidth(); x++) {
-			for (int y = 0; y < bi.getHeight(); y++) {
-				if (pwd.get(y, x) > threshold) {
-					g2.setColor(hit);
-					g2.fillRect(x, y, 1, 1);
-				} else {
-					g2.setColor(miss);
-					g2.fillRect(x, y, 1, 1);
-				}
-			}
-		}
-		return bi;
-	}
+    @Override
+    public void setLeftHandSideId(String lhsid) {
+        this.leftHandSideId = lhsid;
+    }
 
-	private void addAlignmentMap(BufferedImage bi, List<Point> l, Color mapColor) {
-		Color c = mapColor;
-		Graphics2D g2 = (Graphics2D) bi.getGraphics();
-		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-				0.3f));
-		g2.setColor(c);
-		Point last = null;
-		for (Point p : l) {
-			if (last == null) {
-				last = p;
-			} else {
-				g2.fillRect(last.y, last.x, p.y - last.y, p.x - last.x);
-				last = p;
-			}
-		}
-		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-				0.8f));
-		GeneralPath gp = new GeneralPath();
-		gp.moveTo(0, 0);
-		for (Point p : l) {
-			gp.lineTo(p.getY(), p.getX());
-		}
-		g2.setColor(c);
-		g2.draw(gp);
-	}
+    @Override
+    public void setRightHandSideId(String rhsid) {
+        this.rightHandSideId = rhsid;
+    }
 
-	private void saveImage(String name, IArrayD2Double alignment, List<Point> l) {
-		saveImage(name, alignment, l, Color.WHITE);
-	}
+    @Override
+    public void setPairwiseFeatureVectorOperation(TwoFeatureVectorOperation tfvo) {
+        this.similarity = tfvo;
+    }
 
-	@Override
-	public List<Point> getMap() {
-		return this.alignmentMap;
-	}
+    @Override
+    public void setConstraints(Area a) {
+        this.area = a;
+    }
 
-	@Override
-	public String getLeftHandSideId() {
-		return this.leftHandSideId;
-	}
+    @Override
+    public void setDefaultValue(double d) {
+        this.defaultValue = d;
+    }
 
-	@Override
-	public String getRightHandSideId() {
-		return this.rightHandSideId;
-	}
+    @Override
+    public void setOptimizationFunction(IOptimizationFunction iof) {
+        this.optimizationFunction = iof;
+    }
 
-	@Override
-	public void setLeftHandSideId(String lhsid) {
-		this.leftHandSideId = lhsid;
-	}
+    @Override
+    public IOptimizationFunction getOptimizationFunction() {
+        return this.optimizationFunction;
+    }
 
-	@Override
-	public void setRightHandSideId(String rhsid) {
-		this.rightHandSideId = rhsid;
-	}
+    @Override
+    public TwoFeatureVectorOperation getPairwiseFeatureVectorOperation() {
+        return this.similarity;
+    }
 
-	@Override
-	public void setPairwiseFeatureVectorOperation(TwoFeatureVectorOperation tfvo) {
-		this.similarity = tfvo;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * maltcms.experimental.datastructures.IFileFragmentModifier#decorate(cross
+     * .datastructures.fragments.IFileFragment)
+     */
+    @Override
+    public void modify(IFileFragment iff) {
+        String arrayComparatorVariableName = Factory
+                .getInstance()
+                .getConfiguration()
+                .getString("var.alignment.pairwise_distance.class",
+                "pairwise_distance_class");
+        String arrayDistanceClassName = Factory
+                .getInstance()
+                .getConfiguration()
+                .getString("var.alignment.cumulative_distance.class",
+                "cumulative_distance_class");
+        String alignmentClassVariableName = Factory.getInstance()
+                .getConfiguration()
+                .getString("var.alignment.class", "alignment_class");
+        FragmentTools.createString(iff, arrayComparatorVariableName,
+                this.similarity.getClass().getName());
+        FragmentTools.createString(iff, arrayDistanceClassName,
+                this.optimizationFunction.getClass().getName());
+        FragmentTools.createString(iff, alignmentClassVariableName, this
+                .getClass().getName());
+        ArrayDouble.D0 result = new ArrayDouble.D0();
+        result.set(getOptimizationFunction().getOptimalValue());
+        final String distvar = Factory.getInstance().getConfiguration()
+                .getString("var.alignment.distance", "distance");
+        final IVariableFragment dvar = new VariableFragment(iff, distvar);
+        dvar.setArray(result);
+        this.optimizationFunction.modify(iff);
+    }
 
-	@Override
-	public void setConstraints(Area a) {
-		this.area = a;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
+     * )
+     */
+    @Override
+    public void configure(Configuration cfg) {
+    }
 
-	@Override
-	public void setDefaultValue(double d) {
-		this.defaultValue = d;
-	}
+    @Override
+    public Area getConstraints() {
+        return area;
+    }
 
-	@Override
-	public void setOptimizationFunction(IOptimizationFunction iof) {
-		this.optimizationFunction = iof;
-	}
-
-	@Override
-	public IOptimizationFunction getOptimizationFunction() {
-		return this.optimizationFunction;
-	}
-
-	@Override
-	public TwoFeatureVectorOperation getPairwiseFeatureVectorOperation() {
-		return this.similarity;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maltcms.experimental.datastructures.IFileFragmentModifier#decorate(cross
-	 * .datastructures.fragments.IFileFragment)
-	 */
-	@Override
-	public void modify(IFileFragment iff) {
-		String arrayComparatorVariableName = Factory
-				.getInstance()
-				.getConfiguration()
-				.getString("var.alignment.pairwise_distance.class",
-						"pairwise_distance_class");
-		String arrayDistanceClassName = Factory
-				.getInstance()
-				.getConfiguration()
-				.getString("var.alignment.cumulative_distance.class",
-						"cumulative_distance_class");
-		String alignmentClassVariableName = Factory.getInstance()
-				.getConfiguration()
-				.getString("var.alignment.class", "alignment_class");
-		FragmentTools.createString(iff, arrayComparatorVariableName,
-				this.similarity.getClass().getName());
-		FragmentTools.createString(iff, arrayDistanceClassName,
-				this.optimizationFunction.getClass().getName());
-		FragmentTools.createString(iff, alignmentClassVariableName, this
-				.getClass().getName());
-		ArrayDouble.D0 result = new ArrayDouble.D0();
-		result.set(getOptimizationFunction().getOptimalValue());
-		final String distvar = Factory.getInstance().getConfiguration()
-				.getString("var.alignment.distance", "distance");
-		final IVariableFragment dvar = new VariableFragment(iff, distvar);
-		dvar.setArray(result);
-		this.optimizationFunction.modify(iff);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
-	 * )
-	 */
-	@Override
-	public void configure(Configuration cfg) {
-
-	}
-
-	@Override
-	public Area getConstraints() {
-		return area;
-	}
-
-	@Override
-	public double getDefaultValue() {
-		return defaultValue;
-	}
-
+    @Override
+    public double getDefaultValue() {
+        return defaultValue;
+    }
 }

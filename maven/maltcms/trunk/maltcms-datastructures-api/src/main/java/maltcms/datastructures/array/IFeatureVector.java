@@ -28,26 +28,25 @@ import ucar.ma2.Array;
 import cross.annotations.NoFeature;
 
 /**
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 public interface IFeatureVector extends Serializable {
 
-	/**
-	 * Return an Array for a specified feature with name.
-	 * 
-	 * @param name
-	 * @return
-	 */
-	@NoFeature
-	public abstract Array getFeature(String name);
+    /**
+     * Return an Array for a specified feature with name.
+     *
+     * @param name
+     * @return
+     */
+    @NoFeature
+    public abstract Array getFeature(String name);
 
-	/**
-	 * Get a list of available feature names for this FeatureVector.
-	 * 
-	 * @return
-	 */
-	@NoFeature
-	public List<String> getFeatureNames();
-
+    /**
+     * Get a list of available feature names for this FeatureVector.
+     *
+     * @return
+     */
+    @NoFeature
+    public List<String> getFeatureNames();
 }

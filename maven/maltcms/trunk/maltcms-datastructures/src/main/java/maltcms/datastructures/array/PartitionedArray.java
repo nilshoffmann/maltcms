@@ -40,136 +40,137 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.ArrayDouble.D2;
 import ucar.ma2.ArrayInt.D1;
-import cross.Logging;
 import cross.datastructures.tuple.Tuple2D;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Array, which has been partitioned into rectangular areas, e.g. by anchors.
  * Allows overlap of areas, as well as for neighborhoods around anchors.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
+@Slf4j
 public class PartitionedArray implements IArrayD2Double {
 
-	public static PartitionedArray copyLayout(final PartitionedArray pa) {
-		final Area a = new Area(pa.getShape());
-		return new PartitionedArray(pa.rows(), pa.columns(), (ArrayInt.D1) pa
-		        .getColStart().copy(), (ArrayInt.D1) pa.getRowLength().copy(),
-		        (ArrayInt.D1) pa.getRowOffset().copy(), pa.getDataArray(), pa
-		                .getDefaultValue(), a);
-	}
+    public static PartitionedArray copyLayout(final PartitionedArray pa) {
+        final Area a = new Area(pa.getShape());
+        return new PartitionedArray(pa.rows(), pa.columns(), (ArrayInt.D1) pa
+                .getColStart().copy(), (ArrayInt.D1) pa.getRowLength().copy(),
+                (ArrayInt.D1) pa.getRowOffset().copy(), pa.getDataArray(), pa
+                .getDefaultValue(), a);
+    }
 
-	public static PartitionedArray create(final int rows, final int cols,
-	        final AnchorPairSet aps, final int neighborhood1,
-	        final double band, final double defaultValue,
-	        final boolean globalBand) {
-		Area shape = null;
-		if (globalBand) {
-			shape = ConstraintFactory.getInstance().calculateLayout(rows, cols,
-			        neighborhood1, aps, -1, 0, 0);
-			if ((band > 0.0) && (band < 1.0)) {
-				final Area bandshape = ConstraintFactory.getInstance()
-				        .createBandConstraint(0, 0, rows, cols, band);
-				// final Area intersection = new Area(bandshape);
-				shape.intersect(bandshape);
-				// shape = intersection;
-			}
-		} else {
-			shape = ConstraintFactory.getInstance().calculateLayout(rows, cols,
-			        neighborhood1, aps, band, 0, 0);
-		}
+    public static PartitionedArray create(final int rows, final int cols,
+            final AnchorPairSet aps, final int neighborhood1,
+            final double band, final double defaultValue,
+            final boolean globalBand) {
+        Area shape = null;
+        if (globalBand) {
+            shape = ConstraintFactory.getInstance().calculateLayout(rows, cols,
+                    neighborhood1, aps, -1, 0, 0);
+            if ((band > 0.0) && (band < 1.0)) {
+                final Area bandshape = ConstraintFactory.getInstance()
+                        .createBandConstraint(0, 0, rows, cols, band);
+                // final Area intersection = new Area(bandshape);
+                shape.intersect(bandshape);
+                // shape = intersection;
+            }
+        } else {
+            shape = ConstraintFactory.getInstance().calculateLayout(rows, cols,
+                    neighborhood1, aps, band, 0, 0);
+        }
 
-		return PartitionedArray.create(rows, cols, defaultValue, shape);
-	}
+        return PartitionedArray.create(rows, cols, defaultValue, shape);
+    }
 
-	public static PartitionedArray create(final int rows, final int cols,
-	        final double defaultValue, final Area shape) {
-		final ArrayInt.D1 colStart = new ArrayInt.D1(rows);// first valid index
-		// of each row
-		final ArrayInt.D1 rowLength = new ArrayInt.D1(rows);// last valid index
-		// of each row
-		final ArrayInt.D1 rowOffset = new ArrayInt.D1(rows);// offsets of row
-		// storage in
-		final ArrayDouble.D1 dataArray = PartitionedArray.initArrays(rows,
-		        cols, shape, colStart, rowLength, rowOffset);
-		final PartitionedArray pa = new PartitionedArray(rows, cols, colStart,
-		        rowLength, rowOffset, dataArray, defaultValue, shape);
-		Logging.getLogger(PartitionedArray.class).info(
-		        "Number of elements to calculate: "
-		                + pa.getElementsToCalculate());
-		Logging.getLogger(PartitionedArray.class).info(
-		        "Number of virtual elements to calculate: "
-		                + pa.getTotalNumElements());
-		Logging.getLogger(PartitionedArray.class).debug(
-		        "Columns: " + pa.columns() + "\tRows: " + pa.rows());
-		return pa;
-	}
+    public static PartitionedArray create(final int rows, final int cols,
+            final double defaultValue, final Area shape) {
+        final ArrayInt.D1 colStart = new ArrayInt.D1(rows);// first valid index
+        // of each row
+        final ArrayInt.D1 rowLength = new ArrayInt.D1(rows);// last valid index
+        // of each row
+        final ArrayInt.D1 rowOffset = new ArrayInt.D1(rows);// offsets of row
+        // storage in
+        final ArrayDouble.D1 dataArray = PartitionedArray.initArrays(rows,
+                cols, shape, colStart, rowLength, rowOffset);
+        final PartitionedArray pa = new PartitionedArray(rows, cols, colStart,
+                rowLength, rowOffset, dataArray, defaultValue, shape);
+        log.info(
+                "Number of elements to calculate: "
+                + pa.getElementsToCalculate());
+        log.info(
+                "Number of virtual elements to calculate: "
+                + pa.getTotalNumElements());
+        log.debug(
+                "Columns: " + pa.columns() + "\tRows: " + pa.rows());
+        return pa;
+    }
 
-	public static BufferedImage createLayoutImage(final PartitionedArray pa,
-	        final Color bg, final Color fg) {
-		final BufferedImage bi = new BufferedImage(pa.columns(), pa.rows(),
-		        BufferedImage.TYPE_4BYTE_ABGR);
-		final Graphics2D g = (Graphics2D) bi.getGraphics();
-		final Area a = pa.getShape();
-		final Color b = bg;
-		g.setColor(b);
-		g.fill(new Rectangle(0, 0, pa.columns(), pa.rows()));
-		final Color c = fg;
-		g.setColor(c);
-		g.fill(a);
-		return bi;
-	}
+    public static BufferedImage createLayoutImage(final PartitionedArray pa,
+            final Color bg, final Color fg) {
+        final BufferedImage bi = new BufferedImage(pa.columns(), pa.rows(),
+                BufferedImage.TYPE_4BYTE_ABGR);
+        final Graphics2D g = (Graphics2D) bi.getGraphics();
+        final Area a = pa.getShape();
+        final Color b = bg;
+        g.setColor(b);
+        g.fill(new Rectangle(0, 0, pa.columns(), pa.rows()));
+        final Color c = fg;
+        g.setColor(c);
+        g.fill(a);
+        return bi;
+    }
 
-	public static ArrayDouble.D1 initArrays(final int rows, final int cols,
-	        final Area bounds, final ArrayInt.D1 colStart,
-	        final ArrayInt.D1 rowLength, final ArrayInt.D1 rowOffset) {
-		final long start = System.currentTimeMillis();
-		int offset = 0;
-		Area a = null;// new Area(r);
-		for (int i = 0; i < rows; i++) {
-			int startCol = -1;
-			int len = 0;
+    public static ArrayDouble.D1 initArrays(final int rows, final int cols,
+            final Area bounds, final ArrayInt.D1 colStart,
+            final ArrayInt.D1 rowLength, final ArrayInt.D1 rowOffset) {
+        final long start = System.currentTimeMillis();
+        int offset = 0;
+        Area a = null;// new Area(r);
+        for (int i = 0; i < rows; i++) {
+            int startCol = -1;
+            int len = 0;
 
-			// System.out.println("Checking bounds of row "+i);
-			a = new Area(new Rectangle(0, i, cols, 1));
-			a.intersect(bounds);
-			// Logging.getLogger(PartitionedArray.class).info(
-			// "Row {}, start column={} end={}",new
-			// Object[]{i,a.getBounds().x,a.
-			// getBounds().x+a.getBounds().width-1});
-			// System.out.println("Row "+i+" start column="+a.getBounds().x+
-			// " ncols="+(a.getBounds().width-1));
-			// for(int j = 0;j<cols;j++) {
-			// if(bounds.contains(j, i)){
-			// // System.out.println(""+i+","+j+" contained in bounds");
-			// if(startCol==-1) {
-			// startCol = j;
-			// //System.out.println("start column = "+startCol);
-			// }else{
-			// len++;
-			// //System.out.println("length of column = "+len);
-			// //neighborhoods.add(new Rectangle(startCol,i,j-startCol,1));
-			// }
-			// //partitions.add(new Rectangle(j,i,1,1));
-			// }
-			// }
-			// System.out.println("length of column = "+len);
-			// EvalTools.eqI(len, a.getBounds().width-1,
-			// PartitionedArray.class);
-			startCol = a.getBounds().x;
-			len = a.getBounds().width - 1;
-			// r.setBounds(0, r.getBounds().y+1, cols, 1);
-			// System.out.println("Offset before adding cols: "+offset);
-			offset = PartitionedArray.prepareRow(offset, i, startCol, len + 1,
-			        rowOffset, colStart, rowLength);
-			// System.out.println("Offset after adding cols: "+offset);
-		}
-		final long end = System.currentTimeMillis() - start;
-		Logging.getLogger(PartitionedArray.class).debug(
-		        "Time to calculate row layout: " + end);
-		return new ArrayDouble.D1(offset);
-	}
+            // System.out.println("Checking bounds of row "+i);
+            a = new Area(new Rectangle(0, i, cols, 1));
+            a.intersect(bounds);
+            // log.info(
+            // "Row {}, start column={} end={}",new
+            // Object[]{i,a.getBounds().x,a.
+            // getBounds().x+a.getBounds().width-1});
+            // System.out.println("Row "+i+" start column="+a.getBounds().x+
+            // " ncols="+(a.getBounds().width-1));
+            // for(int j = 0;j<cols;j++) {
+            // if(bounds.contains(j, i)){
+            // // System.out.println(""+i+","+j+" contained in bounds");
+            // if(startCol==-1) {
+            // startCol = j;
+            // //System.out.println("start column = "+startCol);
+            // }else{
+            // len++;
+            // //System.out.println("length of column = "+len);
+            // //neighborhoods.add(new Rectangle(startCol,i,j-startCol,1));
+            // }
+            // //partitions.add(new Rectangle(j,i,1,1));
+            // }
+            // }
+            // System.out.println("length of column = "+len);
+            // EvalTools.eqI(len, a.getBounds().width-1,
+            // PartitionedArray.class);
+            startCol = a.getBounds().x;
+            len = a.getBounds().width - 1;
+            // r.setBounds(0, r.getBounds().y+1, cols, 1);
+            // System.out.println("Offset before adding cols: "+offset);
+            offset = PartitionedArray.prepareRow(offset, i, startCol, len + 1,
+                    rowOffset, colStart, rowLength);
+            // System.out.println("Offset after adding cols: "+offset);
+        }
+        final long end = System.currentTimeMillis() - start;
+        log.debug(
+                "Time to calculate row layout: " + end);
+        return new ArrayDouble.D1(offset);
+    }
 
 //	public static void main(final String[] args) {
 //		final int xs = 250;
@@ -281,353 +282,332 @@ public class PartitionedArray implements IArrayD2Double {
 //		jf.setVisible(true);
 //		jf.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 //	}
+    public static int prepareRow(int offset, final int row, final int startcol,
+            final int len, final ArrayInt.D1 rowOffset,
+            final ArrayInt.D1 colStart, final ArrayInt.D1 rowLength) {
+        // + " size of offset array: " + rowOffset.getShape()[0]);
 
-	public static int prepareRow(int offset, final int row, final int startcol,
-	        final int len, final ArrayInt.D1 rowOffset,
-	        final ArrayInt.D1 colStart, final ArrayInt.D1 rowLength) {
-		// + " size of offset array: " + rowOffset.getShape()[0]);
+        rowOffset.set(row, offset);
+        // System.out.println("Processing row " + k + " with " + n
+        // + " elements");
+        // System.out.println("Startindex " + scol);
+        // System.out.println("ncolumns " + (len));
+        // System.out.println("Offset " + offset);
+        // System.out.println("Setting colstart of row " + row + " to " +
+        // startcol);
+        colStart.set(row, startcol);
+        // System.out.println("Setting rowlength of row " + row + " to " + len);
+        rowLength.set(row, len);
+        offset += len;
+        // System.out.println("Setting Row "+row+" offset: "+rowOffset.get(row)+
+        // " colStart: "+colStart.get(row)+" colLen: "+rowLength.get(row));
+        return offset;
+    }
 
-		rowOffset.set(row, offset);
-		// System.out.println("Processing row " + k + " with " + n
-		// + " elements");
-		// System.out.println("Startindex " + scol);
-		// System.out.println("ncolumns " + (len));
-		// System.out.println("Offset " + offset);
-		// System.out.println("Setting colstart of row " + row + " to " +
-		// startcol);
-		colStart.set(row, startcol);
-		// System.out.println("Setting rowlength of row " + row + " to " + len);
-		rowLength.set(row, len);
-		offset += len;
-		// System.out.println("Setting Row "+row+" offset: "+rowOffset.get(row)+
-		// " colStart: "+colStart.get(row)+" colLen: "+rowLength.get(row));
-		return offset;
-	}
+    public static PartitionedArray shareLayout(final PartitionedArray pa) {
+        return new PartitionedArray(pa.rows(), pa.columns(), pa.getColStart(),
+                pa.getRowLength(), pa.getRowOffset(), pa.getDataArray(), pa
+                .getDefaultValue(), pa.getShape());
+    }
+    private Area shape = null;
+    private ArrayInt.D1 colStart;
+    private final ArrayDouble.D1 dataArray;
+    private double defaultValue = Double.POSITIVE_INFINITY;
+    private final float elemsToCalculate;
+    private List<Rectangle> neighborhoods;
+    private int nPartitions;
+    private List<Rectangle> partitions;
+    private int row;
+    private ArrayInt.D1 rowLength;
+    private ArrayInt.D1 rowOffset;
+    private final float totalNumElements;
+    private int virtualCols = 0;
+    private int virtualRows = 0;
 
-	public static PartitionedArray shareLayout(final PartitionedArray pa) {
-		return new PartitionedArray(pa.rows(), pa.columns(), pa.getColStart(),
-		        pa.getRowLength(), pa.getRowOffset(), pa.getDataArray(), pa
-		                .getDefaultValue(), pa.getShape());
-	}
+    public PartitionedArray(final int rows, final int cols,
+            final ArrayInt.D1 colStart1, final ArrayInt.D1 rowLength1,
+            final ArrayInt.D1 rowOffset1, final ArrayDouble.D1 dataArray1,
+            final double defaultValue1, final Area shape1) {
+        this.virtualRows = rows;
+        this.virtualCols = cols;
+        this.colStart = colStart1;
+        this.rowLength = rowLength1;
+        this.rowOffset = rowOffset1;
+        this.dataArray = dataArray1;
+        this.defaultValue = defaultValue1;
+        this.elemsToCalculate = this.dataArray.getShape()[0];
+        this.totalNumElements = this.virtualCols * this.virtualRows;
+        this.shape = shape1;
+        ArrayTools.fill(this.dataArray, this.defaultValue);
+    }
 
-	private Area shape = null;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.datastructures.alignment.IArrayD2Double#columns()
+     */
+    public int columns() {
+        return this.virtualCols;
+    }
 
-	private ArrayInt.D1 colStart;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.datastructures.array.IArrayD2Double#flatten()
+     */
+    @Override
+    public Tuple2D<D1, ucar.ma2.ArrayDouble.D1> flatten() {
+        final ArrayDouble.D1 arr = new ArrayDouble.D1(
+                getNumberOfStoredElements());
+        final ArrayInt.D1 si = new ArrayInt.D1(rows());
+        int offset = 0;
+        for (int i = 0; i < rows(); i++) {
+            si.set(i, 0 + offset);
+            final int[] bds = getColumnBounds(i);
+            int ecnt = 0;
+            for (int j = bds[0]; j < bds[0] + bds[1]; j++) {
+                arr.set(offset + ecnt, get(i, j));
+                ecnt++;
+            }
+            offset += bds[1];
+        }
+        return new Tuple2D<D1, ucar.ma2.ArrayDouble.D1>(si, arr);
+    }
 
-	private final ArrayDouble.D1 dataArray;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.datastructures.alignment.IArrayD2Double#get(int, int)
+     */
+    public double get(final int row, final int col) {
+        final int index = getAddressInDataArray(row, col);
+        if (index == -1) {
+            return this.defaultValue;
+        } else {
+            return this.dataArray.get(index);
+        }
+    }
 
-	private double defaultValue = Double.POSITIVE_INFINITY;
+    protected int getAddressInDataArray(final int row, final int col) {
+        if (inRange(row, col)) {
+            final int rowOffsetPos = this.rowOffset.get(row);
+            final int colStart = this.colStart.get(row);
+            // int len = this.rowLength.get(row);
+            // System.out.println("Adress in array: "+(rowOffsetPos+col));
+            return rowOffsetPos + col - colStart;
+        }
+        return -1;
+    }
 
-	private final float elemsToCalculate;
+    protected int getAddressInDataArrayFast(final int row, final int col)
+            throws ArrayIndexOutOfBoundsException {
+        final int rowOffsetPos = this.rowOffset.get(row);
+        final int colStart = this.colStart.get(row);
+        // int len = this.rowLength.get(row);
+        return rowOffsetPos + col - colStart;
+    }
 
-	private final Logger log = Logging.getLogger(this);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.datastructures.alignment.IArrayD2Double#getArray()
+     */
+    @Override
+    public D2 getArray() {
+        final ArrayDouble.D2 arr = new ArrayDouble.D2(rows(), columns());
+        // fill array with default value
+        ArrayTools.fill(arr, this.defaultValue);
+        for (int i = 0; i < rows(); i++) {
+            for (int j = 0; j < columns(); j++) {
+                arr.set(i, j, get(i, j));
+            }
+        }
+        return arr;
+    }
 
-	private List<Rectangle> neighborhoods;
+    /**
+     * @return the colStart
+     */
+    public ArrayInt.D1 getColStart() {
+        return this.colStart;
+    }
 
-	private int nPartitions;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.datastructures.array.IArrayD2Double#getColumnBounds(int)
+     */
+    @Override
+    public int[] getColumnBounds(final int row) {
+        final int colStartPos = this.colStart.get(row);
+        final int len = this.rowLength.get(row);
+        return new int[]{colStartPos, len};
+    }
 
-	private List<Rectangle> partitions;
+    // public int getNumPartitions() {
+    // return this.partitions.size();
+    // }
+    /**
+     * @return the dataArray
+     */
+    public ArrayDouble.D1 getDataArray() {
+        return (ArrayDouble.D1) this.dataArray.copy();
+    }
 
-	private int row;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.datastructures.alignment.IArrayD2Double#getDefaultValue()
+     */
+    public double getDefaultValue() {
+        return this.defaultValue;
+    }
 
-	private ArrayInt.D1 rowLength;
+    public float getElementsToCalculate() {
+        return this.elemsToCalculate;
+    }
 
-	private ArrayInt.D1 rowOffset;
+    public Rectangle getEnclosingRectangle() {
+        return new Rectangle(0, 0, this.virtualCols, this.virtualRows);
+    }
 
-	private final float totalNumElements;
+    public List<Rectangle> getNeighborhoods() {
+        return this.neighborhoods;
+    }
 
-	private int virtualCols = 0;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * maltcms.datastructures.alignment.IArrayD2Double#getNumberOfStoredElements
+     * ()
+     */
+    @Override
+    public int getNumberOfStoredElements() {
+        return this.dataArray.getShape()[0];
+    }
 
-	private int virtualRows = 0;
+    public int getNumPartitions() {
+        return this.nPartitions;
+    }
 
-	public PartitionedArray(final int rows, final int cols,
-	        final ArrayInt.D1 colStart1, final ArrayInt.D1 rowLength1,
-	        final ArrayInt.D1 rowOffset1, final ArrayDouble.D1 dataArray1,
-	        final double defaultValue1, final Area shape1) {
-		this.virtualRows = rows;
-		this.virtualCols = cols;
-		this.colStart = colStart1;
-		this.rowLength = rowLength1;
-		this.rowOffset = rowOffset1;
-		this.dataArray = dataArray1;
-		this.defaultValue = defaultValue1;
-		this.elemsToCalculate = this.dataArray.getShape()[0];
-		this.totalNumElements = this.virtualCols * this.virtualRows;
-		this.shape = shape1;
-		ArrayTools.fill(this.dataArray, this.defaultValue);
-	}
+    public Iterator<Rectangle> getPartitionIterator() {
+        return iterator();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.alignment.IArrayD2Double#columns()
-	 */
-	public int columns() {
-		return this.virtualCols;
-	}
+    /**
+     * @return the rowLength
+     */
+    public ArrayInt.D1 getRowLength() {
+        return this.rowLength;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.array.IArrayD2Double#flatten()
-	 */
-	@Override
-	public Tuple2D<D1, ucar.ma2.ArrayDouble.D1> flatten() {
-		final ArrayDouble.D1 arr = new ArrayDouble.D1(
-		        getNumberOfStoredElements());
-		final ArrayInt.D1 si = new ArrayInt.D1(rows());
-		int offset = 0;
-		for (int i = 0; i < rows(); i++) {
-			si.set(i, 0 + offset);
-			final int[] bds = getColumnBounds(i);
-			int ecnt = 0;
-			for (int j = bds[0]; j < bds[0] + bds[1]; j++) {
-				arr.set(offset + ecnt, get(i, j));
-				ecnt++;
-			}
-			offset += bds[1];
-		}
-		return new Tuple2D<D1, ucar.ma2.ArrayDouble.D1>(si, arr);
-	}
+    /**
+     * @return the rowOffset
+     */
+    public ArrayInt.D1 getRowOffset() {
+        return this.rowOffset;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.alignment.IArrayD2Double#get(int, int)
-	 */
-	public double get(final int row, final int col) {
-		final int index = getAddressInDataArray(row, col);
-		if (index == -1) {
-			return this.defaultValue;
-		} else {
-			return this.dataArray.get(index);
-		}
-	}
+    public Area getShape() {
+        return this.shape;
+    }
 
-	protected int getAddressInDataArray(final int row, final int col) {
-		if (inRange(row, col)) {
-			final int rowOffsetPos = this.rowOffset.get(row);
-			final int colStart = this.colStart.get(row);
-			// int len = this.rowLength.get(row);
-			// System.out.println("Adress in array: "+(rowOffsetPos+col));
-			return rowOffsetPos + col - colStart;
-		}
-		return -1;
-	}
+    public float getTotalNumElements() {
+        return this.totalNumElements;
+    }
 
-	protected int getAddressInDataArrayFast(final int row, final int col)
-	        throws ArrayIndexOutOfBoundsException {
-		final int rowOffsetPos = this.rowOffset.get(row);
-		final int colStart = this.colStart.get(row);
-		// int len = this.rowLength.get(row);
-		return rowOffsetPos + col - colStart;
-	}
+    @Override
+    public boolean inRange(final int row, final int col) {
+        if ((row < 0) || (row >= rows()) || (col < 0) || (col >= columns())) {
+            return false;
+        }
+        // System.out.println("Retrieving address for row "+row+" col "+col);
+        final int[] colBounds = getColumnBounds(row);
+        // System.out.println("["+row+","+col+"] =>" +
+        // " column start= "+colStartPos+" len: "+len);
+        if ((col < colBounds[0]) || (col >= (colBounds[0] + colBounds[1]))) {
+            return false;
+        }
+        return true;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.alignment.IArrayD2Double#getArray()
-	 */
-	@Override
-	public D2 getArray() {
-		final ArrayDouble.D2 arr = new ArrayDouble.D2(rows(), columns());
-		// fill array with default value
-		ArrayTools.fill(arr, this.defaultValue);
-		for (int i = 0; i < rows(); i++) {
-			for (int j = 0; j < columns(); j++) {
-				arr.set(i, j, get(i, j));
-			}
-		}
-		return arr;
-	}
+    public Iterator<Rectangle> iterator() {
+        return this.partitions.iterator();
+    }
 
-	/**
-	 * @return the colStart
-	 */
-	public ArrayInt.D1 getColStart() {
-		return this.colStart;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.datastructures.alignment.IArrayD2Double#rows()
+     */
+    public int rows() {
+        return this.virtualRows;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.array.IArrayD2Double#getColumnBounds(int)
-	 */
-	@Override
-	public int[] getColumnBounds(final int row) {
-		final int colStartPos = this.colStart.get(row);
-		final int len = this.rowLength.get(row);
-		return new int[] { colStartPos, len };
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.datastructures.alignment.IArrayD2Double#set(int, int,
+     * double)
+     */
+    public void set(final int row, final int col, final double d)
+            throws ArrayIndexOutOfBoundsException {
+        final int index = getAddressInDataArray(row, col);
+        // System.out.println("Row "+row+" Column "+col+
+        // " Index in dataArray array: "+
+        // index);
+        if (index == -1) {
+            // System.out.println(index+" for "+row+" "+col+
+            // " : Index out of bounds!");
+        } else {
+            this.dataArray.set(index, d);
+        }
+    }
 
-	// public int getNumPartitions() {
-	// return this.partitions.size();
-	// }
+    /**
+     * @param colStart the colStart to set
+     */
+    public void setColStart(final ArrayInt.D1 colStart) {
+        this.colStart = colStart;
+    }
 
-	/**
-	 * @return the dataArray
-	 */
-	public ArrayDouble.D1 getDataArray() {
-		return (ArrayDouble.D1) this.dataArray.copy();
-	}
+    /**
+     * @param i
+     */
+    public void setNumPartitions(final int i) {
+        this.nPartitions = i;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.alignment.IArrayD2Double#getDefaultValue()
-	 */
-	public double getDefaultValue() {
-		return this.defaultValue;
-	}
+    /**
+     * @param rowLength the rowLength to set
+     */
+    public void setRowLength(final ArrayInt.D1 rowLength) {
+        this.rowLength = rowLength;
+    }
 
-	public float getElementsToCalculate() {
-		return this.elemsToCalculate;
-	}
+    /**
+     * @param rowOffset the rowOffset to set
+     */
+    public void setRowOffset(final ArrayInt.D1 rowOffset) {
+        this.rowOffset = rowOffset;
+    }
 
-	public Rectangle getEnclosingRectangle() {
-		return new Rectangle(0, 0, this.virtualCols, this.virtualRows);
-	}
-
-	public List<Rectangle> getNeighborhoods() {
-		return this.neighborhoods;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maltcms.datastructures.alignment.IArrayD2Double#getNumberOfStoredElements
-	 * ()
-	 */
-	@Override
-	public int getNumberOfStoredElements() {
-		return this.dataArray.getShape()[0];
-	}
-
-	public int getNumPartitions() {
-		return this.nPartitions;
-	}
-
-	public Iterator<Rectangle> getPartitionIterator() {
-		return iterator();
-	}
-
-	/**
-	 * @return the rowLength
-	 */
-	public ArrayInt.D1 getRowLength() {
-		return this.rowLength;
-	}
-
-	/**
-	 * @return the rowOffset
-	 */
-	public ArrayInt.D1 getRowOffset() {
-		return this.rowOffset;
-	}
-
-	public Area getShape() {
-		return this.shape;
-	}
-
-	public float getTotalNumElements() {
-		return this.totalNumElements;
-	}
-
-	@Override
-	public boolean inRange(final int row, final int col) {
-		if ((row < 0) || (row >= rows()) || (col < 0) || (col >= columns())) {
-			return false;
-		}
-		// System.out.println("Retrieving address for row "+row+" col "+col);
-		final int[] colBounds = getColumnBounds(row);
-		// System.out.println("["+row+","+col+"] =>" +
-		// " column start= "+colStartPos+" len: "+len);
-		if ((col < colBounds[0]) || (col >= (colBounds[0] + colBounds[1]))) {
-			return false;
-		}
-		return true;
-	}
-
-	public Iterator<Rectangle> iterator() {
-		return this.partitions.iterator();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.alignment.IArrayD2Double#rows()
-	 */
-	public int rows() {
-		return this.virtualRows;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.alignment.IArrayD2Double#set(int, int,
-	 * double)
-	 */
-	public void set(final int row, final int col, final double d)
-	        throws ArrayIndexOutOfBoundsException {
-		final int index = getAddressInDataArray(row, col);
-		// System.out.println("Row "+row+" Column "+col+
-		// " Index in dataArray array: "+
-		// index);
-		if (index == -1) {
-			// System.out.println(index+" for "+row+" "+col+
-			// " : Index out of bounds!");
-		} else {
-			this.dataArray.set(index, d);
-		}
-	}
-
-	/**
-	 * @param colStart
-	 *            the colStart to set
-	 */
-	public void setColStart(final ArrayInt.D1 colStart) {
-		this.colStart = colStart;
-	}
-
-	/**
-	 * @param i
-	 */
-	public void setNumPartitions(final int i) {
-		this.nPartitions = i;
-	}
-
-	/**
-	 * @param rowLength
-	 *            the rowLength to set
-	 */
-	public void setRowLength(final ArrayInt.D1 rowLength) {
-		this.rowLength = rowLength;
-	}
-
-	/**
-	 * @param rowOffset
-	 *            the rowOffset to set
-	 */
-	public void setRowOffset(final ArrayInt.D1 rowOffset) {
-		this.rowOffset = rowOffset;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see maltcms.datastructures.alignment.IArrayD2Double#toString()
-	 */
-	@Override
-	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < rows(); i++) {
-			for (int j = 0; j < columns(); j++) {
-				sb.append(get(i, j));
-				sb.append(", ");
-			}
-			sb.append("\n");
-		}
-		return sb.toString();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see maltcms.datastructures.alignment.IArrayD2Double#toString()
+     */
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < rows(); i++) {
+            for (int j = 0; j < columns(); j++) {
+                sb.append(get(i, j));
+                sb.append(", ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
 }

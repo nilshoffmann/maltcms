@@ -29,7 +29,7 @@ import ucar.ma2.IndexIterator;
 
 /**
  * Will take the square root of all elements.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Data
@@ -44,7 +44,6 @@ public class SqrtFilter extends AArrayFilter {
     public SqrtFilter() {
         super();
         this.aef = new AElementFilter() {
-
             @Override
             public Double apply(final Double d) {
                 return Math.sqrt(d);

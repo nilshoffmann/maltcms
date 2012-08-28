@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
  * @author hoffmann
  */
 public class MZMLDataSourceTest {
-    
+
     public MZMLDataSourceTest() {
     }
 

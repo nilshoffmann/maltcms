@@ -105,6 +105,6 @@ public class Peak2DCliqueStatistics extends CliqueStatistics<Peak2D> {
 
     @Override
     public String[] getFeatureNames() {
-        return new String[]{"first_column_time","second_column_time"};
+        return new String[]{"first_column_time", "second_column_time"};
     }
 }

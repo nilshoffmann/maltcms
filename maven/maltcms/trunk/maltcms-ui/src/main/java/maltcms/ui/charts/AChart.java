@@ -35,71 +35,67 @@ import cross.IConfigurable;
 
 /**
  * Abstract base class for Charts of Type T extending Plot of JFreeChart.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  * @param <T extends Plot>
  */
 public abstract class AChart<T extends Plot> implements IConfigurable {
 
-	private double yaxis_min = -1;
-	private double yaxis_max = -1;
+    private double yaxis_min = -1;
+    private double yaxis_max = -1;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
-	 * )
-	 */
-	@Override
-	public void configure(final Configuration cfg) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
+     * )
+     */
+    @Override
+    public void configure(final Configuration cfg) {
+    }
 
-	}
+    public abstract T create();
 
-	public abstract T create();
+    public abstract String getTitle();
 
-	public abstract String getTitle();
+    /**
+     * @return the yaxis_max
+     */
+    public double getYaxis_max() {
+        return this.yaxis_max;
+    }
 
-	/**
-	 * @return the yaxis_max
-	 */
-	public double getYaxis_max() {
-		return this.yaxis_max;
-	}
+    /**
+     * @return the yaxis_min
+     */
+    public double getYaxis_min() {
+        return this.yaxis_min;
+    }
 
-	/**
-	 * @return the yaxis_min
-	 */
-	public double getYaxis_min() {
-		return this.yaxis_min;
-	}
+    public List<Array> normalize(final List<Array> c,
+            final String normalization, final boolean normalize_global) {
+        final NormalizationFilter nf = new NormalizationFilter(normalization,
+                false, normalize_global);
+        nf.configure(Factory.getInstance().getConfiguration());
+        final Array[] as = nf.apply(c.toArray(new Array[]{}));
+        return Arrays.asList(as);
+    }
 
-	public List<Array> normalize(final List<Array> c,
-	        final String normalization, final boolean normalize_global) {
-		final NormalizationFilter nf = new NormalizationFilter(normalization,
-		        false, normalize_global);
-		nf.configure(Factory.getInstance().getConfiguration());
-		final Array[] as = nf.apply(c.toArray(new Array[] {}));
-		return Arrays.asList(as);
-	}
+    public abstract void setTitle(String s);
 
-	public abstract void setTitle(String s);
+    /**
+     * @param yaxis_max the yaxis_max to set
+     */
+    public void setYaxis_max(final double yaxis_max) {
+        this.yaxis_max = yaxis_max;
+    }
 
-	/**
-	 * @param yaxis_max
-	 *            the yaxis_max to set
-	 */
-	public void setYaxis_max(final double yaxis_max) {
-		this.yaxis_max = yaxis_max;
-	}
-
-	/**
-	 * @param yaxis_min
-	 *            the yaxis_min to set
-	 */
-	public void setYaxis_min(final double yaxis_min) {
-		this.yaxis_min = yaxis_min;
-	}
-
+    /**
+     * @param yaxis_min the yaxis_min to set
+     */
+    public void setYaxis_min(final double yaxis_min) {
+        this.yaxis_min = yaxis_min;
+    }
 }

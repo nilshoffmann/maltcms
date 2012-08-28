@@ -33,7 +33,7 @@ import java.util.Collections;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
-
+ *
  *
  */
 public class QuadTreeNode<T> {
@@ -57,7 +57,7 @@ public class QuadTreeNode<T> {
         this.s = "Node[" + level + "] x:" + this.r.x + ", y:" + this.r.y + ", width:" + this.r.width + ", height:" + this.r.height;
     }
 
-    public List<Tuple2D<Point2D,T>> getChildrenInRadius(List<Tuple2D<Point2D,T>> children, Point2D p, double radius){
+    public List<Tuple2D<Point2D, T>> getChildrenInRadius(List<Tuple2D<Point2D, T>> children, Point2D p, double radius) {
         //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
         if (this.t != null) {//this node has no children yet
             //System.out.println("Looking for Point in local list!");
@@ -66,7 +66,7 @@ public class QuadTreeNode<T> {
             double mindist = Double.POSITIVE_INFINITY;
             //iterate over local points
             for (Tuple2D<Point2D, T> tple : this.t) {
-                double dist1 = l1distance(tple.getFirst(),p);//tple.getFirst().distance(p);
+                double dist1 = l1distance(tple.getFirst(), p);//tple.getFirst().distance(p);
                 //check if query is in radius
                 if (dist1 <= radius) {
                     if (dist1 < mindist && !p.equals(tple.getFirst())) {
@@ -94,13 +94,13 @@ public class QuadTreeNode<T> {
         }
         return children;
     }
-    
+
     private double l1distance(Point2D p1, Point2D p2) {
-    	double dist = Math.abs(p1.getX()-p2.getX());
-    	dist+=Math.abs(p1.getY()-p2.getY());
-    	return dist;
+        double dist = Math.abs(p1.getX() - p2.getX());
+        dist += Math.abs(p1.getY() - p2.getY());
+        return dist;
     }
-    
+
     public List<Tuple2D<Point2D, T>> getChildrenInRange(Rectangle2D r) throws ElementNotFoundException {
         if (!r.intersects(getArea())) {
             return Collections.emptyList();

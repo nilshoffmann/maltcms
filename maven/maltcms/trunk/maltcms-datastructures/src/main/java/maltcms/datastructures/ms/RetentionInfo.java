@@ -23,88 +23,83 @@ package maltcms.datastructures.ms;
 
 /**
  * Concrete implementation of {@link maltcms.datastructures.ms.IRetentionInfo}.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class RetentionInfo implements IRetentionInfo {
 
-	private double ri = -1;
+    private double ri = -1;
+    private double rt = -1;
+    private String rtu = "seconds";
+    private String name = "";
+    private int scanIndex = -1;
 
-	private double rt = -1;
+    public int compareTo(final IAnchor o) {
+        if (o instanceof IRetentionInfo) {
+            // If no retention index is given, use names as comparison criterion
+            if ((((IRetentionInfo) o).getRetentionIndex() < 0)
+                    || (getRetentionIndex() < 0)) {
+                return getName().compareTo(o.getName());
+            }
+            // if retention index is given
+            if (((IRetentionInfo) o).getRetentionIndex() > getRetentionIndex()) {
+                return -1;
+            }
+            if (((IRetentionInfo) o).getRetentionIndex() < getRetentionIndex()) {
+                return 1;
+            }
+            return 0;
+        }
+        return toString().compareTo(o.toString());
+    }
 
-	private String rtu = "seconds";
+    public String getName() {
+        return this.name;
+    }
 
-	private String name = "";
+    public double getRetentionIndex() {
+        return this.ri;
+    }
 
-	private int scanIndex = -1;
+    public double getRetentionTime() {
+        return this.rt;
+    }
 
-	public int compareTo(final IAnchor o) {
-		if (o instanceof IRetentionInfo) {
-			// If no retention index is given, use names as comparison criterion
-			if ((((IRetentionInfo) o).getRetentionIndex() < 0)
-			        || (getRetentionIndex() < 0)) {
-				return getName().compareTo(o.getName());
-			}
-			// if retention index is given
-			if (((IRetentionInfo) o).getRetentionIndex() > getRetentionIndex()) {
-				return -1;
-			}
-			if (((IRetentionInfo) o).getRetentionIndex() < getRetentionIndex()) {
-				return 1;
-			}
-			return 0;
-		}
-		return toString().compareTo(o.toString());
-	}
+    public String getRetentionTimeUnit() {
+        return this.rtu;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public int getScanIndex() {
+        return this.scanIndex;
+    }
 
-	public double getRetentionIndex() {
-		return this.ri;
-	}
+    public void setName(final String s) {
+        this.name = s;
+    }
 
-	public double getRetentionTime() {
-		return this.rt;
-	}
+    public void setRetentionIndex(final double d) {
+        this.ri = d;
+    }
 
-	public String getRetentionTimeUnit() {
-		return this.rtu;
-	}
+    public void setRetentionTime(final double d) {
+        this.rt = d;
+    }
 
-	public int getScanIndex() {
-		return this.scanIndex;
-	}
+    public void setRetentionTimeUnit(final String s) {
+        this.rtu = s;
+    }
 
-	public void setName(final String s) {
-		this.name = s;
-	}
+    public void setScanIndex(final int scan) {
+        this.scanIndex = scan;
+    }
 
-	public void setRetentionIndex(final double d) {
-		this.ri = d;
-	}
-
-	public void setRetentionTime(final double d) {
-		this.rt = d;
-	}
-
-	public void setRetentionTimeUnit(final String s) {
-		this.rtu = s;
-	}
-
-	public void setScanIndex(final int scan) {
-		this.scanIndex = scan;
-	}
-
-	@Override
-	public String toString() {
-		if (getRetentionIndex() <= 0) {
-			return "" + getName();
-		} else {
-			return "" + getRetentionIndex();
-		}
-	}
-
+    @Override
+    public String toString() {
+        if (getRetentionIndex() <= 0) {
+            return "" + getName();
+        } else {
+            return "" + getRetentionIndex();
+        }
+    }
 }

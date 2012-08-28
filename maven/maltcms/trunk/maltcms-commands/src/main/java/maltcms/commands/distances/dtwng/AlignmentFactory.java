@@ -24,14 +24,14 @@ package maltcms.commands.distances.dtwng;
 import java.awt.geom.Area;
 
 /**
- * 
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  */
 public class AlignmentFactory {
 
     /**
      * Returns a new DTW instance, configured by ObjectFactory.
-     * 
+     *
      * @return
      */
     public IAlignment getDTWInstance() {

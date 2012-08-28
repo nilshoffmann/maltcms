@@ -58,7 +58,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Will iterate over all mass spectra and calculates mean and variance.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -71,7 +71,7 @@ import org.openide.util.lookup.ServiceProvider;
     "var.meanms_1d_vertical", "var.maxms_1d_horizontal_index",
     "var.maxms_1d_horizontal", "var.used_mass_values",
     "var.maxms_1d_vertical_index", "var.maxms_1d_vertical"})
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class MeanVarProducer extends AFragmentCommand {
 
     @Configurable(name = "var.mean_intensity_values", value = "mean_intensity_values")
@@ -106,7 +106,7 @@ public class MeanVarProducer extends AFragmentCommand {
     private double minStandardDeviationQuantil = 0.01d;
     @Configurable(value = "-1.0d")
     private double minStandardDeviation = -1.0d;
-    
+
     /**
      * {@inheritDoc}
      */
@@ -184,10 +184,8 @@ public class MeanVarProducer extends AFragmentCommand {
     /**
      * Creates an {@link Array} containing the standard deviation.
      *
-     * @param var
-     *            variance
-     * @param slc
-     *            scan line chache
+     * @param var variance
+     * @param slc scan line chache
      * @return array with standard deviation
      */
     private ArrayDouble.D1 calculateSd(final ArrayDouble.D1 var,
@@ -204,12 +202,9 @@ public class MeanVarProducer extends AFragmentCommand {
     /**
      * Computes a new total_intensity containing only mzs with max variance.
      *
-     * @param sd
-     *            array containing the standard deviation
-     * @param slc
-     *            scan line cache
-     * @param fret
-     *            file fragment
+     * @param sd array containing the standard deviation
+     * @param slc scan line cache
+     * @param fret file fragment
      * @return v_total_intensity
      */
     private Tuple2D<ArrayDouble.D1, ArrayDouble.D1> computeNewIntensity(
@@ -413,8 +408,7 @@ public class MeanVarProducer extends AFragmentCommand {
     /**
      * Estimates the mean and variance by an online algorithm.
      *
-     * @param slc
-     *            {@link ScanLineCache}
+     * @param slc {@link ScanLineCache}
      * @return tuple containing mean as first and variance as second element
      */
     private Tuple2D<ArrayDouble.D1, ArrayDouble.D1> calculateMeanVarSparse(

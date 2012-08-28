@@ -21,9 +21,9 @@
  */
 package maltcms.datastructures.peak.normalization;
 
-import cross.datastructures.ehcache.CacheFactory;
-import cross.datastructures.ehcache.ICacheDelegate;
-import cross.datastructures.ehcache.ICacheElementProvider;
+import cross.datastructures.cache.CacheFactory;
+import cross.datastructures.cache.ICacheDelegate;
+import cross.datastructures.cache.ICacheElementProvider;
 import cross.datastructures.fragments.IFileFragment;
 import lombok.Data;
 import maltcms.datastructures.peak.Peak1D;
@@ -37,22 +37,20 @@ import maltcms.tools.ArrayTools;
 public class TicAreaNormalizer implements IPeakNormalizer {
 
     private String ticVariableName = "total_intensity";
-    private ICacheDelegate<IFileFragment,Double> fragmentToArea = CacheFactory.createAutoRetrievalCache("TicAreaNormalizerCache", new ICacheElementProvider<IFileFragment,Double>() {
-
+    private ICacheDelegate<IFileFragment, Double> fragmentToArea = CacheFactory.createAutoRetrievalCache("TicAreaNormalizerCache", new ICacheElementProvider<IFileFragment, Double>() {
         @Override
         public Double provide(IFileFragment key) {
             return ArrayTools.integrate(key.getChild(ticVariableName).getArray());
         }
     });
-    
+
     @Override
     public double getNormalizationFactor(IFileFragment fragment, Peak1D peak) {
-        return 1.0d/fragmentToArea.get(fragment).doubleValue(); 
+        return 1.0d / fragmentToArea.get(fragment).doubleValue();
     }
 
     @Override
     public String getNormalizationName() {
         return "normalization to sum of total intensity";
     }
-    
 }

@@ -56,7 +56,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Creates a gradient image of an chromatogramm using a specific distance
  * function.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j

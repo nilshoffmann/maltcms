@@ -32,14 +32,12 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Description of the process of performing an acquisition
- * 
- * <p>
- * Java class for spectrumDescType complex type.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
+ *
+ * <p> Java class for spectrumDescType complex type.
+ *
+ * <p> The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name=&quot;spectrumDescType&quot;&gt;
  *   &lt;complexContent&gt;
@@ -64,169 +62,156 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "spectrumDescType", propOrder = { "spectrumSettings",
-        "precursorList", "comments" })
+@XmlType(name = "spectrumDescType", propOrder = {"spectrumSettings",
+    "precursorList", "comments"})
 public class SpectrumDescType {
 
-	/**
-	 * <p>
-	 * Java class for anonymous complex type.
-	 * 
-	 * <p>
-	 * The following schema fragment specifies the expected content contained
-	 * within this class.
-	 * 
-	 * <pre>
-	 * &lt;complexType&gt;
-	 *   &lt;complexContent&gt;
-	 *     &lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
-	 *       &lt;sequence&gt;
-	 *         &lt;element name=&quot;precursor&quot; type=&quot;{}precursorType&quot; maxOccurs=&quot;unbounded&quot;/&gt;
-	 *       &lt;/sequence&gt;
-	 *       &lt;attribute name=&quot;count&quot; use=&quot;required&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}int&quot; /&gt;
-	 *     &lt;/restriction&gt;
-	 *   &lt;/complexContent&gt;
-	 * &lt;/complexType&gt;
-	 * </pre>
-	 * 
-	 * 
-	 */
-	@XmlAccessorType(XmlAccessType.FIELD)
-	@XmlType(name = "", propOrder = { "precursor" })
-	public static class PrecursorList {
+    /**
+     * <p> Java class for anonymous complex type.
+     *
+     * <p> The following schema fragment specifies the expected content
+     * contained within this class.
+     *
+     * <pre>
+     * &lt;complexType&gt;
+     *   &lt;complexContent&gt;
+     *     &lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+     *       &lt;sequence&gt;
+     *         &lt;element name=&quot;precursor&quot; type=&quot;{}precursorType&quot; maxOccurs=&quot;unbounded&quot;/&gt;
+     *       &lt;/sequence&gt;
+     *       &lt;attribute name=&quot;count&quot; use=&quot;required&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}int&quot; /&gt;
+     *     &lt;/restriction&gt;
+     *   &lt;/complexContent&gt;
+     * &lt;/complexType&gt;
+     * </pre>
+     *
+     *
+     */
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {"precursor"})
+    public static class PrecursorList {
 
-		@XmlElement(required = true)
-		protected List<PrecursorType> precursor;
-		@XmlAttribute(required = true)
-		protected int count;
+        @XmlElement(required = true)
+        protected List<PrecursorType> precursor;
+        @XmlAttribute(required = true)
+        protected int count;
 
-		/**
-		 * Gets the value of the count property.
-		 * 
-		 */
-		public int getCount() {
-			return this.count;
-		}
+        /**
+         * Gets the value of the count property.
+         *
+         */
+        public int getCount() {
+            return this.count;
+        }
 
-		/**
-		 * Gets the value of the precursor property.
-		 * 
-		 * <p>
-		 * This accessor method returns a reference to the live list, not a
-		 * snapshot. Therefore any modification you make to the returned list
-		 * will be present inside the JAXB object. This is why there is not a
-		 * <CODE>set</CODE> method for the precursor property.
-		 * 
-		 * <p>
-		 * For example, to add a new item, do as follows:
-		 * 
-		 * <pre>
-		 * getPrecursor().add(newItem);
-		 * </pre>
-		 * 
-		 * 
-		 * <p>
-		 * Objects of the following type(s) are allowed in the list
+        /**
+         * Gets the value of the precursor property.
+         *
+         * <p> This accessor method returns a reference to the live list, not a
+         * snapshot. Therefore any modification you make to the returned list
+         * will be present inside the JAXB object. This is why there is not a
+         * <CODE>set</CODE> method for the precursor property.
+         *
+         * <p> For example, to add a new item, do as follows:
+         *
+         * <pre>
+         * getPrecursor().add(newItem);
+         * </pre>
+         *
+         *
+         * <p> Objects of the following type(s) are allowed in the list
 		 * {@link PrecursorType }
-		 * 
-		 * 
-		 */
-		public List<PrecursorType> getPrecursor() {
-			if (this.precursor == null) {
-				this.precursor = new ArrayList<PrecursorType>();
-			}
-			return this.precursor;
-		}
+         *
+         *
+         */
+        public List<PrecursorType> getPrecursor() {
+            if (this.precursor == null) {
+                this.precursor = new ArrayList<PrecursorType>();
+            }
+            return this.precursor;
+        }
 
-		/**
-		 * Sets the value of the count property.
-		 * 
-		 */
-		public void setCount(final int value) {
-			this.count = value;
-		}
+        /**
+         * Sets the value of the count property.
+         *
+         */
+        public void setCount(final int value) {
+            this.count = value;
+        }
+    }
+    @XmlElement(required = true)
+    protected SpectrumSettingsType spectrumSettings;
+    protected SpectrumDescType.PrecursorList precursorList;
+    protected List<String> comments;
 
-	}
+    /**
+     * Gets the value of the comments property.
+     *
+     * <p> This accessor method returns a reference to the live list, not a
+     * snapshot. Therefore any modification you make to the returned list will
+     * be present inside the JAXB object. This is why there is not a
+     * <CODE>set</CODE> method for the comments property.
+     *
+     * <p> For example, to add a new item, do as follows:
+     *
+     * <pre>
+     * getComments().add(newItem);
+     * </pre>
+     *
+     *
+     * <p> Objects of the following type(s) are allowed in the list {@link String
+     * }
+     *
+     *
+     */
+    public List<String> getComments() {
+        if (this.comments == null) {
+            this.comments = new ArrayList<String>();
+        }
+        return this.comments;
+    }
 
-	@XmlElement(required = true)
-	protected SpectrumSettingsType spectrumSettings;
-	protected SpectrumDescType.PrecursorList precursorList;
+    /**
+     * Gets the value of the precursorList property.
+     *
+     * @return possible object is {@link SpectrumDescType.PrecursorList }
+     *
+     */
+    public SpectrumDescType.PrecursorList getPrecursorList() {
+        return this.precursorList;
+    }
 
-	protected List<String> comments;
+    /**
+     * Gets the value of the spectrumSettings property.
+     *
+     * @return possible object is {@link SpectrumSettingsType }
+     *
+     */
+    public SpectrumSettingsType getSpectrumSettings() {
+        return this.spectrumSettings;
+    }
 
-	/**
-	 * Gets the value of the comments property.
-	 * 
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a
-	 * snapshot. Therefore any modification you make to the returned list will
-	 * be present inside the JAXB object. This is why there is not a
-	 * <CODE>set</CODE> method for the comments property.
-	 * 
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getComments().add(newItem);
-	 * </pre>
-	 * 
-	 * 
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link String }
-	 * 
-	 * 
-	 */
-	public List<String> getComments() {
-		if (this.comments == null) {
-			this.comments = new ArrayList<String>();
-		}
-		return this.comments;
-	}
+    /**
+     * Sets the value of the precursorList property.
+     *
+     * @param value allowed object is {@link SpectrumDescType.PrecursorList }
+     *
+     */
+    public void setPrecursorList(final SpectrumDescType.PrecursorList value) {
+        this.precursorList = value;
+    }
 
-	/**
-	 * Gets the value of the precursorList property.
-	 * 
-	 * @return possible object is {@link SpectrumDescType.PrecursorList }
-	 * 
-	 */
-	public SpectrumDescType.PrecursorList getPrecursorList() {
-		return this.precursorList;
-	}
-
-	/**
-	 * Gets the value of the spectrumSettings property.
-	 * 
-	 * @return possible object is {@link SpectrumSettingsType }
-	 * 
-	 */
-	public SpectrumSettingsType getSpectrumSettings() {
-		return this.spectrumSettings;
-	}
-
-	/**
-	 * Sets the value of the precursorList property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link SpectrumDescType.PrecursorList }
-	 * 
-	 */
-	public void setPrecursorList(final SpectrumDescType.PrecursorList value) {
-		this.precursorList = value;
-	}
-
-	/**
-	 * Sets the value of the spectrumSettings property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link SpectrumSettingsType }
-	 * 
-	 */
-	public void setSpectrumSettings(final SpectrumSettingsType value) {
-		this.spectrumSettings = value;
-	}
-
+    /**
+     * Sets the value of the spectrumSettings property.
+     *
+     * @param value allowed object is {@link SpectrumSettingsType }
+     *
+     */
+    public void setSpectrumSettings(final SpectrumSettingsType value) {
+        this.spectrumSettings = value;
+    }
 }

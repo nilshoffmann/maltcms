@@ -37,6 +37,10 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.math.functions.IScalarArraySimilarity;
 
+/**
+ *
+ * @author hoffmann
+ */
 @Slf4j
 @Data
 public class PeakSeparator {
@@ -45,18 +49,23 @@ public class PeakSeparator {
     private IScalarArraySimilarity separationSimilarity;
     private IScalarArraySimilarity similarity;
     private boolean useMeanMsForSeparation;
-    
     private ArrayDouble.D1 rt1, rt2;
-    
+
+    /**
+     *
+     * @param peakAreaList
+     * @param slc
+     * @param intensities
+     * @param rts
+     */
     public void startSeparationFor(List<PeakArea2D> peakAreaList,
             IScanLine slc,
             List<ArrayDouble.D1> intensities,
-            Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rts
-            ) {
+            Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rts) {
 
         this.rt1 = rts.getFirst();
         this.rt2 = rts.getSecond();
-        
+
         log.info("Separator min dist: {}", this.minDist);
 
         long start = System.currentTimeMillis();
@@ -188,19 +197,28 @@ public class PeakSeparator {
         log.info("Separation take {} ms", System.currentTimeMillis()
                 - start);
     }
-    
+
     private double[] getRT1RT2ForSeed(Point p) {
         return new double[]{getRT1ForModulation(p.x), getRT2ForScanInModulation(p.y)};
     }
-    
+
     private double getRT1ForModulation(int x) {
         return rt1.get(x);
     }
-    
+
     private double getRT2ForScanInModulation(int y) {
         return rt2.get(y);
     }
 
+    /**
+     *
+     * @param list
+     * @param similarity
+     * @param slc
+     * @param intensities
+     * @param useMeanMs
+     * @return
+     */
     public boolean shouldBeSeparated(List<PeakArea2D> list,
             IScalarArraySimilarity similarity, IScanLine slc,
             List<ArrayDouble.D1> intensities, boolean useMeanMs) {
@@ -242,6 +260,13 @@ public class PeakSeparator {
         return (min < this.minDist);
     }
 
+    /**
+     *
+     * @param list
+     * @param similarity
+     * @param slc
+     * @param intensities
+     */
     public void separatePeaks(List<PeakArea2D> list,
             IScalarArraySimilarity similarity, IScanLine slc,
             List<ArrayDouble.D1> intensities) {
@@ -294,6 +319,12 @@ public class PeakSeparator {
         }
     }
 
+    /**
+     *
+     * @param list
+     * @param slc
+     * @param intensities
+     */
     public void mergePeaks(List<PeakArea2D> list,
             IScanLine slc, List<ArrayDouble.D1> intensities) {
 
@@ -322,6 +353,10 @@ public class PeakSeparator {
 
     }
 
+    /**
+     *
+     * @param minDist
+     */
     public void setMinDist(double minDist) {
         this.minDist = minDist;
     }

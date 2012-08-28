@@ -29,14 +29,12 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Information about an ontology/CV source and a short 'lookup' tag to refer to.
- * 
- * <p>
- * Java class for cvLookupType complex type.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
+ *
+ * <p> Java class for cvLookupType complex type.
+ *
+ * <p> The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name=&quot;cvLookupType&quot;&gt;
  *   &lt;complexContent&gt;
@@ -49,105 +47,100 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "cvLookupType")
 public class CvLookupType {
 
-	@XmlAttribute(required = true)
-	protected String cvLabel;
-	@XmlAttribute
-	protected String fullName;
-	@XmlAttribute(required = true)
-	protected String version;
-	@XmlAttribute(required = true)
-	@XmlSchemaType(name = "anyURI")
-	protected String address;
+    @XmlAttribute(required = true)
+    protected String cvLabel;
+    @XmlAttribute
+    protected String fullName;
+    @XmlAttribute(required = true)
+    protected String version;
+    @XmlAttribute(required = true)
+    @XmlSchemaType(name = "anyURI")
+    protected String address;
 
-	/**
-	 * Gets the value of the address property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getAddress() {
-		return this.address;
-	}
+    /**
+     * Gets the value of the address property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getAddress() {
+        return this.address;
+    }
 
-	/**
-	 * Gets the value of the cvLabel property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getCvLabel() {
-		return this.cvLabel;
-	}
+    /**
+     * Gets the value of the cvLabel property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getCvLabel() {
+        return this.cvLabel;
+    }
 
-	/**
-	 * Gets the value of the fullName property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getFullName() {
-		return this.fullName;
-	}
+    /**
+     * Gets the value of the fullName property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getFullName() {
+        return this.fullName;
+    }
 
-	/**
-	 * Gets the value of the version property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getVersion() {
-		return this.version;
-	}
+    /**
+     * Gets the value of the version property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getVersion() {
+        return this.version;
+    }
 
-	/**
-	 * Sets the value of the address property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setAddress(final String value) {
-		this.address = value;
-	}
+    /**
+     * Sets the value of the address property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setAddress(final String value) {
+        this.address = value;
+    }
 
-	/**
-	 * Sets the value of the cvLabel property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setCvLabel(final String value) {
-		this.cvLabel = value;
-	}
+    /**
+     * Sets the value of the cvLabel property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setCvLabel(final String value) {
+        this.cvLabel = value;
+    }
 
-	/**
-	 * Sets the value of the fullName property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setFullName(final String value) {
-		this.fullName = value;
-	}
+    /**
+     * Sets the value of the fullName property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setFullName(final String value) {
+        this.fullName = value;
+    }
 
-	/**
-	 * Sets the value of the version property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setVersion(final String value) {
-		this.version = value;
-	}
-
+    /**
+     * Sets the value of the version property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setVersion(final String value) {
+        this.version = value;
+    }
 }

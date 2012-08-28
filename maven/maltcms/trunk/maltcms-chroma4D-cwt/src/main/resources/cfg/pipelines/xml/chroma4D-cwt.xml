@@ -27,7 +27,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <description>
-            This file defines elements of the ChromA4D CWT peakfinder.
+        This file defines elements of the ChromA4D CWT peakfinder.
     </description>
     
     

@@ -39,9 +39,9 @@ import cross.datastructures.tuple.Tuple2D;
 
 /**
  * Concrete Implementation of a 1-dimensional chromatogram.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 public class Chromatogram2D implements IChromatogram2D {
 
@@ -76,8 +76,8 @@ public class Chromatogram2D implements IChromatogram2D {
 
     @Override
     /**
-     *  @param firstColumnScanIndex
-     *  @param secondColumnScanIndex
+     * @param firstColumnScanIndex
+     * @param secondColumnScanIndex
      */
     public IScan2D getScan2D(final int firstColumnScanIndex,
             final int secondColumnScanIndex) {
@@ -118,8 +118,7 @@ public class Chromatogram2D implements IChromatogram2D {
     }
 
     /**
-     * @param scan
-     *            scan index to load
+     * @param scan scan index to load
      */
     @Override
     public IScan2D getScan(final int scan) {
@@ -147,7 +146,6 @@ public class Chromatogram2D implements IChromatogram2D {
     public Iterator<IScan2D> iterator() {
 
         final Iterator<IScan2D> iter = new Iterator<IScan2D>() {
-
             private int currentPos = 0;
 
             @Override

@@ -27,25 +27,23 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 import maltcms.tools.ArrayTools;
 
 import org.jfree.data.statistics.BoxAndWhiskerCalculator;
 import org.jfree.data.statistics.BoxAndWhiskerItem;
-import org.slf4j.Logger;
-
-import cross.Logging;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
+@Slf4j
 public class Clique {
 
     private static long CLIQUEID = -1;
     private long id = -1;
-    private Logger log = Logging.getLogger(this);
     private double cliqueMean = 0, cliqueVar = 0;
     private HashMap<String, Peak> clique = new HashMap<String, Peak>();
     private Peak centroid = null;
@@ -62,9 +60,11 @@ public class Clique {
     }
 
     /**
-     * Returns false, if a peak did not meet the criteria to be added to the clique.
-     * Returns true, if a peak is either already contained in the clique, or if it
-     * has been successfully added, due to satisfaction of all required criteria.
+     * Returns false, if a peak did not meet the criteria to be added to the
+     * clique. Returns true, if a peak is either already contained in the
+     * clique, or if it has been successfully added, due to satisfaction of all
+     * required criteria.
+     *
      * @param p
      * @return
      * @throws IllegalArgumentException
@@ -166,15 +166,15 @@ public class Clique {
         } else {
             // if (clique.isEmpty()) {
             int actualBidiHits = getBBHCount(p);
-            int diff = clique.size()-actualBidiHits;
-            if (((bbhErrors+diff) > maxBBHErrors)) {
+            int diff = clique.size() - actualBidiHits;
+            if (((bbhErrors + diff) > maxBBHErrors)) {
                 return false;
             }
-            bbhErrors+=diff;
+            bbhErrors += diff;
             log.debug(
                     "Adding peak {} with {}/{} bbh hit(s) to clique",
                     new Object[]{p.getAssociation() + "@"
-                    + p.getScanAcquisitionTime(), actualBidiHits,clique.size()});
+                        + p.getScanAcquisitionTime(), actualBidiHits, clique.size()});
             update(p);
             clique.put(p.getAssociation(), p);
             selectCentroid();
@@ -214,8 +214,8 @@ public class Clique {
                 return true;
             }
             int actualBidiHits = getBBHCount(p);
-            int diff = clique.size()-actualBidiHits;
-            bbhErrors-=diff;
+            int diff = clique.size() - actualBidiHits;
+            bbhErrors -= diff;
             updateRemoval(p);
             selectCentroid();
             return true;
@@ -379,7 +379,6 @@ public class Clique {
     public List<Peak> getPeakList() {
         List<Peak> peaks = new ArrayList<Peak>(this.clique.values());
         Collections.sort(peaks, new Comparator<Peak>() {
-
             @Override
             public int compare(Peak o1, Peak o2) {
                 return o1.getAssociation().compareTo(o2.getAssociation());
@@ -411,7 +410,7 @@ public class Clique {
         }
         return true;
     }
-    
+
     public double getCliqueMean() {
         return cliqueMean;
     }
@@ -427,5 +426,4 @@ public class Clique {
     public void setMaxBBHErrors(int maxBBHErrors) {
         this.maxBBHErrors = maxBBHErrors;
     }
-
 }

@@ -28,10 +28,17 @@ import java.util.Arrays;
  */
 public class DistanceMatrix {
 
+    /**
+     *
+     */
     protected double[][] distmat;
 
     // Berechnung der Distanzmatrix basierend auf den Breakpoints,
     // Differenz der Mittelwerte der jeweiligen Bins bildet Distanz
+    /**
+     *
+     * @param bp
+     */
     public DistanceMatrix(final double[] bp) {
         this.distmat = new double[bp.length][bp.length];
         final double[] bpcopy = bp.clone();
@@ -70,6 +77,10 @@ public class DistanceMatrix {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public double[][] getDistmat() {
         return this.distmat;
     }

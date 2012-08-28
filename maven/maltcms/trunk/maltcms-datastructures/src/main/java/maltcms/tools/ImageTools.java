@@ -73,7 +73,6 @@ import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.svggen.SVGGraphics2DIOException;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.encoders.EncoderUtil;
-import org.slf4j.Logger;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 
@@ -85,7 +84,6 @@ import ucar.ma2.InvalidRangeException;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 import cross.Factory;
-import cross.Logging;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
@@ -94,33 +92,27 @@ import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility class concerned with creation and saving of images.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
+@Slf4j
 public class ImageTools {
 
-    private static Logger log = Logging.getLogger(ImageTools.class);
-
     /**
-     * Adds all peaks to an image. If one of the colors are <code>null</code>,
-     * this component wont be drawn.
-     * 
-     * @param img
-     *            img
-     * @param peaklist
-     *            snakes
-     * @param seedPointColor
-     *            color of the seed point
-     * @param regionColor
-     *            color of the peak area
-     * @param boundaryColor
-     *            color of the boundary
-     * @param scansPerModulation
-     *            scans per modulation
+     * Adds all peaks to an image. If one of the colors are
+     * <code>null</code>, this component wont be drawn.
+     *
+     * @param img img
+     * @param peaklist snakes
+     * @param seedPointColor color of the seed point
+     * @param regionColor color of the peak area
+     * @param boundaryColor color of the boundary
+     * @param scansPerModulation scans per modulation
      * @return new image
      */
     public static BufferedImage addPeakToImage(final BufferedImage img,
@@ -163,21 +155,15 @@ public class ImageTools {
     }
 
     /**
-     * Adds all peaks to an image. If one of the colors are <code>null</code>,
-     * this component wont be drawn.
-     * 
-     * @param img
-     *            img
-     * @param peaklist
-     *            snakes
-     * @param seedPointColor
-     *            color of the seed point
-     * @param regionColor
-     *            color of the peak area
-     * @param boundaryColor
-     *            color of the boundary
-     * @param scansPerModulation
-     *            scans per modulation
+     * Adds all peaks to an image. If one of the colors are
+     * <code>null</code>, this component wont be drawn.
+     *
+     * @param img img
+     * @param peaklist snakes
+     * @param seedPointColor color of the seed point
+     * @param regionColor color of the peak area
+     * @param boundaryColor color of the boundary
+     * @param scansPerModulation scans per modulation
      * @return new image
      */
     public static BufferedImage addPeakAreaToImage(final BufferedImage img,
@@ -221,23 +207,15 @@ public class ImageTools {
 
     /**
      * Creates an image of an 2D chromatogramm.
-     * 
-     * @param <T>
-     *            should extend {@link AFragmentCommand}
-     * @param ffName
-     *            file fragment name
-     * @param intensity
-     *            intensity array
-     * @param scansPerModulation
-     *            scans per modulation
-     * @param fillValue
-     *            fill value
-     * @param threshold
-     *            threshold
-     * @param colorRamp
-     *            color ramp
-     * @param creator
-     *            creator of this image
+     *
+     * @param <T> should extend {@link AFragmentCommand}
+     * @param ffName file fragment name
+     * @param intensity intensity array
+     * @param scansPerModulation scans per modulation
+     * @param fillValue fill value
+     * @param threshold threshold
+     * @param colorRamp color ramp
+     * @param creator creator of this image
      * @return image
      */
     public static synchronized <T> BufferedImage create2DImage(
@@ -958,18 +936,13 @@ public class ImageTools {
     }
 
     /**
-     * 
-     * @param bim
-     *            the image to save
-     * @param imgname
-     *            the filename
-     * @param format
-     *            the format, e.g. "png", "jpeg"
+     *
+     * @param bim the image to save
+     * @param imgname the filename
+     * @param format the format, e.g. "png", "jpeg"
      * @param outputDir
-     * @param iw
-     *            may be null
-     * @param resources
-     *            resources, which were used to create the image
+     * @param iw may be null
+     * @param resources resources, which were used to create the image
      */
     public static File saveImage(final RenderedImage bim, final String imgname,
             final String format, final File outputDir,
@@ -1013,9 +986,9 @@ public class ImageTools {
                 final FileOutputStream fos = new FileOutputStream(f);
                 ImageTools.writePNG(chart, fos, imgwidth, imgheight);
             } else {
-                if(ext.isEmpty() || ext.equals(file.getAbsolutePath())) {
+                if (ext.isEmpty() || ext.equals(file.getAbsolutePath())) {
                     ImageTools.log.info("Using default image format png");
-                }else{
+                } else {
                     ImageTools.log.warn("Cannot handle image of type " + ext
                             + "! Saving as png!");
                 }

@@ -58,8 +58,8 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @Slf4j
 @Data
@@ -68,12 +68,11 @@ import org.openide.util.lookup.ServiceProvider;
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.total_intensity"})
 @RequiresOptionalVariables(names = {"var.excluded_masses"})
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class MassFilter extends AFragmentCommand {
 
     private final String description = "Removes defined masses and associated intensities from chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.GENERAL_PREPROCESSING;
-    
     @Configurable
     private List<String> excludeMasses = new LinkedList<String>();
     @Configurable(name = "mass_epsilon")
@@ -88,7 +87,7 @@ public class MassFilter extends AFragmentCommand {
     private String totalIntensVar = "total_intensity";
     @Configurable
     private boolean invert = false;
-    
+
     @Override
     public void configure(Configuration cfg) {
         super.configure(cfg);
@@ -209,5 +208,4 @@ public class MassFilter extends AFragmentCommand {
         }
         return rett;
     }
-
 }

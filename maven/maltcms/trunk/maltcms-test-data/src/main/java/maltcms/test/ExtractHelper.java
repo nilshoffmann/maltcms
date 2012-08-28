@@ -14,25 +14,28 @@ import cross.io.misc.ZipResourceExtractor;
  * @author hoffmann
  */
 public class ExtractHelper {
-    
-    public static enum FType{CDF_1D,CDF_2D,MZML,MZDATA,MZXML};
-    
-    public static File[] extractForType(File tf, FType t, String...paths) {
-        return extractFilesToDir(tf,paths);
+
+    public static enum FType {
+
+        CDF_1D, CDF_2D, MZML, MZDATA, MZXML
+    };
+
+    public static File[] extractForType(File tf, FType t, String... paths) {
+        return extractFilesToDir(tf, paths);
     }
-    
+
     public static File[] extractFilesToDir(File outputFolder, String[] paths) {
         List<File> files = new LinkedList<File>();
-        for(String path:paths) {
+        for (String path : paths) {
             File outputFile = ZipResourceExtractor.extract(path, outputFolder);
             files.add(outputFile);
         }
         return files.toArray(new File[files.size()]);
     }
-    
+
     public static File[] extractAllForType(File tf, FType t) {
         String[] paths = null;
-        switch(t) {
+        switch (t) {
             case CDF_1D:
                 paths = new String[]{
                     "/cdf/1D/glucoseA.cdf.gz",
@@ -44,32 +47,29 @@ public class ExtractHelper {
                 };
                 break;
             case CDF_2D:
-                paths= new String[]{
+                paths = new String[]{
                     "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz"
                 };
                 break;
             case MZML:
-                paths= new String[]{
+                paths = new String[]{
                     "/mzML/MzMLFile_PDA.mzML.xml.gz",
                     "/mzML/small.pwiz.1.1.mzML.gz",
-                    "/mzML/tiny.pwiz.1.1.mzML.gz",
-                };
+                    "/mzML/tiny.pwiz.1.1.mzML.gz",};
                 break;
             case MZDATA:
-                paths= new String[]{
+                paths = new String[]{
                     "/mzData/tiny1.mzData1.05.mzData.xml.gz"
                 };
                 break;
             case MZXML:
-                paths= new String[]{
+                paths = new String[]{
                     "/mzXML/tiny1.mzXML2.0.mzXML.gz",
-                    "/mzXML/tiny1.mzXML3.0.mzXML.gz",
-                };
+                    "/mzXML/tiny1.mzXML3.0.mzXML.gz",};
                 break;
             default:
-                throw new IllegalArgumentException("Unknown file type "+t);
+                throw new IllegalArgumentException("Unknown file type " + t);
         }
         return extractForType(tf, t, paths);
     }
-    
 }

@@ -59,7 +59,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Creates an image for a two-dimensional chromatogram.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -75,7 +75,6 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
 
     private final String description = "2D chromatogram visualization";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
-    
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";
     @Configurable(name = "var.second_column_scan_index",
@@ -104,7 +103,7 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
     private double threshold = 0;
     @Configurable(value = "false")
     private boolean substractMean = false;
-    
+
     /**
      * {@inheritDoc}
      */

@@ -30,9 +30,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Applies exp(x) to all elements of an array.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -45,7 +45,6 @@ public class ExpFilter extends AArrayFilter {
     public ExpFilter() {
         super();
         this.aef = new AElementFilter() {
-
             @Override
             public Double apply(final Double t) {
                 return Math.exp(t);//Math.exp(t);

@@ -72,9 +72,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Base class for dynamic time warping implementations.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Slf4j
 @Data
@@ -82,21 +82,60 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 
 //    @Configurable(name = "alignment.algorithm.windowsize")
 //    protected transient double maxdeviation = 1.0d;
+    /**
+     *
+     */
     protected transient IArrayD2Double alignment = null;
+    /**
+     *
+     */
     protected transient IArrayD2Double distance = null;
+    /**
+     *
+     */
     protected transient byte[][] predecessors = null;
+    /**
+     *
+     */
     protected transient IFileFragment resF = null;
+    /**
+     *
+     */
     protected transient IFileFragment refF = null;
+    /**
+     *
+     */
     protected transient IFileFragment queryF = null;
+    /**
+     *
+     */
     protected transient ArrayDouble.D0 result = null;
+    /**
+     *
+     */
     protected transient ArrayDouble.D1 resultVector = null;
+    /**
+     *
+     */
     protected transient int ref_num_scans = 0;
+    /**
+     *
+     */
     protected transient int query_num_scans = 0;
 //    @Configurable(name = "alignment.cumulative.distance")
+    /**
+     *
+     */
     protected DtwRecurrence recurrence = null;
+    /**
+     *
+     */
     @Configurable(name = "var.scan_acquisition_time")
     protected String scan_acquisition_time = "scan_acquisition_time";
 //    @Configurable(name = "alignment.pairwise.distance")
+    /**
+     *
+     */
     protected PairwiseFeatureSimilarity pairwiseFeatureSimilarity = null;
     private StatsMap statsMap;
     private boolean useAnchors = true;
@@ -118,6 +157,9 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
     private boolean savePairwiseSimilarityMatrix = false;
     private boolean normalizeAlignmentValue = false;
 
+    /**
+     *
+     */
     public ADynamicTimeWarp() {
         super();
     }
@@ -216,6 +258,10 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
      * 
      * @see cross.io.misc.IXMLSerializable#appendXML(org.jdom.Element)
      */
+    /**
+     *
+     * @param e
+     */
     @Override
     public void appendXML(final Element e) {
         // TODO Auto-generated method stub
@@ -227,6 +273,12 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
      * @see
      * maltcms.commands.distances.dtw.IDynamicTimeWarp#apply(cross.datastructures
      * .fragments.FileFragment, cross.datastructures.fragments.FileFragment)
+     */
+    /**
+     *
+     * @param a
+     * @param b
+     * @return
      */
     @Override
     public IFileFragment apply(final IFileFragment a, final IFileFragment b) {
@@ -356,14 +408,14 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
                     this.recurrence.getDiagonalWeight());
             getStatsMap().put("gap_global",
                     this.recurrence.getGlobalGapPenalty());
-            getStatsMap().put("matrixElements",(double)this.alignment.getNumberOfStoredElements());
+            getStatsMap().put("matrixElements", (double) this.alignment.getNumberOfStoredElements());
         }
         // calculate traceback, store path etc.
         this.resF = this.pa.provideFileFragment();
         this.result = this.pa.getResult();
         this.resultVector = this.pa.getResultVector();
-        if(getStatsMap() != null) {
-            getStatsMap().put("pathLength",(double)pa.getPath().size());
+        if (getStatsMap() != null) {
+            getStatsMap().put("pathLength", (double) pa.getPath().size());
         }
         // add the pairwise alignment to bookkeeping
         // MaltcmsTools.addPairwiseAlignment(t.getFirst(), t.getSecond(),
@@ -429,6 +481,18 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         }
     }
 
+    /**
+     *
+     * @param distance2
+     * @param alignment2
+     * @param vrows
+     * @param vcols
+     * @param ref
+     * @param query
+     * @param sat_ref
+     * @param sat_query
+     * @param predecessors
+     */
     protected void calculateCumulativeDistances(final IArrayD2Double distance2,
             final IArrayD2Double alignment2, final int vrows, final int vcols,
             final List<Array> ref, final List<Array> query,
@@ -481,6 +545,10 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
 
     }
 
+    /**
+     *
+     * @param cfg
+     */
     @Override
     public void configure(final Configuration cfg) {
         log.debug("Configure called on {}", this.getClass().getName());
@@ -531,10 +599,18 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
      * @see
      * maltcms.commands.distances.dtw.IDynamicTimeWarp#getCumulativeDistance()
      */
+    /**
+     *
+     * @return
+     */
     public DtwRecurrence getCumulativeDistance() {
         return this.recurrence;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getExtension() {
         return this.extension;
     }
@@ -543,6 +619,10 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
      * (non-Javadoc)
      * 
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
+     */
+    /**
+     *
+     * @return
      */
     @Override
     public IWorkflow getWorkflow() {
@@ -554,6 +634,10 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
      * 
      * @see
      * maltcms.commands.distances.dtw.IDynamicTimeWarp#getResultFileFragment()
+     */
+    /**
+     *
+     * @return
      */
     @Override
     public IFileFragment getResultFileFragment() {
@@ -582,11 +666,23 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
      * 
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /**
+     *
+     * @return
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.ALIGNMENT;
     }
 
+    /**
+     *
+     * @param rows
+     * @param cols
+     * @param value
+     * @param aps
+     * @param band
+     */
     protected void initMatrices(final int rows, final int cols,
             final Double value, final AnchorPairSet aps, final double band) {
         final long start = System.currentTimeMillis();
@@ -619,6 +715,11 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         return b;
     }
 
+    /**
+     *
+     * @param pa
+     * @return
+     */
     protected IFileFragment saveState(final IFileFragment pa) {
         final long start = System.currentTimeMillis();
         pa.save();
@@ -628,6 +729,10 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         return pa;
     }
 
+    /**
+     *
+     * @param newExtension
+     */
     public void setExtension(final String newExtension) {
         if (newExtension != null) {
             this.extension = newExtension;
@@ -643,6 +748,11 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
      * maltcms.commands.distances.dtw.IDynamicTimeWarp#setFileFragments(cross
      * .datastructures.fragments.FileFragment,
      * cross.datastructures.fragments.FileFragment)
+     */
+    /**
+     *
+     * @param a
+     * @param b
      */
     @Override
     public void setFileFragments(final IFileFragment a, final IFileFragment b) {

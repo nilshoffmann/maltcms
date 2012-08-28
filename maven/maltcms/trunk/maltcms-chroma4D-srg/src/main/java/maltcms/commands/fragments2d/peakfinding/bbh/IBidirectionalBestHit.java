@@ -30,19 +30,18 @@ import cross.IConfigurable;
 
 /**
  * Interface for an BBH algorithm used by {@link SeededRegionGrowing}.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 public interface IBidirectionalBestHit extends IConfigurable {
 
     /**
      * Getter.
-     * 
-     * 
-     * @param peaklists
-     *            list of peak list for all chromatograms
+     *
+     *
+     * @param peaklists list of peak list for all chromatograms
      * @return a list of all bidirectional best hits. List contains the indices
-     *         of peak in the peaklist.
+     * of peak in the peaklist.
      */
     List<List<Point>> getBidiBestHitList(List<List<Peak2D>> peaklists);
 

@@ -26,7 +26,7 @@ import maltcms.datastructures.array.IFeatureVector;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
-
+ *
  *
  */
 public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator {
@@ -110,6 +110,7 @@ public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator {
     /**
      * NaN's are treated as 0, giving a large distance for x!=y and 0 for x=y,
      * with either x=NaN and y!=NaN, x!=NaN and y==NaN, or x=NaN=y
+     *
      * @param gt
      * @param test
      * @return
@@ -127,7 +128,7 @@ public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator {
             if (lhsRTNaN && rhsRTNaN) {
                 return 0;
             }
-            double diff = Math.pow((lhsRT - rhsRT),2.0d);
+            double diff = Math.pow((lhsRT - rhsRT), 2.0d);
 //            System.out.println("DiffSq: "+diff);
             return diff;
         }

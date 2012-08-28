@@ -28,5 +28,4 @@ import java.io.Serializable;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 public interface IPostProcessor extends Serializable {
-    
 }

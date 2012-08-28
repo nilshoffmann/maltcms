@@ -38,13 +38,13 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Implementation of progressive, tree based multiple alignment.
- * 
+ *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
- * 
+ *
  */
 @Data
 @Slf4j
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class ProgressiveTreeAlignment extends AFragmentCommand {
 
     @Configurable(value = "maltcms.commands.fragments.cluster.UPGMAAlgorithm")
@@ -54,7 +54,7 @@ public class ProgressiveTreeAlignment extends AFragmentCommand {
     public String toString() {
         return getClass().getName();
     }
-    
+
     /*
      * (non-Javadoc)
      * 

@@ -34,7 +34,6 @@ import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
@@ -47,19 +46,16 @@ import ucar.nc2.Group;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.NetcdfFileWriteable;
 import ucar.nc2.Variable;
-import cross.Logging;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
-import cross.datastructures.fragments.VariableFragment;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
-import cross.exception.ConstraintViolationException;
 import cross.tools.StringTools;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
+import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -69,6 +65,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
  */
+@Slf4j
 @ServiceProvider(service = IDataSource.class)
 public class NetcdfDataSource implements IDataSource {
 
@@ -78,8 +75,7 @@ public class NetcdfDataSource implements IDataSource {
     private static int maxCachedFiles = 40;
     @Deprecated
     private static long secondsUntilCleanup = 360;
-    private final Logger log = Logging.getLogger(this.getClass());
-    private final String[] fileEnding = new String[]{"nc", "nc.gz","nc.z","nc.zip","nc.gzip","nc.bz2","cdf","cdf.gz","cdf.z","cdf.zip","cdf.gzip","cdf.bz2"};
+    private final String[] fileEnding = new String[]{"nc", "nc.gz", "nc.z", "nc.zip", "nc.gzip", "nc.bz2", "cdf", "cdf.gz", "cdf.z", "cdf.zip", "cdf.gzip", "cdf.bz2"};
     private boolean updateAttributes = false;
     @Deprecated
     private boolean useNetcdfFileCache = false;
@@ -222,7 +218,7 @@ public class NetcdfDataSource implements IDataSource {
         }
         final String name = v.getName();
         final List<Range> ranges = v.getRanges();
-        log.debug("Given Ranges for Variable v: {}",ranges);
+        log.debug("Given Ranges for Variable v: {}", ranges);
         IVariableFragment vf = null;
         if (ivf == null) {
             if (ff.hasChild(name)) {
@@ -270,7 +266,6 @@ public class NetcdfDataSource implements IDataSource {
 //        }
 //        return toDimensionArray(al);
 //    }
-
 //    protected ArrayList<Dimension> getDimensionList(final NetcdfFile nf,
 //            final Variable v) {
 //        EvalTools.notNull(v, this);
@@ -287,7 +282,6 @@ public class NetcdfDataSource implements IDataSource {
 //        }
 //        return al;
 //    }
-
     /**
      * Attributes are small metadata.
      *
@@ -586,7 +580,7 @@ public class NetcdfDataSource implements IDataSource {
             if (r != null) {
                 final List<Range> l = Arrays.asList(r);
                 try {
-                    this.log.debug("Using specified range to read partially: {}",l);
+                    this.log.debug("Using specified range to read partially: {}", l);
                     a = v.read(l);
                     // if read with ranges is valid: keep ranges as before
                     f.setRange(r);
@@ -600,7 +594,7 @@ public class NetcdfDataSource implements IDataSource {
                 this.log.debug("No range set, reading completely");
                 a = v.read();
                 List<Range> ranges = v.getRanges();
-                this.log.debug("Ranges from file: {}",ranges);
+                this.log.debug("Ranges from file: {}", ranges);
                 // update ranges to those from file
                 f.setRange(ranges.toArray(new Range[ranges.size()]));
             }
@@ -615,6 +609,13 @@ public class NetcdfDataSource implements IDataSource {
         }
     }
 
+    /**
+     *
+     * @param f
+     * @return
+     * @throws IOException
+     * @throws FileNotFoundException
+     */
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
             throws IOException, FileNotFoundException {
@@ -644,6 +645,14 @@ public class NetcdfDataSource implements IDataSource {
         return al;
     }
 
+    /**
+     *
+     * @param f
+     * @return
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws ResourceNotAvailableException
+     */
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
             throws IOException, FileNotFoundException,
@@ -672,6 +681,11 @@ public class NetcdfDataSource implements IDataSource {
         return f;
     }
 
+    /**
+     *
+     * @param parent
+     * @return
+     */
     protected NetcdfFileWriteable structureWrite(final IFileFragment parent) {
         try {
             File f = null;
@@ -818,11 +832,20 @@ public class NetcdfDataSource implements IDataSource {
         return null;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public List<String> supportedFormats() {
         return Arrays.asList(this.fileEnding);
     }
 
+    /**
+     *
+     * @param al
+     * @return
+     */
     protected Dimension[] toDimensionArray(final ArrayList<Dimension> al) {
         Dimension[] dim = new Dimension[al.size()];
         dim = al.toArray(dim);
@@ -844,6 +867,11 @@ public class NetcdfDataSource implements IDataSource {
         vf.setAttributes(attributes);
     }
 
+    /**
+     *
+     * @param f
+     * @return
+     */
     @Override
     public boolean write(final IFileFragment f) {
         this.log.debug("{}", f.toString());

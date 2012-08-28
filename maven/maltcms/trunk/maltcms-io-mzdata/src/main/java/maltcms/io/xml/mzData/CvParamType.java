@@ -28,14 +28,12 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Parameters from a controlled vocbulary.
- * 
- * <p>
- * Java class for cvParamType complex type.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
+ *
+ * <p> Java class for cvParamType complex type.
+ *
+ * <p> The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name=&quot;cvParamType&quot;&gt;
  *   &lt;complexContent&gt;
@@ -48,104 +46,99 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "cvParamType")
 public class CvParamType {
 
-	@XmlAttribute(required = true)
-	protected String cvLabel;
-	@XmlAttribute(required = true)
-	protected String accession;
-	@XmlAttribute(required = true)
-	protected String name;
-	@XmlAttribute
-	protected String value;
+    @XmlAttribute(required = true)
+    protected String cvLabel;
+    @XmlAttribute(required = true)
+    protected String accession;
+    @XmlAttribute(required = true)
+    protected String name;
+    @XmlAttribute
+    protected String value;
 
-	/**
-	 * Gets the value of the accession property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getAccession() {
-		return this.accession;
-	}
+    /**
+     * Gets the value of the accession property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getAccession() {
+        return this.accession;
+    }
 
-	/**
-	 * Gets the value of the cvLabel property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getCvLabel() {
-		return this.cvLabel;
-	}
+    /**
+     * Gets the value of the cvLabel property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getCvLabel() {
+        return this.cvLabel;
+    }
 
-	/**
-	 * Gets the value of the name property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getName() {
-		return this.name;
-	}
+    /**
+     * Gets the value of the name property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getName() {
+        return this.name;
+    }
 
-	/**
-	 * Gets the value of the value property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getValue() {
-		return this.value;
-	}
+    /**
+     * Gets the value of the value property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getValue() {
+        return this.value;
+    }
 
-	/**
-	 * Sets the value of the accession property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setAccession(final String value) {
-		this.accession = value;
-	}
+    /**
+     * Sets the value of the accession property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setAccession(final String value) {
+        this.accession = value;
+    }
 
-	/**
-	 * Sets the value of the cvLabel property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setCvLabel(final String value) {
-		this.cvLabel = value;
-	}
+    /**
+     * Sets the value of the cvLabel property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setCvLabel(final String value) {
+        this.cvLabel = value;
+    }
 
-	/**
-	 * Sets the value of the name property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setName(final String value) {
-		this.name = value;
-	}
+    /**
+     * Sets the value of the name property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setName(final String value) {
+        this.name = value;
+    }
 
-	/**
-	 * Sets the value of the value property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setValue(final String value) {
-		this.value = value;
-	}
-
+    /**
+     * Sets the value of the value property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setValue(final String value) {
+        this.value = value;
+    }
 }

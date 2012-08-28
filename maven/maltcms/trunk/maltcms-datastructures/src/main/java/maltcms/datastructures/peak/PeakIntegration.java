@@ -26,5 +26,6 @@ package maltcms.datastructures.peak;
  * @author nilshoffmann
  */
 public enum PeakIntegration {
+
     AREA_TIC, AREA_UNIQUE_MASS, APEX_TIC, APEX_UNIQUE_MASS;
 }

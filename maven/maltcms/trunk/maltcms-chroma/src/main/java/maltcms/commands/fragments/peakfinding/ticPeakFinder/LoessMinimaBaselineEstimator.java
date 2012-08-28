@@ -30,12 +30,14 @@ import org.apache.commons.math.analysis.interpolation.LoessInterpolator;
 import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
 
 /**
- * Estimates a baseline from a an array of function values using local minima to fit a Loess polynomial spline function.
+ * Estimates a baseline from a an array of function values using local minima to
+ * fit a Loess polynomial spline function.
+ *
  * @author nilshoffmann
  */
 @Slf4j
 @Data
-public class LoessMinimaBaselineEstimator implements IBaselineEstimator{
+public class LoessMinimaBaselineEstimator implements IBaselineEstimator {
 
     @Configurable
     private double bandwidth = LoessInterpolator.DEFAULT_BANDWIDTH;
@@ -45,7 +47,7 @@ public class LoessMinimaBaselineEstimator implements IBaselineEstimator{
     private int robustnessIterations = LoessInterpolator.DEFAULT_ROBUSTNESS_ITERS;
     @Configurable
     private int minimaWindow = 100;
-    
+
     @Override
     public PolynomialSplineFunction findBaseline(double[] values) {
         final ArrayList<Integer> ts = new ArrayList<Integer>();
@@ -76,9 +78,8 @@ public class LoessMinimaBaselineEstimator implements IBaselineEstimator{
             lip = new LoessInterpolator(bandwidth, robustnessIterations, accuracy);
             return lip.interpolate(xvalues, yvalues);
         } catch (MathException ex) {
-            log.warn("{}",ex);
+            log.warn("{}", ex);
         }
         return null;
     }
-    
 }

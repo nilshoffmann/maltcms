@@ -30,6 +30,5 @@ import lombok.Data;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
-public class PairwisePeakListSimilarities extends Result<DoubleMatrix2D>{
-    
+public class PairwisePeakListSimilarities extends Result<DoubleMatrix2D> {
 }

@@ -59,7 +59,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Default visualization pipeline command.
- * 
+ *
  * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
  */
 @Slf4j
@@ -287,21 +287,14 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 
     /**
      * Create a serialized chart.
-     * 
-     * @param ref
-     *            reference file fragment
-     * @param query
-     *            query file fragment
-     * @param filename
-     *            background image
-     * @param warpi
-     *            warp path i
-     * @param warpj
-     *            warp path j
-     * @param spm
-     *            scans per modulation
-     * @param in
-     *            infile for chart background image
+     *
+     * @param ref reference file fragment
+     * @param query query file fragment
+     * @param filename background image
+     * @param warpi warp path i
+     * @param warpj warp path j
+     * @param spm scans per modulation
+     * @param in infile for chart background image
      */
     private void createChart(final IFileFragment ref,
             final IFileFragment query, final String filename,
@@ -348,11 +341,9 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 
     /**
      * Getter.
-     * 
-     * @param ff
-     *            file fragment
-     * @param spm
-     *            scans per modulation
+     *
+     * @param ff file fragment
+     * @param spm scans per modulation
      * @return scanlines
      */
     protected List<Array> getScanlineFor(final IFileFragment ff, final int spm) {
@@ -375,9 +366,8 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 
     /**
      * Setter.
-     * 
-     * @param normalize
-     *            normalize data from warppath
+     *
+     * @param normalize normalize data from warppath
      */
     protected void normalize(final boolean normalize) {
         this.visualizer.setNormalize(normalize);
@@ -385,13 +375,10 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 
     /**
      * Will the generated Chart.
-     * 
-     * @param chart
-     *            chart
-     * @param ref
-     *            reference file fragment
-     * @param query
-     *            query file fragment
+     *
+     * @param chart chart
+     * @param ref reference file fragment
+     * @param query query file fragment
      */
     protected void saveChart(final JFreeChart chart, final IFileFragment ref,
             final IFileFragment query) {
@@ -409,9 +396,8 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 
     /**
      * Setter.
-     * 
-     * @param binSize
-     *            bin size for the visualizer
+     *
+     * @param binSize bin size for the visualizer
      */
     protected void setBinSize(final int binSize) {
         this.visualizer.setBinSize(binSize);

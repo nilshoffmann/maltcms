@@ -34,9 +34,10 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 /**
- * Performs a classification performance test of a collection of EntityGroup instances
- * as ground truth versus a collection of EntityGroup instances, which are to be evaluated.
- * 
+ * Performs a classification performance test of a collection of EntityGroup
+ * instances as ground truth versus a collection of EntityGroup instances, which
+ * are to be evaluated.
+ *
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
  *
  *
@@ -329,8 +330,9 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
     }
 
     /**
-     * We expect to find at least one positive assignment in a group.
-     * To rank the groups, we focus on TP and TN first.
+     * We expect to find at least one positive assignment in a group. To rank
+     * the groups, we focus on TP and TN first.
+     *
      * @param testGroup
      * @param groundTruth
      * @return
@@ -568,10 +570,8 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
     }
 
     /**
-     * 0-> tp
-     * 1-> tn
-     * 2-> fp
-     * 3-> fn
+     * 0-> tp 1-> tn 2-> fp 3-> fn
+     *
      * @return
      */
     private int[] getCounts(EntityGroup gtGroup, EntityGroup testGroup) {

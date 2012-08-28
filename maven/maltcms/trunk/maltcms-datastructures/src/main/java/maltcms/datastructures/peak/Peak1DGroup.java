@@ -50,7 +50,7 @@ import ucar.ma2.MAMath.MinMax;
  *
  */
 @Data
-public class Peak1DGroup implements Iterable<Peak1D>{
+public class Peak1DGroup implements Iterable<Peak1D> {
 
     /**
      *

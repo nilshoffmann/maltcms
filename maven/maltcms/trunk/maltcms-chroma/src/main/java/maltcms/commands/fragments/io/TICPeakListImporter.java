@@ -59,8 +59,8 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
- * 
- * 
+ *
+ *
  */
 @Slf4j
 @Data
@@ -69,7 +69,6 @@ public class TICPeakListImporter extends AFragmentCommand {
 
     private final String description = "Imports tic peak data from csv files";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILEIO;
-    
     @Configurable
     private List<String> filesToRead = Collections.emptyList();
     @Configurable
@@ -94,22 +93,22 @@ public class TICPeakListImporter extends AFragmentCommand {
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         TupleND<IFileFragment> retf = new TupleND<IFileFragment>();
         //check for wildcard arguments
-        if(this.filesToRead.size()==1) {
+        if (this.filesToRead.size() == 1) {
             log.info("Parsing filesToRead as wildcard expression");
             String s = this.filesToRead.get(0);
             String fullpath = FilenameUtils.getFullPath(s);
             String wildcard = FilenameUtils.getName(s);
-            WildcardFileFilter fileFilter = new WildcardFileFilter(wildcard);       
-            Collection<File> files = FileUtils.listFiles(new File(fullpath), fileFilter, TrueFileFilter.INSTANCE); 
+            WildcardFileFilter fileFilter = new WildcardFileFilter(wildcard);
+            Collection<File> files = FileUtils.listFiles(new File(fullpath), fileFilter, TrueFileFilter.INSTANCE);
             this.filesToRead.clear();
-            for(File f:files) {
+            for (File f : files) {
                 try {
                     filesToRead.add(f.getCanonicalPath());
                 } catch (IOException ex) {
-                    log.warn("{}",ex);
+                    log.warn("{}", ex);
                 }
             }
-            
+
         }
         for (IFileFragment ff : t) {
 

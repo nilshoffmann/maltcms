@@ -1,5 +1,5 @@
 /*
-/*
+ /*
  *  Copyright (C) 2008-2012 Nils Hoffmann
  *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
  *
@@ -51,7 +51,6 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
             (AArrayFilter) new MultiplicationFilter());
     @Configurable
     private TopHatFilter baselineFilter = new TopHatFilter();
-    
     @Configurable
     private double peakSnrThreshold = 75.0;
     @Configurable
@@ -66,13 +65,13 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
     private int baselineEstimationMinimaWindow = 1000;
     @Configurable
     private int meanEstimationWindow = 100;
-    
+
     protected Array applyFilters(final Array correctedtic) {
         final Array filteredtic = BatchFilter.applyFilters(correctedtic,
                 this.filter);
         return filteredtic;
     }
-    
+
     @Override
     public PeakPositionsResultSet findPeakPositions(Array tic) {
         EvalTools.notNull(tic, this);
@@ -86,7 +85,7 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
         // correctedtic = Array.factory(ticValues);
         baselineFilter.setWindow(baselineFilterWindow);
         double[] snrValues = new double[ticValues.length];
-        double[] baselineEstimate = (double[])baselineFilter.apply(correctedtic).get1DJavaArray(double.class);
+        double[] baselineEstimate = (double[]) baselineFilter.apply(correctedtic).get1DJavaArray(double.class);
         double[] cticValues = (double[]) correctedtic.get1DJavaArray(
                 double.class);
         DescriptiveStatistics stats = new DescriptiveStatistics();
@@ -95,10 +94,10 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
         StandardDeviation sd = new StandardDeviation();
         for (int i = 0; i < snrValues.length; i++) {
             stats.addValue(cticValues[i]);
-            double normalized = ((stats.getPercentile(upperPercentile)-stats.getPercentile(lowerPercentile)))/stats.getPercentile(lowerPercentile);
+            double normalized = ((stats.getPercentile(upperPercentile) - stats.getPercentile(lowerPercentile))) / stats.getPercentile(lowerPercentile);
             double snr = 20.0d * Math.log10(normalized);
             snrValues[i] = Double.isInfinite(snr) ? 0 : snr;
-            
+
         }
         log.debug("SNR: {}", Arrays.toString(snrValues));
         for (int i = 0; i < ticValues.length; i++) {
@@ -107,8 +106,7 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
                     peakSeparationWindow);
         }
         PeakPositionsResultSet pprs = new PeakPositionsResultSet(correctedtic,
-                PeakFinderUtils.createPeakCandidatesArray(tic, ts), snrValues, ts,PeakFinderUtils.findBaseline(cticValues,baselineEstimationMinimaWindow));
+                PeakFinderUtils.createPeakCandidatesArray(tic, ts), snrValues, ts, PeakFinderUtils.findBaseline(cticValues, baselineEstimationMinimaWindow));
         return pprs;
     }
-    
 }

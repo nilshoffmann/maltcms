@@ -44,12 +44,11 @@ public class AlignmentColumnComparator {
     public final static int FP = 2;
     //FN is false negative, if gt value is present, but tools value is absent
     public final static int FN = 3;
-    
+
     public static int[] createResultsArray() {
         return new int[4];
     }
-    
-    public static final String[] names = new String[]{"TP","TN","FP","FN"};
+    public static final String[] names = new String[]{"TP", "TN", "FP", "FN"};
 
     public int[] compare(AlignmentColumn gt, AlignmentColumn test) {
         int[] results = new int[names.length];
@@ -72,7 +71,7 @@ public class AlignmentColumnComparator {
                 if (Math.abs(gtVal - toolVal) <= delta) {
                     //TP
                     results[TP]++;
-                }else{
+                } else {
                     //WP
                     results[FP]++;
                 }
