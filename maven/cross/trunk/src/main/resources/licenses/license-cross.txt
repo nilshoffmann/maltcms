@@ -1,0 +1,31 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Cross, common runtime object support system. 
+${licensePrefix}Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}Project website: http://maltcms.sf.net
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}Cross may be used under the terms of either the
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}GNU Lesser General Public License (LGPL)
+${licensePrefix}http://www.gnu.org/licenses/lgpl.html
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}or the
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}Eclipse Public License (EPL)
+${licensePrefix}http://www.eclipse.org/org/documents/epl-v10.php
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}As a user/recipient of Cross, you may choose which license to receive the code 
+${licensePrefix}under. Certain files or entire directories may not be covered by this 
+${licensePrefix}dual license, but are subject to licenses compatible to both LGPL and EPL.
+${licensePrefix}License exceptions are explicitly declared in all relevant files or in a 
+${licensePrefix}LICENSE file in the relevant directories.
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}Cross is distributed in the hope that it will be useful, but WITHOUT
+${licensePrefix}ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+${licensePrefix}FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
+${licensePrefix}for details.
+<#if licenseLast??>
+${licenseLast}
+</#if>

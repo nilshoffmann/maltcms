@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  */
 public class AnnotationInspectorTest {
 

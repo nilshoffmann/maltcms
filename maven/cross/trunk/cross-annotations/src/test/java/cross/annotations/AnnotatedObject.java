@@ -10,7 +10,7 @@ import lombok.Data;
 
 /**
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  */
 @RequiresVariables(names = {"a", "b", "c"})
 @ProvidesVariables(names = {"b", "d"})

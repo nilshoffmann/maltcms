@@ -1,23 +1,29 @@
-/*
- *  Copyright (C) 2008-2012 Nils Hoffmann
- *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+/* 
+ * Cross, common runtime object support system. 
+ * Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
  *
- *  This file is part of Cross/Maltcms.
+ * Project website: http://maltcms.sf.net
  *
- *  Cross/Maltcms is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Cross may be used under the terms of either the
  *
- *  Cross/Maltcms is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
+ * GNU Lesser General Public License (LGPL)
+ * http://www.gnu.org/licenses/lgpl.html
  *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with Cross/Maltcms.  If not, see <http://www.gnu.org/licenses/>.
+ * or the
  *
- *  $Id$
+ * Eclipse Public License (EPL)
+ * http://www.eclipse.org/org/documents/epl-v10.php
+ *
+ * As a user/recipient of Cross, you may choose which license to receive the code 
+ * under. Certain files or entire directories may not be covered by this 
+ * dual license, but are subject to licenses compatible to both LGPL and EPL.
+ * License exceptions are explicitly declared in all relevant files or in a 
+ * LICENSE file in the relevant directories.
+ *
+ * Cross is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
+ * for details.
  */
 package cross.io.misc;
 
@@ -56,7 +62,7 @@ import ucar.ma2.Range;
  * list of arrays with 2001 elements, each individual with possibly different
  * length.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j
