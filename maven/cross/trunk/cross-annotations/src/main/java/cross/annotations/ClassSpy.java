@@ -37,8 +37,19 @@ enum ClassMember {
     CONSTRUCTOR, FIELD, METHOD, CLASS, ALL
 }
 
+/**
+ * <p>ClassSpy class.</p>
+ *
+ * @author Nils Hoffmann
+ * @version $Id$
+ */
 public class ClassSpy {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args a {@link java.lang.String} object.
+     */
     public static void main(final String... args) {
     }
 
@@ -73,6 +84,11 @@ public class ClassSpy {
         System.out.format("%n");
     }
 
+    /**
+     * <p>Constructor for ClassSpy.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     */
     public ClassSpy(final String s) {
         try {
             final Class<?> c = Class.forName(s);

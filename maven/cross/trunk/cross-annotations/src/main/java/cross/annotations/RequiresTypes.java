@@ -30,8 +30,10 @@ package cross.annotations;
 import java.lang.annotation.*;
 
 /**
+ * <p>RequiresTypes class.</p>
  *
- * @author nils
+ * @author Nils Hoffmann
+ * @version $Id$
  */
 @Target(value = {ElementType.TYPE})
 @Retention(value = RetentionPolicy.RUNTIME)

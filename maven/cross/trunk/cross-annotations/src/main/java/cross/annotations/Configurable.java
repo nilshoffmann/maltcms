@@ -30,10 +30,11 @@ package cross.annotations;
 import java.lang.annotation.*;
 
 /**
- * Marker annotation for member variables, which should be made available to
- * Configuration.
+ * <p>Marker annotation for member variables, which should be made available to
+ * Configuration.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id$
  */
 @Documented
 @Target(value = {ElementType.FIELD})

@@ -30,12 +30,12 @@ package cross.annotations;
 import java.lang.annotation.*;
 
 /**
- * Marker annotation which should be added to methods indicating, that this
+ * <p>Marker annotation which should be added to methods indicating, that this
  * method should not be considered when searching for feature type methods. Used
- * by {@link maltcms.db.predicates.PublicMemberGetters}.
+ * by {@link maltcms.db.predicates.PublicMemberGetters}.</p>
  *
  * @author Nils Hoffmann
- *
+ * @version $Id$
  */
 @Target(value = {ElementType.METHOD})
 @Retention(value = RetentionPolicy.RUNTIME)

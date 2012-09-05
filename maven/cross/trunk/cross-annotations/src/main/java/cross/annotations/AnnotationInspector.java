@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
  * as well as their default values.
  *
  * @author Nils Hoffmann
+ * @version $Id$
  */
 public final class AnnotationInspector {
 
@@ -49,8 +50,9 @@ public final class AnnotationInspector {
 
     /**
      * Returns optional required variable names from class annotated with {@link RequiresOptionalVariables}.
+     *
      * @param c The class to inspect.
-     * @return 
+     * @return a {@link java.util.Collection} object.
      */
     public static Collection<String> getOptionalRequiredVariables(
             final Class<?> c) {
@@ -62,8 +64,9 @@ public final class AnnotationInspector {
 
     /**
      * Returns mandatory, required variable names from class annotated with {@link RequiresVariables}.
+     *
      * @param c The class to inspect.
-     * @return 
+     * @return a {@link java.util.Collection} object.
      */
     public static Collection<String> getRequiredVariables(final Class<?> c) {
         final Collection<String> coll = new ArrayList<String>();
@@ -75,8 +78,9 @@ public final class AnnotationInspector {
 
     /**
      * Returns variable names provided by class annotated with {@link ProvidesVariables}.
+     *
      * @param c The class to inspect.
-     * @return 
+     * @return a {@link java.util.Collection} object.
      */
     public static Collection<String> getProvidedVariables(final Class<?> c) {
         final Collection<String> coll = new ArrayList<String>();
@@ -90,8 +94,9 @@ public final class AnnotationInspector {
 
     /**
      * Returns optional required variable names from object's class annotated with {@link RequiresOptionalVariables}.
+     *
      * @param o The object to inspect.
-     * @return 
+     * @return a {@link java.util.Collection} object.
      */
     public static Collection<String> getOptionalRequiredVariables(final Object o) {
         final Collection<String> coll = new ArrayList<String>();
@@ -107,8 +112,9 @@ public final class AnnotationInspector {
 
     /**
      * Returns mandatory, required variable names from object's class annotated with {@link RequiresVariables}.
+     *
      * @param o The object to inspect.
-     * @return 
+     * @return a {@link java.util.Collection} object.
      */
     public static Collection<String> getRequiredVariables(final Object o) {
         final Collection<String> coll = new ArrayList<String>();
@@ -122,8 +128,9 @@ public final class AnnotationInspector {
     
     /**
      * Returns variable names provided by class annotated with {@link ProvidesVariables}.
+     *
      * @param o The object to inspect.
-     * @return 
+     * @return a {@link java.util.Collection} object.
      */
     public static Collection<String> getProvidedVariables(final Object o) {
         final Collection<String> coll = new ArrayList<String>();
@@ -137,8 +144,9 @@ public final class AnnotationInspector {
 
     /**
      * Returns configuration key names for class fields that are annotated with {@link Configurable}.
+     *
      * @param c The class to inspect.
-     * @return 
+     * @return a {@link java.util.Collection} object.
      */
     public static Collection<String> getRequiredConfigKeys(final Class<?> c) {
         final Collection<String> coll = new ArrayList<String>();
@@ -151,8 +159,9 @@ public final class AnnotationInspector {
 
     /**
      * Returns configuration key names for object's class fields that are annotated with {@link Configurable}.
+     *
      * @param o The object to inspect.
-     * @return 
+     * @return a {@link java.util.Collection} object.
      */
     public static Collection<String> getRequiredConfigKeys(final Object o) {
         final Collection<String> coll = new ArrayList<String>();
@@ -165,11 +174,12 @@ public final class AnnotationInspector {
     }
 
     /**
-     * Returns the default value for field with given name on class, based 
+     * Returns the default value for field with given name on class, based
      * on {@link Configurable.value}.
+     *
      * @param c The class to inspect.
      * @param name The field to get the value for.
-     * @return 
+     * @return a {@link java.lang.String} object.
      */
     public static String getDefaultValueFor(final Class<?> c, final String name) {
         Field fld = getFieldForName(c, name);
@@ -183,10 +193,11 @@ public final class AnnotationInspector {
     }
 
     /**
-     * 
-     * @param c
-     * @param name
-     * @return 
+     * <p>getNameFor.</p>
+     *
+     * @param c a {@link java.lang.Class} object.
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
      */
     public static String getNameFor(final Class<?> c, final String name) {
         Field fld = getFieldForName(c, name);
@@ -197,20 +208,22 @@ public final class AnnotationInspector {
     }
 
     /**
-     * 
-     * @param c
-     * @param fld
-     * @return 
+     * <p>getNameFor.</p>
+     *
+     * @param c a {@link java.lang.Class} object.
+     * @param fld a {@link java.lang.reflect.Field} object.
+     * @return a {@link java.lang.String} object.
      */
     public static String getNameFor(final Class<?> c, Field fld) {
         return normalizeName(c, fld);
     }
 
     /**
-     * 
-     * @param c
-     * @param name
-     * @return 
+     * <p>getDescriptionFor.</p>
+     *
+     * @param c a {@link java.lang.Class} object.
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
      */
     public static String getDescriptionFor(final Class<?> c, final String name) {
         Field fld = getFieldForName(c, name);
@@ -223,10 +236,11 @@ public final class AnnotationInspector {
     }
 
     /**
-     * 
-     * @param c
-     * @param name
-     * @return 
+     * <p>getTypeFor.</p>
+     *
+     * @param c a {@link java.lang.Class} object.
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link java.lang.Class} object.
      */
     public static Class<?> getTypeFor(final Class<?> c, final String name) {
         Field fld = getFieldForName(c, name);

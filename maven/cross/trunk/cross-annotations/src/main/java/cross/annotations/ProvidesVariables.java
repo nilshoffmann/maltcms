@@ -30,11 +30,11 @@ package cross.annotations;
 import java.lang.annotation.*;
 
 /**
- * Annotation which should be added to AFragmentCommand instances, declaring,
- * which variables, as given by their names, the annotated class creates.
+ * <p>Annotation which should be added to AFragmentCommand instances, declaring,
+ * which variables, as given by their names, the annotated class creates.</p>
  *
  * @author Nils Hoffmann
- *
+ * @version $Id$
  */
 @Target(value = {ElementType.TYPE})
 @Retention(value = RetentionPolicy.RUNTIME)
