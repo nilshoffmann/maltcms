@@ -3,12 +3,12 @@
     <parent>
         <artifactId>cross</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.2.11-SNAPSHOT</version>
+        <version>1.2.11</version>
     </parent>
     <artifactId>cross-tools</artifactId>
     <packaging>jar</packaging>
     <name>cross-tools</name>
-    <dependencies></dependencies>
+    <dependencies />
 </project>
 
 
