@@ -98,7 +98,7 @@
     
     <repositories>
         <repository>
-            <id>artifactory</id>
+            <id>maltcms-artifactory</id>
             <layout>default</layout>
             <releases>
                 <enabled>true</enabled>
