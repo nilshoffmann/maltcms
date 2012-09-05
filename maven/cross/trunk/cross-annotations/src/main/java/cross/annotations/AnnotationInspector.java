@@ -34,8 +34,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class which provides static utility methods to test for presence of specific
- * cross.annotations.
+ * Provides static utility methods to test for presence of specific
+ * annotations. Assists in finding the runtime type of annotated fields
+ * as well as their default values.
  *
  * @author Nils Hoffmann
  */
@@ -46,6 +47,11 @@ public final class AnnotationInspector {
     private AnnotationInspector() {
     }
 
+    /**
+     * Returns optional required variable names from class annotated with {@link RequiresOptionalVariables}.
+     * @param c The class to inspect.
+     * @return 
+     */
     public static Collection<String> getOptionalRequiredVariables(
             final Class<?> c) {
         final Collection<String> coll = new ArrayList<String>();
@@ -54,6 +60,11 @@ public final class AnnotationInspector {
         return coll;
     }
 
+    /**
+     * Returns mandatory, required variable names from class annotated with {@link RequiresVariables}.
+     * @param c The class to inspect.
+     * @return 
+     */
     public static Collection<String> getRequiredVariables(final Class<?> c) {
         final Collection<String> coll = new ArrayList<String>();
         AnnotationInspector.inspectTypeRequiredVariables(c, coll);
@@ -62,6 +73,11 @@ public final class AnnotationInspector {
         return coll;
     }
 
+    /**
+     * Returns variable names provided by class annotated with {@link ProvidesVariables}.
+     * @param c The class to inspect.
+     * @return 
+     */
     public static Collection<String> getProvidedVariables(final Class<?> c) {
         final Collection<String> coll = new ArrayList<String>();
         AnnotationInspector.inspectTypeProvidedVariables(c, coll);
@@ -72,6 +88,11 @@ public final class AnnotationInspector {
         return coll;
     }
 
+    /**
+     * Returns optional required variable names from object's class annotated with {@link RequiresOptionalVariables}.
+     * @param o The object to inspect.
+     * @return 
+     */
     public static Collection<String> getOptionalRequiredVariables(final Object o) {
         final Collection<String> coll = new ArrayList<String>();
         AnnotationInspector.inspectTypeOptionalRequiredVariables(o.getClass(),
@@ -84,6 +105,26 @@ public final class AnnotationInspector {
         return coll;
     }
 
+    /**
+     * Returns mandatory, required variable names from object's class annotated with {@link RequiresVariables}.
+     * @param o The object to inspect.
+     * @return 
+     */
+    public static Collection<String> getRequiredVariables(final Object o) {
+        final Collection<String> coll = new ArrayList<String>();
+        AnnotationInspector.inspectTypeRequiredVariables(o.getClass(), coll);
+        final Class<?> clazz = o.getClass().getSuperclass();
+        if (clazz != null) {
+            AnnotationInspector.inspectTypeRequiredVariables(clazz, coll);
+        }
+        return coll;
+    }
+    
+    /**
+     * Returns variable names provided by class annotated with {@link ProvidesVariables}.
+     * @param o The object to inspect.
+     * @return 
+     */
     public static Collection<String> getProvidedVariables(final Object o) {
         final Collection<String> coll = new ArrayList<String>();
         AnnotationInspector.inspectTypeProvidedVariables(o.getClass(), coll);
@@ -94,6 +135,11 @@ public final class AnnotationInspector {
         return coll;
     }
 
+    /**
+     * Returns configuration key names for class fields that are annotated with {@link Configurable}.
+     * @param c The class to inspect.
+     * @return 
+     */
     public static Collection<String> getRequiredConfigKeys(final Class<?> c) {
         final Collection<String> coll = new ArrayList<String>();
         final Class<?> clazz = c;
@@ -103,6 +149,11 @@ public final class AnnotationInspector {
         return coll;
     }
 
+    /**
+     * Returns configuration key names for object's class fields that are annotated with {@link Configurable}.
+     * @param o The object to inspect.
+     * @return 
+     */
     public static Collection<String> getRequiredConfigKeys(final Object o) {
         final Collection<String> coll = new ArrayList<String>();
         AnnotationInspector.inspectFields(o.getClass(), coll);
@@ -113,16 +164,13 @@ public final class AnnotationInspector {
         return coll;
     }
 
-    public static Collection<String> getRequiredVariables(final Object o) {
-        final Collection<String> coll = new ArrayList<String>();
-        AnnotationInspector.inspectTypeRequiredVariables(o.getClass(), coll);
-        final Class<?> clazz = o.getClass().getSuperclass();
-        if (clazz != null) {
-            AnnotationInspector.inspectTypeRequiredVariables(clazz, coll);
-        }
-        return coll;
-    }
-
+    /**
+     * Returns the default value for field with given name on class, based 
+     * on {@link Configurable.value}.
+     * @param c The class to inspect.
+     * @param name The field to get the value for.
+     * @return 
+     */
     public static String getDefaultValueFor(final Class<?> c, final String name) {
         Field fld = getFieldForName(c, name);
         if (fld == null) {
@@ -134,6 +182,12 @@ public final class AnnotationInspector {
 
     }
 
+    /**
+     * 
+     * @param c
+     * @param name
+     * @return 
+     */
     public static String getNameFor(final Class<?> c, final String name) {
         Field fld = getFieldForName(c, name);
         if (fld == null) {
@@ -142,10 +196,22 @@ public final class AnnotationInspector {
         return getNameFor(c, fld);
     }
 
+    /**
+     * 
+     * @param c
+     * @param fld
+     * @return 
+     */
     public static String getNameFor(final Class<?> c, Field fld) {
         return normalizeName(c, fld);
     }
 
+    /**
+     * 
+     * @param c
+     * @param name
+     * @return 
+     */
     public static String getDescriptionFor(final Class<?> c, final String name) {
         Field fld = getFieldForName(c, name);
         if (fld == null) {
@@ -156,6 +222,12 @@ public final class AnnotationInspector {
         return descr;
     }
 
+    /**
+     * 
+     * @param c
+     * @param name
+     * @return 
+     */
     public static Class<?> getTypeFor(final Class<?> c, final String name) {
         Field fld = getFieldForName(c, name);
         if (fld == null) {
@@ -165,6 +237,12 @@ public final class AnnotationInspector {
         return fld.getType();
     }
 
+    /**
+     * 
+     * @param c
+     * @param name
+     * @return 
+     */
     private static Field getFieldForName(Class<?> c, String name) {
         final Field[] f = c.getDeclaredFields();
         for (final Field fld : f) {
@@ -188,12 +266,23 @@ public final class AnnotationInspector {
         return null;
     }
 
+    /**
+     * 
+     * @param c
+     * @param f
+     * @return 
+     */
     private static String normalizeName(Class<?> c, Field f) {
         String name = c.getName() + "." + f.getName();
         AnnotationInspector.log.info("Returning normalized name: {}", name);
         return name;
     }
 
+    /**
+     * 
+     * @param c
+     * @param coll 
+     */
     private static void inspectFields(final Class<?> c,
             final Collection<String> coll) {
         final Field[] f = c.getDeclaredFields();
@@ -227,6 +316,11 @@ public final class AnnotationInspector {
         }
     }
 
+    /**
+     * 
+     * @param c
+     * @param coll 
+     */
     private static void inspectTypeOptionalRequiredVariables(final Class<?> c,
             final Collection<String> coll) {
         if (c.isAnnotationPresent(RequiresOptionalVariables.class)) {
@@ -235,6 +329,11 @@ public final class AnnotationInspector {
         }
     }
 
+    /**
+     * 
+     * @param c
+     * @param coll 
+     */
     private static void inspectTypeProvidedVariables(final Class<?> c,
             final Collection<String> coll) {
         if (c.isAnnotationPresent(ProvidesVariables.class)) {
@@ -243,6 +342,11 @@ public final class AnnotationInspector {
         }
     }
 
+    /**
+     * 
+     * @param c
+     * @param coll 
+     */
     private static void inspectTypeRequiredVariables(final Class<?> c,
             final Collection<String> coll) {
         if (c.isAnnotationPresent(RequiresVariables.class)) {
