@@ -38,6 +38,7 @@
             <ref target="info/publications" />
             <ref target="info/license" />
             <ref target="info/contact" />
+	    <a href="http://sf.net/p/maltcms" title="Project Homepage">Project@SF</a>
             
             <group nname="News" ident="news">
                 <ref target="news/index" />
@@ -47,7 +48,7 @@
         <group nname="Maltcms" ident="users">
             <ref target="users/features" />
             <ref target="users/support" />
-            <a href="http://sf.net/apps/trac/maltcms/" title="Wiki">Wiki</a>
+            <a href="https://sourceforge.net/p/maltcms/wiki" title="Wiki">Wiki</a>
         </group>
 
         <group nname="Maui" ident="maui">
