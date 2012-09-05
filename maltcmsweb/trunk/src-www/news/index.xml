@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<content group="news" ident="news/index" nname="Overview" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
+<content group="news" ident="news/index" nname="News" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
     <column id="content">
         <h1>News</h1>
 	<h2>2012</h2>

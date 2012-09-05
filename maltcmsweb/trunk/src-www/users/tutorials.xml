@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content group="users" ident="users/tutorials" nname="Tutorials" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
-<column id="content">
+    <column id="content">
         
-</column>
+    </column>
 </content>

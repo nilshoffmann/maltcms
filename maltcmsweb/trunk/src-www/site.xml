@@ -35,14 +35,11 @@
         <group nname="Home" ident="home">
             <ref target="home/index" />
             <ref target="home/gettingStarted" />
-            <ref target="info/publications" />
-            <ref target="info/license" />
+            <ref target="news/index" />
+	    <ref target="info/publications" />
+	    <ref target="info/license" />
             <ref target="info/contact" />
 	    <a href="http://sf.net/p/maltcms" title="Project Homepage">Project@SF</a>
-            
-            <group nname="News" ident="news">
-                <ref target="news/index" />
-            </group>
         </group>
 
         <group nname="Maltcms" ident="users">
@@ -55,12 +52,14 @@
             <ref target="maui/index" />
         </group>
 
+	<group nname="News" ident="news">
+	    <ref target="news/index" />
+	</group>
+
         <group nname="Developers" ident="developers">
             <ref target="developers/api" />
-            <a href="http://sf.net/projects/maltcms/" title="Project Website">Project
-                Home
-            </a>
-            <a href="http://sf.net/apps/trac/maltcms/" title="Trac">Wiki</a>
+            <a href="http://sf.net/projects/maltcms/" title="Project Website at Sourceforge">Project@SF</a>
+            <a href="http://sf.net/maltcms/wiki" title="Wiki">Wiki</a>
             <group nname="Tutorials" ident="tutorials">
                 <ref target="developers/tutorials/programmaticWorkflow" />
             </group>

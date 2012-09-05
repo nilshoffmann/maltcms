@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content group="home" ident="home/gettingStarted" nname="Getting Started" toRoot="../" publish="yes" lastchanged="$Date$ by $Author$">
-<column id="content">
+    <column id="content">
         <h1>Download and Installation</h1>
         <p>Please use one of the following links for instructions on where to download and how to install a release 
-        of Maltcms.</p>
-	<ul>
-		<li><a href="http://maltcms.sourceforge.net/maven/maltcms/1.2.0/gettingStarted.html">Instructions for Maltcms 1.2.0</a></li>
-        	<li><a href="http://maltcms.sourceforge.net/maven/maltcms/1.1.0/gettingStarted.html">Instructions for Maltcms 1.1.0</a></li>
-	</ul>
-</column>
+            of Maltcms.
+        </p>
+        <ul>
+            <li>
+                <a href="http://maltcms.sourceforge.net/maven/maltcms/1.2.0/gettingStarted.html">Instructions for Maltcms 1.2.0</a>
+            </li>
+            <li>
+                <a href="http://maltcms.sourceforge.net/maven/maltcms/1.1.0/gettingStarted.html">Instructions for Maltcms 1.1.0</a>
+            </li>
+        </ul>
+    </column>
 </content>

@@ -2,8 +2,12 @@
 <content group="developers" subgroup="tutorials" ident="developers/tutorials/programmaticWorkflow" nname="Programmatic Workflow" toRoot="../../" publish="yes" lastchanged="$Date$ by $Author$">
     <column id="content">
         <h1>Creating a workflow for Maltcms in Java</h1>
-        <p>Sometimes it may be preferable to create a custom workflow programmatically, instead of declaratively using <a href="http://www.springsource.org/spring-core" >Spring core's beans xml format</a>.</p>
-        <p>Before proceeding, please download the <a href="http://sourceforge.net/projects/maltcms/files/maltcms/example-data/maltcms-example-data.zip/download">test data</a></p>
+        <p>Sometimes it may be preferable to create a custom workflow programmatically, instead of declaratively using 
+            <a href="http://www.springsource.org/spring-core" >Spring core's beans xml format</a>.
+        </p>
+        <p>Before proceeding, please download the 
+            <a href="http://sourceforge.net/projects/maltcms/files/maltcms/example-data/maltcms-example-data.zip/download">test data</a>
+        </p>
         <pre class="brush: java;">
             <![CDATA[
 package net.sf.maltcms.tutorials;            

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content group="developers" ident="developers/concepts" nname="Concepts" toRoot="../" publish="yes" lastchanged="$Date$ by $Author$">
-<column id="content">
-            <heading level="1">About this page</heading><heading level="2">June 27th, 2010</heading>
-	    <p>TEstdiv</p>
-</column>
+    <column id="content">
+        <heading level="1">About this page</heading>
+        <heading level="2">June 27th, 2010</heading>
+        <p>TEstdiv</p>
+    </column>
 </content>
