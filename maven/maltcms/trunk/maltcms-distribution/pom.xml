@@ -56,7 +56,7 @@
                                     <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                                 </manifest>
                             </archive>
-                            <finalName>maltcms.jar</finalName>
+                            <finalName>maltcms</finalName>
                             <outputDirectory>${project.build.directory}/</outputDirectory>
                         </configuration>
                     </execution>
@@ -78,6 +78,7 @@
                     <descriptors>
                         <descriptor>src/main/assembly/install.xml</descriptor>
                     </descriptors>
+                    <finalName>${distributionName}</finalName>
                     <!--<updateOnly>true</updateOnly>-->
                     <attach>false</attach>
                 </configuration>
@@ -92,20 +93,20 @@
                         <phase>package</phase>
                         <configuration>
                             <target>
-                                <echo message="Correcting file permissions in ${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}" />
+                                <echo message="Correcting file permissions in ${project.build.directory}/${distributionName}-bin/${distributionName}" />
                                 <!--                                <unzip src="${project.build.directory}/${project.artifactId}-${project.version}/lib/maltcms-resources-${project.version}.jar" dest="${project.build.directory}/${project.artifactId}-${project.version}/" />-->
                                 <!--<chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/scripts/" perm="ugo+rx" />-->
-                                <copy file="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/bin/maltcms.sh" toFile="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/bin/maltcms.command"/>
-                                <chmod includes="*.sh,*.command,*.bat,*.jar" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/" perm="ugo+rx" />
-                                <chmod includes="*.sh,*.command,*.bat,*.jar" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/bin" perm="ugo+rx" />
-                                <copy file="${project.build.directory}/maltcms.jar" toDir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/"/>
-                                <zip destfile="${project.build.directory}/${project.artifactId}-${project.version}-bin.zip">
-                                    <zipfileset dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/bin/" prefix="${project.artifactId}-${project.version}/bin" filemode="755">
+                                <copy file="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/maltcms.sh" toFile="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/maltcms.command"/>
+                                <chmod includes="*.sh,*.command,*.bat,*.jar" dir="${project.build.directory}/${distributionName}-bin/${distributionName}/" perm="ugo+rx" />
+                                <chmod includes="*.sh,*.command,*.bat,*.jar" dir="${project.build.directory}/${distributionName}-bin/${distributionName}/bin" perm="ugo+rx" />
+                                <copy file="${project.build.directory}/maltcms.jar" toDir="${project.build.directory}/${distributionName}-bin/${distributionName}/"/>
+                                <zip destfile="${project.build.directory}/${distributionName}-bin.zip">
+                                    <zipfileset dir="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/" prefix="${distributionName}/bin" filemode="755">
                                         <include name="*.sh"/>
                                         <include name="*.command"/>
                                         <!--<include name="scripts/*.sh"/>-->
                                     </zipfileset>    
-                                    <zipfileset dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/" prefix="${project.artifactId}-${project.version}">
+                                    <zipfileset dir="${project.build.directory}/${distributionName}-bin/${distributionName}/" prefix="${distributionName}">
                                         <include name="**"/>
                                         <exclude name="bin/*.sh"/>
                                         <exclude name="bin/*.command"/>
@@ -127,7 +128,7 @@
                                         <exclude name="scripts/*.sh"/>
                                     </tarfileset>
                                 </tar>-->
-                                <attachartifact file="${project.build.directory}/${project.artifactId}-${project.version}-bin.zip" type="zip"/>
+                                <attachartifact file="${project.build.directory}/${distributionName}-bin.zip" type="zip"/>
                                 <!--                                <attachartifact file="${project.build.directory}/${project.artifactId}-${project.version}-bin.tar.gz" type="tar.gz"/>-->
                             </target>
                         </configuration>
@@ -351,5 +352,7 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-
+    <properties>
+        <distributionName>maltcms-${project.version}</distributionName>
+    </properties>
 </project>

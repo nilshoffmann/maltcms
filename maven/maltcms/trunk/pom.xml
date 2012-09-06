@@ -65,7 +65,7 @@
     <inceptionYear>2007</inceptionYear>
     <ciManagement>
         <system>jenkins</system>
-        <url>https://maltcms.de:9443/jenkins/job/maltcms/</url>
+        <url>https://luna835.server4you.de:8181/jenkins/job/maltcms/</url>
     </ciManagement>
     <scm>
         <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</connection>
@@ -74,15 +74,15 @@
     </scm>
     <distributionManagement>
         <repository>
-            <id>maltcms.de</id>
+            <id>maltcms-release</id>
             <name>maltcms-artifactory-releases</name>
-            <url>http://maltcms.de:8080/artifactory/libs-release-local</url>
+            <url>http://luna835.server4you.de:8080/artifactory/libs-release-local</url>
         </repository>
 
         <snapshotRepository>
-            <id>maltcms.de</id>
+            <id>maltcms-snapshot</id>
             <name>maltcms-artifactory-snapshots</name>
-            <url>http://maltcms.de:8080/artifactory/libs-snapshot-local</url>
+            <url>http://luna835.server4you.de:8080/artifactory/libs-snapshot-local</url>
         </snapshotRepository>
         <site>
             <id>maltcms.sf.net</id>
@@ -95,11 +95,27 @@
             <name>L-GPL v3</name>
             <url>http://www.gnu.org/licenses/lgpl.html</url>
         </license>
-        <!--        <license>
+        <license>
             <name>Eclipse Public License (EPL)</name>
             <url>http://www.eclipse.org/org/documents/epl-v10.php</url>
-        </license>-->
+        </license>
     </licenses>
+    
+    <repositories>
+        <repository>
+            <id>maltcms-artifactory</id>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+            </snapshots>
+            <url>http://luna835.server4you.de:8080/artifactory/repo</url>
+        </repository>
+    </repositories>
+    
     <build>
         <resources>
             <resource>
@@ -161,18 +177,18 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>1.5</version>
+                </plugin>
+                <plugin>
+                    <inherited>true</inherited>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.2</version>
                     <executions>
                         <execution>
-                            <id>add-source</id>
-                            <phase>generate-sources</phase>
+                            <id>attach-sources</id>
                             <goals>
-                                <goal>add-source</goal>
+                                <goal>jar</goal>
                             </goals>
-                            <configuration>
-                                <sources>
-                                    <source>${basedir}/src/assemble</source>
-                                </sources>
-                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
@@ -264,7 +280,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <!--<version>3.1</version>-->
                 <configuration>
                     <moduleExcludes>
                         
@@ -291,13 +306,12 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-javadoc-plugin</artifactId>
-                            <!--<version>2.8.1</version>-->
                             <configuration>
                                 <show>public</show>
                                 <links>
                                     <link>http://docs.oracle.com/javase/6/docs/api/</link>
                                     <!-- version 4.1 api not available -->
-                                    <link>http://www.unidata.ucar.edu/software/netcdf-java/v4.0/javadoc/</link>
+                                    <link>http://www.unidata.ucar.edu/software/netcdf-java/v4.2/javadoc/</link>
                                 </links>
                             </configuration>
                         </plugin>
@@ -423,7 +437,7 @@
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>cross-main</artifactId>
-            <version>1.2.11-SNAPSHOT</version>
+            <version>1.2.12-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-logging</artifactId>
@@ -442,7 +456,7 @@
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>cross-ui</artifactId>
-            <version>1.2.11-SNAPSHOT</version>
+            <version>1.2.12-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-logging</artifactId>
