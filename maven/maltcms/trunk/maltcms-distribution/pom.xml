@@ -6,7 +6,7 @@
         <groupId>net.sf.maltcms</groupId>
         <version>1.2.1-SNAPSHOT</version>
     </parent>
-    <artifactId>maltcms</artifactId>
+    <artifactId>maltcms-distribution</artifactId>
     <name>maltcms-distribution</name>
     <url>http://maltcms.sourceforge.net</url>
     <packaging>pom</packaging>
@@ -56,7 +56,7 @@
                                     <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                                 </manifest>
                             </archive>
-                            <finalName>${project.artifactId}</finalName>
+                            <finalName>maltcms.jar</finalName>
                             <outputDirectory>${project.build.directory}/</outputDirectory>
                         </configuration>
                     </execution>
@@ -98,7 +98,7 @@
                                 <copy file="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/bin/maltcms.sh" toFile="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/bin/maltcms.command"/>
                                 <chmod includes="*.sh,*.command,*.bat,*.jar" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/" perm="ugo+rx" />
                                 <chmod includes="*.sh,*.command,*.bat,*.jar" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/bin" perm="ugo+rx" />
-                                <copy file="${project.build.directory}/${project.artifactId}.jar" toDir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/"/>
+                                <copy file="${project.build.directory}/maltcms.jar" toDir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/"/>
                                 <zip destfile="${project.build.directory}/${project.artifactId}-${project.version}-bin.zip">
                                     <zipfileset dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/bin/" prefix="${project.artifactId}-${project.version}/bin" filemode="755">
                                         <include name="*.sh"/>
