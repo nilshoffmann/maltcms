@@ -2,9 +2,11 @@ Welcome to Cross
 
     * {{{./apidocs/index.html}Javadoc API}}
 
-    * {{{http://sourceforge.net/apps/trac/maltcms/}Wiki and Bugtracker}}
+    * {{{http://sf.net/p/maltcms/wiki}Wiki}}
 
-    * {{{https://sourceforge.net/projects/maltcms/support}Help}}
+    * {{{http://sf.net/p/maltcms/maltcms-bugs}Bugtracker}}
+
+    * {{{http://sf.net/projects/maltcms/support}Help}}
 
 Changes for version 1.2.11:
 

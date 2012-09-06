@@ -37,6 +37,7 @@ import cross.io.misc.ArrayChunkIterator;
 import cross.io.misc.Base64;
 import cross.tools.StringTools;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -67,9 +68,6 @@ public class VariableFragment implements IVariableFragment {
     private String rep = null;
     private IVariableFragment index = null;
     private IFileFragment parent = null;
-//    private Array a = null;
-//    private SoftReference<Array> aref = null;
-//    private List<Array> al = null;
     private boolean isModified = false;
     private boolean useCachedList = false;
     private transient ICacheDelegate<IVariableFragment, List<Array>> persistentCache;
@@ -363,30 +361,6 @@ public class VariableFragment implements IVariableFragment {
         }
         List<Array> l = getCache().get(this);
         return l;
-//        if (this.al == null) {
-//            if (getIndex() == null) {
-//                return null;
-//            } else {
-//                if (this.useCachedList) {
-//                    log.debug("Using cached list");
-//                    setIndexedArrayInternal(CachedList.getList(this));
-//                } else {
-//                    log.debug("Reading completely");
-//                    try {
-//
-//                        setIndexedArrayInternal(Factory.getInstance().getDataSourceFactory().getDataSourceFor(
-//                                getParent()).readIndexed(this));
-//                    } catch (final IOException e) {
-//                        log.error(e.getLocalizedMessage());
-//                        return null;
-//                    } catch (final ResourceNotAvailableException e) {
-//                        log.error(e.getLocalizedMessage());
-//                        return null;
-//                    }
-//                }
-//            }
-//        }
-//        return Collections.synchronizedList(this.al);
     }
 
     /*
@@ -492,56 +466,19 @@ public class VariableFragment implements IVariableFragment {
         // if (log.isDebugEnabled()) {
         log.debug("Set array on VariableFragment {} as child of {}",
                 toString(), getParent().getAbsolutePath());
-        // log.info("{}", a1);
-        // } else {
-        // log.info("{}>{} set array", getParent().getName(),
-        // getVarname());
-        // }
-        // Copying prevents accidental modification
-//        if (a1 != null) {
-//            this.a = a1;
-//            this.aref = null;
-//        } else {
-//            clear();
-//        }
         if (a1 == null) {
-//            persistentCache.put(cacheKey, null);
-//            clear();
+            persistentCache.put(this, null);
         } else {
-            ActivatableArrayList<Array> list = new ActivatableArrayList<Array>();
+            ArrayList<Array> list = new ArrayList<Array>(1);
             list.add(a1);
             getCache().put(this, list);
-            //this.al = new ArrayList<Array>(1);
-            //this.al.add(a1);
             setDataType(DataType.getType(a1.getElementType()));
             if (getDimensions() == null) {
                 setDimensions(cross.datastructures.tools.ArrayTools.getDefaultDimensions(a1));
             }
         }
-//        if(getDimensions() == null && a1 != null) {
-//            
-//        }
-//        adjustConsistency();
-        // synchronized (this) {
-        // setArrayInternal(a1);
-        // }
     }
 
-//    protected void setArrayInternal(final Array a1) {
-//        if (!this.isModified) {
-//            if (a1 != null) {
-//                // this.a = a1;// a1.copy();
-//                this.aref = new SoftReference<Array>(a1);
-//                this.isModified = false;
-//            } else {
-//                clear();
-//            }
-//            adjustConsistency();
-//        } else {
-//            throw new IllegalStateException(
-//                    "Variable Fragment was already modified externally!");
-//        }
-//    }
     @Override
     public void addAttribute(Attribute a) {
         this.fragment.addAttribute(a);
@@ -628,15 +565,11 @@ public class VariableFragment implements IVariableFragment {
     protected void setIndexedArrayInternal(final List<Array> al1) {
         if (al1 != null && !al1.isEmpty()) {
             System.out.println("Received list of type: " + al1.getClass().getName());
-            //this.al = al1;
             getCache().put(this, new ActivatableArrayList<Array>(al1));
             setDataType(DataType.getType(al1.get(0).getElementType()));
-            //this.al = new ActivatableArrayList<Array>(al1);
         } else {
-//            persistentCache.put(cacheKey, null);
             clear();
         }
-//        adjustConsistency();
     }
 
     /**
@@ -644,12 +577,7 @@ public class VariableFragment implements IVariableFragment {
      */
     @Override
     public void clear() {
-//        this.persistentCache.put(this, null);
         this.isModified = false;
-//        this.al = null;
-//        this.a = null;
-//        this.aref = null;
-
     }
 
     /*
@@ -672,7 +600,6 @@ public class VariableFragment implements IVariableFragment {
      */
     @Override
     public void setRange(final Range[] ranges1) {
-        // EvalTools.notNull(range);
         this.ranges = ranges1;
     }
 
