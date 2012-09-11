@@ -25,6 +25,9 @@
             <h1>News</h1>
             <ul class="plainunbulletedlist">
                 <li>
+                    <ref target="news/maltcms1_2_1" alt="Maltcms 1.2.1 Released on September 11th, 2012"/>
+                </li>
+                <li>
                     <ref target="news/bmcBioinformatics1" alt="Publication: Peak- and chromatogram-based retention time alignment"/>
                 </li>
                 <li>

@@ -5,6 +5,9 @@
         <h2>Maven Sites</h2>
         <ul style="list-style: none;">
             <li>
+                <a href="../maven/maltcms/1.2.1/index.html" title="Maven Site for 1.2.1">1.2.1</a>
+            </li>
+            <li>
                 <a href="../maven/maltcms/1.2.0/index.html" title="Maven Site for 1.2.0">1.2.0</a>
             </li>
             <li>
@@ -14,7 +17,7 @@
         <h2>Javadoc API</h2>
         <ul style="list-style: none;">
             <li>
-                <a href="../maven/maltcms/1.2.0/apidocs/index.html">Version 1.2.0 API</a>
+                <a href="../maven/maltcms/1.2.0/apidocs/index.html">Version 1.2.x API</a>
             </li>
             <li>
                 <a href="../maven/maltcms/1.1.0/apidocs/index.html">Current Version 1.1.x API</a>

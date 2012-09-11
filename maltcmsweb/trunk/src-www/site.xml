@@ -20,7 +20,7 @@
             </ul>
         </div>
         <download href="http://sf.net/projects/maltcms/files/maui/1.0/beta2/" title="Download" text="Try Maui 1.0 Beta2" provider="Provided by sourceforge.net"/>
-        <download href="http://sf.net/projects/maltcms/files/maltcms/maltcms-1.2/" title="Download" text="Get Maltcms 1.2" provider="Provided by sourceforge.net"/>
+        <download href="http://sf.net/projects/maltcms/files/maltcms/maltcms-1.2/" title="Download" text="Get Maltcms 1.2.1" provider="Provided by sourceforge.net"/>
         <siteimage/>
     </header>
     <categories>
@@ -59,7 +59,7 @@
         <group nname="Developers" ident="developers">
             <ref target="developers/api" />
             <a href="http://sf.net/projects/maltcms/" title="Project Website at Sourceforge">Project@SF</a>
-            <a href="http://sf.net/maltcms/wiki" title="Wiki">Wiki</a>
+            <a href="http://sf.net/p/maltcms/wiki" title="Wiki">Wiki</a>
             <group nname="Tutorials" ident="tutorials">
                 <ref target="developers/tutorials/programmaticWorkflow" />
             </group>
@@ -90,6 +90,7 @@
     <xi:include href="news/netbeansRcpTraining2.xml" parse="xml"/>
     <xi:include href="news/netbeansMauiFeature.xml" parse="xml"/>
     <xi:include href="news/perspektive2010.xml" parse="xml"/>
+    <xi:include href="news/maltcms1_2_1.xml" parse="xml"/>
     <xi:include href="news/maltcms1_2.xml" parse="xml"/>
     <xi:include href="news/maltcms1_1.xml" parse="xml"/>
     <xi:include href="news/bookChapterMetabolomics.xml" parse="xml"/>
