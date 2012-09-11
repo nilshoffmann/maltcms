@@ -29,6 +29,8 @@ package cross.datastructures.fragments;
 
 import cross.Factory;
 import cross.datastructures.StatsMap;
+import cross.datastructures.cache.CacheFactory;
+import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
 import cross.datastructures.tools.FragmentTools;
@@ -39,6 +41,7 @@ import java.io.*;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
+import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
@@ -147,6 +150,7 @@ public class FileFragment implements IFileFragment {
     private final String fileExtension = ".cdf";
     private String filename = "";
     private final Fragment fragment = new Fragment();
+    private ICacheDelegate<IVariableFragment, List<Array>> persistentCache = null;
 
     /**
      * Create a FileFragment
@@ -291,8 +295,11 @@ public class FileFragment implements IFileFragment {
             }
         }
         int ml = 128;
+        List<String> names = new ArrayList<String>();
         for (final IFileFragment file : c) {
-            if (file.getAbsolutePath().length() > ml) {
+            String resolvedPath = resolve(file, this);
+            names.add(resolvedPath);
+            if (resolvedPath.length() > ml) {
                 ml *= 2;
             }
         }
@@ -300,11 +307,11 @@ public class FileFragment implements IFileFragment {
         final Dimension d1 = new Dimension("source_file_number", a.getShape()[0], true);
         final Dimension d2 = new Dimension("source_file_max_chars", a.getShape()[1], true);
         int i = 0;
-        for (final IFileFragment file : c) {
-            log.debug("Setting source file {} on {}", file,
+        for (final String s : names) {
+            log.debug("Setting source file {} on {}", s,
                     this);
 
-            a.setString(i++, resolve(file, this));
+            a.setString(i++, s);
 
         }
         final String sfvar = Factory.getInstance().getConfiguration().getString("var.source_files", "source_files");
@@ -337,7 +344,11 @@ public class FileFragment implements IFileFragment {
 
     private boolean isRootFile(IFileFragment parentFile) {
         try {
-            FragmentTools.getSourceFiles(parentFile);
+            Collection<IFileFragment> sourceFiles = FragmentTools.getSourceFiles(parentFile);
+            if(sourceFiles.isEmpty()) {
+                log.info("File {} is a root file!", parentFile.getAbsolutePath());
+                return true;
+            }
             log.info("File {} is NOT root file!", parentFile.getAbsolutePath());
             return false;
         } catch (ResourceNotAvailableException rnae) {
@@ -412,7 +423,7 @@ public class FileFragment implements IFileFragment {
     @Override
     public void clearArrays() throws IllegalStateException {
         List<IVariableFragment> toRemove = new LinkedList<IVariableFragment>();
-        for (final IVariableFragment ivf : this) {
+        for (final IVariableFragment ivf : this.getImmediateChildren()) {
             if (ivf.isModified()) {
                 log.warn(
                         "Can not clear arrays for {} on {}, {} was modified!",
@@ -424,6 +435,7 @@ public class FileFragment implements IFileFragment {
         for (IVariableFragment v : toRemove) {
             log.debug("Removing child {}", v.getName());
             v.clear();
+            removeChild(v);
         }
     }
 
@@ -505,6 +517,17 @@ public class FileFragment implements IFileFragment {
     @Override
     public List<Attribute> getAttributes() {
         return this.fragment.getAttributes();
+    }
+    
+    /**
+     * @return @see cross.datastructures.fragments.Fragment#getCache()
+     */
+    @Override
+    public ICacheDelegate<IVariableFragment, List<Array>> getCache() {
+        if (this.persistentCache == null) {
+            this.persistentCache = CacheFactory.createDb4oDefaultCache(new File(getAbsolutePath()).getParentFile(), StringTools.removeFileExt(getName()) + "-variable-fragment-cache");
+        }
+        return this.persistentCache;
     }
 
     /**
@@ -599,6 +622,16 @@ public class FileFragment implements IFileFragment {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see cross.datastructures.fragments.IFileFragment#getImmediateChildren()
+     */
+    @Override
+    public List<IVariableFragment> getImmediateChildren() {
+        return Collections.unmodifiableList(new ArrayList<IVariableFragment>(this.children.values()));
+    }
+    
     /*
      * (non-Javadoc)
      *
@@ -884,6 +917,7 @@ public class FileFragment implements IFileFragment {
     public synchronized void removeChild(
             final IVariableFragment variableFragment) {
         if (this.children.containsKey(variableFragment.getName())) {
+            log.debug("Removing child "+variableFragment.getName());
             this.children.remove(variableFragment.getName());
         } else {
             log.warn("Could not remove {}, no child of {}",
@@ -960,6 +994,8 @@ public class FileFragment implements IFileFragment {
         if (Factory.getInstance().getDataSourceFactory().getDataSourceFor(this).write(this)) {
             log.debug("Save of {} succeeded, clearing arrays!", getName());
             clearArrays();
+            getCache().close();
+            this.persistentCache = null;
             return true;
         }
         return false;

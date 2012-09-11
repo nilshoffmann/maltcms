@@ -28,6 +28,7 @@
 package cross.datastructures.fragments;
 
 import cross.datastructures.StatsMap;
+import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.tools.EvalTools;
 import cross.exception.ResourceNotAvailableException;
 import java.io.File;
@@ -37,6 +38,7 @@ import java.io.ObjectOutput;
 import java.util.*;
 import lombok.NonNull;
 import org.jdom.Element;
+import ucar.ma2.Array;
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 
@@ -121,8 +123,7 @@ public class ImmutableFileFragment implements IFileFragment {
      */
     @Override
     public void clearArrays() throws IllegalStateException {
-        throw new IllegalStateException(
-                "Can not clear arrays on immutable fragment!");
+        this.frag.clearArrays();
     }
 
     /**
@@ -198,6 +199,15 @@ public class ImmutableFileFragment implements IFileFragment {
     }
 
     /**
+     * 
+     * @return @see cross.datastructures.fragments.IFragment#getCache()
+     */
+    @Override
+    public ICacheDelegate<IVariableFragment, List<Array>> getCache() {
+        return this.frag.getCache();
+    }
+    
+    /**
      * @param varname
      * @return
      * @throws ResourceNotAvailableException
@@ -223,6 +233,17 @@ public class ImmutableFileFragment implements IFileFragment {
             final boolean loadStructureOnly)
             throws ResourceNotAvailableException {
         return this.frag.getChild(varname, loadStructureOnly);
+    }
+    
+    /**
+     * 
+     * @return 
+     * @see
+     * {@link cross.datastructures.fragments.IFileFragment#getImmediateChildren()}
+     */
+    @Override
+    public List<IVariableFragment> getImmediateChildren() {
+        return this.frag.getImmediateChildren();
     }
 
     /**

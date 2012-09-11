@@ -70,7 +70,6 @@ public class VariableFragment implements IVariableFragment {
     private IFileFragment parent = null;
     private boolean isModified = false;
     private boolean useCachedList = false;
-    private transient ICacheDelegate<IVariableFragment, List<Array>> persistentCache;
 
     private VariableFragment(final IFileFragment ff,
             final IGroupFragment group, final String varname1,
@@ -112,13 +111,6 @@ public class VariableFragment implements IVariableFragment {
         this(parent2, varname2, null, null, null);
     }
 
-    private ICacheDelegate<IVariableFragment, List<Array>> getCache() {
-        if (this.persistentCache == null) {
-            this.persistentCache = CacheFactory.createDb4oDefaultCache(new File(getParent().getAbsolutePath()).getParentFile(), StringTools.removeFileExt(getParent().getName()) + "-variable-fragment-cache");
-        }
-        return this.persistentCache;
-    }
-
     // private IGroupFragment gf = null;
     // private boolean protect = false;
     /**
@@ -157,7 +149,7 @@ public class VariableFragment implements IVariableFragment {
     }
 
     protected Array getArrayRef() {
-        List<Array> l = getCache().get(this);
+        List<Array> l = parent.getCache().get(this);
         if (l != null) {
             if (l.size() == 1) {
                 return l.get(0);
@@ -359,7 +351,7 @@ public class VariableFragment implements IVariableFragment {
         if (getIndex() == null) {
             return Collections.emptyList();
         }
-        List<Array> l = getCache().get(this);
+        List<Array> l = parent.getCache().get(this);
         return l;
     }
 
@@ -408,9 +400,11 @@ public class VariableFragment implements IVariableFragment {
      */
     @Override
     public boolean hasArray() {
-//        return (getArrayRef() == null) ? ((this.al == null) ? false : true)
-//                : true;
-        return getArrayRef() != null;
+        List<Array> l = parent.getCache().get(this);
+        if (l == null || l.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -461,17 +455,18 @@ public class VariableFragment implements IVariableFragment {
      */
     @Override
     public void setArray(final Array a1) {
-        this.isModified = true;
         // EvalTools.notNull(a1, this);
         // if (log.isDebugEnabled()) {
         log.debug("Set array on VariableFragment {} as child of {}",
                 toString(), getParent().getAbsolutePath());
         if (a1 == null) {
-            persistentCache.put(this, null);
+            parent.getCache().put(this, null);
+            clear();
         } else {
+            this.isModified = true;
             ArrayList<Array> list = new ArrayList<Array>(1);
             list.add(a1);
-            getCache().put(this, list);
+            parent.getCache().put(this, list);
             setDataType(DataType.getType(a1.getElementType()));
             if (getDimensions() == null) {
                 setDimensions(cross.datastructures.tools.ArrayTools.getDefaultDimensions(a1));
@@ -549,7 +544,6 @@ public class VariableFragment implements IVariableFragment {
         if (al1 != null && this.index == null) {
             throw new IllegalStateException("Please call setIndex first before adding indexed data!");
         }
-        this.isModified = true;
         log.debug(
                 "Set indexed array on VariableFragment {} as child of {}",
                 toString(), getParent().getAbsolutePath());
@@ -564,8 +558,9 @@ public class VariableFragment implements IVariableFragment {
      */
     protected void setIndexedArrayInternal(final List<Array> al1) {
         if (al1 != null && !al1.isEmpty()) {
+            this.isModified = true;
             System.out.println("Received list of type: " + al1.getClass().getName());
-            getCache().put(this, new ActivatableArrayList<Array>(al1));
+            parent.getCache().put(this, new ActivatableArrayList<Array>(al1));
             setDataType(DataType.getType(al1.get(0).getElementType()));
         } else {
             clear();
@@ -578,6 +573,7 @@ public class VariableFragment implements IVariableFragment {
     @Override
     public void clear() {
         this.isModified = false;
+        parent.getCache().put(this, null);
     }
 
     /*

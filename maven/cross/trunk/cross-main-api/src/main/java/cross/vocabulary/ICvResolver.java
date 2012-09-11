@@ -1,4 +1,4 @@
-/* 
+/*
  * Cross, common runtime object support system. 
  * Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
  *
@@ -25,26 +25,41 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.commands.fragments;
+package cross.vocabulary;
 
-import cross.commands.ICommand;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.IWorkflowElement;
-import cross.datastructures.workflow.IWorkflowResult;
-import cross.event.IEventSource;
-import cross.vocabulary.ICvResolver;
+import cross.exception.MappingNotAvailableException;
+import java.util.Collection;
 
 /**
- * Cover interface (c++: typedef) for IFragmentCommand.
- *
+ * Resolves a given namespace prefixed variable against the available 
+ * providers.
+ * 
  * @author Nils Hoffmann
- *
  */
-public interface IFragmentCommand extends
-        ICommand<TupleND<IFileFragment>, TupleND<IFileFragment>>,
-        IEventSource<IWorkflowResult>, IWorkflowElement {
-    
-    ICvResolver getCvResolver();
-    void setCvResolver(ICvResolver resolver);
+public interface ICvResolver {
+    /**
+     * Translates the given namespace prefixed variable against the available 
+     * providers. Throws a {@link MappingNotAvailableException} if no provider
+     * handles the namespace.
+     * 
+     * @param variable
+     * @return
+     * @throws MappingNotAvailableException 
+     */
+    String translate(String variable) throws MappingNotAvailableException;
+    /**
+     * Returns the list of available providers.
+     * @return 
+     */
+    Collection<? extends IControlledVocabularyProvider> getCvProviders();
+    /**
+     * Adds the given provider.
+     * @param provider 
+     */
+    void add(IControlledVocabularyProvider provider);
+    /**
+     * Removes the given provider.
+     * @param provider 
+     */
+    void remove(IControlledVocabularyProvider provider);
 }

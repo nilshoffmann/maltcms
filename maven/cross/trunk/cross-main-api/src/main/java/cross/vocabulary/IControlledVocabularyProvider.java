@@ -1,4 +1,4 @@
-/* 
+/*
  * Cross, common runtime object support system. 
  * Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
  *
@@ -25,26 +25,43 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.commands.fragments;
+package cross.vocabulary;
 
-import cross.commands.ICommand;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.IWorkflowElement;
-import cross.datastructures.workflow.IWorkflowResult;
-import cross.event.IEventSource;
-import cross.vocabulary.ICvResolver;
+import cross.exception.MappingNotAvailableException;
+import java.util.List;
+import lombok.NonNull;
 
 /**
- * Cover interface (c++: typedef) for IFragmentCommand.
- *
+ * Maps an external variable name to an canonical, internal common name.
+ * 
+ * Implementations should provide such a mapping for different external 
+ * ontologies to the internally used format.
+ * 
  * @author Nils Hoffmann
- *
  */
-public interface IFragmentCommand extends
-        ICommand<TupleND<IFileFragment>, TupleND<IFileFragment>>,
-        IEventSource<IWorkflowResult>, IWorkflowElement {
+public interface IControlledVocabularyProvider {
     
-    ICvResolver getCvResolver();
-    void setCvResolver(ICvResolver resolver);
+    /**
+     * Tries to resolve the given variable to a canonical, internal name.
+     * @param variable
+     * @return
+     * @throws MappingNotAvailableException 
+     */
+    String translate(String variable) throws MappingNotAvailableException;
+    /**
+     * The (lowercase) name of the this provider's ontology. E.g. andims
+     * @return 
+     */
+    String getName();
+    /**
+     * The namespace prefix of this ontology, e.g. maltcms in maltcms.scan_index.
+     * The namespace separator is by default a dot '.'.
+     * @return 
+     */
+    String getNamespace();
+    /**
+     * The version of the ontology used.
+     * @return 
+     */
+    String getVersion();
 }

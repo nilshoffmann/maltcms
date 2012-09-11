@@ -1,4 +1,4 @@
-/* 
+/*
  * Cross, common runtime object support system. 
  * Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
  *
@@ -25,26 +25,29 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.commands.fragments;
-
-import cross.commands.ICommand;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.IWorkflowElement;
-import cross.datastructures.workflow.IWorkflowResult;
-import cross.event.IEventSource;
-import cross.vocabulary.ICvResolver;
+package cross.exception;
 
 /**
- * Cover interface (c++: typedef) for IFragmentCommand.
- *
+ * Exception for cases, where a mapping from a variable name to it's actual 
+ * resolved name is not available.
  * @author Nils Hoffmann
- *
+ * @see {cross.vocabulary.IControlledVocabularyProvider}
  */
-public interface IFragmentCommand extends
-        ICommand<TupleND<IFileFragment>, TupleND<IFileFragment>>,
-        IEventSource<IWorkflowResult>, IWorkflowElement {
-    
-    ICvResolver getCvResolver();
-    void setCvResolver(ICvResolver resolver);
+public class MappingNotAvailableException extends RuntimeException {
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2775065713984704248L;
+
+    public MappingNotAvailableException(final String arg0) {
+        super(arg0);
+    }
+
+    public MappingNotAvailableException(final String arg0, final Throwable arg1) {
+        super(arg0, arg1);
+    }
+
+    public MappingNotAvailableException(final Throwable arg0) {
+        super(arg0);
+    }
 }

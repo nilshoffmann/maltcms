@@ -185,7 +185,7 @@ public interface IVariableFragment extends IFragment {
      *
      * @param dims1
      */
-    public abstract void setDimensions(Dimension[] dims1);
+    public abstract void setDimensions(Dimension... dims1);
 
     /**
      * Every VariableFragment obtains a reference to an IndexFragment, to make
@@ -216,7 +216,7 @@ public interface IVariableFragment extends IFragment {
      *
      * @param ranges1
      */
-    public abstract void setRange(Range[] ranges1);
+    public abstract void setRange(Range... ranges1);
 
     /**
      *

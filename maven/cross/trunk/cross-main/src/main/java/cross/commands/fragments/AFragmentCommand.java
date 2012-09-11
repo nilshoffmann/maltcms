@@ -37,7 +37,10 @@ import cross.event.EventSource;
 import cross.event.IEvent;
 import cross.event.IEventSource;
 import cross.event.IListener;
+import cross.exception.MappingNotAvailableException;
 import cross.tools.StringTools;
+import cross.vocabulary.CvResolver;
+import cross.vocabulary.ICvResolver;
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -72,6 +75,7 @@ public abstract class AFragmentCommand implements IFragmentCommand {
     private final IEventSource<IWorkflowResult> eventSource = new EventSource<IWorkflowResult>();
     private IWorkflow workflow = null;
     private DefaultWorkflowProgressResult progress = null;
+    private ICvResolver cvResolver = new CvResolver();
 
     /**
      *
@@ -351,6 +355,16 @@ public abstract class AFragmentCommand implements IFragmentCommand {
     @Override
     public void removeListener(final IListener<IEvent<IWorkflowResult>> l) {
         this.eventSource.removeListener(l);
+    }
+    
+    public String resolve(String varname) {
+        try{
+            String resolved = cvResolver.translate(varname);
+            return resolved;
+        }catch(MappingNotAvailableException mnae) {
+            log.warn("Could not map variable: "+varname,mnae);
+            return varname;
+        }
     }
 
     /**

@@ -27,13 +27,16 @@
  */
 package cross.datastructures.fragments;
 
+import cross.datastructures.cache.ICacheDelegate;
 import cross.exception.ResourceNotAvailableException;
 import java.io.Externalizable;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import org.jdom.Element;
+import ucar.ma2.Array;
 import ucar.nc2.Dimension;
 
 /**
@@ -101,7 +104,13 @@ public interface IFileFragment extends IGroupFragment, IFragment,
     public abstract String getAbsolutePath();
 
     /**
-     * Return the child with name varname. If varname is not found in local
+     * Return a Cache for variable fragment array data for this fragment.
+     * @return 
+     */
+    public abstract ICacheDelegate<IVariableFragment, List<Array>> getCache();
+    
+    /**
+     * Returns the child with name varname. If varname is not found in local
      * structure, try to locate it in sourcefiles. First hit wins. Otherwise
      * throw IllegalArgumentException.
      *
@@ -113,7 +122,7 @@ public interface IFileFragment extends IGroupFragment, IFragment,
             throws ResourceNotAvailableException;
 
     /**
-     * Return the child with name varname. If varname is not found in local
+     * Returns the child with name varname. If varname is not found in local
      * structure, try to locate it in sourcefiles. First hit wins. Otherwise
      * throw IllegalArgumentException. If
      * <code>loadStructureOnly</code> is true, only the variable structure is
@@ -126,6 +135,14 @@ public interface IFileFragment extends IGroupFragment, IFragment,
     public abstract IVariableFragment getChild(String varname,
             boolean loadStructureOnly) throws ResourceNotAvailableException;
 
+    /**
+     * Returns the immediate children of this fileFragment. Does not return 
+     * children that are only found in referenced source files.
+     * 
+     * @return 
+     */
+    public abstract List<IVariableFragment> getImmediateChildren();
+    
     /**
      * The registered dimensions of this FileFragment.
      *

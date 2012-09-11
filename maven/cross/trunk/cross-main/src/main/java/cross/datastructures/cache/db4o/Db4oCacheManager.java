@@ -43,6 +43,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Cache manager for db4o-based caching. Registered as shutdown hook.
@@ -56,7 +57,7 @@ public class Db4oCacheManager extends Thread {
 
     private final File basedir;
     private final boolean deleteCachesOnExit;
-    private Map<File, Db4oCacheDelegate> caches = Collections.synchronizedMap(new LinkedHashMap<File, Db4oCacheDelegate>());
+    private Map<File, Db4oCacheDelegate> caches = new ConcurrentHashMap<File, Db4oCacheDelegate>();
 
     private Db4oCacheManager(File basedir, boolean deleteCachesOnExit) {
         super();
@@ -64,7 +65,7 @@ public class Db4oCacheManager extends Thread {
         this.basedir = basedir;
         this.deleteCachesOnExit = deleteCachesOnExit;
     }
-    private static final Map<File, Db4oCacheManager> managerMap = Collections.synchronizedMap(new LinkedHashMap<File, Db4oCacheManager>());
+    private static final Map<File, Db4oCacheManager> managerMap = new ConcurrentHashMap<File, Db4oCacheManager>();
 
     public static Db4oCacheManager getInstance(File basedir) {
         if (!managerMap.containsKey(basedir)) {
