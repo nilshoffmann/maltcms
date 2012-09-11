@@ -118,8 +118,8 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
         for (int i = 0; i < massBins; i++) {
             minMaxList.add(new double[]{Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY});
         }
-        IVariableFragment binnedIntensities = output.getChild("binned_intensity_values");
-        binnedIntensities.setIndex(output.getChild("binned_scan_index"));
+        IVariableFragment binnedIntensities = output.getChild(binnedIntensityValues);
+        binnedIntensities.setIndex(output.getChild(binnedScanIndex));
         for (Array a : binnedIntensities.getIndexedArray()) {
             EvalTools.eqI(a.getShape()[0], massBins, this);
             for (int i = 0; i < massBins; i++) {

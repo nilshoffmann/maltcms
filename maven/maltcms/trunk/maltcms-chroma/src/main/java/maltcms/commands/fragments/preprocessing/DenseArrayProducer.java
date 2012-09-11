@@ -22,10 +22,8 @@
 package maltcms.commands.fragments.preprocessing;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 
-import maltcms.tools.MaltcmsTools;
 
 import org.apache.commons.configuration.Configuration;
 
@@ -38,7 +36,6 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
 import java.lang.Double;
-import java.util.ArrayList;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.preprocessing.denseArrayProducer.DenseArrayProducerWorker;

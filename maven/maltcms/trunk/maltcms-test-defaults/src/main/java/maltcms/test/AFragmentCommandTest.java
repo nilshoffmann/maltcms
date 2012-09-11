@@ -36,37 +36,56 @@ import cross.datastructures.pipeline.CommandPipeline;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflow;
 import cross.datastructures.workflow.IWorkflow;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.Level;
 import org.junit.Rule;
 
 /**
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
+@Slf4j
 public abstract class AFragmentCommandTest {
 
     @Rule
     public SetupLogging sl = new SetupLogging();
-
+    
+    protected void setLogLevelFor(String prefix, Level logLevel) {
+        switch(logLevel.toInt()) {
+            case Level.ALL_INT:
+                sl.getConfig().put("log4j.category."+prefix, "ALL");
+                break;
+            case Level.DEBUG_INT:
+                sl.getConfig().put("log4j.category."+prefix, "DEBUG");
+                break;
+            case Level.ERROR_INT:
+                sl.getConfig().put("log4j.category."+prefix, "ERROR");
+                break;
+            case Level.FATAL_INT:
+                sl.getConfig().put("log4j.category."+prefix, "FATAL");
+                break;
+            case Level.INFO_INT:
+                sl.getConfig().put("log4j.category."+prefix, "INFO");
+                break;
+            case Level.OFF_INT:
+                sl.getConfig().put("log4j.category."+prefix, "OFF");
+                break;
+            case Level.WARN_INT:
+                sl.getConfig().put("log4j.category."+prefix, "WARN");
+                break;
+        }
+        PropertyConfigurator.configure(sl.getConfig());
+    }
+    
+    public void setLogLevelFor(Class<?> cls, Level logLevel) {
+        setLogLevelFor(cls.getName(), logLevel);
+    }
+    
+    public void setLogLevelFor(Package pkg, Level logLevel) {
+        setLogLevelFor(pkg.getName(), logLevel);
+    }
+    
     public IWorkflow createWorkflow(File outputDirectory, List<IFragmentCommand> commands, List<File> inputFiles) {
-//    	Properties props = new Properties();
-//        props.setProperty("log4j.rootLogger", "INFO, A1");
-//        props.setProperty("log4j.appender.A1",
-//                "org.apache.log4j.ConsoleAppender");
-//        props.setProperty("log4j.appender.A1.layout",
-//                "org.apache.log4j.PatternLayout");
-//        props.setProperty("log4j.appender.A1.layout.ConversionPattern",
-//                "%m%n");
-//        props.setProperty("log4j.category.cross", "WARN");
-//        props.setProperty("log4j.category.cross.datastructures.pipeline",
-//                "INFO");
-//        props.setProperty("log4j.category.maltcms.commands.fragments",
-//                "INFO");
-//        props.setProperty("log4j.category.maltcms.commands.fragments2d",
-//                "INFO");
-//        props.setProperty("log4j.category.maltcms", "WARN");
-//        props.setProperty("log4j.category.ucar", "WARN");
-//        props.setProperty("log4j.category.smueller", "WARN");
-//        PropertyConfigurator.configure(props);
         CommandPipeline cp = new CommandPipeline();
         List<IFileFragment> fragments = new ArrayList<IFileFragment>();
         for (File f : inputFiles) {

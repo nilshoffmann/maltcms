@@ -152,7 +152,7 @@ fi
 
 if [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]];  then
     log "Found java from JAVA_HOME!"
-    JAVA_LOCATION="$JAVA_HOME"
+    JAVA_LOCATION="$JAVA_HOME/bin/java"
 else
     JAVA_TMP=$(which java)
     if [[ "$?" -eq "0" ]]; then

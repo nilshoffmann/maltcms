@@ -891,12 +891,20 @@ public class NetcdfDataSource implements IDataSource {
                         if (v != null) {
                             this.log.debug("Saving variable "
                                     + v.getNameAndDimensions());
-                            nfw.write(varname, vf.getArray());
-                            nfw.flush();
+                            if(vf.getIndex()!=null) {
+                                int offset = 0;
+                                for(Array a:vf.getIndexedArray()) {
+                                    nfw.write(varname, new int[]{offset},a);
+                                    offset+=a.getShape()[0];
+                                }
+                            }else{
+                                nfw.write(varname, vf.getArray());
+                                nfw.flush();
+                            }
                         }
                     }
-                    vf.clear();
-                    vf.setIsModified(false);
+//                    vf.clear();
+//                    vf.setIsModified(false);
                 } catch (final IOException e) {
                     log.warn("IOException while writing variable '{}'", varname);
                     log.debug("{}", e.getLocalizedMessage());

@@ -53,7 +53,6 @@ import cross.annotations.AnnotationInspector;
 import cross.applicationContext.ReflectionApplicationContextGenerator;
 import cross.datastructures.pipeline.ICommandSequence;
 import cross.datastructures.tools.EvalTools;
-import cross.datastructures.workflow.DefaultWorkflow;
 import cross.datastructures.workflow.IWorkflow;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ExitVmException;
@@ -62,7 +61,6 @@ import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.net.URLClassLoader;
 import java.util.*;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.log4j.PropertyConfigurator;
@@ -388,10 +386,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      *
      */
     public PropertiesConfiguration getDefaultConfiguration() {
-        //EvalTools.notNull(cc, this);
-
         PropertiesConfiguration cfg = null;
-
         //check for commandline argument/environment variable maltcms.home
         final String maltcmsHome = System.getProperty("maltcms.home");
         if (maltcmsHome != null) {
@@ -400,43 +395,29 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             if (propertyFile.exists() && propertyFile.isFile()) {
                 try {
                     cfg = new PropertiesConfiguration(propertyFile);
-                    //cc.addConfiguration(cfg);
                     log.debug("Using default.properties at {}", propertyFile.getAbsolutePath());
                 } catch (final ConfigurationException e) {
-
-                    e.printStackTrace();
-                }
-            } else {//it is a classpath resource
-                URL propRes = Maltcms.class.getClassLoader().getResource(maltcmsHome);
-                if (propRes != null) {
-                    try {
-                        cfg = new PropertiesConfiguration(propRes);
-                        //cc.addConfiguration(cfg);
-                    } catch (final ConfigurationException e) {
-
-                        e.printStackTrace();
-                    }
+                    log.warn("Configuration Exception for file "+propertyFile.getAbsolutePath()+":", e);
                 }
             }
-        } else {
+        }
+        if(cfg==null) {
             //try to locate default.properties from user.dir
             File f = new File(System.getProperty("user.dir"), "cfg/default.properties");
             if (f.exists()) {
                 try {
                     cfg = new PropertiesConfiguration(f);
-                    //cc.addConfiguration(cfg);
                     log.info("Using default.properties below {} at {}", System.getProperty("user.dir"), f.getAbsolutePath());
                 } catch (ConfigurationException ex) {
-                    java.util.logging.Logger.getLogger(Maltcms.class.getName()).log(Level.SEVERE, null, ex);
+                    log.warn("Configuration Exception for file "+f.getAbsolutePath()+":", ex);
                 }
             } else {
                 log.warn("Could not locate default.properties, using defaults from classpath!");
                 try {
                     cfg = new PropertiesConfiguration(getClass().getClassLoader().getResource("cfg/default.properties"));
-                    log.info("Can include external properties: {}", cfg.getIncludesAllowed());
-                    //cc.addConfiguration(cfg);
+                    log.info("Using default.properties from class path at {}",cfg.getPath());
                 } catch (ConfigurationException ex) {
-                    java.util.logging.Logger.getLogger(Maltcms.class.getName()).log(Level.SEVERE, null, ex);
+                    log.warn("Configuration Exception for class path resource "+cfg.getPath()+":", ex);
                 }
             }
         }
@@ -576,18 +557,6 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         }
     }
 
-//    /**
-//     * Builds a composite configuration, adding default configuration and then
-//     * the system configuration.
-//     *
-//     * @return
-//     */
-//    public CompositeConfiguration getDefaultConfig() {
-//        final CompositeConfiguration cfg = new CompositeConfiguration();
-//        addDefaultConfiguration(cfg);
-//        //add runtime config
-//        return cfg;
-//    }
     /**
      * Builds the final composite configuration from all available configuration
      * sources. CLI-Logging override default options, default options override
@@ -813,10 +782,10 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      *
      * @param cfg
      */
-    protected void printOptions(@NonNull final Configuration cfg) {
-//        EvalTools.notNull(cfg, this);
-        this.log.info("Current properties:");
-        this.log.info("{}", ConfigurationUtils.toString(cfg));
+    protected void printOptions(final Configuration cfg) {
+        EvalTools.notNull(cfg, this);
+        log.info("Current properties:");
+        log.info("{}", ConfigurationUtils.toString(cfg));
         System.exit(0);
     }
 
@@ -827,19 +796,20 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * @param s
      * @param cfg
      */
-    public void processVariables(@NonNull final String[] s, @NonNull final Configuration cfg) {
-//        EvalTools.notNull(s, this);
-//        EvalTools.notNull(cfg, this);
+    public void processVariables(final String[] s, final Configuration cfg) {
+        EvalTools.notNull(s, this);
+        EvalTools.notNull(cfg, this);
         final String prefix = "";
         final StringBuilder builder = new StringBuilder();
         for (int i = 0; i < s.length; i++) {
-            this.log.debug("Building String: " + s[i]);
-            builder.append(prefix + s[i]);
+            log.debug("Building String: " + s[i]);
+            builder.append(prefix);
+            builder.append(s[i]);
             if (i < s.length - 1) {
                 builder.append(",");
             }
         }
-        this.log.debug("Adding Variables {}", builder.toString());
+        log.debug("Adding Variables {}", builder.toString());
         cfg.addProperty("input.dataInfo", builder.toString());
 
     }
@@ -858,7 +828,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      */
     @Override
     public void uncaughtException(final Thread t, final Throwable e) {
-        Maltcms.handleRuntimeException(this.log, e, null);
+        Maltcms.handleRuntimeException(log, e, null);
     }
 
     private void handleCreateBeanXML(Configuration cfg, String... beans) {

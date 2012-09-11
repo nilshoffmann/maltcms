@@ -35,7 +35,7 @@ import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import cross.io.misc.ZipResourceExtractor;
 import maltcms.math.functions.DtwPairwiseSimilarity;
-import maltcms.math.functions.similarities.ArrayCos;
+import maltcms.math.functions.similarities.ArrayLp;
 import maltcms.test.AFragmentCommandTest;
 
 import org.junit.Rule;
@@ -103,13 +103,13 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
         factory.setGlobalBand(globalBand);
         factory.setBandWidthPercentage(bandWidthPercentage);
         DtwPairwiseSimilarity dps = new DtwPairwiseSimilarity();
-        dps.setDenseMassSpectraSimilarity(new ArrayCos());
+        dps.setDenseMassSpectraSimilarity(new ArrayLp());
         dps.setMatchWeight(2.25);
         factory.setSimilarity(dps);
         pdc.setWorkerFactory(factory);
         factory.setSaveDtwMatrix(false);
         factory.setSavePairwiseSimilarityMatrix(false);
-        factory.setSaveLayoutImage(false);
+        factory.setSaveLayoutImage(true);
         return pdc;
     }
 
@@ -148,7 +148,7 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
         tpf.setPeakThreshold(20.0d);
         commands.add(tpf);
         commands.add(new PeakCliqueAlignment());
-        commands.add(createPairwiseDistanceCalculatorTIC(true, 0, true, 0.2d));
+        commands.add(createPairwiseDistanceCalculatorTIC(true, 0, true, 0.5d));
 
         IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
                 inputFile1, inputFile2, inputFile3, inputFile4));

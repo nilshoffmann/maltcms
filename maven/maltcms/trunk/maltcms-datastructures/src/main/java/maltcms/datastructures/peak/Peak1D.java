@@ -239,31 +239,54 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
                     peakVarName);
             final Dimension peak_number = new Dimension("peak_number",
                     peaklist.size(), true, false, false);
+            final Dimension peak_source_file_number = new Dimension("peak_source_file_number", 1, true, false, false);
+            final Dimension _1024_byte_string = new Dimension("_1024_byte_string", 1024, true, false, false);
+            final Dimension _64_byte_string = new Dimension("_64_byte_string", 64, true, false, false);
+            final Dimension peak_normalizers = new Dimension("peak_normalizer_count", peakNormalizers.isEmpty()?1:peakNormalizers.size(), true, false, false);
             peaks.setDimensions(new Dimension[]{peak_number});
             Array tic = ff.getChild("total_intensity").getArray();
+            final Dimension scan_number = new Dimension("scan_number", tic.getShape()[0]);
             final IVariableFragment mai = new VariableFragment(ff,
                     filteredTraceVarName);
+            mai.setDimensions(new Dimension[]{scan_number});
             mai.setArray(filteredTrace);
             IVariableFragment peakSourceFile = new VariableFragment(ff, "peak_source_file");
+            peakSourceFile.setDimensions(new Dimension[]{peak_source_file_number,_1024_byte_string});
             IVariableFragment peakNames = new VariableFragment(ff, "peak_name");
+            peakNames.setDimensions(new Dimension[]{peak_number,_1024_byte_string});
             IVariableFragment peakStartIndex = new VariableFragment(ff, "peak_start_index");
+            peakStartIndex.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakEndIndex = new VariableFragment(ff, "peak_end_index");
+            peakEndIndex.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakRT = new VariableFragment(ff,
                     "peak_retention_time");
+            peakRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakStartRT = new VariableFragment(ff,
                     "peak_start_time");
+            peakStartRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakStopRT = new VariableFragment(ff,
                     "peak_end_time");
+            peakStopRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment snr = new VariableFragment(ff, "peak_signal_to_noise");
+            snr.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakType = new VariableFragment(ff, "peak_type");
+            peakType.setDimensions(new Dimension[]{peak_number,_64_byte_string});
             IVariableFragment peakDetectionChannel = new VariableFragment(ff, "peak_detection_channel");
+            peakDetectionChannel.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakArea = new VariableFragment(ff, "peak_area");
+            peakArea.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakNormalizedArea = new VariableFragment(ff, "peak_area_normalized");
+            peakNormalizedArea.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakNormalizationMethod = new VariableFragment(ff, "peak_area_normalization_methods");
+            peakNormalizationMethod.setDimensions(new Dimension[]{peak_normalizers,_1024_byte_string});
             IVariableFragment baseLineStartRT = new VariableFragment(ff, "baseline_start_time");
+            baseLineStartRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment baseLineStopRT = new VariableFragment(ff, "baseline_stop_time");
+            baseLineStopRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment baseLineStartValue = new VariableFragment(ff, "baseline_start_value");
+            baseLineStartValue.setDimensions(new Dimension[]{peak_number});
             IVariableFragment baseLineStopValue = new VariableFragment(ff, "baseline_stop_value");
+            baseLineStopValue.setDimensions(new Dimension[]{peak_number});
             Array peakPositions = new ArrayInt.D1(peaklist.size());
             ArrayInt.D1 peakStartIndexArray = new ArrayInt.D1(peaklist.size());
             ArrayInt.D1 peakEndIndexArray = new ArrayInt.D1(peaklist.size());

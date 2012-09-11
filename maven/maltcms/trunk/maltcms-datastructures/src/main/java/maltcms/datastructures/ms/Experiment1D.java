@@ -37,12 +37,14 @@ import org.slf4j.Logger;
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 import cross.datastructures.StatsMap;
+import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IFragment;
 import cross.datastructures.fragments.IGroupFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.exception.ResourceNotAvailableException;
 import java.util.*;
+import ucar.ma2.Array;
 
 /**
  * Concrete implementation of an Experiment containing a 1-dimensional
@@ -200,6 +202,11 @@ public class Experiment1D implements IExperiment1D {
         return this.ff.getAttributes();
     }
 
+    @Override
+    public ICacheDelegate<IVariableFragment, List<Array>> getCache() {
+        return this.ff.getCache();
+    }
+    
     /**
      * @param varname
      * @return
@@ -236,6 +243,11 @@ public class Experiment1D implements IExperiment1D {
         return this.ff.getID();
     }
 
+    @Override
+    public List<IVariableFragment> getImmediateChildren() {
+        return this.ff.getImmediateChildren();
+    }
+    
     public HashMap<String, String> getMetadata() {
         if (this.metaData == null) {
             this.metaData = new HashMap<String, String>();

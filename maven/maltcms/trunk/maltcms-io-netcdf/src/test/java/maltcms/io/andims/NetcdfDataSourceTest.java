@@ -9,8 +9,10 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableFileFragment;
 import cross.datastructures.fragments.VariableFragment;
+import cross.exception.ResourceNotAvailableException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,7 +27,10 @@ import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayDouble.D3;
 import ucar.ma2.ArrayInt;
+import ucar.ma2.ArrayInt.D1;
+import ucar.ma2.ArrayInt.D2;
 import ucar.ma2.IndexIterator;
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
@@ -262,6 +267,8 @@ public class NetcdfDataSourceTest {
         Dimension dim1 = new Dimension("dim1", 15);
         Dimension dim2 = new Dimension("dim2", 8);
         Dimension dim3 = new Dimension("dim3", 10);
+        Dimension dim5 = new Dimension("dim5", 24);
+        Dimension dim6 = new Dimension("dim6", 240);
         VariableFragment ivf1 = new VariableFragment(ff, "variable1");
         ivf1.setDimensions(new Dimension[]{dim1, dim2, dim3});
         ivf1.setAttributes(new Attribute("description", "three-dimensional array"));
@@ -279,11 +286,44 @@ public class NetcdfDataSourceTest {
         VariableFragment ivf3 = new VariableFragment(ff, "variable3");
         ArrayInt.D2 arr3 = new ArrayInt.D2(25, 17);
         ivf3.setArray(arr3);
+        
+        VariableFragment ivf4 = new VariableFragment(ff, "variable4");
+        ivf4.setDimensions(new Dimension[]{dim5});
+        List<Array> arrays = new ArrayList<Array>();
+        ArrayInt.D1 index = new ArrayInt.D1(24);
+        int offset = 0;
+        for(int i = 0;i<24;i++) {
+            index.set(i,offset);
+            Array a = new ArrayDouble.D1(10);
+            arrays.add(a);
+            offset+=10;
+        }
+        ivf4.setArray(index);
+        VariableFragment ivf5 = new VariableFragment(ff, "variable5");
+        ivf5.setDimensions(new Dimension[]{dim6});
+        ivf5.setIndex(ivf4);
+        ivf5.setIndexedArray(arrays);
+        
+        VariableFragment ivf6 = new VariableFragment(ff, "variable6");
+        ivf6.setDimensions(new Dimension[]{dim6});
+        ivf6.setIndex(ivf4);
+        List<Array> arrays2 = new ArrayList<Array>();
+        for(int i = 0;i<24;i++) {
+            Array a = new ArrayDouble.D1(10);
+            arrays2.add(a);
+        }
+        ivf6.setIndexedArray(arrays2);
 
         System.out.println("Defined dimensions: " + ff.getDimensions());
 
         boolean b = getDataSource().write(ff);
         Assert.assertTrue(b);
+        testDirectRead(testCdf, dim4, ivf1, arr1, ivf2, arr2, arr3);
+        testIndirectRead(testCdf, dim4, ivf1, arr1, ivf2, arr2, arr3);
+        
+    }
+
+    public void testDirectRead(File testCdf, Dimension dim4, VariableFragment ivf1, D3 arr1, VariableFragment ivf2, D1 arr2, D2 arr3) throws ResourceNotAvailableException {
         //read in the created file
         IFileFragment readFragment = new FileFragment(testCdf);
         try {
@@ -350,5 +390,106 @@ public class NetcdfDataSourceTest {
         for (Dimension dim : readFragment.getDimensions()) {
             Assert.assertNotSame(dim.getName(), dim4.getName());
         }
+        
+        IVariableFragment rivf4 = readFragment.getChild("variable4");
+        IVariableFragment rivf5 = readFragment.getChild("variable5",true);
+        rivf5.setIndex(rivf4);
+        List<Array> rivf5l = rivf5.getIndexedArray();
+        Assert.assertNotNull(rivf5l);
+        Assert.assertEquals(24, rivf5l.size());
+        IVariableFragment rivf6 = readFragment.getChild("variable6",true);
+        rivf6.setIndex(rivf4);
+        List<Array> rivf6l = rivf6.getIndexedArray();
+        Assert.assertNotNull(rivf6l);
+        Assert.assertEquals(24, rivf6l.size());
+        
+        
+        //test indirect read
+    }
+    
+    public void testIndirectRead(File testCdf, Dimension dim4, VariableFragment ivf1, D3 arr1, VariableFragment ivf2, D1 arr2, D2 arr3) throws ResourceNotAvailableException {
+        File outputFolder = tf.newFolder("testOutput/referenceTest");
+        File testCdf2 = new File(outputFolder, "testCdf2.cdf");
+        //read in the created file
+        IFileFragment readFragment = new FileFragment(testCdf2);
+        readFragment.addSourceFile(new ImmutableFileFragment(testCdf));
+        try {
+            //initialize fragment with content
+            getDataSource().readStructure(readFragment);
+        } catch (IOException ex) {
+            Logger.getLogger(NetcdfDataSourceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Assert.assertFalse(readFragment.getDimensions().contains(dim4));
+        System.out.println("Stored dimensions: " + readFragment.getDimensions());
+        System.out.println("Stored variables: ");
+        for (IVariableFragment v : readFragment) {
+            System.out.println("Variable: " + v.toString());
+            System.out.println("\tDataType: " + v.getDataType());
+            System.out.println("\tDimensions: " + Arrays.toString(v.getDimensions()));
+        }
+//        //check global attributes
+//        Assert.assertEquals(readFragment.getAttribute("software").getStringValue(), "maltcms");
+//        Assert.assertEquals(readFragment.getAttribute("purpose").getStringValue(), "testing");
+//        Assert.assertEquals(readFragment.getAttribute("version").getNumericValue(), Integer.valueOf(1));
+        //check variables
+        IVariableFragment rivf1 = readFragment.getChild("variable1");
+        Dimension[] rdims1 = rivf1.getDimensions();
+        Dimension[] dims1 = ivf1.getDimensions();
+        //compare dimensions
+        for (int i = 0; i < dims1.length; i++) {
+            Dimension left = dims1[i];
+            Dimension right = rdims1[i];
+            Assert.assertEquals(left, right);
+        }
+        IndexIterator ii1 = arr1.getIndexIterator();
+        IndexIterator rii1 = rivf1.getArray().getIndexIterator();
+        log.info("Original shape: {}", Arrays.toString(arr1.getShape()));
+        log.info("Restored shape: {}", Arrays.toString(rivf1.getArray().getShape()));
+        Assert.assertEquals(arr1.getShape()[0], rivf1.getArray().getShape()[0]);
+        Assert.assertEquals(arr1.getShape()[1], rivf1.getArray().getShape()[1]);
+        while (ii1.hasNext() && rii1.hasNext()) {
+            Assert.assertEquals(ii1.getDoubleNext(), rii1.getDoubleNext());
+        }
+        Assert.assertEquals(rivf1.getAttribute("description").getStringValue(), "three-dimensional array");
+
+        //check next variable
+        IVariableFragment rivf2 = readFragment.getChild("variable2");
+        Dimension[] rdims2 = rivf2.getDimensions();
+        Dimension[] dims2 = ivf2.getDimensions();
+        //compare dimensions
+        for (int i = 0; i < dims2.length; i++) {
+            Dimension left = dims2[i];
+            Dimension right = rdims2[i];
+            Assert.assertEquals(left, right);
+        }
+        IndexIterator ii2 = arr2.getIndexIterator();
+        IndexIterator rii2 = rivf2.getArray().getIndexIterator();
+        Assert.assertEquals(arr2.getShape()[0], rivf2.getArray().getShape()[0]);
+        while (ii2.hasNext() && rii2.hasNext()) {
+            Assert.assertEquals(ii2.getDoubleNext(), rii2.getDoubleNext());
+        }
+
+        IVariableFragment rivf3 = readFragment.getChild("variable3");
+        Array ria3 = rivf3.getArray();
+        Assert.assertEquals(arr3.getShape()[0], ria3.getShape()[0]);
+        Assert.assertEquals(arr3.getShape()[1], ria3.getShape()[1]);
+
+        for (Dimension dim : readFragment.getDimensions()) {
+            Assert.assertNotSame(dim.getName(), dim4.getName());
+        }
+        
+        IVariableFragment rivf4 = readFragment.getChild("variable4");
+        IVariableFragment rivf5 = readFragment.getChild("variable5",true);
+        rivf5.setIndex(rivf4);
+        List<Array> rivf5l = rivf5.getIndexedArray();
+        Assert.assertNotNull(rivf5l);
+        Assert.assertEquals(24, rivf5l.size());
+        IVariableFragment rivf6 = readFragment.getChild("variable6",true);
+        rivf6.setIndex(rivf4);
+        List<Array> rivf6l = rivf6.getIndexedArray();
+        Assert.assertNotNull(rivf6l);
+        Assert.assertEquals(24, rivf6l.size());
+        
+        //test indirect read
     }
 }

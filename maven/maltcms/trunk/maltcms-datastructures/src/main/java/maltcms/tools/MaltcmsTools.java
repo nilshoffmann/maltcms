@@ -1640,8 +1640,8 @@ public class MaltcmsTools {
 
     /**
      *
-     * @param ff
-     * @param f
+     * @param input
+     * @param output
      * @param scan_index
      * @param mass_values
      * @param intensity_values
@@ -1653,24 +1653,24 @@ public class MaltcmsTools {
      * @param outputDir
      * @return
      */
-    public static IFileFragment prepareDenseArraysMZI(final IFileFragment ff, final IFileFragment f,
+    public static IFileFragment prepareDenseArraysMZI(final IFileFragment input, final IFileFragment output,
             final String scan_index, final String mass_values,
             final String intensity_values, final String binned_scan_index,
             final String binned_mass_values,
             final String binned_intensity_values, final Double min_mass,
             final Double max_mass, final File outputDir) {
         MaltcmsTools.log.debug(
-                "Created target IFileFragment {}, with parent {}", f.getAbsolutePath(), ff.getAbsolutePath());
+                "Created target IFileFragment {}, with parent {}", output.getAbsolutePath(), input.getAbsolutePath());
         // Retrieve original scan index
-        final IVariableFragment si = ff.getChild(scan_index);
+        final IVariableFragment si = input.getChild(scan_index);
         final Array b = si.getArray();
         EvalTools.notNull(b, MaltcmsTools.class);
         // Retrieve original mass_values
-        final IVariableFragment mz = ff.getChild(mass_values, true);
+        final IVariableFragment mz = input.getChild(mass_values, true);
         // Manually set index
         mz.setIndex(si);
         // Retrieve original intensity_values
-        final IVariableFragment inten = ff.getChild(intensity_values, true);
+        final IVariableFragment inten = input.getChild(intensity_values, true);
         // Manually set index
         inten.setIndex(si);
         // Read mass_values with index
@@ -1678,12 +1678,12 @@ public class MaltcmsTools {
         // Read intensity_values with index
         final List<Array> intena = inten.getIndexedArray();
         // Create new VariableFragment for mass_values
-        // VariableFragment retMZ = new VariableFragment(f, mz.getVarname());
+        // VariableFragment retMZ = new VariableFragment(output, mz.getVarname());
         // Create new VariableFragment for intensity_values
-        // VariableFragment retInten = new VariableFragment(f, inten
+        // VariableFragment retInten = new VariableFragment(output, inten
         // .getVarname());
         // Create new VariableFragment for scan_index
-        // VariableFragment retScanIndex = new VariableFragment(f, si
+        // VariableFragment retScanIndex = new VariableFragment(output, si
         // .getVarname());
         // Check, that all created objects are correctly initialized
         // EvalTools.notNull(new Object[] { retMZ, retInten, retScanIndex },
@@ -1728,34 +1728,37 @@ public class MaltcmsTools {
         }
         // mass values
         EvalTools.notNull(retMZa, MaltcmsTools.class);
-        // IVariableFragment mzRet = new VariableFragment(f, mz.getVarname());
+        // IVariableFragment mzRet = new VariableFragment(output, mz.getVarname());
         // mzRet.setIndexedArray(retMZa);
-        if (!f.hasChild(binned_scan_index)) {
-            final IVariableFragment siRetDense = new VariableFragment(f,
+        if (!output.hasChild(binned_scan_index)) {
+            log.debug("Adding binned_scan_index");
+            final IVariableFragment siRetDense = new VariableFragment(output,
                     binned_scan_index);
             siRetDense.setArray(retIndexArray);
         } else {
-            throw new ConstraintViolationException("FileFragment " + f.getName() + "already has a child named " + binned_scan_index);
+            throw new ConstraintViolationException("FileFragment " + output.getName() + "already has a child named " + binned_scan_index);
         }
-        if (!f.hasChild(binned_mass_values)) {
-            final IVariableFragment mzRetDense = new VariableFragment(f,
+        if (!output.hasChild(binned_mass_values)) {
+            log.debug("Adding binned_mass_values");
+            final IVariableFragment mzRetDense = new VariableFragment(output,
                     binned_mass_values);
-            mzRetDense.setIndex(f.getChild(binned_scan_index));
+            mzRetDense.setIndex(output.getChild(binned_scan_index));
             // mzRetDense.setArray(ArrayTools.glue(retMZa));
             mzRetDense.setIndexedArray(retMZa);
         } else {
-            throw new ConstraintViolationException("FileFragment " + f.getName() + "already has a child named " + binned_mass_values);
+            throw new ConstraintViolationException("FileFragment " + output.getName() + "already has a child named " + binned_mass_values);
         }
 
         // intensities
         EvalTools.notNull(retIntena, MaltcmsTools.class);
-        // IVariableFragment intenRet = new VariableFragment(f,
+        // IVariableFragment intenRet = new VariableFragment(output,
         // inten.getVarname());
         // intenRet.setIndexedArray(retIntena);
-        if (!f.hasChild(binned_intensity_values)) {
-            final IVariableFragment intenRetDense = new VariableFragment(f,
+        if (!output.hasChild(binned_intensity_values)) {
+            log.debug("Adding binned_intensity_values");
+            final IVariableFragment intenRetDense = new VariableFragment(output,
                     binned_intensity_values);
-            intenRetDense.setIndex(f.getChild(binned_scan_index));
+            intenRetDense.setIndex(output.getChild(binned_scan_index));
             // intenRetDense.setIndex(siRetDense);
             intenRetDense.setIndexedArray(retIntena);
 
@@ -1767,11 +1770,11 @@ public class MaltcmsTools {
 //            final List<Array> al = intenRetDense.getIndexedArray();
             //MaltcmsTools.log.debug("{}", al);
         } else {
-            throw new ConstraintViolationException("FileFragment " + f.getName() + "already has a child named " + binned_intensity_values);
+            throw new ConstraintViolationException("FileFragment " + output.getName() + "already has a child named " + binned_intensity_values);
         }
         // index
         EvalTools.notNull(retIndexArray, MaltcmsTools.class);
-        // IVariableFragment siRet = new VariableFragment(f, si.getVarname());
+        // IVariableFragment siRet = new VariableFragment(output, si.getVarname());
         // siRet.setArray(retIndexArray);
         // mzRet.setIndex(siRet);
         // intenRet.setIndex(siRet);
@@ -1780,9 +1783,9 @@ public class MaltcmsTools {
         // mzRetDense.setIndex(siRetDense);
         // intenRetDense.setIndex(siRetDense);
 
-        EvalTools.notNull(f, MaltcmsTools.class);
-        //MaltcmsTools.log.debug("{}", f);
-        return f;
+        EvalTools.notNull(output, MaltcmsTools.class);
+        //MaltcmsTools.log.debug("{}", output);
+        return output;
     }
 
     /**
