@@ -161,6 +161,13 @@ Running Maltcms
     be handled, if the whole argument (all paths separated by commas) is
     flanked in '"'s. 
 
+    You can alternatively omit INDIR, if you fully qualify the path before each 
+    file provided with -f. Theses files can also have a wildcard expression 
+    as their name, e.g. "*.cdf". You can use -f <FILES> multiple times to
+    supply different base directories with different file wildcard expressions
+    to Maltcms. If you want to include all files below those base directories
+    matching the wildcard, you should also supply the '-r' option.
+
 * Running ChromA/ChromA4D
     
     Pipeline location: As of Maltcms 1.2.1, pipeline *.properties files

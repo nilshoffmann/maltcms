@@ -77,7 +77,14 @@ public class MZXMLStaxDataSource implements IDataSource {
     private String source_files = "source_files";
     private int mslevel = 1;
     private MSXMLParser parser = null;
-    private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = CacheFactory.createDefaultCache(UUID.randomUUID().toString());
+    private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = null;
+
+    private ICacheDelegate<IVariableFragment, Array> getCache() {
+        if(this.variableToArrayCache == null) {
+            this.variableToArrayCache = CacheFactory.createDefaultCache(UUID.randomUUID().toString());
+        }
+        return this.variableToArrayCache;
+    }
 
     /**
      * Checks, if passed in file is valid mzXML, by trying to invoke the parser
@@ -287,7 +294,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 
     private Array loadArray(final IFileFragment f, final IVariableFragment var) {
         final MSXMLParser mp = getParser(f);
-        Array a = variableToArrayCache.get(var);
+        Array a = getCache().get(var);
         if (a != null) {
             log.info("Retrieved variable data array from cache for " + var);
             return a;
@@ -314,7 +321,7 @@ public class MZXMLStaxDataSource implements IDataSource {
                     "Unknown varname to mzXML mapping for varname " + varname);
         }
         if (a != null) {
-            variableToArrayCache.put(var, a);
+            getCache().put(var, a);
         }
         return a;
     }

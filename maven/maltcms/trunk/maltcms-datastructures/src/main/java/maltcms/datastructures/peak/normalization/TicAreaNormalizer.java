@@ -37,16 +37,23 @@ import maltcms.tools.ArrayTools;
 public class TicAreaNormalizer implements IPeakNormalizer {
 
     private String ticVariableName = "total_intensity";
-    private ICacheDelegate<IFileFragment, Double> fragmentToArea = CacheFactory.createAutoRetrievalCache("TicAreaNormalizerCache", new ICacheElementProvider<IFileFragment, Double>() {
-        @Override
-        public Double provide(IFileFragment key) {
-            return ArrayTools.integrate(key.getChild(ticVariableName).getArray());
+    private ICacheDelegate<IFileFragment, Double> cache = null;
+
+    private ICacheDelegate<IFileFragment, Double> getCache() {
+        if (this.cache == null) {
+            this.cache = CacheFactory.createAutoRetrievalCache("TicAreaNormalizerCache", new ICacheElementProvider<IFileFragment, Double>() {
+                @Override
+                public Double provide(IFileFragment key) {
+                    return ArrayTools.integrate(key.getChild(ticVariableName).getArray());
+                }
+            });
         }
-    });
+        return this.cache;
+    }
 
     @Override
     public double getNormalizationFactor(IFileFragment fragment, Peak1D peak) {
-        return 1.0d / fragmentToArea.get(fragment).doubleValue();
+        return 1.0d / getCache().get(fragment).doubleValue();
     }
 
     @Override

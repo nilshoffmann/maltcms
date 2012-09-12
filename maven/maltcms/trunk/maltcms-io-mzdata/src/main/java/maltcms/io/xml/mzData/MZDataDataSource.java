@@ -43,6 +43,8 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.Range;
 import ucar.nc2.Dimension;
 import cross.Factory;
+import cross.datastructures.cache.CacheFactory;
+import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
@@ -52,6 +54,7 @@ import cross.io.IDataSource;
 import cross.io.misc.Base64Util;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.MAMath;
@@ -70,6 +73,14 @@ public class MZDataDataSource implements IDataSource {
     private String mass_range_max = "mass_range_max";
     private NetcdfDataSource ndf = null;
     private String source_files = "source_files";
+    private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = null;
+
+    private ICacheDelegate<IVariableFragment, Array> getCache() {
+        if(this.variableToArrayCache == null) {
+            this.variableToArrayCache = CacheFactory.createDefaultCache(UUID.randomUUID().toString());
+        }
+        return this.variableToArrayCache;
+    }
 
     @Override
     public int canRead(final IFileFragment ff) {
@@ -241,7 +252,11 @@ public class MZDataDataSource implements IDataSource {
 
     private Array loadArray(final IFileFragment f, final IVariableFragment var) {
         final MzData mzd = unmarshal(f);
-        Array a = null;
+        Array a = getCache().get(var);
+        if (a != null) {
+            log.info("Retrieved variable data array from cache for " + var);
+            return a;
+        }
         final String varname = var.getName();
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.mass_values)
@@ -262,6 +277,9 @@ public class MZDataDataSource implements IDataSource {
         } else {
             throw new ResourceNotAvailableException(
                     "Unknown varname to mzXML mapping for varname " + varname);
+        }
+        if (a != null) {
+            getCache().put(var, a);
         }
         return a;
     }

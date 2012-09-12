@@ -32,6 +32,7 @@
         <!--        <format>tar.gz</format>-->
     </formats>
     <includeBaseDirectory>true</includeBaseDirectory>
+    <!--<includeSiteDirectory>true</includeSiteDirectory>-->
     <dependencySets>
         <!-- Inclusion of all dependencies -->
         <dependencySet>
@@ -70,6 +71,8 @@
                     <include>**/bin/**</include>
                     <include>**/res/**</include>
                     <include>**/licenses/**</include>
+                    <include>README</include>
+                    <include>LICENSE</include>
                 </includes>
             </unpackOptions>
             <fileMode>0644</fileMode>

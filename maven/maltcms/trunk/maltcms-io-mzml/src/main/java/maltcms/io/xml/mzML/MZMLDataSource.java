@@ -47,6 +47,8 @@ import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import cross.Factory;
 import cross.annotations.Configurable;
+import cross.datastructures.cache.CacheFactory;
+import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
@@ -57,6 +59,7 @@ import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
 import java.math.BigInteger;
 import java.util.LinkedList;
+import java.util.UUID;
 import java.util.logging.Level;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
@@ -94,6 +97,14 @@ public class MZMLDataSource implements IDataSource {
     private String modulation_time = "modulation_time";
     private String modulationTimeAccession = "MS:1002042";
     private static WeakHashMap<IFileFragment, MzMLUnmarshaller> fileToIndex = new WeakHashMap<IFileFragment, MzMLUnmarshaller>();
+    private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = null;
+
+    private ICacheDelegate<IVariableFragment, Array> getCache() {
+        if(this.variableToArrayCache == null) {
+            this.variableToArrayCache = CacheFactory.createDefaultCache(UUID.randomUUID().toString());
+        }
+        return this.variableToArrayCache;
+    }
 
     @Override
     public int canRead(final IFileFragment ff) {
@@ -284,9 +295,13 @@ public class MZMLDataSource implements IDataSource {
     }
 
     private Array loadArray(final IFileFragment f, final IVariableFragment var) {
+        Array a = getCache().get(var);
+        if (a != null) {
+            log.info("Retrieved variable data array from cache for " + var);
+            return a;
+        }
         MzMLUnmarshaller mzu = getUnmarshaller(f);
         final Run r = getRun(mzu, f);
-        Array a = null;
         final String varname = var.getName();
         log.info("Trying to read variable " + var.getName());
         List<CVParam> parameters = r.getCvParam();
@@ -318,6 +333,9 @@ public class MZMLDataSource implements IDataSource {
         } else {
             throw new ResourceNotAvailableException(
                     "Unknown variable name to mzML mapping for " + varname);
+        }
+        if (a != null) {
+            getCache().put(var, a);
         }
         return a;
     }

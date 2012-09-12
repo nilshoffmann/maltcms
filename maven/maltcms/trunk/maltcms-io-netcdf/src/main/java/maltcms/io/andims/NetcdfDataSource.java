@@ -111,11 +111,32 @@ public class NetcdfDataSource implements IDataSource {
     private Dimension addDimension(final HashMap<String, Dimension> dimensions, String dimname, final NetcdfFileWriteable nfw, final Dimension element) {
         Dimension d;
         if (dimensions.containsKey(dimname)) {
-            this.log.debug("Dimension {} already known!", dimensions.get(dimname));
+            this.log.debug("Dimension {} already known, updating!", dimensions.get(dimname));
             d = dimensions.get(dimname);
-            if (!d.equals(element)) {
+            if (d.getLength()!= element.getLength()) {
                 //TODO improve dimension mapping
                 log.debug("Dimensions with identical name are not equal: {}!={}", d, element);
+            }
+            if (d.isShared() != element.isShared()) {
+                if(d.isShared() && !element.isShared()) {
+                    //do nothing
+                }else{
+                    d.setShared(element.isShared());
+                }
+            }
+            if (d.isUnlimited() != element.isUnlimited()) {
+                if(d.isUnlimited() && !element.isUnlimited()) {
+                    //do nothing
+                } else {
+                    d.setUnlimited(element.isUnlimited());
+                }
+            }
+            if (d.isVariableLength() != element.isVariableLength()) {
+                if(d.isVariableLength() && !element.isVariableLength()) {
+                    //do nothing
+                }else{
+                    d.setVariableLength(element.isVariableLength());
+                }
             }
         } else {
             d = nfw.addDimension(dimname, element.getLength(), element.isShared(), element.isUnlimited(), element.isVariableLength());
@@ -706,12 +727,16 @@ public class NetcdfDataSource implements IDataSource {
             }
 
             final LinkedHashMap<String, Dimension> dimensions = new LinkedHashMap<String, Dimension>();
-//            for (Dimension dim : parent.getDimensions()) {
-//                log.debug("Adding dimension: {}", dim);
-//                addDimension(dimensions, dim.getName(), nfw, dim);
-//                //add all dimensions known to parent file fragment
+            for (Dimension dim : parent.getDimensions()) {
+                if(dim.getName().startsWith("dimension")) {
+                    log.debug("Skipping default dimension {}",dim);
+                }else{
+                    log.debug("Adding dimension: {}", dim);
+                    addDimension(dimensions, dim.getName(), nfw, dim);
+                }
+                //add all dimensions known to parent file fragment
 //                unmappedDimensions.add(dim);
-//            }
+            }
 
             boolean skipVarForMissingData = false;
             for (final IVariableFragment vf : parent) {
@@ -743,24 +768,31 @@ public class NetcdfDataSource implements IDataSource {
                             dim = dimC;
                         }
                     } else {
-                        this.log.debug("Using Dimensions given by IVariableFragment!");
+                        if(!vf.hasArray()) {
+                            this.log.warn(
+                                    "IVariableFragment {} has no array set, skipping!",
+                                    vf);
+                            skipVarForMissingData = true;
+                        }else{
+                            this.log.debug("Using Dimensions given by IVariableFragment!");
 
-                        dim = vf.getDimensions();
-                        final Dimension[] dimC = new Dimension[dim.length];
-                        int i = 0;
-                        int[] shape = vf.getArray().getShape();
-                        for (final Dimension element : dim) {
-                            this.log.debug("Checking Dimension {}", element);
-                            if (shape[i] != element.getLength()) {
-                                //throw new ConstraintViolationException("Dimension and array shape mismatch!: "+element+" vs "+shape[i]);
-                                this.log.warn("Correcting dimension {} to length {}!", element.getName(), shape[i]);
-                                element.setLength(shape[i]);
+                            dim = vf.getDimensions();
+                            final Dimension[] dimC = new Dimension[dim.length];
+                            int i = 0;
+                            int[] shape = vf.getArray().getShape();
+                            for (final Dimension element : dim) {
+                                this.log.debug("Checking Dimension {}", element);
+                                if (shape[i] != element.getLength()) {
+                                    //throw new ConstraintViolationException("Dimension and array shape mismatch!: "+element+" vs "+shape[i]);
+                                    this.log.warn("Correcting dimension {} to length {}!", element.getName(), shape[i]);
+                                    element.setLength(shape[i]);
+                                }
+                                dimC[i] = addDimension(nfw, dimensions, vf,
+                                        element);
+                                i++;
                             }
-                            dimC[i] = addDimension(nfw, dimensions, vf,
-                                    element);
-                            i++;
+                            dim = dimC;
                         }
-                        dim = dimC;
                     }
                     log.info("Defined dimensions: {}", Arrays.deepToString(dim));
                     if (!skipVarForMissingData) {
@@ -824,6 +856,7 @@ public class NetcdfDataSource implements IDataSource {
                 }
             }
             this.log.debug("Dimensions: {}", Arrays.deepToString(dimensions.values().toArray(new Dimension[]{})));
+            
             nfw.create();
             return nfw;
         } catch (final IOException e) {
@@ -903,8 +936,6 @@ public class NetcdfDataSource implements IDataSource {
                             }
                         }
                     }
-//                    vf.clear();
-//                    vf.setIsModified(false);
                 } catch (final IOException e) {
                     log.warn("IOException while writing variable '{}'", varname);
                     log.debug("{}", e.getLocalizedMessage());
