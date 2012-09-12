@@ -90,6 +90,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     private Configuration cfg = new PropertiesConfiguration();
     private boolean executeLocal = true;
     private File outputDirectory = new File(System.getProperty("user.dir"));
+    private List<IWorkflowPostProcessor> workflowPostProcessors = new ArrayList<IWorkflowPostProcessor>();
 
     @Override
     public void addListener(final IListener<IEvent<IWorkflowResult>> l) {
@@ -246,7 +247,6 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
 
     @Override
     public void save() {
-        //TODO extract as IWorkflowPostProcessor
         try {
             final String wflname = getName();
             log.info("Saving workflow {}", wflname);
@@ -656,6 +656,10 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         while (commandSequence.hasNext()) {
             results = commandSequence.next();
         }
+        for(IWorkflowPostProcessor pp:workflowPostProcessors) {
+            log.info("Running workflowPostProcessor {}",pp.getClass().getName());
+            pp.process(this);
+        }
         return results;
     }
 
@@ -669,4 +673,16 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         this.outputDirectory = f;
         log.info("Workflow output base directory: " + this.outputDirectory);
     }
+
+    @Override
+    public List<IWorkflowPostProcessor> getWorkflowPostProcessors() {
+        return workflowPostProcessors;
+    }
+
+    @Override
+    public void setWorkflowPostProcessors(List<IWorkflowPostProcessor> workflowPostProcessors) {
+        this.workflowPostProcessors = workflowPostProcessors;
+    }
+    
+    
 }

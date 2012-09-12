@@ -64,8 +64,6 @@ public class CacheFactory {
         EhcacheDelegate<K, V> ed = new EhcacheDelegate<K, V>(cacheName, cm);
         CacheConfiguration cc = ed.getCache().getCacheConfiguration();
         cc.setEternal(true);
-        cc.setTimeToIdleSeconds(0);
-        cc.setTimeToLiveSeconds(0);
         return ed;
     }
 

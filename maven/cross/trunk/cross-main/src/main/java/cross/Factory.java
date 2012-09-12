@@ -331,6 +331,7 @@ public class Factory implements ConfigurationListener {
             InputDataFactory idf = getObjectFactory().instantiate(
                     "cross.io.InputDataFactory", InputDataFactory.class,
                     getConfiguration());
+            idf.setBasedir(getConfiguration().getString("input.basedir"));
             idf.setInput(getConfiguration().getStringArray("input.dataInfo"));
             idf.setRecurse(getConfiguration().getBoolean("input.basedir.recurse",
                     false));

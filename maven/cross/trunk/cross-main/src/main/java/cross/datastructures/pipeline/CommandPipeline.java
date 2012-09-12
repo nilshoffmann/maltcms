@@ -187,12 +187,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
                 // set output dir to currently active command
                 getWorkflow().getOutputDirectory(cmd);
                 long start = System.nanoTime();
-                TupleND<IFileFragment> fragments = new TupleND<IFileFragment>();
-                for(IFileFragment fragment:this.tmp) {
-                    fragments.add(new ImmutableFileFragment(new File(fragment.getAbsolutePath())));
-                }
-//                this.tmp = cmd.apply(this.tmp);
-                this.tmp = cmd.apply(fragments);
+                this.tmp = cmd.apply(this.tmp);
                 start = Math.abs(System.nanoTime() - start);
                 final float seconds = ((float) start) / ((float) 1000000000);
                 final StringBuilder sb = new StringBuilder();

@@ -54,22 +54,21 @@ import org.apache.commons.configuration.Configuration;
 public class WorkflowZipper implements IConfigurable {
 
     private IWorkflow iw = null;
-    private FileFilter ff = null;
+    private FileFilter ff = new DefaultMatchAllFileFilter();
     private boolean zipWorkflow = true;
     private boolean deleteOnExit = false;
-    private HashSet<String> zipEntries = new HashSet<String>();
 
     private void addZipEntry(final int bufsize, final ZipOutputStream zos,
-            final byte[] input_buffer, final File file) throws IOException {
+            final byte[] input_buffer, final File file, final HashSet<String> zipEntries) throws IOException {
         log.debug("Adding zip entry for file {}", file);
         if (file.exists() && file.isFile()) {
             // Use the file name for the ZipEntry name.
             final ZipEntry zip_entry = new ZipEntry(file.getName());
-            if (this.zipEntries.contains(file.getName())) {
+            if (zipEntries.contains(file.getName())) {
                 log.info("Skipping duplicate zip entry {}", file.getName());
                 return;
             } else {
-                this.zipEntries.add(file.getName());
+                zipEntries.add(file.getName());
             }
             zos.putNextEntry(zip_entry);
 
@@ -130,7 +129,7 @@ public class WorkflowZipper implements IConfigurable {
      */
     public boolean save(final File f) {
         if (this.zipWorkflow) {
-            this.zipEntries.clear();
+            HashSet<String> zipEntries = new HashSet<String>();
             final int bufsize = 1024;
             final File zipFile = f;
             ZipOutputStream zos;
@@ -185,7 +184,7 @@ public class WorkflowZipper implements IConfigurable {
                             continue;
                         } else {
                             log.info("Adding zip entry!");
-                            addZipEntry(bufsize, zos, input_buffer, file);
+                            addZipEntry(bufsize, zos, input_buffer, file, zipEntries);
                         }
                     }
 
@@ -198,7 +197,7 @@ public class WorkflowZipper implements IConfigurable {
                     if (this.deleteOnExit) {
                         runtimeProps.deleteOnExit();
                     }
-                    addZipEntry(bufsize, zos, input_buffer, runtimeProps);
+                    addZipEntry(bufsize, zos, input_buffer, runtimeProps, zipEntries);
                 }
 
                 try {

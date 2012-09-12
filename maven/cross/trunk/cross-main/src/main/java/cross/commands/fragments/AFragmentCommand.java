@@ -179,7 +179,7 @@ public abstract class AFragmentCommand implements IFragmentCommand {
      * @return
      */
     public IFileFragment createWorkFragment(IFileFragment iff) {
-        final IFileFragment copy = Factory.getInstance().getFileFragmentFactory().create(new File(getWorkflow().getOutputDirectory(this),
+        final IFileFragment copy = new FileFragment(new File(getWorkflow().getOutputDirectory(this),
                 StringTools.removeFileExt(iff.getName()) + ".cdf"));
         copy.addSourceFile(iff);
         return copy;

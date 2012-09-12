@@ -213,4 +213,8 @@ public interface IWorkflow extends IEventSource<IWorkflowResult>, IConfigurable,
     public abstract void setExecuteLocal(boolean b);
 
     public abstract void setOutputDirectory(File f);
+    
+    public abstract void setWorkflowPostProcessors(List<IWorkflowPostProcessor> workflowPostProcessors);
+    
+    public List<IWorkflowPostProcessor> getWorkflowPostProcessors();
 }

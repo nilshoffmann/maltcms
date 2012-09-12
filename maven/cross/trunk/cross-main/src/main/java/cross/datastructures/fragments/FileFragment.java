@@ -552,7 +552,7 @@ public class FileFragment implements IFileFragment {
             throws ResourceNotAvailableException {
         // return child if already in memory
         if (this.children.containsKey(varname)) {
-            log.debug("Found {} as direct child of {} in memory", varname,
+            log.debug("Found {} as direct child of {} in memory.", varname,
                     this.getAbsolutePath());
             return getImmediateChild(varname);
         } else {
@@ -607,7 +607,8 @@ public class FileFragment implements IFileFragment {
                     log.debug("Variable {} found in {}", vf.getName(),
                             ff.getAbsolutePath());
                     // add as child
-                    addChildren(vf);
+                    //addChildren(vf);
+                    //this.inheritedChildren.put(varname, vf);
                     return vf;
                 } catch (final ResourceNotAvailableException iex) {
                     // throw new ResourceNotAvailableException(
@@ -993,6 +994,9 @@ public class FileFragment implements IFileFragment {
 
         if (Factory.getInstance().getDataSourceFactory().getDataSourceFor(this).write(this)) {
             log.debug("Save of {} succeeded, clearing arrays!", getName());
+            for(IVariableFragment frag:getImmediateChildren()) {
+                frag.setIsModified(false);
+            }
             clearArrays();
             getCache().close();
             this.persistentCache = null;

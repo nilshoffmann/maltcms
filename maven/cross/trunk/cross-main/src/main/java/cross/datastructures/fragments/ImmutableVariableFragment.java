@@ -189,7 +189,7 @@ public class ImmutableVariableFragment implements IVariableFragment {
      */
     @Override
     public List<Array> getIndexedArray() {
-        return this.vf.getIndexedArray();
+        return Collections.unmodifiableList(this.vf.getIndexedArray());
     }
 
     /**

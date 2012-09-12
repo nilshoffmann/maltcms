@@ -27,16 +27,13 @@
  */
 package cross.io;
 
-import cross.Factory;
 import cross.annotations.Configurable;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.ImmutableFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ExitVmException;
-import cross.tools.StringTools;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,7 +49,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
@@ -85,6 +81,7 @@ public class InputDataFactory implements IInputDataFactory {
         }
         this.basedir = cfg.getString("input.basedir", "");
         if (this.basedir.isEmpty() || this.basedir.equals(".")) {
+            log.debug("Configuration has no value for input.basedir! {}", this.basedir);
             this.basedir = System.getProperty("user.dir");
         }
         this.recurse = cfg.getBoolean("input.basedir.recurse", false);
@@ -99,46 +96,48 @@ public class InputDataFactory implements IInputDataFactory {
         log.debug("Initializing IFileFragment for: " + f.getAbsolutePath());
 //        final IFileFragment inputFragment = Factory.getInstance().
 //                getFileFragmentFactory().fromString(s);
-        IFileFragment inputFragment = new ImmutableFileFragment(f);
+        IFileFragment inputFragment = new FileFragment(f);
         if (!(new File(inputFragment.getAbsolutePath()).exists())) {
             throw new ConstraintViolationException("Input file "
                     + inputFragment.getAbsolutePath() + " does not exist!");
         }
         return inputFragment;
     }
-    
+
     protected IFileFragment initFile(final String s) {
         return initFile(new File(s));
     }
-    
+
     public Collection<File> getInputFiles(String[] input) {
         LinkedHashSet<File> files = new LinkedHashSet<File>();
-        for(String inputString:input) {
+        for (String inputString : input) {
+            log.debug("Processing input string {}", inputString);
             //separate wildcards from plain files
             String name = FilenameUtils.getName(inputString);
             boolean isWildcard = name.contains("?") || name.contains("*");
             String fullPath = FilenameUtils.getFullPath(inputString);
             File path = new File(fullPath);
+            log.debug("Path is absolute: {}", path.isAbsolute());
             //identify absolute and relative files
-            if(!path.isAbsolute()) {
-                log.debug("Resolving relative file against basedir: {}",this.basedir);
+            if (!path.isAbsolute()) {
+                log.info("Resolving relative file against basedir: {}", this.basedir);
                 path = new File(this.basedir, fullPath);
             }
             //normalize filenames
             fullPath = FilenameUtils.normalize(path.getAbsolutePath());
-            log.debug("After normalization: {}",fullPath);
-            IOFileFilter dirFilter = this.recurse?TrueFileFilter.INSTANCE:null;
-            if(isWildcard) {
-                log.info("Using wildcard matcher for {}",name);
+            log.debug("After normalization: {}", fullPath);
+            IOFileFilter dirFilter = this.recurse ? TrueFileFilter.INSTANCE : null;
+            if (isWildcard) {
+                log.debug("Using wildcard matcher for {}", name);
                 files.addAll(FileUtils.listFiles(new File(fullPath), new WildcardFileFilter(name, IOCase.INSENSITIVE), dirFilter));
-            }else{
-                log.info("Using name matcher for {}",name);
-                files.addAll(FileUtils.listFiles(new File(fullPath), new NameFileFilter(name, IOCase.INSENSITIVE), dirFilter));
+            } else {
+                log.debug("Using name for {}", name);
+                files.add(new File(fullPath, name));
             }
         }
-        return files;        
+        return files;
     }
-    
+
     /**
      * Preprocess input data (files and variables).
      *
@@ -146,18 +145,20 @@ public class InputDataFactory implements IInputDataFactory {
      */
     @Override
     public TupleND<IFileFragment> prepareInputData(String[] input) {
-        if (input==null || input.length == 0) {
+        if (input == null || input.length == 0) {
             throw new ExitVmException("No input data given, aborting!");
         }
-        log.info("Preparing Input data!");
+        log.info("Preparing input data!");
         this.initialFiles = new ArrayList<IFileFragment>();
-        for(File f:getInputFiles(input)) {
-            log.debug("Adding file {}",f.getAbsolutePath());
+        for (File f : getInputFiles(input)) {
+            log.info("Adding file {}", f.getAbsolutePath());
             initialFiles.add(initFile(f));
+        }
+        if (initialFiles.isEmpty()) {
+            throw new ExitVmException("Could not create input data for files " + Arrays.toString(input));
         }
         return new TupleND<IFileFragment>(initialFiles);
     }
-
     /**
      * Preprocess input data (files and variables).
      *

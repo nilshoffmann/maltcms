@@ -29,14 +29,10 @@ package cross.datastructures.fragments;
 
 import com.db4o.collections.ActivatableArrayList;
 import cross.datastructures.StatsMap;
-import cross.datastructures.cache.CacheFactory;
-import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.tools.ArrayTools;
 import cross.datastructures.tools.EvalTools;
 import cross.io.misc.ArrayChunkIterator;
 import cross.io.misc.Base64;
-import cross.tools.StringTools;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -352,6 +348,10 @@ public class VariableFragment implements IVariableFragment {
             return Collections.emptyList();
         }
         List<Array> l = parent.getCache().get(this);
+        if(l == null) {
+            parent.getCache().put(this, new ActivatableArrayList<Array>());
+            l = parent.getCache().get(this);
+        }
         return l;
     }
 

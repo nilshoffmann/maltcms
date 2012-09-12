@@ -1,4 +1,4 @@
-/* 
+/*
  * Cross, common runtime object support system. 
  * Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
  *
@@ -25,36 +25,42 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.applicationContext;
+package cross.datastructures.workflow;
 
-import cross.IConfigurable;
+import cross.io.misc.BinaryFileBase64Wrapper;
+import cross.io.misc.WorkflowZipper;
+import java.io.File;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.configuration.Configuration;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
- *
+ * Zips a workflow and creates a base64 encoded version of the zip file, 
+ * if configured to do so.
+ * 
  * @author Nils Hoffmann
  */
 @Slf4j
 @Data
-public class ConfiguringBeanPostProcessor implements BeanPostProcessor {
+public class ZipWorkflowPostProcessor implements IWorkflowPostProcessor {
 
-    private Configuration configuration;
-
+    private WorkflowZipper workflowZipper = new WorkflowZipper();
+    private File outputDirectory = null;
+    private String fileName = "maltcmsResults.zip";
+    private boolean encodeBase64 = false;
+    
     @Override
-    public Object postProcessBeforeInitialization(Object o, String string) throws BeansException {
-        return o;
-    }
-
-    @Override
-    public Object postProcessAfterInitialization(Object o, String string) throws BeansException {
-        if (o instanceof IConfigurable) {
-            log.debug("Configuring bean {}", o.getClass().getName());
-            ((IConfigurable) o).configure(configuration);
+    public void process(IWorkflow workflow) {
+        workflowZipper.setIWorkflow(workflow);
+        if(outputDirectory == null) {
+            outputDirectory = workflow.getOutputDirectory();
         }
-        return o;
+        final File results = new File(outputDirectory, fileName);
+        if (workflowZipper.save(results) && encodeBase64) {
+            BinaryFileBase64Wrapper.base64Encode(results, new File(outputDirectory,
+                    results.getName() + ".b64"));
+        } else {
+            log.debug("Did not Base64 encode "+fileName);
+        }
     }
+    
 }
