@@ -765,7 +765,7 @@ public class TICPeakFinder extends AFragmentCommand {
      *
      * @param pb
      * @param mwIndices
-     * @paramt tic
+     * @param tic
      * @return
      */
     private double integratePeak(final Peak1D pb,
