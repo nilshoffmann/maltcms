@@ -32,10 +32,12 @@ import com.db4o.ObjectSet;
 import com.db4o.activation.ActivationPurpose;
 import com.db4o.activation.Activator;
 import com.db4o.config.annotations.Indexed;
+import com.db4o.ext.DatabaseClosedException;
 import com.db4o.query.Predicate;
 import com.db4o.ta.Activatable;
 import cross.datastructures.cache.ICacheDelegate;
 import java.util.Comparator;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of a cache delegate for typed caches backed by <a
@@ -43,6 +45,7 @@ import java.util.Comparator;
  *
  * @author Nils Hoffmann
  */
+@Slf4j
 public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
 
     private final String cacheName;
@@ -74,30 +77,39 @@ public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
 
     @Override
     public void put(final K key, final V value) {
-        TypedEntry<K, V> te = getTypedEntry(key);
-        if (te == null) {
-            if (value != null) {
-                container.store(new TypedEntry<K, V>(key, value));
-            }
-        } else {
-            if (value == null) {
-                container.delete(te);
+        try {
+            TypedEntry<K, V> te = getTypedEntry(key);
+            if (te == null) {
+                if (value != null) {
+                    container.store(new TypedEntry<K, V>(key, value));
+                }
             } else {
-                te.setValue(value);
+                if (value == null) {
+                    container.delete(te);
+                } else {
+                    te.setValue(value);
+                }
             }
+        } catch (DatabaseClosedException ex) {
+            log.warn("Failed to add element to cache: " + key, ex);
         }
     }
 
     @Override
     public V get(final K key) {
-        ObjectSet<TypedEntry<K, V>> os = container.query(new TypedEntryPredicate<K, V>(key), new TypedEntryComparator<K, V>(comparator));
-        if (os.size() > 1) {
-            throw new IllegalStateException("Cache contains more than one element for key: " + key);
-        }
-        if (os.isEmpty()) {
+        try {
+            ObjectSet<TypedEntry<K, V>> os = container.query(new TypedEntryPredicate<K, V>(key), new TypedEntryComparator<K, V>(comparator));
+            if (os.size() > 1) {
+                throw new IllegalStateException("Cache contains more than one element for key: " + key);
+            }
+            if (os.isEmpty()) {
+                return null;
+            }
+            return os.get(0).getValue();
+        } catch (DatabaseClosedException ex) {
+            log.warn("Failed to get element from cache: " + key, ex);
             return null;
         }
-        return os.get(0).getValue();
     }
 
     private TypedEntry<K, V> getTypedEntry(final K key) {

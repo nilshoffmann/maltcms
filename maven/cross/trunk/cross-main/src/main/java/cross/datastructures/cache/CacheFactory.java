@@ -27,6 +27,9 @@
  */
 package cross.datastructures.cache;
 
+import cross.datastructures.cache.ehcache.AutoRetrievalEhcacheDelegate;
+import cross.datastructures.cache.ehcache.EhcacheDelegate;
+import cross.Factory;
 import cross.datastructures.cache.db4o.Db4oCacheManager;
 import java.io.File;
 import java.util.Comparator;
@@ -57,6 +60,29 @@ public class CacheFactory {
             log.warn("Failed to remove cache " + delegate.getName(), ise.getLocalizedMessage());
         }
     }
+    
+    public static <K, V> ICacheDelegate<K, V> createFragmentCache(String cacheName) {
+        String type = Factory.getInstance().getConfiguration().getString(CacheFactory.class.getName()+".fragmentCacheType","EHCACHE");
+        return createFragmentCache(cacheName, FragmentCacheType.valueOf(type));
+    }
+    
+    public static <K, V> ICacheDelegate<K, V> createFragmentCache(String cacheName, FragmentCacheType cacheType) {
+        switch(cacheType) {
+            case DB4O:
+                File cacheLocation = new File(cacheName);
+                log.debug("Using db4o cache {}",cacheLocation.getAbsolutePath());
+                if(cacheLocation.getParentFile().isDirectory()) {
+                    return createDb4oDefaultCache(cacheLocation.getParentFile(), cacheLocation.getName());
+                }else{
+                    throw new IllegalArgumentException("DB4o cache name must be an absolute file name!");
+                }
+            case EHCACHE:
+                log.debug("Using ehcache {}",cacheName);
+                return createDefaultCache(cacheName);
+            default:
+                throw new IllegalStateException("Unknown enum value: "+cacheType);
+        }
+    }
 
     public static <K, V> ICacheDelegate<K, V> createDefaultCache(String cacheName) {
         CacheManager cm = CacheManager.getInstance();
@@ -64,6 +90,8 @@ public class CacheFactory {
         EhcacheDelegate<K, V> ed = new EhcacheDelegate<K, V>(cacheName, cm);
         CacheConfiguration cc = ed.getCache().getCacheConfiguration();
         cc.setEternal(true);
+        cc.setTimeToIdleSeconds(-1);
+        cc.setTimeToIdleSeconds(-1);
         return ed;
     }
 

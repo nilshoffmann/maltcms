@@ -188,6 +188,10 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
                 getWorkflow().getOutputDirectory(cmd);
                 long start = System.nanoTime();
                 this.tmp = cmd.apply(this.tmp);
+                //clear arrays to allow for gc
+                for(IFileFragment f:this.tmp) {
+                    f.clearArrays();
+                }
                 start = Math.abs(System.nanoTime() - start);
                 final float seconds = ((float) start) / ((float) 1000000000);
                 final StringBuilder sb = new StringBuilder();

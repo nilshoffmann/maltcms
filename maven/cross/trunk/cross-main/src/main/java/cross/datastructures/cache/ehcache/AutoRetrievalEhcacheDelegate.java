@@ -25,31 +25,37 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.datastructures.cache;
+package cross.datastructures.cache.ehcache;
 
+import cross.datastructures.cache.ICacheDelegate;
+import cross.datastructures.cache.ICacheElementProvider;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 
 /**
+ * Transparent cache, which also knows how to create objects of the given type
+ * via the
  *
- * Implementation of a cache delegate for typed caches backed by <a
- * href="http://www.ehcache.org">ehcache</a>.
+ * @{link cross.datastructures.ehcache.ICacheElementProvider}, if their key is
+ * not present in the in-memory cache.
  *
  * Please note that Ehcache only allows Serializable objects to be externalized
  * to disk, should the in-memory cache overflow.
  *
  * @author Nils Hoffmann
  */
-public class EhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
+public class AutoRetrievalEhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
 
     private final String cacheName;
     private final CacheManager cacheManager;
+    private final ICacheElementProvider<K, V> provider;
 
-    public EhcacheDelegate(final String cacheName,
-            final CacheManager cacheManager) {
+    public AutoRetrievalEhcacheDelegate(String cacheName, CacheManager cm,
+            ICacheElementProvider<K, V> provider) {
         this.cacheName = cacheName;
-        this.cacheManager = cacheManager;
+        this.cacheManager = cm;
+        this.provider = provider;
     }
 
     @Override
@@ -60,15 +66,17 @@ public class EhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
     @Override
     public V get(final K key) {
         Element element = getCache().get(key);
+        V v = null;
         if (element != null) {
-            return (V) element.getValue();
+            v = (V) element.getValue();
+            if (v != null) {
+                return v;
+            }
         }
-        return null;
-    }
+        v = provider.provide(key);
+        put(key, v);
+        return v;
 
-    @Override
-    public void close() {
-        cacheManager.getEhcache(cacheName).dispose();
     }
 
     public Ehcache getCache() {
@@ -78,5 +86,10 @@ public class EhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
     @Override
     public String getName() {
         return cacheName;
+    }
+
+    @Override
+    public void close() {
+        cacheManager.getCache(cacheName).dispose();
     }
 }

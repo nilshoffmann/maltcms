@@ -437,6 +437,7 @@ public class FileFragment implements IFileFragment {
         for (IVariableFragment v : toRemove) {
             log.debug("Removing child {}", v.getName());
             v.clear();
+            getCache().put(v, null);
             removeChild(v);
         }
     }
@@ -527,7 +528,8 @@ public class FileFragment implements IFileFragment {
     @Override
     public ICacheDelegate<IVariableFragment, List<Array>> getCache() {
         if (this.persistentCache == null) {
-            this.persistentCache = CacheFactory.createDb4oDefaultCache(new File(getAbsolutePath()).getParentFile(), StringTools.removeFileExt(getName()) + "-variable-fragment-cache");
+            String cacheLocation = new File(new File(getAbsolutePath()).getParentFile(), StringTools.removeFileExt(getName()) + "-variable-fragment-cache").getAbsolutePath();
+            this.persistentCache = CacheFactory.createFragmentCache(cacheLocation);
         }
         return this.persistentCache;
     }

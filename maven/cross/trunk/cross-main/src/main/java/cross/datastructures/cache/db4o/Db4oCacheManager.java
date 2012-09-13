@@ -29,19 +29,18 @@ package cross.datastructures.cache.db4o;
 
 import com.db4o.Db4oEmbedded;
 import com.db4o.EmbeddedObjectContainer;
-import com.db4o.ObjectContainer;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.ext.DatabaseClosedException;
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.io.CachingStorage;
+import com.db4o.io.FileStorage;
+import com.db4o.io.Storage;
 import com.db4o.ta.DeactivatingRollbackStrategy;
 import com.db4o.ta.TransparentActivationSupport;
 import com.db4o.ta.TransparentPersistenceSupport;
 import cross.datastructures.cache.ICacheDelegate;
 import cross.exception.ConstraintViolationException;
 import java.io.File;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -97,6 +96,11 @@ public class Db4oCacheManager extends Thread {
             EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
             configuration.common().add(new TransparentActivationSupport());
             configuration.common().add(new TransparentPersistenceSupport(new DeactivatingRollbackStrategy()));
+            Storage fileStorage = new FileStorage();
+            int npages = 10;
+            int nbytesPerPage = 1024*1024;
+            Storage cachingStorage = new CachingStorage(fileStorage,npages,nbytesPerPage);
+            configuration.file().storage(cachingStorage);
             EmbeddedObjectContainer oc = Db4oEmbedded.openFile(configuration, cachePath.getAbsolutePath());
             delegate = new Db4oCacheDelegate<K, V>(name, oc, comparator);
             caches.put(cachePath, delegate);

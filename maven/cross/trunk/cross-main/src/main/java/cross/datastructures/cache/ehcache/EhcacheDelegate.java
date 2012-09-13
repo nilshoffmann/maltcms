@@ -25,56 +25,62 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.datastructures.cache;
+package cross.datastructures.cache.ehcache;
 
+import cross.datastructures.cache.ICacheDelegate;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 
 /**
- * Transparent cache, which also knows how to create objects of the given type
- * via the
  *
- * @{link cross.datastructures.ehcache.ICacheElementProvider}, if their key is
- * not present in the in-memory cache.
+ * Implementation of a cache delegate for typed caches backed by <a
+ * href="http://www.ehcache.org">ehcache</a>.
  *
  * Please note that Ehcache only allows Serializable objects to be externalized
  * to disk, should the in-memory cache overflow.
  *
  * @author Nils Hoffmann
  */
-class AutoRetrievalEhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
+@Slf4j
+public class EhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
 
     private final String cacheName;
     private final CacheManager cacheManager;
-    private final ICacheElementProvider<K, V> provider;
 
-    public AutoRetrievalEhcacheDelegate(String cacheName, CacheManager cm,
-            ICacheElementProvider<K, V> provider) {
+    public EhcacheDelegate(final String cacheName,
+            final CacheManager cacheManager) {
         this.cacheName = cacheName;
-        this.cacheManager = cm;
-        this.provider = provider;
+        this.cacheManager = cacheManager;
     }
 
     @Override
     public void put(final K key, final V value) {
-        getCache().put(new Element(key, value));
+        try {
+            getCache().put(new Element(key, value));
+        }catch(IllegalStateException se) {
+            log.warn("Failed to add element to cache: "+key,se);
+        }
     }
 
     @Override
     public V get(final K key) {
-        Element element = getCache().get(key);
-        V v = null;
-        if (element != null) {
-            v = (V) element.getValue();
-            if (v != null) {
-                return v;
+        try {
+            Element element = getCache().get(key);
+            if (element != null) {
+                return (V) element.getValue();
             }
-        }
-        v = provider.provide(key);
-        put(key, v);
-        return v;
+            return null;
+        }catch(IllegalStateException se) {
+            log.warn("Failed to get element from cache: "+key,se);
+            return null;
+        }  
+    }
 
+    @Override
+    public void close() {
+        cacheManager.getEhcache(cacheName).dispose();
     }
 
     public Ehcache getCache() {
@@ -84,10 +90,5 @@ class AutoRetrievalEhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
     @Override
     public String getName() {
         return cacheName;
-    }
-
-    @Override
-    public void close() {
-        cacheManager.getCache(cacheName).dispose();
     }
 }
