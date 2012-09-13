@@ -58,7 +58,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Creates all reference-query horizontal tic scanlines vectors.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

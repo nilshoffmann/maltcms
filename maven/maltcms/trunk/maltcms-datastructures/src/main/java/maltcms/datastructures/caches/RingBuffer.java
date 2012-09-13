@@ -33,7 +33,7 @@ import java.util.LinkedList;
  * Implementation of a RingBuffer datastructure e.g. for caches with fixed
  * capacity and automatic remove oldest entry semantics.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  */
 public class RingBuffer<T> {

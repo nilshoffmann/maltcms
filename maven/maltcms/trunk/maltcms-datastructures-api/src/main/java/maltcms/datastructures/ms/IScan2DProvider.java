@@ -28,7 +28,7 @@
 package maltcms.datastructures.ms;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

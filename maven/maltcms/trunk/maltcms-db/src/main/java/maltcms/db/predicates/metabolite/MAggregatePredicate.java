@@ -39,7 +39,7 @@ import maltcms.datastructures.ms.IMetabolite;
  * Metabolites will only be returned, if all MetabolitePredicates apply to this
  * Metabolite (return true for evalOn).
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  *
  */
 public class MAggregatePredicate extends MetabolitePredicate {

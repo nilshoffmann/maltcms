@@ -39,7 +39,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Combinded distance of {@link ArrayCos} and {@link ArrayLp}.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)

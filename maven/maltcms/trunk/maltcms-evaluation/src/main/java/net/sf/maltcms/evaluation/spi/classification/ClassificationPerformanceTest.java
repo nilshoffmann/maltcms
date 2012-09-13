@@ -49,7 +49,7 @@ import net.sf.maltcms.evaluation.api.classification.PeakRTFeatureVectorComparato
  * instances as ground truth versus a collection of EntityGroup instances, which
  * are to be evaluated.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

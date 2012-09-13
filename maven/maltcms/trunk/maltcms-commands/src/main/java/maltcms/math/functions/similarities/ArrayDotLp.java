@@ -35,7 +35,7 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
 /**
- * @author hoffmann
+ * @author Nils Hoffmann
  *
  */
 @Data

@@ -39,7 +39,7 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

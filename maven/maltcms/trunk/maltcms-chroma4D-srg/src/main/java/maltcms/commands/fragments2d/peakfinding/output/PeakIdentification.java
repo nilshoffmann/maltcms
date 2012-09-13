@@ -58,7 +58,7 @@ import maltcms.math.functions.similarities.ArrayCos;
 /**
  * Will do the identification.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

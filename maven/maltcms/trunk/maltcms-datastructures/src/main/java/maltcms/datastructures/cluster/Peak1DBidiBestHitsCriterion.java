@@ -37,7 +37,7 @@ import maltcms.datastructures.peak.Peak1D;
 import cross.exception.NotImplementedException;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  * @param <T>
  *
  *

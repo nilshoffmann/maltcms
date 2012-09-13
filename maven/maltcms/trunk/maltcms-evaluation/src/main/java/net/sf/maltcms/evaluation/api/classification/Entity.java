@@ -33,7 +33,7 @@ import maltcms.datastructures.array.IFeatureVector;
  * An entity represents a classified object. It has a feature vector, a category
  * and a class label.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

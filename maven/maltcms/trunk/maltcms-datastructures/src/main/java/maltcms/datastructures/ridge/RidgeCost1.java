@@ -34,7 +34,7 @@ import org.openide.util.lookup.ServiceProvider;
 import cross.datastructures.tuple.Tuple2D;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

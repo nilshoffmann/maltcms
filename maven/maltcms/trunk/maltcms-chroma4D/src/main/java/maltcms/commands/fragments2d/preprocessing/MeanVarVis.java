@@ -68,7 +68,7 @@ import org.openide.util.lookup.ServiceProvider;
  * This class will visualize the computed mean, variance and standard deviation
  * of every chromatogram.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

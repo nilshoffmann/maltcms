@@ -30,7 +30,7 @@ package net.sf.maltcms.evaluation.api;
 import java.util.HashSet;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

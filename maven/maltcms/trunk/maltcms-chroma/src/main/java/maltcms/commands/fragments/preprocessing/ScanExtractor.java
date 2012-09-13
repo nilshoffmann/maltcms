@@ -55,7 +55,7 @@ import ucar.nc2.Dimension;
  * from a GC/LC-MS file. This is useful for skipping lead-in scans that should
  * be removed prior to processing or to skip data that was written incorrectly.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

@@ -31,7 +31,7 @@ import java.awt.geom.Area;
 
 /**
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 public class AlignmentFactory {
 

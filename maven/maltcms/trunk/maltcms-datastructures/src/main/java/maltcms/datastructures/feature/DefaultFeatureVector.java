@@ -37,7 +37,7 @@ import maltcms.datastructures.array.IFeatureVector;
 import ucar.ma2.Array;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  */
 public class DefaultFeatureVector implements IFeatureVector {

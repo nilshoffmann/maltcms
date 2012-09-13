@@ -31,7 +31,7 @@ import com.db4o.Db4o;
 import com.db4o.ObjectServer;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

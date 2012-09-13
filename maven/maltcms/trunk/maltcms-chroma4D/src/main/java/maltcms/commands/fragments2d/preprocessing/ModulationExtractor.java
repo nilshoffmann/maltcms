@@ -65,7 +65,7 @@ import ucar.nc2.Dimension;
  * modulations or use the Chromatogram2D class or one of the IScanLine
  * implementations.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

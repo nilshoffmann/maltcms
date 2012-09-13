@@ -48,7 +48,7 @@ import maltcms.math.functions.similarities.ArrayCos;
 /**
  * Will compute a list of bidirectional best hits.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

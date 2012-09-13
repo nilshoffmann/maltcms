@@ -32,7 +32,7 @@ package net.sf.maltcms.evaluation.api.classification;
  * be for example the name of the file, for which an entity was generated (e.g.
  * a feature, such as a peak).
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

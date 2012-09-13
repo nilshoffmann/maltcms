@@ -42,7 +42,7 @@ import cross.datastructures.fragments.IFileFragment;
  * This class is a dataholder for mass spectra. This class will cache all mass
  * spectra which were read an hold a {@link SoftReference} to it.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",

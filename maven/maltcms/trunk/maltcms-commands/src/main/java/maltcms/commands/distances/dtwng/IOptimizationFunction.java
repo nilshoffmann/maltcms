@@ -36,7 +36,7 @@ import maltcms.datastructures.IFileFragmentModifier;
 
 /**
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 public interface IOptimizationFunction extends IFileFragmentModifier {
 

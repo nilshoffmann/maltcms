@@ -98,7 +98,7 @@ import maltcms.datastructures.quadTree.ElementNotFoundException;
 import maltcms.datastructures.quadTree.QuadTree;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

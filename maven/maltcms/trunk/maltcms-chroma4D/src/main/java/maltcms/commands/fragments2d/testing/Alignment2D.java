@@ -59,7 +59,7 @@ import maltcms.math.functions.similarities.ArrayCos;
 
 /**
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @RequiresVariables(names = {"var.maxms_1d_horizontal",
     "var.maxms_1d_horizontal_index", "var.maxms_1d_vertical",

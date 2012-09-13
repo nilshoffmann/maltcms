@@ -69,7 +69,7 @@ import net.sf.maltcms.evaluation.spi.xcalibur.RTUnit;
 import net.sf.maltcms.evaluation.spi.xcalibur.XLSIOProvider;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

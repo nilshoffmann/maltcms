@@ -52,7 +52,7 @@ import com.db4o.ObjectSet;
  * Based on ExcelTools by Alexander Bunkowski. Uses Jexcel API,
  * http://jexcelapi.sourceforge.net/
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

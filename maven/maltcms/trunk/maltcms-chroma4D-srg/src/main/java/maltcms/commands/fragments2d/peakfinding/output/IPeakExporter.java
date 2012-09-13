@@ -40,7 +40,7 @@ import cross.datastructures.workflow.IWorkflowElement;
 /**
  * Provides some methods to export relevant peak information.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 public interface IPeakExporter extends IConfigurable, IWorkflowElement {
 

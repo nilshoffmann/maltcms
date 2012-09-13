@@ -52,7 +52,7 @@ import ucar.nc2.Variable;
 
 /**
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  */
 public class NetcdfJavaTest {
 

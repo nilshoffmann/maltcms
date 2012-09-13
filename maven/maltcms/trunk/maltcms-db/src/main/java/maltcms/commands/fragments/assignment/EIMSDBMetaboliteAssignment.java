@@ -62,7 +62,7 @@ import maltcms.datastructures.ms.IScan1D;
 import maltcms.db.predicates.metabolite.MetaboliteSimilarity;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

@@ -39,7 +39,7 @@ import ucar.ma2.Array;
 /**
  * Reprensents a singel snake.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 public class PeakArea2D {
 

@@ -60,7 +60,7 @@ import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tools.FragmentTools;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  */
 public class DTW implements IAlignment, Serializable {

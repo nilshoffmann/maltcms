@@ -60,7 +60,7 @@ import ucar.nc2.Dimension;
 
 /**
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  */
 @Slf4j
 public class NetcdfDataSourceTest {

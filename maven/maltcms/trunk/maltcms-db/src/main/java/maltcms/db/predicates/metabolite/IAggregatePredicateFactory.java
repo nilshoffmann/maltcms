@@ -30,7 +30,7 @@ package maltcms.db.predicates.metabolite;
 import com.db4o.query.Predicate;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 public interface IAggregatePredicateFactory<T> {
 

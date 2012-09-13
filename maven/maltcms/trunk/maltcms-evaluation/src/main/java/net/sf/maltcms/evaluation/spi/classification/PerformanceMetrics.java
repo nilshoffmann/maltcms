@@ -33,7 +33,7 @@ import java.util.Map;
 import net.sf.maltcms.evaluation.api.classification.EntityGroup;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

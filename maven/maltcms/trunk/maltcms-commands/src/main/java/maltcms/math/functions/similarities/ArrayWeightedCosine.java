@@ -34,7 +34,7 @@ import maltcms.math.functions.IArraySimilarity;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

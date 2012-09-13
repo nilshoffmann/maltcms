@@ -54,7 +54,7 @@ import ucar.ma2.ArrayInt;
  * purposes. Mapping of ordinate_values is performed by setting
  * var.total_intensity=ordinate_values.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

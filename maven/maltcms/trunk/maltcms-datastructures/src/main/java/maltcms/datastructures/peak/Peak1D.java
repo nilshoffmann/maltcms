@@ -51,7 +51,7 @@ import ucar.ma2.*;
 import ucar.nc2.Dimension;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  * Peak1D models a standard 1D chromatographic peak. If you want to model mass
  * spectral peaks over time, use a Peak1DGroup instance.

@@ -41,7 +41,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Prints available variables for provided file fragments.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

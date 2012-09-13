@@ -59,7 +59,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  */
 @Slf4j
 @Data

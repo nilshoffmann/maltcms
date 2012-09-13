@@ -40,7 +40,7 @@ import maltcms.datastructures.ms.IScan1D;
 import maltcms.tools.ArrayTools;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

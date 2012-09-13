@@ -44,7 +44,7 @@ import cross.datastructures.tuple.Tuple2D;
  * This interface provies all method to be an visualization for the 2d time warp
  * path.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 public interface IVisualization extends IConfigurable {
 

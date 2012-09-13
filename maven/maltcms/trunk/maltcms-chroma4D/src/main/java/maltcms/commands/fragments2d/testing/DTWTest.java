@@ -52,7 +52,7 @@ import maltcms.math.functions.similarities.ArrayCos;
 
 /**
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  */
 public class DTWTest {
 

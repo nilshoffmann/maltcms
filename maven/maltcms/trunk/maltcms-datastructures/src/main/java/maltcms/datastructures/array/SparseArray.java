@@ -39,7 +39,7 @@ import cross.datastructures.tuple.Tuple2D;
 import java.io.Serializable;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

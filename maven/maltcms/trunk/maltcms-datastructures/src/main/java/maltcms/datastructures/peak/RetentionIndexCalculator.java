@@ -32,7 +32,7 @@ import java.util.Arrays;
 import maltcms.tools.ArrayTools;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

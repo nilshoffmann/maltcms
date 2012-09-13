@@ -79,7 +79,7 @@ import cross.datastructures.tools.FileTools;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

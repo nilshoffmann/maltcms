@@ -37,7 +37,7 @@ import lombok.Data;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

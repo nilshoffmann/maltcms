@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

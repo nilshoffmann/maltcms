@@ -34,7 +34,7 @@ import java.util.List;
  * transformation and reconstruction using a given implementation of a wavelet
  * for real valued input.
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  *
  */
 public final class ContinuousWaveletTransform {

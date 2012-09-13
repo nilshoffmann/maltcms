@@ -30,7 +30,7 @@ package maltcms.experimental.operations;
 /**
  * Implementation of the Edit-Distance on Strings.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 public class EditDistance {
 

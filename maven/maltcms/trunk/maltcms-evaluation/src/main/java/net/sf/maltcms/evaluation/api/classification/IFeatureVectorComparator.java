@@ -30,7 +30,7 @@ package net.sf.maltcms.evaluation.api.classification;
 import maltcms.datastructures.array.IFeatureVector;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

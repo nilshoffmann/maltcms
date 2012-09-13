@@ -38,7 +38,7 @@ import java.awt.geom.Ellipse2D;
 import java.util.Collections;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

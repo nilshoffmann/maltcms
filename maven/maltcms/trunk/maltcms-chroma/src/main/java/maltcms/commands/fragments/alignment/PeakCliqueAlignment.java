@@ -110,7 +110,7 @@ import ucar.ma2.MAMath;
  * determined, and all bi-directional best hits are merged. If they apply, they
  * cover a set of k peaks in k chromatograms.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

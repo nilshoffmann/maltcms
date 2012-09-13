@@ -36,7 +36,7 @@ import ucar.ma2.IndexIterator;
 /**
  * This class will set all elements smaller than minimum to zero.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)

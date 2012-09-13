@@ -34,7 +34,7 @@ import cross.io.misc.ZipResourceExtractor;
 
 /**
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  */
 public class ExtractHelper {
 

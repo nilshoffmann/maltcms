@@ -33,7 +33,7 @@ import cross.IConfigurable;
 /**
  * Supports a method to identify a peak.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 public interface IPeakIdentification extends IConfigurable {
 

@@ -54,7 +54,7 @@ import maltcms.db.predicates.metabolite.MSimilarityPredicate;
 import maltcms.db.predicates.metabolite.MetaboliteSimilarity;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

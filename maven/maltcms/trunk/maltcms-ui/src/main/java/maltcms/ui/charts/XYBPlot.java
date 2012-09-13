@@ -50,8 +50,7 @@ import org.jfree.chart.plot.XYPlot;
  * image. This class supports only axis with the same lower and upper bounds
  * like the image.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
- * (mwilhelm@techfak.uni-bielefeld.de)
+ * @author Mathias Wilhelm
  */
 public class XYBPlot extends XYPlot implements Serializable {
 

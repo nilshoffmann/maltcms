@@ -40,7 +40,7 @@ import cross.datastructures.fragments.IVariableFragment;
  * FeatureVector implementation, which directly accesses the IFileFragment
  * required at construction time.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 public class MaltcmsFeatureVector implements IFeatureVector {
 

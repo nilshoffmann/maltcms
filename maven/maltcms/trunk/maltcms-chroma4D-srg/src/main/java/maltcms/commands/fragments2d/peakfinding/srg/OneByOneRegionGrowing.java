@@ -51,7 +51,7 @@ import maltcms.math.functions.similarities.ArrayCos;
 
 /**
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  */
 @Slf4j
 @Data

@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
  * Warps two chromatogramms according to their mean mass spectra of the scan
  * lines.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

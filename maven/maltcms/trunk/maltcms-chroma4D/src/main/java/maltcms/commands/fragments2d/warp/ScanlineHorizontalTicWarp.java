@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  * class will use a the warped horizontal scanlines as a vector of double
  * (intensities).
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

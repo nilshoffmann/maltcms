@@ -37,7 +37,7 @@ import java.util.Queue;
  * This class represents a first in first out queue. The data holder is an
  * {@link ArrayList}.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  * @param <E> queue element type
  */
 public class FiFoQueue<E> implements Queue<E> {

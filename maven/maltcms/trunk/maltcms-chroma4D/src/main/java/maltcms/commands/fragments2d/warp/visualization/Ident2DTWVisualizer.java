@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
  * Basically the same as {@link Default2DTWVisualizer} but dont uses the warp
  * path.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

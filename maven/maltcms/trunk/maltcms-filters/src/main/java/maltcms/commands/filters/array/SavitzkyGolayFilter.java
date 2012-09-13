@@ -41,7 +41,7 @@ import org.openide.util.lookup.ServiceProvider;
  * Golay,M.J.E. (1964) Smoothing and Differentiation of Data by Simplified Least
  * Squares Procedures. Analytical Chemistry, 36, 1627–1639.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

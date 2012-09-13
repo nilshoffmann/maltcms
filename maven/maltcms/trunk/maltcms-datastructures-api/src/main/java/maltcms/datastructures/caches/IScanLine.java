@@ -37,7 +37,7 @@ import cross.datastructures.tuple.Tuple2D;
 /**
  * Interface for all scan line data holder.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 public interface IScanLine extends IConfigurable {
 

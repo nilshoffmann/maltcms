@@ -65,7 +65,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Will iterate over all mass spectra and calculates mean and variance.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

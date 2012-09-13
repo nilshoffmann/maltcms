@@ -40,7 +40,7 @@ import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.array.IMutableFeatureVector;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

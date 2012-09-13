@@ -77,7 +77,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */
@@ -175,7 +175,7 @@ public class PipelineWizard implements WizardResultProducer, HyperlinkListener,
                     public void actionPerformed(ActionEvent e) {
                         JEditorPane jep = new JEditorPane(
                                 "text/html",
-                                "<p style=\"font-family:Arial,Tahoma,sans-serif;\">ChromA version 1.0.1, October 2010<br />by Nils Hoffmann &lt;Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE&gt;</p><p style=\"font-family:Arial,Tahoma,sans-serif;\"><a href=\"http://maltcms.sourceforge.net\">Visit Maltcms at Sourceforge</a></p><p style=\"font-family:Arial,Tahoma,sans-serif;\"><a href=\"http://bibiserv.techfak.uni-bielefeld.de/chroma/\">Visit ChromA on the web</a></p><p style=\"font-family:Arial,Tahoma,sans-serif;\">Do you have any ideas on how to improve ChromA?<br /><a href=\"https://sourceforge.net/tracker/?func=add&group_id=251287&atid=1126546\">Visit our feature request tracker</a></p>");
+                                "<p style=\"font-family:Arial,Tahoma,sans-serif;\">ChromA version 1.0.1, October 2010<br />by Nils Hoffmann &lt;Nils Hoffmann&gt;</p><p style=\"font-family:Arial,Tahoma,sans-serif;\"><a href=\"http://maltcms.sourceforge.net\">Visit Maltcms at Sourceforge</a></p><p style=\"font-family:Arial,Tahoma,sans-serif;\"><a href=\"http://bibiserv.techfak.uni-bielefeld.de/chroma/\">Visit ChromA on the web</a></p><p style=\"font-family:Arial,Tahoma,sans-serif;\">Do you have any ideas on how to improve ChromA?<br /><a href=\"https://sourceforge.net/tracker/?func=add&group_id=251287&atid=1126546\">Visit our feature request tracker</a></p>");
                         jep.setEditable(false);
                         jep.setBorder(BorderFactory
                                 .createBevelBorder(BevelBorder.LOWERED));

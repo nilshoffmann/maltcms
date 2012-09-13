@@ -73,7 +73,7 @@ import maltcms.datastructures.ms.IMetabolite;
 /**
  * Implementation of an peak exporter.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

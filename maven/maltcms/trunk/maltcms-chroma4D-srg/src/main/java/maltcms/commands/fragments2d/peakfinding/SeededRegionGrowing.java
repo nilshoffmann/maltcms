@@ -91,7 +91,7 @@ import maltcms.tools.ImageTools;
 /**
  * Peakpicking + integration + identification + normalization + evaluation...
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

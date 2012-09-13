@@ -60,7 +60,7 @@ import net.sf.maltcms.evaluation.spi.EntityGroupBuilder;
 import net.sf.maltcms.evaluation.spi.classification.PerformanceMetrics;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

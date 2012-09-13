@@ -54,7 +54,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Visualizes value distribution of a matrix.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 @RequiresVariables(names = {"var.pairwise_distance"})
 @Slf4j

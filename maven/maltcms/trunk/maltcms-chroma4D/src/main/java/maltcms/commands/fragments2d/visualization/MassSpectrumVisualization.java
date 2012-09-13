@@ -58,7 +58,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Visualization for one mass spectra.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

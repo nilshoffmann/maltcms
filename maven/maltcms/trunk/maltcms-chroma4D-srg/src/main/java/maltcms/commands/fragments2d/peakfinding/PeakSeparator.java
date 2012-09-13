@@ -45,7 +45,7 @@ import maltcms.math.functions.IScalarArraySimilarity;
 
 /**
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  */
 @Slf4j
 @Data

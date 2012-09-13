@@ -494,7 +494,7 @@
             <version>1.6.1</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
+		<dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
@@ -504,6 +504,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>maltcms</netbeans.hint.license>
-        <maven.test.skip>false</maven.test.skip>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 </project>

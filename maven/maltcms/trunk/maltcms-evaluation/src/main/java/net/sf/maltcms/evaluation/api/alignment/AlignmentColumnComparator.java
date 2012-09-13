@@ -31,7 +31,7 @@ import cross.datastructures.tools.EvalTools;
 import ucar.ma2.IndexIterator;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

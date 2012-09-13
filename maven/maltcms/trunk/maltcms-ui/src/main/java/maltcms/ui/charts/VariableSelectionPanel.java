@@ -29,7 +29,7 @@ package maltcms.ui.charts;
 
 /**
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  */
 public class VariableSelectionPanel extends javax.swing.JPanel {
 

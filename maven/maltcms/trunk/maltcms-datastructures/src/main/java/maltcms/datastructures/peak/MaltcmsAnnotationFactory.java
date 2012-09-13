@@ -45,7 +45,7 @@ import maltcms.io.xml.bindings.annotation.MaltcmsAnnotation;
 import maltcms.io.xml.bindings.annotation.ResourceType;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

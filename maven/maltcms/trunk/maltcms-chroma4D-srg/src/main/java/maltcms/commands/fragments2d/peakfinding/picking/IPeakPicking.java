@@ -35,7 +35,7 @@ import cross.datastructures.fragments.IFileFragment;
 
 /**
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 public interface IPeakPicking extends IConfigurable {
 

@@ -32,7 +32,7 @@ import java.awt.geom.Area;
 import java.util.List;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  */
 public interface IAlignment extends

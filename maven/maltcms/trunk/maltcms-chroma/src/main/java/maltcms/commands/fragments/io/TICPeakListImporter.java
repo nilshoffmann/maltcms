@@ -64,7 +64,7 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

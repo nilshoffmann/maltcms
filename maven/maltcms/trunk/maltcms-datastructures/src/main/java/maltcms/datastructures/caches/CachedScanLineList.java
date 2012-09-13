@@ -46,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Implementation of {@link IScanLine} with {@link CachedList}.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 public class CachedScanLineList extends AScanLineCache {

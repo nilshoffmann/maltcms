@@ -56,7 +56,7 @@ import cross.tools.MathTools;
 
 /**
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 @Data
 public class ThreePredecessorsOptimization implements IOptimizationFunction {

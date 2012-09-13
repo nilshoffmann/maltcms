@@ -53,7 +53,7 @@ import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
  * welche in den anderen chromatogrammen nicht vorkommen. irgendwie muss das
  * fixiert werden
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

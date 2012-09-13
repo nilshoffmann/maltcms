@@ -42,7 +42,7 @@ import java.util.ServiceLoader;
 import cross.datastructures.tuple.Tuple2D;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

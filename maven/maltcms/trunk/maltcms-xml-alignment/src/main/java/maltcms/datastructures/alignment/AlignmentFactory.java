@@ -49,7 +49,7 @@ import cross.exception.ResourceNotAvailableException;
 import cross.tools.StringTools;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

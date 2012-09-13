@@ -36,7 +36,7 @@ import ucar.ma2.IndexIterator;
 /**
  * Will take the square root of all elements.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)

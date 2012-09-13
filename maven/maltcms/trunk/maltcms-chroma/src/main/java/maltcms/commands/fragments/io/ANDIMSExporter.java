@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayChar;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

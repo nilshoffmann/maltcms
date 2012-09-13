@@ -66,7 +66,7 @@ import cross.tools.StringTools;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

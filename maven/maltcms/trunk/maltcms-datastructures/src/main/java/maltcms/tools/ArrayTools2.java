@@ -57,7 +57,7 @@ import maltcms.commands.filters.array.SqrtFilter;
 /**
  * Array tools.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 public class ArrayTools2 {
 

@@ -60,7 +60,7 @@ import ucar.ma2.ArrayInt;
  * Reduces a GCxGC-MS chromatogram to its one-dimensional representation by
  * summing over modulations.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 /*
  * TODO declare provided and required variables

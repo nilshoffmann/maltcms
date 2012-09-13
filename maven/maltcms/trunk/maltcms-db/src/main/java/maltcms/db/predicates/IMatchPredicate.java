@@ -30,7 +30,7 @@ package maltcms.db.predicates;
 import java.lang.reflect.Method;
 
 /*
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  * 
  * 
  * @param <T>

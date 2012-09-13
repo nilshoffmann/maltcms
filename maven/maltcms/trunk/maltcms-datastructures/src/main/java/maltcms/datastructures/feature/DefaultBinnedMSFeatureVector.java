@@ -41,7 +41,7 @@ import cross.datastructures.tuple.Tuple2D;
  * This feature vector retrieves mass and intensity values for this ms from
  * directly referenced (possibly cached) lists.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 public class DefaultBinnedMSFeatureVector implements IFeatureVector {
 

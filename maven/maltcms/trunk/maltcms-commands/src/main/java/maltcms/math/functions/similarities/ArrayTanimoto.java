@@ -36,7 +36,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Implementation of Tanimoto score.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)

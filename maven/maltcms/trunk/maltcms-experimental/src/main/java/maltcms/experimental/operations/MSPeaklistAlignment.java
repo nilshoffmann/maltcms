@@ -44,7 +44,7 @@ import cross.annotations.RequiresVariables;
 
 /**
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values"})
 public class MSPeaklistAlignment extends TwoFeatureVectorOperation {

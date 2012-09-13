@@ -31,7 +31,7 @@ import net.sf.maltcms.evaluation.spi.classification.PeakRTFeatureVector;
 import maltcms.datastructures.array.IFeatureVector;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

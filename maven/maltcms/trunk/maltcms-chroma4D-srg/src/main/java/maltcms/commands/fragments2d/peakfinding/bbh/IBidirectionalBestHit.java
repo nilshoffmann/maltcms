@@ -37,7 +37,7 @@ import cross.IConfigurable;
 /**
  * Interface for an BBH algorithm used by {@link SeededRegionGrowing}.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 public interface IBidirectionalBestHit extends IConfigurable {
 

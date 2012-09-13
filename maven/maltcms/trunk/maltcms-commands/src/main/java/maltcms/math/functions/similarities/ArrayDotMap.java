@@ -41,7 +41,7 @@ import ucar.ma2.IndexIterator;
  * Calculates the dotmap, but instead of the weighting by mz bin this class uses
  * the standard deviation.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Data
 //@ServiceProvider(service = IArraySimilarity.class)

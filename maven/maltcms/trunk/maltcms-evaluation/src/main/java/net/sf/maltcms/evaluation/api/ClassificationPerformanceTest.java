@@ -44,7 +44,7 @@ import java.util.LinkedHashSet;
  * instances as ground truth versus a collection of EntityGroup instances, which
  * are to be evaluated.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

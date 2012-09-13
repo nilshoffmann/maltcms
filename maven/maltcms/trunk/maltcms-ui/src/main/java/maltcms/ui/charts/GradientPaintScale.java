@@ -51,7 +51,7 @@ import org.jfree.chart.renderer.PaintScale;
 import cross.IConfigurable;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

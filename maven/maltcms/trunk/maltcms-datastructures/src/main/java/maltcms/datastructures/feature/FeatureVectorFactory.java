@@ -42,7 +42,7 @@ import maltcms.datastructures.ms.IScan1D;
 /**
  * Implementation of a Factory for some common FeatureVector types.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 public class FeatureVectorFactory {
 

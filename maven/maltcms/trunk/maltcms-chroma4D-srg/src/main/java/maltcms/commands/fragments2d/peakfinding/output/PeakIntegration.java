@@ -67,7 +67,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Does the Peak Integration on basis of the unique masses.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

@@ -39,7 +39,7 @@ import cross.exception.NotImplementedException;
 import maltcms.datastructures.IFileFragmentModifier;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

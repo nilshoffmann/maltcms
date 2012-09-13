@@ -57,7 +57,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Default visualization pipeline command.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

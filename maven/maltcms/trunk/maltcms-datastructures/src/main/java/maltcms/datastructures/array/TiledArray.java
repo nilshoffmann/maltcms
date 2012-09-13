@@ -44,7 +44,7 @@ import ucar.ma2.ArrayInt.D1;
 import cross.datastructures.tuple.Tuple2D;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

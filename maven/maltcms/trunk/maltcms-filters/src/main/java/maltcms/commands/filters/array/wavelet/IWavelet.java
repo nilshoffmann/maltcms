@@ -30,7 +30,7 @@ package maltcms.commands.filters.array.wavelet;
 /**
  * Interface for Wavelet implementations.
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  *
  */
 public interface IWavelet {

@@ -42,7 +42,7 @@ import cross.datastructures.tuple.Tuple2D;
  * opposed to DefaultBinnedMSFeatureVector, which requests them possibly from a
  * CachedList backed implementation.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 public class FastBinnedMSFeatureVector implements IFeatureVector {
 

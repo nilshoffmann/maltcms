@@ -39,7 +39,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * Exports aligned peak area table.
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

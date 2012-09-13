@@ -40,7 +40,7 @@ import maltcms.datastructures.array.IFeatureVector;
  * are grouped by some algorithm as related entities.
  *
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  *
  */

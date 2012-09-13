@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  * This Factory creates all {@link IScanLine} caches and hold an reference to
  * support multiple usage.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 public class ScanLineCacheFactory {

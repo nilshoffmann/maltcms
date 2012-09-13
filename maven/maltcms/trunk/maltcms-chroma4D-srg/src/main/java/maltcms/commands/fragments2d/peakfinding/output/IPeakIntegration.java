@@ -38,7 +38,7 @@ import cross.datastructures.workflow.IWorkflow;
 /**
  * Provides some methods to do a peak integration.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 public interface IPeakIntegration extends IConfigurable {
 

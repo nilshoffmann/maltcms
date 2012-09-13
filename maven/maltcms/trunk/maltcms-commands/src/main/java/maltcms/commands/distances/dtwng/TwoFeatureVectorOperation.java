@@ -35,7 +35,7 @@ import cross.IConfigurable;
 
 /**
  *
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 public abstract class TwoFeatureVectorOperation implements IConfigurable {
 

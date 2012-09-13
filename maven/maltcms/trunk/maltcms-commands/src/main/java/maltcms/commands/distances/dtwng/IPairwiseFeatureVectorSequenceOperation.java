@@ -33,7 +33,7 @@ import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.IFileFragmentModifier;
 
 /**
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  *
  */
 public interface IPairwiseFeatureVectorSequenceOperation<RESULT> extends

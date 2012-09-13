@@ -47,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
  * a serialized file. Do not use the inherit constructor from {@link PlotRunner}
  * . It will throw a {@link RuntimeException}.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 public class EPlotRunner extends PlotRunner {

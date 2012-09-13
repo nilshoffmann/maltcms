@@ -57,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  * TODO: Change to {@link AScanLineCache}
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",

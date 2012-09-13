@@ -55,7 +55,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Computes relative deltamasses.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 @Slf4j
 @Data

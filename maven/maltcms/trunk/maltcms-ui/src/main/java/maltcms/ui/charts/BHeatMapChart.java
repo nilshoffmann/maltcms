@@ -42,7 +42,7 @@ import cross.datastructures.tools.EvalTools;
  * Creates a chart with labeled domain axis, displaying a heatmap as
  * backgroundimage.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 public class BHeatMapChart extends AChart<XYBPlot> {
 

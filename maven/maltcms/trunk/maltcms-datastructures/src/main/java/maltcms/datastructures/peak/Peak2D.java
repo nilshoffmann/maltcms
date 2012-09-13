@@ -38,7 +38,7 @@ import cross.datastructures.tuple.Tuple2D;
 /**
  * Dataholder for all important information about a peak.
  *
- * @author Mathias Wilhelm(mwilhelm A T TechFak.Uni-Bielefeld.DE)
+ * @author Mathias Wilhelm
  */
 public class Peak2D extends Peak1D implements Serializable {
 

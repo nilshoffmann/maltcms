@@ -36,7 +36,7 @@ import com.db4o.query.Predicate;
 import cross.datastructures.tuple.Tuple2D;
 
 /*
- * @author Nils.Hoffmann@CeBiTec.Uni-Bielefeld.DE
+ * @author Nils Hoffmann
  */
 public interface IDBQuery<T extends Predicate<G>, G> {
 
