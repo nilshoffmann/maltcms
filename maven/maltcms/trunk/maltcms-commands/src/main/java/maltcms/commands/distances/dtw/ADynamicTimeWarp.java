@@ -1,23 +1,29 @@
-/*
- *  Copyright (C) 2008-2012 Nils Hoffmann
- *  Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+/* 
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+ * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
- *  This file is part of Cross/Maltcms.
+ * Project website: http://maltcms.sf.net
  *
- *  Cross/Maltcms is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Maltcms may be used under the terms of either the
  *
- *  Cross/Maltcms is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
+ * GNU Lesser General Public License (LGPL)
+ * http://www.gnu.org/licenses/lgpl.html
  *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with Cross/Maltcms.  If not, see <http://www.gnu.org/licenses/>.
+ * or the
  *
- *  $Id$
+ * Eclipse Public License (EPL)
+ * http://www.eclipse.org/org/documents/epl-v10.php
+ *
+ * As a user/recipient of Maltcms, you may choose which license to receive the code 
+ * under. Certain files or entire directories may not be covered by this 
+ * dual license, but are subject to licenses compatible to both LGPL and EPL.
+ * License exceptions are explicitly declared in all relevant files or in a 
+ * LICENSE file in the relevant directories.
+ *
+ * Maltcms is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
+ * for details.
  */
 package maltcms.commands.distances.dtw;
 
@@ -552,45 +558,8 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
     @Override
     public void configure(final Configuration cfg) {
         log.debug("Configure called on {}", this.getClass().getName());
-        EvalTools.notNull(cfg, this);
-//        setPairwiseScanDistance(Factory.getInstance().getObjectFactory().
-//                instantiate(
-//                cfg.getString("alignment.pairwise.distance",
-//                "maltcms.commands.distances.PairwiseDistance"),
-//                PairwiseFeatureSimilarity.class));
-
-        this.bandWidthPercentage = cfg.getDouble("alignment.algorithm.windowsize", 1.0);
-
-//        final DtwRecurrence cdist = Factory.getInstance().getObjectFactory().
-//                instantiate(
-//                Factory.getInstance().getConfiguration().getString(
-//                "alignment.cumulative.distance",
-//                "maltcms.commands.distances.CumulativeDistance"),
-//                DtwRecurrence.class);
-//        setCumulativeDistance(cdist);
-
-//        EvalTools.notNull(new Object[]{getCumulativeDistance(),
-//                    getPairwiseScanDistance(),
-//                    getPairwiseScanDistance().getDistance()}, this);
-//        getCumulativeDistance().setMinimizing(
-//                getPairwiseScanDistance().getDistance().minimize());
-//        final IDtwSimilarityFunction iac = getPairwiseScanDistance().
-//                getDistance();
-//        getCumulativeDistance().set(iac.getCompressionWeight(),
-//                iac.getExpansionWeight(), iac.getDiagonalWeight());
-
-
         this.scan_acquisition_time = cfg.getString("var.scan_acquisition_time",
                 "scan_acquisition_time");
-//        this.anchorRadius = cfg.getInteger(
-//                "alignment.anchors.neighborhood", 10);
-//        this.precalculatePairwiseDistances = cfg.getBoolean(
-//                "alignment.precalculatePairwiseDistances", true);
-//        this.globalBand = cfg.getBoolean("alignment.globalBand", true);
-//        this.extension = cfg.getString(
-//                this.getClass().getName() + ".extension", "");
-//        this.saveLayoutImage = cfg.getBoolean("alignment.saveLayoutImage",
-//                false);
     }
 
     /*

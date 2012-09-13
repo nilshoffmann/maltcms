@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Maltcms startup script for Unix/MacOS X/Linux, adapted from www.gradle.org gradle.sh
 SCRIPTFILE="$0"
 # Follow relative symlinks to resolve script location
 while [ -h "$SCRIPTFILE" ] ; do
