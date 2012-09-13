@@ -39,6 +39,8 @@ import cross.io.IDataSource;
 import cross.tools.StringTools;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
 import ucar.ma2.Array;
@@ -850,6 +852,13 @@ public class FileFragment implements IFileFragment {
     public Iterator<IVariableFragment> iterator() {
         final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>(
                 this.children.size());
+        if(this.children.isEmpty()) {
+            try {
+                Factory.getInstance().getDataSourceFactory().getDataSourceFor(this).readStructure(this);
+            } catch (IOException ex) {
+                Logger.getLogger(FileFragment.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         // for(IGroupFragment vf:this.children.values()) {
         final Iterator<String> iter = this.children.keySet().iterator(); // Must
         // be in

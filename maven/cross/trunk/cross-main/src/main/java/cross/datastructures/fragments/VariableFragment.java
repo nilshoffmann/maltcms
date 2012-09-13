@@ -460,7 +460,7 @@ public class VariableFragment implements IVariableFragment {
         log.debug("Set array on VariableFragment {} as child of {}",
                 toString(), getParent().getAbsolutePath());
         if (a1 == null) {
-            parent.getCache().put(this, null);
+            //parent.getCache().put(this, null);
             clear();
         } else {
             this.isModified = true;
@@ -563,6 +563,7 @@ public class VariableFragment implements IVariableFragment {
             parent.getCache().put(this, new ActivatableArrayList<Array>(al1));
             setDataType(DataType.getType(al1.get(0).getElementType()));
         } else {
+            //parent.getCache().put(this, null);
             clear();
         }
     }
@@ -573,7 +574,7 @@ public class VariableFragment implements IVariableFragment {
     @Override
     public void clear() {
         this.isModified = false;
-        parent.getCache().put(this, null);
+        //parent.getCache().put(this, null);
     }
 
     /*
