@@ -29,6 +29,7 @@ package maltcms.commands.fragments.preprocessing;
 
 import cross.annotations.AnnotationInspector;
 import cross.commands.fragments.IFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;

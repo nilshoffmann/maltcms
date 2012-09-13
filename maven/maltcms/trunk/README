@@ -74,11 +74,17 @@ this file) with the new release number.
 
 License Headers:
 Check, that all new files all have the maltcms license header, provided 
-under maltcms-resources/src/main/resources/licenses/maltcmsLicenseHeader.txt 
+under src/main/resources/licenses/license-maltcms.txt. NetBeans IDE 
+allows to add this header as a template for new files. Go to Tools->Templates->
+Licenses and select Add in the Dialog. Go ahead and select the license header 
+template. 
 
 To add / update the license header, there is a nice plugin for the NetBeans IDE
 available: 
 	http://plugins.netbeans.org/plugin/17960/license-changer
+
+The newest version supports NetBeans Templates automatically, so you can simply
+select the 'maltcms' license from the dropdown menu of available license templates.
 
 Svn keywords:
 Then, be sure to set the svn:keywords property recursively on the project. The 
@@ -100,15 +106,12 @@ If all tests succeed, continue, otherwise, correct errors and go back to 2.
 4. Prepare release
 >mvn release:prepare -Dusername=MYSOURCEFORGEUSERNAME =Dpassword=MYSOURCEFORGEPASSWD
 If everything looks fine:
-5. Perform release
+5. Open ssh connection
+>ssh -t MYSOURCEFORGEUSERNAME,maltcms@shell.sourceforge.net create
+6. Perform release
 >mvn release:perform 
-6. Create site
->cd target/checkout
->mvn site
-7. Check that site content is okay
-8. Deploy site
->ant site-deploy
-9. Relax ;-)
+This builds the next release and also creates and deploys the site to sourceforge.
+7. Relax ;-)
 
 --------------------------------------------------------------------------------
 	Deploying a snapshot to the artifactory repository *
