@@ -8,12 +8,12 @@
             <arg value="-projecthelp" />
         </java>
     </target>
-
+<!-- Credentials task -->
     <target name="credentials" description="Ask for user credentials">
         <input addproperty="sf.username">Please enter sourceforge username:</input>
         <input addproperty="project.version">Please enter project version:</input>
     </target>
-
+<!-- Site deployment task -->
     <target name="site-deploy" description="Deploy site to sourceforge" depends="credentials">
         <exec command="rsync" inputstring="">
             <arg value="-avtruP"/>

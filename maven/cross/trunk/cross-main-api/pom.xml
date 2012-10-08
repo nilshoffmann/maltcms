@@ -8,6 +8,7 @@
     </parent>
     <artifactId>cross-main-api</artifactId>
     <name>cross-main-api</name>
+    <packaging>jar</packaging>
     <dependencies>
         <dependency>
             <groupId>commons-configuration</groupId>
