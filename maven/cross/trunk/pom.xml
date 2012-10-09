@@ -53,6 +53,12 @@
                 <role>Testing</role>
             </roles>
         </developer>
+        <developer>
+        	<name>Tobias Placht</name>
+        	<roles>
+        		<role>Developer</role>
+        	</roles>
+        </developer>
     </developers>
     <inceptionYear>2007</inceptionYear>
     <ciManagement>
