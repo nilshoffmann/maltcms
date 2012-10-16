@@ -106,12 +106,12 @@
         <dependency>
             <groupId>net.sf.mpaxs</groupId>
             <artifactId>mpaxs-spi</artifactId>
-            <version>1.6.10</version>
+            <version>1.6.11</version>
         </dependency>
         <dependency>
             <groupId>net.sf.mpaxs</groupId>
             <artifactId>mpaxs-server</artifactId>
-            <version>1.6.10</version>
+            <version>1.6.11</version>
         </dependency>
     </dependencies>
 </project>
