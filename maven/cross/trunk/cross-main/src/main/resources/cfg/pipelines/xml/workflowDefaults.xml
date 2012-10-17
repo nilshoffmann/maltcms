@@ -49,14 +49,24 @@ for details.
     
     <bean id="zipPostProcessor" class="cross.datastructures.workflow.ZipWorkflowPostProcessor" scope="singleton">
         <property name="encodeBase64" value="false"/>
+        <!-- if set to true, fileName is used as the output zip archive's name -->
+        <!-- defaults to workflow output directory -->
+        <property name="useCustomName" value="false"/>
         <property name="fileName" value="maltcmsResults.zip"/>
         <property name="workflowZipper" ref="workflowZipper"/>
+        <!-- only set to true, if you also set flatten=true below -->
+        <property name="saveInOutputDirectory" value="false"/>
     </bean>   
     
     <bean id="workflowZipper" class="cross.io.misc.WorkflowZipper" scope="singleton">
+        <!-- create a flat collection of result files -->
+        <!-- recommended setting is false, otherwise some files might be replaced accidentally -->
+        <property name="flatten" value="false"/>
+        <!-- delete output directory and child files on exit of vm -->
         <property name="deleteOnExit" value="false"/>
         <!-- replace matchAllFileFilter with configurableFileFilter if you want to select which files to include in zipped workflow -->
         <property name="fileFilter" ref="matchAllFileFilter"/>
+        <!-- create a zip archive of the workflow -->
         <property name="zipWorkflow" value="true"/>
     </bean>
     

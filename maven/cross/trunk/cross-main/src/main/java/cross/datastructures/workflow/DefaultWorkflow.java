@@ -33,21 +33,17 @@ import cross.commands.fragments.AFragmentCommand;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.pipeline.ICommandSequence;
+import cross.datastructures.tools.FileTools;
 import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.IWorkflow;
-import cross.datastructures.workflow.IWorkflowElement;
-import cross.datastructures.workflow.IWorkflowFileResult;
-import cross.datastructures.workflow.IWorkflowObjectResult;
-import cross.datastructures.workflow.IWorkflowPostProcessor;
-import cross.datastructures.workflow.IWorkflowProgressResult;
-import cross.datastructures.workflow.IWorkflowResult;
-import cross.datastructures.workflow.WorkflowSlot;
 import cross.event.*;
 import cross.exception.ConstraintViolationException;
 import cross.io.misc.DefaultConfigurableFileFilter;
 import cross.io.xml.IXMLSerializable;
 import cross.tools.StringTools;
 import java.io.*;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.OperatingSystemMXBean;
 import java.util.*;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -57,6 +53,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -275,19 +272,6 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
                 f.createNewFile();
                 outp.output(doc, new BufferedOutputStream(new FileOutputStream(
                         f)));
-//                final WorkflowZipper wz = Factory.getInstance().getObjectFactory().
-//                        instantiate(WorkflowZipper.class);
-//                wz.setFileFilter(Factory.getInstance().getObjectFactory().
-//                        instantiate(this.fileFilter,
-//                        java.io.FileFilter.class));
-//                wz.setIWorkflow(this);
-//                final File results = new File(dir, "maltcmsResults.zip");
-//                if (wz.save(results)) {
-//                    BinaryFileBase64Wrapper.base64Encode(results, new File(dir,
-//                            results.getName() + ".b64"));
-//                } else {
-//                    log.debug("Did not Base64 encode maltcmsResults.zip");
-//                }
                 if (this.saveHTML) {
                     saveHTML(f);
                 }
@@ -664,8 +648,11 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         while (commandSequence.hasNext()) {
             results = commandSequence.next();
         }
-        for(IWorkflowPostProcessor pp:workflowPostProcessors) {
-            log.info("Running workflowPostProcessor {}",pp.getClass().getName());
+        // Save configuration
+        Factory.dumpConfig("runtime.properties",getStartupDate());
+        addVmStats(getOutputDirectory());
+        for (IWorkflowPostProcessor pp : workflowPostProcessors) {
+            log.info("Running workflowPostProcessor {}", pp.getClass().getName());
             pp.process(this);
         }
         return results;
@@ -692,5 +679,38 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         this.workflowPostProcessors = workflowPostProcessors;
     }
     
-    
+    private void addVmStats(File outputDirectory) {
+        List<MemoryPoolMXBean> mbeans = ManagementFactory.getMemoryPoolMXBeans();
+        long maxUsed = 0L;
+        for (MemoryPoolMXBean mbean : mbeans) {
+            log.debug("Peak memory initial: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getInit() / (1024.0f * 1024.0f))) + " MB");
+            log.debug("Peak memory used: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getUsed() / (1024.0f * 1024.0f))) + " MB");
+            log.debug("Peak memory comitted: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getCommitted() / (1024.0f * 1024.0f))) + " MB");
+            log.debug("Peak memory max: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getMax() / (1024.0f * 1024.0f))) + " MB");
+            maxUsed += mbean.getPeakUsage().getUsed();
+        }
+        log.info("Total memory used: " + String.format("%.2f", (maxUsed / (1024f * 1024f))) + " MB");
+        int nmemoryPools = mbeans.size();
+        long time = 0L;
+
+        OperatingSystemMXBean osbean = ManagementFactory.getOperatingSystemMXBean();
+        if (osbean instanceof com.sun.management.OperatingSystemMXBean) {
+            com.sun.management.OperatingSystemMXBean osmbean = (com.sun.management.OperatingSystemMXBean) osbean;
+            time = osmbean.getProcessCpuTime();
+        }
+        log.info("Total cpu time: " + String.format("%.2f", (time / 1000000000f)) + " sec");
+        File workflowStats = new File(new File(outputDirectory, "Factory"), "workflowStats.properties");
+
+        PropertiesConfiguration pc;
+        try {
+            pc = new PropertiesConfiguration(workflowStats);
+            pc.setProperty("cputime_nanoseconds", time);
+            pc.setProperty("memory_pools", nmemoryPools);
+            pc.setProperty("maxUsedMemory_bytes", maxUsed);
+            pc.save();
+        } catch (ConfigurationException ex) {
+            log.error("{}", ex);
+        }
+
+    }
 }

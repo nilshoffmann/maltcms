@@ -47,6 +47,8 @@ public class ZipWorkflowPostProcessor implements IWorkflowPostProcessor {
 
     private WorkflowZipper workflowZipper = new WorkflowZipper();
     private File outputDirectory = null;
+    private boolean useCustomName = false;
+    private boolean saveInOutputDirectory = false;
     private String fileName = "maltcmsResults.zip";
     private boolean encodeBase64 = false;
     
@@ -54,14 +56,25 @@ public class ZipWorkflowPostProcessor implements IWorkflowPostProcessor {
     public void process(IWorkflow workflow) {
         workflowZipper.setIWorkflow(workflow);
         if(outputDirectory == null) {
-            outputDirectory = workflow.getOutputDirectory();
+            if(saveInOutputDirectory) {
+                outputDirectory = workflow.getOutputDirectory();
+            }else{
+                outputDirectory = workflow.getOutputDirectory().getParentFile();
+            }
         }
-        final File results = new File(outputDirectory, fileName);
+        String name;
+        if(useCustomName) {
+            name = fileName;
+        }else{
+            name = workflow.getOutputDirectory().getName()+".zip";
+        }
+        final File results = new File(outputDirectory, name);
+        
         if (workflowZipper.save(results) && encodeBase64) {
             BinaryFileBase64Wrapper.base64Encode(results, new File(outputDirectory,
                     results.getName() + ".b64"));
         } else {
-            log.debug("Did not Base64 encode "+fileName);
+            log.debug("Did not Base64 encode "+name);
         }
     }
     
