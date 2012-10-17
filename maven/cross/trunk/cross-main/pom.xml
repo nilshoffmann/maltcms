@@ -48,28 +48,28 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
+            <groupId>org.springframework</groupId> 
+            <artifactId>org.springframework.aop</artifactId> 
             <version>3.0.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-asm</artifactId>
+            <artifactId>org.springframework.asm</artifactId>
             <version>3.0.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
+            <artifactId>org.springframework.beans</artifactId>
             <version>3.0.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <artifactId>org.springframework.context</artifactId>
             <version>3.0.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
+            <artifactId>org.springframework.core</artifactId>
             <version>3.0.6.RELEASE</version>
             <exclusions>
                 <exclusion>
@@ -80,7 +80,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-expression</artifactId>
+            <artifactId>org.springframework.expression</artifactId>
             <version>3.0.6.RELEASE</version>
         </dependency>
         <dependency>
@@ -90,7 +90,7 @@
         </dependency>
         <dependency>
             <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache-core</artifactId>
+            <artifactId>ehcache-core-osgi</artifactId>
             <version>2.4.6</version>
         </dependency>
         <dependency>
@@ -103,15 +103,21 @@
             <artifactId>db4o-all</artifactId>
             <version>8.0.249</version>
         </dependency>
+        <!-- is this required by db4o-all? -->
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>com.springsource.org.apache.tools.ant.nodep</artifactId>
+            <version>1.7.1</version>
+        </dependency>
         <dependency>
             <groupId>net.sf.mpaxs</groupId>
             <artifactId>mpaxs-spi</artifactId>
-            <version>1.6.11</version>
+            <version>1.6.12-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.sf.mpaxs</groupId>
             <artifactId>mpaxs-server</artifactId>
-            <version>1.6.11</version>
+            <version>1.6.12-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

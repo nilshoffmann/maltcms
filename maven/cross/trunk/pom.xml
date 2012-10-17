@@ -253,6 +253,7 @@
                     <configuration>
                         <instructions>
                             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                            <Bundle-RequiredExecutionEnvironment>J2SE-1.5,JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
                         </instructions>
                     </configuration>
                     <executions>
@@ -268,7 +269,7 @@
                 <plugin>
                     <groupId>org.ops4j</groupId>
                     <artifactId>maven-pax-plugin</artifactId>
-                    <version>1.4</version>
+                    <version>1.5</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -417,7 +418,7 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.6.1</version>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency> 
             <groupId>org.projectlombok</groupId> 
@@ -427,8 +428,8 @@
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-util-lookup</artifactId>
-            <version>RELEASE71</version>
+            <artifactId>org-openide-util-lookup-osgi</artifactId>
+            <version>7.1.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -447,6 +448,11 @@
             <artifactId>jul-to-slf4j</artifactId>
             <version>1.6.1</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>com.springsource.org.apache.commons.io</artifactId>
+            <version>1.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
