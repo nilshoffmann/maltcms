@@ -27,9 +27,6 @@
  */
 package cross.datastructures.cache;
 
-import cross.datastructures.cache.FragmentCacheType;
-import cross.datastructures.cache.ICacheDelegate;
-import cross.datastructures.cache.ICacheElementProvider;
 import cross.datastructures.cache.ehcache.AutoRetrievalEhcacheDelegate;
 import cross.datastructures.cache.ehcache.EhcacheDelegate;
 import cross.Factory;
@@ -93,8 +90,6 @@ public class CacheFactory {
         EhcacheDelegate<K, V> ed = new EhcacheDelegate<K, V>(cacheName, cm);
         CacheConfiguration cc = ed.getCache().getCacheConfiguration();
         cc.setEternal(true);
-        cc.setTimeToIdleSeconds(-1);
-        cc.setTimeToIdleSeconds(-1);
         return ed;
     }
 
