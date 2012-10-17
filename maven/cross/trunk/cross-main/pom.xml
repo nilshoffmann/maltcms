@@ -37,17 +37,6 @@
             <version>1.4</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>cross-main-api</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId> 
             <artifactId>org.springframework.aop</artifactId> 
             <version>3.0.6.RELEASE</version>
@@ -118,6 +107,27 @@
             <groupId>net.sf.mpaxs</groupId>
             <artifactId>mpaxs-server</artifactId>
             <version>1.6.12-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.9</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>edu.ucar.unidata</groupId>
+            <artifactId>netcdf-osgi</artifactId>
+            <version>4.2.35</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>com.springsource.org.jdom</artifactId>
+            <version>1.1.0</version>
         </dependency>
     </dependencies>
 </project>

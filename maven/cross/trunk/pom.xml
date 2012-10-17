@@ -405,7 +405,6 @@
         <module>cross-exception</module>
         <module>cross-ui</module>
         <module>cross-tools</module>
-        <module>cross-main-api</module>
         <module>cross-math</module>
     </modules>
     <dependencies>

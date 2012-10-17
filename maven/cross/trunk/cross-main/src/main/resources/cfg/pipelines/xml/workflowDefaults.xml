@@ -35,7 +35,7 @@ for details.
         This file defines elements of the default workflow.
     </description>
     
-    <bean id="workflow" class="cross.main.datastructures.workflow.DefaultWorkflow" scope="singleton">
+    <bean id="workflow" class="cross.datastructures.workflow.DefaultWorkflow" scope="singleton">
         <property name="commandSequence" ref="commandPipeline"/>
         <property name="name" value="workflow"/>
         <property name="executeLocal" value="true"/>
@@ -47,22 +47,22 @@ for details.
         </property>
     </bean>
     
-    <bean id="zipPostProcessor" class="cross.main.datastructures.workflow.ZipWorkflowPostProcessor" scope="singleton">
+    <bean id="zipPostProcessor" class="cross.datastructures.workflow.ZipWorkflowPostProcessor" scope="singleton">
         <property name="encodeBase64" value="false"/>
         <property name="fileName" value="maltcmsResults.zip"/>
         <property name="workflowZipper" ref="workflowZipper"/>
     </bean>   
     
-    <bean id="workflowZipper" class="cross.main.io.misc.WorkflowZipper" scope="singleton">
+    <bean id="workflowZipper" class="cross.io.misc.WorkflowZipper" scope="singleton">
         <property name="deleteOnExit" value="false"/>
         <!-- replace matchAllFileFilter with configurableFileFilter if you want to select which files to include in zipped workflow -->
         <property name="fileFilter" ref="matchAllFileFilter"/>
         <property name="zipWorkflow" value="true"/>
     </bean>
     
-    <bean id="matchAllFileFilter" class="cross.main.io.misc.DefaultMatchAllFileFilter" scope="singleton"/>
+    <bean id="matchAllFileFilter" class="cross.io.misc.DefaultMatchAllFileFilter" scope="singleton"/>
     
-    <bean id="configurableFileFilter" class="cross.main.io.misc.DefaultConfigurableFileFilter" scope="singleton">
+    <bean id="configurableFileFilter" class="cross.io.misc.DefaultConfigurableFileFilter" scope="singleton">
         <property name="fileTypesToKeep">
             <list>
                 <value>png</value>

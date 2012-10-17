@@ -28,9 +28,9 @@
 package cross.main.datastructures.ehcache;
 
 import cross.datastructures.cache.ICacheDelegate;
-import cross.main.datastructures.cache.CacheFactory;
-import cross.main.datastructures.fragments.FileFragment;
-import cross.main.datastructures.fragments.VariableFragment;
+import cross.datastructures.cache.CacheFactory;
+import cross.datastructures.fragments.FileFragment;
+import cross.datastructures.fragments.VariableFragment;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
