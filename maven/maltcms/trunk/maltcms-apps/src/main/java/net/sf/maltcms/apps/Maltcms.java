@@ -116,41 +116,6 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         return Maltcms.mcms;
     }
 
-    private void addVmStats(File outputDirectory) {
-        List<MemoryPoolMXBean> mbeans = ManagementFactory.getMemoryPoolMXBeans();
-        long maxUsed = 0L;
-        for (MemoryPoolMXBean mbean : mbeans) {
-            log.debug("Peak memory initial: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getInit() / (1024.0f * 1024.0f))) + " MB");
-            log.debug("Peak memory used: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getUsed() / (1024.0f * 1024.0f))) + " MB");
-            log.debug("Peak memory comitted: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getCommitted() / (1024.0f * 1024.0f))) + " MB");
-            log.debug("Peak memory max: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getMax() / (1024.0f * 1024.0f))) + " MB");
-            maxUsed += mbean.getPeakUsage().getUsed();
-        }
-        log.info("Total memory used: " + String.format("%.2f", (maxUsed / (1024f * 1024f))) + " MB");
-        int nmemoryPools = mbeans.size();
-        long time = 0L;
-
-        OperatingSystemMXBean osbean = ManagementFactory.getOperatingSystemMXBean();
-        if (osbean instanceof com.sun.management.OperatingSystemMXBean) {
-            com.sun.management.OperatingSystemMXBean osmbean = (com.sun.management.OperatingSystemMXBean) osbean;
-            time = osmbean.getProcessCpuTime();
-        }
-        log.info("Total cpu time: " + String.format("%.2f", (time / 1000000000f)) + " sec");
-        File workflowStats = new File(new File(outputDirectory, "Factory"), "workflowStats.properties");
-
-        PropertiesConfiguration pc;
-        try {
-            pc = new PropertiesConfiguration(workflowStats);
-            pc.setProperty("cputime_nanoseconds", time);
-            pc.setProperty("memory_pools", nmemoryPools);
-            pc.setProperty("maxUsedMemory_bytes", maxUsed);
-            pc.save();
-        } catch (ConfigurationException ex) {
-            log.error("{}", ex);
-        }
-
-    }
-
     private static void handleExitVmException(final Logger log,
             final ExitVmException npe) {
         int ecode;
@@ -237,13 +202,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 try {
                     iw.call();
                     Maltcms.shutdown(30, log);
-                    // Save configuration
-                    Factory.dumpConfig("runtime.properties",
-                            cs.getWorkflow().
-                            getStartupDate());
                     // Save workflow
                     iw.save();
-                    m.addVmStats(iw.getOutputDirectory());
                     System.exit(ecode);
                 } catch (final ExitVmException e) {
                     Maltcms.handleExitVmException(log, e);
