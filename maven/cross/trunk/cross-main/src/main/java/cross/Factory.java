@@ -117,37 +117,41 @@ public class Factory implements ConfigurationListener {
         //retrieve global, joint configuration
         final Configuration cfg = Factory.getInstance().getConfiguration();
         //retrieve pipeline.properties location
-        final File pipelinePropertiesFile = new File(cfg.getString("pipeline.properties"));
-        //resolve and retrieve pipeline.xml location
-        final File pipelineXml;
-        try {
-            pipelineXml = new File(new URI(cfg.getString("pipeline.xml").replace("config.basedir", pipelinePropertiesFile.getParent())));
-            //setup output location
-            final File location = new File(FileTools.prependDefaultDirsWithPrefix(
-                    "", Factory.class, d), filename);
-            //location for pipeline.properties dump
-            final File pipelinePropertiesFileDump = new File(location.getParentFile(), pipelinePropertiesFile.getName());
+        String configFile = cfg.getString("pipeline.properties");
+        if(configFile!=null) {
+            final File pipelinePropertiesFile = new File(configFile);
+            //resolve and retrieve pipeline.xml location
+            final File pipelineXml;
+            try {
+                pipelineXml = new File(new URI(cfg.getString("pipeline.xml").replace("config.basedir", pipelinePropertiesFile.getParent())));
+                //setup output location
+                final File location = new File(FileTools.prependDefaultDirsWithPrefix(
+                        "", Factory.class, d), filename);
+                //location for pipeline.properties dump
+                final File pipelinePropertiesFileDump = new File(location.getParentFile(), pipelinePropertiesFile.getName());
 
-            PropertiesConfiguration pipelineProperties = new PropertiesConfiguration(pipelinePropertiesFile);
-            PropertiesConfiguration newPipelineProperties = new PropertiesConfiguration(pipelinePropertiesFileDump);
-            //copy configuration to dump configuration
-            newPipelineProperties.copy(pipelineProperties);
-            //correct pipeline.xml location
-            newPipelineProperties.setProperty("pipeline.xml", "file:${config.basedir}/" + pipelineXml.getName());
-            newPipelineProperties.save();
-            //copy pipeline.xml to dump location
-            FileUtils.copyFile(pipelineXml, new File(location.getParentFile(), pipelineXml.getName()));
-            Factory.getInstance().log.error("Saving configuration to: ");
-            Factory.getInstance().log.error("{}", location.getAbsolutePath());
-            Factory.saveConfiguration(cfg, location);
-        } catch (IOException ex) {
-            Factory.getInstance().log.error("{}", ex);
-        } catch (URISyntaxException ex) {
-            Factory.getInstance().log.error("{}", ex);
-        } catch (ConfigurationException ex) {
-            Factory.getInstance().log.error("{}", ex);
+                PropertiesConfiguration pipelineProperties = new PropertiesConfiguration(pipelinePropertiesFile);
+                PropertiesConfiguration newPipelineProperties = new PropertiesConfiguration(pipelinePropertiesFileDump);
+                //copy configuration to dump configuration
+                newPipelineProperties.copy(pipelineProperties);
+                //correct pipeline.xml location
+                newPipelineProperties.setProperty("pipeline.xml", "file:${config.basedir}/" + pipelineXml.getName());
+                newPipelineProperties.save();
+                //copy pipeline.xml to dump location
+                FileUtils.copyFile(pipelineXml, new File(location.getParentFile(), pipelineXml.getName()));
+                Factory.getInstance().log.error("Saving configuration to: ");
+                Factory.getInstance().log.error("{}", location.getAbsolutePath());
+                Factory.saveConfiguration(cfg, location);
+            } catch (IOException ex) {
+                Factory.getInstance().log.error("{}", ex);
+            } catch (URISyntaxException ex) {
+                Factory.getInstance().log.error("{}", ex);
+            } catch (ConfigurationException ex) {
+                Factory.getInstance().log.error("{}", ex);
+            }
+        }else{
+            Factory.getInstance().log.warn("Can not save configuration, no pipeline properties file given!");
         }
-
     }
 
     public static Factory getInstance() {
