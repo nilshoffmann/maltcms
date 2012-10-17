@@ -12,8 +12,8 @@
     <dependencies>
         <dependency>
             <groupId>edu.ucar.unidata</groupId>
-            <artifactId>netcdf</artifactId>
-            <version>4.2</version>
+            <artifactId>netcdf-osgi</artifactId>
+            <version>4.2.35</version>
         </dependency>
         <dependency>
             <groupId>commons-configuration</groupId>
@@ -24,12 +24,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-test-data</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

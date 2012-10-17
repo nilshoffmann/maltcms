@@ -25,7 +25,7 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.io.csv;
+package maltcms.io.csv.fsa;
 
 /*
  * Copyright (C) 2008, 2009 Nils Hoffmann Nils.Hoffmann A T
@@ -69,7 +69,6 @@ import ucar.nc2.Dimension;
 import ucar.nc2.NetcdfFileWriteable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
-import cross.datastructures.fragments.VariableFragment;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
@@ -79,6 +78,7 @@ import java.io.FileInputStream;
 import java.util.Vector;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.andims.NetcdfDataSource;
+import maltcms.io.csv.CSVReader;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;

@@ -27,6 +27,8 @@
  */
 package maltcms.tools;
 
+import cross.datastructures.fragments.VariableFragment;
+import cross.datastructures.fragments.FileFragment;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +67,8 @@ import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 import cross.Factory;
 import cross.datastructures.StatsMap;
-import cross.datastructures.fragments.*;
+import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FragmentTools;
 import cross.datastructures.tuple.Tuple2D;

@@ -54,17 +54,43 @@ export MALTCMS_HOME=/path/to/your/maltcms/
 
 * Windows
 
-    Extract the downloaded zip archive to a directory of your choice.
-    In order to have maltcms.bat available on your command prompt, please
-    follow these instructions:
+    Extract the downloaded zip archive to a directory of your choice. In order
+    to have maltcms.bat available on your command prompt, please follow the
+    instructions appropriate for your installed operating system. You may need
+    system administrator privileges to change system variables!
 
-    From your windows desktop, right-click 'My Computer' and select the 
-    'Properties' button. Then, within the 'System Properties' window, 
-    navigate to the 'Advanced' tab and select 'Environment Variables'.
-    In the new dialog 'Environment Variables', go to the 'Path' variable
-    in the 'System Variables' section and hit the 'Edit' button. Add the
-    absolute path of the Maltcms bin directory to the end of the 
-    'Variable value' like so:
+** Windows 7
+
+    Select 'Computer' from the Start menu and choose 'System Properties' from
+    the top level actions bar or from the context menu. Click on 
+    'Advanced system settings' and select the 'Advanced' tab in the dialog.
+    Click on 'Environment Variables' and under 'System Variables' or 
+    'User Variables', locate the 'PATH' variable, and double-click to edit it.
+    If no variable named 'PATH' is available in the 'User Variables' section,
+    select new, name the variable 'PATH'.
+
+** Windows Vista
+
+    Right click on your 'My Computer' icon on the desktop and select 
+    'Properties' from the popup-menu. Click on 'Advanced system settings' and
+    select the 'Advanced' tab in the dialog. Click on 'Environment Variables'
+    and under 'System Variables' or 'User Variables', locate the 'PATH' 
+    variable, and double-click to edit it. If now variable named 'PATH' is
+    available in the 'User Variables' section, select new, name the variable
+    'PATH'.
+
+**Windows XP
+
+    Select 'Start' and click 'Control Panel'. Then go to 'System' and click on
+    'Advanced'. Click on 'Environment Variables' and under 'System Variables'
+    or 'User Variables', locate the 'PATH' variable, and double-click to edit
+    it. If now variable named 'PATH' is available in the 'User Variables'
+    section, select new, name the variable 'PATH'.
+
+** Editing the Path Variable
+
+Add the absolute path of the Maltcms directory to the end of the 'Variable value' like so:
+
 
     Old:
 
@@ -78,12 +104,20 @@ C:\Program Files;C:\Winnt;C:\Winnt\System32
 C:\Program Files;C:\Winnt;C:\Winnt\System32;C:\Path\To\Maltcms\bin
 +------------------------------------------+
 
-    Clicking 'OK' will close the dialog and set the variable. 
-    If you now startup a new session of the Command Prompt, maltcms.bat
-    should be available as a command.
+    Finally, open a new command prompt by typing the 'Windows' or 'Meta' key
+    on your keyboard. Then type 'cmd.com' and hit enter. A new command prompt
+    will open. Type 'maltcms', hit 'Enter' and you should see maltcms' help
+    appear. It may be necessary to log out and back in before the changed 
+    settings take effect.
 
     The script will figure out its installation path from the call
-    automatically.
+    automatically. It will prompt for the installation directory of 
+    maltcms, if you call Maltcms from outside the installation directory and
+    the environment variable MALTCMS_HOME is not set. We recommend to add 
+    'MALTCMS_HOME' as an additional 'System Variable', by defining a new 
+    variable in the 'Environment Variables' dialog under 'User variables'
+    with the name 'MALTCMS_HOME' and the absolute path of the Maltcms 
+    installation directory as its value.
 
 Running Maltcms
 
@@ -94,6 +128,41 @@ Running Maltcms
 
     If you are using Windows, please replace 'maltcms.sh' with 'maltcms.bat'.
 
+* Running ChromA/ChromA4D
+    
+    Pipeline location: As of Maltcms 1.2.1, pipeline *.properties files
+    have been relocated to cfg/pipelines and have been renamed to .mpl 
+    (Maltcms PipeLine) to better distinguish them from standard 
+    configuration files. However, the old *.properties will still work 
+    without change. You may consider to rename them for consistency though.
+
+** ChromA
+
+    To execute the standard pipeline for GC- and LC-MS, use 
+
++------------------------------------------+
+>maltcms.sh -c cfg/pipelines/chroma.mpl -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
++------------------------------------------+
+
+** ChromA4D
+
+    To execute the available pipelines for GCxGC-MS, use 
+
++------------------------------------------+
+>maltcms.sh -c cfg/pipelines/chroma4D.mpl -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
++------------------------------------------+
+
+    If you do not supply any arguments, Maltcms will print all available 
+    arguments with a short explanation.
+
++------------------------------------------+
+>maltcms.sh -- -h
++------------------------------------------+
+
+    prints command-line options for the script with explanations.
+
+* Advanced Usage
+    
     You can start the 32 bit commandline version by typing
 
 +------------------------------------------+
@@ -167,39 +236,6 @@ Running Maltcms
     supply different base directories with different file wildcard expressions
     to Maltcms. If you want to include all files below those base directories
     matching the wildcard, you should also supply the '-r' option.
-
-* Running ChromA/ChromA4D
-    
-    Pipeline location: As of Maltcms 1.2.1, pipeline *.properties files
-    have been relocated to cfg/pipelines and have been renamed to .mpl 
-    (Maltcms PipeLine) to better distinguish them from standard 
-    configuration files. However, the old *.properties will still work 
-    without change. You may consider to rename them for consistency though.
-
-** ChromA
-
-    To execute the standard pipeline for GC- and LC-MS, use 
-
-+------------------------------------------+
->maltcms.sh -c cfg/pipelines/chroma.mpl -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
-+------------------------------------------+
-
-** ChromA4D
-
-    To execute the available pipelines for GCxGC-MS, use 
-
-+------------------------------------------+
->maltcms.sh -c cfg/pipelines/chroma4D.mpl -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
-+------------------------------------------+
-
-    If you do not supply any arguments, Maltcms will print all available 
-    arguments with a short explanation.
-
-+------------------------------------------+
->maltcms.sh -- -h
-+------------------------------------------+
-
-    prints command-line options for the script with explanations.
 
 Other Features
 

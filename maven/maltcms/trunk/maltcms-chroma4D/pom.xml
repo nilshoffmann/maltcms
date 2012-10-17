@@ -23,8 +23,8 @@
         </dependency>
         <dependency>
             <groupId>edu.ucar.unidata</groupId>
-            <artifactId>netcdf</artifactId>
-            <version>4.2</version>
+            <artifactId>netcdf-osgi</artifactId>
+            <version>4.2.35</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

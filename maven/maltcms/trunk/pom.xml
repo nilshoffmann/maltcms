@@ -432,8 +432,8 @@
         <module>maltcms-io-openms-featurexml</module>
         <module>maltcms-evaluation</module>
         <module>maltcms-distribution</module>
-    <module>maltcms-cv</module>
-  </modules>
+        <module>maltcms-cv</module>
+    </modules>
     <dependencies>
         <dependency>
             <groupId>net.sf.maltcms</groupId>
@@ -494,7 +494,7 @@
             <version>1.6.1</version>
             <scope>compile</scope>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
