@@ -123,8 +123,7 @@ public class Db4oCacheManager extends Thread {
             } catch (DatabaseClosedException dce) {
             }
             if (deleteCachesOnExit) {
-                File fileToDelete = cachePath;
-                fileToDelete.deleteOnExit();
+                cachePath.delete();
             }
         }
         caches.clear();

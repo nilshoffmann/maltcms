@@ -25,7 +25,7 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.main.datastructures.tuple.test;
+package cross.datastructures.tuple.test;
 
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;

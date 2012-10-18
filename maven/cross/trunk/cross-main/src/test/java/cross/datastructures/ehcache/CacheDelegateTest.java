@@ -25,7 +25,7 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.main.datastructures.ehcache;
+package cross.datastructures.ehcache;
 
 import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.cache.CacheFactory;

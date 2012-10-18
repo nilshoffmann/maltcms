@@ -63,7 +63,7 @@
     <inceptionYear>2007</inceptionYear>
     <ciManagement>
         <system>jenkins</system>
-        <url>https://maltcms.de:8181/jenkins/job/cross/</url>
+        <url>https://maltcms.de:9443/jenkins/job/cross/</url>
     </ciManagement>
     <scm>
         <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/cross/trunk/</connection>

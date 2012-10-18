@@ -33,7 +33,6 @@ import cross.commands.fragments.AFragmentCommand;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.pipeline.ICommandSequence;
-import cross.datastructures.tools.FileTools;
 import cross.datastructures.tuple.TupleND;
 import cross.event.*;
 import cross.exception.ConstraintViolationException;
@@ -43,7 +42,7 @@ import cross.tools.StringTools;
 import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
-import java.lang.management.OperatingSystemMXBean;
+import java.lang.management.ThreadMXBean;
 import java.util.*;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -649,7 +648,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
             results = commandSequence.next();
         }
         // Save configuration
-        Factory.dumpConfig("runtime.properties",getStartupDate());
+        Factory.dumpConfig("runtime.properties", getStartupDate());
         addVmStats(getOutputDirectory());
         for (IWorkflowPostProcessor pp : workflowPostProcessors) {
             log.info("Running workflowPostProcessor {}", pp.getClass().getName());
@@ -678,7 +677,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
     public void setWorkflowPostProcessors(List<IWorkflowPostProcessor> workflowPostProcessors) {
         this.workflowPostProcessors = workflowPostProcessors;
     }
-    
+
     private void addVmStats(File outputDirectory) {
         List<MemoryPoolMXBean> mbeans = ManagementFactory.getMemoryPoolMXBeans();
         long maxUsed = 0L;
@@ -691,14 +690,15 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         }
         log.info("Total memory used: " + String.format("%.2f", (maxUsed / (1024f * 1024f))) + " MB");
         int nmemoryPools = mbeans.size();
-        long time = 0L;
 
-        OperatingSystemMXBean osbean = ManagementFactory.getOperatingSystemMXBean();
-        if (osbean instanceof com.sun.management.OperatingSystemMXBean) {
-            com.sun.management.OperatingSystemMXBean osmbean = (com.sun.management.OperatingSystemMXBean) osbean;
-            time = osmbean.getProcessCpuTime();
+        ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+        long[] allThreadIds = threadMXBean.getAllThreadIds();
+        long time = 0L;
+        for (long id : allThreadIds) {
+            time += threadMXBean.getThreadCpuTime(id);
         }
-        log.info("Total cpu time: " + String.format("%.2f", (time / 1000000000f)) + " sec");
+
+        log.info("Total cpu time: {} sec, ",String.format("%.2f", (time / 1E9f)));
         File workflowStats = new File(new File(outputDirectory, "Factory"), "workflowStats.properties");
 
         PropertiesConfiguration pc;

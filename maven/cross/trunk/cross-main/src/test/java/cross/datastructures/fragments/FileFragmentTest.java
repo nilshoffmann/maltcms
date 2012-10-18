@@ -25,7 +25,7 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.main.datastructures.fragments;
+package cross.datastructures.fragments;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
