@@ -43,7 +43,7 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                        <configuration>
+                        <configuration combine.self="override">
                             <skipIfEmpty>false</skipIfEmpty>
                             <archive>
                                 <index>true</index>
