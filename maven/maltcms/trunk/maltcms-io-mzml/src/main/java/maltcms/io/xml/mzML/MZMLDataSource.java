@@ -62,6 +62,7 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
+import cross.exception.NotImplementedException;
 import cross.tools.StringTools;
 import java.math.BigInteger;
 import java.util.LinkedList;
@@ -102,6 +103,13 @@ public class MZMLDataSource implements IDataSource {
     @Configurable(name = "var.modulation_time", value = "modulation_time")
     private String modulation_time = "modulation_time";
     private String modulationTimeAccession = "MS:1002042";
+    @Configurable(name = "var.first_column_elution_time", value = "first_column_elution_time")
+    private String first_column_elution_time = "first_column_elution_time";
+    private String first_column_elution_timeAccession = "MS:1002082";
+    @Configurable(name = "var.second_column_elution_time", value = "second_column_elution_time")
+    private String second_column_elution_time = "second_column_elution_time";
+    private String second_column_elution_timeAccession = "MS:1002083 ";
+    
     private static WeakHashMap<IFileFragment, MzMLUnmarshaller> fileToIndex = new WeakHashMap<IFileFragment, MzMLUnmarshaller>();
     private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = null;
 
@@ -151,7 +159,12 @@ public class MZMLDataSource implements IDataSource {
                 "mass_range_max");
         this.source_files = configuration.getString("var.source_files",
                 "source_files");
-        this.modulation_time = configuration.getString("var.modulation_time", "modulation_time");
+        this.modulation_time = configuration.getString("var.modulation_time",
+                "modulation_time");
+        this.first_column_elution_time = configuration.getString("var.first_column_elution_time",
+                "first_column_elution_time");
+        this.second_column_elution_time = configuration.getString("var.second_column_elution_time",
+                "second_column_elution_time");
         this.ndf = new NetcdfDataSource();
         this.ndf.configure(configuration);
     }
@@ -336,6 +349,12 @@ public class MZMLDataSource implements IDataSource {
             a = readScanAcquisitionTimeArray(var, r, mzu);
         } else if (varname.equals(this.modulation_time)) {
             a = readModulationTimeArray(var, r);
+        } else if (varname.equals(this.first_column_elution_time)) {
+            //FIXME implement handling
+            throw new NotImplementedException();
+        } else if (varname.equals(this.second_column_elution_time)) {
+            //FIXME implement handling
+            throw new NotImplementedException();
         } else {
             throw new ResourceNotAvailableException(
                     "Unknown variable name to mzML mapping for " + varname);
