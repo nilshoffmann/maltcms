@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.peak.Peak;
 import ucar.ma2.Array;
 
@@ -39,6 +40,7 @@ import ucar.ma2.Array;
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
+@Slf4j
 public class Peak2D extends Peak {
 
     @Getter
@@ -82,8 +84,14 @@ public class Peak2D extends Peak {
     @Override
     public Array getFeature(String name) {
         if (name.equals("first_column_time")) {
+            log.warn("This term has been deprecated, please use first_column_elution_time!");
+        }
+        if (name.equals("second_column_time")) {
+            log.warn("This term has been deprecated, please use second_column_elution_time!");
+        }
+        if (name.equals("first_column_time") || name.equals("first_column_elution_time")) {
             return Array.factory(retentionTime1);
-        } else if (name.equals("second_column_time")) {
+        } else if (name.equals("second_column_time") || name.equals("second_column_elution_time")) {
             return Array.factory(retentionTime2);
         }
         return super.getFeature(name);
@@ -96,7 +104,7 @@ public class Peak2D extends Peak {
      */
     @Override
     public List<String> getFeatureNames() {
-        return Arrays.asList("first_column_time", "second_column_time", "scan_acquisition_time", "scan_index",
+        return Arrays.asList("first_column_time","first_column_elution_time", "second_column_time","second_column_elution_time", "scan_acquisition_time", "scan_index",
                 "binned_intensity_values");
     }
 }

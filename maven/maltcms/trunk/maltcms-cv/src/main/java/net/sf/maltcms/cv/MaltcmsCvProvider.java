@@ -28,8 +28,13 @@
 package net.sf.maltcms.cv;
 
 import cross.exception.MappingNotAvailableException;
+import cross.tools.StringTools;
 import cross.vocabulary.IControlledVocabularyProvider;
 import java.io.File;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
@@ -46,29 +51,57 @@ import org.openide.util.lookup.ServiceProvider;
 public class MaltcmsCvProvider implements IControlledVocabularyProvider {
 
     private PropertiesConfiguration pc;
+    private Set<String> deprecatedVariables;
 
     public MaltcmsCvProvider() {
         String homeDir = System.getProperty("maltcms.home");
-        File cfg = new File(homeDir, "cfg/cv/cv_maltcms.properties");
+        File cfg = new File(homeDir, "cfg/cv/cv_combined.properties");
         try {
             PropertiesConfiguration pc = new PropertiesConfiguration(cfg);
+            log.info("Using cv.version={}",pc.getString("cv.version"));
+            deprecatedVariables = new LinkedHashSet<String>();
+            StringBuilder message = new StringBuilder();
+            List<String> l = StringTools.toStringList(pc.getList("deprecated.variables", Collections.emptyList()));
+            for (String s : l) {
+                String key = checkDeprecation(s, pc, message);
+                deprecatedVariables.add(key);
+            }
+            log.warn("{}",message);
         } catch (ConfigurationException ex) {
             Logger.getLogger(MaltcmsCvProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    protected final String checkDeprecation(String s, PropertiesConfiguration pc, StringBuilder message) {
+        String key = "";
+        if (s.contains(":")) {
+            String[] split = s.split(":");
+            key = split[0];
+            message.append("Variable name ").
+                    append(pc.getString(key)).
+                    append(" is deprecated. Please replace with ").
+                    append(pc.getString(split[1])).
+                    append("!");
+        } else {
+            key = s;
+            message.append("Variable name ").append(pc.getString(key)).append(" is deprecated!");
+        }
+        if (pc.containsKey("deprecated." + key)) {
+            message.append(" Reason: ").append(pc.getString("deprecated." + key));
+        }
+        message.append("\n");
+        return key;
+    }
+
     @Override
     public String translate(String variable) throws MappingNotAvailableException {
         String resolvedVariableName = variable;
-        if (!variable.startsWith(getNamespace() + ".")) {
-            if (pc.containsKey(resolvedVariableName)) {
-                log.warn("Returning plain mapping!");
-                return pc.getString(resolvedVariableName);
-            }
+        if(deprecatedVariables.contains(variable)) {
+            StringBuilder message = new StringBuilder();
+            checkDeprecation(variable, pc, message);
+            log.warn("{}",message);
         }
-        resolvedVariableName = getNamespace()+"."+resolvedVariableName;
-        if(pc.containsKey(resolvedVariableName)) {
-            log.info("Using fully qualified mapping!");
+        if (pc.containsKey(resolvedVariableName)) {
             return pc.getString(resolvedVariableName);
         }
         throw new MappingNotAvailableException("No mapping for " + variable);
@@ -86,6 +119,10 @@ public class MaltcmsCvProvider implements IControlledVocabularyProvider {
 
     @Override
     public String getVersion() {
-        return "1.2";
+        if(pc==null) {
+            return "NA";
+        }else{
+            return pc.getString("cv.version");
+        }
     }
 }

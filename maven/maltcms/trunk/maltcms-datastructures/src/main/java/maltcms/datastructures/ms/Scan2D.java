@@ -117,11 +117,11 @@ public class Scan2D extends Scan1D implements IScan2D {
             ArrayInt.D0 a = new ArrayInt.D0();
             a.set(this.scind);
             return a;
-        } else if (name.equals("first_column_time")) {
+        } else if (name.equals("first_column_time") || name.equals("first_column_elution_time")) {
             ArrayDouble.D0 a = new ArrayDouble.D0();
             a.set(this.fctime);
             return a;
-        } else if (name.equals("second_column_time")) {
+        } else if (name.equals("second_column_time") || name.equals("second_column_elution_time")) {
             ArrayDouble.D0 a = new ArrayDouble.D0();
             a.set(this.sctime);
             return a;
@@ -135,6 +135,6 @@ public class Scan2D extends Scan1D implements IScan2D {
         return Arrays.asList(new String[]{"mass_values", "intensity_values",
                     "scan_index", "scan_acquisition_time", "total_intensity",
                     "first_column_scan_index", "second_column_scan_index",
-                    "first_column_time", "second_column_time"});
+                    "first_column_elution_time", "second_column_elution_time"});
     }
 }

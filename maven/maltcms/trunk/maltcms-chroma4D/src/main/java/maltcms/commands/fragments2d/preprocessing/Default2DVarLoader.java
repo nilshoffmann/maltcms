@@ -76,7 +76,7 @@ import org.openide.util.lookup.ServiceProvider;
     "var.scan_rate", "var.scan_duration", "var.second_column_time",
     "var.second_column_scan_index", "var.total_intensity_1d",
     "var.scan_acquisition_time", "var.scan_acquisition_time_1d",
-    "var.total_intensity_2d"})
+    "var.total_intensity_2d","var.first_column_elution_time","var.second_column_elution_time"})
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
@@ -110,10 +110,15 @@ public class Default2DVarLoader extends AFragmentCommand {
     private String massValuesVar = "mass_values";
     @Configurable(name = "var.scan_index", value = "scan_index")
     private String scanIndexVar = "scan_index";
+    @Configurable(name = "var.first_column_elution_time", value = "first_column_elution_time")
+    private String firstColumnElutionTimeVar = "first_column_elution_time";
+    @Configurable(name = "var.second_column_elution_time", value = "second_column_elution_time")
+    private String secondColumnElutionTimeVar = "second_column_elution_time";
     @Configurable(name = "var.modulation_time.default", value = "5.0d")
     private double modulationTime = 5.0d;
     private double scanDuration = 0.0d;
     private double scanRate = -1.0d;
+    private double scanAcquisitionTimeOffset = 0.0d;
     private String modulationIndex0Dimension = "modulation_index_0";
     private String modulationIndex1Dimension = "modulation_index_1";
     private String modulationTimeDimension = "modulation_time";
@@ -143,11 +148,15 @@ public class Default2DVarLoader extends AFragmentCommand {
                     new File(getWorkflow().getOutputDirectory(this),
                     ff.getName()));
             fret.addSourceFile(ff);
+            this.scanAcquisitionTimeOffset = ff.getChild("scan_acquisition_time").getArray().
+                getDouble(0);
             createScanRate(ff, fret);
             createModulation(ff, fret);
             create1DTic(ff, fret);
             createSecondColumnIndex(ff, fret);
             createSecondColumnTime(ff, fret);
+            createFirstColumnElutionTime(ff, fret);
+            createSecondColumnElutionTime(ff, fret);
             createTIC2D(ff, fret);
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
                     new File(fret.getAbsolutePath()), this, getWorkflowSlot(),
@@ -228,6 +237,8 @@ public class Default2DVarLoader extends AFragmentCommand {
         this.intensityValuesVar = cfg.getString("var.intensity_values", "intensity_values");
         this.massValuesVar = cfg.getString("var.mass_values", "mass_values");
         this.scanIndexVar = cfg.getString("var.scan_index", "scan_index");
+        this.firstColumnElutionTimeVar = cfg.getString("var.first_column_elution_time","first_column_elution_time");
+        this.secondColumnElutionTimeVar = cfg.getString("var.second_column_elution_time","second_column_elution_time");
 
 //        this.scanRate = cfg.getDouble("var.scan_rate.default", 200.0d);
 //        this.modulationTime = cfg.getDouble("var.modulation_time.default", 5.0d);
@@ -446,6 +457,84 @@ public class Default2DVarLoader extends AFragmentCommand {
         index2dvar.setDimensions(new Dimension[]{new Dimension(
                     modulationIndex0Dimension, modulationCnt, true)});
         return index2dvar;
+    }
+
+    /**
+     * Creates an {@link Array} with the same shape like the total_intensity and
+     * saves the first_column_elution_time.
+     *
+     * @param source source file fragment
+     * @param parent parent file fragment
+     * @return {@link IVariableFragment} for second_column_time
+     */
+    private IVariableFragment createFirstColumnElutionTime(
+            final IFileFragment source, final IFileFragment parent) {
+        try {
+            return retrieveAndCopy(source, parent, firstColumnElutionTimeVar);
+        } catch (ResourceNotAvailableException ex) {
+        }
+        final IVariableFragment originalTICVar = parent.getChild(
+                this.totalIntensityVar);
+        final Array firstRetTimeArray = Array.factory(Double.class, originalTICVar.
+                getArray().getShape());
+        final IndexIterator timeiter = firstRetTimeArray.getIndexIterator();
+
+        double c = 0;
+        final int scanspermodulation = (int) (this.scanRate * this.modulationTime);
+        while (timeiter.hasNext()) {
+            int satIdx = (((int)c) / scanspermodulation);
+            timeiter.setDoubleNext(source.getChild(scanAcquisitionTimeVar).getArray().getDouble(satIdx));
+            c++;
+        }
+
+        final IVariableFragment firstcolumnvar = new VariableFragment(parent,
+                this.firstColumnElutionTimeVar);
+        firstcolumnvar.setArray(firstRetTimeArray);
+        firstcolumnvar.setDimensions(new Dimension[]{new Dimension(scanNumberDimension,
+                    firstRetTimeArray.getShape()[0], true)});
+        return firstcolumnvar;
+    }
+
+    /**
+     * Creates an {@link Array} with the same shape like the total_intensity and
+     * saves the second_column_elution_time.
+     *
+     * @param source source file fragment
+     * @param parent parent file fragment
+     * @return {@link IVariableFragment} for second_column_time
+     */
+    private IVariableFragment createSecondColumnElutionTime(
+            final IFileFragment source, final IFileFragment parent) {
+        
+        try {
+            return retrieveAndCopy(source, parent, secondColumnElutionTimeVar);
+        } catch (ResourceNotAvailableException ex) {
+        }
+        final IVariableFragment originalTICVar = parent.getChild(
+                this.totalIntensityVar);
+        final Array secondRetTimeArray = Array.factory(Double.class, originalTICVar.
+                getArray().getShape());
+
+//		final IndexIterator ticiter = source.getChild(this.totalIntensityVar)
+//		        .getArray().getIndexIterator();
+        final IndexIterator timeiter = secondRetTimeArray.getIndexIterator();
+
+        double c = 0;
+        final Integer scanspermodulation = (int) (this.scanRate * this.modulationTime);
+        while (timeiter.hasNext()) {
+            timeiter.setDoubleNext(
+                    ((c % scanspermodulation) * this.scanDuration));
+//			                + this.scanDuration);
+//			ticiter.next();
+            c++;
+        }
+
+        final IVariableFragment secondcolumnvar = new VariableFragment(parent,
+                this.secondColumnElutionTimeVar);
+        secondcolumnvar.setArray(secondRetTimeArray);
+        secondcolumnvar.setDimensions(new Dimension[]{new Dimension(scanNumberDimension,
+                    secondRetTimeArray.getShape()[0], true)});
+        return secondcolumnvar;
     }
 
     /**
