@@ -31,12 +31,12 @@ import cross.exception.MappingNotAvailableException;
 import cross.tools.StringTools;
 import cross.vocabulary.IControlledVocabularyProvider;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -55,9 +55,21 @@ public class MaltcmsCvProvider implements IControlledVocabularyProvider {
 
     public MaltcmsCvProvider() {
         String homeDir = System.getProperty("maltcms.home");
-        File cfg = new File(homeDir, "cfg/cv/cv_combined.properties");
+        URL file = null;
+        if(homeDir!=null && !homeDir.isEmpty()) {
+            try {
+                file = new File(homeDir, "cfg/cv/cv_combined.properties").toURI().toURL();
+                log.info("Using cv from file system at {}",file);
+            } catch (MalformedURLException ex) {
+               log.warn("Could not retrieve cv file from filesystem at "+file,ex);
+            }   
+        }
+        if(file==null) {
+            file = MaltcmsCvProvider.class.getResource("/cfg/cv/cv_combined.properties");
+            log.info("Using cv from classpath at {}",file);
+        }
         try {
-            PropertiesConfiguration pc = new PropertiesConfiguration(cfg);
+            pc = new PropertiesConfiguration(file);
             log.info("Using cv.version={}",pc.getString("cv.version"));
             deprecatedVariables = new LinkedHashSet<String>();
             StringBuilder message = new StringBuilder();
@@ -68,7 +80,7 @@ public class MaltcmsCvProvider implements IControlledVocabularyProvider {
             }
             log.warn("{}",message);
         } catch (ConfigurationException ex) {
-            Logger.getLogger(MaltcmsCvProvider.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Exception while configuring CvProvider:", ex);
         }
     }
 
@@ -109,12 +121,12 @@ public class MaltcmsCvProvider implements IControlledVocabularyProvider {
 
     @Override
     public String getName() {
-        return pc.getFileName();
+        return "maltcms";
     }
 
     @Override
     public String getNamespace() {
-        return "maltcms";
+        return "var";
     }
 
     @Override
