@@ -31,7 +31,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.PropertyConfigurator;
 
@@ -99,8 +98,9 @@ public abstract class AFragmentCommandTest {
         }
         cp.setCommands(commands);
         cp.setInput(new TupleND<IFileFragment>(fragments));
-        System.out.println("Workflow using commands " + commands);
-        System.out.println("Workflow using inputFiles " + inputFiles);
+        setLogLevelFor(AFragmentCommandTest.class, Level.INFO);
+        log.info("Workflow using commands {}", commands);
+        log.info("Workflow using inputFiles {}", inputFiles);
         DefaultWorkflow dw = new DefaultWorkflow();
         dw.setStartupDate(new Date());
         dw.setName("testWorkflow");

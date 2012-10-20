@@ -27,8 +27,14 @@
  */
 package net.sf.maltcms.maltcms.commands.fragments2d.preprocessing;
 
+import cross.annotations.AnnotationInspector;
 import cross.commands.fragments.IFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
+import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
+import cross.exception.ResourceNotAvailableException;
 import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -36,16 +42,21 @@ import java.util.List;
 import junit.framework.Assert;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import cross.io.misc.ZipResourceExtractor;
+import cross.vocabulary.ICvResolver;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.test.AFragmentCommandTest;
-import org.junit.After;
+import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.openide.util.Lookup;
+import ucar.ma2.Array;
 
 /**
  *
  * @author nilshoffmann
  */
+@Slf4j
 public class Default2DVarLoaderTest extends AFragmentCommandTest {
 
     @Rule
@@ -57,31 +68,36 @@ public class Default2DVarLoaderTest extends AFragmentCommandTest {
         File outputBase = tf.newFolder("chroma4DTestOut");
         File inputFile = ZipResourceExtractor.extract(
                 "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", dataFolder);
-
-
+        setLogLevelFor(Default2DVarLoader.class, Level.ALL);
         Default2DVarLoader d2vl = new Default2DVarLoader();
         d2vl.setEstimateModulationTime(false);
         d2vl.setModulationTime(5.0d);
+        d2vl.setScanRate(100.0);
 
         List<IFragmentCommand> l = new LinkedList<IFragmentCommand>();
         l.add(d2vl);
 
         IWorkflow w = createWorkflow(outputBase, l, Arrays.asList(inputFile));
-//        System.out.println(
-//                "Running " + w.getCommandSequence().getCommands().size() + " commands on " + w.
-//                getCommandSequence().
-//                getInput().size() + " input files.");
         try {
-            w.call();
+            TupleND<IFileFragment> results = w.call();
             w.save();
+            setLogLevelFor(ICvResolver.class, Level.ALL);
+            ICvResolver cvr = Lookup.getDefault().lookup(ICvResolver.class);
+            for (IFileFragment resultFile : results) {
+                FileFragment ff = new FileFragment(new File(resultFile.getAbsolutePath()));
+                for (String variable : AnnotationInspector.getProvidedVariables(Default2DVarLoader.class)) {
+                    try {
+                        IVariableFragment var = ff.getChild(cvr.translate(variable));
+                        Array a = var.getArray();
+                        Assert.assertNotNull(a);
+                    } catch (ResourceNotAvailableException rnae) {
+                        Assert.fail(rnae.getLocalizedMessage());
+                    }
+                }
+            }
         } catch (Exception ex) {
             Assert.fail(ex.getLocalizedMessage());
         }
-    }
-
-    @After
-    public void cleanUp() {
-//        tf.delete();
     }
 
     public static void main(String[] args) {
