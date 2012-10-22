@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.Assert;
+import static junit.framework.Assert.*;
 import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.commands.fragments.cluster.PairwiseDistanceCalculator;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.TicDtwWorkerFactory;
@@ -91,7 +91,7 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
             w.save();
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail(ex.getLocalizedMessage());
+            fail(ex.getLocalizedMessage());
         }
 
     }
@@ -159,7 +159,7 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
             w.save();
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail(ex.getLocalizedMessage());
+            fail(ex.getLocalizedMessage());
         }
 
     }

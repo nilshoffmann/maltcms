@@ -38,7 +38,14 @@
 \definecolor{darkred}{rgb}{0.6,0.1,0.1}
 \definecolor{yac}{rgb}{0.6,0.6,0.1}
 
-\lstset{language=Java,numbers=left,backgroundcolor=\color{codebg},keywordstyle=\bfseries\ttfamily\color{darkred},
+\lstset{
+   language=Java,
+   numbers=left,
+   backgroundcolor=\color{codebg},
+   keywordstyle=\bfseries\ttfamily\color{darkred},
+   basicstyle=\footnotesize,    
+   numberstyle=\tiny\color{gray},
+   numbersep=5pt, 
    stringstyle=\color{textfg}\ttfamily,
    commentstyle=\color{middlegray}\ttfamily,
    emph={square}, 
@@ -46,8 +53,18 @@
    emph={[2]root,base},
    emphstyle={[2]\color{yac}\texttt},
    showstringspaces=false,
-   flexiblecolumns=false}
-%
+   flexiblecolumns=false,
+   keepspaces=true,
+   tabsize=4,
+   breaklines=true,
+   breakautoindent=true,
+   breakatwhitespace=true,
+   prebreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\downarrow}},
+   postbreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\hookrightarrow\space}},
+   captionpos=b
+}%
 
 \author{Nils Hoffmann}
 \title{The Modular Application Toolkit for Chromatography-Mass Spectrometry\\\vspace{1ex}\begin{Large}

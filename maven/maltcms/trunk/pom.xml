@@ -320,7 +320,8 @@
                         <execution>
                             <id>integration-test</id>
                             <goals>
-                                <goal>integration-test</goal>
+                                <!-- this seems to be unnecessary -->
+                                <!--<goal>integration-test</goal>-->
                                 <goal>verify</goal>
                             </goals>
                             <configuration>
@@ -330,6 +331,7 @@
                                 <argLine>-Xmx2G</argLine>
                                 <!--redirectTestOutputToFile--> 
                                 <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                                <failIfNoTests>false</failIfNoTests>
                             </configuration>
                         </execution>
                     </executions>
@@ -655,6 +657,7 @@
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <netbeans.hint.license>maltcms</netbeans.hint.license>
         <!--<maven.test.skip>false</maven.test.skip>-->
         <skipITs>true</skipITs>

@@ -132,9 +132,9 @@ public class MZXMLDataSource implements IDataSource {
     @Override
     public void configure(final Configuration configuration) {
         final List<String> dss = StringTools.toStringList(configuration.getList(getClass().
-                getName() + ".dataSources", Arrays.asList(
+                getName() + ".dataSources", Arrays.asList(new Object[]{
                 "maltcms.io.xml.mzXML.MZXMLStaxDataSource",
-                "maltcms.io.xml.mzXML.MZXMLSaxDataSource")));
+                "maltcms.io.xml.mzXML.MZXMLSaxDataSource"})));
         for (final String s : dss) {
             this.ds.add(Factory.getInstance().getObjectFactory().instantiate(s,
                     cross.io.IDataSource.class));
