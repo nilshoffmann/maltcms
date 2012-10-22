@@ -320,8 +320,7 @@
                         <execution>
                             <id>integration-test</id>
                             <goals>
-                                <!-- this seems to be unnecessary -->
-                                <!--<goal>integration-test</goal>-->
+                                <goal>integration-test</goal>
                                 <goal>verify</goal>
                             </goals>
                             <configuration>

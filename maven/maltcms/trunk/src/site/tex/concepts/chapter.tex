@@ -35,7 +35,7 @@ annotate your class with \verb|@Category(IntegrationTest.class)|, where \verb|Ca
 Integration tests are skipped by default, as they may be long-running and resource-consuming. To enable them, add \verb|-DskipITs=false| to your Maven command line, e.g.
 \verb|mvn -DskipITs=false install|. 
 
-\subsection{Using the Maltcms Testing Infrastructure}\section{sec:using-the-maltcms-testing-infrastructure}
+\subsection{Using the Maltcms Testing Infrastructure}\label{sec:using-the-maltcms-testing-infrastructure}
 The module \verb|maltcms-test-defaults| contains a number of convenience classes to make testing of Maltcms commands and application a lot easier.
 Within the package \verb|maltcms.test|, there are currently three children. \verb|IntegrationTest| is the marker interface used to identify tests that should be run 
 by the \verb|maven-failsafe-plugin| mentioned in section \ref{sec:integration-testing}. \verb|SetupLogging| is a \verb|TestWatcher| that can be included in test classes in order to set up \href{http://logging.apache.org/log4j/1.2/}{log4j} compatible logging in conjunction with the \href{http://www.slf4j.org/}{slf4j} binding for \verb|log4j|. To do so, simply create a new member variable:
