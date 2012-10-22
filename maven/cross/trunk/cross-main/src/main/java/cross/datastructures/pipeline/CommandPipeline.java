@@ -195,20 +195,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
                     f.clearArrays();
                 }
                 start = Math.abs(System.nanoTime() - start);
-                final float seconds = ((float) start) / ((float) 1000000000);
-                final StringBuilder sb = new StringBuilder();
-                final Formatter formatter = new Formatter(sb);
-                formatter.format(CommandPipeline.NUMBERFORMAT, (seconds));
-                log.info("Runtime of command {}: {} sec",
-                        cmd.getClass().getSimpleName(),
-                        sb.toString());
-                Map<String, Object> statsMap = new HashMap<String, Object>();
-                statsMap.put("RUNTIME_MILLISECONDS", Double.valueOf(start / 1000000.f));
-                DefaultWorkflowStatisticsResult dwsr = new DefaultWorkflowStatisticsResult();
-                dwsr.setWorkflowElement(cmd);
-                dwsr.setWorkflowSlot(WorkflowSlot.STATISTICS);
-                dwsr.setStats(statsMap);
-                workflow.append(dwsr);
+                storeCommandRuntime(start, cmd, getWorkflow());
                 this.cnt++;
                 //shutdown master server if execution has finished
                 if (this.cnt == this.commands.size()) {
@@ -217,7 +204,6 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
                 System.gc();
 
             }
-            //shutdown master server in case of any uncaught exceptions
         } catch (Exception e) {
             log.error("Caught exception while executing pipeline: ", e);
             shutdownMasterServer();
@@ -325,5 +311,22 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
             cmds.addContent(iwr);
         }
         e.addContent(cmds);
+    }
+
+    protected void storeCommandRuntime(long start, final IFragmentCommand cmd, final IWorkflow workflow) {
+        final float seconds = ((float) start) / ((float) 1000000000);
+        final StringBuilder sb = new StringBuilder();
+        final Formatter formatter = new Formatter(sb);
+        formatter.format(CommandPipeline.NUMBERFORMAT, (seconds));
+        log.info("Runtime of command {}: {} sec",
+                cmd.getClass().getSimpleName(),
+                sb.toString());
+        Map<String, Object> statsMap = new HashMap<String, Object>();
+        statsMap.put("RUNTIME_MILLISECONDS", Double.valueOf(start / 1000000.f));
+        DefaultWorkflowStatisticsResult dwsr = new DefaultWorkflowStatisticsResult();
+        dwsr.setWorkflowElement(cmd);
+        dwsr.setWorkflowSlot(WorkflowSlot.STATISTICS);
+        dwsr.setStats(statsMap);
+        workflow.append(dwsr);
     }
 }

@@ -29,8 +29,6 @@ package cross.vocabulary;
 
 import cross.exception.ConstraintViolationException;
 import cross.exception.MappingNotAvailableException;
-import cross.vocabulary.IControlledVocabularyProvider;
-import cross.vocabulary.ICvResolver;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
