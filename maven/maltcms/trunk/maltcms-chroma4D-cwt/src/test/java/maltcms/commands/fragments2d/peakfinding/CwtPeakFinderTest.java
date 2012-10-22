@@ -28,20 +28,20 @@
 package maltcms.commands.fragments2d.peakfinding;
 
 import cross.commands.fragments.IFragmentCommand;
-import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.pipeline.CommandPipeline;
 import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.DefaultWorkflow;
 import cross.datastructures.workflow.IWorkflow;
 import cross.io.misc.ZipResourceExtractor;
 import java.io.File;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.IntegrationTest;
+import org.apache.log4j.Level;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -52,48 +52,38 @@ import org.junit.experimental.categories.Category;
 @Slf4j
 @Category(IntegrationTest.class)
 public class CwtPeakFinderTest extends AFragmentCommandTest {
-    
 
-//    @Test
-//    public void testPeakFinder() {
+    @Test
+    public void testPeakFinder() {
+
+        File dataFolder = tf.newFolder("chroma4DTestData");
+        File outputBase = tf.newFolder("chroma4DTestOut");
+        File inputFile = ZipResourceExtractor.extract(
+                "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", dataFolder);
+        setLogLevelFor(CwtPeakFinder.class, Level.ALL);
 //
-//        File inputFile = ZipResourceExtractor.extract(
-//                "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", tf.newFolder(
-//                "cdf2D"));
-//
-//        Default2DVarLoader d2vl = new Default2DVarLoader();
+        Default2DVarLoader d2vl = new Default2DVarLoader();
 //        d2vl.setEstimateModulationTime(true);
+        d2vl.setEstimateModulationTime(false);
+        d2vl.setModulationTime(5.0d);
+        d2vl.setScanRate(100.0);
 //
-//        CwtPeakFinder cpf = new CwtPeakFinder();
+        CwtPeakFinder cpf = new CwtPeakFinder();
 //
-//        List<IFragmentCommand> l = new LinkedList<IFragmentCommand>();
-//        l.add(d2vl);
-//        l.add(cpf);
-//        IWorkflow w = new DefaultWorkflow();
-//        TupleND<IFileFragment> tmp = new TupleND<IFileFragment>(new FileFragment(inputFile.
-//                getAbsoluteFile()));
-//        CommandPipeline cp = new CommandPipeline();
-//        cp.setCommands(l);
-//        cp.setInput(tmp);
-//        w.setCommandSequence(cp);
-//        System.out.println(
-//                "Running " + w.getCommandSequence().getCommands().size() + " commands on " + cp.
-//                getInput().size() + " input files.");
+        List<IFragmentCommand> l = new LinkedList<IFragmentCommand>();
+        l.add(d2vl);
+        l.add(cpf);
+        IWorkflow w = createWorkflow(outputBase, l, Arrays.asList(inputFile));
+        try {
+            TupleND<IFileFragment> results = w.call();
+            w.save();
+        } catch (Exception ex) {
+            Assert.fail(ex.getLocalizedMessage());
+        }
+    }
 //
-//        for (IFragmentCommand cmd : l) {
-//            cmd.setWorkflow(w);
-//            tmp = cmd.apply(tmp);
-//        }
-//        w.save();
-//    }
-//
-//    @After
-//    public void cleanUp() {
-//        tf.delete();
-//    }
-//
-//    public static void main(String[] args) {
-//        CwtPeakFinderTest test = new CwtPeakFinderTest();
-//        test.testPeakFinder();
-//    }
+    public static void main(String[] args) {
+        CwtPeakFinderTest test = new CwtPeakFinderTest();
+        test.testPeakFinder();
+    }
 }

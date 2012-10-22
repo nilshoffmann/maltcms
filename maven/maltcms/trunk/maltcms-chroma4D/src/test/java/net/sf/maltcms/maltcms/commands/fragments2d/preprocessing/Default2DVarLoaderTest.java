@@ -62,9 +62,6 @@ import ucar.ma2.Array;
 @Category(IntegrationTest.class)
 public class Default2DVarLoaderTest extends AFragmentCommandTest {
 
-    @Rule
-    public TemporaryFolder tf = new TemporaryFolder();
-
     @Test
     public void testPeakFinder() {
         File dataFolder = tf.newFolder("chroma4DTestData");
