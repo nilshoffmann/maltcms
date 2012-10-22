@@ -45,7 +45,12 @@ Maven specifics:
 Please note that contrary to usual maven behaviour, test execution is 
 currently disabled for default builds due to the long runtime of those.
 
-To enable test execution, call maven with the argument -Dmaven.test.skip=false.
+To enable integration test execution, call maven with the argument -DskipITs=false
+The build will run all standard tests without user-intervention.
+
+The directory 'maltcms-test-tools' contains additional modules whose artifacts
+are required by maltcms, but which are not automatically built with maltcms anymore
+due to their size.
 
 Additionally, due to the size of the project, it is not always possible to 
 call multiple maven targets within one call. So instead of calling 
