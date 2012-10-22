@@ -9,18 +9,8 @@
     <artifactId>maltcms-resources</artifactId>
     <name>maltcms-resources</name>
     <url>http://maltcms.sourceforge.net</url>
-    <!--    <build>
-       	<resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <excludes>
-          <exclude>**/*.properties</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    </build>-->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <packaging>jar</packaging>
 </project>

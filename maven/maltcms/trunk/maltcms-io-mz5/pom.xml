@@ -16,6 +16,7 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+    <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

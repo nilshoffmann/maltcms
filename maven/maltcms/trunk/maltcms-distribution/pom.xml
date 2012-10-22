@@ -152,46 +152,6 @@
     
 
     <dependencies>
-        <!--        <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>cross-annotations</artifactId>
-        <version>1.2.8-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>cross-event</artifactId>
-        <version>1.2.8-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>cross-exception</artifactId>
-        <version>1.2.8-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>cross-main-api</artifactId>
-        <version>1.2.8-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>cross-tools</artifactId>
-        <version>1.2.8-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>cross-main</artifactId>
-        <version>1.2.8-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>cross-ui</artifactId>
-        <version>1.2.8-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>cross-math</artifactId>
-        <version>1.2.8-SNAPSHOT</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-chroma4D</artifactId>
@@ -216,12 +176,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-chroma</artifactId>
             <version>${project.version}</version>
-            <!--            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-jdk14</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>-->
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-jdk14</artifactId>
@@ -253,12 +207,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-execution</artifactId>
             <version>${project.version}</version>
-            <!--            <exclusions>
-                <exclusion>
-                    <artifactId>log4j-over-slf4j</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -349,6 +297,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-spectratyping</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-cv</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -20,19 +20,8 @@
             <artifactId>jmzml</artifactId>
             <version>1.6.8</version>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-test-data</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-test-data</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
+    <packaging>jar</packaging>
     <repositories>
         <repository>
             <id>ebi-repo</id>
