@@ -48,7 +48,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @Slf4j
 @ServiceProvider(service = IControlledVocabularyProvider.class)
-public class MaltcmsCvProvider implements IControlledVocabularyProvider {
+public final class MaltcmsCvProvider implements IControlledVocabularyProvider {
 
     private PropertiesConfiguration pc;
     private Set<String> deprecatedVariables;
@@ -56,29 +56,29 @@ public class MaltcmsCvProvider implements IControlledVocabularyProvider {
     public MaltcmsCvProvider() {
         String homeDir = System.getProperty("maltcms.home");
         URL file = null;
-        if(homeDir!=null && !homeDir.isEmpty()) {
+        if (homeDir != null && !homeDir.isEmpty()) {
             try {
                 file = new File(homeDir, "cfg/cv/cv_combined.properties").toURI().toURL();
-                log.info("Using cv from file system at {}",file);
+                log.info("Using cv from file system at {}", file);
             } catch (MalformedURLException ex) {
-               log.warn("Could not retrieve cv file from filesystem at "+file,ex);
-            }   
+                log.warn("Could not retrieve cv file from filesystem at " + file, ex);
+            }
         }
-        if(file==null) {
+        if (file == null) {
             file = MaltcmsCvProvider.class.getResource("/cfg/cv/cv_combined.properties");
-            log.info("Using cv from classpath at {}",file);
+            log.info("Using cv from classpath at {}", file);
         }
         try {
             pc = new PropertiesConfiguration(file);
-            log.info("Using cv.version={}",pc.getString("cv.version"));
+            log.info("Using {}.cv.version={}", getName(), pc.getString(getName()+".cv.version"));
             deprecatedVariables = new LinkedHashSet<String>();
             StringBuilder message = new StringBuilder();
-            List<String> l = StringTools.toStringList(pc.getList("deprecated.variables", Collections.emptyList()));
+            List<String> l = StringTools.toStringList(pc.getList(getName()+".deprecated.variables", Collections.emptyList()));
             for (String s : l) {
                 String key = checkDeprecation(s, pc, message);
                 deprecatedVariables.add(key);
             }
-            log.warn("{}",message);
+            log.warn("{}", message);
         } catch (ConfigurationException ex) {
             log.error("Exception while configuring CvProvider:", ex);
         }
@@ -101,17 +101,20 @@ public class MaltcmsCvProvider implements IControlledVocabularyProvider {
         if (pc.containsKey("deprecated." + key)) {
             message.append(" Reason: ").append(pc.getString("deprecated." + key));
         }
+        if (pc.containsKey("deprecated." + key + ".since")) {
+            message.append(" Since: ").append(pc.getString("deprecated." + key + ".since"));
+        }
         message.append("\n");
         return key;
     }
 
     @Override
-    public String translate(String variable) throws MappingNotAvailableException {
+    public final String translate(String variable) throws MappingNotAvailableException {
         String resolvedVariableName = variable;
-        if(deprecatedVariables.contains(variable)) {
+        if (deprecatedVariables.contains(variable)) {
             StringBuilder message = new StringBuilder();
             checkDeprecation(variable, pc, message);
-            log.warn("{}",message);
+            log.warn("{}", message);
         }
         if (pc.containsKey(resolvedVariableName)) {
             return pc.getString(resolvedVariableName);
@@ -120,21 +123,21 @@ public class MaltcmsCvProvider implements IControlledVocabularyProvider {
     }
 
     @Override
-    public String getName() {
+    public final String getName() {
         return "maltcms";
     }
 
     @Override
-    public String getNamespace() {
+    public final String getNamespace() {
         return "var";
     }
 
     @Override
-    public String getVersion() {
-        if(pc==null) {
+    public final String getVersion() {
+        if (pc == null) {
             return "NA";
-        }else{
-            return pc.getString("cv.version");
+        } else {
+            return pc.getString("maltcms.cv.version");
         }
     }
 }

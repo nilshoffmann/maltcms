@@ -45,9 +45,11 @@ import cross.io.misc.ZipResourceExtractor;
 import cross.vocabulary.ICvResolver;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.test.AFragmentCommandTest;
+import maltcms.test.IntegrationTest;
 import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 import org.openide.util.Lookup;
 import ucar.ma2.Array;
@@ -57,6 +59,7 @@ import ucar.ma2.Array;
  * @author nilshoffmann
  */
 @Slf4j
+@Category(IntegrationTest.class)
 public class Default2DVarLoaderTest extends AFragmentCommandTest {
 
     @Rule
@@ -86,6 +89,7 @@ public class Default2DVarLoaderTest extends AFragmentCommandTest {
             for (IFileFragment resultFile : results) {
                 FileFragment ff = new FileFragment(new File(resultFile.getAbsolutePath()));
                 for (String variable : AnnotationInspector.getProvidedVariables(Default2DVarLoader.class)) {
+                    log.info("Evaluating results for variable {}, resolved: {}",variable,cvr.translate(variable));
                     try {
                         IVariableFragment var = ff.getChild(cvr.translate(variable));
                         Array a = var.getArray();

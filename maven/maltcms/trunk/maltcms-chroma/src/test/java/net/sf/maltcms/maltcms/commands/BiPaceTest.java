@@ -33,17 +33,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.Assert;
-import maltcms.commands.filters.array.MovingAverageFilter;
-import maltcms.commands.filters.array.TopHatFilter;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import cross.io.misc.ZipResourceExtractor;
 import maltcms.test.AFragmentCommandTest;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
@@ -52,19 +48,16 @@ import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
+import maltcms.test.IntegrationTest;
+import org.junit.experimental.categories.Category;
 
 /**
  *
  * @author nilshoffmann
  */
+@Category(IntegrationTest.class)
 public class BiPaceTest extends AFragmentCommandTest {
-
-    /**
-     *
-     */
-    @Rule
-    public TemporaryFolder tf = new TemporaryFolder();
-
+    
     /**
      *
      */

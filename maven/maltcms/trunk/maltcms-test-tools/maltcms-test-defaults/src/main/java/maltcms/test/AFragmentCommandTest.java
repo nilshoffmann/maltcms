@@ -44,6 +44,7 @@ import cross.datastructures.workflow.IWorkflow;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.Level;
 import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 
 /**
  *
@@ -52,6 +53,9 @@ import org.junit.Rule;
 @Slf4j
 public abstract class AFragmentCommandTest {
 
+    @Rule
+    public TemporaryFolder tf = new TemporaryFolder();
+    
     @Rule
     public SetupLogging sl = new SetupLogging();
     

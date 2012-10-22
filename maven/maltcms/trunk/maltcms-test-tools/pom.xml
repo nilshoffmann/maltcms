@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.sf.maltcms</groupId>
-    <artifactId>maltcms-modules</artifactId>
+    <artifactId>maltcms-test-tools</artifactId>
     <packaging>pom</packaging>
     <version>1.2.1-SNAPSHOT</version>
-    <name>Maltcms-Modules</name>
+    <name>Maltcms-Test-Tools</name>
     <description>Maltcms, short for "Modular Application Toolkit for Chromatography Mass-Spectrometry" is an application framework mainly suited for developers working in the domain of bioinformatics for metabolomics and proteomics. Its aim is to provide reusable, efficient datastructures, abstracting from the various low-level data-formats like netcdf (ANDIMS), mzXML, mzData and mzML and providing consistent access to data features like mass spectra, chromatograms and metadata. Furthermore, Maltcms provides a platform for the implementation and execution of processing pipelines. New and existing algorithms can be easily implemented or included and executed together with existing processing elements. </description>
     <url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}</url>
     <issueManagement>
@@ -66,12 +66,12 @@
     <inceptionYear>2007</inceptionYear>
     <ciManagement>
         <system>jenkins</system>
-        <url>https://maltcms.de:8181/jenkins/job/maltcms/</url>
+        <url>https://maltcms.de:8181/jenkins/job/maltcms-test-tools/</url>
     </ciManagement>
     <scm>
-        <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</connection>
-        <developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</developerConnection>
-        <url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk</url>
+        <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/maltcms-test-tools</connection>
+        <developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/maltcms-test-tools</developerConnection>
+        <url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/maltcms-test-tools</url>
     </scm>
     <distributionManagement>
         <repository>
@@ -88,7 +88,7 @@
         <site>
             <id>maltcms.sf.net</id>
             <name>maltcms.sf.net</name>
-            <url>scp://shell.sourceforge.net/home/project-web/maltcms/htdocs/maven/maltcms/${project.version}</url>
+            <url>scp://shell.sourceforge.net/home/project-web/maltcms/htdocs/maven/maltcms-test-tools/${project.version}</url>
         </site>
     </distributionManagement>
     <licenses>
@@ -468,37 +468,8 @@
     </build>
 
     <modules>
-        <module>maltcms-apps</module>
-        <module>maltcms-chroma</module>
-        <module>maltcms-chroma4D</module>
-        <module>maltcms-chroma4D-cwt</module>
-        <module>maltcms-chroma4D-srg</module>
-        <module>maltcms-filters</module>
-        <module>maltcms-commands</module>
-        <module>maltcms-datastructures</module>
-        <module>maltcms-datastructures-quadtree</module>
-        <module>maltcms-datastructures-api</module>
-        <module>maltcms-execution</module>
-        <module>maltcms-io</module>
-        <module>maltcms-ui</module>
-        <module>maltcms-db</module>
-        <module>maltcms-experimental</module>
-        <module>maltcms-statistics</module>
-        <module>maltcms-sralign</module>
-        <module>maltcms-spectratyping</module>
-        <module>maltcms-xml-alignment</module>
-        <module>maltcms-xml-annotation</module>
-        <module>maltcms-resources</module>
-        <module>maltcms-io-netcdf</module>
-        <module>maltcms-io-mzxml</module>
-        <module>maltcms-io-mzdata</module>
-        <module>maltcms-io-mzml</module>
-        <module>maltcms-io-mz5</module>
-        <module>maltcms-io-csv</module>
-        <module>maltcms-io-openms-featurexml</module>
-        <module>maltcms-evaluation</module>
-        <module>maltcms-distribution</module>
-        <module>maltcms-cv</module>
+        <module>maltcms-test-defaults</module>
+        <module>maltcms-test-data</module>
     </modules>
     <dependencies>
         <dependency>
@@ -536,18 +507,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.media</groupId>
-            <artifactId>jai_core</artifactId>
-            <version>1.1.3</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>javax.media</groupId>
-            <artifactId>jai_codec</artifactId>
-            <version>1.1.3</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>0.10.6</version>
@@ -570,7 +529,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>maltcms</netbeans.hint.license>
-        <!--<maven.test.skip>false</maven.test.skip>-->
-        <skipITs>true</skipITs>
+        <maven.test.skip>false</maven.test.skip>
     </properties>
 </project>

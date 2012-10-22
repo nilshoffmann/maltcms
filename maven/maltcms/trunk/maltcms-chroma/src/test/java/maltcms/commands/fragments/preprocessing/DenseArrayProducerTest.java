@@ -27,9 +27,7 @@
  */
 package maltcms.commands.fragments.preprocessing;
 
-import cross.annotations.AnnotationInspector;
 import cross.commands.fragments.IFragmentCommand;
-import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
@@ -44,12 +42,11 @@ import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
+import maltcms.test.IntegrationTest;
 import maltcms.tools.MaltcmsTools;
 import org.apache.log4j.Level;
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.Test;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
+import org.junit.experimental.categories.Category;
 import ucar.ma2.Array;
 
 /**
@@ -57,13 +54,8 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  */
 @Slf4j
+@Category(IntegrationTest.class)
 public class DenseArrayProducerTest extends AFragmentCommandTest {
-    
-    /**
-     *
-     */
-    @Rule
-    public TemporaryFolder tf = new TemporaryFolder();
 
     public DenseArrayProducerTest() {
         setLogLevelFor(MaltcmsTools.class, Level.DEBUG);

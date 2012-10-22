@@ -69,11 +69,4 @@ public class MaltcmsCvProviderTest {
         MaltcmsCvProvider mcp = new MaltcmsCvProvider();
         Assert.assertEquals("var", mcp.getNamespace());
     }
-
-    /**
-     * Test of getVersion method, of class MaltcmsCvProvider.
-     */
-    @Test
-    public void testGetVersion() {
-    }
 }

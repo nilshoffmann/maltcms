@@ -44,9 +44,7 @@ import maltcms.math.functions.DtwPairwiseSimilarity;
 import maltcms.math.functions.similarities.ArrayLp;
 import maltcms.test.AFragmentCommandTest;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 import cross.commands.fragments.AFragmentCommand;
 import cross.commands.fragments.IFragmentCommand;
@@ -56,19 +54,16 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
+import maltcms.test.IntegrationTest;
+import org.junit.experimental.categories.Category;
 
 /**
  *
  * @author nilshoffmann
  */
 @Slf4j
+@Category(IntegrationTest.class)
 public class CemappDtwTicTest extends AFragmentCommandTest {
-
-    /**
-     *
-     */
-    @Rule
-    public TemporaryFolder tf = new TemporaryFolder();
 
     @Test
     public void testCemappDtwTICFull() {
