@@ -313,15 +313,12 @@
                             <version>2.12.4</version>
                         </dependency>
                     </dependencies>
-                    <configuration>
-                        <groups>maltcms.test.IntegrationTest</groups>
-                    </configuration>
                     <executions>
                         <execution>
-                            <id>integration-test</id>
+                            <id>default-integration-tests</id>
                             <goals>
                                 <goal>integration-test</goal>
-                                <goal>verify</goal>
+                                <!--<goal>verify</goal>-->
                             </goals>
                             <configuration>
                                 <includes>
@@ -331,6 +328,9 @@
                                 <!--redirectTestOutputToFile--> 
                                 <redirectTestOutputToFile>true</redirectTestOutputToFile>
                                 <failIfNoTests>false</failIfNoTests>
+                                <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+                                <groups>maltcms.test.IntegrationTest</groups>
+                                <!--<testFailureIgnore>true</testFailureIgnore>-->
                             </configuration>
                         </execution>
                     </executions>
