@@ -9,6 +9,14 @@
     <artifactId>maltcms-chroma</artifactId>
     <name>maltcms-chroma</name>
     <url>http://maltcms.sourceforge.net</url>
+    <build>
+        <plugins>
+            <!-- include to run integration tests -->
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>edu.ucar.unidata</groupId>

@@ -33,7 +33,7 @@ The \href{http://maven.apache.org/plugins/maven-failsafe-plugin}{maven-failsafe-
 annotate your class with \verb|@Category(IntegrationTest.class)|, where \verb|Category| is in the package \verb|org.junit.experimental.categories| and \verb|IntegrationTest| is in the \verb|maltcms.test| package.
 
 Integration tests are skipped by default, as they may be long-running and resource-consuming. To enable them, add \verb|-DskipITs=false| to your Maven command line, e.g.
-\verb|mvn -DskipITs=false install|. 
+\verb|mvn -DskipITs=false install|. Details on the specific configuration for Maltcms can be found in Maltcms' \verb|pom.xml|.
 
 \subsection{Using the Maltcms Testing Infrastructure}\label{sec:using-the-maltcms-testing-infrastructure}
 The module \verb|maltcms-test-defaults| contains a number of convenience classes to make testing of Maltcms commands and application a lot easier.

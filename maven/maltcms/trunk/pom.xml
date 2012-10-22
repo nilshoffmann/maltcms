@@ -305,20 +305,25 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.12.4</version>
+                    <version>2.12</version>
                     <dependencies>
                         <dependency>
                             <groupId>org.apache.maven.surefire</groupId>
                             <artifactId>surefire-junit47</artifactId>
-                            <version>2.12.4</version>
+                            <version>2.12</version>
                         </dependency>
                     </dependencies>
+                    <configuration>
+                        <groups>maltcms.test.IntegrationTest</groups>
+                        <failIfNoTests>false</failIfNoTests>
+                        <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+                    </configuration>
                     <executions>
                         <execution>
                             <id>default-integration-tests</id>
                             <goals>
                                 <goal>integration-test</goal>
-                                <!--<goal>verify</goal>-->
+                                <goal>verify</goal>
                             </goals>
                             <configuration>
                                 <includes>
@@ -329,7 +334,6 @@
                                 <redirectTestOutputToFile>true</redirectTestOutputToFile>
                                 <failIfNoTests>false</failIfNoTests>
                                 <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
-                                <groups>maltcms.test.IntegrationTest</groups>
                                 <!--<testFailureIgnore>true</testFailureIgnore>-->
                             </configuration>
                         </execution>
@@ -353,10 +357,6 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <!-- include here to be propagated to child modules' default build lifecycle -->
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>

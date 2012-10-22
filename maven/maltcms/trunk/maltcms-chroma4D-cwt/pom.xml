@@ -9,6 +9,14 @@
     <artifactId>maltcms-chroma4D-cwt</artifactId>
     <name>maltcms-chroma4D-cwt</name>
     <packaging>jar</packaging>
+    <build>
+        <plugins>
+            <!-- include to run integration tests -->
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>net.sf.maltcms</groupId>
