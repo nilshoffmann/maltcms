@@ -200,11 +200,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-datastructures-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-execution</artifactId>
             <version>${project.version}</version>
         </dependency>

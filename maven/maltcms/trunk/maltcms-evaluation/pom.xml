@@ -154,7 +154,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-datastructures-api</artifactId>
+            <artifactId>maltcms-datastructures</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

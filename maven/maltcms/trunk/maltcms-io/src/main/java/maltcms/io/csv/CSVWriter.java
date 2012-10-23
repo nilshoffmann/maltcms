@@ -40,11 +40,7 @@ import java.util.Formatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-
-import maltcms.datastructures.array.IArrayD2Double;
-
 import org.jdom.Element;
-
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
@@ -151,12 +147,12 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File writeAlignmentPath(final String path, final String filename,
-            final List<Tuple2DI> map, final IArrayD2Double dist,
+            final List<Tuple2DI> map, final double[] distValues, final int rows, final int cols,
             final String refname, final String queryname, final String value,
             final String symbolicPath) {
         final File f = createFile(path, filename, WorkflowSlot.ALIGNMENT);
         // appendToWorkflow(f, WorkflowSlot.ALIGNMENT);
-        log.info("Value of [0][0] = {}", dist.get(0, 0));
+        log.info("Value of [0][0] = {}", distValues[0]);
         try {
             final PrintWriter bw = new PrintWriter(new BufferedWriter(
                     new FileWriter(f)));
@@ -167,8 +163,7 @@ public class CSVWriter implements IWorkflowElement {
                     + this.fieldSeparator + value + this.fieldSeparator
                     + "symbol");
             bw.println();
-            log.info("Shape of matrix rows {} cols {}", dist.rows(), dist.
-                    columns());
+            log.info("Shape of matrix rows {} cols {}", rows, cols);
             for (int i = 0; i < map.size(); i++) {
                 final Tuple2DI t = map.get(i);
                 log.debug("Getting path value for {},{}", t.getFirst(), t.
@@ -177,7 +172,7 @@ public class CSVWriter implements IWorkflowElement {
                         + this.fieldSeparator
                         + t.getSecond()
                         + this.fieldSeparator
-                        + dist.get(t.getFirst(), t.getSecond())
+                        + distValues[i]
                         + ((symbolicPath != null) ? this.fieldSeparator
                         + symbolicPath.charAt(i) : ""));
                 bw.println();

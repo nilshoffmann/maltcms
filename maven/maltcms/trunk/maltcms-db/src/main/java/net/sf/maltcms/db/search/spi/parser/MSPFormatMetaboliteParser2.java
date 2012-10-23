@@ -27,7 +27,6 @@
  */
 package net.sf.maltcms.db.search.spi.parser;
 
-import EDU.purdue.cs.bloat.file.Exceptions;
 import com.db4o.config.EmbeddedConfiguration;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -423,6 +422,7 @@ public class MSPFormatMetaboliteParser2 {
         @Override
         public IMetabolite get(int i) {
             try {
+                System.out.println("Retrieving index "+i);
                 raf = new RandomAccessFile(f, "r");
                 raf.seek(metaboliteStartIndices.get(i));
                 long end = raf.length();

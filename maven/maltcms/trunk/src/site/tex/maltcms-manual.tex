@@ -38,8 +38,8 @@
 \definecolor{darkred}{rgb}{0.6,0.1,0.1}
 \definecolor{yac}{rgb}{0.6,0.6,0.1}
 
-\lstset{
-   language=Java,
+\lstdefinestyle{java}{
+	language=Java,
    numbers=left,
    backgroundcolor=\color{codebg},
    keywordstyle=\bfseries\ttfamily\color{darkred},
@@ -65,6 +65,83 @@
         {\ensuremath{\hookrightarrow\space}},
    captionpos=b
 }%
+\lstdefinestyle{script}{
+   language=bash,
+   numbers=left,
+   backgroundcolor=\color{codebg},
+   basicstyle=\footnotesize,    
+   numberstyle=\tiny\color{gray},
+   numbersep=5pt, 
+   stringstyle=\color{textfg}\ttfamily,
+   commentstyle=\color{middlegray}\ttfamily,
+   showstringspaces=false,
+   flexiblecolumns=false,
+   keepspaces=true,
+   tabsize=4,
+   breaklines=true,
+   breakautoindent=true,
+   breakatwhitespace=true,
+   prebreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\downarrow}},
+   postbreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\hookrightarrow\space}},
+   captionpos=b
+}
+\lstdefinestyle{groovy}{
+   language=Java,
+   numbers=left,
+   backgroundcolor=\color{codebg},
+   keywordstyle=\bfseries\ttfamily\color{darkred},
+   basicstyle=\footnotesize,    
+   numberstyle=\tiny\color{gray},
+   numbersep=5pt, 
+   stringstyle=\color{textfg}\ttfamily,
+   commentstyle=\color{middlegray}\ttfamily,
+   emph={square}, 
+   emphstyle=\color{blue}\texttt,
+   emph={[2]root,base},
+   emphstyle={[2]\color{yac}\texttt},
+   showstringspaces=false,
+   flexiblecolumns=false,
+   keepspaces=true,
+   tabsize=4,
+   breaklines=true,
+   breakautoindent=true,
+   breakatwhitespace=true,
+   prebreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\downarrow}},
+   postbreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\hookrightarrow\space}},
+   captionpos=b
+}
+\lstdefinestyle{xml}{
+   language=Java,
+   numbers=left,
+   backgroundcolor=\color{codebg},
+   keywordstyle=\bfseries\ttfamily\color{darkred},
+   basicstyle=\footnotesize,    
+   numberstyle=\tiny\color{gray},
+   numbersep=5pt, 
+   stringstyle=\color{textfg}\ttfamily,
+   commentstyle=\color{middlegray}\ttfamily,
+   emph={square}, 
+   emphstyle=\color{blue}\texttt,
+   emph={[2]root,base},
+   emphstyle={[2]\color{yac}\texttt},
+   showstringspaces=false,
+   flexiblecolumns=false,
+   keepspaces=true,
+   tabsize=4,
+   breaklines=true,
+   breakautoindent=true,
+   breakatwhitespace=true,
+   prebreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\downarrow}},
+   postbreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\hookrightarrow\space}},
+   captionpos=b
+}
+
 
 \author{Nils Hoffmann}
 \title{The Modular Application Toolkit for Chromatography-Mass Spectrometry\\\vspace{1ex}\begin{Large}
@@ -92,15 +169,17 @@ Version 1.2.1-SNAPSHOT
 %\listoffigures    %Abbildungsverzeichnis
 %\listoftables     % Tabellenverzeichnis
 
-\lstinputlisting[firstline=52,lastline=75,float,caption=Programmatic assembly of a workflow,label=lst:myWorkflow]{../../../maltcms-chroma/src/main/java/net/sf/maltcms/tutorials/MyWorkflow.java}
+\lstinputlisting[style=java,firstline=52,lastline=75,float,caption=Programmatic assembly of a workflow,label=lst:myWorkflow]{../../../maltcms-chroma/src/main/java/net/sf/maltcms/tutorials/MyWorkflow.java}
 
 \tableofcontents   %Inhaltsverzeichnis
  
 \mainmatter    %Arabische Seitenummerierung
 \include{intro/chapter}
+\part{Using Maltcms}
 \include{usage/chapter}
-\include{concepts/chapter}
 \include{samples/chapter}
+\part{Developing Maltcms}
+\include{concepts/chapter}
 \backmatter
 \chapter{Appendix}
 \lstlistoflistings

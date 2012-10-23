@@ -1,4 +1,4 @@
-\chapter{Usage}
+\chapter{Installation}
 Maltcms provides a command line interface (CLI) for direct invocation 
 from a system's command prompt. Maltcms is usually called by a platform 
 dependent wrapper script that is located below Maltcms' installation location:
@@ -11,35 +11,22 @@ These wrapper scripts provide additional options and comfort functions
 over the default Maltcms command line and are thus recommended for general use.
 
 \section{Maltcms Command Line Arguments}
-The following basic command line arguments apply to all operating system platforms.
-
--?                                         display this help
- -a <file1,...>                             alignment anchor files (without path
-                                            prefix, assumes location as given
-                                            with option -i)
- -b,--createBeanXml <class1,class2, ...>    Creates a fragmentCommands.xml file
-                                            in spring format for all instances
-                                            of
-                                            cross.commands.fragments.AFragmentCo
-                                            mmand
+The following basic command line arguments apply to all operating system platforms:
+\begin{lstlisting}[style=script]
+ -?                                         display this help
+ -a <file1,...>                             alignment anchor files (without path prefix, assumes location as given with option -i)
+ -b,--createBeanXml <class1,class2, ...>    Creates a fragmentCommands.xml file in spring format for all instances of cross.commands.fragments.AFragmentCommand
  -c <file>                                  configuration file location
- -e <file:///path1/,...>                    extension locations (directories or
-                                            .jar files)
- -f <file1,...>                             input files (wildcard, e.g. *.cdf,
-                                            file name only if -i is given, or
-                                            full path)
+ -e <file:///path1/,...>                    extension locations (directories or .jar files)
+ -f <file1,...>                             input files (wildcard, e.g. *.cdf, file name only if -i is given, or full path)
  -h                                         display this help
  -i <dir>                                   input base directory
- -l <class1,...>                            print available service providers
-                                            (e.g.
-                                            cross.commands.fragments.AFragmentCo
-                                            mmand)
+ -l <class1,...>                            print available service providers (e.g. cross.commands.fragments.AFragmentCommand)
  -o <dir>                                   target directory for all output
  -p                                         print resolved configuration
  -r                                         recurse into input base directory
- -s,--showProperties <class1,class2, ...>   Prints the properties available for
-                                            configuration of given classes
-
+ -s,--showProperties <class1,class2, ...>   Prints the properties available for configuration of given classes
+\end{lstlisting}
 \subsection{Handling Files}
 
 \begin{verbatim}
@@ -56,41 +43,10 @@ The following basic command line arguments apply to all operating system platfor
 \paragraph{Changing the Output Directory Hierarchy}
 \begin{verbatim}
 -DomitUserTimePrefix
--Doutput.overwrite
+-Doutput.overwrite=true
 \end{verbatim}
 \paragraph{Postprocessing of Workflow Results}
 selecting and zipping processing results
-
-\subsection{}
-
-\begin{verbatim}
--?                                         display this help
- -a <file1,...>                             alignment anchor files (without path
-                                            prefix, assumes location as given
-                                            with option -i)
- -b,--createBeanXml <class1,class2, ...>    Creates a fragmentCommands.xml file
-                                            in spring format for all instances
-                                            of
-                                            cross.commands.fragments.AFragmentCo
-                                            mmand
- -c <file>                                  configuration file location
- -e <file:///path1/,...>                    extension locations (directories or
-                                            .jar files)
- -f <file1,...>                             input files (wildcard, e.g. *.cdf,
-                                            file name only if -i is given, or
-                                            full path)
- -h                                         display this help
- -i <dir>                                   input base directory
- -l <class1,...>                            print available service providers
-                                            (e.g.
-                                            cross.commands.fragments.AFragmentCo
-                                            mmand)
- -o <dir>                                   target directory for all output
- -p                                         print resolved configuration
- -r                                         recurse into input base directory
- -s,--showProperties <class1,class2, ...>   Prints the properties available for
-                                            configuration of given classes
-\end{verbatim}
 
 \section{Platform Dependent Wrapper Scripts}
 

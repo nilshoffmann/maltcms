@@ -775,20 +775,28 @@ public class PathTools implements IConfigurable {
         // dwr.setIWorkflowElement(csvw);
         // dwr.setWorkflowSlot(WorkflowSlot.ALIGNMENT);
         // iw.append(dwr);
+
+        double[] pathValues = new double[map1.size()];
+
+        for (int i = 0; i < map.size(); i++) {
+            final Tuple2DI t = map.get(i);
+            pathValues[i] = pwdist.get(t.getFirst(),t.getSecond());
+        }
+
         csvw.setWorkflow(iw);
         csvw.writeAlignmentPath(pathCSV.getParent(), pathCSV.getName(), map1,
-                cdist, FragmentTools.getLHSFile(parent).getName(),
+                pathValues, cdist.rows(), cdist.columns(), FragmentTools.getLHSFile(parent).getName(),
                 FragmentTools.getRHSFile(parent).getName(),
                 "cumulative_distance", this.symbolicPath);
         // ArrayList<Tuple2DI> condensedFeatures = findLocalPathOptima(parent,
         // pwdist, map1, isDist);
         csvw.writeAlignmentPath(pathPWCSV.getParent(), pathPWCSV.getName(),
-                map1, pwdist, FragmentTools.getLHSFile(parent).getName(),
+                map1, pathValues, cdist.rows(), cdist.columns(), FragmentTools.getLHSFile(parent).getName(),
                 FragmentTools.getRHSFile(parent).getName(),
                 "pairwise_distance", this.symbolicPath);
         csvw.writeAlignmentPath(pathPWAlignedPeaks.getParent(),
                 pathPWAlignedPeaks.getName(), getAlignedPeaksAlongPath(isDist,
-                pwdist, map1), pwdist, FragmentTools.getLHSFile(parent)
+                pwdist, map1), pathValues, cdist.rows(), cdist.columns(), FragmentTools.getLHSFile(parent)
                 .getName(), FragmentTools.getRHSFile(parent).getName(),
                 "pairwise_distance", this.symbolicPath);
         // csvw.writeAlignmentPath(pathCondensed.getParent(), pathCondensed
