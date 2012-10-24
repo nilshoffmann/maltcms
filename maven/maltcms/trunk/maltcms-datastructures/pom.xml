@@ -59,7 +59,7 @@
         </dependency>
         <dependency>
             <groupId>org.jfree</groupId>
-            <artifactId>jfreechart-osgi_1.0.13</artifactId>
+            <artifactId>jfreechart-osgi</artifactId>
             <version>1.0.13</version>
         </dependency>
         <dependency>
