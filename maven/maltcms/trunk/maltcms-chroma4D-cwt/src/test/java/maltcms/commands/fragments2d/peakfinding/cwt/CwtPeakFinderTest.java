@@ -25,8 +25,9 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.commands.fragments2d.peakfinding;
+package maltcms.commands.fragments2d.peakfinding.cwt;
 
+import maltcms.commands.fragments2d.peakfinding.cwt.CwtPeakFinder;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;

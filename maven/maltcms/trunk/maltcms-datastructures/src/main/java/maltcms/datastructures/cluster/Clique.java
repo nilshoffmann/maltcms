@@ -34,7 +34,6 @@ import java.util.HashSet;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
-import maltcms.commands.ArrayStatsMap;
 import maltcms.datastructures.array.IFeatureVector;
 
 import maltcms.datastructures.array.IMutableFeatureVector;

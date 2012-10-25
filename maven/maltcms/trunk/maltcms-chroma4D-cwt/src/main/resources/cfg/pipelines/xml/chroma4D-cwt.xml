@@ -37,7 +37,7 @@ for details.
     
     
                
-    <bean id="cwtPeakFinder" class="maltcms.commands.fragments2d.peakfinding.CWTPeakFinder">
+    <bean id="cwtPeakFinder" class="maltcms.commands.fragments2d.peakfinding.cwt.CWTPeakFinder">
         <property name="minScale" value="1"/>
         <property name="maxScale" value="50"/>
         <property name="minRelativeIntensity" value="0.000002"/>

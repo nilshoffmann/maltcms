@@ -25,7 +25,7 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.commands.fragments2d.peakfinding;
+package maltcms.commands.fragments2d.peakfinding.cwt;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -94,6 +94,7 @@ import cross.tools.StringTools;
 import java.io.Serializable;
 import java.util.concurrent.Callable;
 import lombok.Data;
+import maltcms.commands.fragments2d.peakfinding.CwtChartFactory;
 import maltcms.datastructures.quadTree.ElementNotFoundException;
 import maltcms.datastructures.quadTree.QuadTree;
 

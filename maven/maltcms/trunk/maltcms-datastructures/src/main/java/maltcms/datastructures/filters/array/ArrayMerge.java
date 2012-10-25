@@ -25,7 +25,7 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.commands.filters.array;
+package maltcms.datastructures.filters.array;
 
 import maltcms.datastructures.array.Sparse;
 import ucar.ma2.Array;

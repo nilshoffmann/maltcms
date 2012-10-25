@@ -25,7 +25,7 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.commands;
+package maltcms.datastructures.cluster;
 
 import java.util.List;
 import maltcms.datastructures.array.IMutableFeatureVector;
