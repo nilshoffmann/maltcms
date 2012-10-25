@@ -74,7 +74,6 @@ import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
-import cross.datastructures.tools.FileTools;
 import cross.datastructures.tuple.Tuple2D;
 import cross.tools.StringTools;
 import java.io.BufferedWriter;
@@ -82,8 +81,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.Callable;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -91,6 +89,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHFinder;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.CliqueTable;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.IWorkerFactory;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PairwiseSimilarityWorker;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakComparator;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakSimilarityVisualizer;
@@ -118,7 +117,8 @@ import ucar.ma2.MAMath;
     "var.binned_intensity_values", "var.binned_scan_index",
     "var.scan_acquisition_time", "var.mass_values", "var.intensity_values",
     "var.scan_index"})
-@RequiresOptionalVariables(names = {"var.tic_peaks"})
+@RequiresOptionalVariables(names = {"var.tic_peaks",
+    "var.first_column_elution_time", "var.second_column_elution_time"})
 @ProvidesVariables(names = {"var.anchors.retention_index_names",
     "var.anchors.retention_times", "var.anchors.retention_indices",
     "var.anchors.retention_scans"})
@@ -173,7 +173,9 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     @Configurable
     private boolean useSparseArrays = false;
     @Configurable
-    private WorkerFactory workerFactory = new WorkerFactory();
+    private boolean use2DRetentionTimes = false;
+    @Configurable
+    private IWorkerFactory workerFactory = new WorkerFactory();
     /*
      * private scope
      */
@@ -496,8 +498,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 //                this.similarityFunction.getClass().getName());
         // Loop over all pairs of FileFragments
         ICompletionService<Integer> ics = createCompletionService(Integer.class);
-        List<PairwiseSimilarityWorker> workers = workerFactory.create(al, fragmentToPeaks);
-        for (PairwiseSimilarityWorker worker : workers) {
+        List<Callable<Integer>> workers = workerFactory.create(al, fragmentToPeaks);
+        for (Callable<Integer> worker : workers) {
             ics.submit(worker);
         }
 
@@ -1116,6 +1118,18 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     t.getChild(this.binnedScanIndex));
             final Array scan_acquisition_time = t.getChild(
                     this.scanAcquisitionTime).getArray();
+            Array firstColumnElutionTime = null;
+            Array secondColumnElutionTime = null;
+            if(use2DRetentionTimes) {
+                try {
+                    IVariableFragment fcet = t.getChild(resolve("var.first_column_elution_time"));
+                    firstColumnElutionTime = fcet.getArray();
+                    IVariableFragment scet = t.getChild(resolve("var.second_column_elution_time"));
+                    secondColumnElutionTime = scet.getArray();
+                }catch(ResourceNotAvailableException rnae) {
+                    log.warn("Could not retrieve requested variables for 2D retention times!",rnae);
+                }
+            }
             EvalTools.notNull(peakCandidates1, this);
             List<Peak> peaks = null;
             if (fragmentToPeaks.containsKey(t.getName())) {
@@ -1149,6 +1163,10 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     p = new Peak(pc1i, indexedIntensities.get(pc1i),
                             scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
 
+                }
+                if (firstColumnElutionTime != null && secondColumnElutionTime != null) {
+                    p.addFeature(resolve("var.first_column_elution_time"), Array.factory(new float[]{firstColumnElutionTime.getFloat(i)}));
+                    p.addFeature(resolve("var.second_column_elution_time"), Array.factory(new float[]{secondColumnElutionTime.getFloat(i)}));
                 }
                 p.setPeakIndex(i);
                 peaks.add(p);
@@ -1331,7 +1349,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                         }
                     }
                 } catch (ResourceNotAvailableException rnae) {
-                    log.warn("Could not find peak_area as starting from " + fragment.getName() + "!");
+                    log.debug("Could not find peak_area as starting from " + fragment.getName() + "!");
                 }
             }
             final List<String> v = Arrays.asList(line);

@@ -46,16 +46,18 @@ import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
  * @author nilshoffmann
  */
 @Data
-public class WorkerFactory implements IWorkerFactory {
+public class Worker2DFactory implements IWorkerFactory{
 
-    private double maxRTDifference = 60.0d;
+    private double maxRTDifferenceRt1 = 60.0d;
+    private double maxRTDifferenceRt2 = 60.0d;
     private IScalarArraySimilarity similarityFunction;
     private boolean assumeSymmetricSimilarity = false;
 
-    public WorkerFactory() {
+    public Worker2DFactory() {
         similarityFunction = new ProductSimilarity();
-        GaussianDifferenceSimilarity gds = new GaussianDifferenceSimilarity();
-        similarityFunction.setScalarSimilarities(gds);
+        GaussianDifferenceSimilarity gds1 = new GaussianDifferenceSimilarity();
+        GaussianDifferenceSimilarity gds2 = new GaussianDifferenceSimilarity();
+        similarityFunction.setScalarSimilarities(gds1,gds2);
         ArrayCorr ac = new ArrayCorr();
         similarityFunction.setArraySimilarities(ac);
     }
@@ -70,8 +72,9 @@ public class WorkerFactory implements IWorkerFactory {
                 final List<Peak> rhsPeaks = fragmentToPeaks.get(t.getSecond().getName());
 //                log.debug("Comparing {} and {}", t.getFirst().getName(),
 //                        t.getSecond().getName());
-                PairwiseSimilarityWorker psw = new PairwiseSimilarityWorker();
-                psw.setMaxRTDifference(maxRTDifference);
+                PairwiseSimilarityWorker2D psw = new PairwiseSimilarityWorker2D();
+                psw.setMaxRTDifferenceRt1(maxRTDifferenceRt1);
+                psw.setMaxRTDifferenceRt2(maxRTDifferenceRt2);
                 psw.setSimilarityFunction(similarityFunction);
                 psw.setLhsPeaks(lhsPeaks);
                 psw.setRhsPeaks(rhsPeaks);
@@ -86,8 +89,9 @@ public class WorkerFactory implements IWorkerFactory {
                     final List<Peak> rhsPeaks = fragmentToPeaks.get(f2.getName());
 //                log.debug("Comparing {} and {}", t.getFirst().getName(),
 //                        t.getSecond().getName());
-                    PairwiseSimilarityWorker psw = new PairwiseSimilarityWorker();
-                    psw.setMaxRTDifference(maxRTDifference);
+                    PairwiseSimilarityWorker2D psw = new PairwiseSimilarityWorker2D();
+                    psw.setMaxRTDifferenceRt1(maxRTDifferenceRt1);
+                    psw.setMaxRTDifferenceRt2(maxRTDifferenceRt2);
                     psw.setSimilarityFunction(similarityFunction);
                     psw.setLhsPeaks(lhsPeaks);
                     psw.setRhsPeaks(rhsPeaks);

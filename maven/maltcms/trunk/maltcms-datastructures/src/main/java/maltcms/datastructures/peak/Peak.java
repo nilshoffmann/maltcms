@@ -37,15 +37,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import maltcms.datastructures.array.IFeatureVector;
 
 
 import ucar.ma2.Array;
-import cross.datastructures.fragments.IFileFragment;
 import cross.exception.ResourceNotAvailableException;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.feature.DefaultFeatureVector;
 
 /**
  * Shorthand class for peaks.
@@ -55,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Data
 @Slf4j
-public class Peak implements IFeatureVector {
+public class Peak extends DefaultFeatureVector {
 
     /**
      *
@@ -264,6 +264,10 @@ public class Peak implements IFeatureVector {
         } else if (name.equals("binned_intensity_values")) {
             return this.msIntensities;
         }
+        Array retVal = super.getFeature(name);
+        if(retVal!=null) {
+            return retVal;
+        }
         throw new ResourceNotAvailableException("No such feature: " + name);
     }
 
@@ -274,8 +278,11 @@ public class Peak implements IFeatureVector {
      */
     @Override
     public List<String> getFeatureNames() {
-        return Arrays.asList("scan_acquisition_time", "scan_index",
-                "binned_intensity_values");
+        List<String> superFeatureNames = super.getFeatureNames();
+        LinkedList<String> allFeatures = new LinkedList<String>(superFeatureNames);
+        allFeatures.addAll(Arrays.asList("scan_acquisition_time", "scan_index",
+                "binned_intensity_values"));
+        return allFeatures;
     }
 
     @Override

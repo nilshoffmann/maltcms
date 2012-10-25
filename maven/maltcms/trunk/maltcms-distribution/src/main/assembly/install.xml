@@ -93,6 +93,7 @@
                 <include>net.sf.maltcms:maltcms-chroma4D-cwt:jar</include>
                 <include>net.sf.maltcms:maltcms-evaluation:jar</include>
                 <include>net.sf.maltcms:maltcms-spectratyping:jar</include>
+                <include>net.sf.maltcms:maltcms-cv:jar</include>
                 <!--<include>net.sf.maltcms:maltcms-resources:jar</include>-->
             </includes>
             <fileMode>0644</fileMode>
