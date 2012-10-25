@@ -11,9 +11,9 @@
     <url>http://maltcms.sourceforge.net</url>
     <packaging>jar</packaging>
     <dependencies>
-        <dependency>
-            <groupId>wizard</groupId>
-            <artifactId>wizard</artifactId>
+	<dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>wizard-osgi</artifactId>
             <version>0.998.1</version>
         </dependency>
     </dependencies>

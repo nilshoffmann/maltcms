@@ -51,8 +51,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>colt</groupId>
-            <artifactId>colt</artifactId>
+            <groupId>acs.lbl.gov</groupId>
+            <artifactId>colt-osgi</artifactId>
             <version>1.2.0</version>
         </dependency>
         <dependency>

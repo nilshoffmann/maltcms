@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>maltcms-modules</artifactId>
@@ -16,39 +17,40 @@
     <packaging>jar</packaging>
     <build>
         <plugins>
-<!--            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <configuration>
-                            <target>
-
-								 Define enhancement tasks 
-                                <typedef resource="instrumentation-def.properties" classpathref="maven.compile.classpath" loaderRef="instrumentation.loader" />
-
-								 We filter by our annotation 
-                                <typedef name="annotation-filter" classname="net.sf.maltcms.evaluation.api.AnnotationFilter" classpathref="maven.compile.classpath" loaderref="instrumentation.loader" />
-
-                                <db4o-instrument classTargetDir="target/classes" verbose="true" >
-                                    <classpath refid="maven.compile.classpath" />
-                                    <sources dir="target/classes">
-                                        <include name="**/*.class" />
-                                    </sources>
-                                    
-                                    <transparent-activation-step>
-                                        
-                                        <annotation-filter />
-                                    </transparent-activation-step>
-                                </db4o-instrument>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
+<!--            <plugin> 
+                <artifactId>maven-antrun-plugin</artifactId> 
+                <executions> 
+                    <execution> 
+                        <phase>compile</phase> 
+                        <configuration> 
+                            <target> Define enhancement 
+                                tasks 
+                                <typedef resource="instrumentation-def.properties" classpathref="maven.compile.classpath" 
+                                                       loaderRef="instrumentation.loader" /> We filter by our annotation 
+                                <typedef 
+                                    name="annotation-filter" classname="net.sf.maltcms.evaluation.api.AnnotationFilter" 
+                                                                 classpathref="maven.compile.classpath" loaderref="instrumentation.loader" 
+        				/> 
+                                <db4o-instrument classTargetDir="target/classes" verbose="true" > 
+                                    <classpath 
+                                        refid="maven.compile.classpath" /> 
+                                    <sources dir="target/classes"> 
+                                        <include 
+                                            name="**/*.class" /> 
+                                    </sources> 
+                                    <transparent-activation-step> 
+                                        <annotation-filter 
+        				/> 
+                                    </transparent-activation-step> 
+                                </db4o-instrument> 
+                            </target> 
+                        </configuration> 
+                        <goals> 
+                            <goal>run</goal> 
+                        </goals> 
+                    </execution> 
+                </executions> 
+            </plugin> -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -173,8 +175,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.jexcelapi</groupId>
-            <artifactId>jxl</artifactId>
+            <groupId>net.sf.jexcelapi</groupId>
+            <artifactId>jxl-osgi</artifactId>
             <version>2.6.10</version>
         </dependency>
         <dependency>
