@@ -42,6 +42,7 @@ import java.util.List;
 import junit.framework.Assert;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import cross.io.misc.ZipResourceExtractor;
+import cross.vocabulary.CvResolver;
 import cross.vocabulary.ICvResolver;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.test.AFragmentCommandTest;
@@ -82,7 +83,7 @@ public class Default2DVarLoaderTest extends AFragmentCommandTest {
             TupleND<IFileFragment> results = w.call();
             w.save();
             setLogLevelFor(ICvResolver.class, Level.ALL);
-            ICvResolver cvr = Lookup.getDefault().lookup(ICvResolver.class);
+            CvResolver cvr = new CvResolver();
             for (IFileFragment resultFile : results) {
                 FileFragment ff = new FileFragment(new File(resultFile.getAbsolutePath()));
                 for (String variable : AnnotationInspector.getProvidedVariables(Default2DVarLoader.class)) {
