@@ -37,6 +37,8 @@ import cross.datastructures.pipeline.ICommandSequenceValidator;
 import cross.datastructures.tuple.TupleND;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
+import cross.vocabulary.CvResolver;
+import cross.vocabulary.ICvResolver;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -60,7 +62,8 @@ import lombok.extern.slf4j.Slf4j;
 class DefaultCommandSequenceValidator implements ICommandSequenceValidator {
 
     private boolean checkInheritedVariables = true;
-
+    private ICvResolver resolver = new CvResolver();
+    
     @Override
     public boolean isValid(ICommandSequence commandSequence) throws ConstraintViolationException {
         try {
@@ -200,12 +203,12 @@ class DefaultCommandSequenceValidator implements ICommandSequenceValidator {
             final TupleND<IFileFragment> inputFragments,
             final Collection<String> requiredVariables,
             final HashSet<String> providedVariables) {
-
         for (final IFileFragment ff : inputFragments) {
             for (final String s : requiredVariables) {
                 // resolve the variables name
-                final String vname = Factory.getInstance().getConfiguration().
-                        getString(s);
+                final String vname = resolver.translate(s);
+//                Factory.getInstance().getConfiguration().
+//                        getString(s);
                 if ((vname != null) && !vname.isEmpty()) {
                     try {
                         final IVariableFragment ivf = ff.getChild(vname, true);

@@ -36,6 +36,7 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractRefreshableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 /**
@@ -55,6 +56,25 @@ public class DefaultApplicationContextFactory {
             final ConfiguringBeanPostProcessor cbp = new ConfiguringBeanPostProcessor();
             cbp.setConfiguration(configuration);
             context = new FileSystemXmlApplicationContext(applicationContextPaths.toArray(new String[applicationContextPaths.size()]), context);
+            context.addBeanFactoryPostProcessor(new BeanFactoryPostProcessor() {
+                @Override
+                public void postProcessBeanFactory(ConfigurableListableBeanFactory clbf) throws BeansException {
+                    clbf.addBeanPostProcessor(cbp);
+                }
+            });
+            context.refresh();
+        } catch (BeansException e2) {
+            throw e2;
+        }
+        return context;
+    }
+    
+    public ApplicationContext createClassPathApplicationContext() throws BeansException {
+        AbstractRefreshableApplicationContext context = null;
+        try {
+            final ConfiguringBeanPostProcessor cbp = new ConfiguringBeanPostProcessor();
+            cbp.setConfiguration(configuration);
+            context = new ClassPathXmlApplicationContext(applicationContextPaths.toArray(new String[applicationContextPaths.size()]), context);
             context.addBeanFactoryPostProcessor(new BeanFactoryPostProcessor() {
                 @Override
                 public void postProcessBeanFactory(ConfigurableListableBeanFactory clbf) throws BeansException {
