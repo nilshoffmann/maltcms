@@ -206,10 +206,11 @@ class DefaultCommandSequenceValidator implements ICommandSequenceValidator {
         for (final IFileFragment ff : inputFragments) {
             for (final String s : requiredVariables) {
                 // resolve the variables name
-                final String vname = resolver.translate(s);
+                
 //                Factory.getInstance().getConfiguration().
 //                        getString(s);
-                if ((vname != null) && !vname.isEmpty()) {
+                if ((s != null) && !s.isEmpty()) {
+                    final String vname = resolver.translate(s);
                     try {
                         final IVariableFragment ivf = ff.getChild(vname, true);
                         log.debug("Retrieved var {}", ivf.getName());
@@ -221,6 +222,8 @@ class DefaultCommandSequenceValidator implements ICommandSequenceValidator {
                                 "Could not find variable {} as child of {}",
                                 vname, ff.getAbsolutePath());
                     }
+                } else {
+                    throw new ConstraintViolationException("Variable name of required variable must not be null!");
                 }
             }
         }

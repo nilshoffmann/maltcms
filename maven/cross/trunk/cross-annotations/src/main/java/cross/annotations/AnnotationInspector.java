@@ -339,7 +339,12 @@ public final class AnnotationInspector {
             final Collection<String> coll) {
         if (c.isAnnotationPresent(RequiresOptionalVariables.class)) {
             final String[] s = c.getAnnotation(RequiresOptionalVariables.class).names();
-            coll.addAll(java.util.Arrays.asList(s));
+            for(String v:s) {
+                if(v == null || v.isEmpty()) {
+                    throw new IllegalArgumentException(c.getCanonicalName()+" contains an empty variable name definition in annotation "+RequiresOptionalVariables.class.getCanonicalName()+"!");
+                }
+                coll.add(v);
+            }
         }
     }
 
@@ -352,7 +357,12 @@ public final class AnnotationInspector {
             final Collection<String> coll) {
         if (c.isAnnotationPresent(ProvidesVariables.class)) {
             final String[] s = c.getAnnotation(ProvidesVariables.class).names();
-            coll.addAll(java.util.Arrays.asList(s));
+            for(String v:s) {
+                if(v == null || v.isEmpty()) {
+                    throw new IllegalArgumentException(c.getCanonicalName()+" contains an empty variable name definition in annotation "+ProvidesVariables.class.getCanonicalName()+"!");
+                }
+                coll.add(v);
+            }
         }
     }
 
@@ -365,7 +375,12 @@ public final class AnnotationInspector {
             final Collection<String> coll) {
         if (c.isAnnotationPresent(RequiresVariables.class)) {
             final String[] s = c.getAnnotation(RequiresVariables.class).names();
-            coll.addAll(java.util.Arrays.asList(s));
+            for(String v:s) {
+                if(v == null || v.isEmpty()) {
+                    throw new IllegalArgumentException(c.getCanonicalName()+" contains an empty variable name definition in annotation "+RequiresVariables.class.getCanonicalName()+"!");
+                }
+                coll.add(v);
+            }
         }
     }
 }
