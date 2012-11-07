@@ -70,8 +70,6 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Mathias Wilhelm
  */
-@RequiresVariables(names = {""})
-@RequiresOptionalVariables(names = {""})
 @ProvidesVariables(names = {"var.total_intensity", "var.modulation_time",
     "var.scan_rate", "var.scan_duration", "var.second_column_time",
     "var.second_column_scan_index", "var.total_intensity_1d",
