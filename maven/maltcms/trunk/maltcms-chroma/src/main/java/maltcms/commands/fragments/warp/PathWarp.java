@@ -133,8 +133,7 @@ public class PathWarp extends AFragmentCommand {
             tf = apply(mwi, tf);
             log.debug("{}", tf.toString());
             log.debug("Path AWarp saving to {}", tf.getName());
-            final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                    new File(tf.getAbsolutePath()), this, getWorkflowSlot(), ff);
+            final DefaultWorkflowResult dwr = new DefaultWorkflowResult(tf.getUri(), this, getWorkflowSlot(), ff);
             getWorkflow().append(dwr);
             tf.save();
             ret.add(tf);

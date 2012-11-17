@@ -271,7 +271,7 @@
                         <includes>
                             <include>**/*.class</include>
                         </includes>
-                        <excludedGroups>maltcms.test.IntegrationTest</excludedGroups>
+                        <excludedGroups>cross.test.IntegrationTest</excludedGroups>
                         <argLine>-Xmx2G</argLine>
                         <!-- redirectTestOutputToFile -->
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
@@ -288,7 +288,7 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <groups>maltcms.test.IntegrationTest</groups>
+                        <groups>cross.test.IntegrationTest</groups>
                     </configuration>
                     <executions>
                         <execution>
@@ -524,6 +524,11 @@
             <artifactId>junit</artifactId>
             <version>4.10</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.maltcms</groupId>
+            <artifactId>cross-test</artifactId>
+            <version>1.2.12-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <properties>

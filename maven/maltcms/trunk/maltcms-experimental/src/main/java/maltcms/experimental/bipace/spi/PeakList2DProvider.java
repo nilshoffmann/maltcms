@@ -54,12 +54,12 @@ public class PeakList2DProvider implements IPeakListProvider<Peak2D> {
             pl.setFragment(t.getFirst());
             pl.setPeaks(t.getSecond());
             pl.setIndex(i++);
-            map.put(t.getFirst().getAbsolutePath(), pl);
+            map.put(t.getFirst().getUri().toASCIIString(), pl);
         }
     }
 
     @Override
     public PeakList<Peak2D> getPeaks(IFileFragment fragment) {
-        return map.get(fragment.getAbsolutePath());
+        return map.get(fragment.getUri().toASCIIString());
     }
 }

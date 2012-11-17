@@ -54,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
-import maltcms.test.IntegrationTest;
+import cross.test.IntegrationTest;
 import org.junit.experimental.categories.Category;
 
 /**

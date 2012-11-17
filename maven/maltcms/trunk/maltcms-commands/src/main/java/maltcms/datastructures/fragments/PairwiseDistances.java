@@ -159,15 +159,15 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
                 this.pwDistAlignmentsVarName);
         int maxlength = 128;
         for (final IFileFragment iff : this.alignments) {
-            if (iff.getAbsolutePath().length() > maxlength) {
-                maxlength = iff.getAbsolutePath().length();
+            if (iff.getUri().toASCIIString().length() > maxlength) {
+                maxlength = iff.getUri().toASCIIString().length();
             }
         }
         final ArrayChar.D2 anames = cross.datastructures.tools.ArrayTools.createStringArray(
                 this.alignments.getSize(), maxlength);
         int i = 0;
         for (final IFileFragment iff : this.alignments) {
-            anames.setString(i++, iff.getAbsolutePath());
+            anames.setString(i++, iff.getUri().toASCIIString());
         }
         alignments.setArray(anames);
     }

@@ -27,6 +27,7 @@
  */
 package maltcms.test;
 
+import cross.test.SetupLogging;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -98,6 +99,7 @@ public abstract class AFragmentCommandTest {
         CommandPipeline cp = new CommandPipeline();
         List<IFileFragment> fragments = new ArrayList<IFileFragment>();
         for (File f : inputFiles) {
+            log.info("Adding input file {}",f);
             fragments.add(new FileFragment(f));
         }
         cp.setCommands(commands);

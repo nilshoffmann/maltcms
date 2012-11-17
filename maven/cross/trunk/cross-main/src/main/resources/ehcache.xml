@@ -64,7 +64,7 @@ used with JMX monitors.
     Subdirectories can be specified below the property e.g. java.io.tmpdir/one
 
     -->
-    <diskStore path="java.io.tmpdir"/>
+    <diskStore path="java.io.tmpdir" />
 
     <!--
     Default Cache configuration. These settings will be applied to caches
@@ -74,5 +74,5 @@ used with JMX monitors.
 
     The defaultCache has an implicit name "default" which is a reserved cache name.
     -->
-    <defaultCache maxElementsInMemory="100" eternal="true" overflowToDisk="false" memoryStoreEvictionPolicy="LRU" statistics="false"/>
+    <defaultCache maxElementsInMemory="100" eternal="true" overflowToDisk="true" memoryStoreEvictionPolicy="LFU" statistics="false"/>
 </ehcache>

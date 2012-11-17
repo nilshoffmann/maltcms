@@ -37,6 +37,7 @@ import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -51,7 +52,6 @@ import java.util.Set;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
-import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayChar;
 
 /**
@@ -96,15 +96,14 @@ public class ANDIMSExporter extends AFragmentCommand {
 //                throw new RuntimeException(e.fillInStackTrace());
 //            }
             log.info("Processing {}", f.getName());
-            IFileFragment outf = Factory.getInstance().getFileFragmentFactory().
-                    create(new File(getWorkflow().getOutputDirectory(this), f.
+            IFileFragment outf = new FileFragment(new File(getWorkflow().getOutputDirectory(this), f.
                     getName()));
             List<IFileFragment> deepestAncestors = cross.datastructures.tools.FragmentTools.
                     getDeepestAncestor(f);
             if (deepestAncestors.size() > 1) {
                 throw new ConstraintViolationException("Found "
                         + deepestAncestors.size() + " possible roots for "
-                        + f.getAbsolutePath() + ". Maximum is 1! Roots are: "
+                        + f.getUri() + ". Maximum is 1! Roots are: "
                         + deepestAncestors);
             } else if (deepestAncestors.isEmpty()) {
                 deepestAncestors.add(f);
@@ -199,8 +198,7 @@ public class ANDIMSExporter extends AFragmentCommand {
             addGlobalAttributes(outf, lattributes);
 
             outf.save();
-            DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
-                    outf.getAbsolutePath()), this, getWorkflowSlot(), outf);
+            DefaultWorkflowResult dwr = new DefaultWorkflowResult(outf.getUri(), this, getWorkflowSlot(), outf);
             getWorkflow().append(dwr);
         }
         return t;

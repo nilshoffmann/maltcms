@@ -27,9 +27,9 @@
  */
 package cross.datastructures.cache.ehcache;
 
+import cross.datastructures.cache.CacheType;
 import cross.datastructures.cache.ICacheDelegate;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 
@@ -46,21 +46,18 @@ import net.sf.ehcache.Element;
 @Slf4j
 public class EhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
 
-    private final String cacheName;
-    private final CacheManager cacheManager;
+    private final Ehcache cache;
 
-    public EhcacheDelegate(final String cacheName,
-            final CacheManager cacheManager) {
-        this.cacheName = cacheName;
-        this.cacheManager = cacheManager;
+    public EhcacheDelegate(final Ehcache cache) {
+        this.cache = cache;
     }
 
     @Override
     public void put(final K key, final V value) {
         try {
             getCache().put(new Element(key, value));
-        }catch(IllegalStateException se) {
-            log.warn("Failed to add element to cache: "+key,se);
+        } catch (IllegalStateException se) {
+            log.warn("Failed to add element to cache: " + key, se);
         }
     }
 
@@ -69,26 +66,32 @@ public class EhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
         try {
             Element element = getCache().get(key);
             if (element != null) {
-                return (V) element.getValue();
+                element.getObjectValue();
+                return (V) element.getObjectValue();
             }
             return null;
-        }catch(IllegalStateException se) {
-            log.warn("Failed to get element from cache: "+key,se);
+        } catch (IllegalStateException se) {
+            log.warn("Failed to get element from cache: " + key, se);
             return null;
-        }  
+        }
     }
 
     @Override
     public void close() {
-        cacheManager.getEhcache(cacheName).dispose();
+        cache.dispose();
     }
 
     public Ehcache getCache() {
-        return cacheManager.getEhcache(cacheName);
+        return cache;
     }
 
     @Override
     public String getName() {
-        return cacheName;
+        return cache.getName();
+    }
+
+    @Override
+    public CacheType getCacheType() {
+        return CacheType.EHCACHE;
     }
 }

@@ -74,6 +74,7 @@ import org.jfree.ui.TextAnchor;
 
 import ucar.ma2.Array;
 import cross.Factory;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 
 /**
@@ -364,8 +365,7 @@ public class JFreeChartViewer extends JFrame {
                                 final Array[] domains = new Array[f.length];
                                 int i = 0;
                                 VariableSelectionPanel vsp = new VariableSelectionPanel();
-                                IFileFragment fragment = Factory.getInstance()
-                                        .getFileFragmentFactory().create(f[0]);
+                                IFileFragment fragment = new FileFragment(f[0]);
                                 ArrayList<String> vars = new ArrayList<String>();
                                 String[] cfgvars = Factory.getInstance()
                                         .getConfiguration().getStringArray(
@@ -396,8 +396,7 @@ public class JFreeChartViewer extends JFrame {
                                             "user.name",
                                             System.getProperty(
                                             "user.name", ""));
-                                    fragment = Factory.getInstance()
-                                            .getFileFragmentFactory().create(
+                                    fragment = new FileFragment(
                                             file);
                                     labels[i] = fragment.getName();
                                     arrays[i] = fragment.getChild(valueVar)

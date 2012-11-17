@@ -28,12 +28,11 @@
 package cross.datastructures.workflow;
 
 import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.workflow.IWorkflowElement;
-import cross.datastructures.workflow.IWorkflowFileResult;
-import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
+import cross.exception.ResourceNotAvailableException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
 
@@ -47,7 +46,7 @@ import org.jdom.Element;
 @Slf4j
 public class DefaultWorkflowResult implements IWorkflowFileResult {
 
-    private File file = null;
+    private URI file = null;
     private WorkflowSlot workflowSlot = null;
     private IWorkflowElement workflowElement = null;
     private IFileFragment[] resources = null;
@@ -55,7 +54,7 @@ public class DefaultWorkflowResult implements IWorkflowFileResult {
     public DefaultWorkflowResult() {
     }
 
-    public DefaultWorkflowResult(final File f1, final IWorkflowElement iwe1,
+    public DefaultWorkflowResult(final URI f1, final IWorkflowElement iwe1,
             final WorkflowSlot ws1, IFileFragment... resources) {
         EvalTools.notNull(new Object[]{f1, iwe1, ws1, resources}, this);
         this.file = f1;
@@ -64,9 +63,18 @@ public class DefaultWorkflowResult implements IWorkflowFileResult {
         this.resources = resources;
     }
 
+    public DefaultWorkflowResult(final File f1, final IWorkflowElement iwe1,
+            final WorkflowSlot ws1, IFileFragment... resources) {
+        this(f1.toURI(), iwe1, ws1, resources);
+    }
+
     @Override
     public File getFile() {
-        return this.file;
+        File f = new File(this.file);
+        if (f.isFile()) {
+            return f;
+        }
+        throw new ResourceNotAvailableException("Local file is a URI resource: " + this.file);
     }
 
     @Override
@@ -82,7 +90,7 @@ public class DefaultWorkflowResult implements IWorkflowFileResult {
     @Override
     public void setFile(final File iff1) {
         EvalTools.notNull(iff1, this);
-        this.file = iff1;
+        this.file = iff1.toURI();
     }
 
     @Override
@@ -135,15 +143,12 @@ public class DefaultWorkflowResult implements IWorkflowFileResult {
         final Element resources = new Element("resources");
         for (IFileFragment f : this.resources) {
             final Element res = new Element("resource");
-            try {
-                res.setAttribute("uri", new File(f.getAbsolutePath()).getCanonicalFile().toURI().normalize().toString());
-            } catch (IOException ex) {
-                log.warn("{}", ex);
-            }
+            res.setAttribute("uri", f.getUri().normalize().toASCIIString());
             resources.addContent(res);
         }
         iwr.addContent(resources);
         iwr.setAttribute("file", getFile().getAbsolutePath());
+        iwr.setAttribute("file-uri", this.file.normalize().toASCIIString());
         e.addContent(iwr);
     }
 }

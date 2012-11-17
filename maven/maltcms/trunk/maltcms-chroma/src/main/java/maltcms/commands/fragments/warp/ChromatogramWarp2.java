@@ -188,6 +188,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
         log.info("Warping 2D variables: {}", indexedVars);
         EvalTools.notNull(at, this);
         String refname = at.getRefName();
+        log.info("Refname in alignment table {}",refname);
 
         IFileFragment refOrig = null;
         for (IFileFragment f : t) {
@@ -197,28 +198,29 @@ public class ChromatogramWarp2 extends AFragmentCommand {
         }
         EvalTools.notNull(refOrig, this);
 
-        log.info("Reference is {}", refOrig);
+        log.info("Reference is {}", refOrig.getName());
         for (int i = 0; i < wt.size(); i++) {
             IFileFragment queryTarget = wt.get(i);
             IFileFragment querySource = t.get(i);
             log.info("Processing {}/{}", (i + 1), wt.size());
-            if (!StringTools.removeFileExt(queryTarget.getName()).equals(
-                    refOrig.getName())) {
+            String queryTargetName = StringTools.removeFileExt(queryTarget.getName());
+            String refOrigName = StringTools.removeFileExt(refOrig.getName());
+            log.info("QueryTarget: {}; RefOrig: {}",queryTargetName,refOrigName);
+            if (!refOrigName.equals(queryTargetName)) {
                 log.info("Warping {} to {}", querySource.getName(),
                         refOrig.getName());
                 IFileFragment res = warp(refOrig, querySource, queryTarget,
                         at.getPathFor(refOrig, queryTarget), true,
                         getWorkflow());
                 res.save();
-                DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
-                        res.getAbsolutePath()), this, WorkflowSlot.WARPING, res);
+                DefaultWorkflowResult dwr = new DefaultWorkflowResult(res.getUri(), this, WorkflowSlot.WARPING, res);
                 getWorkflow().append(dwr);
             } else {
+                log.info("Copying reference {}",querySource.getName());
                 IFileFragment res = copyReference(querySource, queryTarget,
                         getWorkflow());
                 res.save();
-                DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
-                        res.getAbsolutePath()), this, WorkflowSlot.WARPING, res);
+                DefaultWorkflowResult dwr = new DefaultWorkflowResult(res.getUri(), this, WorkflowSlot.WARPING, res);
                 getWorkflow().append(dwr);
             }
         }
@@ -343,9 +345,15 @@ public class ChromatogramWarp2 extends AFragmentCommand {
             final IFileFragment querySource, final IFileFragment queryTarget,
             final List<Tuple2DI> path, final boolean toLHS, final IWorkflow iw) {
         log.debug("Warping {}, saving in {}",
-                querySource.getAbsolutePath(), queryTarget.getAbsolutePath());
-        warp2D(queryTarget, ref, querySource, path, this.indexedVars, toLHS);
-        warp1D(queryTarget, ref, querySource, path, this.plainVars, toLHS);
+                querySource.getUri(), queryTarget.getUri());
+        if(!this.indexedVars.isEmpty()) {
+            log.debug("Warping indexed variables!");
+            warp2D(queryTarget, ref, querySource, path, this.indexedVars, toLHS);
+        }
+        if(!this.plainVars.isEmpty()) {
+            log.debug("Warping plain variables!");
+            warp1D(queryTarget, ref, querySource, path, this.plainVars, toLHS);
+        }
         warpAnchors(queryTarget, querySource, path, toLHS);
         queryTarget.addSourceFile(querySource);
         return queryTarget;
@@ -568,6 +576,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
             log.debug("Warping to lhs {}, {} from file {}", new Object[]{
                         ref.getName(), s, toBeWarped.getName()});
             final Array refA = ref.getChild(s).getArray();
+            EvalTools.notNull(refA, this);
             warpedA = toBeWarped.getChild(s).getArray();
             // there exists a subtle bug, if variables in original file has
             // an empty array
@@ -581,6 +590,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
             log.debug("Warping to lhs {}, {} from file {}", new Object[]{
                         ref.getName(), s, toBeWarped.getName()});
             final Array refA = ref.getChild(s).getArray();
+            EvalTools.notNull(refA, this);
             warpedA = toBeWarped.getChild(s).getArray();
             // there exists a subtle bug, if variables in original file has
             // an empty array

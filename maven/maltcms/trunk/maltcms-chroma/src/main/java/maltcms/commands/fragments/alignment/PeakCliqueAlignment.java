@@ -66,6 +66,7 @@ import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -90,7 +91,6 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHFinder;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.CliqueTable;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.IWorkerFactory;
-import maltcms.commands.fragments.alignment.peakCliqueAlignment.PairwiseSimilarityWorker;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakComparator;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakSimilarityVisualizer;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.WorkerFactory;
@@ -211,7 +211,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         log.info("Preparing files!");
         for (final IFileFragment ff : newFragments) {
             log.debug("Source files of fragment {}: {}",
-                    ff.getAbsolutePath(), ff.getSourceFiles());
+                    ff.getUri(), ff.getSourceFiles());
             hm.put(ff.getName(), ff);
             final int size = getNumberOfPeaksWithinCliques(ff, cliques);
             if (size > 0) {
@@ -298,7 +298,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             }
             ff.getChild(this.scanAcquisitionTime).getArray();
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                    new File(ff.getAbsolutePath()), this, getWorkflowSlot(), ff);
+                    ff.getUri(), this, getWorkflowSlot(), ff);
             getWorkflow().append(dwr);
             ff.save();
         }
@@ -991,8 +991,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
         final ArrayList<IFileFragment> al2 = new ArrayList<IFileFragment>();
         for (final IFileFragment iff : originalFragments) {
-            final IFileFragment iff2 = Factory.getInstance().
-                    getFileFragmentFactory().create(new File(getWorkflow().
+            final IFileFragment iff2 = new FileFragment(new File(getWorkflow().
                     getOutputDirectory(this),
                     iff.getName()));
             iff2.addSourceFile(iff);
@@ -1103,7 +1102,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             try {
                 IVariableFragment peakCandidates = t.getChild(this.ticPeaks);
                 peakCandidates1 = peakCandidates.getArray();
-                log.debug("Peaks for file {}: {}", t.getAbsolutePath(),
+                log.debug("Peaks for file {}: {}", t.getUri(),
                         peakCandidates1);
             } catch (ResourceNotAvailableException rnae) {
                 // otherwise, create an index array for all scans!!!
@@ -1536,7 +1535,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
 
         for (IFileFragment iff : fragmentToScanIndexMap.keySet()) {
-            af.addScanIndexMap(a, new File(iff.getAbsolutePath()).toURI(),
+            af.addScanIndexMap(a, iff.getUri(),
                     fragmentToScanIndexMap.get(iff), false);
         }
         File out = new File(getWorkflow().getOutputDirectory(this),

@@ -38,6 +38,7 @@ import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
 import cross.Factory;
 import cross.datastructures.fragments.FileFragment;
+import cross.datastructures.fragments.FileFragmentFactory;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
@@ -65,12 +66,11 @@ public class FileCopy {
                 getConfiguration().getStringArray("input.dataInfo"));
         final Date d = new Date();
         for (final IFileFragment f : t) {
-            log.info("Reading defined Variables: {}", f.getAbsolutePath());
+            log.info("Reading defined Variables: {}", f.getUri());
             final IFileFragment al = f;
             // File target = new File(ArrayFactory.getConfiguration().getString(
             // "output.basedir"), al.getName());
-            final IFileFragment fcopy = Factory.getInstance().
-                    getFileFragmentFactory().create(
+            final IFileFragment fcopy = new FileFragmentFactory().create(
                     new File(FileTools.prependDefaultDirsWithPrefix("",
                     FileCopy.class, d), al.getName()));
             fcopy.addSourceFile(al);

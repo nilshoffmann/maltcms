@@ -27,7 +27,6 @@
  */
 package net.sf.maltcms.apps;
 
-import net.sf.maltcms.apps.Maltcms;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -54,9 +53,11 @@ import org.jfree.data.xy.XYSeriesCollection;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import cross.Factory;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.FileTools;
 import cross.datastructures.tools.FragmentTools;
+import cross.io.misc.FragmentStringParser;
 
 /**
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
@@ -90,11 +91,9 @@ public class MSScanVisualizer {
         // "var.scan_index", "scan_index");
         for (final String str : s) {
             System.out.println("Reading input.DataInfo: " + str);
-            final IFileFragment parent = Factory.getInstance()
-                    .getFileFragmentFactory().fromString(str);
+            final IFileFragment parent = new FragmentStringParser().parse(str);
             //
-            final IFileFragment al = Factory.getInstance()
-                    .getFileFragmentFactory().create(
+            final IFileFragment al = new FileFragment(
                     new File(FileTools.getDefaultDirs(date), parent
                     .getName()));
             al.addSourceFile(parent);

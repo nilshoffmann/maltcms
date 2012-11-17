@@ -28,15 +28,17 @@
 package cross.datastructures.tools;
 
 import cross.Factory;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.tools.StringTools;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
-import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -76,7 +78,8 @@ public class FileTools {
     protected static File checkFileReadable(final IFileFragment ff)
             throws IOException {
         log.debug("Trying to locate {}", ff.getName());
-        final File outF = new File(ff.getAbsolutePath()).getCanonicalFile();
+        final File outF = new File(ff.getUri()).getCanonicalFile();
+        //final File outF = new File(ff.getUri()).getCanonicalFile();
         if (outF.exists()) {
             log.debug("Found {} in directory {}", ff.getName(), outF.getParent());
             // knownFiles.put(outF.getAbsolutePath(), outF);
@@ -89,25 +92,25 @@ public class FileTools {
 
     protected static File createFile(final IFileFragment f) throws IOException {
         File file = null;
-        log.debug("File extension: {}", StringTools.getFileExtension(f.getAbsolutePath()));
+        log.debug("File extension: {}", StringTools.getFileExtension(f.getName()));
         IFileFragment ff = f;
         try {
             file = FileTools.findFile(f);
             log.info("File exists, checking, whether we should overwrite or create new file in temporary location!");
             if (Factory.getInstance().getConfiguration().getBoolean(
-                    "output.overwrite")) {
+                    "output.overwrite", false)) {
                 log.info("Option output.overwrite=true in default.properties is set, overwriting existing file!");
                 file.delete();
                 file = new File(file.getAbsolutePath());
             } else {
                 log.info(
                         "File {} already exists, creating file in temporary location!",
-                        f.getAbsolutePath());
+                        f.getUri());
                 final String tmpdir = System.getProperty("java.io.tmpdir");
                 final File tmp = new File(tmpdir);
                 file = new File(tmp, file.getName());
-                log.debug("Setting {} as source file of {}", f.getAbsolutePath(), file.getAbsolutePath());
-                ff = Factory.getInstance().getFileFragmentFactory().create(file);
+                log.debug("Setting {} as source file of {}", f.getUri(), file.getAbsolutePath());
+                ff = new FileFragment(file);
                 ff.addSourceFile(f);
             }
 
@@ -118,7 +121,7 @@ public class FileTools {
             log.debug(ioex.getLocalizedMessage());
             // create the file and it's parent directories atomically
             log.debug("File does not exist, creating atomically!");
-            file = new File(f.getAbsolutePath());
+            file = new File(f.getUri());
             file.getParentFile().mkdirs();
             file.createNewFile();
         }
@@ -176,6 +179,13 @@ public class FileTools {
         return FileTools.findFile(ff);
     }
 
+    public static String getFilename(final URI u) {
+        if(u.getPath().endsWith("/")) {
+            return "";
+        }
+        return u.getPath().substring(u.getPath().lastIndexOf("/") + 1);
+    }
+    
     public static String getFilename(final String fullname) {
         final File f = new File(fullname);
         return f.getName();
@@ -246,12 +256,51 @@ public class FileTools {
                 FileTools.getDefaultDirs(d), prefix, creator);
     }
 
+    public static URI resolveRelativeUri(URI base, URI relativeURI) {
+        return base.resolve(relativeURI);
+    }
+
+    public static URI getRelativeUri(URI from, URI to) {
+        // Normalize paths to remove . and .. segments
+        from = from.normalize();
+        to = to.normalize();
+
+        // Split paths into segments
+        String[] bParts = from.getPath().split("\\/");
+        String[] cParts = to.getPath().split("\\/");
+
+        // Discard trailing segment of from path
+        if (bParts.length > 0 && !from.getPath().endsWith("/")) {
+            bParts = Arrays.copyOf(bParts, bParts.length - 1);
+        }
+
+        // Remove common prefix segments
+        int i = 0;
+        while (i < bParts.length && i < cParts.length && bParts[i].equals(cParts[i])) {
+            i++;
+        }
+
+        // Construct the relative path
+        StringBuilder sb = new StringBuilder();
+        for (int j = 0; j < (bParts.length - i); j++) {
+            sb.append("../");
+        }
+        for (int j = i; j < cParts.length; j++) {
+            if (j != i) {
+                sb.append("/");
+            }
+            sb.append(cParts[j]);
+        }
+
+        return URI.create(sb.toString());
+    }
+
     public static String resolveRelativeFile(File base, File relativeFile) throws IOException {
         return new File(base, relativeFile.getPath()).getCanonicalPath();
     }
 
     public static File getRelativeFile(IFileFragment target, IFileFragment base) throws IOException {
-        return getRelativeFile(new File(target.getAbsolutePath()), new File(base.getAbsolutePath()).getParentFile());
+        return new File(getRelativeUri(target.getUri(), base.getUri()));
     }
 
     /**
@@ -264,41 +313,6 @@ public class FileTools {
      * canonical names
      */
     public static File getRelativeFile(File target, File base) throws IOException {
-        String[] baseComponents = base.getCanonicalPath().split(Pattern.quote(File.separator));
-        String[] targetComponents = target.getCanonicalPath().split(Pattern.quote(File.separator));
-
-        // skip common components
-        int index = 0;
-        for (; index < targetComponents.length && index < baseComponents.length; ++index) {
-            if (!targetComponents[index].equals(baseComponents[index])) {
-                break;
-            }
-        }
-
-        StringBuilder result = new StringBuilder();
-        if (index != baseComponents.length) {
-            // backtrack to base directory
-            for (int i = index; i < baseComponents.length; ++i) {
-                result.append(".." + File.separator);
-            }
-        }
-        for (; index < targetComponents.length; ++index) {
-            result.append(targetComponents[index] + File.separator);
-        }
-        if (!target.getPath().endsWith(File.separator) && !target.getPath().endsWith("\\")) {
-            // remove final path separator
-            result.delete(result.length() - "/".length(), result.length());
-        }
-        return new File(result.toString());
+          return new File(getRelativeUri(base.toURI(), target.toURI()));
     }
-    // public static File prependDefaultDirs(final Class<?> creator, final Date
-    // d) {
-    // return FileTools.appendCreatorNameToBaseDir(
-    // FileTools.getDefaultDirs(d), "", creator);
-    // }
-    // public static File prependDefaultDirs(final String filename,
-    // final Class<?> creator, final Date d) {
-    // return FileTools.getNextFreeFileName(new File(FileTools
-    // .prependDefaultDirs(creator, d), filename));
-    // }
 }

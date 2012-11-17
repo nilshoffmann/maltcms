@@ -321,7 +321,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
     private AnchorPairSet buildAnchorPairSet(
             final Tuple2D<IFileFragment, IFileFragment> t) {
         log.debug("Loading anchors for {} and {}",
-                t.getFirst().getAbsolutePath(), t.getSecond().getAbsolutePath());
+                t.getFirst().getUri(), t.getSecond().getUri());
         Tuple2D<List<IAnchor>, List<IAnchor>> ris = null;
         AnchorPairSet aps;
         if (useAnchors) {

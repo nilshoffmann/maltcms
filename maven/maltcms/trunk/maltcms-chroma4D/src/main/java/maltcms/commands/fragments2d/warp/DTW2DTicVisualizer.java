@@ -193,7 +193,7 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
                                 pwHorizontalAlignmentFragment, ref,
                                 query);
                         // alignmenttuple.add(alignmentHorizontal);
-                        log.info("{}", alignmentHorizontal.getAbsolutePath());
+                        log.info("{}", alignmentHorizontal.getUri());
 
                         warpiH = alignmentHorizontal.getChild(this.warpPathi).
                                 getArray();
@@ -208,7 +208,7 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
                         alignmentVertical = MaltcmsTools.getPairwiseAlignment(
                                 pwVerticalAlignmentFragment, ref, query);
                         // alignmenttuple.add(alignmentVertical);
-                        log.info("{}", alignmentVertical.getAbsolutePath());
+                        log.info("{}", alignmentVertical.getUri());
 
                         warpiV = alignmentVertical.getChild(this.warpPathi).
                                 getArray();

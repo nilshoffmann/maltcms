@@ -35,6 +35,7 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URI;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -71,12 +72,12 @@ public class CwtTicPeakFinder extends AFragmentCommand {
 
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-        ICompletionService<File> ics = createCompletionService(File.class);
+        ICompletionService<URI> ics = createCompletionService(URI.class);
         initProgress(t.size() * 2);
         for (IFileFragment f : t) {
             CwtTicPeakFinderCallable cwt = new CwtTicPeakFinderCallable();
-            cwt.setInput(new File(f.getAbsolutePath()));
-            cwt.setOutput(new File(createWorkFragment(f).getAbsolutePath()));
+            cwt.setInput(f.getUri());
+            cwt.setOutput(createWorkFragment(f).getUri());
             cwt.setMinScale(minScale);
             cwt.setMaxScale(maxScale);
             cwt.setMinPercentile(minPercentile);
@@ -87,9 +88,9 @@ public class CwtTicPeakFinder extends AFragmentCommand {
             getProgress().nextStep();
         }
         try {
-            List<File> results = ics.call();
+            List<URI> results = ics.call();
             TupleND<IFileFragment> resultFragments = new TupleND<IFileFragment>();
-            for (File file : results) {
+            for (URI file : results) {
                 FileFragment f = new FileFragment(file);
                 if (saveGraphics) {
                     BufferedImage bi = CwtChartFactory.createColorHeatmap((ArrayDouble.D2) f.getChild("cwt_scaleogram").getArray());

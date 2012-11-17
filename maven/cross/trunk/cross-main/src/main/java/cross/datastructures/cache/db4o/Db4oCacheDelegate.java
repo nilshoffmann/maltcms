@@ -35,6 +35,7 @@ import com.db4o.config.annotations.Indexed;
 import com.db4o.ext.DatabaseClosedException;
 import com.db4o.query.Predicate;
 import com.db4o.ta.Activatable;
+import cross.datastructures.cache.CacheType;
 import cross.datastructures.cache.ICacheDelegate;
 import java.util.Comparator;
 import lombok.extern.slf4j.Slf4j;
@@ -126,6 +127,11 @@ public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
     @Override
     public String getName() {
         return cacheName;
+    }
+
+    @Override
+    public CacheType getCacheType() {
+        return CacheType.DB4O;
     }
 
     public class TypedEntryComparator<K, V> implements Comparator<TypedEntry<K, V>> {

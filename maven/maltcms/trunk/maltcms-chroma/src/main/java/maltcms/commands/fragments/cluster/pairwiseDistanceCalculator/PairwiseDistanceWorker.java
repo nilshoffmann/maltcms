@@ -28,16 +28,17 @@
 package maltcms.commands.fragments.cluster.pairwiseDistanceCalculator;
 
 import cross.Factory;
-import cross.annotations.Configurable;
 import cross.datastructures.StatsMap;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tools.FileTools;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.workflow.IWorkflow;
 import cross.tools.StringTools;
 import java.io.File;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.concurrent.Callable;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,7 @@ public class PairwiseDistanceWorker implements
     private static final long serialVersionUID = 4556712389798130L;
     private PairwiseFeatureSequenceSimilarity similarity;
     private IWorkflow workflow;
-    private Tuple2D<File, File> input;
+    private Tuple2D<URI, URI> input;
     private File outputDirectory;
     private int jobNumber;
     private int nJobs;
@@ -69,21 +70,21 @@ public class PairwiseDistanceWorker implements
     @Override
     public PairwiseDistanceResult call() throws Exception {
         similarity.setWorkflow(getWorkflow());
+        final String input1 = FileTools.getFilename(input.getFirst());
+        final String input2 = FileTools.getFilename(input.getSecond());
         final String filename = "PW_DISTANCE_"
-                + StringTools.removeFileExt(
-                input.getFirst().getName())
+                + StringTools.removeFileExt(input1)
                 + "_"
-                + StringTools.removeFileExt(input.getSecond().
-                getName()) + ".csv";
-        final IFileFragment iff = new FileFragment(outputDirectory, filename);
+                + StringTools.removeFileExt(input2) + ".csv";
+        final IFileFragment iff = new FileFragment(new File(outputDirectory, filename).toURI());
         final StatsMap sm = new StatsMap(iff);
         similarity.setStatsMap(sm);
         final long t_start = System.currentTimeMillis();
         log.info(
                 "Running job {}/{}: {} with {}",
                 new Object[]{jobNumber + 1, nJobs,
-                    input.getFirst().getName(),
-                    input.getSecond().getName()});
+                    input1,
+                    input2});
         IFileFragment ff;
         ff = similarity.apply(new FileFragment(input.getFirst()), new FileFragment(input.getSecond()));
         final long t_end = System.currentTimeMillis() - t_start;
@@ -91,8 +92,8 @@ public class PairwiseDistanceWorker implements
         final double d = similarity.getResult().get();
         final int maplength = MaltcmsTools.getWarpPath(ff).size();
         log.info("Map length: {}", maplength);
-        sm.setLabel(input.getFirst().getName() + "-"
-                + input.getSecond().getName());
+        sm.setLabel(input1 + "-"
+                + input2);
         sm.put("time", new Double(t_end));
         sm.put("value", new Double(d));
         sm.put("maplength", new Double(maplength));
@@ -102,7 +103,7 @@ public class PairwiseDistanceWorker implements
         sw.write(sm);
         log.info("Distance: " + d);
         EvalTools.notNull(new Object[]{input, ff, d, sm}, this);
-        PairwiseDistanceResult pdr = new PairwiseDistanceResult(input, new File(ff.getAbsolutePath()), d, sm);
+        PairwiseDistanceResult pdr = new PairwiseDistanceResult(input, ff.getUri(), d, sm);
         return pdr;
     }
 }

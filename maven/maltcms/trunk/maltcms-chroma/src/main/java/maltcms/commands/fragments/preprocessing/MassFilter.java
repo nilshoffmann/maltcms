@@ -38,17 +38,16 @@ import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
 
 import org.apache.commons.configuration.Configuration;
-import java.util.Collections;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
-import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -57,7 +56,6 @@ import cross.datastructures.workflow.DefaultWorkflowProgressResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
-import cross.tools.StringTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
@@ -135,10 +133,10 @@ public class MassFilter extends AFragmentCommand {
                         "Could not load excluded_masses from previous file!");
             }
             // create a new FileFragment to hold processed data
-            final IFileFragment retf = Factory.getInstance().
-                    getFileFragmentFactory().create(
+            final IFileFragment retf = new FileFragment(
                     new File(getWorkflow().getOutputDirectory(this),
-                    iff.getName()), iff);
+                    iff.getName()));
+            retf.addSourceFile(iff);
             if (!exclMassSet.isEmpty()) {
                 final List<Double> exclMass = new ArrayList<Double>(exclMassSet);
                 // Collections.sort(exclMass);

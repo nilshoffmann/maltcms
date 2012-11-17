@@ -39,6 +39,7 @@ import cross.datastructures.tools.EvalTools;
 
 import java.io.File;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,7 +57,7 @@ import ucar.ma2.MAVector;
 
 /**
  *
- * @author nils
+ * @author Nils Hoffmann
  */
 @Slf4j
 @Data
@@ -78,8 +79,8 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
     private double minMass = 0;
     private double maxMass = 1000;
     private List<double[]> minMaxIntensities = new ArrayList<double[]>();
-    private File fileToLoad;
-    private File fileToSave;
+    private URI fileToLoad;
+    private URI fileToSave;
 
     /**
      *
@@ -109,7 +110,7 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
         normalizeScans(output, normalizeScans, normalizeEicsToZeroMeanUnitVariance, binnedIntensityValues, binnedScanIndex, minMaxIntensities);
         //save working fragment
         output.save();
-        return new File(output.getAbsolutePath());
+        return new File(output.getUri());
     }
 
     /**
@@ -214,6 +215,7 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
         final IVariableFragment sidx = f.getChild(binnedScanIndexVariable);
         ivf.setIndex(sidx);
         final List<Array> intens = ivf.getIndexedArray();
+        log.debug("Retrieved {} scans", intens.size());
 
         final List<Array> normIntens = new ArrayList<Array>();
         if (normalizeEicsToMeanVariance) {
@@ -249,18 +251,34 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
         }
         if (normalizeScans) {
             log.info("Normalizing scans to length 1");
-            for (int i = 0; i < normIntens.size(); i++) {
-                final Array a = normIntens.get(i);
-                final MAVector ma = new MAVector(a);
-                final double norm = ma.norm();
-                log.debug("Norm: {}", norm);
-                if (norm == 0.0) {
-                    normIntens.set(i, a);
-                } else {
-                    normIntens.set(i, ArrayTools.mult(a, 1.0d / norm));
+            if (normIntens.isEmpty()) {
+                for (int i = 0; i < intens.size(); i++) {
+                    final Array a = intens.get(i);
+                    final MAVector ma = new MAVector(a);
+                    final double norm = ma.norm();
+                    log.debug("Norm: {}", norm);
+                    if (norm == 0.0) {
+                        normIntens.add(a);
+                    } else {
+                        normIntens.add(ArrayTools.mult(a, 1.0d / norm));
+                    }
+                }
+            } else {
+                for (int i = 0; i < normIntens.size(); i++) {
+                    final Array a = normIntens.get(i);
+                    final MAVector ma = new MAVector(a);
+                    final double norm = ma.norm();
+                    log.debug("Norm: {}", norm);
+                    if (norm == 0.0) {
+                        normIntens.set(i, a);
+                    } else {
+                        normIntens.set(i, ArrayTools.mult(a, 1.0d / norm));
+                    }
                 }
             }
+
         }
+        log.debug("Setting indexed array list of size: {}", normIntens.size());
         ivf.setIndexedArray(normIntens);
 //        }
     }

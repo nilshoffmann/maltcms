@@ -303,7 +303,7 @@
                         <includes>
                             <include>**/*.class</include>
                         </includes>
-                        <excludedGroups>maltcms.test.IntegrationTest</excludedGroups>
+                        <excludedGroups>cross.test.IntegrationTest</excludedGroups>
                         <argLine>-Xmx2G</argLine>
                         <!-- redirectTestOutputToFile -->
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
@@ -320,7 +320,7 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <groups>maltcms.test.IntegrationTest</groups>
+                        <groups>cross.test.IntegrationTest</groups>
                         <failIfNoTests>false</failIfNoTests>
                         <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
                     </configuration>
@@ -614,6 +614,22 @@
                     <groupId>log4j</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.maltcms</groupId>
+            <artifactId>cross-test</artifactId>
+            <version>1.2.12-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javax.media.jai</groupId>

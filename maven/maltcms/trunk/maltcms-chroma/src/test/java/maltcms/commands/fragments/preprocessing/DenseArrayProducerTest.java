@@ -42,7 +42,7 @@ import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
-import maltcms.test.IntegrationTest;
+import cross.test.IntegrationTest;
 import maltcms.tools.MaltcmsTools;
 import org.apache.log4j.Level;
 import org.junit.Test;
@@ -93,6 +93,7 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
                     try {
                         //get structure, no data
                         IVariableFragment v = f.getChild(variable, true);
+                        //load array explicitly
                         Array a = v.getArray();
                         Assert.assertNotNull(a);
                         //remove

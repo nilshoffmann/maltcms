@@ -28,6 +28,7 @@
 package net.sf.maltcms.apps;
 
 import cross.Factory;
+import cross.datastructures.fragments.FileFragmentFactory;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.pipeline.ICommandSequence;
 import cross.datastructures.tuple.TupleND;
@@ -152,7 +153,7 @@ public class DTWNew {
         System.out.println("Done!");
         System.out.println(v);
         System.out.println(ia.getOptimizationFunction().getOptimalValue());
-        IFileFragment ares = Factory.getInstance().getFileFragmentFactory().create(iff3, iff4, cp.getWorkflow().getOutputDirectory(ia));
+        IFileFragment ares = new FileFragmentFactory().create(iff3, iff4, cp.getWorkflow().getOutputDirectory(ia));
         ia.modify(ares);
         ares.save();
         ADynamicTimeWarp adtw = Factory.getInstance().getObjectFactory().instantiate(

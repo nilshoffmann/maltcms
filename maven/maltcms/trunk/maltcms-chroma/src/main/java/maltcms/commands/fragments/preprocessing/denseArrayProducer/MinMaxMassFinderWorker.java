@@ -32,14 +32,12 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableFileFragment;
 import cross.datastructures.tools.EvalTools;
-import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
-import java.io.File;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.concurrent.Callable;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.tools.MaltcmsTools;
 import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 
@@ -51,7 +49,7 @@ import ucar.ma2.MAMath;
 @Data
 public class MinMaxMassFinderWorker implements Callable<double[]>, Serializable {
 
-    private File fileToLoad;
+    private URI fileToLoad;
     private boolean ignoreMinMaxMassArrays = false;
     private String minMassVariableName = "mass_range_min";
     private String maxMassVariableName = "mass_range_max";

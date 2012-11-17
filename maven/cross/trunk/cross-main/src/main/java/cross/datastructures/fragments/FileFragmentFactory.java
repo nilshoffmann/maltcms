@@ -28,8 +28,6 @@
 package cross.datastructures.fragments;
 
 import cross.annotations.Configurable;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IFileFragmentFactory;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
 import cross.datastructures.tools.FragmentTools;
@@ -41,9 +39,14 @@ import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * 
+ * Deprecated. Please use @see FileFragment directly.
+ * 
+ * @deprecated
  * @author Nils Hoffmann
  *
  */
+@Deprecated
 @ServiceProvider(service = IFileFragmentFactory.class)
 public class FileFragmentFactory implements IFileFragmentFactory {
 

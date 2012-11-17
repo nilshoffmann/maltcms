@@ -31,6 +31,7 @@ import cross.datastructures.cache.ICacheDelegate;
 import cross.exception.ResourceNotAvailableException;
 import java.io.Externalizable;
 import java.io.File;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -99,8 +100,10 @@ public interface IFileFragment extends IGroupFragment, IFragment,
     /**
      * Return this FileFragment's storage location as string representation.
      *
+     * @deprecated please use @see getUri instead
      * @return
      */
+    @Deprecated
     public abstract String getAbsolutePath();
 
     /**
@@ -183,6 +186,13 @@ public interface IFileFragment extends IGroupFragment, IFragment,
      * @return
      */
     public abstract Collection<IFileFragment> getSourceFiles();
+    
+    /**
+     * Return the URI of this FileFragment.
+     *
+     * @return
+     */
+    public URI getUri();
 
     /**
      * Query FileFragment for the given VariableFragments.
@@ -210,6 +220,13 @@ public interface IFileFragment extends IGroupFragment, IFragment,
     public abstract Iterator<IVariableFragment> iterator();
 
     /**
+     * Call the @see IDataSource for this FileFragment and load the structural 
+     * information for this fragment. This includes variable names and shapes
+     * as well as attributes.
+     */
+    public abstract void readStructure();
+    
+    /**
      * Remove the given IVariableFragment from the list of this FileFragment's
      * children.
      *
@@ -229,7 +246,24 @@ public interface IFileFragment extends IGroupFragment, IFragment,
      */
     public abstract void removeSourceFiles();
 
+    /**
+     * Store this fragment using the @see IDataSource responsible for handling
+     * this fragment name's extension.
+     * 
+     * @return true if saving succeeded, false otherwise
+     */
     public abstract boolean save();
+    
+    /**
+     * Set a Cache for variable fragment array data for this fragment.
+     * 
+     * May throw an @see IllegalStateException if the cache was already 
+     * initialized to avoid accidental modification or replacement.
+     * 
+     * @param cache
+     * @throws IllegalStateException
+     */
+    public abstract void setCache(ICacheDelegate<IVariableFragment, List<Array>> cache);
 
     /**
      * Change the filename of this Fragment.

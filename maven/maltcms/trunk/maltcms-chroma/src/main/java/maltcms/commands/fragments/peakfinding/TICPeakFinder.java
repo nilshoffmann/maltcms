@@ -66,6 +66,7 @@ import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
@@ -339,8 +340,7 @@ public class TICPeakFinder extends AFragmentCommand {
                     this.peakThreshold, pprs.getBaselineEstimator());
         }
         final String filename = f.getName();
-        final IFileFragment ff = Factory.getInstance().getFileFragmentFactory().
-                create(
+        final IFileFragment ff = new FileFragment(
                 new File(getWorkflow().getOutputDirectory(this),
                 filename));
 
@@ -349,7 +349,7 @@ public class TICPeakFinder extends AFragmentCommand {
 
         ff.save();
         f.clearArrays();
-        DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(ff.getAbsolutePath()), this, WorkflowSlot.PEAKFINDING, ff);
+        DefaultWorkflowResult dwr = new DefaultWorkflowResult(ff.getUri(), this, WorkflowSlot.PEAKFINDING, ff);
         getWorkflow().append(dwr);
         return ff;
     }
@@ -612,7 +612,7 @@ public class TICPeakFinder extends AFragmentCommand {
 
         log.debug("start: {}, stop: {}", startIndex, stopIndex);
         final Peak1D pb = new Peak1D(startIndex, apexIndex, stopIndex);
-        pb.setFile(chromatogram.getAbsolutePath());
+        pb.setFile(chromatogram.getUri().toASCIIString());
         if (integrateRawTic) {
             integratePeak(pb, null, rawTIC);
         } else {
@@ -739,7 +739,7 @@ public class TICPeakFinder extends AFragmentCommand {
         }
         log.debug("start: {}, stop: {}", (l + 1), r - 1);
         final Peak1D pb = new Peak1D(l + 1, apexIndex, r - 1);//PeakFactory.createPeak1DTic();
-        pb.setFile(f.getAbsolutePath());
+        pb.setFile(f.getUri().toASCIIString());
         integratePeak(pb, mwIndices, f.getChild(this.ticVarName).getArray());
         return pb;
     }
@@ -835,7 +835,7 @@ public class TICPeakFinder extends AFragmentCommand {
         File matFile = new File(getWorkflow().getOutputDirectory(this),
                 StringTools.removeFileExt(iff.getName())
                 + ".maltcmsAnnotation.xml");
-        MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(new File(iff.getAbsolutePath()).toURI());
+        MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(iff.getUri());
         for (Peak1D p : l) {
             maf.addPeakAnnotation(ma, this.getClass().getName(), p);
         }

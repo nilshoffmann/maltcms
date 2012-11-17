@@ -74,6 +74,7 @@ import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -255,15 +256,14 @@ public class SeededRegionGrowing extends AFragmentCommand {
         }
         // exporting peak lists
         for (int i = 0; i < t.size(); i++) {
-            final IFileFragment fret = Factory.getInstance().
-                    getFileFragmentFactory().create(
+            final IFileFragment fret = new FileFragment(
                     new File(getWorkflow().getOutputDirectory(this), t.get(i).
                     getName()));
             fret.addSourceFile(t.get(i));
             savePeaks(t.get(i), fret, this.peakLists.get(i), colorRamp);
 
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                    new File(fret.getAbsolutePath()), this, getWorkflowSlot(),
+                    fret.getUri(), this, getWorkflowSlot(),
                     t.get(i));
             getWorkflow().append(dwr);
             fret.save();

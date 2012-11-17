@@ -29,18 +29,13 @@ package cross.datastructures.fragments;
 
 import cross.datastructures.StatsMap;
 import cross.datastructures.cache.ICacheDelegate;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IFragment;
-import cross.datastructures.fragments.IGroupFragment;
-import cross.datastructures.fragments.IVariableFragment;
-import cross.datastructures.tools.EvalTools;
 import cross.exception.ResourceNotAvailableException;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.net.URI;
 import java.util.*;
-import lombok.NonNull;
 import org.jdom.Element;
 import ucar.ma2.Array;
 import ucar.nc2.Attribute;
@@ -58,6 +53,10 @@ public class ImmutableFileFragment implements IFileFragment {
 
     private IFileFragment frag = null;
 
+    public ImmutableFileFragment(final URI uri) {
+        this.frag = new FileFragment(uri);
+    }
+    
     public ImmutableFileFragment(final File f) {
         this.frag = new FileFragment(f);
     }
@@ -77,7 +76,7 @@ public class ImmutableFileFragment implements IFileFragment {
      */
     @Override
     public void addChildren(final IVariableFragment... fragments) {
-        throw new UnsupportedOperationException();
+        this.frag.addChildren(fragments);
     }
 
     /**
@@ -87,7 +86,7 @@ public class ImmutableFileFragment implements IFileFragment {
      */
     @Override
     public void addDimensions(final Dimension... dims1) {
-        throw new UnsupportedOperationException();
+        this.frag.addDimensions(dims1);
     }
 
     /**
@@ -97,7 +96,7 @@ public class ImmutableFileFragment implements IFileFragment {
      */
     @Override
     public void addSourceFile(final Collection<IFileFragment> c) {
-        throw new UnsupportedOperationException();
+        this.frag.addSourceFile(c);
     }
 
     /**
@@ -107,7 +106,7 @@ public class ImmutableFileFragment implements IFileFragment {
      */
     @Override
     public void addSourceFile(final IFileFragment... ff) {
-        throw new UnsupportedOperationException();
+        this.frag.addSourceFile(ff);
     }
 
     /**
@@ -163,10 +162,10 @@ public class ImmutableFileFragment implements IFileFragment {
         return this.frag.equals(obj);
     }
 
-    /**
-     * @return @see
-     * cross.datastructures.fragments.IFileFragment#getAbsolutePath()
-     */
+//    /**
+//     * @return @see
+//     * cross.datastructures.fragments.IFileFragment#getAbsolutePath()
+//     */
     @Override
     public String getAbsolutePath() {
         return this.frag.getAbsolutePath();
@@ -401,6 +400,11 @@ public class ImmutableFileFragment implements IFileFragment {
         return this.frag.nextGID();
     }
 
+    @Override
+    public void readStructure() {
+        this.frag.readStructure();
+    }
+    
     /*
      * (non-Javadoc)
      *
@@ -415,7 +419,7 @@ public class ImmutableFileFragment implements IFileFragment {
         }
         o = in.readObject();
         if (o instanceof String) {
-            setFile(new File((String) o));
+            this.frag.setFile(URI.create((String) o).toASCIIString());
         }
         in.close();
     }
@@ -427,7 +431,7 @@ public class ImmutableFileFragment implements IFileFragment {
      */
     @Override
     public void removeChild(final IVariableFragment variableFragment) {
-        throw new UnsupportedOperationException();
+        this.frag.removeChild(variableFragment);
     }
 
     /*
@@ -438,7 +442,7 @@ public class ImmutableFileFragment implements IFileFragment {
      */
     @Override
     public void removeSourceFile(final IFileFragment ff) {
-        throw new UnsupportedOperationException();
+        this.frag.removeSourceFile(ff);
     }
 
     /*
@@ -448,7 +452,7 @@ public class ImmutableFileFragment implements IFileFragment {
      */
     @Override
     public void removeSourceFiles() {
-        throw new UnsupportedOperationException();
+        this.frag.removeSourceFiles();
     }
 
     /**
@@ -456,7 +460,8 @@ public class ImmutableFileFragment implements IFileFragment {
      */
     @Override
     public boolean save() {
-        return this.frag.save();
+        throw new UnsupportedOperationException("Can not save immutable fragment!");
+//        return this.frag.save();
     }
 
     /**
@@ -466,21 +471,33 @@ public class ImmutableFileFragment implements IFileFragment {
      */
     @Override
     public void setAttributes(final Attribute... a) {
-        throw new UnsupportedOperationException();
+        this.frag.setAttributes(a);
     }
 
     @Override
     public void addAttribute(Attribute a) {
-        throw new UnsupportedOperationException();
+        this.frag.addAttribute(a);
     }
 
+    /**
+     * Sets the array cache of this FileFragment as specified if the current cache
+     * has not yet been initialized (is null). Throws an @see IllegalStateException 
+     * otherwise to prevent loss of cached data.
+     * 
+     * @throws IllegalStateException 
+     */
+    @Override
+    public void setCache(ICacheDelegate<IVariableFragment, List<Array>> persistentCache) {
+        this.frag.setCache(persistentCache);
+    }
+    
     /**
      * @param f1
      * @see cross.datastructures.fragments.IFileFragment#setFile(java.io.File)
      */
     @Override
     public void setFile(final File f1) {
-        throw new UnsupportedOperationException();
+        this.frag.setFile(f1);
     }
 
     /**
@@ -490,7 +507,7 @@ public class ImmutableFileFragment implements IFileFragment {
      */
     @Override
     public void setFile(final String file) {
-        throw new UnsupportedOperationException();
+        this.frag.setFile(file);
     }
 
     /**
@@ -499,7 +516,7 @@ public class ImmutableFileFragment implements IFileFragment {
      */
     @Override
     public void setID(final long id) {
-        throw new UnsupportedOperationException();
+        this.frag.setID(id);
     }
 
     /**
@@ -509,7 +526,7 @@ public class ImmutableFileFragment implements IFileFragment {
      */
     @Override
     public void setStats(final StatsMap stats1) {
-        throw new UnsupportedOperationException();
+        this.frag.setStats(stats1);
     }
 
     /**
@@ -535,7 +552,7 @@ public class ImmutableFileFragment implements IFileFragment {
         // store id
         out.writeObject(Long.valueOf(getID()));
         // store path to storage
-        out.writeObject(getAbsolutePath());
+        out.writeObject(getUri());
         out.flush();
         out.close();
     }
@@ -552,6 +569,11 @@ public class ImmutableFileFragment implements IFileFragment {
 
     @Override
     public void clearDimensions() {
-        throw new UnsupportedOperationException();
+        this.frag.clearDimensions();
+    }
+
+    @Override
+    public URI getUri() {
+        return this.frag.getUri();
     }
 }

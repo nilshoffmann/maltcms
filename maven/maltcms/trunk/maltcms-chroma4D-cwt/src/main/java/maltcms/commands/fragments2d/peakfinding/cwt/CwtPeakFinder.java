@@ -276,7 +276,7 @@ public class CwtPeakFinder extends AFragmentCommand {
             cwt.setMinScale(minScale);
             cwt.setModulationTime(modulationTime);
             cwt.setScanRate(scanRate);
-            cwt.setInputFile(new File(f.getAbsolutePath()));
+            cwt.setInputFile(f.getUri());
             log.info("Running cwt peak finder");
             ics.submit(cwt);
             cnt++;

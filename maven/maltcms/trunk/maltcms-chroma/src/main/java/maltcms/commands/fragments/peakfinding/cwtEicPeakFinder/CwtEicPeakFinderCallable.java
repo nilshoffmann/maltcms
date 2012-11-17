@@ -38,6 +38,7 @@ import cross.datastructures.fragments.IFileFragment;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -66,16 +67,16 @@ import ucar.ma2.Index;
  */
 @Data
 @Slf4j
-public class CwtEicPeakFinderCallable implements Callable<File>, Serializable {
+public class CwtEicPeakFinderCallable implements Callable<URI>, Serializable {
 
     @Configurable
     private int minScale = 5;
     @Configurable
     private int maxScale = 20;
     @Configurable
-    private File input;
+    private URI input;
     @Configurable
-    private File output;
+    private URI output;
     @Configurable
     private double mz;
     @Configurable
@@ -119,7 +120,7 @@ public class CwtEicPeakFinderCallable implements Callable<File>, Serializable {
     }
 
     @Override
-    public File call() {
+    public URI call() {
         Array values = Array.factory(eic);
         FileFragment ff = new FileFragment(input);
         ArrayStatsScanner ass = new ArrayStatsScanner();
@@ -166,12 +167,12 @@ public class CwtEicPeakFinderCallable implements Callable<File>, Serializable {
 
         List<Peak1D> peaks = createPeaksForRidges(ff, values, ridges, cwt);
         MaltcmsAnnotationFactory maf = new MaltcmsAnnotationFactory();
-        MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(output.toURI());
+        MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(output);
         for (Peak1D peak : peaks) {
 
             maf.addPeakAnnotation(ma, getClass().getName(), peak);
         }
-        maf.save(ma, output);
+        maf.save(ma, new File(output));
         return output;
     }
 

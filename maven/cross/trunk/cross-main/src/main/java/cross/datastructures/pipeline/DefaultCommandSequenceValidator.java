@@ -220,7 +220,7 @@ class DefaultCommandSequenceValidator implements ICommandSequenceValidator {
                     } catch (final ResourceNotAvailableException rnae) {
                         log.debug(
                                 "Could not find variable {} as child of {}",
-                                vname, ff.getAbsolutePath());
+                                vname, ff.getUri());
                     }
                 } else {
                     throw new ConstraintViolationException("Variable name of required variable must not be null!");

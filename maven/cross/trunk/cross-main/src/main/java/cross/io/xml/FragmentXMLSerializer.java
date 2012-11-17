@@ -28,6 +28,7 @@
 package cross.io.xml;
 
 import cross.Factory;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IFragment;
 import cross.datastructures.fragments.IVariableFragment;
@@ -38,6 +39,7 @@ import cross.exception.NotImplementedException;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.io.misc.Base64;
+import cross.tools.StringTools;
 import java.io.*;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -75,7 +77,7 @@ public class FragmentXMLSerializer implements IDataSource {
      */
     @Override
     public int canRead(final IFileFragment ff) {
-        if (ff.getAbsolutePath().endsWith("maltcms.xml")) {
+        if (ff.getUri().getPath().endsWith("maltcms.xml")) {
             return 1;
         }
         return 0;
@@ -265,7 +267,7 @@ public class FragmentXMLSerializer implements IDataSource {
         log.debug("Associated file is {} {}", dirname.getValue(),
                 filename1.getValue());
         final File f = new File(dirname.getValue(), filename1.getValue());
-        final IFileFragment ff1 = Factory.getInstance().getFileFragmentFactory().create(f);
+        final IFileFragment ff1 = new FileFragment(f.toURI());
         handleAttributes(ff1, file);
         final List<?> l = file.getChildren("namedGroup");
         final HashSet<String> idxVars = new HashSet<String>();
@@ -488,8 +490,7 @@ public class FragmentXMLSerializer implements IDataSource {
     }
 
     public String serialize(final IFileFragment iff) throws IOException {
-        final String filename = iff.getAbsolutePath().substring(0,
-                iff.getAbsolutePath().lastIndexOf("."))
+        final String filename = StringTools.getFileExtension(FileTools.getFilename(iff.getUri()))
                 + ".maltcms.xml";
         final Element maltcms = new Element("maltcms");
         final Document doc = new Document(maltcms);

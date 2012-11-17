@@ -38,6 +38,7 @@ import cross.io.misc.FragmentStringParser;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,8 +62,8 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class DefaultVarLoaderWorker implements Callable<File>, Serializable {
 
-    private String fileToLoad;
-    private String fileToSave;
+    private URI fileToLoad;
+    private URI fileToSave;
     private List<String> defaultVariables = Collections.emptyList();
     private List<String> additionalVariables = Collections.emptyList();
 
@@ -71,8 +72,8 @@ public class DefaultVarLoaderWorker implements Callable<File>, Serializable {
         EvalTools.notNull(fileToLoad, this);
         EvalTools.notNull(fileToSave, this);
         //create a new working fragment
-        IFileFragment input = new FragmentStringParser().parse(fileToLoad);
-        IFileFragment output = new FileFragment(new File(fileToSave));
+        IFileFragment input = new FileFragment(fileToLoad);
+        IFileFragment output = new FileFragment(fileToSave);
         //add source file for data retrieval
         loadDefaultVariables(input, output);
         loadAdditionalVariables(input, output);
@@ -80,7 +81,8 @@ public class DefaultVarLoaderWorker implements Callable<File>, Serializable {
         output.addSourceFile(new ImmutableFileFragment(input));
         //save working fragment
         output.save();
-        return new File(output.getAbsolutePath());
+        File result = new File(output.getUri());
+        return result;
     }
 
     private IVariableFragment createVariable(IFileFragment output, IVariableFragment sourceVar) {

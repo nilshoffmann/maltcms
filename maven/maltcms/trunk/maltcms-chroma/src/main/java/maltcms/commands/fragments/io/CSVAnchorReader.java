@@ -51,6 +51,7 @@ import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -187,7 +188,7 @@ public class CSVAnchorReader extends AFragmentCommand {
                     for (final IFileFragment iff : l) {
                         if (iff.getName().equals(associatedToFile)) {
                             collision++;
-                            g = new File(iff.getAbsolutePath());
+                            g = new File(iff.getUri());
                         }
                     }
                     if (collision > 1) {
@@ -203,14 +204,12 @@ public class CSVAnchorReader extends AFragmentCommand {
                 final String name = g.getAbsolutePath();
                 log.debug("Full path: {}", name);
                 // create new working fragment
-                final IFileFragment parentFragment = Factory.getInstance().
-                        getFileFragmentFactory().create(
+                final IFileFragment parentFragment = new FileFragment(
                         new File(getWorkflow().getOutputDirectory(this), g.
                         getName()));
                 // add associatedToFile fragment as source file, create if
                 // non-existant
-                parentFragment.addSourceFile(Factory.getInstance().
-                        getFileFragmentFactory().create(g));
+                parentFragment.addSourceFile(new FileFragment(g));
                 if (this.scan) {
                     createScan(cols.get("Scan"), parentFragment);
                 }
@@ -223,7 +222,7 @@ public class CSVAnchorReader extends AFragmentCommand {
                 createName(cols.get("Name"), parentFragment);
                 parentFragment.save();
                 final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                        new File(parentFragment.getAbsolutePath()), this,
+                        parentFragment.getUri(), this,
                         WorkflowSlot.FILEIO, parentFragment);
                 getWorkflow().append(dwr);
                 retF.add(parentFragment);

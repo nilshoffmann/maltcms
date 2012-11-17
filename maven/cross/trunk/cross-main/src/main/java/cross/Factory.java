@@ -29,6 +29,8 @@ package cross;
 
 import cross.IObjectFactory;
 import cross.annotations.Configurable;
+import cross.datastructures.cache.CacheFactory;
+import cross.datastructures.cache.CacheType;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.FileFragmentFactory;
 import cross.datastructures.fragments.IFileFragment;
@@ -219,6 +221,8 @@ public class Factory implements ConfigurationListener {
             System.setProperty("java.awt.headless", "true");
         }
         configureThreadPool(this.objconfig);
+        //initialize CacheFactory
+        CacheFactory.setDefaultFragmentCacheType(CacheType.valueOf(this.objconfig.getString(CacheFactory.class.getName()+".fragmentCacheType","EHCACHE")));
         // configure ObjectFactory
         getObjectFactory().configure(config1);
         getDataSourceFactory().configure(config1);
@@ -322,14 +326,14 @@ public class Factory implements ConfigurationListener {
         return this.dsf;
     }
 
-    public IFileFragmentFactory getFileFragmentFactory() {
-        if (this.fff == null) {
-            this.fff = getObjectFactory().instantiate(
-                    "cross.datastructures.fragments.FileFragmentFactory",
-                    FileFragmentFactory.class, getConfiguration());
-        }
-        return this.fff;
-    }
+//    public IFileFragmentFactory getFileFragmentFactory() {
+//        if (this.fff == null) {
+//            this.fff = getObjectFactory().instantiate(
+//                    "cross.datastructures.fragments.FileFragmentFactory",
+//                    FileFragmentFactory.class, getConfiguration());
+//        }
+//        return this.fff;
+//    }
 
     public IInputDataFactory getInputDataFactory() {
         if (this.idf == null) {

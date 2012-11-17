@@ -56,6 +56,7 @@ import cross.Factory;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.StatsMap;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
@@ -204,14 +205,14 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         for (int i = 0; i < this.fragments.size(); i++) {
             final IFileFragment ff = this.fragments.get(i);
             // al.add(ff);
-            if (!(new File(ff.getAbsolutePath()).exists())) {
+            if (!(new File(ff.getUri()).exists())) {
                 ff.save();
             }
-            log.debug("File i={} with name {}", i, ff.getAbsolutePath());
+            log.debug("File i={} with name {}", i, ff.getUri());
         }
         al.add(getConsensus());
         for (final IFileFragment iff : getInputFiles()) {
-            if (!(new File(iff.getAbsolutePath()).exists())) {
+            if (!(new File(iff.getUri()).exists())) {
                 iff.save();
             }
             al.add(iff);
@@ -220,7 +221,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         ArrayChar.D2 names = new ArrayChar.D2(al.size(), initMaxLength(al.iterator()));
         int i = 0;
         for (IFileFragment iff : al) {
-            names.setString(i++, iff.getAbsolutePath());
+            names.setString(i++, iff.getUri().toASCIIString());
         }
 
         final String name = "pairwise_distances.cdf";
@@ -232,18 +233,18 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         pd.setNames(names);
         pd.setAlignments(new TupleND<IFileFragment>(this.alignments));
         pd.setWorkflow(getWorkflow());
-        final IFileFragment ret = Factory.getInstance().getFileFragmentFactory().create(
+        final IFileFragment ret = new FileFragment(
                 new File(getWorkflow().getOutputDirectory(pd), name));
         pd.modify(ret);
         ret.save();
-        final DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
-                ret.getAbsolutePath()), this, WorkflowSlot.STATISTICS, ret);
+        final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
+                ret.getUri(), this, WorkflowSlot.STATISTICS, ret);
         getWorkflow().append(dwr);
 
         log.info("Returned FileFragments: {}", al);
         TupleND<IFileFragment> retFiles = new TupleND<IFileFragment>();
         for (final IFileFragment iff : al) {
-            final IFileFragment rf = Factory.getInstance().getFileFragmentFactory().create(
+            final IFileFragment rf = new FileFragment(
                     new File(getWorkflow().getOutputDirectory(this),
                     iff.getName()));
             rf.addSourceFile(iff);
@@ -251,7 +252,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
             retFiles.add(rf);
             rf.save();
             final DefaultWorkflowResult wr = new DefaultWorkflowResult(
-                    new File(rf.getAbsolutePath()), this,
+                    rf.getUri(), this,
                     WorkflowSlot.CLUSTERING, rf);
             getWorkflow().append(wr);
         }
@@ -466,14 +467,14 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         final long t_start = System.currentTimeMillis();
         final IFileFragment dtw = this.chromatogramDistanceFunctionClass.apply(
                 ff1, ff2);
-        DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(dtw.getAbsolutePath()), this, WorkflowSlot.ALIGNMENT, dtw);
+        DefaultWorkflowResult dwr = new DefaultWorkflowResult(dtw.getUri(), this, WorkflowSlot.ALIGNMENT, dtw);
         getWorkflow().append(dwr);
         this.chromatogramWarpCommandClass.setWorkflow(getWorkflow());
         final IFileFragment warped = this.chromatogramWarpCommandClass.apply(
                 new TupleND<IFileFragment>(dtw)).get(0);
         alignments.add(dtw);
         final long t_end = System.currentTimeMillis() - t_start;
-        final StatsMap sm = new StatsMap(Factory.getInstance().getFileFragmentFactory().create(
+        final StatsMap sm = new StatsMap(new FileFragment(
                 new File(getWorkflow().getOutputDirectory(this), "NJ_"
                 + StringTools.removeFileExt(ff1.getName())
                 + "_"
@@ -484,7 +485,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         final StatsWriter sw = Factory.getInstance().getObjectFactory().instantiate(StatsWriter.class);
         sw.setWorkflow(getWorkflow());
         sw.write(sm);
-        dwr = new DefaultWorkflowResult(new File(warped.getAbsolutePath()),
+        dwr = new DefaultWorkflowResult(warped.getUri(),
                 this, WorkflowSlot.WARPING, warped);
         getWorkflow().append(dwr);
 

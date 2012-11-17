@@ -41,7 +41,7 @@ import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.test.AFragmentCommandTest;
-import maltcms.test.IntegrationTest;
+import cross.test.IntegrationTest;
 import org.apache.log4j.Level;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

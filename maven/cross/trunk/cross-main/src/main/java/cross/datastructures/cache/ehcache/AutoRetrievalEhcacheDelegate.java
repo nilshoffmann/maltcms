@@ -27,11 +27,14 @@
  */
 package cross.datastructures.cache.ehcache;
 
+import cross.datastructures.cache.CacheType;
 import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.cache.ICacheElementProvider;
-import net.sf.ehcache.CacheManager;
+import java.util.ArrayList;
+import java.util.List;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
+import ucar.ma2.Array;
 
 /**
  * Transparent cache, which also knows how to create objects of the given type
@@ -47,15 +50,13 @@ import net.sf.ehcache.Element;
  */
 public class AutoRetrievalEhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
 
-    private final String cacheName;
-    private final CacheManager cacheManager;
     private final ICacheElementProvider<K, V> provider;
+    private final Ehcache cache;
 
-    public AutoRetrievalEhcacheDelegate(String cacheName, CacheManager cm,
+    public AutoRetrievalEhcacheDelegate(Ehcache cache,
             ICacheElementProvider<K, V> provider) {
-        this.cacheName = cacheName;
-        this.cacheManager = cm;
         this.provider = provider;
+        this.cache = cache;
     }
 
     @Override
@@ -68,7 +69,7 @@ public class AutoRetrievalEhcacheDelegate<K, V> implements ICacheDelegate<K, V> 
         Element element = getCache().get(key);
         V v = null;
         if (element != null) {
-            v = (V) element.getValue();
+            v = (V) element.getObjectValue();
             if (v != null) {
                 return v;
             }
@@ -76,20 +77,24 @@ public class AutoRetrievalEhcacheDelegate<K, V> implements ICacheDelegate<K, V> 
         v = provider.provide(key);
         put(key, v);
         return v;
-
     }
 
     public Ehcache getCache() {
-        return cacheManager.getEhcache(cacheName);
+        return cache;
     }
 
     @Override
     public String getName() {
-        return cacheName;
+        return cache.getName();
     }
 
     @Override
     public void close() {
-        cacheManager.getCache(cacheName).dispose();
+        getCache().dispose();
+    }
+
+    @Override
+    public CacheType getCacheType() {
+        return CacheType.EHCACHE;
     }
 }

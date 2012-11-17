@@ -40,6 +40,7 @@ import cross.io.IDataSource;
 import cross.io.IDataSourceFactory;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.*;
 import java.util.logging.Level;
 import lombok.extern.slf4j.Slf4j;
@@ -120,10 +121,10 @@ public class FragmentTools {
     }
 
     /**
-     * Creates or retrieves a {@link IVariableFragment} with
-     * <code>parent</code> as parent and with name
-     * <code>name</code> and
-     * <code>size</code> elements.
+     * Creates or retrieves a {
+     *
+     * @see IVariableFragment} with <code>parent</code> as parent and with name
+     * <code>name</code> and <code>size</code> elements.
      *
      * @param parent
      * @param varname
@@ -144,10 +145,10 @@ public class FragmentTools {
     }
 
     /**
-     * Create a {@link IVariableFragment} as child of
-     * <code>parent</code> with name
-     * <code>varname</code> and contents as given in string
-     * <code>value</code>.
+     * Create a {
+     *
+     * @see IVariableFragment} as child of <code>parent</code> with name
+     * <code>varname</code> and contents as given in string <code>value</code>.
      *
      * @param parent
      * @param varname
@@ -169,8 +170,9 @@ public class FragmentTools {
     }
 
     /**
-     * Create a {@link IVariableFragment} as child of
-     * <code>parent</code> with name
+     * Create a {
+     *
+     * @see IVariableFragment} as child of <code>parent</code> with name
      * <code>varname</code> and contents as given in string collection
      * <code>c</code>.
      *
@@ -194,10 +196,10 @@ public class FragmentTools {
     }
 
     /**
-     * Create a {@link IVariableFragment} as a child of
-     * <code>parent</code>, with name
-     * <code>varname</code> and index fragment
-     * <code>ifrg</code>.
+     * Create a {
+     *
+     * @see IVariableFragment} as a child of <code>parent</code>, with name
+     * <code>varname</code> and index fragment <code>ifrg</code>.
      *
      * @param parent
      * @param varname
@@ -215,7 +217,7 @@ public class FragmentTools {
             // does not exist, so create new
         } catch (final ResourceNotAvailableException e) {
             log.debug("VariableFragment " + varname
-                    + " not available as child of " + parent.getAbsolutePath());
+                    + " not available as child of " + parent.getUri());
         }
         log.debug("Adding as new child!");
         final IVariableFragment vf = new VariableFragment(parent, varname, ifrg);
@@ -263,7 +265,7 @@ public class FragmentTools {
         final String s = FragmentTools.getStringVar(
                 ff,
                 Factory.getInstance().getConfiguration().getString("var.reference_file", "reference_file"));
-        return Factory.getInstance().getFileFragmentFactory().create(new File(s));
+        return new FileFragment(URI.create(s));
     }
 
     /**
@@ -274,11 +276,13 @@ public class FragmentTools {
      */
     public static IFileFragment getRHSFile(final IFileFragment ff) {
         final String s = FragmentTools.getStringVar(ff, Factory.getInstance().getConfiguration().getString("var.query_file", "query_file"));
-        return Factory.getInstance().getFileFragmentFactory().create(new File(s));
+        return new FileFragment(URI.create(s));
     }
 
     /**
-     * Returns all immediate source files of a {@link IFileFragment}.
+     * Returns all immediate source files of a {
+     *
+     * @see IFileFragment}.
      *
      * @param ff
      * @return
@@ -287,7 +291,7 @@ public class FragmentTools {
             final IFileFragment ff) {
         final String sourceFilesVar = Factory.getInstance().getConfiguration().getString("var.source_files", "source_files");
         log.debug("Trying to load {} for {}", sourceFilesVar,
-                ff.getAbsolutePath());
+                ff.getUri());
         final Collection<String> c = FragmentTools.getStringArray(ff,
                 sourceFilesVar);
         if (c.isEmpty()) {
@@ -297,24 +301,52 @@ public class FragmentTools {
         final ArrayList<IFileFragment> al = new ArrayList<IFileFragment>(
                 c.size());
         log.info("Found the following source files:");
+        URI baseUri = ff.getUri();
+        StringBuilder uris = new StringBuilder();
         for (final String s : c) {
-            if (new File(s).isAbsolute()) {
-                al.add(Factory.getInstance().getFileFragmentFactory().create(s));
-                log.info("{}", al.get(al.size() - 1).getAbsolutePath());
-            } else {
-                try {
-                    String absoluteFile = FileTools.resolveRelativeFile(
-                            new File(ff.getAbsolutePath()).getParentFile(),
-                            new File(s));
-                    al.add(Factory.getInstance().getFileFragmentFactory().create(absoluteFile));
-                } catch (IOException ex) {
-                    java.util.logging.Logger.getLogger(
-                            FragmentTools.class.getName()).log(Level.SEVERE,
-                            null, ex);
-                }
-            }
+            log.info("Resource: {}", s);
+            URI uri = URI.create(s);
+//            if (uri.getScheme() == null) {
+//                log.info("Uri seems has no scheme set: {}", uri.toASCIIString());
+//                //expect this to be a file (old format)
+//                File f = new File(s);
+//                uri = f.toURI();
+//            }
+            IFileFragment fragment = null;
+//            if (uri.isAbsolute()) {
+//                log.info("Adding FileFragment for absolute uri from array: {}", uri);
+//                fragment = new FileFragment(uri);
+//                al.add(fragment);
+//            } else {
+            fragment = new FileFragment(FileTools.resolveRelativeUri(baseUri, uri));
+            log.info("Adding FileFragment for resolved relative uri from array: {}; resolved: {}", uri, fragment.getUri());
+            al.add(fragment);
+//            }
+            uris.append(fragment.getUri()).append("; ");
+//            if (uri.getScheme() != null && !uri.getScheme().equals("file")) {
+//                IFileFragment tmpf = new FileFragment(uri);
+//                al.add(tmpf);
+//                log.info("Adding remote file fragment {}", tmpf.getAbsolutePath());
+//            } else {
+//                if (new File(s).isAbsolute()) {
+//                    al.add(Factory.getInstance().getFileFragmentFactory().create(s));
+//                    log.info("{}", al.get(al.size() - 1).getAbsolutePath());
+//                } else {
+//                    try {
+//                        String absoluteFile = FileTools.resolveRelativeFile(
+//                                new File(ff.getAbsolutePath()).getParentFile(),
+//                                new File(s));
+//                        al.add(Factory.getInstance().getFileFragmentFactory().create(absoluteFile));
+//                    } catch (IOException ex) {
+//                        java.util.logging.Logger.getLogger(
+//                                FragmentTools.class.getName()).log(Level.SEVERE,
+//                                null, ex);
+//                    }
+//                }
+//            }
 
         }
+        log.info("Restored source files from array: {}", uris.toString());
         return al;
     }
 
@@ -336,7 +368,9 @@ public class FragmentTools {
             EvalTools.notNull(a, FragmentTools.class);
             return ArrayTools.getStringsFromArray(a);
         } catch (ResourceNotAvailableException ex) {
-            log.warn("{}", ex);
+            StringBuilder sb = new StringBuilder();
+            sb.append("Could not retrieve variable ").append(variableName).append(" from ").append(ff.getUri());
+            log.warn(sb.toString());
             return Collections.emptyList();
         }
     }
@@ -374,7 +408,10 @@ public class FragmentTools {
      */
     @Deprecated
     /**
-     * See {@link IFileFragment} and {@link IVariableFragment}.
+     * See {
+     *
+     * @see IFileFragment} and {
+     * @see IVariableFragment}.
      */
     public static IVariableFragment getVariable(final IFileFragment parent,
             final String varname, final String indexname)
@@ -416,7 +453,7 @@ public class FragmentTools {
         final List<?> l = Factory.getInstance().getConfiguration().getList(configKey == null ? "additional.vars" : configKey);
         final Iterator<?> iter = l.iterator();
         log.debug("Trying to load additional vars for file {}",
-                ff.getAbsolutePath());
+                ff.getUri());
         while (iter.hasNext()) {
             final String var = iter.next().toString();
             if (var.equals("*")) { // load all available Variables
@@ -469,7 +506,7 @@ public class FragmentTools {
         final List<?> l = Factory.getInstance().getConfiguration().getList(configKey == null ? "default.vars" : configKey);
         final Iterator<?> iter = l.iterator();
         log.debug("Loading default vars for file {}",
-                ff.getAbsolutePath());
+                ff.getUri());
         while (iter.hasNext()) {
             final String var = iter.next().toString();
             if (!var.equals("") && !var.trim().isEmpty()) {
@@ -491,7 +528,7 @@ public class FragmentTools {
     public static void setLHSFile(final IFileFragment ff,
             final IFileFragment lhs) {
         FragmentTools.createString(ff, Factory.getInstance().getConfiguration().getString("var.reference_file", "reference_file"),
-                lhs.getAbsolutePath());
+                lhs.getUri().toASCIIString());
     }
 
     /**
@@ -505,7 +542,7 @@ public class FragmentTools {
     public static void setRHSFile(final IFileFragment ff,
             final IFileFragment rhs) {
         FragmentTools.createString(ff, Factory.getInstance().getConfiguration().getString("var.query_file", "query_file"),
-                rhs.getAbsolutePath());
+                rhs.getUri().toASCIIString());
     }
 
     /**
@@ -565,9 +602,11 @@ public class FragmentTools {
     }
 
     /**
-     * Retrieve all accessible {@link IVariableFragment} instances starting from
-     * the given {@link IFileFragment} and traversing the ancestor tree in
-     * breadth-first order, adding all immediate
+     * Retrieve all accessible {
+     *
+     * @see IVariableFragment} instances starting from the given {
+     * @see IFileFragment} and traversing the ancestor tree in breadth-first
+     * order, adding all immediate
      *
      * @{link IVariableFragment} instances to the list first, before exploring
      * the next ancestor (source_files).
@@ -589,40 +628,45 @@ public class FragmentTools {
                 Collection<String> c = ArrayTools.getStringsFromArray(sf.getArray());
                 for (String s : c) {
                     log.debug("Processing file {}", s);
-                    File file = new File(s);
-                    if (file.isAbsolute()) {
-                        parentsToExplore.add(new FileFragment(file));
+                    URI path = URI.create(s);
+                    if (path.getScheme() == null || !path.getPath().startsWith("/")) {
+                        URI resolved = FileTools.resolveRelativeUri(fragment.getUri(), path);
+                        log.debug("Adding resolved relative path: {} to {}", path, resolved);
+                        parentsToExplore.add(new FileFragment(resolved));
                     } else {
-                        try {
-                            file = new File(
-                                    cross.datastructures.tools.FileTools.resolveRelativeFile(new File(
-                                    fragment.getAbsolutePath()).getParentFile(), new File(
-                                    s)));
-                            parentsToExplore.add(new FileFragment(file.getCanonicalFile()));
-                        } catch (IOException ex) {
-                            log.error("{}", ex);
-                        }
+                        log.debug("Adding absolute path: {}", path);
+                        parentsToExplore.add(new FileFragment(path));
                     }
+
+//                    File file = new File(s);
+//                    if (file.isAbsolute()) {
+//                        parentsToExplore.add(new FileFragment(file));
+//                    } else {
+//                        try {
+//                            file = new File(
+//                                    cross.datastructures.tools.FileTools.resolveRelativeFile(new File(
+//                                    fragment.getAbsolutePath()).getParentFile(), new File(
+//                                    s)));
+//                            parentsToExplore.add(new FileFragment(file.getCanonicalFile()));
+//                        } catch (IOException ex) {
+//                            log.error("{}", ex);
+//                        }
+//                    }
                 }
             } catch (ResourceNotAvailableException rnae) {
             }
             // System.out.println("Parent files " + parentsToExplore);
             try {
-//				List<IVariableFragment> l = dsf.getDataSourceFor(parent)
-//				        .readStructure(parent);
                 for (IVariableFragment ivf : getVariablesFor(parent)) {
                     if (!ivf.getName().equals("source_files")) {
                         if (!names.containsKey(ivf.getName())) {
                             names.put(ivf.getName(), ivf);
                             allVars.add(ivf);
                         }
-
                     }
                 }
-
-                // allVars.addAll(l);
             } catch (IOException ex) {
-                log.error("{}", ex);
+                log.warn("{}", ex);
             }
         }
         return allVars;
@@ -654,23 +698,33 @@ public class FragmentTools {
                 depth++;
                 for (String s : c) {
                     log.debug("Processing file {}", s);
-                    File file = new File(s);
+                    URI path = URI.create(s);
                     IFileFragment frag = null;
-                    if (file.isAbsolute()) {
-                        frag = new FileFragment(file);
-                        parentsToExplore.add(frag);
+                    if (path.getScheme() == null || !path.getPath().startsWith("/")) {
+                        URI resolved = FileTools.resolveRelativeUri(fragment.getUri(), path);
+                        log.debug("Adding resolved relative path: {} to {}", path, resolved);
+                        frag = new FileFragment(resolved);
                     } else {
-                        try {
-                            file = new File(
-                                    cross.datastructures.tools.FileTools.resolveRelativeFile(new File(
-                                    fragment.getAbsolutePath()).getParentFile(), new File(
-                                    s)));
-                            frag = new FileFragment(file.getCanonicalFile());
-                            parentsToExplore.add(frag);
-                        } catch (IOException ex) {
-                            log.error("{}", ex);
-                        }
+                        log.debug("Adding absolute path: {}", path);
+                        frag = new FileFragment(path);
                     }
+//                    File file = new File(s);
+//                    IFileFragment frag = null;
+//                    if (file.isAbsolute()) {
+//                        frag = new FileFragment(file);
+//                        parentsToExplore.add(frag);
+//                    } else {
+//                        try {
+//                            file = new File(
+//                                    cross.datastructures.tools.FileTools.resolveRelativeFile(new File(
+//                                    fragment.getAbsolutePath()).getParentFile(), new File(
+//                                    s)));
+//                            frag = new FileFragment(file.getCanonicalFile());
+//                            parentsToExplore.add(frag);
+//                        } catch (IOException ex) {
+//                            log.error("{}", ex);
+//                        }
+//                    }
                     if (frag != null) {
                         Integer key = Integer.valueOf(depth);
                         if (depth > maxDepth) {
@@ -688,17 +742,19 @@ public class FragmentTools {
             } catch (ResourceNotAvailableException rnae) {
             }
         }
-        if (depthToFragment.containsKey(Integer.valueOf(depth))) {
-            new LinkedList<IFileFragment>(depthToFragment.get(Integer.valueOf(depth)));
-        }
+//        if (depthToFragment.containsKey(Integer.valueOf(depth))) {
+//            new LinkedList<IFileFragment>(depthToFragment.get(Integer.valueOf(depth)));
+//        }
         lhs = depthToFragment.get(Integer.valueOf(maxDepth));
         return new LinkedList<IFileFragment>(lhs);
     }
 
     /**
-     * Returns a list of the variables provided by the {@link IDataSource} for
-     * the given file fragment. Any errors encountered by the DataSource are
-     * thrown as an {@link IOException}.
+     * Returns a list of the variables provided by the {
+     *
+     * @see IDataSource} for the given file fragment. Any errors encountered by
+     * the DataSource are thrown as an {
+     * @see IOException}.
      *
      * @param fragment
      * @return
@@ -711,8 +767,10 @@ public class FragmentTools {
     }
 
     /**
-     * Returns a {@link TupleND} of {@link ImmutableFileFragment}s from the
-     * given files.
+     * Returns a {
+     *
+     * @see TupleND} of {
+     * @see ImmutableFileFragment}s from the given files.
      *
      * @param files
      * @return
@@ -726,8 +784,10 @@ public class FragmentTools {
     }
 
     /**
-     * Returns a {@link TupleND} of {@link ImmutableFileFragment}s from the
-     * given files.
+     * Returns a {
+     *
+     * @see TupleND} of {
+     * @see ImmutableFileFragment}s from the given files.
      *
      * @param files
      * @return
@@ -741,7 +801,10 @@ public class FragmentTools {
     }
 
     /**
-     * Returns a {@link TupleND} of {@link FileFragment}s from the given files.
+     * Returns a {
+     *
+     * @see TupleND} of {
+     * @see FileFragment}s from the given files.
      *
      * @param files
      * @return

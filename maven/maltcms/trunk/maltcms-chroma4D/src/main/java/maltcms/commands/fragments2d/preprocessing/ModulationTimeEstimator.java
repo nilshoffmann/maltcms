@@ -53,6 +53,7 @@ import cross.Factory;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.StatsMap;
 import cross.datastructures.Vars;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -62,7 +63,6 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  * ModulationTimeEstimator tries to find the spike-like modulation peaks in
@@ -95,8 +95,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
         for (final IFileFragment ff : t) {
-            final IFileFragment fret = Factory.getInstance()
-                    .getFileFragmentFactory().create(
+            final IFileFragment fret = new FileFragment(
                     new File(getWorkflow().getOutputDirectory(this),
                     ff.getName()));
 
@@ -466,9 +465,9 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         final HeatMapChart hmc = new HeatMapChart(bi, "time 1 [s]",
                 "time 2 [s]", buildScanAcquisitionTime(
                 (int) (this.secondColumnTime * this.scanRate), tic
-                .getShape()[0], satMean), ff.getAbsolutePath());
+                .getShape()[0], satMean), ff.getUri().getPath());
         final PlotRunner pl = new PlotRunner(hmc.create(), "Chromatogram of "
-                + ff.getAbsolutePath(), "chromatogram-" + ff.getName(),
+                + ff.getUri().getPath(), "chromatogram-" + ff.getName(),
                 getWorkflow().getOutputDirectory(this));
         pl.configure(Factory.getInstance().getConfiguration());
         Factory.getInstance().submitJob(pl);

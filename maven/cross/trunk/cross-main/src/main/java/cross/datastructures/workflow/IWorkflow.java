@@ -161,7 +161,7 @@ public interface IWorkflow extends IEventSource<IWorkflowResult>, IConfigurable,
      * Save this IWorkflow.
      */
     public abstract void save();
-
+    
     /**
      * Set ics to be the active ICommandSequence instance.
      *
@@ -207,6 +207,8 @@ public interface IWorkflow extends IEventSource<IWorkflowResult>, IConfigurable,
     public abstract File getOutputDirectory(Object iwe);
 
     public abstract File getOutputDirectory();
+    
+    public abstract File getWorkflowXmlFile();
 
     public abstract boolean isExecuteLocal();
 

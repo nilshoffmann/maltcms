@@ -51,6 +51,7 @@ import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.datastructures.cache.CacheFactory;
 import cross.datastructures.cache.ICacheDelegate;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
@@ -101,7 +102,7 @@ public class MZDataDataSource implements IDataSource {
                 return 1;
             }
         }
-        this.log.debug("no!");
+        log.debug("no!");
         return 0;
     }
 
@@ -165,12 +166,12 @@ public class MZDataDataSource implements IDataSource {
         final String precision = blbt.getData().getPrecision();
         final int prec = Integer.parseInt(precision);
         final int length = blbt.getData().getLength();
-        this.log.debug("endian: {} precision: {} length: {}", new Object[]{
+        log.debug("endian: {} precision: {} length: {}", new Object[]{
                     endian, precision, length});
         Array a = null;
         if (prec == 32) {
             final float[] f = Base64Util.byteArrayToFloatArray(b, endian.equals("little") ? false : true, length);
-            this.log.info("{}", Arrays.toString(f));
+            log.info("{}", Arrays.toString(f));
             // avoid later checking for double/float arrays
             a = new ArrayDouble.D1(f.length);
             for (int i = 0; i < f.length; i++) {
@@ -178,7 +179,7 @@ public class MZDataDataSource implements IDataSource {
             }
         } else if (prec == 64) {
             final double[] d = Base64Util.byteArrayToDoubleArray(b, endian.equals("little") ? false : true, length);
-            this.log.debug("{}", Arrays.toString(d));
+            log.debug("{}", Arrays.toString(d));
             a = new ArrayDouble.D1(d.length);
             for (int i = 0; i < d.length; i++) {
                 ((ArrayDouble.D1) a).set(i, d[i]);
@@ -202,7 +203,7 @@ public class MZDataDataSource implements IDataSource {
                 // multiply with 60 to get seconds equivalent
                 final double d = Double.parseDouble(cv.value) * 60.0d;
                 if (d == Double.NaN) {
-                    this.log.warn("Parsed time as NaN!");
+                    log.warn("Parsed time as NaN!");
                     return 0.0d;
                 }
                 return d;
@@ -231,7 +232,7 @@ public class MZDataDataSource implements IDataSource {
      */
     protected Tuple2D<Array, Array> initMinMaxMZ(final IVariableFragment var,
             final MzData mp) {
-        this.log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
+        log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
                     this.mass_range_max});
         int scans = getScanCount(mp);
         int start = 0;
@@ -347,7 +348,7 @@ public class MZDataDataSource implements IDataSource {
 
     private Array readMinMaxMassValueArray(final IVariableFragment var,
             final MzData mp) {
-        this.log.debug("readMinMaxMassValueArray");
+        log.debug("readMinMaxMassValueArray");
         final Tuple2D<Array, Array> t = initMinMaxMZ(var, mp);
         if (var.getName().equals(this.mass_range_min)) {
             return t.getFirst();
@@ -377,7 +378,7 @@ public class MZDataDataSource implements IDataSource {
             final Array a = new ArrayDouble.D1(npeaks);
             npeaks = 0;
             for (int i = start; i < scans; i++) {
-                this.log.debug("Reading scan {} of {}", (i + 1), scans);
+                log.debug("Reading scan {} of {}", (i + 1), scans);
                 final Array b = getMassValues(mp, i);
                 Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
                 npeaks += b.getShape()[0];
@@ -388,11 +389,11 @@ public class MZDataDataSource implements IDataSource {
             final Array a = new ArrayDouble.D1(npeaks);
             npeaks = 0;
             for (int i = start; i < scans; i++) {
-                this.log.debug("Reading scan {} of {}", (i + 1), scans);
+                log.debug("Reading scan {} of {}", (i + 1), scans);
                 final Array b = getIntensityValues(mp, i);
                 Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
                 npeaks += b.getShape()[0];
-                this.log.debug("npeaks after: {}", npeaks);
+                log.debug("npeaks after: {}", npeaks);
             }
             return a;
             // f.setArray(a);
@@ -405,7 +406,7 @@ public class MZDataDataSource implements IDataSource {
 
     private Array readScanAcquisitionTimeArray(final IVariableFragment var,
             final MzData mp) {
-        this.log.debug("readScanAcquisitionTimeArray");
+        log.debug("readScanAcquisitionTimeArray");
         int scans = getScanCount(mp);
         int start = 0;
         final Range[] r = var.getRange();
@@ -416,7 +417,7 @@ public class MZDataDataSource implements IDataSource {
         final ArrayDouble.D1 sat = new ArrayDouble.D1(scans);
         for (int i = start; i < scans; i++) {
             sat.set(i, getRT(mp, i));
-            this.log.debug("RT({})={}", i, sat.get(i));
+            log.debug("RT({})={}", i, sat.get(i));
         }
         // f.setArray(sat);
         return sat;
@@ -431,12 +432,12 @@ public class MZDataDataSource implements IDataSource {
             start = r[0].first();
             scans = r[0].length();
         }
-        this.log.debug("Creating index array with {} elements", scans);
+        log.debug("Creating index array with {} elements", scans);
         final ArrayInt.D1 scan_index = new ArrayInt.D1(scans);
         for (int i = start; i < scans; i++) {
             final int peaks = getNumPeaks(mp, i);
             // current npeaks is index into larger arrays for current scan
-            this.log.debug("Scan {} from {} to {}", new Object[]{i, npeaks,
+            log.debug("Scan {} from {} to {}", new Object[]{i, npeaks,
                         (npeaks + peaks - 1)});
             scan_index.set(i, npeaks);
             npeaks += peaks;
@@ -448,9 +449,9 @@ public class MZDataDataSource implements IDataSource {
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException {
-        this.log.debug("readSingle of {} in {}", f.getName(), f.getParent().getAbsolutePath());
+        log.debug("readSingle of {} in {}", f.getName(), f.getParent().getUri());
         if (f.hasArray()) {
-            this.log.warn("{} already has an array set!", f);
+            log.warn("{} already has an array set!", f);
         }
         final Array a = loadArray(f.getParent(), f);
         if (a == null) {
@@ -520,7 +521,7 @@ public class MZDataDataSource implements IDataSource {
             } catch (final NullPointerException npe) {
                 throw new ResourceNotAvailableException(
                         "Could not rap header of file "
-                        + f.getParent().getAbsolutePath());
+                        + f.getParent().getUri());
             }
         } else {
             throw new ResourceNotAvailableException(
@@ -550,7 +551,7 @@ public class MZDataDataSource implements IDataSource {
         try {
             jc = JAXBContext.newInstance("maltcms.io.xml.mzData");
             final Unmarshaller u = jc.createUnmarshaller();
-            final MzData mzd = (MzData) u.unmarshal(new File(iff.getAbsolutePath()));
+            final MzData mzd = (MzData) u.unmarshal(new File(iff.getUri()));
             return mzd;
         } catch (final JAXBException e) {
             throw new RuntimeException(e.fillInStackTrace());
@@ -561,15 +562,14 @@ public class MZDataDataSource implements IDataSource {
     public boolean write(final IFileFragment f) {
         EvalTools.notNull(this.ndf, this);
         // TODO Implement real write support
-        this.log.info("Saving {} with MZXMLStaxDataSource", f.getAbsolutePath());
-        this.log.info("Changing output file from: {}", f.toString());
-        final String source_file = f.getAbsolutePath();
-        String filename = StringTools.removeFileExt(f.getAbsolutePath());
+        log.info("Saving {} with MZXMLStaxDataSource", f.getUri());
+        log.info("Changing output file from: {}", f.toString());
+        File file = new File(f.getUri());
+        String filename = StringTools.removeFileExt(file.getAbsolutePath());
         filename += ".cdf";
         f.setFile(filename);
-        f.addSourceFile(Factory.getInstance().getFileFragmentFactory().create(
-                new File(source_file)));
-        this.log.info("To: {}", filename);
+        f.addSourceFile(new FileFragment(f.getUri()));
+        log.info("To: {}", filename);
         return Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).write(f);
     }
 }

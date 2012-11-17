@@ -44,17 +44,16 @@ import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.ImageTools;
 import maltcms.tools.MaltcmsTools;
-import org.apache.commons.configuration.Configuration;
 
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
-import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.StatsMap;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
@@ -131,7 +130,7 @@ public class EICPeakFinder extends AFragmentCommand {
             final ArrayList<Callable<Tuple2D<Tuple2D<Integer, Integer>, Double>>> solvers = new ArrayList<Callable<Tuple2D<Tuple2D<Integer, Integer>, Double>>>();
             final Tuple2D<List<Array>, List<Array>> mzis = MaltcmsTools.
                     getBinnedMZIs(f);
-            log.info("Retrieving data from {}", f.getAbsolutePath());
+            log.info("Retrieving data from {}", f.getUri());
             final List<ArrayDouble.D1> al = ArrayTools.tiltD1(ArrayTools.
                     convertArrays(mzis.getSecond()));
             List<Double> bins = new ArrayList<Double>(al.size());
@@ -211,8 +210,7 @@ public class EICPeakFinder extends AFragmentCommand {
                     // .apply(0, 0, -1, -1, al.get(i), al.get(j)));
                 }
             }
-            final IFileFragment iff = Factory.getInstance().
-                    getFileFragmentFactory().create(
+            final IFileFragment iff = new FileFragment(
                     new File(getWorkflow().getOutputDirectory(this),
                     StringTools.removeFileExt(f.getName())
                     + "-eic_correlation.cdf"));
@@ -236,7 +234,7 @@ public class EICPeakFinder extends AFragmentCommand {
             // ivf2.setArray(crossCorrs);
             iff.save();
             final DefaultWorkflowResult fileMapRes = new DefaultWorkflowResult(
-                    new File(iff.getAbsolutePath()), this,
+                    iff.getUri(), this,
                     WorkflowSlot.PEAKFINDING, iff);
             getWorkflow().append(fileMapRes);
         }

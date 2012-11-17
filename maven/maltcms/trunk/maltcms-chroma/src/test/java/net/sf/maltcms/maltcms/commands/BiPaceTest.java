@@ -48,7 +48,7 @@ import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
-import maltcms.test.IntegrationTest;
+import cross.test.IntegrationTest;
 import org.junit.experimental.categories.Category;
 
 /**
@@ -92,7 +92,6 @@ public class BiPaceTest extends AFragmentCommandTest {
         IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
                 inputFile1, inputFile2));
         try {
-
             w.call();
             w.save();
         } catch (Exception ex) {

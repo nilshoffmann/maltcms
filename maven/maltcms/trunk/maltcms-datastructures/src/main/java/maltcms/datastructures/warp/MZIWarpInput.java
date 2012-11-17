@@ -64,7 +64,7 @@ public class MZIWarpInput implements IWarpInput {
         log
                 .info("#############################################################################");
         log.info("Preparing input for {} with sources {}", new Object[]{
-                    ff.getAbsolutePath(), ff.getSourceFiles()});
+                    ff.getUri(), ff.getSourceFiles()});
         final IFileFragment queryFile1 = FragmentTools.getRHSFile(ff);
         final IFileFragment referenceFile = FragmentTools.getLHSFile(ff);
 

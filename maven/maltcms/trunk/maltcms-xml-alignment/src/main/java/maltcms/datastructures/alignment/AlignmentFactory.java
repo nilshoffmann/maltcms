@@ -98,7 +98,7 @@ public class AlignmentFactory {
         }
         throw new ResourceNotAvailableException(
                 "Could not find a mappedPoints entry for "
-                + f.getAbsolutePath());
+                + f.getUri());
     }
 
     public List<Integer> convertToScanIndexMap(MappedPointsType mpt)
@@ -139,7 +139,7 @@ public class AlignmentFactory {
 
         MappedPointsType mpt = new MappedPointsType();
         ResourceType rt = new ResourceType();
-        rt.setUri(resource.toString());
+        rt.setUri(resource.toASCIIString());
         mpt.setResource(rt);
         mpt.setIsAlignmentReference(isAlignmentReference);
         PointMapType pmt = new PointMapType();

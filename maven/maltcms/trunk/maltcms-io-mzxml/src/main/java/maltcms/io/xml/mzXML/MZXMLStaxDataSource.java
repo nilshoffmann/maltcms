@@ -51,6 +51,7 @@ import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.datastructures.cache.CacheFactory;
 import cross.datastructures.cache.ICacheDelegate;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
@@ -109,7 +110,7 @@ public class MZXMLStaxDataSource implements IDataSource {
                 return 1;
             }
         }
-        this.log.debug("no!");
+        log.debug("no!");
         return 0;
     }
 
@@ -141,7 +142,7 @@ public class MZXMLStaxDataSource implements IDataSource {
     protected void convertScanIntensity(final int offset, final Scan s,
             final Array i) {
         final double[][] mzi = s.getMassIntensityList();
-        this.log.debug("Scan has {} peaks", s.header.getPeaksCount());
+        log.debug("Scan has {} peaks", s.header.getPeaksCount());
         final Index iind = i.getIndex();
         for (int k = 0; k < s.header.getPeaksCount(); k++) {
             // log.debug("Reading intensity of peak {} of {}", k, s
@@ -152,14 +153,14 @@ public class MZXMLStaxDataSource implements IDataSource {
 
     protected void convertScanMZ(final int offset, final Scan s, final Array mz) {
         final double[][] mzi = s.getMassIntensityList();
-        this.log.debug("Scan has {} peaks", s.header.getPeaksCount());
+        log.debug("Scan has {} peaks", s.header.getPeaksCount());
         final Index mzind = mz.getIndex();
         for (int k = 0; k < s.header.getPeaksCount(); k++) {
             // log.debug("Reading mz of peak {} of {}", k, s.getPeaksCount());
             try {
                 mz.setDouble(mzind.set(k + offset), mzi[0][k]);
             } catch (final RuntimeException re) {
-                this.log.error(
+                log.error(
                         "At offset {} and k={}, shape of mz array {}, Caught exception {}",
                         new Object[]{offset, k,
                             Arrays.toString(mz.getShape()),
@@ -197,7 +198,7 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     private MSXMLParser getParser(final IFileFragment ff) {
-        return getParser(ff.getAbsolutePath());
+        return getParser(new File(ff.getUri()).getAbsolutePath());
     }
 
     private MSXMLParser getParser(final String file) {
@@ -227,7 +228,7 @@ public class MZXMLStaxDataSource implements IDataSource {
     private int getScans(final MSXMLParser mp, final int mslevel) {
         int scans = 0;
         int skippedScans = 0;
-        this.log.info("Checking scans at mslevel: {}", mslevel);
+        log.info("Checking scans at mslevel: {}", mslevel);
         for (int i = 0; i < mp.getScanCount(); i++) {
             final ScanHeader h = mp.rapHeader(i + 1);
             if (h.getMsLevel() == mslevel) {
@@ -236,7 +237,7 @@ public class MZXMLStaxDataSource implements IDataSource {
                 skippedScans++;
             }
         }
-        this.log.info("Found {}/{} scans, skipped {}", new Object[]{scans,
+        log.info("Found {}/{} scans, skipped {}", new Object[]{scans,
                     scans + skippedScans, skippedScans});
         return scans;
     }
@@ -271,7 +272,7 @@ public class MZXMLStaxDataSource implements IDataSource {
      */
     protected Tuple2D<Array, Array> initMinMaxMZ(final IVariableFragment var,
             final MSXMLParser mp) {
-        this.log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
+        log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
                     this.mass_range_max});
         int scans = getScans(mp, this.mslevel);
         int start = 0;
@@ -350,10 +351,10 @@ public class MZXMLStaxDataSource implements IDataSource {
 
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
-        this.log.debug("{}", f.getParent().toString());
+        log.debug("{}", f.getParent().toString());
         if (f.getName().equals("mass_values")
                 || f.getName().equals("intensity_values")) {
-            this.log.debug("Reading {} and {}", this.mass_values,
+            log.debug("Reading {} and {}", this.mass_values,
                     this.intensity_values);
             // Tuple2D<ArrayList<Array>, ArrayList<Array>> t = MaltcmsTools
             // .getMZIs(f.getParent());
@@ -374,7 +375,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 
     private Array readMinMaxMassValueArray(final IVariableFragment var,
             final MSXMLParser mp) {
-        this.log.debug("readMinMaxMassValueArray");
+        log.debug("readMinMaxMassValueArray");
         final Tuple2D<Array, Array> t = initMinMaxMZ(var, mp);
         if (var.getName().equals(this.mass_range_min)) {
             return t.getFirst();
@@ -408,32 +409,32 @@ public class MZXMLStaxDataSource implements IDataSource {
         if (var.getName().equals(this.mass_values)) {
             npeaks = 0;
             for (int i = start; i < scans; i++) {
-                this.log.debug("Reading scan {} of {}", (i + 1), scans);
+                log.debug("Reading scan {} of {}", (i + 1), scans);
                 final Scan s = mp.rap((i + 1));
                 if (s.getHeader().getMsLevel() == mslevel) {
-                    this.log.debug("Converting scan {} of {} with {} peaks",
+                    log.debug("Converting scan {} of {} with {} peaks",
                             new Object[]{(i + 1), scans,
                                 s.header.getPeaksCount()});
                     convertScanMZ(npeaks, s, a);
-                    this.log.debug("npeaks before: {}", npeaks);
+                    log.debug("npeaks before: {}", npeaks);
                     npeaks += s.header.getPeaksCount();
-                    this.log.debug("npeaks after: {}", npeaks);
+                    log.debug("npeaks after: {}", npeaks);
                 }
             }
             // f.setArray(a);
         } else if (var.getName().equals(this.intensity_values)) {
             npeaks = 0;
             for (int i = start; i < scans; i++) {
-                this.log.debug("Reading scan {} of {}", (i + 1), scans);
+                log.debug("Reading scan {} of {}", (i + 1), scans);
                 final Scan s = mp.rap((i + 1));
                 if (s.getHeader().getMsLevel() == mslevel) {
-                    this.log.debug("Converting scan {} of {} with {} peaks",
+                    log.debug("Converting scan {} of {} with {} peaks",
                             new Object[]{(i + 1), scans,
                                 s.header.getPeaksCount()});
                     convertScanIntensity(npeaks, s, a);
-                    this.log.debug("npeaks before: {}", npeaks);
+                    log.debug("npeaks before: {}", npeaks);
                     npeaks += s.header.getPeaksCount();
-                    this.log.debug("npeaks after: {}", npeaks);
+                    log.debug("npeaks after: {}", npeaks);
                 }
             }
             // f.setArray(a);
@@ -456,34 +457,34 @@ public class MZXMLStaxDataSource implements IDataSource {
         if (var.getName().equals(this.mass_values)) {
             int npeaks = 0;
             for (int i = start; i < scans; i++) {
-                this.log.debug("Reading scan {} of {}", (i + 1), scans);
+                log.debug("Reading scan {} of {}", (i + 1), scans);
                 final Scan s = mp.rap((i + 1));
                 if (s.getHeader().getMsLevel() == mslevel) {
                     final ArrayDouble.D1 a = new ArrayDouble.D1(s.header.getPeaksCount());
-                    this.log.debug("Converting scan {} of {} with {} peaks",
+                    log.debug("Converting scan {} of {} with {} peaks",
                             new Object[]{(i + 1), scans,
                                 s.header.getPeaksCount()});
                     convertScanMZ(0, s, a);
-                    this.log.debug("npeaks before: {}", npeaks);
+                    log.debug("npeaks before: {}", npeaks);
                     npeaks += s.header.getPeaksCount();
-                    this.log.debug("npeaks after: {}", npeaks);
+                    log.debug("npeaks after: {}", npeaks);
                     al.add(a);
                 }
             }
         } else if (var.getName().equals(this.intensity_values)) {
             int npeaks = 0;
             for (int i = start; i < scans; i++) {
-                this.log.debug("Reading scan {} of {}", (i + 1), scans);
+                log.debug("Reading scan {} of {}", (i + 1), scans);
                 final Scan s = mp.rap((i + 1));
                 if (s.getHeader().getMsLevel() == mslevel) {
                     final ArrayDouble.D1 a = new ArrayDouble.D1(s.header.getPeaksCount());
-                    this.log.debug("Converting scan {} of {} with {} peaks",
+                    log.debug("Converting scan {} of {} with {} peaks",
                             new Object[]{(i + 1), scans,
                                 s.header.getPeaksCount()});
                     convertScanIntensity(0, s, a);
-                    this.log.debug("npeaks before: {}", npeaks);
+                    log.debug("npeaks before: {}", npeaks);
                     npeaks += s.header.getPeaksCount();
-                    this.log.debug("npeaks after: {}", npeaks);
+                    log.debug("npeaks after: {}", npeaks);
                     al.add(a);
                 }
             }
@@ -493,7 +494,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 
     private Array readScanAcquisitionTimeArray(final IVariableFragment var,
             final MSXMLParser mp) {
-        this.log.debug("readScanAcquisitionTimeArray");
+        log.debug("readScanAcquisitionTimeArray");
         int scans = mp.getScanCount();
         int levelnscans = getScans(mp, this.mslevel);
         int start = 0;
@@ -525,14 +526,14 @@ public class MZXMLStaxDataSource implements IDataSource {
             start = r[0].first();
             scans = r[0].length();
         }
-        this.log.debug("Creating index array with {} elements", levelnscans);
+        log.debug("Creating index array with {} elements", levelnscans);
         final ArrayInt.D1 scan_index = new ArrayInt.D1(levelnscans);
         int cnt = 0;
         for (int i = start; i < scans; i++) {
             final Scan s = mp.rap((i + 1));
             if (s.getHeader().getMsLevel() == this.mslevel) {
                 // current npeaks is index into larger arrays for current scan
-                this.log.debug("Scan {} from {} to {}", new Object[]{i,
+                log.debug("Scan {} from {} to {}", new Object[]{i,
                             npeaks, (npeaks + s.header.getPeaksCount() - 1)});
                 scan_index.set(cnt++, npeaks);
                 npeaks += s.header.getPeaksCount();
@@ -548,9 +549,9 @@ public class MZXMLStaxDataSource implements IDataSource {
      */
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException {
-        this.log.info("readSingle of {} in {}", f.getName(), f.getParent().getAbsolutePath());
+        log.info("readSingle of {} in {}", f.getName(), f.getParent().getUri());
         if (f.hasArray()) {
-            this.log.debug("{} already has an array set!", f);
+            log.debug("{} already has an array set!", f);
         }
         final Array a = loadArray(f.getParent(), f);
         if (a == null) {
@@ -616,7 +617,7 @@ public class MZXMLStaxDataSource implements IDataSource {
             } catch (final NullPointerException npe) {
                 throw new ResourceNotAvailableException(
                         "Could not rap header of file "
-                        + f.getParent().getAbsolutePath());
+                        + f.getParent().getUri());
             }
         } else {
             throw new ResourceNotAvailableException(
@@ -627,7 +628,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 
     private Array readTotalIntensitiesArray(final IVariableFragment var,
             final MSXMLParser mp) {
-        this.log.debug("readTotalIntensitiesArray");
+        log.debug("readTotalIntensitiesArray");
         int levelnscans = getScans(mp, this.mslevel);
         int scans = mp.getScanCount();
         int start = 0;
@@ -732,15 +733,14 @@ public class MZXMLStaxDataSource implements IDataSource {
     public boolean write(final IFileFragment f) {
         EvalTools.notNull(this.ndf, this);
         // TODO Implement real write support
-        this.log.info("Saving {} with MZXMLStaxDataSource", f.getAbsolutePath());
-        this.log.info("Changing output file from: {}", f.toString());
-        final String source_file = f.getAbsolutePath();
-        String filename = StringTools.removeFileExt(f.getAbsolutePath());
+        log.info("Saving {} with MZXMLStaxDataSource", f.getUri());
+        log.info("Changing output file from: {}", f.toString());
+         File file = new File(f.getUri());
+        String filename = StringTools.removeFileExt(file.getAbsolutePath());
         filename += ".cdf";
         f.setFile(filename);
-        f.addSourceFile(Factory.getInstance().getFileFragmentFactory().create(
-                new File(source_file)));
-        this.log.info("To: {}", filename);
+        f.addSourceFile(new FileFragment(f.getUri()));
+        log.info("To: {}", filename);
         return Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).write(f);
     }
 }

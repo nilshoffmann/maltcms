@@ -34,10 +34,10 @@ import org.apache.commons.configuration.Configuration;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
-import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.TupleND;
@@ -87,8 +87,7 @@ public class ANDIChromImporter extends AFragmentCommand {
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
         for (final IFileFragment iff : t) {
-            final IFileFragment fret = Factory.getInstance().
-                    getFileFragmentFactory().create(
+            final IFileFragment fret = new FileFragment(
                     new File(getWorkflow().getOutputDirectory(this),
                     iff.getName()));
             final Array a = iff.getChild(this.ordinateValuesVariable).getArray();

@@ -148,7 +148,7 @@ public class MZXMLDataSource implements IDataSource {
         }
         for (final IDataSource ids : this.ds) {
             try {
-                this.log.info("Checking DataSource {}", ids.getClass().getName());
+                log.info("Checking DataSource {}", ids.getClass().getName());
                 if (ids.canRead(ff) > 0) {
                     IDataSource dataSource = Factory.getInstance().getObjectFactory().instantiate(ids.getClass().getName(),
                             cross.io.IDataSource.class);
@@ -159,7 +159,7 @@ public class MZXMLDataSource implements IDataSource {
             }
         }
         throw new NotImplementedException("No provider available for "
-                + StringTools.getFileExtension(ff.getAbsolutePath()));
+                + StringTools.getFileExtension(ff.getName()));
     }
 
     /*

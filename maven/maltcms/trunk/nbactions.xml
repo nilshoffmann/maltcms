@@ -17,4 +17,14 @@
             <goal>deploy</goal>
         </goals>
     </action>
+    <action>
+            <actionName>CUSTOM-Integration Test</actionName>
+            <displayName>Integration Test</displayName>
+            <goals>
+                <goal>verify</goal>
+            </goals>
+            <properties>
+                <skipITs>false</skipITs>
+            </properties>
+        </action>
 </actions>

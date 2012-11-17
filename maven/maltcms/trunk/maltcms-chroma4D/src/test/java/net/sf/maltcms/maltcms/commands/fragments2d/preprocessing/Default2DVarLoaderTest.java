@@ -46,13 +46,10 @@ import cross.vocabulary.CvResolver;
 import cross.vocabulary.ICvResolver;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.test.AFragmentCommandTest;
-import maltcms.test.IntegrationTest;
+import cross.test.IntegrationTest;
 import org.apache.log4j.Level;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.rules.TemporaryFolder;
-import org.openide.util.Lookup;
 import ucar.ma2.Array;
 
 /**
@@ -85,7 +82,7 @@ public class Default2DVarLoaderTest extends AFragmentCommandTest {
             setLogLevelFor(ICvResolver.class, Level.ALL);
             CvResolver cvr = new CvResolver();
             for (IFileFragment resultFile : results) {
-                FileFragment ff = new FileFragment(new File(resultFile.getAbsolutePath()));
+                FileFragment ff = new FileFragment(resultFile.getUri());
                 for (String variable : AnnotationInspector.getProvidedVariables(Default2DVarLoader.class)) {
                     log.info("Evaluating results for variable {}, resolved: {}",variable,cvr.translate(variable));
                     try {

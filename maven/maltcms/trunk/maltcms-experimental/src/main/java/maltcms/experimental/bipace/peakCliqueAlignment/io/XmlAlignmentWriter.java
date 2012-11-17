@@ -85,7 +85,7 @@ public class XmlAlignmentWriter implements IWorkflowElement {
         }
 
         for (IFileFragment iff : fragmentToScanIndexMap.keySet()) {
-            af.addScanIndexMap(a, new File(iff.getAbsolutePath()).toURI(),
+            af.addScanIndexMap(a, iff.getUri(),
                     fragmentToScanIndexMap.get(iff), false);
         }
         File out = new File(getWorkflow().getOutputDirectory(this),

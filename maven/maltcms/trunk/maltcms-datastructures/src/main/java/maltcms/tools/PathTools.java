@@ -760,15 +760,15 @@ public class PathTools implements IConfigurable {
         final CSVWriter csvw = Factory.getInstance().getObjectFactory()
                 .instantiate(CSVWriter.class);
         final String filename = StringTools.removeFileExt(parent.getName());
-        final File pathCSV = new File(new File(parent.getAbsolutePath())
+        final File pathCSV = new File(new File(parent.getUri())
                 .getParent(), filename + "_path.csv");
-        final File pathPWCSV = new File(new File(parent.getAbsolutePath())
+        final File pathPWCSV = new File(new File(parent.getUri())
                 .getParent(), filename + "_path_pw.csv");
         final File pathPWAlignedPeaks = new File(new File(parent
-                .getAbsolutePath()).getParent(), filename
+                .getUri()).getParent(), filename
                 + "_path_alignedPeaks.csv");
         // final File pathCondensed = new File(new
-        // File(parent.getAbsolutePath())
+        // File(parent.getUri())
         // .getParent(), filename + "_path_condensed.csv");
         // DefaultWorkflowResult dwr = new DefaultWorkflowResult();
         // dwr.setFile(pathCSV);
@@ -804,7 +804,7 @@ public class PathTools implements IConfigurable {
         // .getName(), FragmentTools.getRHSFile(parent).getName(),
         // "pairwise-distance", this.symbolicPath);
 
-        final File f = new File(new File(parent.getAbsolutePath()).getParent(),
+        final File f = new File(new File(parent.getUri()).getParent(),
                 filename + "_path-symbolic.txt");
         final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(f, csvw,
                 WorkflowSlot.ALIGNMENT, parent);

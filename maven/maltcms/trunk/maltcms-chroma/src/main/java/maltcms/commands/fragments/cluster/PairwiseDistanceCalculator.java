@@ -52,6 +52,7 @@ import cross.datastructures.workflow.DefaultWorkflowProgressResult;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.EvalTools;
+import java.net.URI;
 import java.util.Collections;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -159,7 +160,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
     }
 
     private ArrayChar.D2 initNames(final TupleND<IFileFragment> t,
-            final HashMap<File, Integer> filenameToIndex, final int nextIndex1,
+            final HashMap<URI, Integer> filenameToIndex, final int nextIndex1,
             final int maxlength) {
         int nextIndex = nextIndex1;
         Iterator<IFileFragment> ffiter;
@@ -167,11 +168,11 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
         ffiter = t.getIterator();
         while (ffiter.hasNext()) {
             final IFileFragment ff = ffiter.next();
-            if (!filenameToIndex.containsKey(ff)) {
-                filenameToIndex.put(new File(ff.getAbsolutePath()), nextIndex);
+            if (!filenameToIndex.containsKey(ff.getUri())) {
+                filenameToIndex.put(ff.getUri(), nextIndex);
             }
 
-            names.setString(nextIndex, ff.getAbsolutePath());
+            names.setString(nextIndex, ff.getUri().toASCIIString());
             nextIndex++;
         }
         return names;
@@ -210,7 +211,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
         // log.info("Using {} as local function.",
         // this.pairwiseDistanceFunction);
 
-        final HashMap<File, Integer> filenameToIndex = new HashMap<File, Integer>();
+        final HashMap<URI, Integer> filenameToIndex = new HashMap<URI, Integer>();
         final int nextIndex = 0;
         final ArrayDouble.D2 pairwiseDistances = new ArrayDouble.D2(
                 t.getSize(), t.getSize());
@@ -239,7 +240,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
             if (tcnt == 0) {
                 log.info("Using {} as pairwise sequence function.", worker.getSimilarity().getClass().getName());
             }
-            worker.setInput(new Tuple2D<File, File>(new File(tuple.getFirst().getAbsolutePath()), new File(tuple.getSecond().getAbsolutePath())));
+            worker.setInput(new Tuple2D<URI, URI>(tuple.getFirst().getUri(), tuple.getSecond().getUri()));
             worker.setJobNumber(tcnt);
             worker.setNJobs(lsize);
             worker.setWorkflow(getWorkflow());
@@ -268,7 +269,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
                 IFileFragment ff = new FileFragment(tpl.getAlignment());
                 alignments.add(ff);
                 final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                        new File(ff.getAbsolutePath()), this,
+                        new File(ff.getUri()), this,
                         WorkflowSlot.ALIGNMENT, ff);
                 getWorkflow().append(dwr);
                 // notify workflow
@@ -290,11 +291,11 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
         pd.setMinimize(this.minimizingLocalDistance);
         pd.setAlignments(alignments);
         pd.setWorkflow(getWorkflow());
-        final IFileFragment ret = Factory.getInstance().getFileFragmentFactory().create(new File(getWorkflow().getOutputDirectory(pd), name));
+        final IFileFragment ret = new FileFragment(new File(getWorkflow().getOutputDirectory(pd), name));
         pd.modify(ret);
         ret.save();
         final DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
-                ret.getAbsolutePath()), this, WorkflowSlot.STATISTICS, ret);
+                ret.getUri()), this, WorkflowSlot.STATISTICS, ret);
         getWorkflow().append(dwr);
         // Factory.getInstance().getConfiguration().setProperty(
         // "pairwise_distances_location", ret.getAbsolutePath());
@@ -302,14 +303,14 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
         EvalTools.notNull(alignments, this);
         final TupleND<IFileFragment> tple = new TupleND<IFileFragment>();
         for (final IFileFragment iff : t) {
-            final IFileFragment rf = Factory.getInstance().getFileFragmentFactory().create(new File(getWorkflow().getOutputDirectory(this),
+            final IFileFragment rf = new FileFragment(new File(getWorkflow().getOutputDirectory(this),
                     iff.getName()));
             rf.addSourceFile(iff);
             rf.addSourceFile(ret);
             rf.save();
             tple.add(rf);
             final DefaultWorkflowResult wr = new DefaultWorkflowResult(
-                    new File(rf.getAbsolutePath()), this,
+                    new File(rf.getUri()), this,
                     WorkflowSlot.STATISTICS, rf);
             getWorkflow().append(wr);
         }

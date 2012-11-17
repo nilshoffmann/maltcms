@@ -42,6 +42,7 @@ import cross.tools.StringTools;
 import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.MemoryType;
 import java.lang.management.ThreadMXBean;
 import java.util.*;
 import javax.xml.transform.Transformer;
@@ -483,6 +484,12 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
         return outputFile;
     }
 
+    @Override
+    public File getWorkflowXmlFile() {
+        File f = new File(getOutputDirectory(),getName()+".xml");
+        return f;
+    }
+    
     /*
      * (non-Javadoc)
      *
@@ -680,15 +687,22 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
 
     private void addVmStats(File outputDirectory) {
         List<MemoryPoolMXBean> mbeans = ManagementFactory.getMemoryPoolMXBeans();
-        long maxUsed = 0L;
+        long maxUsedHeap = 0L;
+        long maxUsedNonHeap = 0L;
         for (MemoryPoolMXBean mbean : mbeans) {
             log.debug("Peak memory initial: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getInit() / (1024.0f * 1024.0f))) + " MB");
             log.debug("Peak memory used: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getUsed() / (1024.0f * 1024.0f))) + " MB");
             log.debug("Peak memory comitted: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getCommitted() / (1024.0f * 1024.0f))) + " MB");
             log.debug("Peak memory max: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getMax() / (1024.0f * 1024.0f))) + " MB");
-            maxUsed += mbean.getPeakUsage().getUsed();
+            if(mbean.getType()==MemoryType.HEAP) {
+                maxUsedHeap += mbean.getPeakUsage().getUsed();
+            }else{
+                maxUsedNonHeap += mbean.getPeakUsage().getUsed();
+            }
         }
-        log.info("Total memory used: " + String.format("%.2f", (maxUsed / (1024f * 1024f))) + " MB");
+        log.info("Total memory used: " + String.format("%.2f", ((maxUsedHeap+maxUsedNonHeap) / (1024f * 1024f))) + " MB");
+        log.info("Heap memory used: " + String.format("%.2f", ((maxUsedHeap) / (1024f * 1024f))) + " MB");
+        log.info("Non-Heap memory used: " + String.format("%.2f", ((maxUsedNonHeap) / (1024f * 1024f))) + " MB");
         int nmemoryPools = mbeans.size();
 
         ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
@@ -706,7 +720,7 @@ public class DefaultWorkflow implements IWorkflow, IXMLSerializable {
             pc = new PropertiesConfiguration(workflowStats);
             pc.setProperty("cputime_nanoseconds", time);
             pc.setProperty("memory_pools", nmemoryPools);
-            pc.setProperty("maxUsedMemory_bytes", maxUsed);
+            pc.setProperty("maxUsedMemory_bytes", maxUsedHeap+maxUsedNonHeap);
             pc.save();
         } catch (ConfigurationException ex) {
             log.error("{}", ex);

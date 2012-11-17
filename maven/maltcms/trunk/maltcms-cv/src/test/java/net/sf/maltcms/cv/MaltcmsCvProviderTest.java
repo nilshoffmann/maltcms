@@ -27,7 +27,7 @@
  */
 package net.sf.maltcms.cv;
 
-import maltcms.test.SetupLogging;
+import cross.test.SetupLogging;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;

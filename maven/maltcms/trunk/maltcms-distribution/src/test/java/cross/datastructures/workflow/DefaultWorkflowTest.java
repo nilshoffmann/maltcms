@@ -124,7 +124,7 @@ public class DefaultWorkflowTest {
         try {
             TupleND<IFileFragment> tpl = dw.call();
             for (IFileFragment ff : tpl) {
-                log.info("Workflow created fragment: {}", ff.getAbsolutePath());
+                log.info("Workflow created fragment: {}", ff.getUri());
             }
         } catch (Exception e) {
             fail();

@@ -28,17 +28,17 @@
 package maltcms.commands.scanners;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
-import cross.Factory;
 import cross.annotations.Configurable;
 import cross.commands.ICommand;
 import cross.datastructures.StatsMap;
 import cross.datastructures.Vars;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,8 +54,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
 
     private StatsMap gsm = null;
-    private IFileFragment ff = Factory.getInstance().getFileFragmentFactory().
-            create("default_stats.cdf");
+    private IFileFragment ff = new FileFragment(new File("default-stats.cdf"));
     private IVariableFragment[] vfs = null;
     @Configurable(name = "ignorePositiveInfinity")
     private boolean ignorePositiveInfinity = true;

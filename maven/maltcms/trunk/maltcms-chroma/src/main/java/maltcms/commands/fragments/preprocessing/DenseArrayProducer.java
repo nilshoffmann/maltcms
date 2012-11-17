@@ -115,7 +115,7 @@ public class DenseArrayProducer extends AFragmentCommand {
             mmmfw.setMinMassVariableName(massRangeMin);
             mmmfw.setMaxMassVariableName(massRangeMax);
             mmmfw.setIgnoreMinMaxMassArrays(ignoreMinMaxMassArrays);
-            mmmfw.setFileToLoad(new File(f.getAbsolutePath()));
+            mmmfw.setFileToLoad(f.getUri());
             massRangeCompletionService.submit(mmmfw);
         }
         double[] massRange = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
@@ -152,9 +152,8 @@ public class DenseArrayProducer extends AFragmentCommand {
             dapw.setNormalizeScans(normalizeScans);
             dapw.setScanIndex(scanIndex);
             dapw.setTotalIntensity(totalIntensity);
-            dapw.setFileToLoad(new File(ff.getAbsolutePath()));
-            dapw.setFileToSave(new File(createWorkFragment(ff).
-                    getAbsolutePath()));
+            dapw.setFileToLoad(ff.getUri());
+            dapw.setFileToSave(createWorkFragment(ff).getUri());
             ics.submit(dapw);
         }
 

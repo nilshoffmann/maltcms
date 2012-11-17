@@ -70,7 +70,7 @@ public class CvResolver implements ICvResolver{
     protected String getNamespacePrefix(String variable) {
         String[] s = variable.split("\\.");
         log.info("Splits of variable: {}",Arrays.toString(s));
-        if(s.length!=2) {
+        if(s.length<2) {
             throw new ConstraintViolationException("Variable has no valid namespace declaration: "+variable);
         }
         return s[0];

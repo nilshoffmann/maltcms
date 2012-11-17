@@ -43,6 +43,7 @@ import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -53,8 +54,6 @@ import cross.tools.StringTools;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -122,10 +121,10 @@ public class TICPeakListImporter extends AFragmentCommand {
                 if (StringTools.removeFileExt(s).endsWith(
                         StringTools.removeFileExt(ff.getName()))) {
                     log.warn("Loading TIC peaks from file {}", s);
-                    IFileFragment work = Factory.getInstance().
-                            getFileFragmentFactory().create(
+                    IFileFragment work = new FileFragment(new File(
                             getWorkflow().getOutputDirectory(this),
-                            ff.getName(), ff);
+                            ff.getName()));
+                    work.addSourceFile(ff);
                     CSVReader csvr = Factory.getInstance().getObjectFactory().
                             instantiate(CSVReader.class);
                     Tuple2D<Vector<Vector<String>>, Vector<String>> table;

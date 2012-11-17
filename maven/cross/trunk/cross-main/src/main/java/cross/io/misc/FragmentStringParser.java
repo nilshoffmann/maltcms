@@ -28,6 +28,7 @@
 package cross.io.misc;
 
 import cross.Factory;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -35,6 +36,7 @@ import cross.datastructures.tools.EvalTools;
 import cross.exception.NotImplementedException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import ucar.ma2.InvalidRangeException;
@@ -198,13 +200,13 @@ public class FragmentStringParser {
     public IFileFragment parse(final String s) {
         EvalTools.notNull(s, this);
         if (!s.contains(">")) {
-            final IFileFragment ff = Factory.getInstance().getFileFragmentFactory().create(s);
+            final IFileFragment ff = new FileFragment(URI.create(s));
             return ff;
         }
         log.info("Checking if Variables were given explicitly");
         final String[] fileNameVarNameRest = s.split(">", 0);// seperate
         if (fileNameVarNameRest.length == 1) {
-            final IFileFragment ff = Factory.getInstance().getFileFragmentFactory().create(s.substring(0, s.length() - 1));
+            final IFileFragment ff = new FileFragment(URI.create(s.substring(0, s.length() - 1)));
             return ff;
         }
         // filename and
@@ -223,7 +225,7 @@ public class FragmentStringParser {
         }
         log.debug("From file {}, parse vars: {}", filename, Arrays.deepToString(vars));
 
-        final IFileFragment parent = Factory.getInstance().getFileFragmentFactory().create(new File(dir, filename));
+        final IFileFragment parent = new FileFragment(new File(dir, filename));
         if (vars.length == 0) {
             log.info("Vars not given explicitly, loading all!");
             try {
@@ -313,7 +315,7 @@ public class FragmentStringParser {
      */
     public IFileFragment parseString(final String s) {
         if (!s.contains(">")) {
-            final IFileFragment ff = Factory.getInstance().getFileFragmentFactory().create(s);
+            final IFileFragment ff = new FileFragment(URI.create(s));
             return ff;
         }
         log.info("Checking if Variables were given explicitly");

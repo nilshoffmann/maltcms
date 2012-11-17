@@ -49,6 +49,7 @@ import cross.datastructures.fragments.IFragment;
 import cross.datastructures.fragments.IGroupFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.exception.ResourceNotAvailableException;
+import java.net.URI;
 import java.util.*;
 import ucar.ma2.Array;
 
@@ -520,5 +521,20 @@ public class Experiment1D implements IExperiment1D {
     @Override
     public Set<Dimension> getDimensions() {
         return this.ff.getDimensions();
+    }
+
+    @Override
+    public URI getUri() {
+        return this.ff.getUri();
+    }
+
+    @Override
+    public void setCache(ICacheDelegate<IVariableFragment, List<Array>> cache) {
+        this.ff.setCache(cache);
+    }
+
+    @Override
+    public void readStructure() {
+        this.ff.readStructure();
     }
 }

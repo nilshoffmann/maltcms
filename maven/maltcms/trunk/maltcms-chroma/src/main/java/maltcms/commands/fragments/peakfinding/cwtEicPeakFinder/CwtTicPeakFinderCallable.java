@@ -36,11 +36,10 @@ import cross.datastructures.Vars;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.VariableFragment;
-import java.awt.Image;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -51,14 +50,12 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.FirstDerivativeFilter;
 import maltcms.commands.filters.array.MultiplicationFilter;
 import maltcms.commands.filters.array.wavelet.MexicanHatWaveletFilter;
-import maltcms.commands.fragments2d.peakfinding.CwtChartFactory;
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.datastructures.peak.Peak1D;
 import maltcms.datastructures.peak.PeakType;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.datastructures.rank.Rank;
 import maltcms.datastructures.ridge.Ridge;
-import maltcms.tools.ImageTools;
 import org.apache.commons.math.stat.descriptive.rank.Percentile;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -71,16 +68,16 @@ import ucar.ma2.Index;
  */
 @Data
 @Slf4j
-public class CwtTicPeakFinderCallable implements Callable<File>, Serializable {
+public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
 
     @Configurable
     private int minScale = 5;
     @Configurable
     private int maxScale = 20;
     @Configurable
-    private File input;
+    private URI input;
     @Configurable
-    private File output;
+    private URI output;
     @Configurable
     private double minPercentile = 5.0d;
     @Configurable
@@ -135,7 +132,7 @@ public class CwtTicPeakFinderCallable implements Callable<File>, Serializable {
     }
 
     @Override
-    public File call() {
+    public URI call() {
         FileFragment ff = new FileFragment(input);
         Array values = ff.getChild("total_intensity").getArray();
         ArrayStatsScanner ass = new ArrayStatsScanner();

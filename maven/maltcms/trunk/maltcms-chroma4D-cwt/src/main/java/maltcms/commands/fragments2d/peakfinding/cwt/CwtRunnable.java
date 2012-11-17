@@ -92,6 +92,7 @@ import cross.datastructures.workflow.DefaultWorkflow;
 import cross.exception.ResourceNotAvailableException;
 import cross.tools.StringTools;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.concurrent.Callable;
 import lombok.Data;
 import maltcms.commands.fragments2d.peakfinding.CwtChartFactory;
@@ -121,7 +122,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     private double minRelativeIntensity = 0.000003;
 //	@Configurable(value = "", type = String.class)
 //	private String inputFile = "";
-    private File inputFile;
+    private URI inputFile;
     @Configurable(value = "", type = String.class)
     private String outputDir = "";
     @Configurable(name = "var.modulation_time.default", type = double.class,
@@ -298,8 +299,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
      */
     private File saveToAnnotationsFile(IFileFragment f, List<Peak2D> l) {
         MaltcmsAnnotationFactory maf = new MaltcmsAnnotationFactory();
-        MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(new File(f.
-                getAbsolutePath()).toURI());
+        MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(f.getUri());
         // List<Scan2D> scans = new ArrayList<Scan2D>();
         System.out.println("Building scans");
         // List<Peak2D> p2 = new LinkedList<Peak2D>();
@@ -1153,7 +1153,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
      */
     @Override
     public List<Point> findPeaks(IFileFragment ffO) {
-        this.inputFile = new File(ffO.getAbsolutePath());
+        this.inputFile = ffO.getUri();
         call();
         List<Point> l = new ArrayList<Point>(ridgeTree.size());
         Iterator<Tuple2D<Point2D, Ridge>> iter = ridgeTree.iterator();

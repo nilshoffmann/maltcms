@@ -31,7 +31,7 @@ import cross.io.misc.ZipResourceExtractor;
 import maltcms.test.ExtractHelper;
 import java.io.File;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.test.SetupLogging;
+import cross.test.SetupLogging;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;

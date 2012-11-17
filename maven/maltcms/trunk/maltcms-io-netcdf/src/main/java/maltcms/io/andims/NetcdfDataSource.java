@@ -28,7 +28,6 @@
 package maltcms.io.andims;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -58,8 +57,10 @@ import cross.datastructures.fragments.ImmutableVariableFragment2;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
-import cross.datastructures.tools.FileTools;
+import cross.datastructures.tools.FragmentTools;
 import cross.tools.StringTools;
+import java.io.File;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
@@ -76,11 +77,11 @@ import org.openide.util.lookup.ServiceProvider;
 public class NetcdfDataSource implements IDataSource {
 
     @Deprecated
-    private static int minCachedFiles = 20;
+    private static int minCachedFiles = 5;
     @Deprecated
-    private static int maxCachedFiles = 40;
+    private static int maxCachedFiles = 10;
     @Deprecated
-    private static long secondsUntilCleanup = 360;
+    private static long secondsUntilCleanup = 60;
     private final String[] fileEnding = new String[]{"nc", "nc.gz", "nc.z", "nc.zip", "nc.gzip", "nc.bz2", "cdf", "cdf.gz", "cdf.z", "cdf.zip", "cdf.gzip", "cdf.bz2"};
     private boolean updateAttributes = false;
     @Deprecated
@@ -99,14 +100,14 @@ public class NetcdfDataSource implements IDataSource {
 
         if (this.pointDimensionVars.contains(vf.getName())) {
             dimname = this.pointDimensionName;
-            this.log.debug("Renaming dimension {} to {} for variable {}",
+            log.debug("Renaming dimension {} to {} for variable {}",
                     new Object[]{element.getName(), dimname,
                         vf.getName()});
         }
 
         if (this.scanDimensionVars.contains(vf.getName())) {
             dimname = this.scanDimensionName;
-            this.log.debug("Renaming dimension {} to {} for variable {}",
+            log.debug("Renaming dimension {} to {} for variable {}",
                     new Object[]{element.getName(), dimname,
                         vf.getName()});
         }
@@ -117,30 +118,30 @@ public class NetcdfDataSource implements IDataSource {
     private Dimension addDimension(final HashMap<String, Dimension> dimensions, String dimname, final NetcdfFileWriteable nfw, final Dimension element) {
         Dimension d;
         if (dimensions.containsKey(dimname)) {
-            this.log.debug("Dimension {} already known, updating!", dimensions.get(dimname));
+            log.debug("Dimension {} already known, updating!", dimensions.get(dimname));
             d = dimensions.get(dimname);
-            if (d.getLength()!= element.getLength()) {
+            if (d.getLength() != element.getLength()) {
                 //TODO improve dimension mapping
                 log.debug("Dimensions with identical name are not equal: {}!={}", d, element);
             }
             if (d.isShared() != element.isShared()) {
-                if(d.isShared() && !element.isShared()) {
+                if (d.isShared() && !element.isShared()) {
                     //do nothing
-                }else{
+                } else {
                     d.setShared(element.isShared());
                 }
             }
             if (d.isUnlimited() != element.isUnlimited()) {
-                if(d.isUnlimited() && !element.isUnlimited()) {
+                if (d.isUnlimited() && !element.isUnlimited()) {
                     //do nothing
                 } else {
                     d.setUnlimited(element.isUnlimited());
                 }
             }
             if (d.isVariableLength() != element.isVariableLength()) {
-                if(d.isVariableLength() && !element.isVariableLength()) {
+                if (d.isVariableLength() && !element.isVariableLength()) {
                     //do nothing
-                }else{
+                } else {
                     d.setVariableLength(element.isVariableLength());
                 }
             }
@@ -159,24 +160,13 @@ public class NetcdfDataSource implements IDataSource {
                     + ff);
         }
         final String filename = ff.getName();
-        // System.out.println("fileending: "+fileending);
         for (final String s : this.fileEnding) {
             if (filename.toLowerCase().endsWith(s)) {
                 return 1;
             }
         }
-        this.log.debug("no!");
+        log.debug("no!");
         return 0;
-    }
-
-    protected boolean closeFile(final NetcdfFile nf) {
-        try {
-            nf.close();
-            return true;
-        } catch (final IOException ex) {
-            this.log.warn("Failed to close file " + nf.getLocation());
-        }
-        return false;
     }
 
     @Override
@@ -272,7 +262,7 @@ public class NetcdfDataSource implements IDataSource {
         } catch (final IOException e) {
             // this is only a problem, when we want to write to a file, but then
             // we create it anyway
-            this.log.debug(e.getLocalizedMessage());
+            log.debug(e.getLocalizedMessage());
         }
         return null;
     }
@@ -318,68 +308,78 @@ public class NetcdfDataSource implements IDataSource {
     protected void loadAttributes(final IFileFragment ff, final NetcdfFile nf) {
         final List<?> attrs = nf.getGlobalAttributes();
         if (!ff.getAttributes().isEmpty()) {
-            this.log.debug(
-                    "IFileFragment {} already has Attributes, updating!", ff.getAbsolutePath());
+            log.debug(
+                    "IFileFragment {} already has Attributes, updating!", ff.getUri());
         }
         if (!attrs.isEmpty()) {
-            this.log.debug("Loading Attributes for {}", ff.getAbsolutePath());
+            log.debug("Loading Attributes for {}", ff.getUri());
         }
         for (final Object o : attrs) {
             if (ff.hasAttribute((Attribute) o)) {
                 if (this.updateAttributes) {
-                    this.log.debug("Updating Attribute {}", ((Attribute) o).getName());
+                    log.debug("Updating Attribute {}", ((Attribute) o).getName());
                     ff.setAttributes((Attribute) o);
                 } else {
-                    this.log.debug("Attribute {} already exists, ",
+                    log.debug("Attribute {} already exists, ",
                             ((Attribute) o).getName());
                 }
             } else {
-                this.log.debug("Setting Attribute {}", ((Attribute) o).getName());
+                log.debug("Setting Attribute {}", ((Attribute) o).getName());
                 ff.setAttributes((Attribute) o);
             }
         }
     }
 
-    protected NetcdfFile locateFile(final IFileFragment ff) throws IOException {
-        return NetcdfFile.open(FileTools.getFile(ff).getAbsolutePath());
+    protected synchronized NetcdfFile locateFile(final IFileFragment ff) throws IOException {
+        URI u = ff.getUri();
+        String filepath = u.toASCIIString();
+        log.info("Opening netcdf file {}", filepath);
+        return NetcdfFile.open(filepath);
     }
 
     protected NetcdfFile locateFile(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
         NetcdfFile nf = null;
-        this.log.debug("Trying to find {} in {}", f.getName(), f.getParent().getAbsolutePath());
-        String file = "";
+        log.debug("Trying to find {} in {}", f.getName(), f.getParent().getUri());
+        // String file = "";
         try {// Prefer to find in parent of f, if it exists as a file
-            file = FileTools.getFile(f.getParent()).getAbsolutePath();
-            nf = NetcdfFile.open(file);
-            this.log.debug("Searching for IVariableFragment {} in parent {}",
-                    f, f.getParent().getAbsolutePath());
+            //file = FileTools.getFile(f.getParent()).getAbsolutePath();
+            nf = locateFile(f.getParent());//NetcdfFile.open(file);
+            log.debug("Searching for IVariableFragment {} in parent {}",
+                    f, f.getParent().getUri());
             if (nf.findVariable(f.getName()) != null) {
-                this.log.debug("Found IVariableFragment {} in parent {}", f, f.getParent().getAbsolutePath());
+                log.debug("Found IVariableFragment {} in parent {}", f, f.getParent().getUri());
                 return nf;
             } else {
                 nf.close();
             }
         } catch (final IOException ioex) {
+            if (nf != null) {
+                try {
+                    nf.close();
+                } catch (final IOException ioex2) {
+                    throw ioex2;
+                }
+            }
             throw ioex;
         }
         // try to locate variable in source files of parent of f, first hit
         // wins
         // so be careful with equal names
-        if (f.getParent().getSourceFiles().isEmpty()) {
-            this.log.debug("{} has no source files!", f.getParent().getAbsolutePath());
-            // try to load the source_files from file
-            // FragmentTools.getSourceFiles(f.getParent());
-        }
+//        if (f.getParent().getSourceFiles().isEmpty()) {
+//            log.debug("{} has no source files!", f.getParent().getUri());
+//            // try to load the source_files from file
+////            FragmentTools.getSourceFiles(f.getParent());
+//        }
         for (final IFileFragment ff : f.getParent().getSourceFiles()) {
             try {
-                file = FileTools.getFile(ff).getAbsolutePath();
-                nf = NetcdfFile.open(file);
-                this.log.debug(
+//                file = FileTools.getFile(ff).getAbsolutePath();
+                nf = locateFile(ff);//NetcdfFile.open(file);
+                log.debug(
                         "Searching for IVariableFragment {} in source file {}",
                         f, ff);
                 if (nf.findVariable(f.getName()) != null) {
-                    this.log.debug(
+                    log.debug(
                             "Found IVariableFragment {} in source file {}", f,
                             ff);
                     return nf;
@@ -410,7 +410,7 @@ public class NetcdfDataSource implements IDataSource {
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, FileNotFoundException,
             ResourceNotAvailableException {
-        this.log.debug("Reading indexed of {}, child of {}", f.toString(), f.getParent().toString());
+        log.debug("Reading indexed of {}, child of {}", f.toString(), f.getParent().toString());
         final ArrayList<Array> al = readIndexed2(f);
         return al;
     }
@@ -439,18 +439,18 @@ public class NetcdfDataSource implements IDataSource {
     public ArrayList<Array> readIndexed2(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException,
             FileNotFoundException {
-        this.log.debug("{}", f.getParent().toString());
+        log.debug("{}", f.getParent().toString());
         // get the associated Netcdf File
         final NetcdfFile nd = get(f);
         if (nd == null) {
             throw new FileNotFoundException("File "
-                    + f.getParent().getAbsolutePath()
+                    + f.getParent().getUri()
                     + " appears not to be a valid cdf file!");
         }
         // Ensure there is an index
         EvalTools.notNull(f.getIndex(), this);// ,f.getIndex().getRange());
         final IVariableFragment index = f.getIndex();
-        this.log.debug("Reading {} with index {}", f.getName(), index.getName());
+        log.debug("Reading {} with index {}", f.getName(), index.getName());
         // This will be the range of Arrays in the returned ArrayList
         Range[] index_range = index.getRange();
         // Unset the range, so we can read in the full index_array at first
@@ -476,13 +476,13 @@ public class NetcdfDataSource implements IDataSource {
             index_stride = index_range[0].stride();
         }
 
-        this.log.debug("index_start {}, index_end {}, index_stride {}",
+        log.debug("index_start {}, index_end {}, index_stride {}",
                 new Object[]{index_start, index_end, index_stride});
 
         // get information for length of compressed data
         final Variable data_var = nd.findVariable(f.getName());
         if (data_var == null) {
-            nd.close();
+            //nd.close();
             throw new ResourceNotAvailableException("Could not read "
                     + f.getName());
         }
@@ -502,7 +502,7 @@ public class NetcdfDataSource implements IDataSource {
             data_stride = f.getRange()[0].stride();
         }
 
-        this.log.debug("data_start {}, data_end {}, data_stride {}",
+        log.debug("data_start {}, data_end {}, data_stride {}",
                 new Object[]{data_start, data_end, data_stride});
 
         // Create a new index array, which is zero based
@@ -513,9 +513,9 @@ public class NetcdfDataSource implements IDataSource {
             try {
                 index_range[0] = new Range(0, index_end - index_start,
                         index_stride);
-                this.log.debug("index_range[0] = {}", index_range[0]);
+                log.debug("index_range[0] = {}", index_range[0]);
             } catch (final InvalidRangeException e) {
-                this.log.error(e.getLocalizedMessage());
+                log.error(e.getLocalizedMessage());
             }
         }
 
@@ -539,7 +539,7 @@ public class NetcdfDataSource implements IDataSource {
                 data_end = index_array.get((index_start + i + 1)) - 1;
             }
             try {
-                this.log.debug("Reading array {}, from {} to {}", new Object[]{
+                log.debug("Reading array {}, from {} to {}", new Object[]{
                             i, data_start, data_end});
                 // Read from data_start to data_end incl. with data_stride
                 final Array ai = data_var.read(data_start + ":" + data_end
@@ -552,7 +552,7 @@ public class NetcdfDataSource implements IDataSource {
                 index_offset += (data_end - data_start);
                 al.add(ai);
             } catch (final InvalidRangeException e) {
-                this.log.error(e.getLocalizedMessage());
+                log.error(e.getLocalizedMessage());
             }
 
         }
@@ -565,17 +565,17 @@ public class NetcdfDataSource implements IDataSource {
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException, FileNotFoundException {
-        this.log.debug("Reading single of {}, child of {}", f.toString(), f.getParent().toString());
-        this.log.debug("{}", f.getParent().toString());
+        log.debug("Reading single of {}, child of {}", f.toString(), f.getParent().toString());
+        log.debug("{}", f.getParent().toString());
         final NetcdfFile nd = get(f);
         if (nd == null) {
             throw new FileNotFoundException("Could not find physical file for "
-                    + f.getParent().getAbsolutePath());
+                    + f.getParent().getUri());
         }
         EvalTools.notNull(nd, this);
         if (f.getIndex() != null) {
 
-            this.log.debug("IVariableFragment "
+            log.debug("IVariableFragment "
                     + f.getName()
                     + " has IndexFragment "
                     + f.getIndex().getName()
@@ -607,31 +607,31 @@ public class NetcdfDataSource implements IDataSource {
             if (r != null) {
                 final List<Range> l = Arrays.asList(r);
                 try {
-                    this.log.debug("Using specified range to read partially: {}", l);
+                    log.debug("Using specified range to read partially: {}", l);
                     a = v.read(l);
                     // if read with ranges is valid: keep ranges as before
                     f.setRange(r);
                 } catch (final InvalidRangeException e) {
-                    this.log.warn("Defined range list {} is invalid for variable {}, falling back to default range defined in file!", new Object[]{l, f.getName()});
+                    log.warn("Defined range list {} is invalid for variable {}, falling back to default range defined in file!", new Object[]{l, f.getName()});
                     a = v.read();
                     // replace ranges with valid ranges from file
                     f.setRange(v.getRanges().toArray(new Range[]{}));
                 }
             } else {
-                this.log.debug("No range set, reading completely");
+                log.debug("No range set, reading completely");
                 a = v.read();
                 List<Range> ranges = v.getRanges();
-                this.log.debug("Ranges from file: {}", ranges);
+                log.debug("Ranges from file: {}", ranges);
                 // update ranges to those from file
                 f.setRange(ranges.toArray(new Range[ranges.size()]));
             }
             nd.close();
             if (a == null) {
-                this.log.debug("a is null", a);
+                log.debug("a is null", a);
             }
             return a;
         } catch (final IOException e) {
-            this.log.error(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
             throw e;
         }
     }
@@ -646,29 +646,26 @@ public class NetcdfDataSource implements IDataSource {
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
             throws IOException, FileNotFoundException {
-        this.log.debug("Reading structure of {}", f.toString());
+        log.debug("Reading structure of {}", f.toString());
         final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
         final NetcdfFile nd = locateFile(f);
         if (nd == null) {
             throw new FileNotFoundException("Could not find physical file for "
-                    + f.getAbsolutePath());
+                    + f.getUri());
         }
         loadAttributes(f, nd);
-        try {
-            final List<?> l = nd.getVariables();
-            for (final Object o : l) {
-                final Variable v = (Variable) o;
-                final IVariableFragment vf = convert(f, v, null);
-                final List<?> att = v.getAttributes();
-                for (final Object attr : att) {
-                    vf.setAttributes((ucar.nc2.Attribute) attr);
-                }
-                al.add(vf);
+        final List<?> l = nd.getVariables();
+        for (final Object o : l) {
+            final Variable v = (Variable) o;
+            final IVariableFragment vf = convert(f, v, null);
+            final List<?> att = v.getAttributes();
+            for (final Object attr : att) {
+                vf.setAttributes((ucar.nc2.Attribute) attr);
             }
-            this.log.debug(f.toString());
-        } finally {
-            nd.close();
+            al.add(vf);
         }
+        log.debug(f.toString());
+
         return al;
     }
 
@@ -684,15 +681,14 @@ public class NetcdfDataSource implements IDataSource {
     public IVariableFragment readStructure(final IVariableFragment f)
             throws IOException, FileNotFoundException,
             ResourceNotAvailableException {
-        this.log.debug("Reading structure of {}", f.toString());
+        log.debug("Reading structure of {}", f.toString());
         final NetcdfFile nd = locateFile(f);
         if (nd == null) {
             throw new FileNotFoundException("Could not find physical file for "
-                    + f.getParent().getAbsolutePath());
+                    + f.getParent().getUri());
         }
         Variable v = nd.findVariable(f.getName());
         if (v == null) {
-            nd.close();
             throw new ResourceNotAvailableException("Could not read "
                     + f.getName());
         }
@@ -703,8 +699,7 @@ public class NetcdfDataSource implements IDataSource {
         }
 
         loadAttributes(f.getParent(), nd);
-        this.log.debug(f.toString());
-        nd.close();
+        log.debug(f.toString());
         return f;
     }
 
@@ -715,28 +710,33 @@ public class NetcdfDataSource implements IDataSource {
      */
     protected NetcdfFileWriteable structureWrite(final IFileFragment parent) {
         try {
-            File f = null;
+            String filename = null;
             if (parent.getSize() == 0) {
-                this.log.warn("IFileFragment {} has no children!", parent.getAbsolutePath());
+                log.warn("IFileFragment {} has no children!", parent.getUri());
                 return null;
             }
-            f = FileTools.prepareOutput(parent);
-            final String filename = f.getAbsolutePath();
-            this.log.debug("Trying to create NetcdfFileWritable {}", filename);
+            if (parent.getUri().getScheme().equals("file")) {
+                File file = new File(parent.getUri()).getAbsoluteFile();
+                file.getParentFile().mkdirs();
+                filename = file.getAbsolutePath();
+            } else {
+                filename = parent.getUri().toASCIIString();
+            }
+            log.debug("Trying to create NetcdfFileWritable {}", filename);
             final NetcdfFileWriteable nfw = NetcdfFileWriteable.createNew(
                     filename, false);
 
             final List<Attribute> globalAttrs = parent.getAttributes();
             for (final Attribute attr : globalAttrs) {
-                this.log.debug("Adding attribute {} to file {}", attr, parent.getAbsolutePath());
+                log.debug("Adding attribute {} to file {}", attr, parent.getUri());
                 nfw.addGlobalAttribute(attr);
             }
 
             final LinkedHashMap<String, Dimension> dimensions = new LinkedHashMap<String, Dimension>();
             for (Dimension dim : parent.getDimensions()) {
-                if(dim.getName().startsWith("dimension")) {
-                    log.debug("Skipping default dimension {}",dim);
-                }else{
+                if (dim.getName().startsWith("dimension")) {
+                    log.debug("Skipping default dimension {}", dim);
+                } else {
                     log.debug("Adding dimension: {}", dim);
                     addDimension(dimensions, dim.getName(), nfw, dim);
                 }
@@ -747,50 +747,50 @@ public class NetcdfDataSource implements IDataSource {
             boolean skipVarForMissingData = false;
             for (final IVariableFragment vf : parent) {
                 if (vf.getName().equals("scan_index")) {
-                    this.log.debug("{}", vf.getArray());
+                    log.debug("{}", vf.getArray());
                 }
-                if (vf.getParent().getAbsolutePath().equals(
-                        parent.getAbsolutePath())) {
+                if (vf.getParent().getUri().equals(
+                        parent.getUri())) {
                     // HANDLE DIMENSIONS, SHOULD BE DEFINED GLOBALLY
                     Dimension[] dim = null;
                     if (vf.getDimensions() == null) {
                         if (!vf.hasArray()) {
-                            this.log.warn(
+                            log.warn(
                                     "IVariableFragment {} has no array set, skipping!",
                                     vf);
                             skipVarForMissingData = true;
                         } else {
-                            this.log.warn(
+                            log.warn(
                                     "IVariableFragment {} has no Dimension info, adding defaults!",
                                     vf.getName());
                             dim = cross.datastructures.tools.ArrayTools.getDefaultDimensions(vf.getArray());
                             final Dimension[] dimC = new Dimension[dim.length];
                             int i = 0;
                             for (final Dimension element : dim) {
-                                this.log.debug("Checking Dimension {}", element);
+                                log.debug("Checking Dimension {}", element);
                                 dimC[i++] = addDimension(nfw, dimensions, vf,
                                         element);
                             }
                             dim = dimC;
                         }
                     } else {
-                        if(!vf.hasArray()) {
-                            this.log.warn(
+                        if (!vf.hasArray()) {
+                            log.warn(
                                     "IVariableFragment {} has no array set, skipping!",
                                     vf);
                             skipVarForMissingData = true;
-                        }else{
-                            this.log.debug("Using Dimensions given by IVariableFragment!");
+                        } else {
+                            log.debug("Using Dimensions given by IVariableFragment!");
 
                             dim = vf.getDimensions();
                             final Dimension[] dimC = new Dimension[dim.length];
                             int i = 0;
                             int[] shape = vf.getArray().getShape();
                             for (final Dimension element : dim) {
-                                this.log.debug("Checking Dimension {}", element);
+                                log.debug("Checking Dimension {}", element);
                                 if (shape[i] != element.getLength()) {
                                     //throw new ConstraintViolationException("Dimension and array shape mismatch!: "+element+" vs "+shape[i]);
-                                    this.log.warn("Correcting dimension {} to length {}!", element.getName(), shape[i]);
+                                    log.warn("Correcting dimension {} to length {}!", element.getName(), shape[i]);
                                     element.setLength(shape[i]);
                                 }
                                 dimC[i] = addDimension(nfw, dimensions, vf,
@@ -800,7 +800,7 @@ public class NetcdfDataSource implements IDataSource {
                             dim = dimC;
                         }
                     }
-                    log.info("Defined dimensions: {}", Arrays.deepToString(dim));
+                    log.debug("Defined dimensions: {}", Arrays.deepToString(dim));
                     if (!skipVarForMissingData) {
                         // HANDLE GROUPS
                         final Group rootGroup = nfw.getRootGroup();
@@ -856,17 +856,17 @@ public class NetcdfDataSource implements IDataSource {
                         for (final Attribute att : attrs) {
                             v.addAttribute(att);
                         }
-                        this.log.debug("Adding variable {}", v.toString());
+                        log.debug("Adding variable {}", v.toString());
                     }
                     skipVarForMissingData = false;
                 }
             }
-            this.log.debug("Dimensions: {}", Arrays.deepToString(dimensions.values().toArray(new Dimension[]{})));
-            
+            log.debug("Dimensions: {}", Arrays.deepToString(dimensions.values().toArray(new Dimension[]{})));
+
             nfw.create();
             return nfw;
         } catch (final IOException e) {
-            this.log.error(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
         }
         return null;
     }
@@ -913,30 +913,30 @@ public class NetcdfDataSource implements IDataSource {
      */
     @Override
     public boolean write(final IFileFragment f) {
-        this.log.debug("{}", f.toString());
-        this.log.debug("Saving {} with NetcdfDataSource", f.getAbsolutePath());
+        log.debug("{}", f.toString());
+        log.debug("Saving {} with NetcdfDataSource", f.getUri());
         EvalTools.notNull(f, this);
         final NetcdfFileWriteable nfw = structureWrite(f);
         EvalTools.notNull(nfw, this);
         int cnt = 0;
         String varname = "";
         for (final IVariableFragment vf : f) {
-            if (vf.getParent().getAbsolutePath().equals(f.getAbsolutePath())) {
+            if (vf.getParent().getUri().equals(f.getUri())) {
                 try {
                     varname = vf.getName();
                     EvalTools.notNull(varname, this);
                     if (vf.hasArray()) {
                         final Variable v = nfw.findVariable(varname);
                         if (v != null) {
-                            this.log.debug("Saving variable "
+                            log.debug("Saving variable "
                                     + v.getNameAndDimensions());
-                            if(vf.getIndex()!=null) {
+                            if (vf.getIndex() != null) {
                                 int offset = 0;
-                                for(Array a:vf.getIndexedArray()) {
-                                    nfw.write(varname, new int[]{offset},a);
-                                    offset+=a.getShape()[0];
+                                for (Array a : vf.getIndexedArray()) {
+                                    nfw.write(varname, new int[]{offset}, a);
+                                    offset += a.getShape()[0];
                                 }
-                            }else{
+                            } else {
                                 nfw.write(varname, vf.getArray());
                                 nfw.flush();
                             }
@@ -954,7 +954,7 @@ public class NetcdfDataSource implements IDataSource {
             }
         }
         nfw.finish();
-        this.log.info("Wrote " + cnt + " records to " + nfw.getLocation());
+        log.info("Wrote " + cnt + " records to " + nfw.getLocation());
         if (this.saveNCML) {
             final String ncmlFile = StringTools.removeFileExt(nfw.getLocation())
                     + ".ncml";
@@ -962,21 +962,29 @@ public class NetcdfDataSource implements IDataSource {
                 nfw.writeNcML(new BufferedOutputStream(new FileOutputStream(
                         ncmlFile)), null);
             } catch (final FileNotFoundException e1) {
-                this.log.error(e1.getLocalizedMessage());
-                this.log.error("{}", e1);
+                log.error(e1.getLocalizedMessage());
+                log.error("{}", e1);
             } catch (final IOException e1) {
-                this.log.error(e1.getLocalizedMessage());
-                this.log.error("{}", e1);
+                log.error(e1.getLocalizedMessage());
+                log.error("{}", e1);
             }
         }
-        f.setFile(nfw.getLocation());
         try {
             nfw.flush();
             nfw.close();
             return true;
         } catch (final IOException e) {
-            this.log.error(e.getLocalizedMessage());
-            this.log.error("{}", e);
+            log.error(e.getLocalizedMessage());
+            log.error("{}", e);
+            if (nfw != null) {
+                try {
+                    nfw.close();
+                } catch (final IOException ex) {
+                    log.error(ex.getLocalizedMessage());
+                    log.error("{}", ex);
+                    return false;
+                }
+            }
             return false;
         }
 

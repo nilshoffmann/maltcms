@@ -29,11 +29,11 @@ package cross.commands.fragments;
 
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.DefaultWorkflowProgressResult;
-import cross.commands.fragments.IFragmentCommand;
 import cross.Factory;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tools.FileTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowElement;
@@ -49,8 +49,10 @@ import cross.vocabulary.CvResolver;
 import cross.vocabulary.ICvResolver;
 import java.io.File;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
@@ -185,8 +187,10 @@ public abstract class AFragmentCommand implements IFragmentCommand {
      * @return
      */
     public IFileFragment createWorkFragment(IFileFragment iff) {
-        final IFileFragment copy = new FileFragment(new File(getWorkflow().getOutputDirectory(this),
-                StringTools.removeFileExt(iff.getName()) + ".cdf"));
+        URI uri = new File(getWorkflow().getOutputDirectory(this),
+                StringTools.removeFileExt(iff.getName()) + ".cdf").toURI();
+        log.info("Work fragment: {}",uri);
+        final IFileFragment copy = new FileFragment(uri);
         copy.addSourceFile(iff);
         return copy;
     }
@@ -199,17 +203,39 @@ public abstract class AFragmentCommand implements IFragmentCommand {
      * @param inputFragments
      * @return
      */
-    public TupleND<IFileFragment> mapToInput(List<File> files,
+    public TupleND<IFileFragment> mapToInputUri(List<URI> files,
             TupleND<IFileFragment> inputFragments) {
-        HashMap<String, File> names = new LinkedHashMap<String, File>();
-        for (File f : files) {
-            names.put(StringTools.removeFileExt(f.getName()), f);
+        HashMap<String, URI> names = new LinkedHashMap<String, URI>();
+        for (URI f : files) {
+            String filename = FileTools.getFilename(f.getPath());
+            log.debug("Filename: {}",filename);
+            names.put(filename, f);
         }
         TupleND<IFileFragment> retFragments = new TupleND<IFileFragment>();
         for (IFileFragment fragment : inputFragments) {
-            retFragments.add(new FileFragment(names.get(StringTools.removeFileExt(fragment.getName()))));
+            log.debug("InputFragment: "+fragment.getUri());
+            String filename = FileTools.getFilename(fragment.getUri());
+            retFragments.add(new FileFragment(names.get(filename)));
         }
         return retFragments;
+    }
+    
+     /**
+     * Maps a list of Files which resemble processing results of input file
+     * fragments to the input file fragments in the right order.
+     *
+     * @param files
+     * @param inputFragments
+     * @return
+     */
+    public TupleND<IFileFragment> mapToInput(List<File> files,
+            TupleND<IFileFragment> inputFragments) {
+        List<URI> uris = new LinkedList<URI>();
+        for(File f:files) {
+            log.info("Adding result file {}",f.toURI());
+            uris.add(f.toURI());
+        }
+        return mapToInputUri(uris, inputFragments);
     }
 
     /**
@@ -298,7 +324,7 @@ public abstract class AFragmentCommand implements IFragmentCommand {
      */
     public void addWorkflowResult(IFileFragment fragment) {
         getWorkflow().append(
-                new DefaultWorkflowResult(new File(fragment.getAbsolutePath()),
+                new DefaultWorkflowResult(new File(fragment.getUri()),
                 this, getWorkflowSlot(), fragment));
     }
 
@@ -310,7 +336,7 @@ public abstract class AFragmentCommand implements IFragmentCommand {
     public void addWorkflowResult(IFileFragment fragment,
             IFileFragment... resources) {
         getWorkflow().append(
-                new DefaultWorkflowResult(new File(fragment.getAbsolutePath()),
+                new DefaultWorkflowResult(new File(fragment.getUri()),
                 this, getWorkflowSlot(), resources));
     }
 
@@ -323,7 +349,7 @@ public abstract class AFragmentCommand implements IFragmentCommand {
     public void addWorkflowResult(IFileFragment fragment, WorkflowSlot slot,
             IFileFragment... resources) {
         getWorkflow().append(
-                new DefaultWorkflowResult(new File(fragment.getAbsolutePath()),
+                new DefaultWorkflowResult(new File(fragment.getUri()),
                 this, slot, resources));
     }
 
@@ -338,7 +364,7 @@ public abstract class AFragmentCommand implements IFragmentCommand {
             IWorkflowElement producer, WorkflowSlot slot,
             IFileFragment... resources) {
         getWorkflow().append(
-                new DefaultWorkflowResult(new File(fragment.getAbsolutePath()),
+                new DefaultWorkflowResult(new File(fragment.getUri()),
                 producer, slot, resources));
     }
 

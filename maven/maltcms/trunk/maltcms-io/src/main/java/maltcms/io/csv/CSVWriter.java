@@ -445,7 +445,7 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File writeStatsMap(final IFileFragment f, final StatsMap sm) {
-        final File file = new File(f.getAbsolutePath());
+        final File file = new File(f.getUri());
         return writeStatsMap(file.getParent(), file.getName(), sm);
     }
 

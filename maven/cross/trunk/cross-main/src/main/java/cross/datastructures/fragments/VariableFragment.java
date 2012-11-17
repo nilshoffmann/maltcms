@@ -29,10 +29,6 @@ package cross.datastructures.fragments;
 
 import com.db4o.collections.ActivatableArrayList;
 import cross.datastructures.StatsMap;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IFragment;
-import cross.datastructures.fragments.IGroupFragment;
-import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tools.ArrayTools;
 import cross.datastructures.tools.EvalTools;
 import cross.io.misc.ArrayChunkIterator;
@@ -346,6 +342,12 @@ public class VariableFragment implements IVariableFragment {
      *
      * @see cross.datastructures.fragments.IVariableFragment#getIndexedArray()
      */
+    /**
+     * Returns an empty list if no index variable has been set. Otherwise, 
+     * will try to retrieve list of arrays from parent cache. If there is no 
+     * list in the parent cache, it will return an empty immutable list.
+     * @return 
+     */
     @Override
     public List<Array> getIndexedArray() {
         if (getIndex() == null) {
@@ -353,8 +355,7 @@ public class VariableFragment implements IVariableFragment {
         }
         List<Array> l = parent.getCache().get(this);
         if(l == null) {
-            parent.getCache().put(this, new ActivatableArrayList<Array>());
-            l = parent.getCache().get(this);
+            return Collections.emptyList();
         }
         return l;
     }
@@ -462,7 +463,7 @@ public class VariableFragment implements IVariableFragment {
         // EvalTools.notNull(a1, this);
         // if (log.isDebugEnabled()) {
         log.debug("Set array on VariableFragment {} as child of {}",
-                toString(), getParent().getAbsolutePath());
+                toString(), getParent().getUri());
         if (a1 == null) {
             //parent.getCache().put(this, null);
             clear();
@@ -470,7 +471,14 @@ public class VariableFragment implements IVariableFragment {
             this.isModified = true;
             ArrayList<Array> list = new ArrayList<Array>(1);
             list.add(a1);
-            parent.getCache().put(this, list);
+            switch(parent.getCache().getCacheType()) {
+                case DB4O:
+                    parent.getCache().put(this, new ActivatableArrayList<Array>(list));
+                    break;
+                case EHCACHE:
+                    parent.getCache().put(this, list);
+                    break;
+            }
             setDataType(DataType.getType(a1.getElementType()));
             if (getDimensions() == null) {
                 setDimensions(cross.datastructures.tools.ArrayTools.getDefaultDimensions(a1));
@@ -550,10 +558,10 @@ public class VariableFragment implements IVariableFragment {
         }
         log.debug(
                 "Set indexed array on VariableFragment {} as child of {}",
-                toString(), getParent().getAbsolutePath());
-        synchronized (this) {
+                toString(), getParent().getUri());
+//        synchronized (this) {
             setIndexedArrayInternal(al1);
-        }
+//        }
     }
 
     /**
@@ -563,11 +571,16 @@ public class VariableFragment implements IVariableFragment {
     protected void setIndexedArrayInternal(final List<Array> al1) {
         if (al1 != null && !al1.isEmpty()) {
             this.isModified = true;
-            System.out.println("Received list of type: " + al1.getClass().getName());
-            parent.getCache().put(this, new ActivatableArrayList<Array>(al1));
+            switch(parent.getCache().getCacheType()) {
+                case DB4O:
+                    parent.getCache().put(this, new ActivatableArrayList<Array>(al1));
+                    break;
+                case EHCACHE:
+                    parent.getCache().put(this, al1);
+                    break;
+            }
             setDataType(DataType.getType(al1.get(0).getElementType()));
         } else {
-            //parent.getCache().put(this, null);
             clear();
         }
     }
@@ -578,7 +591,7 @@ public class VariableFragment implements IVariableFragment {
     @Override
     public void clear() {
         this.isModified = false;
-        //parent.getCache().put(this, null);
+        parent.getCache().put(this, null);
     }
 
     /*

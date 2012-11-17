@@ -67,6 +67,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.FragmentTools;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
+import java.net.URI;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
@@ -163,7 +164,7 @@ public class CenterStarAlignment extends AFragmentCommand {
 
         log.info("Saving alignment files!");
         for (final IFileFragment iff : warpedFiles) {
-            log.debug("Saving warped file {}", iff.getAbsolutePath());
+            log.debug("Saving warped file {}", iff.getUri());
             log.debug("Source files {}, dimensions: {}", iff.getChild("source_files").getArray(), Arrays.deepToString(iff.getChild("source_files").getDimensions()));
             iff.save();
             iff.clearArrays();
@@ -258,7 +259,7 @@ public class CenterStarAlignment extends AFragmentCommand {
         }
 
         for (IFileFragment iff : fragmentToScanIndexMap.keySet()) {
-            af.addScanIndexMap(a, new File(iff.getAbsolutePath()).toURI(),
+            af.addScanIndexMap(a, iff.getUri(),
                     fragmentToScanIndexMap.get(iff), false);
         }
         File out = new File(getWorkflow().getOutputDirectory(this),
@@ -277,14 +278,12 @@ public class CenterStarAlignment extends AFragmentCommand {
                         StringTools.removeFileExt(this.centerSequence))) {
                     log.info("Using user defined center: {}",
                             this.centerSequence);
-                    return Factory.getInstance().getFileFragmentFactory().create(
-                            this.centerSequence);
+                    return new FileFragment(URI.create(this.centerSequence));
                 }
             }
         }
         if (this.alignToFirst) {
-            return Factory.getInstance().getFileFragmentFactory().create(names.
-                    getString(0));
+            return new FileFragment(URI.create(names.getString(0)));
         }
         final int rows = a.getShape()[0];
         final int cols = a.getShape()[1];
@@ -318,8 +317,7 @@ public class CenterStarAlignment extends AFragmentCommand {
                 }
             }
         }
-        final IFileFragment centerSeq = Factory.getInstance().
-                getFileFragmentFactory().create(names.getString(optIndex));
+        final IFileFragment centerSeq = new FileFragment(URI.create(names.getString(optIndex)));
         return centerSeq;
     }
 
@@ -443,8 +441,7 @@ public class CenterStarAlignment extends AFragmentCommand {
                 getOutputDirectory(this), "multiple-alignment.cdf");
         addMultipleAlignment(maFragment, table);
         maFragment.save();
-        DefaultWorkflowResult dfw = new DefaultWorkflowResult(new File(
-                maFragment.getAbsolutePath()), this, WorkflowSlot.ALIGNMENT,
+        DefaultWorkflowResult dfw = new DefaultWorkflowResult(maFragment.getUri(), this, WorkflowSlot.ALIGNMENT,
                 warped.toArray(new IFileFragment[]{}));
         getWorkflow().append(dfw);
         for (IFileFragment ifrag : warped) {
@@ -478,7 +475,7 @@ public class CenterStarAlignment extends AFragmentCommand {
             ArrayList<String> colList = new ArrayList<String>();
             colList.add(rindices.get(0));
             IFileFragment iff = nameToFragment.get(colList.get(0));
-            log.debug("Using FileFragment {} as source!", iff.getAbsolutePath());
+            log.debug("Using FileFragment {} as source!", iff.getUri());
             for (int row = 1; row < rindices.size(); row++) {
                 String c = rindices.get(row);
                 String[] split = c.split(",");
@@ -758,7 +755,7 @@ public class CenterStarAlignment extends AFragmentCommand {
                 getOriginalFileFor(FragmentTools.getLHSFile(repOnRHS.get(i))),
                 FragmentTools.getLHSFile(repOnRHS.get(i)), al, false,
                 getWorkflow());
-        dwr = new DefaultWorkflowResult(new File(ifwarped.getAbsolutePath()),
+        dwr = new DefaultWorkflowResult(ifwarped.getUri(),
                 this, WorkflowSlot.WARPING, ifwarped);
         getWorkflow().append(dwr);
         warped.add(ifwarped);
@@ -781,7 +778,7 @@ public class CenterStarAlignment extends AFragmentCommand {
                 getOriginalFileFor(FragmentTools.getRHSFile(repOnLHS.get(i))),
                 FragmentTools.getRHSFile(repOnLHS.get(i)), al, true,
                 getWorkflow());
-        dwr = new DefaultWorkflowResult(new File(ifwarped.getAbsolutePath()),
+        dwr = new DefaultWorkflowResult(ifwarped.getUri(),
                 this, WorkflowSlot.WARPING, ifwarped);
         getWorkflow().append(dwr);
         warped.add(ifwarped);

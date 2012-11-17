@@ -97,7 +97,7 @@ public class AnchorExporter<T extends Peak> implements IWorkflowElement {
         log.info("Preparing files!");
         for (final IFileFragment ff : newFragments) {
             log.debug("Source files of fragment {}: {}",
-                    ff.getAbsolutePath(), ff.getSourceFiles());
+                    ff.getUri(), ff.getSourceFiles());
             hm.put(ff.getName(), ff);
             final int size = cf.getNumberOfPeaksWithinCliques(ff, cliques);
             if (size > 0) {
@@ -190,8 +190,7 @@ public class AnchorExporter<T extends Peak> implements IWorkflowElement {
                 ff.removeChild(ff.getChild(this.intensityValues));
             }
             ff.getChild(this.scanAcquisitionTime).getArray();
-            final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                    new File(ff.getAbsolutePath()), this, getWorkflowSlot(), ff);
+            final DefaultWorkflowResult dwr = new DefaultWorkflowResult(ff.getUri(), this, getWorkflowSlot(), ff);
             getWorkflow().append(dwr);
             ff.save();
         }

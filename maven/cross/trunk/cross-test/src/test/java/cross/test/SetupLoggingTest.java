@@ -1,3 +1,5 @@
+package cross.test;
+
 /* 
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
@@ -25,11 +27,11 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.test;
 
+
+import cross.test.SetupLogging;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Rule;
 
 /**

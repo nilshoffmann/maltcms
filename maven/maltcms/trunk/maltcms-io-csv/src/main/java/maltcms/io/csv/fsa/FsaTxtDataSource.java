@@ -50,6 +50,7 @@ package maltcms.io.csv.fsa;
  */
 import com.db4o.foundation.NotImplementedException;
 import cross.Factory;
+import cross.datastructures.fragments.FileFragment;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -72,9 +73,11 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tools.FileTools;
 import cross.datastructures.tuple.Tuple2D;
 import cross.tools.StringTools;
 import java.io.FileInputStream;
+import java.net.URI;
 import java.util.Vector;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.andims.NetcdfDataSource;
@@ -211,13 +214,13 @@ public class FsaTxtDataSource implements IDataSource {
                 f.getParent().toString());
         log.debug("{}", f.getParent().toString());
         if (f.getName().equals("total_intensity")) {
-            Array data = getDataEntry(new File(f.getParent().getAbsolutePath()),
+            Array data = getDataEntry(f.getParent().getUri(),
                     dataFieldToRead);
             f.setDimensions(new Dimension[]{new Dimension(scanDimensionName,
                         data.getShape()[0])});
             return data;
         } else if (f.getName().equals("scan_index")) {
-            Array data = getDataEntry(new File(f.getParent().getAbsolutePath()),
+            Array data = getDataEntry(f.getParent().getUri(),
                     dataFieldToRead);
             Array scanIndex = new ArrayInt.D1(data.getShape()[0]);
             for (int i = 0; i < data.getShape()[0]; i++) {
@@ -231,8 +234,8 @@ public class FsaTxtDataSource implements IDataSource {
                 getName());
     }
 
-    protected CSVReader read(CSVReader csvr, File inputFile) throws IOException {
-        String fileExtension = StringTools.getFileExtension(inputFile.getName()).
+    protected CSVReader read(CSVReader csvr, String inputFileName) throws IOException {
+        String fileExtension = StringTools.getFileExtension(inputFileName).
                 toLowerCase();
         csvr.setComment("#");
         csvr.setFirstLineHeaders(true);
@@ -278,11 +281,10 @@ public class FsaTxtDataSource implements IDataSource {
         return Arrays.asList(this.fileEnding);
     }
 
-    protected Array getDataEntry(File f, int id) {
+    protected Array getDataEntry(URI f, int id) {
         try {
-            CSVReader csvr = read(new CSVReader(), f);
-            Tuple2D<Vector<Vector<String>>, Vector<String>> table = csvr.read(new FileInputStream(
-                    f));
+            CSVReader csvr = read(new CSVReader(), FileTools.getFilename(f));
+            Tuple2D<Vector<Vector<String>>, Vector<String>> table = csvr.read(f.toURL().openStream());
             for (Vector<String> row : table.getFirst()) {
                 if (row.get(0).trim().toLowerCase().equals("data")) {
                     //is data row
@@ -302,23 +304,21 @@ public class FsaTxtDataSource implements IDataSource {
                     log(Level.SEVERE, null, ex);
         }
         throw new ResourceNotAvailableException("Could not retrieve data item " + id + " from file " + f.
-                getAbsolutePath());
+                toASCIIString());
     }
 
     @Override
     public boolean write(final IFileFragment f) {
         EvalTools.notNull(this.ndf, this);
         // TODO Implement real write support
-        this.log.info("Saving {} with CsvDataSource", f.getAbsolutePath());
+        this.log.info("Saving {} with CsvDataSource", f.getUri());
         this.log.info("Changing output file from: {}", f.toString());
-        final String source_file = f.getAbsolutePath();
-        String filename = StringTools.removeFileExt(f.getAbsolutePath());
+        File file = new File(f.getUri());
+        String filename = StringTools.removeFileExt(file.getAbsolutePath());
         filename += ".cdf";
         f.setFile(filename);
-        f.addSourceFile(Factory.getInstance().getFileFragmentFactory().create(
-                new File(source_file)));
-        this.log.info("To: {}", filename);
-        return Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).
-                write(f);
+        f.addSourceFile(new FileFragment(f.getUri()));
+        log.info("To: {}", filename);
+        return Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).write(f);
     }
 }

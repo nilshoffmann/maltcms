@@ -31,9 +31,6 @@ import cross.Factory;
 import cross.IConfigurable;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.pipeline.ICommandSequence;
-import cross.datastructures.pipeline.ICommandSequenceValidator;
-import cross.datastructures.fragments.ImmutableFileFragment;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowStatisticsResult;
@@ -191,7 +188,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
                 long start = System.nanoTime();
                 this.tmp = cmd.apply(this.tmp);
                 //clear arrays to allow for gc
-                for(IFileFragment f:this.tmp) {
+                for (IFileFragment f : this.tmp) {
                     f.clearArrays();
                 }
                 start = Math.abs(System.nanoTime() - start);
@@ -279,28 +276,18 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
         final Element ifrge = new Element("workflowInputs");
         for (final IFileFragment ifrg : getInput()) {
             final Element ifrge0 = new Element("workflowInput");
-            try {
-                ifrge0.setAttribute("uri", new File(ifrg.getAbsolutePath()).getCanonicalFile().toURI().normalize().
-                        toASCIIString());
-                ifrge.addContent(ifrge0);
-            } catch (IOException ex) {
-                log.warn("{}", ex);
-            }
-
+            ifrge0.setAttribute("uri", ifrg.getUri().normalize().
+                    toASCIIString());
+            ifrge.addContent(ifrge0);
         }
         e.addContent(ifrge);
 
         final Element ofrge = new Element("workflowOutputs");
         for (final IFileFragment ofrg : tmp) {
             final Element ofrge0 = new Element("workflowOutput");
-            try {
-                ofrge0.setAttribute("uri", new File(ofrg.getAbsolutePath()).getCanonicalFile().toURI().normalize().
-                        toASCIIString());
-                ofrge.addContent(ofrge0);
-            } catch (IOException ex) {
-                log.warn("{}", ex);
-            }
-
+            ofrge0.setAttribute("uri", ofrg.getUri().normalize().
+                    toASCIIString());
+            ofrge.addContent(ofrge0);
         }
         e.addContent(ofrge);
 

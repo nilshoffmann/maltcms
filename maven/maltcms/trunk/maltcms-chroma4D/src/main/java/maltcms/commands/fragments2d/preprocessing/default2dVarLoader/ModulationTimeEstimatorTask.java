@@ -33,8 +33,8 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.Tuple2D;
-import java.io.File;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
@@ -59,7 +59,7 @@ import ucar.ma2.Range;
 public class ModulationTimeEstimatorTask implements Callable<Double>,
         Serializable {
 
-    private File input;
+    private URI input;
     private int numberOfScans = 5000;
     private int offset = 0;
 
@@ -67,6 +67,7 @@ public class ModulationTimeEstimatorTask implements Callable<Double>,
      *
      * @return
      */
+    @Override
     public Double call() {
         return estimateModulationTime(new FileFragment(input));
     }

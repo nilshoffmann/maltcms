@@ -33,13 +33,14 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ExitVmException;
-import cross.io.IInputDataFactory;
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -98,9 +99,9 @@ public class InputDataFactory implements IInputDataFactory {
 //        final IFileFragment inputFragment = Factory.getInstance().
 //                getFileFragmentFactory().fromString(s);
         IFileFragment inputFragment = new FileFragment(f);
-        if (!(new File(inputFragment.getAbsolutePath()).exists())) {
+        if (!(new File(inputFragment.getUri()).exists())) {
             throw new ConstraintViolationException("Input file "
-                    + inputFragment.getAbsolutePath() + " does not exist!");
+                    + inputFragment.getUri() + " does not exist!");
         }
         return inputFragment;
     }
@@ -151,10 +152,18 @@ public class InputDataFactory implements IInputDataFactory {
         }
         log.info("Preparing input data!");
         this.initialFiles = new ArrayList<IFileFragment>();
-        for (File f : getInputFiles(input)) {
-            log.info("Adding file {}", f.getAbsolutePath());
-            initialFiles.add(initFile(f));
+        for (String s : input) {
+            URI uri = URI.create(s);
+            if (uri.getScheme() != null) {
+                this.initialFiles.add(new FileFragment(uri));
+            } else {
+                for (File f : getInputFiles(new String[]{s})) {
+                    log.info("Adding file {}", f.getAbsolutePath());
+                    initialFiles.add(initFile(f));
+                }
+            }
         }
+
         if (initialFiles.isEmpty()) {
             throw new ExitVmException("Could not create input data for files " + Arrays.toString(input));
         }

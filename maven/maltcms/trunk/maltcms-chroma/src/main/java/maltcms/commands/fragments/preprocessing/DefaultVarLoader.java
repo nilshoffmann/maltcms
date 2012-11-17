@@ -28,15 +28,13 @@
 package maltcms.commands.fragments.preprocessing;
 
 import cross.annotations.Configurable;
-import java.io.File;
-
-
 import cross.annotations.ProvidesVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
-import cross.datastructures.tools.EvalTools;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import lombok.Data;
@@ -85,8 +83,8 @@ public class DefaultVarLoader extends AFragmentCommand {
             IFileFragment workFragment = createWorkFragment(f);
             //create a new worker
             DefaultVarLoaderWorker worker = new DefaultVarLoaderWorker();
-            worker.setFileToLoad(f.toString());
-            worker.setFileToSave(workFragment.getAbsolutePath());
+            worker.setFileToLoad(f.getUri());
+            worker.setFileToSave(workFragment.getUri());
             worker.setDefaultVariables(defaultVariables);
             worker.setAdditionalVariables(additionalVariables);
             //submit to completion service

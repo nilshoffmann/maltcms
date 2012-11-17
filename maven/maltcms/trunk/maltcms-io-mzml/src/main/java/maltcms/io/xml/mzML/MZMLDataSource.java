@@ -27,7 +27,6 @@
  */
 package maltcms.io.xml.mzML;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +54,7 @@ import cross.Factory;
 import cross.annotations.Configurable;
 import cross.datastructures.cache.CacheFactory;
 import cross.datastructures.cache.ICacheDelegate;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
@@ -64,7 +64,9 @@ import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
 import cross.exception.NotImplementedException;
 import cross.tools.StringTools;
+import java.io.File;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
 import java.util.LinkedList;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -109,12 +111,11 @@ public class MZMLDataSource implements IDataSource {
     @Configurable(name = "var.second_column_elution_time", value = "second_column_elution_time")
     private String second_column_elution_time = "second_column_elution_time";
     private String second_column_elution_timeAccession = "MS:1002083 ";
-    
     private static WeakHashMap<IFileFragment, MzMLUnmarshaller> fileToIndex = new WeakHashMap<IFileFragment, MzMLUnmarshaller>();
     private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = null;
 
     private ICacheDelegate<IVariableFragment, Array> getCache() {
-        if(this.variableToArrayCache == null) {
+        if (this.variableToArrayCache == null) {
             this.variableToArrayCache = CacheFactory.createDefaultCache(UUID.randomUUID().toString());
         }
         return this.variableToArrayCache;
@@ -134,7 +135,7 @@ public class MZMLDataSource implements IDataSource {
             }
         }
 
-        this.log.debug("no!");
+        log.debug("no!");
         return 0;
     }
 
@@ -173,10 +174,15 @@ public class MZMLDataSource implements IDataSource {
         if (MZMLDataSource.fileToIndex.containsKey(ff)) {
             return MZMLDataSource.fileToIndex.get(ff);
         }
-        MzMLUnmarshaller um = new MzMLUnmarshaller(new File(ff.getAbsolutePath()));
-        MZMLDataSource.fileToIndex.put(ff, um);
-        log.debug("mzML file {} is indexed: {}", ff.getAbsolutePath(), um.isIndexedmzML());
-        return um;
+        MzMLUnmarshaller um;
+        try {
+            um = new MzMLUnmarshaller(ff.getUri().toURL());
+            MZMLDataSource.fileToIndex.put(ff, um);
+            log.debug("mzML file {} is indexed: {}", ff.getUri(), um.isIndexedmzML());
+            return um;
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private Run getRun(MzMLUnmarshaller mzmlu, final IFileFragment ff) {
@@ -286,7 +292,7 @@ public class MZMLDataSource implements IDataSource {
      */
     protected Tuple2D<Array, Array> initMinMaxMZ(final IVariableFragment var,
             final Run run, final MzMLUnmarshaller um) {
-        this.log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
+        log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
                     this.mass_range_max});
         int scans = getScanCount(run);
         int start = 0;
@@ -432,7 +438,7 @@ public class MZMLDataSource implements IDataSource {
 
     private Array readMinMaxMassValueArray(final IVariableFragment var,
             final Run run, final MzMLUnmarshaller um) {
-        this.log.debug("readMinMaxMassValueArray");
+        log.debug("readMinMaxMassValueArray");
         final Tuple2D<Array, Array> t = initMinMaxMZ(var, run, um);
         if (var.getName().equals(this.mass_range_min)) {
             return t.getFirst();
@@ -462,7 +468,7 @@ public class MZMLDataSource implements IDataSource {
             final Array a = new ArrayDouble.D1(npeaks);
             npeaks = 0;
             for (int i = start; i < scans; i++) {
-                this.log.debug("Reading scan {} of {}", (i + 1), scans);
+                log.debug("Reading scan {} of {}", (i + 1), scans);
                 final Array b = getMassValues(getSpectrum(um, i));
                 Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
                 npeaks += b.getShape()[0];
@@ -473,11 +479,11 @@ public class MZMLDataSource implements IDataSource {
             final Array a = new ArrayDouble.D1(npeaks);
             npeaks = 0;
             for (int i = start; i < scans; i++) {
-                this.log.debug("Reading scan {} of {}", (i + 1), scans);
+                log.debug("Reading scan {} of {}", (i + 1), scans);
                 final Array b = getIntensityValues(getSpectrum(um, i));
                 Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
                 npeaks += b.getShape()[0];
-                this.log.debug("npeaks after: {}", npeaks);
+                log.debug("npeaks after: {}", npeaks);
             }
             return a;
             // f.setArray(a);
@@ -490,7 +496,7 @@ public class MZMLDataSource implements IDataSource {
 
     private Array readScanAcquisitionTimeArray(final IVariableFragment var,
             final Run run, final MzMLUnmarshaller um) {
-        this.log.debug("readScanAcquisitionTimeArray");
+        log.debug("readScanAcquisitionTimeArray");
         int scans = getScanCount(run);
         int start = 0;
         final Range[] r = var.getRange();
@@ -501,7 +507,7 @@ public class MZMLDataSource implements IDataSource {
         final ArrayDouble.D1 sat = new ArrayDouble.D1(scans);
         for (int i = start; i < scans; i++) {
             sat.set(i, getRT(getSpectrum(um, i)));
-            this.log.debug("RT({})={}", i, sat.get(i));
+            log.debug("RT({})={}", i, sat.get(i));
         }
         // f.setArray(sat);
         return sat;
@@ -516,12 +522,12 @@ public class MZMLDataSource implements IDataSource {
             start = r[0].first();
             scans = r[0].length();
         }
-        this.log.debug("Creating index array with {} elements", scans);
+        log.debug("Creating index array with {} elements", scans);
         final ArrayInt.D1 scan_index = new ArrayInt.D1(scans);
         for (int i = start; i < scans; i++) {
             final int peaks = getMassValues(getSpectrum(um, i)).getShape()[0];
             // current npeaks is index into larger arrays for current scan
-            this.log.debug("Scan {} from {} to {}", new Object[]{i, npeaks,
+            log.debug("Scan {} from {} to {}", new Object[]{i, npeaks,
                         (npeaks + peaks - 1)});
             scan_index.set(i, npeaks);
             npeaks += peaks;
@@ -556,9 +562,9 @@ public class MZMLDataSource implements IDataSource {
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException {
-        this.log.debug("readSingle of {} in {}", f.getName(), f.getParent().getAbsolutePath());
+        log.debug("readSingle of {} in {}", f.getName(), f.getParent().getUri());
         if (f.hasArray()) {
-            this.log.warn("{} already has an array set!", f);
+            log.warn("{} already has an array set!", f);
         }
         final Array a = loadArray(f.getParent(), f);
         if (a == null) {
@@ -629,7 +635,7 @@ public class MZMLDataSource implements IDataSource {
             } catch (final NullPointerException npe) {
                 throw new ResourceNotAvailableException(
                         "Could not read header of file "
-                        + f.getParent().getAbsolutePath());
+                        + f.getParent().getUri());
             }
         } else if (varname.equals(this.modulation_time)) {
             Array a = readModulationTimeArray(f, run);
@@ -691,15 +697,14 @@ public class MZMLDataSource implements IDataSource {
     public boolean write(final IFileFragment f) {
         EvalTools.notNull(this.ndf, this);
         // TODO Implement real write support
-        this.log.info("Saving {} with MZMLDataSource", f.getAbsolutePath());
-        this.log.info("Changing output file from: {}", f.toString());
-        final String source_file = f.getAbsolutePath();
-        String filename = StringTools.removeFileExt(f.getAbsolutePath());
+        log.info("Saving {} with MZMLDataSource", f.getUri());
+        log.info("Changing output file from: {}", f.toString());
+        File file = new File(f.getUri());
+        String filename = StringTools.removeFileExt(file.getAbsolutePath());
         filename += ".cdf";
         f.setFile(filename);
-        f.addSourceFile(Factory.getInstance().getFileFragmentFactory().create(
-                new File(source_file)));
-        this.log.info("To: {}", filename);
+        f.addSourceFile(new FileFragment(f.getUri()));
+        log.info("To: {}", filename);
         return Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).write(f);
     }
 }

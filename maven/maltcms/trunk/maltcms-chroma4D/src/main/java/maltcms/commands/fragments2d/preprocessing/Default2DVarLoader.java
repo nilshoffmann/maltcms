@@ -43,12 +43,10 @@ import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Dimension;
-import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
-import cross.annotations.RequiresOptionalVariables;
-import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -141,8 +139,7 @@ public class Default2DVarLoader extends AFragmentCommand {
         final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
         for (final IFileFragment ff : t) {
             log.info("Running var loader for {}", ff.getName());
-            final IFileFragment fret = Factory.getInstance().
-                    getFileFragmentFactory().create(
+            final IFileFragment fret = new FileFragment(
                     new File(getWorkflow().getOutputDirectory(this),
                     ff.getName()));
             fret.addSourceFile(ff);
@@ -157,7 +154,7 @@ public class Default2DVarLoader extends AFragmentCommand {
             createSecondColumnElutionTime(ff, fret);
             createTIC2D(ff, fret);
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                    new File(fret.getAbsolutePath()), this, getWorkflowSlot(),
+                    fret.getUri(), this, getWorkflowSlot(),
                     ff);
             getWorkflow().append(dwr);
             fret.save();
@@ -347,7 +344,7 @@ public class Default2DVarLoader extends AFragmentCommand {
             ICompletionService<Double> mcs = createCompletionService(
                     Double.class);
             ModulationTimeEstimatorTask mtet = new ModulationTimeEstimatorTask();
-            mtet.setInput(new File(source.getAbsolutePath()));
+            mtet.setInput(source.getUri());
             mtet.setNumberOfScans(100000);
             mtet.setOffset(0);
             mcs.submit(mtet);

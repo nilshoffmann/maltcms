@@ -25,14 +25,20 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.test;
+package cross.test;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.NodeChangeListener;
+import java.util.prefs.PreferenceChangeListener;
+import java.util.prefs.Preferences;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.lf5.LogLevel;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
@@ -73,5 +79,23 @@ public class SetupLogging extends TestWatcher {
 
     public Properties getConfig() {
         return config;
+    }
+
+    public void setLogLevel(Class clazz, String level) {
+        getConfig().put("log4j.category." + clazz.getName(), level);
+        update();
+    }
+
+    public void setLogLevel(String packageOrClass, String level) {
+        if (packageOrClass.startsWith("log4j.category.")) {
+            getConfig().put(packageOrClass, level);
+        } else {
+            getConfig().put("log4j.category." + packageOrClass, level);
+        }
+        update();
+    }
+
+    public void update() {
+        PropertyConfigurator.configure(config);
     }
 }

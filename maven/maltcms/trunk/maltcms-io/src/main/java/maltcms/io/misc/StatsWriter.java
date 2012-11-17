@@ -38,6 +38,7 @@ import cross.datastructures.StatsMap;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.tools.FileTools;
 import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
@@ -124,8 +125,8 @@ public class StatsWriter implements IWorkflowElement {
                         final IFileFragment parent = ((IVariableFragment) f)
                                 .getParent();
                         final String basename = StringTools
-                                .removeFileExt(parent.getAbsolutePath());
-                        final String path = new File(parent.getAbsolutePath())
+                                .removeFileExt(FileTools.getFilename(parent.getUri()));
+                        final String path = new File(parent.getUri())
                                 .getParent();
                         csvw.writeStatsMap(path,
                                 basename + "-"

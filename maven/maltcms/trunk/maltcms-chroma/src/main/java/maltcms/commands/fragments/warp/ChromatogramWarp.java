@@ -39,7 +39,6 @@ import maltcms.tools.MaltcmsTools;
 
 import org.apache.commons.configuration.Configuration;
 import java.util.Arrays;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
@@ -49,6 +48,7 @@ import ucar.ma2.MAMath;
 import ucar.nc2.Attribute;
 import cross.Factory;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -133,13 +133,12 @@ public class ChromatogramWarp extends AFragmentCommand {
         } catch (final IOException e) {
             throw new RuntimeException(e.fillInStackTrace());
         }
-        final IFileFragment copy = Factory.getInstance()
-                .getFileFragmentFactory().create(
+        final IFileFragment copy = new FileFragment(
                 new File(getWorkflow().getOutputDirectory(this),
                 StringTools.removeFileExt(ref.getName())
                 + ".cdf"));
-        log.info("Ref: {}, copy: {}", ref.getAbsolutePath(), copy
-                .getAbsolutePath());
+        log.info("Ref: {}, copy: {}", ref.getUri(), copy
+                .getUri());
         copy.setAttributes(ref.getAttributes().toArray(new Attribute[]{}));
         IVariableFragment ivf = null;
         for (final String s : this.indexedVars) {
@@ -258,9 +257,8 @@ public class ChromatogramWarp extends AFragmentCommand {
             final IFileFragment processedFile, final List<Tuple2DI> path,
             final boolean toLHS, final IWorkflow iw) {
         log.info("Warping {}, saving in {}", originalFile
-                .getAbsolutePath(), processedFile.getAbsolutePath());
-        final IFileFragment warped = Factory.getInstance()
-                .getFileFragmentFactory().create(
+                .getUri(), processedFile.getUri());
+        final IFileFragment warped = new FileFragment(
                 new File(getWorkflow().getOutputDirectory(this),
                 StringTools.removeFileExt(originalFile
                 .getName())
@@ -275,14 +273,14 @@ public class ChromatogramWarp extends AFragmentCommand {
         warped.setAttributes(originalFile.getAttributes().toArray(
                 new Attribute[]{}));
         log.debug("Currently set attributes on file {}:{}", originalFile
-                .getAbsolutePath(), Arrays.deepToString(originalFile
+                .getUri(), Arrays.deepToString(originalFile
                 .getAttributes().toArray()));
         log.debug("Currently set attributes on file {}:{}", warped
-                .getAbsolutePath(), Arrays.deepToString(warped.getAttributes()
+                .getUri(), Arrays.deepToString(warped.getAttributes()
                 .toArray()));
         log.debug("Warping {} to {}, saving in {}", new Object[]{
-                    originalFile.getAbsolutePath(), ref.getAbsolutePath(),
-                    warped.getAbsolutePath()});
+                    originalFile.getUri(), ref.getUri(),
+                    warped.getUri()});
         warp2D(warped, ref, originalFile, path, this.indexedVars, toLHS);
         warp1D(warped, ref, originalFile, path, this.plainVars, toLHS);
         warpAnchors(warped, processedFile, path, toLHS);

@@ -37,12 +37,10 @@ import maltcms.tools.MaltcmsTools;
 import maltcms.tools.PathTools;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
-import cross.Factory;
 import cross.annotations.Configurable;
-import cross.annotations.ProvidesVariables;
-import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -101,7 +99,7 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
         final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
         IFileFragment fret;
         for (IFileFragment ff : t) {
-            fret = Factory.getInstance().getFileFragmentFactory().create(
+            fret = new FileFragment(
                     new File(getWorkflow().getOutputDirectory(this),
                     ff.getName()));
             fret.addSourceFile(ff);
@@ -176,8 +174,7 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
         }
 
         for (IFileFragment ff : ret) {
-            final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                    new File(ff.getAbsolutePath()), this, getWorkflowSlot(), ff);
+            final DefaultWorkflowResult dwr = new DefaultWorkflowResult(ff.getUri(), this, getWorkflowSlot(), ff);
             getWorkflow().append(dwr);
             ff.save();
         }

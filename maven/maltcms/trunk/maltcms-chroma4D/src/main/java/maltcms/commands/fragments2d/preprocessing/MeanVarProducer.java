@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Vector;
 
 import maltcms.datastructures.caches.IScanLine;
-import maltcms.datastructures.caches.ScanLineCache;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.tools.ArrayTools2;
 
@@ -43,12 +42,11 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.IndexIterator;
-import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
-import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -121,7 +119,7 @@ public class MeanVarProducer extends AFragmentCommand {
         final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
         for (final IFileFragment ff : t) {
             log.info("Computing mean and std for {}", StringTools.removeFileExt(ff.getName()));
-            final IFileFragment fret = Factory.getInstance().getFileFragmentFactory().create(
+            final IFileFragment fret = new FileFragment(
                     new File(getWorkflow().getOutputDirectory(this),
                     ff.getName()));
             fret.addSourceFile(ff);
@@ -177,7 +175,7 @@ public class MeanVarProducer extends AFragmentCommand {
             slc.setCacheModulations(true);
 
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                    new File(fret.getAbsolutePath()), this, getWorkflowSlot(),
+                    fret.getUri(), this, getWorkflowSlot(),
                     ff);
             getWorkflow().append(dwr);
 

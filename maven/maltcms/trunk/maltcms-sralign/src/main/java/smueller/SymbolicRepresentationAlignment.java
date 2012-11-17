@@ -52,7 +52,6 @@ import maltcms.tools.ImageTools;
 import maltcms.tools.MaltcmsTools;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import smueller.alignment.OneAffineAlignment;
 import smueller.datastructure.AlignmentOutput;
@@ -73,6 +72,7 @@ import cross.Factory;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.StatsMap;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.pipeline.ICommandSequence;
 import cross.datastructures.tuple.Tuple2D;
@@ -257,8 +257,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
                     + StringTools.removeFileExt(F.getFirst().getName()) + "_"
                     + StringTools.removeFileExt(F.getSecond().getName())
                     + ".csv";
-            final IFileFragment iff = Factory.getInstance()
-                    .getFileFragmentFactory().create(
+            final IFileFragment iff = new FileFragment(
                     new File(getWorkflow().getOutputDirectory(this),
                     filename));
             final StatsMap sm = new StatsMap(iff);
@@ -339,10 +338,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
         pd.setName(name);
         pd.setPairwiseDistances(pairwiseDistances);
         pd.setNames(names);
-        final IFileFragment ret = Factory
-                .getInstance()
-                .getFileFragmentFactory()
-                .create(new File(getWorkflow().getOutputDirectory(this), name));
+        final IFileFragment ret = new FileFragment(new File(getWorkflow().getOutputDirectory(this), name));
         pd.modify(ret);
         ret.save();
         saveToCSV(ret, pairwiseDistances, names);
@@ -564,7 +560,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
                 filenameToIndex.put(ff, nextIndex);
             }
 
-            names.setString(nextIndex, ff.getAbsolutePath());
+            names.setString(nextIndex, ff.getUri().toASCIIString());
             nextIndex++;
         }
         return names;

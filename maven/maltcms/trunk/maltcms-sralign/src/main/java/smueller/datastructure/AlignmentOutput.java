@@ -294,8 +294,8 @@ public class AlignmentOutput {
                 .removeFileExt(ali.getRef().getName());
         final String queryname = StringTools.removeFileExt(ali.getQuery()
                 .getName());
-        final String refloc = ali.getRef().getAbsolutePath();
-        final String queryloc = ali.getQuery().getAbsolutePath();
+        final String refloc = ali.getRef().getUri().toASCIIString();
+        final String queryloc = ali.getQuery().getUri().toASCIIString();
 
         if (format.equals("txt")) {
             try {

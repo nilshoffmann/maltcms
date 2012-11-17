@@ -29,7 +29,6 @@ package maltcms.commands.fragments.cluster.pairwiseDistanceCalculator;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import maltcms.commands.distances.dtw.TICDynamicTimeWarp;
 import maltcms.commands.distances.dtw.MZIDynamicTimeWarp;
 import lombok.Data;
 import maltcms.commands.distances.DtwRecurrence;

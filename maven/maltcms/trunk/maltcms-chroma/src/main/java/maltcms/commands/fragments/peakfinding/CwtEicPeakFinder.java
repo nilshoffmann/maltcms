@@ -34,7 +34,7 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
-import java.io.File;
+import java.net.URI;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +65,7 @@ public class CwtEicPeakFinder extends AFragmentCommand {
 
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
+        log.info("Warning: this class is still experimental and not meant for productive use!");
         int cnt = 0;
         for (IFileFragment f : t) {
             IVariableFragment biv = f.getChild(binnedIntensityValues);
@@ -73,11 +74,11 @@ public class CwtEicPeakFinder extends AFragmentCommand {
             biv.setIndex(scanIndex);
             List<Array> eics = ArrayTools.tilt(biv.getIndexedArray());
             Array mzs = bmv.getIndexedArray().get(0);
-            ICompletionService<File> ics = createCompletionService(File.class);
+            ICompletionService<URI> ics = createCompletionService(URI.class);
             for (int i = 0; i < eics.size(); i++) {
                 Array eic = eics.get(i);
                 CwtEicPeakFinderCallable cwt = new CwtEicPeakFinderCallable();
-                cwt.setInput(new File(f.getAbsolutePath()));
+                cwt.setInput(f.getUri());
                 cwt.setEic((double[]) eic.get1DJavaArray(double.class));
                 cwt.setMz(mzs.getDouble(i));
                 cwt.setMinScale(5);
