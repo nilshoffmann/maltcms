@@ -118,6 +118,7 @@ public class CacheDelegateTest {
     private ICacheDelegate<Integer, double[]> createCache(String name) {
         System.out.println("Setting up cache!");
         int arraySize = 1000;
+        CacheFactory.setDefaultFragmentCacheType(CacheType.EHCACHE);
         ICacheDelegate<Integer, double[]> delegate = CacheFactory.createDefaultCache(
                 name);
         CacheFactory.getCacheFor(name).setSampledStatisticsEnabled(true);
@@ -142,6 +143,7 @@ public class CacheDelegateTest {
     public void cachedVariableFragment() {
         logging.getConfig().put("log4j.category.net.sf.ehcache", "DEBUG");
         logging.update();
+        CacheFactory.setDefaultFragmentCacheType(CacheType.EHCACHE);
         FileFragment ff = new FileFragment(tf.newFolder("cachedVariableFragmentTest"),"testfrag.cdf");
         Ehcache cache = CacheManager.getInstance().getEhcache(ff.getCache().getName());
         CacheConfiguration config = cache.getCacheConfiguration();

@@ -42,7 +42,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
-import java.util.logging.Level;
 import lombok.extern.slf4j.Slf4j;
 import ucar.ma2.*;
 import ucar.nc2.Dimension;
@@ -287,18 +286,32 @@ public class FragmentTools {
      * @param ff
      * @return
      */
-    public static Collection<IFileFragment> getSourceFiles(
+    public static Map<URI, IFileFragment> getSourceFiles(
             final IFileFragment ff) {
         final String sourceFilesVar = Factory.getInstance().getConfiguration().getString("var.source_files", "source_files");
         log.debug("Trying to load {} for {}", sourceFilesVar,
                 ff.getUri());
-        final Collection<String> c = FragmentTools.getStringArray(ff,
-                sourceFilesVar);
-        if (c.isEmpty()) {
-            log.warn("Could not find any source_files in " + ff);
-            return Collections.emptyList();
+        IVariableFragment tf = ff.hasChild(sourceFilesVar) ? ff.getChild(sourceFilesVar) : new VariableFragment(ff, sourceFilesVar);
+        Array a = null;
+        try {
+            a = Factory.getInstance().getDataSourceFactory().getDataSourceFor(ff).readSingle(tf);
+        } catch (ResourceNotAvailableException rnae) {
+            //this is fine, it simply means, there is no source file variable available
+        } catch (IOException ioex) {
+            //throw new RuntimeException(ioex);
         }
-        final ArrayList<IFileFragment> al = new ArrayList<IFileFragment>(
+        Collection<String> c = null;
+        if (a != null) {
+            c = ArrayTools.getStringsFromArray(a);
+            if (c == null || c.isEmpty()) {
+                log.warn("Could not find any source_files in " + ff);
+                return Collections.emptyMap();
+            }
+        } else {
+            log.warn("Could not retrieve source_files from " + ff);
+            return Collections.emptyMap();
+        }
+        final Map<URI, IFileFragment> al = new LinkedHashMap<URI, IFileFragment>(
                 c.size());
         log.info("Found the following source files:");
         URI baseUri = ff.getUri();
@@ -306,48 +319,67 @@ public class FragmentTools {
         for (final String s : c) {
             log.info("Resource: {}", s);
             URI uri = URI.create(s);
-//            if (uri.getScheme() == null) {
-//                log.info("Uri seems has no scheme set: {}", uri.toASCIIString());
-//                //expect this to be a file (old format)
-//                File f = new File(s);
-//                uri = f.toURI();
-//            }
             IFileFragment fragment = null;
-//            if (uri.isAbsolute()) {
-//                log.info("Adding FileFragment for absolute uri from array: {}", uri);
-//                fragment = new FileFragment(uri);
-//                al.add(fragment);
-//            } else {
-            fragment = new FileFragment(FileTools.resolveRelativeUri(baseUri, uri));
+            URI resolved = FileTools.resolveRelativeUri(baseUri, uri);
+//            fragment = FileFragment.getFragment(uri);                
+//            if (fragment == null) {
+                fragment = new FileFragment(resolved);
+//            }
             log.info("Adding FileFragment for resolved relative uri from array: {}; resolved: {}", uri, fragment.getUri());
-            al.add(fragment);
-//            }
+            al.put(fragment.getUri(), fragment);
             uris.append(fragment.getUri()).append("; ");
-//            if (uri.getScheme() != null && !uri.getScheme().equals("file")) {
-//                IFileFragment tmpf = new FileFragment(uri);
-//                al.add(tmpf);
-//                log.info("Adding remote file fragment {}", tmpf.getAbsolutePath());
-//            } else {
-//                if (new File(s).isAbsolute()) {
-//                    al.add(Factory.getInstance().getFileFragmentFactory().create(s));
-//                    log.info("{}", al.get(al.size() - 1).getAbsolutePath());
-//                } else {
-//                    try {
-//                        String absoluteFile = FileTools.resolveRelativeFile(
-//                                new File(ff.getAbsolutePath()).getParentFile(),
-//                                new File(s));
-//                        al.add(Factory.getInstance().getFileFragmentFactory().create(absoluteFile));
-//                    } catch (IOException ex) {
-//                        java.util.logging.Logger.getLogger(
-//                                FragmentTools.class.getName()).log(Level.SEVERE,
-//                                null, ex);
-//                    }
-//                }
-//            }
 
         }
         log.info("Restored source files from array: {}", uris.toString());
         return al;
+    }
+
+    public static boolean isRootFile(IFileFragment parentFile) {
+        try {
+            Map<URI, IFileFragment> sourceFiles = FragmentTools.getSourceFiles(parentFile);
+            if (sourceFiles.isEmpty()) {
+                log.info("File {} is a root file!", parentFile.getUri());
+                return true;
+            }
+            log.info("File {} is NOT root file!", parentFile.getUri());
+            return false;
+        } catch (ResourceNotAvailableException rnae) {
+            log.info("File {} is a root file!", parentFile.getUri());
+            return true;
+        }
+    }
+
+    public static URI resolve(IFileFragment targetFile, IFileFragment baseFile) {
+        if (isRootFile(targetFile)) {
+            log.debug("targetFile {} is a root file!", targetFile.getUri());
+            return targetFile.getUri();
+        }
+        URI relativePath = FileTools.getRelativeUri(baseFile.getUri(), targetFile.getUri());
+        log.debug("Relative path from {} to {} = {}", new Object[]{baseFile.getUri(), targetFile.getUri(), relativePath});
+        EvalTools.eq(targetFile.getUri().toASCIIString(), baseFile.getUri().resolve(relativePath).toASCIIString());
+        return relativePath;
+    }
+
+    public static ArrayChar.D2 createSourceFilesArray(final IFileFragment root, Collection<IFileFragment> files) {
+        int ml = 128;
+        List<String> names = new ArrayList<String>();
+        for (final IFileFragment file : files) {
+            String resolvedPath = resolve(file, root).toASCIIString();
+            log.info("Adding resolved (relative) source file: {}", resolvedPath);
+            names.add(resolvedPath);
+            if (resolvedPath.length() > ml) {
+                ml *= 2;
+            }
+        }
+        final ArrayChar.D2 a = cross.datastructures.tools.ArrayTools.createStringArray(files.size(), ml);
+        int i = 0;
+        for (final String s : names) {
+            log.debug("Setting source file {} on {}", s,
+                    root);
+            a.setString(i++, s);
+
+        }
+        return a;
     }
 
     /**
@@ -602,14 +634,14 @@ public class FragmentTools {
     }
 
     /**
-     * Retrieve all accessible {
+     * Retrieve all accessible
      *
-     * @see IVariableFragment} instances starting from the given {
-     * @see IFileFragment} and traversing the ancestor tree in breadth-first
+     * @see IVariableFragment instances starting from the given
+     * @see IFileFragment and traversing the ancestor tree in breadth-first
      * order, adding all immediate
      *
-     * @{link IVariableFragment} instances to the list first, before exploring
-     * the next ancestor (source_files).
+     * @see IVariableFragment instances to the list first, before exploring the
+     * next ancestor as given by <em>source_files</em>.
      *
      * @param fragment
      * @return
@@ -708,23 +740,6 @@ public class FragmentTools {
                         log.debug("Adding absolute path: {}", path);
                         frag = new FileFragment(path);
                     }
-//                    File file = new File(s);
-//                    IFileFragment frag = null;
-//                    if (file.isAbsolute()) {
-//                        frag = new FileFragment(file);
-//                        parentsToExplore.add(frag);
-//                    } else {
-//                        try {
-//                            file = new File(
-//                                    cross.datastructures.tools.FileTools.resolveRelativeFile(new File(
-//                                    fragment.getAbsolutePath()).getParentFile(), new File(
-//                                    s)));
-//                            frag = new FileFragment(file.getCanonicalFile());
-//                            parentsToExplore.add(frag);
-//                        } catch (IOException ex) {
-//                            log.error("{}", ex);
-//                        }
-//                    }
                     if (frag != null) {
                         Integer key = Integer.valueOf(depth);
                         if (depth > maxDepth) {

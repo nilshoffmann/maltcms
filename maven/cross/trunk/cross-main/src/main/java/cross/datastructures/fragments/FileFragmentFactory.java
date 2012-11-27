@@ -39,14 +39,14 @@ import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * 
- * Deprecated. Please use @see FileFragment directly.
- * 
- * @deprecated
+ *
+ * Provides a number of convenience methods to create new {@link IFileFragment}
+ * instances. However, you can also create {@link FileFragment} and 
+ * {@link ImmutableFileFragment} instances directly.
+ *
  * @author Nils Hoffmann
  *
  */
-@Deprecated
 @ServiceProvider(service = IFileFragmentFactory.class)
 public class FileFragmentFactory implements IFileFragmentFactory {
 
@@ -70,9 +70,9 @@ public class FileFragmentFactory implements IFileFragmentFactory {
      */
     @Override
     public IFileFragment create(final File f) {
-        if (FileFragment.hasFragment(f.getAbsolutePath())) {
-            return FileFragment.getFragment(f.getAbsolutePath());
-        }
+//        if (FileFragment.hasFragment(f.getAbsolutePath())) {
+//            return FileFragment.getFragment(f.getAbsolutePath());
+//        }
         return new FileFragment(f);
     }
 
@@ -149,13 +149,9 @@ public class FileFragmentFactory implements IFileFragmentFactory {
             ff = new FileFragment(new File(dirname), null);
             ff.addSourceFile(resourceFiles);
         } else {
-            f = new File(dirname, filename);// ,resourceFiles);
-            if (FileFragment.hasFragment(f.getAbsolutePath())) {
-                ff = FileFragment.getFragment(f.getAbsolutePath());
-            } else {
-                ff = new FileFragment(f);
-                ff.addSourceFile(resourceFiles);
-            }
+            f = new File(dirname, filename);
+            ff = new FileFragment(f);
+            ff.addSourceFile(resourceFiles);
         }
         return ff;
     }

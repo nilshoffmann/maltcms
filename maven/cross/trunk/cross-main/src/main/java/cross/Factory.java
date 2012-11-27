@@ -106,7 +106,7 @@ public class Factory implements ConfigurationListener {
         Factory.getInstance().es.awaitTermination(time, u);
         // NetcdfFileCache.clearCache(true);
         // NetcdfFileCache.exit();
-        FileFragment.clearFragments();
+//        FileFragment.clearFragments();
         // Factory.getInstance().resetDate();
     }
 
@@ -389,7 +389,7 @@ public class Factory implements ConfigurationListener {
         final List<Runnable> l = new ArrayList<Runnable>();
         // NetcdfFileCache.clearCache(true);
         // NetcdfFileCache.exit();
-        FileFragment.clearFragments();
+//        FileFragment.clearFragments();
         // resetDate();
         l.addAll(this.es.shutdownNow());
         l.addAll(this.auxPool.shutdownNow());

@@ -1,4 +1,4 @@
-/* 
+/*
  * Cross, common runtime object support system. 
  * Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
  *
@@ -25,25 +25,52 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.datastructures.cache;
+package cross.tools;
 
-import java.util.Set;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public interface ICacheDelegate<K, V> {
-
-    void put(K key, V value);
-
-    V get(K key);
-
-    String getName();
+public class StringToolsTest {
     
-    Set<K> keys();
+    public StringToolsTest() {
+    }
 
-    void close();
-    
-    CacheType getCacheType();
+    /**
+     * Test of deBlank method, of class StringTools.
+     */
+    @Test
+    public void testDeBlank_String() {
+    }
+
+    /**
+     * Test of deBlank method, of class StringTools.
+     */
+    @Test
+    public void testDeBlank_String_String() {
+    }
+
+    /**
+     * Test of getFileExtension method, of class StringTools.
+     */
+    @Test
+    public void testGetFileExtension() {
+    }
+
+    /**
+     * Test of removeFileExt method, of class StringTools.
+     */
+    @Test
+    public void testRemoveFileExt() {
+    }
+
+    /**
+     * Test of toStringList method, of class StringTools.
+     */
+    @Test
+    public void testToStringList() {
+    }
 }

@@ -33,9 +33,8 @@ import java.util.Iterator;
  * Partition mimics a collection of indexed elements of given size. Iteration
  * over the partition corresponds to returning the number of each item in the
  * partition in increasing order. When the last item's number is returned, the
- * iterator can not be further iterated. Calling {
- *
- * @see #reset()} resets the item index to 0 and allows reuse of the Iterator.
+ * iterator can not be further iterated. Calling <code>reset()</code> resets the
+ * item index to 0 and allows reuse of the Iterator.
  *
  * @author Nils Hoffmann
  */

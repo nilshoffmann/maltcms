@@ -57,10 +57,9 @@ public class AFragmentCommandServiceLoader implements IConfigurable {
     }
 
     /**
-     * Returns the available implementations of
-     *
-     * @see{IFragmentCommand}. Elements are sorted according to lexical order on
-     * their classnames.
+     * Returns the available implementations of {@link IFragmentCommand}. 
+     * 
+     * Elements are sorted according to lexical order on their classnames.
      *
      * @return
      */

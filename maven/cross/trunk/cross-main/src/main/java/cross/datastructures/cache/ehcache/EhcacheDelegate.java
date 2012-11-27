@@ -29,6 +29,8 @@ package cross.datastructures.cache.ehcache;
 
 import cross.datastructures.cache.CacheType;
 import cross.datastructures.cache.ICacheDelegate;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
@@ -47,15 +49,27 @@ import net.sf.ehcache.Element;
 public class EhcacheDelegate<K, V> implements ICacheDelegate<K, V> {
 
     private final Ehcache cache;
+    private final Set<K> keys;
 
     public EhcacheDelegate(final Ehcache cache) {
         this.cache = cache;
+        this.keys = new HashSet<K>();
+    }
+
+    @Override
+    public Set<K> keys() {
+        return this.keys;
     }
 
     @Override
     public void put(final K key, final V value) {
         try {
             getCache().put(new Element(key, value));
+            if (value == null) {
+                this.keys.remove(key);
+            } else {
+                this.keys.add(key);
+            }
         } catch (IllegalStateException se) {
             log.warn("Failed to add element to cache: " + key, se);
         }

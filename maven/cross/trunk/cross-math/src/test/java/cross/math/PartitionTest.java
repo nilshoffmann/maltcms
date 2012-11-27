@@ -1,4 +1,4 @@
-/* 
+/*
  * Cross, common runtime object support system. 
  * Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
  *
@@ -25,25 +25,48 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.datastructures.cache;
+package cross.math;
 
-import java.util.Set;
+import junit.framework.Assert;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public interface ICacheDelegate<K, V> {
+public class PartitionTest {
 
-    void put(K key, V value);
+    public PartitionTest() {
+    }
 
-    V get(K key);
+    /**
+     * Test of iteration of class Partition.
+     */
+    @Test
+    public void testIteration() {
+        Partition p = new Partition(5);
+        for (int i = 0; i < p.size()-1; i++) {
+            Assert.assertTrue(p.hasNext());
+            Assert.assertEquals(i, p.next().intValue());
+        }
+    }
 
-    String getName();
-    
-    Set<K> keys();
+    /**
+     * Test of remove method, of class Partition.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testRemove() {
+        Partition p = new Partition(11);
+        p.remove();
+    }
 
-    void close();
-    
-    CacheType getCacheType();
+    /**
+     * Test of size method, of class Partition.
+     */
+    @Test
+    public void testSize() {
+        Partition p = new Partition(11);
+        Assert.assertEquals(11, p.size());
+    }
 }

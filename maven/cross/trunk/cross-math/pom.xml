@@ -14,11 +14,5 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>cross-main</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+    <dependencies></dependencies>
 </project>

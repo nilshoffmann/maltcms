@@ -84,4 +84,15 @@ public interface ICommandSequence extends Iterator<TupleND<IFileFragment>>,
     public abstract boolean isCheckCommandDependencies();
 
     public abstract void setCheckCommandDependencies(boolean checkCommandDependencies);
+    
+    /**
+     * If <code>true</code>, will throw a {@link ConstraintViolationException}
+     * if any {@link IFileFragment} has unsaved changes, as determined by calling
+     * <code>f.isModified()</code>. Otherwise, a warning is logged. 
+     * 
+     * @param b
+     */
+    public abstract void setThrowExceptionOnUnsavedModification(boolean b);
+    
+    public abstract boolean isThrowExceptionOnUnsavedModification();
 }

@@ -28,43 +28,75 @@
 package cross.datastructures.fragments;
 
 import cross.Factory;
+import cross.datastructures.cache.CacheFactory;
+import cross.datastructures.cache.CacheType;
 import cross.datastructures.tools.FileTools;
+import cross.datastructures.tools.FragmentTools;
+import cross.exception.ConstraintViolationException;
+import cross.exception.ResourceNotAvailableException;
 import cross.io.MockDatasource;
 import cross.test.SetupLogging;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import junit.framework.Assert;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.MethodRule;
+import org.junit.rules.TestWatchman;
+import org.junit.runners.model.FrameworkMethod;
+import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 
 /**
  *
  * @author Nils Hoffmann
  */
+@Slf4j
 public class FileFragmentTest {
 
+    @Rule
+    public MethodRule watchman = new TestWatchman() {
+        @Override
+        public void starting(FrameworkMethod method) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 80; i++) {
+                sb.append("#");
+            }
+            sb.append("\n").append("# ").append(method.getName()).append("\n");
+            for (int i = 0; i < 80; i++) {
+                sb.append("#");
+            }
+            System.out.println(sb.toString());
+        }
+    };
     @Rule
     public SetupLogging logging = new SetupLogging();
 
     /**
      *
      */
-    public FileFragmentTest() {
+    @Before
+    public void setUp() {
         Factory.getInstance().getDataSourceFactory().setDataSources(Arrays.asList(MockDatasource.class.getCanonicalName()));
+        CacheFactory.setDefaultFragmentCacheType(CacheType.NONE);
     }
+    
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:
     //
+
     @Test
     public void testUriEquality() {
-    
+
         URI uri1 = URI.create("file://tmp/897123/command1/fileA.cdf");
         URI uri2 = URI.create("file://tmp/897123/command2/fileB.cdf");
         URI uri3 = URI.create("file://tmp/897123/command2/fileB.cdf");
-        
+
         Assert.assertFalse(uri1.equals(uri2));
         Assert.assertEquals(uri2, uri3);
     }
@@ -144,14 +176,142 @@ public class FileFragmentTest {
         IFileFragment[] sourceFiles = new IFileFragment[]{remote1, local3};
         local4.addSourceFile(sourceFiles);
 
-        ArrayChar.D2 a = (ArrayChar.D2) local4.getChild("source_files").getArray();
+        ArrayChar.D2 a = (ArrayChar.D2) FragmentTools.createSourceFilesArray(local4, local4.getSourceFiles());
         System.out.println("Raw Source files from array:");
+        System.out.println(a);
         Assert.assertEquals(sourceFiles[0].getUri(), URI.create(a.getString(0)));
-        Assert.assertEquals(URI.create("../../testSourceFilesRelativization/subdir/local3.cdf"), URI.create(a.getString(1)));
+//        Assert.assertEquals(URI.create("../../testSourceFilesRelativization/subdir/local3.cdf"), URI.create(a.getString(1)));
         Assert.assertEquals(local3.getUri(), FileTools.resolveRelativeUri(local4.getUri(), URI.create(a.getString(1))));
         ArrayList<IFileFragment> resolvedSourceFiles = new ArrayList<IFileFragment>(local4.getSourceFiles());
         for (int i = 0; i < sourceFiles.length; i++) {
             Assert.assertEquals(resolvedSourceFiles.get(i).getUri(), sourceFiles[i].getUri());
         }
+    }
+
+    @Test
+    public void testSourceFilesEquality() {
+//        FileFragment.clearFragments();
+        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "DEBUG");
+        FileFragment remote1 = new FileFragment(URI.create("http://bibiserv.techfak.uni-bielefeld.de/chroma/data/glucoseA.cdf"));
+        File outBaseDir = new File(System.getProperty("java.io.tmpdir"), "testSourceFilesRelativization");
+        File pathLocal1 = new File(outBaseDir, "local1.cdf");
+        FileFragment local1 = new FileFragment(pathLocal1);
+        File pathLocal2 = new File(outBaseDir, "local2.cdf");
+        FileFragment local2 = new FileFragment(pathLocal2);
+        File pathLocal3 = new File(new File(outBaseDir, "subdir"), "local3.cdf");
+        FileFragment local3 = new FileFragment(pathLocal3);
+        local3.addSourceFile(local1, local2);
+        File pathLocal4 = new File(new File(outBaseDir.getParentFile(), "testUpDir/subdir"), "local2.cdf");
+        FileFragment local4 = new FileFragment(pathLocal4);
+        IFileFragment[] sourceFiles = new IFileFragment[]{remote1, local3};
+        local4.addSourceFile(sourceFiles);
+
+        Collection<IFileFragment> c = local4.getSourceFiles();
+        local4.save();
+        Collection<IFileFragment> cs = local4.getSourceFiles();
+        //assert that we have the same number of source files
+        Assert.assertEquals(c.size(), cs.size());
+        //assert that we have the same source files
+        Assert.assertEquals(c, cs);
+    }
+
+    @Test
+    public void testBreadthFirstSearch() {
+        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "DEBUG");
+        File outBaseDir = new File(System.getProperty("java.io.tmpdir"), "testSourceFilesBFS");
+
+        //create two Filefragments at the same level with equally named variables
+        File pathLocal1 = new File(outBaseDir, "local1.cdf");
+        FileFragment local1 = new FileFragment(pathLocal1);
+        local1.addChild("testVar1").setArray(Array.factory(new double[]{876, 986123.8, 21986.856, 79006.8613, 897123.123}));
+
+        File pathLocal2 = new File(outBaseDir, "local2.cdf");
+        FileFragment local2 = new FileFragment(pathLocal2);
+        local2.addChild("testVar1").setArray(Array.factory(new double[]{7889, 986123.8, 21986.856, 79006.8613, 897123.123}));
+
+        File pathLocal3 = new File(new File(outBaseDir, "subdir"), "local3.cdf");
+        FileFragment local3 = new FileFragment(pathLocal3);
+        local3.addSourceFile(local1, local2);
+        log.info("Source files: {}", local3.getSourceFiles());
+
+        try {
+            local3.getChild("testVar1");
+        } catch (ConstraintViolationException ise) {
+            Assert.assertTrue("IllegalStateException", true);
+        } catch (ResourceNotAvailableException rnae) {
+            Assert.fail(rnae.getLocalizedMessage());
+        }
+
+    }
+
+    @Test
+    public void testBreadthFirstDifferentDepthSearch() {
+//        FileFragment.clearFragments();
+        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "DEBUG");
+        File outBaseDir = new File(System.getProperty("java.io.tmpdir"), "testSourceFilesBFS");
+
+        File pathLocal0 = new File(outBaseDir, "local0.cdf");
+        FileFragment local0 = new FileFragment(pathLocal0);
+        local0.addChild("testVar1").setArray(Array.factory(new double[]{876, 986123.8, 21986.856, 79006.8613, 897123.123}));
+
+        //create two Filefragments at the same level with equally named variables
+        File pathLocal1 = new File(outBaseDir, "local1.cdf");
+        FileFragment local1 = new FileFragment(pathLocal1);
+        local1.addSourceFile(local0);
+
+        File pathLocal2 = new File(outBaseDir, "local2.cdf");
+        FileFragment local2 = new FileFragment(pathLocal2);
+        local2.addChild("testVar1").setArray(Array.factory(new double[]{7889, 986123.8, 21986.856, 79006.8613, 897123.123}));
+
+        File pathLocal3 = new File(new File(outBaseDir, "subdir"), "local3.cdf");
+        FileFragment local3 = new FileFragment(pathLocal3);
+        local3.addSourceFile(local1, local2);
+        log.info("Source files: {}", local3.getSourceFiles());
+
+        try {
+            IVariableFragment ivf = local3.getChild("testVar1");
+            log.info("Parent of variable: {}",ivf.getParent());
+            Assert.assertEquals(local2, ivf.getParent());
+        } catch (ResourceNotAvailableException rnae) {
+            Assert.fail(rnae.getLocalizedMessage());
+        }
+
+    }
+
+    @Test(expected = ConstraintViolationException.class)
+    public void testBreadthFirstSameDepthSearch() {
+//        FileFragment.clearFragments();
+        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "DEBUG");
+        File outBaseDir = new File(System.getProperty("java.io.tmpdir"), "testSourceFilesBFS");
+
+        File pathLocal0 = new File(outBaseDir, "local0.cdf");
+        FileFragment local0 = new FileFragment(pathLocal0);
+        local0.addChild("testVar1").setArray(Array.factory(new double[]{876, 986123.8, 21986.856, 79006.8613, 897123.123}));
+
+        //create two Filefragments at the same level with equally named variables
+        File pathLocal1 = new File(outBaseDir, "local1.cdf");
+        FileFragment local1 = new FileFragment(pathLocal1);
+        local1.addSourceFile(local0);
+
+        File pathLocal2 = new File(outBaseDir, "local2.cdf");
+        FileFragment local2 = new FileFragment(pathLocal2);
+        local2.addSourceFile(local1);
+        local2.addChild("testVar1").setArray(Array.factory(new double[]{7889, 986123.8, 21986.856, 79006.8613, 897123.123}));
+
+        File pathLocal3 = new File(new File(outBaseDir, "subdir"), "local3.cdf");
+        FileFragment local3 = new FileFragment(pathLocal3);
+        local3.addSourceFile(local2);
+
+        File pathLocal4 = new File(new File(outBaseDir, "subdir"), "local4.cdf");
+        FileFragment local4 = new FileFragment(pathLocal4);
+        local4.addSourceFile(local1, local3);
+        log.info("Source files: {}", local4.getSourceFiles());
+
+        try {
+            IVariableFragment ivf = local4.getChild("testVar1");
+        } catch (ResourceNotAvailableException rnae) {
+            Assert.fail(rnae.getLocalizedMessage());
+        }
+
     }
 }

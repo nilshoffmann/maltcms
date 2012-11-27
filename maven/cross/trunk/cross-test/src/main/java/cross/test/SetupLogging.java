@@ -28,23 +28,16 @@
 package cross.test;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.NodeChangeListener;
-import java.util.prefs.PreferenceChangeListener;
-import java.util.prefs.Preferences;
 import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.lf5.LogLevel;
 import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
 
 /**
  *
- * @author nils
+ * @author Nils Hoffmann
  */
 public class SetupLogging extends TestWatcher {
 

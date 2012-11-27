@@ -1,4 +1,4 @@
-/* 
+/*
  * Cross, common runtime object support system. 
  * Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
  *
@@ -25,25 +25,27 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.datastructures.cache;
+package cross.math;
 
-import java.util.Set;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import org.junit.Assert;
+//import junit.framework.Assert;
+import org.junit.Test;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public interface ICacheDelegate<K, V> {
+public class CombinatoricsTest {
 
-    void put(K key, V value);
-
-    V get(K key);
-
-    String getName();
-    
-    Set<K> keys();
-
-    void close();
-    
-    CacheType getCacheType();
+    /**
+     * Test of faculty method, of class Combinatorics.
+     */
+    @Test
+    public void testFaculty() {
+        double f = 1 * 2 * 3 * 4 * 5 * 6 * 7;
+        Assert.assertEquals(Combinatorics.faculty(7), f, 0.0f);
+    }
 }

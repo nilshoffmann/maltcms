@@ -27,14 +27,19 @@
  */
 package cross.io;
 
+import cross.datastructures.cache.CacheFactory;
+import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.tools.ArrayTools;
 import cross.exception.ResourceNotAvailableException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import ucar.ma2.Array;
@@ -45,34 +50,64 @@ import ucar.ma2.Array;
  */
 public class MockDatasource implements IDataSource {
 
+    Map<IFileFragment,ICacheDelegate<IVariableFragment,List<Array>>> persistentCache = new HashMap<IFileFragment,ICacheDelegate<IVariableFragment,List<Array>>>();
+    
     @Override
     public int canRead(IFileFragment ff) {
         return 1;
     }
 
+    private ICacheDelegate<IVariableFragment,List<Array>> getCache(IFileFragment f) {
+        if(persistentCache.containsKey(f)) {
+            return persistentCache.get(f);
+        }
+        ICacheDelegate<IVariableFragment,List<Array>> delegate = CacheFactory.createFragmentCache(UUID.randomUUID().toString());
+        persistentCache.put(f, delegate);
+        return delegate;
+    }
+    
     @Override
     public ArrayList<Array> readAll(IFileFragment f) throws IOException, ResourceNotAvailableException {
-        return new ArrayList<Array>(0);
+//        ArrayList<Array> al = new ArrayList<Array>();
+//        for(IVariableFragment frag:f) {
+//            al.add(ArrayTools.glue(getCache(f).get(frag)));
+//        }
+//        return al;
+        throw new ResourceNotAvailableException("Variable "+f.getName()+" does not exist on file!");
     }
 
     @Override
     public ArrayList<Array> readIndexed(IVariableFragment f) throws IOException, ResourceNotAvailableException {
-        throw new ResourceNotAvailableException("No such indexed variable: "+f.getName());
+//        List<Array> l = getCache(f.getParent()).get(f);
+//        if(l== null || l.isEmpty()) {
+//            throw new ResourceNotAvailableException("Could not read indexed arrays for "+f);
+//        }
+//        return new ArrayList<Array>(l);
+        throw new ResourceNotAvailableException("Variable "+f.getName()+" does not exist on file!");
     }
 
     @Override
     public Array readSingle(IVariableFragment f) throws IOException, ResourceNotAvailableException {
-        throw new ResourceNotAvailableException("No such variable: "+f.getName());
+//        List<Array> l = getCache(f.getParent()).get(f);
+//        if(l== null || l.isEmpty()) {
+//            throw new ResourceNotAvailableException("Could not read indexed arrays for "+f);
+//        }
+//        if(l.size()==1) {
+//            return l.get(0);
+//        }else{
+//            return ArrayTools.glue(l);
+//        }
+        throw new ResourceNotAvailableException("Variable "+f.getName()+" does not exist on file!");
     }
 
     @Override
     public ArrayList<IVariableFragment> readStructure(IFileFragment f) throws IOException {
-        return new ArrayList<IVariableFragment>(0);
+        return new ArrayList<IVariableFragment>(f.getImmediateChildren());
     }
 
     @Override
     public IVariableFragment readStructure(IVariableFragment f) throws IOException, ResourceNotAvailableException {
-        return f;
+        throw new ResourceNotAvailableException("Variable "+f.getName()+" does not exist on file!");
     }
 
     @Override
@@ -82,6 +117,13 @@ public class MockDatasource implements IDataSource {
 
     @Override
     public boolean write(IFileFragment f) {
+        for(IVariableFragment v:f.getImmediateChildren()) {
+            if(v.getIndex()!=null) {
+                getCache(f).put(v, v.getIndexedArray());
+            }else{
+                getCache(f).put(v, new ArrayList<Array>(Arrays.asList(v.getArray())));
+            }
+        }
         return true;
     }
 

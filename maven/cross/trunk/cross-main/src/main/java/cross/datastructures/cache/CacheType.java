@@ -32,5 +32,5 @@ package cross.datastructures.cache;
  * @author Nils Hoffmann
  */
 public enum CacheType {
-    DB4O,EHCACHE,SOFT;
+    DB4O,EHCACHE,SOFT,NONE;
 }

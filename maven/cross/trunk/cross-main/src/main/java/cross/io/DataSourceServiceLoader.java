@@ -39,10 +39,9 @@ import java.util.*;
 public class DataSourceServiceLoader {
 
     /**
-     * Returns the available implementations of
-     *
-     * @see{IDataSource}. Elements are sorted according to lexical order on
-     * their classnames.
+     * Returns the available implementations of {@code IDataSource}. 
+     * 
+     * Elements are sorted according to lexical order on their classnames.
      *
      * @return
      */

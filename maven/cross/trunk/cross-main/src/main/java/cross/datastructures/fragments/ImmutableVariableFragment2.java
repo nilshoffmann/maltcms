@@ -29,10 +29,6 @@ package cross.datastructures.fragments;
 
 import cross.Factory;
 import cross.datastructures.StatsMap;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IFragment;
-import cross.datastructures.fragments.IGroupFragment;
-import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tools.EvalTools;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.misc.ArrayChunkIterator;
@@ -62,6 +58,8 @@ import ucar.nc2.Dimension;
 @Slf4j
 public class ImmutableVariableFragment2 implements IVariableFragment {
 
+    public static boolean useCachedIndexedAccess = false;
+    
     private final Fragment fragment = new Fragment();
     private final String varname;
     private Dimension[] dims;
@@ -71,8 +69,7 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
     private IVariableFragment index = null;
     private IFileFragment parent = null;
     private boolean isModified = false;
-    private boolean useCachedList = false;
-//    private ICacheDelegate<IVariableFragment, List<Array>> volatileCache;
+    private boolean useCachedList = useCachedIndexedAccess;
 
     private ImmutableVariableFragment2(final IFileFragment ff,
             final IGroupFragment group, final String varname1,
@@ -121,34 +118,7 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
             final String varname2) {
         this(parent2, varname2, null, null, null);
     }
-
-//    private ICacheDelegate<IVariableFragment, List<Array>> getCache() {
-//        if (this.volatileCache == null) {
-//            this.volatileCache = CacheFactory.createVolatileAutoRetrievalCache("immutable-variable-fragment-cache", new ICacheElementProvider<IVariableFragment, List<Array>>() {
-//                @Override
-//                public List<Array> provide(IVariableFragment key) {
-//                    if (key.getIndex() == null) {
-//                        final Array a;
-//                        try {
-//                            a = Factory.getInstance().getDataSourceFactory().getDataSourceFor(getParent()).readSingle(key);
-//                            return Arrays.asList(a);
-//                        } catch (IOException ex) {
-//                            log.error("Caught IOException while trying to read array data for " + key.getName(), ex);
-//                        }
-//                        return Collections.emptyList();
-//                    } else {
-////                        try {
-//                            return CachedList.getList(key,0,2048);
-////                        } catch (IOException ex) {
-////                            log.error("Caught IOException while trying to read array data for " + key.getName(), ex);
-////                        }
-//                    }
-////                    return Collections.emptyList();
-//                }
-//            }, 240, 0);
-//        }
-//        return this.volatileCache;
-//    }
+    
     /**
      * Creates a VariableFragment compatible in type, name and dimensions to vf.
      * Does not copy Range or array data!

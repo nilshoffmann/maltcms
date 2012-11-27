@@ -31,9 +31,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import cross.datastructures.collections.CachedLazyList;
-import cross.datastructures.collections.IElementProvider;
-import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -69,53 +66,6 @@ public class Combinatorics {
             }
         }
         return s;
-    }
-
-    /**
-     * Returns a lazily instantiated list (allows for an almost arbitrary number
-     * of combinations< {@code Integer.maxValue()}) of all unique object
-     * combinations, s.t. for (a,b)=(b,a) only (a,b) is returned. The list is
-     * backed by a {@see CombinationProvider} wrapping a {@see
-     * CombinationIterator} to feed a {@see CachedLazyList}.
-     *
-
-     *
-     * @param data
-     * @return
-     */
-    public static List<Object[]> getKPartiteChoices(List<Object[]> data) {
-        //element counter
-//        int nelements = 0;
-        int[] partitionSize = new int[data.size()];
-        Partition[] parts = new Partition[data.size()];
-        // store partition size
-        // and partition
-        // allowed combinations are enumerated by
-        // treating each individual partition p as a 
-        // base |p| number register. 
-        // While enumerating, the current value of the right-most
-        // partition/register is increased until its maximum is reached.
-        // It then carries over to the next neighbor, who is also increased.
-        // The counting continues until the maximum number of possible choices
-        // is reached, which is \PI_{i=0}^{k}|p_{i}| (the product of all parition
-        // sizes)
-        for (int i = 0; i < data.size(); i++) {
-            partitionSize[i] = data.get(i).length;
-//            nelements += partitionSize[i];
-            if (i > 0) {
-                parts[i] = new Partition(parts[i - 1], partitionSize[i]);
-            } else {
-                parts[i] = new Partition(partitionSize[i]);
-            }
-            log.debug("|Partition {}| = {}; contents = {}", new Object[]{i, partitionSize[i], Arrays.toString(data.get(i))});
-        }
-
-        CombinationIterator pi = new CombinationIterator(parts);
-        log.info("No. of choices: {}", pi.size());
-        // list holding returned choices
-        IElementProvider<Object[]> iep = new CombinationProvider(pi, data);
-        List<Object[]> l = CachedLazyList.getList(iep);//new ArrayList<Object[]>();
-        return l;
     }
 
     /**

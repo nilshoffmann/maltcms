@@ -31,9 +31,6 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.lang.reflect.Field;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -42,7 +39,7 @@ import ucar.ma2.DataType;
 
 /**
  *
- * Serialization proxy for @see ucar.ma2.Array instances.
+ * Serialization proxy for {@link ucar.ma2.Array} instances.
  * 
  * @author Nils Hoffmann
  */

@@ -65,14 +65,13 @@ import org.apache.commons.configuration.Configuration;
 import org.jdom.Element;
 
 /**
- * A class providing a default implementation for configure and a concrete
- * typing of the untyped superclass {@link cross.commands.ICommand}.
+ * A class providing a default implementation for configuration and a concrete
+ * typing of the untyped superclass {@link cross.commands.ICommand}. Additionally,
+ * many convenience methods are provided for easier creation of custom commands.
  *
- * Use objects extending this class as commands within a FileFragment-based
- * pipeline.
+ * Use objects extending this class as commands within a {@link cross.datastructures.pipeline.ICommandSequence}.
  *
  * @author Nils Hoffmann
- *
  */
 @Slf4j
 @Data

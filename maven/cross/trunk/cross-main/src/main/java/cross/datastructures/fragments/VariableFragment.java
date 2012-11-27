@@ -269,8 +269,8 @@ public class VariableFragment implements IVariableFragment {
 
     /**
      * @param a
-     * @return
-     * @see
+     *  @return
+     *  @see
      * cross.datastructures.fragments.Fragment#getAttribute(ucar.nc2.Attribute)
      */
     @Override
@@ -343,10 +343,11 @@ public class VariableFragment implements IVariableFragment {
      * @see cross.datastructures.fragments.IVariableFragment#getIndexedArray()
      */
     /**
-     * Returns an empty list if no index variable has been set. Otherwise, 
-     * will try to retrieve list of arrays from parent cache. If there is no 
-     * list in the parent cache, it will return an empty immutable list.
-     * @return 
+     * Returns an empty list if no index variable has been set. Otherwise, will
+     * try to retrieve list of arrays from parent cache. If there is no list in
+     * the parent cache, it will return an empty immutable list.
+     *
+     * @return
      */
     @Override
     public List<Array> getIndexedArray() {
@@ -354,7 +355,7 @@ public class VariableFragment implements IVariableFragment {
             return Collections.emptyList();
         }
         List<Array> l = parent.getCache().get(this);
-        if(l == null) {
+        if (l == null) {
             return Collections.emptyList();
         }
         return l;
@@ -471,13 +472,12 @@ public class VariableFragment implements IVariableFragment {
             this.isModified = true;
             ArrayList<Array> list = new ArrayList<Array>(1);
             list.add(a1);
-            switch(parent.getCache().getCacheType()) {
+            switch (parent.getCache().getCacheType()) {
                 case DB4O:
                     parent.getCache().put(this, new ActivatableArrayList<Array>(list));
                     break;
-                case EHCACHE:
+                default:
                     parent.getCache().put(this, list);
-                    break;
             }
             setDataType(DataType.getType(a1.getElementType()));
             if (getDimensions() == null) {
@@ -560,7 +560,7 @@ public class VariableFragment implements IVariableFragment {
                 "Set indexed array on VariableFragment {} as child of {}",
                 toString(), getParent().getUri());
 //        synchronized (this) {
-            setIndexedArrayInternal(al1);
+        setIndexedArrayInternal(al1);
 //        }
     }
 
@@ -571,13 +571,12 @@ public class VariableFragment implements IVariableFragment {
     protected void setIndexedArrayInternal(final List<Array> al1) {
         if (al1 != null && !al1.isEmpty()) {
             this.isModified = true;
-            switch(parent.getCache().getCacheType()) {
+            switch (parent.getCache().getCacheType()) {
                 case DB4O:
                     parent.getCache().put(this, new ActivatableArrayList<Array>(al1));
                     break;
-                case EHCACHE:
+                default:
                     parent.getCache().put(this, al1);
-                    break;
             }
             setDataType(DataType.getType(al1.get(0).getElementType()));
         } else {

@@ -36,10 +36,13 @@ import cross.event.IEventSource;
 import cross.vocabulary.ICvResolver;
 
 /**
- * Cover interface (c++: typedef) for IFragmentCommand.
+ * Base interface for commands that can be part of a processing pipeline.
+ * 
+ * 
  *
  * @author Nils Hoffmann
- *
+ * @see AFragmentCommand
+ * @see IWorkflowElement
  */
 public interface IFragmentCommand extends
         ICommand<TupleND<IFileFragment>, TupleND<IFileFragment>>,

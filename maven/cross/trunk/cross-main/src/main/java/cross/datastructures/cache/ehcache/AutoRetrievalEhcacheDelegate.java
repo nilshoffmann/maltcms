@@ -30,17 +30,16 @@ package cross.datastructures.cache.ehcache;
 import cross.datastructures.cache.CacheType;
 import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.cache.ICacheElementProvider;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
-import ucar.ma2.Array;
 
 /**
  * Transparent cache, which also knows how to create objects of the given type
  * via the
  *
- * @{link cross.datastructures.ehcache.ICacheElementProvider}, if their key is
+ * {@link cross.datastructures.ehcache.ICacheElementProvider}, if their key is
  * not present in the in-memory cache.
  *
  * Please note that Ehcache only allows Serializable objects to be externalized
@@ -52,16 +51,28 @@ public class AutoRetrievalEhcacheDelegate<K, V> implements ICacheDelegate<K, V> 
 
     private final ICacheElementProvider<K, V> provider;
     private final Ehcache cache;
+    private final Set<K> keys;
 
     public AutoRetrievalEhcacheDelegate(Ehcache cache,
             ICacheElementProvider<K, V> provider) {
         this.provider = provider;
         this.cache = cache;
+        this.keys = new HashSet<K>();
     }
 
     @Override
+    public Set<K> keys() {
+        return this.keys;
+    }
+    
+    @Override
     public void put(final K key, final V value) {
         getCache().put(new Element(key, value));
+        if(value==null) {
+            this.keys.remove(key);
+        }else{
+            this.keys.add(key);
+        }
     }
 
     @Override

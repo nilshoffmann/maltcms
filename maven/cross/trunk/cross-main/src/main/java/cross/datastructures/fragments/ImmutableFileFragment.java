@@ -54,11 +54,19 @@ public class ImmutableFileFragment implements IFileFragment {
     private IFileFragment frag = null;
 
     public ImmutableFileFragment(final URI uri) {
-        this.frag = new FileFragment(uri);
+//        if (FileFragment.hasFragment(uri)) {
+//            this.frag = FileFragment.getFragment(uri);
+//        } else {
+            this.frag = new FileFragment(uri);
+//        }
     }
-    
+
     public ImmutableFileFragment(final File f) {
-        this.frag = new FileFragment(f);
+//        if (FileFragment.hasFragment(f.toURI())) {
+//            this.frag = FileFragment.getFragment(f.toURI());
+//        } else {
+            this.frag = new FileFragment(f);
+//        }
     }
 
     public ImmutableFileFragment(final File basedir, final String name) {
@@ -67,6 +75,11 @@ public class ImmutableFileFragment implements IFileFragment {
 
     public ImmutableFileFragment(final IFileFragment f) {
         this.frag = f;
+    }
+
+    @Override
+    public IVariableFragment addChild(String name) {
+        return this.frag.addChild(name);
     }
 
     /**
@@ -202,14 +215,14 @@ public class ImmutableFileFragment implements IFileFragment {
     }
 
     /**
-     * 
+     *
      * @return @see cross.datastructures.fragments.IFragment#getCache()
      */
     @Override
     public ICacheDelegate<IVariableFragment, List<Array>> getCache() {
         return this.frag.getCache();
     }
-    
+
     /**
      * @param varname
      * @return
@@ -237,11 +250,10 @@ public class ImmutableFileFragment implements IFileFragment {
             throws ResourceNotAvailableException {
         return this.frag.getChild(varname, loadStructureOnly);
     }
-    
+
     /**
-     * 
-     * @return 
-     * @see
+     *
+     * @return @see
      * {@link cross.datastructures.fragments.IFileFragment#getImmediateChildren()}
      */
     @Override
@@ -404,7 +416,7 @@ public class ImmutableFileFragment implements IFileFragment {
     public void readStructure() {
         this.frag.readStructure();
     }
-    
+
     /*
      * (non-Javadoc)
      *
@@ -480,17 +492,18 @@ public class ImmutableFileFragment implements IFileFragment {
     }
 
     /**
-     * Sets the array cache of this FileFragment as specified if the current cache
-     * has not yet been initialized (is null). Throws an @see IllegalStateException 
-     * otherwise to prevent loss of cached data.
-     * 
-     * @throws IllegalStateException 
+     * Sets the array cache of this FileFragment as specified if the current
+     * cache has not yet been initialized (is null). Throws an
+     *
+     * @see IllegalStateException otherwise to prevent loss of cached data.
+     *
+     * @throws IllegalStateException
      */
     @Override
     public void setCache(ICacheDelegate<IVariableFragment, List<Array>> persistentCache) {
         this.frag.setCache(persistentCache);
     }
-    
+
     /**
      * @param f1
      * @see cross.datastructures.fragments.IFileFragment#setFile(java.io.File)

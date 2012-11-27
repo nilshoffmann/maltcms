@@ -38,11 +38,13 @@ import com.db4o.ta.Activatable;
 import cross.datastructures.cache.CacheType;
 import cross.datastructures.cache.ICacheDelegate;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Implementation of a cache delegate for typed caches backed by <a
- * href="http://www.db4o.com/">db4o</a>.
+ * Implementation of a cache delegate for typed caches backed by 
+ * <a href="http://www.db4o.com/">db4o</a>.
  *
  * @author Nils Hoffmann
  */
@@ -52,6 +54,7 @@ public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
     private final String cacheName;
     private final ObjectContainer container;
     private final Comparator<K> comparator;
+    private final Set<K> keys;
 
     public Db4oCacheDelegate(final String cacheName,
             final ObjectContainer container, final Comparator<K> comparator) {
@@ -67,9 +70,14 @@ public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
         } else {
             this.comparator = comparator;
         }
-
+        this.keys = new HashSet<K>();
     }
 
+    @Override
+    public Set<K> keys() {
+        return this.keys;
+    }
+    
     @Override
     public void close() {
         container.commit();
@@ -83,12 +91,15 @@ public class Db4oCacheDelegate<K, V> implements ICacheDelegate<K, V> {
             if (te == null) {
                 if (value != null) {
                     container.store(new TypedEntry<K, V>(key, value));
+                    this.keys.add(key);
                 }
             } else {
                 if (value == null) {
                     container.delete(te);
+                    this.keys.remove(key);
                 } else {
                     te.setValue(value);
+                    this.keys.add(key);
                 }
             }
         } catch (DatabaseClosedException ex) {

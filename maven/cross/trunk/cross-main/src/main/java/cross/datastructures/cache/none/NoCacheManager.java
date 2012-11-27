@@ -25,44 +25,44 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.datastructures.cache.softReference;
+package cross.datastructures.cache.none;
 
 import cross.datastructures.cache.ICacheDelegate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Cache manager for soft-reference-based caching. 
+ * CacheManager that manages {@link NoCache} instances for names.
  * 
  * @author Nils Hoffmann
  */
-public class SoftReferenceCacheManager{
+public class NoCacheManager {
 
-    private static Map<String, SoftReferenceCache> caches = new ConcurrentHashMap<String, SoftReferenceCache>();
-    private static SoftReferenceCacheManager instance;
+    private static Map<String, NoCache> caches = new ConcurrentHashMap<String, NoCache>();
+    private static NoCacheManager instance;
 
-    private SoftReferenceCacheManager() {
+    private NoCacheManager() {
         super();
     }
 
-    public static SoftReferenceCacheManager getInstance() {
-        if (SoftReferenceCacheManager.instance == null) {
-            SoftReferenceCacheManager.instance = new SoftReferenceCacheManager();
+    public static NoCacheManager getInstance() {
+        if (NoCacheManager.instance == null) {
+            NoCacheManager.instance = new NoCacheManager();
         }
-        return SoftReferenceCacheManager.instance;
+        return NoCacheManager.instance;
     }
 
     public <K, V> ICacheDelegate<K, V> getCache(String name) {
-        SoftReferenceCache<K, V> delegate = caches.get(name);
+        NoCache<K, V> delegate = caches.get(name);
         if (delegate == null) {
-            delegate = new SoftReferenceCache<K, V>(name);
+            delegate = new NoCache<K, V>(name);
             caches.put(name, delegate);
         }
         return delegate;
     }
 
     public <K, V> void remove(ICacheDelegate<K, V> delegate) {
-        SoftReferenceCache<K, V> cache = caches.get(delegate.getName());
+        NoCache<K, V> cache = caches.get(delegate.getName());
         if (cache != null) {
             cache.close();
             caches.remove(delegate.getName());

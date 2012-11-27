@@ -1,4 +1,4 @@
-/* 
+/*
  * Cross, common runtime object support system. 
  * Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
  *
@@ -25,25 +25,59 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.datastructures.cache;
+package cross.datastructures.cache.none;
 
+import cross.datastructures.cache.CacheType;
+import cross.datastructures.cache.ICacheDelegate;
+import java.util.HashMap;
 import java.util.Set;
 
 /**
- *
+ * A mock cache using a typed HashMap for key->value mappings.
+ * 
  * @author Nils Hoffmann
  */
-public interface ICacheDelegate<K, V> {
+public class NoCache<K, V> implements ICacheDelegate<K, V> {
 
-    void put(K key, V value);
+    private final HashMap<K, V> map;
+    private final String name;
 
-    V get(K key);
-
-    String getName();
+    public NoCache(String name) {
+        this.name = name;
+        this.map = new HashMap<K, V>();
+    }
     
-    Set<K> keys();
+    @Override
+    public Set<K> keys() {
+        return this.map.keySet();
+    }
 
-    void close();
-    
-    CacheType getCacheType();
+    @Override
+    public void put(K key, V value) {
+        if (value == null) {
+            map.remove(key);
+        } else {
+            map.put(key, value);
+        }
+    }
+
+    @Override
+    public V get(K key) {
+        return map.get(key);
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public void close() {
+        this.map.clear();
+    }
+
+    @Override
+    public CacheType getCacheType() {
+        return CacheType.NONE;
+    }
 }

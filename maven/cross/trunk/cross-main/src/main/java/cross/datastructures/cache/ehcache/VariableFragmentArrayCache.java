@@ -32,10 +32,13 @@ import cross.datastructures.cache.ICacheDelegate;
 import cross.datastructures.fragments.IVariableFragment;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
+import net.sf.ehcache.Status;
 import ucar.ma2.Array;
 
 /**
@@ -49,14 +52,21 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  */
 @Slf4j
-public class VariableFragmentArrayCache<K, V> implements ICacheDelegate<IVariableFragment, List<Array>> {
+public class VariableFragmentArrayCache implements ICacheDelegate<IVariableFragment, List<Array>> {
 
     private final String cacheName;
     private final Ehcache cache;
+    private final Set<IVariableFragment> keys;
 
     public VariableFragmentArrayCache(final Ehcache cache) {
         this.cache = cache;
         this.cacheName = cache.getName();
+        this.keys = new HashSet<IVariableFragment>();
+    }
+
+    @Override
+    public Set<IVariableFragment> keys() {
+        return this.keys;
     }
 
     @Override
@@ -118,6 +128,10 @@ public class VariableFragmentArrayCache<K, V> implements ICacheDelegate<IVariabl
     }
 
     public Ehcache getCache() {
+        if (cache.getStatus() != Status.STATUS_ALIVE) {
+            cache.dispose();
+            cache.initialise();
+        }
         return cache;
     }
 

@@ -48,6 +48,14 @@ public interface IFileFragment extends IGroupFragment, IFragment,
         Externalizable {
 
     /**
+     * Add a child of given name or return already existing one.
+     *
+     * @param name
+     * @return variableFragment
+     */
+    public abstract IVariableFragment addChild(String name);
+    
+    /**
      * Add a number of children.
      *
      * @param fragments

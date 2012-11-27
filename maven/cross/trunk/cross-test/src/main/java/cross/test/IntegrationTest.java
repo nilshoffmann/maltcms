@@ -28,7 +28,8 @@
 package cross.test;
 
 /**
- *
+ * Marker interface to distinguish integration tests from plain tests.
+ * 
  * @author Nils Hoffmann
  */
 public interface IntegrationTest {

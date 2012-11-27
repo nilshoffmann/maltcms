@@ -27,6 +27,7 @@
  */
 package cross.math;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,6 +38,10 @@ import java.util.Set;
  */
 public class SetOperations {
 
+    public static <T> Set<T> newSet(Collection<? extends T> c) {
+        return new HashSet<T>(c);
+    }
+    
     public static <T> Set<T> union(Set<T> a, Set<T> b) {
         Set<T> union = new HashSet<T>(a);
         union.addAll(b);

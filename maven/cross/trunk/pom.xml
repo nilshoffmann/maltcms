@@ -407,6 +407,7 @@
         <module>cross-tools</module>
         <module>cross-math</module>
         <module>cross-test</module>
+        <module>cross-osgi</module>
     </modules>
     <dependencies>
         <dependency>

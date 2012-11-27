@@ -27,10 +27,11 @@
  */
 package cross.datastructures.cache;
 
+import cross.datastructures.cache.db4o.Db4oCacheManager;
 import cross.datastructures.cache.ehcache.AutoRetrievalEhcacheDelegate;
 import cross.datastructures.cache.ehcache.EhcacheDelegate;
-import cross.datastructures.cache.db4o.Db4oCacheManager;
 import cross.datastructures.cache.ehcache.VariableFragmentArrayCache;
+import cross.datastructures.cache.none.NoCacheManager;
 import cross.datastructures.cache.softReference.SoftReferenceCacheManager;
 import cross.datastructures.fragments.IVariableFragment;
 import java.io.File;
@@ -41,19 +42,20 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.event.CacheEventListener;
-import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 import net.sf.ehcache.store.DiskStore;
+import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 import ucar.ma2.Array;
 
 /**
- *
+ * Static utility class for creation and retrieval of various pre-configured caches. 
+ * 
  * @author Nils Hoffmann
  */
 @Slf4j
 public class CacheFactory {
 
     private static File cacheDirectory = new File(System.getProperty("java.io.tmpdir"));
-    private static CacheType fragmentCacheType = CacheType.EHCACHE;
+    private static CacheType fragmentCacheType = CacheType.NONE;
 
     /**
      * Set the cache location for all NEWLY created caches.
@@ -97,18 +99,19 @@ public class CacheFactory {
             case DB4O:
                 File cacheLocation = new File(cacheDir, cacheName);
                 log.debug("Using db4o cache {}", cacheLocation.getAbsolutePath());
-//                if(cacheLocation.getParentFile().isDirectory()) {
                 return createDb4oDefaultCache(cacheDir, cacheName);
-//                }else{
-//                    throw new IllegalArgumentException("DB4o cache name must be an absolute file name!");
-//                }
             case EHCACHE:
                 log.debug("Using ehcache {}", cacheName);
                 return createDefaultFragmentCache(cacheDir, cacheName);
             case SOFT:
+                log.debug("Using soft reference cache {}", cacheName);
                 return SoftReferenceCacheManager.getInstance().getCache(cacheName);
+            case NONE:
+                log.debug("Using hash map cache {}", cacheName);
+                return NoCacheManager.getInstance().getCache(cacheName);
             default:
-                throw new IllegalStateException("Unknown enum value: " + cacheType);
+                log.debug("Using hash map cache {}", cacheName);
+                return NoCacheManager.getInstance().getCache(cacheName);
         }
     }
 

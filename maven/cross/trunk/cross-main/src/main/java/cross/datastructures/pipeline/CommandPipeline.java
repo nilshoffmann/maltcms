@@ -39,8 +39,6 @@ import cross.datastructures.workflow.IWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.event.IEvent;
 import cross.exception.ConstraintViolationException;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -64,11 +62,11 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = ICommandSequence.class)
 public final class CommandPipeline implements ICommandSequence, IConfigurable {
 
-    /**
+    /*
      *
      */
     private static final long serialVersionUID = 7387727704189206255L;
-    /**
+    /*
      * accessible fields with generated getters and setters
      */
     public static final String NUMBERFORMAT = "%.2f";
@@ -76,8 +74,9 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
     private TupleND<IFileFragment> input;
     private IWorkflow workflow;
     private boolean checkCommandDependencies = true;
+    private boolean throwExceptionOnUnsavedModification = false;
     private ICommandSequenceValidator validator = new DefaultCommandSequenceValidator();
-    /**
+    /*
      * Private fields
      */
     //execution server instance
@@ -119,7 +118,6 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
             boolean valid = false;
             try {
                 valid = validator.isValid(this);
-                //checkCommandDependencies(input, commands);
                 return valid;
             } catch (ConstraintViolationException cve) {
                 log.warn("Pipeline validation failed: " + cve.
@@ -189,7 +187,16 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
                 this.tmp = cmd.apply(this.tmp);
                 //clear arrays to allow for gc
                 for (IFileFragment f : this.tmp) {
+                    if (f.isModified()) {
+                        log.warn("FileFragment {} has modifications after fragment command {}!"
+                                + " Please call clearArrays() or save a modified FileFragment before returning it!",
+                                f.getName(), cmd.getClass().getCanonicalName());
+                        if (throwExceptionOnUnsavedModification) {
+                            throw new ConstraintViolationException("FileFragment " + f.getName() + " has modifications after fragment command " + cmd.getClass().getCanonicalName() + "! Please call clearArrays() or save a modified FileFragment before returning it!");
+                        }
+                    }
                     f.clearArrays();
+                    f.clearDimensions();
                 }
                 start = Math.abs(System.nanoTime() - start);
                 storeCommandRuntime(start, cmd, getWorkflow());

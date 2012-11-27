@@ -1,4 +1,4 @@
-/* 
+/*
  * Cross, common runtime object support system. 
  * Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
  *
@@ -25,38 +25,30 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.math;
+package cross.test;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.Statement;
 
 /**
- * Unit test for simple App.
+ *
+ * @author Nils Hoffmann
  */
-public class AppTest
-        extends TestCase {
+public class LogMethodName extends TestWatcher {
 
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest(String testName) {
-        super(testName);
+    @Override
+    public void starting(Description method) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 80; i++) {
+            sb.append("#");
+        }
+        sb.append("\n").append("# ").append(method.getMethodName()).append("\n");
+        for (int i = 0; i < 80; i++) {
+            sb.append("#");
+        }
+        System.out.println(sb.toString());
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite() {
-        return new TestSuite(AppTest.class);
-    }
-
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp() {
-        assertTrue(true);
-    }
 }

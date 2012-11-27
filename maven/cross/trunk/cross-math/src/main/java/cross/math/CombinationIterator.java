@@ -30,12 +30,10 @@ package cross.math;
 import java.util.Iterator;
 
 /**
- * Implementation of {
- *
- * @see Iterator} for {@code int[]}, returning, for a given number of {
- * @see Partition}s in increasing order, an array of item indices for each
- * partition for the current iteration. Allows to enumerate all items of
- * supplied partitions of arbitrary size in a defined order.
+ * Implementation of {@link Iterator} for <code>int[]</code>, returning, for a 
+ * given number of {@link Partition}s in increasing order, an array of item
+ * indices for each partition for the current iteration. Allows to enumerate 
+ * all items of supplied partitions of arbitrary size in a defined order.
  *
  * @author Nils Hoffmann
  */

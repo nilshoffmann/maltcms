@@ -31,9 +31,13 @@ import cross.datastructures.cache.CacheType;
 import cross.datastructures.cache.ICacheDelegate;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
- *
+ * Values are referenced using {@see java.lang.ref.SoftReference}. These may be
+ * reclaimed by the garbage collector as soon as the virtual machine requires
+ * additional free memory. The keys are strongly referenced.
+ * 
  * @author Nils Hoffmann
  */
 public class SoftReferenceCache<K, V> implements ICacheDelegate<K, V> {
@@ -49,8 +53,17 @@ public class SoftReferenceCache<K, V> implements ICacheDelegate<K, V> {
     }
 
     @Override
+    public Set<K> keys() {
+        return this.map.keySet();
+    }
+    
+    @Override
     public void put(K key, V value) {
-        map.put(key, new SoftReference<V>(value));//,this.referenceQueue));
+        if (value == null) {
+            map.remove(key);
+        } else {
+            map.put(key, new SoftReference<V>(value));//,this.referenceQueue));
+        }
     }
 
     @Override
