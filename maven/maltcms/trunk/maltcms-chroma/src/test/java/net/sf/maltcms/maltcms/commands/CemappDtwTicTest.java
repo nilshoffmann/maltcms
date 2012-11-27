@@ -29,17 +29,14 @@ package net.sf.maltcms.maltcms.commands;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.Assert.*;
 import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.commands.fragments.cluster.PairwiseDistanceCalculator;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.TicDtwWorkerFactory;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
-import cross.io.misc.ZipResourceExtractor;
 import maltcms.math.functions.DtwPairwiseSimilarity;
 import maltcms.math.functions.similarities.ArrayLp;
 import maltcms.test.AFragmentCommandTest;
@@ -55,45 +52,37 @@ import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import cross.test.IntegrationTest;
+import maltcms.commands.fragments.preprocessing.ScanExtractor;
+import maltcms.test.ExtractClassPathFiles;
+import org.junit.Rule;
 import org.junit.experimental.categories.Category;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 @Slf4j
 @Category(IntegrationTest.class)
 public class CemappDtwTicTest extends AFragmentCommandTest {
 
+    @Rule
+    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
+            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
+
     @Test
     public void testCemappDtwTICFull() {
-        File dataFolder = tf.newFolder("testCemappDtwFull");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File inputFile2 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
-//        File inputFile3 = ZipResourceExtractor.extract(
-//                "/cdf/1D/mannitolA.cdf.gz", dataFolder);
-        File inputFile4 = ZipResourceExtractor.extract(
-                "/cdf/1D/mannitolB.cdf.gz", dataFolder);
         File outputBase = tf.newFolder("testCemappDtwFullTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        ScanExtractor se = new ScanExtractor();
+        se.setStartScan(1000);
+        se.setEndScan(1500);
         commands.add(new DefaultVarLoader());
+        commands.add(se);
         commands.add(new DenseArrayProducer());
         commands.add(createPairwiseDistanceCalculatorTIC(false, 0, true,
                 1.0d));
-
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1, inputFile2, inputFile4));
-        try {
-
-            w.call();
-            w.save();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            fail(ex.getLocalizedMessage());
-        }
-
+        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        testWorkflow(w);
     }
 
     public AFragmentCommand createPairwiseDistanceCalculatorTIC(boolean useAnchors, int anchorRadius, boolean globalBand, double bandWidthPercentage) {
@@ -119,15 +108,6 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
      */
     @Test
     public void testCemappDtwTICConstrained() {
-        File dataFolder = tf.newFolder("testCemappDtwConstrained");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File inputFile2 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
-        File inputFile3 = ZipResourceExtractor.extract(
-                "/cdf/1D/mannitolA.cdf.gz", dataFolder);
-        File inputFile4 = ZipResourceExtractor.extract(
-                "/cdf/1D/mannitolB.cdf.gz", dataFolder);
         File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         commands.add(new DefaultVarLoader());
@@ -150,17 +130,7 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
         commands.add(tpf);
         commands.add(new PeakCliqueAlignment());
         commands.add(createPairwiseDistanceCalculatorTIC(true, 0, true, 0.5d));
-
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1, inputFile2, inputFile3, inputFile4));
-        try {
-
-            w.call();
-            w.save();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            fail(ex.getLocalizedMessage());
-        }
-
+        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        testWorkflow(w);
     }
 }

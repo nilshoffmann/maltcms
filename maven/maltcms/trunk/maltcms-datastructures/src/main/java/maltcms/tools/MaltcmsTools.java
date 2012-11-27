@@ -749,11 +749,11 @@ public class MaltcmsTools {
                 varname);
         final ArrayList<IFileFragment> al = new ArrayList<IFileFragment>();
         for (final String sn : s) {
-            if (FileFragment.hasFragment(sn)) {
-                al.add(FileFragment.getFragment(sn));
-            } else {
+//            if (FileFragment.hasFragment(sn)) {
+//                al.add(FileFragment.getFragment(sn));
+//            } else {
                 al.add(new FileFragment(URI.create(sn)));
-            }
+//            }
         }
         final TupleND<IFileFragment> t = new TupleND<IFileFragment>(al);
         return t;

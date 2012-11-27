@@ -29,17 +29,14 @@ package net.sf.maltcms.maltcms.commands;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.Assert;
 import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.commands.fragments.cluster.PairwiseDistanceCalculator;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.MziDtwWorkerFactory;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
-import cross.io.misc.ZipResourceExtractor;
 import maltcms.math.functions.DtwPairwiseSimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.test.AFragmentCommandTest;
@@ -48,6 +45,8 @@ import org.junit.Test;
 
 import cross.commands.fragments.AFragmentCommand;
 import cross.commands.fragments.IFragmentCommand;
+import cross.datastructures.cache.CacheType;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.workflow.IWorkflow;
 import java.util.LinkedList;
 import lombok.extern.slf4j.Slf4j;
@@ -55,45 +54,41 @@ import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import cross.test.IntegrationTest;
+import maltcms.commands.fragments.alignment.CenterStarAlignment;
+import maltcms.commands.fragments.preprocessing.ScanExtractor;
+import maltcms.commands.fragments.warp.ChromatogramWarp2;
+import maltcms.test.ExtractClassPathFiles;
+import org.junit.Rule;
 import org.junit.experimental.categories.Category;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 @Slf4j
 @Category(IntegrationTest.class)
 public class CemappDtwMziTest extends AFragmentCommandTest {
 
+    @Rule
+    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
+            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
+
     @Test
     public void testCemappDtwMZIFull() {
-        File dataFolder = tf.newFolder("testCemappDtwFull");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File inputFile2 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
-//        File inputFile3 = ZipResourceExtractor.extract(
-//                "/cdf/1D/mannitolA.cdf.gz", dataFolder);
-        File inputFile4 = ZipResourceExtractor.extract(
-                "/cdf/1D/mannitolB.cdf.gz", dataFolder);
+//        FileFragment.clearFragments();
+        cross.datastructures.cache.CacheFactory.setDefaultFragmentCacheType(CacheType.NONE);
         File outputBase = tf.newFolder("testCemappDtwFullTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        ScanExtractor se = new ScanExtractor();
+        se.setStartScan(1000);
+        se.setEndScan(1500);
         commands.add(new DefaultVarLoader());
+        commands.add(se);
         commands.add(new DenseArrayProducer());
         commands.add(createPairwiseDistanceCalculatorMZI(false, 0, true,
                 1.0d));
-
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1, inputFile2, inputFile4));
-        try {
-
-            w.call();
-            w.save();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Assert.fail(ex.getLocalizedMessage());
-        }
-
+        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        testWorkflow(w);
     }
 
     public AFragmentCommand createPairwiseDistanceCalculatorMZI(boolean useAnchors, int anchorRadius, boolean globalBand, double bandWidthPercentage) {
@@ -119,48 +114,37 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
      */
     @Test
     public void testCemappDtwMZIConstrained() {
-        File dataFolder = tf.newFolder("testCemappDtwConstrained");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File inputFile2 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
-        File inputFile3 = ZipResourceExtractor.extract(
-                "/cdf/1D/mannitolA.cdf.gz", dataFolder);
-        File inputFile4 = ZipResourceExtractor.extract(
-                "/cdf/1D/mannitolB.cdf.gz", dataFolder);
+//        FileFragment.clearFragments();
+        cross.datastructures.cache.CacheFactory.setDefaultFragmentCacheType(CacheType.NONE);
         File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         commands.add(new DefaultVarLoader());
+        ScanExtractor se = new ScanExtractor();
+        se.setStartScan(500);
+        se.setEndScan(749);
+        commands.add(se);
         commands.add(new DenseArrayProducer());
-        TICPeakFinder tpf = new TICPeakFinder();
-        SavitzkyGolayFilter sgf = new SavitzkyGolayFilter();
-        sgf.setWindow(12);
-        List<AArrayFilter> filters = new LinkedList<AArrayFilter>();
-        filters.add(sgf);
-        tpf.setFilter(filters);
-        LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();
-        lmbe.setBandwidth(0.3);
-        lmbe.setAccuracy(1.0E-12);
-        lmbe.setRobustnessIterations(2);
-        lmbe.setMinimaWindow(100);
-        tpf.setBaselineEstimator(lmbe);
-        tpf.setSnrWindow(50);
-        tpf.setPeakSeparationWindow(10);
-        tpf.setPeakThreshold(20.0d);
-        commands.add(tpf);
-        commands.add(new PeakCliqueAlignment());
-        commands.add(createPairwiseDistanceCalculatorMZI(true, 0, false, 0.5d));
-
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1, inputFile2, inputFile3, inputFile4));
-        try {
-
-            w.call();
-            w.save();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Assert.fail(ex.getLocalizedMessage());
-        }
-
+//        TICPeakFinder tpf = new TICPeakFinder();
+//        SavitzkyGolayFilter sgf = new SavitzkyGolayFilter();
+//        sgf.setWindow(12);
+//        List<AArrayFilter> filters = new LinkedList<AArrayFilter>();
+//        filters.add(sgf);
+//        tpf.setFilter(filters);
+//        LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();
+//        lmbe.setBandwidth(0.3);
+//        lmbe.setAccuracy(1.0E-12);
+//        lmbe.setRobustnessIterations(2);
+//        lmbe.setMinimaWindow(50);
+//        tpf.setBaselineEstimator(lmbe);
+//        tpf.setSnrWindow(50);
+//        tpf.setPeakSeparationWindow(10);
+//        tpf.setPeakThreshold(20.0d);
+//        commands.add(tpf);
+//        commands.add(new PeakCliqueAlignment());
+        commands.add(createPairwiseDistanceCalculatorMZI(false, 0, false, 0.5d));
+        commands.add(new CenterStarAlignment());
+        commands.add(new ChromatogramWarp2());
+        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        testWorkflow(w);
     }
 }

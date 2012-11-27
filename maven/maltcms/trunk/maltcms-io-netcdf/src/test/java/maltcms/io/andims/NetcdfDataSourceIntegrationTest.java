@@ -43,6 +43,7 @@ import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.test.ExtractHelper;
 import cross.test.IntegrationTest;
+import cross.test.LogMethodName;
 import cross.test.SetupLogging;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,62 +61,24 @@ import ucar.nc2.Dimension;
 @Category(IntegrationTest.class)
 public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
 
-    /**
-     *
-     */
     @Rule
     public SetupLogging sl = new SetupLogging();
-    /**
-     *
-     */
+    @Rule
+    public LogMethodName lmn = new LogMethodName();
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
-    File[] files1D;
-    File[] files2D;
     IFileFragment remoteFileFragment = null;
 
     @Before
     public void extractTestData() {
-        if (files1D == null || files2D == null) {
-            try {
-                //files1D = ExtractHelper.extractAllForType(tf.newFolder(ExtractHelper.FType.CDF_1D.name()), ExtractHelper.FType.CDF_1D);
-                files1D = ExtractHelper.extractForType(tf.newFolder(), ExtractHelper.FType.CDF_1D, "/cdf/1D/glucoseA.cdf.gz");
-                files2D = new File[0];//ExtractHelper.extractAllForType(tf.newFolder(ExtractHelper.FType.CDF_2D.name()), ExtractHelper.FType.CDF_2D);
-            } catch (IOException ex) {
-                Logger.getLogger(NetcdfDataSourceTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
         if(remoteFileFragment == null) {
             remoteFileFragment = new FileFragment(URI.create("http://bibiserv.techfak.uni-bielefeld.de/chroma/data/glucoseA.cdf"));
-        }
-    }
-
-    /**
-     * Test of write method, of class NetcdfDataSource.
-     */
-    @Test
-    public void testRemoteRead() {
-        testDirectRemoteRead(remoteFileFragment.getUri());
-    }
-
-    /**
-     * Test of write method, of class NetcdfDataSource.
-     */
-    @Test
-    public void testRemoteChainedRead() {
-        try {
-            FileFragment localProxy = new FileFragment(tf.newFolder(), "localProxy.cdf");
-            localProxy.addSourceFile(remoteFileFragment);
-            localProxy.save();
-            testIndirectRemoteRead(localProxy.getUri());
-        } catch (Exception ex) {
-            Logger.getLogger(NetcdfDataSourceIntegrationTest.class.getName()).log(Level.SEVERE, null, ex);
-            Assert.fail(ex.getLocalizedMessage());
+            remoteFileFragment.readStructure();
         }
     }
     
     /**
-     * Test of write method, of class NetcdfDataSource.
+     * Test of indirectly reading data from a remote file fragment via a local chain of file fragments.
      */
     @Test
     public void testIndirectRemoteChainedRead() {
@@ -136,25 +99,6 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
             Assert.fail(ex.getLocalizedMessage());
         }
     }
-    
-//    /**
-//     * Test of write method, of class NetcdfDataSource.
-//     */
-//    @Test
-//    public void testRemoteMultiChainedRead() {
-//        try {
-//            FileFragment localProxy = new FileFragment(tf.newFolder(), "localProxy.cdf");
-//            localProxy.addSourceFile(remoteFileFragment);
-//            localProxy.save();
-//            FileFragment localProxyProxy = new FileFragment(new File(tf.newFolder(),"proxyproxy"),"localProxyProxy.cdf");
-//            localProxyProxy.addSourceFile(localProxy);
-////            localProxyProxy.save();
-//            testIndirectRemoteRead(localProxyProxy.getUri());
-//        } catch (Exception ex) {
-//            Logger.getLogger(NetcdfDataSourceIntegrationTest.class.getName()).log(Level.SEVERE, null, ex);
-//            Assert.fail(ex.getLocalizedMessage());
-//        }
-//    }
 
     public IFileFragment testDirectRemoteRead(URI testCdf) throws ResourceNotAvailableException {
         System.out.println("Tesing direct remote read!");

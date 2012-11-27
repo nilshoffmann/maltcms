@@ -57,7 +57,6 @@ import cross.datastructures.fragments.ImmutableVariableFragment2;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
-import cross.datastructures.tools.FragmentTools;
 import cross.tools.StringTools;
 import java.io.File;
 import java.net.URI;
@@ -387,6 +386,13 @@ public class NetcdfDataSource implements IDataSource {
                     nf.close();
                 }
             } catch (final IOException ioex2) {
+                if (nf != null) {
+                    try {
+                        nf.close();
+                    } catch (final IOException ioex3) {
+                        throw ioex3;
+                    }
+                }
                 throw ioex2;
             }
         }
@@ -573,66 +579,71 @@ public class NetcdfDataSource implements IDataSource {
                     + f.getParent().getUri());
         }
         EvalTools.notNull(nd, this);
-        if (f.getIndex() != null) {
-
-            log.debug("IVariableFragment "
-                    + f.getName()
-                    + " has IndexFragment "
-                    + f.getIndex().getName()
-                    + " set. Ignore if you didn't want to read this Variable indexed!");
-        }
-        final Variable v = nd.findVariable(f.getName());
-        if (v == null) {
-            throw new ResourceNotAvailableException("Could not read "
-                    + f.getName());
-        }
-
-        f.setDataType(v.getDataType());
-        // if this
-        // fails, look at the commented code below!
-        final List<Dimension> dims = v.getDimensions();
-        log.debug("Dimensions for variable: {}:{}", f.getName(), dims);
-        // final Iterator<Dimension> iter = dims.iterator();
-        // final Dimension[] dimensions = new Dimension[dims.size()];
-        // int cnt = 0;
-        // while (iter.hasNext()) {
-        // final Dimension dim = iter.next();
-        // dimensions[cnt] = dim;
-        // cnt++;
-        // }
-        f.setDimensions(dims.toArray(new Dimension[]{}));
-        Array a = null;
         try {
-            final Range[] r = f.getRange();
-            if (r != null) {
-                final List<Range> l = Arrays.asList(r);
-                try {
-                    log.debug("Using specified range to read partially: {}", l);
-                    a = v.read(l);
-                    // if read with ranges is valid: keep ranges as before
-                    f.setRange(r);
-                } catch (final InvalidRangeException e) {
-                    log.warn("Defined range list {} is invalid for variable {}, falling back to default range defined in file!", new Object[]{l, f.getName()});
+            if (f.getIndex() != null) {
+
+                log.debug("IVariableFragment "
+                        + f.getName()
+                        + " has IndexFragment "
+                        + f.getIndex().getName()
+                        + " set. Ignore if you didn't want to read this Variable indexed!");
+            }
+            final Variable v = nd.findVariable(f.getName());
+            if (v == null) {
+                throw new ResourceNotAvailableException("Could not read "
+                        + f.getName());
+            }
+
+            f.setDataType(v.getDataType());
+            // if this
+            // fails, look at the commented code below!
+            final List<Dimension> dims = v.getDimensions();
+            log.debug("Dimensions for variable: {}:{}", f.getName(), dims);
+            // final Iterator<Dimension> iter = dims.iterator();
+            // final Dimension[] dimensions = new Dimension[dims.size()];
+            // int cnt = 0;
+            // while (iter.hasNext()) {
+            // final Dimension dim = iter.next();
+            // dimensions[cnt] = dim;
+            // cnt++;
+            // }
+            f.setDimensions(dims.toArray(new Dimension[]{}));
+            Array a = null;
+            try {
+                final Range[] r = f.getRange();
+                if (r != null) {
+                    final List<Range> l = Arrays.asList(r);
+                    try {
+                        log.debug("Using specified range to read partially: {}", l);
+                        a = v.read(l);
+                        // if read with ranges is valid: keep ranges as before
+                        f.setRange(r);
+                    } catch (final InvalidRangeException e) {
+                        log.warn("Defined range list {} is invalid for variable {}, falling back to default range defined in file!", new Object[]{l, f.getName()});
+                        a = v.read();
+                        // replace ranges with valid ranges from file
+                        f.setRange(v.getRanges().toArray(new Range[]{}));
+                    }
+                } else {
+                    log.debug("No range set, reading completely");
                     a = v.read();
-                    // replace ranges with valid ranges from file
-                    f.setRange(v.getRanges().toArray(new Range[]{}));
+                    List<Range> ranges = v.getRanges();
+                    log.debug("Ranges from file: {}", ranges);
+                    // update ranges to those from file
+                    f.setRange(ranges.toArray(new Range[ranges.size()]));
                 }
-            } else {
-                log.debug("No range set, reading completely");
-                a = v.read();
-                List<Range> ranges = v.getRanges();
-                log.debug("Ranges from file: {}", ranges);
-                // update ranges to those from file
-                f.setRange(ranges.toArray(new Range[ranges.size()]));
+                nd.close();
+                if (a == null) {
+                    log.debug("a is null", a);
+                }
+                return a;
+            } catch (final IOException e) {
+                throw e;
+            } finally {
+                nd.close();
             }
+        } finally {
             nd.close();
-            if (a == null) {
-                log.debug("a is null", a);
-            }
-            return a;
-        } catch (final IOException e) {
-            log.error(e.getLocalizedMessage());
-            throw e;
         }
     }
 
@@ -641,7 +652,7 @@ public class NetcdfDataSource implements IDataSource {
      * @param f
      * @return
      * @throws IOException
-     * @throws FileNotFoundException
+     *        @throws FileNotFoundException
      */
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
@@ -653,20 +664,23 @@ public class NetcdfDataSource implements IDataSource {
             throw new FileNotFoundException("Could not find physical file for "
                     + f.getUri());
         }
-        loadAttributes(f, nd);
-        final List<?> l = nd.getVariables();
-        for (final Object o : l) {
-            final Variable v = (Variable) o;
-            final IVariableFragment vf = convert(f, v, null);
-            final List<?> att = v.getAttributes();
-            for (final Object attr : att) {
-                vf.setAttributes((ucar.nc2.Attribute) attr);
+        try {
+            loadAttributes(f, nd);
+            final List<?> l = nd.getVariables();
+            for (final Object o : l) {
+                final Variable v = (Variable) o;
+                final IVariableFragment vf = convert(f, v, null);
+                final List<?> att = v.getAttributes();
+                for (final Object attr : att) {
+                    vf.setAttributes((ucar.nc2.Attribute) attr);
+                }
+                al.add(vf);
             }
-            al.add(vf);
+            log.debug(f.toString());
+        } finally {
+            nd.close();
+            return al;
         }
-        log.debug(f.toString());
-
-        return al;
     }
 
     /**
@@ -687,20 +701,24 @@ public class NetcdfDataSource implements IDataSource {
             throw new FileNotFoundException("Could not find physical file for "
                     + f.getParent().getUri());
         }
-        Variable v = nd.findVariable(f.getName());
-        if (v == null) {
-            throw new ResourceNotAvailableException("Could not read "
-                    + f.getName());
-        }
-        final IVariableFragment vf = convert(f.getParent(), v, f);
-        final List<?> att = v.getAttributes();
-        for (final Object attr : att) {
-            vf.setAttributes((ucar.nc2.Attribute) attr);
-        }
+        try {
+            Variable v = nd.findVariable(f.getName());
+            if (v == null) {
+                throw new ResourceNotAvailableException("Could not read "
+                        + f.getName());
+            }
+            final IVariableFragment vf = convert(f.getParent(), v, f);
+            final List<?> att = v.getAttributes();
+            for (final Object attr : att) {
+                vf.setAttributes((ucar.nc2.Attribute) attr);
+            }
 
-        loadAttributes(f.getParent(), nd);
-        log.debug(f.toString());
-        return f;
+            loadAttributes(f.getParent(), nd);
+            log.debug(f.toString());
+        } finally {
+            nd.close();
+            return f;
+        }
     }
 
     /**
@@ -709,6 +727,7 @@ public class NetcdfDataSource implements IDataSource {
      * @return
      */
     protected NetcdfFileWriteable structureWrite(final IFileFragment parent) {
+        NetcdfFileWriteable nfw = null;
         try {
             String filename = null;
             if (parent.getSize() == 0) {
@@ -723,7 +742,7 @@ public class NetcdfDataSource implements IDataSource {
                 filename = parent.getUri().toASCIIString();
             }
             log.debug("Trying to create NetcdfFileWritable {}", filename);
-            final NetcdfFileWriteable nfw = NetcdfFileWriteable.createNew(
+            nfw = NetcdfFileWriteable.createNew(
                     filename, false);
 
             final List<Attribute> globalAttrs = parent.getAttributes();
@@ -867,6 +886,13 @@ public class NetcdfDataSource implements IDataSource {
             return nfw;
         } catch (final IOException e) {
             log.error(e.getLocalizedMessage());
+            if (nfw != null) {
+                try {
+                    nfw.close();
+                } catch (IOException ex) {
+                    log.error(ex.getLocalizedMessage());
+                }
+            }
         }
         return null;
     }
@@ -918,58 +944,58 @@ public class NetcdfDataSource implements IDataSource {
         EvalTools.notNull(f, this);
         final NetcdfFileWriteable nfw = structureWrite(f);
         EvalTools.notNull(nfw, this);
-        int cnt = 0;
-        String varname = "";
-        for (final IVariableFragment vf : f) {
-            if (vf.getParent().getUri().equals(f.getUri())) {
-                try {
-                    varname = vf.getName();
-                    EvalTools.notNull(varname, this);
-                    if (vf.hasArray()) {
-                        final Variable v = nfw.findVariable(varname);
-                        if (v != null) {
-                            log.debug("Saving variable "
-                                    + v.getNameAndDimensions());
-                            if (vf.getIndex() != null) {
-                                int offset = 0;
-                                for (Array a : vf.getIndexedArray()) {
-                                    nfw.write(varname, new int[]{offset}, a);
-                                    offset += a.getShape()[0];
+        try {
+            int cnt = 0;
+            String varname = "";
+            for (final IVariableFragment vf : f) {
+                if (vf.getParent().getUri().equals(f.getUri())) {
+                    try {
+                        varname = vf.getName();
+                        EvalTools.notNull(varname, this);
+                        if (vf.hasArray()) {
+                            final Variable v = nfw.findVariable(varname);
+                            if (v != null) {
+                                log.debug("Saving variable "
+                                        + v.getNameAndDimensions());
+                                if (vf.getIndex() != null) {
+                                    int offset = 0;
+                                    for (Array a : vf.getIndexedArray()) {
+                                        nfw.write(varname, new int[]{offset}, a);
+                                        offset += a.getShape()[0];
+                                    }
+                                } else {
+                                    nfw.write(varname, vf.getArray());
+                                    nfw.flush();
                                 }
-                            } else {
-                                nfw.write(varname, vf.getArray());
-                                nfw.flush();
                             }
                         }
+                    } catch (final IOException e) {
+                        log.warn("IOException while writing variable '{}'", varname);
+                        log.debug("{}", e.getLocalizedMessage());
+                        throw new RuntimeException(e);
+                    } catch (final InvalidRangeException e) {
+                        log.warn("InvalidRangeException writing variable '{}' with dimensions '{}'", new Object[]{varname, Arrays.toString(vf.getDimensions())});
+                        log.debug("{}", e.getLocalizedMessage());
                     }
-                } catch (final IOException e) {
-                    log.warn("IOException while writing variable '{}'", varname);
-                    log.debug("{}", e.getLocalizedMessage());
-                    throw new RuntimeException(e);
-                } catch (final InvalidRangeException e) {
-                    log.warn("InvalidRangeException writing variable '{}' with dimensions '{}'", new Object[]{varname, Arrays.toString(vf.getDimensions())});
-                    log.debug("{}", e.getLocalizedMessage());
+                    cnt++;
                 }
-                cnt++;
             }
-        }
-        nfw.finish();
-        log.info("Wrote " + cnt + " records to " + nfw.getLocation());
-        if (this.saveNCML) {
-            final String ncmlFile = StringTools.removeFileExt(nfw.getLocation())
-                    + ".ncml";
-            try {
-                nfw.writeNcML(new BufferedOutputStream(new FileOutputStream(
-                        ncmlFile)), null);
-            } catch (final FileNotFoundException e1) {
-                log.error(e1.getLocalizedMessage());
-                log.error("{}", e1);
-            } catch (final IOException e1) {
-                log.error(e1.getLocalizedMessage());
-                log.error("{}", e1);
+            nfw.finish();
+            log.info("Wrote " + cnt + " records to " + nfw.getLocation());
+            if (this.saveNCML) {
+                final String ncmlFile = StringTools.removeFileExt(nfw.getLocation())
+                        + ".ncml";
+                try {
+                    nfw.writeNcML(new BufferedOutputStream(new FileOutputStream(
+                            ncmlFile)), null);
+                } catch (final FileNotFoundException e1) {
+                    log.error(e1.getLocalizedMessage());
+                    log.error("{}", e1);
+                } catch (final IOException e1) {
+                    log.error(e1.getLocalizedMessage());
+                    log.error("{}", e1);
+                }
             }
-        }
-        try {
             nfw.flush();
             nfw.close();
             return true;
@@ -987,6 +1013,5 @@ public class NetcdfDataSource implements IDataSource {
             }
             return false;
         }
-
     }
 }

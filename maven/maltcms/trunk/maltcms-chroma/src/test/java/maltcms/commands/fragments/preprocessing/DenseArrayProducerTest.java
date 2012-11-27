@@ -32,7 +32,6 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
-import cross.io.misc.ZipResourceExtractor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,13 +39,14 @@ import java.util.Collection;
 import java.util.List;
 import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
-import cross.test.IntegrationTest;
+import maltcms.test.ExtractClassPathFiles;
 import maltcms.tools.MaltcmsTools;
 import org.apache.log4j.Level;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import ucar.ma2.Array;
 
 /**
@@ -54,8 +54,12 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  */
 @Slf4j
-@Category(IntegrationTest.class)
+//@Category(IntegrationTest.class)
 public class DenseArrayProducerTest extends AFragmentCommandTest {
+
+    @Rule
+    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
+            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
 
     public DenseArrayProducerTest() {
         setLogLevelFor(MaltcmsTools.class, Level.DEBUG);
@@ -66,53 +70,88 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
      * Test of apply method, of class DenseArrayProducer.
      */
     @Test
-    public void testApply() {
-        File dataFolder = tf.newFolder("chromaTestData");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File inputFile2 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
+    public void testDirectApply() {
         File outputBase = tf.newFolder("chromaTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         commands.add(new DefaultVarLoader());
+        ScanExtractor se = new ScanExtractor();
+        se.setStartScan(1000);
+        se.setEndScan(1500);
+        commands.add(se);
         DenseArrayProducer dap = new DenseArrayProducer();
-        log.info("DenseArrayProducer: {}",dap);
+        log.info("DenseArrayProducer: {}", dap);
         commands.add(dap);
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1, inputFile2));
+        commands.add(new PeakCliqueAlignment());
+        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         TupleND<IFileFragment> results;
-        try {
-            //execute workflow
-            results = w.call();
-            w.save();
-            //retrieve variables that DenseArrayProducer provides
-            Collection<String> variablesToCheck = Arrays.asList(new String[]{"binned_mass_values","binned_intensity_values","binned_scan_index"});//AnnotationInspector.getProvidedVariables(DenseArrayProducer.class);
-            for(IFileFragment f:results) {
-                for(String variable:variablesToCheck) {
-                    log.info("Checking variable: {}",variable);
-                    try {
-                        //get structure, no data
-                        IVariableFragment v = f.getChild(variable, true);
-                        //load array explicitly
-                        Array a = v.getArray();
-                        Assert.assertNotNull(a);
-                        //remove
-                        f.removeChild(v);
-                        //get structure and data
+        //execute workflow
+        results = testWorkflow(w);
+        //retrieve variables that DenseArrayProducer provides
+        Collection<String> variablesToCheck = Arrays.asList(new String[]{"binned_mass_values", "binned_intensity_values", "binned_scan_index"});//AnnotationInspector.getProvidedVariables(DenseArrayProducer.class);
+        for (IFileFragment f : results) {
+            for (String variable : variablesToCheck) {
+                log.info("Checking variable: {}", variable);
+                try {
+                    //get structure, no data
+                    IVariableFragment v = f.getChild(variable, true);
+                    //load array explicitly
+                    Array a = v.getArray();
+                    Assert.assertNotNull(a);
+                    //remove
+                    f.removeChild(v);
+                    //get structure and data
 //                        v = f.getChild(variable);
 //                        a = v.getArray();
 //                        Assert.assertNotNull(a);
-                    }catch(Exception e) {
-                        e.printStackTrace();
-                        Assert.fail(e.getLocalizedMessage());
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Assert.fail(e.getLocalizedMessage());
                 }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Assert.fail(ex.getLocalizedMessage());
         }
     }
 
-    
+    /**
+     * Test of apply method, of class DenseArrayProducer.
+     */
+    @Test
+    public void testApply() {
+        File outputBase = tf.newFolder("chromaTestOut");
+        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        commands.add(new DefaultVarLoader());
+        ScanExtractor se = new ScanExtractor();
+        se.setStartScan(1000);
+        se.setEndScan(1500);
+        commands.add(se);
+        DenseArrayProducer dap = new DenseArrayProducer();
+        log.info("DenseArrayProducer: {}", dap);
+        commands.add(dap);
+        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        TupleND<IFileFragment> results;
+        //execute workflow
+        results = testWorkflow(w);
+        //retrieve variables that DenseArrayProducer provides
+        Collection<String> variablesToCheck = Arrays.asList(new String[]{"binned_mass_values", "binned_intensity_values", "binned_scan_index"});//AnnotationInspector.getProvidedVariables(DenseArrayProducer.class);
+        for (IFileFragment f : results) {
+            for (String variable : variablesToCheck) {
+                log.info("Checking variable: {}", variable);
+                try {
+                    //get structure, no data
+                    IVariableFragment v = f.getChild(variable, true);
+                    //load array explicitly
+                    Array a = v.getArray();
+                    Assert.assertNotNull(a);
+                    //remove
+                    f.removeChild(v);
+                    //get structure and data
+//                        v = f.getChild(variable);
+//                        a = v.getArray();
+//                        Assert.assertNotNull(a);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Assert.fail(e.getLocalizedMessage());
+                }
+            }
+        }
+    }
 }

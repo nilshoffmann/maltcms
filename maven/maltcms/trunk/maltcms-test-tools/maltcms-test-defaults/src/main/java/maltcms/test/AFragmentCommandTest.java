@@ -42,7 +42,11 @@ import cross.datastructures.pipeline.CommandPipeline;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflow;
 import cross.datastructures.workflow.IWorkflow;
+import cross.test.LogMethodName;
+import java.io.IOException;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
@@ -56,50 +60,51 @@ public abstract class AFragmentCommandTest {
 
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
-    
     @Rule
     public SetupLogging sl = new SetupLogging();
-    
+    @Rule
+    public LogMethodName lmn = new LogMethodName();
+
     protected void setLogLevelFor(String prefix, Level logLevel) {
-        switch(logLevel.toInt()) {
+        switch (logLevel.toInt()) {
             case Level.ALL_INT:
-                sl.getConfig().put("log4j.category."+prefix, "ALL");
+                sl.getConfig().put("log4j.category." + prefix, "ALL");
                 break;
             case Level.DEBUG_INT:
-                sl.getConfig().put("log4j.category."+prefix, "DEBUG");
+                sl.getConfig().put("log4j.category." + prefix, "DEBUG");
                 break;
             case Level.ERROR_INT:
-                sl.getConfig().put("log4j.category."+prefix, "ERROR");
+                sl.getConfig().put("log4j.category." + prefix, "ERROR");
                 break;
             case Level.FATAL_INT:
-                sl.getConfig().put("log4j.category."+prefix, "FATAL");
+                sl.getConfig().put("log4j.category." + prefix, "FATAL");
                 break;
             case Level.INFO_INT:
-                sl.getConfig().put("log4j.category."+prefix, "INFO");
+                sl.getConfig().put("log4j.category." + prefix, "INFO");
                 break;
             case Level.OFF_INT:
-                sl.getConfig().put("log4j.category."+prefix, "OFF");
+                sl.getConfig().put("log4j.category." + prefix, "OFF");
                 break;
             case Level.WARN_INT:
-                sl.getConfig().put("log4j.category."+prefix, "WARN");
+                sl.getConfig().put("log4j.category." + prefix, "WARN");
                 break;
         }
         PropertyConfigurator.configure(sl.getConfig());
     }
-    
+
     public void setLogLevelFor(Class<?> cls, Level logLevel) {
         setLogLevelFor(cls.getName(), logLevel);
     }
-    
+
     public void setLogLevelFor(Package pkg, Level logLevel) {
         setLogLevelFor(pkg.getName(), logLevel);
     }
-    
+
     public IWorkflow createWorkflow(File outputDirectory, List<IFragmentCommand> commands, List<File> inputFiles) {
         CommandPipeline cp = new CommandPipeline();
         List<IFileFragment> fragments = new ArrayList<IFileFragment>();
         for (File f : inputFiles) {
-            log.info("Adding input file {}",f);
+            log.info("Adding input file {}", f);
             fragments.add(new FileFragment(f));
         }
         cp.setCommands(commands);
@@ -114,5 +119,31 @@ public abstract class AFragmentCommandTest {
         dw.setExecuteLocal(true);
         dw.setOutputDirectory(outputDirectory);
         return dw;
+    }
+
+    public TupleND<IFileFragment> testWorkflow(IWorkflow w) {
+        try {
+            TupleND<IFileFragment> t = w.call();
+            w.save();
+            return t;
+        } catch (Exception e) {
+            copyToInspectionDir(w);
+            log.error("Caught exception while running workflow:", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void copyToInspectionDir(IWorkflow w) {
+        File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+        File outDir = new File(tmpDir, "maltcms-test-failures");
+        UUID uid = UUID.randomUUID();
+        File instanceDir = new File(outDir, uid.toString());
+        instanceDir.mkdirs();
+        try {
+            System.out.println("Copying workflow output to inspection directory: " + instanceDir.getAbsolutePath());
+            FileUtils.copyDirectoryToDirectory(w.getOutputDirectory(), instanceDir);
+        } catch (IOException ex) {
+            log.error("Failed to copy workflow output to inspection directory!", ex);
+        }
     }
 }

@@ -210,14 +210,13 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
      * @param f
      */
     protected void normalizeScans(final IFileFragment f, final boolean normalizeScans, boolean normalizeEicsToMeanVariance, String binnedIntensityVariable, String binnedScanIndexVariable, List<double[]> minMaxIntensities) {
-//        if (normalizeScans || normalizeMeanVariance) {
         final IVariableFragment ivf = f.getChild(binnedIntensityVariable);
         final IVariableFragment sidx = f.getChild(binnedScanIndexVariable);
         ivf.setIndex(sidx);
         final List<Array> intens = ivf.getIndexedArray();
         log.debug("Retrieved {} scans", intens.size());
 
-        final List<Array> normIntens = new ArrayList<Array>();
+        List<Array> normIntens = intens;
         if (normalizeEicsToMeanVariance) {
             log.info("Normalizing by subtracting mean and dividing by variance!");
             final List<Array> tilted = ArrayTools.tilt(intens);
@@ -229,8 +228,9 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
                 mean.set(i, -sm[i].get(Vars.Mean.name()));
                 var.set(i, sm[i].get(Vars.Variance.name()));
             }
-            for (final Array a : intens) {
-                normIntens.add(ArrayTools.div(ArrayTools.diff(a, mean),
+            for (int i = 0; i < normIntens.size(); i++) {
+                final Array a = normIntens.get(i);
+                normIntens.set(i, ArrayTools.div(ArrayTools.diff(a, mean),
                         var));
             }
         } else if (normalizeEicsToUnity) {
@@ -244,42 +244,27 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
                 min.set(i, -sm[i].get(Vars.Min.name()));
                 max.set(i, sm[i].get(Vars.Max.name()) + min.get(i));
             }
-            for (final Array a : intens) {
-                normIntens.add(ArrayTools.div(ArrayTools.diff(a, min),
+            for (int i = 0; i < normIntens.size(); i++) {
+                final Array a = normIntens.get(i);
+                normIntens.set(i, ArrayTools.div(ArrayTools.diff(a, min),
                         max));
             }
         }
         if (normalizeScans) {
             log.info("Normalizing scans to length 1");
-            if (normIntens.isEmpty()) {
-                for (int i = 0; i < intens.size(); i++) {
-                    final Array a = intens.get(i);
-                    final MAVector ma = new MAVector(a);
-                    final double norm = ma.norm();
-                    log.debug("Norm: {}", norm);
-                    if (norm == 0.0) {
-                        normIntens.add(a);
-                    } else {
-                        normIntens.add(ArrayTools.mult(a, 1.0d / norm));
-                    }
-                }
-            } else {
-                for (int i = 0; i < normIntens.size(); i++) {
-                    final Array a = normIntens.get(i);
-                    final MAVector ma = new MAVector(a);
-                    final double norm = ma.norm();
-                    log.debug("Norm: {}", norm);
-                    if (norm == 0.0) {
-                        normIntens.set(i, a);
-                    } else {
-                        normIntens.set(i, ArrayTools.mult(a, 1.0d / norm));
-                    }
+            for (int i = 0; i < normIntens.size(); i++) {
+                final Array a = normIntens.get(i);
+                final MAVector ma = new MAVector(a);
+                final double norm = ma.norm();
+                log.debug("Norm: {}", norm);
+                if (norm == 0.0) {
+                    normIntens.set(i, a);
+                } else {
+                    normIntens.set(i, ArrayTools.mult(a, 1.0d / norm));
                 }
             }
-
         }
         log.debug("Setting indexed array list of size: {}", normIntens.size());
         ivf.setIndexedArray(normIntens);
-//        }
     }
 }

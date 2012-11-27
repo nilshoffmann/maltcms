@@ -1,4 +1,4 @@
-/* 
+/*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
@@ -25,57 +25,43 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.commands.filters.array;
+package maltcms.test;
 
-import cross.datastructures.fragments.ImmutableFileFragment;
 import java.io.File;
-import maltcms.test.ZipResourceExtractor;
-import org.junit.*;
+import java.util.List;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import ucar.ma2.Array;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
-public class SavitzkyGolayFilterTest {
-
+public class ExtractClassPathFilesTest {
+    
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
 
-    public SavitzkyGolayFilterTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
-     * Test of apply method, of class SavitzkyGolayFilter.
+     * Test of getFiles method, of class ExtractClassPathFiles.
      */
     @Test
-    public void testApply() {
-        File outputFolder = tf.newFolder(
-                "cdf");
-        File outputFile = ZipResourceExtractor.extract("/cdf/1D/glucoseA.cdf.gz", outputFolder);
-        File unzippedFile = new File(outputFolder, "glucoseA.cdf");
-        ImmutableFileFragment ff = new ImmutableFileFragment(unzippedFile);
-        Array tic = ff.getChild("total_intensity").getArray();
-        SavitzkyGolayFilter instance = new SavitzkyGolayFilter();
-        instance.setWindow(2);
-        Array result = instance.apply(tic);
-
+    public void testGetFiles() {
+        ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf, ExtractHelper.getPathsForType(ExtractHelper.FType.CDF_1D)[0]);
+        try {
+            ecpf.before();
+            List<File> l = ecpf.getFiles();
+            Assert.assertFalse(l.isEmpty());
+            File f = l.get(0);
+            Assert.assertTrue(f.exists() && f.isFile());
+            Assert.assertTrue(f.length() > 0);
+            Assert.assertEquals("glucoseA.cdf", f.getName());
+            ecpf.after();
+            Assert.assertFalse(f.exists());
+        } catch (Throwable ex) {
+           Assert.fail(ex.getLocalizedMessage());
+        }
+        
     }
 }

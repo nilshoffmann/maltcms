@@ -45,6 +45,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import cross.math.Combinatorics;
+import net.sf.maltcms.evaluation.api.classification.ChoiceFactory;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.LoggerFactory;
@@ -66,7 +67,7 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
     public BeansXmlGenerator(LinkedHashMap<String, List<?>> parameterMap,
             File template, File outputDirectory, HashMap<String, String> tokenMap) {
         keys = parameterMap.keySet();
-        this.choices = Combinatorics.getKPartiteChoices(Combinatorics.
+        this.choices = ChoiceFactory.getKPartiteChoices(Combinatorics.
                 toObjectArray(parameterMap));
         this.template = template;
         this.outputDirectory = outputDirectory;

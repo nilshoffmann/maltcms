@@ -65,16 +65,15 @@ public class DefaultVarLoader extends AFragmentCommand {
     private List<String> defaultVariables = Collections.emptyList();
     @Configurable
     private List<String> additionalVariables = Collections.emptyList();
-    @Configurable
-    private int startIndex = -1;
-    @Configurable
-    private int stopIndex = -1;
 
     @Override
     public TupleND<IFileFragment> apply(
             final TupleND<IFileFragment> inputFileFragments) {
         log.debug("Running DefaultVarLoader on {} FileFragments!",
                 inputFileFragments.size());
+        if(defaultVariables.isEmpty() && additionalVariables.isEmpty()) {
+            return inputFileFragments;
+        }
         //create a new completion service instance for this fragment command
         ICompletionService<File> ics = createCompletionService(File.class);
         for (final IFileFragment f : inputFileFragments) {

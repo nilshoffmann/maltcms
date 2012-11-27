@@ -41,7 +41,7 @@ import java.util.LinkedList;
 import java.util.List;
 import junit.framework.Assert;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
-import cross.io.misc.ZipResourceExtractor;
+import maltcms.test.ZipResourceExtractor;
 import cross.vocabulary.CvResolver;
 import cross.vocabulary.ICvResolver;
 import lombok.extern.slf4j.Slf4j;

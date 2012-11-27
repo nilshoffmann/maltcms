@@ -118,7 +118,7 @@ import ucar.ma2.MAMath;
     "var.scan_acquisition_time", "var.mass_values", "var.intensity_values",
     "var.scan_index"})
 @RequiresOptionalVariables(names = {"var.tic_peaks",
-    "var.first_column_elution_time", "var.second_column_elution_time"})
+    "var.first_column_elution_time", "var.second_column_elution_time", "var.peak_area"})
 @ProvidesVariables(names = {"var.anchors.retention_index_names",
     "var.anchors.retention_times", "var.anchors.retention_indices",
     "var.anchors.retention_scans"})
@@ -1109,14 +1109,17 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 Array sidx = t.getChild(this.binnedScanIndex).getArray();
                 peakCandidates1 = ArrayTools.indexArray(sidx.getShape()[0], 0);
             }
-
-            t.getChild(this.massValues).setIndex(t.getChild(this.scanIndex));
-            t.getChild(this.intensityValues).setIndex(t.getChild(this.scanIndex));
+            IVariableFragment sivar = t.getChild(this.scanIndex);
+            IVariableFragment mvar = t.getChild(this.massValues);
+            mvar.setIndex(sivar);
+            IVariableFragment ivar = t.getChild(this.intensityValues);
+            ivar.setIndex(sivar);
             // maxPeaks = Math.max(maxPeaks, peakCandidates1.getShape()[0]);
-            t.getChild(this.binnedIntensities).setIndex(
-                    t.getChild(this.binnedScanIndex));
-            final Array scan_acquisition_time = t.getChild(
-                    this.scanAcquisitionTime).getArray();
+            IVariableFragment bsivar = t.getChild(this.binnedScanIndex);
+            IVariableFragment bivar = t.getChild(this.binnedIntensities);
+            bivar.setIndex(bsivar);
+            IVariableFragment satvar = t.getChild(this.scanAcquisitionTime);
+            final Array scan_acquisition_time = satvar.getArray();
             Array firstColumnElutionTime = null;
             Array secondColumnElutionTime = null;
             if(use2DRetentionTimes) {
@@ -1140,10 +1143,10 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             List<Array> indexedMasses = null;
             List<Array> indexedIntensities = null;
             if (useSparseArrays) {
-                indexedMasses = t.getChild(this.massValues).getIndexedArray();
-                indexedIntensities = t.getChild(this.intensityValues).getIndexedArray();
+                indexedMasses = mvar.getIndexedArray();
+                indexedIntensities = ivar.getIndexedArray();
             } else {
-                indexedIntensities = t.getChild(this.binnedIntensities).getIndexedArray();
+                indexedIntensities = bivar.getIndexedArray();
             }
             final Index pc1 = peakCandidates1.getIndex();
             final Index sat1 = scan_acquisition_time.getIndex();
@@ -1293,11 +1296,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
     }
 
-    //var.tic_peaks
-//    "var.tic_peaks", "var.tic_filtered", "andichrom.var.peak_name",
-//    "andichrom.dimension.peak_number", "andichrom.var.peak_retention_time", "andichrom.var.peak_start_time",
-//    "andichrom.var.peak_end_time", "andichrom.var.peak_area","andichrom.var.baseline_start_time",
-//    "andichrom.var.baseline_stop_time","andichrom.var.baseline_start_value","andichrom.var.baseline_stop_value"
     /**
      * @param columnMap
      * @param ll

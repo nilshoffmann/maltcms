@@ -25,13 +25,13 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.io;
+package maltcms.test;
 
-import cross.io.misc.ZipResourceExtractor;
 import maltcms.test.ExtractHelper;
 import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 import cross.test.SetupLogging;
+import maltcms.test.ZipResourceExtractor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -63,44 +63,16 @@ public class ZipResourceExtractorTest {
         log.info("File size is != 0: {}", unzippedFile.length());
     }
 
-    @Test
-    public void testExtract2D() {
-        File outputFolder = tf.newFolder(
-                "cdf");
-        File outputFile = ZipResourceExtractor.extract("/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", outputFolder);
-        File unzippedFile = new File(outputFolder, "090306_37_FAME_Standard_1.cdf");
-        Assert.assertTrue(outputFile.getAbsolutePath().equals(unzippedFile.getAbsolutePath()));
-        Assert.assertTrue(unzippedFile.exists());
-        log.info("File exists");
-        Assert.assertTrue(unzippedFile.length() > 0);
-        log.info("File size is != 0: {}", unzippedFile.length());
-    }
-
-    @Test
-    public void testExtractHelper() {
-        ExtractHelper.FType type = ExtractHelper.FType.CDF_1D;
-        File[] files = ExtractHelper.extractAllForType(tf.newFolder(type.name()), type);
-        for (File f : files) {
-            Assert.assertTrue(f.exists() && f.isFile());
-            Assert.assertTrue(f.length() > 0);
-        }
-        type = ExtractHelper.FType.MZML;
-        files = ExtractHelper.extractAllForType(tf.newFolder(type.name()), type);
-        for (File f : files) {
-            Assert.assertTrue(f.exists() && f.isFile());
-            Assert.assertTrue(f.length() > 0);
-        }
-        type = ExtractHelper.FType.MZXML;
-        files = ExtractHelper.extractAllForType(tf.newFolder(type.name()), type);
-        for (File f : files) {
-            Assert.assertTrue(f.exists() && f.isFile());
-            Assert.assertTrue(f.length() > 0);
-        }
-        type = ExtractHelper.FType.MZDATA;
-        files = ExtractHelper.extractAllForType(tf.newFolder(type.name()), type);
-        for (File f : files) {
-            Assert.assertTrue(f.exists() && f.isFile());
-            Assert.assertTrue(f.length() > 0);
-        }
-    }
+//    @Test
+//    public void testExtract2D() {
+//        File outputFolder = tf.newFolder(
+//                "cdf");
+//        File outputFile = ZipResourceExtractor.extract("/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", outputFolder);
+//        File unzippedFile = new File(outputFolder, "090306_37_FAME_Standard_1.cdf");
+//        Assert.assertTrue(outputFile.getAbsolutePath().equals(unzippedFile.getAbsolutePath()));
+//        Assert.assertTrue(unzippedFile.exists());
+//        log.info("File exists");
+//        Assert.assertTrue(unzippedFile.length() > 0);
+//        log.info("File size is != 0: {}", unzippedFile.length());
+//    }
 }

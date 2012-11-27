@@ -31,16 +31,17 @@ import cross.applicationContext.DefaultApplicationContextFactory;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.tools.FragmentTools;
 import cross.datastructures.workflow.IWorkflow;
-import cross.io.misc.ZipResourceExtractor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import junit.framework.Assert;
 import maltcms.commands.filters.array.AArrayFilter;
+import maltcms.commands.filters.array.LogFilter;
 import maltcms.commands.filters.array.SqrtFilter;
 import maltcms.test.AFragmentCommandTest;
+import maltcms.test.ExtractClassPathFiles;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 
@@ -50,30 +51,32 @@ import org.springframework.context.ApplicationContext;
  */
 public class MyFragmentCommandTest extends AFragmentCommandTest {
     
+    @Rule
+    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
+            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
+    
     /**
      * Test of getDescription method, of class MyFragmentCommand.
      */
     @Test
     public void testProgrammaticWorkflow() {
-        File dataFolder = tf.newFolder("chromaTestData");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File inputFile2 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
         File outputBase = tf.newFolder("chromaTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         MyFragmentCommand cmd = new MyFragmentCommand();
         cmd.setFilter(Arrays.asList(new AArrayFilter[]{new SqrtFilter()}));
         commands.add(cmd);
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1, inputFile2));
-        try {
-            w.call();
-            w.save();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Assert.fail(ex.getLocalizedMessage());
-        }
+        //add a transparent fragment command
+        commands.add(new SameInSameOutFragmentCommand());
+        //add a second filter fragment command that retrieves data already 
+        //written by cmd
+        MyFragmentCommand cmd2 = new MyFragmentCommand();
+        cmd2.setFilter(Arrays.asList(new AArrayFilter[]{new LogFilter()}));
+        commands.add(cmd2);
+        commands.add(new DecoratingFragmentCommand());
+        commands.add(new SameInSameOutFragmentCommand());
+        commands.add(new TransparentFragmentCommand());
+        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        testWorkflow(w);
     }
 
     /**
@@ -81,23 +84,12 @@ public class MyFragmentCommandTest extends AFragmentCommandTest {
      */
     @Test
     public void testApplicationContextWorkflow() {
-        File dataFolder = tf.newFolder("chromaTestData");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File inputFile2 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
         File outputBase = tf.newFolder("chromaTestOut");
         DefaultApplicationContextFactory dacf = new DefaultApplicationContextFactory(Arrays.asList("/cfg/pipelines/xml/workflowDefaults.xml","/cfg/pipelines/xml/myFragmentCommand.xml"), new PropertiesConfiguration());
         ApplicationContext ac = dacf.createClassPathApplicationContext();
         IWorkflow w = ac.getBean(IWorkflow.class);
-        w.getCommandSequence().setInput(FragmentTools.immutable(inputFile1,inputFile2));
+        w.getCommandSequence().setInput(FragmentTools.immutable(ecpf.getFiles()));
         w.setOutputDirectory(outputBase);
-        try {
-            w.call();
-            w.save();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Assert.fail(ex.getLocalizedMessage());
-        }
+        testWorkflow(w);
     }
 }

@@ -298,8 +298,8 @@ for details.
     <bean id="chromatogramWarp" class="maltcms.commands.fragments.warp.ChromatogramWarp2">
         <property name="indexedVars">
             <list><!-- uncomment the following two to recalculate the mass spectra to the aligned time -->
-                <!-- <value>mass_values</value> -->
-                <!-- <value>intensity_values</value> -->
+                <value>mass_values</value>
+                <value>intensity_values</value>
             </list>
         </property>
         <property name="plainVars">

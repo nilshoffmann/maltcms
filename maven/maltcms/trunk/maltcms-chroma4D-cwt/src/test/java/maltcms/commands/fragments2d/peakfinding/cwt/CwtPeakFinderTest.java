@@ -32,7 +32,7 @@ import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
-import cross.io.misc.ZipResourceExtractor;
+import maltcms.test.ZipResourceExtractor;
 import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;

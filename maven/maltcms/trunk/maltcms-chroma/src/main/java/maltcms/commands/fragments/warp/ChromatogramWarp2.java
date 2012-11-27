@@ -188,7 +188,6 @@ public class ChromatogramWarp2 extends AFragmentCommand {
         log.info("Warping 2D variables: {}", indexedVars);
         EvalTools.notNull(at, this);
         String refname = at.getRefName();
-        log.info("Refname in alignment table {}",refname);
 
         IFileFragment refOrig = null;
         for (IFileFragment f : t) {
@@ -452,54 +451,25 @@ public class ChromatogramWarp2 extends AFragmentCommand {
         Tuple2D<List<Array>, List<Array>> t = null;
         final ArrayList<Tuple2DI> al = new ArrayList<Tuple2DI>(path.size());
         al.addAll(path);
-        // if(sourceOnLHS){ //whether b is on lhs of path
-        // log.info("Processing {} indexed by {} from file {}",new
-        // Object[]{s1,this.indexVar,b.getName()});
-        // log.info("Processing {} indexed by {} from file {}",new
-        // Object[]{s2,this.indexVar,b.getName()});
-        // a.getChild(s1).setIndex(a.getChild(this.indexVar));
-        // a.getChild(s2).setIndex(a.getChild(this.indexVar));
-        // List<Array> aA1 = a.getChild(s1).getIndexedArray();
-        // List<Array> aA2 = a.getChild(s2).getIndexedArray();
-        // b.getChild(s1).setIndex(b.getChild(this.indexVar));
-        // b.getChild(s2).setIndex(b.getChild(this.indexVar));
-        // bA1 = b.getChild(s1).getIndexedArray();
-        // bA2 = b.getChild(s2).getIndexedArray();
-        // //aA is only needed for correct shape and data type
-        // t = ArrayTools.project2(false,aA1, aA2, al, bA1, bA2);
-        // bA1 = t.getFirst();
-        // bA2 = t.getSecond();
-        // }else{//a is on lhs of path
-        // log.info("Processing {} indexed by {} from file {}",new
-        // Object[]{s1,this.indexVar,b.getName()});
-        // log.info("Processing {} indexed by {} from file {}",new
-        // Object[]{s2,this.indexVar,b.getName()});
-        // a.getChild(s1).setIndex(a.getChild(this.indexVar));
-        // a.getChild(s2).setIndex(a.getChild(this.indexVar));
-        // List<Array> aA1 = a.getChild(s1).getIndexedArray();
-        // List<Array> aA2 = a.getChild(s2).getIndexedArray();
-        // b.getChild(s1).setIndex(b.getChild(this.indexVar));
-        // b.getChild(s2).setIndex(b.getChild(this.indexVar));
-        // bA1 = b.getChild(s1).getIndexedArray();
-        // bA2 = b.getChild(s2).getIndexedArray();
-        // //aA is only needed for correct shape and data type
-        // t = ArrayTools.project2(true,aA1, aA2, al, bA1, bA2);
-        // bA1 = t.getFirst();
-        // bA2 = t.getSecond();
-        // }
         try {
             log.debug("Processing {} indexed by {} from file {}",
                     new Object[]{s1, this.indexVar, toBeWarped.getName()});
             log.debug("Processing {} indexed by {} from file {}",
                     new Object[]{s2, this.indexVar, toBeWarped.getName()});
-            ref.getChild(s1).setIndex(ref.getChild(this.indexVar));
-            ref.getChild(s2).setIndex(ref.getChild(this.indexVar));
-            final List<Array> aA1 = ref.getChild(s1).getIndexedArray();
-            final List<Array> aA2 = ref.getChild(s2).getIndexedArray();
-            toBeWarped.getChild(s1).setIndex(toBeWarped.getChild(this.indexVar));
-            toBeWarped.getChild(s2).setIndex(toBeWarped.getChild(this.indexVar));
-            tbwa1 = toBeWarped.getChild(s1).getIndexedArray();
-            tbwa2 = toBeWarped.getChild(s2).getIndexedArray();
+            IVariableFragment iv = ref.getChild(this.indexVar);
+            IVariableFragment s1v = ref.getChild(s1);
+            s1v.setIndex(iv);
+            IVariableFragment s2v = ref.getChild(s2);
+            s2v.setIndex(iv);
+            final List<Array> aA1 = s1v.getIndexedArray();
+            final List<Array> aA2 = s2v.getIndexedArray();
+            IVariableFragment tiv = toBeWarped.getChild(this.indexVar);
+            IVariableFragment t1v = toBeWarped.getChild(s1);
+            t1v.setIndex(tiv);
+            IVariableFragment t2v = toBeWarped.getChild(s2);
+            t2v.setIndex(tiv);
+            tbwa1 = t1v.getIndexedArray();
+            tbwa2 = t2v.getIndexedArray();
             // aA is only needed for correct shape and data type
             // if(toLHS) {
             // t = ArrayTools.project2(toLHS,bA1, bA2, al, aA1, aA2);

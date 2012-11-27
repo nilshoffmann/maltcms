@@ -48,6 +48,7 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IFragment;
 import cross.datastructures.fragments.IGroupFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.fragments.VariableFragment;
 import cross.exception.ResourceNotAvailableException;
 import java.net.URI;
 import java.util.*;
@@ -72,6 +73,11 @@ public class Experiment1D implements IExperiment1D {
 
     public Experiment1D(final IFileFragment ff1) {
         this.ff = ff1;
+    }
+    
+    @Override
+    public IVariableFragment addChild(String name) {
+        return this.ff.addChild(name);
     }
 
     /**

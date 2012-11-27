@@ -32,11 +32,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.Assert;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
-import cross.io.misc.ZipResourceExtractor;
+import maltcms.test.ZipResourceExtractor;
 import maltcms.test.AFragmentCommandTest;
 
 import org.junit.Test;
@@ -53,7 +52,7 @@ import org.junit.experimental.categories.Category;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 @Category(IntegrationTest.class)
 public class BiPaceTest extends AFragmentCommandTest {
@@ -91,13 +90,6 @@ public class BiPaceTest extends AFragmentCommandTest {
         commands.add(new PeakCliqueAlignment());
         IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
                 inputFile1, inputFile2));
-        try {
-            w.call();
-            w.save();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Assert.fail(ex.getLocalizedMessage());
-        }
-
+        testWorkflow(w);
     }
 }
