@@ -114,28 +114,29 @@ public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
             synchronized (t.getFirst()) {
                 final IVariableFragment index1 = t.getFirst().getChild(
                         "binned_" + this.scan_index);
-                if (t.getFirst().getChild("binned_" + this.mass_values).getIndex() == null) {
-                    t.getFirst().getChild("binned_" + this.mass_values).setIndex(
+                final IVariableFragment binnedMassValues1 = t.getFirst().getChild("binned_" + this.mass_values);
+                final IVariableFragment binnedIntensityValues1 = t.getFirst().getChild("binned_" + this.intensity_values);
+                if (binnedMassValues1.getIndex() == null) {
+                    binnedMassValues1.setIndex(
                             index1);
-                    t.getFirst().getChild("binned_" + this.intensity_values).
+                    binnedIntensityValues1.
                             setIndex(index1);
                 }
-                intens1 = t.getFirst().getChild(
-                        "binned_" + this.intensity_values).getIndexedArray();
+                intens1 = binnedIntensityValues1.getIndexedArray();
                 EvalTools.notNull(intens1, this);
             }
             synchronized (t.getSecond()) {
                 final IVariableFragment index2 = t.getSecond().getChild(
                         "binned_" + this.scan_index);
-                if (t.getSecond().getChild("binned_" + this.mass_values).
-                        getIndex() == null) {
-                    t.getSecond().getChild("binned_" + this.mass_values).
-                            setIndex(index2);
-                    t.getSecond().getChild("binned_" + this.intensity_values).
+                final IVariableFragment binnedMassValues2 = t.getSecond().getChild("binned_" + this.mass_values);
+                final IVariableFragment binnedIntensityValues2 = t.getSecond().getChild("binned_" + this.intensity_values);
+                if (binnedMassValues2.getIndex() == null) {
+                    binnedMassValues2.setIndex(
+                            index2);
+                    binnedIntensityValues2.
                             setIndex(index2);
                 }
-                intens2 = t.getSecond().getChild(
-                        "binned_" + this.intensity_values).getIndexedArray();
+                intens2 = binnedIntensityValues2.getIndexedArray();
                 EvalTools.notNull(intens2, this);
             }
         }

@@ -37,6 +37,7 @@ import cross.tools.MathTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.ArrayByte;
 
 /**
  * Objects of this type are used to calculate the cumulative distance within the
@@ -82,13 +83,13 @@ public class DtwRecurrence implements IRecurrence {
 
     private double cumDistM(final int row, final int column,
             final IArrayD2Double cumDistMatrix, final double cij,
-            final boolean minimize1, final byte[][] predecessors) {
+            final boolean minimize1, final ArrayByte.D2 predecessors) {
         final double init = minimize1 ? Double.POSITIVE_INFINITY
                 : Double.NEGATIVE_INFINITY;
         double n = init, w = init, nw = init;
         if ((row == 0) && (column == 0)) {
             nw = this.diag_weight * cij;
-            predecessors[row][column] = 1;
+            predecessors.set(row, column, (byte) 1);
             // System.out.println("cij = "+cij + ", nw= "+nw);
             cumDistMatrix.set(row, column, nw);
             // log.debug(
@@ -99,7 +100,7 @@ public class DtwRecurrence implements IRecurrence {
             // System.out.println("i="+row+" j="+column+" cij = "+cij +
             // ", n= "+n);
             cumDistMatrix.set(row, column, n);
-            predecessors[row][column] = 2;
+            predecessors.set(row, column, (byte) 2);
             // log.debug("Case 2: First column, row {}={}, best from Up",
             // row, n);
             return n;
@@ -108,7 +109,7 @@ public class DtwRecurrence implements IRecurrence {
             // System.out.println("i="+row+" j="+column+" cij = "+cij +
             // ", w= "+w);
             cumDistMatrix.set(row, column, w);
-            predecessors[row][column] = 3;
+            predecessors.set(row, column, (byte) 3);
             // log.debug("Case 3: First row, column {}={}, best from Left",
             // column, w);
             return w;
@@ -130,11 +131,11 @@ public class DtwRecurrence implements IRecurrence {
                     n, w, nw);
             // int neq = nequal(n, w, nw);
             if (m == nw) {
-                predecessors[row][column] = 1;
+                predecessors.set(row, column, (byte) 1);
             } else if (m == n) {
-                predecessors[row][column] = 2;
+                predecessors.set(row, column, (byte) 2);
             } else if (m == w) {
-                predecessors[row][column] = 3;
+                predecessors.set(row, column, (byte) 3);
             }
             cumDistMatrix.set(row, column, m);
             // if (minimize1) {
@@ -208,7 +209,7 @@ public class DtwRecurrence implements IRecurrence {
     @Override
     public double eval(final int row, final int column,
             final IArrayD2Double cumDistMatrix, final double dij,
-            final byte[][] predecessors) {
+            final ArrayByte.D2 predecessors) {
         if (this.minimize) {
             return cumDistM(row, column, cumDistMatrix, dij, true, predecessors);
         }

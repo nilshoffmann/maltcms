@@ -150,7 +150,7 @@ public class NetcdfDataSourceTest {
             iv.setIndex(si);
             l = getDataSource().readIndexed(iv);
             Assert.assertTrue(l.size() > 0);
-
+            iv.setIndex(null);
             ff.removeChild(si);
             ff.removeChild(iv);
 //            FileFragment.clearFragments();

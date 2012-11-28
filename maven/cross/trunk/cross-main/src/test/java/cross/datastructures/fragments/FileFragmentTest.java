@@ -157,6 +157,11 @@ public class FileFragmentTest {
         URI relative52 = FileTools.getRelativeUri(uri9, uri10);
         Assert.assertEquals(URI.create("../command2"), relative52);
         Assert.assertEquals(uri10, FileTools.resolveRelativeUri(uri9, relative52));
+        
+        URI uri11 = new File("/tmp/69138/workflow/command1/file1.cdf").toURI();
+        URI uri12 = new File("/tmp/69138/workflow/command1/otherOutput/oof.cdf").toURI();
+        URI relative1112 = FileTools.getRelativeUri(uri11, uri12);
+        Assert.assertEquals(URI.create("otherOutput/oof.cdf"),relative1112);
     }
 
     @Test
@@ -186,6 +191,25 @@ public class FileFragmentTest {
         for (int i = 0; i < sourceFiles.length; i++) {
             Assert.assertEquals(resolvedSourceFiles.get(i).getUri(), sourceFiles[i].getUri());
         }
+        
+        URI uri11 = new File("/tmp/69138/workflow/command1/file1.cdf").toURI();
+        FileFragment f1 = new FileFragment(uri11);
+        URI uri12 = new File("/tmp/69138/workflow/command1/otherOutput/oof.cdf").toURI();
+        FileFragment f2 = new FileFragment(uri12);
+        Assert.assertTrue(FragmentTools.isChild(f1, f2));
+        
+        URI uri13 = new File("/tmp/69138/workflow/command2/file1.cdf").toURI();
+        FileFragment f3 = new FileFragment(uri13);
+        URI uri14 = new File("/tmp/69138/workflow/command0/otherOutput/oof.cdf").toURI();
+        FileFragment f4 = new FileFragment(uri14);
+        Assert.assertFalse(FragmentTools.isChild(f3, f4));
+        
+        URI uri15 = new File("/tmp/69138/workflow/command2/otherOutput/oof1.cdf").toURI();
+        FileFragment f5 = new FileFragment(uri15);
+        f5.addSourceFile(f3);
+        Assert.assertFalse(f5.getSourceFiles().isEmpty());
+        Assert.assertTrue(FragmentTools.isChild(f3,f5));
+        Assert.assertEquals(URI.create("otherOutput/oof1.cdf"), FragmentTools.resolve(f5, f3));
     }
 
     @Test

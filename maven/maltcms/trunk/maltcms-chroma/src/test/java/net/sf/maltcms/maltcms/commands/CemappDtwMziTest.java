@@ -46,7 +46,6 @@ import org.junit.Test;
 import cross.commands.fragments.AFragmentCommand;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.cache.CacheType;
-import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.workflow.IWorkflow;
 import java.util.LinkedList;
 import lombok.extern.slf4j.Slf4j;
@@ -54,10 +53,12 @@ import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import cross.test.IntegrationTest;
+import java.util.Collections;
 import maltcms.commands.fragments.alignment.CenterStarAlignment;
 import maltcms.commands.fragments.preprocessing.ScanExtractor;
 import maltcms.commands.fragments.warp.ChromatogramWarp2;
 import maltcms.test.ExtractClassPathFiles;
+import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.experimental.categories.Category;
 
@@ -75,7 +76,11 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
 
     @Test
     public void testCemappDtwMZIFull() {
-//        FileFragment.clearFragments();
+        setLogLevelFor("cross", Level.OFF);
+        setLogLevelFor("maltcms", Level.OFF);
+        setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
+        setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
+        setLogLevelFor("maltcms.tools.PathTools", Level.INFO);
         cross.datastructures.cache.CacheFactory.setDefaultFragmentCacheType(CacheType.NONE);
         File outputBase = tf.newFolder("testCemappDtwFullTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
@@ -87,6 +92,10 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         commands.add(new DenseArrayProducer());
         commands.add(createPairwiseDistanceCalculatorMZI(false, 0, true,
                 1.0d));
+        commands.add(new CenterStarAlignment());
+        ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
+        cwarp2.setIndexedVars(new LinkedList<String>());
+        commands.add(cwarp2);
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }
@@ -105,7 +114,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         pdc.setWorkerFactory(factory);
         factory.setSaveDtwMatrix(false);
         factory.setSavePairwiseSimilarityMatrix(false);
-        factory.setSaveLayoutImage(false);
+        factory.setSaveLayoutImage(true);
         return pdc;
     }
 
@@ -114,36 +123,41 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
      */
     @Test
     public void testCemappDtwMZIConstrained() {
-//        FileFragment.clearFragments();
+        setLogLevelFor("cross", Level.OFF);
+        setLogLevelFor("maltcms", Level.OFF);
+        setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
+        setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
+        setLogLevelFor("maltcms.tools.PathTools", Level.INFO);
         cross.datastructures.cache.CacheFactory.setDefaultFragmentCacheType(CacheType.NONE);
         File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         commands.add(new DefaultVarLoader());
         ScanExtractor se = new ScanExtractor();
-        se.setStartScan(500);
-        se.setEndScan(749);
+        se.setStartScan(1600);
+        se.setEndScan(2100);
         commands.add(se);
         commands.add(new DenseArrayProducer());
-//        TICPeakFinder tpf = new TICPeakFinder();
-//        SavitzkyGolayFilter sgf = new SavitzkyGolayFilter();
-//        sgf.setWindow(12);
-//        List<AArrayFilter> filters = new LinkedList<AArrayFilter>();
-//        filters.add(sgf);
-//        tpf.setFilter(filters);
-//        LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();
-//        lmbe.setBandwidth(0.3);
-//        lmbe.setAccuracy(1.0E-12);
-//        lmbe.setRobustnessIterations(2);
-//        lmbe.setMinimaWindow(50);
-//        tpf.setBaselineEstimator(lmbe);
-//        tpf.setSnrWindow(50);
-//        tpf.setPeakSeparationWindow(10);
-//        tpf.setPeakThreshold(20.0d);
-//        commands.add(tpf);
-//        commands.add(new PeakCliqueAlignment());
-        commands.add(createPairwiseDistanceCalculatorMZI(false, 0, false, 0.5d));
+        TICPeakFinder tpf = new TICPeakFinder();
+        SavitzkyGolayFilter sgf = new SavitzkyGolayFilter();
+        sgf.setWindow(12);
+        List<AArrayFilter> filters = new LinkedList<AArrayFilter>();
+        filters.add(sgf);
+        tpf.setFilter(filters);
+        LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();
+        lmbe.setBandwidth(0.4);
+        lmbe.setAccuracy(1.0E-12);
+        lmbe.setRobustnessIterations(2);
+        lmbe.setMinimaWindow(50);
+        tpf.setBaselineEstimator(lmbe);
+        tpf.setSnrWindow(50);
+        tpf.setPeakSeparationWindow(10);
+        tpf.setPeakThreshold(5.0d);
+        commands.add(tpf);
+        commands.add(new PeakCliqueAlignment());
+        commands.add(createPairwiseDistanceCalculatorMZI(true, 0, false, 0.5d));
         commands.add(new CenterStarAlignment());
-        commands.add(new ChromatogramWarp2());
+        ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
+        cwarp2.setIndexedVars(new LinkedList<String>());
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }

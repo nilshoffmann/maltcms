@@ -382,11 +382,13 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
                             getParent()).readIndexed(this);
                     return l;
                 } catch (final IOException e) {
-                    log.error(e.getLocalizedMessage());
-                    return Collections.emptyList();
+                    throw new RuntimeException(e);
+//                    log.error(e.getLocalizedMessage());
+//                    return Collections.emptyList();
                 } catch (final ResourceNotAvailableException e) {
-                    log.error(e.getLocalizedMessage());
-                    return Collections.emptyList();
+//                    log.error(e.getLocalizedMessage());
+//                    return Collections.emptyList();
+                    throw new RuntimeException(e);
                 }
             }
         }

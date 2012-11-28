@@ -70,6 +70,7 @@ import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.io.IFileFragmentProvider;
 import cross.tools.StringTools;
+import ucar.ma2.ArrayByte;
 
 /**
  * Implementation of IFileFragmentProvider for PairwiseAlignment.
@@ -110,7 +111,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     @Configurable(name = "alignment.algorithm.distance")
     private String arrayDistanceClassName = "maltcms.commands.distances.ArrayLp";
     private IWorkflow iw;
-    private byte[][] predecessors;
+    private ArrayByte.D2 predecessors;
     @Configurable(name = "normalizeAlignmentValueByMapWeights")
     private boolean normalizeAlignmentValueByMapWeights;
     private List<Tuple2DI> interppath;
@@ -233,7 +234,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     /**
      * @return the predecessors
      */
-    public byte[][] getPredecessors() {
+    public ArrayByte.D2 getPredecessors() {
         return this.predecessors;
     }
 
@@ -367,9 +368,9 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
                     .getName())
                     + "_names.txt", rows, WorkflowSlot.ALIGNMENT);
             if (this.anchors != null) {
-                row.add(this.ref.getName());
-                row.add(this.target.getName());
-                rows.add(row);
+//                row.add(this.ref.getName());
+//                row.add(this.target.getName());
+//                rows.add(row);
                 for (Tuple2D<IAnchor, IAnchor> t : this.anchors) {
                     row = new ArrayList<String>();
                     row.add(t.getFirst().getScanIndex() + "");
@@ -652,7 +653,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     /**
      * @param predecessors the predecessors to set
      */
-    public void setPredecessors(final byte[][] predecessors) {
+    public void setPredecessors(final ArrayByte.D2 predecessors) {
         this.predecessors = predecessors;
     }
 
@@ -710,7 +711,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
         this.target = target;
     }
 
-    public void setTraceMatrix(final byte[][] predecessors1) {
+    public void setTraceMatrix(final ArrayByte.D2 predecessors1) {
         this.predecessors = predecessors1;
     }
 }

@@ -29,6 +29,7 @@ package maltcms.commands.distances;
 
 import maltcms.datastructures.array.IArrayD2Double;
 import cross.IConfigurable;
+import ucar.ma2.ArrayByte;
 
 /**
  * Interface for classes performing a recurring operation, e.g. dynamic
@@ -40,7 +41,7 @@ import cross.IConfigurable;
 public interface IRecurrence extends IConfigurable {
 
     public abstract double eval(int row, int column,
-            IArrayD2Double cumDistMatrix, double dij, byte[][] predecessors);
+            IArrayD2Double cumDistMatrix, double dij, ArrayByte.D2 predecessors);
 
     public abstract double eval(int row, int column,
             IArrayD2Double previousRow, IArrayD2Double currentRow, double dij);

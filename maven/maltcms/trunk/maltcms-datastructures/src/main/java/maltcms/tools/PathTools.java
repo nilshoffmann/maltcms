@@ -43,7 +43,6 @@ import maltcms.datastructures.array.IArrayD2Double;
 import maltcms.io.csv.CSVWriter;
 
 import org.apache.commons.configuration.Configuration;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -64,7 +63,9 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.datastructures.tools.FragmentTools;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
+import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
+import ucar.ma2.ArrayByte;
 
 /**
  * Utility class providing methods for handling of the path obtained from
@@ -780,7 +781,7 @@ public class PathTools implements IConfigurable {
 
         for (int i = 0; i < map.size(); i++) {
             final Tuple2DI t = map.get(i);
-            pathValues[i] = pwdist.get(t.getFirst(),t.getSecond());
+            pathValues[i] = pwdist.get(t.getFirst(), t.getSecond());
         }
 
         csvw.setWorkflow(iw);
@@ -820,23 +821,26 @@ public class PathTools implements IConfigurable {
     }
 
     /**
-     * Calculates a trace based on the byte[][] argument. Expects 0 for diagonal
-     * steps, 1 for vertical steps and -1 for horizontal steps.
+     * Calculates a trace based on the ArrayByte.D2 argument
+     * <code>predecessors</code>. Expects 1 for diagonal steps, 2 for vertical
+     * steps and 3 for horizontal steps.
      *
      * @param predecessors
      * @return
      */
-    public List<Tuple2DI> traceback(final byte[][] predecessors,
+    public List<Tuple2DI> traceback(final ArrayByte.D2 predecessors,
             final IFileFragment ref, final IFileFragment target) {
-        int a = predecessors.length - 1;
-        int b = predecessors[0].length - 1;
+        log.info("Shape of predecessors: {}", Arrays.toString(predecessors.getShape()));
+        int a = predecessors.getShape()[0] - 1;
+        int b = predecessors.getShape()[1] - 1;
         int i;
         this.nexp = this.ndiag = this.ncomp = 0;
         final StringBuilder sb = new StringBuilder();
         final ArrayList<Tuple2DI> al = new ArrayList<Tuple2DI>();
         int prev = 0;
         while ((a != 0) && (b != 0)) {
-            i = predecessors[a][b];
+            i = predecessors.get(a, b);
+            log.info("a: {}, b: {}", a, b);
             switch (i) {
                 case 1: {
                     al.add(new Tuple2DI(a, b));

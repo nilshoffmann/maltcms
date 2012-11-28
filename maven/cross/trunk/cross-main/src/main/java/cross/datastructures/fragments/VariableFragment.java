@@ -351,9 +351,9 @@ public class VariableFragment implements IVariableFragment {
      */
     @Override
     public List<Array> getIndexedArray() {
-        if (getIndex() == null) {
-            return Collections.emptyList();
-        }
+//        if (getIndex() == null) {
+//            return Collections.emptyList();
+//        }
         List<Array> l = parent.getCache().get(this);
         if (l == null) {
             return Collections.emptyList();

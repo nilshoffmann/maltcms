@@ -75,6 +75,7 @@ import cross.tools.StringTools;
 import java.util.LinkedList;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import ucar.ma2.ArrayByte;
 
 /**
  * Base class for dynamic time warping implementations.
@@ -99,7 +100,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
     /**
      *
      */
-    protected transient byte[][] predecessors = null;
+    protected transient ArrayByte.D2 predecessors = null;
     /**
      *
      */
@@ -185,7 +186,8 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         // log.info("Starting pairwise alignment!");
         final List<Array> ref = tuple.getFirst();
         final List<Array> query = tuple.getSecond();
-
+        EvalTools.neqI(0, ref.size(), this);
+        EvalTools.neqI(0, query.size(), this);
         final int rows = ref.size();
         final int cols = query.size();
 
@@ -433,9 +435,9 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         if (this.saveLayoutImage) {
             saveLayoutImage(aps, StringTools.removeFileExt(forwardAlignment.getName()));
         }
-        this.alignment = null;
-        this.distance = null;
-        this.predecessors = null;
+//        this.alignment = null;
+//        this.distance = null;
+//        this.predecessors = null;
         t.getFirst().clearArrays();
         t.getSecond().clearArrays();
         return forwardAlignment;
@@ -503,7 +505,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
             final IArrayD2Double alignment2, final int vrows, final int vcols,
             final List<Array> ref, final List<Array> query,
             final ArrayDouble.D1 sat_ref, final ArrayDouble.D1 sat_query,
-            final byte[][] predecessors) {
+            final ArrayByte.D2 predecessors) {
         final long start = System.currentTimeMillis();
         log.debug("Calculating the alignment matrix!");
         EvalTools.notNull(new Object[]{distance2, alignment2}, this);
@@ -663,7 +665,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         this.alignment = parts1;
         final IArrayD2Double parts2 = f.createSharedLayout(parts1);
         this.distance = parts2;
-        this.predecessors = new byte[rows][cols];
+        this.predecessors = new ArrayByte.D2(rows,cols);
         log.debug("Alignment matrix has {} rows and {} columns",
                 parts1.rows(), parts2.columns());
         final long time = System.currentTimeMillis() - start;

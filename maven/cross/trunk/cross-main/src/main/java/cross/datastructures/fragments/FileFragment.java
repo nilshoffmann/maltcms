@@ -105,7 +105,6 @@ public class FileFragment implements IFileFragment {
         }
         return sb.toString();
     }
-    
     /**
      *
      */
@@ -190,7 +189,11 @@ public class FileFragment implements IFileFragment {
             return this.children.get(name);
         }
         IVariableFragment variableFragment = new VariableFragment(this, name);
+//        addChildren(variableFragment);
         this.children.put(name, variableFragment);
+        if (variableFragment.getDimensions() != null) {
+            addDimensions(variableFragment.getDimensions());
+        }
         return variableFragment;
     }
 
@@ -393,7 +396,8 @@ public class FileFragment implements IFileFragment {
                 if (persistentCache != null) {
                     persistentCache.put(v, null);
                 }
-                removeChild(v);
+//                removeChild(v);
+                children.remove(v.getName());
             }
         }
     }
@@ -553,7 +557,7 @@ public class FileFragment implements IFileFragment {
                     log.info("Found matches for {} in {}", varname, parents);
                 }
                 if (parents.size() == 1) {
-                    return parents.iterator().next().getChild(varname);
+                    return parents.iterator().next().getChild(varname, loadStructureOnly);
                 } else if (parents.size() > 1) {
                     throw new ConstraintViolationException("Found more than one possible source file for variable " + varname + ": " + parents);
                 }
@@ -797,7 +801,7 @@ public class FileFragment implements IFileFragment {
             try {
                 Factory.getInstance().getDataSourceFactory().getDataSourceFor(this).readStructure(this);
             } catch (IOException ex) {
-                log.error("IOException while loading structure of "+getUri(),ex);
+                log.error("IOException while loading structure of " + getUri(), ex);
             }
         }
         // for(IGroupFragment vf:this.children.values()) {
@@ -886,7 +890,22 @@ public class FileFragment implements IFileFragment {
             final IVariableFragment variableFragment) {
         if (this.children.containsKey(variableFragment.getName())) {
             log.debug("Removing child " + variableFragment.getName());
-            this.children.remove(variableFragment.getName());
+            if (variableFragment.getIndex() != null) {
+                throw new ConstraintViolationException("Tried to remove a variable that references an index variable: " + variableFragment.getName() + "; index: " + variableFragment.getIndex().getName());
+            }
+            List<IVariableFragment> indexReferents = new LinkedList<IVariableFragment>();
+            for (IVariableFragment other : this.children.values()) {
+                if (other.getIndex() != null) {
+                    if (other.getIndex().getName().equals(variableFragment.getName())) {
+                        indexReferents.add(other);
+                    }
+                }
+            }
+            if (indexReferents.isEmpty()) {
+                this.children.remove(variableFragment.getName());
+            } else {
+                throw new ConstraintViolationException("Tried to remove index variable " + variableFragment.getName() + ", required by: " + indexReferents);
+            }
         } else {
             log.warn("Could not remove {}, no child of {}",
                     variableFragment.getName(), this.getUri());

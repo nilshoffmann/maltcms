@@ -323,7 +323,7 @@ public class FragmentTools {
             URI resolved = FileTools.resolveRelativeUri(baseUri, uri);
 //            fragment = FileFragment.getFragment(uri);                
 //            if (fragment == null) {
-                fragment = new FileFragment(resolved);
+            fragment = new FileFragment(resolved);
 //            }
             log.info("Adding FileFragment for resolved relative uri from array: {}; resolved: {}", uri, fragment.getUri());
             al.put(fragment.getUri(), fragment);
@@ -334,6 +334,12 @@ public class FragmentTools {
         return al;
     }
 
+    /**
+     * Returns true if the given parent file has no further source files.
+     *
+     * @param parentFile
+     * @return
+     */
     public static boolean isRootFile(IFileFragment parentFile) {
         try {
             Map<URI, IFileFragment> sourceFiles = FragmentTools.getSourceFiles(parentFile);
@@ -349,8 +355,34 @@ public class FragmentTools {
         }
     }
 
+    /**
+     * Returns true if
+     * <code>childFile</code> is a direct child of
+     * <code>parentFile</code>.
+     *
+     * @param parentFile
+     * @param childFile
+     * @return
+     */
+    public static boolean isChild(IFileFragment parentFile, IFileFragment childFile) {
+        if (!parentFile.getUri().getScheme().equals(childFile.getUri().getScheme())) {
+            log.warn("Trying to compare file fragments with different schemes: {} vs. {}", parentFile.getUri(), childFile.getUri());
+            return false;
+        }
+        URI relativePath = FileTools.getRelativeUri(parentFile.getUri(), childFile.getUri());
+        if (relativePath.getPath().contains("..")) {
+            return false;
+        }
+        return true;
+    }
+
     public static URI resolve(IFileFragment targetFile, IFileFragment baseFile) {
-        if (isRootFile(targetFile)) {
+        boolean relativize = false;
+        if (isChild(baseFile, targetFile)) {
+            log.info("targetFile {} is below baseFile {}", targetFile.getUri(), baseFile.getUri());
+            relativize = true;
+        }
+        if (isRootFile(targetFile) && !relativize) {
             log.debug("targetFile {} is a root file!", targetFile.getUri());
             return targetFile.getUri();
         }
