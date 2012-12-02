@@ -12,7 +12,6 @@
     <packaging>pom</packaging>
     
     <build>
-
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -46,7 +45,7 @@
                         <configuration combine.self="override">
                             <skipIfEmpty>false</skipIfEmpty>
                             <archive>
-                                <index>true</index>
+                                <!--<index>true</index>-->
                                 <manifest>
                                     <useUniqueVersions>false</useUniqueVersions>
                                     <mainClass>net.sf.maltcms.apps.Maltcms</mainClass>

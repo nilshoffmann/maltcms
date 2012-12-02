@@ -41,11 +41,13 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.MethodRule;
 import org.junit.rules.TestWatchman;
 import org.junit.runners.model.FrameworkMethod;
@@ -337,5 +339,45 @@ public class FileFragmentTest {
             Assert.fail(rnae.getLocalizedMessage());
         }
 
+    }
+    
+    @Test
+    public void testVariableFragmentEquality() {
+        IFileFragment f = createTestFragment();
+        //first check that all are there
+        Assert.assertNotNull(f.getChild("variable1"));
+        Assert.assertNotNull(f.getChild("variable2"));
+        Assert.assertNotNull(f.getChild("indexVar1"));
+        Assert.assertNotNull(f.getChild("variable3"));
+        try{
+            f.getChild("variable3");
+        }catch(ResourceNotAvailableException rnae) {
+            log.info("Caught expected exception for non-existing child {}","variable3");
+        }
+        Assert.assertNotNull(f.getChild("variable1").getIndex());
+        Assert.assertNotNull(f.getChild("variable2").getIndex());
+        Assert.assertEquals(f.getChild("variable1").getIndex(),f.getChild("variable2").getIndex());
+        Assert.assertEquals(f.getChild("indexVar1"),f.getChild("variable1").getIndex());
+        Assert.assertNull(f.getChild("variable3").getIndex());
+        Assert.assertNull(f.getChild("indexVar1").getIndex());
+    }
+    
+    public IFileFragment createTestFragment() {
+        IFileFragment f = new FileFragment();
+        f.addChild("variable1").setIndex(f.addChild("indexVar1"));
+        List<Array> l1 = new ArrayList<Array>();
+        l1.add(Array.factory(new double[]{1.2,1.5}));
+        l1.add(Array.factory(new double[]{2.2,2.6,2.87}));
+        l1.add(Array.factory(new double[]{3.67}));
+        f.getChild("variable1").setIndexedArray(l1);
+        f.addChild("variable2").setIndex(f.getChild("indexVar1"));
+        List<Array> l2 = new ArrayList<Array>();
+        l2.add(Array.factory(new int[]{1,1}));
+        l2.add(Array.factory(new int[]{2,2,2}));
+        l2.add(Array.factory(new int[]{3}));
+        f.getChild("variable2").setIndexedArray(l2);
+        f.addChild("variable3").setArray(Array.factory(new double[]{2,3.3,235.32,352.3}));
+        f.getChild("indexVar1").setArray(Array.factory(new int[]{2,3,1}));
+        return f;
     }
 }

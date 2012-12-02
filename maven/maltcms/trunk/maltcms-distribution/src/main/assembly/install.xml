@@ -37,6 +37,7 @@
         <!-- Inclusion of all dependencies -->
         <dependencySet>
             <unpack>false</unpack>
+            <useTransitiveDependencies>true</useTransitiveDependencies>
             <excludes>
                 <!--exclude other dependencies for unpacking--> 
                 <!--                <exclude>commons-math:commons-math:jar:1.2</exclude>
@@ -48,6 +49,7 @@
                 <exclude>net.sf.maltcms:maltcms-evaluation:jar</exclude>
                 <exclude>net.sf.maltcms:maltcms-spectratyping:jar</exclude>-->
                 <exclude>net.sf.maltcms:*:pom</exclude>
+                <exclude>*:*:pom</exclude>
             </excludes>
             <outputFileNameMapping>${artifact.artifactId}-${artifact.baseVersion}.${artifact.extension}</outputFileNameMapping>
             <fileMode>0644</fileMode>

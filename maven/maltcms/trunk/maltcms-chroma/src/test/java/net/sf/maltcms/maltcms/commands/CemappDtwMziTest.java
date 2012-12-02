@@ -93,9 +93,9 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         commands.add(createPairwiseDistanceCalculatorMZI(false, 0, true,
                 1.0d));
         commands.add(new CenterStarAlignment());
-        ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
-        cwarp2.setIndexedVars(new LinkedList<String>());
-        commands.add(cwarp2);
+        //ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
+        //cwarp2.setIndexedVars(new LinkedList<String>());
+        //commands.add(cwarp2);
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }
@@ -156,8 +156,8 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         commands.add(new PeakCliqueAlignment());
         commands.add(createPairwiseDistanceCalculatorMZI(true, 0, false, 0.5d));
         commands.add(new CenterStarAlignment());
-        ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
-        cwarp2.setIndexedVars(new LinkedList<String>());
+        //ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
+        //cwarp2.setIndexedVars(new LinkedList<String>());
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }
