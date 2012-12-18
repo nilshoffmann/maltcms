@@ -287,7 +287,7 @@ public class Peak extends DefaultFeatureVector {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof Peak) {
+        if (o!=null && o instanceof Peak) {
             return toString().equals(o.toString());
         }
         return false;

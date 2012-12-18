@@ -45,8 +45,8 @@ import maltcms.math.functions.IScalarArraySimilarity;
 public class PairwiseSimilarityWorker2D implements Callable<Integer>, Serializable {
 
     private String name;
-    private List<Peak> lhsPeaks;
-    private List<Peak> rhsPeaks;
+    private List<? extends Peak> lhsPeaks;
+    private List<? extends Peak> rhsPeaks;
     private IScalarArraySimilarity similarityFunction;
     private double maxRTDifferenceRt1 = 60.0d;
     private double maxRTDifferenceRt2 = 1.0d;
@@ -59,11 +59,13 @@ public class PairwiseSimilarityWorker2D implements Callable<Integer>, Serializab
         int elemCnt = 0;
         for (final Peak p1 : lhsPeaks) {
             for (final Peak p2 : rhsPeaks) {
+                Peak2D p12d = (Peak2D)p1;
+                Peak2D p22d = (Peak2D)p2;
                 // skip peaks, which are too far apart
-                double rt1p1 = p1.getFeature("first_column_elution_time").getDouble(0);
-                double rt1p2 = p2.getFeature("first_column_elution_time").getDouble(0);
-                double rt2p1 = p1.getFeature("second_column_elution_time").getDouble(0);
-                double rt2p2 = p2.getFeature("second_column_elution_time").getDouble(0);
+                double rt1p1 = p12d.getFirstColumnElutionTime();
+                double rt1p2 = p22d.getFirstColumnElutionTime();
+                double rt2p1 = p12d.getSecondColumnElutionTime();
+                double rt2p2 = p22d.getSecondColumnElutionTime();
                 // cutoff to limit calculation work
                 // this has a better effect, than applying the limit
                 // within the similarity function only
@@ -72,9 +74,9 @@ public class PairwiseSimilarityWorker2D implements Callable<Integer>, Serializab
                 if (Math.abs(rt1p1 - rt1p2) < this.maxRTDifferenceRt1 || Math.abs(rt2p1 - rt2p2) < this.maxRTDifferenceRt2) {
                     // the similarity is symmetric:
                     // sim(a,b) = sim(b,a)
-                    final Double d = similarityFunction.apply(new double[]{rt1p1,rt2p1}, new double[]{rt1p2,rt2p2}, p1.getMsIntensities(), p2.getMsIntensities());
-                    p1.addSimilarity(p2, d);
-                    p2.addSimilarity(p1, d);
+                    final double d = similarityFunction.apply(new double[]{rt1p1,rt2p1}, new double[]{rt1p2,rt2p2}, p1.getMsIntensities(), p2.getMsIntensities());
+                    p1.addSimilarity(p2, Double.valueOf(d));
+                    p2.addSimilarity(p1, Double.valueOf(d));
                 }
                 elemCnt++;
             }

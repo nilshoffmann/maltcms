@@ -91,6 +91,7 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHFinder;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.CliqueTable;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.IWorkerFactory;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.Peak2D;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakComparator;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakSimilarityVisualizer;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.WorkerFactory;
@@ -1155,20 +1156,30 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             for (int i = 0; i < peakCandidates1.getShape()[0]; i++) {
                 final int pc1i = peakCandidates1.getInt(pc1.set(i));
                 Peak p = null;
-                if (useSparseArrays) {
-                    ArrayDouble.D1 sparse = new Sparse(indexedMasses.get(i), indexedIntensities.get(i),
-                            (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
-                            size, massBinResolution);
-                    p = new Peak(pc1i, sparse,
-                            scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
-                } else {
-                    p = new Peak(pc1i, indexedIntensities.get(pc1i),
-                            scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
-
-                }
                 if (firstColumnElutionTime != null && secondColumnElutionTime != null) {
-                    p.addFeature(resolve("var.first_column_elution_time"), Array.factory(new float[]{firstColumnElutionTime.getFloat(i)}));
-                    p.addFeature(resolve("var.second_column_elution_time"), Array.factory(new float[]{secondColumnElutionTime.getFloat(i)}));
+                    if (useSparseArrays) {
+                        ArrayDouble.D1 sparse = new Sparse(indexedMasses.get(i), indexedIntensities.get(i),
+                                (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
+                                size, massBinResolution);
+                        p = new Peak2D(pc1i, sparse,
+                                scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
+                    } else {
+                        p = new Peak2D(pc1i, indexedIntensities.get(pc1i),
+                                scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
+                    }
+                    ((Peak2D)p).setFirstColumnElutionTime(firstColumnElutionTime.getFloat(i));
+                    ((Peak2D)p).setSecondColumnElutionTime(secondColumnElutionTime.getFloat(i));
+                }else{
+                    if (useSparseArrays) {
+                        ArrayDouble.D1 sparse = new Sparse(indexedMasses.get(i), indexedIntensities.get(i),
+                                (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
+                                size, massBinResolution);
+                        p = new Peak(pc1i, sparse,
+                                scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
+                    } else {
+                        p = new Peak(pc1i, indexedIntensities.get(pc1i),
+                                scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
+                    }
                 }
                 p.setPeakIndex(i);
                 peaks.add(p);
