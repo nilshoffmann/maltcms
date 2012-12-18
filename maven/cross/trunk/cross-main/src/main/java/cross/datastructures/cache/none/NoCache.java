@@ -35,6 +35,10 @@ import java.util.Set;
 /**
  * A mock cache using a typed HashMap for key->value mappings.
  * 
+ * Adding a <pre>null</pre> value for a key will remove the key
+ * from the map, thereby freeing resources associated to both,
+ * key and value.
+ * 
  * @author Nils Hoffmann
  */
 public class NoCache<K, V> implements ICacheDelegate<K, V> {

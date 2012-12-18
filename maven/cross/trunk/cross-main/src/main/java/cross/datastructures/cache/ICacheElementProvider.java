@@ -28,6 +28,8 @@
 package cross.datastructures.cache;
 
 /**
+ * Interface for deferred retrieval/creation of values associated
+ * to keys in a custom cache implementation.
  *
  * @author Nils Hoffmann
  */

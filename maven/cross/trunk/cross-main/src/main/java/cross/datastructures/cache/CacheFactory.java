@@ -124,7 +124,7 @@ public class CacheFactory {
         Ehcache cache = cm.addCacheIfAbsent(cacheName);
         ICacheDelegate<IVariableFragment, List<Array>> ed = new VariableFragmentArrayCache(cache);
         CacheConfiguration cc = cache.getCacheConfiguration();
-        cc.setMaxElementsInMemory(10);
+        cc.setMaxElementsInMemory(100);
 //        cc.setEternal(true);
         cc.overflowToDisk(true);
         cc.maxElementsOnDisk(1000000000);

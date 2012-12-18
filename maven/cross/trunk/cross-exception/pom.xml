@@ -7,6 +7,6 @@
     </parent>
     <artifactId>cross-exception</artifactId>
     <packaging>jar</packaging>
-    <name>cross-exception</name>
+    <name>Cross Exceptions</name>
 </project>
 

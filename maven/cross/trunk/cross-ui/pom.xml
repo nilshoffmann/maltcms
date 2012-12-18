@@ -7,7 +7,7 @@
     </parent>
     <artifactId>cross-ui</artifactId>
     <packaging>jar</packaging>
-    <name>cross-ui</name>
+    <name>Cross UI</name>
     <dependencies>
         <dependency>
             <groupId>commons-configuration</groupId>

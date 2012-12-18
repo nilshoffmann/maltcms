@@ -9,7 +9,7 @@
     </parent>
     <artifactId>cross-annotations</artifactId>
     <packaging>jar</packaging>
-    <name>cross-annotations</name>
+    <name>Cross Annotations</name>
 </project>
 
 

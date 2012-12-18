@@ -7,7 +7,7 @@
     </parent>
     <artifactId>cross-tools</artifactId>
     <packaging>jar</packaging>
-    <name>cross-tools</name>
+    <name>Cross Tools</name>
 </project>
 
 

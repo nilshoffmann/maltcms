@@ -9,7 +9,7 @@
     </parent>
     <artifactId>cross-main</artifactId>
     <packaging>jar</packaging>
-    <name>cross-main</name>
+    <name>Cross Main</name>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

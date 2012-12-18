@@ -7,6 +7,6 @@
     </parent>
     <artifactId>cross-event</artifactId>
     <packaging>jar</packaging>
-    <name>cross-event</name>
+    <name>Cross Events</name>
 </project>
 

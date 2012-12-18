@@ -9,7 +9,7 @@
     <groupId>net.sf.maltcms</groupId>
     <artifactId>cross-math</artifactId>
     <version>1.2.12-SNAPSHOT</version>
-    <name>cross-math</name>
+    <name>Cross Math</name>
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

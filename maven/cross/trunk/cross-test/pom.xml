@@ -7,7 +7,7 @@
     </parent>
     <artifactId>cross-test</artifactId>
     <packaging>jar</packaging>
-    <name>cross-test</name>
+    <name>Cross Test</name>
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>

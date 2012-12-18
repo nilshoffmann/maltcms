@@ -9,7 +9,7 @@
     </parent>
     <artifactId>cross-osgi</artifactId>
     <packaging>pom</packaging>
-    <name>cross-osgi</name>
+    <name>Cross OSGI Bundle</name>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

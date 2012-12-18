@@ -28,6 +28,7 @@
 package cross.datastructures.cache;
 
 /**
+ * Enumeration of currently available cache types.
  *
  * @author Nils Hoffmann
  */

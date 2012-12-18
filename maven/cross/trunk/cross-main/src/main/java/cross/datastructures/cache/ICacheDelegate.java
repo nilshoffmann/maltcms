@@ -30,6 +30,10 @@ package cross.datastructures.cache;
 import java.util.Set;
 
 /**
+ * Interface for facades in front of particular cache implementations.
+ *
+ * Delegates operations to underlying cache but presents a 
+ * unified interface.
  *
  * @author Nils Hoffmann
  */
