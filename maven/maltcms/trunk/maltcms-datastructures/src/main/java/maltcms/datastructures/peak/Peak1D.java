@@ -234,7 +234,6 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             p.setPeakType(PeakType.valueOf(peakType.getString(i)));
             p.setMw(peakDetectionChannel.getDouble(i));
             peaklist.add(p);
-            i++;
         }
         return peaklist;
     }
