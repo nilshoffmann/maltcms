@@ -27,7 +27,6 @@
  */
 package cross.io.misc;
 
-import cross.Factory;
 import cross.IConfigurable;
 import cross.datastructures.tools.FileTools;
 import cross.datastructures.workflow.IWorkflow;
@@ -38,13 +37,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * If configured to do so, zips all elements of a given
@@ -234,7 +230,7 @@ public class WorkflowZipper implements IConfigurable {
                             files.addAll(Arrays.asList(currentFile.listFiles(ff)));
                         } else {
                             try {
-                                String relativePath = FileUtils.getRelativePath(archiveBase, currentFile).replaceAll("\\\\", "/");
+                                String relativePath = FileTools.getRelativeFile(archiveBase, currentFile).getPath().replaceAll("\\\\", "/");
                                 log.info("Adding zip entry for {} below {}", relativePath, archiveBase);
                                 addRelativeZipEntry(bufsize, zos, input_buffer, relativePath, currentFile, zipEntries);
                             } catch (Exception ex) {
