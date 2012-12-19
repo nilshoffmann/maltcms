@@ -56,21 +56,17 @@ public class CwtPeakFinderTest extends AFragmentCommandTest {
 
     @Test
     public void testPeakFinder() {
-
         File dataFolder = tf.newFolder("chroma4DTestData");
         File outputBase = tf.newFolder("chroma4DTestOut");
         File inputFile = ZipResourceExtractor.extract(
                 "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", dataFolder);
         setLogLevelFor(CwtPeakFinder.class, Level.ALL);
-//
         Default2DVarLoader d2vl = new Default2DVarLoader();
 //        d2vl.setEstimateModulationTime(true);
         d2vl.setEstimateModulationTime(false);
         d2vl.setModulationTime(5.0d);
         d2vl.setScanRate(100.0);
-//
         CwtPeakFinder cpf = new CwtPeakFinder();
-//
         List<IFragmentCommand> l = new LinkedList<IFragmentCommand>();
         l.add(d2vl);
         l.add(cpf);
@@ -82,7 +78,7 @@ public class CwtPeakFinderTest extends AFragmentCommandTest {
             Assert.fail(ex.getLocalizedMessage());
         }
     }
-//
+
     public static void main(String[] args) {
         CwtPeakFinderTest test = new CwtPeakFinderTest();
         test.testPeakFinder();
