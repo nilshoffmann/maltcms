@@ -17,40 +17,6 @@
     <packaging>jar</packaging>
     <build>
         <plugins>
-<!--            <plugin> 
-                <artifactId>maven-antrun-plugin</artifactId> 
-                <executions> 
-                    <execution> 
-                        <phase>compile</phase> 
-                        <configuration> 
-                            <target> Define enhancement 
-                                tasks 
-                                <typedef resource="instrumentation-def.properties" classpathref="maven.compile.classpath" 
-                                                       loaderRef="instrumentation.loader" /> We filter by our annotation 
-                                <typedef 
-                                    name="annotation-filter" classname="net.sf.maltcms.evaluation.api.AnnotationFilter" 
-                                                                 classpathref="maven.compile.classpath" loaderref="instrumentation.loader" 
-        				/> 
-                                <db4o-instrument classTargetDir="target/classes" verbose="true" > 
-                                    <classpath 
-                                        refid="maven.compile.classpath" /> 
-                                    <sources dir="target/classes"> 
-                                        <include 
-                                            name="**/*.class" /> 
-                                    </sources> 
-                                    <transparent-activation-step> 
-                                        <annotation-filter 
-        				/> 
-                                    </transparent-activation-step> 
-                                </db4o-instrument> 
-                            </target> 
-                        </configuration> 
-                        <goals> 
-                            <goal>run</goal> 
-                        </goals> 
-                    </execution> 
-                </executions> 
-            </plugin> -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>

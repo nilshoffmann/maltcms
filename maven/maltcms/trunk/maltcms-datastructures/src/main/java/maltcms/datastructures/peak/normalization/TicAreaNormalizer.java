@@ -27,9 +27,9 @@
  */
 package maltcms.datastructures.peak.normalization;
 
-import cross.datastructures.cache.CacheFactory;
-import cross.datastructures.cache.ICacheDelegate;
-import cross.datastructures.cache.ICacheElementProvider;
+import cross.cache.CacheFactory;
+import cross.cache.ICacheDelegate;
+import cross.cache.ICacheElementProvider;
 import cross.datastructures.fragments.IFileFragment;
 import lombok.Data;
 import maltcms.datastructures.peak.Peak1D;

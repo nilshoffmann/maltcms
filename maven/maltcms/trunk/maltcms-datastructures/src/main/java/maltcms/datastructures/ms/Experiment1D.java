@@ -38,17 +38,15 @@ import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 import org.jdom.Element;
-import org.slf4j.Logger;
 
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 import cross.datastructures.StatsMap;
-import cross.datastructures.cache.ICacheDelegate;
+import cross.cache.ICacheDelegate;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IFragment;
 import cross.datastructures.fragments.IGroupFragment;
 import cross.datastructures.fragments.IVariableFragment;
-import cross.datastructures.fragments.VariableFragment;
 import cross.exception.ResourceNotAvailableException;
 import java.net.URI;
 import java.util.*;

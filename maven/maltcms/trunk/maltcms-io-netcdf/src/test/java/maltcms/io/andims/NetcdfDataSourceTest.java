@@ -28,9 +28,9 @@
 package maltcms.io.andims;
 
 import cross.Factory;
-import cross.datastructures.cache.CacheFactory;
-import cross.datastructures.cache.CacheType;
+import cross.cache.CacheType;
 import cross.datastructures.fragments.FileFragment;
+import cross.datastructures.fragments.Fragments;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableFileFragment;
@@ -90,7 +90,7 @@ public class NetcdfDataSourceTest {
     @Before
     public void setUp() {
         Factory.getInstance().getDataSourceFactory().setDataSources(Arrays.asList(NetcdfDataSource.class.getCanonicalName()));
-        CacheFactory.setDefaultFragmentCacheType(CacheType.NONE);
+        Fragments.setDefaultFragmentCacheType(CacheType.NONE);
     }
 
     /**

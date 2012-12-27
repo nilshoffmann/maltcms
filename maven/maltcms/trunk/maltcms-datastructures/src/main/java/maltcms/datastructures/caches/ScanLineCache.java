@@ -118,7 +118,6 @@ public class ScanLineCache implements IScanLine {
         this.iff = iff1;
         this.scansPerModulation = scansPerModulation1;
         this.lastIndex = lastIndex1;
-
         setUpxyIndexMap();
     }
 
