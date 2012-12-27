@@ -28,8 +28,8 @@
 package net.sf.maltcms.db.search.api.similarities;
 
 import com.db4o.query.Predicate;
-import cross.datastructures.cache.CacheFactory;
-import cross.datastructures.cache.ICacheDelegate;
+import cross.cache.CacheFactory;
+import cross.cache.ICacheDelegate;
 import cross.datastructures.tuple.Tuple2D;
 import java.util.ArrayList;
 import java.util.Collection;

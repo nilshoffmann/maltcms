@@ -45,7 +45,8 @@ import org.junit.Test;
 
 import cross.commands.fragments.AFragmentCommand;
 import cross.commands.fragments.IFragmentCommand;
-import cross.datastructures.cache.CacheType;
+import cross.cache.CacheType;
+import cross.datastructures.fragments.Fragments;
 import cross.datastructures.workflow.IWorkflow;
 import java.util.LinkedList;
 import lombok.extern.slf4j.Slf4j;
@@ -53,10 +54,8 @@ import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import cross.test.IntegrationTest;
-import java.util.Collections;
 import maltcms.commands.fragments.alignment.CenterStarAlignment;
 import maltcms.commands.fragments.preprocessing.ScanExtractor;
-import maltcms.commands.fragments.warp.ChromatogramWarp2;
 import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
 import org.junit.Rule;
@@ -81,7 +80,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
         setLogLevelFor("maltcms.tools.PathTools", Level.INFO);
-        cross.datastructures.cache.CacheFactory.setDefaultFragmentCacheType(CacheType.NONE);
+        Fragments.setDefaultFragmentCacheType(CacheType.NONE);
         File outputBase = tf.newFolder("testCemappDtwFullTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         ScanExtractor se = new ScanExtractor();
@@ -128,7 +127,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
         setLogLevelFor("maltcms.tools.PathTools", Level.INFO);
-        cross.datastructures.cache.CacheFactory.setDefaultFragmentCacheType(CacheType.NONE);
+        Fragments.setDefaultFragmentCacheType(CacheType.NONE);
         File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         commands.add(new DefaultVarLoader());

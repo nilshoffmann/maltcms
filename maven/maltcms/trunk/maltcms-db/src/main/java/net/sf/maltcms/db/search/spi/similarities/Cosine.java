@@ -27,7 +27,7 @@
  */
 package net.sf.maltcms.db.search.spi.similarities;
 
-import cross.datastructures.cache.ICacheDelegate;
+import cross.cache.ICacheDelegate;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
