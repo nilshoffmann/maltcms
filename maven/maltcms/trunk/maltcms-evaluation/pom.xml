@@ -165,5 +165,10 @@
             <artifactId>cross-math</artifactId>
             <version>1.2.12-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.db4o</groupId>
+            <artifactId>db4o-all</artifactId>
+            <version>8.0.249</version>
+        </dependency>
     </dependencies>
 </project>
