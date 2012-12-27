@@ -103,12 +103,12 @@ public class PipelineWizard implements WizardResultProducer, HyperlinkListener,
      * a new one should be created. After configuration and validation, the user
      * should be asked, whether he wants to save his configuration.
      *
-     * After finishing of the wizard, maltcms would be started with the
+     *   After finishing of the wizard, maltcms would be started with the
      * corresponding configuration. User selectable, whether within the same VM
      * (not recommended for clients) or as a job submitted to the SGE or as a
      * stand alone java process.
      *
-     * @param args
+     *   @param args
      */
     public static void main(String[] args) {
         System.setProperty("log4j.configuration",
