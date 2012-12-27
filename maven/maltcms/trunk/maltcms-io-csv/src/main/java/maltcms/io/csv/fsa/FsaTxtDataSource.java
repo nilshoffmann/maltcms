@@ -48,7 +48,6 @@ package maltcms.io.csv.fsa;
  * 
  * $Id$
  */
-import com.db4o.foundation.NotImplementedException;
 import cross.Factory;
 import cross.datastructures.fragments.FileFragment;
 import java.io.File;
@@ -75,6 +74,7 @@ import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
 import cross.datastructures.tuple.Tuple2D;
+import cross.exception.NotImplementedException;
 import cross.tools.StringTools;
 import java.io.FileInputStream;
 import java.net.URI;
