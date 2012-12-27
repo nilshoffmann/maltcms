@@ -27,11 +27,10 @@
  */
 package cross.io;
 
-import cross.datastructures.cache.CacheFactory;
-import cross.datastructures.cache.ICacheDelegate;
+import cross.cache.ICacheDelegate;
+import cross.datastructures.fragments.Fragments;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
-import cross.datastructures.tools.ArrayTools;
 import cross.exception.ResourceNotAvailableException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ public class MockDatasource implements IDataSource {
         if(persistentCache.containsKey(f)) {
             return persistentCache.get(f);
         }
-        ICacheDelegate<IVariableFragment,List<Array>> delegate = CacheFactory.createFragmentCache(UUID.randomUUID().toString());
+        ICacheDelegate<IVariableFragment,List<Array>> delegate = Fragments.createFragmentCache(UUID.randomUUID().toString());
         persistentCache.put(f, delegate);
         return delegate;
     }

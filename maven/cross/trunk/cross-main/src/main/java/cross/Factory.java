@@ -27,12 +27,10 @@
  */
 package cross;
 
-import cross.IObjectFactory;
 import cross.annotations.Configurable;
-import cross.datastructures.cache.CacheFactory;
-import cross.datastructures.cache.CacheType;
-import cross.datastructures.fragments.FileFragment;
-import cross.datastructures.fragments.FileFragmentFactory;
+import cross.cache.CacheFactory;
+import cross.cache.CacheType;
+import cross.datastructures.fragments.Fragments;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IFileFragmentFactory;
 import cross.datastructures.pipeline.CommandPipeline;
@@ -222,7 +220,7 @@ public class Factory implements ConfigurationListener {
         }
         configureThreadPool(this.objconfig);
         //initialize CacheFactory
-        CacheFactory.setDefaultFragmentCacheType(CacheType.valueOf(this.objconfig.getString(CacheFactory.class.getName()+".fragmentCacheType","EHCACHE")));
+        Fragments.setDefaultFragmentCacheType(CacheType.valueOf(this.objconfig.getString(Fragments.class.getName()+".cacheType","EHCACHE")));
         // configure ObjectFactory
         getObjectFactory().configure(config1);
         getDataSourceFactory().configure(config1);

@@ -28,7 +28,7 @@
 package cross.datastructures.fragments;
 
 import cross.datastructures.StatsMap;
-import cross.datastructures.cache.ICacheDelegate;
+import cross.cache.ICacheDelegate;
 import cross.exception.ResourceNotAvailableException;
 import java.io.File;
 import java.io.IOException;

@@ -417,10 +417,10 @@
 
     <modules>
         <module>cross-annotations</module>
+	<module>cross-cache</module>
         <module>cross-main</module>
         <module>cross-event</module>
         <module>cross-exception</module>
-        <module>cross-ui</module>
         <module>cross-tools</module>
         <module>cross-math</module>
         <module>cross-test</module>

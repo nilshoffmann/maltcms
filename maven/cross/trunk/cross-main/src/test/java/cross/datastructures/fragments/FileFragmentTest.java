@@ -28,8 +28,8 @@
 package cross.datastructures.fragments;
 
 import cross.Factory;
-import cross.datastructures.cache.CacheFactory;
-import cross.datastructures.cache.CacheType;
+import cross.cache.CacheFactory;
+import cross.cache.CacheType;
 import cross.datastructures.tools.FileTools;
 import cross.datastructures.tools.FragmentTools;
 import cross.exception.ConstraintViolationException;
@@ -85,7 +85,7 @@ public class FileFragmentTest {
     @Before
     public void setUp() {
         Factory.getInstance().getDataSourceFactory().setDataSources(Arrays.asList(MockDatasource.class.getCanonicalName()));
-        CacheFactory.setDefaultFragmentCacheType(CacheType.NONE);
+        Fragments.setDefaultFragmentCacheType(CacheType.NONE);
     }
     
     // TODO add test methods here.

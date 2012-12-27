@@ -29,8 +29,8 @@ package cross.datastructures.fragments;
 
 import cross.Factory;
 import cross.datastructures.StatsMap;
-import cross.datastructures.cache.CacheFactory;
-import cross.datastructures.cache.ICacheDelegate;
+import cross.cache.CacheFactory;
+import cross.cache.ICacheDelegate;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FragmentTools;
 import cross.exception.ConstraintViolationException;
@@ -481,7 +481,7 @@ public class FileFragment implements IFileFragment {
     public ICacheDelegate<IVariableFragment, List<Array>> getCache() {
         if (this.persistentCache == null) {
             String cacheLocation = UUID.nameUUIDFromBytes(getUri().toASCIIString().getBytes()).toString();
-            this.persistentCache = CacheFactory.createFragmentCache(cacheLocation);
+            this.persistentCache = Fragments.createFragmentCache(cacheLocation);
         }
         return this.persistentCache;
     }

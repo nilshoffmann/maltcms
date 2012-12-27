@@ -25,6 +25,11 @@ Recommended:
   IntelliJ Idea 10.5
   	http://www.jetbrains.com/idea/
 
+OSGI:
+Cross is osgi-compatible since version 1.2.11. The cross-osgi module
+lists all required dependencies in its pom. So if you want to use cross 
+from osgi, start there. Otherwise, you can use the cross-main module directly.
+
 The remainder of this README contains task descriptions and the corresponding 
 commands required to perform those tasks. Tasks marked with '*' can only be 
 executed by registered developers. In order to register, you need to have a

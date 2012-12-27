@@ -83,12 +83,6 @@
             <version>2.4.6</version>
         </dependency>
         <dependency>
-            <groupId>com.db4o</groupId>
-            <artifactId>db4o-all</artifactId>
-            <version>8.0.249</version>
-        </dependency>
-        <!-- is this required by db4o-all? -->
-        <dependency>
             <groupId>net.sf.mpaxs</groupId>
             <artifactId>mpaxs-spi</artifactId>
             <version>1.6.12-SNAPSHOT</version>
@@ -107,6 +101,10 @@
                 <exclusion>
                     <artifactId>slf4j-jdk14</artifactId>
                     <groupId>org.slf4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>swing-layout-osgi</artifactId>
+                    <groupId>org.swinglabs</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -141,6 +139,24 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>cross-math</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>cross-cache</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <artifactId>log4j</artifactId>
+            <groupId>log4j</groupId>
+            <type>jar</type>
+            <version>1.2.16</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 </project>

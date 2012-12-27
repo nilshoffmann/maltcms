@@ -27,7 +27,6 @@
  */
 package cross.datastructures.fragments;
 
-import com.db4o.collections.ActivatableArrayList;
 import cross.datastructures.StatsMap;
 import cross.datastructures.tools.ArrayTools;
 import cross.datastructures.tools.EvalTools;
@@ -269,8 +268,8 @@ public class VariableFragment implements IVariableFragment {
 
     /**
      * @param a
-     *  @return
-     *  @see
+     * @return
+     * @see
      * cross.datastructures.fragments.Fragment#getAttribute(ucar.nc2.Attribute)
      */
     @Override
@@ -472,13 +471,7 @@ public class VariableFragment implements IVariableFragment {
             this.isModified = true;
             ArrayList<Array> list = new ArrayList<Array>(1);
             list.add(a1);
-            switch (parent.getCache().getCacheType()) {
-                case DB4O:
-                    parent.getCache().put(this, new ActivatableArrayList<Array>(list));
-                    break;
-                default:
-                    parent.getCache().put(this, list);
-            }
+            parent.getCache().put(this, list);
             setDataType(DataType.getType(a1.getElementType()));
             if (getDimensions() == null) {
                 setDimensions(cross.datastructures.tools.ArrayTools.getDefaultDimensions(a1));
@@ -571,13 +564,7 @@ public class VariableFragment implements IVariableFragment {
     protected void setIndexedArrayInternal(final List<Array> al1) {
         if (al1 != null && !al1.isEmpty()) {
             this.isModified = true;
-            switch (parent.getCache().getCacheType()) {
-                case DB4O:
-                    parent.getCache().put(this, new ActivatableArrayList<Array>(al1));
-                    break;
-                default:
-                    parent.getCache().put(this, al1);
-            }
+            parent.getCache().put(this, al1);
             setDataType(DataType.getType(al1.get(0).getElementType()));
         } else {
             clear();
