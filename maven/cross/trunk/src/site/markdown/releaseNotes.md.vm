@@ -1,17 +1,20 @@
 Release Notes
 
-Changes for version 1.2.12:
+Changes for version 1.3:
 ---------------------------
 
 New features
 
+* Cross artifacts now expose osgi dependency information and can be deployed 
+in osgi-compatible runtime containers. The cross-osgi module lists all required 
+dependencies.
 * `java.net.URI` is now consistently used by cross
 for all `cross.datastructures.fragments.IFileFragment` instances.
 This also enables access to remote file resources, as long as they may
 be opened using an input stream.
 * `cross.datastructures.fragments.FileFragment` now uses a custom breadh-first
 search through its ancestors for localization of variables.
-* `cross.datastructures.cache` has been extended and multiple
+* The cross-cache module has been added and multiple
 different caches are now available. The `ucar.ma2.Array` class has been
 supplemented with a Serialization helper used by Ehcache for disk-based caching.
 * `cross.vocabulary` has been added to allow for programmatic resolution of
@@ -22,7 +25,11 @@ in addition to file system resources.
 * More and more descriptive exceptions and improved documentation.
 * A large number of tests.
 
-This version is backwards compatible to other 1.2.x releases of cross concerning the workflow format.
+Removed
+
+* The module cross-ui has been removed.
+
+This version is backwards compatible to 1.2.x releases of cross concerning the workflow format.
 
 Changes for version 1.2.11:
 ---------------------------
