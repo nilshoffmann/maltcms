@@ -32,7 +32,7 @@
         <!--        <format>tar.gz</format>-->
     </formats>
     <includeBaseDirectory>true</includeBaseDirectory>
-    <includeSiteDirectory>true</includeSiteDirectory>
+    <includeSiteDirectory>false</includeSiteDirectory>
     <dependencySets>
         <!-- Inclusion of all dependencies -->
         <dependencySet>
