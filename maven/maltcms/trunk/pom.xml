@@ -447,36 +447,11 @@
                 <groupId>de.akquinet.jbosscc.latex</groupId>
                 <artifactId>maven-latex-plugin</artifactId>
                 <version>1.2</version>
-                <configuration>
-                    <settings>
-                        <!-- all tex main documents in this folder (including subfolders) will 
-                 							be processed -->
-                        <texDirectory>${basedir}/src/site/tex</texDirectory>
-                        <!-- the generated artifacts will be copied to this folder relative 
-                 							to ${project.reporting.outputDirectory} -->
-                        <outputDirectory>.</outputDirectory>
-                        <!-- the working directory, for temporary files and LaTeX processing 
-                 							relative to ${project.build.directory} -->
-                        <tempDirectory>m2latex</tempDirectory>
-                        <!-- clean up the working directory in the end? May be used for debugging -->
-                        <cleanUp>true</cleanUp>
-                        <!-- path to the TeX scripts, if none, it must be on the system path -->
-                        <texPath />
-                        <!-- the latex command -->
-                        <texCommand>pdflatex</texCommand>
-                        <!-- the bibtex command -->
-                        <bibtexCommand>bibtex</bibtexCommand>
-                        <!-- the arguments to use when calling latex -->
-                        <texCommandArgs>
-                            <texCommandArg>-interaction=nonstopmode</texCommandArg>
-                            <texCommandArg>--src-specials</texCommandArg>
-                        </texCommandArgs>
-                    </settings>
-                </configuration>
+		<inherited>false</inherited>
                 <executions>
                     <!-- execute latex goal automatically during the site phase -->
                     <execution>
-                        <phase>site</phase>
+                        <phase>pre-site</phase>
                         <goals>
                             <goal>latex</goal>
                         </goals>

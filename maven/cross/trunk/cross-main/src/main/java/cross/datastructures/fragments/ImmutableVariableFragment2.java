@@ -221,6 +221,7 @@ public class ImmutableVariableFragment2 implements IVariableFragment {
 
     @Override
     public void clear() {
+        this.parent = null;
 //        this.volatileCache.put(this, null);
     }
 

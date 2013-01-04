@@ -578,6 +578,7 @@ public class VariableFragment implements IVariableFragment {
     public void clear() {
         this.isModified = false;
         parent.getCache().put(this, null);
+        this.parent = null;
     }
 
     /*

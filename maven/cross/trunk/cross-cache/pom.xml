@@ -21,5 +21,8 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <properties>
+        <netbeans.hint.license>cross</netbeans.hint.license>
+    </properties>
 </project>
 
