@@ -31,6 +31,28 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-spring-resources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/META-INF</directory>
+                                    <targetPath>classes/META-INF</targetPath>
+                                </resource>
+                            </resources>
+                            <outputDirectory>${project.build.directory}/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Jar plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -43,6 +65,9 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration combine.self="override">
+                            <includes>
+                                <include>META-INF/*</include>
+                            </includes>
                             <skipIfEmpty>false</skipIfEmpty>
                             <archive>
                                 <!--<index>true</index>-->
@@ -54,6 +79,7 @@
                                     <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                                     <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                                 </manifest>
+                                
                             </archive>
                             <finalName>maltcms</finalName>
                             <outputDirectory>${project.build.directory}/</outputDirectory>
