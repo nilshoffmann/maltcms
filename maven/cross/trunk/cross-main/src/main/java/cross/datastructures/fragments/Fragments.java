@@ -29,9 +29,9 @@ package cross.datastructures.fragments;
 
 import cross.cache.CacheType;
 import cross.cache.ICacheDelegate;
-import cross.datastructures.cache.VariableFragmentArrayCache;
 import cross.cache.none.NoCacheManager;
 import cross.cache.softReference.SoftReferenceCacheManager;
+import cross.datastructures.cache.VariableFragmentArrayCache;
 import java.io.File;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
