@@ -534,7 +534,7 @@
         </profile>
     </profiles>
     <modules>
-	<module>maltcms-test-tools</module>
+        <module>maltcms-test-tools</module>
         <module>maltcms-apps</module>
         <module>maltcms-chroma</module>
         <module>maltcms-chroma4D</module>
