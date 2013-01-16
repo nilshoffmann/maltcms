@@ -30,6 +30,7 @@ package cross.io;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.tools.FileTools;
 import cross.datastructures.tuple.TupleND;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ExitVmException;
@@ -153,7 +154,7 @@ public class InputDataFactory implements IInputDataFactory {
         log.info("Preparing input data!");
         this.initialFiles = new ArrayList<IFileFragment>();
         for (String s : input) {
-            URI uri = URI.create(s);
+            URI uri = URI.create(FileTools.escapeUri(s));
             if (uri.getScheme() != null) {
                 this.initialFiles.add(new FileFragment(uri));
             } else {

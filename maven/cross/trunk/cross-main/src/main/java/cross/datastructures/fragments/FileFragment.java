@@ -32,6 +32,7 @@ import cross.datastructures.StatsMap;
 import cross.cache.CacheFactory;
 import cross.cache.ICacheDelegate;
 import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tools.FileTools;
 import cross.datastructures.tools.FragmentTools;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
@@ -1057,7 +1058,7 @@ public class FileFragment implements IFileFragment {
     }
 
     protected boolean isURI(final String path) {
-        URI uri = URI.create(path);
+        URI uri = URI.create(FileTools.escapeUri(path));
         if (uri.getScheme() == null || uri.getScheme().isEmpty()) {
             return false;
         }
@@ -1074,7 +1075,7 @@ public class FileFragment implements IFileFragment {
     public void setFile(final String file) {
         EvalTools.notNull(file, this);
         log.info("Setting resource location to: {}", file);
-        URI u = URI.create(file);
+        URI u = URI.create(FileTools.escapeUri(file));
         if (u.getScheme() == null) {
             throw new ConstraintViolationException("URI scheme must not be null for " + this.u.toASCIIString());
         }

@@ -60,6 +60,7 @@ import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
+import cross.datastructures.tools.FileTools;
 import cross.datastructures.tuple.Tuple2DI;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
@@ -276,12 +277,12 @@ public class CenterStarAlignment extends AFragmentCommand {
                         StringTools.removeFileExt(this.centerSequence))) {
                     log.info("Using user defined center: {}",
                             this.centerSequence);
-                    return new FileFragment(URI.create(this.centerSequence));
+                    return new FileFragment(URI.create(FileTools.escapeUri(this.centerSequence)));
                 }
             }
         }
         if (this.alignToFirst) {
-            return new FileFragment(URI.create(names.getString(0)));
+            return new FileFragment(URI.create(FileTools.escapeUri(names.getString(0))));
         }
         final int rows = a.getShape()[0];
         final int cols = a.getShape()[1];
@@ -315,7 +316,7 @@ public class CenterStarAlignment extends AFragmentCommand {
                 }
             }
         }
-        final IFileFragment centerSeq = new FileFragment(URI.create(names.getString(optIndex)));
+        final IFileFragment centerSeq = new FileFragment(URI.create(FileTools.escapeUri(names.getString(optIndex))));
         return centerSeq;
     }
 

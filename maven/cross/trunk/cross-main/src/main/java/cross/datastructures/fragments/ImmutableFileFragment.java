@@ -29,6 +29,7 @@ package cross.datastructures.fragments;
 
 import cross.datastructures.StatsMap;
 import cross.cache.ICacheDelegate;
+import cross.datastructures.tools.FileTools;
 import cross.exception.ResourceNotAvailableException;
 import java.io.File;
 import java.io.IOException;
@@ -431,7 +432,7 @@ public class ImmutableFileFragment implements IFileFragment {
         }
         o = in.readObject();
         if (o instanceof String) {
-            this.frag.setFile(URI.create((String) o).toASCIIString());
+            this.frag.setFile(URI.create(FileTools.escapeUri((String) o)).toASCIIString());
         }
         in.close();
     }

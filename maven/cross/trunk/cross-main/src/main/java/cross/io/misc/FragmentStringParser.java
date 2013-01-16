@@ -33,6 +33,7 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tools.FileTools;
 import cross.exception.NotImplementedException;
 import java.io.File;
 import java.io.IOException;
@@ -200,13 +201,13 @@ public class FragmentStringParser {
     public IFileFragment parse(final String s) {
         EvalTools.notNull(s, this);
         if (!s.contains(">")) {
-            final IFileFragment ff = new FileFragment(URI.create(s));
+            final IFileFragment ff = new FileFragment(URI.create(FileTools.escapeUri(s)));
             return ff;
         }
         log.info("Checking if Variables were given explicitly");
         final String[] fileNameVarNameRest = s.split(">", 0);// seperate
         if (fileNameVarNameRest.length == 1) {
-            final IFileFragment ff = new FileFragment(URI.create(s.substring(0, s.length() - 1)));
+            final IFileFragment ff = new FileFragment(URI.create(FileTools.escapeUri(s.substring(0, s.length() - 1))));
             return ff;
         }
         // filename and
@@ -315,7 +316,7 @@ public class FragmentStringParser {
      */
     public IFileFragment parseString(final String s) {
         if (!s.contains(">")) {
-            final IFileFragment ff = new FileFragment(URI.create(s));
+            final IFileFragment ff = new FileFragment(URI.create(FileTools.escapeUri(s)));
             return ff;
         }
         log.info("Checking if Variables were given explicitly");

@@ -194,24 +194,24 @@ public class FileFragmentTest {
             Assert.assertEquals(resolvedSourceFiles.get(i).getUri(), sourceFiles[i].getUri());
         }
         
-        URI uri11 = new File("/tmp/69138/workflow/command1/file1.cdf").toURI();
+        URI uri11 = new File("/tmp/69138/workflow/command1/file 1.cdf").toURI();
         FileFragment f1 = new FileFragment(uri11);
         URI uri12 = new File("/tmp/69138/workflow/command1/otherOutput/oof.cdf").toURI();
         FileFragment f2 = new FileFragment(uri12);
         Assert.assertTrue(FragmentTools.isChild(f1, f2));
         
-        URI uri13 = new File("/tmp/69138/workflow/command2/file1.cdf").toURI();
+        URI uri13 = new File("/tmp/69138/workflow/command 2/file 1.cdf").toURI();
         FileFragment f3 = new FileFragment(uri13);
         URI uri14 = new File("/tmp/69138/workflow/command0/otherOutput/oof.cdf").toURI();
         FileFragment f4 = new FileFragment(uri14);
         Assert.assertFalse(FragmentTools.isChild(f3, f4));
         
-        URI uri15 = new File("/tmp/69138/workflow/command2/otherOutput/oof1.cdf").toURI();
+        URI uri15 = new File("/tmp/69138/workflow/command 2/otherOutput/oof 1.cdf").toURI();
         FileFragment f5 = new FileFragment(uri15);
         f5.addSourceFile(f3);
         Assert.assertFalse(f5.getSourceFiles().isEmpty());
         Assert.assertTrue(FragmentTools.isChild(f3,f5));
-        Assert.assertEquals(URI.create("otherOutput/oof1.cdf"), FragmentTools.resolve(f5, f3));
+        Assert.assertEquals(URI.create(FileTools.escapeUri("otherOutput/oof 1.cdf")), FragmentTools.resolve(f5, f3));
     }
 
     @Test

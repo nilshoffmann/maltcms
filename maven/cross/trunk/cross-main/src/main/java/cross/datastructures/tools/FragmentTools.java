@@ -264,7 +264,7 @@ public class FragmentTools {
         final String s = FragmentTools.getStringVar(
                 ff,
                 Factory.getInstance().getConfiguration().getString("var.reference_file", "reference_file"));
-        return new FileFragment(URI.create(s));
+        return new FileFragment(URI.create(FileTools.escapeUri(s)));
     }
 
     /**
@@ -275,7 +275,7 @@ public class FragmentTools {
      */
     public static IFileFragment getRHSFile(final IFileFragment ff) {
         final String s = FragmentTools.getStringVar(ff, Factory.getInstance().getConfiguration().getString("var.query_file", "query_file"));
-        return new FileFragment(URI.create(s));
+        return new FileFragment(URI.create(FileTools.escapeUri(s)));
     }
 
     /**
@@ -318,7 +318,7 @@ public class FragmentTools {
         StringBuilder uris = new StringBuilder();
         for (final String s : c) {
             log.info("Resource: {}", s);
-            URI uri = URI.create(s);
+            URI uri = URI.create(FileTools.escapeUri(s));
             IFileFragment fragment = null;
             URI resolved = FileTools.resolveRelativeUri(baseUri, uri);
 //            fragment = FileFragment.getFragment(uri);                
@@ -692,7 +692,7 @@ public class FragmentTools {
                 Collection<String> c = ArrayTools.getStringsFromArray(sf.getArray());
                 for (String s : c) {
                     log.debug("Processing file {}", s);
-                    URI path = URI.create(s);
+                    URI path = URI.create(FileTools.escapeUri(s));
                     if (path.getScheme() == null || !path.getPath().startsWith("/")) {
                         URI resolved = FileTools.resolveRelativeUri(fragment.getUri(), path);
                         log.debug("Adding resolved relative path: {} to {}", path, resolved);
@@ -762,7 +762,7 @@ public class FragmentTools {
                 depth++;
                 for (String s : c) {
                     log.debug("Processing file {}", s);
-                    URI path = URI.create(s);
+                    URI path = URI.create(FileTools.escapeUri(s));
                     IFileFragment frag = null;
                     if (path.getScheme() == null || !path.getPath().startsWith("/")) {
                         URI resolved = FileTools.resolveRelativeUri(fragment.getUri(), path);

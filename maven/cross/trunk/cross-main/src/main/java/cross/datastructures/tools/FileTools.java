@@ -31,14 +31,19 @@ import cross.Factory;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.exception.ExitVmException;
 import cross.tools.StringTools;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -292,7 +297,7 @@ public class FileTools {
             sb.append(cParts[j]);
         }
 
-        return URI.create(sb.toString());
+        return URI.create(escapeUri(sb.toString()));
     }
 
     public static String resolveRelativeFile(File base, File relativeFile) throws IOException {
@@ -314,5 +319,9 @@ public class FileTools {
      */
     public static File getRelativeFile(File target, File base) throws IOException {
           return new File(getRelativeUri(base.toURI(), target.toURI()));
+    }
+
+    public static String escapeUri(String path) {
+        return path.replaceAll(" ", "%20");
     }
 }

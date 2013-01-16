@@ -70,6 +70,7 @@ import cross.datastructures.StatsMap;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tools.FileTools;
 import cross.datastructures.tools.FragmentTools;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.Tuple2DDoubleComp;
@@ -752,7 +753,7 @@ public class MaltcmsTools {
 //            if (FileFragment.hasFragment(sn)) {
 //                al.add(FileFragment.getFragment(sn));
 //            } else {
-                al.add(new FileFragment(URI.create(sn)));
+                al.add(new FileFragment(URI.create(FileTools.escapeUri(sn))));
 //            }
         }
         final TupleND<IFileFragment> t = new TupleND<IFileFragment>(al);
