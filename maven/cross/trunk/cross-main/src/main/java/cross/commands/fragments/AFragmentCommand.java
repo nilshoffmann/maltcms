@@ -206,7 +206,7 @@ public abstract class AFragmentCommand implements IFragmentCommand {
             TupleND<IFileFragment> inputFragments) {
         HashMap<String, URI> names = new LinkedHashMap<String, URI>();
         for (URI f : files) {
-            String filename = FileTools.getFilename(f.getPath());
+            String filename = FileTools.getFilename(f);
             log.debug("Filename: {}",filename);
             names.put(filename, f);
         }

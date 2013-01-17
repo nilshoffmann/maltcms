@@ -247,7 +247,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             final Dimension peak_source_file_number = new Dimension("peak_source_file_number", 1, true, false, false);
             final Dimension _1024_byte_string = new Dimension("_1024_byte_string", 1024, true, false, false);
             final Dimension _64_byte_string = new Dimension("_64_byte_string", 64, true, false, false);
-            final Dimension peak_normalizers = new Dimension("peak_normalizer_count", peakNormalizers.isEmpty()?1:peakNormalizers.size(), true, false, false);
+            final Dimension peak_normalizers = new Dimension("peak_normalizer_count", peakNormalizers.isEmpty() ? 1 : peakNormalizers.size(), true, false, false);
             peaks.setDimensions(new Dimension[]{peak_number});
             Array tic = ff.getChild("total_intensity").getArray();
             final Dimension scan_number = new Dimension("scan_number", tic.getShape()[0]);
@@ -256,9 +256,9 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             mai.setDimensions(new Dimension[]{scan_number});
             mai.setArray(filteredTrace);
             IVariableFragment peakSourceFile = new VariableFragment(ff, "peak_source_file");
-            peakSourceFile.setDimensions(new Dimension[]{peak_source_file_number,_1024_byte_string});
+            peakSourceFile.setDimensions(new Dimension[]{peak_source_file_number, _1024_byte_string});
             IVariableFragment peakNames = new VariableFragment(ff, "peak_name");
-            peakNames.setDimensions(new Dimension[]{peak_number,_1024_byte_string});
+            peakNames.setDimensions(new Dimension[]{peak_number, _1024_byte_string});
             IVariableFragment peakStartIndex = new VariableFragment(ff, "peak_start_index");
             peakStartIndex.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakEndIndex = new VariableFragment(ff, "peak_end_index");
@@ -275,7 +275,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             IVariableFragment snr = new VariableFragment(ff, "peak_signal_to_noise");
             snr.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakType = new VariableFragment(ff, "peak_type");
-            peakType.setDimensions(new Dimension[]{peak_number,_64_byte_string});
+            peakType.setDimensions(new Dimension[]{peak_number, _64_byte_string});
             IVariableFragment peakDetectionChannel = new VariableFragment(ff, "peak_detection_channel");
             peakDetectionChannel.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakArea = new VariableFragment(ff, "peak_area");
@@ -283,7 +283,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             IVariableFragment peakNormalizedArea = new VariableFragment(ff, "peak_area_normalized");
             peakNormalizedArea.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakNormalizationMethod = new VariableFragment(ff, "peak_area_normalization_methods");
-            peakNormalizationMethod.setDimensions(new Dimension[]{peak_normalizers,_1024_byte_string});
+            peakNormalizationMethod.setDimensions(new Dimension[]{peak_normalizers, _1024_byte_string});
             IVariableFragment baseLineStartRT = new VariableFragment(ff, "baseline_start_time");
             baseLineStartRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment baseLineStopRT = new VariableFragment(ff, "baseline_stop_time");
@@ -337,11 +337,6 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
                 startRT.setDouble(i, p.getStartTime());
                 stopRT.setDouble(i, p.getStopTime());
                 area.setDouble(i, p.getArea());
-                double normalizedArea = p.getArea();
-                for (IPeakNormalizer normalizer : peakNormalizers) {
-                    normalizedArea *= normalizer.getNormalizationFactor(ff, p);
-                }
-                areaNormalized.setDouble(i, normalizedArea);
                 bstartRT.setDouble(i, p.getStartTime());
                 if (p.getStartIndex() >= 0) {
                     bstartV.setDouble(i, tic.getDouble(p.getStartIndex()) - filteredTrace.getDouble(p.getStartIndex()));
@@ -375,8 +370,15 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             baseLineStopRT.setArray(bstopRT);
             baseLineStartValue.setArray(bstartV);
             baseLineStopValue.setArray(bstopV);
-            peakNormalizedArea.setArray(areaNormalized);
             peakNormalizationMethod.setArray(normalizationMethodArray);
+            for (Peak1D p : peaklist) {
+                double normalizedArea = p.getArea();
+                for (IPeakNormalizer normalizer : peakNormalizers) {
+                    normalizedArea *= normalizer.getNormalizationFactor(ff, p);
+                }
+                areaNormalized.setDouble(i, normalizedArea);
+            }
+            peakNormalizedArea.setArray(areaNormalized);
         }
     }
 }

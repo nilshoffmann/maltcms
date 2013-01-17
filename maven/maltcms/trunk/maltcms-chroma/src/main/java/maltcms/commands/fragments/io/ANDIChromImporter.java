@@ -42,21 +42,17 @@ import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.VariableFragment;
-import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ExitVmException;
 import cross.exception.ResourceNotAvailableException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.tools.ArrayTools;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.ArrayInt;
-import ucar.ma2.InvalidRangeException;
 
 /**
  *
@@ -83,8 +79,6 @@ public class ANDIChromImporter extends AFragmentCommand {
     private String actualSamplingIntervalVariable = "actual_sampling_interval";
     @Configurable(name = "var.actual_delay_time")
     private String actualDelayTimeVariable = "actual_delay_time";
-    private double rtStartTime = Double.NEGATIVE_INFINITY;
-    private double rtStopTime = Double.POSITIVE_INFINITY;
 
     @Override
     public String toString() {
@@ -104,56 +98,25 @@ public class ANDIChromImporter extends AFragmentCommand {
                     new File(getWorkflow().getOutputDirectory(this),
                     iff.getName()));
             final Array a = iff.getChild(this.ordinateValuesVariable).getArray();
+            final VariableFragment tic = new VariableFragment(fret, "total_intensity");
+            tic.setArray(a);
+            final Array sa = iff.getChild(this.actualSamplingIntervalVariable).
+                    getArray();
+            final ArrayInt.D1 scanIndex = ArrayTools.indexArray(a.getShape()[0], 0);
+            final VariableFragment siV = new VariableFragment(fret, "scan_index");
+            siV.setArray(scanIndex);
             final ArrayDouble.D1 sat = new ArrayDouble.D1(a.getShape()[0]);
             final Array adt = iff.getChild(this.actualDelayTimeVariable).
                     getArray();
             final double rtStart = adt.getDouble(0);
-            final Array sa = iff.getChild(this.actualSamplingIntervalVariable).
-                    getArray();
             final double asi = sa.getDouble(0);
-            int startIndex = 0;
-            int stopIndex = sat.getShape()[0] - 1;
             for (int i = 0; i < sat.getShape()[0]; i++) {
                 sat.set(i, rtStart + ((i) * asi));
             }
-            //determine start and end index within rt bounds
-            if (rtStartTime > Double.NEGATIVE_INFINITY || rtStartTime < Double.POSITIVE_INFINITY) {
-                int start = -1;
-                int stop = -1;
-                for (int i = 0; i < sat.getShape()[0]; i++) {
-                    double satVal = sat.getDouble(i);
-                    if (start == -1 && satVal >= rtStartTime) {
-                        start = i;
-                    }
-                    if (stop == -1 && satVal > rtStopTime) {
-                        stop = i - 1;
-                    }
-                }
-                if (start != -1) {
-                    startIndex = start;
-                }
-                if (stop != -1) {
-                    stopIndex = stop;
-                }
-            }
-            int nscans = stopIndex - startIndex + 1;
-            final VariableFragment tic = new VariableFragment(fret, "total_intensity");
-            try {
-                tic.setArray(a.section(new int[startIndex], new int[nscans]));
-            } catch (InvalidRangeException ex) {
-                Logger.getLogger(ANDIChromImporter.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            final ArrayInt.D1 scanIndex = ArrayTools.indexArray(nscans, 0);
-            final VariableFragment siV = new VariableFragment(fret, "scan_index");
-            siV.setArray(scanIndex);
             fret.addSourceFile(iff);
             final VariableFragment vf = new VariableFragment(fret,
                     this.scanAcquisitionTimeVariable);
-            try {
-                vf.setArray(sat.section(new int[startIndex], new int[nscans]));
-            } catch (InvalidRangeException ex) {
-                Logger.getLogger(ANDIChromImporter.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            vf.setArray(sat);
             final Array mass_values = new ArrayDouble.D1(a.getShape()[0]);
             final Array intensity_values = new ArrayDouble.D1(a.getShape()[0]);
             for (int i = 0; i < a.getShape()[0]; i++) {
@@ -161,32 +124,16 @@ public class ANDIChromImporter extends AFragmentCommand {
                 intensity_values.setDouble(i, a.getDouble(i));
             }
             final VariableFragment massValuesV = new VariableFragment(fret, "mass_values");
-            try {
-                massValuesV.setArray(mass_values.section(new int[startIndex], new int[nscans]));
-            } catch (InvalidRangeException ex) {
-                Logger.getLogger(ANDIChromImporter.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            massValuesV.setArray(mass_values);
             final VariableFragment intensityValuesV = new VariableFragment(fret, "intensity_values");
-            try {
-                intensityValuesV.setArray(intensity_values.section(new int[startIndex], new int[nscans]));
-            } catch (InvalidRangeException ex) {
-                Logger.getLogger(ANDIChromImporter.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            intensityValuesV.setArray(intensity_values);
             final Array mass_range_min = new ArrayDouble.D1(mass_values.getShape()[0]);
             final Array mass_range_max = new ArrayDouble.D1(mass_values.getShape()[0]);
             ArrayTools.fill(mass_range_max, 1.0d);
             final VariableFragment massRangeMin = new VariableFragment(fret, "mass_range_min");
-            try {
-                massRangeMin.setArray(mass_range_min.section(new int[startIndex], new int[nscans]));
-            } catch (InvalidRangeException ex) {
-                Logger.getLogger(ANDIChromImporter.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            massRangeMin.setArray(mass_range_min);
             final VariableFragment massRangeMax = new VariableFragment(fret, "mass_range_max");
-            try {
-                massRangeMax.setArray(mass_range_max.section(new int[startIndex], new int[nscans]));
-            } catch (InvalidRangeException ex) {
-                Logger.getLogger(ANDIChromImporter.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            massRangeMax.setArray(mass_range_max);
             fret.save();
             ret.add(fret);
         }
