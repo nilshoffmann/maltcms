@@ -103,7 +103,7 @@ public class ArrayTools {
     public static int getSizeForFlattenedArrays(final List<Array> scans) {
         int size = 0;
         for (final Array a : scans) {
-            if (a.getRank() == 1) {
+            if (a.getRank() <= 1) {
                 size += a.getShape()[0];// ArrayTools.getSizeForFlattenedArray
                 // (a);
             } else {
@@ -191,5 +191,18 @@ public class ArrayTools {
             return target;
         }
 
+    }
+
+    public static Array random(Random random, Class<?> elementType, int[] shape) {
+        return random(random, 0, 1, elementType, shape);
+    }
+
+    public static Array random(Random random, double offset, double scale, Class<?> elementType, int[] shape) {
+        Array a = Array.factory(elementType, shape);
+        IndexIterator iter = a.getIndexIterator();
+        while (iter.hasNext()) {
+            iter.setDoubleNext((random.nextDouble() * scale) - offset);
+        }
+        return a;
     }
 }

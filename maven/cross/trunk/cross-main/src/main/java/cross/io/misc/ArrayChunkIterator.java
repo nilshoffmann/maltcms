@@ -30,10 +30,13 @@ package cross.io.misc;
 import cross.Factory;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tools.EvalTools;
+import cross.exception.ConstraintViolationException;
 import cross.exception.NotImplementedException;
 import cross.exception.ResourceNotAvailableException;
-import cross.io.misc.IArrayChunkIterator;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
 import ucar.ma2.Array;
 import ucar.ma2.InvalidRangeException;
@@ -51,6 +54,10 @@ public class ArrayChunkIterator implements IArrayChunkIterator {
     private final IVariableFragment ivf;
     private int chunksize = 1024;
     private int chunk = 0;
+    private int offset = 0;
+    private int nchunks = -1;
+    private int length = -1;
+    private boolean loadFromFile = false;
 
     /**
      *
@@ -64,6 +71,7 @@ public class ArrayChunkIterator implements IArrayChunkIterator {
             try {
                 Factory.getInstance().getDataSourceFactory().getDataSourceFor(
                         this.ivf.getParent()).readStructure(ivf1);
+                loadFromFile = true;
             } catch (final IOException iex) {
                 log.warn(iex.getLocalizedMessage());
             }
@@ -81,61 +89,54 @@ public class ArrayChunkIterator implements IArrayChunkIterator {
      */
     @Override
     public boolean hasNext() {
-        if ((this.ivf.getDimensions() == null)
-                || (this.ivf.getDimensions()[0] == null)) {
-            if (this.chunk == 0) {
-                return true;
+        if (nchunks < 0) {
+            if (loadFromFile) {
+                length = ivf.getDimensions()[0].getLength();
             } else {
-                return false;
+                length = ivf.getArray().getShape()[0];
             }
+            log.info("Length: {}",length);
+            int mod = length % chunksize;
+            nchunks = (mod==0?0:1) + (length / chunksize);
+            log.info("Chunksize: {}",chunksize);
+            log.info("#of chunks: {}",nchunks);
         }
-        final Dimension d = this.ivf.getDimensions()[0];
-        if (this.chunk <= (d.getLength() / this.chunksize)) {
-            return true;
-        } else {
-            return false;
-        }
+        return chunk < nchunks;
     }
 
     private Array loadChunk(final int i) {
         final Dimension d = this.ivf.getDimensions()[0];
-        final Range[] r = this.ivf.getRange();
+        final Range[] oldRange = this.ivf.getRange();
+        Range[] r = null;
         Array a = null;
-        if (r != null) {
-            EvalTools.inRangeI(0, (int) Math.ceil(d.getLength()
-                    / this.chunksize), i, this.getClass());
-            final int start = d.getLength() / i;
-            final int length = Math
-                    .min(d.getLength(), (i + 1) * this.chunksize)
-                    - (i * this.chunksize);
+        int activeChunkSize = Math.min(chunksize, length - offset);
+        int lastIndex = Math.max(offset, offset+activeChunkSize-1);
+        log.info("Active chunk: {} with size {}",chunk,activeChunkSize);
+        try {
+            r = new Range[]{new Range(offset,lastIndex)};
+        } catch (InvalidRangeException ex) {
+            Logger.getLogger(ArrayChunkIterator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (loadFromFile) {
+            ivf.setRange(r);
             try {
-                final Range[] tmp = new Range[]{new Range(start, start
-                    + length - 1)};
-                this.ivf.setRange(tmp);
                 a = Factory.getInstance().getDataSourceFactory()
                         .getDataSourceFor(this.ivf.getParent()).readSingle(
                         this.ivf);
-            } catch (final InvalidRangeException e) {
-                log.warn(e.getLocalizedMessage());
-            } catch (final ResourceNotAvailableException e) {
-                log.warn(e.getLocalizedMessage());
-            } catch (final IOException e) {
-                log.warn(e.getLocalizedMessage());
-            } finally {
-                // reset range
-                this.ivf.setRange(r);
+            } catch (IOException ex) {
+                Logger.getLogger(ArrayChunkIterator.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ResourceNotAvailableException ex) {
+                Logger.getLogger(ArrayChunkIterator.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {// fall back to default behavior, returns complete array
+        } else {
             try {
-                a = Factory.getInstance().getDataSourceFactory()
-                        .getDataSourceFor(this.ivf.getParent()).readSingle(
-                        this.ivf);
-            } catch (final ResourceNotAvailableException e) {
-                log.warn(e.getLocalizedMessage());
-            } catch (final IOException e) {
-                log.warn(e.getLocalizedMessage());
+                a = ivf.getArray().sectionNoReduce(Arrays.asList(r));
+            } catch (InvalidRangeException ex) {
+                Logger.getLogger(ArrayChunkIterator.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        this.ivf.setRange(oldRange);
+        offset+=activeChunkSize;
         return a;
     }
 

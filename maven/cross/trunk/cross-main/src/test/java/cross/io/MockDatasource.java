@@ -31,6 +31,7 @@ import cross.cache.ICacheDelegate;
 import cross.datastructures.fragments.Fragments;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.tools.ArrayTools;
 import cross.exception.ResourceNotAvailableException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,36 +68,36 @@ public class MockDatasource implements IDataSource {
     
     @Override
     public ArrayList<Array> readAll(IFileFragment f) throws IOException, ResourceNotAvailableException {
-//        ArrayList<Array> al = new ArrayList<Array>();
-//        for(IVariableFragment frag:f) {
-//            al.add(ArrayTools.glue(getCache(f).get(frag)));
-//        }
-//        return al;
-        throw new ResourceNotAvailableException("Variable "+f.getName()+" does not exist on file!");
+        ArrayList<Array> al = new ArrayList<Array>();
+        for(IVariableFragment frag:f) {
+            al.add(ArrayTools.glue(getCache(f).get(frag)));
+        }
+        return al;
     }
 
     @Override
     public ArrayList<Array> readIndexed(IVariableFragment f) throws IOException, ResourceNotAvailableException {
-//        List<Array> l = getCache(f.getParent()).get(f);
-//        if(l== null || l.isEmpty()) {
-//            throw new ResourceNotAvailableException("Could not read indexed arrays for "+f);
-//        }
-//        return new ArrayList<Array>(l);
-        throw new ResourceNotAvailableException("Variable "+f.getName()+" does not exist on file!");
+        List<Array> l = getCache(f.getParent()).get(f);
+        if(f.getIndex()==null) {
+            throw new IllegalStateException("Variable Fragment has no index variable set!");
+        }
+        if(l== null || l.isEmpty()) {
+            throw new ResourceNotAvailableException("Could not read indexed arrays for "+f);
+        }
+        return new ArrayList<Array>(l);
     }
 
     @Override
     public Array readSingle(IVariableFragment f) throws IOException, ResourceNotAvailableException {
-//        List<Array> l = getCache(f.getParent()).get(f);
-//        if(l== null || l.isEmpty()) {
-//            throw new ResourceNotAvailableException("Could not read indexed arrays for "+f);
-//        }
-//        if(l.size()==1) {
-//            return l.get(0);
-//        }else{
-//            return ArrayTools.glue(l);
-//        }
-        throw new ResourceNotAvailableException("Variable "+f.getName()+" does not exist on file!");
+        List<Array> l = getCache(f.getParent()).get(f);
+        if(l== null || l.isEmpty()) {
+            throw new ResourceNotAvailableException("Could not read indexed arrays for "+f);
+        }
+        if(l.size()==1) {
+            return l.get(0);
+        }else{
+            return ArrayTools.glue(l);
+        }
     }
 
     @Override
@@ -106,6 +107,9 @@ public class MockDatasource implements IDataSource {
 
     @Override
     public IVariableFragment readStructure(IVariableFragment f) throws IOException, ResourceNotAvailableException {
+//        if(getCache(f.getParent())!=null) {
+//            return f;
+//        }
         throw new ResourceNotAvailableException("Variable "+f.getName()+" does not exist on file!");
     }
 

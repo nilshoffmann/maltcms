@@ -69,6 +69,15 @@ public class ObjectFactory implements IObjectFactory {
         log.debug("Using context locations: {}",
                 Arrays.toString(contextLocations));
         try {
+            if(cfg.containsKey("maltcms.home")) {
+                File f = new File(new File(cfg.getString("maltcms.home")),"cfg/pipelines/xml/workflowDefaults.xml");
+                if(f.exists()) {
+                    log.info("Using workflow defaults at: {}",f);
+                    cfg.setProperty("cross.applicationContext.workflowDefaults", cfg.getString("cross.applicationContext.workflowDefaults.file"));
+                }
+            }else{
+                log.info("Using workflow defaults from classpath.");
+            }
             String[] defaultLocations = cfg.getStringArray("cross.applicationContext.defaultLocations");
             log.debug("Using default context locations: {}", Arrays.toString(defaultLocations));
             LinkedList<String> applicationContextLocations = new LinkedList<String>(Arrays.asList(defaultLocations));
