@@ -43,7 +43,10 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflow;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.LogMethodName;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -127,19 +130,36 @@ public abstract class AFragmentCommandTest {
             w.save();
             return t;
         } catch (Exception e) {
-            copyToInspectionDir(w);
+            copyToInspectionDir(w, e);
             log.error("Caught exception while running workflow:", e);
             throw new RuntimeException(e);
         }
     }
 
-    public void copyToInspectionDir(IWorkflow w) {
+    public void copyToInspectionDir(IWorkflow w, Throwable t) {
         File tmpDir = new File(System.getProperty("java.io.tmpdir"));
         File outDir = new File(tmpDir, "maltcms-test-failures");
         UUID uid = UUID.randomUUID();
         File instanceDir = new File(outDir, uid.toString());
         instanceDir.mkdirs();
         try {
+            File f = new File(instanceDir, "stacktrace.txt");
+            PrintWriter bw = null;
+            try {
+                bw = new PrintWriter(f);
+                Throwable cause = t.getCause();
+                while(cause!=null) {
+                    cause.printStackTrace(bw);
+                    cause = cause.getCause();
+                }
+                bw.flush();
+            } catch (IOException ioex) {
+                log.error("Received io exception while creating stacktrace file!", ioex);
+            } finally {
+                if (bw != null) {
+                    bw.close();
+                }
+            }
             System.out.println("Copying workflow output to inspection directory: " + instanceDir.getAbsolutePath());
             FileUtils.copyDirectoryToDirectory(w.getOutputDirectory(), instanceDir);
         } catch (IOException ex) {

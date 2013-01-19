@@ -593,8 +593,10 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     cmdLineCfg.setProperty("output.basedir", o1.getValue());
                 }
                 if (o1.getOpt().equals("f")) {
+                    String[] inputFiles = cl.getOptionValues("f");
+                    log.info("Received input files: {}",Arrays.toString(inputFiles));
                     cmdLineCfg.setProperty("input.dataInfo",
-                            cl.getOptionValues("f"));
+                            inputFiles);
                 }
             }
             if (printHelp) {

@@ -305,6 +305,7 @@
                         </includes>
                         <excludedGroups>cross.test.IntegrationTest</excludedGroups>
                         <argLine>-Xmx2G</argLine>
+                        <trimStackTrace>false</trimStackTrace>
                         <!-- redirectTestOutputToFile -->
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     </configuration>
@@ -322,6 +323,7 @@
                     <configuration>
                         <groups>cross.test.IntegrationTest</groups>
                         <failIfNoTests>false</failIfNoTests>
+                        <trimStackTrace>false</trimStackTrace>
                         <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
                     </configuration>
                     <executions>
@@ -338,6 +340,7 @@
                                 <argLine>-Xmx2G</argLine>
                                 <!--redirectTestOutputToFile -->
                                 <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                                <trimStackTrace>false</trimStackTrace>
                                 <failIfNoTests>false</failIfNoTests>
                                 <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
                                 <!--<testFailureIgnore>true</testFailureIgnore> -->

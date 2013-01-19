@@ -371,12 +371,13 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             baseLineStartValue.setArray(bstartV);
             baseLineStopValue.setArray(bstopV);
             peakNormalizationMethod.setArray(normalizationMethodArray);
+            i = 0;
             for (Peak1D p : peaklist) {
                 double normalizedArea = p.getArea();
                 for (IPeakNormalizer normalizer : peakNormalizers) {
                     normalizedArea *= normalizer.getNormalizationFactor(ff, p);
                 }
-                areaNormalized.setDouble(i, normalizedArea);
+                areaNormalized.setDouble(i++, normalizedArea);
             }
             peakNormalizedArea.setArray(areaNormalized);
         }

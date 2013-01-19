@@ -152,6 +152,7 @@ public class InputDataFactory implements IInputDataFactory {
             throw new ExitVmException("No input data given, aborting!");
         }
         log.info("Preparing input data!");
+        log.debug("Received paths: {}",Arrays.toString(input));
         this.initialFiles = new ArrayList<IFileFragment>();
         for (String s : input) {
             URI uri = URI.create(FileTools.escapeUri(s));

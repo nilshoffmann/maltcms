@@ -186,6 +186,7 @@
                     <configuration>
                         <argLine>-Xmx2G</argLine>
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                        <trimStackTrace>false</trimStackTrace>
                     </configuration>
                 </plugin>
                 <plugin>
