@@ -97,9 +97,10 @@ public class InputDataFactory implements IInputDataFactory {
 
     protected IFileFragment initFile(final File f) {
         log.debug("Initializing IFileFragment for: " + f.getAbsolutePath());
+        log.debug("Initializing IFileFragment for URI: " + f.toURI());
 //        final IFileFragment inputFragment = Factory.getInstance().
 //                getFileFragmentFactory().fromString(s);
-        IFileFragment inputFragment = new FileFragment(f);
+        IFileFragment inputFragment = new FileFragment(f.toURI());
         if (!(new File(inputFragment.getUri()).exists())) {
             throw new ConstraintViolationException("Input file "
                     + inputFragment.getUri() + " does not exist!");
@@ -107,6 +108,7 @@ public class InputDataFactory implements IInputDataFactory {
         return inputFragment;
     }
 
+    @Deprecated
     protected IFileFragment initFile(final String s) {
         return initFile(new File(s));
     }
@@ -161,7 +163,7 @@ public class InputDataFactory implements IInputDataFactory {
             } else {
                 for (File f : getInputFiles(new String[]{s})) {
                     log.info("Adding file {}", f.getAbsolutePath());
-                    initialFiles.add(initFile(f));
+                    initialFiles.add(new FileFragment(f.toURI()));
                 }
             }
         }
