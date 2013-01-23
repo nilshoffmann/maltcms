@@ -32,18 +32,25 @@ cd "`dirname \"$SCRIPTFILE\"`/.."
 SCRIPTDIR="`pwd -P`"
 cd "$WORKINGDIR"
 
+# Declare an array of delimited input parameters.
+ARRAY=("${@}")
+
+# Declare a numeric constant of array elements.
+ELEMENTS=${#ARRAY[@]}
+
+JVMARGS=()
+MALTCMSARGS=()
+EXECARGS=("net.sf.maltcms.apps.Maltcms")
+
 #define some common variables
-JBIN="\/vol\/java-1.6.0\/bin"
-EXEC="net.sf.maltcms.apps.Maltcms"
-MALTCMSARGS=""
-USRCLSPATH=""
+USRCLSPATH=()
 MXSIZE="-Xmx2G"
 MSSIZE="-Xms128M"
 
 #print help for arguments
 function printHelp {
     printf "%-70s\n" "Usage: $0 [OPTION]... [MALTCMSARGS]..."
-    printf "%4s %-20s %-44s\n" "-64" "" "use 64bit jvm (default on 64 bit OS)"
+    printf "%4s %-20s %-44s\n" "-d64" "" "use 64bit jvm (default on 64 bit OS)"
     printf "%4s %-20s %-44s\n" "" "-XmxARG" "maximum heapsize (M for MBytes, G for GBytes)"
     printf "%4s %-20s %-44s\n" "" "-XmsARG" "minimum heapsize"
     printf "%4s %-20s %-44s\n" "" "-exec ARG" "execute the given base class,"
@@ -63,56 +70,50 @@ if [ $# -eq 0 ]; then
 	printHelp $1
 fi
 
-while [ $# -gt 0 ]; do
-    case "$1" in
-        -v) 
+# Process the parameter list.
+for (( i = 0; i < ${ELEMENTS}; i++ )); do
+  echo "  ARRAY["${i}"]=["${ARRAY[${i}]}"]"
+  IPLUS=$((i+1)) #positional next parameter
+  VAR="${ARRAY[${i}]}"
+  case "$VAR" in
+        -v)
             _V=1
             log "Verbose mode on!"
-            shift
             ;;
         -exec|--execute)
-            shift
-            FILE="$1"
-            if [ "${FILE#*.}" = "groovy" ]; then
+            FILE="${ARRAY[${IPLUS}]}"
+            if [ "${FILE##*.}" = "groovy" ]; then
                 #add the Groovy Shell
-                log "Using GroovyShell for execution of $1"
-                EXEC="groovy.lang.GroovyShell $1"
+                log "Using GroovyShell for execution of $VAR"
+                EXECARGS=("groovy.lang.GroovyShell")
+                EXECARGS+=("$FILE")
             else
                 #otherwise use plain class name
-                EXEC="$1"
+                EXECARGS=("$FILE")
             fi
-            shift
+            #remove the next argument, since we processed it
+            unset ARRAY[${IPLUS}]
             ;;
         --help)
             printHelp $0
             ;;
         -Xmx*)
-            MXSIZE="$1"
-            shift
+            MXSIZE="$VAR"
             ;;
         -Xms*)
-            MSSIZE="$1"
-            shift
+            MSSIZE="$VAR"
             ;;
         -D* | -XX* | -agent* | -X* | -d*)
-            log "Java environment argument: $1"
-            if [ -z "$ENVARGS" ]; then
-                ENVARGS="$1"
-            else
-                ENVARGS="$ENVARGS $1"
-            fi
-            shift
+            log "Java environment argument: $VAR"
+            JVMARGS+=("$VAR")
             ;;
         *)
-            if [ -z "$MALTCMSARGS" ]; then
-                MALTCMSARGS="$1"
-            else
-                MALTCMSARGS="$MALTCMSARGS $1"
-            fi
-            shift
-            ;;	
+            MALTCMSARGS+=("$VAR")
+            ;;
     esac
 done
+
+JVMARGS+=("$MSSIZE" "$MXSIZE")
 
 #Check, whether we are called from a maltcms installation
 if [ -f "$SCRIPTDIR/maltcms.jar" ]; then
@@ -152,41 +153,44 @@ else
 fi
 
 if [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]];  then
-    log "Found java from JAVA_HOME!"
     JAVA_LOCATION="$JAVA_HOME/bin/java"
+    log "Found java from JAVA_HOME at $JAVA_LOCATION"
 else
     JAVA_TMP=$(which java)
     if [[ "$?" -eq "0" ]]; then
-        log "Found java from environment!"
         JAVA_LOCATION="$(which java)"
+        log "Found java from environment at $JAVA_LOCATION"
     else
         loge "No java could be found! Please check your JAVA installation and that JAVA_HOME points to its location!"
     fi
 fi
 
 
-#environment arguments to java, e.g. -DsomeOption=someValue
-ENVARGS="-Dlog4j.configuration=file://$MALTCMSUSRDIR/cfg/log4j.properties -Djava.util.logging.config.file=$MALTCMSUSRDIR/cfg/logging.properties"
+#environment arguments to java and maltcms, e.g. -DsomeOption=someValue
+JVMARGS+=("-Dlog4j.configuration=file://$MALTCMSUSRDIR/cfg/log4j.properties")
+JVMARGS+=("-Djava.util.logging.config.file=$MALTCMSUSRDIR/cfg/logging.properties")
+JVMARGS+=("-Dmaltcms.home=$MALTCMSUSRDIR")
 
 # set up classpath
-for i in $(ls $MALTCMSUSRDIR/lib/*.jar);
-do
-    if [ -z "$USRCLSPATH" ]; then
-            USRCLSPATH="$i"
-    else
-            USRCLSPATH="$USRCLSPATH:$i";
-    fi
-done
+#for i in $(ls $MALTCMSUSRDIR/lib/*.jar);
+#do
+#    if [ -z "$USRCLSPATH" ]; then
+#            USRCLSPATH="$i"
+#    else
+#            USRCLSPATH="$USRCLSPATH:$i";
+#    fi
+#done
+USRCLASSPATH="$MALTCMSUSRDIR/maltcms.jar"
 if [ -n "$CLASSPATH" ]; then
     USRCLASSPATH="$CLASSPATH:$USRCLSPATH"
 fi
+#add the classpath
+JVMARGS+=("-cp" "${USRCLASSPATH}")
 #set up arguments
-ARGS="$MXSIZE $MSSIZE -Dmaltcms.home=$MALTCMSUSRDIR"
-if [ -n "$ENVARGS" ]; then
-    #echo "Using system properties: $ENVARGS"
-    ARGS="$ARGS $ENVARGS"
-fi
-ARGS="$ARGS -cp $USRCLSPATH $EXEC $MALTCMSARGS"
-log "Executing $JAVA_LOCATION $ARGS"
-$JAVA_LOCATION $ARGS
+CMDLINE=("$JAVA_LOCATION")
+CMDLINE+=("${JVMARGS[@]}")
+CMDLINE+=("${EXECARGS[@]}")
+CMDLINE+=("${MALTCMSARGS[@]}")
+echo "Executing ${CMDLINE[@]}"
+exec -a maltcms "${CMDLINE[@]}"
 exit $?
