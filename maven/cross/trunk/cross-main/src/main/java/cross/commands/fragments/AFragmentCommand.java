@@ -207,14 +207,19 @@ public abstract class AFragmentCommand implements IFragmentCommand {
         HashMap<String, URI> names = new LinkedHashMap<String, URI>();
         for (URI f : files) {
             String filename = FileTools.getFilename(f);
-            log.debug("Filename: {}",filename);
-            names.put(filename, f);
+            String basename = StringTools.removeFileExt(filename);
+            String ext = StringTools.getFileExtension(filename);
+            log.debug("Filename: {}",basename+"."+ext);
+            names.put(basename, f);
         }
         TupleND<IFileFragment> retFragments = new TupleND<IFileFragment>();
         for (IFileFragment fragment : inputFragments) {
             log.debug("InputFragment: "+fragment.getUri());
             String filename = FileTools.getFilename(fragment.getUri());
-            retFragments.add(new FileFragment(names.get(filename)));
+            String basename = StringTools.removeFileExt(filename);
+            String ext = StringTools.getFileExtension(filename).toLowerCase();
+            log.debug("Filename: {}",basename+"."+ext);
+            retFragments.add(new FileFragment(names.get(basename)));
         }
         return retFragments;
     }
