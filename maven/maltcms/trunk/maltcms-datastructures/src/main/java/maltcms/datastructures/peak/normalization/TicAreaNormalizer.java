@@ -64,6 +64,6 @@ public class TicAreaNormalizer implements IPeakNormalizer {
 
     @Override
     public String getNormalizationName() {
-        return "normalization to sum of total intensity";
+        return "normalization to sum of "+ticVariableName;
     }
 }

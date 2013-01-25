@@ -30,6 +30,8 @@ package maltcms.commands.fragments.peakfinding.ticPeakFinder;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.MathTools;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
@@ -84,7 +86,7 @@ public class PeakFinderUtils {
     }
 
     public static void checkMinimum(final double[] values,
-            final ArrayList<Integer> ts, final int i,
+            final Collection<Integer> ts, final int i,
             final int window) {
         EvalTools.notNull(new Object[]{values, i}, PeakFinderUtils.class);
         if (isMinCandidate(i, values, window)) {
@@ -118,20 +120,22 @@ public class PeakFinderUtils {
     }
 
     public static PolynomialSplineFunction findBaseline(double[] ticValues, int baselineEstimationMinimaWindow, double accuracy, double bandwidth, int robustnessIterations) {
-        final ArrayList<Integer> ts = new ArrayList<Integer>();
+        final LinkedHashSet<Integer> ts = new LinkedHashSet<Integer>();
         for (int i = 0; i < ticValues.length; i++) {
             log.debug("i=" + i);
             PeakFinderUtils.checkMinimum(ticValues, ts, i,
                     baselineEstimationMinimaWindow);
         }
+        
         log.info("Found {} minima for baseline estimation!", ts.size());
+        ArrayList<Integer> tss = new ArrayList<Integer>(ts);
         //add the first index
-        if (!ts.get(0).equals(Integer.valueOf(0))) {
-            ts.add(0, 0);
+        if (!tss.get(0).equals(Integer.valueOf(0))) {
+            tss.add(0, 0);
         }
         //add the last index
-        if (!ts.get(ts.size() - 1).equals(Integer.valueOf(ticValues.length - 1))) {
-            ts.add(ticValues.length - 1);
+        if (!tss.get(ts.size() - 1).equals(Integer.valueOf(ticValues.length - 1))) {
+            tss.add(ticValues.length - 1);
         }
         double[] xvalues = new double[ts.size()];
         double[] yvalues = new double[ts.size()];

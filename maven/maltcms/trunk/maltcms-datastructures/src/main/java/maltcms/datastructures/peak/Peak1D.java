@@ -303,6 +303,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
                     1, 1024);
             ArrayChar.D2 normalizationMethodArray = cross.datastructures.tools.ArrayTools.createStringArray(
                     Math.max(1, peakNormalizers.size()), 1024);
+            String[] normalizationMethodsString = new String[peakNormalizers.size()];
             ArrayDouble.D1 apexRT = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 startRT = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 snrArray = new ArrayDouble.D1(peaklist.size());
@@ -320,6 +321,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             } else {
                 for (int i = 0; i < peakNormalizers.size(); i++) {
                     normalizationMethodArray.setString(i, peakNormalizers.get(i).getNormalizationName());
+                    normalizationMethodsString[i] = peakNormalizers.get(i).getNormalizationName();
                 }
             }
             int i = 0;
@@ -373,11 +375,13 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             peakNormalizationMethod.setArray(normalizationMethodArray);
             i = 0;
             for (Peak1D p : peaklist) {
+                p.setNormalizationMethods(normalizationMethodsString);
                 double normalizedArea = p.getArea();
                 for (IPeakNormalizer normalizer : peakNormalizers) {
                     normalizedArea *= normalizer.getNormalizationFactor(ff, p);
                 }
                 areaNormalized.setDouble(i++, normalizedArea);
+                p.setNormalizedArea(normalizedArea);
             }
             peakNormalizedArea.setArray(areaNormalized);
         }

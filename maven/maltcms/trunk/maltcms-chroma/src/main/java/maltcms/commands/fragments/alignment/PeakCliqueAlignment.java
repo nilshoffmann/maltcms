@@ -893,6 +893,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
+        /*
         this.scanAcquisitionTime = cfg.getString(
                 "var.scan_acquisition_time", "scan_acquisition_time");
         this.binnedIntensities = cfg.getString(
@@ -914,7 +915,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         this.intensityValues = cfg.getString(
                 "var.intensity_values", "intensity_values");
         this.ticPeaks = cfg.getString("var.tic_peaks", "tic_peaks");
-        this.peakAreaVariable = cfg.getString("var.peak_area", "peak_area");
+        */
+        //this.peakAreaVariable = cfg.getString("var.peak_area", "peak_area");
     }
 
     /**
@@ -1357,7 +1359,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                         }
                     }
                 } catch (ResourceNotAvailableException rnae) {
-                    log.debug("Could not find peak_area as starting from " + fragment.getName() + "!");
+                    log.debug("Could not find {} as starting from {}!",peakAreaVariable,fragment.getName());
                 }
             }
             final List<String> v = Arrays.asList(line);

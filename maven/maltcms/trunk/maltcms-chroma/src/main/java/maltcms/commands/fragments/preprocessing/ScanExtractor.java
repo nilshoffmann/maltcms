@@ -189,69 +189,75 @@ public class ScanExtractor extends AFragmentCommand {
                     log.info("Using endTime: {}",endTime);
                     endScan = getUpperIndexForRetentionTime(ff.getChild(scanAcquisitionTimeVar).getArray(), endTime);
                 }
-                int[] ranges = checkRanges(ff, startScan, endScan);
-                int nscans = (ranges[1] - ranges[0] + 1);
-                log.info("Reading {} scans, from index {} to index {} (inclusive) for {}", new Object[]{nscans, ranges[0], ranges[1], ff.getName()});
-                Array sat = get1DArraySubset(ff.getChild(scanAcquisitionTimeVar).getArray(), ranges[0], ranges[1]);
-                Array tic = get1DArraySubset(ff.getChild(totalIntensityVar).getArray(), ranges[0], ranges[1]);
+                if(startScan==-1 && endScan==-1) {
+                    log.info("Skipping scan extraction, startScan=endScan=-1");
+                    work.save();
+                    res.add(work);
+                }else{
+                    int[] ranges = checkRanges(ff, startScan, endScan);
+                    int nscans = (ranges[1] - ranges[0] + 1);
+                    log.info("Reading {} scans, from index {} to index {} (inclusive) for {}", new Object[]{nscans, ranges[0], ranges[1], ff.getName()});
+                    Array sat = get1DArraySubset(ff.getChild(scanAcquisitionTimeVar).getArray(), ranges[0], ranges[1]);
+                    Array tic = get1DArraySubset(ff.getChild(totalIntensityVar).getArray(), ranges[0], ranges[1]);
 
-                IVariableFragment massesVar = ff.getChild("mass_values");
-                IVariableFragment originalScanIndexVar = ff.getChild("scan_index");
-                originalScanIndexVar.clear();
-                originalScanIndexVar.setRange(new Range[]{new Range(ranges[0], ranges[1])});
+                    IVariableFragment massesVar = ff.getChild("mass_values");
+                    IVariableFragment originalScanIndexVar = ff.getChild("scan_index");
+                    originalScanIndexVar.clear();
+                    originalScanIndexVar.setRange(new Range[]{new Range(ranges[0], ranges[1])});
 
-                massesVar.setIndex(originalScanIndexVar);
-                List<Array> massSubset = new ArrayList<Array>(nscans);
-                EvalTools.eqI(nscans, sat.getShape()[0], this);
-                List<Array> originalMasses = massesVar.getIndexedArray();
-                for (int i = 0; i < nscans; i++) {
-                    massSubset.add(i, originalMasses.get(i));
+                    massesVar.setIndex(originalScanIndexVar);
+                    List<Array> massSubset = new ArrayList<Array>(nscans);
+                    EvalTools.eqI(nscans, sat.getShape()[0], this);
+                    List<Array> originalMasses = massesVar.getIndexedArray();
+                    for (int i = 0; i < nscans; i++) {
+                        massSubset.add(i, originalMasses.get(i));
+                    }
+                    log.info("Retrieved {} mass value arrays", massSubset.size());
+                    int massDim = ArrayTools.getSizeForFlattenedArrays(massSubset);
+                    IVariableFragment intensVar = ff.getChild("intensity_values");
+                    intensVar.setIndex(originalScanIndexVar);
+                    List<Array> intensSubset = new ArrayList<Array>(nscans);
+                    List<Array> originalIntensities = intensVar.getIndexedArray();
+                    for (int i = 0; i < nscans; i++) {
+                        intensSubset.add(i, originalIntensities.get(i));
+                    }
+                    int scanDim = intensSubset.size();
+                    log.info("Subset list has {} scans!", scanDim);
+                    EvalTools.eqI(scanDim, tic.getShape()[0], this);
+
+                    //correct the index array for new offset
+                    ArrayInt.D1 scanIndexArray = new ArrayInt.D1(intensSubset.size());
+                    int offset = 0;
+                    for (int i = 0; i < intensSubset.size(); i++) {
+                        scanIndexArray.set(i, offset);
+                        offset += intensSubset.get(i).getShape()[0];
+                    }
+
+                    IVariableFragment indexSubsetVar = new VariableFragment(work, "scan_index");
+                    indexSubsetVar.setArray(scanIndexArray);
+                    indexSubsetVar.setDimensions(adaptDimensions(originalScanIndexVar, new int[]{scanDim}));
+
+                    IVariableFragment targetMasses = new VariableFragment(work, massesVar.getName());
+                    targetMasses.setIndex(indexSubsetVar);
+                    targetMasses.setIndexedArray(massSubset);
+                    targetMasses.setDimensions(adaptDimensions(massesVar, new int[]{massDim}));
+                    IVariableFragment targetIntensities = new VariableFragment(work, intensVar.getName());
+                    targetIntensities.setIndex(indexSubsetVar);
+                    targetIntensities.setIndexedArray(intensSubset);
+                    targetIntensities.setDimensions(adaptDimensions(intensVar, new int[]{massDim}));
+
+                    IVariableFragment ticVar = new VariableFragment(work, totalIntensityVar);
+                    ticVar.setDimensions(new Dimension[]{new Dimension(ff.getChild(totalIntensityVar).getDimensions()[0].getName(), tic.getShape()[0])});
+                    ticVar.setArray(tic);
+
+                    IVariableFragment satVar = new VariableFragment(work, scanAcquisitionTimeVar);
+                    satVar.setDimensions(new Dimension[]{new Dimension(ff.getChild(scanAcquisitionTimeVar).getDimensions()[0].getName(), tic.getShape()[0])});
+                    satVar.setArray(sat);
+
+                    work.setAttributes(ff.getAttributes().toArray(new Attribute[ff.getAttributes().size()]));
+                    work.save();
+                    res.add(work);
                 }
-                log.info("Retrieved {} mass value arrays", massSubset.size());
-                int massDim = ArrayTools.getSizeForFlattenedArrays(massSubset);
-                IVariableFragment intensVar = ff.getChild("intensity_values");
-                intensVar.setIndex(originalScanIndexVar);
-                List<Array> intensSubset = new ArrayList<Array>(nscans);
-                List<Array> originalIntensities = intensVar.getIndexedArray();
-                for (int i = 0; i < nscans; i++) {
-                    intensSubset.add(i, originalIntensities.get(i));
-                }
-                int scanDim = intensSubset.size();
-                log.info("Subset list has {} scans!", scanDim);
-                EvalTools.eqI(scanDim, tic.getShape()[0], this);
-
-                //correct the index array for new offset
-                ArrayInt.D1 scanIndexArray = new ArrayInt.D1(intensSubset.size());
-                int offset = 0;
-                for (int i = 0; i < intensSubset.size(); i++) {
-                    scanIndexArray.set(i, offset);
-                    offset += intensSubset.get(i).getShape()[0];
-                }
-
-                IVariableFragment indexSubsetVar = new VariableFragment(work, "scan_index");
-                indexSubsetVar.setArray(scanIndexArray);
-                indexSubsetVar.setDimensions(adaptDimensions(originalScanIndexVar, new int[]{scanDim}));
-
-                IVariableFragment targetMasses = new VariableFragment(work, massesVar.getName());
-                targetMasses.setIndex(indexSubsetVar);
-                targetMasses.setIndexedArray(massSubset);
-                targetMasses.setDimensions(adaptDimensions(massesVar, new int[]{massDim}));
-                IVariableFragment targetIntensities = new VariableFragment(work, intensVar.getName());
-                targetIntensities.setIndex(indexSubsetVar);
-                targetIntensities.setIndexedArray(intensSubset);
-                targetIntensities.setDimensions(adaptDimensions(intensVar, new int[]{massDim}));
-
-                IVariableFragment ticVar = new VariableFragment(work, totalIntensityVar);
-                ticVar.setDimensions(new Dimension[]{new Dimension(ff.getChild(totalIntensityVar).getDimensions()[0].getName(), tic.getShape()[0])});
-                ticVar.setArray(tic);
-
-                IVariableFragment satVar = new VariableFragment(work, scanAcquisitionTimeVar);
-                satVar.setDimensions(new Dimension[]{new Dimension(ff.getChild(scanAcquisitionTimeVar).getDimensions()[0].getName(), tic.getShape()[0])});
-                satVar.setArray(sat);
-
-                work.setAttributes(ff.getAttributes().toArray(new Attribute[ff.getAttributes().size()]));
-                work.save();
-                res.add(work);
             } catch (InvalidRangeException ex) {
                 log.error("Invalid range:",ex);
             }

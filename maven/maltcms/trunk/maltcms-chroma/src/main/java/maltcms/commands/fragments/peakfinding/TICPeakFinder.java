@@ -333,7 +333,6 @@ public class TICPeakFinder extends AFragmentCommand {
         List<Peak1D> peaks = Collections.emptyList();
         if (this.integratePeaks) {
             peaks = findPeakAreas(f, pprs.getTs(), f.getName(), tic, pprs.getCorrectedTIC(), snrValues);
-            savePeakTable(peaks, f);
         }
         if (this.saveGraphics) {
             visualize(f, tic, pprs.getCorrectedTIC(), snrValues, extr,
@@ -345,8 +344,13 @@ public class TICPeakFinder extends AFragmentCommand {
                 filename));
 
         ff.addSourceFile(f);
+        if (this.integratePeaks) {
+            log.info("Using peak normalizers: {}", peakNormalizers);
+        }
         addResults(ff, pprs, peaks);
-
+        if (this.integratePeaks) {
+            savePeakTable(peaks, f);
+        }
         ff.save();
         f.clearArrays();
         DefaultWorkflowResult dwr = new DefaultWorkflowResult(ff.getUri(), this, WorkflowSlot.PEAKFINDING, ff);
