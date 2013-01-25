@@ -1,4 +1,4 @@
-/* 
+/*
  * Cross, common runtime object support system. 
  * Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
  *
@@ -25,27 +25,45 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.datastructures.collections;
+package cross.datastructures.combinations;
 
-import java.util.List;
+import java.util.Iterator;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public interface IElementProvider<T> {
+public class CombinationIterator<T> implements Iterator<T> {
 
-    int size();
+    private final CombinationProvider provider;
     
-    long sizeLong();
-
-    T get(int i);
-
-    List<T> get(int start, int stop);
-
-    void reset();
+    private final ITypeFactory<T> factory;
     
-    T get(long l);
+    private long element = 0;
     
-    List<T> get(long start, long stop);
+    public CombinationIterator(CombinationProvider provider, ITypeFactory<T> factory) {
+        this.provider = provider;
+        this.factory = factory;
+    }
+    
+    @Override
+    public boolean hasNext() {
+        return element<provider.size();
+    }
+
+    @Override
+    public T next() {
+        return factory.create(provider.get(element++));
+    }
+
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public void reset() {
+        this.element = 0;
+        this.provider.reset();
+    }
+    
 }

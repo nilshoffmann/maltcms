@@ -45,7 +45,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import cross.math.Combinatorics;
-import net.sf.maltcms.evaluation.api.classification.ChoiceFactory;
+import cross.datastructures.combinations.ChoiceFactory;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.LoggerFactory;

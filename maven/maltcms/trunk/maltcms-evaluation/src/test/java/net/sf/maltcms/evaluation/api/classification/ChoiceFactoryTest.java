@@ -27,6 +27,7 @@
  */
 package net.sf.maltcms.evaluation.api.classification;
 
+import cross.datastructures.combinations.ChoiceFactory;
 import cross.math.Combinatorics;
 import java.util.Arrays;
 import java.util.LinkedList;

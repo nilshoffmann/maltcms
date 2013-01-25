@@ -202,7 +202,7 @@ public class CachedLazyList<T> implements List<T> {
     }
 
     private void init(final int offset, final int size) {
-        this.size = this.ivf.size();
+        this.size = (int)this.ivf.size();
         if ((offset > 0) && (size >= 0)) {
 
             this.size = Math.min(this.size, size);

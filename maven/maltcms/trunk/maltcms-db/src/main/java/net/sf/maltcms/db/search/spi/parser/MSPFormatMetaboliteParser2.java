@@ -373,7 +373,7 @@ public class MSPFormatMetaboliteParser2 {
     private class MetaboliteProvider implements IElementProvider<IMetabolite> {
 
         private File f;
-        private int records = 0;
+        private long records = 0;
         private List<Long> metaboliteStartIndices;
         private RandomAccessFile raf = null;
 
@@ -416,7 +416,7 @@ public class MSPFormatMetaboliteParser2 {
 
         @Override
         public int size() {
-            return records;
+            return (int)records;
         }
 
         @Override
@@ -474,6 +474,21 @@ public class MSPFormatMetaboliteParser2 {
         @Override
         public void reset() {
             throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public long sizeLong() {
+            return (int)size();
+        }
+
+        @Override
+        public IMetabolite get(long l) {
+            return get((int)l);
+        }
+
+        @Override
+        public List<IMetabolite> get(long start, long stop) {
+            return get((int)start,(int)stop);
         }
     }
 

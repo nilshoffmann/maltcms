@@ -1265,10 +1265,20 @@ public class ArrayTools {
             private final int lazySize = size;
 
             @Override
+            public long sizeLong() {
+                return lazySize;
+            }
+            
+            @Override
             public int size() {
                 return lazySize;
             }
 
+            @Override
+            public Array get(long index) {
+                return get((int)index);
+            }
+            
             @Override
             public Array get(int index) {
                 final int nscans = originalList.size();
@@ -1286,6 +1296,11 @@ public class ArrayTools {
                 return ret;
             }
 
+            @Override
+            public List<Array> get(long start, long stop) {
+                return get((int)start,(int)stop);
+            }
+            
             @Override
             public List<Array> get(int start, int stop) {
                 final ArrayList<Array> ret = new ArrayList<Array>();

@@ -25,7 +25,7 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package net.sf.maltcms.evaluation.api.classification;
+package cross.datastructures.combinations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +33,10 @@ import cross.datastructures.collections.IElementProvider;
 import cross.math.CombinationIterator;
 
 /**
- * Implementation of {@link IElementProvider} for <code>Object[]</code>.
- * 
+ * Implementation of {@link IElementProvider} for
+ * <code>Object[]</code>. Use this class in ascending iteration order 
+ * to achieve the best performance.
+ *
  * @author Nils Hoffmann
  *
  */
@@ -42,7 +44,7 @@ public class CombinationProvider implements IElementProvider<Object[]> {
 
     private CombinationIterator ci;
     private List<Object[]> data;
-    private int lastIdx = -1;
+    private long lastIdx = -1;
 
     public CombinationProvider(CombinationIterator ci, List<Object[]> data) {
         this.ci = ci;
@@ -62,6 +64,30 @@ public class CombinationProvider implements IElementProvider<Object[]> {
      */
     @Override
     public Object[] get(int idx) {
+        return get((long) idx);
+    }
+
+    /* (non-Javadoc)
+     * @see net.sf.maltcms.datastructures.IElementProvider#get(int, int)
+     */
+    @Override
+    public List<Object[]> get(int start, int stop) {
+        return get((int) start, (int) stop);
+    }
+
+    @Override
+    public void reset() {
+        lastIdx = -1;
+        ci.reset();
+    }
+
+    @Override
+    public long sizeLong() {
+        return ci.size();
+    }
+
+    @Override
+    public Object[] get(long idx) {
         if (idx > size()) {
             throw new IndexOutOfBoundsException();
         }
@@ -83,19 +109,12 @@ public class CombinationProvider implements IElementProvider<Object[]> {
         return s;
     }
 
-    /* (non-Javadoc)
-     * @see net.sf.maltcms.datastructures.IElementProvider#get(int, int)
-     */
     @Override
-    public List<Object[]> get(int start, int stop) {
+    public List<Object[]> get(long start, long stop) {
         List<Object[]> l = new ArrayList<Object[]>();
-        l.add(get(start));
+        for (long i = start; i <= stop; i++) {
+            l.add(get(i));
+        }
         return l;
-    }
-
-    @Override
-    public void reset() {
-        lastIdx = -1;
-        ci.reset();
     }
 }

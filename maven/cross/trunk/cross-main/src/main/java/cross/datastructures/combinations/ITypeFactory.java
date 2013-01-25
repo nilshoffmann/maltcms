@@ -1,4 +1,4 @@
-/* 
+/*
  * Cross, common runtime object support system. 
  * Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
  *
@@ -25,27 +25,14 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package cross.datastructures.collections;
-
-import java.util.List;
+package cross.datastructures.combinations;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public interface IElementProvider<T> {
-
-    int size();
+public interface ITypeFactory<T> {
     
-    long sizeLong();
-
-    T get(int i);
-
-    List<T> get(int start, int stop);
-
-    void reset();
+    T create(Object[] values);
     
-    T get(long l);
-    
-    List<T> get(long start, long stop);
 }

@@ -66,7 +66,7 @@ import ucar.nc2.Dimension;
 @ServiceProvider(service = AFragmentCommand.class)
 public class ScanExtractor extends AFragmentCommand {
 
-    private final String description = "Allows definition of a start and end modulation period to be extracted from a raw GCxGC-MS chromatogram.";
+    private final String description = "Allows definition of a start and end modulation period to be extracted from a raw chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.GENERAL_PREPROCESSING;
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";
@@ -78,6 +78,11 @@ public class ScanExtractor extends AFragmentCommand {
     private int startScan = -1;
     @Configurable(value = "-1")
     private int endScan = -1;
+    
+    @Configurable(value = "-Inf")
+    private double startTime = Double.NEGATIVE_INFINITY;
+    @Configurable(value = "+Inf")
+    private double endTime = Double.POSITIVE_INFINITY;
 
     protected Array get1DArraySubset(Array a, int startIndex, int endIndex) {
         int scans = endIndex - startIndex + 1;
@@ -96,6 +101,26 @@ public class ScanExtractor extends AFragmentCommand {
             int idx = iter.getIntNext();
             iter.setIntCurrent(idx - startIndex);
         }
+    }
+    
+    protected int getLowerIndexForRetentionTime(Array sat, double rt) {
+        for(int i = 0;i <sat.getShape()[0]; i++) {    
+            double satValue = sat.getDouble(i);
+            if(satValue>=rt) {
+               return i;
+            }
+        }
+        return -1;
+    }
+    
+    protected int getUpperIndexForRetentionTime(Array sat, double rt) {
+        for(int i = 0;i <sat.getShape()[0]; i++) {    
+            double satValue = sat.getDouble(i);
+            if(satValue>=rt) {
+               return Math.max(0,i-1);
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -154,6 +179,16 @@ public class ScanExtractor extends AFragmentCommand {
         for (IFileFragment ff : t) {
             try {
                 final IFileFragment work = createWorkFragment(ff);
+                int startScan = this.startScan;
+                int endScan = this.endScan;
+                if(!Double.isInfinite(startTime)) {
+                    log.info("Using startTime: {}",startTime);
+                    startScan = getLowerIndexForRetentionTime(ff.getChild(scanAcquisitionTimeVar).getArray(), startTime);
+                }
+                if(!Double.isInfinite(endTime)) {
+                    log.info("Using endTime: {}",endTime);
+                    endScan = getUpperIndexForRetentionTime(ff.getChild(scanAcquisitionTimeVar).getArray(), endTime);
+                }
                 int[] ranges = checkRanges(ff, startScan, endScan);
                 int nscans = (ranges[1] - ranges[0] + 1);
                 log.info("Reading {} scans, from index {} to index {} (inclusive) for {}", new Object[]{nscans, ranges[0], ranges[1], ff.getName()});
