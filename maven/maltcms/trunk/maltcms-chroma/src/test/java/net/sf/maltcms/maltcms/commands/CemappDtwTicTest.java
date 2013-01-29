@@ -54,6 +54,7 @@ import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineE
 import cross.test.IntegrationTest;
 import maltcms.commands.fragments.preprocessing.ScanExtractor;
 import maltcms.test.ExtractClassPathFiles;
+import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.experimental.categories.Category;
 
@@ -94,7 +95,8 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
         factory.setBandWidthPercentage(bandWidthPercentage);
         DtwPairwiseSimilarity dps = new DtwPairwiseSimilarity();
         dps.setDenseMassSpectraSimilarity(new ArrayLp());
-        dps.setMatchWeight(2.25);
+        //dps.setMatchWeight(2.25);
+        dps.setMatchWeight(1.0);
         factory.setSimilarity(dps);
         pdc.setWorkerFactory(factory);
         factory.setSaveDtwMatrix(false);
@@ -129,7 +131,7 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
         tpf.setPeakThreshold(20.0d);
         commands.add(tpf);
         commands.add(new PeakCliqueAlignment());
-        commands.add(createPairwiseDistanceCalculatorTIC(true, 0, true, 0.5d));
+        commands.add(createPairwiseDistanceCalculatorTIC(true, 5, false, 0.25d));
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }
