@@ -388,7 +388,7 @@ public class FragmentTools {
         }
         URI relativePath = FileTools.getRelativeUri(baseFile.getUri(), targetFile.getUri());
         log.debug("Relative path from {} to {} = {}", new Object[]{baseFile.getUri(), targetFile.getUri(), relativePath});
-        EvalTools.eq(targetFile.getUri().toASCIIString(), baseFile.getUri().resolve(relativePath).toASCIIString());
+        EvalTools.eq(targetFile.getUri().toString(), baseFile.getUri().resolve(relativePath).toString());
         return relativePath;
     }
 
@@ -396,7 +396,7 @@ public class FragmentTools {
         int ml = 128;
         List<String> names = new ArrayList<String>();
         for (final IFileFragment file : files) {
-            String resolvedPath = resolve(file, root).toASCIIString();
+            String resolvedPath = resolve(file, root).toString();
             log.info("Adding resolved (relative) source file: {}", resolvedPath);
             names.add(resolvedPath);
             if (resolvedPath.length() > ml) {
@@ -592,7 +592,7 @@ public class FragmentTools {
     public static void setLHSFile(final IFileFragment ff,
             final IFileFragment lhs) {
         FragmentTools.createString(ff, Factory.getInstance().getConfiguration().getString("var.reference_file", "reference_file"),
-                lhs.getUri().toASCIIString());
+                lhs.getUri().toString());
     }
 
     /**
@@ -606,7 +606,7 @@ public class FragmentTools {
     public static void setRHSFile(final IFileFragment ff,
             final IFileFragment rhs) {
         FragmentTools.createString(ff, Factory.getInstance().getConfiguration().getString("var.query_file", "query_file"),
-                rhs.getUri().toASCIIString());
+                rhs.getUri().toString());
     }
 
     /**

@@ -143,12 +143,12 @@ public class DefaultWorkflowResult implements IWorkflowFileResult {
         final Element resources = new Element("resources");
         for (IFileFragment f : this.resources) {
             final Element res = new Element("resource");
-            res.setAttribute("uri", f.getUri().normalize().toASCIIString());
+            res.setAttribute("uri", f.getUri().normalize().toString());
             resources.addContent(res);
         }
         iwr.addContent(resources);
         iwr.setAttribute("file", getFile().getAbsolutePath());
-        iwr.setAttribute("file-uri", this.file.normalize().toASCIIString());
+        iwr.setAttribute("file-uri", this.file.normalize().toString());
         e.addContent(iwr);
     }
 }

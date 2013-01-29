@@ -139,7 +139,7 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
         System.out.println("Testing indirect remote read!");
         IFileFragment readFragment = new ImmutableFileFragment(new FileFragment(testCdf));
         IVariableFragment sourceFiles = readFragment.getChild("source_files");
-        System.out.println("SourceFiles for "+testCdf.toASCIIString()+": "+sourceFiles.getArray());
+        System.out.println("SourceFiles for "+testCdf.toString()+": "+sourceFiles.getArray());
         //check variables
         IVariableFragment rivf1 = readFragment.getChild("total_intensity");
         Dimension[] rdims1 = rivf1.getDimensions();

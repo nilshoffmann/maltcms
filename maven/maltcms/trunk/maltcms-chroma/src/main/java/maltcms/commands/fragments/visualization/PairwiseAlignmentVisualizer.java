@@ -590,7 +590,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
                 "Superimposition of alignment of "
                 + StringTools.removeFileExt(ref.getName()) + " with "
                 + StringTools.removeFileExt(query.getName()),
-                new String[]{ref.getUri().toASCIIString(), query.getUri().toASCIIString()},
+                new String[]{ref.getUri().toString(), query.getUri().toString()},
                 new Array[]{lhsmcopy, rhsmcopy}, new Array[]{lhs_domain},
                 x_label, y_label);
         final XYPlot p = xyc.create();
@@ -738,12 +738,12 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         // }
         // }else{
         tc1 = new XYChart(filea1.getName(), new String[]{
-                    filea1.getUri().toASCIIString()}, new Array[]{a1},
+                    filea1.getUri().toString()}, new Array[]{a1},
                 new Array[]{domains[0]}, x_label, this.y_axis_label);
         tc1.setYaxis_min(min);
         tc1.setYaxis_max(max);
         tc2 = new XYChart(fileb1.getName(), new String[]{
-                    fileb1.getUri().toASCIIString()}, new Array[]{b1},
+                    fileb1.getUri().toString()}, new Array[]{b1},
                 new Array[]{domains[1]}, x_label, this.y_axis_label);
         tc2.setYaxis_min(min);
         tc2.setYaxis_max(max);

@@ -104,7 +104,7 @@ public class Array1DVisualizer extends AFragmentCommand {
         for (final IFileFragment ff : t) {
             log.info("Processing File fragment {}: {} of {}",
                     new Object[]{ff.getName(), (i + 1), t.getSize()});
-            labels[i] = ff.getUri().toASCIIString();
+            labels[i] = ff.getUri().toString();
             final IVariableFragment ivf = ff.getChild(this.variableName);
             values[i] = ivf.getArray();
             log.debug("Parent of {}:{}", ivf, ivf.getParent());
@@ -188,8 +188,8 @@ public class Array1DVisualizer extends AFragmentCommand {
             final IFileFragment rhs = pair.getSecond();
             final Array[] domains = new Array[2];
             // for(FileFragment ff:t) {
-            labels[0] = lhs.getUri().toASCIIString();
-            labels[1] = rhs.getUri().toASCIIString();
+            labels[0] = lhs.getUri().toString();
+            labels[1] = rhs.getUri().toString();
             if (lhs.hasChild(this.variableName)
                     && rhs.hasChild(this.variableName)) {
                 values[0] = lhs.getChild(this.variableName).getArray().copy();
@@ -267,8 +267,8 @@ public class Array1DVisualizer extends AFragmentCommand {
             final IFileFragment rhs = pair.getSecond();
             final Array[] domains = new Array[2];
             // for(FileFragment ff:t) {
-            labels[0] = lhs.getUri().toASCIIString();
-            labels[1] = rhs.getUri().toASCIIString();
+            labels[0] = lhs.getUri().toString();
+            labels[1] = rhs.getUri().toString();
             if (lhs.hasChild(this.variableName)
                     && rhs.hasChild(this.variableName)) {
                 values[0] = lhs.getChild(this.variableName).getArray();

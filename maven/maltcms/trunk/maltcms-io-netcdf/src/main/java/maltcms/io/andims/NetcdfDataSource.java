@@ -331,7 +331,7 @@ public class NetcdfDataSource implements IDataSource {
 
     protected synchronized NetcdfFile locateFile(final IFileFragment ff) throws IOException {
         URI u = ff.getUri();
-        String filepath = u.toASCIIString();
+        String filepath = u.toString();
         log.info("Opening netcdf file {}", filepath);
         return NetcdfFile.open(filepath);
     }
@@ -739,7 +739,7 @@ public class NetcdfDataSource implements IDataSource {
                 file.getParentFile().mkdirs();
                 filename = file.getAbsolutePath();
             } else {
-                filename = parent.getUri().toASCIIString();
+                filename = parent.getUri().toString();
             }
             log.debug("Trying to create NetcdfFileWritable {}", filename);
             nfw = NetcdfFileWriteable.createNew(

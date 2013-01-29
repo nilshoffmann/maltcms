@@ -616,7 +616,7 @@ public class TICPeakFinder extends AFragmentCommand {
 
         log.debug("start: {}, stop: {}", startIndex, stopIndex);
         final Peak1D pb = new Peak1D(startIndex, apexIndex, stopIndex);
-        pb.setFile(chromatogram.getUri().toASCIIString());
+        pb.setFile(chromatogram.getUri().toString());
         if (integrateRawTic) {
             integratePeak(pb, null, rawTIC);
         } else {
@@ -743,7 +743,7 @@ public class TICPeakFinder extends AFragmentCommand {
         }
         log.debug("start: {}, stop: {}", (l + 1), r - 1);
         final Peak1D pb = new Peak1D(l + 1, apexIndex, r - 1);//PeakFactory.createPeak1DTic();
-        pb.setFile(f.getUri().toASCIIString());
+        pb.setFile(f.getUri().toString());
         integratePeak(pb, mwIndices, f.getChild(this.ticVarName).getArray());
         return pb;
     }

@@ -341,7 +341,7 @@ public class FileFragment implements IFileFragment {
         final Element sourceFiles = new Element("sourceFiles");
         for (final IFileFragment frag : getSourceFiles()) {
             final Element sfile = new Element("file");
-            sfile.setAttribute("filename", frag.getUri().toASCIIString());
+            sfile.setAttribute("filename", frag.getUri().toString());
             sourceFiles.addContent(sfile);
         }
         final Element dimensions = new Element("dimensions");
@@ -360,7 +360,7 @@ public class FileFragment implements IFileFragment {
         }
         fileFragment.addContent(dimensions);
         // fileFragment.setAttribute("resourceLocation", );
-        fileFragment.setAttribute("filename", getUri().toASCIIString());
+        fileFragment.setAttribute("filename", getUri().toString());
         // fileFragment.setAttribute("dirname", getDirname());
         fileFragment.setAttribute("size", "" + getSize());
         // fileFragment.setAttribute("id",""+this.fID);
@@ -441,7 +441,7 @@ public class FileFragment implements IFileFragment {
         if (this.u.getScheme() == null || this.u.getScheme().equals("file")) {
             return new File(this.u).getAbsolutePath();
         } else {
-            return this.u.toASCIIString();
+            return this.u.toString();
         }
     }
 
@@ -481,7 +481,7 @@ public class FileFragment implements IFileFragment {
     @Override
     public ICacheDelegate<IVariableFragment, List<Array>> getCache() {
         if (this.persistentCache == null) {
-            String cacheLocation = UUID.nameUUIDFromBytes(getUri().toASCIIString().getBytes()).toString();
+            String cacheLocation = UUID.nameUUIDFromBytes(getUri().toString().getBytes()).toString();
             this.persistentCache = Fragments.createFragmentCache(cacheLocation);
         }
         return this.persistentCache;
@@ -569,7 +569,7 @@ public class FileFragment implements IFileFragment {
             }
             // if all fails, throw ResourceNotAvailableException
             throw new ResourceNotAvailableException("Failed to find var "
-                    + varname + " in fragment " + getUri().toASCIIString()
+                    + varname + " in fragment " + getUri().toString()
                     + " and source files " + this.sourcefiles.values());
         }
     }
@@ -980,7 +980,7 @@ public class FileFragment implements IFileFragment {
         log.debug("extension: " + ext);
         log.debug("filename: " + filename);
         log.debug("basepath: " + basepath);
-        log.debug("uri: " + u.toASCIIString());
+        log.debug("uri: " + u.toString());
         //FIXME this should be configured more centrally
         final String[] netcdfExts = new String[]{"nc", "nc.gz", "nc.z", "nc.zip", "nc.gzip", "nc.bz2", "cdf", "cdf.gz", "cdf.z", "cdf.zip", "cdf.gzip", "cdf.bz2"};
         log.debug("Looking for file extension: {} in {}", ext, Arrays.toString(netcdfExts));
@@ -1014,7 +1014,7 @@ public class FileFragment implements IFileFragment {
             removeSourceFiles();
             this.persistentCache = null;
 //            FileFragment.fileMap.remove(u);
-//            FileFragment.fileMap.remove(u.toASCIIString());
+//            FileFragment.fileMap.remove(u.toString());
             return true;
         }
         return false;
@@ -1049,7 +1049,7 @@ public class FileFragment implements IFileFragment {
     }
 
     protected void setFile(final URI uri) {
-        setFile(uri.toASCIIString());
+        setFile(uri.toString());
     }
 
     protected boolean isFile(final String path) {
@@ -1077,10 +1077,10 @@ public class FileFragment implements IFileFragment {
         log.info("Setting resource location to: {}", file);
         URI u = URI.create(FileTools.escapeUri(file));
         if (u.getScheme() == null) {
-            throw new ConstraintViolationException("URI scheme must not be null for " + this.u.toASCIIString());
+            throw new ConstraintViolationException("URI scheme must not be null for " + this.u.toString());
         }
         if (u.getPath().contains("file:")) {
-            throw new ConstraintViolationException("Illegal URI: scheme must not occur in path for " + this.u.toASCIIString());
+            throw new ConstraintViolationException("Illegal URI: scheme must not occur in path for " + this.u.toString());
         }
         this.u = u;
     }
@@ -1117,7 +1117,7 @@ public class FileFragment implements IFileFragment {
         if (this.u == null) {
             sb.append(getID());
         } else {
-            sb.append(this.u.toASCIIString());
+            sb.append(this.u.toString());
         }
         sb.append(">");
         int i = 0;
@@ -1191,7 +1191,7 @@ public class FileFragment implements IFileFragment {
         // store id
         out.writeObject(Long.valueOf(this.fID));
         // store path to storage
-        out.writeObject(this.u.toASCIIString());
+        out.writeObject(this.u.toString());
         out.flush();
         out.close();
     }

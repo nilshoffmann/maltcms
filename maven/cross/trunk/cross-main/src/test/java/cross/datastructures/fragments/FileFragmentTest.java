@@ -194,13 +194,13 @@ public class FileFragmentTest {
             Assert.assertEquals(resolvedSourceFiles.get(i).getUri(), sourceFiles[i].getUri());
         }
         
-        URI uri11 = new File("/tmp/69138/workflow/command1/file 1.cdf").toURI();
+        URI uri11 = new File("/tmp/69138/workflow/command1/file 1üa 3.cdf").toURI();
         FileFragment f1 = new FileFragment(uri11);
         URI uri12 = new File("/tmp/69138/workflow/command1/otherOutput/oof.cdf").toURI();
         FileFragment f2 = new FileFragment(uri12);
         Assert.assertTrue(FragmentTools.isChild(f1, f2));
         
-        URI uri13 = new File("/tmp/69138/workflow/command 2/file 1.cdf").toURI();
+        URI uri13 = new File("/tmp/69138/workflow/command 2/file 1üa 3.cdf").toURI();
         FileFragment f3 = new FileFragment(uri13);
         URI uri14 = new File("/tmp/69138/workflow/command0/otherOutput/oof.cdf").toURI();
         FileFragment f4 = new FileFragment(uri14);

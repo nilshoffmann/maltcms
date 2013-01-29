@@ -95,6 +95,9 @@ import maltcms.commands.fragments.alignment.peakCliqueAlignment.Peak2D;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakComparator;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakSimilarityVisualizer;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.WorkerFactory;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.IPeakFactory;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.IPeakFactoryImpl;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak1DMSFactory;
 import maltcms.datastructures.alignment.AlignmentFactory;
 import maltcms.datastructures.array.Sparse;
 import maltcms.datastructures.ms.IMetabolite;
@@ -177,6 +180,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     private boolean use2DRetentionTimes = false;
     @Configurable
     private IWorkerFactory workerFactory = new WorkerFactory();
+    @Configurable
+    private IPeakFactory peakFactory = new Peak1DMSFactory();
     /*
      * private scope
      */
@@ -1112,29 +1117,29 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 Array sidx = t.getChild(this.binnedScanIndex).getArray();
                 peakCandidates1 = ArrayTools.indexArray(sidx.getShape()[0], 0);
             }
-            IVariableFragment sivar = t.getChild(this.scanIndex);
-            IVariableFragment mvar = t.getChild(this.massValues);
-            mvar.setIndex(sivar);
-            IVariableFragment ivar = t.getChild(this.intensityValues);
-            ivar.setIndex(sivar);
-            // maxPeaks = Math.max(maxPeaks, peakCandidates1.getShape()[0]);
-            IVariableFragment bsivar = t.getChild(this.binnedScanIndex);
-            IVariableFragment bivar = t.getChild(this.binnedIntensities);
-            bivar.setIndex(bsivar);
-            IVariableFragment satvar = t.getChild(this.scanAcquisitionTime);
-            final Array scan_acquisition_time = satvar.getArray();
-            Array firstColumnElutionTime = null;
-            Array secondColumnElutionTime = null;
-            if(use2DRetentionTimes) {
-                try {
-                    IVariableFragment fcet = t.getChild(resolve("var.first_column_elution_time"));
-                    firstColumnElutionTime = fcet.getArray();
-                    IVariableFragment scet = t.getChild(resolve("var.second_column_elution_time"));
-                    secondColumnElutionTime = scet.getArray();
-                }catch(ResourceNotAvailableException rnae) {
-                    log.warn("Could not retrieve requested variables for 2D retention times!",rnae);
-                }
-            }
+//            IVariableFragment sivar = t.getChild(this.scanIndex);
+//            IVariableFragment mvar = t.getChild(this.massValues);
+//            mvar.setIndex(sivar);
+//            IVariableFragment ivar = t.getChild(this.intensityValues);
+//            ivar.setIndex(sivar);
+//            // maxPeaks = Math.max(maxPeaks, peakCandidates1.getShape()[0]);
+//            IVariableFragment bsivar = t.getChild(this.binnedScanIndex);
+//            IVariableFragment bivar = t.getChild(this.binnedIntensities);
+//            bivar.setIndex(bsivar);
+//            IVariableFragment satvar = t.getChild(this.scanAcquisitionTime);
+//            final Array scan_acquisition_time = satvar.getArray();
+//            Array firstColumnElutionTime = null;
+//            Array secondColumnElutionTime = null;
+//            if(use2DRetentionTimes) {
+//                try {
+//                    IVariableFragment fcet = t.getChild(resolve("var.first_column_elution_time"));
+//                    firstColumnElutionTime = fcet.getArray();
+//                    IVariableFragment scet = t.getChild(resolve("var.second_column_elution_time"));
+//                    secondColumnElutionTime = scet.getArray();
+//                }catch(ResourceNotAvailableException rnae) {
+//                    log.warn("Could not retrieve requested variables for 2D retention times!",rnae);
+//                }
+//            }
             EvalTools.notNull(peakCandidates1, this);
             List<Peak> peaks = null;
             if (fragmentToPeaks.containsKey(t.getName())) {
@@ -1143,46 +1148,49 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 peaks = new ArrayList<Peak>();
             }
             log.debug("Adding peaks for {}", t.getName());
-            List<Array> indexedMasses = null;
-            List<Array> indexedIntensities = null;
-            if (useSparseArrays) {
-                indexedMasses = mvar.getIndexedArray();
-                indexedIntensities = ivar.getIndexedArray();
-            } else {
-                indexedIntensities = bivar.getIndexedArray();
-            }
-            final Index pc1 = peakCandidates1.getIndex();
-            final Index sat1 = scan_acquisition_time.getIndex();
+//            List<Array> indexedMasses = null;
+//            List<Array> indexedIntensities = null;
+//            if (useSparseArrays) {
+//                indexedMasses = mvar.getIndexedArray();
+//                indexedIntensities = ivar.getIndexedArray();
+//            } else {
+//                indexedIntensities = bivar.getIndexedArray();
+//            }
+//            final Index pc1 = peakCandidates1.getIndex();
+//            final Index sat1 = scan_acquisition_time.getIndex();
             final List<Peak> userDefinedAnchors = definedAnchors.get(t.getName());
-
+            IPeakFactoryImpl pfi = peakFactory.createInstance(t, savePeakSimilarities, minMaxMassRange, size, massBinResolution, useSparseArrays, savePeakSimilarities);
+            
             for (int i = 0; i < peakCandidates1.getShape()[0]; i++) {
-                final int pc1i = peakCandidates1.getInt(pc1.set(i));
+//                final int pc1i = peakCandidates1.getInt(pc1.set(i));
+                final int pc1i = peakCandidates1.getInt(i);
                 Peak p = null;
-                if (firstColumnElutionTime != null && secondColumnElutionTime != null) {
-                    if (useSparseArrays) {
-                        ArrayDouble.D1 sparse = new Sparse(indexedMasses.get(i), indexedIntensities.get(i),
-                                (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
-                                size, massBinResolution);
-                        p = new Peak2D(pc1i, sparse,
-                                scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
-                    } else {
-                        p = new Peak2D(pc1i, indexedIntensities.get(pc1i),
-                                scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
-                    }
-                    ((Peak2D)p).setFirstColumnElutionTime(firstColumnElutionTime.getFloat(i));
-                    ((Peak2D)p).setSecondColumnElutionTime(secondColumnElutionTime.getFloat(i));
-                }else{
-                    if (useSparseArrays) {
-                        ArrayDouble.D1 sparse = new Sparse(indexedMasses.get(i), indexedIntensities.get(i),
-                                (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
-                                size, massBinResolution);
-                        p = new Peak(pc1i, sparse,
-                                scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
-                    } else {
-                        p = new Peak(pc1i, indexedIntensities.get(pc1i),
-                                scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
-                    }
-                }
+                p = pfi.create(pc1i, i);
+//                if (firstColumnElutionTime != null && secondColumnElutionTime != null) {
+//                    if (useSparseArrays) {
+//                        ArrayDouble.D1 sparse = new Sparse(indexedMasses.get(i), indexedIntensities.get(i),
+//                                (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
+//                                size, massBinResolution);
+//                        p = new Peak2D(pc1i, sparse,
+//                                scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
+//                    } else {
+//                        p = new Peak2D(pc1i, indexedIntensities.get(pc1i),
+//                                scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
+//                    }
+//                    ((Peak2D)p).setFirstColumnElutionTime(firstColumnElutionTime.getFloat(i));
+//                    ((Peak2D)p).setSecondColumnElutionTime(secondColumnElutionTime.getFloat(i));
+//                }else{
+//                    if (useSparseArrays) {
+//                        ArrayDouble.D1 sparse = new Sparse(indexedMasses.get(i), indexedIntensities.get(i),
+//                                (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
+//                                size, massBinResolution);
+//                        p = new Peak(pc1i, sparse,
+//                                scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
+//                    } else {
+//                        p = new Peak(pc1i, indexedIntensities.get(pc1i),
+//                                scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
+//                    }
+//                }
                 p.setPeakIndex(i);
                 peaks.add(p);
                 npeaks++;

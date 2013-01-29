@@ -284,7 +284,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
         for (final IFileFragment ifrg : getInput()) {
             final Element ifrge0 = new Element("workflowInput");
             ifrge0.setAttribute("uri", ifrg.getUri().normalize().
-                    toASCIIString());
+                    toString());
             ifrge.addContent(ifrge0);
         }
         e.addContent(ifrge);
@@ -293,7 +293,7 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
         for (final IFileFragment ofrg : tmp) {
             final Element ofrge0 = new Element("workflowOutput");
             ofrge0.setAttribute("uri", ofrg.getUri().normalize().
-                    toASCIIString());
+                    toString());
             ofrge.addContent(ofrge0);
         }
         e.addContent(ofrge);

@@ -221,7 +221,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         ArrayChar.D2 names = new ArrayChar.D2(al.size(), initMaxLength(al.iterator()));
         int i = 0;
         for (IFileFragment iff : al) {
-            names.setString(i++, iff.getUri().toASCIIString());
+            names.setString(i++, iff.getUri().toString());
         }
 
         final String name = "pairwise_distances.cdf";

@@ -198,7 +198,7 @@ public class ChromatogramVisualizer extends AFragmentCommand {
 
                 final HeatMapChart hmc = new HeatMapChart(bi, x_label, "m/z",
                         new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(sat,
-                        massAxis), ff.getUri().toASCIIString());
+                        massAxis), ff.getUri().toString());
                 final PlotRunner pl = new PlotRunner(hmc.create(),
                         "Chromatogram of " + ff.getName(), StringTools.
                         removeFileExt(ff.getName())

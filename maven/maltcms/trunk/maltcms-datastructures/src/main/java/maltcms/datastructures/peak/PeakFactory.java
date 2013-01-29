@@ -54,7 +54,7 @@ public class PeakFactory {
         peak.setExtractedIonCurrent((double[]) MaltcmsTools.getEIC(fragment, startMass, stopMass, false, false, startIndex, stopIndex - startIndex).get1DJavaArray(double.class));
         peak.setArea(MathTools.sum(peak.getExtractedIonCurrent()));
         peak.setApexIntensity(peak.getExtractedIonCurrent()[apexIndex - startIndex]);
-        peak.setFile(fragment.getUri().toASCIIString());
+        peak.setFile(fragment.getUri().toString());
         peak.setStartIndex(startIndex);
         peak.setApexIndex(apexIndex);
         peak.setStopIndex(stopIndex);
@@ -96,7 +96,7 @@ public class PeakFactory {
         }
         peak.setArea(MathTools.sum(peak.getExtractedIonCurrent()));
         peak.setApexIntensity(peak.getExtractedIonCurrent()[apexIndex - startIndex]);
-        peak.setFile(fragment.getUri().toASCIIString());
+        peak.setFile(fragment.getUri().toString());
         peak.setStartIndex(startIndex);
         peak.setApexIndex(apexIndex);
         peak.setStopIndex(stopIndex);

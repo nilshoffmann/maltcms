@@ -172,7 +172,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
                 filenameToIndex.put(ff.getUri(), nextIndex);
             }
 
-            names.setString(nextIndex, ff.getUri().toASCIIString());
+            names.setString(nextIndex, ff.getUri().toString());
             nextIndex++;
         }
         return names;

@@ -77,7 +77,7 @@ public class DefaultWorkflowObjectResult<T> implements IWorkflowObjectResult<T> 
         final Element resources = new Element("resources");
         for (IFileFragment f : this.resources) {
             final Element res = new Element("resource");
-            res.setAttribute("uri", f.getUri().normalize().toASCIIString());
+            res.setAttribute("uri", f.getUri().normalize().toString());
             resources.addContent(res);
         }
         if (object instanceof IXMLSerializable) {

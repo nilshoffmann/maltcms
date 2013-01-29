@@ -149,6 +149,10 @@ for details.
         <property name="similarityFunction" ref="timePenalizedDotProduct"/>
         <property name="assumeSymmetricSimilarity" value="true"/>
     </bean>
+
+    <bean id="peakFactory2DMS" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak2DMSFactory" scope="prototype">
+    
+    </bean>
     
     <!-- PeakCliqueAlignment -->
     <bean id="peakCliqueAlignment" class="maltcms.commands.fragments.alignment.PeakCliqueAlignment">
@@ -166,6 +170,7 @@ for details.
         <property name="saveIncompatiblePeaks" value="false"/>
         <!-- which peak area definition to use, default: peak_area, alternative: peak_area_normalized -->
         <property name="peakAreaVariable" value="peak_area"/>
+        <property name="peakFactory" ref="peakFactory1DMS"/>
     </bean>
     
 </beans>

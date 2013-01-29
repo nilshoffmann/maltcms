@@ -432,7 +432,7 @@ public class ImmutableFileFragment implements IFileFragment {
         }
         o = in.readObject();
         if (o instanceof String) {
-            this.frag.setFile(URI.create(FileTools.escapeUri((String) o)).toASCIIString());
+            this.frag.setFile(URI.create(FileTools.escapeUri((String) o)).toString());
         }
         in.close();
     }

@@ -304,7 +304,7 @@ public class FsaTxtDataSource implements IDataSource {
                     log(Level.SEVERE, null, ex);
         }
         throw new ResourceNotAvailableException("Could not retrieve data item " + id + " from file " + f.
-                toASCIIString());
+                toString());
     }
 
     @Override

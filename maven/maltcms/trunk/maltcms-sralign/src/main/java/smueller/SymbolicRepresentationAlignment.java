@@ -560,7 +560,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
                 filenameToIndex.put(ff, nextIndex);
             }
 
-            names.setString(nextIndex, ff.getUri().toASCIIString());
+            names.setString(nextIndex, ff.getUri().toString());
             nextIndex++;
         }
         return names;

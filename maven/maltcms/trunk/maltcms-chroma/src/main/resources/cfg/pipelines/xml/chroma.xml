@@ -226,6 +226,14 @@ for details.
         <property name="assumeSymmetricSimilarity" value="true"/>
     </bean>
     
+    <bean id="peakFactory1D" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak1DFactory" scope="prototype">
+	
+    </bean>
+ 
+    <bean id="peakFactory1DMS" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak1DMSFactory" scope="prototype">
+	
+    </bean>
+    
     <!-- PeakCliqueAlignment -->
     <bean id="peakCliqueAlignment" class="maltcms.commands.fragments.alignment.PeakCliqueAlignment">
         <property name="workerFactory" ref="workerFactory"/>
@@ -241,6 +249,7 @@ for details.
         <property name="saveIncompatiblePeaks" value="false"/>
         <!-- which peak area definition to use, default: peak_area, alternative: peak_area_normalized -->
         <property name="peakAreaVariable" value="peak_area"/>
+        <property name="peakFactory" ref="peakFactory1DMS"/>
     </bean>
     
     <!--     PairwiseDistanceCalculator -->

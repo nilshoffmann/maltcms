@@ -139,7 +139,7 @@ public class AlignmentFactory {
 
         MappedPointsType mpt = new MappedPointsType();
         ResourceType rt = new ResourceType();
-        rt.setUri(resource.toASCIIString());
+        rt.setUri(resource.toString());
         mpt.setResource(rt);
         mpt.setIsAlignmentReference(isAlignmentReference);
         PointMapType pmt = new PointMapType();
