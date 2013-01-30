@@ -107,20 +107,20 @@ public class Peak2DMSFactory implements IPeakFactory {
         }
         
         @Override
-        public Peak create(int peakIndex, int globalIndex) {
+        public Peak create(int scanIndex) {
             Peak p;
             if (useSparseArrays) {
-                ArrayDouble.D1 sparse = new Sparse(indexedMassValues.get(globalIndex), indexedIntensityValues.get(globalIndex),
+                ArrayDouble.D1 sparse = new Sparse(indexedMassValues.get(scanIndex), indexedIntensityValues.get(scanIndex),
                         (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
                         size, massBinResolution);
-                p = new Peak2D(globalIndex, sparse,
-                        satArray.getDouble(globalIndex), sourceFile.getName(), savePeakSimilarities);
+                p = new Peak2D(scanIndex, sparse,
+                        satArray.getDouble(scanIndex), sourceFile.getName(), savePeakSimilarities);
             } else {
-                p = new Peak2D(globalIndex, indexedIntensityValues.get(globalIndex),
-                        satArray.getDouble(globalIndex), sourceFile.getName(), savePeakSimilarities);
+                p = new Peak2D(scanIndex, indexedIntensityValues.get(scanIndex),
+                        satArray.getDouble(scanIndex), sourceFile.getName(), savePeakSimilarities);
             }
-            ((Peak2D) p).setFirstColumnElutionTime(fctArray.getFloat(globalIndex));
-            ((Peak2D) p).setSecondColumnElutionTime(sctArray.getFloat(globalIndex));
+            ((Peak2D) p).setFirstColumnElutionTime(fctArray.getFloat(scanIndex));
+            ((Peak2D) p).setSecondColumnElutionTime(sctArray.getFloat(scanIndex));
             return p;
         }
     }

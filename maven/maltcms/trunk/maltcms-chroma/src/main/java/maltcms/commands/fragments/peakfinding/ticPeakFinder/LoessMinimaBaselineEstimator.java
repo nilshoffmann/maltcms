@@ -55,11 +55,11 @@ public class LoessMinimaBaselineEstimator implements IBaselineEstimator {
     private int minimaWindow = 100;
 
     @Override
-    public PolynomialSplineFunction findBaseline(double[] values) {
+    public PolynomialSplineFunction findBaseline(double[] xvalues, double[] yvalues) {
         final ArrayList<Integer> ts = new ArrayList<Integer>();
-        for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < yvalues.length; i++) {
             log.debug("i=" + i);
-            PeakFinderUtils.checkMinimum(values, ts, i,
+            PeakFinderUtils.checkMinimum(yvalues, ts, i,
                     minimaWindow);
         }
         log.info("Found {} minima for baseline estimation!", ts.size());
@@ -68,21 +68,22 @@ public class LoessMinimaBaselineEstimator implements IBaselineEstimator {
             ts.add(0, 0);
         }
         //add the last index
-        if (!ts.get(ts.size() - 1).equals(Integer.valueOf(values.length - 1))) {
-            ts.add(values.length - 1);
+        if (!ts.get(ts.size() - 1).equals(Integer.valueOf(yvalues.length - 1))) {
+            ts.add(yvalues.length - 1);
         }
-        double[] xvalues = new double[ts.size()];
-        double[] yvalues = new double[ts.size()];
+        double[] xvalues1 = new double[ts.size()];
+        double[] yvalues1 = new double[ts.size()];
         int arrayIdx = 0;
         for (Integer idx : ts) {
-            xvalues[arrayIdx] = idx;
-            yvalues[arrayIdx] = values[idx];
+            xvalues1[arrayIdx] = xvalues[idx];
+            yvalues1[arrayIdx] = yvalues[idx];
             arrayIdx++;
         }
+//        double[] xvalues = new double[yvalues.length];
         LoessInterpolator lip;
         try {
             lip = new LoessInterpolator(bandwidth, robustnessIterations, accuracy);
-            return lip.interpolate(xvalues, yvalues);
+            return lip.interpolate(xvalues1, yvalues1);
         } catch (MathException ex) {
             log.warn("{}", ex);
         }

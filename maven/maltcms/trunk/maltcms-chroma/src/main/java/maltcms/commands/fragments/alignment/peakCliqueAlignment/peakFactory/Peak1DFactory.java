@@ -29,6 +29,8 @@ package maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory;
 
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
+import cross.exception.ConstraintViolationException;
+import java.util.Arrays;
 import lombok.Data;
 import maltcms.datastructures.peak.Peak;
 import ucar.ma2.Array;
@@ -41,7 +43,7 @@ import ucar.ma2.ArrayDouble;
 @Data
 public class Peak1DFactory implements IPeakFactory {
 
-    private String peakAreaVar = "peak_area";
+    private String peakAreaVar = "total_intensity";
     private String scanAcquisitionTimeVar = "scan_acquisition_time";
 
     @Override
@@ -75,11 +77,15 @@ public class Peak1DFactory implements IPeakFactory {
         }
 
         @Override
-        public Peak create(int peakIndex, int globalIndex) {
+        public Peak create(int scanIndex) {
             Array a = new ArrayDouble.D1(1);
-            a.setDouble(0,peakAreaArray.getDouble(globalIndex));
-            Peak p = new Peak(globalIndex, a,
-                    satArray.getDouble(globalIndex), sourceFile.getName(), savePeakSimilarities);
+            if (peakAreaArray.getShape()[0] != satArray.getShape()[0]) {
+                throw new ConstraintViolationException("Shape of " + peakAreaVar + " must equal shape of " + scanAcquisitionTimeVar + "! Was " + Arrays.toString(peakAreaArray.getShape()) + " vs. " + Arrays.toString(satArray.getShape()));
+            } else {
+                a.setDouble(0, peakAreaArray.getDouble(scanIndex));
+            }
+            Peak p = new Peak(scanIndex, a,
+                    satArray.getDouble(scanIndex), sourceFile.getName(), savePeakSimilarities);
             return p;
         }
     }

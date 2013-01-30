@@ -35,5 +35,5 @@ import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
  */
 public interface IBaselineEstimator {
 
-    PolynomialSplineFunction findBaseline(double[] values);
+    PolynomialSplineFunction findBaseline(double[] values, double[] yvalues);
 }

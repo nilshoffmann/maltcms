@@ -288,9 +288,10 @@ public class TICPeakFinder extends AFragmentCommand {
     /**
      *
      * @param tic
+     * @param sat
      * @return
      */
-    public PeakPositionsResultSet findPeakPositions(Array tic) {
+    public PeakPositionsResultSet findPeakPositions(Array tic, Array sat) {
         EvalTools.notNull(tic, this);
         Array correctedtic = null;
         final ArrayList<Integer> ts = new ArrayList<Integer>();
@@ -298,14 +299,15 @@ public class TICPeakFinder extends AFragmentCommand {
         double[] ticValues = (double[]) tic.get1DJavaArray(double.class);
         correctedtic = applyFilters(tic.copy());
         double[] snrValues = new double[ticValues.length];
+        double[] satValues = (double[]) sat.get1DJavaArray(double.class);
         double[] cticValues = (double[]) correctedtic.get1DJavaArray(
                 double.class);
-        PolynomialSplineFunction baselineEstimatorFunction = baselineEstimator.findBaseline(cticValues);
+        PolynomialSplineFunction baselineEstimatorFunction = baselineEstimator.findBaseline(satValues,cticValues);
         for (int i = 0; i < snrValues.length; i++) {
             double snr = Double.NEGATIVE_INFINITY;
             try {
                 double ratio = (cticValues[i])
-                        / baselineEstimatorFunction.value(i);
+                        / baselineEstimatorFunction.value(sat.getDouble(i));
                 snr = 20.0d * Math.log10(ratio);
             } catch (ArgumentOutsideDomainException ex) {
                 Logger.getLogger(TICPeakFinder.class.getName()).log(Level.SEVERE, null, ex);
@@ -326,7 +328,8 @@ public class TICPeakFinder extends AFragmentCommand {
 
     private IFileFragment findPeaks(final IFileFragment f) {
         final Array tic = f.getChild(this.ticVarName).getArray();
-        final PeakPositionsResultSet pprs = findPeakPositions(tic);
+        final Array sat = f.getChild(this.satVarName).getArray();
+        final PeakPositionsResultSet pprs = findPeakPositions(tic,sat);
         final ArrayInt.D1 extr = pprs.getPeakPositions();
         final double[] snrValues = pprs.getSnrValues();
         log.info("Found {} peaks for file {}", pprs.getTs().size(), f.getName());
@@ -335,7 +338,7 @@ public class TICPeakFinder extends AFragmentCommand {
             peaks = findPeakAreas(f, pprs.getTs(), f.getName(), tic, pprs.getCorrectedTIC(), snrValues);
         }
         if (this.saveGraphics) {
-            visualize(f, tic, pprs.getCorrectedTIC(), snrValues, extr,
+            visualize(f, sat, tic, pprs.getCorrectedTIC(), snrValues, extr,
                     this.peakThreshold, pprs.getBaselineEstimator());
         }
         final String filename = f.getName();
@@ -852,6 +855,7 @@ public class TICPeakFinder extends AFragmentCommand {
     /**
      *
      * @param f
+     * @param sat
      * @param intensities
      * @param filteredIntensities
      * @param snr
@@ -859,7 +863,7 @@ public class TICPeakFinder extends AFragmentCommand {
      * @param peakThreshold
      * @param baselineEstimator
      */
-    public void visualize(final IFileFragment f, final Array intensities,
+    public void visualize(final IFileFragment f, final Array sat, final Array intensities,
             final Array filteredIntensities,
             final double[] snr, final ArrayInt.D1 peaks,
             final double peakThreshold, PolynomialSplineFunction baselineEstimator) {
@@ -879,7 +883,7 @@ public class TICPeakFinder extends AFragmentCommand {
         final Array baseline = new ArrayDouble.D1(snr.length);
         for (int i = 0; i < snr.length; i++) {
             try {
-                baseline.setDouble(i, baselineEstimator.value(i));
+                baseline.setDouble(i, baselineEstimator.value(sat.getDouble(i)));
             } catch (ArgumentOutsideDomainException ex) {
                 Logger.getLogger(TICPeakFinder.class.getName()).log(Level.SEVERE, null, ex);
             }
