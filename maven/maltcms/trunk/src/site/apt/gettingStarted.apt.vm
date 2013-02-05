@@ -17,7 +17,6 @@ Installation Instructions
 
 * Unix/Linux/MacOSX
 
-
     Extract the downloaded zip archive to a directory of your choice. In
     order to have maltcms.sh available on your command prompt, set the
     following in your $HOME/.profile or $HOME/.bashrc 
@@ -79,7 +78,7 @@ export MALTCMS_HOME=/path/to/your/maltcms/
     available in the 'User Variables' section, select new, name the variable
     'PATH'.
 
-**Windows XP
+** Windows XP
 
     Select 'Start' and click 'Control Panel'. Then go to 'System' and click on
     'Advanced'. Click on 'Environment Variables' and under 'System Variables'
@@ -89,8 +88,7 @@ export MALTCMS_HOME=/path/to/your/maltcms/
 
 ** Editing the Path Variable
 
-Add the absolute path of the Maltcms directory to the end of the 'Variable value' like so:
-
+    Add the absolute path of the Maltcms directory to the end of the 'Variable value' like so:
 
     Old:
 
