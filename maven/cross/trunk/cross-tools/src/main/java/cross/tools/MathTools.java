@@ -108,6 +108,10 @@ public class MathTools {
      * Returns exact faculty for n<=170. Above, Stirling's approximation is
      * used.
      *
+     *
+     *
+     *
+     *
 
      *
      * @param n
@@ -396,5 +400,36 @@ public class MathTools {
             ret[i] = closing[i] - d[i];
         }
         return ret;
+    }
+
+    public static int[] seq(int from, int to, int by) {
+        //0..11, by 2 -> 0,2,4,6,8,10
+        //11-0 -> ceil(11/2) = 5.x 
+        int quotient = Math.abs((to - from) / by);
+        int steps = 1 + (int) quotient;
+        System.out.println("Steps: " + steps);
+        int[] values = new int[steps];
+        int i = from;
+        for (int cnt = 0; cnt < values.length; cnt++) {
+//            values[];
+            values[cnt] = i;
+            i += by;
+        }
+        return values;
+    }
+
+    public static double[] seq(double from, double to, double by) {
+        System.out.println("From "+from+" to "+to+" by "+by);
+        double quotient = Math.abs((to - from) / by);
+        System.out.println("Quotient: "+quotient);
+        int steps = 1 + (int) quotient;
+        System.out.println("Steps: " + steps);
+        double[] values = new double[steps];
+        double value = from;
+        for (int i = 0; i < values.length; i++) {
+            values[i] = value;
+            value += by;
+        }
+        return values;
     }
 }

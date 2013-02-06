@@ -27,6 +27,7 @@
  */
 package cross.tools;
 
+import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -35,7 +36,7 @@ import static org.junit.Assert.*;
  * @author Nils Hoffmann
  */
 public class MathToolsTest {
-    
+
     public MathToolsTest() {
     }
 
@@ -268,5 +269,32 @@ public class MathToolsTest {
      */
     @Test
     public void testBottomHat() {
+    }
+
+    /**
+     * Tesf of seq method, of class MathTools.
+     */
+    @Test
+    public void testSeqInt() {
+        int[] referenceSequence = new int[]{3, 5, 7, 9};
+        int[] testSequence = MathTools.seq(3, 10, 2);
+        Assert.assertArrayEquals(referenceSequence, testSequence);
+        referenceSequence = new int[]{-3, -5, -7, -9};
+        testSequence = MathTools.seq(-3, -9, -2);
+        Assert.assertArrayEquals(referenceSequence, testSequence);
+    }
+
+    /**
+     * Tesf of seq method, of class MathTools.
+     */
+    @Test
+    public void testSeqDouble() {
+        double[] referenceSequence = new double[]{0.0, 0.1, 0.2, 0.3, 0.4, 0.5};
+        double[] testSequence = MathTools.seq(0.0, 0.5, 0.1);
+        Assert.assertArrayEquals(referenceSequence, testSequence, 1.0e-10d);
+        
+        referenceSequence = new double[]{-2.1, -2.05, -2.0,-1.95, -1.9};
+        testSequence = MathTools.seq(-2.1, -1.9, 0.05);
+        Assert.assertArrayEquals(referenceSequence, testSequence, 1.0e-10d);
     }
 }

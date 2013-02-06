@@ -28,6 +28,7 @@
 package maltcms.datastructures.cluster;
 
 import java.util.List;
+import java.util.UUID;
 import maltcms.datastructures.array.IMutableFeatureVector;
 import maltcms.datastructures.feature.DefaultFeatureVector;
 import ucar.ma2.Array;
@@ -63,5 +64,10 @@ public class ArrayStatsMap implements IMutableFeatureVector {
     @Override
     public void addFeature(String name, Array a) {
         featureVector.addFeature(name, a);
+    }
+    
+    @Override
+    public UUID getUniqueId() {
+        return featureVector.getUniqueId();
     }
 }

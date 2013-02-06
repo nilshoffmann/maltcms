@@ -35,6 +35,7 @@ import ucar.ma2.Array;
 import ucar.ma2.InvalidRangeException;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import java.util.UUID;
 
 /**
  * FeatureVector implementation, which directly accesses the IFileFragment
@@ -50,6 +51,7 @@ public class MaltcmsFeatureVector implements IFeatureVector {
     private static final long serialVersionUID = 1423070246312970401L;
     private IFileFragment iff = null;
     private int index = -1;
+    private UUID uniqueId = UUID.randomUUID();
 
     public void addFeatures(IFileFragment iff, int i) {
         this.iff = iff;
@@ -77,5 +79,10 @@ public class MaltcmsFeatureVector implements IFeatureVector {
             names.add(ivf.getName());
         }
         return names;
+    }
+    
+    @Override
+    public UUID getUniqueId() {
+        return uniqueId;
     }
 }

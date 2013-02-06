@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import maltcms.datastructures.array.IFeatureVector;
 import ucar.ma2.Array;
 
@@ -47,7 +48,8 @@ public class DefaultFeatureVector implements IFeatureVector {
     private static final long serialVersionUID = -2245293151270164895L;
     private Map<String, Integer> featureToIndex = null;
     private List<Array> datalist = null;
-
+    private UUID uniqueId = UUID.randomUUID();
+    
     private List<Array> getDataList() {
         if(this.datalist == null) {
             this.datalist = new ArrayList<Array>(1);
@@ -95,4 +97,10 @@ public class DefaultFeatureVector implements IFeatureVector {
         Collections.sort(l);
         return l;
     }
+
+    @Override
+    public UUID getUniqueId() {
+        return uniqueId;
+    }
+    
 }

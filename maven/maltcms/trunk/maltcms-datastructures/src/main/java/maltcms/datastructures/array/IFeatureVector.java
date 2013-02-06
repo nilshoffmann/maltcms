@@ -32,6 +32,7 @@ import java.util.List;
 
 import ucar.ma2.Array;
 import cross.annotations.NoFeature;
+import java.util.UUID;
 
 /**
  *
@@ -55,4 +56,6 @@ public interface IFeatureVector extends Serializable {
      */
     @NoFeature
     public List<String> getFeatureNames();
+    
+    public UUID getUniqueId();
 }

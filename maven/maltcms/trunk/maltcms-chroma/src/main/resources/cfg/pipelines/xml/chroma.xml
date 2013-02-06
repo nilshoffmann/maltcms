@@ -197,6 +197,11 @@ for details.
         <property name="tolerance" value="2.0d"/>
         <property name="threshold" value="0.5d"/>
     </bean>
+    <bean id="inverseGaussianDifferenceSimilarity" class="maltcms.math.functions.similarities.InverseGaussianDifferenceSimilarity" scope="prototype">
+        <property name="lambda" value="2.0d"/>
+        <property name="threshold" value="0.5d"/>
+        <property name="normalize" value="false"/>
+    </bean>
     <bean id="dtwGaussianDifferenceSimilarity" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity" scope="prototype">
         <property name="tolerance" value="2.0d"/>
         <property name="threshold" value="0.0d"/>
@@ -223,6 +228,7 @@ for details.
     <bean id="workerFactory" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.WorkerFactory" scope="prototype">
         <property name="maxRTDifference" value="60.0d"/>
         <property name="similarityFunction" ref="timePenalizedDotProduct"/>
+        <!-- set this to false for inverseGaussian -->
         <property name="assumeSymmetricSimilarity" value="true"/>
     </bean>
     

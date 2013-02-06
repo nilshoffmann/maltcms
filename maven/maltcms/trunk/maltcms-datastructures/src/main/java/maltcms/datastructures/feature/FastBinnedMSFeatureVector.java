@@ -36,6 +36,7 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
+import java.util.UUID;
 
 /**
  * This feature vector keeps direct copies of mass and intensity values, as
@@ -54,6 +55,7 @@ public class FastBinnedMSFeatureVector implements IFeatureVector {
     private final Array binnedIntens;
     private final ArrayDouble.D0 sat;
     private final ArrayDouble.D0 tic;
+    private UUID uniqueId = UUID.randomUUID();
 
     public FastBinnedMSFeatureVector(IFileFragment iff, int i) {// ArrayDouble.D0
         // tic,
@@ -95,4 +97,10 @@ public class FastBinnedMSFeatureVector implements IFeatureVector {
         return Arrays.asList("binned_mass_values", "binned_intensity_values",
                 "total_intensity", "scan_acquisition_time");
     }
+
+    @Override
+    public UUID getUniqueId() {
+        return uniqueId;
+    }
+    
 }

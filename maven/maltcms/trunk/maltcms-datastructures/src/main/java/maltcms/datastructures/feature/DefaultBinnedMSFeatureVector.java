@@ -36,6 +36,7 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
+import java.util.UUID;
 
 /**
  * This feature vector retrieves mass and intensity values for this ms from
@@ -55,6 +56,7 @@ public class DefaultBinnedMSFeatureVector implements IFeatureVector {
     private ArrayDouble.D0 tic = null;
     private final int i;
     private final IFileFragment iff;
+    private UUID uniqueId = UUID.randomUUID();
 
     public DefaultBinnedMSFeatureVector(IFileFragment iff, int i,
             Tuple2D<List<Array>, List<Array>> t) {
@@ -93,5 +95,10 @@ public class DefaultBinnedMSFeatureVector implements IFeatureVector {
     public List<String> getFeatureNames() {
         return Arrays.asList("binned_mass_values", "binned_intensity_values",
                 "total_intensity", "scan_acquisition_time");
+    }
+    
+    @Override
+    public UUID getUniqueId() {
+        return uniqueId;
     }
 }

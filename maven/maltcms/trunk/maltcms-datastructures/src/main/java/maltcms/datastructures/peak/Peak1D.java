@@ -85,6 +85,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
     private double baselineStopTime = Double.NaN;
     private double baselineStartValue = Double.NaN;
     private double baselineStopValue = Double.NaN;
+    private UUID uniqueId;
 
     public Peak1D() {
     }
@@ -385,5 +386,10 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             }
             peakNormalizedArea.setArray(areaNormalized);
         }
+    }
+    
+    @Override
+    public UUID getUniqueId() {
+        return uniqueId;
     }
 }
