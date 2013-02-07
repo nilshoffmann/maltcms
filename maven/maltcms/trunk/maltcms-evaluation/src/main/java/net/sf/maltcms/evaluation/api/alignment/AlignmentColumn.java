@@ -29,6 +29,7 @@ package net.sf.maltcms.evaluation.api.alignment;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import maltcms.datastructures.array.IFeatureVector;
 import ucar.ma2.Array;
@@ -46,6 +47,7 @@ public class AlignmentColumn implements IFeatureVector {
      */
     private static final long serialVersionUID = -5936343655074144856L;
     private final ArrayDouble.D1 values;
+    private final UUID uniqueId = UUID.randomUUID();
 
     public AlignmentColumn(double... rt) {
         this.values = (ArrayDouble.D1) Array.factory(rt);
@@ -82,4 +84,10 @@ public class AlignmentColumn implements IFeatureVector {
         sb.append("RT = " + getRT());
         return sb.toString();
     }
+
+    @Override
+    public UUID getUniqueId() {
+        return uniqueId;
+    }
+    
 }

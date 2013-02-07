@@ -29,6 +29,7 @@ package net.sf.maltcms.evaluation.api;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import maltcms.datastructures.array.IFeatureVector;
 import ucar.ma2.Array;
@@ -46,6 +47,7 @@ public class PeakRTFeatureVector implements IFeatureVector {
      */
     private static final long serialVersionUID = -5936343655074144856L;
     private final ArrayDouble.D0 rt;
+    private final UUID uniqueId = UUID.randomUUID();
 
     public PeakRTFeatureVector(double rt) {
         this.rt = new ArrayDouble.D0();
@@ -81,4 +83,10 @@ public class PeakRTFeatureVector implements IFeatureVector {
         sb.append("RT = " + getRT());
         return sb.toString();
     }
+
+    @Override
+    public UUID getUniqueId() {
+        return uniqueId;
+    }
+    
 }

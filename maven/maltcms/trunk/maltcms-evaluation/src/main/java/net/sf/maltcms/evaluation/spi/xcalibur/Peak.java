@@ -29,6 +29,7 @@ package net.sf.maltcms.evaluation.spi.xcalibur;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import maltcms.datastructures.array.IFeatureVector;
 import ucar.ma2.Array;
@@ -56,6 +57,7 @@ public class Peak implements IFeatureVector {
     public static final double RT_DEFAULT = Double.NaN;
     public static final double RT_START_DEFAULT = Double.NaN;
     public static final double RT_STOP_DEFAULT = Double.NaN;
+    private final UUID uniqueId = UUID.randomUUID();
 
     public Peak(Creator creator, Chromatogram parent, String name, double rt, double rtstart, double rtstop, double[] mw, double area, double height, RTUnit unit) {
         this.parent = parent;
@@ -189,4 +191,10 @@ public class Peak implements IFeatureVector {
     public double getHeight() {
         return height;
     }
+
+    @Override
+    public UUID getUniqueId() {
+        return uniqueId;
+    }
+    
 }
