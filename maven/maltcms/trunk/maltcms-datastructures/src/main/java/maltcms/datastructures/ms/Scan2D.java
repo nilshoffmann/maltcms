@@ -29,6 +29,7 @@ package maltcms.datastructures.ms;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -137,4 +138,5 @@ public class Scan2D extends Scan1D implements IScan2D {
                     "first_column_scan_index", "second_column_scan_index",
                     "first_column_elution_time", "second_column_elution_time"});
     }
+
 }

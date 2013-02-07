@@ -29,6 +29,7 @@ package maltcms.datastructures.ms;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -52,6 +53,7 @@ public class Scan1D implements IScan1D {
     private final ArrayDouble.D0 total_intensity = new ArrayDouble.D0();
     private Array masses = null;
     private Array intensities = null;
+    private final UUID uniqueId = UUID.randomUUID();
 
     public Scan1D(final Array masses1, final Array intensities1,
             final int scanNumber1, final double scanAcquisitionTime1) {
@@ -116,5 +118,10 @@ public class Scan1D implements IScan1D {
             d += ii.getDoubleNext();
         }
         return d;
+    }
+
+    @Override
+    public UUID getUniqueId() {
+        return uniqueId;
     }
 }
