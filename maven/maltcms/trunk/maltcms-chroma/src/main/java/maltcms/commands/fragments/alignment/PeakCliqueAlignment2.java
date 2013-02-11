@@ -129,7 +129,7 @@ import ucar.ma2.MAMath;
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
-public class PeakCliqueAlignment extends AFragmentCommand {
+public class PeakCliqueAlignment2 extends AFragmentCommand {
 
 //    private IScalarArraySimilarity similarityFunction;
     @Configurable(name = "var.tic_peaks")

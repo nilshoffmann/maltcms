@@ -83,4 +83,9 @@ public class PairwiseSimilarityWorker2D implements Callable<Integer>, Serializab
         }
         return elemCnt;
     }
+    
+    @Override
+    public String toString() {
+        return name;
+    }
 }

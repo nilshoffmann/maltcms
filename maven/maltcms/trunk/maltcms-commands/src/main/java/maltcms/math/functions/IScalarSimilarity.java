@@ -27,6 +27,8 @@
  */
 package maltcms.math.functions;
 
+import java.io.Serializable;
+
 /**
  * The implemented similarity function should have the following properties: The
  * maximal function value must be greater than the minimal function value,
@@ -38,7 +40,7 @@ package maltcms.math.functions;
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-public interface IScalarSimilarity {
+public interface IScalarSimilarity extends Serializable{
 
     public double apply(double a, double b);
 }

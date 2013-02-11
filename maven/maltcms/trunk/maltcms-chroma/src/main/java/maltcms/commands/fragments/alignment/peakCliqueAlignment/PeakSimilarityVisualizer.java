@@ -34,8 +34,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.media.jai.JAI;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.MinMaxNormalizationFilter;
@@ -55,7 +55,7 @@ import ucar.ma2.MAMath.MinMax;
 public class PeakSimilarityVisualizer {
 
     public void visualizePeakSimilarities(
-            final HashMap<String, List<Peak>> hm, final int samples,
+            final Map<String, List<Peak>> hm, final int samples,
             final String prefix,
             final IWorkflow workflow) {
 

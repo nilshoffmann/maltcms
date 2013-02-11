@@ -25,16 +25,19 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory;
+package maltcms.commands.fragments.alignment.peakCliqueAlignment2;
 
 import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.tuple.Tuple2D;
 import java.io.Serializable;
+import java.util.List;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.IPeakFactory;
+import maltcms.datastructures.peak.Peak;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public interface IPeakFactory extends Serializable{    
-    IPeakFactoryImpl createInstance(IFileFragment sourceFile,boolean storeOnlyBestSimilarites, Tuple2D<Double,Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, boolean savePeakSimilarities);
+public interface IPeakLoader extends Serializable {
+     public List<Peak> loadPeaks(IFileFragment t);
+     public void setPeakFactory(IPeakFactory peakFactory);
 }

@@ -35,6 +35,7 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cross.tools.MathTools;
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  *
@@ -44,13 +45,18 @@ public class PairwiseValueMap implements Serializable {
 
     private final DoubleMatrix2D matrix;
     private final boolean symmetric;
+    private final UUID id;
 
     public enum StorageType {
 
         DENSE, ROW_COMPRESSED, SPARSE
     };
-    
+
     public PairwiseValueMap(int rows, int columns, boolean symmetric, StorageType type, double missingValue) {
+        this(UUID.randomUUID(), rows, columns, symmetric, type, missingValue);
+    }
+
+    public PairwiseValueMap(UUID id, int rows, int columns, boolean symmetric, StorageType type, double missingValue) {
         switch (type) {
             case DENSE:
                 matrix = DoubleFactory2D.dense.make(rows, columns, missingValue);
@@ -65,6 +71,7 @@ public class PairwiseValueMap implements Serializable {
                 throw new IllegalArgumentException("Unmatched case: " + type);
 
         }
+        this.id = id;
         this.symmetric = symmetric;
     }
 
@@ -86,7 +93,7 @@ public class PairwiseValueMap implements Serializable {
     public int indexOfMinInColumn(int columnIndex) {
         return indexOfMin(matrix.viewColumn(columnIndex));
     }
-    
+
     public int indexOfMaxInRow(int rowIndex) {
         return indexOfMax(matrix.viewRow(rowIndex));
     }
@@ -94,28 +101,26 @@ public class PairwiseValueMap implements Serializable {
     public int indexOfMinInRow(int rowIndex) {
         return indexOfMin(matrix.viewRow(rowIndex));
     }
-    
+
     public int indexOfMax(DoubleMatrix1D vector) {
         PermutationSwapper swapper = new PermutationSwapper(vector);
         GenericSorting.mergeSort(0, vector.size(), new ColumnComparator(vector), swapper);
         int[] permutation = swapper.getPermutation();
-        if(permutation.length!=vector.size()) {
+        if (permutation.length != vector.size()) {
             throw new IllegalStateException();
         }
         //return index of largest element
-//        System.out.println("Largest: "+vector.get(permutation[permutation.length-1]));
         return permutation[permutation.length - 1];
     }
-    
+
     public int indexOfMin(DoubleMatrix1D vector) {
         PermutationSwapper swapper = new PermutationSwapper(vector);
         GenericSorting.mergeSort(0, vector.size(), new ColumnComparator(vector), swapper);
         int[] permutation = swapper.getPermutation();
-        if(permutation.length!=vector.size()) {
+        if (permutation.length != vector.size()) {
             throw new IllegalStateException();
         }
         //return index of smallest element
-//        System.out.println("Smalles: "+vector.get(permutation[0]));
         return permutation[0];
     }
 
@@ -126,7 +131,7 @@ public class PairwiseValueMap implements Serializable {
 
         public PermutationSwapper(DoubleMatrix1D column) {
             this.column = column;
-            permutation = MathTools.seq(0, column.size()-1, 1);
+            permutation = MathTools.seq(0, column.size() - 1, 1);
         }
 
         @Override
@@ -142,24 +147,47 @@ public class PairwiseValueMap implements Serializable {
     }
 
     public class ColumnComparator implements IntComparator {
+
         private final DoubleMatrix1D column;
         private final boolean ascending;
-        
+
         public ColumnComparator(DoubleMatrix1D column) {
             this(column, true);
         }
-        
+
         public ColumnComparator(DoubleMatrix1D column, boolean ascending) {
             this.column = column;
             this.ascending = ascending;
         }
-        
+
         @Override
         public int compare(int a, int b) {
-            if(ascending) {
+            if (ascending) {
                 return column.get(a) == column.get(b) ? 0 : (column.get(a) < column.get(b) ? -1 : 1);
             }
             return column.get(a) == column.get(b) ? 0 : (column.get(a) < column.get(b) ? 1 : -1);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PairwiseValueMap other = (PairwiseValueMap) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
     }
 }

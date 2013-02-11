@@ -31,10 +31,10 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.peak.Peak;
@@ -51,7 +51,7 @@ public class BBHFinder {
      * @param fragmentToPeaks
      */
     public List<Peak> findBiDiBestHits(final TupleND<IFileFragment> al,
-            final HashMap<String, List<Peak>> fragmentToPeaks) {
+            final Map<String, List<Peak>> fragmentToPeaks) {
         // For each pair of FileFragments
         final Set<Peak> matchedPeaks = new HashSet<Peak>();
         for (final Tuple2D<IFileFragment, IFileFragment> t : al.getPairs()) {

@@ -57,4 +57,10 @@ public class ProductSimilarity implements IScalarArraySimilarity {
         }
         return val;
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+    
 }

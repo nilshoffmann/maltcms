@@ -43,6 +43,7 @@ import ucar.ma2.Array;
 import cross.exception.ResourceNotAvailableException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.feature.DefaultFeatureVector;
@@ -64,8 +65,8 @@ public class Peak extends DefaultFeatureVector {
     private final int scanIndex;
     private final Array msIntensities;
     private final double sat;
-    private final HashMap<String, Map<Peak, Double>> sims = new HashMap<String, Map<Peak, Double>>();
-    private final HashMap<String, List<Peak>> sortedPeaks = new HashMap<String, List<Peak>>();
+    private final Map<String, Map<Peak, Double>> sims = new ConcurrentHashMap<String, Map<Peak, Double>>();
+    private final Map<String, List<Peak>> sortedPeaks = new ConcurrentHashMap<String, List<Peak>>();
     private String name = "";
     private int peakIndex = -1;
     private final String association;
@@ -103,7 +104,7 @@ public class Peak extends DefaultFeatureVector {
                     hm.put(s, sim);
                     best = s;
                 } else {
-                    hm = new LinkedHashMap<Peak, Double>();
+                    hm = new ConcurrentHashMap<Peak, Double>();
                     hm.put(p, similarity);
                     this.sims.put(p.getAssociation(), hm);
                 }
@@ -119,7 +120,7 @@ public class Peak extends DefaultFeatureVector {
                     hm = this.sims.get(p.getAssociation());
                     hm.put(p, similarity);
                 } else {
-                    hm = new HashMap<Peak, Double>();
+                    hm = new ConcurrentHashMap<Peak, Double>();
                     hm.put(p, similarity);
                     this.sims.put(p.getAssociation(), hm);
                 }

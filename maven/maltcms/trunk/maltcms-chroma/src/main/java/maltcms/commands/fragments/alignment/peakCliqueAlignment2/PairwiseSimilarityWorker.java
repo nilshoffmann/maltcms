@@ -25,14 +25,18 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.commands.fragments.alignment.peakCliqueAlignment;
+package maltcms.commands.fragments.alignment.peakCliqueAlignment2;
 
-import cross.datastructures.tools.EvalTools;
+import cross.annotations.Configurable;
+import cross.datastructures.fragments.FileFragment;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.feature.PairwiseValueMap;
 import maltcms.datastructures.peak.Peak;
 import maltcms.math.functions.IScalarArraySimilarity;
 
@@ -42,25 +46,39 @@ import maltcms.math.functions.IScalarArraySimilarity;
  */
 @Data
 @Slf4j
-public class PairwiseSimilarityWorker implements Callable<Integer>, Serializable {
+public class PairwiseSimilarityWorker implements Callable<PairwiseValueMap>, Serializable {
 
     private String name;
-    private List<Peak> lhsPeaks;
-    private List<Peak> rhsPeaks;
+    private URI lhs;
+    private URI rhs;
+    private UUID id;
+    @Configurable
     private IScalarArraySimilarity similarityFunction;
+    @Configurable
     private double maxRTDifference = 60.0d;
+    @Configurable
+    private String storageType = "ROW_COMPRESSED";
+    @Configurable
+    private double defaultValue = Double.NEGATIVE_INFINITY;
+    @Configurable
+    private IPeakLoader peakLoader;
 
     @Override
-    public Integer call() {
+    public PairwiseValueMap call() {
         log.debug(name);
-        EvalTools.notNull(lhsPeaks, this);
-        EvalTools.notNull(rhsPeaks, this);
+        List<Peak> lhsPeaks = peakLoader.loadPeaks(new FileFragment(lhs));
+        int lhsPeaksLength = lhsPeaks.size();
+        List<Peak> rhsPeaks = peakLoader.loadPeaks(new FileFragment(rhs));
+        int rhsPeaksLength = rhsPeaks.size();
         int elemCnt = 0;
-        for (final Peak p1 : lhsPeaks) {
-            for (final Peak p2 : rhsPeaks) {
+        PairwiseValueMap pvm = new PairwiseValueMap(id, lhsPeaks.size(), rhsPeaks.size(), false, PairwiseValueMap.StorageType.valueOf(storageType), defaultValue);
+        for (int i = 0; i < lhsPeaks.size(); i++) {
+            final Peak p1 = lhsPeaks.get(i);
+            for (int j = 0; j < rhsPeaks.size(); j++) {
+                final Peak p2 = rhsPeaks.get(j);
                 // skip peaks, which are too far apart
-                double rt1 = p1.getScanAcquisitionTime();
-                double rt2 = p2.getScanAcquisitionTime();
+                final double rt1 = p1.getScanAcquisitionTime();
+                final double rt2 = p2.getScanAcquisitionTime();
                 // cutoff to limit calculation work
                 // this has a better effect, than applying the limit
                 // within the similarity function only
@@ -69,18 +87,18 @@ public class PairwiseSimilarityWorker implements Callable<Integer>, Serializable
                 if (Math.abs(rt1 - rt2) < this.maxRTDifference) {
                     // the similarity is symmetric:
                     // sim(a,b) = sim(b,a)
-                    final Double d = similarityFunction.apply(new double[]{rt1}, new double[]{rt2}, p1.getMsIntensities(), p2.getMsIntensities());
-                    p1.addSimilarity(p2, d);
-                    p2.addSimilarity(p1, d);
+                    final double d = similarityFunction.apply(new double[]{rt1}, new double[]{rt2}, p1.getMsIntensities(), p2.getMsIntensities());
+                    pvm.setValue(i, j, d);
                 }
                 elemCnt++;
             }
         }
-        return elemCnt;
+        return pvm;
     }
-    
+
     @Override
     public String toString() {
         return name;
     }
+
 }

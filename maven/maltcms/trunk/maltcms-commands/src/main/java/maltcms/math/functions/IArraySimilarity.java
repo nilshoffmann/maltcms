@@ -27,6 +27,7 @@
  */
 package maltcms.math.functions;
 
+import java.io.Serializable;
 import ucar.ma2.Array;
 
 /**
@@ -44,7 +45,7 @@ import ucar.ma2.Array;
  * @author nilshoffmann
  *
  */
-public interface IArraySimilarity {
+public interface IArraySimilarity extends Serializable{
 
     /**
      *

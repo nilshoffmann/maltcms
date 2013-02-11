@@ -9,7 +9,7 @@
 -->
 <project xmlns="http://maven.apache.org/DECORATION/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd" name="Maltcms Test Tools">
-    <bannerLeft>
+<!--    <bannerLeft>
         <name>Maltcms</name>
         <src>images/ChromA4DSurface.png</src>
         <href>http://maltcms.sf.net</href>
@@ -27,7 +27,7 @@
         </fluidoSkin>
     </custom>
     <publishDate position="right"/>
-    <version position="right"/>
+    <version position="right"/>-->
     <body>
         <breadcrumbs>
             <item name="Maltcms" href="../index.html" />

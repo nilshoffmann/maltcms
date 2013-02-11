@@ -27,13 +27,14 @@
  */
 package maltcms.math.functions;
 
+import java.io.Serializable;
 import ucar.ma2.Array;
 
 /**
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-public interface IScalarArraySimilarity {
+public interface IScalarArraySimilarity extends Serializable {
 
     public double apply(double[] s1, double[] s2, Array a1, Array a2);
 

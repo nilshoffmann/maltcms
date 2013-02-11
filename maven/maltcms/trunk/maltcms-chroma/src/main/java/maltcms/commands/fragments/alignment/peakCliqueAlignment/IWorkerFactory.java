@@ -29,6 +29,7 @@ package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -38,7 +39,7 @@ import maltcms.datastructures.peak.Peak;
  *
  * @author Nils Hoffmann
  */
-public interface IWorkerFactory {
+public interface IWorkerFactory extends Serializable {
 
     List<Callable<Integer>> create(TupleND<IFileFragment> input, Map<String, List<Peak>> fragmentToPeaks);
     

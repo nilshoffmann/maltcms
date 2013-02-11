@@ -27,12 +27,13 @@
  */
 package maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory;
 
+import java.io.Serializable;
 import maltcms.datastructures.peak.Peak;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public interface IPeakFactoryImpl {
+public interface IPeakFactoryImpl extends Serializable{
     public Peak create(int scanIndex);
 }
