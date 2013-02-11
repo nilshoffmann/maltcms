@@ -39,6 +39,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.*;
+import org.openide.util.lookup.ServiceProvider;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -48,6 +49,7 @@ import org.springframework.context.ApplicationContext;
  * @author Nils Hoffmann
  */
 @Slf4j
+@ServiceProvider(service=IObjectFactory.class)
 public class ObjectFactory implements IObjectFactory {
 
     private Configuration cfg = new PropertiesConfiguration();
