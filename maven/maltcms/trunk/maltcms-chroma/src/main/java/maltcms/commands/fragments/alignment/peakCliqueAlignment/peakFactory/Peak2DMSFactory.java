@@ -107,7 +107,7 @@ public class Peak2DMSFactory implements IPeakFactory {
         }
         
         @Override
-        public Peak create(int scanIndex) {
+        public Peak create(int peakIndex, int scanIndex) {
             Peak p;
             if (useSparseArrays) {
                 ArrayDouble.D1 sparse = new Sparse(indexedMassValues.get(scanIndex), indexedIntensityValues.get(scanIndex),
@@ -121,6 +121,7 @@ public class Peak2DMSFactory implements IPeakFactory {
             }
             ((Peak2D) p).setFirstColumnElutionTime(fctArray.getFloat(scanIndex));
             ((Peak2D) p).setSecondColumnElutionTime(sctArray.getFloat(scanIndex));
+            p.setPeakIndex(peakIndex);
             return p;
         }
     }

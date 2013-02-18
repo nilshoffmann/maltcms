@@ -99,7 +99,7 @@ public class Peak1DMSFactory implements IPeakFactory {
         }
 
         @Override
-        public Peak create(int scanIndex) {
+        public Peak create(int peakIndex, int scanIndex) {
             Peak p;
             if (useSparseArrays) {
                 ArrayDouble.D1 sparse = new Sparse(indexedMassValues.get(scanIndex), indexedIntensityValues.get(scanIndex),
@@ -111,6 +111,7 @@ public class Peak1DMSFactory implements IPeakFactory {
                 p = new Peak(scanIndex, indexedIntensityValues.get(scanIndex),
                         satArray.getDouble(scanIndex), sourceFile.getName(), savePeakSimilarities);
             }
+            p.setPeakIndex(peakIndex);
             return p;
         }
     }

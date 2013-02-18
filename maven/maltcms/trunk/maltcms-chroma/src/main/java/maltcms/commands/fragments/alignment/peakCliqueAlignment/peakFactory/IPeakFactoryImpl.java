@@ -35,5 +35,5 @@ import maltcms.datastructures.peak.Peak;
  * @author Nils Hoffmann
  */
 public interface IPeakFactoryImpl extends Serializable{
-    public Peak create(int scanIndex);
+    public Peak create(int peakIndex, int scanIndex);
 }

@@ -1165,7 +1165,7 @@ public class PeakCliqueAlignment2 extends AFragmentCommand {
 //                final int pc1i = peakCandidates1.getInt(pc1.set(i));
                 final int pc1i = peakCandidates1.getInt(i);
                 Peak p = null;
-                p = pfi.create(pc1i);
+                p = pfi.create(i, pc1i);
 //                if (firstColumnElutionTime != null && secondColumnElutionTime != null) {
 //                    if (useSparseArrays) {
 //                        ArrayDouble.D1 sparse = new Sparse(indexedMasses.get(i), indexedIntensities.get(i),
@@ -1191,7 +1191,7 @@ public class PeakCliqueAlignment2 extends AFragmentCommand {
 //                                scan_acquisition_time.getDouble(sat1.set(pc1i)), t.getName(), this.savePeakSimilarities);
 //                    }
 //                }
-                p.setPeakIndex(i);
+//                p.setPeakIndex(i);
                 peaks.add(p);
                 npeaks++;
             }

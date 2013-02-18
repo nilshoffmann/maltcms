@@ -125,8 +125,7 @@ public class PeakLoader implements IPeakLoader {
 
         for (int i = 0; i < peakCandidates1.getShape()[0]; i++) {
             final int pc1i = peakCandidates1.getInt(i);
-            Peak p = pfi.create(pc1i);
-            p.setPeakIndex(i);
+            Peak p = pfi.create(i, pc1i);
             peaks.add(p);
             npeaks++;
         }

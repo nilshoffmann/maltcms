@@ -77,15 +77,17 @@ public class Peak1DFactory implements IPeakFactory {
         }
 
         @Override
-        public Peak create(int scanIndex) {
+        public Peak create(int peakIndex, int scanIndex) {
             Array a = new ArrayDouble.D1(1);
             if (peakAreaArray.getShape()[0] != satArray.getShape()[0]) {
-                throw new ConstraintViolationException("Shape of " + peakAreaVar + " must equal shape of " + scanAcquisitionTimeVar + "! Was " + Arrays.toString(peakAreaArray.getShape()) + " vs. " + Arrays.toString(satArray.getShape()));
+                a.setDouble(0, peakAreaArray.getDouble(peakIndex));
+//                throw new ConstraintViolationException("Shape of " + peakAreaVar + " must equal shape of " + scanAcquisitionTimeVar + "! Was " + Arrays.toString(peakAreaArray.getShape()) + " vs. " + Arrays.toString(satArray.getShape()));
             } else {
                 a.setDouble(0, peakAreaArray.getDouble(scanIndex));
             }
             Peak p = new Peak(scanIndex, a,
                     satArray.getDouble(scanIndex), sourceFile.getName(), savePeakSimilarities);
+            p.setPeakIndex(peakIndex);
             return p;
         }
     }
