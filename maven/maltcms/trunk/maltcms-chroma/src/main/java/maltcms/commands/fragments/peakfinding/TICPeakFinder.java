@@ -802,7 +802,7 @@ public class TICPeakFinder extends AFragmentCommand {
         final List<List<String>> rows = new ArrayList<List<String>>(l.size());
         List<String> headers = null;
         final String[] headerLine = new String[]{"APEX", "START", "STOP",
-            "RT_APEX", "RT_START", "RT_STOP", "AREA", "AREA_NORMALIZED", "NORMALIZATION_METHODS", "MW", "INTENSITY", "SNR"};
+            "RT_APEX", "RT_START", "RT_STOP", "AREA", "AREA_NORMALIZED","AREA_NORMALIZED_PERCENT", "NORMALIZATION_METHODS", "MW", "INTENSITY", "SNR"};
         headers = Arrays.asList(headerLine);
         log.debug("Adding row {}", headers);
         rows.add(headers);
@@ -815,6 +815,7 @@ public class TICPeakFinder extends AFragmentCommand {
                 pb.getStartIndex() + "", pb.getStopIndex() + "",
                 df.format(pb.getApexTime()), df.format(pb.getStartTime()),
                 df.format(pb.getStopTime()), pb.getArea() + "", pb.getNormalizedArea() + "",
+                pb.getNormalizedArea()*100.0 + "",
                 Arrays.toString(pb.getNormalizationMethods()),
                 "" + pb.getMw(), "" + pb.getApexIntensity(), "" + pb.getSnr()};
             final List<String> v = Arrays.asList(line);

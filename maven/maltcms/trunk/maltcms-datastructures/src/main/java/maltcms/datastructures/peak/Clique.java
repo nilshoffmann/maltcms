@@ -31,8 +31,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
 
 import maltcms.tools.ArrayTools;
@@ -51,7 +52,7 @@ public class Clique {
     private static long CLIQUEID = -1;
     private long id = -1;
     private double cliqueMean = 0, cliqueVar = 0;
-    private HashMap<String, Peak> clique = new HashMap<String, Peak>();
+    private Map<String, Peak> clique = new ConcurrentHashMap<String, Peak>();
     private Peak centroid = null;
     private int maxBBHErrors = 0;
     private int bbhErrors = 0;

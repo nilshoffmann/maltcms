@@ -1056,6 +1056,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         savePeakMatchTable(columnMap, ll);
         savePeakMatchRTTable(columnMap, ll);
         savePeakMatchAreaTable(columnMap, ll, nameToFragment);
+        savePeakMatchAreaPercentTable(columnMap, ll, nameToFragment);
         if (saveXMLAlignment) {
             log.info("Saving alignment to xml!");
             saveToXMLAlignment(t, ll);
@@ -1356,7 +1357,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     log.debug("Insert position for {}: {}", iff, pos);
                     if (pos >= 0) {
                         if (line[pos].equals("-")) {
-                            final double sat = p.getScanAcquisitionTime() / 60.0d;
                             if (p.getPeakIndex() != -1) {
                                 line[pos] = peakAreas.getDouble(p.getPeakIndex()) + "";
                             } else {
@@ -1380,6 +1380,71 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         csvw.setWorkflow(getWorkflow());
         csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).
                 getAbsolutePath(), "multiple-alignmentArea.csv", rows,
+                WorkflowSlot.ALIGNMENT);
+    }
+    
+    /**
+     * @param columnMap
+     * @param ll
+     */
+    private void savePeakMatchAreaPercentTable(final Map<String, Integer> columnMap,
+            final List<List<Peak>> ll, final Map<String, IFileFragment> nameToFragment) {
+        final List<List<String>> rows = new ArrayList<List<String>>(ll.size());
+        List<String> headers = null;
+        final String[] headerLine = new String[columnMap.size()];
+        for (int i = 0; i < headerLine.length; i++) {
+            headerLine[i] = "";
+        }
+        headers = Arrays.asList(headerLine);
+        for (final String s : columnMap.keySet()) {
+            headers.set(columnMap.get(s), StringTools.removeFileExt(s));
+        }
+        log.debug("Adding row {}", headers);
+        rows.add(headers);
+        int rowCounter = 0;
+        for (final List<Peak> l : ll) {
+            log.debug("Adding row {}", rowCounter);
+            final String[] line = new String[columnMap.size()];
+            for (int i = 0; i < line.length; i++) {
+                line[i] = "-";
+            }
+            log.debug("Adding {} peaks", l.size());
+            for (final Peak p : l) {
+                final String iff = p.getAssociation();
+                log.debug("Adding peak {} from {}", p, iff);
+                EvalTools.notNull(iff, this);
+                IFileFragment fragment = nameToFragment.get(iff);
+                EvalTools.notNull(fragment, this);
+                final int pos = columnMap.get(iff).intValue();
+                try {
+                    Array peakAreas = fragment.getChild(peakAreaVariable).getArray();
+                    log.debug("PeakAreas for {}: {}", fragment.getName(), peakAreas.getShape()[0]);
+                    log.debug("Insert position for {}: {}", iff, pos);
+                    if (pos >= 0) {
+                        if (line[pos].equals("-")) {
+                            if (p.getPeakIndex() != -1) {
+                                line[pos] = peakAreas.getDouble(p.getPeakIndex())*100.0 + "";
+                            } else {
+                                line[pos] = "NaN";
+                            }
+                        } else {
+                            log.warn("Array position {} already used!", pos);
+                        }
+                    }
+                } catch (ResourceNotAvailableException rnae) {
+                    log.debug("Could not find {} as starting from {}!",peakAreaVariable,fragment.getName());
+                }
+            }
+            final List<String> v = Arrays.asList(line);
+            rows.add(v);
+            log.debug("Adding row {}", v);
+            rowCounter++;
+        }
+
+        final CSVWriter csvw = new CSVWriter();
+        csvw.setWorkflow(getWorkflow());
+        csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).
+                getAbsolutePath(), "multiple-alignmentAreaPercent.csv", rows,
                 WorkflowSlot.ALIGNMENT);
     }
 
