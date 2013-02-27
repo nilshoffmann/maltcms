@@ -123,7 +123,7 @@ public class DataSourceFactory implements IDataSourceFactory {
                 cnt--;
             }
         }
-        throw new IllegalArgumentException("Unsupported file type " + fname);
+        throw new IllegalArgumentException("Unsupported file type '" + fname+"'");
     }
 
     private boolean hasDataSourceFor(String fileExtension) {
