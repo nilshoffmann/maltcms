@@ -567,12 +567,13 @@
         <module>maltcms-io-openms-featurexml</module>
         <module>maltcms-evaluation</module>
         <module>maltcms-distribution</module>
+        <module>maltcms-osgi-distribution</module>
         <module>maltcms-cv</module>
     </modules>
     <dependencies>
         <dependency>
             <groupId>net.sf.maltcms</groupId>
-            <artifactId>cross-main</artifactId>
+            <artifactId>cross-osgi</artifactId>
             <version>1.2.12-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
@@ -586,21 +587,6 @@
                 <exclusion>
                     <artifactId>slf4j-jdk14</artifactId>
                     <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.maltcms</groupId>
-            <artifactId>cross-ui</artifactId>
-            <version>1.2.12-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>log4j</artifactId>
-                    <groupId>log4j</groupId>
                 </exclusion>
             </exclusions>
         </dependency>

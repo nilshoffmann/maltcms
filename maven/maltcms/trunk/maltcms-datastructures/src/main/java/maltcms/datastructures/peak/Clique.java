@@ -171,7 +171,6 @@ public class Clique {
             selectCentroid();
             return true;
         } else {
-            // if (clique.isEmpty()) {
             int actualBidiHits = getBBHCount(p);
             int diff = clique.size() - actualBidiHits;
             if (((bbhErrors + diff) > maxBBHErrors)) {
@@ -199,8 +198,7 @@ public class Clique {
 
     private int getBBHCount(Peak p, Collection<Peak> c) {
         int bidiHits = 0;
-        // check bidi best hit assumption
-        // bail out if assumption fails!
+        // check and count bidi best hit
         for (Peak q : getPeakList()) {
             if (!p.isBidiBestHitFor(q)) {
                 log.debug(
