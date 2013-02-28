@@ -15,4 +15,12 @@
             <goal>deploy</goal>
         </goals>
     </action>
+    <action>
+            <actionName>CUSTOM-Site Preview</actionName>
+            <displayName>Site Preview</displayName>
+            <goals>
+                <goal>site:site</goal>
+                <goal>site:stage</goal>
+            </goals>
+        </action>
 </actions>
