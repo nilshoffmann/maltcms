@@ -12,7 +12,7 @@
     <artifactId>maltcms-test-tools</artifactId>
     <packaging>pom</packaging>
     <version>1.2.1-SNAPSHOT</version>
-    <name>Maltcms-Test-Tools</name>
+    <name>Maltcms Test Tools</name>
     <description>Maltcms, short for "Modular Application Toolkit for Chromatography Mass-Spectrometry" is an application framework mainly suited for developers working in the domain of bioinformatics for metabolomics and proteomics. Its aim is to provide reusable, efficient datastructures, abstracting from the various low-level data-formats like netcdf (ANDIMS), mzXML, mzData and mzML and providing consistent access to data features like mass spectra, chromatograms and metadata. Furthermore, Maltcms provides a platform for the implementation and execution of processing pipelines. New and existing algorithms can be easily implemented or included and executed together with existing processing elements. </description>
     <url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}</url>
     <issueManagement>
@@ -94,7 +94,7 @@
         <site>
             <id>maltcms.sf.net</id>
             <name>maltcms.sf.net</name>
-            <url>scp://shell.sourceforge.net/home/project-web/maltcms/htdocs/maven/maltcms-test-tools/${project.version}</url>
+            <url>scp://shell.sourceforge.net/home/project-web/maltcms/htdocs/maven/maltcms/${project.version}/maltcms-test-tools</url>
         </site>
     </distributionManagement>
     <licenses>

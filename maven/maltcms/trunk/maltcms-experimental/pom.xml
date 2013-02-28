@@ -7,7 +7,7 @@
         <version>1.2.1-SNAPSHOT</version>
     </parent>
     <artifactId>maltcms-experimental</artifactId>
-    <name>maltcms-experimental</name>
+    <name>Maltcms Experimental</name>
     <url>http://maltcms.sourceforge.net</url>
     <dependencies>
         <dependency>

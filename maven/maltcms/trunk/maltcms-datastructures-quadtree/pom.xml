@@ -7,7 +7,7 @@
         <version>1.2.1-SNAPSHOT</version>
     </parent>
     <artifactId>maltcms-datastructures-quadtree</artifactId>
-    <name>maltcms-datastructures-quadtree</name>
+    <name>Maltcms QuadTree</name>
     <url>http://maltcms.sourceforge.net</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

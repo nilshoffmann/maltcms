@@ -6,32 +6,41 @@
         <groupId>net.sf.maltcms</groupId>
         <version>1.2.1-SNAPSHOT</version>
     </parent>
-    <artifactId>maltcms-osgi-distribution</artifactId>
-    <name>Maltcms Distribution OSGI</name>
+    <artifactId>maltcms-nbm</artifactId>
+    <name>Maltcms Distribution NBM</name>
     <url>http://maltcms.sourceforge.net</url>
-    <packaging>pom</packaging>
+    <packaging>nbm</packaging>
     
     <build>
         <plugins>      
-            <!-- Assembly plugin -->
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>my-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
+			<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>nbm-maven-plugin</artifactId>
+                <version>3.8.1</version>
+                <extensions>true</extensions>
+				<configuration>
+					<useOSGiDependencies>false</useOSGiDependencies>
+					<author>Nils Hoffmann</author>
+					<cluster>maltcms</cluster>
+					<publicPackages>
+						<publicPackage>maltcms.*</publicPackage>
+						<publicPackage>cross.*</publicPackage>
+						<publicPackage>net.sf.*</publicPackage>
+						<publicPackage>groovy.*</publicPackage>
+						<publicPackage>org.codehaus.groovy.*</publicPackage>
+						<publicPackage>ucar.*</publicPackage>
+						<publicPackage>thredds.*</publicPackage>
+                    </publicPackages>
+					<codeNameBase>net.sf.maltcms.nbm</codeNameBase>
+					<moduleType>autoload</moduleType>
+				</configuration>
+            </plugin>
+            <plugin> <!-- required since nbm-plugin 3.0-->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.2</version>
                 <configuration>
-                    <descriptors>
-                        <descriptor>src/main/assembly/osgi.xml</descriptor>
-                    </descriptors>
-                    <finalName>${distributionName}</finalName>
-                    <updateOnly>true</updateOnly>
-                    <attach>false</attach>
+                    <useDefaultManifestFile>true</useDefaultManifestFile>
                 </configuration>
             </plugin>
         </plugins>
@@ -199,7 +208,4 @@
             </exclusions>
         </dependency>
     </dependencies>
-    <properties>
-        <distributionName>maltcms-${project.version}-osgi</distributionName>
-    </properties>
 </project>

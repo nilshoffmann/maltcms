@@ -8,7 +8,7 @@
         <version>1.2.1-SNAPSHOT</version>
     </parent>
     <artifactId>maltcms-datastructures</artifactId>
-    <name>maltcms-datastructures</name>
+    <name>Maltcms Datastructures</name>
     <url>http://maltcms.sourceforge.net</url>
     <dependencies>
         <dependency>

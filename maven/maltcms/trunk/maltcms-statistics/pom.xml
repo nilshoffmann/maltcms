@@ -7,7 +7,7 @@
         <version>1.2.1-SNAPSHOT</version>
     </parent>
     <artifactId>maltcms-statistics</artifactId>
-    <name>maltcms-statistics</name>
+    <name>Maltcms Statistics</name>
     <url>http://maltcms.sourceforge.net</url>
     <dependencies>
         <dependency>

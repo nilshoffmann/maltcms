@@ -8,7 +8,7 @@
         <!--<relativePath>..</relativePath>-->
     </parent>
     <artifactId>maltcms-test-data</artifactId>
-    <name>maltcms-test-data</name>
+    <name>Maltcms Test Data</name>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>

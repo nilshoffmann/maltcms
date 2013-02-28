@@ -7,7 +7,7 @@
         <version>1.2.1-SNAPSHOT</version>
     </parent>
     <artifactId>maltcms-io-mz5</artifactId>
-    <name>maltcms-io-mz5</name>
+    <name>Maltcms IO Provider MZ5</name>
     <url>http://maltcms.sourceforge.net</url>
     <dependencies>
         <dependency>

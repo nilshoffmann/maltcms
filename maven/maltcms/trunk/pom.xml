@@ -564,10 +564,12 @@
         <module>maltcms-io-mzml</module>
         <module>maltcms-io-mz5</module>
         <module>maltcms-io-csv</module>
+        <module>maltcms-io-xlsx</module>
         <module>maltcms-io-openms-featurexml</module>
         <module>maltcms-evaluation</module>
         <module>maltcms-distribution</module>
         <module>maltcms-osgi-distribution</module>
+		<module>maltcms-nbm</module>
         <module>maltcms-cv</module>
     </modules>
     <dependencies>

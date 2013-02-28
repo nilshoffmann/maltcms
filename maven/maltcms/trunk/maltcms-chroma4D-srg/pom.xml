@@ -7,7 +7,7 @@
         <version>1.2.1-SNAPSHOT</version>
     </parent>
     <artifactId>maltcms-chroma4D-srg</artifactId>
-    <name>maltcms-chroma4D-srg</name>
+    <name>Maltcms ChromA4D SRG</name>
     <url>http://maltcms.sourceforge.net</url>
     <dependencies>
         <dependency>
