@@ -63,6 +63,8 @@ public class WorkbookBridge {
 					log.warn("IOException: ",ex);
 				} catch (InvalidFormatException ex) {
 					log.warn("InvalidFormatException: ",ex);
+				} catch (java.lang.NoClassDefFoundError ex) {
+					log.warn("Could not find implementation for POI: ",ex);
 				}
 				return null;
 			case JEXCELAPI:
@@ -72,6 +74,8 @@ public class WorkbookBridge {
 					log.warn("IOException: ",ex);
 				} catch (BiffException ex) {
 					log.warn("BiffException: ",ex);
+				} catch (java.lang.NoClassDefFoundError ex) {
+					log.warn("Could not find implementation for JXL: ",ex);
 				}
 				return null;
 			default:
