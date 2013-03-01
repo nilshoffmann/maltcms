@@ -51,15 +51,14 @@ public class WorkbookBridge {
 	 * 
 	 * @param uri
 	 * @param impl
+	 * @param iisp
 	 * @return 
 	 */
-	public IWorkbook getWorkbook(URI uri, IMPL impl) {
+	public IWorkbook getWorkbook(URI uri, IMPL impl, IInputStreamProvider iisp) {
 		switch(impl) {
 			case POI:
 				try {
-					return new POIWorkbook(uri);
-				} catch (MalformedURLException ex) {
-					log.warn("MalformedURL: ",ex);
+					return new POIWorkbook(iisp);
 				} catch (IOException ex) {
 					log.warn("IOException: ",ex);
 				} catch (InvalidFormatException ex) {
@@ -68,7 +67,7 @@ public class WorkbookBridge {
 				return null;
 			case JEXCELAPI:
 				try {
-					return new JXLWorkbook(uri);
+					return new JXLWorkbook(iisp);
 				} catch (IOException ex) {
 					log.warn("IOException: ",ex);
 				} catch (BiffException ex) {

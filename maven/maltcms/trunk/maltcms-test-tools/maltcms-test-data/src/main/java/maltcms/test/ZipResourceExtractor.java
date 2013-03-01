@@ -39,6 +39,8 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import lombok.Cleanup;
 
 public class ZipResourceExtractor {
@@ -62,8 +64,14 @@ public class ZipResourceExtractor {
             @Cleanup
             OutputStream out = null;
             try {
-                String outname = new File(resourceURL.getPath()).getName();;
-                if (resourcePath.endsWith("gz")) {
+                String outname = new File(resourceURL.getPath()).getName();
+				outname = outname.replaceAll("%20", " ");
+				System.out.println(outname);
+				if (resourcePath.endsWith("zip")) {
+					outname = outname.substring(0, outname.lastIndexOf(
+                            "."));
+					return extractZipArchive(resourceInputStream, destDir);
+				} else if (resourcePath.endsWith("gz")) {
                     in = new GZIPInputStream(new BufferedInputStream(
                             resourceInputStream));
 
@@ -96,4 +104,41 @@ public class ZipResourceExtractor {
 
         return outputFile;
     }
+	
+	public static File extractZipArchive(InputStream istream, File outputDir) {
+		try {
+            ZipInputStream zis = new ZipInputStream(
+                    new BufferedInputStream(istream));
+            ZipEntry entry;
+			File outDir = null;
+            while ((entry = zis.getNextEntry()) != null) {
+                int size;
+                byte[] buffer = new byte[2048];
+				File outFile = new File(outputDir,entry.getName());
+				if(entry.isDirectory()) {
+					outFile.mkdirs();
+					if(outDir==null) {
+						outDir = outFile;
+					}
+				}else{
+					FileOutputStream fos = new FileOutputStream(outFile);
+					BufferedOutputStream bos = new BufferedOutputStream(fos, buffer.length);
+					while ((size = zis.read(buffer, 0, buffer.length)) != -1) {
+						bos.write(buffer, 0, size);
+					}
+					bos.flush();
+					bos.close();
+					fos.close();
+				}
+            }
+			if(outDir==null) {
+				outDir = outputDir;
+			}
+            zis.close();
+            istream.close();
+			return outDir;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+	}
 }

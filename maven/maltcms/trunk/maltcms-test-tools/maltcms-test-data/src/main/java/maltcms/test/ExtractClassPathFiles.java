@@ -39,33 +39,39 @@ import org.junit.rules.TemporaryFolder;
  */
 public class ExtractClassPathFiles extends ExternalResource {
 
-    private final TemporaryFolder tf;
-    private final String[] resourcePaths;
-    private final List<File> files = new LinkedList<File>();
+	private final TemporaryFolder tf;
+	private final String[] resourcePaths;
+	private final List<File> files = new LinkedList<File>();
+	private File baseFolder;
 
-    public ExtractClassPathFiles(TemporaryFolder tf, String... resourcePaths) {
-        this.tf = tf;
-        this.resourcePaths = resourcePaths;
-    }
+	public ExtractClassPathFiles(TemporaryFolder tf, String... resourcePaths) {
+		this.tf = tf;
+		this.resourcePaths = resourcePaths;
+	}
 
-    @Override
-    protected void before() throws Throwable {
-        File outputFolder = tf.newFolder();
-        for (String resource : resourcePaths) {
-            File file = ZipResourceExtractor.extract(
-                    resource, outputFolder);
-            files.add(file);
-        }
-    }
+	@Override
+	protected void before() throws Throwable {
+		baseFolder = tf.newFolder();
+		int i = 0;
+		for (String resource : resourcePaths) {
+			File file = ZipResourceExtractor.extract(
+					resource, baseFolder);
+			files.add(file);
+		}
+	}
 
-    @Override
-    protected void after() {
-        for(File f:files) {
-            f.delete();
-        }
-    }
-    
-    public List<File> getFiles() {
-        return this.files;
-    }
+	@Override
+	protected void after() {
+		for (File f : files) {
+			f.delete();
+		}
+	}
+
+	public List<File> getFiles() {
+		return this.files;
+	}
+	
+	public File getBaseDir() {
+		return baseFolder;
+	}
 }

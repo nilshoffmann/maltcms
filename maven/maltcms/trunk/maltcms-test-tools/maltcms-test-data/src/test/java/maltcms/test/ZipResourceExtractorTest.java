@@ -62,6 +62,29 @@ public class ZipResourceExtractorTest {
         Assert.assertTrue(unzippedFile.length() > 0);
         log.info("File size is != 0: {}", unzippedFile.length());
     }
+	
+	@Test
+    public void testExtractZip() {
+        File outputFolder = tf.newFolder(
+                "xls");
+		//zip archives must contain a folder with their name, e.g. 'Ap 601.D'
+        File outputFile = ZipResourceExtractor.extract("/xls/agilent/Ap 601.D.zip", outputFolder);
+        File unzippedFile = new File(outputFolder, "Ap 601.D");
+		log.info(outputFile.getAbsolutePath());
+		log.info(unzippedFile.getAbsolutePath());
+		Assert.assertTrue(outputFile.getAbsolutePath().equals(unzippedFile.getAbsolutePath()));
+        Assert.assertTrue(unzippedFile.exists());
+        log.info("File exists");
+		Assert.assertTrue(unzippedFile.isDirectory());
+		log.info("File is directory");
+        Assert.assertTrue(unzippedFile.length() > 0);
+        log.info("File size is != 0: {}", unzippedFile.length());
+		File reportFile = new File(unzippedFile,"REPORT01.xls");
+		Assert.assertTrue(reportFile.exists());
+		log.info("Report file exists!");
+		Assert.assertTrue(reportFile.isFile());
+		log.info("Report file is file!");
+    }
 
 //    @Test
 //    public void testExtract2D() {

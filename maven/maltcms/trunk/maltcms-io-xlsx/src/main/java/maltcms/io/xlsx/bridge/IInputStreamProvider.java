@@ -25,37 +25,14 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.io.xlsx.bridge.impl.jexcelapi;
+package maltcms.io.xlsx.bridge;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Locale;
-import jxl.Sheet;
-import jxl.WorkbookSettings;
-import jxl.read.biff.BiffException;
-import lombok.Data;
-import maltcms.io.xlsx.bridge.IInputStreamProvider;
-import maltcms.io.xlsx.bridge.ISheet;
-import maltcms.io.xlsx.bridge.IWorkbook;
+import java.io.InputStream;
 
 /**
  *
  * @author Nils Hoffmann
  */
-
-@Data
-public class JXLWorkbook implements IWorkbook {
-	private final jxl.Workbook workbook;
-
-	public JXLWorkbook(IInputStreamProvider iisp) throws IOException, BiffException {
-		WorkbookSettings ws = new WorkbookSettings();
-		ws.setLocale(Locale.US);
-		workbook = jxl.Workbook.getWorkbook(iisp.openStream(), ws);
-	}
-	
-	@Override
-	public ISheet getSheet(String name) {
-		Sheet sheet = workbook.getSheet(name);
-		return new JXLSheet(sheet);
-	}
+public interface IInputStreamProvider {
+	public InputStream openStream();
 }

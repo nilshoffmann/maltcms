@@ -37,25 +37,34 @@ import cross.exception.ResourceNotAvailableException;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.xlsx.IXLSDataSource;
 import maltcms.io.xlsx.bridge.ICell;
+import maltcms.io.xlsx.bridge.IInputStreamProvider;
 import maltcms.io.xlsx.bridge.IRow;
 import maltcms.io.xlsx.bridge.ISheet;
 import maltcms.io.xlsx.bridge.IWorkbook;
 import maltcms.io.xlsx.bridge.WorkbookBridge;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.io.FileUtils;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
 import ucar.ma2.DataType;
 import static ucar.ma2.DataType.DOUBLE;
 import ucar.ma2.Range;
@@ -69,7 +78,8 @@ import ucar.nc2.Dimension;
 @ServiceProvider(service=IXLSDataSource.class)
 public final class AgilentPeakReportDataSource implements IXLSDataSource {
 
-	private final String[] fileEnding = new String[]{"xls", "xlsx"};
+	private final String[] reportFileEnding = new String[]{"xls", "xlsx"};
+	private final String[] fileEnding = new String[]{"d"};
 	private HashMap<String, Mapping> varnameToMapping = new HashMap<String, Mapping>();
 	private static HashMap<URI,WorkbookBridge.IMPL> uriToImpl = new HashMap<URI,WorkbookBridge.IMPL>();
 
@@ -160,18 +170,43 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 				}
 			}
 		}
-		System.out.println("Returning " + a);
 		return a;
+	}
+	
+	@Data
+	private class AgilentDReportInputStreamProvider implements IInputStreamProvider {
+		private final URI sourceDirectory;
+
+		@Override
+		public InputStream openStream() {
+			File f = new File(sourceDirectory);
+			if(f.isDirectory() && f.exists()) {
+				Collection<File> c = FileUtils.listFiles(f, reportFileEnding , false);
+				if(c.size()>1) {
+					throw new ConstraintViolationException("Found more than one report file in directory: "+f);
+				}
+				if(!c.isEmpty()) {
+					try {
+						return new FileInputStream(c.iterator().next());
+					} catch (FileNotFoundException ex) {
+						throw new ConstraintViolationException(ex);
+					}
+				}
+				throw new ConstraintViolationException("Could not find any valid report files below: "+f);
+			}
+			throw new ConstraintViolationException("Could not find location: "+f);
+		}
+		
 	}
 
 	private IWorkbook open(URI uri) {
 		WorkbookBridge wb = new WorkbookBridge();
 		if(uriToImpl.containsKey(uri)) {
-			return wb.getWorkbook(uri, uriToImpl.get(uri));
+			return wb.getWorkbook(uri, uriToImpl.get(uri), new AgilentDReportInputStreamProvider(uri));
 		}
 		for(WorkbookBridge.IMPL impl: WorkbookBridge.IMPL.values()) {
 			try{
-				IWorkbook workbook = wb.getWorkbook(uri, impl);
+				IWorkbook workbook = wb.getWorkbook(uri, impl, new AgilentDReportInputStreamProvider(uri));
 				if(workbook!=null) {
 					uriToImpl.put(uri, impl);
 					return workbook;
@@ -185,6 +220,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 
 	@Override
 	public int canRead(IFileFragment ff) {
+		System.out.println("Filename: "+ff.getName());
 		final int dotindex = ff.getName().lastIndexOf(".");
 		final String filename = ff.getName().toLowerCase();
 		if (dotindex == -1) {
@@ -229,7 +265,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 	
 	public Range[] ranges(Array a, IVariableFragment ivf) {
 		int[] shape = a.getShape();
-		if (ivf.getName().equals("scan_acquisition_time") || ivf.getName().equals("total_intensity") || ivf.getName().equals("scan_index")) {
+		if (ivf.getName().equals("scan_acquisition_time") || ivf.getName().equals("total_intensity") || ivf.getName().equals("scan_index") || ivf.getName().equals("mass_range_min") || ivf.getName().equals("mass_range_max")) {
 			return new Range[]{new Range(shape[0])};
 		} else if (ivf.getName().equals("mass_values") || ivf.getName().equals("intensity_values")) {
 			return new Range[]{new Range(shape[0])};
@@ -260,6 +296,8 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 		addIfNew("scan_index", f);
 		addIfNew("mass_values", f);
 		addIfNew("intensity_values", f);
+		addIfNew("mass_range_min", f);
+		addIfNew("mass_range_max", f);
 		int scanNumber = getNumberOfPeaks(w, getMapping(f.getChild("scan_acquisition_time")));
 		for (IVariableFragment ivf : f) {
 			l.add(createArray(ivf, f, w));
@@ -273,6 +311,10 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 			a = createScanIndex(f, w);
 		} else if (ivf.getName().equals("mass_values")) {
 			a = createMassValues(f, w);
+		} else if (ivf.getName().equals("mass_range_min")) {
+			a = createMassRangeMin(f, w);
+		} else if (ivf.getName().equals("mass_range_max")) {
+			a = createMassRangeMax(f, w);
 		} else {
 			a = getSheetData(w, getMapping(ivf));
 		}
@@ -295,10 +337,23 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 		addIfNew("mass_values", f);
 		int scanNumber = getNumberOfPeaks(w, getMapping(f.getChild("scan_acquisition_time")));
 		double[] mv = new double[scanNumber];
-		Arrays.fill(mv, -1);
+		Arrays.fill(mv, 0);
 		Array a = Array.factory(mv);
 		EvalTools.eqI(scanNumber, a.getShape()[0], this);
 		return a;
+	}
+	
+	private Array createMassRangeMin(IFileFragment f, IWorkbook w) {
+		int scanNumber = getNumberOfPeaks(w, getMapping(f.getChild("scan_acquisition_time")));
+		final Array mass_range_min = new ArrayDouble.D1(scanNumber);
+		return mass_range_min;
+	}
+	
+	private Array createMassRangeMax(IFileFragment f, IWorkbook w) {
+		int scanNumber = getNumberOfPeaks(w, getMapping(f.getChild("scan_acquisition_time")));
+		double[] mass_range_max = new double[scanNumber];
+		Arrays.fill(mass_range_max,1.0d);
+		return Array.factory(mass_range_max);
 	}
 
 	@Override
