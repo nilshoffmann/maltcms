@@ -185,10 +185,17 @@ public class FileTools {
     }
 
     public static String getFilename(final URI u) {
-        if(u.getPath().endsWith("/")) {
-            return "";
-        }
-        return u.getPath().substring(u.getPath().lastIndexOf("/") + 1);
+		String pathName = u.getPath();
+		if(u.getPath().endsWith("/")){
+			pathName = u.getPath().substring(0, u.getPath().length()-1);
+			log.debug("PathName: {}",pathName);
+		}
+        return pathName.substring(pathName.lastIndexOf("/") + 1);
+//		
+//        if(u.getPath().endsWith("/")) {
+//            return "";
+//        }
+//        return u.getPath().substring(u.getPath().lastIndexOf("/") + 1);
     }
     
     public static String getFilename(final String fullname) {
