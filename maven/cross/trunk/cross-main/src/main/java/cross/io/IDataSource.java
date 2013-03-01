@@ -54,7 +54,7 @@ import ucar.ma2.Array;
  */
 public interface IDataSource extends IConfigurable, ConfigurationListener {
 
-    public int canRead(IFileFragment ff);
+	public int canRead(IFileFragment ff);
 
     public ArrayList<Array> readAll(IFileFragment f) throws IOException,
             ResourceNotAvailableException;
