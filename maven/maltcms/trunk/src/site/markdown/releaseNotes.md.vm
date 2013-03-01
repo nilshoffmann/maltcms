@@ -1,0 +1,17 @@
+Release Notes
+
+Changes for version 1.3:
+---------------------------
+
+New features
+
+* Maltcms artifacts now expose osgi dependency information and can be deployed 
+in osgi-compatible runtime containers. The maltcms-osgi-distribution module lists all required 
+dependencies.
+* The maltcms-nbm module provides an osgi-compatible NetBeans module.
+* Preliminary support for Agilent Chemstation _.D_ directories with peak reports in '.xls' format.
+* More and more descriptive exceptions and improved documentation.
+* A large number of tests.
+
+This version is backwards compatible to 1.2.x releases of maltcms concerning the workflow format.
+

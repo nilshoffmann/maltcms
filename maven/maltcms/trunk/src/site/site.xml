@@ -38,6 +38,7 @@
 
         <menu name="Maltcms">
             <item name="About Maltcms" href="index.html"/>
+			<item name="Release Notes" href="releaseNotes.html"/>
             <item name="Download" href="download.html"/>
             <item name="Getting Started" href="gettingStarted.html"/>
             <item name="Available Commands" href="fragmentCommands.html"/>

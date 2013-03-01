@@ -48,6 +48,7 @@ for details.
         <property name="checkCommandDependencies" value="false"/>
         <property name="commands">
             <list>
+				<!--<ref bean="defaultVarLoader" />-->
                 <ref bean="andiChromImporter" />
                 <ref bean="scanExtractor" />
                 <ref bean="denseArrayProducer" />
@@ -57,10 +58,29 @@ for details.
         </property>
     </bean>
     <!-- commands -->
-
-    <!-- CSVAnchorReader, reads pre-defined alignment anchors -->
-    <bean id="csvAnchorReader" class="maltcms.commands.fragments.io.CSVAnchorReader">
-
+	
+	<!-- DefaultVarLoader, loads default variables, see cfg/cv/cv_maltcms.properties for default values for these -->
+    <bean id="defaultVarLoader" class="maltcms.commands.fragments.preprocessing.DefaultVarLoader">
+        <property name="defaultVariables">
+            <list>
+                <!-- uncomment to explicitly load default variables -->
+                <value>scan_index</value>
+                <value>mass_values</value>
+                <value>intensity_values</value>
+                <value>total_intensity</value>
+                <value>mass_range_min</value>
+                <value>mass_range_max</value>
+                <value>scan_acquisition_time</value>
+            </list>
+        </property>
+        <property name="additionalVariables">
+            <list>
+                <!-- uncomment to explicitly load additional variables -->
+                <!--
+                <value>retention_scans</value>
+                <value>source_files</value> -->
+            </list>
+        </property>
     </bean>
 
     <bean id="andiChromImporter" class="maltcms.commands.fragments.io.ANDIChromImporter">

@@ -60,7 +60,7 @@ for details.
                 <value>intensity_values</value>
                 <value>total_intensity</value>
                 <value>mass_range_min</value>
-                <value>mass_range_min</value>
+                <value>mass_range_max</value>
                 <value>scan_acquisition_time</value> -->
             </list>
         </property>
