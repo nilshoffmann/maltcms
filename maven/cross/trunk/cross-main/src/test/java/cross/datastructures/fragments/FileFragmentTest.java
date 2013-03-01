@@ -36,6 +36,7 @@ import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.MockDatasource;
 import cross.test.SetupLogging;
+import cross.tools.StringTools;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.MethodRule;
+import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestWatchman;
 import org.junit.runners.model.FrameworkMethod;
 import ucar.ma2.Array;
@@ -78,6 +80,8 @@ public class FileFragmentTest {
     };
     @Rule
     public SetupLogging logging = new SetupLogging();
+	@Rule
+	public TemporaryFolder tf = new TemporaryFolder();
 
     /**
      *
@@ -168,7 +172,7 @@ public class FileFragmentTest {
 
     @Test
     public void testSourceFilesRelativization() {
-        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "DEBUG");
+        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "INFO");
         FileFragment remote1 = new FileFragment(URI.create("http://bibiserv.techfak.uni-bielefeld.de/chroma/data/glucoseA.cdf"));
         File outBaseDir = new File(System.getProperty("java.io.tmpdir"), "testSourceFilesRelativization");
         File pathLocal1 = new File(outBaseDir, "local1.cdf");
@@ -217,7 +221,7 @@ public class FileFragmentTest {
     @Test
     public void testSourceFilesEquality() {
 //        FileFragment.clearFragments();
-        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "DEBUG");
+        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "INFO");
         FileFragment remote1 = new FileFragment(URI.create("http://bibiserv.techfak.uni-bielefeld.de/chroma/data/glucoseA.cdf"));
         File outBaseDir = new File(System.getProperty("java.io.tmpdir"), "testSourceFilesRelativization");
         File pathLocal1 = new File(outBaseDir, "local1.cdf");
@@ -243,7 +247,7 @@ public class FileFragmentTest {
 
     @Test
     public void testBreadthFirstSearch() {
-        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "DEBUG");
+        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "INFO");
         File outBaseDir = new File(System.getProperty("java.io.tmpdir"), "testSourceFilesBFS");
 
         //create two Filefragments at the same level with equally named variables
@@ -273,7 +277,7 @@ public class FileFragmentTest {
     @Test
     public void testBreadthFirstDifferentDepthSearch() {
 //        FileFragment.clearFragments();
-        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "DEBUG");
+        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "INFO");
         File outBaseDir = new File(System.getProperty("java.io.tmpdir"), "testSourceFilesBFS");
 
         File pathLocal0 = new File(outBaseDir, "local0.cdf");
@@ -307,7 +311,7 @@ public class FileFragmentTest {
     @Test(expected = ConstraintViolationException.class)
     public void testBreadthFirstSameDepthSearch() {
 //        FileFragment.clearFragments();
-        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "DEBUG");
+        logging.setLogLevel("log4j.category.cross.datastructures.fragments", "INFO");
         File outBaseDir = new File(System.getProperty("java.io.tmpdir"), "testSourceFilesBFS");
 
         File pathLocal0 = new File(outBaseDir, "local0.cdf");
@@ -343,6 +347,7 @@ public class FileFragmentTest {
     
     @Test
     public void testVariableFragmentEquality() {
+		logging.setLogLevel("log4j.category.cross.datastructures.fragments", "INFO");
         IFileFragment f = createTestFragment();
         //first check that all are there
         Assert.assertNotNull(f.getChild("variable1"));
@@ -361,6 +366,20 @@ public class FileFragmentTest {
         Assert.assertNull(f.getChild("variable3").getIndex());
         Assert.assertNull(f.getChild("indexVar1").getIndex());
     }
+	
+	@Test
+	public void testGetName() {
+		logging.setLogLevel("log4j.category.cross.datastructures.fragments", "DEBUG");
+		IFileFragment f = new FileFragment(tf.newFolder("0000000.D"));
+		String plainName = f.getName();
+		log.info("PlainName: {}",plainName);
+		Assert.assertTrue(plainName.endsWith(".D"));
+//		String baseName = StringTools.removeFileExt(plainName);
+//		f.setFile(new File(new File(f.getUri()).getParentFile(),baseName+".D/").toURI().toString());
+//		String dirName = f.getName();
+//		Assert.assertFalse(dirName.isEmpty());
+//		Assert.assertTrue(dirName.endsWith(".D"));
+	}
     
     public IFileFragment createTestFragment() {
         IFileFragment f = new FileFragment();

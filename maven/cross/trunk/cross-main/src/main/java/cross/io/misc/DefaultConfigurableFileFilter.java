@@ -83,12 +83,17 @@ public class DefaultConfigurableFileFilter implements FileFilter, IConfigurable 
         // Third match filename extensions
         final String extension = StringTools.getFileExtension(f
                 .getAbsolutePath());
-        for (final String s : this.fileTypesToKeep) {
-            if (extension.equalsIgnoreCase(s)) {
-                log.debug("FileFilter matched on {}", extension);
-                return true;
-            }
-        }
+		if(extension.equals(f.getName())) {
+			log.warn("File has no proper file extension: {}",f);
+			return false;
+		}else{
+			for (final String s : this.fileTypesToKeep) {
+				if (extension.equalsIgnoreCase(s)) {
+					log.debug("FileFilter matched on {}", extension);
+					return true;
+				}
+			}
+		}
         return false;
     }
 

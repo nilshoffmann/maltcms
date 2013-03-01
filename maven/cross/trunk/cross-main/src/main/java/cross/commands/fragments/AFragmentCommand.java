@@ -209,7 +209,11 @@ public abstract class AFragmentCommand implements IFragmentCommand {
             String filename = FileTools.getFilename(f);
             String basename = StringTools.removeFileExt(filename);
             String ext = StringTools.getFileExtension(filename);
-            log.debug("Filename: {}",basename+"."+ext);
+			if(ext.equals(filename)) {
+				log.debug("Filename: {}",basename);
+			}else{
+				log.debug("Filename: {}",basename+"."+ext);
+			}
             names.put(basename, f);
         }
         TupleND<IFileFragment> retFragments = new TupleND<IFileFragment>();
@@ -218,7 +222,11 @@ public abstract class AFragmentCommand implements IFragmentCommand {
             String filename = FileTools.getFilename(fragment.getUri());
             String basename = StringTools.removeFileExt(filename);
             String ext = StringTools.getFileExtension(filename).toLowerCase();
-            log.debug("Filename: {}",basename+"."+ext);
+            if(ext.equals(filename)) {
+				log.debug("Filename: {}",basename);
+			}else{
+				log.debug("Filename: {}",basename+"."+ext);
+			}
             retFragments.add(new FileFragment(names.get(basename)));
         }
         return retFragments;

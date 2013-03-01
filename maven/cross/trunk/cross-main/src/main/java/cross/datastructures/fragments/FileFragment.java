@@ -605,8 +605,12 @@ public class FileFragment implements IFileFragment {
      */
     @Override
     public String getName() {
-        //return this.f.getName();
-        return u.getPath().substring(u.getPath().lastIndexOf("/") + 1);
+		String pathName = u.getPath();
+		if(u.getPath().endsWith("/")){
+			pathName = u.getPath().substring(0, u.getPath().length()-1);
+			log.debug("PathName: {}",pathName);
+		}
+        return pathName.substring(pathName.lastIndexOf("/") + 1);
     }
 
     /*
@@ -974,9 +978,18 @@ public class FileFragment implements IFileFragment {
         }
 
         // FIXME all output currently redirected to netcdf
-        final String ext = StringTools.getFileExtension(getName()).toLowerCase();
+        String ext = StringTools.getFileExtension(getName());//.toLowerCase();
+		if(ext.equals(getName())) {
+			log.info("File location did not have a proper extension, setting default: cdf!");
+			ext = "cdf";
+		}
         final String filename = StringTools.removeFileExt(getName());
-        final String basepath = u.getPath().substring(0, u.getPath().lastIndexOf("/") + 1);
+		String basepath = u.getPath();
+		if(basepath.endsWith("/")) {
+			log.debug("Resource is a directory, removing trailing slash!");
+			basepath = basepath.substring(0, basepath.length()-1);
+		}
+		basepath = basepath.substring(0, basepath.lastIndexOf("/") + 1);
         log.debug("extension: " + ext);
         log.debug("filename: " + filename);
         log.debug("basepath: " + basepath);

@@ -490,7 +490,7 @@ public class FragmentXMLSerializer implements IDataSource {
     }
 
     public String serialize(final IFileFragment iff) throws IOException {
-        final String filename = StringTools.getFileExtension(FileTools.getFilename(iff.getUri()))
+        final String filename = StringTools.removeFileExt(FileTools.getFilename(iff.getUri()))
                 + ".maltcms.xml";
         final Element maltcms = new Element("maltcms");
         final Document doc = new Document(maltcms);

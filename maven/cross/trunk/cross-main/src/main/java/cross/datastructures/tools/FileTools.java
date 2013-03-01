@@ -208,8 +208,14 @@ public class FileTools {
         }
         while (f.exists()) {
             final String ext = StringTools.getFileExtension(f.getAbsolutePath());
-            final String base = StringTools.removeFileExt(f.getAbsolutePath());
-            f = new File(base + "" + i + "." + ext);
+			if(ext.equals(f.getName())) {
+				log.warn("File has no proper file extension: {}",f);
+				final String base = StringTools.removeFileExt(f.getAbsolutePath());
+				f = new File(base + "" + i);
+			}else{
+				final String base = StringTools.removeFileExt(f.getAbsolutePath());
+				f = new File(base + "" + i + "." + ext);
+			}
             i++;
         }
         return f;

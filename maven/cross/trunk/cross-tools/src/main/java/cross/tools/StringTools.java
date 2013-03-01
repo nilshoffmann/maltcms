@@ -60,18 +60,23 @@ public class StringTools {
     }
 
     /**
-     * Returns the suffix of a file.
+     * Returns the suffix of a file or s if no dot '.' is contained 
+	 * in s.
      *
      * @param s
      * @return
      */
     public static String getFileExtension(final String s) {
         final int lastIndexOfDot = s.lastIndexOf(".");
+		if(lastIndexOfDot==-1) {
+			return s;
+		}
         return s.substring(lastIndexOfDot + 1, s.length());
     }
 
     /**
-     * Returns that part of a string before first occurrence of a dot.
+     * Returns that part of a string before first occurrence of a dot, 
+	 * if a dot is contained in s, otherwise, s is returned.
      *
      * @param deBlank
      * @return
