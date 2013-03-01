@@ -711,6 +711,7 @@ public class MZXMLSaxDataSource implements IDataSource {
         return write(f);
     }
 
+	@Override
     public List<String> supportedFormats() {
         return Arrays.asList(this.fileEnding);
     }
