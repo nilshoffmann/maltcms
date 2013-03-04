@@ -476,9 +476,10 @@ public class Default2DVarLoader extends AFragmentCommand {
 
         double c = 0;
         final int scanspermodulation = (int) (this.scanRate * this.modulationTime);
+		final Array sourceTime = source.getChild(scanAcquisitionTimeVar).getArray();
         while (timeiter.hasNext()) {
             int satIdx = (((int)c) / scanspermodulation);
-            timeiter.setDoubleNext(source.getChild(scanAcquisitionTimeVar).getArray().getDouble(satIdx));
+            timeiter.setDoubleNext(sourceTime.getDouble(satIdx));
             c++;
         }
 
