@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="help" name="CrossSiteDeploy">
+
+    <target name="help" description="Prints usage info using -projecthelp">
+        <java classname="org.apache.tools.ant.Main">
+            <arg value="-buildfile" />
+            <arg value="${ant.file}" />
+            <arg value="-projecthelp" />
+        </java>
+    </target>
+<!-- Credentials task -->
+    <target name="credentials" description="Ask for user credentials">
+        <input addproperty="sf.username">Please enter sourceforge username:</input>
+        <input addproperty="project.version">Please enter project version:</input>
+    </target>
+<!-- Site deployment task -->
+    <target name="site-deploy" description="Deploy site to sourceforge" depends="credentials">
+        <exec command="rsync" inputstring="">
+            <arg value="-avtruP"/>
+            <arg value="-e ssh "/>
+            <arg value="target/site/"/>
+            <arg value="${sf.username},maltcms@web.sourceforge.net:htdocs/maven/cross/${project.version}"/>
+        </exec>
+    </target>
+</project>

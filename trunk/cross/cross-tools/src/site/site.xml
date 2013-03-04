@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : site.xml
+    Created on : 1. November 2011, 11:24
+    Author     : Nils Hoffmann
+    Description:
+        Base file for maven site documentation.
+-->
+<project xmlns="http://maven.apache.org/DECORATION/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd" name="${project.name}">
+    <body>
+        <breadcrumbs>
+            <item name="Cross" href="../index.html" />
+        </breadcrumbs>
+    	<menu name="${project.name}">
+            <item name="About ${project.name}" href="index.html" />
+            <!--<item name="Getting Started" href="gettingStarted.html" />-->
+        </menu>
+        <menu ref="reports"/>
+    </body>
+</project>

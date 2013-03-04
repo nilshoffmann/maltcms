@@ -1,0 +1,117 @@
+This is the Cross maven3 project.
+Within this directory, you will find all the submodules, which 
+make up Cross. 
+General configuration for all modules can be found within the 
+file pom.xml in the same directory as this README. Module-specific
+configuration can be found below each module's directory in the 
+corresponding pom.xml file. 
+
+Prerequisites for Cross:
+- Java JDK 6 (NOT JRE)
+  http://www.oracle.com/technetwork/java/javase/downloads/index.html
+- Maven 3
+  http://maven.apache.org/download.html
+- Ant 1.8.2 (site deployment)
+  http://ant.apache.org/
+
+Recommended:
+- Any IDE supporting maven 2/3 integration and subversion support
+  NetBeans 7
+  	http://netbeans.org/
+  Eclipse 3.7 (Indigo)
+  	http://eclipse.org/
+	(requires additional m2e plugin and 
+	 subclipse/subversive plugins)
+  IntelliJ Idea 10.5
+  	http://www.jetbrains.com/idea/
+
+OSGI:
+Cross is osgi-compatible since version 1.2.11. The cross-osgi module
+lists all required dependencies in its pom. So if you want to use cross 
+from osgi, start there. Otherwise, you can use the cross-main module directly.
+
+The remainder of this README contains task descriptions and the corresponding 
+commands required to perform those tasks. Tasks marked with '*' can only be 
+executed by registered developers. In order to register, you need to have a
+sourceforge account and apply for membership within the project maltcms.
+
+User registration:
+Create a new user name at
+https://sourceforge.net/user/registration
+
+Then, apply to join maltcms by sending a mail to the project admin with your
+sourceforge username:
+http://sourceforge.net/users/Nils Hoffmann/ 
+
+You will then receive access to the project's subversion repository as well as
+to the maltcms artifactory instance for artifact resolution (required for maven).
+
+Maven specifics:  
+Please note that contrary to usual maven behaviour, test execution is 
+currently disabled for default builds due to the long runtime of those.
+
+To enable test execution, call maven with the argument -Dmaven.test.skip=false.
+
+Additionally, due to the size of the project, it is not always possible to 
+call multiple maven targets within one call. So instead of calling 
+>mvn clean install 
+please use
+>mvn clean && mvn install
+
+Or issue three separate calls of maven from the command-line:
+>mvn clean
+>mvn install
+
+In order to build maltcms and have all tests run automatically, call:
+>mvn -Dmaven.test.skip=false install
+
+This will create a zip release of the project below maltcms-distribution/target.
+
+--------------------------------------------------------------------------------
+	Creating a release version *
+--------------------------------------------------------------------------------
+Prerequisites:
+Ensure that there are no SNAPSHOT dependencies to
+other modules. 
+
+License Headers:
+Check, that all new files all have the maltcms license header, provided 
+under maltcms-resources/src/main/resources/licenses/maltcmsLicenseHeader.txt 
+
+To add / update the license header, there is a nice plugin for the NetBeans IDE
+available: 
+	http://plugins.netbeans.org/plugin/17960/license-changer
+
+Svn keywords:
+Then, be sure to set the svn:keywords property recursively on the project. The 
+keywords should hold at least the 'Id' property. See the subversion manual for 
+more information: 
+	http://svnbook.red-bean.com/en/1.6/svn.advanced.props.special.keywords.html
+For short
+>svn propset -R svn:keywords "Id" *
+will set the 'Id' property on EVERY file below the current directory recursively.
+
+Creating a tagged release:
+1. Update local svn copy
+>svn update
+2. Commit local changes
+>svn commit
+3. Build Cross with all tests enabled
+>mvn -Dmaven.test.skip=false install
+If all tests succeed, continue, otherwise, correct errors and go back to 2.
+4. Prepare release
+Create a ssh shell 
+>ssh -t MYSOURCEFORGEUSERNAME,cross@shell.sf.net create
+>mvn release:prepare -Dusername=MYSOURCEFORGEUSERNAME =Dpassword=MYSOURCEFORGEPASSWD
+If everything looks fine:
+5. Perform release
+>mvn release:perform 
+6. Relax ;-)
+
+--------------------------------------------------------------------------------
+	Deploying a snapshot to the artifactory repository *
+--------------------------------------------------------------------------------
+
+>mvn deploy
+
+

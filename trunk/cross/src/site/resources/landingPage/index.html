@@ -1,0 +1,155 @@
+<!--
+Cross, common runtime object support system. 
+Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
+
+Project website: http://maltcms.sf.net
+
+Cross may be used under the terms of either the
+
+GNU Lesser General Public License (LGPL)
+http://www.gnu.org/licenses/lgpl.html
+
+or the
+
+Eclipse Public License (EPL)
+http://www.eclipse.org/org/documents/epl-v10.php
+
+As a user/recipient of Cross, you may choose which license to receive the code 
+under. Certain files or entire directories may not be covered by this 
+dual license, but are subject to licenses compatible to both LGPL and EPL.
+License exceptions are explicitly declared in all relevant files or in a 
+LICENSE file in the relevant directories.
+
+Cross is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
+for details.
+-->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Cross</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <!-- Le styles -->
+        <link href="../css/bootstrap.css" rel="stylesheet">
+        <style type="text/css">
+            body {
+                padding-top: 60px;
+                padding-bottom: 40px;
+            }
+        </style>
+        <link href="../css/bootstrap-responsive.css" rel="stylesheet">
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <!-- Fav and touch icons -->
+        <!--        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../ico/apple-touch-icon-144-precomposed.png">
+                <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../ico/apple-touch-icon-114-precomposed.png">
+                <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../ico/apple-touch-icon-72-precomposed.png">
+                <link rel="apple-touch-icon-precomposed" href="../ico/apple-touch-icon-57-precomposed.png">
+                <link rel="shortcut icon" href="../ico/favicon.png">-->
+    </head>
+
+    <body>
+
+        <div class="navbar navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="#">Cross</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li class="active"><a href="#">Home</a></li>
+                            <li><a href="../index.html">About</a></li>
+                            <li><a href="../team-list.html">Contact</a></li>
+                            <li><a class="externalLink" href="http://sourceforge.net/projects/maltcms/files/maltcms/">Downloads</a></li>
+                        </ul>
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+
+            <!-- Main hero unit for a primary marketing message or call to action -->
+            <div class="hero-unit">
+                <img class="featurette-image pull-right" style="max-width: 25%;" src="../images/cross-logo.png"/>
+                <h1>Cross</h1>
+                <p>Self-describing, reuseable parallel workflows in Java for everyday use <span class="muted">and for <a href="http://www.maltcms.de">Maltcms</a></span>.</p>
+                <p><a class="btn btn-primary btn-large" href="../index.html">See more &raquo;</a></p>
+            </div>
+
+            <!-- Example row of columns -->
+            <div class="row">
+                <div class="span4">
+                    <h2>Assembly</h2>
+                    <p>Workflows are assembled from a sequence of <em>fragment commands</em> using <a href="http://www.springframework.org">Spring</a> beans conventions. 
+                    <p><a class="btn" href="../index.html">View details &raquo;</a></p>
+                </div>
+                <div class="span4">
+                    <h2>Maven &AMP; OSGI support</h2>
+                    <p>Cross is built using Apache Maven. It is fully OSGI-enabled and deployable in OSGI-compatible containers like Apache Felix.</p>
+                    <p><a class="btn" href="../index.html">View details &raquo;</a></p>
+                </div>
+                <div class="span4">
+                    <h2>Parallel Execution</h2>
+                    <p>Using the <a href="http://sourceforge.net/projects/mpaxs">Mpaxs</a> framework, individual tasks 
+                        can be executed in parallel on a local computer or on a network by implementing <em>Callable</em> or <em>Runnable</em>.</p>
+                    <p><a class="btn" href="../index.html">View details &raquo;</a></p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="span4">
+                    <h2>Monitoring</h2>
+                    <p>The workflow monitors the creation of intermediate results and notifies registered clients of those changes.</p>
+                    <p><a class="btn" href="../index.html">View details &raquo;</a></p>
+                </div>
+                <div class="span4">
+                    <h2>Controlled Vocabulary</h2>
+                    <p>Variables can have a key name that is translated at runtime using any of the provided controlled vocabulary providers.</p>
+                    <p><a class="btn" href="../index.html">View details &raquo;</a></p>
+                </div>
+                <div class="span4">
+                    <h2>Efficient Data Structures</h2>
+                    <p>The primary persistent data format of Cross are netcdf binary files combined with in-memory and on-disk caching during file creation.</p>
+                    <p><a class="btn" href="../index.html">View details &raquo;</a></p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="span4">
+                    <h2>License</h2>
+                    <p>Cross is licensed under either the terms of the <br/>
+                        <span class="label label-info">Eclipse Public License v1</span><br/>
+                        or, at the licensee's choice, under the terms of the<br/>
+                        <span class="label label-info">GNU Lesser General Public License version 3</span> (L-GPL v3).</p>
+                    <p><a class="btn btn-primary" href="../license.html">View details &raquo;</a></p>
+                </div>
+            </div>
+            <hr>
+
+            <footer>
+                <p>&copy; Nils Hoffmann 2007-2012</p>
+            </footer>
+
+        </div> <!-- /container -->
+
+        <!-- Le javascript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="../js/jquery.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+    </body>
+</html>

@@ -1,0 +1,4 @@
+<h2>${project.artifactId}</h2>
+<p>This project provides caching abstractions for various specific caching implementations.
+Currently, there are implementations available for <a href="http://www.ehcache.org">Ehcache</a>, 
+a volatile cache based on soft references, and a default variant that uses simple HashMaps.</p>

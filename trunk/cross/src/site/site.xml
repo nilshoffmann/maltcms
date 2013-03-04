@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : site.xml
+    Created on : 1. November 2011, 11:24
+    Author     : Nils Hoffmann
+    Description:
+        Base file for maven site documentation.
+-->
+<project xmlns="http://maven.apache.org/DECORATION/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd" name="Cross">
+    <bannerLeft>
+        <name>Cross</name>
+        <src>images/ChromA4DSurface.png</src>
+        <href>http://maltcms.sf.net</href>
+    </bannerLeft>
+    <skin>
+	<groupId>org.apache.maven.skins</groupId>
+	<artifactId>maven-fluido-skin</artifactId>
+	<version>1.3.0</version>
+    </skin>
+    <custom>
+    	<fluidoSkin>
+      		<topBarEnabled>false</topBarEnabled>
+      		<sideBarEnabled>true</sideBarEnabled>
+		<sourceLineNumbersEnabled>true</sourceLineNumbersEnabled>
+    	</fluidoSkin>
+    </custom>
+    <publishDate position="right"/>
+    <version position="right" />
+	<!--
+    <publishDate position="right"/>
+    <version position="right"/>-->
+    <body>
+        <breadcrumbs>
+            <item name="Home" href="landingPage/index.html" />
+        </breadcrumbs>
+        <links>
+            <item name="Maltcms" href="http://maltcms.sf.net" />
+        </links>
+    	<menu name="Cross">
+            <item name="About Cross" href="index.html" />
+            <!--<item name="Getting Started" href="gettingStarted.html" />-->
+	    <item name="Release Notes" href="releaseNotes.html" />
+      	    <item name="API" href="./apidocs/index.html" />
+            <item name="Wiki" href="http://sf.net/p/maltcms/wiki" />
+            <item name="Bugs" href="http://sf.net/p/maltcms/maltcms-bugs" />
+            <item name="Support" href="http://sf.net/projects/maltcms/support" />
+        </menu>
+        <menu ref="modules" />
+
+        <menu ref="reports"/>
+<!--        <footer>-->
+           <!-- <span>
+                Copyright 2008-2012,
+            </span>-->
+<!--	    <ul class="inline">
+    		<li><a title="Contact" href="http://maltcms.sf.net/info/contact.html">Nils Hoffmann</a></li>
+		<li>Maltcms is hosted by <a title="Hosting by sourceforge.net" href="http://sourceforge.net/">sourceforge.net</a></li>
+		<li><a href="http://maven.apache.org">Built by Maven 3</a></li>
+    	    </ul>
+        </footer>-->
+    </body>
+</project>

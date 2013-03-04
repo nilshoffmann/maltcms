@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>cross</artifactId>
+        <groupId>net.sf.maltcms</groupId>
+        <version>1.2.12-SNAPSHOT</version>
+    </parent>
+    <artifactId>cross-cache</artifactId>
+    <packaging>jar</packaging>
+    <name>Cross Cache</name>
+    <dependencies>
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-core-osgi</artifactId>
+            <version>2.4.6</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>cross-test</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <properties>
+        <netbeans.hint.license>cross</netbeans.hint.license>
+    </properties>
+</project>
+

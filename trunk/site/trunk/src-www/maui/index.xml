@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content group="maui" ident="maui/index" nname="Getting Started" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
+<column id="content">
+            <h1>Maui - Maltcms User Interface</h1>
+            Maui is an application for visualization, exploration and processing of raw data from GC/LC-MS and GCxGC-MS experiments.
+            <h1>Release 1.1 (February 2013)</h1>
+            <h2>Available Features</h2>
+            <ul>
+                <li>chromatogram view (1D and 2D) with interactive selection of mass spectra and database query</li>
+                <li>integration of custom scripts for raw data and csv type data via Groovy</li>
+                <li>charting of csv and raw data</li>
+                <li>automatic download and pipeline import of Maltcms</li>
+                <li>import and visualization of Maltcms processing results</li>
+                <li>interactive peak exploration</li>
+                <li>manual refinement of peak lists</li>
+		<li>custom database definition from msp files (AMDIS,Maltcms)</li>
+		<li>mass spectral database search for peak identification, with retention indices</li>
+                <li>statistical evaluation of peak tables</li>
+<!--                <li>peak im-/export with <a href="http://meltdb.cebitec.uni-bielefeld.de">MeltDB</a></li>-->
+                <li>3D viewer with interactive peak exploration for 2D chromatograms based on <a href="http://code.google.com/p/jzy3d/">jzy3D</a></li>
+                <li>GNU-R integration</li>
+                <li>3D PCA viewer</li>
+                <li>pipeline runner for Maltcms</li>
+            </ul>
+	    <h2>Requirements</h2>
+	    <ul>
+		<li>Java Runtime Environment 1.6+</li>
+		<li>GNU R > 2.14</li>
+		<li>Rserve</li>
+	    </ul>
+	    <h2>1.1 Downloads</h2>
+	    <ul>
+		<li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.1/maui-windows.exe">Windows</li>
+		<li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.1/maui-linux.sh">Linux</li>
+		<li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.1/maui-macosx.tgz">MacOS X</li>
+		<li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.1/maui-solaris.sh">Solaris</li>
+		<li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.1/maui.zip">Platform independent zip</li>
+	    </ul>
+	    <h1>Deprecated Downloads</h1>
+            <h2>1.0 beta2 Downloads</h2>
+            <ul>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta2/maui-windows.exe">Windows</a></li>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta2/maui-linux.sh">Linux</a></li>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta2/maui-macosx.tgz">MacOS X</a></li>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta2/maui-solaris.sh">Solaris</a></li>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta2/maui.zip">Platform independent zip</a></li>
+            </ul>
+            <h2>1.0 beta Downloads</h2>
+            <ul>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta/maui-windows.exe">Windows</a></li>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta/maui-linux.sh">Linux</a></li>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta/maui-macosx.tgz">MacOS X</a></li>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta/maui-solaris.sh">Solaris</a></li>
+                <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta/maui.zip">Platform independent zip</a></li>
+            </ul>
+</column>
+</content>

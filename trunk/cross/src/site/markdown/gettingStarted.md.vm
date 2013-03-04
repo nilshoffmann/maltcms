@@ -1,0 +1,26 @@
+Welcome to Cross
+================
+
+Cross, the _Common Runtime Object Support System_ is a Java API
+for definition, creation and execution of linear workflows.
+
+A workflow in Cross is made up of a sequence of _fragment command_
+objects that use _file fragments_ as their in- and output type.
+The number of in- and output _file fragments_ processed by a
+_fragment command_ can differ, thus allowing _map-reduce_-like processing
+schemes or generally schemes with different or equal parities.
+
+A _passive_ fragment command does not need to create _file fragments_ itself,
+while an _active_ fragment command may create an arbitrary number of _file fragments_.
+
+A _file fragment_ is an aggregation of _variable_ objects, defined by a
+storage location URI. _File fragment_ objects may reference an arbitrary
+number of _source files_, thereby allowing virtual aggregation of processing
+result variables of previous fragment commands. _Shadowing_ allows _file fragments_
+to hide the existence of an upstream variable of the same name from downstream
+_file fragments_.
+
+Workflows in Cross are self-descriptive and repeatable. The basic configuration
+of all workflow elements is performed using a Spring Application Context and
+Spring Beans - based xml configuration, supplemented by runtime properties.
+
