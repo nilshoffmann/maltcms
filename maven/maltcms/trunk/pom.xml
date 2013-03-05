@@ -569,7 +569,7 @@
         <module>maltcms-evaluation</module>
         <module>maltcms-distribution</module>
         <module>maltcms-osgi-distribution</module>
-		<module>maltcms-nbm-aggregator</module>
+		<module>maltcms-nbm</module>
         <module>maltcms-cv</module>
     </modules>
     <dependencies>
