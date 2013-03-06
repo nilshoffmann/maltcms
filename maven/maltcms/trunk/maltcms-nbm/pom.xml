@@ -32,6 +32,7 @@
 						<publicPackage>org.codehaus.groovy.*</publicPackage>
 						<publicPackage>ucar.*</publicPackage>
 						<publicPackage>thredds.*</publicPackage>
+						<publicPackage>org.jfree.*</publicPackage>
                     </publicPackages>
 					<codeNameBase>net.sf.maltcms.nbm</codeNameBase>
 					<moduleType>autoload</moduleType>
@@ -215,11 +216,34 @@
             </exclusions>
         </dependency>
         <dependency>
-            <artifactId>org-openide-util-lookup-osgi</artifactId>
-            <groupId>org.netbeans.api</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <groupId>javax.xml.bind</groupId>
             <type>jar</type>
-            <version>7.1.0</version>
-			<scope>provided</scope>
+            <version>2.1</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>stax-api</artifactId>
+                    <groupId>javax.xml.stream</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <artifactId>jaxb-impl</artifactId>
+            <groupId>com.sun.xml.bind</groupId>
+            <type>jar</type>
+            <version>2.1.12</version>
+        </dependency>
+        <dependency>
+            <artifactId>jaxb-xjc</artifactId>
+            <groupId>com.sun.xml.bind</groupId>
+            <type>jar</type>
+            <version>2.1.7</version>
+        </dependency>
+        <dependency>
+            <artifactId>activation</artifactId>
+            <groupId>javax.activation</groupId>
+            <type>jar</type>
+            <version>1.1</version>
         </dependency>
     </dependencies>
 </project>

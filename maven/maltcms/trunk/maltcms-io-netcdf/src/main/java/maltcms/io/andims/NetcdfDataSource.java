@@ -158,9 +158,9 @@ public class NetcdfDataSource implements IDataSource {
             throw new RuntimeException("Could not determine File extension of "
                     + ff);
         }
-        final String filename = ff.getName();
+        final String filename = ff.getName().toLowerCase();
         for (final String s : this.fileEnding) {
-            if (filename.toLowerCase().endsWith(s)) {
+            if (filename.endsWith(s)) {
                 return 1;
             }
         }

@@ -313,7 +313,17 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-io-xlsx</artifactId>
             <version>${project.version}</version>
-        </dependency>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>xml-apis</artifactId>
+		   <groupId>xml-apis</groupId>
+		  </exclusion>
+		  <exclusion>
+		   <artifactId>stax-api</artifactId>
+		   <groupId>stax</groupId>
+		  </exclusion>
+		 </exclusions>
+		</dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-evaluation</artifactId>

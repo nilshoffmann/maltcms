@@ -92,11 +92,11 @@ public class MZDataDataSource implements IDataSource {
     @Override
     public int canRead(final IFileFragment ff) {
         final int dotindex = ff.getName().lastIndexOf(".");
-        final String filename = ff.getName().toLowerCase();
         if (dotindex == -1) {
             throw new RuntimeException("Could not determine File extension of "
                     + ff);
         }
+		final String filename = ff.getName().toLowerCase();
         for (final String s : this.fileEnding) {
             if (filename.endsWith(s)) {
                 return 1;

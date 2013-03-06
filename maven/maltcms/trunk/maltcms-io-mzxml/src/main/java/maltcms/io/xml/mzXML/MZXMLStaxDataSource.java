@@ -99,15 +99,18 @@ public class MZXMLStaxDataSource implements IDataSource {
      */
     public int canRead(final IFileFragment ff) {
         final int dotindex = ff.getName().lastIndexOf(".");
-        final String filename = ff.getName().toLowerCase();
-        getParser(ff);
         if (dotindex == -1) {
             throw new RuntimeException("Could not determine File extension of "
                     + ff);
         }
+		final String filename = ff.getName().toLowerCase();
         for (final String s : this.fileEnding) {
             if (filename.endsWith(s)) {
-                return 1;
+				MSXMLParser parser = getParser(ff);
+				if(parser!=null) {
+					return 1;
+				}
+//                return 1;
             }
         }
         log.debug("no!");
