@@ -21,19 +21,19 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<!-- set this to project.version to stay in sync -->
-			<version>${project.version}</version>
+			<version>3.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<!-- set this to project.version to stay in sync -->
-			<version>${project.version}</version>
+			<version>3.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml-schemas</artifactId>
 			<!-- set this to project.version to stay in sync -->
-			<version>${project.version}</version>
+			<version>3.9</version>
 		</dependency>
 		<dependency>
 			<artifactId>xml-apis</artifactId>

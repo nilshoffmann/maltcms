@@ -21,7 +21,7 @@
 			<groupId>net.sourceforge.jexcelapi</groupId>
 			<artifactId>jxl</artifactId>
 			<!-- set this to project.version to stay in sync -->
-			<version>${project.version}</version>
+			<version>2.6.12</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>log4j</artifactId>
