@@ -442,9 +442,9 @@
                 <scope>runtime</scope>
             </dependency>
             <dependency>
-                <groupId>org.apache.log4j</groupId>
-                <artifactId>com.springsource.org.apache.log4j</artifactId>
-                <version>1.2.16</version>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.17</version>
             </dependency>
             <dependency>
                 <artifactId>sun-drmaa-impl-osgi</artifactId>
@@ -616,6 +616,39 @@
             </dependency>
             <dependency>
                 <groupId>net.sf.mpaxs</groupId>
+                <artifactId>mpaxs-api</artifactId>
+                <version>${version.mpaxs}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>slf4j-jdk14</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.mpaxs</groupId>
+                <artifactId>mpaxs-computeHost</artifactId>
+                <version>${version.mpaxs}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>slf4j-jdk14</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.mpaxs</groupId>
+                <artifactId>mpaxs-drmaa-spi</artifactId>
+                <version>${version.mpaxs}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>slf4j-jdk14</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.mpaxs</groupId>
                 <artifactId>mpaxs-spi</artifactId>
                 <version>${version.mpaxs}</version>
                 <exclusions>
@@ -658,10 +691,10 @@
             <groupId>org.projectlombok</groupId> 
             <artifactId>lombok</artifactId> 
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util-lookup-osgi</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -673,10 +706,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>com.springsource.org.apache.commons.io</artifactId>
         </dependency>
     </dependencies>
     
