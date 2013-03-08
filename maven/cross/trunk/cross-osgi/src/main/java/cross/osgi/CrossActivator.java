@@ -28,12 +28,8 @@
 package cross.osgi;
 
 import cross.Factory;
-import cross.IObjectFactory;
-import cross.commands.fragments.IFragmentCommand;
-import cross.vocabulary.ICvResolver;
 import java.util.Dictionary;
 import java.util.Properties;
-import java.util.ServiceLoader;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.PropertyConfigurator;
 import org.osgi.framework.BundleActivator;
