@@ -19,7 +19,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math</artifactId>
-            <version>2.2</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -29,7 +28,6 @@
         <dependency>
             <groupId>acs.lbl.gov</groupId>
             <artifactId>colt-osgi</artifactId>
-            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -45,12 +43,10 @@
         <dependency>
             <groupId>org.apache.batik</groupId>
             <artifactId>com.springsource.org.apache.batik.dom.svg</artifactId>
-            <version>1.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.batik</groupId>
             <artifactId>com.springsource.org.apache.batik.svggen</artifactId>
-            <version>1.7.0</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -60,13 +56,19 @@
         <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart-osgi</artifactId>
-            <version>1.0.13</version>
         </dependency>
         <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jcommon-osgi</artifactId>
-            <version>1.0.16</version>
         </dependency>
+		<dependency>
+			<groupId>javax.media.jai</groupId>
+			<artifactId>com.springsource.javax.media.jai.codec</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.media.jai</groupId>
+			<artifactId>com.springsource.javax.media.jai.core</artifactId>
+		</dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

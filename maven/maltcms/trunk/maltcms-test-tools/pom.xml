@@ -490,61 +490,29 @@
     <dependencies>
         <dependency>
             <groupId>net.sf.maltcms</groupId>
-            <artifactId>cross-main</artifactId>
-            <version>1.2.12-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>log4j</artifactId>
-                    <groupId>log4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>slf4j-jdk14</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.maltcms</groupId>
-            <artifactId>cross-ui</artifactId>
-            <version>1.2.12-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>log4j</artifactId>
-                    <groupId>log4j</groupId>
-                </exclusion>
-            </exclusions>
+            <artifactId>cross-osgi</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>0.10.6</version>
-            <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.1</version>
             <scope>compile</scope>
         </dependency>
+		<!-- scopes below are set to compile since we create classes used for testing,
+			 scope is defined as 'test' in parent pom -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>cross-test</artifactId>
-            <version>1.2.12-SNAPSHOT</version>
+			<scope>compile</scope>
         </dependency>
     </dependencies>
     <properties>

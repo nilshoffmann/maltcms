@@ -327,6 +327,7 @@
                             <!-- simpler configuration without reportSets available for usual cases -->
                             <reports>
                                 <report>dependencies</report>
+                                <report>dependency-convergence</report>
                                 <report>project-team</report>
                                 <report>mailing-list</report>
                                 <report>issue-tracking</report>
