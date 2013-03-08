@@ -112,6 +112,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 		log.info("Initializing AgilentPeakReportDataSource");
 		varnameToMapping.put("scan_acquisition_time", new Mapping("IntResults1", "RetTime", DataType.DOUBLE));
 		varnameToMapping.put("total_intensity", new Mapping("IntResults1", "Area", DataType.DOUBLE));
+		varnameToMapping.put("peak_area", new Mapping("IntResults1", "Area", DataType.DOUBLE));
 		varnameToMapping.put("intensity_values", new Mapping("IntResults1", "Area", DataType.DOUBLE));
 	}
 
@@ -298,6 +299,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 		addIfNew("intensity_values", f);
 		addIfNew("mass_range_min", f);
 		addIfNew("mass_range_max", f);
+		addIfNew("peak_area", f);
 		int scanNumber = getNumberOfPeaks(w, getMapping(f.getChild("scan_acquisition_time")));
 		for (IVariableFragment ivf : f) {
 			l.add(createArray(ivf, f, w));

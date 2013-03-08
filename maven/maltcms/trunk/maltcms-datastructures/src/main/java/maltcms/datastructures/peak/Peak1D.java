@@ -379,7 +379,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
                 p.setNormalizationMethods(normalizationMethodsString);
                 double normalizedArea = p.getArea();
                 for (IPeakNormalizer normalizer : peakNormalizers) {
-                    normalizedArea *= normalizer.getNormalizationFactor(ff, p);
+                    normalizedArea *= normalizer.getNormalizationFactor(ff, i);
                 }
                 areaNormalized.setDouble(i++, normalizedArea);
                 p.setNormalizedArea(normalizedArea);
