@@ -7,7 +7,7 @@
 		<groupId>net.sf.maltcms</groupId>
 		<version>1.2.1-SNAPSHOT</version>
 	</parent>
-	<groupId>org.apache.poi</groupId>
+<!--	<groupId>org.apache.poi</groupId>-->
 	<artifactId>poi-osgi</artifactId>
 	<!--<version>3.9</version>-->
 	<name>POI OSGI</name>

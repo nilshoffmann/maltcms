@@ -139,7 +139,7 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.jexcelapi</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jxl-osgi</artifactId>
 			<version>${project.version}</version>
         </dependency>

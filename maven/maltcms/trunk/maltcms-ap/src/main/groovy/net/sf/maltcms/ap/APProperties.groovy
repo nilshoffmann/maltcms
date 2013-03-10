@@ -87,6 +87,8 @@ class APProperties {
         pca.peakAreaVariable = u.convString(props["peakCliqueAlignment.peakAreaVariable"],"peak_area_normalized")
         mr.arguments = u.convString(props["maltcmsRuntime.arguments"],"-Xmx1G")
         mr.parallelThreads = u.convInteger(props["maltcmsRuntime.parallelThreads"],1)
+		mr.pipelineMode = u.convString(props["maltcmsRuntime.pipelineMode"],"ap")
+		mr.pipelineFile = new File(u.convString(props["maltcmsRuntime.pipelineFile"],new File(System.getProperty("ap.home"),"${mr.pipelineMode}.properties").absolutePath))
     }
 
     public void save() {
@@ -113,6 +115,8 @@ class APProperties {
         props["peakCliqueAlignment.peakAreaVariable"] = pca.peakAreaVariable.toString()
         props["maltcmsRuntime.arguments"] = mr.arguments.toString()
         props["maltcmsRuntime.parallelThreads"] = mr.parallelThreads.toString()
+		props["maltcmsRuntime.pipelineMode"] = mr.pipelineMode.toString()
+		props["maltcmsRuntime.pipelineFile"] = mr.pipelineFile.absolutePath
         f.withOutputStream {
             stream -> props.store(stream, "maltcms-ap parameters")
         }

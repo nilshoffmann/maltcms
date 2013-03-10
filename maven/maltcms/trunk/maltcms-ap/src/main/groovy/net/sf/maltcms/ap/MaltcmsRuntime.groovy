@@ -39,5 +39,25 @@ import groovy.beans.Bindable
 class MaltcmsRuntime {
     String arguments = "-Xmx1G"
     Integer parallelThreads = 1
+	String pipelineMode = "ap"
+	File pipelineFile = new File(System.getProperty("ap.home"),"cfg/ap.properties")
+	Map activePanels = [
+		"ap"		:
+			[
+				"importTab",
+				"preprocessingTab",
+				"peakDetectionTab",
+				"peakNormalizationTab",
+				"peakAlignmentTab",
+				"maltcmsTab"
+			],
+		"ap-direct" :
+			[
+				"importTab",
+				"peakNormalizationTab",
+				"peakAlignmentTab",
+				"maltcmsTab"
+			]
+	]
 }
 

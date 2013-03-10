@@ -31,6 +31,7 @@ import javax.swing.JTextArea
 import java.util.concurrent.Executors
 import java.util.concurrent.ExecutorService
 import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 
 /**
  *
@@ -43,6 +44,7 @@ class MaltcmsExecution {
     String inputFiles
     File outputBaseDir = new File(System.getProperty("user.dir"),"ap-output")
     File workingDirectory = new File(System.getProperty("user.dir"))
+	File apProperties = null
     ExecutorService es = Executors.newSingleThreadExecutor()
     String arguments = "-Xmx1G"
     Integer parallelThreads = 1
@@ -54,7 +56,10 @@ class MaltcmsExecution {
             textArea.setText("")
             File outputDir = getOutputDir(outputBaseDir)
             File apDir = new File(System.getProperty("ap.home"))
-            File apProperties = new File(apDir,"cfg/ap.properties")
+			if(apProperties==null) {
+				apProperties = new File(apDir,"cfg/ap.properties")
+			}
+			println "Using pipeline ${apProperties}"
             File apParameters = new File(System.getProperty("user.dir"),"ap-parameters.properties")
             File maltcmsDir = new File(System.getProperty("maltcms.home"))
             def commandLine = ["java"]

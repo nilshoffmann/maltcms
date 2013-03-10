@@ -58,7 +58,7 @@ MaltcmsExecution execution = null
 SwingBuilder swing = new SwingBuilder()
 swing.lookAndFeel('system')
 
-def importTab = swing.panel(constraints: BL.CENTER, name: "Import", alignmentY: java.awt.Component.TOP_ALIGNMENT, alignmentX: java.awt.Component.LEFT_ALIGNMENT) {
+def importTab = swing.panel(constraints: BL.CENTER, id: "importTab", name: "Import", alignmentY: java.awt.Component.TOP_ALIGNMENT, alignmentX: java.awt.Component.LEFT_ALIGNMENT) {
     tableLayout(cellpadding: 5) {
         tr {
             td(colspan: 4, colfill: true, align: "LEFT") {
@@ -75,20 +75,54 @@ def importTab = swing.panel(constraints: BL.CENTER, name: "Import", alignmentY: 
             }
             td(colfill: true, align: "LEFT") {
                 button("...", id: "fileButton", actionPerformed: {
-                        def fc = new JFileChooser(dialogTitle:"Select input files",multiSelectionEnabled: true,
-                            fileFilter:[getDescription: {-> "*.cdf"}, accept:{file-> file ==~ /.*?\.cdf/ ||
-                                    file ==~ /.*?\.CDF/ ||
-                                    file.isDirectory() }] as javax.swing.filechooser.FileFilter)
-                        fc.currentDirectory = userProps.lastDirectory
-                        def retval = fc.showOpenDialog()
-                        if(retval == JFileChooser.APPROVE_OPTION) {
-                            if(fc.getSelectedFiles().length>0) {
-                                userProps.lastDirectory = fc.getSelectedFiles()[0].getParentFile()
-                            }
-                            List files = fc.getSelectedFiles().collect{
-                                file -> file.path
+                        def fc = new java.awt.FileDialog(mainFrame, "Select input files", java.awt.FileDialog.LOAD)
+						fc.directory=userProps.lastDirectory
+//							fileSelectionMode: JFileChooser.FILES_AND_DIRECTORIES,
+//							multiSelectionEnabled : true,
+						fc.multipleMode = true
+                        fc.filenameFilter = new FilenameFilter() {
+							public boolean accept(File file, String name) {
+								if(file.isDirectory()) {
+									return true
+								}
+								return (
+									name ==~ /.*?\.cdf/ ||
+                                    name ==~ /.*?\.CDF/ || 
+									name ==~ /.*?\.D/ || 
+									name ==~ /.*?\.d/
+                                    )
+							}
+						}
+                        //fc.currentDirectory = userProps.lastDirectory
+//						fc.fileSelectionMode = JFileChooser.FILES_AND_DIRECTORIES
+						
+                        fc.show()
+						def selectedFiles = fc.getFiles()
+                        if(selectedFiles.length>0) {
+							String mode = "ap"
+                            userProps.lastDirectory = selectedFiles[0].getParentFile()
+                            List files = selectedFiles.collect{
+                                file -> 
+								if(file.name.toLowerCase().endsWith(".d")) {
+									println "Using direct pipeline mode on preexisting peaks!"
+									mode = "ap-direct"
+								}else{
+									println "Using full pipeline mode with custom peakfinding!"
+								}
+								file.path
                             }
                             inputFiles.text = files.join(",")
+							pipelineMode.text = mode
+							props.mr.pipelineFile = new File(System.getProperty("ap.home"),"cfg/${mode}.properties")
+							println "Active panels: ${props.mr.activePanels[mode]}"
+							if(mode=="ap") {
+								
+//								props.mr.activePanels["ap-direct"].values().each{ ita -> ita.enabled = false}
+//								props.mr.activePanels[mode].values().each{ ita -> ita.enabled = true}
+							} else {
+//								props.mr.activePanels["ap"].values().each{ ita -> ita.enabled = false}
+//								props.mr.activePanels[mode].values().each{ ita -> ita.enabled = true}
+							}
                         }
                     })
             }
@@ -99,6 +133,29 @@ def importTab = swing.panel(constraints: BL.CENTER, name: "Import", alignmentY: 
                 separator()
             }
         }
+        tr {
+			td(colspan: 4, colfill: true, align: "LEFT") {
+                label "<html><u>Pipeline Mode</u>:</html>"
+            }
+		}
+		tr {
+			td(colfill: false, align: "RIGHT") {label "Mode"}
+			td(colspan: 3, colfill: true, align: "LEFT") {
+				textField(id: "pipelineMode", columns: 20, toolTipText: "Operating mode of this pipeline, either ap (w/ peakfinding) or ap-direct (w/ imported peaks)", editable: false)
+				bind(source: pipelineMode, sourceProperty: "value", target: props.mr, targetProperty: "pipelineMode",
+					mutual:true)
+			}
+		}
+    }
+}
+
+def processMonitorTextArea = swing.textArea(id: "processMonitorTextArea", editable: false)
+
+/*
+ * Tab for preprocessing settings
+ */
+def preprocessingTab = swing.panel(constraints: BL.CENTER, id: "preprocessingTab", name: "Preprocessing", alignmentY: java.awt.Component.TOP_ALIGNMENT, alignmentX: java.awt.Component.LEFT_ALIGNMENT) {
+    tableLayout(cellpadding: 5) {
         tr {
             td(colspan: 4, colfill: true, align: "LEFT") {
                 label "<html><u>Scan Extractor</u>:</html>"
@@ -132,14 +189,12 @@ def importTab = swing.panel(constraints: BL.CENTER, name: "Import", alignmentY: 
     }
 }
 
-def processMonitorTextArea = swing.textArea(id: "processMonitorTextArea", editable: false)
-
 /*
- * Tab for preprocessing settings
+ * Tab for peak detection settings
  */
-def preprocessingTab = swing.panel(constraints: BL.CENTER, name: "Preprocessing", alignmentY: java.awt.Component.TOP_ALIGNMENT, alignmentX: java.awt.Component.LEFT_ALIGNMENT) {
+def peakDetectionTab = swing.panel(constraints: BL.CENTER, id: "peakDetectionTab", name:"Peak Detection", alignmentY: java.awt.Component.TOP_ALIGNMENT, alignmentX: java.awt.Component.LEFT_ALIGNMENT) {
     tableLayout(cellpadding: 5) {
-        tr {
+		tr {
             td(colspan: 4, colfill: true, align: "LEFT") {
                 label "<html><u>Savitzky-Golay Filter</u>:</html>"
             }
@@ -191,14 +246,12 @@ def preprocessingTab = swing.panel(constraints: BL.CENTER, name: "Preprocessing"
                     targetProperty: "robustnessIterations", mutual: true)
             }
         }
-    }
-}
-
-/*
- * Tab for peak detection settings
- */
-def peakDetectionTab = swing.panel(constraints: BL.CENTER, name:"Peak Detection", alignmentY: java.awt.Component.TOP_ALIGNMENT, alignmentX: java.awt.Component.LEFT_ALIGNMENT) {
-    tableLayout(cellpadding: 5) {
+		tr {
+            td(colfill: true) {hglue()}
+            td(colspan: 3, colfill: true) {
+                separator()
+            }
+        }
         tr {
             td(colspan: 4, colfill: true, align: "LEFT") {
                 label "<html><u>Peak Finder</u>:</html>"
@@ -242,12 +295,11 @@ def peakDetectionTab = swing.panel(constraints: BL.CENTER, name:"Peak Detection"
                     targetProperty: "saveGraphics", mutual: true)
             }
         }
-        tr {
-            td(colfill: true) {hglue()}
-            td(colspan: 3, colfill: true) {
-                separator()
-            }
-        }
+    }
+}
+
+def peakNormalizationTab = swing.panel(constraints: BL.CENTER, id: "peakNormalizationTab", name:"Peak Normalization", alignmentY: java.awt.Component.TOP_ALIGNMENT, alignmentX: java.awt.Component.LEFT_ALIGNMENT) {
+    tableLayout(cellpadding: 5) {
         tr {
             td(colspan: 4, colfill: true, align: "LEFT") {
                 label "<html><u>Peak Normalizer</u>:</html>"
@@ -267,7 +319,7 @@ def peakDetectionTab = swing.panel(constraints: BL.CENTER, name:"Peak Detection"
 /*
  * Tab for peak alignment settings
  */
-def peakAlignmentTab = swing.panel(constraints: BL.CENTER, name:"Peak Alignment", alignmentY: java.awt.Component.TOP_ALIGNMENT, alignmentX: java.awt.Component.LEFT_ALIGNMENT) {
+def peakAlignmentTab = swing.panel(constraints: BL.CENTER, id:"peakAlignmentTab", name:"Peak Alignment", alignmentY: java.awt.Component.TOP_ALIGNMENT, alignmentX: java.awt.Component.LEFT_ALIGNMENT) {
     tableLayout(cellpadding: 5) {
         tr {
             td(colspan: 4, colfill: true, align: "LEFT") {
@@ -345,7 +397,7 @@ def peakAlignmentTab = swing.panel(constraints: BL.CENTER, name:"Peak Alignment"
 /*
  * Tab for maltcms runtime settings
  */
-def maltcmsRuntimeTab = swing.panel(constraints: BL.CENTER, name:"Maltcms", alignmentY: java.awt.Component.TOP_ALIGNMENT, alignmentX: java.awt.Component.LEFT_ALIGNMENT) {
+def maltcmsRuntimeTab = swing.panel(constraints: BL.CENTER, id: "maltcmsTab", name:"Maltcms", alignmentY: java.awt.Component.TOP_ALIGNMENT, alignmentX: java.awt.Component.LEFT_ALIGNMENT) {
     tableLayout(cellpadding: 5) {
         tr {
             td(colspan: 4, colfill: true, align: "LEFT") {
@@ -375,6 +427,22 @@ def maltcmsRuntimeTab = swing.panel(constraints: BL.CENTER, name:"Maltcms", alig
     }
 }
 
+//def tabbedPane = swing.tabbedPane(id: "tabbedPane") {
+//	widget(importTab)
+//	widget(preprocessingTab)
+//	widget(peakDetectionTab)
+//	widget(peakNormalizationTab)
+//	widget(peakAlignmentTab)
+//	widget(maltcmsRuntimeTab)
+//}
+//
+//def apDirectTabbedPane = swing.tabbedPane(id: "apDirectTabbedPane") {
+//	widget(importTab)
+//	widget(peakNormalizationTab)
+//	widget(peakAlignmentTab)
+//	widget(maltcmsRuntimeTab)
+//}
+
 /*
  * Content panel
  */
@@ -382,13 +450,14 @@ def contentPanel = swing.panel(constraints: BL.CENTER, border: swing.emptyBorder
     tableLayout(cellpadding: 1) {
         tr {
             td(colspan: 2, colfill: true, rowfill: true, align: "LEFT") {
-                tabbedPane() {
-                    widget(importTab)
-                    widget(preprocessingTab)
-                    widget(peakDetectionTab)
-                    widget(peakAlignmentTab)
-                    widget(maltcmsRuntimeTab)
-                }
+                tabbedPane(id: "tabbedPane") {
+					widget(importTab)
+					widget(preprocessingTab)
+					widget(peakDetectionTab)
+					widget(peakNormalizationTab)
+					widget(peakAlignmentTab)
+					widget(maltcmsRuntimeTab)
+				}
             }
             td(colspan: 1, colfill: true, rowfill: true, rowspan: 10) {
                 panel(border: titledBorder("Maltcms Output")) {
@@ -407,17 +476,17 @@ def contentPanel = swing.panel(constraints: BL.CENTER, border: swing.emptyBorder
  */
 def buttonPanel = swing.panel(constraints: BL.SOUTH, id: "buttonPanel") {
     button("Load Defaults", actionPerformed: {
-        props.load(new File(System.getProperty("ap.home"),"cfg/ap-defaultParameters.properties"))
-    })
+			props.load(new File(System.getProperty("ap.home"),"cfg/ap-defaultParameters.properties"))
+		})
     separator(orientation: javax.swing.SwingConstants.VERTICAL)
     button("Save", actionPerformed: {
-        props.save()
-        userProps.save()
-    })
+			props.save()
+			userProps.save()
+		})
     button("Reload", actionPerformed: {
-        props.load()
-        userProps.load()
-    })
+			props.load()
+			userProps.load()
+		})
     separator(orientation: javax.swing.SwingConstants.VERTICAL)
     button("Start", actionPerformed: {
             props.save()
@@ -428,7 +497,7 @@ def buttonPanel = swing.panel(constraints: BL.SOUTH, id: "buttonPanel") {
             }
             if(execution==null) {
                 println "Creating new MaltcmsExecution"
-                execution = new MaltcmsExecution(textArea: processMonitorTextArea, inputFiles: props.ifiles.files, arguments: props.mr.arguments, parallelThreads: props.mr.parallelThreads)//, //workingDirectory: props.wdir)
+                execution = new MaltcmsExecution(textArea: processMonitorTextArea, inputFiles: props.ifiles.files, arguments: props.mr.arguments, parallelThreads: props.mr.parallelThreads, apProperties: props.mr.pipelineFile)//, //workingDirectory: props.wdir)
             }
             execution.start()
         })

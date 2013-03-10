@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Maltcms, modular application toolkit for chromatography-mass spectrometry.
+Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+
+Project website: http://maltcms.sf.net
+
+Maltcms may be used under the terms of either the
+
+GNU Lesser General Public License (LGPL)
+http://www.gnu.org/licenses/lgpl.html
+
+or the
+
+Eclipse Public License (EPL)
+http://www.eclipse.org/org/documents/epl-v10.php
+
+As a user/recipient of Maltcms, you may choose which license to receive the code
+under. Certain files or entire directories may not be covered by this
+dual license, but are subject to licenses compatible to both LGPL and EPL.
+License exceptions are explicitly declared in all relevant files or in a
+LICENSE file in the relevant directories.
+
+Maltcms is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
+for details.
+-->
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <description>
+        This file defines elements of the default ChromA pipeline.
+    </description>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>${configLocation}</value>
+        </property>
+    </bean>
+
+    <!-- a command pipeline consists a list of
+    commands to be executed -->
+    <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
+        <property name="checkCommandDependencies" value="false"/>
+        <property name="commands">
+            <list>
+				<ref bean="denseArrayProducer" />
+				<ref bean="peakAreaNormalizer" />
+                <ref bean="peakCliqueAlignment" />
+            </list>
+        </property>
+    </bean>
+    <!-- commands -->
+
+    <!-- DenseArrayProducer, creates a dense profile matrix -->
+    <bean id="denseArrayProducer" class="maltcms.commands.fragments.preprocessing.DenseArrayProducer">
+        <property name="maskedMasses">
+            <list>
+                <!-- <value>73</value> -->
+                <!-- <value>74</value> -->
+                <!-- <value>75</value> -->
+                <!-- <value>147</value> -->
+                <!-- <value>148</value> -->
+                <!-- <value>149</value> -->
+            </list>
+        </property>
+        <property name="invertMaskedMasses" value="false"/>
+        <property name="normalizeScans" value="true"/>
+        <property name="normalizeMeanVariance" value="false"/>
+        <property name="massBinResolution" value="1.0d"/>
+    </bean>
+
+	<bean id="peakAreaNormalizer" class="maltcms.commands.fragments.peakfinding.PeakAreaNormalizer">
+		<property name="peakNormalizers">
+            <list>
+                <ref bean="ticAreaNormalizer"/>
+            </list>
+        </property>
+	</bean>
+
+    <bean id="ticAreaNormalizer" class="maltcms.datastructures.peak.normalization.TicAreaNormalizer">
+        <!-- use either total_intensity or total_intensity_filtered -->
+        <property name="ticVariableName" value="${ticAreaNormalizer.ticVariableName}"/>
+    </bean>
+
+    <bean id="gaussianDifferenceSimilarity" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity" scope="prototype">
+        <property name="tolerance" value="${gaussianDifferenceSimilarity.tolerance}"/>
+        <property name="threshold" value="${gaussianDifferenceSimilarity.threshold}"/>
+    </bean>
+
+    <!-- array similarity functions -->
+    <bean id="cosineSimilarity" class="maltcms.math.functions.similarities.ArrayCos" scope="prototype"/>
+    <bean id="lpSimilarity" class="maltcms.math.functions.similarities.ArrayLp" scope="prototype"/>
+
+    <!-- time penalized functions -->
+    <bean id="timePenalizedSimilarity" class="maltcms.math.functions.ProductSimilarity" scope="prototype">
+        <property name="scalarSimilarities">
+            <array>
+                <ref bean="gaussianDifferenceSimilarity"/>
+            </array>
+        </property>
+        <property name="arraySimilarities">
+            <array>
+                <ref bean="cosineSimilarity"/>
+            </array>
+        </property>
+    </bean>
+
+    <bean id="workerFactory" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.WorkerFactory" scope="prototype">
+        <property name="maxRTDifference" value="${peakCliqueAlignment.maxRTDifference}"/>
+        <property name="similarityFunction" ref="timePenalizedSimilarity"/>
+        <property name="assumeSymmetricSimilarity" value="true"/>
+    </bean>
+
+    <bean id="peakFactory1D" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak1DFactory" scope="prototype">
+        <property name="peakAreaVar" value="peak_area_normalized"/>
+    </bean>
+
+    <!-- PeakCliqueAlignment -->
+    <bean id="peakCliqueAlignment" class="maltcms.commands.fragments.alignment.PeakCliqueAlignment">
+        <property name="workerFactory" ref="workerFactory"/>
+        <property name="useSparseArrays" value="false"/>
+        <property name="minCliqueSize" value="${peakCliqueAlignment.minCliqueSize}"/>
+        <property name="maxBBHErrors" value="0"/>
+        <property name="savePeakSimilarities" value="false"/>
+        <property name="useUserSuppliedAnchors" value="false"/>
+        <property name="saveXMLAlignment" value="true"/>
+        <property name="savePlots" value="false"/>
+        <property name="saveUnmatchedPeaks" value="false"/>
+        <property name="saveUnassignedPeaks" value="false"/>
+        <property name="saveIncompatiblePeaks" value="false"/>
+        <!-- which peak area definition to use, default: peak_area, alternative: peak_area_normalized -->
+        <property name="peakAreaVariable" value="${peakCliqueAlignment.peakAreaVariable}"/>
+        <property name="peakFactory" ref="peakFactory1D"/>
+    </bean>
+</beans>
