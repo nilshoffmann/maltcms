@@ -753,7 +753,8 @@ public class MaltcmsTools {
 //            if (FileFragment.hasFragment(sn)) {
 //                al.add(FileFragment.getFragment(sn));
 //            } else {
-                al.add(new FileFragment(URI.create(FileTools.escapeUri(sn))));
+//                al.add(new FileFragment(URI.create(FileTools.escapeUri(sn))));
+				al.add(new FileFragment(FileTools.resolveRelativeUri(pwdFile.getUri(), URI.create(sn))));
 //            }
         }
         final TupleND<IFileFragment> t = new TupleND<IFileFragment>(al);

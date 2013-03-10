@@ -52,7 +52,9 @@ import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import cross.test.IntegrationTest;
+import maltcms.commands.fragments.alignment.CenterStarAlignment;
 import maltcms.commands.fragments.preprocessing.ScanExtractor;
+import maltcms.commands.fragments.warp.ChromatogramWarp2;
 import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
 import org.junit.Rule;
@@ -82,6 +84,10 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
         commands.add(new DenseArrayProducer());
         commands.add(createPairwiseDistanceCalculatorTIC(false, 0, true,
                 1.0d));
+		commands.add(new CenterStarAlignment());
+		ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
+        cwarp2.setIndexedVars(new LinkedList<String>());
+		commands.add(cwarp2);
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }
@@ -132,6 +138,10 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
         commands.add(tpf);
         commands.add(new PeakCliqueAlignment());
         commands.add(createPairwiseDistanceCalculatorTIC(true, 5, false, 0.25d));
+		commands.add(new CenterStarAlignment());
+		ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
+        cwarp2.setIndexedVars(new LinkedList<String>());
+		commands.add(cwarp2);
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }

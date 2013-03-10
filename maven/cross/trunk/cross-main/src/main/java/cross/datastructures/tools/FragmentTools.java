@@ -264,7 +264,7 @@ public class FragmentTools {
         final String s = FragmentTools.getStringVar(
                 ff,
                 Factory.getInstance().getConfiguration().getString("var.reference_file", "reference_file"));
-        return new FileFragment(URI.create(FileTools.escapeUri(s)));
+        return new FileFragment(FileTools.resolveRelativeUri(ff.getUri(), URI.create(FileTools.escapeUri(s))));
     }
 
     /**
@@ -275,7 +275,7 @@ public class FragmentTools {
      */
     public static IFileFragment getRHSFile(final IFileFragment ff) {
         final String s = FragmentTools.getStringVar(ff, Factory.getInstance().getConfiguration().getString("var.query_file", "query_file"));
-        return new FileFragment(URI.create(FileTools.escapeUri(s)));
+        return new FileFragment(FileTools.resolveRelativeUri(ff.getUri(), URI.create(FileTools.escapeUri(s))));
     }
 
     /**
@@ -592,7 +592,7 @@ public class FragmentTools {
     public static void setLHSFile(final IFileFragment ff,
             final IFileFragment lhs) {
         FragmentTools.createString(ff, Factory.getInstance().getConfiguration().getString("var.reference_file", "reference_file"),
-                lhs.getUri().toString());
+                FileTools.getRelativeUri(ff.getUri(), lhs.getUri()).toString());
     }
 
     /**
@@ -606,7 +606,7 @@ public class FragmentTools {
     public static void setRHSFile(final IFileFragment ff,
             final IFileFragment rhs) {
         FragmentTools.createString(ff, Factory.getInstance().getConfiguration().getString("var.query_file", "query_file"),
-                rhs.getUri().toString());
+                FileTools.getRelativeUri(ff.getUri(), rhs.getUri()).toString());
     }
 
     /**

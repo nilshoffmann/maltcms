@@ -51,6 +51,7 @@ import ucar.ma2.MAMath;
 import cross.annotations.Configurable;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -208,6 +209,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
             if (!refOrigName.equals(queryTargetName)) {
                 log.info("Warping {} to {}", querySource.getName(),
                         refOrig.getName());
+				refOrig = new FileFragment(refOrig.getUri());
                 IFileFragment res = warp(refOrig, querySource, queryTarget,
                         at.getPathFor(refOrig, queryTarget), true,
                         getWorkflow());
@@ -390,6 +392,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
             } else {
                 var = new VariableFragment(warpedB, s);
             }
+			log.info("{}",ref);
             IVariableFragment refVar = ref.getChild(s);
             final Array refA = refVar.getArray();
             IVariableFragment tbwVar = toBeWarped.getChild(s);
@@ -403,6 +406,9 @@ public class ChromatogramWarp2 extends AFragmentCommand {
                 // an empty array
                 // then this array might be null
                 if (warpedA != null) {
+					EvalTools.notNull(refA, "refA was null", this);
+					EvalTools.notNull(path, "path was null", this);
+					EvalTools.notNull(warpedA, "warpedA was null", this);
                     // refA is only needed for correct shape and data type
                     warpedA = ArrayTools.projectToLHS(refA, path, warpedA, true);
                 }
@@ -415,6 +421,9 @@ public class ChromatogramWarp2 extends AFragmentCommand {
                 // an empty array
                 // then this array might be null
                 if (warpedA != null) {
+					EvalTools.notNull(refA, "refA was null", this);
+					EvalTools.notNull(path, "path was null", this);
+					EvalTools.notNull(warpedA, "warpedA was null", this);
                     // refA is only needed for correct shape and data type
                     warpedA = ArrayTools.projectToRHS(refA, path, warpedA, true);
                 }

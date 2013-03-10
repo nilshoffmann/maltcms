@@ -66,10 +66,12 @@ import org.jdom.Element;
 
 /**
  * A class providing a default implementation for configuration and a concrete
- * typing of the untyped superclass {@link cross.commands.ICommand}. Additionally,
- * many convenience methods are provided for easier creation of custom commands.
+ * typing of the untyped superclass {@link cross.commands.ICommand}.
+ * Additionally, many convenience methods are provided for easier creation of
+ * custom commands.
  *
- * Use objects extending this class as commands within a {@link cross.datastructures.pipeline.ICommandSequence}.
+ * Use objects extending this class as commands within a
+ * {@link cross.datastructures.pipeline.ICommandSequence}.
  *
  * @author Nils Hoffmann
  */
@@ -77,346 +79,345 @@ import org.jdom.Element;
 @Data
 public abstract class AFragmentCommand implements IFragmentCommand {
 
-    private static final long serialVersionUID = -4551167359317007776L;
-    @Getter(AccessLevel.NONE)
-    private final IEventSource<IWorkflowResult> eventSource = new EventSource<IWorkflowResult>();
-    private IWorkflow workflow = null;
-    private DefaultWorkflowProgressResult progress = null;
-    private ICvResolver cvResolver = new CvResolver();
+	private static final long serialVersionUID = -4551167359317007776L;
+	@Getter(AccessLevel.NONE)
+	private final IEventSource<IWorkflowResult> eventSource = new EventSource<IWorkflowResult>();
+	private IWorkflow workflow = null;
+	private DefaultWorkflowProgressResult progress = null;
+	private ICvResolver cvResolver = new CvResolver();
 
-    /**
-     *
-     * @param fragmentCommand
-     */
-    public void initSubCommand(AFragmentCommand fragmentCommand) {
-        fragmentCommand.setWorkflow(workflow);
-        fragmentCommand.configure(workflow.getConfiguration());
-    }
+	/**
+	 *
+	 * @param fragmentCommand
+	 */
+	public void initSubCommand(AFragmentCommand fragmentCommand) {
+		fragmentCommand.setWorkflow(workflow);
+		fragmentCommand.configure(workflow.getConfiguration());
+	}
 
-    /**
-     *
-     * @param ics
-     * @param t
-     * @return
-     */
-    public TupleND<IFileFragment> postProcess(ICompletionService<File> ics,
-            final TupleND<IFileFragment> t) {
-        TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
-        try {
-            List<File> results = ics.call();
-            // expect at least one result
-            EvalTools.gt(0, results.size(), this);
-            // map input to results
-            ret = mapToInput(results, t);
-            // append results to workflow for bookkeeping
-            addWorkflowResults(ret);
-        } catch (Exception ex) {
-            log.error("Caught exception while executing workers: ", ex);
-            throw new RuntimeException(ex);
-        }
-        return ret;
-    }
+	/**
+	 *
+	 * @param ics
+	 * @param t
+	 * @return
+	 */
+	public TupleND<IFileFragment> postProcess(ICompletionService<File> ics,
+			final TupleND<IFileFragment> t) {
+		TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
+		try {
+			List<File> results = ics.call();
+			// expect at least one result
+			EvalTools.gt(0, results.size(), this);
+			// map input to results
+			ret = mapToInput(results, t);
+			// append results to workflow for bookkeeping
+			addWorkflowResults(ret);
+		} catch (Exception ex) {
+			log.error("Caught exception while executing workers: ", ex);
+			throw new RuntimeException(ex);
+		}
+		return ret;
+	}
 
-    /**
-     * @param l
-     * @see
-     * cross.event.IEventSource#addListener(cross.event.IListener<cross.event
-     * .IEvent<V>>[])
-     */
-    @Override
-    public void addListener(final IListener<IEvent<IWorkflowResult>> l) {
-        this.eventSource.addListener(l);
-    }
+	/**
+	 * @param l
+	 * @see
+	 * cross.event.IEventSource#addListener(cross.event.IListener<cross.event
+	 * .IEvent<V>>[])
+	 */
+	@Override
+	public void addListener(final IListener<IEvent<IWorkflowResult>> l) {
+		this.eventSource.addListener(l);
+	}
 
-    /**
-     *
-     * @param e
-     */
-    @Override
-    public void appendXML(final Element e) {
-    }
+	/**
+	 *
+	 * @param e
+	 */
+	@Override
+	public void appendXML(final Element e) {
+	}
 
-    /**
-     * As of release 1.2.2, please use the spring beans based configuration for
-     * AFragmentCommand instances. Only configuration of variable name mappings
-     * should be performed using configure.
-     *
-     * @param cfg
-     * @deprecated
-     */
-    @Override
-    @Deprecated
-    public void configure(final Configuration cfg) {
-    }
+	/**
+	 * As of release 1.2.2, please use the spring beans based configuration for
+	 * AFragmentCommand instances. Only configuration of variable name mappings
+	 * should be performed using configure.
+	 *
+	 * @param cfg
+	 * @deprecated
+	 */
+	@Override
+	@Deprecated
+	public void configure(final Configuration cfg) {
+	}
 
-    /**
-     * @param e
-     * @see cross.event.IEventSource#fireEvent(cross.event.IEvent)
-     */
-    @Override
-    public void fireEvent(final IEvent<IWorkflowResult> e) {
-        this.eventSource.fireEvent(e);
-    }
+	/**
+	 * @param e
+	 * @see cross.event.IEventSource#fireEvent(cross.event.IEvent)
+	 */
+	@Override
+	public void fireEvent(final IEvent<IWorkflowResult> e) {
+		this.eventSource.fireEvent(e);
+	}
 
-    /**
-     *
-     * @return
-     */
-    public abstract String getDescription();
+	/**
+	 *
+	 * @return
+	 */
+	public abstract String getDescription();
 
-    /**
-     * Utility method to create mutable FileFragments from a given tuple of
-     * FileFragments.
-     *
-     * @param t
-     * @return
-     */
-    public TupleND<IFileFragment> createWorkFragments(TupleND<IFileFragment> t) {
-        TupleND<IFileFragment> wt = new TupleND<IFileFragment>();
-        for (IFileFragment iff : t) {
-            wt.add(createWorkFragment(iff));
-        }
-        return wt;
-    }
+	/**
+	 * Utility method to create mutable FileFragments from a given tuple of
+	 * FileFragments.
+	 *
+	 * @param t
+	 * @return
+	 */
+	public TupleND<IFileFragment> createWorkFragments(TupleND<IFileFragment> t) {
+		TupleND<IFileFragment> wt = new TupleND<IFileFragment>();
+		for (IFileFragment iff : t) {
+			wt.add(createWorkFragment(iff));
+		}
+		return wt;
+	}
 
-    /**
-     * Utility method to create a mutable FileFragment to work on.
-     *
-     * @param iff
-     * @return
-     */
-    public IFileFragment createWorkFragment(IFileFragment iff) {
-        URI uri = new File(getWorkflow().getOutputDirectory(this),
-                StringTools.removeFileExt(iff.getName()) + ".cdf").toURI();
-        log.info("Work fragment: {}",uri);
-        final IFileFragment copy = new FileFragment(uri);
-        copy.addSourceFile(iff);
-        return copy;
-    }
+	/**
+	 * Utility method to create a mutable FileFragment to work on.
+	 *
+	 * @param iff
+	 * @return
+	 */
+	public IFileFragment createWorkFragment(IFileFragment iff) {
+		URI uri = new File(getWorkflow().getOutputDirectory(this), iff.getName()).toURI();
+		log.info("Work fragment: {}", uri);
+		final IFileFragment copy = new FileFragment(uri);
+		copy.addSourceFile(iff);
+		return copy;
+	}
 
-    /**
-     * Maps a list of Files which resemble processing results of input file
-     * fragments to the input file fragments in the right order.
-     *
-     * @param files
-     * @param inputFragments
-     * @return
-     */
-    public TupleND<IFileFragment> mapToInputUri(List<URI> files,
-            TupleND<IFileFragment> inputFragments) {
-        HashMap<String, URI> names = new LinkedHashMap<String, URI>();
-        for (URI f : files) {
-            String filename = FileTools.getFilename(f);
-            String basename = StringTools.removeFileExt(filename);
-            String ext = StringTools.getFileExtension(filename);
-			if(ext.equals(filename)) {
-				log.debug("Filename: {}",basename);
-			}else{
-				log.debug("Filename: {}",basename+"."+ext);
+	/**
+	 * Maps a list of Files which resemble processing results of input file
+	 * fragments to the input file fragments in the right order.
+	 *
+	 * @param files
+	 * @param inputFragments
+	 * @return
+	 */
+	public TupleND<IFileFragment> mapToInputUri(List<URI> files,
+			TupleND<IFileFragment> inputFragments) {
+		HashMap<String, URI> names = new LinkedHashMap<String, URI>();
+		for (URI f : files) {
+			String filename = FileTools.getFilename(f);
+			String basename = StringTools.removeFileExt(filename);
+			String ext = StringTools.getFileExtension(filename);
+			if (ext.equals(filename)) {
+				log.debug("Filename: {}", basename);
+			} else {
+				log.debug("Filename: {}", basename + "." + ext);
 			}
-            names.put(basename, f);
-        }
-        TupleND<IFileFragment> retFragments = new TupleND<IFileFragment>();
-        for (IFileFragment fragment : inputFragments) {
-            log.debug("InputFragment: "+fragment.getUri());
-            String filename = FileTools.getFilename(fragment.getUri());
-            String basename = StringTools.removeFileExt(filename);
-            String ext = StringTools.getFileExtension(filename).toLowerCase();
-            if(ext.equals(filename)) {
-				log.debug("Filename: {}",basename);
-			}else{
-				log.debug("Filename: {}",basename+"."+ext);
+			names.put(basename, f);
+		}
+		TupleND<IFileFragment> retFragments = new TupleND<IFileFragment>();
+		for (IFileFragment fragment : inputFragments) {
+			log.debug("InputFragment: " + fragment.getUri());
+			String filename = FileTools.getFilename(fragment.getUri());
+			String basename = StringTools.removeFileExt(filename);
+			String ext = StringTools.getFileExtension(filename).toLowerCase();
+			if (ext.equals(filename)) {
+				log.debug("Filename: {}", basename);
+			} else {
+				log.debug("Filename: {}", basename + "." + ext);
 			}
-            retFragments.add(new FileFragment(names.get(basename)));
-        }
-        return retFragments;
-    }
-    
-     /**
-     * Maps a list of Files which resemble processing results of input file
-     * fragments to the input file fragments in the right order.
-     *
-     * @param files
-     * @param inputFragments
-     * @return
-     */
-    public TupleND<IFileFragment> mapToInput(List<File> files,
-            TupleND<IFileFragment> inputFragments) {
-        List<URI> uris = new LinkedList<URI>();
-        for(File f:files) {
-            log.info("Adding result file {}",f.toURI());
-            uris.add(f.toURI());
-        }
-        return mapToInputUri(uris, inputFragments);
-    }
+			retFragments.add(new FileFragment(names.get(basename)));
+		}
+		return retFragments;
+	}
 
-    /**
-     *
-     * @param <T>
-     * @param serviceObjectType
-     * @return
-     */
-    public <T extends Serializable> ICompletionService<T> createCompletionService(
-            Class<? extends T> serviceObjectType) {
-        return createNonBlockingCompletionService(serviceObjectType, 1000,
-                TimeUnit.MILLISECONDS);
-    }
+	/**
+	 * Maps a list of Files which resemble processing results of input file
+	 * fragments to the input file fragments in the right order.
+	 *
+	 * @param files
+	 * @param inputFragments
+	 * @return
+	 */
+	public TupleND<IFileFragment> mapToInput(List<File> files,
+			TupleND<IFileFragment> inputFragments) {
+		List<URI> uris = new LinkedList<URI>();
+		for (File f : files) {
+			log.info("Adding result file {}", f.toURI());
+			uris.add(f.toURI());
+		}
+		return mapToInputUri(uris, inputFragments);
+	}
 
-    /**
-     *
-     * @param <T>
-     * @param serviceObjectType
-     * @return
-     */
-    public <T extends Serializable> ICompletionService<T> createBlockingCompletionService(
-            Class<? extends T> serviceObjectType) {
-        ICompletionService<T> ics = null;
-        CompletionServiceFactory<T> csf = new CompletionServiceFactory<T>();
-        csf.setBlockingWait(true);
-        if (getWorkflow().isExecuteLocal()) {
-            log.info("Creating local completion service!");
-            csf.setMaxThreads(Factory.getInstance().getConfiguration().getInt("cross.Factory.maxthreads", 1));
-            ics = csf.newLocalCompletionService();
-        } else {
-            log.info("Creating mpaxs completion service!");
-            ics = new CompletionServiceFactory<T>().newDistributedCompletionService();
-        }
-        return ics;
-    }
+	/**
+	 *
+	 * @param <T>
+	 * @param serviceObjectType
+	 * @return
+	 */
+	public <T extends Serializable> ICompletionService<T> createCompletionService(
+			Class<? extends T> serviceObjectType) {
+		return createNonBlockingCompletionService(serviceObjectType, 1000,
+				TimeUnit.MILLISECONDS);
+	}
 
-    /**
-     *
-     * @param <T>
-     * @param serviceObjectType
-     * @param timeOut
-     * @param timeUnit
-     * @return
-     */
-    public <T extends Serializable> ICompletionService<T> createNonBlockingCompletionService(
-            Class<? extends T> serviceObjectType, long timeOut,
-            TimeUnit timeUnit) {
-        ICompletionService<T> ics = null;
-        CompletionServiceFactory<T> csf = new CompletionServiceFactory<T>();
-        csf.setTimeOut(timeOut);
-        csf.setTimeUnit(timeUnit);
-        if (getWorkflow().isExecuteLocal()) {
-            log.info("Creating local completion service!");
-            csf.setMaxThreads(Factory.getInstance().getConfiguration().getInt("cross.Factory.maxthreads", 1));
-            ics = csf.newLocalCompletionService();
-        } else {
-            log.info("Creating mpaxs completion service!");
-            ics = new CompletionServiceFactory<T>().newDistributedCompletionService();
-        }
-        return ics;
-    }
+	/**
+	 *
+	 * @param <T>
+	 * @param serviceObjectType
+	 * @return
+	 */
+	public <T extends Serializable> ICompletionService<T> createBlockingCompletionService(
+			Class<? extends T> serviceObjectType) {
+		ICompletionService<T> ics = null;
+		CompletionServiceFactory<T> csf = new CompletionServiceFactory<T>();
+		csf.setBlockingWait(true);
+		if (getWorkflow().isExecuteLocal()) {
+			log.info("Creating local completion service!");
+			csf.setMaxThreads(Factory.getInstance().getConfiguration().getInt("cross.Factory.maxthreads", 1));
+			ics = csf.newLocalCompletionService();
+		} else {
+			log.info("Creating mpaxs completion service!");
+			ics = new CompletionServiceFactory<T>().newDistributedCompletionService();
+		}
+		return ics;
+	}
 
-    /**
-     *
-     * @param fragments
-     */
-    public void addWorkflowResults(IFileFragment... fragments) {
-        for (IFileFragment fragment : fragments) {
-            addWorkflowResult(fragment);
-        }
-    }
+	/**
+	 *
+	 * @param <T>
+	 * @param serviceObjectType
+	 * @param timeOut
+	 * @param timeUnit
+	 * @return
+	 */
+	public <T extends Serializable> ICompletionService<T> createNonBlockingCompletionService(
+			Class<? extends T> serviceObjectType, long timeOut,
+			TimeUnit timeUnit) {
+		ICompletionService<T> ics = null;
+		CompletionServiceFactory<T> csf = new CompletionServiceFactory<T>();
+		csf.setTimeOut(timeOut);
+		csf.setTimeUnit(timeUnit);
+		if (getWorkflow().isExecuteLocal()) {
+			log.info("Creating local completion service!");
+			csf.setMaxThreads(Factory.getInstance().getConfiguration().getInt("cross.Factory.maxthreads", 1));
+			ics = csf.newLocalCompletionService();
+		} else {
+			log.info("Creating mpaxs completion service!");
+			ics = new CompletionServiceFactory<T>().newDistributedCompletionService();
+		}
+		return ics;
+	}
 
-    /**
-     *
-     * @param fragments
-     */
-    public void addWorkflowResults(TupleND<IFileFragment> fragments) {
-        for (IFileFragment fragment : fragments) {
-            addWorkflowResult(fragment);
-        }
-    }
+	/**
+	 *
+	 * @param fragments
+	 */
+	public void addWorkflowResults(IFileFragment... fragments) {
+		for (IFileFragment fragment : fragments) {
+			addWorkflowResult(fragment);
+		}
+	}
 
-    /**
-     *
-     * @param fragment
-     */
-    public void addWorkflowResult(IFileFragment fragment) {
-        getWorkflow().append(
-                new DefaultWorkflowResult(new File(fragment.getUri()),
-                this, getWorkflowSlot(), fragment));
-    }
+	/**
+	 *
+	 * @param fragments
+	 */
+	public void addWorkflowResults(TupleND<IFileFragment> fragments) {
+		for (IFileFragment fragment : fragments) {
+			addWorkflowResult(fragment);
+		}
+	}
 
-    /**
-     *
-     * @param fragment
-     * @param resources
-     */
-    public void addWorkflowResult(IFileFragment fragment,
-            IFileFragment... resources) {
-        getWorkflow().append(
-                new DefaultWorkflowResult(new File(fragment.getUri()),
-                this, getWorkflowSlot(), resources));
-    }
+	/**
+	 *
+	 * @param fragment
+	 */
+	public void addWorkflowResult(IFileFragment fragment) {
+		getWorkflow().append(
+				new DefaultWorkflowResult(new File(fragment.getUri()),
+				this, getWorkflowSlot(), fragment));
+	}
 
-    /**
-     *
-     * @param fragment
-     * @param slot
-     * @param resources
-     */
-    public void addWorkflowResult(IFileFragment fragment, WorkflowSlot slot,
-            IFileFragment... resources) {
-        getWorkflow().append(
-                new DefaultWorkflowResult(new File(fragment.getUri()),
-                this, slot, resources));
-    }
+	/**
+	 *
+	 * @param fragment
+	 * @param resources
+	 */
+	public void addWorkflowResult(IFileFragment fragment,
+			IFileFragment... resources) {
+		getWorkflow().append(
+				new DefaultWorkflowResult(new File(fragment.getUri()),
+				this, getWorkflowSlot(), resources));
+	}
 
-    /**
-     *
-     * @param fragment
-     * @param producer
-     * @param slot
-     * @param resources
-     */
-    public void addWorkflowResult(IFileFragment fragment,
-            IWorkflowElement producer, WorkflowSlot slot,
-            IFileFragment... resources) {
-        getWorkflow().append(
-                new DefaultWorkflowResult(new File(fragment.getUri()),
-                producer, slot, resources));
-    }
+	/**
+	 *
+	 * @param fragment
+	 * @param slot
+	 * @param resources
+	 */
+	public void addWorkflowResult(IFileFragment fragment, WorkflowSlot slot,
+			IFileFragment... resources) {
+		getWorkflow().append(
+				new DefaultWorkflowResult(new File(fragment.getUri()),
+				this, slot, resources));
+	}
 
-    /**
-     *
-     * @param size
-     */
-    public void initProgress(int size) {
-        EvalTools.isNull(progress, this);
-        setProgress(
-                new DefaultWorkflowProgressResult(
-                size, this, getWorkflowSlot()));
-    }
+	/**
+	 *
+	 * @param fragment
+	 * @param producer
+	 * @param slot
+	 * @param resources
+	 */
+	public void addWorkflowResult(IFileFragment fragment,
+			IWorkflowElement producer, WorkflowSlot slot,
+			IFileFragment... resources) {
+		getWorkflow().append(
+				new DefaultWorkflowResult(new File(fragment.getUri()),
+				producer, slot, resources));
+	}
 
-    /**
-     * @param l
-     * @see cross.event.IEventSource#removeListener(cross.event.IListener<cross.
-     * event.IEvent<V>>[])
-     */
-    @Override
-    public void removeListener(final IListener<IEvent<IWorkflowResult>> l) {
-        this.eventSource.removeListener(l);
-    }
-    
-    public String resolve(String varname) {
-        try{
-            String resolved = cvResolver.translate(varname);
-            return resolved;
-        }catch(MappingNotAvailableException mnae) {
-            log.warn("Could not map variable: "+varname,mnae);
-            return varname;
-        }
-    }
+	/**
+	 *
+	 * @param size
+	 */
+	public void initProgress(int size) {
+		EvalTools.isNull(progress, this);
+		setProgress(
+				new DefaultWorkflowProgressResult(
+				size, this, getWorkflowSlot()));
+	}
 
-    /**
-     *
-     * @return
-     */
-    @Override
-    public String toString() {
-        return getClass().getName();
-    }
+	/**
+	 * @param l
+	 * @see cross.event.IEventSource#removeListener(cross.event.IListener<cross.
+	 * event.IEvent<V>>[])
+	 */
+	@Override
+	public void removeListener(final IListener<IEvent<IWorkflowResult>> l) {
+		this.eventSource.removeListener(l);
+	}
+
+	public String resolve(String varname) {
+		try {
+			String resolved = cvResolver.translate(varname);
+			return resolved;
+		} catch (MappingNotAvailableException mnae) {
+			log.warn("Could not map variable: " + varname, mnae);
+			return varname;
+		}
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@Override
+	public String toString() {
+		return getClass().getName();
+	}
 }

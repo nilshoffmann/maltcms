@@ -982,6 +982,8 @@ public class FileFragment implements IFileFragment {
 		if(ext.equals(getName())) {
 			log.info("File location did not have a proper extension, setting default: cdf!");
 			ext = "cdf";
+		}else{
+			ext = ext.toLowerCase();
 		}
         final String filename = StringTools.removeFileExt(getName());
 		String basepath = u.getPath();

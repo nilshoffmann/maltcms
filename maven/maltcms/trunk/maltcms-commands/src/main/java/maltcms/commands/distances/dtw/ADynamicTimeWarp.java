@@ -339,9 +339,6 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
                 }
                 return aps;
             }
-//        Factory.getInstance().getConfiguration().setProperty(
-//                "maltcms.datastructures.alignment.DefaultPairSet.minScansBetweenAnchors",
-//                10);
         }
         //return default anchors at 0,0 and N-1,M-1
         aps = new AnchorPairSet(new LinkedList<IAnchor>(),

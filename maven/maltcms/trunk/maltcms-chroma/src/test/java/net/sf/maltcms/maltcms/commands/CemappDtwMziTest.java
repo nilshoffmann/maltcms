@@ -56,6 +56,7 @@ import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineE
 import cross.test.IntegrationTest;
 import maltcms.commands.fragments.alignment.CenterStarAlignment;
 import maltcms.commands.fragments.preprocessing.ScanExtractor;
+import maltcms.commands.fragments.warp.ChromatogramWarp2;
 import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
 import org.junit.Rule;
@@ -80,6 +81,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
         setLogLevelFor("maltcms.tools.PathTools", Level.INFO);
+		setLogLevelFor("maltcms.commands.fragments.warp.ChromatogramWarp2", Level.DEBUG);
         Fragments.setDefaultFragmentCacheType(CacheType.NONE);
         File outputBase = tf.newFolder("testCemappDtwFullTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
@@ -92,9 +94,36 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         commands.add(createPairwiseDistanceCalculatorMZI(false, 0, true,
                 1.0d));
         commands.add(new CenterStarAlignment());
-        //ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
-        //cwarp2.setIndexedVars(new LinkedList<String>());
-        //commands.add(cwarp2);
+        ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
+        cwarp2.setIndexedVars(new LinkedList<String>());
+        commands.add(cwarp2);
+        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        testWorkflow(w);
+    }
+	
+	@Test
+    public void testCemappDtwMZIFullEhcache() {
+        setLogLevelFor("cross", Level.OFF);
+        setLogLevelFor("maltcms", Level.OFF);
+        setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
+        setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
+        setLogLevelFor("maltcms.tools.PathTools", Level.INFO);
+		setLogLevelFor("maltcms.commands.fragments.warp.ChromatogramWarp2", Level.DEBUG);
+        Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
+        File outputBase = tf.newFolder("testCemappDtwFullTestOut");
+        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        ScanExtractor se = new ScanExtractor();
+        se.setStartScan(1000);
+        se.setEndScan(1500);
+        commands.add(new DefaultVarLoader());
+        commands.add(se);
+        commands.add(new DenseArrayProducer());
+        commands.add(createPairwiseDistanceCalculatorMZI(false, 0, true,
+                1.0d));
+        commands.add(new CenterStarAlignment());
+        ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
+        cwarp2.setIndexedVars(new LinkedList<String>());
+        commands.add(cwarp2);
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }
@@ -127,6 +156,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
         setLogLevelFor("maltcms.tools.PathTools", Level.INFO);
+		setLogLevelFor("maltcms.commands.fragments.warp.ChromatogramWarp2", Level.DEBUG);
         Fragments.setDefaultFragmentCacheType(CacheType.NONE);
         File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
@@ -155,8 +185,55 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         commands.add(new PeakCliqueAlignment());
         commands.add(createPairwiseDistanceCalculatorMZI(true, 0, false, 0.5d));
         commands.add(new CenterStarAlignment());
-        //ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
-        //cwarp2.setIndexedVars(new LinkedList<String>());
+        ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
+        cwarp2.setIndexedVars(new LinkedList<String>());
+		commands.add(cwarp2);
+        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        testWorkflow(w);
+    }
+	
+	/**
+     *
+     */
+    @Test
+    public void testCemappDtwMZIConstrainedEhcache() {
+        setLogLevelFor("cross", Level.OFF);
+        setLogLevelFor("maltcms", Level.OFF);
+        setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
+        setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
+        setLogLevelFor("maltcms.tools.PathTools", Level.INFO);
+		setLogLevelFor("maltcms.commands.fragments.warp.ChromatogramWarp2", Level.DEBUG);
+        Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
+        File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
+        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        commands.add(new DefaultVarLoader());
+        ScanExtractor se = new ScanExtractor();
+        se.setStartScan(1600);
+        se.setEndScan(2100);
+        commands.add(se);
+        commands.add(new DenseArrayProducer());
+        TICPeakFinder tpf = new TICPeakFinder();
+        SavitzkyGolayFilter sgf = new SavitzkyGolayFilter();
+        sgf.setWindow(12);
+        List<AArrayFilter> filters = new LinkedList<AArrayFilter>();
+        filters.add(sgf);
+        tpf.setFilter(filters);
+        LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();
+        lmbe.setBandwidth(0.4);
+        lmbe.setAccuracy(1.0E-12);
+        lmbe.setRobustnessIterations(2);
+        lmbe.setMinimaWindow(50);
+        tpf.setBaselineEstimator(lmbe);
+        tpf.setSnrWindow(50);
+        tpf.setPeakSeparationWindow(10);
+        tpf.setPeakThreshold(5.0d);
+        commands.add(tpf);
+        commands.add(new PeakCliqueAlignment());
+        commands.add(createPairwiseDistanceCalculatorMZI(true, 0, false, 0.5d));
+        commands.add(new CenterStarAlignment());
+        ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
+        cwarp2.setIndexedVars(new LinkedList<String>());
+		commands.add(cwarp2);
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }

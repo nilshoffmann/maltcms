@@ -46,6 +46,7 @@ import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.NotImplementedException;
 import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tools.FileTools;
 
 public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
         IWorkflowElement {
@@ -167,7 +168,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
                 this.alignments.getSize(), maxlength);
         int i = 0;
         for (final IFileFragment iff : this.alignments) {
-            anames.setString(i++, iff.getUri().toString());
+            anames.setString(i++, FileTools.getRelativeUri(f.getUri(), iff.getUri()).toString());
         }
         alignments.setArray(anames);
     }
@@ -176,6 +177,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
         this.alignments = t;
     }
 
+	@Override
     public void setWorkflow(final IWorkflow iw1) {
         this.iw = iw1;
     }
