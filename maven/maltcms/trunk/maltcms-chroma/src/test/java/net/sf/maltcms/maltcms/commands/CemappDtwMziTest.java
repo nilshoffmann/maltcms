@@ -80,8 +80,6 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("maltcms", Level.OFF);
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
-        setLogLevelFor("maltcms.tools.PathTools", Level.INFO);
-		setLogLevelFor("maltcms.commands.fragments.warp.ChromatogramWarp2", Level.DEBUG);
         Fragments.setDefaultFragmentCacheType(CacheType.NONE);
         File outputBase = tf.newFolder("testCemappDtwFullTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
@@ -107,8 +105,6 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("maltcms", Level.OFF);
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
-        setLogLevelFor("maltcms.tools.PathTools", Level.INFO);
-		setLogLevelFor("maltcms.commands.fragments.warp.ChromatogramWarp2", Level.DEBUG);
         Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
         File outputBase = tf.newFolder("testCemappDtwFullTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
@@ -155,8 +151,6 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("maltcms", Level.OFF);
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
-        setLogLevelFor("maltcms.tools.PathTools", Level.INFO);
-		setLogLevelFor("maltcms.commands.fragments.warp.ChromatogramWarp2", Level.DEBUG);
         Fragments.setDefaultFragmentCacheType(CacheType.NONE);
         File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
@@ -201,8 +195,6 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("maltcms", Level.OFF);
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
-        setLogLevelFor("maltcms.tools.PathTools", Level.INFO);
-		setLogLevelFor("maltcms.commands.fragments.warp.ChromatogramWarp2", Level.DEBUG);
         Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
         File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
