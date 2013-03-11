@@ -54,6 +54,7 @@ import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import cross.test.IntegrationTest;
+import java.io.IOException;
 import maltcms.commands.fragments.alignment.CenterStarAlignment;
 import maltcms.commands.fragments.preprocessing.ScanExtractor;
 import maltcms.commands.fragments.warp.ChromatogramWarp2;
@@ -75,7 +76,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
             "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
 
     @Test
-    public void testCemappDtwMZIFull() {
+    public void testCemappDtwMZIFull() throws IOException  {
         setLogLevelFor("cross", Level.OFF);
         setLogLevelFor("maltcms", Level.OFF);
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
@@ -100,7 +101,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
     }
 	
 	@Test
-    public void testCemappDtwMZIFullEhcache() {
+    public void testCemappDtwMZIFullEhcache() throws IOException  {
         setLogLevelFor("cross", Level.OFF);
         setLogLevelFor("maltcms", Level.OFF);
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
@@ -146,7 +147,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
      *
      */
     @Test
-    public void testCemappDtwMZIConstrained() {
+    public void testCemappDtwMZIConstrained() throws IOException  {
         setLogLevelFor("cross", Level.OFF);
         setLogLevelFor("maltcms", Level.OFF);
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
@@ -190,7 +191,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
      *
      */
     @Test
-    public void testCemappDtwMZIConstrainedEhcache() {
+    public void testCemappDtwMZIConstrainedEhcache() throws IOException  {
         setLogLevelFor("cross", Level.OFF);
         setLogLevelFor("maltcms", Level.OFF);
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);

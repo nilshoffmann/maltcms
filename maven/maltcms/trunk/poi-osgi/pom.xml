@@ -76,7 +76,7 @@
 							if these are not given, dependencies are NOT included 
 							by bnd
 						-->
-						<Export-Package>org.apache.poi.*;org.openxmlformats;schema*</Export-Package>
+						<Export-Package>org.apache.poi.*;org.openxmlformats;schema*;org.apache.poi.openxml4j.exceptions.*</Export-Package>
 						<!--
 							state the url of the license
 						-->

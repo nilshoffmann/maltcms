@@ -591,7 +591,7 @@
 			<dependency>
 				<groupId>net.sf.maltcms</groupId>
 				<artifactId>cross-osgi</artifactId>
-				<version>${cross.version}</version>
+				<version>${version.cross}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -610,7 +610,7 @@
 			<dependency>
 				<groupId>net.sf.maltcms</groupId>
 				<artifactId>cross-test</artifactId>
-				<version>${cross.version}</version>
+				<version>${version.cross}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -643,7 +643,7 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
-				<version>1.6.1</version>
+				<version>${version.slf4j}</version>
 				<scope>compile</scope>
 			</dependency>
 			<dependency>
@@ -684,7 +684,7 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.10</version>
+				<version>${version.junit}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -715,14 +715,6 @@
 			<artifactId>cross-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--		<dependency>
-			<groupId>javax.media.jai</groupId>
-			<artifactId>com.springsource.javax.media.jai.codec</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.media.jai</groupId>
-			<artifactId>com.springsource.javax.media.jai.core</artifactId>
-		</dependency>-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -746,6 +738,8 @@
 		<skipITs>true</skipITs>
 		<project.build.sourceLevel>1.7</project.build.sourceLevel>
 		<project.build.targetLevel>1.7</project.build.targetLevel>
-		<cross.version>1.2.12-SNAPSHOT</cross.version>
+		<version.cross>1.2.12-SNAPSHOT</version.cross>
+		<version.slf4j>1.7.2</version.slf4j>
+        <version.junit>4.11</version.junit>
 	</properties>
 </project>

@@ -48,6 +48,7 @@ import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import cross.test.IntegrationTest;
+import java.io.IOException;
 import org.junit.experimental.categories.Category;
 
 /**
@@ -61,7 +62,7 @@ public class BiPaceTest extends AFragmentCommandTest {
      *
      */
     @Test
-    public void testChromA() {
+    public void testChromA() throws IOException  {
         File dataFolder = tf.newFolder("chromaTestData");
         File inputFile1 = ZipResourceExtractor.extract(
                 "/cdf/1D/glucoseA.cdf.gz", dataFolder);

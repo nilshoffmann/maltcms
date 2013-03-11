@@ -28,8 +28,11 @@
 package maltcms.test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.TemporaryFolder;
 
@@ -51,6 +54,11 @@ public class ExtractClassPathFiles extends ExternalResource {
 
 	@Override
 	protected void before() throws Throwable {
+		try {
+			this.tf.create();
+		} catch (IOException ex) {
+			throw ex;
+		}
 		baseFolder = tf.newFolder();
 		int i = 0;
 		for (String resource : resourcePaths) {

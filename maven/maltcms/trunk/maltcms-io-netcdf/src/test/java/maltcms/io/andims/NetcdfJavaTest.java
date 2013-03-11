@@ -27,7 +27,6 @@
  */
 package maltcms.io.andims;
 
-import cross.datastructures.fragments.IVariableFragment;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -66,7 +65,7 @@ public class NetcdfJavaTest {
      *
      */
     @Test
-    public void testWriteRead() {
+    public void testWriteRead() throws IOException {
         File outputFolder = tf.newFolder("testOutput");
         File testCdf = new File(outputFolder, "testCdf.cdf");
         try {

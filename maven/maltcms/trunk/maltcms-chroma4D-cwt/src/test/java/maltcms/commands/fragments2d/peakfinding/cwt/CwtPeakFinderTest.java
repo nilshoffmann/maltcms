@@ -27,7 +27,6 @@
  */
 package maltcms.commands.fragments2d.peakfinding.cwt;
 
-import maltcms.commands.fragments2d.peakfinding.cwt.CwtPeakFinder;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
@@ -42,6 +41,8 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.test.AFragmentCommandTest;
 import cross.test.IntegrationTest;
+import java.io.IOException;
+import java.util.logging.Logger;
 import org.apache.log4j.Level;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -55,7 +56,7 @@ import org.junit.experimental.categories.Category;
 public class CwtPeakFinderTest extends AFragmentCommandTest {
 
     @Test
-    public void testPeakFinder() {
+    public void testPeakFinder() throws IOException  {
         File dataFolder = tf.newFolder("chroma4DTestData");
         File outputBase = tf.newFolder("chroma4DTestOut");
         File inputFile = ZipResourceExtractor.extract(
@@ -81,6 +82,10 @@ public class CwtPeakFinderTest extends AFragmentCommandTest {
 
     public static void main(String[] args) {
         CwtPeakFinderTest test = new CwtPeakFinderTest();
-        test.testPeakFinder();
+		try {
+			test.testPeakFinder();
+		} catch (IOException ex) {
+			Logger.getLogger(CwtPeakFinderTest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		}
     }
 }

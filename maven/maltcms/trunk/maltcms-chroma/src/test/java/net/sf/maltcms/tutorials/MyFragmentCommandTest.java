@@ -32,6 +32,7 @@ import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.tools.FragmentTools;
 import cross.datastructures.workflow.IWorkflow;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -59,7 +60,7 @@ public class MyFragmentCommandTest extends AFragmentCommandTest {
      * Test of getDescription method, of class MyFragmentCommand.
      */
     @Test
-    public void testProgrammaticWorkflow() {
+    public void testProgrammaticWorkflow() throws IOException {
         File outputBase = tf.newFolder("chromaTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         MyFragmentCommand cmd = new MyFragmentCommand();
@@ -83,7 +84,7 @@ public class MyFragmentCommandTest extends AFragmentCommandTest {
      * Test of apply method, of class MyFragmentCommand.
      */
     @Test
-    public void testApplicationContextWorkflow() {
+    public void testApplicationContextWorkflow() throws IOException  {
         File outputBase = tf.newFolder("chromaTestOut");
         DefaultApplicationContextFactory dacf = new DefaultApplicationContextFactory(Arrays.asList("/cfg/pipelines/xml/workflowDefaults.xml","/cfg/pipelines/xml/myFragmentCommand.xml"), new PropertiesConfiguration());
         ApplicationContext ac = dacf.createClassPathApplicationContext();

@@ -31,6 +31,7 @@ import maltcms.test.ExtractHelper;
 import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 import cross.test.SetupLogging;
+import java.io.IOException;
 import maltcms.test.ZipResourceExtractor;
 import org.junit.Rule;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class ZipResourceExtractorTest {
     public SetupLogging sl = new SetupLogging();
 
     @Test
-    public void testExtract1D() {
+    public void testExtract1D() throws IOException {
         File outputFolder = tf.newFolder(
                 "cdf");
         File outputFile = ZipResourceExtractor.extract("/cdf/1D/glucoseA.cdf.gz", outputFolder);
@@ -64,7 +65,7 @@ public class ZipResourceExtractorTest {
     }
 	
 	@Test
-    public void testExtractZip() {
+    public void testExtractZip() throws IOException {
         File outputFolder = tf.newFolder(
                 "xls");
 		//zip archives must contain a folder with their name, e.g. 'Ap 601.D'
@@ -87,7 +88,7 @@ public class ZipResourceExtractorTest {
     }
 
 //    @Test
-//    public void testExtract2D() {
+//    public void testExtract2D() throws IOException {
 //        File outputFolder = tf.newFolder(
 //                "cdf");
 //        File outputFile = ZipResourceExtractor.extract("/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", outputFolder);

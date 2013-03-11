@@ -52,11 +52,11 @@ import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import cross.test.IntegrationTest;
+import java.io.IOException;
 import maltcms.commands.fragments.alignment.CenterStarAlignment;
 import maltcms.commands.fragments.preprocessing.ScanExtractor;
 import maltcms.commands.fragments.warp.ChromatogramWarp2;
 import maltcms.test.ExtractClassPathFiles;
-import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.experimental.categories.Category;
 
@@ -73,7 +73,7 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
             "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
 
     @Test
-    public void testCemappDtwTICFull() {
+    public void testCemappDtwTICFull() throws IOException  {
         File outputBase = tf.newFolder("testCemappDtwFullTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         ScanExtractor se = new ScanExtractor();
@@ -115,7 +115,7 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
      *
      */
     @Test
-    public void testCemappDtwTICConstrained() {
+    public void testCemappDtwTICConstrained() throws IOException  {
         File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         commands.add(new DefaultVarLoader());

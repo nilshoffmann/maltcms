@@ -29,6 +29,7 @@ package maltcms.commands.filters.array;
 
 import cross.datastructures.fragments.ImmutableFileFragment;
 import java.io.File;
+import java.io.IOException;
 import maltcms.test.ZipResourceExtractor;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
@@ -66,7 +67,7 @@ public class SavitzkyGolayFilterTest {
      * Test of apply method, of class SavitzkyGolayFilter.
      */
     @Test
-    public void testApply() {
+    public void testApply() throws IOException {
         File outputFolder = tf.newFolder(
                 "cdf");
         File outputFile = ZipResourceExtractor.extract("/cdf/1D/glucoseA.cdf.gz", outputFolder);

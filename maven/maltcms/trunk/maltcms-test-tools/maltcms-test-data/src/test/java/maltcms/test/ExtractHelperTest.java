@@ -28,6 +28,7 @@
 package maltcms.test;
 
 import java.io.File;
+import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Rule;
@@ -43,7 +44,7 @@ public class ExtractHelperTest {
     public TemporaryFolder tf = new TemporaryFolder();
 
     @Test
-    public void testExtractHelper() {
+    public void testExtractHelper() throws IOException {
         //clear possibly existing paths
         ExtractHelper.typeToPaths.clear();
         //manually add only one file per type category

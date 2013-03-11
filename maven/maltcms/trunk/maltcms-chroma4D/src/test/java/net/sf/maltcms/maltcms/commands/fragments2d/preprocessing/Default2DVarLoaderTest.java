@@ -47,6 +47,8 @@ import cross.vocabulary.ICvResolver;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.test.AFragmentCommandTest;
 import cross.test.IntegrationTest;
+import java.io.IOException;
+import java.util.logging.Logger;
 import org.apache.log4j.Level;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -61,7 +63,7 @@ import ucar.ma2.Array;
 public class Default2DVarLoaderTest extends AFragmentCommandTest {
 
     @Test
-    public void testPeakFinder() {
+    public void testPeakFinder() throws IOException  {
         File dataFolder = tf.newFolder("chroma4DTestData");
         File outputBase = tf.newFolder("chroma4DTestOut");
         File inputFile = ZipResourceExtractor.extract(
@@ -101,6 +103,10 @@ public class Default2DVarLoaderTest extends AFragmentCommandTest {
 
     public static void main(String[] args) {
         Default2DVarLoaderTest test = new Default2DVarLoaderTest();
-        test.testPeakFinder();
+		try {
+			test.testPeakFinder();
+		} catch (IOException ex) {
+			Logger.getLogger(Default2DVarLoaderTest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		}
     }
 }

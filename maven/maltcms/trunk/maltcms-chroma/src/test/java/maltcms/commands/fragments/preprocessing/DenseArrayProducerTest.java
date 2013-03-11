@@ -33,6 +33,7 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -70,7 +71,7 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
      * Test of apply method, of class DenseArrayProducer.
      */
     @Test
-    public void testDirectApply() {
+    public void testDirectApply() throws IOException {
         File outputBase = tf.newFolder("chromaTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         commands.add(new DefaultVarLoader());
@@ -115,7 +116,7 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
      * Test of apply method, of class DenseArrayProducer.
      */
     @Test
-    public void testApply() {
+    public void testApply() throws IOException  {
         File outputBase = tf.newFolder("chromaTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         commands.add(new DefaultVarLoader());
