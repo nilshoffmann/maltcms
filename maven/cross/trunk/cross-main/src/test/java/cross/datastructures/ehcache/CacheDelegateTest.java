@@ -27,8 +27,6 @@
  */
 package cross.datastructures.ehcache;
 
-import cross.cache.ICacheDelegate;
-import cross.cache.CacheFactory;
 import cross.cache.CacheType;
 import cross.datastructures.cache.VariableFragmentArrayCache;
 import cross.datastructures.fragments.FileFragment;
@@ -36,6 +34,7 @@ import cross.datastructures.fragments.Fragments;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.test.SetupLogging;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -45,7 +44,6 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.config.CacheConfiguration;
-import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -88,7 +86,7 @@ public class CacheDelegateTest {
      *
      */
     @Test
-    public void cachedVariableFragment() {
+    public void cachedVariableFragment() throws IOException {
         logging.getConfig().put("log4j.category.net.sf.ehcache", "DEBUG");
         logging.update();
         Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
@@ -131,7 +129,7 @@ public class CacheDelegateTest {
      *
      */
     @Test
-    public void customCachedVariableFragment() {
+    public void customCachedVariableFragment() throws IOException {
         logging.getConfig().put("log4j.category.net.sf.ehcache", "DEBUG");
         logging.update();
         Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
