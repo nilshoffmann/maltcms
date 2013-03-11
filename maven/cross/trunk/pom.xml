@@ -481,7 +481,6 @@
                 <groupId>org.netbeans.api</groupId>
                 <artifactId>org-openide-util-lookup-osgi</artifactId>
                 <version>7.1.0</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -708,7 +707,7 @@
         <project.build.targetLevel>1.7</project.build.targetLevel>
         <netbeans.hint.license>cross</netbeans.hint.license>
         <version.spring>3.2.1.RELEASE</version.spring>
-        <version.mpaxs>1.6.13</version.mpaxs>
+        <version.mpaxs>1.6.14</version.mpaxs>
         <version.slf4j>1.7.2</version.slf4j>
         <version.junit>4.11</version.junit>
         <version.netbeans>721RELEASE</version.netbeans>

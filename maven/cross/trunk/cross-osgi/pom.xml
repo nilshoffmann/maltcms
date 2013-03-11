@@ -157,10 +157,11 @@
 				<artifactId>maven-pax-plugin</artifactId>
 				
 				<configuration>
+                    <!-- equinox also works -->
 					<framework>felix</framework>
 					<provision>
 						<!-- prevent the following bundle fragments from being started -->
-						<param>mvn:org.slf4j/slf4j-log4j12/1.6.1@nostart</param>
+						<param>mvn:org.slf4j/slf4j-log4j12/1.7.2@nostart</param>
 						<param>mvn:org.apache.ant/com.springsource.org.apache.tools.ant.nodep/1.7.1@nostart</param>
 					</provision>
 				</configuration>
