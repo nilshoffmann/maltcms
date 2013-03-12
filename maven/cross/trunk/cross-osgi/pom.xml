@@ -69,10 +69,6 @@
 			<groupId>commons-lang</groupId>
 		</dependency>
 		<dependency>
-			<artifactId>commons-logging</artifactId>
-			<groupId>commons-logging</groupId>
-		</dependency>
-		<dependency>
 			<artifactId>ehcache-core-osgi</artifactId>
 			<groupId>net.sf.ehcache</groupId>
 		</dependency>
@@ -117,8 +113,10 @@
 			<artifactId>org.osgi.core</artifactId>
 		</dependency>
 		<dependency>
+			<artifactId>com.springsource.org.apache.commons.logging</artifactId>
 			<groupId>org.apache.commons</groupId>
-			<artifactId>com.springsource.org.apache.commons.io</artifactId>
+			<type>jar</type>
+			<version>1.1.1</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -157,7 +155,7 @@
 				<artifactId>maven-pax-plugin</artifactId>
 				
 				<configuration>
-                    <!-- equinox also works -->
+					<!-- equinox also works -->
 					<framework>felix</framework>
 					<provision>
 						<!-- prevent the following bundle fragments from being started -->

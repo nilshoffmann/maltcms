@@ -28,53 +28,84 @@
 package cross.osgi;
 
 import cross.Factory;
+import cross.commands.fragments.AFragmentCommand;
+import cross.io.IDataSource;
+import cross.vocabulary.IControlledVocabularyProvider;
+import java.util.Collection;
 import java.util.Dictionary;
+import java.util.LinkedList;
 import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.PropertyConfigurator;
+import org.openide.util.Lookup;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 
 /**
  *
  * @author Nils Hoffmann
  */
+@Slf4j
 public class CrossActivator implements BundleActivator {
 
-    @Override
-    public void start(BundleContext context) throws Exception {
-        setupLogging();
-        Dictionary props = new Properties();
-        Factory factory = Factory.getInstance();
-        PropertiesConfiguration cfg = new PropertiesConfiguration();
-        factory.configure(cfg);
-        context.registerService(Factory.class.getName(), factory, props);
-    }
+	private Collection<ServiceRegistration> services;
+	
+	@Override
+	public void start(BundleContext context) throws Exception {
+		setupLogging();
+		Dictionary props = new Properties();
+		Factory factory = Factory.getInstance();
+		PropertiesConfiguration cfg = new PropertiesConfiguration();
+		factory.configure(cfg);
+		services = new LinkedList<ServiceRegistration>();
+		services.add(context.registerService(Factory.class.getName(), factory, props));
+		Collection<? extends AFragmentCommand> commands = Lookup.getDefault().lookupAll(AFragmentCommand.class);
+		log.info("Found {} fragment commands!", commands.size());
+		for(AFragmentCommand cmd:commands) {
+			services.add(context.registerService(AFragmentCommand.class.getName(), cmd, props));
+		}
+		Collection<? extends IDataSource> dataSources = Lookup.getDefault().lookupAll(IDataSource.class);
+		log.info("Found {} data sources!", dataSources.size());
+		for(IDataSource ds:dataSources) {
+			services.add(context.registerService(IDataSource.class.getName(), ds, props));
+		}
+		Collection<? extends IControlledVocabularyProvider> cvProviders = Lookup.getDefault().lookupAll(IControlledVocabularyProvider.class);
+		log.info("Found {} cvProviders!", cvProviders.size());
+		for(IControlledVocabularyProvider icv:cvProviders) {
+			services.add(context.registerService(IControlledVocabularyProvider.class.getName(), icv, props));
+		}
+	}
 
-    protected void setupLogging() {
-        Properties props = new Properties();
-        props.setProperty("log4j.rootLogger", "INFO, A1");
-        props.setProperty("log4j.appender.A1",
-                "org.apache.log4j.ConsoleAppender");
-        props.setProperty("log4j.appender.A1.layout",
-                "org.apache.log4j.PatternLayout");
-        props.setProperty("log4j.appender.A1.layout.ConversionPattern",
-                "%m%n");
-        props.setProperty("log4j.category.cross", "WARN");
-        props.setProperty("log4j.category.cross.datastructures.pipeline",
-                "INFO");
-        props.setProperty("log4j.category.maltcms.commands.fragments",
-                "INFO");
-        props.setProperty("log4j.category.maltcms.commands.fragments2d",
-                "INFO");
-        props.setProperty("log4j.category.maltcms", "WARN");
-        props.setProperty("log4j.category.ucar", "WARN");
-        props.setProperty("log4j.category.smueller", "WARN");
-        props.setProperty("log4j.category.org.springframework.beans.factory", "WARN");
-        PropertyConfigurator.configure(props);
-    }
+	protected void setupLogging() {
+		Properties props = new Properties();
+		props.setProperty("log4j.rootLogger", "INFO, A1");
+		props.setProperty("log4j.appender.A1",
+				"org.apache.log4j.ConsoleAppender");
+		props.setProperty("log4j.appender.A1.layout",
+				"org.apache.log4j.PatternLayout");
+		props.setProperty("log4j.appender.A1.layout.ConversionPattern",
+				"%m%n");
+		props.setProperty("log4j.category.cross", "WARN");
+		props.setProperty("log4j.category.cross.datastructures.pipeline",
+				"INFO");
+		props.setProperty("log4j.category.maltcms.commands.fragments",
+				"INFO");
+		props.setProperty("log4j.category.maltcms.commands.fragments2d",
+				"INFO");
+		props.setProperty("log4j.category.maltcms", "WARN");
+		props.setProperty("log4j.category.ucar", "WARN");
+		props.setProperty("log4j.category.smueller", "WARN");
+		props.setProperty("log4j.category.org.springframework.beans.factory", "WARN");
+		PropertyConfigurator.configure(props);
+	}
 
-    @Override
-    public void stop(BundleContext context) throws Exception {
-    }
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		log.info("Unregistering services!");
+		for(ServiceRegistration sr:services) {
+			sr.unregister();
+		}
+	}
 }
