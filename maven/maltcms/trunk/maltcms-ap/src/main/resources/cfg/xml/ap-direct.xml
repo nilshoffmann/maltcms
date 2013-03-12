@@ -48,6 +48,7 @@ for details.
         <property name="checkCommandDependencies" value="false"/>
         <property name="commands">
             <list>
+				<ref bean="defaultVarLoader" />
 				<ref bean="denseArrayProducer" />
 				<ref bean="peakAreaNormalizer" />
                 <ref bean="peakCliqueAlignment" />
@@ -55,6 +56,27 @@ for details.
         </property>
     </bean>
     <!-- commands -->
+
+	<!-- DefaultVarLoader, loads default variables, see cfg/cv/cv_maltcms.properties for default values for these -->
+    <bean id="defaultVarLoader" class="maltcms.commands.fragments.preprocessing.DefaultVarLoader">
+        <property name="defaultVariables">
+            <list>
+                <!-- uncomment to explicitly load default variables -->
+                <value>scan_index</value>
+                <value>mass_values</value>
+                <value>intensity_values</value>
+                <value>total_intensity</value>
+                <value>mass_range_min</value>
+                <value>mass_range_max</value>
+                <value>scan_acquisition_time</value>
+            </list>
+        </property>
+        <property name="additionalVariables">
+            <list>
+				<value>peak_area</value>
+            </list>
+        </property>
+    </bean>
 
     <!-- DenseArrayProducer, creates a dense profile matrix -->
     <bean id="denseArrayProducer" class="maltcms.commands.fragments.preprocessing.DenseArrayProducer">
@@ -117,7 +139,8 @@ for details.
     </bean>
 
     <bean id="peakFactory1D" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak1DFactory" scope="prototype">
-        <property name="peakAreaVar" value="peak_area_normalized"/>
+        <!-- was: peak_area_normalized -->
+		<property name="peakAreaVar" value="${peakCliqueAlignment.peakAreaVariable}"/>
     </bean>
 
     <!-- PeakCliqueAlignment -->

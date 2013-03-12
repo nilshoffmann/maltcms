@@ -88,7 +88,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 
     private ICacheDelegate<IVariableFragment, Array> getCache() {
         if(this.variableToArrayCache == null) {
-            this.variableToArrayCache = CacheFactory.createDefaultCache(UUID.randomUUID().toString());
+            this.variableToArrayCache = CacheFactory.createDefaultCache(MZXMLStaxDataSource.class.getName());
         }
         return this.variableToArrayCache;
     }

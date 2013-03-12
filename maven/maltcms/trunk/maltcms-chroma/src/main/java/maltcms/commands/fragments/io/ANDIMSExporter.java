@@ -55,9 +55,9 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.ArrayChar;
 
 /**
+ * Exports chromatogram data to ANDI-MS netCDF format.
+ * 
  * @author Nils Hoffmann
- *
- *
  */
 @Slf4j
 @Data

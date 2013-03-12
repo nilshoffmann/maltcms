@@ -116,7 +116,7 @@ public class MZMLDataSource implements IDataSource {
 
     private ICacheDelegate<IVariableFragment, Array> getCache() {
         if (this.variableToArrayCache == null) {
-            this.variableToArrayCache = CacheFactory.createDefaultCache(UUID.randomUUID().toString());
+            this.variableToArrayCache = CacheFactory.createDefaultCache(MZMLDataSource.class.getName());
         }
         return this.variableToArrayCache;
     }

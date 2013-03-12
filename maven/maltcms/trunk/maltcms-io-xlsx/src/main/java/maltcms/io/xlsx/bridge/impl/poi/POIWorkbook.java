@@ -28,7 +28,6 @@
 package maltcms.io.xlsx.bridge.impl.poi;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import lombok.Data;
 import maltcms.io.xlsx.bridge.IInputStreamProvider;
 import maltcms.io.xlsx.bridge.ISheet;
@@ -41,19 +40,21 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  *
  * @author Nils Hoffmann
  */
-
 @Data
 public class POIWorkbook implements IWorkbook {
-	
+
 	private final Workbook workbook;
 
 	public POIWorkbook(IInputStreamProvider provider) throws IOException, InvalidFormatException {
-		workbook = WorkbookFactory.create(provider.openStream());
+		try {
+			workbook = WorkbookFactory.create(provider.openStream());
+		} finally {
+			provider.closeStream();
+		}
 	}
-	
+
 	@Override
 	public ISheet getSheet(String name) {
 		return new POISheet(workbook.getSheet(name));
 	}
-	
 }

@@ -160,7 +160,8 @@ for details.
     </bean>
 
     <bean id="peakFactory1D" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak1DFactory" scope="prototype">
-        <property name="peakAreaVar" value="peak_area_normalized"/>
+        <!-- was: peak_area_normalized -->
+		<property name="peakAreaVar" value="${peakCliqueAlignment.peakAreaVariable}"/>
     </bean>
 
     <!-- PeakCliqueAlignment -->

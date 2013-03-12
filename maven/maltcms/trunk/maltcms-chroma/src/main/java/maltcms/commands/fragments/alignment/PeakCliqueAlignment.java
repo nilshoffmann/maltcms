@@ -122,7 +122,7 @@ import ucar.ma2.MAMath;
     "var.scan_acquisition_time", "var.mass_values", "var.intensity_values",
     "var.scan_index"})
 @RequiresOptionalVariables(names = {"var.tic_peaks",
-    "var.first_column_elution_time", "var.second_column_elution_time", "var.peak_area", "var.peak_area_percent"})
+    "var.first_column_elution_time", "var.second_column_elution_time", "var.peak_area"})
 @ProvidesVariables(names = {"var.anchors.retention_index_names",
     "var.anchors.retention_times", "var.anchors.retention_indices",
     "var.anchors.retention_scans"})
@@ -156,8 +156,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     private String scanAcquisitionTime = "scan_acquisition_time";
     @Configurable(name = "var.peak_area")
     private String peakAreaVariable = "peak_area";
-	@Configurable(name = "var.peak_area_percent")
-    private String peakAreaPercentVariable = "peak_area_percent";
     @Configurable
     private boolean useUserSuppliedAnchors = false;
     @Configurable
@@ -1419,7 +1417,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 EvalTools.notNull(fragment, this);
                 final int pos = columnMap.get(iff).intValue();
                 try {
-                    Array peakAreas = fragment.getChild(peakAreaPercentVariable).getArray();
+                    Array peakAreas = fragment.getChild(peakAreaVariable).getArray();
                     log.debug("PeakAreas for {}: {}", fragment.getName(), peakAreas.getShape()[0]);
                     log.debug("Insert position for {}: {}", iff, pos);
                     if (pos >= 0) {
@@ -1434,7 +1432,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                         }
                     }
                 } catch (ResourceNotAvailableException rnae) {
-                    log.debug("Could not find {} as starting from {}!",peakAreaPercentVariable,fragment.getName());
+                    log.debug("Could not find {} as starting from {}!",peakAreaVariable,fragment.getName());
                 }
             }
             final List<String> v = Arrays.asList(line);

@@ -28,6 +28,8 @@
 package maltcms.io.xlsx.impl;
 
 import cross.Factory;
+import cross.cache.CacheFactory;
+import cross.cache.ICacheDelegate;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
@@ -48,6 +50,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.UUID;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
@@ -81,40 +85,25 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 	private final String[] reportFileEnding = new String[]{"xls", "xlsx"};
 	private final String[] fileEnding = new String[]{"d"};
 	private HashMap<String, Mapping> varnameToMapping = new HashMap<String, Mapping>();
+	private static WeakHashMap<IFileFragment, IWorkbook> fileToWorkbook = new WeakHashMap<IFileFragment, IWorkbook>();
+    private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = null;
 	private static HashMap<URI,WorkbookBridge.IMPL> uriToImpl = new HashMap<URI,WorkbookBridge.IMPL>();
 
-//	private final String[] variables = {
-//		"peak_retention_time",
-//		"peak_name",
-//		"peak_amount",
-//		"peak_start_time",
-//		"peak_end_time",
-//		"peak_width",
-//		"peak_area",
-//		"peak_area_percent",
-//		"peak_height",
-//		"peak_height_percent",
-//		"peak_start_detection_code",
-//		"peak_stop_detection_code",
-//		"baseline_start_time",
-//		"baseline_start_value",
-//		"baseline_stop_time",
-//		"baseline_stop_value",
-//		"retention_index",
-//		"peak_asymmetry",
-//		"peak_efficiency"
-//	};
-//	private final String[] dimensions = {
-//		"peak_number",
-//		"scan_number"
-//	};
 	public AgilentPeakReportDataSource() {
 		log.info("Initializing AgilentPeakReportDataSource");
 		varnameToMapping.put("scan_acquisition_time", new Mapping("IntResults1", "RetTime", DataType.DOUBLE));
 		varnameToMapping.put("total_intensity", new Mapping("IntResults1", "Area", DataType.DOUBLE));
 		varnameToMapping.put("peak_area", new Mapping("IntResults1", "Area", DataType.DOUBLE));
 		varnameToMapping.put("intensity_values", new Mapping("IntResults1", "Area", DataType.DOUBLE));
+
 	}
+	
+    private ICacheDelegate<IVariableFragment, Array> getCache() {
+        if (this.variableToArrayCache == null) {
+            this.variableToArrayCache = CacheFactory.createDefaultCache(AgilentPeakReportDataSource.class.getName());
+        }
+        return this.variableToArrayCache;
+    }
 
 	private int getNumberOfPeaks(IWorkbook workbook, Mapping mapping) {
 		ISheet s = workbook.getSheet(mapping.getSheetName());
@@ -139,7 +128,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 				for (ICell c : header) {
 					if (c.stringValue().equals(mapping.getColumnName())) {
 						colIdx = cnt;
-						System.out.println("Found " + mapping.getColumnName() + " at index " + colIdx + "!");
+						log.debug("Found {} at index {}!", mapping.getColumnName(),colIdx);
 						break;
 					}
 					cnt++;
@@ -177,6 +166,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 	@Data
 	private class AgilentDReportInputStreamProvider implements IInputStreamProvider {
 		private final URI sourceDirectory;
+		private FileInputStream fileInputStream;
 
 		@Override
 		public InputStream openStream() {
@@ -188,7 +178,8 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 				}
 				if(!c.isEmpty()) {
 					try {
-						return new FileInputStream(c.iterator().next());
+						fileInputStream = new FileInputStream(c.iterator().next());
+						return fileInputStream;
 					} catch (FileNotFoundException ex) {
 						throw new ConstraintViolationException(ex);
 					}
@@ -197,31 +188,51 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 			}
 			throw new ConstraintViolationException("Could not find location: "+f);
 		}
+
+		@Override
+		public void closeStream() {
+			if(fileInputStream!=null) {
+				try {
+					fileInputStream.close();
+				} catch (IOException ex) {
+					log.warn("Caught exception while closing stream to "+sourceDirectory);
+				}
+			}
+		}
 		
 	}
 
-	private IWorkbook open(URI uri) {
+	private IWorkbook open(IFileFragment fragment) {
+		URI uri = fragment.getUri();
+		if(fileToWorkbook.containsKey(fragment)) {
+			return fileToWorkbook.get(fragment);
+		}
+		IWorkbook workbook = null;
 		WorkbookBridge wb = new WorkbookBridge();
 		if(uriToImpl.containsKey(uri)) {
-			return wb.getWorkbook(uri, uriToImpl.get(uri), new AgilentDReportInputStreamProvider(uri));
-		}
-		for(WorkbookBridge.IMPL impl: WorkbookBridge.IMPL.values()) {
-			try{
-				IWorkbook workbook = wb.getWorkbook(uri, impl, new AgilentDReportInputStreamProvider(uri));
-				if(workbook!=null) {
-					uriToImpl.put(uri, impl);
-					return workbook;
+			workbook =  wb.getWorkbook(uri, uriToImpl.get(uri), new AgilentDReportInputStreamProvider(uri));
+		}else{
+			for(WorkbookBridge.IMPL impl: WorkbookBridge.IMPL.values()) {
+				try{
+					workbook = wb.getWorkbook(uri, impl, new AgilentDReportInputStreamProvider(uri));
+					if(workbook!=null) {
+						uriToImpl.put(uri, impl);
+						break;
+					}
+				}catch(Exception e) {
+					log.warn("Caught exception while testing implementation "+impl);
 				}
-			}catch(Exception e) {
-				log.warn("Caught exception while testing implementation "+impl);
 			}
+		}
+		if(workbook!=null) {
+			fileToWorkbook.put(fragment,workbook);
+			return workbook;
 		}
 		throw new RuntimeException("Failed to load workbook for "+uri);
 	}
 
 	@Override
 	public int canRead(IFileFragment ff) {
-		System.out.println("Filename: "+ff.getName());
 		final int dotindex = ff.getName().lastIndexOf(".");
 		final String filename = ff.getName().toLowerCase();
 		if (dotindex == -1) {
@@ -230,17 +241,18 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 		}
 		for (final String s : this.fileEnding) {
 			if (filename.endsWith(s)) {
-				try {
-					IWorkbook w = open(ff.getUri());
-					ISheet peak = w.getSheet("Peak");
-					ISheet intRes = w.getSheet("IntResults1");
-					if (peak != null && intRes != null) {
-						log.info("Found a valid agilent peak report file!");
-						return 1;
-					}
-				} catch (RuntimeException re) {
-					log.warn("Could not open excel file:", re);
-				}
+//				try {
+//					IWorkbook w = open(ff.getUri());
+//					ISheet peak = w.getSheet("Peak");
+//					ISheet intRes = w.getSheet("IntResults1");
+//					if (peak != null && intRes != null) {
+//						log.info("Found a valid agilent peak report file!");
+//						return 1;
+//					}
+//				} catch (RuntimeException re) {
+//					log.warn("Could not open excel file:", re);
+//				}
+				return 1;
 			}
 		}
 		return 0;
@@ -256,7 +268,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 
 	public Dimension[] dimensions(Array a, IVariableFragment ivf) {
 		int[] shape = a.getShape();
-		if (ivf.getName().equals("scan_acquisition_time") || ivf.getName().equals("total_intensity") || ivf.getName().equals("scan_index")) {
+		if (ivf.getName().equals("scan_acquisition_time") || ivf.getName().equals("total_intensity") || ivf.getName().equals("scan_index")  || ivf.getName().equals("mass_range_min") || ivf.getName().equals("mass_range_max")) {
 			return new Dimension[]{new Dimension("scan_number", shape[0])};
 		} else if (ivf.getName().equals("mass_values") || ivf.getName().equals("intensity_values")) {
 			return new Dimension[]{new Dimension("point_number", shape[0])};
@@ -290,7 +302,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 
 	@Override
 	public ArrayList<Array> readAll(IFileFragment f) throws IOException, ResourceNotAvailableException {
-		IWorkbook w = open(f.getUri());
+		IWorkbook w = open(f);
 		ArrayList<Array> l = new ArrayList<Array>();
 		addIfNew("scan_acquisition_time", f);
 		addIfNew("total_intensity", f);
@@ -308,7 +320,11 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 	}
 	
 	private Array createArray(IVariableFragment ivf, IFileFragment f, IWorkbook w) {
-		Array a;
+		Array a = getCache().get(ivf);
+        if (a != null) {
+            log.info("Retrieved variable data array from cache for " + ivf);
+            return a;
+        }
 		if (ivf.getName().equals("scan_index")) {
 			a = createScanIndex(f, w);
 		} else if (ivf.getName().equals("mass_values")) {
@@ -323,6 +339,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 		if(a!=null) {
 			ivf.setDimensions(dimensions(a, ivf));
 			ivf.setRange(ranges(a, ivf));
+            getCache().put(ivf, a);
 		}
 		return a;
 	}
@@ -385,7 +402,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 
 	@Override
 	public Array readSingle(IVariableFragment f) throws IOException, ResourceNotAvailableException {
-		IWorkbook w = open(f.getParent().getUri());
+		IWorkbook w = open(f.getParent());
 		return createArray(f, f.getParent(), w);
 	}
 
@@ -417,6 +434,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 		f.setFile(filename);
 		f.addSourceFile(new FileFragment(f.getUri()));
 		log.info("To: {}", filename);
+		IWorkbook workbook = fileToWorkbook.get(f);
 		return Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).write(f);
 	}
 

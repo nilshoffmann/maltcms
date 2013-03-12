@@ -28,7 +28,6 @@
 package maltcms.io.xlsx.bridge.impl.jexcelapi;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Locale;
 import jxl.Sheet;
 import jxl.WorkbookSettings;
@@ -47,10 +46,14 @@ import maltcms.io.xlsx.bridge.IWorkbook;
 public class JXLWorkbook implements IWorkbook {
 	private final jxl.Workbook workbook;
 
-	public JXLWorkbook(IInputStreamProvider iisp) throws IOException, BiffException {
-		WorkbookSettings ws = new WorkbookSettings();
-		ws.setLocale(Locale.US);
-		workbook = jxl.Workbook.getWorkbook(iisp.openStream(), ws);
+	public JXLWorkbook(IInputStreamProvider provider) throws IOException, BiffException {
+		try{
+			WorkbookSettings ws = new WorkbookSettings();
+			ws.setLocale(Locale.US);
+			workbook = jxl.Workbook.getWorkbook(provider.openStream(), ws);
+		}finally{
+			provider.closeStream();
+		}
 	}
 	
 	@Override

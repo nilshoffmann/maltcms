@@ -45,6 +45,14 @@ import javax.swing.AbstractAction
 import java.awt.event.ActionEvent
 import java.text.SimpleDateFormat
 import javax.swing.JFileChooser
+import java.awt.Component
+import java.awt.Container
+
+def osName = System.properties['os.name'].toLowerCase()
+def laf = "system"
+if(osName.contains("linux")) {
+	laf ="nimbus"
+}
 
 UserProperties userProps = new UserProperties()
 APProperties props = new APProperties(wdir:new File(System.getProperty("ap.home")))
@@ -56,7 +64,30 @@ DefaultFormatterFactory df = new DefaultFormatterFactory(nf,nf,nf)
 
 MaltcmsExecution execution = null
 SwingBuilder swing = new SwingBuilder()
-swing.lookAndFeel('system')
+swing.lookAndFeel(laf)
+
+public void setMode(String mode, SwingBuilder swing, APProperties props) {
+	println "Using mode $mode"
+	props.mr.activePanels["ap"].each{
+		apit -> enableComponent(swing."$apit",false)
+	}
+	props.mr.activePanels[mode].each{
+		apit -> enableComponent(swing."$apit",true )
+	}
+//	swing.pipelineMode.value = mode
+	props.mr.pipelineMode = mode
+	props.mr.pipelineFile = new File(System.getProperty("ap.home"),"cfg/${mode}.properties")
+}
+
+public void enableComponent(Component comp, boolean state) {
+	comp.enabled = state
+	if(comp instanceof Container) {
+		Container cont = (Container)comp
+		cont.getComponents().each {
+			child -> enableComponent(child, state)
+		}
+	}
+}
 
 def importTab = swing.panel(constraints: BL.CENTER, id: "importTab", name: "Import", alignmentY: java.awt.Component.TOP_ALIGNMENT, alignmentX: java.awt.Component.LEFT_ALIGNMENT) {
     tableLayout(cellpadding: 5) {
@@ -75,55 +106,27 @@ def importTab = swing.panel(constraints: BL.CENTER, id: "importTab", name: "Impo
             }
             td(colfill: true, align: "LEFT") {
                 button("...", id: "fileButton", actionPerformed: {
-                        def fc = new java.awt.FileDialog(mainFrame, "Select input files", java.awt.FileDialog.LOAD)
-						fc.directory=userProps.lastDirectory
-//							fileSelectionMode: JFileChooser.FILES_AND_DIRECTORIES,
-//							multiSelectionEnabled : true,
-						fc.multipleMode = true
-                        fc.filenameFilter = new FilenameFilter() {
-							public boolean accept(File file, String name) {
-								if(file.isDirectory()) {
-									return true
-								}
-								return (
-									name ==~ /.*?\.cdf/ ||
-                                    name ==~ /.*?\.CDF/ || 
-									name ==~ /.*?\.D/ || 
-									name ==~ /.*?\.d/
-                                    )
-							}
-						}
-                        //fc.currentDirectory = userProps.lastDirectory
-//						fc.fileSelectionMode = JFileChooser.FILES_AND_DIRECTORIES
-						
-                        fc.show()
-						def selectedFiles = fc.getFiles()
-                        if(selectedFiles.length>0) {
+                        def fc = new JFileChooser(dialogTitle:"Select input files",fileSelectionMode: JFileChooser.FILES_AND_DIRECTORIES, multiSelectionEnabled: true,
+                            fileFilter:[getDescription: {-> "*.cdf;*.D"}, accept:{file-> file ==~ /.*?\.cdf/ ||
+                                    file ==~ /.*?\.CDF/ || file ==~ /.*?\.D/ || file ==~ /.*?\.d/ ||
+                                    file.isDirectory() }] as javax.swing.filechooser.FileFilter)
+                        fc.currentDirectory = userProps.lastDirectory
+                        def retval = fc.showOpenDialog()
+                        if(retval == JFileChooser.APPROVE_OPTION) {
 							String mode = "ap"
-                            userProps.lastDirectory = selectedFiles[0].getParentFile()
-                            List files = selectedFiles.collect{
+                            if(fc.getSelectedFiles().length>0) {
+                                userProps.lastDirectory = fc.getSelectedFiles()[0].getParentFile()
+							}
+                            List files = fc.getSelectedFiles().collect{
                                 file -> 
 								if(file.name.toLowerCase().endsWith(".d")) {
-									println "Using direct pipeline mode on preexisting peaks!"
 									mode = "ap-direct"
-								}else{
-									println "Using full pipeline mode with custom peakfinding!"
 								}
 								file.path
                             }
                             inputFiles.text = files.join(",")
-							pipelineMode.text = mode
-							props.mr.pipelineFile = new File(System.getProperty("ap.home"),"cfg/${mode}.properties")
-							println "Active panels: ${props.mr.activePanels[mode]}"
-							if(mode=="ap") {
-								
-//								props.mr.activePanels["ap-direct"].values().each{ ita -> ita.enabled = false}
-//								props.mr.activePanels[mode].values().each{ ita -> ita.enabled = true}
-							} else {
-//								props.mr.activePanels["ap"].values().each{ ita -> ita.enabled = false}
-//								props.mr.activePanels[mode].values().each{ ita -> ita.enabled = true}
-							}
-                        }
+							setMode(mode, swing, props)
+						}
                     })
             }
         }
@@ -141,8 +144,8 @@ def importTab = swing.panel(constraints: BL.CENTER, id: "importTab", name: "Impo
 		tr {
 			td(colfill: false, align: "RIGHT") {label "Mode"}
 			td(colspan: 3, colfill: true, align: "LEFT") {
-				textField(id: "pipelineMode", columns: 20, toolTipText: "Operating mode of this pipeline, either ap (w/ peakfinding) or ap-direct (w/ imported peaks)", editable: false)
-				bind(source: pipelineMode, sourceProperty: "value", target: props.mr, targetProperty: "pipelineMode",
+				textField(id: "pipelineMode", columns: 20, toolTipText: "Operating mode of this pipeline, either ap (w/ peakfinding) or ap-direct (w/ imported peaks)")
+				bind(source: pipelineMode, sourceProperty: "text", target: props.mr, targetProperty: "pipelineMode",
 					mutual:true)
 			}
 		}
@@ -523,6 +526,6 @@ swing.edt {
 
 props.load()
 userProps.load()
-
 swing.tanTicVariableNames.selectedItem = props.tan.ticVariableName
-
+swing.pipelineMode = props.mr.pipelineMode
+setMode(props.mr.pipelineMode, swing, props)

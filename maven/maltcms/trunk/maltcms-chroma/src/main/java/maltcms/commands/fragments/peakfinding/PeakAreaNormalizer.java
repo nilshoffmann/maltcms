@@ -33,14 +33,12 @@ import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
-import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import java.util.Collections;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.filters.array.MultiplicationFilter;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
@@ -54,7 +52,7 @@ import ucar.nc2.Dimension;
  * @author Nils Hoffmann
  */
 @RequiresVariables(names = {"var.peak_area"})
-@ProvidesVariables(names = {"var.peak_area_normalized","var.peak_area_percent"})
+@ProvidesVariables(names = {"var.peak_area_normalized"})
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
@@ -74,6 +72,7 @@ public class PeakAreaNormalizer extends AFragmentCommand {
 		for (IFileFragment f : in) {
 			//init work data
 			IFileFragment result = createWorkFragment(f);			
+			log.info("Source file of result: {}",result.getSourceFiles());
 			Array area = f.getChild(resolve("var.peak_area")).getArray();
 			final Dimension peak_number = new Dimension("peak_number",
                     area.getShape()[0], true, false, false);
@@ -101,14 +100,9 @@ public class PeakAreaNormalizer extends AFragmentCommand {
 			//normalized peak area (may be not normalized if peakNormalizers is empty
 			IVariableFragment peakAreaNormalized = result.addChild(resolve("var.peak_area_normalized"));
             peakAreaNormalized.setDimensions(new Dimension[]{peak_number});
-			peakAreaNormalized.setArray(area);
-			//normalized peak area in percent
-			IVariableFragment peakAreaPercent = result.addChild(resolve("var.peak_area_percent"));
-			peakAreaPercent.setDimensions(new Dimension[]{peak_number});
-			MultiplicationFilter mf = new MultiplicationFilter(100.0d);
-			peakAreaPercent.setArray(mf.apply(normalizedAreaArray));
+			peakAreaNormalized.setArray(normalizedAreaArray);
 			//names of used methods
-            IVariableFragment peakNormalizationMethod = new VariableFragment(result, "peak_area_normalization_methods");
+            IVariableFragment peakNormalizationMethod = result.addChild("peak_area_normalization_methods");
             peakNormalizationMethod.setDimensions(new Dimension[]{peak_normalizers, _1024_byte_string});
 			peakNormalizationMethod.setArray(normalizationMethodArray);
 			//save

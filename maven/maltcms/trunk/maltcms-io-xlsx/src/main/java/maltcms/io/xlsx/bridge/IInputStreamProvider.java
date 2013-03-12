@@ -35,4 +35,6 @@ import java.io.InputStream;
  */
 public interface IInputStreamProvider {
 	public InputStream openStream();
+
+	public void closeStream();
 }

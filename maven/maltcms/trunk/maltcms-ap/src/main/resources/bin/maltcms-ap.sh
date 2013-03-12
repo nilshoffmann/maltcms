@@ -7,7 +7,7 @@
 ##############################################################################
 
 # Add default JVM options here. You can also use JAVA_OPTS and MALTCMS_OPTS to pass JVM options to this script.
-DEFAULT_JVM_OPTS=""
+DEFAULT_JVM_OPTS="-Dswing.aatext=true -Dawt.useSystemAAFontSettings=on -Dsun.java2d.dpiaware=true"
 
 APP_NAME="Maltcms AP"
 APP_BASE_NAME=`basename "$0"`
