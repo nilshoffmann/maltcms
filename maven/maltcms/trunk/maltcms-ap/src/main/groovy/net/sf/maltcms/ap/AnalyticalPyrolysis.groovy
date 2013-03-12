@@ -144,7 +144,7 @@ def importTab = swing.panel(constraints: BL.CENTER, id: "importTab", name: "Impo
 		tr {
 			td(colfill: false, align: "RIGHT") {label "Mode"}
 			td(colspan: 3, colfill: true, align: "LEFT") {
-				textField(id: "pipelineMode", columns: 20, toolTipText: "Operating mode of this pipeline, either ap (w/ peakfinding) or ap-direct (w/ imported peaks)")
+				textField(id: "pipelineMode", columns: 20, editable: false, toolTipText: "Operating mode of this pipeline, either ap (w/ peakfinding) or ap-direct (w/ imported peaks)")
 				bind(source: pipelineMode, sourceProperty: "text", target: props.mr, targetProperty: "pipelineMode",
 					mutual:true)
 			}
