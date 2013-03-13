@@ -74,10 +74,15 @@
 		<system>jenkins</system>
 		<url>https://maltcms.de:8181/jenkins/job/maltcms/</url>
 	</ciManagement>
+	<!--    <scm>
+        <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</connection>
+        <developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</developerConnection>
+        <url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</url>
+    </scm>-->
 	<scm>
-		<connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</connection>
-		<developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</developerConnection>
-		<url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk</url>
+		<developerConnection>scm:git:https://git.code.sf.net/p/maltcms/code</developerConnection>
+		<connection>scm:git:git://git.code.sf.net/p/maltcms/code</connection>
+		<url>https://git.code.sf.net/p/maltcms/code</url>
 	</scm>
 	<distributionManagement>
 		<repository>
@@ -171,11 +176,16 @@
 						<releaseProfiles>src,javadoc</releaseProfiles>
 					</configuration>
 					<dependencies>
-						<dependency>
+						<dependency> 
+							<groupId>org.apache.maven.scm</groupId> 
+							<artifactId>maven-scm-provider-gitexe</artifactId> 
+							<version>1.8.1</version> 
+						</dependency>
+<!--						<dependency>
 							<groupId>org.apache.maven.scm</groupId>
 							<artifactId>maven-scm-provider-svnexe</artifactId>
 							<version>1.7</version>
-						</dependency>
+						</dependency>-->
 					</dependencies>
 				</plugin>
 				<plugin>

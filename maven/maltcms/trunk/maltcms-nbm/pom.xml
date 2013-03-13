@@ -9,14 +9,14 @@
 	<artifactId>maltcms-nbm</artifactId>
 	<name>Maltcms Distribution NBM</name>
 	<url>http://maltcms.sourceforge.net</url>
-	<packaging>nbm-application</packaging>
+	<packaging>nbm</packaging>
     
 	<build>
         <plugins>      
 			<plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
-				<version>3.10-SNAPSHOT</version>
+				<version>3.9</version>
                 <extensions>true</extensions>
 				<configuration>
 					<useOSGiDependencies>false</useOSGiDependencies>
@@ -26,7 +26,7 @@
 						<publicPackage>maltcms.*</publicPackage>
 						<publicPackage>cross.*</publicPackage>
 						<publicPackage>net.sf.maltcms.*</publicPackage>
-<!--						<publicPackage>net.sf.mpaxs.*</publicPackage>
+						<publicPackage>net.sf.mpaxs.*</publicPackage>
 						<publicPackage>org.apache.*</publicPackage>
 						<publicPackage>groovy.*</publicPackage>
 						<publicPackage>org.codehaus.groovy.*</publicPackage>
@@ -34,13 +34,13 @@
 						<publicPackage>thredds.*</publicPackage>
 						<publicPackage>org.jfree.*</publicPackage>
 						<publicPackage>javax.media.*</publicPackage>
-						<publicPackage>javax.xml.bind.*</publicPackage>-->
+						<publicPackage>javax.xml.bind.*</publicPackage>
                     </publicPackages>
-					<brandingToken>maltcms-nbm</brandingToken>
+					<!--<brandingToken>maltcms-nbm</brandingToken>-->
 					<defaultCluster>maltcms</defaultCluster>
 					<codeNameBase>net.sf.maltcms.nbm</codeNameBase>
 					<moduleType>autoload</moduleType>
-					<skipHarness>true</skipHarness>
+					<!--<skipHarness>true</skipHarness>-->
 				</configuration>
             </plugin>
             <plugin> <!-- required since nbm-plugin 3.0-->
@@ -59,7 +59,7 @@
 			<version>RELEASE721</version>
 			<scope>provided</scope>
 		</dependency>-->
-<!--		<dependency>
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>maltcms-chroma4D</artifactId>
 			<version>${project.version}</version>
@@ -287,11 +287,11 @@
 			<artifactId>commons-codec</artifactId>
 			<groupId>commons-codec</groupId>
 			<version>1.4</version>
-		</dependency>-->
-		<dependency>
+		</dependency>
+<!--		<dependency>
 			<artifactId>maltcms-osgi-distribution</artifactId>
 			<groupId>net.sf.maltcms</groupId>
 			<version>${project.version}</version>
-		</dependency>
+		</dependency>-->
 	</dependencies>
 </project>

@@ -65,12 +65,16 @@
         <system>jenkins</system>
         <url>https://maltcms.de:9443/jenkins/job/cross/</url>
     </ciManagement>
-    <scm>
+    <!--    <scm>
         <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/cross/trunk/</connection>
         <developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/cross/trunk/</developerConnection>
         <url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/cross/trunk/</url>
+    </scm>-->
+    <scm>
+        <developerConnection>scm:git:https://git.code.sf.net/p/maltcms/code</developerConnection>
+        <connection>scm:git:git://git.code.sf.net/p/maltcms/code</connection>
+        <url>https://git.code.sf.net/p/maltcms/code</url>
     </scm>
-
     <distributionManagement>
         <repository>
             <id>maltcms-release</id>
@@ -302,11 +306,16 @@
                     <releaseProfiles>src,javadoc</releaseProfiles>
                 </configuration>
                 <dependencies> 
-                    <dependency> 
+<!--                    <dependency> 
                         <groupId>org.apache.maven.scm</groupId> 
                         <artifactId>maven-scm-provider-svnexe</artifactId> 
                         <version>1.7</version> 
-                    </dependency> 
+                    </dependency> -->
+                    <dependency> 
+                        <groupId>org.apache.maven.scm</groupId> 
+                        <artifactId>maven-scm-provider-gitexe</artifactId> 
+                        <version>1.8.1</version> 
+                    </dependency>
                 </dependencies>
             </plugin>
             <plugin>
@@ -341,7 +350,7 @@
                             <configuration>
                                 <show>public</show>
                                 <links>
-                                    <link>http://docs.oracle.com/javase/6/docs/api/</link>
+                                    <link>http://docs.oracle.com/javase/7/docs/api/</link>
                                     <link>http://www.unidata.ucar.edu/software/netcdf-java/v4.2/javadoc/</link>
                                 </links>
                             </configuration>
@@ -488,7 +497,7 @@
                 <version>${version.junit}</version>
                 <scope>test</scope>
             </dependency>
-<!--            <dependency>
+            <!--            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>com.springsource.org.apache.commons.io</artifactId>
                 <version>1.4.0</version>
