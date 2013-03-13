@@ -40,7 +40,7 @@
 					<defaultCluster>maltcms</defaultCluster>
 					<codeNameBase>net.sf.maltcms.nbm</codeNameBase>
 					<moduleType>autoload</moduleType>
-					<!--<skipHarness>true</skipHarness>-->
+					<skipHarness>true</skipHarness>
 				</configuration>
             </plugin>
             <plugin> <!-- required since nbm-plugin 3.0-->
