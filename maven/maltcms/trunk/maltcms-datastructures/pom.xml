@@ -57,10 +57,6 @@
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart-osgi</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.jfree</groupId>
-            <artifactId>jcommon-osgi</artifactId>
-        </dependency>
 		<dependency>
 			<groupId>javax.media.jai</groupId>
 			<artifactId>com.springsource.javax.media.jai.codec</artifactId>

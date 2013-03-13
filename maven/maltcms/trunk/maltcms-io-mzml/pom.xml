@@ -20,6 +20,12 @@
             <groupId>uk.ac.ebi.jmzml</groupId>
             <artifactId>jmzml-osgi</artifactId>
             <version>1.6.8</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>com.springsource.org.apache.commons.io</artifactId>
+                    <groupId>org.apache.commons</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <packaging>jar</packaging>

@@ -7,28 +7,31 @@
 		<groupId>net.sf.maltcms</groupId>
 		<version>1.2.1-SNAPSHOT</version>
 	</parent>
-	<groupId>net.sf.jexcelapi</groupId>
-	<artifactId>jxl-osgi</artifactId>
-	<version>2.6.12</version>
-	<name>JXL OSGI</name>
-	<url>http://jexcelapi.sourceforge.net/</url>
+	<groupId>org.jfree</groupId>
+	<artifactId>jfreechart-osgi</artifactId>
+	<version>1.0.14</version>
+	<name>JFreeChart OSGI</name>
+	<url>http://jfreechart.sourceforge.net/</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<packaging>bundle</packaging>
 	<dependencies>
 		<dependency>
-			<groupId>net.sourceforge.jexcelapi</groupId>
-			<artifactId>jxl</artifactId>
-			<!-- set this to project.version to stay in sync -->
-			<version>2.6.12</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>log4j</artifactId>
-					<groupId>log4j</groupId>
-				</exclusion>
-			</exclusions>
-			<!--<scope>provided</scope>-->
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.0.14</version>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>itext</artifactId>
+		   <groupId>com.lowagie</groupId>
+		  </exclusion>
+		 </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jcommon</artifactId>
+			<version>1.0.17</version>
 		</dependency>
 	</dependencies>
 	
@@ -40,13 +43,14 @@
 				<extensions>true</extensions> 
 				<configuration> 
 					<instructions> 
-						<Import-Package>!junit.*;*</Import-Package>
+						<!-- ignore servlet package dependencies -->
+						<Import-Package>!javax.servlet.*;!com.lowagie;*</Import-Package>
 						<!-- 
 							state the packages to export, separated by ';' 
 							if these are not given, dependencies are NOT included 
 							by bnd
 						-->
-						<Export-Package>jxl.*</Export-Package>
+						<Export-Package>org.jfree.*;com.keypoint.*</Export-Package>
 						<!--
 							state the url of the license
 						-->
@@ -54,7 +58,7 @@
 						<!--
 							short description of the bundle 
 						-->
-						<Bundle-Description>Java Excel API - A Java API to read, write, and modify Excel spreadsheets</Bundle-Description>
+						<Bundle-Description>JFreeChart</Bundle-Description>
 					</instructions> 
 				</configuration> 
 				<executions>

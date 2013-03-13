@@ -28,7 +28,6 @@
 package maltcms.io.xlsx.bridge;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import jxl.read.biff.BiffException;
 import lombok.extern.slf4j.Slf4j;

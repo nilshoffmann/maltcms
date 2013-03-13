@@ -19,7 +19,7 @@
 				<version>3.10-SNAPSHOT</version>
                 <extensions>true</extensions>
 				<configuration>
-					<useOSGiDependencies>true</useOSGiDependencies>
+					<useOSGiDependencies>false</useOSGiDependencies>
 					<author>Nils Hoffmann</author>
 					<cluster>maltcms</cluster>
 					<publicPackages>
@@ -40,7 +40,7 @@
 					<defaultCluster>maltcms</defaultCluster>
 					<codeNameBase>net.sf.maltcms.nbm</codeNameBase>
 					<moduleType>autoload</moduleType>
-					<skipHarness>true</skipHarness>
+					<!--<skipHarness>true</skipHarness>-->
 				</configuration>
             </plugin>
             <plugin> <!-- required since nbm-plugin 3.0-->
@@ -59,7 +59,7 @@
 			<version>RELEASE721</version>
 			<scope>provided</scope>
 		</dependency>-->
-		<dependency>
+<!--		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>maltcms-chroma4D</artifactId>
 			<version>${project.version}</version>
@@ -180,6 +180,12 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>maltcms-io-mzml</artifactId>
 			<version>${project.version}</version>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>com.springsource.org.apache.log4j</artifactId>
+		   <groupId>org.apache.log4j</groupId>
+		  </exclusion>
+		 </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -232,12 +238,12 @@
 			<groupId>javax.xml.bind</groupId>
 			<type>jar</type>
 			<version>2.1</version>
-<!--			<exclusions>
+			<exclusions>
 				<exclusion>
 					<artifactId>stax-api</artifactId>
 					<groupId>javax.xml.stream</groupId>
 				</exclusion>
-			</exclusions>-->
+			</exclusions>
 		</dependency>
 		<dependency>
 			<artifactId>jaxb-impl</artifactId>
@@ -281,6 +287,11 @@
 			<artifactId>commons-codec</artifactId>
 			<groupId>commons-codec</groupId>
 			<version>1.4</version>
+		</dependency>-->
+		<dependency>
+			<artifactId>maltcms-osgi-distribution</artifactId>
+			<groupId>net.sf.maltcms</groupId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>
