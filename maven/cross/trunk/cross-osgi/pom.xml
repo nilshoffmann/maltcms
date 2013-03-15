@@ -118,6 +118,10 @@
 			<type>jar</type>
 			<version>1.1.1</version>
 		</dependency>
+	 <dependency>
+	  <groupId>org.projectlombok</groupId>
+	  <artifactId>lombok</artifactId>
+	 </dependency>
 	</dependencies>
 	<build>
 		<plugins>

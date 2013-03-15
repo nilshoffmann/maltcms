@@ -136,6 +136,7 @@
 						<publicPackage>ucar.nc2.*</publicPackage>
 						<publicPackage>ucar.unidata.*</publicPackage>
 						<publicPackage>org.springframework.*</publicPackage>
+						<publicPackage>org.jdom.*</publicPackage>
 					</publicPackages>
 					<defaultCluster>maltcms</defaultCluster>
 				</configuration>
