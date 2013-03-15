@@ -283,6 +283,12 @@
                     <artifactId>maven-pax-plugin</artifactId>
                     <version>1.5</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>nbm-maven-plugin</artifactId>
+                    <version>3.9</version>
+                    <extensions>true</extensions>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -306,7 +312,7 @@
                     <releaseProfiles>src,javadoc</releaseProfiles>
                 </configuration>
                 <dependencies> 
-<!--                    <dependency> 
+                    <!--                    <dependency> 
                         <groupId>org.apache.maven.scm</groupId> 
                         <artifactId>maven-scm-provider-svnexe</artifactId> 
                         <version>1.7</version> 
@@ -437,7 +443,7 @@
         <module>cross-test</module>
         <module>cross-osgi</module>
         <module>cross-nbm-cluster</module>
-  </modules>
+    </modules>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -671,7 +677,7 @@
     </dependencyManagement>
     
     <dependencies>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
@@ -683,7 +689,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
         </dependency>
