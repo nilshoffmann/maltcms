@@ -14,32 +14,197 @@
 
 	<name>maltcms-nbm</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
-	<repositories>
-		<!--
-		Repository hosting NetBeans modules, especially APIs.
-		Versions are based on IDE releases, e.g.: RELEASE691
-		To create your own repository, use: nbm:populate-repository
-		-->
-		<repository>
-			<id>netbeans</id>
-			<name>NetBeans</name>
-			<url>http://bits.netbeans.org/maven2/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
 	<dependencies>
 		<dependency>
+			<groupId>com.db4o</groupId>
+			<artifactId>db4o-nbm</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.jai</groupId>
+			<artifactId>jai-nbm</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreechart-nbm</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>apache-commons-nbm</artifactId>
+			<version>${version.cross}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.mpaxs</groupId>
+			<artifactId>mpaxs-nbm</artifactId>
+			<version>${version.cross}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-nbm</artifactId>
+			<version>${version.cross}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.netbeans.api</groupId>
-			<artifactId>org-netbeans-api-annotations-common</artifactId>
+			<artifactId>org-openide-util-lookup</artifactId>
 			<version>RELEASE721</version>
 		</dependency>
+		<dependency>
+			<groupId>net.sf.maltcms</groupId>
+			<artifactId>cross-nbm</artifactId>
+			<version>${version.cross}</version>
+		</dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-ap</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-apps</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-chroma</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-chroma4D</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-chroma4D-cwt</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-chroma4D-srg</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-filters</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-commands</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-datastructures</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-datastructures-quadtree</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-execution</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-io</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-db</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-experimental</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-statistics</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-sralign</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-spectratyping</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-xml-alignment</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-xml-annotation</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-resources</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-io-netcdf</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-io-mzxml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-io-mzdata</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-io-mzml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-io-csv</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-io-xlsx</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-io-openms-featurexml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-evaluation</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-cv</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -47,29 +212,28 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>nbm-maven-plugin</artifactId>
-				<version>3.8</version>
 				<extensions>true</extensions>
+				<configuration>
+					<useOSGiDependencies>false</useOSGiDependencies>
+					<author>Nils Hoffmann</author>
+					<cluster>maltcms</cluster>
+					<publicPackages>
+						<publicPackage>maltcms.*</publicPackage>
+						<publicPackage>net.sf.maltcms.*</publicPackage>
+					</publicPackages>
+					<defaultCluster>maltcms</defaultCluster>
+				</configuration>
 			</plugin>
 
 			<plugin>
 				<!-- NetBeans 6.9+ requires JDK 6 -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<!-- to have the jar plugin pickup the nbm generated manifest -->
-					<useDefaultManifestFile>true</useDefaultManifestFile>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

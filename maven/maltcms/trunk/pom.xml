@@ -379,6 +379,12 @@
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.1</version>
 				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>nbm-maven-plugin</artifactId>
+					<extensions>true</extensions>
+					<version>3.9</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
