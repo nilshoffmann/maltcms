@@ -10,9 +10,17 @@
     <artifactId>cross-math</artifactId>
     <version>1.2.12-SNAPSHOT</version>
     <name>Cross Math</name>
-    <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <dependencies></dependencies>
+    <dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+	</dependencies>
 </project>

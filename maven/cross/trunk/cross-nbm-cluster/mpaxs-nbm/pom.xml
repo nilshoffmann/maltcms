@@ -1,0 +1,137 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>cross-nbm-cluster</artifactId>
+		<groupId>net.sf.maltcms</groupId>
+		<version>1.2.12-SNAPSHOT</version>
+	</parent>
+	<groupId>net.sf.mpaxs</groupId>
+	<artifactId>mpaxs-nbm</artifactId>
+	<version>1.2.12-SNAPSHOT</version>
+	<packaging>nbm</packaging>
+
+	<name>mpaxs-nbm</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.netbeans.api</groupId>
+			<artifactId>org-netbeans-api-annotations-common</artifactId>
+			<version>RELEASE721</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>apache-commons-nbm</artifactId>
+			<version>${project.version}</version>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>slf4j-api</artifactId>
+		   <groupId>org.slf4j</groupId>
+		  </exclusion>
+		 </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.mpaxs</groupId>
+			<artifactId>mpaxs-spi</artifactId>
+			<scope>compile</scope>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>slf4j-api</artifactId>
+		   <groupId>org.slf4j</groupId>
+		  </exclusion>
+		 </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.mpaxs</groupId>
+			<artifactId>mpaxs-server</artifactId>
+			<scope>compile</scope>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>slf4j-api</artifactId>
+		   <groupId>org.slf4j</groupId>
+		  </exclusion>
+		 </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.mpaxs</groupId>
+			<artifactId>mpaxs-api</artifactId>
+			<scope>compile</scope>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>slf4j-api</artifactId>
+		   <groupId>org.slf4j</groupId>
+		  </exclusion>
+		 </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.mpaxs</groupId>
+			<artifactId>mpaxs-computeHost</artifactId>
+			<scope>compile</scope>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>slf4j-api</artifactId>
+		   <groupId>org.slf4j</groupId>
+		  </exclusion>
+		 </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.mpaxs</groupId>
+			<artifactId>mpaxs-drmaa-spi</artifactId>
+			<scope>compile</scope>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>slf4j-api</artifactId>
+		   <groupId>org.slf4j</groupId>
+		  </exclusion>
+		 </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.gff.drmaa</groupId>
+			<artifactId>sun-drmaa-impl-osgi</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-nbm</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>nbm-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<useOSGiDependencies>false</useOSGiDependencies>
+					<author>Nils Hoffmann</author>
+					<cluster>maltcms</cluster>
+					<publicPackages>
+						<publicPackage>net.sf.mpaxs.*</publicPackage>
+					</publicPackages>
+					<defaultCluster>maltcms</defaultCluster>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<!-- NetBeans 6.9+ requires JDK 6 -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<!-- to have the jar plugin pickup the nbm generated manifest -->
+					<useDefaultManifestFile>true</useDefaultManifestFile>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

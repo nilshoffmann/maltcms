@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Install: net/sf/maltcms/cross/nbm/Installer.class
+OpenIDE-Module-Localizing-Bundle: net/sf/maltcms/cross/nbm/Bundle.properties

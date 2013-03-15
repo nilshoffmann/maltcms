@@ -8,5 +8,6 @@
     <artifactId>cross-event</artifactId>
     <packaging>jar</packaging>
     <name>Cross Events</name>
+	
 </project>
 

@@ -416,12 +416,12 @@ public class ReflectionApplicationContextGenerator {
                     } else {
                         value = value.trim();
                     }
-                    if (value.startsWith("\"")) {
+                    if (value.contains("\"")) {
                         //remove the quotes that surround Strings
-                        value = value.substring(1, value.length() - 1);
-                    } else if (value.startsWith("'")) {
+                        value = value.replaceAll("\"","");
+                    } else if (value.contains("'")) {
                         //remove the quotes that surround characters
-                        value = value.substring(1, value.length() - 1);
+                        value = value.replaceAll("'","");
                     } else if (value.endsWith("d") || value.endsWith("D") || value.endsWith("f") || value.endsWith("F") || value.endsWith("l") || value.endsWith("L")) {
                         //remove the "double", "float", or "long" letters if they are there
                         value = value.substring(0, value.length() - 1);
