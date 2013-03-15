@@ -70,6 +70,7 @@
 				<configuration>
 					<!-- equinox also works -->
 					<framework>felix</framework>
+					<!--<framework>equinox</framework>-->
 					<provision>
 						<!-- prevent the following bundle fragments from being started -->
 						<param>mvn:org.slf4j/slf4j-log4j12/1.7.2@nostart</param>

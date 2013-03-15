@@ -57,6 +57,7 @@ public class WorkbookBridge {
 		switch(impl) {
 			case POI:
 				try {
+					log.info("Trying poi implementation.");
 					return new POIWorkbook(iisp);
 				} catch (IOException ex) {
 					log.warn("IOException: ",ex);
@@ -68,6 +69,7 @@ public class WorkbookBridge {
 				return null;
 			case JEXCELAPI:
 				try {
+					log.info("Trying jxl implementation.");
 					return new JXLWorkbook(iisp);
 				} catch (IOException ex) {
 					log.warn("IOException: ",ex);

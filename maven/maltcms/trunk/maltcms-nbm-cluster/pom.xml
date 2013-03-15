@@ -6,11 +6,19 @@
 		<groupId>net.sf.maltcms</groupId>
 		<version>1.2.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>maltcms-nbm</artifactId>
+	<artifactId>maltcms-nbm-cluster</artifactId>
 	<name>Maltcms Distribution NBM</name>
 	<url>http://maltcms.sourceforge.net</url>
-	<packaging>nbm</packaging>
-    
+	<packaging>pom</packaging>
+    <properties>
+		<maven.nbm.skip>true</maven.nbm.skip>
+	</properties>
+	<modules>
+		<module>db4o-nbm</module>
+		<module>jai-nbm</module>
+		<module>jfreechart-nbm</module>
+    <module>maltcms-nbm</module>
+  </modules>
 	<build>
         <plugins>      
 			<plugin>
@@ -24,10 +32,9 @@
 					<cluster>maltcms</cluster>
 					<publicPackages>
 						<publicPackage>maltcms.*</publicPackage>
-						<publicPackage>cross.*</publicPackage>
 						<publicPackage>net.sf.maltcms.*</publicPackage>
-						<publicPackage>net.sf.mpaxs.*</publicPackage>
-						<publicPackage>org.apache.*</publicPackage>
+						<!--<publicPackage>net.sf.mpaxs.*</publicPackage>-->
+<!--						<publicPackage>org.apache.*</publicPackage>
 						<publicPackage>groovy.*</publicPackage>
 						<publicPackage>org.codehaus.groovy.*</publicPackage>
 						<publicPackage>ucar.*</publicPackage>
@@ -35,12 +42,12 @@
 						<publicPackage>org.jfree.*</publicPackage>
 						<publicPackage>javax.media.*</publicPackage>
 						<publicPackage>javax.xml.bind.*</publicPackage>
+						<publicPackage>com.sun.media.jai.*</publicPackage>
+						<publicPackage>com.db4o.*</publicPackage>-->
                     </publicPackages>
-					<!--<brandingToken>maltcms-nbm</brandingToken>-->
+					<brandingToken>maltcms-nbm</brandingToken>
 					<defaultCluster>maltcms</defaultCluster>
 					<codeNameBase>net.sf.maltcms.nbm</codeNameBase>
-					<moduleType>autoload</moduleType>
-					<!--<skipHarness>true</skipHarness>-->
 				</configuration>
             </plugin>
             <plugin> <!-- required since nbm-plugin 3.0-->
@@ -59,7 +66,7 @@
 			<version>RELEASE721</version>
 			<scope>provided</scope>
 		</dependency>-->
-		<dependency>
+<!--		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>maltcms-chroma4D</artifactId>
 			<version>${project.version}</version>
@@ -218,20 +225,33 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<artifactId>cross-main</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>maltcms-ap</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>mpaxs-nbm</artifactId>
+			<groupId>net.sf.mpaxs</groupId>
+			<type>jar</type>
+			<version>1.2.12-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<artifactId>cross-nbm</artifactId>
 			<groupId>net.sf.maltcms</groupId>
 			<type>jar</type>
 			<version>1.2.12-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>com.springsource.org.apache.tools.ant</artifactId>
-					<groupId>org.apache.ant</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>org-openide-util-lookup-osgi</artifactId>
-					<groupId>org.netbeans.api</groupId>
-				</exclusion>
-			</exclusions>
+		</dependency>
+		<dependency>
+			<artifactId>apache-commons-nbm</artifactId>
+			<groupId>org.apache</groupId>
+			<type>jar</type>
+			<version>1.2.12-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<artifactId>slf4j-nbm</artifactId>
+			<groupId>org.slf4j</groupId>
+			<type>jar</type>
+			<version>1.2.12-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<artifactId>jaxb-api</artifactId>
@@ -274,24 +294,40 @@
 			<version>1.3.3</version>
 		</dependency>
 		<dependency>
-			<artifactId>poi-osgi</artifactId>
-			<groupId>${project.groupId}</groupId>
-			<version>${project.version}</version>
+			<artifactId>poi</artifactId>
+			<groupId>org.apache.poi</groupId>
+			<version>3.9</version>
 		</dependency>
 		<dependency>
+			<artifactId>poi-ooxml</artifactId>
+			<groupId>org.apache.poi</groupId>
+			<version>3.9</version>
+		</dependency>
+		<dependency>
+			<artifactId>poi-ooxml-schemas</artifactId>
+			<groupId>org.apache.poi</groupId>
+			<version>3.9</version>
+		</dependency>-->
+<!--		<dependency>
 			<artifactId>com.springsource.org.apache.tools.ant</artifactId>
 			<groupId>org.apache.ant</groupId>
 			<version>1.7.1</version>
-		</dependency>
-		<dependency>
+			<scope>provided</scope>
+		</dependency>-->
+<!--		<dependency>
 			<artifactId>commons-codec</artifactId>
 			<groupId>commons-codec</groupId>
-			<version>1.4</version>
-		</dependency>
+			<version>1.5</version>
+		</dependency>-->
 <!--		<dependency>
-			<artifactId>maltcms-osgi-distribution</artifactId>
+			<groupId>net.sf.maltcms</groupId>
+			<artifactId>cross-osgi</artifactId>
+		</dependency>-->
+<!--		<dependency>
+			<artifactId>maltcms-ap-distribution</artifactId>
 			<groupId>net.sf.maltcms</groupId>
 			<version>${project.version}</version>
+			<type>pom</type>
 		</dependency>-->
 	</dependencies>
 </project>

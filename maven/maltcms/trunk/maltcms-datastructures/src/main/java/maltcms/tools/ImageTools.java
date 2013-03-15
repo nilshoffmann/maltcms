@@ -28,7 +28,6 @@
 package maltcms.tools;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -39,7 +38,6 @@ import java.awt.MultipleGradientPaint;
 import java.awt.Point;
 import java.awt.Transparency;
 import java.awt.font.TextLayout;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ByteLookupTable;
 import java.awt.image.LookupOp;
@@ -51,9 +49,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -74,13 +69,8 @@ import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.io.csv.ColorRampReader;
 
-import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.apache.batik.svggen.SVGGraphics2D;
-import org.apache.batik.svggen.SVGGraphics2DIOException;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.encoders.EncoderUtil;
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
 
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -96,6 +86,7 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
+import cross.exception.NotImplementedException;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
 import lombok.extern.slf4j.Slf4j;
@@ -983,9 +974,10 @@ public class ImageTools {
                     file.getAbsolutePath());
             if (ext.equalsIgnoreCase("svg")) {
                 // File f = new File(d, fname + "." + filetype);
-                ImageTools.log.info("Saving to file {}", file.getAbsolutePath());
-                final FileOutputStream fos = new FileOutputStream(file);
-                ImageTools.writeSVG(chart, fos, imgwidth, imgheight);
+//                ImageTools.log.info("Saving to file {}", file.getAbsolutePath());
+//                final FileOutputStream fos = new FileOutputStream(file);
+//                ImageTools.writeSVG(chart, fos, imgwidth, imgheight);
+				throw new NotImplementedException("svg support is currently disabled!");
             } else if (ext.equalsIgnoreCase("png")) {// use png as default
                 final File f = file;
                 ImageTools.log.info("Saving to file {}", f.getAbsolutePath());
@@ -1020,38 +1012,38 @@ public class ImageTools {
         }
     }
 
-    public static void writeSVG(final JFreeChart chart,
-            final FileOutputStream fos, final int imgwidth, final int imgheight) {
-        try {
-            // Following code is adapted from JFreeChart Developers manual
-            final String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
-            final DOMImplementation domImpl = SVGDOMImplementation.
-                    getDOMImplementation();
-            // Create an instance of org.w3c.dom.Document
-            final Document document = domImpl.createDocument(svgNS, "svg", null);
-            // Create an instance of the SVG Generator
-            final SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
-            // set the precision to avoid a null pointer exception in Batik 1.5
-            svgGenerator.getGeneratorContext().setPrecision(6);
-            // Ask the chart to render into the SVG Graphics2D implementation
-            svgGenerator.setSVGCanvasSize(new Dimension(imgwidth, imgheight));
-            chart.draw(svgGenerator, new Rectangle2D.Double(0, 0, imgwidth,
-                    imgheight), null);
-            // Finally, stream out SVG to a file using UTF-8 character to
-            // byte encoding
-            final boolean useCSS = true;
-            Writer out;
-            try {
-                out = new OutputStreamWriter(fos, "UTF-8");
-                svgGenerator.stream(out, useCSS);
-            } catch (final UnsupportedEncodingException e) {
-                ImageTools.log.error(e.getLocalizedMessage());
-            } catch (final SVGGraphics2DIOException e) {
-                ImageTools.log.error(e.getLocalizedMessage());
-            }
-        } catch (final NoClassDefFoundError cnfe) {
-            ImageTools.log.warn("Batik is not present on the classpath!");
-        }
-
-    }
+//    public static void writeSVG(final JFreeChart chart,
+//            final FileOutputStream fos, final int imgwidth, final int imgheight) {
+//        try {
+//            // Following code is adapted from JFreeChart Developers manual
+//            final String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
+//            final DOMImplementation domImpl = SVGDOMImplementation.
+//                    getDOMImplementation();
+//            // Create an instance of org.w3c.dom.Document
+//            final Document document = domImpl.createDocument(svgNS, "svg", null);
+//            // Create an instance of the SVG Generator
+//            final SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+//            // set the precision to avoid a null pointer exception in Batik 1.5
+//            svgGenerator.getGeneratorContext().setPrecision(6);
+//            // Ask the chart to render into the SVG Graphics2D implementation
+//            svgGenerator.setSVGCanvasSize(new Dimension(imgwidth, imgheight));
+//            chart.draw(svgGenerator, new Rectangle2D.Double(0, 0, imgwidth,
+//                    imgheight), null);
+//            // Finally, stream out SVG to a file using UTF-8 character to
+//            // byte encoding
+//            final boolean useCSS = true;
+//            Writer out;
+//            try {
+//                out = new OutputStreamWriter(fos, "UTF-8");
+//                svgGenerator.stream(out, useCSS);
+//            } catch (final UnsupportedEncodingException e) {
+//                ImageTools.log.error(e.getLocalizedMessage());
+//            } catch (final SVGGraphics2DIOException e) {
+//                ImageTools.log.error(e.getLocalizedMessage());
+//            }
+//        } catch (final NoClassDefFoundError cnfe) {
+//            ImageTools.log.warn("Batik is not present on the classpath!");
+//        }
+//
+//    }
 }

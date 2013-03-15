@@ -75,10 +75,10 @@
 		<url>https://maltcms.de:8181/jenkins/job/maltcms/</url>
 	</ciManagement>
 	<!--    <scm>
-        <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</connection>
-        <developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</developerConnection>
-        <url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</url>
-    </scm>-->
+		<connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</connection>
+		<developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</developerConnection>
+		<url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</url>
+	</scm>-->
 	<scm>
 		<developerConnection>scm:git:https://git.code.sf.net/p/maltcms/code</developerConnection>
 		<connection>scm:git:git://git.code.sf.net/p/maltcms/code</connection>
@@ -181,7 +181,7 @@
 							<artifactId>maven-scm-provider-gitexe</artifactId> 
 							<version>1.8.1</version> 
 						</dependency>
-<!--						<dependency>
+						<!--						<dependency>
 							<groupId>org.apache.maven.scm</groupId>
 							<artifactId>maven-scm-provider-svnexe</artifactId>
 							<version>1.7</version>
@@ -590,7 +590,7 @@
 		<module>maltcms-distribution</module>
 		<module>maltcms-ap-distribution</module>
 		<module>maltcms-osgi-distribution</module>
-		<module>maltcms-nbm</module>
+		<module>maltcms-nbm-cluster</module>
 		<module>maltcms-cv</module>
 		<module>maltcms-ap</module>
 		<module>jxl-osgi</module>
@@ -735,14 +735,24 @@
 				<artifactId>netcdf-osgi</artifactId>
 				<version>4.2.35</version>
 			</dependency>
+			<dependency>
+				<groupId>net.sf.maltcms</groupId>
+				<artifactId>cross-main</artifactId>
+				<version>1.2.12-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.xml.bind</groupId>
+				<artifactId>jaxb-impl</artifactId>
+				<version>2.1.12</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	
 	<dependencies>
-		<dependency>
+		<!--		<dependency>
 			<groupId>net.sf.maltcms</groupId>
 			<artifactId>cross-osgi</artifactId>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>net.sf.maltcms</groupId>
 			<artifactId>cross-test</artifactId>
@@ -751,11 +761,12 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
 		</dependency>
-		<dependency>
+		<!--		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

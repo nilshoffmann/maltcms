@@ -28,15 +28,12 @@
 package maltcms.io.xlsx;
 
 import cross.Factory;
-import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
-import cross.datastructures.tools.EvalTools;
 import cross.exception.NotImplementedException;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.tools.StringTools;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;

@@ -15,6 +15,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-datastructures</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>maltcms-xml-alignment</artifactId>
+                    <groupId>net.sf.maltcms</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -38,13 +44,7 @@
         </dependency>
         <dependency>
             <groupId>org.jfree</groupId>
-            <artifactId>jcommon-osgi</artifactId>
-            <version>1.0.16</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jfree</groupId>
             <artifactId>jfreechart-osgi</artifactId>
-            <version>1.0.13</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
