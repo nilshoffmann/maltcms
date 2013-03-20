@@ -31,6 +31,7 @@ import cross.Factory;
 import cross.IConfigurable;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.tools.EvalTools;
 import cross.exception.ResourceNotAvailableException;
 import java.io.IOException;
 import java.lang.ref.ReferenceQueue;
@@ -188,8 +189,8 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
                 final int upperBound = Math.min(this.size, this.cacheSize);
                 log.info("Prefetching: from {} to {}",
                         arg0, arg0 + upperBound);
-                final List<Array> l = load(arg0, Math.min(
-                        arg0 + upperBound - 1, this.size - 1));
+                final List<Array> l = load(arg0, Math.max(arg0,Math.min(
+                        arg0 + upperBound - 1, this.size - 1)));
                 for (int i = 0; i < l.size(); i++) {
                     addToCache(Integer.valueOf(arg0 + i), l.get(i));
                 }
@@ -289,6 +290,7 @@ public class CachedList implements List<ucar.ma2.Array>, IConfigurable {
     private List<Array> load(final int from, final int to)
             throws ResourceNotAvailableException {
         Range[] originalRange = this.ivf.getIndex().getRange();
+		EvalTools.geq(from, to, this);
         try {
             // keep range as is since we still reference original data
             final Range[] r = new Range[]{new Range(from + this.offset, to

@@ -27,6 +27,7 @@
  */
 package cross.datastructures.collections;
 
+import cross.datastructures.tools.EvalTools;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.*;
@@ -172,8 +173,11 @@ public class CachedLazyList<T> implements List<T> {
                 final int upperBound = Math.min(this.size, this.cacheSize);
 //				Logging.getLogger(this).info("Prefetching: from {} to {}",
 //				        arg0, arg0 + upperBound);
-                final List<T> l = ivf.get(arg0, Math.min(
+				int from = arg0;
+				int to = Math.max(arg0,Math.min(
                         arg0 + upperBound - 1, this.size - 1));
+				EvalTools.geq(from, to, this);
+                final List<T> l = ivf.get(from, to);
                 for (int i = 0; i < l.size(); i++) {
                     addToCache(Integer.valueOf(arg0 + i), l.get(i));
                 }
