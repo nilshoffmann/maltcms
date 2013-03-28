@@ -16,7 +16,8 @@
 		<module>jai-nbm</module>
 		<module>jfreechart-nbm</module>
 		<module>maltcms-nbm</module>
-	</modules>
+    <module>groovy-nbm</module>
+  </modules>
   
 	<build>
 		<pluginManagement>

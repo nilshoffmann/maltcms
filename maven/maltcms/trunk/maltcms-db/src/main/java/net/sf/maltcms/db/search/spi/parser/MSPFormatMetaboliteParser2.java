@@ -49,6 +49,7 @@ import cross.datastructures.collections.IElementProvider;
 import cross.exception.ConstraintViolationException;
 import java.io.*;
 import java.lang.Number;
+import java.net.URI;
 import java.text.NumberFormat;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
@@ -85,6 +86,7 @@ public class MSPFormatMetaboliteParser2 {
     private int nnpeaks = 0;
     private int metaboliteCounter = 1;
     private Locale locale = Locale.US;
+	private URI link;
 
     public void setLocale(Locale locale) {
         this.locale = locale;
@@ -200,6 +202,9 @@ public class MSPFormatMetaboliteParser2 {
         } else if (synon.startsWith("MPIMP-ID:")) {
             this.idType = "MPIMP-ID";
             handleSynonMPIMPID(synon.substring("MPIMP-ID:".length()));
+		} else if (synon.startsWith("GMD LINK:")) {
+			this.idType = "MPIMP-GUID";
+			handleSynonGmdLink(synon.substring("GMD LINK:".length()));
         } else if (synon.startsWith("ID:")) {
             this.idType = "ID";
             handleSynonID(synon.substring("ID:".length()));
@@ -270,6 +275,12 @@ public class MSPFormatMetaboliteParser2 {
         }
 
     }
+	
+	public void handleSynonGmdLink(String link) {
+		this.link = URI.create(link);
+		this.id = link.substring(link.lastIndexOf("/")+1,link.length());
+		this.id = this.id.substring(this.id.lastIndexOf("."));
+	}
 
     public void handleSynonMATCH(String match) {
         System.out.println("IGNORING ATTRIBUTE MATCH=" + match);

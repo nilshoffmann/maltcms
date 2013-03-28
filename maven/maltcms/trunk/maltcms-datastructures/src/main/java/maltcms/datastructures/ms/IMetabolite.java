@@ -30,6 +30,7 @@ package maltcms.datastructures.ms;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import cross.datastructures.tuple.Tuple2D;
+import java.net.URI;
 
 /**
  * Interface representing a Metabolite.
@@ -44,6 +45,8 @@ public interface IMetabolite extends IRetentionInfo {
     public String getDate();
 
     public String getFormula();
+	
+	public URI getLink();
 
     public String getID();
 
@@ -72,6 +75,8 @@ public interface IMetabolite extends IRetentionInfo {
     public void setFormula(String formula);
 
     public void setID(String id);
+	
+	public void setLink(URI link);
 
     public void setMassSpectrum(ArrayDouble.D1 masses, ArrayInt.D1 intensities);
 
