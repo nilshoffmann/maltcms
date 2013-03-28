@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>cross-nbm-cluster</artifactId>
+		<groupId>net.sf.maltcms</groupId>
+		<version>1.2.12-SNAPSHOT</version>
+	</parent>
+
+	<groupId>ucar</groupId>
+	<artifactId>netcdf-nbm</artifactId>
+	<version>1.2.12-SNAPSHOT</version>
+	<packaging>nbm</packaging>
+
+	<name>netcdf-nbm</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>edu.ucar.unidata</groupId>
+			<artifactId>netcdf-osgi</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-nbm</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>apache-commons-nbm</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>nbm-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<useOSGiDependencies>false</useOSGiDependencies>
+					<author>Nils Hoffmann</author>
+					<cluster>maltcms</cluster>
+					<publicPackages>
+						<publicPackage>thredds.*</publicPackage>
+						<publicPackage>ucar.atd.*</publicPackage>
+						<publicPackage>ucar.ma2.*</publicPackage>
+						<publicPackage>ucar.nc2.*</publicPackage>
+						<publicPackage>ucar.unidata.*</publicPackage>
+					</publicPackages>
+					<defaultCluster>maltcms</defaultCluster>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<!-- NetBeans 6.9+ requires JDK 6 -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>

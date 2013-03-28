@@ -18,7 +18,8 @@
 		<module>cross-nbm</module>
 		<module>apache-commons-nbm</module>
 		<module>slf4j-nbm</module>
-	</modules>
+    <module>netcdf-nbm</module>
+  </modules>
 
 	<build>
 		<pluginManagement>

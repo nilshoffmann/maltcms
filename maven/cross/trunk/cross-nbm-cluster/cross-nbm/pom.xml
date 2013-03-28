@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
 		<artifactId>cross-nbm-cluster</artifactId>
 		<groupId>net.sf.maltcms</groupId>
 		<version>1.2.12-SNAPSHOT</version>
 	</parent>
 
-    <groupId>net.sf.maltcms</groupId>
-    <artifactId>cross-nbm</artifactId>
-    <version>1.2.12-SNAPSHOT</version>
-    <packaging>nbm</packaging>
+	<groupId>net.sf.maltcms</groupId>
+	<artifactId>cross-nbm</artifactId>
+	<version>1.2.12-SNAPSHOT</version>
+	<packaging>nbm</packaging>
 
-    <name>cross-nbm</name>
+	<name>cross-nbm</name>
 
 	<dependencies>
 		<dependency>
@@ -56,6 +56,10 @@
 				<exclusion>
 					<artifactId>log4j</artifactId>
 					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netcdf-osgi</artifactId>
+					<groupId>edu.ucar.unidata</groupId>
 				</exclusion>
 			</exclusions>
 			<!--<type>pom</type>-->
@@ -115,6 +119,11 @@
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>ucar</groupId>
+			<artifactId>netcdf-nbm</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -130,11 +139,6 @@
 					<publicPackages>
 						<publicPackage>cross.*</publicPackage>
 						<publicPackage>net.sf.ehcache.*</publicPackage>
-						<publicPackage>thredds.*</publicPackage>
-						<publicPackage>ucar.atd.*</publicPackage>
-						<publicPackage>ucar.ma2.*</publicPackage>
-						<publicPackage>ucar.nc2.*</publicPackage>
-						<publicPackage>ucar.unidata.*</publicPackage>
 						<publicPackage>org.springframework.*</publicPackage>
 						<publicPackage>org.jdom.*</publicPackage>
 					</publicPackages>
