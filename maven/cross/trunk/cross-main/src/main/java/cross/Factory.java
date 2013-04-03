@@ -123,7 +123,10 @@ public class Factory implements ConfigurationListener {
             //resolve and retrieve pipeline.xml location
             final File pipelineXml;
             try {
-                pipelineXml = new File(new URI(cfg.getString("pipeline.xml").replace("config.basedir", pipelinePropertiesFile.getParent())));
+				File configBasedir = pipelinePropertiesFile.getParentFile();
+				String pipelineLocation = cfg.getString("pipeline.xml").replace("config.basedir", configBasedir.getAbsolutePath());
+				pipelineLocation = pipelineLocation.substring("file:".length());
+                pipelineXml = new File(pipelineLocation);
                 //setup output location
                 final File location = new File(FileTools.prependDefaultDirsWithPrefix(
                         "", Factory.class, d), filename);
@@ -135,17 +138,22 @@ public class Factory implements ConfigurationListener {
                 //copy configuration to dump configuration
                 newPipelineProperties.copy(pipelineProperties);
                 //correct pipeline.xml location
-                newPipelineProperties.setProperty("pipeline.xml", "file:${config.basedir}/" + pipelineXml.getName());
+                newPipelineProperties.setProperty("pipeline.xml", "file:${config.basedir}/"+pipelineXml.getName());
                 newPipelineProperties.save();
                 //copy pipeline.xml to dump location
                 FileUtils.copyFile(pipelineXml, new File(location.getParentFile(), pipelineXml.getName()));
+				if(cfg.containsKey("configLocation")) {
+					File configLocation = new File(URI.create(cfg.getString("configLocation")));
+					File configLocationNew = new File(location.getParentFile(), configLocation.getName());
+					FileUtils.copyFile(configLocation,configLocationNew);
+				}
                 Factory.getInstance().log.error("Saving configuration to: ");
                 Factory.getInstance().log.error("{}", location.getAbsolutePath());
                 Factory.saveConfiguration(cfg, location);
             } catch (IOException ex) {
                 Factory.getInstance().log.error("{}", ex);
-            } catch (URISyntaxException ex) {
-                Factory.getInstance().log.error("{}", ex);
+//            } catch (URISyntaxException ex) {
+//                Factory.getInstance().log.error("{}", ex);
             } catch (ConfigurationException ex) {
                 Factory.getInstance().log.error("{}", ex);
             }

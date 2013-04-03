@@ -63,6 +63,7 @@ import maltcms.io.xlsx.bridge.WorkbookBridge;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.hssf.OldExcelFormatException;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -170,15 +171,20 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 			File f = new File(sourceDirectory);
 			if(f.isDirectory() && f.exists()) {
 				Collection<File> c = FileUtils.listFiles(f, reportFileEnding , false);
-				if(c.size()>1) {
-					throw new ConstraintViolationException("Found more than one report file in directory: "+f);
-				}
+//				if(c.size()>1) {
+//					throw new ConstraintViolationException("Found more than one report file in directory: "+f);
+//				}
 				if(!c.isEmpty()) {
-					try {
-						fileInputStream = new FileInputStream(c.iterator().next());
-						return fileInputStream;
-					} catch (FileNotFoundException ex) {
-						throw new ConstraintViolationException(ex);
+					for(File file:c) {
+						if(file.getName().toLowerCase().startsWith("report01")) {
+							log.info("Using report {}",file);
+							try {
+								fileInputStream = new FileInputStream(file);
+								return fileInputStream;
+							} catch (FileNotFoundException ex) {
+								throw new ConstraintViolationException(ex);
+							}
+						}
 					}
 				}
 				throw new ConstraintViolationException("Could not find any valid report files below: "+f);
@@ -216,8 +222,11 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 						uriToImpl.put(uri, impl);
 						break;
 					}
+				}catch(OldExcelFormatException ofe) {
+					log.info("Workbook Implementation {} does not support old Excel format!",impl);
 				}catch(Exception e) {
 					log.warn("Caught exception while testing implementation "+impl);
+					log.warn("Details:",e);
 				}
 			}
 		}
