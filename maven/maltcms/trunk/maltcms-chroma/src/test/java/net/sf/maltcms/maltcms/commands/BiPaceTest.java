@@ -63,12 +63,12 @@ public class BiPaceTest extends AFragmentCommandTest {
      */
     @Test
     public void testChromA() throws IOException  {
-        File dataFolder = tf.newFolder("chromaTestData");
+        File dataFolder = tf.newFolder("chromaTest Data ö");
         File inputFile1 = ZipResourceExtractor.extract(
                 "/cdf/1D/glucoseA.cdf.gz", dataFolder);
         File inputFile2 = ZipResourceExtractor.extract(
                 "/cdf/1D/glucoseB.cdf.gz", dataFolder);
-        File outputBase = tf.newFolder("chromaTestOut");
+        File outputBase = tf.newFolder("chromaTest Out ü");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         commands.add(new DefaultVarLoader());
         commands.add(new DenseArrayProducer());
