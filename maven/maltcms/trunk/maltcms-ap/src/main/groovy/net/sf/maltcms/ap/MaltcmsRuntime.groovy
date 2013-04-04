@@ -40,7 +40,7 @@ class MaltcmsRuntime {
     String arguments = "-Xmx1G"
     Integer parallelThreads = 1
 	String pipelineMode = "ap"
-	File pipelineFile = new File(System.getProperty("ap.home"),"cfg/ap.properties")
+	File pipelineFile = new File(System.getProperty("ap.home"),"cfg/pipelines/ap.mpl")
 	Map activePanels = [
 		"ap"		:
 			[

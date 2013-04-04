@@ -72,7 +72,7 @@ fi
 
 # Process the parameter list.
 for (( i = 0; i < ${ELEMENTS}; i++ )); do
-  echo "  ARRAY["${i}"]=["${ARRAY[${i}]}"]"
+  #echo "  ARRAY["${i}"]=["${ARRAY[${i}]}"]"
   IPLUS=$((i+1)) #positional next parameter
   VAR="${ARRAY[${i}]}"
   case "$VAR" in

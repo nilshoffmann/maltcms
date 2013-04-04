@@ -57,7 +57,7 @@ class MaltcmsExecution {
             File outputDir = getOutputDir(outputBaseDir)
             File apDir = new File(System.getProperty("ap.home"))
 			if(apProperties==null) {
-				apProperties = new File(apDir,"cfg/ap.properties")
+				apProperties = new File(apDir,"cfg/pipelines/ap.mpl")
 			}
 			println "Using pipeline ${apProperties}"
             File apParameters = new File(System.getProperty("user.dir"),"ap-parameters.properties")

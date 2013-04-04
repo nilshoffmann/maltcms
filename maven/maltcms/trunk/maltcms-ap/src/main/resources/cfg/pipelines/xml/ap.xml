@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright (C) 2008-2012 Nils Hoffmann
- Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+Maltcms, modular application toolkit for chromatography-mass spectrometry.
+Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
 
- This file is part of Cross/Maltcms.
+Project website: http://maltcms.sf.net
 
- Cross/Maltcms is free software: you can redistribute it and/or modify
- it under the terms of the GNU Lesser General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+Maltcms may be used under the terms of either the
 
- Cross/Maltcms is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Lesser General Public License for more details.
+GNU Lesser General Public License (LGPL)
+http://www.gnu.org/licenses/lgpl.html
 
- You should have received a copy of the GNU Lesser General Public License
- along with Cross/Maltcms.  If not, see &lt;http://www.gnu.org/licenses/>.
+or the
 
- $Id: chroma.xml 436 2012-02-15 16:10:33Z nilshoffmann $
+Eclipse Public License (EPL)
+http://www.eclipse.org/org/documents/epl-v10.php
 
+As a user/recipient of Maltcms, you may choose which license to receive the code
+under. Certain files or entire directories may not be covered by this
+dual license, but are subject to licenses compatible to both LGPL and EPL.
+License exceptions are explicitly declared in all relevant files or in a
+LICENSE file in the relevant directories.
+
+Maltcms is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
+for details.
 -->
+
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -37,7 +43,7 @@
     </bean>
 
     <!-- a command pipeline consists a list of
-     commands to be executed -->
+    commands to be executed -->
     <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
         <property name="checkCommandDependencies" value="false"/>
         <property name="commands">
@@ -50,7 +56,7 @@
             </list>
         </property>
     </bean>
-               <!-- commands -->
+    <!-- commands -->
 
     <!-- CSVAnchorReader, reads pre-defined alignment anchors -->
     <bean id="csvAnchorReader" class="maltcms.commands.fragments.io.CSVAnchorReader">
@@ -58,8 +64,7 @@
     </bean>
 
     <bean id="andiChromImporter" class="maltcms.commands.fragments.io.ANDIChromImporter">
-        <!--<property name="rtStartTime" value="${andiChromImporter.rtStartTime}"/>
-        <property name="rtStopTime" value="${andiChromImporter.rtStopTime}"/>-->
+
     </bean>
 
     <bean id="scanExtractor" class="maltcms.commands.fragments.preprocessing.ScanExtractor">
@@ -71,12 +76,12 @@
     <bean id="denseArrayProducer" class="maltcms.commands.fragments.preprocessing.DenseArrayProducer">
         <property name="maskedMasses">
             <list>
-            <!-- <value>73</value> -->
-            <!-- <value>74</value> -->
-            <!-- <value>75</value> -->
-            <!-- <value>147</value> -->
-            <!-- <value>148</value> -->
-            <!-- <value>149</value> -->
+                <!-- <value>73</value> -->
+                <!-- <value>74</value> -->
+                <!-- <value>75</value> -->
+                <!-- <value>147</value> -->
+                <!-- <value>148</value> -->
+                <!-- <value>149</value> -->
             </list>
         </property>
         <property name="invertMaskedMasses" value="false"/>
@@ -91,9 +96,9 @@
     </bean>
 
     <bean id="loessBaselineEstimator" class="maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator" scope="prototype">
-        <property name="bandwidth" value="0.3"/>
+        <property name="bandwidth" value="${loessBaselineEstimator.bandwidth}"/>
         <property name="accuracy" value="1.0E-12"/>
-        <property name="robustnessIterations" value="2"/>
+        <property name="robustnessIterations" value="${loessBaselineEstimator.robustnessIterations}"/>
         <property name="minimaWindow" value="${loessBaselineEstimator.minimaWindow}"/>
     </bean>
 
@@ -109,7 +114,7 @@
         <property name="filter">
             <list>
                 <ref bean="savitzkyGolayFilter"/>
-    <!--            <ref bean="topHatFilter"/> -->
+                <!--            <ref bean="topHatFilter"/> -->
             </list>
         </property>
         <!--<property name="snrWindow" value="10"/>-->
@@ -154,6 +159,11 @@
         <property name="assumeSymmetricSimilarity" value="true"/>
     </bean>
 
+    <bean id="peakFactory1D" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak1DFactory" scope="prototype">
+        <!-- was: peak_area_normalized -->
+		<property name="peakAreaVar" value="${peakCliqueAlignment.peakAreaVariable}"/>
+    </bean>
+
     <!-- PeakCliqueAlignment -->
     <bean id="peakCliqueAlignment" class="maltcms.commands.fragments.alignment.PeakCliqueAlignment">
         <property name="workerFactory" ref="workerFactory"/>
@@ -169,5 +179,8 @@
         <property name="saveIncompatiblePeaks" value="false"/>
         <!-- which peak area definition to use, default: peak_area, alternative: peak_area_normalized -->
         <property name="peakAreaVariable" value="${peakCliqueAlignment.peakAreaVariable}"/>
+        <property name="peakFactory" ref="peakFactory1D"/>
+		<property name="rtNormalizationFactor" value="${peakCliqueAlignment.rtNormalizationFactor}"/>
+		<property name="rtOutputFormat" value="${peakCliqueAlignment.rtOutputFormat}"/>
     </bean>
 </beans>

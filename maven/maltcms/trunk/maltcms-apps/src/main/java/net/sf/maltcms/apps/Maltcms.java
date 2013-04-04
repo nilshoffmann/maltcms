@@ -537,7 +537,6 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         final PropertiesConfiguration cmdLineCfg = new PropertiesConfiguration();
         boolean printOptions = false;
         String[] beans = null;
-
         try {
             final CommandLine cl = clp.parse(this.o, args);
             final Option[] opts = cl.getOptions();
@@ -595,6 +594,9 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 if (o1.getOpt().equals("f")) {
                     String[] inputFiles = cl.getOptionValues("f");
                     log.info("Received input files: {}",Arrays.toString(inputFiles));
+					if(inputFiles.length==0 || inputFiles[0].isEmpty()) {
+						throw new ExitVmException("Please supply at least one input file!");
+					}
                     cmdLineCfg.setProperty("input.dataInfo",
                             inputFiles);
                 }
@@ -607,6 +609,12 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             if (cl.hasOption("c")) {
                 try {
                     File userConfigLocation = new File(cl.getOptionValue("c"));
+					if(!userConfigLocation.isFile()) {
+						throw new ExitVmException("Configuration file '"+userConfigLocation+"' is not a valid file!");
+					}
+					if(!userConfigLocation.exists()) {
+						throw new ExitVmException("Configuration file '"+userConfigLocation+"' does not exist!");
+					}
                     if (!userConfigLocation.isAbsolute()) {
                         // try to add config given by parameter c
                         userConfigLocation = new File(new File(System.getProperty(
@@ -620,7 +628,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     this.log.error(e.getLocalizedMessage());
                 }
             } else if (!cl.hasOption("b")) {
-                throw new ParseException("-c argument is mandatory!");
+                throw new ExitVmException("Please supply a configuration file!");
             }
             // cmdLine options override default options and system options
             cfg.addConfiguration(cmdLineCfg);

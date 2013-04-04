@@ -61,6 +61,10 @@ NumberFormatter nf = new NumberFormatter(new DecimalFormat("#0.0000"))
 nf.setAllowsInvalid(true)
 nf.setOverwriteMode(true)
 DefaultFormatterFactory df = new DefaultFormatterFactory(nf,nf,nf)
+NumberFormatter nf2 = new NumberFormatter(new DecimalFormat("#0.0000000000"))
+nf2.setAllowsInvalid(true)
+nf2.setOverwriteMode(true)
+DefaultFormatterFactory df2 = new DefaultFormatterFactory(nf2,nf2,nf2)
 
 MaltcmsExecution execution = null
 SwingBuilder swing = new SwingBuilder()
@@ -74,9 +78,8 @@ public void setMode(String mode, SwingBuilder swing, APProperties props) {
 	props.mr.activePanels[mode].each{
 		apit -> enableComponent(swing."$apit",true )
 	}
-//	swing.pipelineMode.value = mode
 	props.mr.pipelineMode = mode
-	props.mr.pipelineFile = new File(System.getProperty("ap.home"),"cfg/${mode}.properties")
+	props.mr.pipelineFile = new File(System.getProperty("ap.home"),"cfg/pipelines/${mode}.mpl")
 }
 
 public void enableComponent(Component comp, boolean state) {
@@ -403,7 +406,7 @@ def peakAlignmentTab = swing.panel(constraints: BL.CENTER, id:"peakAlignmentTab"
             td(colfill: true) {hglue()}
             td(align: "RIGHT") {label "Retention Time Normalization Factor"}
             td(colspan: 2, colfill: true, align: "LEFT") {
-                formattedTextField(id: 'pcaRtNormalizationFactor',columns: 14,formatterFactory: df,
+                formattedTextField(id: 'pcaRtNormalizationFactor',columns: 14,formatterFactory: df2,
                     toolTipText: "0< Retention Time Normalization Factor < INF"
                 )
                 bind(source: pcaRtNormalizationFactor, sourceProperty: "value", target: props.pca,
@@ -489,7 +492,7 @@ def contentPanel = swing.panel(constraints: BL.CENTER, border: swing.emptyBorder
  */
 def buttonPanel = swing.panel(constraints: BL.SOUTH, id: "buttonPanel") {
     button("Load Defaults", actionPerformed: {
-			props.load(new File(System.getProperty("ap.home"),"cfg/ap-defaultParameters.properties"))
+			props.load(new File(System.getProperty("ap.home"),"cfg/pipelines/ap-defaultParameters.properties"))
 		})
     separator(orientation: javax.swing.SwingConstants.VERTICAL)
     button("Save", actionPerformed: {

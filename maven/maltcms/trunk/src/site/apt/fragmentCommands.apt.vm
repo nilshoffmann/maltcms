@@ -24,8 +24,7 @@ Available Fragment Commands
 	not work immediately. For hints on completing the configuration files, please 
 	consult the provided pipelines below 'cfg/pipelines/' and 'cfg/pipelines/xml'.
 	
-	If you have further questions, please feel free to contact the author at
-	(http://maltcms.sourceforge.net/info/contact.html)
+	If you have further questions, please feel free to contact {{{http://maltcms.sourceforge.net/info/contact.html}the author}}.
 
 List of Fragment Commands
 	

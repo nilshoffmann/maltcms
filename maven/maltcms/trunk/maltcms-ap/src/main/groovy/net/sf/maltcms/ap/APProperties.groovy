@@ -54,7 +54,7 @@ class APProperties {
         if (customProperties.exists()) {
             load(customProperties)
         } else {
-            load(new File(System.getProperty("ap.home"),"cfg/ap-defaultParameters.properties"))
+            load(new File(System.getProperty("ap.home"),"cfg/pipelines/ap-defaultParameters.properties"))
         }
     }
 
@@ -90,7 +90,7 @@ class APProperties {
         mr.arguments = u.convString(props["maltcmsRuntime.arguments"],"-Xmx1G")
         mr.parallelThreads = u.convInteger(props["maltcmsRuntime.parallelThreads"],1)
 		mr.pipelineMode = u.convString(props["maltcmsRuntime.pipelineMode"],"ap")
-		mr.pipelineFile = new File(u.convString(props["maltcmsRuntime.pipelineFile"],new File(System.getProperty("ap.home"),"${mr.pipelineMode}.properties").absolutePath))
+		mr.pipelineFile = new File(u.convString(props["maltcmsRuntime.pipelineFile"],new File(System.getProperty("ap.home"),"pipelines/${mr.pipelineMode}.mpl").absolutePath))
     }
 
     public void save() {

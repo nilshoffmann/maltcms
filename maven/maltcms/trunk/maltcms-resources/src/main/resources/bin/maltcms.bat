@@ -72,6 +72,7 @@ set CMD_LINE_ARGS=%$
 set CLASSPATH=%APP_HOME%\maltcms.jar
 set ENVARGS=-Dlog4j.configuration="file:/%APP_HOME%/cfg/log4j.properties" -Djava.util.logging.config.file="%APP_HOME%/cfg/logging.properties"
 
+echo Excuting "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %ENVARGS% -classpath "%CLASSPATH%" net.sf.maltcms.apps.Maltcms %CMD_LINE_ARGS%
 @rem Execute Maltcms
 "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %ENVARGS% -classpath "%CLASSPATH%" net.sf.maltcms.apps.Maltcms %CMD_LINE_ARGS%
 
