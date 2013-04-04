@@ -306,10 +306,10 @@ Input data formats
 
     Example data for maltcms in netcdf format along with alignment
     anchors can be downloaded individually from
-    http://bibiserv.techfak.uni-bielefeld.de/chroma/download.html.
+    (http://bibiserv.techfak.uni-bielefeld.de/chroma/download.html).
 
-    Alternatively, 1D and 2D chromatogram data can be downloaded
-    http://sourceforge.net/projects/maltcms/files/maltcms/example-data/.
+    Alternatively, 1D and 2D chromatogram data can be downloaded from
+    (http://sourceforge.net/projects/maltcms/files/maltcms/example-data/).
 
 * File format for Anchors
 
