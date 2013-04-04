@@ -64,7 +64,7 @@
 		<copy todir="${build.dir}/lib">
 			<fileset dir="lib" />
 		</copy>
-		<javac fork="yes" verbose="true" compiler="${build.compiler}" includeAntRuntime="false" includeJavaRuntime="true" destdir="${build.dir}/classes" includeDestClasses="false" source="1.6" target="1.6">
+		<javac fork="yes" verbose="true" compiler="${build.compiler}" includeAntRuntime="false" includeJavaRuntime="true" destdir="${build.dir}/classes" includeDestClasses="false" source="1.7" target="1.7">
 			<src path="src" />
                         <classpath refid="MaltcmsWeb.classpath" />
 		</javac>
