@@ -256,6 +256,10 @@ for details.
         <!-- which peak area definition to use, default: peak_area, alternative: peak_area_normalized -->
         <property name="peakAreaVariable" value="peak_area"/>
         <property name="peakFactory" ref="peakFactory1DMS"/>
+		<!-- 1/60 th -> from second to minute conversion, set to 1 to output unaltered rts -->
+		<property name="rtNormalizationFactor" value="0.016666667"/>
+		<!-- output format for rt alignment, add more '0' to output more decimal places -->
+		<property name="rtOutputFormat" value="0.000"/>
     </bean>
     
     <!--     PairwiseDistanceCalculator -->

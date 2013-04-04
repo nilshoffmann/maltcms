@@ -182,6 +182,11 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     private IWorkerFactory workerFactory = new WorkerFactory();
     @Configurable
     private IPeakFactory peakFactory = new Peak1DMSFactory();
+	@Configurable
+	private double rtNormalizationFactor = 1/60.0d; 
+	@Configurable
+	private String rtOutputFormat = "0.000"; 
+	
     /*
      * private scope
      */
@@ -1472,7 +1477,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         // which allows less error to accumulate, but is seldomly used
         // outside of java...
         df.setRoundingMode(RoundingMode.HALF_UP);
-        df.applyPattern("0.000");
+        df.applyPattern(rtOutputFormat);
         for (final List<Peak> l : ll) {
             final String[] line = new String[columnMap.size()];
             for (int i = 0; i < line.length; i++) {
@@ -1486,7 +1491,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 log.debug("Insert position for {}: {}", iff, pos);
                 if (pos >= 0) {
                     if (line[pos].equals("-")) {
-                        final double sat = p.getScanAcquisitionTime() / 60.0d;
+                        final double sat = p.getScanAcquisitionTime() * rtNormalizationFactor;
                         line[pos] = df.format(sat) + "";
                     } else {
                         log.warn("Array position {} already used!", pos);

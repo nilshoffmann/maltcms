@@ -394,6 +394,32 @@ def peakAlignmentTab = swing.panel(constraints: BL.CENTER, id:"peakAlignmentTab"
                     targetProperty: "peakAreaVariable", mutual: true)
             }
         }
+		tr {
+            td(colspan: 4, colfill: true, align: "LEFT") {
+                label(text: "<html><u>Peak Clique Alignment Output</u>:</html>")
+            }
+        }
+		tr {
+            td(colfill: true) {hglue()}
+            td(align: "RIGHT") {label "Retention Time Normalization Factor"}
+            td(colspan: 2, colfill: true, align: "LEFT") {
+                formattedTextField(id: 'pcaRtNormalizationFactor',columns: 14,formatterFactory: df,
+                    toolTipText: "0< Retention Time Normalization Factor < INF"
+                )
+                bind(source: pcaRtNormalizationFactor, sourceProperty: "value", target: props.pca,
+                    targetProperty: "rtNormalizationFactor", mutual: true)
+            }
+        }
+		tr {
+            td(colfill: true) {hglue()}
+            td(align: "RIGHT") {label "Retention Time Format", visible: true}
+            td(colspan: 2, colfill: true, align: "LEFT") {
+                textField(id: 'pcaRtOutputFormat', columns: 14,toolTipText: "Append '0's to output additional decimal places",
+                    visible: true)// or peak_area")
+                bind(source: pcaRtOutputFormat, sourceProperty: "text", target: props.pca,
+                    targetProperty: "rtOutputFormat", mutual: true)
+            }
+        }
     }
 }
 
@@ -429,22 +455,6 @@ def maltcmsRuntimeTab = swing.panel(constraints: BL.CENTER, id: "maltcmsTab", na
         }
     }
 }
-
-//def tabbedPane = swing.tabbedPane(id: "tabbedPane") {
-//	widget(importTab)
-//	widget(preprocessingTab)
-//	widget(peakDetectionTab)
-//	widget(peakNormalizationTab)
-//	widget(peakAlignmentTab)
-//	widget(maltcmsRuntimeTab)
-//}
-//
-//def apDirectTabbedPane = swing.tabbedPane(id: "apDirectTabbedPane") {
-//	widget(importTab)
-//	widget(peakNormalizationTab)
-//	widget(peakAlignmentTab)
-//	widget(maltcmsRuntimeTab)
-//}
 
 /*
  * Content panel
