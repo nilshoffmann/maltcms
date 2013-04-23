@@ -44,6 +44,12 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-nbm</artifactId>
 			<version>${version.cross}</version>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>log4j</artifactId>
+		   <groupId>log4j</groupId>
+		  </exclusion>
+		 </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
