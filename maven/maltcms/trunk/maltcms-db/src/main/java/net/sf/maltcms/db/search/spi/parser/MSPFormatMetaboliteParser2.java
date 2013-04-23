@@ -49,9 +49,12 @@ import cross.datastructures.collections.IElementProvider;
 import cross.exception.ConstraintViolationException;
 import java.io.*;
 import java.lang.Number;
-import java.net.URI;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -86,7 +89,7 @@ public class MSPFormatMetaboliteParser2 {
     private int nnpeaks = 0;
     private int metaboliteCounter = 1;
     private Locale locale = Locale.US;
-	private URI link;
+	private URL link;
 
     public void setLocale(Locale locale) {
         this.locale = locale;
@@ -277,7 +280,11 @@ public class MSPFormatMetaboliteParser2 {
     }
 	
 	public void handleSynonGmdLink(String link) {
-		this.link = URI.create(link);
+		try {
+			this.link = new URL(link);
+		} catch (MalformedURLException ex) {
+			log.error("Exception while parsing: ", ex);
+		}
 		this.id = link.substring(link.lastIndexOf("/")+1,link.length());
 		this.id = this.id.substring(this.id.lastIndexOf("."));
 	}

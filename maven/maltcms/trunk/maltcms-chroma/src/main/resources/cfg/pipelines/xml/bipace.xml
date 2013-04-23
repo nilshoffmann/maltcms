@@ -115,13 +115,9 @@ for details.
         <property name="ignoreMinMaxMassArrays" value="false"/>
     </bean>
     
-    <bean id="gaussianDifferenceSimilarityRt1" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity" scope="prototype">
-        <property name="tolerance" value="30.0d"/>
-        <property name="threshold" value="0.5d"/>
-    </bean>
-    <bean id="gaussianDifferenceSimilarityRt2" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity" scope="prototype">
-        <property name="tolerance" value="1.0d"/>
-        <property name="threshold" value="0.5d"/>
+    <bean id="gaussianDifferenceSimilarity" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity" scope="prototype">
+        <property name="tolerance" value="5.0d"/>
+        <property name="threshold" value="0.0d"/>
     </bean>
     
     <!-- array similarity functions -->
@@ -132,8 +128,7 @@ for details.
     <bean id="timePenalizedDotProduct" class="maltcms.math.functions.ProductSimilarity" scope="prototype">
         <property name="scalarSimilarities">
             <array>
-                <ref bean="gaussianDifferenceSimilarityRt1"/>
-                <ref bean="gaussianDifferenceSimilarityRt2"/>
+                <ref bean="gaussianDifferenceSimilarity"/>
             </array>
         </property>
         <property name="arraySimilarities">
@@ -143,21 +138,20 @@ for details.
         </property>
     </bean>
     
-    <bean id="worker2DFactory" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.Worker2DFactory" scope="prototype">
-        <property name="maxRTDifferenceRt1" value="60.0d"/>
-        <property name="maxRTDifferenceRt2" value="5.0d"/>
+    <bean id="worker1DFactory" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.WorkerFactory" scope="prototype">
+        <property name="maxRTDifference" value="60.0d"/>
         <property name="similarityFunction" ref="timePenalizedDotProduct"/>
         <property name="assumeSymmetricSimilarity" value="true"/>
     </bean>
 
-    <bean id="peakFactory2DMS" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak2DMSFactory" scope="prototype">
+    <bean id="peakFactory1DMS" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak1DMSFactory" scope="prototype">
     
     </bean>
     
     <!-- PeakCliqueAlignment -->
     <bean id="peakCliqueAlignment" class="maltcms.commands.fragments.alignment.PeakCliqueAlignment">
-        <property name="workerFactory" ref="worker2DFactory"/>
-        <property name="use2DRetentionTimes" value="true"/>
+        <property name="workerFactory" ref="worker1DFactory"/>
+        <property name="use2DRetentionTimes" value="false"/>
         <property name="useSparseArrays" value="false"/>
         <property name="minCliqueSize" value="2"/>
         <property name="maxBBHErrors" value="0"/>
@@ -170,7 +164,7 @@ for details.
         <property name="saveIncompatiblePeaks" value="false"/>
         <!-- which peak area definition to use, default: peak_area, alternative: peak_area_normalized -->
         <property name="peakAreaVariable" value="peak_area"/>
-        <property name="peakFactory" ref="peakFactory2DMS"/>
+        <property name="peakFactory" ref="peakFactory1DMS"/>
     </bean>
     
 </beans>
