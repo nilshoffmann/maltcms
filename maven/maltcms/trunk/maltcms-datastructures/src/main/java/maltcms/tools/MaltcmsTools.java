@@ -670,28 +670,30 @@ public class MaltcmsTools {
         final IVariableFragment index1 = f.getChild(Factory.getInstance().getConfiguration().getString("var.scan_index", "scan_index"));
         final String massVar = Factory.getInstance().getConfiguration().getString("var.mass_values", "mass_values");
         final String intensVar = Factory.getInstance().getConfiguration().getString("var.intensity_values", "intensity_values");
-        if (f.getChild(massVar).getIndex() == null) {
-            f.getChild(massVar).setIndex(index1);
-            f.getChild(intensVar).setIndex(index1);
+        final IVariableFragment masses = f.getChild(massVar);
+		final IVariableFragment intensities = f.getChild(intensVar);
+		if (f.getChild(massVar).getIndex() == null) {
+            masses.setIndex(index1);
+            intensities.setIndex(index1);
         }
-        final List<Array> intens1 = f.getChild(intensVar).getIndexedArray();
-        final List<Array> mass1 = f.getChild(massVar).getIndexedArray();
+        final List<Array> intens1 = intensities.getIndexedArray();
+        final List<Array> mass1 = masses.getIndexedArray();
         final ArrayDouble.D1 eic = new ArrayDouble.D1(nscans);
         final ArrayInt.D1 eicbinCnt = new ArrayInt.D1(nscans);
         for (int i = 0; i < nscans; i++) {
-            final Array masses = mass1.get(start + i);
-            final Index mind = masses.getIndex();
-            final Array intensities = intens1.get(start + i);
-            final Index intind = intensities.getIndex();
+            final Array massesArray = mass1.get(start + i);
+            final Index mind = massesArray.getIndex();
+            final Array intensitiesArray = intens1.get(start + i);
+            final Index intind = intensitiesArray.getIndex();
             if (keepMaxInBin) {// only keep max in bin (xcms)
                 int max = Integer.MIN_VALUE;
-                for (int j = 0; j < masses.getShape()[0]; j++) {
+                for (int j = 0; j < massesArray.getShape()[0]; j++) {
                     mind.set(j);
                     intind.set(j);
-                    final double m = masses.getDouble(mind);
+                    final double m = massesArray.getDouble(mind);
                     // in range
                     if ((m >= eicStart) && (m < eicStop)) {
-                        final int val = intensities.getInt(intind);
+                        final int val = intensitiesArray.getInt(intind);
                         if (val > max) {
                             eic.set(i, val);
                             max = val;
@@ -699,13 +701,13 @@ public class MaltcmsTools {
                     }
                 }
             } else {// sum all intensities in bin
-                for (int j = 0; j < masses.getShape()[0]; j++) {
+                for (int j = 0; j < massesArray.getShape()[0]; j++) {
                     mind.set(j);
                     intind.set(j);
-                    final double m = masses.getDouble(mind);
+                    final double m = massesArray.getDouble(mind);
                     // in range
                     if ((m >= eicStart) && (m < eicStop)) {
-                        final int val = intensities.getInt(intind);
+                        final int val = intensitiesArray.getInt(intind);
                         eicbinCnt.set(i, eicbinCnt.get(i) + 1);
                         eic.set(i, val + eic.get(i));
                     }
