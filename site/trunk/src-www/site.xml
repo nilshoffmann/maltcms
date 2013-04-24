@@ -19,7 +19,7 @@
                 </li>
             </ul>
         </div>
-        <download href="http://sf.net/projects/maltcms/files/maui/1.0/beta2/" title="Download" text="Try Maui 1.0 Beta2" provider="Provided by sourceforge.net"/>
+        <download href="http://sourceforge.net/projects/maltcms/files/maui/1.2.1/" title="Download" text="Get Maui 1.2.1" provider="Provided by sourceforge.net"/>
         <download href="http://sf.net/projects/maltcms/files/maltcms/maltcms-1.2/" title="Download" text="Get Maltcms 1.2.1" provider="Provided by sourceforge.net"/>
         <siteimage/>
     </header>
@@ -27,7 +27,8 @@
         <ref target="home/index" alt="Home" />
         <ref target="news/index" alt="News" />
         <ref target="users/features" alt="Maltcms" />
-        <ref target="maui/index" alt="Maui" />
+        <!--<ref target="http://maltcms.de/maui" alt="Maui" />-->
+		<a href="http://maltcms.de/maui" title="Maui">Maui</a>
         <ref target="developers/api" alt="Developers" />
         <ref target="info/publications" alt="Info"/>
     </categories>
@@ -49,7 +50,8 @@
         </group>
 
         <group nname="Maui" ident="maui">
-            <ref target="maui/index" />
+			<a href="http://maltcms.de/maui" title="Maui">Maui</a>
+            <!--<ref target="maui/index" />-->
         </group>
 
 	<group nname="News" ident="news">
@@ -95,6 +97,7 @@
     <xi:include href="news/maltcms1_1.xml" parse="xml"/>
     <xi:include href="news/bookChapterMetabolomics.xml" parse="xml"/>
     <xi:include href="news/bmcBioinformatics1.xml" parse="xml"/>
+	<xi:include href="news/maui1_2_1.xml" parse="xml"/>
 <!--    Users -->
     <xi:include href="users/features.xml" parse="xml" />
     <xi:include href="users/tutorials.xml" parse="xml" /> 
@@ -110,5 +113,5 @@
     <xi:include href="info/license.xml" parse="xml" />
     <xi:include href="info/contact.xml" parse="xml" />
 <!--    Maui -->
-    <xi:include href="maui/index.xml" parse="xml" />
+    <!--<xi:include href="maui/index.xml" parse="xml" />-->
 </site>

@@ -162,14 +162,25 @@
 									<xsl:element name="div">
 										<xsl:attribute name="id">categories</xsl:attribute>
 										<ul>
-											<xsl:for-each select="//categories/ref">
-												<li>
-													<xsl:call-template name="REFTEMPLATE">
-														<xsl:with-param name="PAGENAME" select="$pagename" />
-														<xsl:with-param name="GROUPNAME" select="$activegroup" />
-														<xsl:with-param name="PATHTOROOT" select="$pathToRoot" />
-													</xsl:call-template>
-												</li>
+											<xsl:for-each select="//categories">
+												<xsl:for-each select="./ref">
+													<li>
+														<xsl:call-template name="REFTEMPLATE">
+															<xsl:with-param name="PAGENAME" select="$pagename" />
+															<xsl:with-param name="GROUPNAME" select="$activegroup" />
+															<xsl:with-param name="PATHTOROOT" select="$pathToRoot" />
+														</xsl:call-template>
+													</li>
+												</xsl:for-each>
+												<xsl:for-each select="./a">
+													<li>
+														<xsl:call-template name="MATCHXHTML" >
+															<xsl:with-param name="PAGENAME" select="$pagename" />
+															<xsl:with-param name="GROUPNAME" select="$activegroup" />
+															<xsl:with-param name="PATHTOROOT" select="$pathToRoot" />
+														</xsl:call-template>
+													</li>
+												</xsl:for-each>
 											</xsl:for-each>
 										</ul>
 									</xsl:element>

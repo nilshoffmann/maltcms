@@ -24,6 +24,15 @@
         <div class="block">
             <h1>News</h1>
             <ul class="plainunbulletedlist">
+				<li>
+					<ref target="news/maui1_2_1" alt="Maui 1.2.1 Released on April 24th, 2013"/>
+				</li>
+				<li>
+					<a href="http://openmasp.hswt.de">Maltcms collaborates with openMASP</a>
+				</li>
+				<li>
+					<a href="http://wiki.eclipse.org/Science_IWG">Maltcms is a member of Eclipse Science Industry Working Group</a>
+				</li>
                 <li>
                     <ref target="news/maltcms1_2_1" alt="Maltcms 1.2.1 Released on September 11th, 2012"/>
                 </li>
