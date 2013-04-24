@@ -28,7 +28,7 @@
 					<groupId>log4j</groupId>
 				</exclusion>
 			</exclusions>
-			<!--<scope>provided</scope>-->
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	
@@ -55,6 +55,7 @@
 							short description of the bundle 
 						-->
 						<Bundle-Description>Java Excel API - A Java API to read, write, and modify Excel spreadsheets</Bundle-Description>
+						<Include-Resource>{maven-resources},@jxl-${project.version}.jar!/**</Include-Resource>
 					</instructions> 
 				</configuration> 
 				<executions>
