@@ -6,7 +6,7 @@
 - [Java API](./apidocs/index.html)
 - [Wiki](http://sourceforge.net/apps/trac/maltcms/)
 - [Support](https://sourceforge.net/projects/maltcms/support)
-
+<!---
 <h2>Application Features</h2>
 <h3>1D Chromatography</h3>
 <h3>2D Chromatography</h3>
@@ -16,5 +16,5 @@
 <h3>Open File Formats</h3>
 <h3>Parallel Processing</h3>
 <h3>Custom Processing Pipelines</h3>
-<h3>Extensibility</h3>
+<h3>Extensibility</h3>-->
 
