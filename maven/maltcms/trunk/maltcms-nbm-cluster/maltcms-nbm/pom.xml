@@ -29,6 +29,16 @@
 			<groupId>org.jfree</groupId>
 			<artifactId>jfreechart-nbm</artifactId>
 			<version>${project.version}</version>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>jcommon</artifactId>
+		   <groupId>org.jfree</groupId>
+		  </exclusion>
+		  <exclusion>
+		   <artifactId>jfreechart</artifactId>
+		   <groupId>org.jfree</groupId>
+		  </exclusion>
+		 </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache</groupId>
@@ -60,6 +70,12 @@
 			<groupId>net.sf.maltcms</groupId>
 			<artifactId>cross-nbm</artifactId>
 			<version>${version.cross}</version>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>slf4j-log4j12</artifactId>
+		   <groupId>org.slf4j</groupId>
+		  </exclusion>
+		 </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -86,6 +102,10 @@
 					<artifactId>netcdf-osgi</artifactId>
 					<groupId>edu.ucar.unidata</groupId>
 				</exclusion>
+			 <exclusion>
+			  <artifactId>jfreechart-osgi</artifactId>
+			  <groupId>org.jfree</groupId>
+			 </exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -124,11 +144,23 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>maltcms-commands</artifactId>
 			<version>${project.version}</version>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>jfreechart-osgi</artifactId>
+		   <groupId>org.jfree</groupId>
+		  </exclusion>
+		 </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>maltcms-datastructures</artifactId>
 			<version>${project.version}</version>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>jfreechart-osgi</artifactId>
+		   <groupId>org.jfree</groupId>
+		  </exclusion>
+		 </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -149,6 +181,12 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>maltcms-ui</artifactId>
 			<version>${project.version}</version>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>jfreechart-osgi</artifactId>
+		   <groupId>org.jfree</groupId>
+		  </exclusion>
+		 </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -215,6 +253,14 @@
 					<artifactId>log4j</artifactId>
 					<groupId>log4j</groupId>
 				</exclusion>
+			 <exclusion>
+			  <artifactId>slf4j-api</artifactId>
+			  <groupId>org.slf4j</groupId>
+			 </exclusion>
+			 <exclusion>
+			  <artifactId>slf4j-log4j12</artifactId>
+			  <groupId>org.slf4j</groupId>
+			 </exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -226,6 +272,24 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>maltcms-io-xlsx</artifactId>
 			<version>${project.version}</version>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>jxl</artifactId>
+		   <groupId>net.sourceforge.jexcelapi</groupId>
+		  </exclusion>
+		  <exclusion>
+		   <artifactId>poi</artifactId>
+		   <groupId>org.apache.poi</groupId>
+		  </exclusion>
+		  <exclusion>
+		   <artifactId>poi-ooxml</artifactId>
+		   <groupId>org.apache.poi</groupId>
+		  </exclusion>
+		  <exclusion>
+		   <artifactId>poi-ooxml-schemas</artifactId>
+		   <groupId>org.apache.poi</groupId>
+		  </exclusion>
+		 </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -268,6 +332,18 @@
 			<artifactId>netcdf-nbm</artifactId>
 			<version>${version.cross}</version>
 		</dependency>
+	 <dependency>
+	  <artifactId>cross-test</artifactId>
+	  <groupId>net.sf.maltcms</groupId>
+	  <type>jar</type>
+	  <version>1.2.12-SNAPSHOT</version>
+	  <exclusions>
+	   <exclusion>
+	    <artifactId>slf4j-api</artifactId>
+	    <groupId>org.slf4j</groupId>
+	   </exclusion>
+	  </exclusions>
+	 </dependency>
 	</dependencies>
 
 	<build>

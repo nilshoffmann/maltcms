@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>org.jfree</groupId>
 	<artifactId>jfreechart-osgi</artifactId>
-	<version>1.0.14</version>
+	<version>1.0.14.1</version>
 	<name>JFreeChart OSGI</name>
 	<url>http://jfreechart.sourceforge.net/</url>
 	<properties>
@@ -27,13 +27,13 @@
 					<groupId>com.lowagie</groupId>
 				</exclusion>
 			</exclusions>
-			<scope>provided</scope>
+			<!--<scope>provided</scope>-->
 		</dependency>
 		<dependency>
 			<groupId>org.jfree</groupId>
 			<artifactId>jcommon</artifactId>
 			<version>1.0.17</version>
-			<scope>provided</scope>
+			<!--<scope>provided</scope>-->
 		</dependency>
 		<dependency>
 			<artifactId>xml-apis</artifactId>

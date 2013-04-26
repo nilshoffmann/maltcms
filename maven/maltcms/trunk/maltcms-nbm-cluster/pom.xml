@@ -16,8 +16,8 @@
 		<module>jai-nbm</module>
 		<module>jfreechart-nbm</module>
 		<module>maltcms-nbm</module>
-    <module>groovy-nbm</module>
-  </modules>
+		<module>groovy-nbm</module>
+	</modules>
   
 	<build>
 		<pluginManagement>
@@ -39,7 +39,7 @@
 		</pluginManagement>
 	</build>
   
-<!--	<build>
+	<!--	<build>
 		<plugins>      
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

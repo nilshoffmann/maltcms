@@ -22,21 +22,21 @@
 			<artifactId>poi</artifactId>
 			<!-- set this to project.version to stay in sync -->
 			<version>3.9</version>
-			<scope>provided</scope>
+			<!--<scope>provided</scope>-->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<!-- set this to project.version to stay in sync -->
 			<version>3.9</version>
-			<scope>provided</scope>
+			<!--<scope>provided</scope>-->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml-schemas</artifactId>
 			<!-- set this to project.version to stay in sync -->
 			<version>3.9</version>
-			<scope>provided</scope>
+			<!--<scope>provided</scope>-->
 		</dependency>
 		<dependency>
 			<artifactId>xml-apis</artifactId>

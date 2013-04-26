@@ -708,7 +708,7 @@
 			<dependency>
 				<groupId>org.jfree</groupId>
 				<artifactId>jfreechart-osgi</artifactId>
-				<version>1.0.14</version>
+				<version>1.0.14.1</version>
 			</dependency>
 			<!--			<dependency>
 				<groupId>org.jfree</groupId>
