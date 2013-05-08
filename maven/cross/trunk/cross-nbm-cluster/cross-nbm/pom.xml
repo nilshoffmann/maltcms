@@ -61,6 +61,10 @@
 					<artifactId>netcdf-osgi</artifactId>
 					<groupId>edu.ucar.unidata</groupId>
 				</exclusion>
+			 <exclusion>
+			  <artifactId>com.springsource.org.aopalliance</artifactId>
+			  <groupId>org.aopalliance</groupId>
+			 </exclusion>
 			</exclusions>
 			<!--<type>pom</type>-->
 		</dependency>

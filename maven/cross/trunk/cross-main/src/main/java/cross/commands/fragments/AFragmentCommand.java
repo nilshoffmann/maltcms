@@ -118,6 +118,30 @@ public abstract class AFragmentCommand implements IFragmentCommand {
 		}
 		return ret;
 	}
+	
+		/**
+	 *
+	 * @param ics
+	 * @param t
+	 * @return
+	 */
+	public TupleND<IFileFragment> postProcessUri(ICompletionService<URI> ics,
+			final TupleND<IFileFragment> t) {
+		TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
+		try {
+			List<URI> results = ics.call();
+			// expect at least one result
+			EvalTools.gt(0, results.size(), this);
+			// map input to results
+			ret = mapToInputUri(results, t);
+			// append results to workflow for bookkeeping
+			addWorkflowResults(ret);
+		} catch (Exception ex) {
+			log.error("Caught exception while executing workers: ", ex);
+			throw new RuntimeException(ex);
+		}
+		return ret;
+	}
 
 	/**
 	 * @param l
@@ -410,6 +434,13 @@ public abstract class AFragmentCommand implements IFragmentCommand {
 			log.warn("Could not map variable: " + varname, mnae);
 			return varname;
 		}
+	}
+	
+	public TupleND<IFileFragment> save(TupleND<IFileFragment> fileFragments) {
+		for(IFileFragment f:fileFragments) {
+			f.save();
+		}
+		return fileFragments;
 	}
 
 	/**

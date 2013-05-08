@@ -39,5 +39,21 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>nbm-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<executions>
+                    <execution>
+                        <id>extra</id>
+                        <goals>
+							<goal>cluster</goal>
+                            <goal>autoupdate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+			</plugin>
+		</plugins>
 	</build>
 </project>

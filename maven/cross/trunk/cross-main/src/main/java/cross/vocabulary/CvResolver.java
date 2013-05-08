@@ -43,51 +43,62 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils Hoffmann
  */
 @Slf4j
-@ServiceProvider(service=ICvResolver.class)
+@ServiceProvider(service = ICvResolver.class)
 @Data
-public class CvResolver implements ICvResolver{
-    private Map<String,IControlledVocabularyProvider> providers = new ConcurrentHashMap<String,IControlledVocabularyProvider>();
-    
-    public CvResolver() {
-        for(IControlledVocabularyProvider provider:Lookup.getDefault().lookupAll(IControlledVocabularyProvider.class)) {
-            String namespace = provider.getNamespace();
-            if(namespace==null || namespace.isEmpty()) {
-                throw new ConstraintViolationException("Namespace must not be null!");
-            }
-            providers.put(provider.getNamespace(), provider);
-        }
-    }
-    
-    @Override
-    public String translate(String variable) throws MappingNotAvailableException {
-        String ns = getNamespacePrefix(variable);
-        if(providers.containsKey(ns)) {
-            return providers.get(ns).translate(variable);
-        }
-        throw new MappingNotAvailableException("No provider known for namespace "+ns+" and variable "+variable);
-    }
-    
-    protected String getNamespacePrefix(String variable) {
-        String[] s = variable.split("\\.");
-        log.info("Splits of variable: {}",Arrays.toString(s));
-        if(s.length<2) {
-            throw new ConstraintViolationException("Variable has no valid namespace declaration: "+variable);
-        }
-        return s[0];
-    }
+public class CvResolver implements ICvResolver {
 
-    @Override
-    public Collection<? extends IControlledVocabularyProvider> getCvProviders() {
-        return providers.values();
-    }
+	private Map<String, IControlledVocabularyProvider> providers = new ConcurrentHashMap<String, IControlledVocabularyProvider>();
 
-    @Override
-    public void add(IControlledVocabularyProvider provider) {
-        providers.put(provider.getNamespace(), provider);
-    }
+	public CvResolver() {
+		for (IControlledVocabularyProvider provider : Lookup.getDefault().lookupAll(IControlledVocabularyProvider.class)) {
+			String namespace = provider.getNamespace();
+			if (namespace == null || namespace.isEmpty()) {
+				throw new ConstraintViolationException("Namespace must not be null!");
+			}
+			providers.put(provider.getNamespace(), provider);
+		}
+	}
 
-    @Override
-    public void remove(IControlledVocabularyProvider provider) {
-        providers.remove(provider.getNamespace());
-    }
+	@Override
+	public String translate(String variable) throws MappingNotAvailableException {
+		String ns = getNamespacePrefix(variable);
+		if (providers.containsKey(ns)) {
+			return providers.get(ns).translate(variable);
+		}
+		throw new MappingNotAvailableException("No provider known for namespace " + ns + " and variable " + variable);
+	}
+
+	protected String getNamespacePrefix(String variable) {
+		if (variable.contains(".")) {
+			String[] s = variable.split("\\.");
+			log.info("Splits of variable: {}", Arrays.toString(s));
+			if (s.length < 2) {
+				throw new ConstraintViolationException("Variable has no valid namespace declaration: " + variable);
+			}
+			return s[0];
+		}else if(variable.contains(":")) {
+			String[] s = variable.split(":");
+			log.info("Splits of variable: {}", Arrays.toString(s));
+			if (s.length < 2) {
+				throw new ConstraintViolationException("Variable has no valid namespace declaration: " + variable);
+			}
+			return s[0];
+		}
+		throw new IllegalArgumentException("Can not process namespace of "+variable+"! Unknown delimiter!");
+	}
+
+	@Override
+	public Collection<? extends IControlledVocabularyProvider> getCvProviders() {
+		return providers.values();
+	}
+
+	@Override
+	public void add(IControlledVocabularyProvider provider) {
+		providers.put(provider.getNamespace(), provider);
+	}
+
+	@Override
+	public void remove(IControlledVocabularyProvider provider) {
+		providers.remove(provider.getNamespace());
+	}
 }
