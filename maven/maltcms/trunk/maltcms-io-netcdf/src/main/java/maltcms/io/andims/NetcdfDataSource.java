@@ -464,7 +464,14 @@ public class NetcdfDataSource implements IDataSource {
 
         // read in the full index_array
         log.debug("Reading index array {}", index);
-        final ArrayInt.D1 index_array = (ArrayInt.D1) readSingle(index);
+		Array index_array = readSingle(index);
+		switch(DataType.getType(index_array.getElementType())) {
+			case LONG:
+				log.warn("Index array contains long values, this is currently only supported up to Integer.MAX_VALUE");
+				break;
+			case INT:
+				break;
+		}
         // how many scans are stored in the original array/ how many array
         // pointers are contained in index_array?
         final int num_arrays = index_array.getShape()[0];
@@ -499,8 +506,8 @@ public class NetcdfDataSource implements IDataSource {
                     data_dim)});
 
         // absolute array start and end indices in data_array
-        int data_start = index_array.get(index_start);
-        int data_end = index_array.get(index_end);
+        int data_start = index_array.getInt(index_start);
+        int data_end = index_array.getInt(index_end);
         int data_stride = 1;
 
         // set stride, if exists
@@ -536,13 +543,13 @@ public class NetcdfDataSource implements IDataSource {
         // index_array
         for (int i = 0; i < index_range[0].length(); i += index_stride) {
             // first element of array index_start+i
-            data_start = index_array.get((index_start + i));
+            data_start = index_array.getInt((index_start + i));
             // if we have reached the last scan start contained in index_array
             // use the length of the data array -1 as absolute end of last array
             if ((i + index_start + 1) == num_arrays) {
                 data_end = data_dim.getLength() - 1;
             } else {
-                data_end = index_array.get((index_start + i + 1)) - 1;
+                data_end = index_array.getInt((index_start + i + 1)) - 1;
             }
             try {
                 log.debug("Reading array {}, from {} to {}", new Object[]{

@@ -261,6 +261,10 @@
 			  <artifactId>slf4j-log4j12</artifactId>
 			  <groupId>org.slf4j</groupId>
 			 </exclusion>
+			 <exclusion>
+			  <artifactId>com.springsource.org.apache.log4j</artifactId>
+			  <groupId>org.apache.log4j</groupId>
+			 </exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
