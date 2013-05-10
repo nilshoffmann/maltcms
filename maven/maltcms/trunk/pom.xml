@@ -72,7 +72,7 @@
 	<inceptionYear>2007</inceptionYear>
 	<ciManagement>
 		<system>jenkins</system>
-		<url>https://maltcms.de:8181/jenkins/job/maltcms/</url>
+		<url>https://maltcms.de/jenkins/job/maltcms/</url>
 	</ciManagement>
 	<!--    <scm>
 		<connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</connection>
@@ -88,12 +88,12 @@
 		<repository>
 			<id>maltcms-release</id>
 			<name>maltcms-artifactory-releases</name>
-			<url>http://maltcms.de:8080/artifactory/libs-release-local</url>
+			<url>http://maltcms.de/artifactory/libs-release-local</url>
 		</repository>
 		<snapshotRepository>
 			<id>maltcms-snapshot</id>
 			<name>maltcms-artifactory-snapshots</name>
-			<url>http://maltcms.de:8080/artifactory/libs-snapshot-local</url>
+			<url>http://maltcms.de/artifactory/libs-snapshot-local</url>
 		</snapshotRepository>
 		<site>
 			<id>maltcms.sf.net</id>
@@ -122,7 +122,7 @@
 				<enabled>true</enabled>
 				<updatePolicy>daily</updatePolicy>
 			</snapshots>
-			<url>http://maltcms.de:8080/artifactory/repo</url>
+			<url>http://maltcms.de/artifactory/repo</url>
 		</repository>
 		<repository>
 			<id>com.springsource.repository.bundles.release</id>
