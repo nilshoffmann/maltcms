@@ -53,12 +53,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io-netcdf</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>cross-main</artifactId>
             <version>1.2.12-SNAPSHOT</version>
         </dependency>

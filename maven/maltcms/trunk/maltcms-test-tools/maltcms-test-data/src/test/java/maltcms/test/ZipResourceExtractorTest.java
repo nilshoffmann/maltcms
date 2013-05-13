@@ -27,12 +27,10 @@
  */
 package maltcms.test;
 
-import maltcms.test.ExtractHelper;
 import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 import cross.test.SetupLogging;
 import java.io.IOException;
-import maltcms.test.ZipResourceExtractor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -63,30 +61,29 @@ public class ZipResourceExtractorTest {
         Assert.assertTrue(unzippedFile.length() > 0);
         log.info("File size is != 0: {}", unzippedFile.length());
     }
-	
-	@Test
+
+    @Test
     public void testExtractZip() throws IOException {
         File outputFolder = tf.newFolder(
                 "xls");
-		//zip archives must contain a folder with their name, e.g. 'Ap 601.D'
+        //zip archives must contain a folder with their name, e.g. 'Ap 601.D'
         File outputFile = ZipResourceExtractor.extract("/xls/agilent/Ap 601.D.zip", outputFolder);
         File unzippedFile = new File(outputFolder, "Ap 601.D");
-		log.info(outputFile.getAbsolutePath());
-		log.info(unzippedFile.getAbsolutePath());
-		Assert.assertTrue(outputFile.getAbsolutePath().equals(unzippedFile.getAbsolutePath()));
+        log.info(outputFile.getAbsolutePath());
+        log.info(unzippedFile.getAbsolutePath());
+        Assert.assertTrue(outputFile.getAbsolutePath().equals(unzippedFile.getAbsolutePath()));
         Assert.assertTrue(unzippedFile.exists());
         log.info("File exists");
-		Assert.assertTrue(unzippedFile.isDirectory());
-		log.info("File is directory");
-        Assert.assertTrue(unzippedFile.length() > 0);
-        log.info("File size is != 0: {}", unzippedFile.length());
-		File reportFile = new File(unzippedFile,"REPORT01.xls");
-		Assert.assertTrue(reportFile.exists());
-		log.info("Report file exists!");
-		Assert.assertTrue(reportFile.isFile());
-		log.info("Report file is file!");
+        Assert.assertTrue(unzippedFile.isDirectory());
+        log.info("File is directory");
+        Assert.assertTrue(unzippedFile.length() >= 0);
+        log.info("File size is >= 0: {}", unzippedFile.length());
+        File reportFile = new File(unzippedFile, "REPORT01.xls");
+        Assert.assertTrue(reportFile.exists());
+        log.info("Report file exists!");
+        Assert.assertTrue(reportFile.isFile());
+        log.info("Report file is file!");
     }
-
 //    @Test
 //    public void testExtract2D() throws IOException {
 //        File outputFolder = tf.newFolder(
