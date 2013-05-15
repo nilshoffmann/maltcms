@@ -28,14 +28,8 @@
 package cross.commands.fragments;
 
 import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.VariableFragment;
-import cross.datastructures.tools.ArrayTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
-import java.util.Random;
-import ucar.ma2.Array;
-import ucar.nc2.Attribute;
-import ucar.nc2.Dimension;
 
 /**
  *

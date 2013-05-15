@@ -1221,40 +1221,6 @@ public class FileFragment implements IFileFragment {
         return Collections.unmodifiableSet(new LinkedHashSet<Dimension>(this.dims.values()));
     }
 
-//    /**
-//     *
-//     * @return
-//     */
-//    @Override
-//    public int hashCode() {
-//        int hash = 7;
-//        hash = 79 * hash + (int) (this.fID ^ (this.fID >>> 32));
-//        hash = 79 * hash + (this.fragment != null ? this.fragment.hashCode() : 0);
-//        return hash;
-//    }
-//
-//    /**
-//     *
-//     * @param obj
-//     * @return
-//     */
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (obj == null) {
-//            return false;
-//        }
-//        if (getClass() != obj.getClass()) {
-//            return false;
-//        }
-//        final FileFragment other = (FileFragment) obj;
-//        if (this.fID != other.fID) {
-//            return false;
-//        }
-//        if (this.fragment != other.fragment && (this.fragment == null || !this.fragment.equals(other.fragment))) {
-//            return false;
-//        }
-//        return true;
-//    }
     @Override
     public int hashCode() {
         int hash = 7;

@@ -64,14 +64,10 @@ import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.util.LinkedList;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.DataType;
@@ -82,8 +78,6 @@ import uk.ac.ebi.jmzml.model.mzml.FileDescription;
 import uk.ac.ebi.jmzml.model.mzml.SourceFile;
 import uk.ac.ebi.jmzml.model.mzml.SourceFileList;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
-import uk.ac.ebi.jmzml.xml.xxindex.MzMLIndexer;
-import uk.ac.ebi.jmzml.xml.xxindex.MzMLIndexerFactory;
 
 @Slf4j
 @ServiceProvider(service = IDataSource.class)
@@ -116,6 +110,10 @@ public class MZMLDataSource implements IDataSource {
 	@Configurable(name = "var.second_column_elution_time", value = "second_column_elution_time")
 	private String second_column_elution_time = "second_column_elution_time";
 	private String second_column_elution_timeAccession = "MS:1002083 ";
+	private String ms_level = "ms_level";
+	@Configurable
+	private int msLevel = 1;
+	private String msLevelAccession = "MS:1000511";
 	private static WeakHashMap<IFileFragment, MzMLUnmarshaller> fileToIndex = new WeakHashMap<IFileFragment, MzMLUnmarshaller>();
 	private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = null;
 
@@ -145,7 +143,6 @@ public class MZMLDataSource implements IDataSource {
 
 	@Override
 	public void configurationChanged(final ConfigurationEvent arg0) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -170,6 +167,7 @@ public class MZMLDataSource implements IDataSource {
 				"first_column_elution_time");
 		this.second_column_elution_time = configuration.getString("var.second_column_elution_time",
 				"second_column_elution_time");
+		this.ms_level = configuration.getString("var.ms_level", "ms_level");
 		this.ndf = new NetcdfDataSource();
 		this.ndf.configure(configuration);
 	}
@@ -268,9 +266,9 @@ public class MZMLDataSource implements IDataSource {
 		if (rtUnit.equalsIgnoreCase("seconds") || rtUnit.equalsIgnoreCase("second")) {
 			return rtValue;
 		} else if (rtUnit.equalsIgnoreCase("minutes") || rtUnit.equalsIgnoreCase("minute")) {
-			return rtValue /= 60.0;
+			return rtValue *= 60.0;
 		} else if (rtUnit.equalsIgnoreCase("hours") || rtUnit.equalsIgnoreCase("hour")) {
-			return rtValue /= 3600.0;
+			return rtValue *= 3600.0;
 		}
 		throw new IllegalArgumentException("Unknown rt unit for rtValue conversion: " + rtUnit);
 	}
@@ -285,7 +283,7 @@ public class MZMLDataSource implements IDataSource {
 		} catch (NullPointerException npe) {
 			log.warn("Could not retrieve spectrum acquisition time!");
 		} catch (ResourceNotAvailableException rne) {
-			log.warn("Could not retrieve spectrum acquisition time!",rne);
+			log.warn("Could not retrieve spectrum acquisition time!", rne);
 		}
 		return rt;
 	}
@@ -377,6 +375,8 @@ public class MZMLDataSource implements IDataSource {
 			a = readElutionTimeArray(var, r, mzu, this.first_column_elution_timeAccession);
 		} else if (varname.equals(this.second_column_elution_time)) {
 			a = readElutionTimeArray(var, r, mzu, this.second_column_elution_timeAccession);
+		} else if (varname.equals(this.ms_level)) {
+			a = readMsLevelArray(var, r, mzu);
 		} else {
 			throw new ResourceNotAvailableException(
 					"Unknown variable name to mzML mapping for " + varname);
@@ -490,11 +490,11 @@ public class MZMLDataSource implements IDataSource {
 
 	private Array readMZI(final IVariableFragment var, final Run run, final MzMLUnmarshaller um) {
 		// if(!f.hasArray()) {
-		if(var.getIndex()==null) {
+		if (var.getIndex() == null) {
 			IVariableFragment scanIndex = null;
 			try {
 				scanIndex = var.getParent().getChild(scan_index);
-			}catch(ResourceNotAvailableException rnae) {
+			} catch (ResourceNotAvailableException rnae) {
 				scanIndex = var.getParent().addChild(scan_index);
 			}
 			var.setIndex(scanIndex);
@@ -507,7 +507,7 @@ public class MZMLDataSource implements IDataSource {
 			start = r[0].first();
 			scans = r[0].last();
 		}
-		log.debug("Reading from {} to {} (inclusive)",start,start+scans-1);
+		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
 		for (int i = start; i < start + scans; i++) {
 			npeaks += getMassValues(getSpectrum(um, i)).getShape()[0];
 		}
@@ -540,6 +540,27 @@ public class MZMLDataSource implements IDataSource {
 				"Don't know how to handle variable: " + var.getName());
 		// }
 		// return f.getArray();
+	}
+
+	private Array readMsLevelArray(final IVariableFragment var, final Run run, final MzMLUnmarshaller um) {
+		int start = 0;
+		int scans = getScanCount(run);
+		final Range[] r = var.getIndex().getRange();
+		if (r != null) {
+			start = r[0].first();
+			scans = r[0].last();
+		}
+		Array a = new ArrayInt.D1(scans);
+		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
+		for (int i = start; i < start + scans; i++) {
+			CVParam param = findParam(getSpectrum(um, i).getCvParam(), msLevelAccession);
+			int paramMsLevel = -1;
+			if (param != null && !param.getValue().isEmpty()) {
+				paramMsLevel = Integer.parseInt(param.getValue());
+			}
+			a.setInt(i, paramMsLevel);
+		}
+		return a;
 	}
 
 	private Array readScanAcquisitionTimeArray(final IVariableFragment var,

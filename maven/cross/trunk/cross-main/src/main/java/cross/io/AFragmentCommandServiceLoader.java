@@ -37,9 +37,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 
 /**
+ * Loads available implementations of {@link cross.commands.fragments.AFragmentCommand} 
+ * from classpath resources using the {@link java.util.ServiceLoader}.
+ *
  * @author Nils Hoffmann
- *
- *
  */
 @Slf4j
 public class AFragmentCommandServiceLoader implements IConfigurable {

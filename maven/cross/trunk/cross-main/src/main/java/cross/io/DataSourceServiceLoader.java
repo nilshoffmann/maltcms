@@ -32,26 +32,24 @@ import cross.Factory;
 import java.util.*;
 
 /**
+ * Loads available service implementations from the classpath using 
+ * {@link java.util.ServiceLoader}.
+ * 
  * @author Nils Hoffmann
- *
- *
  */
 public class DataSourceServiceLoader {
 
     /**
-     * Returns the available implementations of {@code IDataSource}. 
+     * Returns the available implementations of {@link IDataSource}. 
      * 
      * Elements are sorted according to lexical order on their classnames.
      *
-     * @return
+     * @return a list of available implementations
      */
     public List<IDataSource> getAvailableCommands() {
         ServiceLoader<IDataSource> sl = ServiceLoader.load(IDataSource.class);
         HashSet<IDataSource> s = new HashSet<IDataSource>();
         for (IDataSource ifc : sl) {
-            // since we can not control the instantiation, we need to
-            // configure ifc, if it is configurable
-            // @TODO this could be fixed by using netbeans lookup api
             Factory.getInstance().getObjectFactory().configureType(ifc);
             s.add(ifc);
         }

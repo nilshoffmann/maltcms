@@ -56,7 +56,7 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 /**
- *
+ * Implementation of {@link IInputDataFactory}.
  * @author Nils Hoffmann
  */
 @Slf4j
@@ -68,6 +68,7 @@ public class InputDataFactory implements IInputDataFactory {
     public static InputDataFactory getInstance() {
         return InputDataFactory.idf;
     }
+	
     @Configurable(name = "input.dataInfo")
     private String[] input = new String[]{};
     @Configurable(name = "input.basedir")
@@ -98,8 +99,6 @@ public class InputDataFactory implements IInputDataFactory {
     protected IFileFragment initFile(final File f) {
         log.debug("Initializing IFileFragment for: " + f.getAbsolutePath());
         log.debug("Initializing IFileFragment for URI: " + f.toURI());
-//        final IFileFragment inputFragment = Factory.getInstance().
-//                getFileFragmentFactory().fromString(s);
         IFileFragment inputFragment = new FileFragment(f.toURI());
         if (!(new File(inputFragment.getUri()).exists())) {
             throw new ConstraintViolationException("Input file "
@@ -173,104 +172,4 @@ public class InputDataFactory implements IInputDataFactory {
         }
         return new TupleND<IFileFragment>(initialFiles);
     }
-    /**
-     * Preprocess input data (files and variables).
-     *
-     * @return
-     */
-//    @Override
-//    public TupleND<IFileFragment> prepareInputData(String[] input) {
-//        log.info("Preparing Input data!");
-//        this.initialFiles = new ArrayList<IFileFragment>();
-//        if (this.input.length > 0) {
-//            Factory.getInstance().log.debug("{}", this.input);
-//            if (this.input.length == 1) {
-//                if (this.input[0].startsWith("*")) {
-//                    final File dir = new File(this.basedir);
-//                    final boolean recurse = this.recurse;
-//                    final FilenameFilter filter = new FilenameFilter() {
-//                        @Override
-//                        public boolean accept(final File dir1, final String name) {
-//                            return name.endsWith(StringTools.getFileExtension(
-//                                    InputDataFactory.this.input[0])) || name.toLowerCase().endsWith(StringTools.getFileExtension(
-//                                    InputDataFactory.this.input[0]).toLowerCase());
-//                        }
-//                    };
-//                    log.debug("Assuming input under: {}", dir.
-//                            getAbsolutePath());
-//                    final ArrayList<String> files = new ArrayList<String>();
-//                    if (recurse) {
-//                        log.debug("Descending into subdirectories");
-//                        final ArrayList<String> subdirs = new ArrayList<String>();
-//                        subdirs.add(dir.getAbsolutePath());
-//                        while (!subdirs.isEmpty()) {
-//                            log.debug("Subdirectories: {}", subdirs);
-//                            final File directory = new File(subdirs.remove(0));
-//                            log.debug("IsDir? {}", dir.isDirectory());
-//                            log.info("Checking dir: {}", directory);
-//                            final String[] dirs = directory.list();// subdirfilter);
-//                            if (dirs != null) {
-//                                for (final String s : dirs) {
-//                                    if (new File(directory, s).isDirectory()) {
-//                                        log.debug(
-//                                                "Adding subdirectory {}", s);
-//                                        subdirs.add(new File(directory, s).
-//                                                getAbsolutePath());
-//                                    }
-//                                }
-//                            }
-//                            final String[] fils = directory.list(filter);
-//                            if (fils != null) {
-//                                for (final String s : fils) {
-//                                    log.info("Adding file {}", s);
-//                                    files.add(new File(directory, s).
-//                                            getAbsolutePath());
-//                                }
-//                            }
-//
-//                        }
-//                    } else {
-//                        log.info("Checking dir: {}", dir);
-//                        final String[] fls = dir.list(filter);
-//                        for (final String s : fls) {
-//                            log.info("Adding file {}", s);
-//                            files.add(new File(dir, s).getAbsolutePath());
-//                        }
-//                    }
-//
-//                    final String[] children = files.toArray(new String[]{});// dir.list(filter);
-//                    if (children == null) {
-//                        log.error("Could not find directory "
-//                                + dir.getAbsolutePath() + ", aborting!");
-//                        System.exit(-1);
-//                    } else if (children.length == 0) {
-//                        log.error("Could not find " + Arrays.toString(input) + " in "
-//                                + dir.getAbsolutePath() + ", aborting!");
-//                        System.exit(-1);
-//                    } else {
-//                        for (int i = 0; i < children.length; i++) {
-//                            log.info("Adding file " + (i + 1) + "/"
-//                                    + children.length + ": " + children[i]);
-//                            this.initialFiles.add(initFile(children[i]));
-//                        }
-//                    }
-//                    return new TupleND<IFileFragment>(this.initialFiles);
-//                }
-//            }
-//            if (this.input.length == 0) {
-//                Factory.getInstance().log.error("{} could not be tokenized!", Arrays.toString(input));
-//                System.exit(-1);
-//            }
-//
-//            int cnt = 0;
-//            for (final String s : this.input) {
-//                Factory.getInstance().log.info("Adding file " + (cnt + 1) + "/"
-//                        + this.input.length + ": " + s);
-//                cnt++;
-//                this.initialFiles.add(initFile(s));
-//            }
-//            return new TupleND<IFileFragment>(this.initialFiles);
-//        }
-//        throw new ExitVmException("No input data given, aborting!");
-//    }
 }

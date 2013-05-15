@@ -33,7 +33,8 @@ import cross.datastructures.tuple.TupleND;
 import java.util.List;
 
 /**
- *
+ * Interface for providers of input data.
+ * 
  * @author Nils Hoffmann
  */
 public interface IInputDataFactory extends IConfigurable {

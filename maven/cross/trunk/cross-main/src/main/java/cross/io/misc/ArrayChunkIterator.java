@@ -29,8 +29,6 @@ package cross.io.misc;
 
 import cross.Factory;
 import cross.datastructures.fragments.IVariableFragment;
-import cross.datastructures.tools.EvalTools;
-import cross.exception.ConstraintViolationException;
 import cross.exception.NotImplementedException;
 import cross.exception.ResourceNotAvailableException;
 import java.io.IOException;
@@ -44,9 +42,9 @@ import ucar.ma2.Range;
 import ucar.nc2.Dimension;
 
 /**
- *
+ * Implementation for chunked array iteration of large on-disk arrays.
+ * 
  * @author Nils Hoffmann
- *
  */
 @Slf4j
 public class ArrayChunkIterator implements IArrayChunkIterator {

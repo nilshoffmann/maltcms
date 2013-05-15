@@ -35,6 +35,7 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tools.ArrayTools;
 import cross.io.MockDatasource;
+import cross.test.LogMethodName;
 import cross.test.SetupLogging;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,9 +48,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.MethodRule;
-import org.junit.rules.TestWatchman;
-import org.junit.runners.model.FrameworkMethod;
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
@@ -61,21 +59,8 @@ import ucar.ma2.Range;
  */
 @Slf4j
 public class ArrayChunkIteratorTest {
-@Rule
-    public MethodRule watchman = new TestWatchman() {
-        @Override
-        public void starting(FrameworkMethod method) {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < 80; i++) {
-                sb.append("#");
-            }
-            sb.append("\n").append("# ").append(method.getName()).append("\n");
-            for (int i = 0; i < 80; i++) {
-                sb.append("#");
-            }
-            System.out.println(sb.toString());
-        }
-    };
+	@Rule
+    public LogMethodName logMethodName = new LogMethodName();
     @Rule
     public SetupLogging logging = new SetupLogging();
 

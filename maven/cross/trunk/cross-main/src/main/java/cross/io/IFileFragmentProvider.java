@@ -30,7 +30,7 @@ package cross.io;
 import cross.datastructures.fragments.IFileFragment;
 
 /**
- * Interface for Objects, which provide a IFileFragment.
+ * Interface for Objects, which provide an {@link IFileFragment}.
  *
  * @author Nils Hoffmann
  *

@@ -30,8 +30,6 @@ package cross.io;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
-import cross.io.IDataSource;
-import cross.io.IDataSourceFactory;
 import cross.datastructures.tools.EvalTools;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,9 +41,10 @@ import org.apache.commons.configuration.Configuration;
  * Factory managing objects of type
  * <code>IDataSource</code>. Objects can be registered within cfg/io.properties,
  * key "cross.io.IDataSource". Or by defining them as service implementations of @code{cross.io.IDataSource} in a
- * jar files manifest.
+ * jar files manifest under META-INF/services/cross.io.IDataSource.
  *
  * @author Nils Hoffmann
+ * @see java.util.ServiceLoader
  *
  */
 @Slf4j

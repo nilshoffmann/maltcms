@@ -59,125 +59,118 @@ import ucar.ma2.ArrayInt;
 @Slf4j
 public class CacheDelegateTest {
 
-    private int narrays = 50;
-    private Integer[] indices;
-    private int maxRepetitions = 20;
-    private long seed = 1920712093679568761L;
-    private Random r;
-    /**
-     *
-     */
-    @Rule
-    public TemporaryFolder tf = new TemporaryFolder();
-    
-    @Rule
-    public SetupLogging logging = new SetupLogging();
+	private int narrays = 50;
+	private Integer[] indices;
+	private int maxRepetitions = 20;
+	private long seed = 1920712093679568761L;
+	private Random r;
+	/**
+	 *
+	 */
+	@Rule
+	public TemporaryFolder tf = new TemporaryFolder();
+	@Rule
+	public SetupLogging logging = new SetupLogging();
 
-    /**
-     *
-     */
-    @Before
-    public void setUp() {
-        logging.getConfig().put("log4j.category.net.sf.ehcache", "INFO");
-        logging.update();
-    }
+	/**
+	 *
+	 */
+	@Before
+	public void setUp() {
+		logging.setLogLevel("log4j.category.net.sf.ehcache", "INFO");
 
-    /**
-     *
-     */
-    @Test
-    public void cachedVariableFragment() throws IOException {
-        logging.getConfig().put("log4j.category.net.sf.ehcache", "DEBUG");
-        logging.update();
-        Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
-        FileFragment ff = new FileFragment(tf.newFolder("cachedVariableFragmentTest"),"testfrag.cdf");
-        Ehcache cache = CacheManager.getInstance().getEhcache(ff.getCache().getName());
-        CacheConfiguration config = cache.getCacheConfiguration();
-        log.info("Storing cache on disk at {}",config.getDiskStorePath());
-        log.info("Using disk store size of {}",cache.getDiskStoreSize());
-        log.info("Overflowing to disk: {}",config.isOverflowToDisk());
-        for (int j = 0; j < 100; j++) {
-            VariableFragment vf1 = new VariableFragment(ff, "a" + j);
-            vf1.setArray(new ArrayDouble.D2(10, 39));
-            VariableFragment vfIndex = new VariableFragment(ff, "index"+j);
-            vfIndex.setArray(new ArrayInt.D1(20));
-            VariableFragment vf2 = new VariableFragment(ff, "b" + j, vfIndex);
-            List<Array> l = new ArrayList<Array>();
-            Array indexArray = vfIndex.getArray();
-            int offset = 0;
-            for (int i = 0; i < 20; i++) {
-                l.add(new ArrayDouble.D1(10));
-                indexArray.setInt(i, offset);
-                offset += 10;
-            }
-            vf2.setIndexedArray(l);
-            Assert.assertNotNull(vf1.getArray());
-            Assert.assertNotNull(vf2.getIndexedArray());
-            Assert.assertEquals(20, vf2.getIndexedArray().size());
-            Assert.assertNotNull(vfIndex.getArray());
-            log.info("In memory: {}; On disk: {}",cache.getSize(),cache.getDiskStoreSize());
-        }
-        for(IVariableFragment var:ff) {
-            Assert.assertNotNull(var.getArray());
-            System.out.println(var.getName()+": "+var.getArray());
-        }
-        logging.getConfig().put("log4j.category.net.sf.ehcache", "INFO");
-        logging.update();
-    }
-    
-    /**
-     *
-     */
-    @Test
-    public void customCachedVariableFragment() throws IOException {
-        logging.getConfig().put("log4j.category.net.sf.ehcache", "DEBUG");
-        logging.update();
-        Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
-        FileFragment ff = new FileFragment(tf.newFolder("cachedVariableFragmentTest"),"testfrag.cdf");
-        CacheManager manager = CacheManager.create();
-        CacheConfiguration config = new CacheConfiguration(ff.getName()+"-variable-fragment-cache",100);
-        config.setDiskStorePath(tf.newFolder("cacheLocation").getAbsolutePath());
-        config.setMaxElementsInMemory(100);
-        config.setMaxElementsOnDisk(1000);
-        config.setOverflowToDisk(true);
-        config.setDiskSpoolBufferSizeMB(10);
-        config.setEternal(false);
-        Ehcache cache = new Cache(config);
-        manager.addCache(cache);
-//        Ehcache cache = CacheManager.getInstance().getEhcache(ff.getCache().getName());
-//        CacheConfiguration config = cache.getCacheConfiguration();
-        
-        //cache.setDiskStorePath(System.getProperty("java.io.tmp"));
-        log.info("Storing cache on disk at {}",config.getDiskStorePath());
-        log.info("Using disk store size of {}",cache.getDiskStoreSize());
-        log.info("Overflowing to disk: {}",config.isOverflowToDisk());
-        ff.setCache(new VariableFragmentArrayCache(cache));
-        for (int j = 0; j < 100; j++) {
-            VariableFragment vf1 = new VariableFragment(ff, "a" + j);
-            vf1.setArray(new ArrayDouble.D2(10, 39));
-            VariableFragment vfIndex = new VariableFragment(ff, "index"+j);
-            vfIndex.setArray(new ArrayInt.D1(20));
-            VariableFragment vf2 = new VariableFragment(ff, "b" + j, vfIndex);
-            List<Array> l = new ArrayList<Array>();
-            Array indexArray = vfIndex.getArray();
-            int offset = 0;
-            for (int i = 0; i < 20; i++) {
-                l.add(new ArrayDouble.D1(10));
-                indexArray.setInt(i, offset);
-                offset += 10;
-            }
-            vf2.setIndexedArray(l);
-            Assert.assertNotNull(vf1.getArray());
-            Assert.assertNotNull(vf2.getIndexedArray());
-            Assert.assertEquals(20, vf2.getIndexedArray().size());
-            Assert.assertNotNull(vfIndex.getArray());
-            log.info("In memory: {}; On disk: {}",cache.getSize(),cache.getDiskStoreSize());
-        }
-        for(IVariableFragment var:ff) {
-            Assert.assertNotNull(var.getArray());
-            System.out.println(var.getName()+": "+var.getArray());
-        }
-        logging.getConfig().put("log4j.category.net.sf.ehcache", "INFO");
-        logging.update();
-    }
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void cachedVariableFragment() throws IOException {
+		logging.setLogLevel("log4j.category.net.sf.ehcache", "DEBUG");
+
+		Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
+		FileFragment ff = new FileFragment(tf.newFolder("cachedVariableFragmentTest"), "testfrag.cdf");
+		Ehcache cache = CacheManager.getInstance().getEhcache(ff.getCache().getName());
+		CacheConfiguration config = cache.getCacheConfiguration();
+		log.info("Storing cache on disk at {}", config.getDiskStorePath());
+		log.info("Using disk store size of {}", cache.getDiskStoreSize());
+		log.info("Overflowing to disk: {}", config.isOverflowToDisk());
+		for (int j = 0; j < 100; j++) {
+			VariableFragment vf1 = new VariableFragment(ff, "a" + j);
+			vf1.setArray(new ArrayDouble.D2(10, 39));
+			VariableFragment vfIndex = new VariableFragment(ff, "index" + j);
+			vfIndex.setArray(new ArrayInt.D1(20));
+			VariableFragment vf2 = new VariableFragment(ff, "b" + j, vfIndex);
+			List<Array> l = new ArrayList<Array>();
+			Array indexArray = vfIndex.getArray();
+			int offset = 0;
+			for (int i = 0; i < 20; i++) {
+				l.add(new ArrayDouble.D1(10));
+				indexArray.setInt(i, offset);
+				offset += 10;
+			}
+			vf2.setIndexedArray(l);
+			Assert.assertNotNull(vf1.getArray());
+			Assert.assertNotNull(vf2.getIndexedArray());
+			Assert.assertEquals(20, vf2.getIndexedArray().size());
+			Assert.assertNotNull(vfIndex.getArray());
+			log.info("In memory: {}; On disk: {}", cache.getSize(), cache.getDiskStoreSize());
+		}
+		for (IVariableFragment var : ff) {
+			Assert.assertNotNull(var.getArray());
+			log.info(var.getName() + ": " + var.getArray());
+		}
+		logging.setLogLevel("log4j.category.net.sf.ehcache", "INFO");
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void customCachedVariableFragment() throws IOException {
+		logging.setLogLevel("log4j.category.net.sf.ehcache", "DEBUG");
+		Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
+		FileFragment ff = new FileFragment(tf.newFolder("cachedVariableFragmentTest"), "testfrag.cdf");
+		CacheManager manager = CacheManager.create();
+		CacheConfiguration config = new CacheConfiguration(ff.getName() + "-variable-fragment-cache", 100);
+		config.setDiskStorePath(tf.newFolder("cacheLocation").getAbsolutePath());
+		config.setMaxElementsInMemory(100);
+		config.setMaxElementsOnDisk(1000);
+		config.setOverflowToDisk(true);
+		config.setDiskSpoolBufferSizeMB(10);
+		config.setEternal(false);
+		Ehcache cache = new Cache(config);
+		manager.addCache(cache);
+
+		log.info("Storing cache on disk at {}", config.getDiskStorePath());
+		log.info("Using disk store size of {}", cache.getDiskStoreSize());
+		log.info("Overflowing to disk: {}", config.isOverflowToDisk());
+		ff.setCache(new VariableFragmentArrayCache(cache));
+		for (int j = 0; j < 100; j++) {
+			VariableFragment vf1 = new VariableFragment(ff, "a" + j);
+			vf1.setArray(new ArrayDouble.D2(10, 39));
+			VariableFragment vfIndex = new VariableFragment(ff, "index" + j);
+			vfIndex.setArray(new ArrayInt.D1(20));
+			VariableFragment vf2 = new VariableFragment(ff, "b" + j, vfIndex);
+			List<Array> l = new ArrayList<Array>();
+			Array indexArray = vfIndex.getArray();
+			int offset = 0;
+			for (int i = 0; i < 20; i++) {
+				l.add(new ArrayDouble.D1(10));
+				indexArray.setInt(i, offset);
+				offset += 10;
+			}
+			vf2.setIndexedArray(l);
+			Assert.assertNotNull(vf1.getArray());
+			Assert.assertNotNull(vf2.getIndexedArray());
+			Assert.assertEquals(20, vf2.getIndexedArray().size());
+			Assert.assertNotNull(vfIndex.getArray());
+			log.info("In memory: {}; On disk: {}", cache.getSize(), cache.getDiskStoreSize());
+		}
+		for (IVariableFragment var : ff) {
+			Assert.assertNotNull(var.getArray());
+			log.info(var.getName() + ": " + var.getArray());
+		}
+		logging.setLogLevel("log4j.category.net.sf.ehcache", "INFO");
+	}
 }

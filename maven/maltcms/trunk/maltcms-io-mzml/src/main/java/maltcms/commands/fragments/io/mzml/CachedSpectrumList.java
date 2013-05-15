@@ -37,7 +37,9 @@ import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.model.mzml.SpectrumList;
 
 /**
- *
+ * Caches the added spectra on disk for lower memory usage overhead
+ * and retrieves them lazily from disk on access.
+ * 
  * @author Nils Hoffmann
  */
 public class CachedSpectrumList extends SpectrumList {

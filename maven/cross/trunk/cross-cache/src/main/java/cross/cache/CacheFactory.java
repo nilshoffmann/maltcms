@@ -57,7 +57,6 @@ public class CacheFactory {
         CacheFactory.cacheDirectory = f;
     }
 
-
     public static void removeCache(String cacheName) {
         try {
             CacheManager.getInstance().removeCache(cacheName);
@@ -65,30 +64,41 @@ public class CacheFactory {
             log.warn("Failed to remove cache " + cacheName, ise.getLocalizedMessage());
         }
     }
-    
-    public static <K, V> ICacheDelegate<K, V> createDefaultCache(File cacheDir, String cacheName) {
-        CacheManager cm = CacheManager.getInstance();
+	
+	public static <K, V> ICacheDelegate<K, V> createDefaultCache(File cacheDir, String cacheName, int maxElementsInMemory) {
+		CacheManager cm = CacheManager.getInstance();
         Ehcache cache = cm.addCacheIfAbsent(cacheName);
         EhcacheDelegate<K, V> ed = new EhcacheDelegate<K, V>(cache);
         CacheConfiguration cc = cache.getCacheConfiguration();
-        cc.setMaxElementsInMemory(10000);
+        cc.setMaxElementsInMemory(maxElementsInMemory);
 //        cc.setEternal(true);
         cc.overflowToDisk(true);
         cc.maxElementsOnDisk(1000000000);
         cc.memoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LFU);
         DiskStore ds = DiskStore.create(cache, cacheDir.getAbsolutePath());
         return ed;
+	}
+    public static <K, V> ICacheDelegate<K, V> createDefaultCache(File cacheDir, String cacheName) {
+        return createDefaultCache(cacheDir, cacheName, 100);
     }
 
     public static <K, V> ICacheDelegate<K, V> createDefaultCache(String cacheName) {
         return createDefaultCache(cacheDirectory, cacheName);
+    }
+	
+	public static <K, V> ICacheDelegate<K, V> createDefaultCache(String cacheName, int maxElementsInMemory) {
+        return createDefaultCache(cacheDirectory, cacheName, maxElementsInMemory);
     }
 
     public static <K, V> ICacheDelegate<K, V> createVolatileCache(String cacheName, long timeToIdle, long timeToLive) {
         return createVolatileCache(cacheName, timeToIdle, timeToLive, 20, new CacheEventListener[0]);
     }
     
-    public static <K, V> ICacheDelegate<K, V> createVolatileCache(String cacheName, long timeToIdle, long timeToLive, int maxElementsInMemory, CacheEventListener... cacheEventListener) {
+    public static <K, V> ICacheDelegate<K, V> createVolatileCache(String cacheName, long timeToIdle, long timeToLive, int maxElementsInMemory) {
+        return createVolatileCache(cacheName, timeToIdle, timeToLive, maxElementsInMemory, new CacheEventListener[0]);
+    }
+	
+	public static <K, V> ICacheDelegate<K, V> createVolatileCache(String cacheName, long timeToIdle, long timeToLive, int maxElementsInMemory, CacheEventListener... cacheEventListener) {
         CacheManager cm = CacheManager.getInstance();
         Ehcache cache = cm.addCacheIfAbsent(cacheName);
         EhcacheDelegate<K, V> ed = new EhcacheDelegate<K, V>(cache);

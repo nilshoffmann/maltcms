@@ -34,6 +34,7 @@ import cross.datastructures.tools.FragmentTools;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.MockDatasource;
+import cross.test.LogMethodName;
 import cross.test.SetupLogging;
 import java.io.File;
 import java.io.IOException;
@@ -47,10 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.MethodRule;
 import org.junit.rules.TemporaryFolder;
-import org.junit.rules.TestWatchman;
-import org.junit.runners.model.FrameworkMethod;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 
@@ -62,27 +60,14 @@ import ucar.ma2.ArrayChar;
 public class FileFragmentTest {
 
 	@Rule
-	public MethodRule watchman = new TestWatchman() {
-		@Override
-		public void starting(FrameworkMethod method) {
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < 80; i++) {
-				sb.append("#");
-			}
-			sb.append("\n").append("# ").append(method.getName()).append("\n");
-			for (int i = 0; i < 80; i++) {
-				sb.append("#");
-			}
-			System.out.println(sb.toString());
-		}
-	};
+	public LogMethodName logMethodName = new LogMethodName();
 	@Rule
 	public SetupLogging logging = new SetupLogging();
 	@Rule
 	public TemporaryFolder tf = new TemporaryFolder();
 
 	/**
-	 *
+	 * Explicitly set the available data sources. Disable caching.
 	 */
 	@Before
 	public void setUp() {
@@ -90,9 +75,6 @@ public class FileFragmentTest {
 		Fragments.setDefaultFragmentCacheType(CacheType.NONE);
 	}
 
-	// TODO add test methods here.
-	// The methods must be annotated with annotation @Test. For example:
-	//
 	@Test
 	public void testUriEquality() {
 
@@ -106,11 +88,11 @@ public class FileFragmentTest {
 
 	@Test
 	public void testUriRelativization() {
-		System.out.println("File to file");
+		log.info("File to file");
 		URI uri1 = URI.create("file://tmp/897123/command1/fileA.cdf");
 		URI uri2 = URI.create("file://tmp/897123/command2/fileB.cdf");
-		System.out.println("target: " + uri1);
-		System.out.println("base: " + uri2);
+		log.info("target: " + uri1);
+		log.info("base: " + uri2);
 		URI relative1 = uri2.relativize(uri1);
 		URI relative12 = FileTools.getRelativeUri(uri2, uri1);
 		URI relative21 = FileTools.getRelativeUri(uri1, uri2);
@@ -118,43 +100,43 @@ public class FileFragmentTest {
 		Assert.assertEquals(URI.create("../command2/fileB.cdf"), relative21);
 		Assert.assertEquals(uri1, FileTools.resolveRelativeUri(uri2, relative12));
 		Assert.assertEquals(uri2, FileTools.resolveRelativeUri(uri1, relative21));
-		System.out.println("relativized1: " + relative1.getPath());
-		System.out.println("relativized2: " + uri1.relativize(uri2).getPath());
-		System.out.println("resolved: " + uri2.relativize(uri1));
+		log.info("relativized1: " + relative1.getPath());
+		log.info("relativized2: " + uri1.relativize(uri2).getPath());
+		log.info("resolved: " + uri2.relativize(uri1));
 		Assert.assertEquals(uri1, uri2.resolve(relative1));
 
-		System.out.println("Dir to dir");
+		log.info("Dir to dir");
 		URI uri3 = URI.create("file://tmp/897123/command1/");
 		URI uri4 = URI.create("file://tmp/897123/command2/");
-		System.out.println("target: " + uri3);
-		System.out.println("base: " + uri4);
+		log.info("target: " + uri3);
+		log.info("base: " + uri4);
 		URI relative2 = uri4.relativize(uri3);
-		System.out.println("relativized: " + relative2);
+		log.info("relativized: " + relative2);
 		Assert.assertEquals(uri3, uri4.resolve(relative2));
 //      
-		System.out.println("Dir to other dir");
+		log.info("Dir to other dir");
 		URI uri5 = URI.create("file://tmp/897123/");
 		URI uri6 = URI.create("file://tmp/897123/command2/");
-		System.out.println("target: " + uri5);
-		System.out.println("base: " + uri6);
+		log.info("target: " + uri5);
+		log.info("base: " + uri6);
 		URI relative3 = uri6.relativize(uri5);
-		System.out.println("relativized: " + relative3);
+		log.info("relativized: " + relative3);
 		Assert.assertEquals(uri5, uri6.resolve(relative3));
 
 		URI uri7 = new File("/tmp/897123/command1/file1.cdf").toURI();
 		URI uri8 = new File("/tmp/897123/command2/file2.cdf").toURI();
-		System.out.println("target: " + uri7);
-		System.out.println("base: " + uri8);
+		log.info("target: " + uri7);
+		log.info("base: " + uri8);
 		URI relative4 = uri8.relativize(uri7);
-		System.out.println("relativized: " + relative4);
+		log.info("relativized: " + relative4);
 		Assert.assertEquals(uri7, uri8.resolve(relative4));
 
 		URI uri9 = new File("/tmp/897123/command1/file1.cdf").toURI();
 		URI uri10 = new File("/tmp/897123/command2").toURI();
-		System.out.println("target: " + uri9);
-		System.out.println("base: " + uri10);
+		log.info("target: " + uri9);
+		log.info("base: " + uri10);
 		URI relative5 = uri10.relativize(uri9);
-		System.out.println("relativized: " + relative5);
+		log.info("relativized: " + relative5);
 		Assert.assertEquals(uri9, uri10.resolve(relative5));
 
 		URI relative52 = FileTools.getRelativeUri(uri9, uri10);
@@ -185,10 +167,8 @@ public class FileFragmentTest {
 		local4.addSourceFile(sourceFiles);
 
 		ArrayChar.D2 a = (ArrayChar.D2) FragmentTools.createSourceFilesArray(local4, local4.getSourceFiles());
-		System.out.println("Raw Source files from array:");
-		System.out.println(a);
+		log.info("Raw Source files from array: {}", a);
 		Assert.assertEquals(sourceFiles[0].getUri(), URI.create(a.getString(0)));
-//        Assert.assertEquals(URI.create("../../testSourceFilesRelativization/subdir/local3.cdf"), URI.create(a.getString(1)));
 		Assert.assertEquals(local3.getUri(), FileTools.resolveRelativeUri(local4.getUri(), URI.create(a.getString(1))));
 		ArrayList<IFileFragment> resolvedSourceFiles = new ArrayList<IFileFragment>(local4.getSourceFiles());
 		for (int i = 0; i < sourceFiles.length; i++) {
@@ -217,7 +197,6 @@ public class FileFragmentTest {
 
 	@Test
 	public void testSourceFilesEquality() {
-//        FileFragment.clearFragments();
 		logging.setLogLevel("log4j.category.cross.datastructures.fragments", "INFO");
 		FileFragment remote1 = new FileFragment(URI.create("http://bibiserv.techfak.uni-bielefeld.de/chroma/data/glucoseA.cdf"));
 		File outBaseDir = new File(System.getProperty("java.io.tmpdir"), "testSourceFilesRelativization");
@@ -273,7 +252,6 @@ public class FileFragmentTest {
 
 	@Test
 	public void testBreadthFirstDifferentDepthSearch() {
-//        FileFragment.clearFragments();
 		logging.setLogLevel("log4j.category.cross.datastructures.fragments", "INFO");
 		File outBaseDir = new File(System.getProperty("java.io.tmpdir"), "testSourceFilesBFS");
 
@@ -307,7 +285,6 @@ public class FileFragmentTest {
 
 	@Test(expected = ConstraintViolationException.class)
 	public void testBreadthFirstSameDepthSearch() {
-//        FileFragment.clearFragments();
 		logging.setLogLevel("log4j.category.cross.datastructures.fragments", "INFO");
 		File outBaseDir = new File(System.getProperty("java.io.tmpdir"), "testSourceFilesBFS");
 
@@ -371,11 +348,6 @@ public class FileFragmentTest {
 		String plainName = f.getName();
 		log.info("PlainName: {}", plainName);
 		Assert.assertTrue(plainName.endsWith(".D"));
-//		String baseName = StringTools.removeFileExt(plainName);
-//		f.setFile(new File(new File(f.getUri()).getParentFile(),baseName+".D/").toURI().toString());
-//		String dirName = f.getName();
-//		Assert.assertFalse(dirName.isEmpty());
-//		Assert.assertTrue(dirName.endsWith(".D"));
 	}
 
 	public IFileFragment createTestFragment() {

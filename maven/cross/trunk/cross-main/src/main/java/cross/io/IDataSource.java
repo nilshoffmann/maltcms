@@ -60,7 +60,7 @@ public interface IDataSource extends IConfigurable, ConfigurationListener {
             ResourceNotAvailableException;
 
     public ArrayList<Array> readIndexed(IVariableFragment f)
-            throws IOException, ResourceNotAvailableException;// f
+            throws IOException, ResourceNotAvailableException;
 
     public Array readSingle(IVariableFragment f) throws IOException,
             ResourceNotAvailableException;

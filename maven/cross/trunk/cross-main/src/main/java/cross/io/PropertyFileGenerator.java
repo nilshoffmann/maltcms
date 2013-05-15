@@ -50,9 +50,7 @@ public class PropertyFileGenerator {
 
     /**
      * Creates a property file for the given class, containing those fields,
-     * which are annotated by {
-     *
-     * @Configurable}.
+     * which are annotated by {@link cross.annotations.Configurable}.
      * @param className
      * @param basedir
      */
@@ -99,14 +97,11 @@ public class PropertyFileGenerator {
                     "Could not find annotated configuration keys for class {}!",
                     c.getName());
         }
-        //TODO add maltcms-datastructures -> PublicMemberGetters support
         return new PropertiesConfiguration();
     }
 
     public static void main(String[] args) {
         Options options = new Options();
-
-        // add t option
         options.addOption("f", true, "base directory for output of files");
         Option provOptions = new Option("p", true,
                 "Comma separated list of provider classes to create Properties for");

@@ -43,12 +43,13 @@ public interface IDataSourceFactory extends IConfigurable {
      * type.
      *
      * @param ff
-     * @return
+     * @return a specific datasource for the given IFileFragment
+	 * @throws IllegalArgumentException if no data source is available for ff
      */
     IDataSource getDataSourceFor(final IFileFragment ff);
 
     /**
-     * @return the dataSources
+     * @return the list of complete class names used as data sources
      */
     List<String> getDataSources();
 
@@ -60,7 +61,8 @@ public interface IDataSourceFactory extends IConfigurable {
     List<String> getSupportedFormats();
 
     /**
-     * @param dataSources the dataSources to set
+	 * 
+     * @param dataSources a list of complete class names
      */
     void setDataSources(final List<String> dataSources);
 }

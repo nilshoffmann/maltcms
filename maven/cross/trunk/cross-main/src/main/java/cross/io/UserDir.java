@@ -30,7 +30,9 @@ package cross.io;
 import java.io.File;
 
 /**
- *
+ * Abstraction of a user dir for an application given an application name and 
+ * a version.
+ * 
  * @author Nils Hoffmann
  */
 public class UserDir {
