@@ -53,6 +53,9 @@
                         </goals>
                     </execution>
                 </executions>
+				<configuration>
+					<outputDirectory>${nbm.updatecenter.outputDir}</outputDirectory>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
