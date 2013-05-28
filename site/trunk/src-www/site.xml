@@ -27,7 +27,7 @@
 		<ref target="home/index" alt="Home" />
 		<ref target="news/index" alt="News" />
 		<ref target="users/features" alt="Maltcms" />
-		<a href="http://maltcms.de/maui" title="Maui">Maui</a>
+		<ref target="maui/index" alt="Maui" />
 		<ref target="developers/api" alt="Developers" />
 		<ref target="info/publications" alt="Info"/>
 	</categories>
@@ -49,8 +49,8 @@
 		</group>
 
 		<group nname="Maui" ident="maui">
-			<a href="http://maltcms.de/maui" title="Maui">Maui</a>
-			<!--<ref target="maui/index" />-->
+			<!--<a href="http://maltcms.de/maui" title="Maui">Maui</a>-->
+			<ref target="maui/index" />
 		</group>
 
 		<group nname="News" ident="news">
@@ -75,7 +75,7 @@
 
 	<div id="footer">
 		<span>
-            &#169; 2008-2012,
+            &#169; 2008-2013,
 		</span>
 		<a title="Contact" href="../info/contact.html">Nils Hoffmann</a> | Maltcms is hosted by
 		<a title="Hosting by sourceforge.net" href="http://sourceforge.net/">sourceforge.net</a> |
@@ -112,5 +112,5 @@
 	<xi:include href="info/license.xml" parse="xml" />
 	<xi:include href="info/contact.xml" parse="xml" />
 	<!--    Maui -->
-	<!--<xi:include href="maui/index.xml" parse="xml" />-->
+	<xi:include href="maui/index.xml" parse="xml" />
 </site>

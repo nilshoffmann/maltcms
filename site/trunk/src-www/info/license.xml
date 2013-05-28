@@ -33,12 +33,6 @@
             <p>
                 For other use-cases, the L-GPL v3 may be sufficient.
             </p>
-            <h2>License Implications</h2>
-            <p>
-                If you simply use Maltcms within your own application or framework, e.g. by building upon existing interfaces and classes,
-                there is no need to license your application under the same license as Maltcms. However, if you extend or alter
-                the source code of Maltcms, both licenses require you to license your derivative work under the same license as Maltcms.
-            </p>
         </p>
         <h2>Versions prior to 1.3</h2>
         <p>
