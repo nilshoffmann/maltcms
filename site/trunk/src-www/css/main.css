@@ -98,8 +98,9 @@ div.nav_dotted ul.unbulletedlist li:hover {
     background: none repeat scroll 0 0 #BBFF99;
 }
 div.block {
-    border: 1px solid #CCCCCC;
-    border-radius: 10px;
+/*    border: 1px solid #CCCCCC;
+    border-radius: 10px;*/
+	border-bottom: 1px solid #CCCCCC;
     padding: 0.5em;
     margin-bottom: 0.5em;
 }
@@ -175,8 +176,8 @@ div.nav_dotted ul.unbulletedlist li.active {
     text-indent: 1em;
 }
 #header {
-    border-left: 1px solid #AACC88;
-    border-right: 1px solid #AACC88;
+/*    border-left: 1px solid #AACC88;
+    border-right: 1px solid #AACC88;*/
 }
 #categories {
     background: none repeat scroll 0 0 #CCEE99;
@@ -309,7 +310,7 @@ div.nav_dotted ul.unbulletedlist li.active {
     padding: 0.5em;
 }
 #colcontent {
-    background: url("/img/background.png") repeat-x scroll 0 0 transparent;
+    /*background: url("/img/background.png") repeat-x scroll 0 0 transparent;*/
     min-height: 25em;
     padding-left: 0.5em;
     padding-right: 0.5em;
@@ -322,10 +323,10 @@ div.nav_dotted ul.unbulletedlist li.active {
 }
 #navcontent {
     background: none repeat scroll 0 0 transparent;
-    border-bottom: 1px solid #AACC88;
+/*    border-bottom: 1px solid #AACC88;
     border-left: 1px solid #AACC88;
     border-radius: 0 0 0 10px;
-    border-right: 1px solid #AACC88;
+    border-right: 1px solid #AACC88;*/
 }
 #logo {
     background-color: transparent;
