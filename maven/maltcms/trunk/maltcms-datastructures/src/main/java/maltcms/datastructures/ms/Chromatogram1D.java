@@ -199,30 +199,37 @@ public class Chromatogram1D implements IChromatogram1D {
     }
 
     @Override
-    public int getIndexFor(double scan_acquisition_time) {
+    public int getIndexFor(double scan_acquisition_time) throws ArrayIndexOutOfBoundsException{
         double[] d = (double[]) getScanAcquisitionTime().get1DJavaArray(
                 double.class);
         int idx = Arrays.binarySearch(d, scan_acquisition_time);
-
-        if (idx
-                >= 0) {// exact hit
-            log.info("sat {}, scan_index {}",
+		if (idx >= 0) {// exact hit
+			log.info("sat {}, scan_index {}",
                     scan_acquisition_time, idx);
-            return idx;
-        } else {// imprecise hit, find closest element
-            double current = d[Math.min(d.length - 1, (-idx) + 1)];
-            double previous = d[Math.max(0, (-idx))];
-            if (Math.abs(scan_acquisition_time - previous) < Math.abs(
-                    scan_acquisition_time - current)) {
-                log.info("sat {}, scan_index {}",
-                        scan_acquisition_time, (-idx) + 1);
-                return (-idx) + 1;
-            } else {
-                log.info("sat {}, scan_index {}",
-                        scan_acquisition_time, -idx);
-                return (-idx);
-            }
-        }
+			return idx;
+		} else {// imprecise hit, find closest element
+			int insertionPosition = (-idx)-1;
+			if(insertionPosition<0) {
+				throw new ArrayIndexOutOfBoundsException("Insertion index is out of bounds! "+insertionPosition+"<"+0);
+			}
+			if(insertionPosition>=d.length) {
+				throw new ArrayIndexOutOfBoundsException("Insertion index is out of bounds! "+insertionPosition+">="+d.length);
+			}
+//			System.out.println("Would insert before "+insertionPosition);
+			double current = d[Math.min(d.length - 1, insertionPosition)];
+//			System.out.println("Value at insertion position: "+current);
+			double previous = d[Math.max(0, insertionPosition-1)];
+//			System.out.println("Value before insertion position: "+previous);
+			if (Math.abs(scan_acquisition_time - previous) <= Math.abs(
+					scan_acquisition_time - current)) {
+				int index = Math.max(0, insertionPosition-1);
+//				System.out.println("Returning "+index);
+				return index;
+			} else {
+//				System.out.println("Returning "+insertionPosition);
+				return insertionPosition;
+			}
+		}
     }
 
     /*

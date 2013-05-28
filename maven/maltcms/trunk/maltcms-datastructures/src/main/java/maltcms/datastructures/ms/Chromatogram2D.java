@@ -42,6 +42,7 @@ import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Concrete Implementation of a 1-dimensional chromatogram.
@@ -49,6 +50,7 @@ import cross.datastructures.tuple.Tuple2D;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
  */
+@Slf4j
 public class Chromatogram2D implements IChromatogram2D {
 
     private IFileFragment parent;
@@ -227,18 +229,33 @@ public class Chromatogram2D implements IChromatogram2D {
         double[] d = (double[]) getScanAcquisitionTime().get1DJavaArray(
                 double.class);
         int idx = Arrays.binarySearch(d, scan_acquisition_time);
-        if (idx >= 0) {// exact hit
-            return idx;
-        } else {// imprecise hit, find closest element
-            double current = d[Math.max(d.length - 1, (-idx) + 1)];
-            double next = d[Math.max(d.length - 1, (-idx) + 2)];
-            if (Math.abs(scan_acquisition_time - current) < Math.abs(
-                    scan_acquisition_time - next)) {
-                return (-idx) + 1;
-            } else {
-                return (-idx) + 2;
-            }
-        }
+		if (idx >= 0) {// exact hit
+			log.info("sat {}, scan_index {}",
+                    scan_acquisition_time, idx);
+			return idx;
+		} else {// imprecise hit, find closest element
+			int insertionPosition = (-idx)-1;
+			if(insertionPosition<0) {
+				throw new ArrayIndexOutOfBoundsException("Insertion index is out of bounds! "+insertionPosition+"<"+0);
+			}
+			if(insertionPosition>=d.length) {
+				throw new ArrayIndexOutOfBoundsException("Insertion index is out of bounds! "+insertionPosition+">="+d.length);
+			}
+//			System.out.println("Would insert before "+insertionPosition);
+			double current = d[Math.min(d.length - 1, insertionPosition)];
+//			System.out.println("Value at insertion position: "+current);
+			double previous = d[Math.max(0, insertionPosition-1)];
+//			System.out.println("Value before insertion position: "+previous);
+			if (Math.abs(scan_acquisition_time - previous) <= Math.abs(
+					scan_acquisition_time - current)) {
+				int index = Math.max(0, insertionPosition-1);
+//				System.out.println("Returning "+index);
+				return index;
+			} else {
+//				System.out.println("Returning "+insertionPosition);
+				return insertionPosition;
+			}
+		}
     }
 
     @Override
