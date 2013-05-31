@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.WeakHashMap;
 
 import maltcms.io.andims.NetcdfDataSource;
 
@@ -114,7 +113,7 @@ public class MZMLDataSource implements IDataSource {
 	@Configurable
 	private int msLevel = 1;
 	private String msLevelAccession = "MS:1000511";
-	private static WeakHashMap<IFileFragment, MzMLUnmarshaller> fileToIndex = new WeakHashMap<IFileFragment, MzMLUnmarshaller>();
+	private static ICacheDelegate<IFileFragment, MzMLUnmarshaller> fileToIndex = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller", 300, 600, 20);
 	private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = null;
 
 	private ICacheDelegate<IVariableFragment, Array> getCache() {
@@ -173,7 +172,7 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private MzMLUnmarshaller getUnmarshaller(final IFileFragment ff) {
-		if (MZMLDataSource.fileToIndex.containsKey(ff)) {
+		if (MZMLDataSource.fileToIndex.get(ff) != null) {
 			return MZMLDataSource.fileToIndex.get(ff);
 		}
 		MzMLUnmarshaller um;
@@ -288,8 +287,8 @@ public class MZMLDataSource implements IDataSource {
 		return rt;
 	}
 
-	private int getScanCount(final Run r) {
-		return r.getSpectrumList().getSpectrum().size();
+	private int getScanCount(final IFileFragment f, final Run r) {
+		return r.getSpectrumList().getCount();
 	}
 
 	private IVariableFragment getVariable(final IFileFragment f,
@@ -310,7 +309,7 @@ public class MZMLDataSource implements IDataSource {
 			final Run run, final MzMLUnmarshaller um) {
 		log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
 			this.mass_range_max});
-		int scans = getScanCount(run);
+		int scans = getScanCount(var.getParent(), run);
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
@@ -361,7 +360,7 @@ public class MZMLDataSource implements IDataSource {
 			a = readScanIndex(var, r, mzu);
 			// read total_intensity
 		} else if (varname.equals(this.total_intensity)) {
-			a = readTotalIntensitiesArray(var, r);
+			a = readTotalIntensitiesArray(var.getParent(), intensity_values, mzu, r);
 			// read min and max_mass_range
 		} else if (varname.equals(this.mass_range_min)
 				|| varname.equals(this.mass_range_max)) {
@@ -407,7 +406,7 @@ public class MZMLDataSource implements IDataSource {
 			final ArrayList<Array> al = new ArrayList<Array>();
 			final Run run = getRun(getUnmarshaller(f.getParent()));
 			int start = 0;
-			int len = getScanCount(run);
+			int len = getScanCount(f.getParent(), run);
 			if (f.getIndex() != null) {
 				Range[] r = f.getIndex().getRange();
 				if (r != null && r[0] != null) {
@@ -424,7 +423,7 @@ public class MZMLDataSource implements IDataSource {
 			final ArrayList<Array> al = new ArrayList<Array>();
 			final Run run = getRun(getUnmarshaller(f.getParent()));
 			int start = 0;
-			int len = getScanCount(run);
+			int len = getScanCount(f.getParent(), run);
 			if (f.getIndex() != null) {
 				Range[] r = f.getIndex().getRange();
 				if (r != null && r[0] != null) {
@@ -453,7 +452,7 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private Array readElutionTimeArray(final IVariableFragment var, final Run run, final MzMLUnmarshaller um, final String accession) {
-		int scans = getScanCount(run);
+		int scans = getScanCount(var.getParent(), run);
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
@@ -488,8 +487,40 @@ public class MZMLDataSource implements IDataSource {
 				"Method accepts only one of mass_range_min or mass_range_max as varname!");
 	}
 
+	private Array readTicFromMzi(final IVariableFragment var, final Run run, final MzMLUnmarshaller um) {
+		if (var.getIndex() == null) {
+			IVariableFragment scanIndex = null;
+			try {
+				scanIndex = var.getParent().getChild(scan_index);
+			} catch (ResourceNotAvailableException rnae) {
+				scanIndex = var.getParent().addChild(scan_index);
+			}
+			var.setIndex(scanIndex);
+		}
+		int start = 0;
+		int scans = getScanCount(var.getParent(), run);
+		final Range[] r = var.getIndex().getRange();
+		if (r != null) {
+			start = r[0].first();
+			scans = r[0].last();
+		}
+		ArrayDouble.D1 tic = new ArrayDouble.D1(scans);
+		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
+		if (var.getName().equals(this.intensity_values)) {
+			double sum = 0.0d;
+			for (int i = start; i < start + scans; i++) {
+				log.debug("Reading scan {} of {}", (i + 1), scans);
+				tic.setDouble(i, MAMath.sumDouble(getIntensityValues(getSpectrum(um, i))));
+			}
+			return tic;
+		}
+		throw new IllegalArgumentException(
+				"Don't know how to handle variable: " + var.getName());
+		// }
+		// return f.getArray();
+	}
+
 	private Array readMZI(final IVariableFragment var, final Run run, final MzMLUnmarshaller um) {
-		// if(!f.hasArray()) {
 		if (var.getIndex() == null) {
 			IVariableFragment scanIndex = null;
 			try {
@@ -501,11 +532,13 @@ public class MZMLDataSource implements IDataSource {
 		}
 		int npeaks = 0;
 		int start = 0;
-		int scans = getScanCount(run);
-		final Range[] r = var.getIndex().getRange();
-		if (r != null) {
-			start = r[0].first();
-			scans = r[0].last();
+		int scans = getScanCount(var.getParent(), run);
+		if (var.getIndex() != null) {
+			final Range[] r = var.getIndex().getRange();
+			if (r != null) {
+				start = r[0].first();
+				scans = r[0].length();
+			}
 		}
 		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
 		for (int i = start; i < start + scans; i++) {
@@ -544,7 +577,7 @@ public class MZMLDataSource implements IDataSource {
 
 	private Array readMsLevelArray(final IVariableFragment var, final Run run, final MzMLUnmarshaller um) {
 		int start = 0;
-		int scans = getScanCount(run);
+		int scans = getScanCount(var.getParent(), run);
 		final Range[] r = var.getIndex().getRange();
 		if (r != null) {
 			start = r[0].first();
@@ -566,7 +599,7 @@ public class MZMLDataSource implements IDataSource {
 	private Array readScanAcquisitionTimeArray(final IVariableFragment var,
 			final Run run, final MzMLUnmarshaller um) {
 		log.debug("readScanAcquisitionTimeArray");
-		int scans = getScanCount(run);
+		int scans = getScanCount(var.getParent(), run);
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
@@ -584,7 +617,7 @@ public class MZMLDataSource implements IDataSource {
 
 	private Array readScanIndex(final IVariableFragment var, final Run run, final MzMLUnmarshaller um) {
 		int npeaks = 0;
-		int scans = getScanCount(run);
+		int scans = getScanCount(var.getParent(), run);
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
@@ -680,7 +713,7 @@ public class MZMLDataSource implements IDataSource {
 			throws IOException, ResourceNotAvailableException {
 		MzMLUnmarshaller um = getUnmarshaller(f.getParent());
 		final Run run = getRun(um);
-		final int scancount = getScanCount(run);
+		final int scancount = getScanCount(f.getParent(), run);
 		final String varname = f.getName();
 		// Read mass_values or intensity_values for whole chromatogram
 		if (varname.equals(this.scan_index)
@@ -736,44 +769,40 @@ public class MZMLDataSource implements IDataSource {
 		return f;
 	}
 
-	private Array readTotalIntensitiesArray(final IVariableFragment var,
+	private Array readTotalIntensitiesArray(final IFileFragment f, final String fallback, final MzMLUnmarshaller um,
 			final Run run) {
 		// Current assumption is, that global time for ms scans correspond to
 		// chromatogram times
 		ChromatogramList cl = run.getChromatogramList();
 		if (cl == null || cl.getCount().equals(BigInteger.ZERO) || cl.getChromatogram().isEmpty()) {
-			throw new ResourceNotAvailableException("No chromatograms defined in mzML file {}" + var.getParent().getName());
+			throw new ResourceNotAvailableException("No TIC chromatograms defined in mzML file {}" + f.getName());
 		}
-		if (cl.getChromatogram().size() > 1) {
-			log.warn("mzML file {} contains more than one chromatogram, defaulting to first!", var.getParent().getName());
+		Chromatogram ticChromatogram = null;
+		for (Chromatogram c : cl.getChromatogram()) {
+			try {
+				CVParam param = findParam(c.getCvParam(), "MS:1000235");
+				if (param != null) {
+					if (ticChromatogram != null) {
+						log.warn("mzML file {} contains more than one tic chromatogram, defaulting to first!", f.getName());
+					} else {
+						ticChromatogram = c;
+					}
+				}
+			} catch (ResourceNotAvailableException rnae) {
+				log.debug("Chromatogram is not a 'total ion current chromatogram'");
+			}
 		}
-		Chromatogram c = cl.getChromatogram().get(0);
-		BinaryDataArray timeArray = c.getBinaryDataArrayList().getBinaryDataArray().get(0);
-		BinaryDataArray intensitiesArray = c.getBinaryDataArrayList().getBinaryDataArray().get(1);
-//        // TODO add a unit check
-//        String rtUnit = "second";
-//        try {
-//            CVParam rtUnitP = findParam(timeArray.getCvParam(), "MS:1000595");
-//            rtUnit = rtUnitP.getUnitName();
-//        } catch (ResourceNotAvailableException rnae) {
-//        }
+		if (ticChromatogram == null) {
+			log.warn("No TIC chromatograms defined in mzML file {} reconstructing from spectra!", f.getName());
+			return readTicFromMzi(f.getChild(fallback), run, um);
+		}
+		BinaryDataArray intensitiesArray = ticChromatogram.getBinaryDataArrayList().getBinaryDataArray().get(1);
 		Number[] intensities = intensitiesArray.getBinaryDataAsNumberArray();
 		final ArrayDouble.D1 intensA = new ArrayDouble.D1(intensities.length);
 		for (int i = 0; i < intensities.length; i++) {
 			intensA.set(i, intensities[i].doubleValue());
 		}
 		return intensA;
-	}
-
-	private double convertTimeValue(double value, String unit) {
-		if (unit.equalsIgnoreCase("second")) {
-			return value;
-		} else if (unit.equalsIgnoreCase("minute")) {
-			return value /= 60.0d;
-		} else if (unit.equalsIgnoreCase("hour")) {
-			return value /= 3600.0d;
-		}
-		throw new UnsupportedOperationException("Don't know how to convert " + unit + " to seconds!");
 	}
 
 	@Override
