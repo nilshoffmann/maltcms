@@ -95,6 +95,10 @@ public final class CommandPipeline implements ICommandSequence, IConfigurable {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private int cnt;
+    
+    public CommandPipeline() {
+        
+    }
 
     @Override
     public void configure(final Configuration cfg) {

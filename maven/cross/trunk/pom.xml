@@ -247,6 +247,11 @@
                     <configuration>
                         <!-- Default configuration for all reports -->
                         <show>public</show>
+                        <links>
+                            <link>http://docs.oracle.com/javase/7/docs/api/</link>
+                            <link>http://www.unidata.ucar.edu/software/netcdf-java/v4.2/javadoc/</link>
+                        </links>
+                        <sourcepath>target/generated-sources/delombok</sourcepath>
                         <archive>
                             <manifestEntries>
                                 <Built-By>${user.name}</Built-By>
@@ -288,6 +293,23 @@
                     <artifactId>nbm-maven-plugin</artifactId>
                     <version>3.9</version>
                     <extensions>true</extensions>
+                </plugin>
+                <plugin>
+                    <groupId>org.projectlombok</groupId>
+                    <artifactId>lombok-maven-plugin</artifactId>
+                    <version>${version.lombok.maven}</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>delombok</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <addOutputDirectory>false</addOutputDirectory>
+                        <sourceDirectory>src/main/java</sourceDirectory>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -359,6 +381,8 @@
                                     <link>http://docs.oracle.com/javase/7/docs/api/</link>
                                     <link>http://www.unidata.ucar.edu/software/netcdf-java/v4.2/javadoc/</link>
                                 </links>
+                                <sourcepath>${basedir}/src/main/java</sourcepath>
+                                <sourcepath>target/generated-sources/delombok</sourcepath>
                             </configuration>
                         </plugin>
                     </reportPlugins>
@@ -430,6 +454,31 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>lombok-needs-tools-jar</id>
+            <activation>
+                <file>
+                    <exists>${java.home}/../lib/tools.jar</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok-maven-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>sun.jdk</groupId>
+                                <artifactId>tools</artifactId>
+                                <version>1.7</version>
+                                <scope>system</scope>
+                                <systemPath>${java.home}/../lib/tools.jar</systemPath>
+                            </dependency>
+                        </dependencies>        
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <modules>
@@ -490,7 +539,7 @@
             <dependency> 
                 <groupId>org.projectlombok</groupId> 
                 <artifactId>lombok</artifactId> 
-                <version>0.10.6</version>
+                <version>${version.lombok}</version>
                 <scope>provided</scope> 
             </dependency>
             <dependency>
@@ -726,5 +775,7 @@
         <version.slf4j>1.7.2</version.slf4j>
         <version.junit>4.11</version.junit>
         <version.netbeans>721RELEASE</version.netbeans>
+        <version.lombok>0.11.8</version.lombok>
+        <version.lombok.maven>0.11.8.0</version.lombok.maven>
     </properties>
 </project>
