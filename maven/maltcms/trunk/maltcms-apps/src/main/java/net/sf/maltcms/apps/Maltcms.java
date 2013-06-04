@@ -628,7 +628,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
 								"user.dir")), cl.getOptionValue("c"));
 					}
 					cfg.setProperty("pipeline.properties", userConfigLocation.getAbsolutePath());
-					cfg.setProperty("config.basedir", userConfigLocation.getParentFile().getAbsolutePath());
+					cfg.setProperty("config.basedir", userConfigLocation.getParentFile().getAbsoluteFile().toURI().getPath());
 					//user options override default options
 					cfg.addConfiguration(new PropertiesConfiguration(cl.getOptionValue("c")));
 				} catch (final ConfigurationException e) {
