@@ -42,7 +42,7 @@
             <item name="About Cross" href="index.html" />
             <!--<item name="Getting Started" href="gettingStarted.html" />-->
 	    <item name="Release Notes" href="releaseNotes.html" />
-      	    <!--<item name="API" href="./apidocs/index.html" />-->
+      	    <item name="API" href="./apidocs/index.html" />
             <item name="Wiki" href="http://sf.net/p/maltcms/wiki" />
             <item name="Bugs" href="http://sf.net/p/maltcms/maltcms-bugs" />
             <item name="Support" href="http://sf.net/projects/maltcms/support" />
