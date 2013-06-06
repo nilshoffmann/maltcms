@@ -46,13 +46,14 @@ import org.jfree.data.Range;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.TextAnchor;
-import org.slf4j.Logger;
 
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import cross.Factory;
+import cross.exception.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import ucar.ma2.MAMath;
 
 /**
  * Chart to display one Variable's data, or additionally combined with domain
@@ -142,10 +143,11 @@ public class XYChart extends AChart<XYPlot> {
             }
             final XYSeries xs = new XYSeries(key);
             final Index idx = this.arrays.get(k).getIndex();
-            // if(domainK!=null) {
-            // EvalTools.eqI(arrays.get(k).getShape()[0],domainK.getShape()[0],
-            // this);
-            // }
+            if (domainK != null) {
+				if(!MAMath.conformable(arrays.get(k).getShape(), domainK.getShape())) {
+					throw new ConstraintViolationException("Arrays for domain and values do not have the same dimensions!");
+				}
+			}
             final Array a = this.arrays.get(k);
             for (int j = 0; j < a.getShape()[0]; j++) {
                 double domX = j;

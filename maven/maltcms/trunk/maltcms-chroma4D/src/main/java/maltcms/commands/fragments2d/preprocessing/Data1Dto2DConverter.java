@@ -38,9 +38,11 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.NotImplementedException;
+import cross.exception.ResourceNotAvailableException;
 import cross.tools.StringTools;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -55,6 +57,8 @@ import ucar.ma2.DataType;
 import ucar.nc2.Dimension;
 
 /**
+ * Joins a number of sequentially acquired chromatograms into a two-dimensional
+ * chromatogram.
  *
  * @author Nils Hoffmann
  */
@@ -66,10 +70,13 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 	private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;
 	@Configurable
 	private String outputFileName = null;
+	@Configurable
+	private List<Integer> msLevel = Arrays.asList(Integer.valueOf(1));
 
 	@Override
 	public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
 		IFileFragment f = null;
+		Collections.sort(msLevel);
 		if (outputFileName == null) {
 			List<String> filenames = new LinkedList<String>();
 			for (IFileFragment ff : in) {
@@ -96,6 +103,7 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 		ICacheDelegate<Integer, Float> fcetCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((f.getUri() + "-firstColumnElutionTimeValues").getBytes()).toString(), 5000);
 		ICacheDelegate<Integer, Float> scetCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((f.getUri() + "-secondColumnElutionTimeValues").getBytes()).toString(), 5000);
 		ICacheDelegate<Integer, Integer> ticCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((f.getUri() + "-ticValues").getBytes()).toString(), 5000);
+		ICacheDelegate<Integer, Integer> msLevelCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((f.getUri() + "-msLevelValues").getBytes()).toString(), 5000);
 		ICacheDelegate<Integer, Integer> scanIndexCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((f.getUri() + "-scanIndexValues").getBytes()).toString(), 5000);
 		int scanIndex = 0;
 		ArrayList<String> inSorted = new ArrayList<String>();
@@ -105,6 +113,7 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 			nameToFragment.put(ff.getName(), ff);
 		}
 		Collections.sort(inSorted, new NaturalSortOrderComparator());
+		int scanIndexOffset = 0;
 		for (String key : inSorted) {
 			IFileFragment ff = nameToFragment.remove(key);
 			log.info("Processing file {}", ff.getName());
@@ -117,34 +126,60 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 			Array sat = satVar.getArray();
 			IVariableFragment ticVar = ff.getChild("total_intensity");
 			Array tic = ticVar.getArray();
-			//TODO integrate ms_level
+			IVariableFragment msLevelVar = null;
+			Array msLevelArray = null;
+			try {
+				msLevelVar = ff.getChild("ms_level");
+				msLevelArray = msLevelVar.getArray();
+			} catch (ResourceNotAvailableException rnae) {
+				log.warn("ms_level not present, only ms level one spectra will be returned!");
+			}
 			List<Array> massValues = massValuesVar.getIndexedArray();
 			List<Array> intensityValues = intensityValuesVar.getIndexedArray();
 			int scans = massValues.size();
-			int scanIndexOffset = 0;
+			double previousMs1Sat = 0.0d;
 			for (int i = 0; i < scans; i++) {
-				if (i == 0) {
-					modulationStartTime = modulationEndTime + sat.getDouble(i);
-					firstColumnElutionTime = modulationStartTime;
+				int scanMsLevel = -1;
+				if (msLevelArray != null) {
+					scanMsLevel = msLevelArray.getInt(i);
+				}else{
+					scanMsLevel = 1;
 				}
-				if (i == scans - 1) {
-					modulationEndTime = modulationStartTime + sat.getDouble(i);
+				int atIndex = Collections.binarySearch(msLevel, Integer.valueOf(scanMsLevel));
+				if (atIndex > -1) {
+					//found in atIndex
+					if (i == 0) {
+						modulationStartTime = modulationEndTime + sat.getDouble(i);
+						firstColumnElutionTime = modulationStartTime;
+					} else if (i == scans - 1) {
+						modulationEndTime = modulationStartTime + sat.getDouble(i);
+					}
+					if (scanMsLevel > -1) {
+						msLevelCache.put(scanIndex, scanMsLevel);
+					}
+					scanIndexCache.put(scanIndex, scanIndexOffset);
+					secondColumnElutionTime = sat.getDouble(i) - modulationStartTime;
+					massValuesCache.add(scanIndex, massValues.get(i));
+					intensityValuesCache.add(scanIndex, intensityValues.get(i));
+					double localScanTime = modulationStartTime + secondColumnElutionTime;
+					satCache.put(scanIndex, (float) localScanTime);
+					fcetCache.put(scanIndex, (float) modulationStartTime);
+					scetCache.put(scanIndex, (float) secondColumnElutionTime);
+					ticCache.put(scanIndex, tic.getInt(scanIndex));
+					scanIndexOffset += massValues.get(i).getShape()[0];
+					if (scanMsLevel == 1) {
+						log.info("Scan time delta to previous scan: {}", secondColumnElutionTime - previousMs1Sat);
+						if(i>0) {
+							scanRate = Math.min(scanRate, 1.0d / (sat.getDouble(i) - sat.getDouble(i - 1)));
+						}
+						previousMs1Sat = secondColumnElutionTime;
+					}
+					modulationTime = Math.max(modulationTime, (modulationEndTime - modulationStartTime));
+					scanIndex++;
+				} else {
+					log.info("Skipping scan with ms level {}. Not in whitelist!", scanMsLevel);
 				}
-				scanIndexCache.put(scanIndex, scanIndexOffset);
-				secondColumnElutionTime = sat.getDouble(i);
-				massValuesCache.add(scanIndex, massValues.get(i));
-				intensityValuesCache.add(scanIndex, intensityValues.get(i));
-				double localScanTime = modulationStartTime + secondColumnElutionTime;
-				satCache.put(scanIndex, (float) localScanTime);
-				fcetCache.put(scanIndex, (float) modulationStartTime);
-				scetCache.put(scanIndex, (float) secondColumnElutionTime);
-				ticCache.put(scanIndex, tic.getInt(scanIndex));
-				scanIndexOffset += massValues.get(i).getShape()[0];
-				if (i > 0) {
-					scanRate = Math.max(scanRate, 1.0d/(sat.getDouble(i) - sat.getDouble(i - 1)));
-				}
-				modulationTime = Math.max(modulationTime, (modulationEndTime - modulationStartTime));
-				scanIndex++;
+
 			}
 			ff.clearArrays();
 		}
@@ -176,12 +211,16 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 		scetVar.setArray(toArray(scetCache, DataType.FLOAT));
 		//
 		IVariableFragment modTimeVar = f.addChild("modulation_time");
-		modTimeVar.setDimensions(new Dimension("modulation_time",1));
+		modTimeVar.setDimensions(new Dimension("modulation_time", 1));
 		modTimeVar.setArray(Array.factory(new double[]{modulationTime}));
 		//
 		IVariableFragment scanRateVar = f.addChild("scan_rate");
-		scanRateVar.setDimensions(new Dimension("scan_rate",1));
+		scanRateVar.setDimensions(new Dimension("scan_rate", 1));
 		scanRateVar.setArray(Array.factory(new double[]{scanRate}));
+
+		IVariableFragment msLevelVar = f.addChild("ms_level");
+		msLevelVar.setDimensions(new Dimension("scan_index", 1));
+		msLevelVar.setArray(toArray(msLevelCache, DataType.INT));
 		log.info("Storing results.");
 		f.save();
 		return new TupleND<IFileFragment>(f);

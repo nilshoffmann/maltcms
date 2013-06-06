@@ -792,6 +792,10 @@ public class MZMLDataSource implements IDataSource {
 				log.debug("Chromatogram is not a 'total ion current chromatogram'");
 			}
 		}
+		if(ticChromatogram!=null && ticChromatogram.getDefaultArrayLength()!=getScanCount(f, run)) {
+			log.warn("TIC Chromatogram point number does not match scan count! Recreating TIC from spectra!");
+			ticChromatogram = null;
+		}
 		if (ticChromatogram == null) {
 			log.warn("No TIC chromatograms defined in mzML file {} reconstructing from spectra!", f.getName());
 			return readTicFromMzi(f.getChild(fallback), run, um);
