@@ -111,9 +111,13 @@ public class DataSourceFactory implements IDataSourceFactory {
                 if (hasDataSourceFor(tmp)) {
                     for (final IDataSource ids : this.formatToIDataSource.get(tmp.
                             toLowerCase())) {
-                        if (ids.canRead(ff) == 1) {
-                            return ids;
-                        }
+						try{
+							if (ids.canRead(ff) == 1) {
+								return ids;
+							}
+						}catch(Exception e) {
+							log.warn("Caught exception while querying IDataSource "+ids.getClass().getName()+"! IDataSource.canRead should not throw Exceptions: Please fix!");
+						}
                     }
                 }
                 if (cnt > 0) {
