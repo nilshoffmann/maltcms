@@ -78,7 +78,7 @@ public class MZMLDataSourceTest {
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
     @Rule
-    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf, "/mzML/small.pwiz.1.1.mzML.gz","/mzML/tiny.pwiz.1.1.mzML.gz","/mzML/MzMLFile_PDA.mzML.xml.gz");
+    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf, "/mzML/AbSciexMsConvert.mzML.gz","/mzML/small.pwiz.1.1.mzML.gz","/mzML/tiny.pwiz.1.1.mzML.gz","/mzML/MzMLFile_PDA.mzML.xml.gz");
 
     MZMLDataSource getDataSource() {
         return new MZMLDataSource();
@@ -139,25 +139,36 @@ public class MZMLDataSourceTest {
         for (File f : ecpf.getFiles()) {
             IFileFragment ff = new FileFragment(f);
             IVariableFragment si = ff.getChild("scan_index");
-            Assert.assertNotNull(si.getArray());
+			Array a = si.getArray();
+            Assert.assertNotNull(a);
             IVariableFragment iv = ff.getChild("intensity_values");
             iv.setIndex(si);
             List<Array> l = getDataSource().readIndexed(iv);
             Assert.assertTrue(l.size() > 0);
+			Assert.assertTrue(l.size() == a.getShape()[0]);
 
             ff = new ImmutableFileFragment(f);
             si = ff.getChild("scan_index");
-            Assert.assertNotNull(si.getArray());
+			a = si.getArray();
+            Assert.assertNotNull(a);
             iv = ff.getChild("intensity_values");
             iv.setIndex(si);
             l = getDataSource().readIndexed(iv);
             Assert.assertTrue(l.size() > 0);
-            iv.setIndex(null);
+			Assert.assertTrue(l.size() == a.getShape()[0]);
+            
+			iv.setIndex(null);
             ff.removeChild(si);
             ff.removeChild(iv);
             ff = new FileFragment(f);
             si = ff.getChild("scan_index");
-            Assert.assertNotNull(si.getArray());
+			a = si.getArray();
+            Assert.assertNotNull(a);
+			iv = ff.getChild("intensity_values");
+            iv.setIndex(si);
+            l = getDataSource().readIndexed(iv);
+            Assert.assertTrue(l.size() > 0);
+			Assert.assertTrue(l.size() == a.getShape()[0]);
 
         }
     }
@@ -173,12 +184,40 @@ public class MZMLDataSourceTest {
             Array a = getDataSource().readSingle(si);
             Assert.assertNotNull(a);
             Assert.assertTrue(a.getShape()[0] > 0);
-
+			
+			IVariableFragment tic = ff.getChild("total_intensity");
+			Array ticA = getDataSource().readSingle(tic);
+			Assert.assertNotNull(ticA);
+            Assert.assertTrue(ticA.getShape()[0] > 0);
+			Assert.assertTrue(ticA.getShape()[0]==a.getShape()[0]);
+			Assert.assertTrue(tic.getRange()[0].toString().equals(si.getRange()[0].toString()));
+			
+			IVariableFragment sat = ff.getChild("scan_acquisition_time");
+			Array satA = getDataSource().readSingle(sat);
+			Assert.assertNotNull(satA);
+            Assert.assertTrue(satA.getShape()[0] > 0);
+			Assert.assertTrue(ticA.getShape()[0]==satA.getShape()[0]);
+			Assert.assertTrue(tic.getRange()[0].toString().equals(sat.getRange()[0].toString()));
+			
             ff = new ImmutableFileFragment(f);
             si = ff.getChild("scan_index");
             a = getDataSource().readSingle(si);
             Assert.assertNotNull(a);
             Assert.assertTrue(a.getShape()[0] > 0);
+			
+			tic = ff.getChild("total_intensity");
+			ticA = getDataSource().readSingle(tic);
+			Assert.assertNotNull(ticA);
+            Assert.assertTrue(ticA.getShape()[0] > 0);
+			Assert.assertTrue(ticA.getShape()[0]==a.getShape()[0]);
+			Assert.assertTrue(tic.getRange()[0].toString().equals(si.getRange()[0].toString()));
+			
+			sat = ff.getChild("scan_acquisition_time");
+			satA = getDataSource().readSingle(sat);
+			Assert.assertNotNull(satA);
+            Assert.assertTrue(satA.getShape()[0] > 0);
+			Assert.assertTrue(ticA.getShape()[0]==satA.getShape()[0]);
+			Assert.assertTrue(tic.getRange()[0].toString().equals(sat.getRange()[0].toString()));
         }
     }
 

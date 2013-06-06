@@ -313,8 +313,8 @@ public class MZMLDataSource implements IDataSource {
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
-			start = r[0].first();
-			scans = r[0].length();
+			start = Math.max(0,r[0].first());
+			scans = Math.min(scans,r[0].length());
 		}
 		final ArrayDouble.D1 mass_range_min1 = new ArrayDouble.D1(scans);
 		final ArrayDouble.D1 mass_range_max1 = new ArrayDouble.D1(scans);
@@ -410,8 +410,8 @@ public class MZMLDataSource implements IDataSource {
 			if (f.getIndex() != null) {
 				Range[] r = f.getIndex().getRange();
 				if (r != null && r[0] != null) {
-					start = r[0].first();
-					len = r[0].length();
+					start = Math.max(0,r[0].first());
+					len = Math.min(len,r[0].length());
 				}
 			}
 			for (int i = start; i < start + len; i++) {
@@ -427,8 +427,8 @@ public class MZMLDataSource implements IDataSource {
 			if (f.getIndex() != null) {
 				Range[] r = f.getIndex().getRange();
 				if (r != null && r[0] != null) {
-					start = r[0].first();
-					len = r[0].length();
+					start = Math.max(0,r[0].first());
+					len = Math.min(len,r[0].length());
 				}
 			}
 			for (int i = start; i < start + len; i++) {
@@ -456,8 +456,8 @@ public class MZMLDataSource implements IDataSource {
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
-			start = r[0].first();
-			scans = r[0].length();
+			start = Math.max(0,r[0].first());
+			scans = Math.min(scans,r[0].length());
 		}
 		log.debug("Creating index array with {} elements", scans);
 		final ArrayDouble.D1 elutionTime = new ArrayDouble.D1(scans);
@@ -501,8 +501,8 @@ public class MZMLDataSource implements IDataSource {
 		int scans = getScanCount(var.getParent(), run);
 		final Range[] r = var.getIndex().getRange();
 		if (r != null) {
-			start = r[0].first();
-			scans = r[0].last();
+			start = Math.max(0,r[0].first());
+			scans = Math.min(scans,r[0].length());
 		}
 		ArrayDouble.D1 tic = new ArrayDouble.D1(scans);
 		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
@@ -536,8 +536,8 @@ public class MZMLDataSource implements IDataSource {
 		if (var.getIndex() != null) {
 			final Range[] r = var.getIndex().getRange();
 			if (r != null) {
-				start = r[0].first();
-				scans = r[0].length();
+				start = Math.max(0,r[0].first());
+				scans = Math.min(scans,r[0].length());
 			}
 		}
 		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
@@ -580,8 +580,8 @@ public class MZMLDataSource implements IDataSource {
 		int scans = getScanCount(var.getParent(), run);
 		final Range[] r = var.getIndex().getRange();
 		if (r != null) {
-			start = r[0].first();
-			scans = r[0].last();
+			start = Math.max(0,r[0].first());
+			scans = Math.min(scans,r[0].length());
 		}
 		Array a = new ArrayInt.D1(scans);
 		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
@@ -603,8 +603,8 @@ public class MZMLDataSource implements IDataSource {
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
-			start = r[0].first();
-			scans = r[0].length();
+			start = Math.max(0,r[0].first());
+			scans = Math.min(scans,r[0].length());
 		}
 		final ArrayDouble.D1 sat = new ArrayDouble.D1(scans);
 		for (int i = start; i < start + scans; i++) {
@@ -621,8 +621,8 @@ public class MZMLDataSource implements IDataSource {
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
-			start = r[0].first();
-			scans = r[0].length();
+			start = Math.max(0,r[0].first());
+			scans = Math.min(scans,r[0].length());
 		}
 		log.debug("Creating index array with {} elements", scans);
 		final ArrayInt.D1 scan_index = new ArrayInt.D1(scans);
