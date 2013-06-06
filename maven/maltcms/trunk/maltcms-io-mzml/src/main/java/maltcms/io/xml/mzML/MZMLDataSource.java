@@ -446,6 +446,9 @@ public class MZMLDataSource implements IDataSource {
 		for (SourceFile sfs : sfl.getSourceFile()) {
 			sourceFilePaths.add(sfs.getLocation());
 		}
+		if(sourceFilePaths.isEmpty()) {
+			return null;
+		}
 		Array a = Array.makeArray(DataType.STRING, new LinkedList<String>(sourceFilePaths));
 		log.info("Returning source files: ", a);
 		return a;
