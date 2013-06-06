@@ -78,7 +78,7 @@ public class MZMLDataSourceTest {
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
     @Rule
-    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf, "/mzML/AbSciexMsConvert.mzML.gz","/mzML/small.pwiz.1.1.mzML.gz","/mzML/tiny.pwiz.1.1.mzML.gz","/mzML/MzMLFile_PDA.mzML.xml.gz");
+    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf, "/mzML/small.pwiz.1.1.mzML.gz","/mzML/tiny.pwiz.1.1.mzML.gz","/mzML/MzMLFile_PDA.mzML.xml.gz");
 
     MZMLDataSource getDataSource() {
         return new MZMLDataSource();

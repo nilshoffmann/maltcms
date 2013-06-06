@@ -29,18 +29,11 @@ package maltcms.commands.fragments.io;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
-import cross.test.LogMethodName;
-import cross.test.SetupLogging;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.io.xml.mzML.MZMLDataSource;
@@ -49,7 +42,6 @@ import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
 import org.junit.Test;
 import org.junit.Rule;
-import ucar.ma2.Array;
 
 /**
  *
