@@ -422,8 +422,12 @@ public class ChromatogramWarp extends AFragmentCommand {
                     new Object[]{s1, this.indexVar, toBeWarped.getName()});
             log.debug("Processing {} indexed by {} from file {}",
                     new Object[]{s2, this.indexVar, toBeWarped.getName()});
-            ref.getChild(s1).setIndex(ref.getChild(this.indexVar));
-            ref.getChild(s2).setIndex(ref.getChild(this.indexVar));
+            IVariableFragment s1v = ref.getChild(s1);
+			IVariableFragment s1iv = ref.getChild(this.indexVar);
+			s1v.setIndex(s1iv);
+            IVariableFragment s2v = ref.getChild(s2);
+			IVariableFragment s2iv = ref.getChild(this.indexVar);
+			s2v.setIndex(s2iv);
             final List<Array> aA1 = ref.getChild(s1).getIndexedArray();
             final List<Array> aA2 = ref.getChild(s2).getIndexedArray();
             toBeWarped.getChild(s1)

@@ -38,6 +38,7 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -69,11 +70,12 @@ public class SimplePeakPicking implements IPeakPicking {
     }
 
     private List<ArrayDouble.D1> getIntensities(IFileFragment ff) {
-        ff.getChild(this.totalIntensityVar).setIndex(
-                ff.getChild(this.secondScanIndexVar));
+        IVariableFragment tiv = ff.getChild(this.totalIntensityVar);
+		IVariableFragment ssiv = ff.getChild(this.secondScanIndexVar);
+		tiv.setIndex(ssiv);
         List<ArrayDouble.D1> intensities = new ArrayList<ArrayDouble.D1>();
 
-        for (Array a : ff.getChild(this.totalIntensityVar).getIndexedArray()) {
+        for (Array a : tiv.getIndexedArray()) {
             intensities.add((ArrayDouble.D1) a);
         }
 

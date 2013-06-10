@@ -27,6 +27,7 @@
  */
 package maltcms.datastructures.ms;
 
+import cross.annotations.Configurable;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,8 +42,10 @@ import org.apache.commons.configuration.Configuration;
 
 import ucar.ma2.Array;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import lombok.extern.slf4j.Slf4j;
+import ucar.ma2.MAMath;
 
 /**
  * Concrete Implementation of a 1-dimensional chromatogram.
@@ -57,10 +60,15 @@ public class Chromatogram2D implements IChromatogram2D {
     private IScanLine isl;
     private final String scanAcquisitionTimeUnit = "seconds";
     private final String secondColumnScanAcquisitionTimeUnit = "seconds";
+	@Configurable(name = "var.scan_acquisition_time")
+	private String scan_acquisition_time_var = "scan_acquisition_time";
+	private final IVariableFragment scanAcquisitionTimeVar;
     private double md = -1;
     private final int spm;
     private final int slc;
     private double satOffset = 0;
+	private Tuple2D<Double,Double> massRange;
+	private Tuple2D<Double,Double> timeRange;
 
     public Chromatogram2D(final IFileFragment e) {
         this.parent = e;
@@ -70,6 +78,7 @@ public class Chromatogram2D implements IChromatogram2D {
         this.satOffset = e.getChild("scan_acquisition_time").getArray().
                 getDouble(0);
         this.md = getModulationDuration();
+		this.scanAcquisitionTimeVar = e.getChild(scan_acquisition_time_var);
     }
 
     @Override
@@ -117,10 +126,29 @@ public class Chromatogram2D implements IChromatogram2D {
     public void configure(final Configuration cfg) {
     }
 
+	@Override
+	public Tuple2D<Double,Double> getTimeRange() {
+		if(timeRange==null) {
+			MAMath.MinMax satMM = MAMath.getMinMax(scanAcquisitionTimeVar.getArray());
+			timeRange = new Tuple2D<Double,Double>(satMM.min,satMM.max);
+		}
+		return timeRange;
+	}
+	
+	@Override
+	public Tuple2D<Double,Double> getMassRange() {
+		if(massRange==null) {
+			massRange = MaltcmsTools.getMinMaxMassRange(parent);
+		}
+		return massRange;
+	}
+	
+	@Override
     public List<Array> getIntensities() {
         return MaltcmsTools.getMZIs(this.parent).getSecond();
     }
 
+	@Override
     public List<Array> getMasses() {
         return MaltcmsTools.getMZIs(this.parent).getFirst();
     }

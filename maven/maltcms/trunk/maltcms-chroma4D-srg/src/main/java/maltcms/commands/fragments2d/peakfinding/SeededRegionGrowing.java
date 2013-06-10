@@ -610,10 +610,10 @@ public class SeededRegionGrowing extends AFragmentCommand {
         // .divBy60(ff.getChild(this.scanAcquTime1DVar).getArray());
         final ArrayDouble.D1 firstRetTime = (ArrayDouble.D1) ff.getChild(
                 this.scanAcquTime1DVar).getArray();
-        ff.getChild(this.secondColumnTimeVar).setIndex(
-                ff.getChild(this.secondScanIndexVar));
-        final ArrayDouble.D1 secondRetTime = (ArrayDouble.D1) ff.getChild(
-                this.secondColumnTimeVar).getIndexedArray().get(0);
+        IVariableFragment sctv = ff.getChild(this.secondColumnTimeVar);
+		IVariableFragment sciv = ff.getChild(this.secondScanIndexVar);
+		sctv.setIndex(sciv);
+        final ArrayDouble.D1 secondRetTime = (ArrayDouble.D1) sctv.getIndexedArray().get(0);
         final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times = new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(
                 firstRetTime, secondRetTime);
         return times;
@@ -731,8 +731,9 @@ public class SeededRegionGrowing extends AFragmentCommand {
     }
 
     private List<Array> getIntensities(IFileFragment ff) {
-        ff.getChild(this.totalIntensityVar).setIndex(
-                ff.getChild(this.secondScanIndexVar));
+        IVariableFragment ticVar = ff.getChild(this.totalIntensityVar);
+		IVariableFragment sciv = ff.getChild(this.secondScanIndexVar);
+		ticVar.setIndex(sciv);
         return ff.getChild(this.totalIntensityVar).getIndexedArray();
     }
 

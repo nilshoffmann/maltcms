@@ -1,4 +1,4 @@
-/* 
+/*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
@@ -25,37 +25,31 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.datastructures.ms;
+package maltcms.datastructures.quadTree.distances;
 
-import cross.IConfigurable;
-import java.util.List;
-
-import ucar.ma2.Array;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.tuple.Tuple2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 
 /**
- * Interface representing a Chromatogram.
- *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * Implementation of Perpendicular Distance of a Point onto a line.
+ * This is useful for range searches along a given line/dimension.
+ * 
+ * @author Nils Hoffmann
  */
-public interface IChromatogram extends IConfigurable {
-
-    public IFileFragment getParent();
-
-    public int getNumberOfScans();
-
-    public List<Array> getIntensities();
-
-    public List<Array> getMasses();
-
-    public String getScanAcquisitionTimeUnit();
-
-    public Array getScanAcquisitionTime();
+public class PerpendicularDistance {
 	
-	public Tuple2D<Double,Double> getTimeRange();
+	public double distance(Point2D p, Line2D l) {
+		double m = getM(l);
+		double b = getB(l);
+		double z = Math.abs((m*p.getX())-p.getY()+b);
+		return z/Math.sqrt(Math.pow(m, 2)+1);
+	}
 	
-	public Tuple2D<Double,Double> getMassRange();
-
-    public int getIndexFor(double scan_acquisition_time);
+	private double getM(Line2D l) {
+		return (l.getY2()-l.getY1())/(l.getX2()-l.getX1());
+	}
+	
+	private double getB(Line2D l) {
+		return l.getY1()-(getM(l)*l.getX1());
+	}
 }

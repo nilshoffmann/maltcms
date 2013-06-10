@@ -35,7 +35,9 @@ import java.util.List;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ConstraintViolationException;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 import java.util.Collections;
+import maltcms.datastructures.quadTree.distances.PerpendicularDistance;
 
 /**
  * @author Nils Hoffmann
@@ -63,6 +65,35 @@ public class QuadTreeNode<T> {
         this.s = "Node[" + level + "] x:" + this.r.x + ", y:" + this.r.y + ", width:" + this.r.width + ", height:" + this.r.height;
     }
 
+	public List<Tuple2D<Point2D, T>> getClosestChildrenPerpendicularToLine(List<Tuple2D<Point2D, T>> children, Line2D l, double distance) {
+		PerpendicularDistance pd = new PerpendicularDistance();
+		    //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
+        if (this.t != null) {//this node has no children yet
+            //iterate over local points
+            for (Tuple2D<Point2D, T> tple : this.t) {
+                double dist1 = pd.distance(tple.getFirst(), l);//tple.getFirst().distance(p);
+                //check if query is in distance
+                if (dist1 <= distance) {
+					children.add(tple);
+                }
+            }
+        }
+        //System.out.println("Looking for Point in children!");
+        if (this.children != null) {//this node has children
+            //iterate over child nodes
+            for (QuadTreeNode<T> qtn : this.children) {
+                if (qtn != null) {
+                    //intersection with quadrant
+                    if (l.intersects(qtn.getArea())) {
+                        //check for closest child
+                        qtn.getClosestChildrenPerpendicularToLine(children, l, distance);
+                    }
+                }
+            }
+        }
+        return children;
+	}
+	
     public List<Tuple2D<Point2D, T>> getChildrenInRadius(List<Tuple2D<Point2D, T>> children, Point2D p, double radius) {
         //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
         if (this.t != null) {//this node has no children yet

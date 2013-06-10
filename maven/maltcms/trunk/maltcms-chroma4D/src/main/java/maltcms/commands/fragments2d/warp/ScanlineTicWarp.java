@@ -39,6 +39,7 @@ import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -81,12 +82,14 @@ public class ScanlineTicWarp extends ADynamicTimeWarp {
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
             final Tuple2D<IFileFragment, IFileFragment> t) {
-        t.getFirst().getChild(this.totalIntensity).setIndex(
-                t.getFirst().getChild(this.secondColumnScanIndexVar));
+        IVariableFragment var1 = t.getFirst().getChild(this.totalIntensity);
+		IVariableFragment index1 = t.getFirst().getChild(this.secondColumnScanIndexVar);
+		var1.setIndex(index1);
         final List<Array> ref = t.getFirst().getChild(this.totalIntensity).
                 getIndexedArray();
-        t.getSecond().getChild(this.totalIntensity).setIndex(
-                t.getSecond().getChild(this.secondColumnScanIndexVar));
+        IVariableFragment var2 = t.getSecond().getChild(this.totalIntensity);
+		IVariableFragment index2 = t.getSecond().getChild(this.secondColumnScanIndexVar);
+		var2.setIndex(index2);
         final List<Array> query = t.getSecond().getChild(this.totalIntensity).
                 getIndexedArray();
 

@@ -545,8 +545,9 @@ public class PeakCliqueAlignment2 extends AFragmentCommand {
                 final Array peakScans = ascans.getArray();
                 final Index peakScansI = peakScans.getIndex();
 
-                t.getChild(this.binnedIntensities).setIndex(
-                        t.getChild(this.binnedScanIndex));
+                IVariableFragment biv = t.getChild(this.binnedIntensities);
+				IVariableFragment bsi = t.getChild(this.binnedScanIndex);
+				biv.setIndex(bsi);
                 log.info("Checking user supplied anchors for: {}", t);
                 final Array scan_acquisition_time = t.getChild(
                         this.scanAcquisitionTime).getArray();

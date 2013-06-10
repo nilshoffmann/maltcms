@@ -50,6 +50,7 @@ import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
@@ -232,7 +233,9 @@ public class Alignment2D extends AFragmentCommand {
             final String varName, final String indexName, final boolean filter,
             final boolean scale) {
         final FeatureVectorFactory fvf = FeatureVectorFactory.getInstance();
-        ff.getChild(varName).setIndex(ff.getChild(indexName));
+        IVariableFragment ivf = ff.getChild(varName);
+		IVariableFragment si = ff.getChild(indexName);
+		ivf.setIndex(si);
 
         List<Array> feature = ff.getChild(varName).getIndexedArray();
         if (filter) {
@@ -266,8 +269,9 @@ public class Alignment2D extends AFragmentCommand {
      * @return scanlines
      */
     protected List<Array> getScanlineFor(final IFileFragment ff) {
-        ff.getChild(this.totalIntensity).setIndex(
-                ff.getChild(this.secondColumnScanIndexVar));
+        IVariableFragment ticVar = ff.getChild(this.totalIntensity);
+		IVariableFragment si = ff.getChild(this.secondColumnScanIndexVar);
+		ticVar.setIndex(si);
         final List<Array> scanlines = ff.getChild(this.totalIntensity).
                 getIndexedArray();
         return scanlines;

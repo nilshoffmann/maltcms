@@ -55,6 +55,7 @@ import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
@@ -126,9 +127,10 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
             final double modulationTime = ff.getChild(this.modulationTimeVar).
                     getArray().getDouble(Index.scalarIndexImmutable);
             final int scansPerModulation = (int) (scanRate * modulationTime);
-            ff.getChild(this.totalIntensityVar).setIndex(
-                    ff.getChild(this.secondScanIndexVar));
-            List<Array> intensities = ff.getChild(this.totalIntensityVar).
+			IVariableFragment ticVar = ff.getChild(this.totalIntensityVar);
+			IVariableFragment tic2DScanIndexVar = ff.getChild(this.secondScanIndexVar);
+			ticVar.setIndex(tic2DScanIndexVar);
+            List<Array> intensities = ticVar.
                     getIndexedArray();
             boolean truncateLast = false;
             int shapeZero = -1;
@@ -189,10 +191,9 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
 
             final ArrayDouble.D1 firstRetTime = (ArrayDouble.D1) ArrayTools.
                     divBy60(ff.getChild(this.scanAcquTime).getArray());
-            ff.getChild(this.secondColumnTimeVar).setIndex(
-                    ff.getChild(this.secondColumnScanIndexVar));
-            final ArrayDouble.D1 secondRetTime = (ArrayDouble.D1) ff.getChild(
-                    this.secondColumnTimeVar).getIndexedArray().get(0);
+            IVariableFragment sctv = ff.getChild(this.secondColumnTimeVar);
+			sctv.setIndex(tic2DScanIndexVar);
+            final ArrayDouble.D1 secondRetTime = (ArrayDouble.D1) sctv.getIndexedArray().get(0);
             final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times = new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(
                     firstRetTime, secondRetTime);
 

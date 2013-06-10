@@ -43,13 +43,11 @@ import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
-import cross.Factory;
 import cross.annotations.Configurable;
-import cross.annotations.ProvidesVariables;
-import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
@@ -112,8 +110,9 @@ public class GradientVisualizer extends AFragmentCommand {
             final int modulationTime = ff.getChild(this.modulationTimeVar).
                     getArray().getInt(Index.scalarIndexImmutable);
             final int scansPerModulation = scanRate * modulationTime;
-            ff.getChild(this.totalIntensityVar).setIndex(
-                    ff.getChild(this.secondScanIndexVar));
+            IVariableFragment ticVar = ff.getChild(this.totalIntensityVar);
+			IVariableFragment ssiv = ff.getChild(this.secondScanIndexVar);
+			ticVar.setIndex(ssiv);
             if (this.similarity instanceof ArrayDotMap) {
                 log.info("Setting std");
                 ((ArrayDotMap) this.similarity).setStdArray((ArrayDouble.D1) ff.

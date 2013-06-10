@@ -41,7 +41,6 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 
 import ucar.ma2.Array;
-import ucar.ma2.ArrayInt;
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
@@ -54,7 +53,6 @@ import ucar.nc2.Variable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
-import cross.datastructures.tools.ArrayTools;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
@@ -64,6 +62,7 @@ import java.net.URI;
 import java.util.LinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.nc2.dataset.NetcdfDataset;
 
 /**
  * Implementation of {@link cross.io.IDataSource} for Netcdf files, following
@@ -76,15 +75,11 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IDataSource.class)
 public class NetcdfDataSource implements IDataSource {
 
-	@Deprecated
 	private static int minCachedFiles = 5;
-	@Deprecated
 	private static int maxCachedFiles = 10;
-	@Deprecated
-	private static long secondsUntilCleanup = 60;
+	private static int secondsUntilCleanup = 60;
 	private final String[] fileEnding = new String[]{"nc", "nc.gz", "nc.z", "nc.zip", "nc.gzip", "nc.bz2", "cdf", "cdf.gz", "cdf.z", "cdf.zip", "cdf.gzip", "cdf.bz2"};
 	private boolean updateAttributes = false;
-	@Deprecated
 	private boolean useNetcdfFileCache = false;
 	private boolean saveNCML;
 	private List<String> scanDimensionVars = Collections.emptyList();
@@ -202,7 +197,7 @@ public class NetcdfDataSource implements IDataSource {
 		NetcdfDataSource.maxCachedFiles = configuration.getInt(
 				"ucar.nc2.NetcdfFileCache.maxCachedFiles",
 				NetcdfDataSource.maxCachedFiles);
-		NetcdfDataSource.secondsUntilCleanup = configuration.getLong(
+		NetcdfDataSource.secondsUntilCleanup = configuration.getInt(
 				"ucar.nc2.NetcdfFileCache.secondsUntilCleanup",
 				NetcdfDataSource.secondsUntilCleanup);
 		this.updateAttributes = configuration.getBoolean(
@@ -220,6 +215,19 @@ public class NetcdfDataSource implements IDataSource {
 				+ ".pointDimensionName", "point_number");
 		this.saveNCML = configuration.getBoolean(
 				"ucar.nc2.NetcdfFile.saveNCML", false);
+		if(useNetcdfFileCache) {
+			NetcdfDataset.initNetcdfFileCache(minCachedFiles, maxCachedFiles, secondsUntilCleanup);
+			Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHook()));
+		}
+	}
+	
+	private static class ShutdownHook implements Runnable {
+
+		@Override
+		public void run() {
+			NetcdfDataset.shutdown();
+		}
+		
 	}
 
 	public IVariableFragment convert(final IFileFragment ff, final Variable v,
@@ -302,7 +310,8 @@ public class NetcdfDataSource implements IDataSource {
 		URI u = ff.getUri();
 		String filepath = u.toString();
 		log.info("Opening netcdf file {}", filepath);
-		return NetcdfFile.open(filepath);
+		return NetcdfDataset.acquireFile(filepath, null);
+//		return NetcdfFile.open(filepath);
 	}
 
 	protected NetcdfFile locateFile(final IVariableFragment f)

@@ -314,7 +314,7 @@ public class PeakSeparator {
                 }
                 c++;
             }
-            if (maxArg >= 0) {
+            if (maxArg >= 0 && !list.isEmpty()) {
                 list.get(maxArg).addRegionPoint(p, slc.getMassSpectra(p),
                         intensities.get(p.x).get(p.y));
             }

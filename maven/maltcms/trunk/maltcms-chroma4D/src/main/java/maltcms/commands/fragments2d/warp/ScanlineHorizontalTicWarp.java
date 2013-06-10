@@ -35,9 +35,8 @@ import maltcms.tools.ArrayTools2;
 
 import ucar.ma2.Array;
 import cross.annotations.ProvidesVariables;
-import cross.annotations.RequiresOptionalVariables;
-import cross.annotations.RequiresVariables;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.tools.StringTools;
 import lombok.Data;
@@ -72,13 +71,15 @@ public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
         final String refname = StringTools.removeFileExt(ref.getName()), queryname = StringTools.
                 removeFileExt(query.getName());
 
-        ref.getChild(refname + "_" + queryname + "-tv").setIndex(
-                ref.getChild(refname + "_" + queryname + "-idx"));
+        IVariableFragment var1 = ref.getChild(refname + "_" + queryname + "-tv");
+		IVariableFragment index1 = ref.getChild(refname + "_" + queryname + "-idx");
+		var1.setIndex(index1);
         List<Array> scanlineRef = ref.getChild(
                 refname + "_" + queryname + "-tv").getIndexedArray();
 
-        query.getChild(queryname + "_" + refname + "-tv").setIndex(
-                query.getChild(queryname + "_" + refname + "-idx"));
+        IVariableFragment var2 = query.getChild(queryname + "_" + refname + "-tv");
+		IVariableFragment index2 = query.getChild(queryname + "_" + refname + "-idx");
+		var2.setIndex(index2);
         List<Array> scanlineQuery = query.getChild(
                 queryname + "_" + refname + "-tv").getIndexedArray();
 

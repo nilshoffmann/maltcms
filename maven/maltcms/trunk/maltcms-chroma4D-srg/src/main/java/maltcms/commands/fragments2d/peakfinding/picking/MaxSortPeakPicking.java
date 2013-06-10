@@ -39,6 +39,7 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,11 +74,12 @@ public class MaxSortPeakPicking implements IPeakPicking {
 
     private List<ArrayDouble.D1> getIntensities(IFileFragment ff,
             final String localTotalIntensityVar) {
-        ff.getChild(localTotalIntensityVar).setIndex(
-                ff.getChild(this.secondScanIndexVar));
+        IVariableFragment ltiv = ff.getChild(localTotalIntensityVar);
+		IVariableFragment sciv = ff.getChild(this.secondScanIndexVar);
+		ltiv.setIndex(sciv);
         List<ArrayDouble.D1> intensities = new ArrayList<ArrayDouble.D1>();
 
-        for (Array a : ff.getChild(localTotalIntensityVar).getIndexedArray()) {
+        for (Array a : ltiv.getIndexedArray()) {
             intensities.add((ArrayDouble.D1) a);
         }
 

@@ -43,6 +43,7 @@ import ucar.ma2.IndexIterator;
 import ucar.ma2.ArrayDouble.D1;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
 import cross.exception.ResourceNotAvailableException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -354,8 +355,9 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
      */
     @Override
     public List<D1> getIntensities() {
-        ff.getChild(this.totalIntensityVar).setIndex(
-                ff.getChild(this.secondScanIndexVar));
+        IVariableFragment tiv = ff.getChild(this.totalIntensityVar);
+		IVariableFragment ssiv = ff.getChild(this.secondScanIndexVar);
+		tiv.setIndex(ssiv);
         final List<ArrayDouble.D1> intensitiesD = new ArrayList<ArrayDouble.D1>();
         for (Array a : this.ff.getChild(this.totalIntensityVar).getIndexedArray()) {
             intensitiesD.add((ArrayDouble.D1) a);
