@@ -56,227 +56,231 @@ import ucar.ma2.MAMath;
 @Slf4j
 public class Chromatogram2D implements IChromatogram2D {
 
-    private IFileFragment parent;
-    private IScanLine isl;
-    private final String scanAcquisitionTimeUnit = "seconds";
-    private final String secondColumnScanAcquisitionTimeUnit = "seconds";
+	private IFileFragment parent;
+	private IScanLine isl;
+	private final String scanAcquisitionTimeUnit = "seconds";
+	private final String secondColumnScanAcquisitionTimeUnit = "seconds";
 	@Configurable(name = "var.scan_acquisition_time")
 	private String scan_acquisition_time_var = "scan_acquisition_time";
 	private final IVariableFragment scanAcquisitionTimeVar;
-    private double md = -1;
-    private final int spm;
-    private final int slc;
-    private double satOffset = 0;
-	private Tuple2D<Double,Double> massRange;
-	private Tuple2D<Double,Double> timeRange;
+	private double md = -1;
+	private final int spm;
+	private final int slc;
+	private double satOffset = 0;
+	private Tuple2D<Double, Double> massRange;
+	private Tuple2D<Double, Double> timeRange;
+	private int numberOfScans = -1;
 
-    public Chromatogram2D(final IFileFragment e) {
-        this.parent = e;
-        this.isl = ScanLineCacheFactory.getScanLineCache(e);
-        this.spm = this.isl.getScansPerModulation();
-        this.slc = this.isl.getScanLineCount();
-        this.satOffset = e.getChild("scan_acquisition_time").getArray().
-                getDouble(0);
-        this.md = getModulationDuration();
+	public Chromatogram2D(final IFileFragment e) {
+		this.parent = e;
+		this.isl = ScanLineCacheFactory.getScanLineCache(e);
+		this.spm = this.isl.getScansPerModulation();
+		this.slc = this.isl.getScanLineCount();
+		this.satOffset = e.getChild("scan_acquisition_time").getArray().
+				getDouble(0);
+		this.md = getModulationDuration();
 		this.scanAcquisitionTimeVar = e.getChild(scan_acquisition_time_var);
-    }
-
-    @Override
-    public IFileFragment getParent() {
-        return this.parent;
-    }
-
-    @Override
-    public int getNumberOf2DScans() {
-        return this.isl.getScanLineCount() * this.isl.getScansPerModulation();
-    }
-
-    @Override
-    /**
-     * @param firstColumnScanIndex
-     * @param secondColumnScanIndex
-     */
-    public IScan2D getScan2D(final int firstColumnScanIndex,
-            final int secondColumnScanIndex) {
-        return buildScan((firstColumnScanIndex * isl.getScansPerModulation())
-                + secondColumnScanIndex);
-    }
-
-    /**
-     * Call for explicit access to the underlying IScanLine implementation.
-     *
-     * @return
-     */
-    public IScanLine getScanLineImpl() {
-        return this.isl;
-    }
-
-    protected IScan2D buildScan(int i) {
-        Point p = this.isl.mapIndex(i);
-        final Tuple2D<Array, Array> t = this.isl.getSparseMassSpectra(p.x, p.y);
-        double sat1 = satOffset + (p.x * getModulationDuration());
-        double sat = MaltcmsTools.getScanAcquisitionTime(this.parent, i);
-        double sat2 = sat - sat1;
-        final Scan2D s = new Scan2D(t.getFirst(), t.getSecond(), i, sat, p.x,
-                p.y, sat1, sat2);
-        return s;
-    }
-
-    @Override
-    public void configure(final Configuration cfg) {
-    }
+	}
 
 	@Override
-	public Tuple2D<Double,Double> getTimeRange() {
-		if(timeRange==null) {
+	public IFileFragment getParent() {
+		return this.parent;
+	}
+
+	@Override
+	public int getNumberOf2DScans() {
+		return this.isl.getScanLineCount() * this.isl.getScansPerModulation();
+	}
+
+	@Override
+	/**
+	 * @param firstColumnScanIndex
+	 * @param secondColumnScanIndex
+	 */
+	public IScan2D getScan2D(final int firstColumnScanIndex,
+			final int secondColumnScanIndex) {
+		return buildScan((firstColumnScanIndex * isl.getScansPerModulation())
+				+ secondColumnScanIndex);
+	}
+
+	/**
+	 * Call for explicit access to the underlying IScanLine implementation.
+	 *
+	 * @return
+	 */
+	public IScanLine getScanLineImpl() {
+		return this.isl;
+	}
+
+	protected IScan2D buildScan(int i) {
+		Point p = this.isl.mapIndex(i);
+		final Tuple2D<Array, Array> t = this.isl.getSparseMassSpectra(p.x, p.y);
+		double sat1 = satOffset + (p.x * getModulationDuration());
+		double sat = MaltcmsTools.getScanAcquisitionTime(this.parent, i);
+		double sat2 = sat - sat1;
+		final Scan2D s = new Scan2D(t.getFirst(), t.getSecond(), i, sat, p.x,
+				p.y, sat1, sat2);
+		return s;
+	}
+
+	@Override
+	public void configure(final Configuration cfg) {
+	}
+
+	@Override
+	public Tuple2D<Double, Double> getTimeRange() {
+		if (timeRange == null) {
 			MAMath.MinMax satMM = MAMath.getMinMax(scanAcquisitionTimeVar.getArray());
-			timeRange = new Tuple2D<Double,Double>(satMM.min,satMM.max);
+			timeRange = new Tuple2D<Double, Double>(satMM.min, satMM.max);
 		}
 		return timeRange;
 	}
-	
+
 	@Override
-	public Tuple2D<Double,Double> getMassRange() {
-		if(massRange==null) {
+	public Tuple2D<Double, Double> getMassRange() {
+		if (massRange == null) {
 			massRange = MaltcmsTools.getMinMaxMassRange(parent);
 		}
 		return massRange;
 	}
-	
-	@Override
-    public List<Array> getIntensities() {
-        return MaltcmsTools.getMZIs(this.parent).getSecond();
-    }
 
 	@Override
-    public List<Array> getMasses() {
-        return MaltcmsTools.getMZIs(this.parent).getFirst();
-    }
+	public List<Array> getIntensities() {
+		return MaltcmsTools.getMZIs(this.parent).getSecond();
+	}
 
-    /**
-     * @param scan scan index to load
-     */
-    @Override
-    public IScan2D getScan(final int scan) {
-        return buildScan(scan);
-    }
+	@Override
+	public List<Array> getMasses() {
+		return MaltcmsTools.getMZIs(this.parent).getFirst();
+	}
 
-    @Override
-    public String getScanAcquisitionTimeUnit() {
-        return this.scanAcquisitionTimeUnit;
-    }
+	/**
+	 * @param scan scan index to load
+	 */
+	@Override
+	public IScan2D getScan(final int scan) {
+		return buildScan(scan);
+	}
 
-    public List<IScan2D> getScans() {
-        ArrayList<IScan2D> al = new ArrayList<IScan2D>();
-        for (int i = 0; i < getNumberOfScans(); i++) {
-            al.add(buildScan(i));
-        }
-        return al;
-    }
+	@Override
+	public String getScanAcquisitionTimeUnit() {
+		return this.scanAcquisitionTimeUnit;
+	}
 
-    /**
-     * This iterator acts on the underlying collection of scans in
-     * Chromatogram1D, so be careful with concurrent access / modification!
-     */
-    @Override
-    public Iterator<IScan2D> iterator() {
+	public List<IScan2D> getScans() {
+		ArrayList<IScan2D> al = new ArrayList<IScan2D>();
+		for (int i = 0; i < getNumberOfScans(); i++) {
+			al.add(buildScan(i));
+		}
+		return al;
+	}
 
-        final Iterator<IScan2D> iter = new Iterator<IScan2D>() {
-            private int currentPos = 0;
+	/**
+	 * This iterator acts on the underlying collection of scans in
+	 * Chromatogram1D, so be careful with concurrent access / modification!
+	 */
+	@Override
+	public Iterator<IScan2D> iterator() {
 
-            @Override
-            public boolean hasNext() {
-                if (this.currentPos < getScans().size() - 1) {
-                    return true;
-                }
-                return false;
-            }
+		final Iterator<IScan2D> iter = new Iterator<IScan2D>() {
+			private int currentPos = 0;
 
-            @Override
-            public IScan2D next() {
-                return getScan(this.currentPos++);
-            }
+			@Override
+			public boolean hasNext() {
+				if (this.currentPos < getNumberOfScans() - 1) {
+					return true;
+				}
+				return false;
+			}
 
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException(
-                        "Can not remove scans with iterator!");
-            }
-        };
-        return iter;
-    }
+			@Override
+			public IScan2D next() {
+				return getScan(this.currentPos++);
+			}
 
-    public void setExperiment(final IExperiment e) {
-        if (e instanceof IExperiment2D) {
-            this.parent = (IExperiment2D) e;
-        }
-        throw new IllegalArgumentException(
-                "Parameter must be of type IExperiment2D!");
-    }
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException(
+						"Can not remove scans with iterator!");
+			}
+		};
+		return iter;
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see maltcms.datastructures.ms.IChromatogram#getScanAcquisitionTime()
-     */
-    @Override
-    public Array getScanAcquisitionTime() {
-        return this.parent.getChild("scan_acquisition_time").getArray();
-    }
+	public void setExperiment(final IExperiment e) {
+		if (e instanceof IExperiment2D) {
+			this.parent = (IExperiment2D) e;
+		}
+		throw new IllegalArgumentException(
+				"Parameter must be of type IExperiment2D!");
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see maltcms.datastructures.ms.IChromatogram#getNumberOfScans()
-     */
-    @Override
-    public int getNumberOfScans() {
-        return MaltcmsTools.getNumberOfScans(this.parent);
-    }
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see maltcms.datastructures.ms.IChromatogram#getScanAcquisitionTime()
+	 */
+	@Override
+	public Array getScanAcquisitionTime() {
+		return this.parent.getChild("scan_acquisition_time").getArray();
+	}
 
-    public Array getIntensities(int globalScan, int localScan) {
-        return getIntensities().get(this.isl.mapPoint(globalScan, localScan));
-    }
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see maltcms.datastructures.ms.IChromatogram#getNumberOfScans()
+	 */
+	@Override
+	public int getNumberOfScans() {
+		if (numberOfScans == -1) {
+			numberOfScans = MaltcmsTools.getNumberOfScans(this.parent);
+		}
+		return numberOfScans;
+	}
 
-    public Array getMasses(int globalScan, int localScan) {
-        return getMasses().get(this.isl.mapPoint(globalScan, localScan));
-    }
+	public Array getIntensities(int globalScan, int localScan) {
+		return getIntensities().get(this.isl.mapPoint(globalScan, localScan));
+	}
 
-    @Override
-    public Point getPointFor(int scan) {
-        return this.isl.mapIndex(scan);
-    }
+	public Array getMasses(int globalScan, int localScan) {
+		return getMasses().get(this.isl.mapPoint(globalScan, localScan));
+	}
 
-    @Override
-    public Point getPointFor(double scan_acquisition_time) {
-        return getPointFor(getIndexFor(scan_acquisition_time));
-    }
+	@Override
+	public Point getPointFor(int scan) {
+		return this.isl.mapIndex(scan);
+	}
 
-    @Override
-    public int getIndexFor(double scan_acquisition_time) {
-        double[] d = (double[]) getScanAcquisitionTime().get1DJavaArray(
-                double.class);
-        int idx = Arrays.binarySearch(d, scan_acquisition_time);
+	@Override
+	public Point getPointFor(double scan_acquisition_time) {
+		return getPointFor(getIndexFor(scan_acquisition_time));
+	}
+
+	@Override
+	public int getIndexFor(double scan_acquisition_time) {
+		double[] d = (double[]) getScanAcquisitionTime().get1DJavaArray(
+				double.class);
+		int idx = Arrays.binarySearch(d, scan_acquisition_time);
 		if (idx >= 0) {// exact hit
 			log.info("sat {}, scan_index {}",
-                    scan_acquisition_time, idx);
+					scan_acquisition_time, idx);
 			return idx;
 		} else {// imprecise hit, find closest element
-			int insertionPosition = (-idx)-1;
-			if(insertionPosition<0) {
-				throw new ArrayIndexOutOfBoundsException("Insertion index is out of bounds! "+insertionPosition+"<"+0);
+			int insertionPosition = (-idx) - 1;
+			if (insertionPosition < 0) {
+				throw new ArrayIndexOutOfBoundsException("Insertion index is out of bounds! " + insertionPosition + "<" + 0);
 			}
-			if(insertionPosition>=d.length) {
-				throw new ArrayIndexOutOfBoundsException("Insertion index is out of bounds! "+insertionPosition+">="+d.length);
+			if (insertionPosition >= d.length) {
+				throw new ArrayIndexOutOfBoundsException("Insertion index is out of bounds! " + insertionPosition + ">=" + d.length);
 			}
 //			System.out.println("Would insert before "+insertionPosition);
 			double current = d[Math.min(d.length - 1, insertionPosition)];
 //			System.out.println("Value at insertion position: "+current);
-			double previous = d[Math.max(0, insertionPosition-1)];
+			double previous = d[Math.max(0, insertionPosition - 1)];
 //			System.out.println("Value before insertion position: "+previous);
 			if (Math.abs(scan_acquisition_time - previous) <= Math.abs(
 					scan_acquisition_time - current)) {
-				int index = Math.max(0, insertionPosition-1);
+				int index = Math.max(0, insertionPosition - 1);
 //				System.out.println("Returning "+index);
 				return index;
 			} else {
@@ -284,30 +288,30 @@ public class Chromatogram2D implements IChromatogram2D {
 				return insertionPosition;
 			}
 		}
-    }
+	}
 
-    @Override
-    public String getSecondColumnScanAcquisitionTimeUnit() {
-        return this.secondColumnScanAcquisitionTimeUnit;
-    }
+	@Override
+	public String getSecondColumnScanAcquisitionTimeUnit() {
+		return this.secondColumnScanAcquisitionTimeUnit;
+	}
 
-    @Override
-    public int getNumberOfModulations() {
-        return this.isl.getScanLineCount();
-    }
+	@Override
+	public int getNumberOfModulations() {
+		return this.isl.getScanLineCount();
+	}
 
-    @Override
-    public int getNumberOfScansPerModulation() {
-        return this.isl.getScansPerModulation();
-    }
+	@Override
+	public int getNumberOfScansPerModulation() {
+		return this.isl.getScansPerModulation();
+	}
 
-    @Override
-    public double getModulationDuration() {
-        if (this.md == -1) {
-            Array sat = this.parent.getChild("scan_acquisition_time").getArray();
-            double t1 = sat.getDouble(getNumberOfScansPerModulation());
-            this.md = t1 - this.satOffset;
-        }
-        return this.md;
-    }
+	@Override
+	public double getModulationDuration() {
+		if (this.md == -1) {
+			Array sat = this.parent.getChild("scan_acquisition_time").getArray();
+			double t1 = sat.getDouble(getNumberOfScansPerModulation());
+			this.md = t1 - this.satOffset;
+		}
+		return this.md;
+	}
 }

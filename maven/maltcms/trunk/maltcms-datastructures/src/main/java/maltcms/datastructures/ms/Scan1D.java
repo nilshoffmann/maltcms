@@ -27,6 +27,11 @@
  */
 package maltcms.datastructures.ms;
 
+import cross.datastructures.cache.SerializableArray;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -42,18 +47,18 @@ import ucar.ma2.IndexIterator;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
  */
-public class Scan1D implements IScan1D {
+public class Scan1D implements IScan1D, Externalizable {
 
     /**
      *
      */
     private static final long serialVersionUID = 2937381605461829269L;
-    private final ArrayInt.D0 scanNumber = new ArrayInt.D0();
-    private final ArrayDouble.D0 scanAcquisitionTime = new ArrayDouble.D0();
-    private final ArrayDouble.D0 total_intensity = new ArrayDouble.D0();
+    private ArrayInt.D0 scanNumber = new ArrayInt.D0();
+    private ArrayDouble.D0 scanAcquisitionTime = new ArrayDouble.D0();
+    private ArrayDouble.D0 total_intensity = new ArrayDouble.D0();
     private Array masses = null;
     private Array intensities = null;
-    private final UUID uniqueId = UUID.randomUUID();
+    private UUID uniqueId = UUID.randomUUID();
 
     public Scan1D(final Array masses1, final Array intensities1,
             final int scanNumber1, final double scanAcquisitionTime1) {
@@ -124,4 +129,34 @@ public class Scan1D implements IScan1D {
     public UUID getUniqueId() {
         return uniqueId;
     }
+
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeObject(uniqueId);
+		SerializableArray scanNumberArray = new SerializableArray(scanNumber);
+		scanNumberArray.writeExternal(out);
+		SerializableArray scanAcquisitionTimeArray = new SerializableArray(scanNumber);
+		scanAcquisitionTimeArray.writeExternal(out);
+		SerializableArray totalIntensityArray = new SerializableArray(scanNumber);
+		totalIntensityArray.writeExternal(out);
+		SerializableArray massesArray = new SerializableArray(masses);
+		massesArray.writeExternal(out);
+		SerializableArray intensitiesArray = new SerializableArray(intensities);
+		intensitiesArray.writeExternal(out);
+	}
+
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		uniqueId = (UUID)in.readObject();
+		SerializableArray scanNumberArray = (SerializableArray)in.readObject();
+		scanNumber = (ArrayInt.D0)scanNumberArray.getArray();
+		SerializableArray scanAcquisitionTimeArray = (SerializableArray)in.readObject();
+		scanAcquisitionTime = (ArrayDouble.D0)scanAcquisitionTimeArray.getArray();
+		SerializableArray totalIntensityArray = (SerializableArray)in.readObject();
+		total_intensity = (ArrayDouble.D0)totalIntensityArray.getArray();
+		SerializableArray massesArray = (SerializableArray)in.readObject();
+		masses = (Array)massesArray.getArray();
+		SerializableArray intensitiesArray = (SerializableArray)in.readObject();
+		intensities = (Array)intensitiesArray.getArray();
+	}
 }

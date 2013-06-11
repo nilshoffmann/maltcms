@@ -34,6 +34,6 @@ package maltcms.datastructures.ms;
  *
  */
 public interface IChromatogram1D extends IChromatogram, IScan1DProvider {
-//	@Override
-//	public Scan1D getScan(int scan);
+	public Iterable<IScan1D> subsetByScanAcquisitionTime(double startSat, double stopSat);
+	public Iterable<IScan1D> subsetByScanIndex(int startIndex, int stopIndex);
 }
