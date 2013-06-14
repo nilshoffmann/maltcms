@@ -109,6 +109,12 @@ public class MZMLDataSource implements IDataSource {
 	@Configurable(name = "var.second_column_elution_time", value = "second_column_elution_time")
 	private String second_column_elution_time = "second_column_elution_time";
 	private String second_column_elution_timeAccession = "MS:1002083 ";
+	@Configurable(name = "var.total_ion_current_chromatogram", value = "total_ion_current_chromatogram")
+	private String total_ion_current_chromatogram = "total_ion_current_chromatogram";
+	private String total_ion_current_chromatogramAccession = "MS:1000235";
+	@Configurable(name = "var.total_ion_current_chromatogram_scan_acquisition_time", value = "total_ion_current_chromatogram_scan_acquisition_time")
+	private String total_ion_current_chromatogram_scan_acquisition_time = "total_ion_current_chromatogram_scan_acquisition_time";
+	private String total_ion_current_chromatogram_scan_acquisition_timeAccession = "MS:1000595";
 	private String ms_level = "ms_level";
 	@Configurable
 	private int msLevel = 1;
@@ -166,6 +172,8 @@ public class MZMLDataSource implements IDataSource {
 				"first_column_elution_time");
 		this.second_column_elution_time = configuration.getString("var.second_column_elution_time",
 				"second_column_elution_time");
+		this.total_ion_current_chromatogram = configuration.getString("var.total_ion_current_chromatogram", "total_ion_current_chromatogram");
+		this.total_ion_current_chromatogram_scan_acquisition_time = configuration.getString("var.total_ion_current_chromatogram_scan_acquisition_time", "total_ion_current_chromatogram_scan_acquisition_time");
 		this.ms_level = configuration.getString("var.ms_level", "ms_level");
 		this.ndf = new NetcdfDataSource();
 		this.ndf.configure(configuration);
@@ -313,8 +321,8 @@ public class MZMLDataSource implements IDataSource {
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
-			start = Math.max(0,r[0].first());
-			scans = Math.min(scans,r[0].length());
+			start = Math.max(0, r[0].first());
+			scans = Math.min(scans, r[0].length());
 		}
 		final ArrayDouble.D1 mass_range_min1 = new ArrayDouble.D1(scans);
 		final ArrayDouble.D1 mass_range_max1 = new ArrayDouble.D1(scans);
@@ -376,6 +384,10 @@ public class MZMLDataSource implements IDataSource {
 			a = readElutionTimeArray(var, r, mzu, this.second_column_elution_timeAccession);
 		} else if (varname.equals(this.ms_level)) {
 			a = readMsLevelArray(var, r, mzu);
+		} else if (varname.equals(this.total_ion_current_chromatogram)) {
+			a = readTotalIonCurrentChromatogram(var, r, true);
+		} else if (varname.equals(this.total_ion_current_chromatogram_scan_acquisition_time)) {
+			a = readTotalIonCurrentChromatogram(var, r, false);
 		} else {
 			throw new ResourceNotAvailableException(
 					"Unknown variable name to mzML mapping for " + varname);
@@ -410,8 +422,8 @@ public class MZMLDataSource implements IDataSource {
 			if (f.getIndex() != null) {
 				Range[] r = f.getIndex().getRange();
 				if (r != null && r[0] != null) {
-					start = Math.max(0,r[0].first());
-					len = Math.min(len,r[0].length());
+					start = Math.max(0, r[0].first());
+					len = Math.min(len, r[0].length());
 				}
 			}
 			for (int i = start; i < start + len; i++) {
@@ -427,8 +439,8 @@ public class MZMLDataSource implements IDataSource {
 			if (f.getIndex() != null) {
 				Range[] r = f.getIndex().getRange();
 				if (r != null && r[0] != null) {
-					start = Math.max(0,r[0].first());
-					len = Math.min(len,r[0].length());
+					start = Math.max(0, r[0].first());
+					len = Math.min(len, r[0].length());
 				}
 			}
 			for (int i = start; i < start + len; i++) {
@@ -446,7 +458,7 @@ public class MZMLDataSource implements IDataSource {
 		for (SourceFile sfs : sfl.getSourceFile()) {
 			sourceFilePaths.add(sfs.getLocation());
 		}
-		if(sourceFilePaths.isEmpty()) {
+		if (sourceFilePaths.isEmpty()) {
 			return null;
 		}
 		Array a = Array.makeArray(DataType.STRING, new LinkedList<String>(sourceFilePaths));
@@ -459,8 +471,8 @@ public class MZMLDataSource implements IDataSource {
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
-			start = Math.max(0,r[0].first());
-			scans = Math.min(scans,r[0].length());
+			start = Math.max(0, r[0].first());
+			scans = Math.min(scans, r[0].length());
 		}
 		log.debug("Creating index array with {} elements", scans);
 		final ArrayDouble.D1 elutionTime = new ArrayDouble.D1(scans);
@@ -504,8 +516,8 @@ public class MZMLDataSource implements IDataSource {
 		int scans = getScanCount(var.getParent(), run);
 		final Range[] r = var.getIndex().getRange();
 		if (r != null) {
-			start = Math.max(0,r[0].first());
-			scans = Math.min(scans,r[0].length());
+			start = Math.max(0, r[0].first());
+			scans = Math.min(scans, r[0].length());
 		}
 		ArrayDouble.D1 tic = new ArrayDouble.D1(scans);
 		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
@@ -539,8 +551,8 @@ public class MZMLDataSource implements IDataSource {
 		if (var.getIndex() != null) {
 			final Range[] r = var.getIndex().getRange();
 			if (r != null) {
-				start = Math.max(0,r[0].first());
-				scans = Math.min(scans,r[0].length());
+				start = Math.max(0, r[0].first());
+				scans = Math.min(scans, r[0].length());
 			}
 		}
 		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
@@ -581,10 +593,10 @@ public class MZMLDataSource implements IDataSource {
 	private Array readMsLevelArray(final IVariableFragment var, final Run run, final MzMLUnmarshaller um) {
 		int start = 0;
 		int scans = getScanCount(var.getParent(), run);
-		final Range[] r = var.getIndex().getRange();
+		final Range[] r = var.getRange();
 		if (r != null) {
-			start = Math.max(0,r[0].first());
-			scans = Math.min(scans,r[0].length());
+			start = Math.max(0, r[0].first());
+			scans = Math.min(scans, r[0].length());
 		}
 		Array a = new ArrayInt.D1(scans);
 		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
@@ -606,8 +618,8 @@ public class MZMLDataSource implements IDataSource {
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
-			start = Math.max(0,r[0].first());
-			scans = Math.min(scans,r[0].length());
+			start = Math.max(0, r[0].first());
+			scans = Math.min(scans, r[0].length());
 		}
 		final ArrayDouble.D1 sat = new ArrayDouble.D1(scans);
 		for (int i = start; i < start + scans; i++) {
@@ -624,8 +636,8 @@ public class MZMLDataSource implements IDataSource {
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
-			start = Math.max(0,r[0].first());
-			scans = Math.min(scans,r[0].length());
+			start = Math.max(0, r[0].first());
+			scans = Math.min(scans, r[0].length());
 		}
 		log.debug("Creating index array with {} elements", scans);
 		final ArrayInt.D1 scan_index = new ArrayInt.D1(scans);
@@ -687,6 +699,7 @@ public class MZMLDataSource implements IDataSource {
 	@Override
 	public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
 			throws IOException {
+		final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
 		final IVariableFragment ti = getVariable(f, this.total_intensity);
 		final IVariableFragment sat = getVariable(f, this.scan_acquisition_time);
 		final IVariableFragment si = getVariable(f, this.scan_index);
@@ -694,11 +707,13 @@ public class MZMLDataSource implements IDataSource {
 		final IVariableFragment mrmax = getVariable(f, this.mass_range_max);
 		final IVariableFragment mv = getVariable(f, this.mass_values);
 		final IVariableFragment iv = getVariable(f, this.intensity_values);
+//		final IVariableFragment msLevel = getVariable(f, this.ms_level);
+//		final IVariableFragment tic = getVariable(f, this.total_ion_current_chromatogram);
+//		final IVariableFragment ticSat = getVariable(f, this.total_ion_current_chromatogram_scan_acquisition_time);
 		//TODO add first and second_column_elution_time with fast query, whether they 
 		//are contained in the file
-		final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
 		al.addAll(Arrays.asList(new IVariableFragment[]{ti, sat, si, mrmin,
-			mrmax, mv, iv}));
+			mrmax, mv, iv}));//, msLevel, tic, ticSat}));
 		for (final IVariableFragment ivf : al) {
 			readStructure(ivf);
 		}
@@ -725,7 +740,8 @@ public class MZMLDataSource implements IDataSource {
 				|| varname.equals(this.mass_range_max)
 				|| varname.equals(this.scan_acquisition_time)
 				|| varname.equals(this.first_column_elution_time)
-				|| varname.equals(this.second_column_elution_time)) {
+				|| varname.equals(this.second_column_elution_time)
+				|| varname.equals(this.ms_level)) {
 			final Dimension[] dims = new Dimension[]{new Dimension(
 				"scan_number", scancount, true)};
 			f.setDimensions(dims);
@@ -765,6 +781,16 @@ public class MZMLDataSource implements IDataSource {
 			f.setDimensions(dims);
 			final Range[] ranges = new Range[]{new Range(1)};
 			f.setRange(ranges);
+		} else if (varname.equals(this.total_ion_current_chromatogram) || varname.equals(this.total_ion_current_chromatogram_scan_acquisition_time)) {
+			ChromatogramList cl = run.getChromatogramList();
+			Chromatogram c = readTotalIonCurrentChromatogram(cl, f.getParent());
+			if (c == null) {
+				throw new ResourceNotAvailableException("Could not load variable " + varname);
+			}
+			final Dimension[] dims = new Dimension[]{new Dimension("total_ion_current_chromatogram_scan_number", c.getDefaultArrayLength(), true, false, false)};
+			f.setDimensions(dims);
+			final Range[] ranges = new Range[]{new Range(c.getDefaultArrayLength())};
+			f.setRange(ranges);
 		} else {
 			throw new ResourceNotAvailableException(
 					"Unknown varname to mzML mapping for varname " + varname);
@@ -777,25 +803,11 @@ public class MZMLDataSource implements IDataSource {
 		// Current assumption is, that global time for ms scans correspond to
 		// chromatogram times
 		ChromatogramList cl = run.getChromatogramList();
-		if (cl == null || cl.getCount().equals(BigInteger.ZERO) || cl.getChromatogram().isEmpty()) {
+		if (cl == null || cl.getCount().equals(0) || cl.getChromatogram().isEmpty()) {
 			throw new ResourceNotAvailableException("No TIC chromatograms defined in mzML file {}" + f.getName());
 		}
-		Chromatogram ticChromatogram = null;
-		for (Chromatogram c : cl.getChromatogram()) {
-			try {
-				CVParam param = findParam(c.getCvParam(), "MS:1000235");
-				if (param != null) {
-					if (ticChromatogram != null) {
-						log.warn("mzML file {} contains more than one tic chromatogram, defaulting to first!", f.getName());
-					} else {
-						ticChromatogram = c;
-					}
-				}
-			} catch (ResourceNotAvailableException rnae) {
-				log.debug("Chromatogram is not a 'total ion current chromatogram'");
-			}
-		}
-		if(ticChromatogram!=null && ticChromatogram.getDefaultArrayLength()!=getScanCount(f, run)) {
+		Chromatogram ticChromatogram = readTotalIonCurrentChromatogram(cl, f);
+		if (ticChromatogram != null && ticChromatogram.getDefaultArrayLength() != getScanCount(f, run)) {
 			log.warn("TIC Chromatogram point number does not match scan count! Recreating TIC from spectra!");
 			ticChromatogram = null;
 		}
@@ -810,6 +822,59 @@ public class MZMLDataSource implements IDataSource {
 			intensA.set(i, intensities[i].doubleValue());
 		}
 		return intensA;
+	}
+
+	private BinaryDataArray getBinaryDataArrayForCV(Chromatogram chrom, String cv) {
+		// time array MS:1000595
+		// intensity array MS:1000515
+		for (BinaryDataArray bda : chrom.getBinaryDataArrayList().getBinaryDataArray()) {
+			try {
+				CVParam param = findParam(bda.getCvParam(), cv);
+				if (param != null) {
+					return bda;
+				}
+			} catch (ResourceNotAvailableException rnae) {
+				//this can be ignored
+			}
+		}
+		return null;
+	}
+
+	private Array readTotalIonCurrentChromatogram(final IVariableFragment f, final Run run, boolean loadTotalIonCurrentChromatogram) {
+		ChromatogramList cl = run.getChromatogramList();
+		if (cl == null || cl.getCount().equals(0) || cl.getChromatogram().isEmpty()) {
+			throw new ResourceNotAvailableException("No TIC chromatograms defined in mzML file {}" + f.getName());
+		}
+		Chromatogram ticChromatogram = readTotalIonCurrentChromatogram(cl, f.getParent());
+		// time array MS:1000595
+		// intensity array MS:1000515
+		if (loadTotalIonCurrentChromatogram) {
+			BinaryDataArray intensitiesArray = getBinaryDataArrayForCV(ticChromatogram, "MS:1000515");
+			if (intensitiesArray == null) {
+				throw new ResourceNotAvailableException("Could not retrieve binary data array with CV term MS:1000515 = 'intensity array'");
+			}
+			Number[] intensities = intensitiesArray.getBinaryDataAsNumberArray();
+			final ArrayDouble.D1 intensA = new ArrayDouble.D1(intensities.length);
+			for (int i = 0; i < intensities.length; i++) {
+				intensA.set(i, intensities[i].doubleValue());
+			}
+			return intensA;
+		} else {
+			//load time array
+			BinaryDataArray ticSatArray = getBinaryDataArrayForCV(ticChromatogram, "MS:1000595");
+			if (ticSatArray == null) {
+				throw new ResourceNotAvailableException("Could not retrieve binary data array with CV term MS:1000595 = 'time array'");
+			}
+			Number[] time = ticSatArray.getBinaryDataAsNumberArray();
+			final ArrayDouble.D1 ticSats = new ArrayDouble.D1(time.length);
+			CVParam rtp = findParam(ticSatArray.getCvParam(), "MS:1000595");
+			String unit = rtp.getUnitName();
+			for (int i = 0; i < time.length; i++) {
+				double value = convertRT(time[i].doubleValue(), unit);
+				ticSats.set(i, value);
+			}
+			return ticSats;
+		}
 	}
 
 	@Override
@@ -830,5 +895,24 @@ public class MZMLDataSource implements IDataSource {
 		f.addSourceFile(new FileFragment(f.getUri()));
 		log.info("To: {}", filename);
 		return Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).write(f);
+	}
+
+	private Chromatogram readTotalIonCurrentChromatogram(ChromatogramList cl, final IFileFragment f) {
+		Chromatogram ticChromatogram = null;
+		for (Chromatogram c : cl.getChromatogram()) {
+			try {
+				CVParam param = findParam(c.getCvParam(), "MS:1000235");
+				if (param != null) {
+					if (ticChromatogram != null) {
+						log.warn("mzML file {} contains more than one tic chromatogram, defaulting to first!", f.getName());
+					} else {
+						ticChromatogram = c;
+					}
+				}
+			} catch (ResourceNotAvailableException rnae) {
+				log.debug("Chromatogram is not a 'total ion current chromatogram'");
+			}
+		}
+		return ticChromatogram;
 	}
 }

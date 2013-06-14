@@ -70,8 +70,10 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 	private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;
 	@Configurable
 	private String outputFileName = null;
-	@Configurable
+	@Configurable(description="The msLevels that should be imported.")
 	private List<Integer> msLevel = Arrays.asList(Integer.valueOf(1));
+	@Configurable(description="The modulation period between column switching in seconds.")
+	private double modulationTime = 60.0;
 
 	@Override
 	public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {

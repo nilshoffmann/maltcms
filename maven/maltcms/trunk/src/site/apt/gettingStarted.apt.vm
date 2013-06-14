@@ -2,7 +2,7 @@ Getting Started
 
 
     [[1]] Please download and install Java Runtime Environment (JRE) or 
-          JDK version 1.6.0 or newer for your specific platform and 
+          JDK version 1.7.0 or newer for your specific platform and 
           operating system from 
     
     {{{http://www.oracle.com/technetwork/java/javase/downloads/index.html}here}}.
@@ -58,7 +58,7 @@ export MALTCMS_HOME=/path/to/your/maltcms/
     instructions appropriate for your installed operating system. You may need
     system administrator privileges to change system variables!
 
-** Windows 7
+** Windows 7 / 8
 
     Select 'Computer' from the Start menu and choose 'System Properties' from
     the top level actions bar or from the context menu. Click on 
@@ -259,8 +259,7 @@ Other Features
     scripts in the Groovy programming language 
         
         (http://groovy.codehaus.org/).
-    These scripts can be executed using the 'maltcms-groovy.sh' shell
-    script, or by calling 
+    These scripts can be executed by calling 
 
 +------------------------------------------+
 maltcms.sh -exec path/to/script.groovy <ARGS>

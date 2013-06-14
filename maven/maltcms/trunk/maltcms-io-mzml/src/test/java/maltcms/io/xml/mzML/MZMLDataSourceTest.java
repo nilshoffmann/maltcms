@@ -28,6 +28,7 @@
 package maltcms.io.xml.mzML;
 
 import cross.Factory;
+import cross.annotations.Configurable;
 import cross.cache.CacheType;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.Fragments;
@@ -199,6 +200,42 @@ public class MZMLDataSourceTest {
 			Assert.assertTrue(ticA.getShape()[0]==satA.getShape()[0]);
 			Assert.assertTrue(tic.getRange()[0].toString().equals(sat.getRange()[0].toString()));
 			
+			try {
+				IVariableFragment msLevel = ff.getChild("ms_level");
+				Array msLevelA = getDataSource().readSingle(msLevel);
+				Assert.assertNotNull(msLevelA);
+				Assert.assertTrue(msLevelA.getShape()[0] > 0);
+				Assert.assertTrue(ticA.getShape()[0]==msLevelA.getShape()[0]);
+				Assert.assertTrue(tic.getRange()[0].toString().equals(msLevel.getRange()[0].toString()));
+			}catch(ResourceNotAvailableException rnae) {
+				if(!ff.getName().equals("MzMLFile_PDA.mzML.xml")) {
+					throw new RuntimeException("ms_level not available for file "+ff.getName(),rnae);
+				}else{
+					log.warn("ms_level not available for file {}",ff.getName());
+				}
+			}
+	
+			try {
+				IVariableFragment ticc = ff.getChild("total_ion_current_chromatogram");
+				Array ticcA = getDataSource().readSingle(ticc);
+				Assert.assertNotNull(ticcA);
+				Assert.assertTrue(ticcA.getShape()[0] > 0);
+				IVariableFragment ticcSat = ff.getChild("total_ion_current_chromatogram_scan_acquisition_time");
+				Array ticcSatA = getDataSource().readSingle(ticcSat);
+				Assert.assertNotNull(ticcSatA);
+				Assert.assertTrue(ticcSatA.getShape()[0] > 0);
+				Assert.assertTrue(ticcA.getShape()[0]==ticcSatA.getShape()[0]);
+				Assert.assertTrue(ticc.getRange()[0].toString().equals(ticcSat.getRange()[0].toString()));
+			}catch(ResourceNotAvailableException rnae) {
+				if(!ff.getName().equals("MzMLFile_PDA.mzML.xml")) {
+					rnae.printStackTrace();
+					throw new RuntimeException("total_ion_current_chromatogram / total_ion_current_chromatogram_scan_acquisition_time not available for file "+ff.getName(),rnae);
+				}else{
+					log.warn("total_ion_current_chromatogram not available for file {}",ff.getName());
+					log.warn("total_ion_current_chromatogram_scan_acquisition_time not available for file {}",ff.getName());
+				}
+			}
+			
             ff = new ImmutableFileFragment(f);
             si = ff.getChild("scan_index");
             a = getDataSource().readSingle(si);
@@ -218,6 +255,42 @@ public class MZMLDataSourceTest {
             Assert.assertTrue(satA.getShape()[0] > 0);
 			Assert.assertTrue(ticA.getShape()[0]==satA.getShape()[0]);
 			Assert.assertTrue(tic.getRange()[0].toString().equals(sat.getRange()[0].toString()));
+			
+			try {
+				IVariableFragment msLevel = ff.getChild("ms_level");
+				Array msLevelA = getDataSource().readSingle(msLevel);
+				Assert.assertNotNull(msLevelA);
+				Assert.assertTrue(msLevelA.getShape()[0] > 0);
+				Assert.assertTrue(ticA.getShape()[0]==msLevelA.getShape()[0]);
+				Assert.assertTrue(tic.getRange()[0].toString().equals(msLevel.getRange()[0].toString()));
+			}catch(ResourceNotAvailableException rnae) {
+				if(!ff.getName().equals("MzMLFile_PDA.mzML.xml")) {
+					throw new RuntimeException("ms_level not available for file "+ff.getName(),rnae);
+				}else{
+					log.warn("ms_level not available for file {}",ff.getName());
+				}
+			}
+	
+			try {
+				IVariableFragment ticc = ff.getChild("total_ion_current_chromatogram");
+				Array ticcA = getDataSource().readSingle(ticc);
+				Assert.assertNotNull(ticcA);
+				Assert.assertTrue(ticcA.getShape()[0] > 0);
+				IVariableFragment ticcSat = ff.getChild("total_ion_current_chromatogram_scan_acquisition_time");
+				Array ticcSatA = getDataSource().readSingle(ticcSat);
+				Assert.assertNotNull(ticcSatA);
+				Assert.assertTrue(ticcSatA.getShape()[0] > 0);
+				Assert.assertTrue(ticcA.getShape()[0]==ticcSatA.getShape()[0]);
+				Assert.assertTrue(ticc.getRange()[0].toString().equals(ticcSat.getRange()[0].toString()));
+			}catch(ResourceNotAvailableException rnae) {
+				if(!ff.getName().equals("MzMLFile_PDA.mzML.xml")) {
+					throw new RuntimeException("total_ion_current_chromatogram / total_ion_current_chromatogram_scan_acquisition_time not available for file "+ff.getName(),rnae);
+				}else{
+					log.warn("total_ion_current_chromatogram not available for file {}",ff.getName());
+					log.warn("total_ion_current_chromatogram_scan_acquisition_time not available for file {}",ff.getName());
+				}
+			}
+			
         }
     }
 
