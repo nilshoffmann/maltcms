@@ -48,16 +48,13 @@ import org.apache.commons.cli.ParseException;
 import cross.tools.StringTools;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import net.sf.maltcms.evaluation.spi.classification.ClassificationPerformanceTest;
 import net.sf.maltcms.evaluation.api.classification.EntityGroup;
 import net.sf.maltcms.evaluation.spi.classification.PeakRTFeatureVector;
 import net.sf.maltcms.evaluation.api.classification.PeakRTFeatureVectorComparator;
 import net.sf.maltcms.evaluation.spi.EntityGroupBuilder;
 import net.sf.maltcms.evaluation.spi.classification.PerformanceMetrics;
+import org.apache.commons.cli.MissingOptionException;
 
 /**
  * @author Nils Hoffmann
@@ -252,7 +249,7 @@ public class MultipleAlignmentRowEvaluation {
         if (args.length == 0) {
             HelpFormatter hf = new HelpFormatter();
             hf.printHelp(
-                    "java -jar maltcms.jar "
+                    "java -cp maltcms.jar "
                     + MultipleAlignmentRowEvaluation.class.getCanonicalName(), options,
                     true);
             System.exit(1);
@@ -299,9 +296,19 @@ public class MultipleAlignmentRowEvaluation {
             }
             //System.out.println("Delta: " + deltav);
             re.eval(deltav);
+		} catch (MissingOptionException moe) {
+			HelpFormatter hf = new HelpFormatter();
+            hf.printHelp(
+                    "java -cp maltcms.jar "
+                    + MultipleAlignmentRowEvaluation.class.getCanonicalName(), options,
+                    true);
+            System.exit(1);
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            HelpFormatter hf = new HelpFormatter();
+            hf.printHelp(
+                    "java -cp maltcms.jar "
+                    + MultipleAlignmentRowEvaluation.class.getCanonicalName(), options,
+                    true);
             System.exit(1);
         }
 

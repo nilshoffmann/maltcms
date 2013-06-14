@@ -86,7 +86,7 @@ public class Peak1DFactory implements IPeakFactory {
                 a.setDouble(0, peakAreaArray.getDouble(scanIndex));
             }
             Peak p = new Peak(scanIndex, a,
-                    satArray.getDouble(scanIndex), sourceFile.getName(), savePeakSimilarities);
+                    satArray.getDouble(scanIndex), sourceFile.getName(), storeOnlyBestSimilarites);
             p.setPeakIndex(peakIndex);
             return p;
         }

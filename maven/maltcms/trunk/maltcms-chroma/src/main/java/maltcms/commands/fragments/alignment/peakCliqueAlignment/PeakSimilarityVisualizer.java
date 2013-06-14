@@ -28,21 +28,22 @@
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import cross.datastructures.workflow.IWorkflow;
-import java.awt.Color;
-import java.awt.Transparency;
-import java.awt.image.BufferedImage;
+import cross.datastructures.workflow.IWorkflowElement;
+import cross.datastructures.workflow.WorkflowSlot;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.media.jai.JAI;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.MinMaxNormalizationFilter;
 import maltcms.datastructures.peak.Peak;
 import maltcms.io.csv.CSVWriter;
-import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ImageTools;
+import org.jdom.Element;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
@@ -52,12 +53,15 @@ import ucar.ma2.MAMath.MinMax;
  * @author nils
  */
 @Slf4j
-public class PeakSimilarityVisualizer {
+@Data
+public class PeakSimilarityVisualizer implements IWorkflowElement{
 
+	private IWorkflow workflow;
+	private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
+	
     public void visualizePeakSimilarities(
             final Map<String, List<Peak>> hm, final int samples,
-            final String prefix,
-            final IWorkflow workflow) {
+            final String prefix) {
 
         int npeaks = 0;
         for (final String key : hm.keySet()) {
@@ -112,22 +116,28 @@ public class PeakSimilarityVisualizer {
                             mm.min, mm.max);
                     ArrayDouble.D2 img = (ArrayDouble.D2) mmnf.apply(psims);
 
-                    int nsamples = 256;
-                    double[] sampleTable = ImageTools.createSampleTable(nsamples);
-                    final ColorRampReader crr = new ColorRampReader();
-                    final int[][] colorRamp = crr.getDefaultRamp();
-                    Color[] cRamp = ImageTools.rampToColorArray(colorRamp);
-                    BufferedImage crampImg = ImageTools.createColorRampImage(
-                            sampleTable, Transparency.TRANSLUCENT, cRamp);
-                    BufferedImage sourceImg = ImageTools.makeImage2D(img,
-                            nsamples);
-                    BufferedImage destImg = ImageTools.applyLut(sourceImg,
-                            ImageTools.createLookupTable(crampImg, 1.0f,
-                            nsamples));
-
-                    // final RenderedImage bi = ImageTools.makeImage2D(psims,
-                    // samples, Double.NEGATIVE_INFINITY);
-                    JAI.create("filestore", destImg, new File(workflow.
+//                    int nsamples = 256;
+//                    double[] sampleTable = ImageTools.createSampleTable(nsamples);
+//                    final ColorRampReader crr = new ColorRampReader();
+//                    final int[][] colorRamp = crr.getDefaultRamp();
+//                    Color[] cRamp = ImageTools.rampToColorArray(colorRamp);
+//                    BufferedImage crampImg = ImageTools.createColorRampImage(
+//                            sampleTable, Transparency.TRANSLUCENT, cRamp);
+//                    BufferedImage sourceImg = ImageTools.makeImage2D(img,
+//                            nsamples);
+//                    BufferedImage destImg = ImageTools.applyLut(sourceImg,
+//                            ImageTools.createLookupTable(crampImg, 1.0f,
+//                            nsamples));
+//					try {
+						 final RenderedImage bi = ImageTools.makeImage2D(img,
+						 samples, Double.NEGATIVE_INFINITY);
+//						ImageIO.write(bi, "PNG", new File(workflow.
+//								getOutputDirectory(this), prefix + "_" + keyl
+//								+ "-" + keyr + "_peak_similarities.png"));
+//					} catch (IOException ex) {
+//						Logger.getLogger(PeakSimilarityVisualizer.class.getName()).log(Level.SEVERE, null, ex);
+//					}
+                    JAI.create("filestore", bi, new File(workflow.
                             getOutputDirectory(this), prefix + "_" + keyl
                             + "-" + keyr + "_peak_similarities.png").
                             getAbsolutePath(), "PNG");
@@ -142,4 +152,9 @@ public class PeakSimilarityVisualizer {
         }
 
     }
+
+	@Override
+	public void appendXML(Element e) {
+		
+	}
 }

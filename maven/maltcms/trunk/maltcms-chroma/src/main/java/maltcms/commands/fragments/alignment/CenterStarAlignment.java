@@ -329,62 +329,9 @@ public class CenterStarAlignment extends AFragmentCommand {
         return "Creates a multiple alignment by selecting a reference chromatogram based on highest overall similarity or lowest overall distance of reference to other chromatograms.";
     }
 
-    /**
-     * @return the minimizingArrayCompVariableName
-     */
-//    public String getMinimizingArrayCompVariableName() {
-//        return this.minimizingArrayCompVariableName;
-//    }
     private IFileFragment getOriginalFileFor(final IFileFragment iff) {
-        // final List<IFileFragment> l = Factory.getInstance()
-        // .getInputDataFactory().getInitialFiles();
-        // depth first search for first file fragment with the same name
-        // and no further source files
-        // final String iffname = StringTools.removeFileExt(iff.getName());
-        // final Stack<IFileFragment> history = new Stack<IFileFragment>();
-        // history.push(iff);
-        // while (!history.isEmpty()) {
-        // IFileFragment work = history.pop();
-        // log.info("Exploring whether {} is a source file!", work
-        // .getAbsolutePath());
-        // Collection<IFileFragment> c = work.getSourceFiles();
-        // if (c.isEmpty()
-        // && StringTools.removeFileExt(work.getName())
-        // .equals(iffname)) {
-        // log.info("Yes");
-        // return work;
-        // }
-        // for (IFileFragment ff : c) {
-        // history.push(ff);
-        // }
-        // }
-        // // for (final IFileFragment f : l) {
-        // // Collection<IFileFragment> c = f.getSourceFiles();
-        // // final String fname = StringTools.removeFileExt(f.getName());
-        // //
-        // // if (iffname.equals(fname)) {
-        // // return f;
-        // // }
-        // // }
-        // log.warn("Could not find original file, returning argument!");
         return iff;
-        // throw new ConstraintViolationException(
-        // "Could not find original file, returning argument!");
-        // // return iff;
     }
-
-//    /**
-//     * @return the pairwiseDistanceMatrixVariableName
-//     */
-//    public String getPairwiseDistanceMatrixVariableName() {
-//        return this.pairwiseDistanceMatrixVariableName;
-//    }
-//    /**
-//     * @return the pairwiseDistanceNamesVariableName
-//     */
-//    public String getPairwiseDistanceNamesVariableName() {
-//        return this.pairwiseDistanceNamesVariableName;
-//    }
 
     /*
      * (non-Javadoc)
@@ -535,18 +482,6 @@ public class CenterStarAlignment extends AFragmentCommand {
             final ArrayList<IFileFragment> repOnRHS,
             final List<IFileFragment> warped, final ChromatogramWarp cw) {
 
-        // final IFileFragment centerCopy = Factory.getInstance()
-        // .getFileFragmentFactory().create(
-        // new File(getWorkflow().getOutputDirectory(this), top
-        // .getName()), top);
-        // final IFileFragment centerCopy = cw.copyReference(
-        // getOriginalFileFor(top), getWorkflow());
-        // centerCopy.addSourceFile(top);
-        // DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
-        // centerCopy.getAbsolutePath()), this, WorkflowSlot.WARPING,
-        // centerCopy);
-        // getWorkflow().append(dwr);
-        // warped.add(centerCopy);
         FileFragment newTop = new FileFragment(getWorkflow().getOutputDirectory(
                 this), top.getName());
         newTop.addSourceFile(top);
@@ -782,34 +717,4 @@ public class CenterStarAlignment extends AFragmentCommand {
         getWorkflow().append(dwr);
         warped.add(ifwarped);
     }
-    /**
-     * @param minimizeDist the minimizeDist to set
-     */
-//    public void setMinimizeDist(final boolean minimizeDist) {
-//        this.minimizeDist = minimizeDist;
-//    }
-    /**
-     * @param minimizingArrayCompVariableName the
-     * minimizingArrayCompVariableName to set
-     */
-//    public void setMinimizingArrayCompVariableName(
-//            final String minimizingArrayCompVariableName) {
-//        this.minimizingArrayCompVariableName = minimizingArrayCompVariableName;
-//    }
-    /**
-     * @param pairwiseDistanceMatrixVariableName the
-     * pairwiseDistanceMatrixVariableName to set
-     */
-//    public void setPairwiseDistanceMatrixVariableName(
-//            final String pairwiseDistanceMatrixVariableName) {
-//        this.pairwiseDistanceMatrixVariableName = pairwiseDistanceMatrixVariableName;
-//    }
-    /**
-     * @param pairwiseDistanceNamesVariableName the
-     * pairwiseDistanceNamesVariableName to set
-     */
-//    public void setPairwiseDistanceNamesVariableName(
-//            final String pairwiseDistanceNamesVariableName) {
-//        this.pairwiseDistanceNamesVariableName = pairwiseDistanceNamesVariableName;
-//    }
 }

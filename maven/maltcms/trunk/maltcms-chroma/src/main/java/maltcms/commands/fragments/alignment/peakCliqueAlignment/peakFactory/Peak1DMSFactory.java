@@ -106,10 +106,10 @@ public class Peak1DMSFactory implements IPeakFactory {
                         (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
                         size, massBinResolution);
                 p = new Peak(scanIndex, sparse,
-                        satArray.getDouble(scanIndex), sourceFile.getName(), savePeakSimilarities);
+                        satArray.getDouble(scanIndex), sourceFile.getName(), storeOnlyBestSimilarites);
             } else {
                 p = new Peak(scanIndex, indexedIntensityValues.get(scanIndex),
-                        satArray.getDouble(scanIndex), sourceFile.getName(), savePeakSimilarities);
+                        satArray.getDouble(scanIndex), sourceFile.getName(), storeOnlyBestSimilarites);
             }
             p.setPeakIndex(peakIndex);
             return p;

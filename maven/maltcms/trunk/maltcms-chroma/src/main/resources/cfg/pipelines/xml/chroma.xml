@@ -172,7 +172,7 @@ for details.
         </property>
         <property name="snrWindow" value="50"/>
         <property name="peakSeparationWindow" value="10"/>
-        <property name="integratePeaks" value="false"/>
+        <property name="integratePeaks" value="true"/>
         <property name="integrateRawTic" value="true"/>
         <property name="saveGraphics" value="false"/>
         <property name="peakNormalizers">

@@ -114,10 +114,10 @@ public class Peak2DMSFactory implements IPeakFactory {
                         (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
                         size, massBinResolution);
                 p = new Peak2D(scanIndex, sparse,
-                        satArray.getDouble(scanIndex), sourceFile.getName(), savePeakSimilarities);
+                        satArray.getDouble(scanIndex), sourceFile.getName(), storeOnlyBestSimilarites);
             } else {
                 p = new Peak2D(scanIndex, indexedIntensityValues.get(scanIndex),
-                        satArray.getDouble(scanIndex), sourceFile.getName(), savePeakSimilarities);
+                        satArray.getDouble(scanIndex), sourceFile.getName(), storeOnlyBestSimilarites);
             }
             ((Peak2D) p).setFirstColumnElutionTime(fctArray.getFloat(scanIndex));
             ((Peak2D) p).setSecondColumnElutionTime(sctArray.getFloat(scanIndex));

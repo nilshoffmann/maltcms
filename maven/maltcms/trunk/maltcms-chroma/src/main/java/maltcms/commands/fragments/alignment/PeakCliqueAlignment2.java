@@ -518,9 +518,9 @@ public class PeakCliqueAlignment2 extends AFragmentCommand {
 
         if (this.savePeakSimilarities) {
             PeakSimilarityVisualizer psv = new PeakSimilarityVisualizer();
-//            psv.setWorkflow(getWorkflow());
+            psv.setWorkflow(getWorkflow());
             psv.visualizePeakSimilarities(
-                    fragmentToPeaks, 256, "beforeBIDI", getWorkflow());
+                    fragmentToPeaks, 256, "beforeBIDI");
         }
     }
 
@@ -1049,9 +1049,9 @@ public class PeakCliqueAlignment2 extends AFragmentCommand {
                 System.currentTimeMillis() - startT2);
         if (this.savePeakSimilarities) {
             PeakSimilarityVisualizer psv = new PeakSimilarityVisualizer();
-//            psv.setWorkflow(getWorkflow());
+            psv.setWorkflow(getWorkflow());
             psv.visualizePeakSimilarities(
-                    fragmentToPeaks, 256, "afterBIDI", getWorkflow());
+                    fragmentToPeaks, 256, "afterBIDI");
         }
         log.info("Saving peak match tables!");
         savePeakMatchTable(columnMap, ll);
@@ -1160,7 +1160,7 @@ public class PeakCliqueAlignment2 extends AFragmentCommand {
 //            final Index pc1 = peakCandidates1.getIndex();
 //            final Index sat1 = scan_acquisition_time.getIndex();
             final List<Peak> userDefinedAnchors = definedAnchors.get(t.getName());
-            IPeakFactoryImpl pfi = peakFactory.createInstance(t, savePeakSimilarities, minMaxMassRange, size, massBinResolution, useSparseArrays, savePeakSimilarities);
+            IPeakFactoryImpl pfi = peakFactory.createInstance(t, !savePeakSimilarities, minMaxMassRange, size, massBinResolution, useSparseArrays, savePeakSimilarities);
             
             for (int i = 0; i < peakCandidates1.getShape()[0]; i++) {
 //                final int pc1i = peakCandidates1.getInt(pc1.set(i));

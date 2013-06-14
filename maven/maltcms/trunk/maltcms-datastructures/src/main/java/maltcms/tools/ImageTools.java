@@ -86,7 +86,6 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
-import cross.exception.NotImplementedException;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
 import lombok.extern.slf4j.Slf4j;
@@ -973,11 +972,14 @@ public class ImageTools {
             final String ext = StringTools.getFileExtension(
                     file.getAbsolutePath());
             if (ext.equalsIgnoreCase("svg")) {
-                // File f = new File(d, fname + "." + filetype);
 //                ImageTools.log.info("Saving to file {}", file.getAbsolutePath());
 //                final FileOutputStream fos = new FileOutputStream(file);
 //                ImageTools.writeSVG(chart, fos, imgwidth, imgheight);
-				throw new NotImplementedException("svg support is currently disabled!");
+				ImageTools.log.info("svg output currently not supported, reverting to png!");
+				final File f = file;
+                ImageTools.log.info("Saving to file {}", f.getAbsolutePath());
+                final FileOutputStream fos = new FileOutputStream(f);
+                ImageTools.writePNG(chart, fos, imgwidth, imgheight);
             } else if (ext.equalsIgnoreCase("png")) {// use png as default
                 final File f = file;
                 ImageTools.log.info("Saving to file {}", f.getAbsolutePath());
