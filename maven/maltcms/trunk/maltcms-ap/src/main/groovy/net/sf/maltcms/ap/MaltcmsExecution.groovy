@@ -44,7 +44,7 @@ class MaltcmsExecution {
     String inputFiles
     File outputBaseDir = new File(System.getProperty("user.dir"),"ap-output")
     File workingDirectory = new File(System.getProperty("user.dir"))
-	File apProperties = null
+    File apProperties = null
     ExecutorService es = Executors.newSingleThreadExecutor()
     String arguments = "-Xmx1G"
     Integer parallelThreads = 1
