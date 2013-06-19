@@ -189,6 +189,12 @@
             <artifactId>maltcms-ap</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <artifactId>slf4j-log4j12</artifactId>
+            <groupId>org.slf4j</groupId>
+            <type>jar</type>
+            <version>1.7.2</version>
+        </dependency>
     </dependencies>
     <properties>
         <distributionName>maltcms-ap-${project.version}</distributionName>

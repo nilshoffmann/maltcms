@@ -110,8 +110,8 @@ def importTab = swing.panel(constraints: BL.CENTER, id: "importTab", name: "Impo
             td(colfill: true, align: "LEFT") {
                 button("...", id: "fileButton", actionPerformed: {
                         def fc = new JFileChooser(dialogTitle:"Select input files",fileSelectionMode: JFileChooser.FILES_AND_DIRECTORIES, multiSelectionEnabled: true,
-                            fileFilter:[getDescription: {-> "*.cdf;*.D"}, accept:{file-> file ==~ /.*?\.cdf/ ||
-                                    file ==~ /.*?\.CDF/ || file ==~ /.*?\.D/ || file ==~ /.*?\.d/ ||
+                            fileFilter:[getDescription: {-> "*.cdf;*.D"}, accept:{file-> file.toString() ==~ /.*?\.cdf/ ||
+                                    file.toString() ==~ /.*?\.CDF/ || file.toString() ==~ /.*?\.D/ || file.toString() ==~ /.*?\.d/ ||
                                     file.isDirectory() }] as javax.swing.filechooser.FileFilter)
                         fc.currentDirectory = userProps.lastDirectory
                         def retval = fc.showOpenDialog()
