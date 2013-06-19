@@ -190,10 +190,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <artifactId>slf4j-log4j12</artifactId>
             <groupId>org.slf4j</groupId>
-            <type>jar</type>
-            <version>1.7.2</version>
+            <artifactId>slf4j-log4j12</artifactId>
         </dependency>
     </dependencies>
     <properties>
