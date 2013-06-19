@@ -70,15 +70,15 @@
         </developer>
     </developers>
     <inceptionYear>2007</inceptionYear>
-    <ciManagement>
-        <system>jenkins</system>
-        <url>https://maltcms.de/jenkins/job/maltcms/</url>
-    </ciManagement>
     <!--    <scm>
             <connection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</connection>
             <developerConnection>scm:svn:https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</developerConnection>
             <url>https://maltcms.svn.sourceforge.net/svnroot/maltcms/maven/maltcms/trunk/</url>
     </scm>-->
+    <ciManagement>
+        <system>hudson</system>
+        <url>https://maltcms.de/jenkins/job/Maltcms/</url>
+    </ciManagement>
     <scm>
         <developerConnection>scm:git:https://git.code.sf.net/p/maltcms/code</developerConnection>
         <connection>scm:git:git://git.code.sf.net/p/maltcms/code</connection>
@@ -585,9 +585,12 @@
         <profile>
             <id>lombok-needs-tools-jar</id>
             <activation>
-                <file>
+<!--                <file>
                     <exists>${java.home}/../lib/tools.jar</exists>
-                </file>
+                </file>-->
+                <property>
+                    <name>delombok</name>
+                </property>
             </activation>
             <build>
                 <plugins>
