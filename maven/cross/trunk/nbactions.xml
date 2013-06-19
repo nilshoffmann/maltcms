@@ -23,4 +23,14 @@
                 <goal>site:stage</goal>
             </goals>
         </action>
+    <action>
+            <actionName>CUSTOM-Install Delombok</actionName>
+            <displayName>Install Delombok</displayName>
+            <goals>
+                <goal>install</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>delombok</activatedProfile>
+            </activatedProfiles>
+        </action>
 </actions>
