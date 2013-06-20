@@ -53,6 +53,7 @@ import cross.Factory;
 import cross.annotations.Configurable;
 import cross.cache.CacheFactory;
 import cross.cache.ICacheDelegate;
+import cross.datastructures.cache.SerializableArray;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
@@ -63,16 +64,15 @@ import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
 import java.io.File;
-import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.logging.Level;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
-import uk.ac.ebi.jmzml.model.mzml.ChromatogramList;
 import uk.ac.ebi.jmzml.model.mzml.FileDescription;
 import uk.ac.ebi.jmzml.model.mzml.SourceFile;
 import uk.ac.ebi.jmzml.model.mzml.SourceFileList;
@@ -120,13 +120,11 @@ public class MZMLDataSource implements IDataSource {
 	private int msLevel = 1;
 	private String msLevelAccession = "MS:1000511";
 	private static ICacheDelegate<IFileFragment, MzMLUnmarshaller> fileToIndex = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller", 300, 600, 20);
-	private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = null;
+	private static ICacheDelegate<MzMLUnmarshaller, Run> unmarshallerToRun = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller-to-run", 300, 600, 2);
+	private static ICacheDelegate<IVariableFragment, SerializableArray> variableToArrayCache = CacheFactory.createDefaultCache(MZMLDataSource.class.getName(), 50);
 
-	private ICacheDelegate<IVariableFragment, Array> getCache() {
-		if (this.variableToArrayCache == null) {
-			this.variableToArrayCache = CacheFactory.createDefaultCache(MZMLDataSource.class.getName());
-		}
-		return this.variableToArrayCache;
+	private ICacheDelegate<IVariableFragment, SerializableArray> getCache() {
+		return MZMLDataSource.variableToArrayCache;
 	}
 
 	@Override
@@ -180,11 +178,13 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private MzMLUnmarshaller getUnmarshaller(final IFileFragment ff) {
-		if (MZMLDataSource.fileToIndex.get(ff) != null) {
-			return MZMLDataSource.fileToIndex.get(ff);
+		MzMLUnmarshaller um = MZMLDataSource.fileToIndex.get(ff);
+		if (um != null) {
+			log.info("Retrieved unmarshaller from cache!");
+			return um;
 		}
-		MzMLUnmarshaller um;
 		try {
+			log.debug("Initializing unmarshaller for file {}", ff.getUri());
 			um = new MzMLUnmarshaller(ff.getUri().toURL());
 			MZMLDataSource.fileToIndex.put(ff, um);
 			log.debug("mzML file {} is indexed: {}", ff.getUri(), um.isIndexedmzML());
@@ -195,7 +195,13 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private Run getRun(MzMLUnmarshaller mzmlu) {
-		Run run = mzmlu.unmarshalFromXpath("/run", Run.class);
+		Run run = MZMLDataSource.unmarshallerToRun.get(mzmlu);
+		if (run != null) {
+			log.info("Retrieved run from cache!");
+			return run;
+		}
+		run = mzmlu.unmarshalFromXpath("/run", Run.class);
+		MZMLDataSource.unmarshallerToRun.put(mzmlu, run);
 		return run;
 	}
 
@@ -295,8 +301,11 @@ public class MZMLDataSource implements IDataSource {
 		return rt;
 	}
 
-	private int getScanCount(final IFileFragment f, final Run r) {
-		return r.getSpectrumList().getCount();
+	private int getScanCount(final MzMLUnmarshaller um) {
+		if (um.isIndexedmzML()) {
+			return um.getSpectrumIDs().size();
+		}
+		return getRun(um).getSpectrumList().getCount();
 	}
 
 	private IVariableFragment getVariable(final IFileFragment f,
@@ -314,10 +323,10 @@ public class MZMLDataSource implements IDataSource {
 	 * mass_range_max as second array
 	 */
 	protected Tuple2D<Array, Array> initMinMaxMZ(final IVariableFragment var,
-			final Run run, final MzMLUnmarshaller um) {
+			final MzMLUnmarshaller um) {
 		log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
 			this.mass_range_max});
-		int scans = getScanCount(var.getParent(), run);
+		int scans = getScanCount(um);
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
@@ -343,11 +352,12 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private Array loadArray(final IFileFragment f, final IVariableFragment var) {
-		Array a = getCache().get(var);
-		if (a != null) {
-			log.info("Retrieved variable data array from cache for " + var);
-			return a;
+		SerializableArray sa = getCache().get(var);
+		if (sa != null) {
+			log.debug("Retrieved variable data array from cache for " + var);
+			return sa.getArray();
 		}
+		Array a = null;
 		MzMLUnmarshaller mzu = getUnmarshaller(f);
 		final Run r = getRun(mzu);
 		final String varname = var.getName();
@@ -363,37 +373,37 @@ public class MZMLDataSource implements IDataSource {
 		}
 		if (varname.equals(this.mass_values)
 				|| varname.equals(this.intensity_values)) {
-			a = readMZI(var, r, mzu);
+			a = readMZI(var, mzu);
 		} else if (varname.equals(this.scan_index)) {
-			a = readScanIndex(var, r, mzu);
+			a = readScanIndex(var, mzu);
 			// read total_intensity
 		} else if (varname.equals(this.total_intensity)) {
-			a = readTotalIntensitiesArray(var.getParent(), intensity_values, mzu, r);
+			a = readTotalIntensitiesArray(var.getParent(), intensity_values, mzu);
 			// read min and max_mass_range
 		} else if (varname.equals(this.mass_range_min)
 				|| varname.equals(this.mass_range_max)) {
-			a = readMinMaxMassValueArray(var, r, mzu);
+			a = readMinMaxMassValueArray(var, mzu);
 			// read scan_acquisition_time
 		} else if (varname.equals(this.scan_acquisition_time)) {
-			a = readScanAcquisitionTimeArray(var, r, mzu);
+			a = readScanAcquisitionTimeArray(var, mzu);
 		} else if (varname.equals(this.modulation_time)) {
-			a = readModulationTimeArray(var, r);
+			a = readModulationTimeArray(var, mzu);
 		} else if (varname.equals(this.first_column_elution_time)) {
 			a = readElutionTimeArray(var, r, mzu, this.first_column_elution_timeAccession);
 		} else if (varname.equals(this.second_column_elution_time)) {
 			a = readElutionTimeArray(var, r, mzu, this.second_column_elution_timeAccession);
 		} else if (varname.equals(this.ms_level)) {
-			a = readMsLevelArray(var, r, mzu);
+			a = readMsLevelArray(var, mzu);
 		} else if (varname.equals(this.total_ion_current_chromatogram)) {
-			a = readTotalIonCurrentChromatogram(var, r, true);
+			a = readTotalIonCurrentChromatogram(var, mzu, true);
 		} else if (varname.equals(this.total_ion_current_chromatogram_scan_acquisition_time)) {
-			a = readTotalIonCurrentChromatogram(var, r, false);
+			a = readTotalIonCurrentChromatogram(var, mzu, false);
 		} else {
 			throw new ResourceNotAvailableException(
 					"Unknown variable name to mzML mapping for " + varname);
 		}
 		if (a != null) {
-			getCache().put(var, a);
+			getCache().put(var, new SerializableArray(a));
 		}
 		return a;
 	}
@@ -416,9 +426,8 @@ public class MZMLDataSource implements IDataSource {
 		MzMLUnmarshaller um = getUnmarshaller(f.getParent());
 		if (f.getName().equals(this.mass_values)) {
 			final ArrayList<Array> al = new ArrayList<Array>();
-			final Run run = getRun(getUnmarshaller(f.getParent()));
 			int start = 0;
-			int len = getScanCount(f.getParent(), run);
+			int len = getScanCount(um);
 			if (f.getIndex() != null) {
 				Range[] r = f.getIndex().getRange();
 				if (r != null && r[0] != null) {
@@ -433,9 +442,8 @@ public class MZMLDataSource implements IDataSource {
 		}
 		if (f.getName().equals(this.intensity_values)) {
 			final ArrayList<Array> al = new ArrayList<Array>();
-			final Run run = getRun(getUnmarshaller(f.getParent()));
 			int start = 0;
-			int len = getScanCount(f.getParent(), run);
+			int len = getScanCount(um);
 			if (f.getIndex() != null) {
 				Range[] r = f.getIndex().getRange();
 				if (r != null && r[0] != null) {
@@ -467,7 +475,7 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private Array readElutionTimeArray(final IVariableFragment var, final Run run, final MzMLUnmarshaller um, final String accession) {
-		int scans = getScanCount(var.getParent(), run);
+		int scans = getScanCount(um);
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
@@ -489,9 +497,9 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private Array readMinMaxMassValueArray(final IVariableFragment var,
-			final Run run, final MzMLUnmarshaller um) {
+			final MzMLUnmarshaller um) {
 		log.debug("readMinMaxMassValueArray");
-		final Tuple2D<Array, Array> t = initMinMaxMZ(var, run, um);
+		final Tuple2D<Array, Array> t = initMinMaxMZ(var, um);
 		if (var.getName().equals(this.mass_range_min)) {
 			return t.getFirst();
 		}
@@ -502,7 +510,7 @@ public class MZMLDataSource implements IDataSource {
 				"Method accepts only one of mass_range_min or mass_range_max as varname!");
 	}
 
-	private Array readTicFromMzi(final IVariableFragment var, final Run run, final MzMLUnmarshaller um) {
+	private Array readTicFromMzi(final IVariableFragment var, final MzMLUnmarshaller um) {
 		if (var.getIndex() == null) {
 			IVariableFragment scanIndex = null;
 			try {
@@ -513,7 +521,7 @@ public class MZMLDataSource implements IDataSource {
 			var.setIndex(scanIndex);
 		}
 		int start = 0;
-		int scans = getScanCount(var.getParent(), run);
+		int scans = getScanCount(um);
 		final Range[] r = var.getIndex().getRange();
 		if (r != null) {
 			start = Math.max(0, r[0].first());
@@ -535,7 +543,7 @@ public class MZMLDataSource implements IDataSource {
 		// return f.getArray();
 	}
 
-	private Array readMZI(final IVariableFragment var, final Run run, final MzMLUnmarshaller um) {
+	private Array readMZI(final IVariableFragment var, final MzMLUnmarshaller um) {
 		if (var.getIndex() == null) {
 			IVariableFragment scanIndex = null;
 			try {
@@ -547,7 +555,7 @@ public class MZMLDataSource implements IDataSource {
 		}
 		int npeaks = 0;
 		int start = 0;
-		int scans = getScanCount(var.getParent(), run);
+		int scans = getScanCount(um);
 		if (var.getIndex() != null) {
 			final Range[] r = var.getIndex().getRange();
 			if (r != null) {
@@ -590,9 +598,9 @@ public class MZMLDataSource implements IDataSource {
 		// return f.getArray();
 	}
 
-	private Array readMsLevelArray(final IVariableFragment var, final Run run, final MzMLUnmarshaller um) {
+	private Array readMsLevelArray(final IVariableFragment var, final MzMLUnmarshaller um) {
 		int start = 0;
-		int scans = getScanCount(var.getParent(), run);
+		int scans = getScanCount(um);
 		final Range[] r = var.getRange();
 		if (r != null) {
 			start = Math.max(0, r[0].first());
@@ -612,9 +620,9 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private Array readScanAcquisitionTimeArray(final IVariableFragment var,
-			final Run run, final MzMLUnmarshaller um) {
+			final MzMLUnmarshaller um) {
 		log.debug("readScanAcquisitionTimeArray");
-		int scans = getScanCount(var.getParent(), run);
+		int scans = getScanCount(um);
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
@@ -630,9 +638,9 @@ public class MZMLDataSource implements IDataSource {
 		return sat;
 	}
 
-	private Array readScanIndex(final IVariableFragment var, final Run run, final MzMLUnmarshaller um) {
+	private Array readScanIndex(final IVariableFragment var, final MzMLUnmarshaller um) {
 		int npeaks = 0;
-		int scans = getScanCount(var.getParent(), run);
+		int scans = getScanCount(um);
 		int start = 0;
 		final Range[] r = var.getRange();
 		if (r != null) {
@@ -653,8 +661,8 @@ public class MZMLDataSource implements IDataSource {
 		return scan_index;
 	}
 
-	private Array readModulationTimeArray(IVariableFragment var, Run r) {
-		List<CVParam> parameters = r.getCvParam();
+	private Array readModulationTimeArray(IVariableFragment var, MzMLUnmarshaller um) {
+		List<CVParam> parameters = getRun(um).getCvParam();
 		for (CVParam param : parameters) {
 			if (param.getAccession().equalsIgnoreCase(modulationTimeAccession)) {
 				log.info("Found modulation time parameter as attribute of run");
@@ -713,7 +721,7 @@ public class MZMLDataSource implements IDataSource {
 		//TODO add first and second_column_elution_time with fast query, whether they 
 		//are contained in the file
 		al.addAll(Arrays.asList(new IVariableFragment[]{ti, sat, si, mrmin,
-			mrmax, mv, iv}));//, msLevel, tic, ticSat}));
+			mrmax, mv, iv}));// msLevel}));//, tic, ticSat}));
 		for (final IVariableFragment ivf : al) {
 			readStructure(ivf);
 		}
@@ -730,8 +738,7 @@ public class MZMLDataSource implements IDataSource {
 	public IVariableFragment readStructure(final IVariableFragment f)
 			throws IOException, ResourceNotAvailableException {
 		MzMLUnmarshaller um = getUnmarshaller(f.getParent());
-		final Run run = getRun(um);
-		final int scancount = getScanCount(f.getParent(), run);
+		final int scancount = getScanCount(um);
 		final String varname = f.getName();
 		// Read mass_values or intensity_values for whole chromatogram
 		if (varname.equals(this.scan_index)
@@ -776,17 +783,13 @@ public class MZMLDataSource implements IDataSource {
 						+ f.getParent().getUri());
 			}
 		} else if (varname.equals(this.modulation_time)) {
-			Array a = readModulationTimeArray(f, run);
+			Array a = readModulationTimeArray(f, um);
 			final Dimension[] dims = new Dimension[]{new Dimension(this.modulation_time, 1, true, false, false)};
 			f.setDimensions(dims);
 			final Range[] ranges = new Range[]{new Range(1)};
 			f.setRange(ranges);
 		} else if (varname.equals(this.total_ion_current_chromatogram) || varname.equals(this.total_ion_current_chromatogram_scan_acquisition_time)) {
-			ChromatogramList cl = run.getChromatogramList();
-			Chromatogram c = readTotalIonCurrentChromatogram(cl, f.getParent());
-			if (c == null) {
-				throw new ResourceNotAvailableException("Could not load variable " + varname);
-			}
+			Chromatogram c = readTotalIonCurrentChromatogram(um, f.getParent());
 			final Dimension[] dims = new Dimension[]{new Dimension("total_ion_current_chromatogram_scan_number", c.getDefaultArrayLength(), true, false, false)};
 			f.setDimensions(dims);
 			final Range[] ranges = new Range[]{new Range(c.getDefaultArrayLength())};
@@ -798,22 +801,26 @@ public class MZMLDataSource implements IDataSource {
 		return f;
 	}
 
-	private Array readTotalIntensitiesArray(final IFileFragment f, final String fallback, final MzMLUnmarshaller um,
-			final Run run) {
+	private Array readTotalIntensitiesArray(final IFileFragment f, final String fallback, final MzMLUnmarshaller um) {
 		// Current assumption is, that global time for ms scans correspond to
 		// chromatogram times
-		ChromatogramList cl = run.getChromatogramList();
-		if (cl == null || cl.getCount().equals(0) || cl.getChromatogram().isEmpty()) {
-			throw new ResourceNotAvailableException("No TIC chromatograms defined in mzML file {}" + f.getName());
+		Set<String> chromatograms = um.getChromatogramIDs();
+		if (chromatograms == null || chromatograms.isEmpty()) {
+			throw new ResourceNotAvailableException("No chromatograms defined in mzML file {}" + f.getName());
 		}
-		Chromatogram ticChromatogram = readTotalIonCurrentChromatogram(cl, f);
-		if (ticChromatogram != null && ticChromatogram.getDefaultArrayLength() != getScanCount(f, run)) {
+		Chromatogram ticChromatogram = null;
+		try {
+			ticChromatogram = readTotalIonCurrentChromatogram(um, f);
+		} catch (ResourceNotAvailableException rnae) {
+			//ignore, will handle null chromatogram further down
+		}
+		if (ticChromatogram != null && ticChromatogram.getDefaultArrayLength() != getScanCount(um)) {
 			log.warn("TIC Chromatogram point number does not match scan count! Recreating TIC from spectra!");
 			ticChromatogram = null;
 		}
 		if (ticChromatogram == null) {
 			log.warn("No TIC chromatograms defined in mzML file {} reconstructing from spectra!", f.getName());
-			return readTicFromMzi(f.getChild(fallback), run, um);
+			return readTicFromMzi(f.getChild(fallback), um);
 		}
 		BinaryDataArray intensitiesArray = ticChromatogram.getBinaryDataArrayList().getBinaryDataArray().get(1);
 		Number[] intensities = intensitiesArray.getBinaryDataAsNumberArray();
@@ -840,12 +847,12 @@ public class MZMLDataSource implements IDataSource {
 		return null;
 	}
 
-	private Array readTotalIonCurrentChromatogram(final IVariableFragment f, final Run run, boolean loadTotalIonCurrentChromatogram) {
-		ChromatogramList cl = run.getChromatogramList();
-		if (cl == null || cl.getCount().equals(0) || cl.getChromatogram().isEmpty()) {
-			throw new ResourceNotAvailableException("No TIC chromatograms defined in mzML file {}" + f.getName());
+	private Array readTotalIonCurrentChromatogram(final IVariableFragment f, MzMLUnmarshaller um, boolean loadTotalIonCurrentChromatogram) {
+		Set<String> chromatograms = um.getChromatogramIDs();
+		if (chromatograms == null || chromatograms.isEmpty()) {
+			throw new ResourceNotAvailableException("No chromatograms defined in mzML file {}" + f.getName());
 		}
-		Chromatogram ticChromatogram = readTotalIonCurrentChromatogram(cl, f.getParent());
+		Chromatogram ticChromatogram = readTotalIonCurrentChromatogram(um, f.getParent());
 		// time array MS:1000595
 		// intensity array MS:1000515
 		if (loadTotalIonCurrentChromatogram) {
@@ -897,10 +904,12 @@ public class MZMLDataSource implements IDataSource {
 		return Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).write(f);
 	}
 
-	private Chromatogram readTotalIonCurrentChromatogram(ChromatogramList cl, final IFileFragment f) {
+	private Chromatogram readTotalIonCurrentChromatogram(MzMLUnmarshaller um, final IFileFragment f) {
 		Chromatogram ticChromatogram = null;
-		for (Chromatogram c : cl.getChromatogram()) {
+		Set<String> chromatogramIds = um.getChromatogramIDs();
+		for (String id : chromatogramIds) {
 			try {
+				Chromatogram c = um.getChromatogramById(id);
 				CVParam param = findParam(c.getCvParam(), "MS:1000235");
 				if (param != null) {
 					if (ticChromatogram != null) {
@@ -911,7 +920,12 @@ public class MZMLDataSource implements IDataSource {
 				}
 			} catch (ResourceNotAvailableException rnae) {
 				log.debug("Chromatogram is not a 'total ion current chromatogram'");
+			} catch (MzMLUnmarshallerException ex) {
+				log.warn("Failed to unmarshal chromatogram {}", id);
 			}
+		}
+		if (ticChromatogram == null) {
+			throw new ResourceNotAvailableException("Could not retrieve tic chromatogram for file " + f.getName());
 		}
 		return ticChromatogram;
 	}

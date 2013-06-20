@@ -89,12 +89,6 @@ public class ANDIMSExporter extends AFragmentCommand {
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         for (IFileFragment f : t) {
-//            try {
-//                Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).
-//                        readStructure(f);
-//            } catch (final IOException e) {
-//                throw new RuntimeException(e.fillInStackTrace());
-//            }
             log.info("Processing {}", f.getName());
             IFileFragment outf = new FileFragment(new File(getWorkflow().getOutputDirectory(this), f.
                     getName()));
