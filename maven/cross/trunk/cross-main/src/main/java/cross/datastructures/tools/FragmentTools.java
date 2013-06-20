@@ -399,7 +399,7 @@ public class FragmentTools {
             String resolvedPath = resolve(file, root).toString();
             log.info("Adding resolved (relative) source file: {}", resolvedPath);
             names.add(resolvedPath);
-            if (resolvedPath.length() > ml) {
+            while(resolvedPath.length() > ml) {
                 ml *= 2;
             }
         }
