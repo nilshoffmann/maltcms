@@ -44,7 +44,7 @@ EXECARGS=("net.sf.maltcms.apps.Maltcms")
 
 #define some common variables
 USRCLSPATH=()
-MXSIZE="-Xmx1200M
+MXSIZE="-Xmx1200M"
 MSSIZE="-Xms128M"
 
 #print help for arguments
