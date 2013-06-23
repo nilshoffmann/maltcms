@@ -96,22 +96,6 @@ public class InputDataFactory implements IInputDataFactory {
         return this.initialFiles;
     }
 
-    protected IFileFragment initFile(final File f) {
-        log.debug("Initializing IFileFragment for: " + f.getAbsolutePath());
-        log.debug("Initializing IFileFragment for URI: " + f.toURI());
-        IFileFragment inputFragment = new FileFragment(f.toURI());
-        if (!(new File(inputFragment.getUri()).exists())) {
-            throw new ConstraintViolationException("Input file "
-                    + inputFragment.getUri() + " does not exist!");
-        }
-        return inputFragment;
-    }
-
-    @Deprecated
-    protected IFileFragment initFile(final String s) {
-        return initFile(new File(s));
-    }
-
     public Collection<File> getInputFiles(String[] input) {
         LinkedHashSet<File> files = new LinkedHashSet<File>();
         for (String inputString : input) {
@@ -121,6 +105,13 @@ public class InputDataFactory implements IInputDataFactory {
             boolean isWildcard = name.contains("?") || name.contains("*");
             String fullPath = FilenameUtils.getFullPath(inputString);
             File path = new File(fullPath);
+			File baseDirFile = new File(this.basedir);
+			if(!baseDirFile.exists()) {
+				throw new ExitVmException("Input base directory '"+baseDirFile+"' does not exist!");
+			}
+			if(!baseDirFile.isDirectory()) {
+				throw new ExitVmException("Input base directory '"+baseDirFile+"' is not a directory!");
+			}
             log.debug("Path is absolute: {}", path.isAbsolute());
             //identify absolute and relative files
             if (!path.isAbsolute()) {
@@ -136,7 +127,14 @@ public class InputDataFactory implements IInputDataFactory {
                 files.addAll(FileUtils.listFiles(new File(fullPath), new WildcardFileFilter(name, IOCase.INSENSITIVE), dirFilter));
             } else {
                 log.debug("Using name for {}", name);
-                files.add(new File(fullPath, name));
+				File f = new File(fullPath, name);
+				if(!f.exists()) {
+					throw new ExitVmException("Input file '"+f+"' does not exist!");
+				}
+				if(!f.isFile()) {
+					throw new ExitVmException("Input file '"+f+"' is not a file!");
+				}
+                files.add(f);
             }
         }
         return files;
