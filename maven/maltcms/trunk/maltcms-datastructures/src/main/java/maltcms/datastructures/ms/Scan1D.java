@@ -39,6 +39,7 @@ import java.util.UUID;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
+import ucar.ma2.ArrayShort;
 import ucar.ma2.IndexIterator;
 
 /**
@@ -59,6 +60,7 @@ public class Scan1D implements IScan1D, Externalizable {
     private Array masses = null;
     private Array intensities = null;
     private UUID uniqueId = UUID.randomUUID();
+	private ArrayShort.D0 msLevel = new ArrayShort.D0();
 
     public Scan1D(final Array masses1, final Array intensities1,
             final int scanNumber1, final double scanAcquisitionTime1) {
@@ -67,6 +69,12 @@ public class Scan1D implements IScan1D, Externalizable {
         this.scanNumber.set(scanNumber1);
         this.scanAcquisitionTime.set(scanAcquisitionTime1);
         this.total_intensity.set(integrate(this.intensities));
+    }
+	
+	public Scan1D(final Array masses1, final Array intensities1,
+            final int scanNumber1, final double scanAcquisitionTime1, final short msLevel) {
+        this(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
+		this.msLevel.set(msLevel);
     }
 
     @Override
@@ -81,14 +89,16 @@ public class Scan1D implements IScan1D, Externalizable {
             return this.scanAcquisitionTime;
         } else if (name.equals("total_intensity")) {
             return this.total_intensity;
-        }
+        } else if (name.equals("ms_level")) {
+			return this.msLevel;
+		}
         throw new IllegalArgumentException("Feature name " + name + " unknown!");
     }
 
     @Override
     public List<String> getFeatureNames() {
         return Arrays.asList(new String[]{"mass_values", "intensity_values",
-                    "scan_index", "scan_acquisition_time", "total_intensity"});
+                    "scan_index", "scan_acquisition_time", "total_intensity", "ms_level"});
     }
 
     @Override
@@ -118,7 +128,7 @@ public class Scan1D implements IScan1D, Externalizable {
 
     private double integrate(final Array intensities) {
         double d = 0;
-        final IndexIterator ii = this.intensities.getIndexIterator();
+        final IndexIterator ii = intensities.getIndexIterator();
         while (ii.hasNext()) {
             d += ii.getDoubleNext();
         }
@@ -143,6 +153,8 @@ public class Scan1D implements IScan1D, Externalizable {
 		massesArray.writeExternal(out);
 		SerializableArray intensitiesArray = new SerializableArray(intensities);
 		intensitiesArray.writeExternal(out);
+		SerializableArray msLevelArray = new SerializableArray(msLevel);
+		msLevelArray.writeExternal(out);
 	}
 
 	@Override
@@ -158,5 +170,12 @@ public class Scan1D implements IScan1D, Externalizable {
 		masses = (Array)massesArray.getArray();
 		SerializableArray intensitiesArray = (SerializableArray)in.readObject();
 		intensities = (Array)intensitiesArray.getArray();
+		SerializableArray msLevelArray = (SerializableArray)in.readObject();
+		msLevel = (ArrayShort.D0)msLevelArray.getArray();
+	}
+
+	@Override
+	public short getMsLevel() {
+		return msLevel.get();
 	}
 }

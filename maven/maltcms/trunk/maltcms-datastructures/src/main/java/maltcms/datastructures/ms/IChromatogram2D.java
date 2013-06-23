@@ -52,4 +52,6 @@ public interface IChromatogram2D extends IChromatogram, IScan2DProvider {
     public Point getPointFor(int scan);
 
     public Point getPointFor(double scan_acquisition_time);
+	
+	public Iterable<IScan2D> subsetByMsLevel(short msLevel);
 }

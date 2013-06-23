@@ -116,8 +116,6 @@ public class MZMLDataSource implements IDataSource {
 	private String total_ion_current_chromatogram_scan_acquisition_time = "total_ion_current_chromatogram_scan_acquisition_time";
 	private String total_ion_current_chromatogram_scan_acquisition_timeAccession = "MS:1000595";
 	private String ms_level = "ms_level";
-	@Configurable
-	private int msLevel = 1;
 	private String msLevelAccession = "MS:1000511";
 	private static ICacheDelegate<IFileFragment, MzMLUnmarshaller> fileToIndex = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller", 300, 600, 20);
 	private static ICacheDelegate<MzMLUnmarshaller, Run> unmarshallerToRun = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller-to-run", 300, 600, 2);
@@ -230,6 +228,10 @@ public class MZMLDataSource implements IDataSource {
 		}
 	}
 
+	private int getPointCount(final Spectrum s) {
+		return s.getBinaryDataArrayList().getBinaryDataArray().get(0).getBinaryDataAsNumberArray().length;
+	}
+	
 	private Array getMassValues(final Spectrum s) {
 		Number[] n = s.getBinaryDataArrayList().getBinaryDataArray().get(0).getBinaryDataAsNumberArray();
 		ArrayDouble.D1 masses = new ArrayDouble.D1(n.length);
@@ -565,7 +567,7 @@ public class MZMLDataSource implements IDataSource {
 		}
 		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
 		for (int i = start; i < start + scans; i++) {
-			npeaks += getMassValues(getSpectrum(um, i)).getShape()[0];
+			npeaks += getPointCount(getSpectrum(um, i));
 		}
 
 		if (var.getName().equals(this.mass_values)) {
@@ -764,7 +766,7 @@ public class MZMLDataSource implements IDataSource {
 			int npeaks = 0;
 			try {
 				for (int i = 0; i < scancount; i++) {
-					npeaks += getMassValues(getSpectrum(um, i)).getShape()[0];
+					npeaks += getPointCount(getSpectrum(um, i));
 				}
 				final Dimension[] dims = new Dimension[]{new Dimension(
 					"point_number", npeaks, true)};

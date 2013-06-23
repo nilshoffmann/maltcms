@@ -47,4 +47,6 @@ public interface IScan extends IFeatureVector {
     public int getScanIndex();
 
     public double getTotalIntensity();
+	
+	public short getMsLevel();
 }

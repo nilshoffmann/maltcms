@@ -35,10 +35,15 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.Tuple2D;
+import cross.exception.ResourceNotAvailableException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
@@ -61,9 +66,11 @@ public class Chromatogram1D implements IChromatogram1D {
 	private final IVariableFragment scanAcquisitionTimeVar;
 	private final List<Array> massValues;
 	private final List<Array> intensityValues;
-	private Tuple2D<Double,Double> massRange;
-	private Tuple2D<Double,Double> timeRange;
+	private Tuple2D<Double, Double> massRange;
+	private Tuple2D<Double, Double> timeRange;
 	private int numberOfScans = -1;
+	private Array msLevel;
+	private Map<Short, List<Integer>> msScanMap;
 
 	public Chromatogram1D(final IFileFragment e) {
 		this(e, true);
@@ -98,6 +105,24 @@ public class Chromatogram1D implements IChromatogram1D {
 			setPrefetchSize(scans, intensityValues);
 		}
 		scanAcquisitionTimeVar = e.getChild(scan_acquisition_time_var);
+		try {
+			IVariableFragment msLevelVar = this.parent.getChild("ms_level");
+			msLevel = msLevelVar.getArray();
+			msScanMap = new TreeMap<Short, List<Integer>>();
+			for (int i = 0; i < msLevel.getShape()[0]; i++) {
+				Short msLevelValue = msLevel.getShort(i);
+				if (msScanMap.containsKey(msLevelValue)) {
+					List<Integer> scanToScan = msScanMap.get(msLevelValue);
+					scanToScan.add(i);
+				} else {
+					List<Integer> scanToScan = new ArrayList<Integer>();
+					scanToScan.add(scanToScan.size(), i);
+					msScanMap.put(msLevelValue, scanToScan);
+				}
+			}
+		} catch (ResourceNotAvailableException rnae) {
+			System.out.println("Chromatogram has no ms_level variable, assuming all scans are MS1!");
+		}
 	}
 
 	protected void setPrefetchSize(int scans, List<Array> list) {
@@ -117,26 +142,25 @@ public class Chromatogram1D implements IChromatogram1D {
 	}
 
 	protected Scan1D buildScan(int i) {
-		log.info("Building scan {}",i);
+		log.info("Building scan {}", i);
 		final Array masses = massValues.get(i);
 		final Array intens = intensityValues.get(i);
 		final Scan1D s = new Scan1D(masses, intens, i, scanAcquisitionTimeVar.getArray().getDouble(i));
 		return s;
 	}
-	
-	
+
 	@Override
-	public Tuple2D<Double,Double> getTimeRange() {
-		if(timeRange==null) {
+	public Tuple2D<Double, Double> getTimeRange() {
+		if (timeRange == null) {
 			MAMath.MinMax satMM = MAMath.getMinMax(scanAcquisitionTimeVar.getArray());
-			timeRange = new Tuple2D<Double,Double>(satMM.min,satMM.max);
+			timeRange = new Tuple2D<Double, Double>(satMM.min, satMM.max);
 		}
 		return timeRange;
 	}
-	
+
 	@Override
-	public Tuple2D<Double,Double> getMassRange() {
-		if(massRange==null) {
+	public Tuple2D<Double, Double> getMassRange() {
+		if (massRange == null) {
 			massRange = MaltcmsTools.getMinMaxMassRange(parent);
 		}
 		return massRange;
@@ -178,15 +202,15 @@ public class Chromatogram1D implements IChromatogram1D {
 		}
 		return al;
 	}
-	
+
 	@Override
 	public Iterable<IScan1D> subsetByScanAcquisitionTime(double startSat, double stopSat) {
 		final int startIndex = getIndexFor(startSat);
-		if(startIndex<0) {
+		if (startIndex < 0) {
 			throw new ArrayIndexOutOfBoundsException(startIndex);
 		}
 		final int stopIndex = getIndexFor(stopSat);
-		if(stopIndex>getNumberOfScans()-1) {
+		if (stopIndex > getNumberOfScans() - 1) {
 			throw new ArrayIndexOutOfBoundsException(stopIndex);
 		}
 		final Iterator<IScan1D> iter = new Iterator<IScan1D>() {
@@ -212,19 +236,19 @@ public class Chromatogram1D implements IChromatogram1D {
 			}
 		};
 		return new Iterable<IScan1D>() {
-
 			@Override
 			public Iterator<IScan1D> iterator() {
 				return iter;
 			}
 		};
 	}
+
 	@Override
 	public Iterable<IScan1D> subsetByScanIndex(final int startIndex, final int stopIndex) {
-		if(startIndex<0) {
+		if (startIndex < 0) {
 			throw new ArrayIndexOutOfBoundsException(startIndex);
 		}
-		if(stopIndex>getNumberOfScans()-1) {
+		if (stopIndex > getNumberOfScans() - 1) {
 			throw new ArrayIndexOutOfBoundsException(stopIndex);
 		}
 		final Iterator<IScan1D> iter = new Iterator<IScan1D>() {
@@ -250,7 +274,6 @@ public class Chromatogram1D implements IChromatogram1D {
 			}
 		};
 		return new Iterable<IScan1D>() {
-
 			@Override
 			public Iterator<IScan1D> iterator() {
 				return iter;
@@ -311,7 +334,7 @@ public class Chromatogram1D implements IChromatogram1D {
 	 */
 	@Override
 	public int getNumberOfScans() {
-		if(numberOfScans==-1) {
+		if (numberOfScans == -1) {
 			numberOfScans = MaltcmsTools.getNumberOfScans(this.parent);
 		}
 		return numberOfScans;
@@ -359,5 +382,68 @@ public class Chromatogram1D implements IChromatogram1D {
 	@Override
 	public IFileFragment getParent() {
 		return this.parent;
+	}
+
+	@Override
+	public int getNumberOfScansForMsLevel(short msLevelValue) {
+		return msScanMap.get(msLevelValue).size();
+	}
+
+	@Override
+	public Iterable<IScan1D> subsetByMsLevel(final short msLevel) {
+		Iterable<IScan1D> iterable = new Iterable<IScan1D>() {
+
+			@Override
+			public Iterator<IScan1D> iterator() {
+				return new Scan1DIterator(msLevel);
+			}
+		};
+		return iterable;
+	}
+
+	@Override
+	public Collection<Short> getMsLevels() {
+		List<Short> l = new ArrayList<Short>(msScanMap.keySet());
+		Collections.sort(l);
+		return l;
+	}
+
+	@Override
+	public IScan1D getScanForMsLevel(int i, short level) {
+		if (level == 1 && msScanMap == null) {
+			return getScan(i);
+		}
+		if (msScanMap == null) {
+			throw new ResourceNotAvailableException("No ms fragmentation level available for chromatogram " + getParent().getName());
+		}
+		return getScan(msScanMap.get(level).get(i));
+	}
+	
+	private class Scan1DIterator implements Iterator<IScan1D> {
+
+		private final int maxScans;
+		private int scan = 0;
+		private short msLevel = 1;
+		
+		public Scan1DIterator(short msLevel) {
+			maxScans = getNumberOfScansForMsLevel(msLevel);
+			this.msLevel = msLevel;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return scan<maxScans-1;
+		}
+
+		@Override
+		public IScan1D next() {
+			return getScanForMsLevel(scan, msLevel);
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		}
+		
 	}
 }

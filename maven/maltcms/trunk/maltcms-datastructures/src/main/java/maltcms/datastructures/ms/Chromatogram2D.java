@@ -44,6 +44,12 @@ import ucar.ma2.Array;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
+import cross.exception.ResourceNotAvailableException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import lombok.extern.slf4j.Slf4j;
 import ucar.ma2.MAMath;
 
@@ -70,6 +76,8 @@ public class Chromatogram2D implements IChromatogram2D {
 	private Tuple2D<Double, Double> massRange;
 	private Tuple2D<Double, Double> timeRange;
 	private int numberOfScans = -1;
+	private Array msLevel;
+	private Map<Short, List<Integer>> msScanMap;
 
 	public Chromatogram2D(final IFileFragment e) {
 		this.parent = e;
@@ -80,6 +88,24 @@ public class Chromatogram2D implements IChromatogram2D {
 				getDouble(0);
 		this.md = getModulationDuration();
 		this.scanAcquisitionTimeVar = e.getChild(scan_acquisition_time_var);
+		try {
+			IVariableFragment msLevelVar = this.parent.getChild("ms_level");
+			msLevel = msLevelVar.getArray();
+			msScanMap = new TreeMap<Short, List<Integer>>();
+			for (int i = 0; i < msLevel.getShape()[0]; i++) {
+				Short msLevelValue = msLevel.getShort(i);
+				if (msScanMap.containsKey(msLevelValue)) {
+					List<Integer> scanToScan = msScanMap.get(msLevelValue);
+					scanToScan.add(i);
+				} else {
+					List<Integer> scanToScan = new ArrayList<Integer>();
+					scanToScan.add(scanToScan.size(), i);
+					msScanMap.put(msLevelValue, scanToScan);
+				}
+			}
+		} catch (ResourceNotAvailableException rnae) {
+			System.out.println("Chromatogram has no ms_level variable, assuming all scans are MS1!");
+		}
 	}
 
 	@Override
@@ -313,5 +339,69 @@ public class Chromatogram2D implements IChromatogram2D {
 			this.md = t1 - this.satOffset;
 		}
 		return this.md;
+	}
+	
+	
+	@Override
+	public int getNumberOfScansForMsLevel(short msLevelValue) {
+		return msScanMap.get(msLevelValue).size();
+	}
+
+	@Override
+	public Iterable<IScan2D> subsetByMsLevel(final short msLevel) {
+		Iterable<IScan2D> iterable = new Iterable<IScan2D>() {
+
+			@Override
+			public Iterator<IScan2D> iterator() {
+				return new Scan2DIterator(msLevel);
+			}
+		};
+		return iterable;
+	}
+
+	@Override
+	public Collection<Short> getMsLevels() {
+		List<Short> l = new ArrayList<Short>(msScanMap.keySet());
+		Collections.sort(l);
+		return l;
+	}
+
+	@Override
+	public IScan2D getScanForMsLevel(int i, short level) {
+		if (level == 1 && msScanMap == null) {
+			return getScan(i);
+		}
+		if (msScanMap == null) {
+			throw new ResourceNotAvailableException("No ms fragmentation level available for chromatogram " + getParent().getName());
+		}
+		return getScan(msScanMap.get(level).get(i));
+	}
+		
+	private class Scan2DIterator implements Iterator<IScan2D> {
+
+		private final int maxScans;
+		private int scan = 0;
+		private short msLevel = 1;
+		
+		public Scan2DIterator(short msLevel) {
+			maxScans = getNumberOfScansForMsLevel(msLevel);
+			this.msLevel = msLevel;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return scan<maxScans-1;
+		}
+
+		@Override
+		public IScan2D next() {
+			return getScanForMsLevel(scan, msLevel);
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		}
+		
 	}
 }

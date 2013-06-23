@@ -58,4 +58,5 @@ public interface IChromatogram extends IConfigurable {
 	public Tuple2D<Double,Double> getMassRange();
 
     public int getIndexFor(double scan_acquisition_time);
+
 }

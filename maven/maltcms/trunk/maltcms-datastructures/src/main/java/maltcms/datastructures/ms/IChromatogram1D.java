@@ -36,4 +36,5 @@ package maltcms.datastructures.ms;
 public interface IChromatogram1D extends IChromatogram, IScan1DProvider {
 	public Iterable<IScan1D> subsetByScanAcquisitionTime(double startSat, double stopSat);
 	public Iterable<IScan1D> subsetByScanIndex(int startIndex, int stopIndex);
+	public Iterable<IScan1D> subsetByMsLevel(short msLevel);
 }

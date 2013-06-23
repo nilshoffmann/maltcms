@@ -28,26 +28,51 @@
 package maltcms.datastructures.ms;
 
 import cross.IConfigurable;
+import cross.exception.ResourceNotAvailableException;
+import java.util.Collection;
 
 /**
  * Interface giving access to specific scans within an experiment.
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
- * @param <T extends IScan> provides concrete implementations of an IScan
  */
 public interface IScanProvider<T extends IScan> extends IConfigurable, Iterable<T> {
 
     /**
-     *
+     * Retrieve the Scan at the specified index.
      * @param i the scan index to retrieve
      * @return the IScan
      */
     public T getScan(int i);
 
     /**
-     *
-     * @return the number of scans
+     * Returns the total number of ms scans available in this chromatogram.
+	 * May contain scans of all fragmentation levels.
+     * @return the total number of scans
      */
     public int getNumberOfScans();
+	
+	/**
+	 * Returns the available ms fragmentation levels in ascending order.
+	 * @return the available ms fragmentation levels
+	 */
+	public Collection<Short> getMsLevels();
+	
+	/**
+	 * Returns the number of scans available for the supplied level.
+	 * @param level the ms fragmentation level (1,2,...,n)
+	 * @return the number of scans for the specified level
+	 */
+	public int getNumberOfScansForMsLevel(short level);
+	
+	/**
+	 * Return a scan for the specific index, bound by the number of available 
+	 * scans for the given ms fragmentation level.
+	 * @param i
+	 * @param level
+	 * @return the corresponding scan
+	 * @throws ResourceNotAvailableException if a scan at that index or level is not available
+	 */
+	public T getScanForMsLevel(int i, short level);
 }
