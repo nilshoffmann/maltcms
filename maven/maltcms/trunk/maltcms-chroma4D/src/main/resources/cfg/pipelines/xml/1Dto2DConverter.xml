@@ -47,13 +47,7 @@ for details.
     </bean>
 	
 	<bean id="data1Dto2DConverter" class="maltcms.commands.fragments2d.preprocessing.Data1Dto2DConverter">
-<!--		<property name="msLevel">
-			<list>
-				<value>1</value>
-				<value>2</value>
-			</list>
-		</property>-->
-		<property name="scanCacheSize" value="5000"/>
+		<property name="modulationTime" value="60"/>
 	</bean>
 
 </beans>

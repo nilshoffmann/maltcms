@@ -35,6 +35,7 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
+import cross.exception.ConstraintViolationException;
 import cross.exception.NotImplementedException;
 import cross.tools.StringTools;
 import java.io.File;
@@ -73,8 +74,6 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 	private String outputFileName = null;
 	@Configurable(description = "The modulation period between column switching in seconds.")
 	private double modulationTime = 60.0;
-	@Configurable(description = "The number of scans to keep in memory before writing.")
-	private int scanCacheSize = 5000;
 
 	@Override
 	public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
@@ -117,13 +116,17 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 			pointCount += ff.getChild("mass_values", true).getDimensions()[0].getLength();
 			ticChromScanCount += ff.getChild("total_ion_current_chromatogram", true).getDimensions()[0].getLength();
 		}
+		log.info("Found {} mass spectra", scanCount);
+		log.info("Found {} mz/I pairs", pointCount);
+		log.info("Found {} total ion current chromatogram scans", ticChromScanCount);
 		try {
 			log.info("Creating output file!");
 			NetcdfFileWriteable nfw = NetcdfFileWriteable.createNew(f.getAbsolutePath(), true);
 			nfw.setLargeFile(true);
 			nfw.addDimension("scan_number", scanCount, true, false, false);
-			nfw.addDimension("point_number", 100, true, true, false);
+			nfw.addDimension("point_number", pointCount, true, true, false);
 			nfw.addDimension("total_ion_current_chromatogram_scan_number", ticChromScanCount, true, false, false);
+			nfw.addDimension("modulation_time", 1, true, false, false);
 			Variable nfwScanIndex = nfw.addVariable("scan_index", DataType.INT, "scan_number");
 			Variable nfwMassValues = nfw.addVariable("mass_values", DataType.DOUBLE, "point_number");
 			Variable nfwIntensityValues = nfw.addVariable("intensity_values", DataType.INT, "point_number");
@@ -132,9 +135,10 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 			Variable nfwMsLevel = nfw.addVariable("ms_level", DataType.SHORT, "scan_number");
 			Variable nfwFcet = nfw.addVariable("first_column_elution_time", DataType.FLOAT, "scan_number");
 			Variable nfwScet = nfw.addVariable("second_column_elution_time", DataType.FLOAT, "scan_number");
+			//add total_ion_current_chromatogram etc.
 			Variable nfwTicChrom = nfw.addVariable("total_ion_current_chromatogram", DataType.INT, "total_ion_current_chromatogram_scan_number");
 			Variable nfwTicSat = nfw.addVariable("total_ion_current_chromatogram_scan_acquisition_time", DataType.FLOAT, "total_ion_current_chromatogram_scan_number");
-			//add total_ion_current_chromatogram etc.
+			Variable nfwModTime = nfw.addVariable("modulation_time", DataType.FLOAT, "modulation_time");
 			log.info("Creating output file structure!");
 			nfw.create();
 			nfw.close();
@@ -169,50 +173,73 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 				double localScanTime = 0;
 				//initialize local modulation start time to the first scan acquisition time value
 				double localModulationStartTime = sourceSatArray.getDouble(0);
+				if (Double.isNaN(globalModulationStartTime)) {
+					globalModulationStartTime = localModulationStartTime;
+				}
 				//list of mass values and intensity values, write every few scans
-				MSChunk chunk = new MSChunk(nfw, scanCacheSize);
 				int scanIndex = 0;
+				int scansInModulation = 0;
+				int shape = 0;
 				for (int i = 0; i < sourceScans; i++) {
-					log.info("Local scan {}/{}, global scan {}/{}", new Object[]{(i + 1), sourceScans, (globalScanIndex + 1), scanCount});
+					log.debug("#############################################");
+					log.debug("Local scan {}/{}, global scan {}/{}", new Object[]{(i + 1), sourceScans, (globalScanIndex + 1), scanCount});
 					double sat = sourceSatArray.getDouble(i);
-					if (Double.isNaN(globalModulationStartTime)) {
-						log.info("Initializing globalModulationStartTime to {}", sat);
-						globalModulationStartTime = sat;
+
+					if (sat - localModulationStartTime >= modulationTime) {
+						log.info("Previous modulation contained {} scans", scansInModulation);
+						log.info("Starting a new modulation at scan {}", i);
+						//update global times as well
+						globalModulationStartTime = globalModulationStartTime + (sat - localModulationStartTime);
+						localScanTime = 0;
+						globalScanTime = globalModulationStartTime + localScanTime;
+						//start a new modulation
+						localModulationStartTime = sat;
+						scansInModulation = 0;
+					} else {
+						//difference to modulation start is local scan time
+						localScanTime = sat - localModulationStartTime;
+						//local scan time offset by the last global modulation start time is the global scan time
+						globalScanTime = globalModulationStartTime + localScanTime;
+						scansInModulation++;
 					}
-					//difference to modulation start is local scan time
-					localScanTime = sat - localModulationStartTime;
-					//local scan time offset by the last global modulation start time is the global scan time
-					globalScanTime = globalModulationStartTime + localScanTime;
+
+					log.debug("Local scan acquisition time: {}", sat);
+					log.debug("Local modulation start time: {}; global modulation start time: {}", localModulationStartTime, globalModulationStartTime);
+					log.debug("First column elution time: {}", globalModulationStartTime);
+					log.debug("Second column elution time: {}", localScanTime);
+					//target global scan time
 					targetSatArray.setDouble(i, globalScanTime);
-					//duration of this modulation
-					double modulationDuration = localScanTime - localModulationStartTime;
-					if (modulationDuration > modulationTime) {
-						//we are at the beginning of a new modulation
-						//update localModulationStartTime
-						localModulationStartTime = localScanTime;
-						globalModulationStartTime = globalScanTime;
-					}
+
 					//set values accordingly
 					targetFcetArray.setDouble(i, globalModulationStartTime);
 					targetScetArray.setDouble(i, localScanTime);
-
+					/*
+					 * Create and enqueue mass spectral data
+					 */
+					log.debug("Scan index offset: {}", scanIndexOffset);
+					if (scanIndexOffset >= pointCount) {
+						throw new ConstraintViolationException("Error in offset calculation: scanIndexOffset >= pointCount");
+					}
 					targetScanIndexArray.setInt(scanIndex, scanIndexOffset);
 					Array massArray = sourceMassValues.get(i);
-					chunk.addMassValues(massArray);
-					chunk.addIntensityValues(sourceIntensityValues.get(i));
-					scanIndexOffset += massArray.getShape()[0];
-					chunk.checkWriteable();
-					if (i == sourceScans - 1) {
-						log.debug("Forcing write on last scan!");
-						chunk.write();
+					Array intensArray = sourceIntensityValues.get(i);
+					shape = massArray.getShape()[0];
+					log.debug("Number of points in scan: {}", shape);
+					try {
+						nfw.write("mass_values", new int[]{scanIndexOffset}, massArray);
+						nfw.write("intensity_values", new int[]{scanIndexOffset}, intensArray);
+					} catch (IOException ex) {
+						Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
+					} catch (InvalidRangeException ex) {
+						Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
 					}
+					scanIndexOffset += shape;
 					scanIndex++;
 					globalScanIndex++;
 				}
 				scanIndexVar.clear();
 				massValuesVar.clear();
 				intensityValuesVar.clear();
-				chunk = null;
 				try {
 					nfw.write("total_intensity", new int[]{offset}, ff.getChild("total_intensity").getArray());
 					nfw.write("ms_level", new int[]{offset}, ff.getChild("ms_level").getArray());
@@ -434,87 +461,6 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 			}
 
 			return ch1 - ch2;
-		}
-	};
-
-	private class MSChunk {
-
-		private final int maxChunkSize;
-		private int offset = 0;
-		private int arraySize = 0;
-		private final NetcdfFileWriteable nfw;
-		private List<Array> massValues = new ArrayList<Array>();
-		private List<Array> intensityValues = new ArrayList<Array>();
-
-		public MSChunk(NetcdfFileWriteable nfw, int maxChunkSize) {
-			this.nfw = nfw;
-			this.maxChunkSize = maxChunkSize;
-		}
-
-		public void addMassValues(Array a) {
-			massValues.add(a);
-			arraySize += a.getShape()[0];
-		}
-
-		public void addIntensityValues(Array a) {
-			intensityValues.add(a);
-		}
-
-		public void checkWriteable() {
-			if ((massValues.size() == intensityValues.size()) && (massValues.size() == maxChunkSize)) {
-				write();
-			}
-		}
-
-		public void write() {
-			log.info("Writing {} mass value arrays to netcdf file!", arraySize);
-			createAndWriteMassValues();
-			log.info("Writing {} intensity value arrays to netcdf file!", arraySize);
-			createAndWriteIntensityValues();
-			offset += arraySize;
-			arraySize = 0;
-		}
-
-		private void createAndWriteMassValues() {
-			int localOffset = 0;
-			Array a = Array.factory(massValues.get(0).getElementType(), new int[]{arraySize});
-			ListIterator<Array> iter = massValues.listIterator();
-			while (iter.hasNext()) {
-				Array massArray = iter.next();
-				iter.remove();
-				Array.arraycopy(massArray, 0, a, localOffset, massArray.getShape()[0]);
-				localOffset += massArray.getShape()[0];
-			}
-			massValues = new ArrayList<Array>();
-			try {
-				nfw.write("mass_values", new int[]{offset}, a);
-				a = null;
-			} catch (IOException ex) {
-				Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
-			} catch (InvalidRangeException ex) {
-				Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-
-		private void createAndWriteIntensityValues() {
-			int localOffset = 0;
-			Array a = Array.factory(intensityValues.get(0).getElementType(), new int[]{arraySize});
-			ListIterator<Array> iter = intensityValues.listIterator();
-			while (iter.hasNext()) {
-				Array intensityArray = iter.next();
-				iter.remove();
-				Array.arraycopy(intensityArray, 0, a, localOffset, intensityArray.getShape()[0]);
-				localOffset += intensityArray.getShape()[0];
-			}
-			intensityValues = new ArrayList<Array>();
-			try {
-				nfw.write("intensity_values", new int[]{offset}, a);
-				a = null;
-			} catch (IOException ex) {
-				Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
-			} catch (InvalidRangeException ex) {
-				Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
-			}
 		}
 	};
 }
