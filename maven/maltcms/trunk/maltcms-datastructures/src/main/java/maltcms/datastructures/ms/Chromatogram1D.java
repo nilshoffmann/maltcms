@@ -386,13 +386,15 @@ public class Chromatogram1D implements IChromatogram1D {
 
 	@Override
 	public int getNumberOfScansForMsLevel(short msLevelValue) {
+		if (msLevelValue == 1 && msScanMap == null) {
+			return getNumberOfScans();
+		}
 		return msScanMap.get(msLevelValue).size();
 	}
 
 	@Override
 	public Iterable<IScan1D> subsetByMsLevel(final short msLevel) {
 		Iterable<IScan1D> iterable = new Iterable<IScan1D>() {
-
 			@Override
 			public Iterator<IScan1D> iterator() {
 				return new Scan1DIterator(msLevel);
@@ -403,6 +405,9 @@ public class Chromatogram1D implements IChromatogram1D {
 
 	@Override
 	public Collection<Short> getMsLevels() {
+		if (msScanMap == null) {
+			return Arrays.asList(Short.valueOf((short) 1));
+		}
 		List<Short> l = new ArrayList<Short>(msScanMap.keySet());
 		Collections.sort(l);
 		return l;
@@ -418,32 +423,47 @@ public class Chromatogram1D implements IChromatogram1D {
 		}
 		return getScan(msScanMap.get(level).get(i));
 	}
-	
+
+	@Override
+	public List<Integer> getIndicesOfScansForMsLevel(short level) {
+		if (level == 1 && msScanMap == null) {
+			int scans = getNumberOfScansForMsLevel((short)1);
+			ArrayList<Integer> indices = new ArrayList<Integer>(scans);
+			for (int i = 0; i < scans; i++) {
+				indices.set(i,i);
+			}
+			return indices;
+		}
+		if(msScanMap == null) {
+			throw new ResourceNotAvailableException("No ms fragmentation level available for chromatogram " + getParent().getName());
+		}
+		return Collections.unmodifiableList(msScanMap.get(Short.valueOf(level)));
+	}
+
 	private class Scan1DIterator implements Iterator<IScan1D> {
 
 		private final int maxScans;
 		private int scan = 0;
 		private short msLevel = 1;
-		
+
 		public Scan1DIterator(short msLevel) {
 			maxScans = getNumberOfScansForMsLevel(msLevel);
 			this.msLevel = msLevel;
 		}
-		
+
 		@Override
 		public boolean hasNext() {
-			return scan<maxScans-1;
+			return scan < maxScans - 1;
 		}
 
 		@Override
 		public IScan1D next() {
-			return getScanForMsLevel(scan, msLevel);
+			return getScanForMsLevel(scan++, msLevel);
 		}
 
 		@Override
 		public void remove() {
 			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 		}
-		
 	}
 }

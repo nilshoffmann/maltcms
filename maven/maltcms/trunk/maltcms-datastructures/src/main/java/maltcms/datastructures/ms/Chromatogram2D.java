@@ -344,6 +344,9 @@ public class Chromatogram2D implements IChromatogram2D {
 	
 	@Override
 	public int getNumberOfScansForMsLevel(short msLevelValue) {
+		if(msLevelValue==1 && msScanMap==null) {
+			return getNumberOfScans();
+		}
 		return msScanMap.get(msLevelValue).size();
 	}
 
@@ -361,6 +364,9 @@ public class Chromatogram2D implements IChromatogram2D {
 
 	@Override
 	public Collection<Short> getMsLevels() {
+		if(msScanMap==null) {
+			return Arrays.asList(Short.valueOf((short)1));
+		}
 		List<Short> l = new ArrayList<Short>(msScanMap.keySet());
 		Collections.sort(l);
 		return l;
@@ -375,6 +381,22 @@ public class Chromatogram2D implements IChromatogram2D {
 			throw new ResourceNotAvailableException("No ms fragmentation level available for chromatogram " + getParent().getName());
 		}
 		return getScan(msScanMap.get(level).get(i));
+	}
+	
+	@Override
+	public List<Integer> getIndicesOfScansForMsLevel(short level) {
+		if (level == 1 && msScanMap == null) {
+			int scans = getNumberOfScansForMsLevel((short)1);
+			ArrayList<Integer> indices = new ArrayList<Integer>(scans);
+			for (int i = 0; i < scans; i++) {
+				indices.set(i,i);
+			}
+			return indices;
+		}
+		if(msScanMap == null) {
+			throw new ResourceNotAvailableException("No ms fragmentation level available for chromatogram " + getParent().getName());
+		}
+		return Collections.unmodifiableList(msScanMap.get(Short.valueOf(level)));
 	}
 		
 	private class Scan2DIterator implements Iterator<IScan2D> {
@@ -395,7 +417,7 @@ public class Chromatogram2D implements IChromatogram2D {
 
 		@Override
 		public IScan2D next() {
-			return getScanForMsLevel(scan, msLevel);
+			return getScanForMsLevel(scan++, msLevel);
 		}
 
 		@Override
