@@ -145,7 +145,11 @@ public class Chromatogram1D implements IChromatogram1D {
 		log.info("Building scan {}", i);
 		final Array masses = massValues.get(i);
 		final Array intens = intensityValues.get(i);
-		final Scan1D s = new Scan1D(masses, intens, i, scanAcquisitionTimeVar.getArray().getDouble(i));
+		short scanMsLevel = 1;
+		if (msLevel != null) {
+			scanMsLevel = msLevel.getByte(i);
+		}
+		final Scan1D s = new Scan1D(masses, intens, i, scanAcquisitionTimeVar.getArray().getDouble(i), scanMsLevel);
 		return s;
 	}
 
@@ -427,14 +431,14 @@ public class Chromatogram1D implements IChromatogram1D {
 	@Override
 	public List<Integer> getIndicesOfScansForMsLevel(short level) {
 		if (level == 1 && msScanMap == null) {
-			int scans = getNumberOfScansForMsLevel((short)1);
+			int scans = getNumberOfScansForMsLevel((short) 1);
 			ArrayList<Integer> indices = new ArrayList<Integer>(scans);
 			for (int i = 0; i < scans; i++) {
-				indices.set(i,i);
+				indices.set(i, i);
 			}
 			return indices;
 		}
-		if(msScanMap == null) {
+		if (msScanMap == null) {
 			throw new ResourceNotAvailableException("No ms fragmentation level available for chromatogram " + getParent().getName());
 		}
 		return Collections.unmodifiableList(msScanMap.get(Short.valueOf(level)));
