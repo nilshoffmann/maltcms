@@ -38,9 +38,9 @@ import static org.junit.Assert.*;
  * @author Nils Hoffmann
  */
 public class RetentionIndexCalculatorTest {
-	
-	 @Test
-	 public void testSameNumberOfRisAndCompounds() {
+
+	@Test
+	public void testSameNumberOfRisAndCompounds() {
 		//create an array of 38 elements from [10 to 10+38-1]
 		int[] cs = (int[]) ArrayTools.indexArray(38, 10).get1DJavaArray(
 				int.class);
@@ -55,7 +55,7 @@ public class RetentionIndexCalculatorTest {
 			rirts[i] = (startSAT + (Math.random() * (endSAT - startSAT)));
 		}
 		Arrays.sort(rirts);
-		System.out.println("RI rts: "+Arrays.toString(rirts));
+		System.out.println("RI rts: " + Arrays.toString(rirts));
 		//initialize rts of peaks
 		for (int i = 0; i < rts.length; i++) {
 			rts[i] = (startSAT - 100 + (Math.random() * (endSAT - startSAT + 121)));
@@ -65,6 +65,7 @@ public class RetentionIndexCalculatorTest {
 		RetentionIndexCalculator ric = new RetentionIndexCalculator(cs, rirts);
 		double[] risIso = new double[rts.length];
 		double[] risTc = new double[rts.length];
+		double[] risLin = new double[rts.length];
 		for (int i = 0; i < rts.length; i++) {
 			risIso[i] = ric.getIsothermalKovatsIndex(rts[i]);
 			assertFalse(Double.isNaN(risIso[i]));
@@ -72,20 +73,25 @@ public class RetentionIndexCalculatorTest {
 			risTc[i] = ric.getTemperatureProgrammedKovatsIndex(rts[i]);
 			assertFalse(Double.isNaN(risTc[i]));
 			assertFalse(Double.isInfinite(risTc[i]));
+			risLin[i] = ric.getLinearIndex(rts[i]);
+			assertFalse(Double.isNaN(risLin[i]));
+			assertFalse(Double.isInfinite(risLin[i]));
 		}
 		//check that ri values are weakly increasing
 		for (int i = 1; i < rts.length; i++) {
 			risIso[i] = ric.getIsothermalKovatsIndex(rts[i]);
-			assertEquals(true, risIso[i]>=risIso[i-1]);
+			assertEquals(true, risIso[i] >= risIso[i - 1]);
 			risTc[i] = ric.getTemperatureProgrammedKovatsIndex(rts[i]);
-			assertEquals(true, risTc[i]>=risTc[i-1]);
+			assertEquals(true, risTc[i] >= risTc[i - 1]);
+			risLin[i] = ric.getLinearIndex(rts[i]);
+			assertEquals(true, risLin[i] >= risLin[i - 1]);
 		}
-	 }
-	 
-	 @Test
-	 public void testMoreCompoundsThanRis() {
-		 //create an array of 38 elements from [10 to 10+38-1]
-		 int[] cs = (int[]) ArrayTools.indexArray(38, 10).get1DJavaArray(
+	}
+
+	@Test
+	public void testMoreCompoundsThanRis() {
+		//create an array of 38 elements from [10 to 10+38-1]
+		int[] cs = (int[]) ArrayTools.indexArray(38, 10).get1DJavaArray(
 				int.class);
 		double[] rts = new double[cs.length * 5];
 		double[] rirts = new double[cs.length];
@@ -98,7 +104,7 @@ public class RetentionIndexCalculatorTest {
 		}
 		Arrays.sort(rirts);
 		//initialize rts of peaks
-		System.out.println("RI rts: "+Arrays.toString(rirts));
+		System.out.println("RI rts: " + Arrays.toString(rirts));
 		for (int i = 0; i < rts.length; i++) {
 			rts[i] = (startSAT - 100 + (Math.random() * (endSAT - startSAT + 121)));
 		}
@@ -107,6 +113,7 @@ public class RetentionIndexCalculatorTest {
 		RetentionIndexCalculator ric = new RetentionIndexCalculator(cs, rirts);
 		double[] risIso = new double[rts.length];
 		double[] risTc = new double[rts.length];
+		double[] risLin = new double[rts.length];
 		for (int i = 0; i < rts.length; i++) {
 			risIso[i] = ric.getIsothermalKovatsIndex(rts[i]);
 			assertFalse(Double.isNaN(risIso[i]));
@@ -114,13 +121,18 @@ public class RetentionIndexCalculatorTest {
 			risTc[i] = ric.getTemperatureProgrammedKovatsIndex(rts[i]);
 			assertFalse(Double.isNaN(risTc[i]));
 			assertFalse(Double.isInfinite(risTc[i]));
+			risLin[i] = ric.getLinearIndex(rts[i]);
+			assertFalse(Double.isNaN(risLin[i]));
+			assertFalse(Double.isInfinite(risLin[i]));
 		}
 		//check that ri values are weakly increasing
 		for (int i = 1; i < rts.length; i++) {
 			risIso[i] = ric.getIsothermalKovatsIndex(rts[i]);
-			assertEquals(true, risIso[i]>=risIso[i-1]);
+			assertEquals(true, risIso[i] >= risIso[i - 1]);
 			risTc[i] = ric.getTemperatureProgrammedKovatsIndex(rts[i]);
-			assertEquals(true, risTc[i]>=risTc[i-1]);
+			assertEquals(true, risTc[i] >= risTc[i - 1]);
+			risLin[i] = ric.getLinearIndex(rts[i]);
+			assertEquals(true, risLin[i] >= risLin[i - 1]);
 		}
-	 }
+	}
 }

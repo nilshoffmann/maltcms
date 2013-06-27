@@ -165,8 +165,8 @@ public class RetentionIndexCalculator {
 		// System.out.println("RT of previous ri: " + prevRIrt);
 		// System.out.println("RT of next ri: " + nextRIrt);
 		int nCAtoms = nCarbAtoms[prevRIIdx];
-		double ri = 100 * (((Math.log10(rt) - Math.log10(prevRIrt)) / (Math.
-				log10(nextRIrt) - Math.log10(prevRIrt))) + nCAtoms);
+		double ri = (100 * nCAtoms) + (100*((Math.log10(rt) - Math.log10(prevRIrt)) / (Math.
+				log10(nextRIrt) - Math.log10(prevRIrt))));
 		// System.out.println("cAtoms before: " + nCarbAtoms[prevRIIdx]
 		// + " after: " + nCarbAtoms[nextRIIdx]);
 //		 System.out.println(prevRIrt + " < " + rt + " < " + nextRIrt + " RI: "
@@ -236,8 +236,8 @@ public class RetentionIndexCalculator {
 	public double getTemperatureProgrammedKovatsIndex(double rt) {
 		int prevRIIdx = getIndexOfPreviousRI(rt);
 		int nextRIIdx = getIndexOfNextRI(rt);
-		System.out.println("Previous idx: " + prevRIIdx + " next idx: "
-				+ nextRIIdx);
+//		System.out.println("Previous idx: " + prevRIIdx + " next idx: "
+//				+ nextRIIdx);
 		if (prevRIIdx == -1 || nextRIIdx == -1 || prevRIIdx == nextRIIdx) {
 
 			if (this.riRTs.length >= 2) {
@@ -264,18 +264,18 @@ public class RetentionIndexCalculator {
 		int nCAtoms = nCarbAtoms[prevRIIdx];
 		double ri = 0;
 		// handle last case
-		if (rt == prevRIrt && nextRIrt == prevRIrt) {
-			ri = (100 * nCAtoms);
-		} else {
-			ri = 100 * (((rt - prevRIrt) / (nextRIrt - prevRIrt)) + nCAtoms);
-		}
+//		if (rt == prevRIrt && nextRIrt == prevRIrt) {
+//			ri = (100 * nCAtoms);
+//		} else {
+		ri = 100*nCAtoms + 100*((rt - prevRIrt) / (nextRIrt - prevRIrt));
+//		}
 //        System.out.println("cAtoms before: " + nCarbAtoms[prevRIIdx]
 //                + " after: " + nCarbAtoms[nextRIIdx]);
 //        System.out.println(prevRIrt + " < " + rt + " < " + nextRIrt + " RI: "
 //                + ri);
 		return ri;
 	}
-	
+
 	public double getLinearIndex(double rt) {
 		int prevRIIdx = getIndexOfPreviousRI(rt);
 		int nextRIIdx = getIndexOfNextRI(rt);
@@ -298,7 +298,7 @@ public class RetentionIndexCalculator {
 			}
 			return Double.NaN;
 		}
-		
+
 		double x0 = this.riRTs[prevRIIdx];
 		double y0 = nCarbAtoms[prevRIIdx] * 100;
 		double x1 = this.riRTs[nextRIIdx];
@@ -319,7 +319,7 @@ public class RetentionIndexCalculator {
 			rirts[i] = (startSAT + (Math.random() * (endSAT - startSAT)));
 		}
 		Arrays.sort(rirts);
-		System.out.println("RI rts: "+Arrays.toString(rirts));
+		System.out.println("RI rts: " + Arrays.toString(rirts));
 		for (int i = 0; i < rts.length; i++) {
 			rts[i] = (startSAT - 100 + (Math.random() * (endSAT - startSAT + 121)));
 		}
@@ -333,8 +333,12 @@ public class RetentionIndexCalculator {
 					+ istRI + "; RI rt range: [" + rirts[0] + ":"
 					+ rirts[rirts.length - 1] + "]");
 			double tcRI = ric.getTemperatureProgrammedKovatsIndex(rts[i]);
-			System.out.println("Linear RI for peak at rt " + rts[i] + " = "
+			System.out.println("Temperature programmed RI for peak at rt " + rts[i] + " = "
 					+ tcRI + "; RI rt range: [" + rirts[0] + ":"
+					+ rirts[rirts.length - 1] + "]");
+			double liRI = ric.getLinearIndex(rts[i]);
+			System.out.println("Linear RI for peak at rt " + rts[i] + " = "
+					+ liRI + "; RI rt range: [" + rirts[0] + ":"
 					+ rirts[rirts.length - 1] + "]");
 		}
 	}
