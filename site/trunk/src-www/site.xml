@@ -97,6 +97,7 @@
 	<xi:include href="news/bookChapterMetabolomics.xml" parse="xml"/>
 	<xi:include href="news/bmcBioinformatics1.xml" parse="xml"/>
 	<xi:include href="news/maui1_2_1.xml" parse="xml"/>
+	<xi:include href="news/latestBuilds.xml" parse="xml"/>
 	<!--    Users -->
 	<xi:include href="users/features.xml" parse="xml" />
 	<xi:include href="users/tutorials.xml" parse="xml" /> 

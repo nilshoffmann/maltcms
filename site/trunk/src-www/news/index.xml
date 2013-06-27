@@ -4,6 +4,7 @@
         <h1>News</h1>
 	<h2>2013</h2>
 		<ul class="plainunbulletedlist">
+			<li><ref target="news/latestBuilds" alt="Latest Builds available for testing" /></li>
             <li><ref target="news/maui1_2_1" alt="Maui 1.2.1 Release on April 24th, 2013" /></li>
         </ul>
 	<h2>2012</h2>

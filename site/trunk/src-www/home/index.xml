@@ -25,6 +25,9 @@
             <h1>News</h1>
             <ul class="plainunbulletedlist">
 				<li>
+					<ref target="news/latestBuilds" alt="Latest Stable Builds available"/>
+				</li>
+				<li>
 					<ref target="news/maui1_2_1" alt="Maui 1.2.1 Released on April 24th, 2013"/>
 				</li>
 				<li>
