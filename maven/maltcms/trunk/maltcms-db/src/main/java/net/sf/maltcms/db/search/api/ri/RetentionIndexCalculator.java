@@ -275,6 +275,36 @@ public class RetentionIndexCalculator {
 //                + ri);
 		return ri;
 	}
+	
+	public double getLinearIndex(double rt) {
+		int prevRIIdx = getIndexOfPreviousRI(rt);
+		int nextRIIdx = getIndexOfNextRI(rt);
+		if (prevRIIdx == -1 || nextRIIdx == -1 || prevRIIdx == nextRIIdx) {
+
+			if (this.riRTs.length >= 2) {
+				if (prevRIIdx == -1) {
+					double x0 = this.riRTs[0];
+					double y0 = nCarbAtoms[0] * 100;
+					double x1 = this.riRTs[1];
+					double y1 = nCarbAtoms[1] * 100;
+					return extrapolate(x0, y0, x1, y1, rt);
+				} else if (nextRIIdx == -1 || prevRIIdx == nextRIIdx) {
+					double x0 = this.riRTs[riRTs.length - 2];
+					double y0 = nCarbAtoms[riRTs.length - 2] * 100;
+					double x1 = this.riRTs[riRTs.length - 1];
+					double y1 = nCarbAtoms[riRTs.length - 1] * 100;
+					return extrapolate(x0, y0, x1, y1, rt);
+				}
+			}
+			return Double.NaN;
+		}
+		
+		double x0 = this.riRTs[prevRIIdx];
+		double y0 = nCarbAtoms[prevRIIdx] * 100;
+		double x1 = this.riRTs[nextRIIdx];
+		double y1 = nCarbAtoms[nextRIIdx] * 100;
+		return extrapolate(x0, y0, x1, y1, rt);
+	}
 
 	public static void main(String[] args) {
 		int[] cs = (int[]) ArrayTools.indexArray(38, 10).get1DJavaArray(
