@@ -390,7 +390,7 @@ public class Chromatogram1D implements IChromatogram1D {
 
 	@Override
 	public int getNumberOfScansForMsLevel(short msLevelValue) {
-		if (msLevelValue == 1 && msScanMap == null) {
+		if (msLevelValue == (short)1 && msScanMap == null) {
 			return getNumberOfScans();
 		}
 		return msScanMap.get(msLevelValue).size();
@@ -419,7 +419,7 @@ public class Chromatogram1D implements IChromatogram1D {
 
 	@Override
 	public IScan1D getScanForMsLevel(int i, short level) {
-		if (level == 1 && msScanMap == null) {
+		if (level == (short)1 && msScanMap == null) {
 			return getScan(i);
 		}
 		if (msScanMap == null) {
@@ -430,11 +430,11 @@ public class Chromatogram1D implements IChromatogram1D {
 
 	@Override
 	public List<Integer> getIndicesOfScansForMsLevel(short level) {
-		if (level == 1 && msScanMap == null) {
+		if (level == (short)1 && msScanMap == null) {
 			int scans = getNumberOfScansForMsLevel((short) 1);
 			ArrayList<Integer> indices = new ArrayList<Integer>(scans);
 			for (int i = 0; i < scans; i++) {
-				indices.set(i, i);
+				indices.add(i);
 			}
 			return indices;
 		}
