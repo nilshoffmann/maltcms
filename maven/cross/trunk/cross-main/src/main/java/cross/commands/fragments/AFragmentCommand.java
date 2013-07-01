@@ -283,9 +283,8 @@ public abstract class AFragmentCommand implements IFragmentCommand {
 	 */
 	public <T extends Serializable> ICompletionService<T> createCompletionService(
 			Class<? extends T> serviceObjectType) {
-//		return createNonBlockingCompletionService(serviceObjectType, 1000,
-//				TimeUnit.MILLISECONDS);
-		return createBlockingCompletionService(serviceObjectType);
+		return createNonBlockingCompletionService(serviceObjectType, 1000,
+				TimeUnit.MILLISECONDS);
 	}
 
 	/**
