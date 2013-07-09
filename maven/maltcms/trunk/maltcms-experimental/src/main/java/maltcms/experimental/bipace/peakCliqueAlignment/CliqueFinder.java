@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.ListIterator;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.peak.Peak;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.experimental.bipace.datastructures.api.Clique;
 import org.jdom.Element;
 
@@ -53,7 +53,7 @@ import org.jdom.Element;
  */
 @Slf4j
 @Data
-public class CliqueFinder<T extends Peak> implements IWorkflowElement {
+public class CliqueFinder<T extends IPeak> implements IWorkflowElement {
 
     private int minCliqueSize = -1;
     private IWorkflow workflow;
@@ -214,7 +214,7 @@ public class CliqueFinder<T extends Peak> implements IWorkflowElement {
 //        }
 
         for (T p : incompatiblePeaks) {
-            log.debug("Incompatible peak: " + p);
+            log.debug("Incompatible peak: " + p.toString());
         }
 
         for (T p : incompatiblePeaks) {

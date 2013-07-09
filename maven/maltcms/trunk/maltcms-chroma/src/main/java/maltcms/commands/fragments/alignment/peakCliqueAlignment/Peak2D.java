@@ -32,7 +32,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
+import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.peak.Peak;
+import maltcms.datastructures.peak.PeakNG;
 import ucar.ma2.Array;
 
 /**
@@ -40,13 +42,13 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  */
 @Data
-public class Peak2D extends Peak {
+public class Peak2D extends PeakNG {
     
     private double firstColumnElutionTime;
     private double secondColumnElutionTime;
 
-    public Peak2D(int scanIndex, Array msIntensities, double sat, String association, boolean storeOnlyBestSimilarities) {
-        super(scanIndex, msIntensities, sat, association, storeOnlyBestSimilarities);
+    public Peak2D(int scanIndex, Array array, double sat, String association, boolean storeOnlyBestSimilarities) {
+        super(scanIndex, array, sat, association, storeOnlyBestSimilarities);
     }
     
     @Override
@@ -93,14 +95,14 @@ public class Peak2D extends Peak {
     @Override
     public boolean equals(Object o) {
         if (o!=null && o instanceof Peak2D) {
-            return toString().equals(o.toString());
+            return getUniqueId().equals(((Peak2D)o).getUniqueId());
         }
         return false;
     }
     
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        return getUniqueId().hashCode();
     }
     
 }

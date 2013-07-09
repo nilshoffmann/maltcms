@@ -27,7 +27,6 @@
  */
 package maltcms.experimental.bipace.peakCliqueAlignment.io;
 
-import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowElement;
@@ -43,6 +42,7 @@ import java.util.List;
 import java.util.Locale;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.datastructures.peak.Peak;
 import maltcms.io.csv.CSVWriter;
 import org.jdom.Element;
@@ -58,7 +58,7 @@ public class MultipleAlignmentWriter implements IWorkflowElement {
     private IWorkflow workflow;
 
     public void savePeakMatchTable(final HashMap<String, Integer> columnMap,
-            final List<List<Peak>> ll) {
+            final List<List<IPeak>> ll) {
         final List<List<String>> rows = new ArrayList<List<String>>(ll.size());
         List<String> headers = null;
         final String[] headerLine = new String[columnMap.size()];
@@ -71,13 +71,13 @@ public class MultipleAlignmentWriter implements IWorkflowElement {
         }
         log.debug("Adding row {}", headers);
         rows.add(headers);
-        for (final List<Peak> l : ll) {
+        for (final List<IPeak> l : ll) {
             final String[] line = new String[columnMap.size()];
             for (int i = 0; i < line.length; i++) {
                 line[i] = "-";
             }
             log.debug("Adding {} peaks: {}", l.size(), l);
-            for (final Peak p : l) {
+            for (final IPeak p : l) {
                 final String iff = p.getAssociation();
                 EvalTools.notNull(iff, this);
                 final int pos = columnMap.get(iff).intValue();
@@ -107,7 +107,7 @@ public class MultipleAlignmentWriter implements IWorkflowElement {
      * @param ll
      */
     public void savePeakMatchRTTable(final HashMap<String, Integer> columnMap,
-            final List<List<Peak>> ll) {
+            final List<List<IPeak>> ll) {
         final List<List<String>> rows = new ArrayList<List<String>>(ll.size());
         List<String> headers = null;
         final String[] headerLine = new String[columnMap.size()];
@@ -127,13 +127,13 @@ public class MultipleAlignmentWriter implements IWorkflowElement {
         // outside of java...
         df.setRoundingMode(RoundingMode.HALF_UP);
         df.applyPattern("0.000");
-        for (final List<Peak> l : ll) {
+        for (final List<IPeak> l : ll) {
             final String[] line = new String[columnMap.size()];
             for (int i = 0; i < line.length; i++) {
                 line[i] = "-";
             }
             log.debug("Adding {} peaks", l.size());
-            for (final Peak p : l) {
+            for (final IPeak p : l) {
                 final String iff = p.getAssociation();
                 EvalTools.notNull(iff, this);
                 final int pos = columnMap.get(iff).intValue();

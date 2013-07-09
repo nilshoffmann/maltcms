@@ -27,6 +27,8 @@
  */
 package net.sf.maltcms.evaluation.api.classification;
 
+import java.io.Serializable;
+
 /**
  * A class which allows the definition of a category for an entity. This could
  * be for example the name of the file, for which an entity was generated (e.g.
@@ -36,7 +38,7 @@ package net.sf.maltcms.evaluation.api.classification;
  *
  *
  */
-public class Category implements Comparable<Category> {
+public class Category implements Comparable<Category>, Serializable {
 
     private final String name;
 

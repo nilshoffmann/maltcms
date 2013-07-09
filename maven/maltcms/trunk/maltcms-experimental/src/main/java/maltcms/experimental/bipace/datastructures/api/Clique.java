@@ -27,7 +27,6 @@
  */
 package maltcms.experimental.bipace.datastructures.api;
 
-import maltcms.experimental.bipace.datastructures.api.CliqueStatistics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,7 +37,7 @@ import java.util.List;
 import cross.datastructures.fragments.IFileFragment;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.peak.Peak;
+import maltcms.datastructures.peak.IPeak;
 
 /**
  * @author Nils Hoffmann
@@ -46,7 +45,7 @@ import maltcms.datastructures.peak.Peak;
  *
  */
 @Slf4j
-public class Clique<T extends Peak> {
+public class Clique<T extends IPeak> {
 
     private static long CLIQUEID = -1;
     private long id = -1;

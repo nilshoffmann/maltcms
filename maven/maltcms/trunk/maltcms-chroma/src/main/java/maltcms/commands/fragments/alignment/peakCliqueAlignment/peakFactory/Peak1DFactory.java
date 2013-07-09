@@ -29,10 +29,9 @@ package maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory;
 
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
-import cross.exception.ConstraintViolationException;
-import java.util.Arrays;
 import lombok.Data;
-import maltcms.datastructures.peak.Peak;
+import maltcms.datastructures.peak.IPeak;
+import maltcms.datastructures.peak.PeakNG;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
@@ -77,7 +76,7 @@ public class Peak1DFactory implements IPeakFactory {
         }
 
         @Override
-        public Peak create(int peakIndex, int scanIndex) {
+        public IPeak create(int peakIndex, int scanIndex) {
             Array a = new ArrayDouble.D1(1);
             if (peakAreaArray.getShape()[0] != satArray.getShape()[0]) {
                 a.setDouble(0, peakAreaArray.getDouble(peakIndex));
@@ -85,7 +84,7 @@ public class Peak1DFactory implements IPeakFactory {
             } else {
                 a.setDouble(0, peakAreaArray.getDouble(scanIndex));
             }
-            Peak p = new Peak(scanIndex, a,
+            PeakNG p = new PeakNG(scanIndex, a,
                     satArray.getDouble(scanIndex), sourceFile.getName(), storeOnlyBestSimilarites);
             p.setPeakIndex(peakIndex);
             return p;

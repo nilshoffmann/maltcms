@@ -28,6 +28,7 @@
 package maltcms.experimental.bipace.spi;
 
 import lombok.Data;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.datastructures.peak.Peak;
 import maltcms.experimental.bipace.api.PeakSimilarityCalculator;
 
@@ -36,12 +37,12 @@ import maltcms.experimental.bipace.api.PeakSimilarityCalculator;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
-public class Peak1DSimilarityCalculator extends PeakSimilarityCalculator<Peak> {
+public class Peak1DSimilarityCalculator extends PeakSimilarityCalculator<IPeak> {
 
     private double maxRtDifference = 10.0d;
 
     @Override
-    public double calculateSimilarity(Peak p1, Peak p2) {
+    public double calculateSimilarity(IPeak p1, IPeak p2) {
         // skip peaks, which are too far apart
         double rt1 = p1.getScanAcquisitionTime();
         double rt2 = p2.getScanAcquisitionTime();
@@ -62,7 +63,7 @@ public class Peak1DSimilarityCalculator extends PeakSimilarityCalculator<Peak> {
     }
 
     @Override
-    public PeakSimilarityCalculator<Peak> copy() {
+    public PeakSimilarityCalculator<IPeak> copy() {
         Peak1DSimilarityCalculator copy = new Peak1DSimilarityCalculator();
         copy.setPeakListA(getPeakListA());
         copy.setPeakListB(getPeakListB());

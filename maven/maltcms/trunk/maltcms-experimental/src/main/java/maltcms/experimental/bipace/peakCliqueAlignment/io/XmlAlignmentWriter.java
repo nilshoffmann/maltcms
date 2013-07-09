@@ -40,6 +40,7 @@ import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.alignment.AlignmentFactory;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.datastructures.peak.Peak;
 import maltcms.io.xml.bindings.alignment.Alignment;
 import org.jdom.Element;
@@ -55,20 +56,20 @@ public class XmlAlignmentWriter implements IWorkflowElement {
     private IWorkflow workflow;
 
     public void saveToXMLAlignment(final TupleND<IFileFragment> tuple,
-            final List<List<Peak>> ll) {
+            final List<List<IPeak>> ll) {
         AlignmentFactory af = new AlignmentFactory();
         Alignment a = af.createNewAlignment(this.getClass().getName(), false);
         HashMap<IFileFragment, List<Integer>> fragmentToScanIndexMap = new HashMap<IFileFragment, List<Integer>>();
-        for (final List<Peak> l : ll) {
+        for (final List<IPeak> l : ll) {
             log.debug("Adding {} peaks: {}", l.size(), l);
-            HashMap<String, Peak> fragToPeak = new HashMap<String, Peak>();
-            for (final Peak p : l) {
+            HashMap<String, IPeak> fragToPeak = new HashMap<String, IPeak>();
+            for (final IPeak p : l) {
                 fragToPeak.put(p.getAssociation(), p);
             }
             for (final IFileFragment iff : tuple) {
                 int scanIndex = -1;
                 if (fragToPeak.containsKey(iff.getName())) {
-                    Peak p = fragToPeak.get(iff.getName());
+                    IPeak p = fragToPeak.get(iff.getName());
                     scanIndex = p.getScanIndex();
                 }
 

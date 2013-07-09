@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.datastructures.peak.Peak;
 import maltcms.math.functions.IScalarArraySimilarity;
 
@@ -45,8 +46,8 @@ import maltcms.math.functions.IScalarArraySimilarity;
 public class PairwiseSimilarityWorker2D implements Callable<Integer>, Serializable {
 
     private String name;
-    private List<? extends Peak> lhsPeaks;
-    private List<? extends Peak> rhsPeaks;
+    private List<? extends IPeak> lhsPeaks;
+    private List<? extends IPeak> rhsPeaks;
     private IScalarArraySimilarity similarityFunction;
     private double maxRTDifferenceRt1 = 60.0d;
     private double maxRTDifferenceRt2 = 1.0d;
@@ -57,8 +58,8 @@ public class PairwiseSimilarityWorker2D implements Callable<Integer>, Serializab
         EvalTools.notNull(lhsPeaks, this);
         EvalTools.notNull(rhsPeaks, this);
         int elemCnt = 0;
-        for (final Peak p1 : lhsPeaks) {
-            for (final Peak p2 : rhsPeaks) {
+        for (final IPeak p1 : lhsPeaks) {
+            for (final IPeak p2 : rhsPeaks) {
                 Peak2D p12d = (Peak2D)p1;
                 Peak2D p22d = (Peak2D)p2;
                 // skip peaks, which are too far apart

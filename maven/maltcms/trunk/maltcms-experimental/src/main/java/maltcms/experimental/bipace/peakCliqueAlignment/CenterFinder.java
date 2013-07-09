@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.datastructures.peak.Peak;
 import maltcms.experimental.bipace.datastructures.api.Clique;
 import maltcms.io.csv.CSVWriter;
@@ -52,7 +53,7 @@ import ucar.ma2.ArrayDouble;
  */
 @Slf4j
 @Data
-public class CenterFinder<T extends Peak> implements IWorkflowElement {
+public class CenterFinder<T extends IPeak> implements IWorkflowElement {
 
     private IWorkflow workflow;
 
@@ -74,7 +75,7 @@ public class CenterFinder<T extends Peak> implements IWorkflowElement {
         List<Clique<T>> commonCliques = new ArrayList<Clique<T>>();
         log.debug("Retrieving common cliques");
         for (Clique<T> c : l) {
-            for (Peak p : c.getPeakList()) {
+            for (T p : c.getPeakList()) {
                 if (p.getAssociation().equals(a.getName())
                         || p.getAssociation().equals(b.getName())) {
                     commonCliques.add(c);
@@ -130,7 +131,7 @@ public class CenterFinder<T extends Peak> implements IWorkflowElement {
         // associated to each peak
         int npeaks = 0;
         for (Clique<T> c : cliques) {
-            for (Peak p : c.getPeakList()) {
+            for (T p : c.getPeakList()) {
                 cliqueNumbers[placeMap.get(p.getAssociation())]++;
                 cliqueSize[placeMap.get(p.getAssociation())] += c.
                         getPeakList().size();

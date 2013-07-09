@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.datastructures.peak.Peak;
 import maltcms.experimental.bipace.datastructures.api.Clique;
 import ucar.ma2.ArrayBoolean;
@@ -45,7 +46,7 @@ import ucar.ma2.ArrayBoolean;
  *
  * CliqueTable allows for easy retrieval of common clique information.
  */
-public class CliqueTable<T extends Peak> {
+public class CliqueTable<T extends IPeak> {
 
     private ArrayBoolean.D2 arr = null;
     private HashMap<IFileFragment, Integer> placeMap = null;
@@ -59,7 +60,7 @@ public class CliqueTable<T extends Peak> {
         }
         int i = 0;
         for (Clique<T> c : l) {
-            for (Peak p : c.getPeakList()) {
+            for (IPeak p : c.getPeakList()) {
                 arr.set(i, placeMap.get(p.getAssociation()), true);
             }
             i++;

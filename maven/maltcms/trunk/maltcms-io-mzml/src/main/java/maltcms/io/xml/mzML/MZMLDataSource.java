@@ -118,8 +118,8 @@ public class MZMLDataSource implements IDataSource {
 	private String ms_level = "ms_level";
 	private String msLevelAccession = "MS:1000511";
 	private static ICacheDelegate<IFileFragment, MzMLUnmarshaller> fileToIndex = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller", 300, 600, 20);
-	private static ICacheDelegate<MzMLUnmarshaller, Run> unmarshallerToRun = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller-to-run", 300, 600, 2);
-	private static ICacheDelegate<IVariableFragment, SerializableArray> variableToArrayCache = CacheFactory.createDefaultCache(MZMLDataSource.class.getName(), 50);
+//	private static ICacheDelegate<MzMLUnmarshaller, Run> unmarshallerToRun = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller-to-run", 300, 600, 2);
+	private static ICacheDelegate<IVariableFragment, SerializableArray> variableToArrayCache = CacheFactory.createDefaultCache(MZMLDataSource.class.getName(), 10);
 
 	private ICacheDelegate<IVariableFragment, SerializableArray> getCache() {
 		return MZMLDataSource.variableToArrayCache;
@@ -193,13 +193,13 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private Run getRun(MzMLUnmarshaller mzmlu) {
-		Run run = MZMLDataSource.unmarshallerToRun.get(mzmlu);
-		if (run != null) {
-			log.info("Retrieved run from cache!");
-			return run;
-		}
-		run = mzmlu.unmarshalFromXpath("/run", Run.class);
-		MZMLDataSource.unmarshallerToRun.put(mzmlu, run);
+//		Run run = MZMLDataSource.unmarshallerToRun.get(mzmlu);
+//		if (run != null) {
+//			log.info("Retrieved run from cache!");
+//			return run;
+//		}
+		Run run = mzmlu.unmarshalFromXpath("/run", Run.class);
+//		MZMLDataSource.unmarshallerToRun.put(mzmlu, run);
 		return run;
 	}
 

@@ -40,6 +40,7 @@ import javax.media.jai.JAI;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.MinMaxNormalizationFilter;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.datastructures.peak.Peak;
 import maltcms.io.csv.CSVWriter;
 import maltcms.tools.ImageTools;
@@ -60,7 +61,7 @@ public class PeakSimilarityVisualizer implements IWorkflowElement{
 	private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
 	
     public void visualizePeakSimilarities(
-            final Map<String, List<Peak>> hm, final int samples,
+            final Map<String, List<IPeak>> hm, final int samples,
             final String prefix) {
 
         int npeaks = 0;
@@ -76,16 +77,16 @@ public class PeakSimilarityVisualizer implements IWorkflowElement{
         Collections.sort(keys);
         boolean minimize = false;//costFunction.minimize();
         for (final String keyl : keys) {
-            final List<Peak> l = hm.get(keyl);
+            final List<IPeak> l = hm.get(keyl);
             for (final String keyr : keys) {
                 if (!keyl.equals(keyr)) {
-                    final List<Peak> r = hm.get(keyr);
+                    final List<IPeak> r = hm.get(keyr);
                     final ArrayDouble.D2 psims = new ArrayDouble.D2(l.size(),
                             r.size());
                     int i = 0;
-                    for (final Peak pl : l) {
+                    for (final IPeak pl : l) {
                         int j = 0;
-                        for (final Peak pr : r) {
+                        for (final IPeak pr : r) {
                             double sim = pl.getSimilarity(pr);
                             if (Double.isNaN(sim)) {
                                 // log.warn("NaN occurred!");

@@ -37,7 +37,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.peak.Peak;
+import maltcms.datastructures.peak.IPeak;
 
 /**
  *
@@ -50,18 +50,18 @@ public class BBHFinder {
      * @param al
      * @param fragmentToPeaks
      */
-    public List<Peak> findBiDiBestHits(final TupleND<IFileFragment> al,
-            final Map<String, List<Peak>> fragmentToPeaks) {
+    public List<IPeak> findBiDiBestHits(final TupleND<IFileFragment> al,
+            final Map<String, List<IPeak>> fragmentToPeaks) {
         // For each pair of FileFragments
-        final Set<Peak> matchedPeaks = new HashSet<Peak>();
+        final Set<IPeak> matchedPeaks = new HashSet<IPeak>();
         for (final Tuple2D<IFileFragment, IFileFragment> t : al.getPairs()) {
 
-            final List<Peak> lhsPeaks = fragmentToPeaks.get(t.getFirst().getName());
-            final List<Peak> rhsPeaks = fragmentToPeaks.get(t.getSecond().getName());
+            final List<IPeak> lhsPeaks = fragmentToPeaks.get(t.getFirst().getName());
+            final List<IPeak> rhsPeaks = fragmentToPeaks.get(t.getSecond().getName());
             log.debug("lhsPeaks: {}", lhsPeaks.size());
             log.debug("rhsPeaks: {}", rhsPeaks.size());
-            for (final Peak plhs : lhsPeaks) {
-                for (final Peak prhs : rhsPeaks) {
+            for (final IPeak plhs : lhsPeaks) {
+                for (final IPeak prhs : rhsPeaks) {
                     log.debug("Checking peaks {} and {}", plhs, prhs);
                     if (plhs.isBidiBestHitFor(prhs)) {
                         log.debug(
@@ -80,13 +80,13 @@ public class BBHFinder {
         log.info("Retained {} matched peaks!", matchedPeaks.size());
         log.debug("Counting and removing unmatched peaks!");
         int peaks = 0;
-        List<Peak> unmatchedPeaks = new ArrayList<Peak>();
+        List<IPeak> unmatchedPeaks = new ArrayList<IPeak>();
         for (final IFileFragment t : al) {
-            final List<Peak> lhsPeaks = fragmentToPeaks.get(t.getName());
+            final List<IPeak> lhsPeaks = fragmentToPeaks.get(t.getName());
             log.debug("lhsPeaks: {}", lhsPeaks.size());
-            ListIterator<Peak> liter = lhsPeaks.listIterator();
+            ListIterator<IPeak> liter = lhsPeaks.listIterator();
             while (liter.hasNext()) {
-                final Peak plhs = liter.next();
+                final IPeak plhs = liter.next();
                 if (!matchedPeaks.contains(plhs)) {
                     unmatchedPeaks.add(plhs);
                     peaks++;

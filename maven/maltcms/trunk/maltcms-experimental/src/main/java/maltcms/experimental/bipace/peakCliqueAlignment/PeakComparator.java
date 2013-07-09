@@ -28,17 +28,17 @@
 package maltcms.experimental.bipace.peakCliqueAlignment;
 
 import java.util.Comparator;
-import maltcms.datastructures.peak.Peak;
+import maltcms.datastructures.peak.IPeak;
 
 /**
  *
  * @author nils
  */
 public class PeakComparator
-        implements Comparator<Peak> {
+        implements Comparator<IPeak> {
 
     @Override
-    public int compare(final Peak o1, final Peak o2) {
+    public int compare(final IPeak o1, final IPeak o2) {
         if (o1.getScanIndex() == o2.getScanIndex()) {
             return 0;
         } else if (o1.getScanIndex() < o2.getScanIndex()) {

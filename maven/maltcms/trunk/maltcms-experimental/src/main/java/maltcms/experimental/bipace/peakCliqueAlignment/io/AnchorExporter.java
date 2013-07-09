@@ -35,12 +35,11 @@ import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.peak.Peak;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.experimental.bipace.datastructures.api.Clique;
 import maltcms.experimental.bipace.peakCliqueAlignment.CenterFinder;
 import maltcms.tools.ArrayTools;
@@ -55,7 +54,7 @@ import ucar.ma2.ArrayInt;
  */
 @Slf4j
 @Data
-public class AnchorExporter<T extends Peak> implements IWorkflowElement {
+public class AnchorExporter<T extends IPeak> implements IWorkflowElement {
 
     private String anchorNames;
     private String anchorTimes;
@@ -80,9 +79,9 @@ public class AnchorExporter<T extends Peak> implements IWorkflowElement {
      * @param peakToClique
      * @return
      */
-    public TupleND<IFileFragment> addAnchors(final List<List<Peak>> al,
+    public TupleND<IFileFragment> addAnchors(final List<List<IPeak>> al,
             final TupleND<IFileFragment> newFragments,
-            final List<Clique<T>> cliques, final HashMap<Peak, Clique<T>> peakToClique) {
+            final List<Clique<T>> cliques, final HashMap<IPeak, Clique<T>> peakToClique) {
 
         final String ri_names = this.anchorNames;
         final String ri_times = this.anchorTimes;
@@ -138,7 +137,7 @@ public class AnchorExporter<T extends Peak> implements IWorkflowElement {
         log.info("Setting anchors!");
         for (final Clique<T> c : cliques) {
             // Matched Peaks
-            for (final Peak p : c.getPeakList()) {
+            for (final IPeak p : c.getPeakList()) {
                 final IFileFragment association = hm.get(p.getAssociation());
                 int slot = placeMap.get(association.getName());
                 if (peakToClique.containsKey(p)) {

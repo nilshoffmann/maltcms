@@ -34,6 +34,7 @@ import java.util.List;
 import lombok.Data;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.Peak2D;
 import maltcms.datastructures.array.Sparse;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.datastructures.peak.Peak;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -107,8 +108,8 @@ public class Peak2DMSFactory implements IPeakFactory {
         }
         
         @Override
-        public Peak create(int peakIndex, int scanIndex) {
-            Peak p;
+        public IPeak create(int peakIndex, int scanIndex) {
+            Peak2D p;
             if (useSparseArrays) {
                 ArrayDouble.D1 sparse = new Sparse(indexedMassValues.get(scanIndex), indexedIntensityValues.get(scanIndex),
                         (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
@@ -119,8 +120,8 @@ public class Peak2DMSFactory implements IPeakFactory {
                 p = new Peak2D(scanIndex, indexedIntensityValues.get(scanIndex),
                         satArray.getDouble(scanIndex), sourceFile.getName(), storeOnlyBestSimilarites);
             }
-            ((Peak2D) p).setFirstColumnElutionTime(fctArray.getFloat(scanIndex));
-            ((Peak2D) p).setSecondColumnElutionTime(sctArray.getFloat(scanIndex));
+            p.setFirstColumnElutionTime(fctArray.getFloat(scanIndex));
+            p.setSecondColumnElutionTime(sctArray.getFloat(scanIndex));
             p.setPeakIndex(peakIndex);
             return p;
         }

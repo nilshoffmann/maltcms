@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import lombok.Data;
-import maltcms.datastructures.peak.Peak;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.experimental.bipace.datastructures.spi.PairwisePeakListSimilarities;
 import maltcms.math.functions.IScalarArraySimilarity;
 
@@ -44,7 +44,7 @@ import maltcms.math.functions.IScalarArraySimilarity;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
-public abstract class PeakSimilarityCalculator<T extends Peak> implements
+public abstract class PeakSimilarityCalculator<T extends IPeak> implements
         Callable<PairwisePeakListSimilarities>,
         Serializable {
 

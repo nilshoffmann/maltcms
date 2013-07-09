@@ -31,14 +31,14 @@ import cross.datastructures.fragments.IFileFragment;
 import java.io.Serializable;
 import java.util.List;
 import lombok.Data;
-import maltcms.datastructures.peak.Peak;
+import maltcms.datastructures.peak.IPeak;
 
 /**
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
-public class PeakList<T extends Peak> implements Serializable {
+public class PeakList<T extends IPeak> implements Serializable {
 
     private IFileFragment fragment;
     private List<T> peaks;

@@ -52,8 +52,8 @@ public class Clique {
 	private static long CLIQUEID = -1;
 	private long id = -1;
 	private double cliqueMean = 0, cliqueVar = 0;
-	private Map<String, Peak> clique = new ConcurrentHashMap<String, Peak>();
-	private Peak centroid = null;
+	private Map<String, IPeak> clique = new ConcurrentHashMap<String, IPeak>();
+	private IPeak centroid = null;
 	private int maxBBHErrors = 0;
 	private int bbhErrors = 0;
 	private int bidiHits = 0;
@@ -66,10 +66,10 @@ public class Clique {
 		return this.id;
 	}
 
-	public boolean addPeak(Peak p, boolean force) {
+	public boolean addPeak(IPeak p, boolean force) {
 		if (force) {
 			if (clique.containsKey(p.getAssociation())) {
-				Peak q = clique.get(p.getAssociation());
+				IPeak q = clique.get(p.getAssociation());
 				if (p.equals(q)) {
 					return true;
 				}
@@ -93,7 +93,7 @@ public class Clique {
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public boolean addPeak(Peak p) throws IllegalArgumentException {
+	public boolean addPeak(IPeak p) throws IllegalArgumentException {
 		// if (clique.contains(p)) {
 		// log.debug("Peak {} already contained in clique!", p);
 		// return false;
@@ -119,9 +119,9 @@ public class Clique {
 		return addPeak2(p);
 	}
 
-	public boolean addPeak2(Peak p) throws IllegalArgumentException {
+	public boolean addPeak2(IPeak p) throws IllegalArgumentException {
 		if (clique.containsKey(p.getAssociation())) {
-			Peak q = clique.get(p.getAssociation());
+			IPeak q = clique.get(p.getAssociation());
 			if (p.equals(q)) {
 				return true;
 			}
@@ -136,9 +136,9 @@ public class Clique {
 	 * @param p
 	 * @return
 	 */
-	private boolean handleConflictingPeak(Peak p) {
-		Collection<Peak> currentPeaks = clique.values();
-		Peak q = clique.get(p.getAssociation());
+	private boolean handleConflictingPeak(IPeak p) {
+		Collection<IPeak> currentPeaks = clique.values();
+		IPeak q = clique.get(p.getAssociation());
 		currentPeaks.remove(q);
 		// calculate bbh scores for both peaks
 		int bbh1 = getBBHCount(q, currentPeaks);
@@ -178,7 +178,7 @@ public class Clique {
 	 * @param p
 	 * @return
 	 */
-	private boolean handleNonConflictingPeak(Peak p) {
+	private boolean handleNonConflictingPeak(IPeak p) {
 		if (clique.containsValue(p)) {
 			log.debug("Peak {} already contained in clique!", p);
 			return false;
@@ -205,7 +205,7 @@ public class Clique {
 		}
 	}
 	
-	private boolean handleForceAddPeak(Peak p) {
+	private boolean handleForceAddPeak(IPeak p) {
 		if (clique.containsValue(p)) {
 			log.debug("Peak {} already contained in clique!", p);
 			return false;
@@ -233,14 +233,14 @@ public class Clique {
 	 * @param p
 	 * @return
 	 */
-	private int getBBHCount(Peak p) {
+	private int getBBHCount(IPeak p) {
 		return getBBHCount(p, getPeakList());
 	}
 
-	private int getBBHCount(Peak p, Collection<Peak> c) {
+	private int getBBHCount(IPeak p, Collection<IPeak> c) {
 		int bidiHits = 0;
 		// check and count bidi best hit
-		for (Peak q : getPeakList()) {
+		for (IPeak q : getPeakList()) {
 			if (!p.isBidiBestHitFor(q)) {
 				log.debug(
 						"Peak q: {} in clique is not a bidirectional best hit for peak p: {}",
@@ -252,7 +252,7 @@ public class Clique {
 		return bidiHits;
 	}
 
-	public boolean removePeak(Peak p) {
+	public boolean removePeak(IPeak p) {
 		if (clique.containsValue(p)) {
 			clique.remove(p.getAssociation());
 			if (clique.isEmpty()) {
@@ -311,9 +311,9 @@ public class Clique {
 		double mindist = Double.POSITIVE_INFINITY;
 		double[] dists = new double[clique.size()];
 		int i = 0;
-		Peak[] peaks = clique.values().toArray(new Peak[]{});
-		for (Peak peak : peaks) {
-			for (Peak peak1 : peaks) {
+		IPeak[] peaks = clique.values().toArray(new IPeak[]{});
+		for (IPeak peak : peaks) {
+			for (IPeak peak1 : peaks) {
 				dists[i] += Math.pow(
 						peak.getScanAcquisitionTime()
 						- peak1.getScanAcquisitionTime(), 2.0d);
@@ -331,17 +331,17 @@ public class Clique {
 		this.centroid = peaks[mindistIdx];
 	}
 
-	public double getRTDistanceToCentroid(Peak p) {
+	public double getRTDistanceToCentroid(IPeak p) {
 		double mean = getCliqueRTMean();
 		return Math.pow(mean - p.getScanAcquisitionTime(), 2);
 	}
 
-	public double getRatioOfRTDistanceToCentroidAndCliqueVariance(Peak p) {
+	public double getRatioOfRTDistanceToCentroidAndCliqueVariance(IPeak p) {
 		double d = getRTDistanceToCentroid(p);
 		return d / getCliqueRTVariance();
 	}
 
-	private void update(Peak p) {
+	private void update(IPeak p) {
 		int n = 0;
 		double mean = cliqueMean;
 		double var = cliqueVar;
@@ -365,7 +365,7 @@ public class Clique {
 				var, mean);
 	}
 
-	private void updateRemoval(Peak p) {
+	private void updateRemoval(IPeak p) {
 		int n = 0;
 		double mean = cliqueMean;
 		double var = cliqueVar;
@@ -397,7 +397,7 @@ public class Clique {
 		return this.cliqueMean;
 	}
 
-	public Peak getCliqueCentroid() {
+	public IPeak getCliqueCentroid() {
 		return this.centroid;
 	}
 
@@ -422,11 +422,11 @@ public class Clique {
 		return sb.toString();
 	}
 
-	public List<Peak> getPeakList() {
-		List<Peak> peaks = new ArrayList<Peak>(this.clique.values());
-		Collections.sort(peaks, new Comparator<Peak>() {
+	public List<IPeak> getPeakList() {
+		List<IPeak> peaks = new ArrayList<IPeak>(this.clique.values());
+		Collections.sort(peaks, new Comparator<IPeak>() {
 			@Override
-			public int compare(Peak o1, Peak o2) {
+			public int compare(IPeak o1, IPeak o2) {
 				return o1.getAssociation().compareTo(o2.getAssociation());
 			}
 		});
@@ -439,7 +439,9 @@ public class Clique {
 
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		int hash = 5;
+		hash = 79 * hash + (int) (this.id ^ (this.id >>> 32));
+		return hash;
 	}
 
 	@Override
@@ -451,7 +453,7 @@ public class Clique {
 			return false;
 		}
 		final Clique other = (Clique) obj;
-		if (this.clique != other.clique && (this.clique == null || !this.clique.equals(other.clique))) {
+		if (this.id != other.id) {
 			return false;
 		}
 		return true;

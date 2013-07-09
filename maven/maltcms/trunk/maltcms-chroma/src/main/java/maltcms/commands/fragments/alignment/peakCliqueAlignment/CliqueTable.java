@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import maltcms.datastructures.peak.Clique;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.datastructures.peak.Peak;
 import ucar.ma2.ArrayBoolean;
 
@@ -59,7 +60,7 @@ public class CliqueTable {
         }
         int i = 0;
         for (Clique c : l) {
-            for (Peak p : c.getPeakList()) {
+            for (IPeak p : c.getPeakList()) {
                 arr.set(i, placeMap.get(p.getAssociation()), true);
             }
             i++;
