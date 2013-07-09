@@ -84,7 +84,7 @@ public class QuadTreeNode<T> {
             for (QuadTreeNode<T> qtn : this.children) {
                 if (qtn != null) {
                     //intersection with quadrant
-                    if (l.intersects(qtn.getArea()) || qtn.getArea().intersectsLine(l)) {
+                    if (l.intersects(qtn.getArea()) || qtn.getArea().intersectsLine(l) || (qtn.getArea().contains(l.getP1()) && qtn.getArea().contains(l.getP2())) ) {
                         //check for closest child
                         qtn.getClosestChildrenPerpendicularToLine(children, l, distance);
                     }
