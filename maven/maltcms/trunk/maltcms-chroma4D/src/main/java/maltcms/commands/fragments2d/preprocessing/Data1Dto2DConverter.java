@@ -30,9 +30,12 @@ package maltcms.commands.fragments2d.preprocessing;
 import cross.annotations.Configurable;
 import cross.cache.ICacheDelegate;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.cache.SerializableArrayProxy;
+import cross.datastructures.collections.CachedReadWriteList;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.tools.ArrayTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ConstraintViolationException;
@@ -46,8 +49,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
@@ -57,6 +60,8 @@ import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.NetcdfFileWriteable;
 import ucar.nc2.Variable;
+import ucar.nc2.iosp.IOServiceProvider;
+import ucar.unidata.io.RandomAccessFile;
 
 /**
  * Joins a number of sequentially acquired chromatograms into a two-dimensional
@@ -94,14 +99,15 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 //		f = new FileFragment();
 		f = new File(outputDirectory, outputFileName + ".cdf");
 		log.info("Writing output to {}", f.getName());
-//		List<Array> massValuesCache = new CachedReadWriteList<Array>(UUID.nameUUIDFromBytes((f.getUri() + ">mass_values").getBytes()).toString(), new SerializableArrayProxy(), 5000);
-//		List<Array> intensityValuesCache = new CachedReadWriteList<Array>(UUID.nameUUIDFromBytes((f.getUri() + ">intensity_values").getBytes()).toString(), new SerializableArrayProxy(), 5000);
-//		ICacheDelegate<Integer, Float> satCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((f.getUri() + "-satValues").getBytes()).toString(), 5000);
-//		ICacheDelegate<Integer, Float> fcetCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((f.getUri() + "-firstColumnElutionTimeValues").getBytes()).toString(), 5000);
-//		ICacheDelegate<Integer, Float> scetCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((f.getUri() + "-secondColumnElutionTimeValues").getBytes()).toString(), 5000);
-//		ICacheDelegate<Integer, Integer> ticCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((f.getUri() + "-ticValues").getBytes()).toString(), 5000);
-//		ICacheDelegate<Integer, Integer> msLevelCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((f.getUri() + "-msLevelValues").getBytes()).toString(), 5000);
-//		ICacheDelegate<Integer, Integer> scanIndexCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((f.getUri() + "-scanIndexValues").getBytes()).toString(), 5000);
+		IFileFragment fragment = new FileFragment(f);
+		List<Array> massValuesCache = new CachedReadWriteList<Array>(UUID.nameUUIDFromBytes((fragment.getUri() + ">mass_values").getBytes()).toString(), new SerializableArrayProxy(), 5000);
+		List<Array> intensityValuesCache = new CachedReadWriteList<Array>(UUID.nameUUIDFromBytes((fragment.getUri() + ">intensity_values").getBytes()).toString(), new SerializableArrayProxy(), 5000);
+//		ICacheDelegate<Integer, Float> satCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((fragment.getUri() + "-satValues").getBytes()).toString(), 5000);
+//		ICacheDelegate<Integer, Float> fcetCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((fragment.getUri() + "-firstColumnElutionTimeValues").getBytes()).toString(), 5000);
+//		ICacheDelegate<Integer, Float> scetCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((fragment.getUri() + "-secondColumnElutionTimeValues").getBytes()).toString(), 5000);
+//		ICacheDelegate<Integer, Integer> ticCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((fragment.getUri() + "-ticValues").getBytes()).toString(), 5000);
+//		ICacheDelegate<Integer, Integer> msLevelCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((fragment.getUri() + "-msLevelValues").getBytes()).toString(), 5000);
+//		ICacheDelegate<Integer, Integer> scanIndexCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((fragment.getUri() + "-scanIndexValues").getBytes()).toString(), 5000);
 		ArrayList<String> inSorted = new ArrayList<String>();
 
 		Map<String, IFileFragment> nameToFragment = new HashMap<String, IFileFragment>();
@@ -124,7 +130,7 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 			NetcdfFileWriteable nfw = NetcdfFileWriteable.createNew(f.getAbsolutePath(), true);
 			nfw.setLargeFile(true);
 			nfw.addDimension("scan_number", scanCount, true, false, false);
-			nfw.addDimension("point_number", pointCount, true, true, false);
+			nfw.addDimension("point_number", pointCount, true, false, false);
 			nfw.addDimension("total_ion_current_chromatogram_scan_number", ticChromScanCount, true, false, false);
 			nfw.addDimension("modulation_time", 1, true, false, false);
 			Variable nfwScanIndex = nfw.addVariable("scan_index", DataType.INT, "scan_number");
@@ -143,6 +149,8 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 			nfw.create();
 			nfw.close();
 			nfw = NetcdfFileWriteable.openExisting(f.getAbsolutePath());
+
+//			nfw = NetcdfFileWriteable.open(f.getAbsolutePath(), 129472, null);
 			Collections.sort(inSorted, new NaturalSortOrderComparator());
 			int scanIndexOffset = 0;
 			int offset = 0;
@@ -225,14 +233,16 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 					Array intensArray = sourceIntensityValues.get(i);
 					shape = massArray.getShape()[0];
 					log.debug("Number of points in scan: {}", shape);
-					try {
-						nfw.write("mass_values", new int[]{scanIndexOffset}, massArray);
-						nfw.write("intensity_values", new int[]{scanIndexOffset}, intensArray);
-					} catch (IOException ex) {
-						Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
-					} catch (InvalidRangeException ex) {
-						Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
-					}
+					massValuesCache.add(massArray);
+					intensityValuesCache.add(intensArray);
+//					try {
+//						nfw.write("mass_values", new int[]{scanIndexOffset}, massArray);
+//						nfw.write("intensity_values", new int[]{scanIndexOffset}, intensArray);
+//					} catch (IOException ex) {
+//						Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
+//					} catch (InvalidRangeException ex) {
+//						Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
+//					}
 					scanIndexOffset += shape;
 					scanIndex++;
 					globalScanIndex++;
@@ -260,6 +270,19 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 //				file++;
 			}
 			nfw.close();
+			nfw = NetcdfFileWriteable.openExisting(f.getAbsolutePath());
+			scanIndexOffset = 0;
+			log.info("Writing mass values");
+			writeArrayList("mass_values",massValuesCache,nfw);
+			nfw.close();
+			massValuesCache.clear();
+			massValuesCache = null;
+			nfw = NetcdfFileWriteable.openExisting(f.getAbsolutePath());
+			log.info("Writing intensity values");
+			writeArrayList("intensity_values",intensityValuesCache, nfw);
+			nfw.close();
+			intensityValuesCache.clear();
+			intensityValuesCache = null;
 			log.info("Done.");
 		} catch (IOException ex) {
 			Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
@@ -298,13 +321,13 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 //		IVariableFragment scanRateVar = f.addChild("scan_rate");
 //		scanRateVar.setDimensions(new Dimension("scan_rate", 1));
 //		scanRateVar.setArray(Array.factory(new double[]{scanRate}));
-
 //		IVariableFragment msLevelVar = f.addChild("ms_level");
 //		msLevelVar.setDimensions(new Dimension("scan_index", msLevelCache.keys().size()));
 //		msLevelVar.setArray(toArray(msLevelCache, DataType.INT));
 //		log.info("Storing results.");
 //		f.save();
-		return new TupleND<IFileFragment>(new FileFragment(f));
+		return new TupleND<IFileFragment>(
+				new FileFragment(f));
 	}
 
 	protected Array toArray(ICacheDelegate<Integer, ?> delegate, DataType dataType) {
@@ -369,6 +392,50 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 			}
 		}
 		return "";
+
+
+	}
+
+	private void writeArrayList(String variableName, List<Array> valuesCache, NetcdfFileWriteable nfw) throws IOException {
+		int scanIndexOffset = 0;
+		int combineScans = 1000;
+		ArrayList<Array> scans = new ArrayList<Array>(combineScans);
+		int scanCnt = 0;
+		for (int i = 0; i < valuesCache.size(); i++) {
+
+			try {
+				Array intens = valuesCache.get(i);
+				if (scanCnt < combineScans) {
+					scans.add(intens);
+					scanCnt++;
+				} else {
+					log.info("Flushing {} scans to file!",scans.size());
+					scanCnt = 0;
+					Array toWrite = ArrayTools.glue(scans);
+					int shape = toWrite.getShape()[0];
+					nfw.write(variableName, new int[]{scanIndexOffset}, toWrite);
+					scanIndexOffset += shape;
+					scans.clear();
+					log.info("Done with flushing!",scans.size());
+				}
+			} catch (IOException ex) {
+				Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
+			} catch (InvalidRangeException ex) {
+				Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		if (!scans.isEmpty()) {
+			try {
+				log.info("Flushing {} scans to file!",scans.size());
+				Array toWrite = ArrayTools.glue(scans);
+				int shape = toWrite.getShape()[0];
+				nfw.write(variableName, new int[]{scanIndexOffset}, toWrite);
+			} catch (IOException ex) {
+				Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
+			} catch (InvalidRangeException ex) {
+				Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
 	}
 
 	private class NaturalSortOrderComparator implements Comparator<String> {
