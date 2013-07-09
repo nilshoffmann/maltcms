@@ -304,7 +304,7 @@ public abstract class AFragmentCommand implements IFragmentCommand {
 			ics = csf.newLocalCompletionService();
 		} else {
 			log.info("Creating mpaxs completion service!");
-			ics = new CompletionServiceFactory<T>().newDistributedCompletionService();
+			ics = csf.newDistributedCompletionService();
 		}
 		return ics;
 	}
@@ -330,7 +330,7 @@ public abstract class AFragmentCommand implements IFragmentCommand {
 			ics = csf.newLocalCompletionService();
 		} else {
 			log.info("Creating mpaxs completion service!");
-			ics = new CompletionServiceFactory<T>().newDistributedCompletionService();
+			ics = csf.newDistributedCompletionService();
 		}
 		return ics;
 	}

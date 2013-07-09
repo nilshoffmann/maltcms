@@ -175,7 +175,8 @@ public class CachedReadWriteList<T> implements List<T> {
 
 	@Override
 	public boolean add(T e) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		add(size(), e);
+		return true;
 	}
 
 	@Override
