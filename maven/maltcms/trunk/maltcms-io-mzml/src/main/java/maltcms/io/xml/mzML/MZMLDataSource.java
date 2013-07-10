@@ -231,7 +231,7 @@ public class MZMLDataSource implements IDataSource {
 	private int getPointCount(final Spectrum s) {
 		return s.getBinaryDataArrayList().getBinaryDataArray().get(0).getBinaryDataAsNumberArray().length;
 	}
-	
+
 	private Array getMassValues(final Spectrum s) {
 		Number[] n = s.getBinaryDataArrayList().getBinaryDataArray().get(0).getBinaryDataAsNumberArray();
 		ArrayDouble.D1 masses = new ArrayDouble.D1(n.length);
@@ -361,17 +361,21 @@ public class MZMLDataSource implements IDataSource {
 		}
 		Array a = null;
 		MzMLUnmarshaller mzu = getUnmarshaller(f);
-		final Run r = getRun(mzu);
 		final String varname = var.getName();
+		if (varname.equals(this.source_files)) {
+			a = readSourceFiles(mzu);
+			// Read mass_values or intensity_values for whole chromatogram
+			if (a != null) {
+				getCache().put(var, new SerializableArray(a));
+			}
+			return a;
+		}
+		final Run r = getRun(mzu);
 		log.info("Trying to read variable " + var.getName());
 		List<CVParam> parameters = r.getCvParam();
 		log.debug("Run has {} cvparams!", parameters.size());
 		for (CVParam param : parameters) {
 			log.debug("CVParam: {}", param);
-		}
-		if (varname.equals(this.source_files)) {
-			a = readSourceFiles(f, mzu);
-			// Read mass_values or intensity_values for whole chromatogram
 		}
 		if (varname.equals(this.mass_values)
 				|| varname.equals(this.intensity_values)) {
@@ -462,7 +466,7 @@ public class MZMLDataSource implements IDataSource {
 		return new ArrayList<Array>();
 	}
 
-	private Array readSourceFiles(final IFileFragment f, final MzMLUnmarshaller mzmu) {
+	private Array readSourceFiles(final MzMLUnmarshaller mzmu) {
 		SourceFileList sfl = getSourceFiles(mzmu);
 		List<String> sourceFilePaths = new LinkedList<String>();
 		for (SourceFile sfs : sfl.getSourceFile()) {
