@@ -15,5 +15,5 @@ dependencies.
 * Preliminary Support for extraction of mzML TIC chromatograms via total_ion_current_chromatogram and total_ion_current_chromatogram_scan_acquisition_time.
 * New optional caching system for lower memory footprint.
 
-This version is backwards compatible to 1.2.x releases of maltcms concerning the workflow format.
+This version is backwards compatible to 1.2.x releases of maltcms concerning the workflow format. However, some commands have additional properties, so please check whether your pipelines require updating. Parameters are introduced with sensible default values, usually meaning that they are not used when not explicitly configured. Go <a href="fragmentCommands.html">here</a> for more information on how to inquire a fragment command for its supported parameters. 
 

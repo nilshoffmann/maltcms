@@ -62,15 +62,16 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tools.FragmentTools;
 import cross.tools.StringTools;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.logging.Level;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.util.lookup.ServiceProvider;
-import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
 import uk.ac.ebi.jmzml.model.mzml.FileDescription;
@@ -363,11 +364,12 @@ public class MZMLDataSource implements IDataSource {
 		MzMLUnmarshaller mzu = getUnmarshaller(f);
 		final String varname = var.getName();
 		if (varname.equals(this.source_files)) {
-			a = readSourceFiles(mzu);
-			// Read mass_values or intensity_values for whole chromatogram
-			if (a != null) {
-				getCache().put(var, new SerializableArray(a));
-			}
+			//FIXME this may include files without a valid IO provider
+//			a = readSourceFiles(f, mzu);
+//			// Read mass_values or intensity_values for whole chromatogram
+//			if (a != null) {
+//				getCache().put(var, new SerializableArray(a));
+//			}
 			return a;
 		}
 		final Run r = getRun(mzu);
@@ -466,16 +468,16 @@ public class MZMLDataSource implements IDataSource {
 		return new ArrayList<Array>();
 	}
 
-	private Array readSourceFiles(final MzMLUnmarshaller mzmu) {
+	private Array readSourceFiles(final IFileFragment f, final MzMLUnmarshaller mzmu) {
 		SourceFileList sfl = getSourceFiles(mzmu);
-		List<String> sourceFilePaths = new LinkedList<String>();
+		List<IFileFragment> sourceFilePaths = new LinkedList<IFileFragment>();
 		for (SourceFile sfs : sfl.getSourceFile()) {
-			sourceFilePaths.add(sfs.getLocation());
+			sourceFilePaths.add(new FileFragment(URI.create(sfs.getLocation())));
 		}
 		if (sourceFilePaths.isEmpty()) {
 			return null;
 		}
-		Array a = Array.makeArray(DataType.STRING, new LinkedList<String>(sourceFilePaths));
+		Array a = FragmentTools.createSourceFilesArray(f, sourceFilePaths);
 		log.info("Returning source files: ", a);
 		return a;
 	}
