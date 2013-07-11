@@ -363,6 +363,7 @@ public class MZMLDataSource implements IDataSource {
 		Array a = null;
 		MzMLUnmarshaller mzu = getUnmarshaller(f);
 		final String varname = var.getName();
+		log.info("Trying to read variable " + var.getName());
 		if (varname.equals(this.source_files)) {
 			//FIXME this may include files without a valid IO provider
 //			a = readSourceFiles(f, mzu);
@@ -371,13 +372,6 @@ public class MZMLDataSource implements IDataSource {
 //				getCache().put(var, new SerializableArray(a));
 //			}
 			return a;
-		}
-		final Run r = getRun(mzu);
-		log.info("Trying to read variable " + var.getName());
-		List<CVParam> parameters = r.getCvParam();
-		log.debug("Run has {} cvparams!", parameters.size());
-		for (CVParam param : parameters) {
-			log.debug("CVParam: {}", param);
 		}
 		if (varname.equals(this.mass_values)
 				|| varname.equals(this.intensity_values)) {
@@ -396,16 +390,16 @@ public class MZMLDataSource implements IDataSource {
 			a = readScanAcquisitionTimeArray(var, mzu);
 		} else if (varname.equals(this.modulation_time)) {
 			a = readModulationTimeArray(var, mzu);
-		} else if (varname.equals(this.first_column_elution_time)) {
-			a = readElutionTimeArray(var, r, mzu, this.first_column_elution_timeAccession);
-		} else if (varname.equals(this.second_column_elution_time)) {
-			a = readElutionTimeArray(var, r, mzu, this.second_column_elution_timeAccession);
 		} else if (varname.equals(this.ms_level)) {
 			a = readMsLevelArray(var, mzu);
 		} else if (varname.equals(this.total_ion_current_chromatogram)) {
 			a = readTotalIonCurrentChromatogram(var, mzu, true);
 		} else if (varname.equals(this.total_ion_current_chromatogram_scan_acquisition_time)) {
 			a = readTotalIonCurrentChromatogram(var, mzu, false);
+		} else if (varname.equals(this.first_column_elution_time)) {
+			a = readElutionTimeArray(var, getRun(mzu), mzu, this.first_column_elution_timeAccession);
+		} else if (varname.equals(this.second_column_elution_time)) {
+			a = readElutionTimeArray(var, getRun(mzu), mzu, this.second_column_elution_timeAccession);
 		} else {
 			throw new ResourceNotAvailableException(
 					"Unknown variable name to mzML mapping for " + varname);
@@ -749,7 +743,10 @@ public class MZMLDataSource implements IDataSource {
 		final int scancount = getScanCount(um);
 		final String varname = f.getName();
 		// Read mass_values or intensity_values for whole chromatogram
-		if (varname.equals(this.scan_index)
+		if(varname.equals(this.source_files)) {
+			throw new ResourceNotAvailableException(
+					"Unknown varname to mzML mapping for varname " + varname);
+		}else if (varname.equals(this.scan_index)
 				|| varname.equals(this.total_intensity)
 				|| varname.equals(this.mass_range_min)
 				|| varname.equals(this.mass_range_max)
