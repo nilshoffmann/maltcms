@@ -25,49 +25,67 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package net.sf.maltcms.evaluation.api.classification;
+package net.sf.maltcms.evaluation.spi.classification;
 
-import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
 import maltcms.datastructures.array.IFeatureVector;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayChar;
 
 /**
- * An entity represents a classified object. It has a feature vector, a category
- * and a class label.
- *
  * @author Nils Hoffmann
  *
  *
  */
-public class Entity implements Serializable {
+public class PeakNameFeatureVector implements IFeatureVector {
 
-    private final String classLabel;
-    private final Category c;
-    private final IFeatureVector featureVector;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5936343655074144856L;
+    private final String name;
+    private final UUID uniqueId = UUID.randomUUID();
 
-    public Entity(IFeatureVector featureVector, Category c, String classLabel) {
-        this.featureVector = featureVector;
-        this.c = c;
-        this.classLabel = classLabel;
+    public PeakNameFeatureVector(String name) {
+        this.name = name;
     }
 
-    public String getClassLabel() {
-        return classLabel;
+    /* (non-Javadoc)
+     * @see maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
+     */
+    @Override
+    public Array getFeature(String name) {
+        if (name.equals("NAME")) {
+            return ArrayChar.makeFromString(name, 2048);
+        }
+        return null;
     }
 
-    public Category getCategory() {
-        return c;
+    /* (non-Javadoc)
+     * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
+     */
+    @Override
+    public List<String> getFeatureNames() {
+        return Arrays.asList("NAME");
     }
 
-    public IFeatureVector getFeatureVector() {
-        return featureVector;
+    public String getName() {
+        return this.name;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-//		sb.append("Entity for category "+getCategory()+" with label "+getClassLabel()+"\n");
-//                sb.append(getClassLabel());
-        sb.append(getFeatureVector().toString());
+        sb.append("NAME = " + getName());
         return sb.toString();
     }
+
+    @Override
+    public UUID getUniqueId() {
+        return uniqueId;
+    }
+  
 }

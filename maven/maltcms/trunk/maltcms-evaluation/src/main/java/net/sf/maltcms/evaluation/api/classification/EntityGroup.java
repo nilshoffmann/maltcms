@@ -27,6 +27,7 @@
  */
 package net.sf.maltcms.evaluation.api.classification;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ import maltcms.datastructures.array.IFeatureVector;
  *
  *
  */
-public class EntityGroup implements Comparable<EntityGroup> {
+public class EntityGroup implements Comparable<EntityGroup>, Serializable {
 
     private final HashMap<Category, Entity> categoryToEntityMap;
 
@@ -54,6 +55,15 @@ public class EntityGroup implements Comparable<EntityGroup> {
             categoryToEntityMap.put(ent.getCategory(), ent);
         }
     }
+	
+	public EntityGroup subGroup(Category...c) {
+		List<Entity> entities = new ArrayList<Entity>(c.length);
+		for(Category cat:c) {
+			entities.add(getEntityForCategory(cat));
+		}
+		EntityGroup eg = new EntityGroup(entities.toArray(new Entity[c.length]));
+		return eg;
+	}
 
     public void addEntity(Category c, Entity e) {
         if (this.categoryToEntityMap.containsKey(c)) {

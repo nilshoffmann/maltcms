@@ -150,8 +150,15 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
             EntityGroupClassificationResult gtg = findBest(tgEg, this.groundTruth);
 
             if (gtg != null) {
-                //log.debug("GT group: \n" + gtg.getGroundTruthEntityGroup());
-                //log.debug("Best tool group: \n" + gtg.getToolEntityGroup());
+//				System.out.println("##################");
+//				System.out.println("GT group: \n");
+//				System.out.println(gtg.getGroundTruthEntityGroup());
+//                //log.debug("GT group: \n" + gtg.getGroundTruthEntityGroup());
+//                //log.debug("Best tool group: \n" + gtg.getToolEntityGroup());
+//				System.out.println("Tool group: \n");
+//				System.out.println(gtg.getToolEntityGroup());
+//				System.out.println("TP: "+gtg.getTp()+" FP: "+gtg.getFp()+" TN: "+gtg.getTn()+" FN: "+gtg.getFn());
+//				System.out.println("##################");
                 EntityGroup gtEntityGroup = gtg.getGroundTruthEntityGroup();
                 if (gtToClsRes.containsKey(gtEntityGroup)) {
                     //System.err.println("Warning: GT EntityGroup already assigned!");

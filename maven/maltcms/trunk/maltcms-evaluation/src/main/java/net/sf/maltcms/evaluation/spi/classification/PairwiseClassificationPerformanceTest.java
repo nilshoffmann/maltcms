@@ -27,23 +27,27 @@
  */
 package net.sf.maltcms.evaluation.spi.classification;
 
-import cross.datastructures.tuple.Tuple2D;
-import cross.datastructures.tuple.TupleND;
+import cross.tools.MathTools;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import static net.sf.maltcms.evaluation.spi.classification.PerformanceMetrics.Vars.*;
 import java.util.Set;
 import maltcms.datastructures.array.IFeatureVector;
 import net.sf.maltcms.evaluation.api.classification.Category;
 import net.sf.maltcms.evaluation.api.classification.Entity;
 import net.sf.maltcms.evaluation.api.classification.EntityGroup;
+import net.sf.maltcms.evaluation.api.classification.EntityGroupList;
 import net.sf.maltcms.evaluation.api.classification.IFeatureVectorComparator;
 import net.sf.maltcms.evaluation.api.classification.PeakRTFeatureVectorComparator;
+import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 
 /**
  *
@@ -65,6 +69,21 @@ public class PairwiseClassificationPerformanceTest<T extends IFeatureVector> {
 		this.ifvc = ifvc;
 	}
 
+	public static Map<String, EntityGroupList> createPairMap(EntityGroupList entities) {
+		Map<String, EntityGroupList> m = new LinkedHashMap<String, EntityGroupList>();
+		int cnt = 0;
+		int size = entities.getCategoriesSize() * (entities.getCategoriesSize() - 1) / 2;
+		Category[] categories = entities.getCategories().toArray(new Category[entities.getCategoriesSize()]);
+		for (int i = 0; i < entities.getCategoriesSize() - 1; i++) {
+			for (int j = i + 1; j < entities.getCategoriesSize(); j++) {
+				System.out.println("Adding pair " + (cnt + 1) + " of " + size);
+				m.put(i + "-" + j, entities.getSubList(categories[i], categories[j]));
+				cnt++;
+			}
+		}
+		return m;
+	}
+
 	public static void main(String[] args) {
 		Category c1 = new Category("c1");
 		Category c2 = new Category("c2");
@@ -79,14 +98,14 @@ public class PairwiseClassificationPerformanceTest<T extends IFeatureVector> {
 		gt[4] = new double[]{6.7, 6.65, 6.71};
 		gt[5] = new double[]{7.23, 7.12, 7.123};
 
-		List<EntityGroup> gtl = new ArrayList<EntityGroup>();
+		EntityGroupList egl = new EntityGroupList(cats);
 		for (int i = 0; i < gt.length; i++) {
 			Entity[] e = new Entity[gt[i].length];
 			for (int j = 0; j < e.length; j++) {
 				e[j] = new Entity(new PeakRTFeatureVector(gt[i][j]), cats[j], "gt" + (i + 1));
 			}
 			EntityGroup eg = new EntityGroup(e);
-			gtl.add(eg);
+			egl.add(eg);
 		}
 
 		double[][] data = new double[6][];
@@ -97,7 +116,7 @@ public class PairwiseClassificationPerformanceTest<T extends IFeatureVector> {
 		data[4] = new double[]{6.34999, 6.321, Double.NaN};
 		data[5] = new double[]{7.23, Double.NaN, 7.12};
 
-		List<EntityGroup> datal = new ArrayList<EntityGroup>();
+		EntityGroupList datal = new EntityGroupList(cats);
 		for (int i = 0; i < data.length; i++) {
 			Entity[] e = new Entity[data[i].length];
 			for (int j = 0; j < e.length; j++) {
@@ -107,34 +126,90 @@ public class PairwiseClassificationPerformanceTest<T extends IFeatureVector> {
 			datal.add(eg);
 		}
 
-		PairwiseClassificationPerformanceTest<PeakRTFeatureVector> cpt = new PairwiseClassificationPerformanceTest<PeakRTFeatureVector>(gtl, new PeakRTFeatureVectorComparator(0.02));
-		System.out.println(cpt.performTest("test", datal));
+		Map<String, EntityGroupList> refMap = createPairMap(egl);
+		Map<String, EntityGroupList> resultMap = createPairMap(datal);
+		String toolName = "testTool";
+		MultiMap<PerformanceMetrics.Vars, Number> metricsMap = new MultiMap<PerformanceMetrics.Vars, Number>();
+		for (String s : resultMap.keySet()) {
+			EntityGroupList egl1 = refMap.get(s);
+			EntityGroupList resultMap1 = resultMap.get(s);
+			ClassificationPerformanceTest<PeakRTFeatureVector> cpt = new ClassificationPerformanceTest<PeakRTFeatureVector>(egl1, new PeakRTFeatureVectorComparator(0.02));
+			PerformanceMetrics pm = cpt.performTest(egl1.getCategories().toString(), resultMap1);
+			metricsMap.put(TP, pm.getTp());
+			metricsMap.put(FP, pm.getFp());
+			metricsMap.put(TN, pm.getTn());
+			metricsMap.put(FN, pm.getFn());
+			metricsMap.put(F1, pm.getF1());
+//			System.out.println(pm);
+		}
+		System.out.println("Pairwise evaluation:");
+		for (PerformanceMetrics.Vars var : metricsMap.keySet()) {
+			double[] values = toArray(metricsMap.get(var));
+			DescriptiveStatistics ds = new DescriptiveStatistics(values);
+			System.out.println(var.toString() + ": totalValue=" + ds.getSum() + "; min=" + ds.getMin() + "; max=" + ds.getMax() + "; mean=" + ds.getMean() + "+/-" + ds.getStandardDeviation());
+		}
+		ClassificationPerformanceTest<PeakRTFeatureVector> cpt = new ClassificationPerformanceTest<PeakRTFeatureVector>(egl, new PeakRTFeatureVectorComparator(0.02));
+		PerformanceMetrics pm = cpt.performTest(toolName, datal);
+		MultiMap<PerformanceMetrics.Vars, Number> metricsMap2 = new MultiMap<PerformanceMetrics.Vars, Number>();
+		metricsMap2.put(TP, pm.getTp());
+		metricsMap2.put(FP, pm.getFp());
+		metricsMap2.put(TN, pm.getTn());
+		metricsMap2.put(FN, pm.getFn());
+		metricsMap2.put(F1, pm.getF1());
+		System.out.println("Row-wise evaluation:");
+		for (PerformanceMetrics.Vars var : metricsMap2.keySet()) {
+			double[] values = toArray(metricsMap2.get(var));
+			DescriptiveStatistics ds = new DescriptiveStatistics(values);
+			System.out.println(var.toString() + ": totalValue=" + ds.getSum()+"; min=" + ds.getMin() + "; max=" + ds.getMax() + "; mean=" + ds.getMean() + "+/-" + ds.getStandardDeviation());
+		}
+//		System.out.println(cpt.performTest("test", datal));
 	}
-	
+
+	public static double[] toArray(Collection<Number> c) {
+		double[] values = new double[c.size()];
+		Number[] numbers = c.toArray(new Number[c.size()]);
+		for (int i = 0; i < values.length; i++) {
+			values[i] = numbers[i].doubleValue();
+		}
+		return values;
+	}
+
 	public String getPairwisePerformanceMetrics() {
 		return null;
 //		cscore <- function(d1,d2){
 //    d1.name = as.character(d1$name)
 //    d2.name = as.character(d2$name)
-//    total.pos = length(na.omit(match(d1.name,d2.name)))
+//	total number of matching rows between 1 and 2 (identical name)
+//    total.pos = length(na.omit(match(d1.name,d2.name))) 
+// total number of peaks with the same name in common, these should be found	
+//	product of names in 1 and names in 2 (omitting empty rows)
+// total number of peaks that could be assigned, but would score as wrong assignments
 //    total.neg = length(d1.name)*length(d2.name) - total.pos
 //
+//	select only peaks that have a match in ref
 //    d1 = d1[d1$nflag!=0,] # ref
+//	select only peaks that have a match in target
 //    d2 = d2[d2$nflag!=0,] # tar
 //    d1 = d1[order(d1$nflag),]
 //    d2 = d2[order(d2$nflag),]
 //    d1$name = as.character(d1$name)
 //    d2$name = as.character(d2$name)
+//	total number of matches (including TP, FP matches) from d1 into d2
 //    total.match = dim(d1)[1]
 //    t.p = 0
 //    for(i in 1:total.match){
+//			count true positives
 //        if(d1$name[i] == d2$name[i]){
 //            t.p = t.p + 1
 //        }
 //    }
+// FP = #MATCHES - TP
 //    f.p = total.match - t.p
+// FN = #POSITIVES - TP
 //    f.n = total.pos - t.p
+// TN = #NEGATIVES - FP
 //    t.n = total.neg - f.p
+//	  total.pos <- t.p + f.n		
 //    t.p.r = t.p/total.pos
 //    p.p.v = t.p/(t.p+f.p)
 //    f1 = 2*t.p.r*p.p.v/(t.p.r+p.p.v)

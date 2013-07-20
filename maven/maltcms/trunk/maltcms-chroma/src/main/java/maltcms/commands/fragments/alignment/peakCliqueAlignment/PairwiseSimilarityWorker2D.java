@@ -76,8 +76,8 @@ public class PairwiseSimilarityWorker2D implements Callable<Integer>, Serializab
                     // the similarity is symmetric:
                     // sim(a,b) = sim(b,a)
                     final double d = similarityFunction.apply(new double[]{rt1p1,rt2p1}, new double[]{rt1p2,rt2p2}, p1.getMsIntensities(), p2.getMsIntensities());
-                    p1.addSimilarity(p2, Double.valueOf(d));
-                    p2.addSimilarity(p1, Double.valueOf(d));
+					p1.addSimilarity(p2, Double.valueOf(d));
+					p2.addSimilarity(p1, Double.valueOf(d));
                 }
                 elemCnt++;
             }

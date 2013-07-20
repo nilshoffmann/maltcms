@@ -1,4 +1,4 @@
-/* 
+/*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
@@ -25,41 +25,47 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.math.functions;
+package net.sf.maltcms.evaluation.spi.classification;
 
-import lombok.Data;
-import org.openide.util.lookup.ServiceProvider;
-import ucar.ma2.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  */
-@Data
-@ServiceProvider(service = IScalarArraySimilarity.class)
-public class ProductSimilarity implements IScalarArraySimilarity {
+public class MultiMap<K, V> {
 
-	private IScalarSimilarity[] scalarSimilarities = new IScalarSimilarity[0];
-	private IArraySimilarity[] arraySimilarities = new IArraySimilarity[0];
+	private Map<K, Collection<V>> map = new LinkedHashMap<K, Collection<V>>();
 
-	@Override
-	public double apply(double[] s1, double[] s2, Array a1, Array a2) {
-		double val = 1.0d;
-		for (int i = 0; i < scalarSimilarities.length; i++) {
-			double v = scalarSimilarities[i].apply(s1[i], s2[i]);
-			if (Double.isInfinite(v) || Double.isNaN(v)) {
-				return Double.NEGATIVE_INFINITY;
-			}
-			val *= v;
+	public Set<K> keySet() {
+		return map.keySet();
+	}
+	
+	public Collection<V> get(K k) {
+		Collection<V> c = map.get(k);
+		if (c == null) {
+			return Collections.emptyList();
 		}
-		for (int i = 0; i < arraySimilarities.length; i++) {
-			val *= arraySimilarities[i].apply(a1, a2);
-		}
-		return val;
+		return c;
 	}
 
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		return super.clone();
+	public void put(K k, V v) {
+		if (map.containsKey(k)) {
+			Collection<V> c = map.get(k);
+			c.add(v);
+		} else {
+			Collection<V> c = new ArrayList<V>();
+			c.add(v);
+			map.put(k, c);
+		}
+	}
+
+	public void remove(K k) {
+		map.remove(k);
 	}
 }

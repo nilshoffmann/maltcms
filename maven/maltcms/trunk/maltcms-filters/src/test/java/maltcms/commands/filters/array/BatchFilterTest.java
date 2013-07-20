@@ -1,4 +1,4 @@
-/* 
+/*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
@@ -25,41 +25,27 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.math.functions;
+package maltcms.commands.filters.array;
 
-import lombok.Data;
-import org.openide.util.lookup.ServiceProvider;
+import static org.junit.Assert.*;
+import org.junit.Test;
 import ucar.ma2.Array;
+import ucar.ma2.MAMath;
 
 /**
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  */
-@Data
-@ServiceProvider(service = IScalarArraySimilarity.class)
-public class ProductSimilarity implements IScalarArraySimilarity {
+public class BatchFilterTest {
 
-	private IScalarSimilarity[] scalarSimilarities = new IScalarSimilarity[0];
-	private IArraySimilarity[] arraySimilarities = new IArraySimilarity[0];
-
-	@Override
-	public double apply(double[] s1, double[] s2, Array a1, Array a2) {
-		double val = 1.0d;
-		for (int i = 0; i < scalarSimilarities.length; i++) {
-			double v = scalarSimilarities[i].apply(s1[i], s2[i]);
-			if (Double.isInfinite(v) || Double.isNaN(v)) {
-				return Double.NEGATIVE_INFINITY;
-			}
-			val *= v;
-		}
-		for (int i = 0; i < arraySimilarities.length; i++) {
-			val *= arraySimilarities[i].apply(a1, a2);
-		}
-		return val;
-	}
-
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		return super.clone();
+	@Test
+	public void testNormalization() {
+		Array intensities = Array.factory(new float[]{0, 200, 3023, 214, 97324, 977213, 23, 325});
+		MAMath.MinMax mmi = MAMath.getMinMax(intensities);
+		MultiplicationFilter mf1 = new MultiplicationFilter(999.0/(mmi.max-mmi.min));
+		Array normalizedIntensities = mf1.apply(intensities);
+		MAMath.MinMax mm = MAMath.getMinMax(normalizedIntensities);
+		assertEquals(0.0d,mm.min,10e-6);
+		assertEquals(999.0d,mm.max,10e-6);
 	}
 }
