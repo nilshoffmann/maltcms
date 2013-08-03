@@ -197,43 +197,47 @@ public class CSVReader {
 
             while ((line = br.readLine()) != null) {
                 this.log.debug("Parsing row: {}", cnt);
-                if (line.startsWith(this.comment)) {
-                    if (this.skipCommentLines) {
-                        this.log.debug("Skipping comment row: {} = {}", cnt,
-                                line);
-                        // skip to next line
-                        comment1++;
-                        cnt++;
-                        continue;
-                    } else {
-                        // Add row if comments should not be skipped
-                        this.log.debug("Adding row: {}", cnt);
-                        addLine(rows, line);
-                        cnt++;// increase counter only on added lines
-                    }
-                } else {
-                    // Skip row
-                    if (line.startsWith(this.skip)) {
-                        this.log.debug("Skipping row: {} = {}", cnt, line);
-                        this.skippedLines.add(line);
-                        skipped++;
-                        cnt++;
-                        continue;
-                    }
-                    // we haven't seen any content yet, so suspect the next line
-                    // to contain column labels
-                    if (this.firstLineHeaders && (content == 0)) {
-                        this.log.debug("Adding headers: {}", cnt);
-                        headers = addColumns(line);
-                        cnt++;
-                        this.firstLineHeaders = false;
-                    } else {// add content row
-                        this.log.debug("Adding row: {}", cnt);
-                        addLine(rows, line);
-                        content++;
-                        cnt++;
-                    }
-                }
+				if (line.trim().isEmpty()) {
+					this.log.debug("Skipping empty line!");
+				}else {
+					if (line.startsWith(this.comment)) {
+						if (this.skipCommentLines) {
+							this.log.debug("Skipping comment row: {} = {}", cnt,
+									line);
+							// skip to next line
+							comment1++;
+							cnt++;
+							continue;
+						} else {
+							// Add row if comments should not be skipped
+							this.log.debug("Adding row: {}", cnt);
+							addLine(rows, line);
+							cnt++;// increase counter only on added lines
+						}
+					} else {
+						// Skip row
+						if (line.startsWith(this.skip)) {
+							this.log.debug("Skipping row: {} = {}", cnt, line);
+							this.skippedLines.add(line);
+							skipped++;
+							cnt++;
+							continue;
+						}
+						// we haven't seen any content yet, so suspect the next line
+						// to contain column labels
+						if (this.firstLineHeaders && (content == 0)) {
+							this.log.debug("Adding headers: {}", cnt);
+							headers = addColumns(line);
+							cnt++;
+							this.firstLineHeaders = false;
+						} else {// add content row
+							this.log.debug("Adding row: {}", cnt);
+							addLine(rows, line);
+							content++;
+							cnt++;
+						}
+					}
+				}
             }
             br.close();
             this.log.debug("Read {} lines, skipped {}, comments {}",

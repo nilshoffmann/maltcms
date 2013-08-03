@@ -55,11 +55,11 @@ import net.sf.maltcms.evaluation.api.classification.PeakRTFeatureVectorComparato
  */
 public class ClassificationPerformanceTest<T extends IFeatureVector> {
 
-    private final List<EntityGroup> groundTruth;
+    private final List<EntityGroup<T>> groundTruth;
     private final int numberOfGroundTruthEntities;
     private final IFeatureVectorComparator ifvc;
 
-    public ClassificationPerformanceTest(List<EntityGroup> groundTruth, IFeatureVectorComparator ifvc) {
+    public ClassificationPerformanceTest(List<EntityGroup<T>> groundTruth, IFeatureVectorComparator ifvc) {
         this.groundTruth = groundTruth;
         int nent = 0;
         for (EntityGroup eg : this.groundTruth) {
@@ -83,13 +83,13 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         gt[4] = new double[]{6.7, 6.65, 6.71};
         gt[5] = new double[]{7.23, 7.12, 7.123};
 
-        List<EntityGroup> gtl = new ArrayList<EntityGroup>();
+        List<EntityGroup<PeakRTFeatureVector>> gtl = new ArrayList<EntityGroup<PeakRTFeatureVector>>();
         for (int i = 0; i < gt.length; i++) {
             Entity[] e = new Entity[gt[i].length];
             for (int j = 0; j < e.length; j++) {
-                e[j] = new Entity(new PeakRTFeatureVector(gt[i][j]), cats[j], "gt" + (i + 1));
+                e[j] = new Entity<PeakRTFeatureVector>(new PeakRTFeatureVector(gt[i][j],Double.NaN), cats[j], "gt" + (i + 1));
             }
-            EntityGroup eg = new EntityGroup(e);
+            EntityGroup<PeakRTFeatureVector> eg = new EntityGroup<PeakRTFeatureVector>(e);
             gtl.add(eg);
         }
 
@@ -101,13 +101,13 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         data[4] = new double[]{6.34999, 6.321, Double.NaN};
         data[5] = new double[]{7.23, Double.NaN, 7.12};
 
-        List<EntityGroup> datal = new ArrayList<EntityGroup>();
+        List<EntityGroup<PeakRTFeatureVector>> datal = new ArrayList<EntityGroup<PeakRTFeatureVector>>();
         for (int i = 0; i < data.length; i++) {
             Entity[] e = new Entity[data[i].length];
             for (int j = 0; j < e.length; j++) {
-                e[j] = new Entity(new PeakRTFeatureVector(data[i][j]), cats[j], "data" + (i + 1));
+                e[j] = new Entity<PeakRTFeatureVector>(new PeakRTFeatureVector(data[i][j],Double.NaN), cats[j], "data" + (i + 1));
             }
-            EntityGroup eg = new EntityGroup(e);
+            EntityGroup<PeakRTFeatureVector> eg = new EntityGroup<PeakRTFeatureVector>(e);
             datal.add(eg);
         }
 
@@ -115,7 +115,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         System.out.println(cpt.performTest("test", datal));
     }
 
-    public PerformanceMetrics performTest(String toolname, List<EntityGroup> testGroup) throws IllegalArgumentException {
+    public PerformanceMetrics performTest(String toolname, List<EntityGroup<T>> testGroup) throws IllegalArgumentException {
         //log.debug("Performing classification performance test for " + toolname);
         if (!checkCategories(this.groundTruth, testGroup)) {
             throw new IllegalArgumentException("Could not match categories to ground truth for tool: " + toolname + "!");
@@ -132,7 +132,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         //we first try to find the ground truth EntityGroup, which best matches
         //to a given testGroup entity group
 
-        HashMap<EntityGroup, EntityGroupClassificationResult> gtToClsRes = new LinkedHashMap<EntityGroup, EntityGroupClassificationResult>();
+        HashMap<EntityGroup<T>, EntityGroupClassificationResult> gtToClsRes = new LinkedHashMap<EntityGroup<T>, EntityGroupClassificationResult>();
 
         int M = 0;
         for (EntityGroup eg : testGroup) {
@@ -143,7 +143,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
 
         int cnt = 0;
         //log.debug("Matching " + M + " entities against ground truth!");
-        for (EntityGroup tgEg : testGroup) {
+        for (EntityGroup<T> tgEg : testGroup) {
             //log.debug("Entity group " + (++cnt) + "/" + testGroup.size());
             //find the ground truth group, which has the highest tp1+tn1 number
             //may be null if no tp1 and/or tn1 hits are found
@@ -159,7 +159,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
 //				System.out.println(gtg.getToolEntityGroup());
 //				System.out.println("TP: "+gtg.getTp()+" FP: "+gtg.getFp()+" TN: "+gtg.getTn()+" FN: "+gtg.getFn());
 //				System.out.println("##################");
-                EntityGroup gtEntityGroup = gtg.getGroundTruthEntityGroup();
+                EntityGroup<T> gtEntityGroup = gtg.getGroundTruthEntityGroup();
                 if (gtToClsRes.containsKey(gtEntityGroup)) {
                     //System.err.println("Warning: GT EntityGroup already assigned!");
                     //test for reassignment
@@ -184,21 +184,21 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         HashSet<EntityGroup> matchedToolGroups = new LinkedHashSet<EntityGroup>();
         int tp = 0, tn = 0, fp = 0, fn = 0;
         double dist = 0;
-        for (EntityGroup gtGroup : gtToClsRes.keySet()) {
+        for (EntityGroup<T> gtGroup : gtToClsRes.keySet()) {
             EntityGroupClassificationResult egcr = gtToClsRes.get(gtGroup);
             tp += egcr.getTp();
             tn += egcr.getTn();
             fp += egcr.getFp();
             fn += egcr.getFn();
             dist += egcr.getDist();
-            EntityGroup toolGroup = gtToClsRes.get(gtGroup).getToolEntityGroup();
+            EntityGroup<T> toolGroup = gtToClsRes.get(gtGroup).getToolEntityGroup();
             matchedToolGroups.add(toolGroup);
         }
-        HashSet<EntityGroup> unmatchedToolGroups = new LinkedHashSet<EntityGroup>(testGroup);
+        HashSet<EntityGroup<T>> unmatchedToolGroups = new LinkedHashSet<EntityGroup<T>>(testGroup);
         unmatchedToolGroups.removeAll(matchedToolGroups);
 
-        HashSet<EntityGroup> matchedGTGroups = new LinkedHashSet<EntityGroup>(gtToClsRes.keySet());
-        HashSet<EntityGroup> unmatchedGTGroups = new LinkedHashSet<EntityGroup>(groundTruth);
+        HashSet<EntityGroup<T>> matchedGTGroups = new LinkedHashSet<EntityGroup<T>>(gtToClsRes.keySet());
+        HashSet<EntityGroup<T>> unmatchedGTGroups = new LinkedHashSet<EntityGroup<T>>(groundTruth);
         unmatchedGTGroups.removeAll(matchedGTGroups);
 
         PerformanceMetrics pm = new PerformanceMetrics(toolname, tp, fp, tn, fn, N, M, K, dist, unmatchedToolGroups, unmatchedGTGroups, gtToClsRes);
@@ -213,7 +213,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
      * @param groundTruth
      * @return
      */
-    public EntityGroupClassificationResult findBest(EntityGroup testGroup, List<EntityGroup> groundTruth) {
+    public EntityGroupClassificationResult findBest(EntityGroup<T> testGroup, List<EntityGroup<T>> groundTruth) {
         //int tmpCorrect = 1;
 
         Set<Category> categories = testGroup.getCategories();
@@ -221,7 +221,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         //int tpOpt = 0, fpOpt = categories.size(), tnOpt = 0, fnOpt = categories.size();
         //double minDist = Double.POSITIVE_INFINITY;
         EntityGroupClassificationResult bestGroup = null;
-        for (EntityGroup groundTruthEntityGroup : groundTruth) {
+        for (EntityGroup<T> groundTruthEntityGroup : groundTruth) {
             int tp = 0;
             int tn = 0;
             int fp = 0;
@@ -240,8 +240,8 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
             //if a group is assigned to a gt group, which has already been assigned before.
             double dist = 0;
             for (Category c : categories) {
-                Entity gtEntity = groundTruthEntityGroup.getEntityForCategory(c);
-                Entity testEntity = testGroup.getEntityForCategory(c);
+                Entity<T> gtEntity = groundTruthEntityGroup.getEntityForCategory(c);
+                Entity<T> testEntity = testGroup.getEntityForCategory(c);
                 if (this.ifvc.isTP(gtEntity.getFeatureVector(), testEntity.getFeatureVector())) {
                     tp++;
                 }
@@ -281,12 +281,12 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         return bestGroup;
     }
 
-    private void printScoreForGroup(EntityGroup gtGroup, EntityGroup testGroup) {
+    private void printScoreForGroup(EntityGroup<T> gtGroup, EntityGroup<T> testGroup) {
         Set<Category> categories = testGroup.getCategories();
         int tp = 0, tn = 0, fp = 0, fn = 0;
         for (Category c : categories) {
-            Entity gtEntity = gtGroup.getEntityForCategory(c);
-            Entity testEntity = testGroup.getEntityForCategory(c);
+            Entity<T> gtEntity = gtGroup.getEntityForCategory(c);
+            Entity<T> testEntity = testGroup.getEntityForCategory(c);
             if (this.ifvc.isTP(gtEntity.getFeatureVector(), testEntity.getFeatureVector())) {
                 tp++;
             }
@@ -303,7 +303,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         //log.debug("Score of test group \n" + testGroup.toString() + "\n versus ground truth group \n" + gtGroup.toString() + "\n" + " tp = " + tp + " tn = " + tn + " fp = " + fp + " fn = " + fn);
     }
 
-    private EntityGroup getBetterGroup(EntityGroup gtGroup, EntityGroup testGroup1, EntityGroup testGroup2) {
+    private EntityGroup<T> getBetterGroup(EntityGroup<T> gtGroup, EntityGroup<T> testGroup1, EntityGroup<T> testGroup2) {
         int[] cnts1 = getCounts(gtGroup, testGroup1);
         int[] cnts2 = getCounts(gtGroup, testGroup2);
         EntityGroup best = testGroup1;
@@ -355,12 +355,12 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
      *
      * @return
      */
-    private int[] getCounts(EntityGroup gtGroup, EntityGroup testGroup) {
+    private int[] getCounts(EntityGroup<T> gtGroup, EntityGroup<T> testGroup) {
         int tp1 = 0, tn1 = 0, fp1 = 0, fn1 = 0;
         Set<Category> categories = testGroup.getCategories();
         for (Category c : categories) {
-            Entity gtEntity = gtGroup.getEntityForCategory(c);
-            Entity testEntity = testGroup.getEntityForCategory(c);
+            Entity<T> gtEntity = gtGroup.getEntityForCategory(c);
+            Entity<T> testEntity = testGroup.getEntityForCategory(c);
             if (this.ifvc.isTP(gtEntity.getFeatureVector(), testEntity.getFeatureVector())) {
                 tp1++;
             }
@@ -377,11 +377,11 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         return new int[]{tp1, tn1, fp1, fn1};
     }
 
-    public boolean checkCategories(List<EntityGroup> gt, List<EntityGroup> testGroup) {
+    public boolean checkCategories(List<EntityGroup<T>> gt, List<EntityGroup<T>> testGroup) {
         boolean check = false;
         int ncat = -1;
         //test all pairs
-        for (EntityGroup eg : gt) {
+        for (EntityGroup<T> eg : gt) {
             if (ncat == -1) {
                 ncat = eg.getCategories().size();
             } else {
@@ -389,7 +389,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
                     //log.warn("Number of categories in ground truth differs! Check rows!");
                 }
             }
-            for (EntityGroup tg : testGroup) {
+            for (EntityGroup<T> tg : testGroup) {
                 if (ncat != tg.getCategories().size()) {
                     //log.warn("Number of categories in test group differs! Check rows!");
                 }
@@ -399,7 +399,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         return check;
     }
 
-    public boolean checkCategories(EntityGroup gt, EntityGroup testGroup) {
+    public boolean checkCategories(EntityGroup<T> gt, EntityGroup<T> testGroup) {
         //categories need to be the same
         Set<Category> gtCats = gt.getCategories();
         Set<Category> tgCats = testGroup.getCategories();

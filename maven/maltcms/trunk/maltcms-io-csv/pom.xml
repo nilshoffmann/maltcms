@@ -26,5 +26,10 @@
             <artifactId>maltcms-io</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-datastructures</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

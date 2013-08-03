@@ -28,6 +28,7 @@
 package maltcms.datastructures.peak;
 
 import java.util.List;
+import java.util.UUID;
 import ucar.ma2.Array;
 
 /**
@@ -96,4 +97,6 @@ public interface IPeak {
 	int getPeakIndex();
 	
 	void setPeakIndex(int index);
+	
+	UUID getUniqueId();
 }

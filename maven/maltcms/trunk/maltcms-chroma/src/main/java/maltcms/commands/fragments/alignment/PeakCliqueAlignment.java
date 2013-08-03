@@ -510,6 +510,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 		// Loop over all pairs of FileFragments
 		ICompletionService<Integer> ics = createCompletionService(Integer.class);
 		List<Callable<Integer>> workers = workerFactory.create(al, fragmentToPeaks);
+		log.info("Running {} pairwise similarity tasks!",workers.size());
 		for (Callable<Integer> worker : workers) {
 			ics.submit(worker);
 		}

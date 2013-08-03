@@ -194,3 +194,4 @@ CMDLINE+=("${MALTCMSARGS[@]}")
 echo "Executing ${CMDLINE[@]}"
 exec -a maltcms "${CMDLINE[@]}"
 exit $?
+

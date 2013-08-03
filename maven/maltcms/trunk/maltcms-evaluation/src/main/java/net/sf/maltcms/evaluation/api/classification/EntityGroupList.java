@@ -30,22 +30,39 @@ package net.sf.maltcms.evaluation.api.classification;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import maltcms.datastructures.array.IFeatureVector;
+import net.sf.maltcms.evaluation.spi.classification.Peak2DFeatureVector;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class EntityGroupList implements List<EntityGroup> {
-	private List<EntityGroup> delegate = new ArrayList<EntityGroup>();
+public class EntityGroupList<T extends IFeatureVector> implements List<EntityGroup<T>> {
+	private List<EntityGroup<T>> delegate = new ArrayList<EntityGroup<T>>();
 
 	private final Set<Category> categories;
+	
+	public EntityGroupList(List<Category> categories) {
+		ArrayList<Category> cats = new ArrayList<Category>(categories);
+		Collections.sort(cats, new Comparator<Category>() {
+
+			@Override
+			public int compare(Category o1, Category o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		this.categories = new LinkedHashSet<Category>(cats);
+	}
+	
 	public EntityGroupList(Category...category) {
-		categories = new LinkedHashSet<Category>(Arrays.asList(category));
+		this(Arrays.asList(category));
 	}
 	
 	public int getCategoriesSize() {
@@ -56,9 +73,39 @@ public class EntityGroupList implements List<EntityGroup> {
 		return categories;
 	}
 	
-	public EntityGroupList getSubList(Category...categories) {
-		EntityGroupList entityGroups = new EntityGroupList(categories);
-		for(EntityGroup eg:this) {
+	public Entity<T> findMatching(Entity<T> template, String feature) {
+		for(Entity<T> e:getEntities(template.getCategory())) {
+			if(template.getFeatureVector() instanceof Peak2DFeatureVector && e.getFeatureVector() instanceof Peak2DFeatureVector) {
+				Peak2DFeatureVector p2dtemplate = (Peak2DFeatureVector)template.getFeatureVector();
+				Peak2DFeatureVector p2de = (Peak2DFeatureVector)e.getFeatureVector();
+				if(p2dtemplate.getRowIndex()!= -1 && p2de.getRowIndex() != -1 && p2dtemplate.getRowIndex()==p2de.getRowIndex()) {
+					return e;
+				}
+			}else {
+				if(e.getFeatureVector().getFeature(feature).equals(template.getFeatureVector().getFeature(feature))) {
+					return e;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public boolean containsEntity(Entity<T> template, String feature) {
+		Entity<T> result = findMatching(template, feature);
+		return result==null?false:true;
+	}
+	
+	public List<Entity<T>> getEntities(Category c) {
+		List<Entity<T>> es = new ArrayList<Entity<T>>();
+		for(EntityGroup<T> eg:this) {
+			es.add(eg.getEntityForCategory(c));
+		}
+		return es;
+	}
+	
+	public EntityGroupList<T> getSubList(Category...categories) {
+		EntityGroupList<T> entityGroups = new EntityGroupList<T>(categories);
+		for(EntityGroup<T> eg:this) {
 			entityGroups.add(eg.subGroup(categories));
 		}
 		return entityGroups;
@@ -80,7 +127,7 @@ public class EntityGroupList implements List<EntityGroup> {
 	}
 
 	@Override
-	public Iterator<EntityGroup> iterator() {
+	public Iterator<EntityGroup<T>> iterator() {
 		return delegate.iterator();
 	}
 
@@ -95,7 +142,7 @@ public class EntityGroupList implements List<EntityGroup> {
 	}
 
 	@Override
-	public boolean add(EntityGroup e) {
+	public boolean add(EntityGroup<T> e) {
 		if(categories.containsAll(e.getCategories())){
 			return delegate.add(e);
 		}else{
@@ -114,7 +161,7 @@ public class EntityGroupList implements List<EntityGroup> {
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends EntityGroup> c) {
+	public boolean addAll(Collection<? extends EntityGroup<T>> c) {
 		boolean b = false;
 		for(EntityGroup eg:c) {
 			b = add(eg);
@@ -123,7 +170,7 @@ public class EntityGroupList implements List<EntityGroup> {
 	}
 
 	@Override
-	public boolean addAll(int index, Collection<? extends EntityGroup> c) {
+	public boolean addAll(int index, Collection<? extends EntityGroup<T>> c) {
 		return delegate.addAll(index, c);
 	}
 
@@ -153,12 +200,12 @@ public class EntityGroupList implements List<EntityGroup> {
 	}
 
 	@Override
-	public EntityGroup get(int index) {
+	public EntityGroup<T> get(int index) {
 		return delegate.get(index);
 	}
 
 	@Override
-	public EntityGroup set(int index, EntityGroup element) {
+	public EntityGroup<T> set(int index, EntityGroup<T> element) {
 		if(categories.containsAll(element.getCategories())){
 			return delegate.set(index, element);
 		}else{
@@ -167,7 +214,7 @@ public class EntityGroupList implements List<EntityGroup> {
 	}
 
 	@Override
-	public void add(int index, EntityGroup element) {
+	public void add(int index, EntityGroup<T> element) {
 		if(categories.containsAll(element.getCategories())){
 			delegate.add(index, element);
 		}else{
@@ -176,7 +223,7 @@ public class EntityGroupList implements List<EntityGroup> {
 	}
 
 	@Override
-	public EntityGroup remove(int index) {
+	public EntityGroup<T> remove(int index) {
 		return delegate.remove(index);
 	}
 
@@ -191,17 +238,17 @@ public class EntityGroupList implements List<EntityGroup> {
 	}
 
 	@Override
-	public ListIterator<EntityGroup> listIterator() {
+	public ListIterator<EntityGroup<T>> listIterator() {
 		return delegate.listIterator();
 	}
 
 	@Override
-	public ListIterator<EntityGroup> listIterator(int index) {
+	public ListIterator<EntityGroup<T>> listIterator(int index) {
 		return delegate.listIterator(index);
 	}
 
 	@Override
-	public List<EntityGroup> subList(int fromIndex, int toIndex) {
+	public List<EntityGroup<T>> subList(int fromIndex, int toIndex) {
 		return delegate.subList(fromIndex, toIndex);
 	}
 }

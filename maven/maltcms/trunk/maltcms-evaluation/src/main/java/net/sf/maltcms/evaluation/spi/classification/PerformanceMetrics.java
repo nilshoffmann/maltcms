@@ -27,9 +27,11 @@
  */
 package net.sf.maltcms.evaluation.spi.classification;
 
+import net.sf.maltcms.evaluation.api.classification.IPerformanceMetrics;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import maltcms.datastructures.array.IFeatureVector;
 import net.sf.maltcms.evaluation.api.classification.EntityGroup;
 
 /**
@@ -37,19 +39,15 @@ import net.sf.maltcms.evaluation.api.classification.EntityGroup;
  *
  *
  */
-public class PerformanceMetrics {
+public class PerformanceMetrics<T extends IFeatureVector> implements IPerformanceMetrics {
 
-	public static enum Vars {
-
-		TP, FP, TN, FN, F1, SENSITIVITY, SPECIFICITY, FPR, FNR, RECALL, ACCURACY, GAIN
-	};
 	private int tp, fp, tn, fn, realfn, groundTruthEntities, toolEntities, unmatchedTool, unmatchedGroundTruth, K;
 	private double dist, f1;
 	private String toolName;
-	private HashSet<EntityGroup> unmatchedToolEnt, unmatchedGroundTruthEnt;
-	private HashMap<EntityGroup, EntityGroupClassificationResult> groundTruthToToolMatchResults;
+	private HashSet<EntityGroup<T>> unmatchedToolEnt, unmatchedGroundTruthEnt;
+	private HashMap<EntityGroup<T>, EntityGroupClassificationResult> groundTruthToToolMatchResults;
 
-	public PerformanceMetrics(String toolName, int tp, int fp, int tn, int fn, int N, int M, int K, double dist, HashSet<EntityGroup> unmatchedTool, HashSet<EntityGroup> unmatchedGroundTruth, HashMap<EntityGroup, EntityGroupClassificationResult> gtToClsRes) {
+	public PerformanceMetrics(String toolName, int tp, int fp, int tn, int fn, int N, int M, int K, double dist, HashSet<EntityGroup<T>> unmatchedTool, HashSet<EntityGroup<T>> unmatchedGroundTruth, HashMap<EntityGroup<T>, EntityGroupClassificationResult> gtToClsRes) {
 		this.toolName = toolName;
 		this.tp = tp;
 		this.fp = fp;//+unmatchedTool;
@@ -60,11 +58,11 @@ public class PerformanceMetrics {
 		this.toolEntities = M;
 		this.dist = dist;
 		this.unmatchedTool = 0;////unmatchedTool.size();
-		for (EntityGroup group : unmatchedTool) {
+		for (EntityGroup<T> group : unmatchedTool) {
 			this.unmatchedTool += group.getEntities().size();
 		}
 		this.unmatchedGroundTruth = 0;//K * unmatchedGroundTruth.size();
-		for (EntityGroup group : unmatchedGroundTruth) {
+		for (EntityGroup<T> group : unmatchedGroundTruth) {
 			this.unmatchedGroundTruth += group.getEntities().size();
 		}
 		this.fn = this.realfn;// + (this.unmatchedGroundTruth);
@@ -82,14 +80,17 @@ public class PerformanceMetrics {
 		return this.toolName;
 	}
 
+	@Override
 	public int getTp() {
 		return this.tp;
 	}
 
+	@Override
 	public int getFp() {
 		return this.fp;
 	}
 
+	@Override
 	public int getTn() {
 		return this.tn;
 	}
@@ -98,6 +99,7 @@ public class PerformanceMetrics {
 		return this.realfn;
 	}
 
+	@Override
 	public int getFn() {
 		return this.fn;
 	}
@@ -122,10 +124,11 @@ public class PerformanceMetrics {
 		return this.unmatchedGroundTruth;
 	}
 
-	public Map<EntityGroup, EntityGroupClassificationResult> getGroundTruthToToolMatchResults() {
+	public Map<EntityGroup<T>, EntityGroupClassificationResult> getGroundTruthToToolMatchResults() {
 		return this.groundTruthToToolMatchResults;
 	}
 
+	@Override
 	public double getSensitivity() {
 		double tpv = tp;
 		double fnv = fn;
@@ -133,6 +136,7 @@ public class PerformanceMetrics {
 		return sens;
 	}
 
+	@Override
 	public double getSpecificity() {
 		double tnv = tn;
 		double fpv = fp;
@@ -140,14 +144,17 @@ public class PerformanceMetrics {
 		return spec;
 	}
 
+	@Override
 	public double getFPR() {
 		return 1 - getSpecificity();
 	}
 
+	@Override
 	public double getFNR() {
 		return 1 - getSensitivity();
 	}
 
+	@Override
 	public double getAccuracy() {
 		double tpv = tp;
 		double tnv = tn;
@@ -157,6 +164,7 @@ public class PerformanceMetrics {
 		return acc;
 	}
 
+	@Override
 	public double getGain() {
 		//System.out.println("tp+fn=" + (tp + fn));
 		//System.out.println("tp+tn+fp+fn=" + (tp + tn + fp + fn));
@@ -167,6 +175,7 @@ public class PerformanceMetrics {
 		return gain;
 	}
 
+	@Override
 	public double getPrecision() {
 		double tpv = tp;
 		double fpv = fp;
@@ -174,6 +183,7 @@ public class PerformanceMetrics {
 		return prec;
 	}
 
+	@Override
 	public double getRecall() {
 		return getSensitivity();
 	}
@@ -204,12 +214,12 @@ public class PerformanceMetrics {
 		sb.append("Number of unmatched testGroup entities (ignored)= " + unmatchedTool + "\n");
 		sb.append("Number of unmatched groundTruth entities (counted as false negatives)= " + unmatchedGroundTruth + "\n");
 		sb.append("Unmatched tool entities:\n");
-		for (EntityGroup eg : unmatchedToolEnt) {
+		for (EntityGroup<T> eg : unmatchedToolEnt) {
 			sb.append(eg + "\n");
 		}
 		sb.append("Unmatched ground truth entities:\n");
 
-		for (EntityGroup eg : unmatchedGroundTruthEnt) {
+		for (EntityGroup<T> eg : unmatchedGroundTruthEnt) {
 			sb.append(eg + "\n");
 		}
 		return sb.toString();
@@ -221,6 +231,7 @@ public class PerformanceMetrics {
 		return a / b;
 	}
 
+	@Override
 	public double getF1() {
 		return f1;
 	}

@@ -34,15 +34,15 @@ import maltcms.datastructures.array.IFeatureVector;
  *
  *
  */
-public interface IFeatureVectorComparator {
+public interface IFeatureVectorComparator<T extends IFeatureVector> {
 
-    public abstract boolean isTP(IFeatureVector gt, IFeatureVector test);
+    public abstract boolean isTP(T gt, T test);
 
-    public abstract boolean isTN(IFeatureVector gt, IFeatureVector test);
+    public abstract boolean isTN(T gt, T test);
 
-    public abstract boolean isFP(IFeatureVector gt, IFeatureVector test);
+    public abstract boolean isFP(T gt, T test);
 
-    public abstract boolean isFN(IFeatureVector gt, IFeatureVector test);
+    public abstract boolean isFN(T gt, T test);
 
-    public abstract double getSquaredDiff(IFeatureVector gt, IFeatureVector test);
+    public abstract double getSquaredDiff(T gt, T test);
 }

@@ -27,30 +27,22 @@
  */
 package net.sf.maltcms.evaluation.api.classification;
 
-import net.sf.maltcms.evaluation.spi.classification.PeakRTFeatureVector;
-
 /**
  * @author Nils Hoffmann
  *
  *
  */
-public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator<PeakRTFeatureVector> {
-
-    private final double delta;
-
-    public PeakRTFeatureVectorComparator(double delta) {
-        this.delta = delta;
-    }
+public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorComparator<IRowIndexNamedPeakFeatureVector> {
 
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isFN(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
     @Override
-    public boolean isFN(PeakRTFeatureVector gt, PeakRTFeatureVector test) {
-        if (gt instanceof PeakRTFeatureVector && test instanceof PeakRTFeatureVector) {
-            final double lhsRT = ((PeakRTFeatureVector) gt).getRT();
-            final double rhsRT = ((PeakRTFeatureVector) test).getRT();
-            if (!Double.isNaN(lhsRT) && Double.isNaN(rhsRT)) {
+    public boolean isFN(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
+        if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
+            final int lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
+            final int rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();
+            if (lhsRT!=-1 && rhsRT==-1) {
                 return true;
             }
         }
@@ -61,15 +53,15 @@ public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator<P
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isFP(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
     @Override
-    public boolean isFP(PeakRTFeatureVector gt, PeakRTFeatureVector test) {
-        if (gt instanceof PeakRTFeatureVector && test instanceof PeakRTFeatureVector) {
-            final double lhsRT = ((PeakRTFeatureVector) gt).getRT();
-            final double rhsRT = ((PeakRTFeatureVector) test).getRT();
+    public boolean isFP(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
+        if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
+            final int lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
+            final int rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();
             //if gt is NaN, but test has a value, if FP=true
-            if (Double.isNaN(lhsRT) && !Double.isNaN(rhsRT)) {
+            if (lhsRT==-1 && rhsRT!=-1) {
                 return true;
             }
-            if (Math.abs(lhsRT - rhsRT) > delta) {
+            if (lhsRT!=-1 && rhsRT!=-1 && lhsRT!=rhsRT) {
                 return true;
             }
         }
@@ -80,12 +72,12 @@ public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator<P
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isTN(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
     @Override
-    public boolean isTN(PeakRTFeatureVector gt, PeakRTFeatureVector test) {
-        if (gt instanceof PeakRTFeatureVector && test instanceof PeakRTFeatureVector) {
-            final double lhsRT = ((PeakRTFeatureVector) gt).getRT();
-            final double rhsRT = ((PeakRTFeatureVector) test).getRT();
+    public boolean isTN(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
+        if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
+            final int lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
+            final int rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();
             //both are NaNs
-            if (Double.isNaN(lhsRT) && Double.isNaN(rhsRT)) {
+            if (lhsRT==-1 && rhsRT==-1) {
                 return true;
             }
         }
@@ -96,16 +88,16 @@ public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator<P
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isTP(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
     @Override
-    public boolean isTP(PeakRTFeatureVector gt, PeakRTFeatureVector test) {
-        if (gt instanceof PeakRTFeatureVector && test instanceof PeakRTFeatureVector) {
-            final double lhsRT = ((PeakRTFeatureVector) gt).getRT();
-            final double rhsRT = ((PeakRTFeatureVector) test).getRT();
+    public boolean isTP(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
+        if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
+            final int lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
+            final int rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();
             //if either is a NaN or both, TP=false
-            if ((Double.isNaN(lhsRT) && !Double.isNaN(rhsRT)) || (!Double.isNaN(lhsRT) && Double.isNaN(rhsRT))) {
+            if ((lhsRT==-1 && rhsRT!=-1) || (lhsRT!=-1 && rhsRT==-1)) {
                 return false;
             }
             //true positive if both have a value, and their difference is <=delta
-            if (Math.abs(lhsRT - rhsRT) <= delta) {
+            if (lhsRT!=-1 && rhsRT!=-1 && lhsRT == rhsRT) {
                 return true;
             }
         }
@@ -121,22 +113,22 @@ public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator<P
      * @return
      */
     @Override
-    public double getSquaredDiff(PeakRTFeatureVector gt, PeakRTFeatureVector test) {
-        if (gt instanceof PeakRTFeatureVector && test instanceof PeakRTFeatureVector) {
-            double lhsRT = ((PeakRTFeatureVector) gt).getRT();
-            double rhsRT = ((PeakRTFeatureVector) test).getRT();
-            boolean lhsRTNaN = false, rhsRTNaN = false;
-            lhsRTNaN = Double.isNaN(lhsRT);
-            rhsRTNaN = Double.isNaN(rhsRT);
-            lhsRT = (lhsRTNaN) ? 0 : lhsRT;
-            rhsRT = (rhsRTNaN) ? 0 : rhsRT;
-            if (lhsRTNaN && rhsRTNaN) {
-                return 0;
-            }
-            double diff = Math.pow((lhsRT - rhsRT), 2.0d);
-//            System.out.println("DiffSq: "+diff);
-            return diff;
-        }
+    public double getSquaredDiff(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
+//        if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
+//            double lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
+//            double rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();
+//            boolean lhsRTNaN = false, rhsRTNaN = false;
+//            lhsRTNaN = Double.isNaN(lhsRT);
+//            rhsRTNaN = Double.isNaN(rhsRT);
+//            lhsRT = (lhsRTNaN) ? 0 : lhsRT;
+//            rhsRT = (rhsRTNaN) ? 0 : rhsRT;
+//            if (lhsRTNaN && rhsRTNaN) {
+//                return 0;
+//            }
+//            double diff = Math.pow((lhsRT - rhsRT), 2.0d);
+////            System.out.println("DiffSq: "+diff);
+//            return diff;
+//        }
         return Double.NaN;
     }
 }

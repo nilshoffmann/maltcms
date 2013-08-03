@@ -45,38 +45,38 @@ import maltcms.datastructures.array.IFeatureVector;
  *
  *
  */
-public class EntityGroup implements Comparable<EntityGroup>, Serializable {
+public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityGroup>, Serializable {
 
-    private final HashMap<Category, Entity> categoryToEntityMap;
+    private final HashMap<Category, Entity<T>> categoryToEntityMap;
 
-    public EntityGroup(Entity... e) {
-        categoryToEntityMap = new HashMap<Category, Entity>();
-        for (Entity ent : e) {
+    public EntityGroup(Entity<T>... e) {
+        categoryToEntityMap = new HashMap<Category, Entity<T>>();
+        for (Entity<T> ent : e) {
             categoryToEntityMap.put(ent.getCategory(), ent);
         }
     }
 	
-	public EntityGroup subGroup(Category...c) {
-		List<Entity> entities = new ArrayList<Entity>(c.length);
+	public EntityGroup<T> subGroup(Category...c) {
+		List<Entity<T>> entities = new ArrayList<Entity<T>>(c.length);
 		for(Category cat:c) {
 			entities.add(getEntityForCategory(cat));
 		}
-		EntityGroup eg = new EntityGroup(entities.toArray(new Entity[c.length]));
+		EntityGroup<T> eg = new EntityGroup<T>(entities.toArray(new Entity[c.length]));
 		return eg;
 	}
 
-    public void addEntity(Category c, Entity e) {
+    public void addEntity(Category c, Entity<T> e) {
         if (this.categoryToEntityMap.containsKey(c)) {
             System.err.println("Element with key " + c + " already contained in EntityGroup!");
         }
         this.categoryToEntityMap.put(c, e);
     }
 
-    public List<Entity> getEntities() {
-        return new ArrayList<Entity>(categoryToEntityMap.values());
+    public List<Entity<T>> getEntities() {
+        return new ArrayList<Entity<T>>(categoryToEntityMap.values());
     }
 
-    public Entity getEntityForCategory(Category c) {
+    public Entity<T> getEntityForCategory(Category c) {
         return categoryToEntityMap.get(c);
     }
 

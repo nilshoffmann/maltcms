@@ -161,5 +161,10 @@
             <groupId>com.db4o</groupId>
             <artifactId>db4o-all</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-io-csv</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

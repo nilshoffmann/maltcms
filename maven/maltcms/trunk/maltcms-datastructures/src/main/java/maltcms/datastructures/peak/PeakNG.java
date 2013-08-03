@@ -31,8 +31,6 @@ import com.carrotsearch.hppc.ObjectDoubleOpenHashMap;
 import com.carrotsearch.hppc.cursors.ObjectCursor;
 import com.carrotsearch.hppc.sorting.IndirectComparator;
 import com.carrotsearch.hppc.sorting.IndirectSort;
-import cross.cache.CacheFactory;
-import cross.cache.ICacheDelegate;
 import cross.datastructures.cache.SerializableArray;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,12 +41,16 @@ import java.util.Map;
 
 import ucar.ma2.Array;
 import cross.exception.ResourceNotAvailableException;
+import java.io.Serializable;
 import java.util.LinkedList;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.feature.DefaultFeatureVector;
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
+import net.sf.ehcache.config.CacheConfiguration;
+import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 
 /**
  * Shorthand class for peaks.
@@ -64,11 +66,8 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
      *
      */
     private static final long serialVersionUID = -4337180586706400884L;
-//	public static final ObjectObjectOpenHashMap<IPeak,String> peakToAssociation = new ObjectObjectOpenHashMap<IPeak,String>();
-	private final ICacheDelegate<UUID,SerializableArray> peakArrayCache = CacheFactory.createDefaultCache("PEAKNG-CACHE", 100000);
+	private static final Ehcache peakArrayCache;
     private final int scanIndex;
-//	@Getter(AccessLevel.PRIVATE)
-//    private final SerializableArray msIntensities;
     private final double sat;
     private final Map<String, ObjectDoubleOpenHashMap<IPeak>> sims = new ConcurrentHashMap<String, ObjectDoubleOpenHashMap<IPeak>>();
     private final Map<String, IPeak[]> sortedPeaks = new ConcurrentHashMap<String, IPeak[]>();
@@ -76,18 +75,30 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
     private int peakIndex = -1;
     private final String association;
     private final boolean storeOnlyBestSimilarities;
-
-	public PeakNG(int scanIndex, Array msIntensities, double sat, String association, boolean storeOnlyBestSimilarities) {
+//	private final Array msIntensities;
+	
+	static {
+		peakArrayCache = net.sf.ehcache.CacheManager.getInstance().addCacheIfAbsent("PEAKNG-CACHE");
+		CacheConfiguration cc = peakArrayCache.getCacheConfiguration();
+		cc.setDiskSpoolBufferSizeMB(128);
+		cc.setMaxElementsInMemory(100000);
+		cc.setMaxElementsOnDisk(Integer.MAX_VALUE);
+		cc.setOverflowToDisk(true);
+		cc.setMemoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LRU.toString());
+	}
+	
+	public PeakNG(int scanIndex, Array array, double sat, String association, boolean storeOnlyBestSimilarities) {
         this.scanIndex = scanIndex;
-		peakArrayCache.put(this.getUniqueId(), new SerializableArray(msIntensities));
+		peakArrayCache.put(new Element(this.getUniqueId(), new SerializableArray(array)));
 		this.sat = sat;
-		this.association = association;
+		this.association = association.intern();
 		this.storeOnlyBestSimilarities = storeOnlyBestSimilarities;
     }
 	
+	@Override
 	public Array getMsIntensities() {
-//		return msIntensities.getArray();
-		return peakArrayCache.get(this.getUniqueId()).getArray();
+		Serializable s = peakArrayCache.get(getUniqueId()).getValue();
+		return ((SerializableArray)s).getArray();
 	}
 	
     /**
@@ -100,6 +111,7 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
      * @param p
      * @param similarity
      */
+	@Override
     public void addSimilarity(final IPeak p, final double similarity) {
         if (this.storeOnlyBestSimilarities) {
             if (!Double.isInfinite(similarity) && !Double.isNaN(similarity)) {
@@ -149,6 +161,7 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
         }
     }
 
+	@Override
     public void clearSimilarities() {
         this.sims.clear();
         this.sortedPeaks.clear();
@@ -160,6 +173,7 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
      * @param key
      * @return
      */
+	@Override
     public List<IPeak> getPeaksSortedBySimilarity(final String key) {
         if (this.sims.containsKey(key)) {
             List<IPeak> peaks = null;
@@ -168,38 +182,10 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
             } else {
 				double[] similarities = this.sims.get(key).values;
 				int[] indices = IndirectSort.mergesort(0, similarities.length, new IndirectComparator.AscendingDoubleComparator(similarities));
-//                final Set<Entry<IPeak, Double>> s = this.sims.get(key).entrySet();
-//                final ArrayList<Entry<IPeak, Double>> al = new ArrayList<Entry<IPeak, Double>>();
-//				final ArrayList<IPeak> al = new ArrayList<IPeak>();
-				
-//                for (final Entry<IPeak, Double> e : s) {
-//                    if (!e.getKey().getAssociation().equals(getAssociation())) {
-//                        al.add(e);
-//                    }
-//                }
-//
-//                // al.addAll(s);
-//                Collections.sort(al, new Comparator<Entry<IPeak, Double>>() {
-//                    @Override
-//                    public int compare(final Entry<IPeak, Double> o1,
-//                            final Entry<IPeak, Double> o2) {
-//                        if (o1.getValue() == o2.getValue()) {
-//                            return 0;
-//                        } else if (o1.getValue() < o2.getValue()) {
-//                            return -1;
-//                        } else {
-//                            return 1;
-//                        }
-//                    }
-//                });
                 peaks = new ArrayList<IPeak>();
-//                for (final Entry<IPeak, Double> e : al) {
-//					
-//                    peaks.add(e.getKey());
-//                }
 				for(int idx:indices) {
 					IPeak peak = this.sims.get(key).keys[idx];
-					if (!peak.equals(getAssociation())) {
+					if (!peak.getAssociation().equals(getAssociation())) {
                         peaks.add(peak);
                     }
 				}
@@ -210,7 +196,15 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
         return java.util.Collections.emptyList();
     }
 
+	@Override
     public IPeak getPeakWithHighestSimilarity(final String key) {
+		if(storeOnlyBestSimilarities) {
+			if(sortedPeaks.containsKey(key)) {
+				return this.sortedPeaks.get(key)[0];
+			}else{
+				return null;
+			}
+		}
         final List<IPeak> l = getPeaksSortedBySimilarity(key);
         if (l.isEmpty()) {
             return null;
@@ -218,14 +212,17 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
         return l.get(l.size() - 1);
     }
 
+	@Override
     public double getScanAcquisitionTime() {
         return this.sat;
     }
 
+	@Override
     public int getScanIndex() {
         return this.scanIndex;
     }
 
+	@Override
     public double getSimilarity(final IPeak p) {
         if (this.sims.containsKey(p.getAssociation())) {
             if (this.sims.get(p.getAssociation()).containsKey(p)) {
@@ -235,6 +232,7 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
         return Double.NaN;
     }
 
+	@Override
     public boolean isBidiBestHitFor(final IPeak p) {
         final IPeak pT = getPeakWithHighestSimilarity(p.getAssociation());
         final IPeak qT = p.getPeakWithHighestSimilarity(this.getAssociation());
@@ -248,12 +246,13 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
         return false;
     }
 
+	@Override
     public void retainSimilarityRemoveRest(final IPeak p) {
         if (this.sims.containsKey(p.getAssociation())) {
             final ObjectDoubleOpenHashMap<IPeak> hm = this.sims.get(p.getAssociation());
             if (hm.containsKey(p)) {
                 log.debug("Retaining similarity to {} in {}", p, this);
-                final Double lhsToRhs = hm.get(p);
+                final double lhsToRhs = hm.get(p);
                 // Double rhsToLhs = p.getSimilarity(this);
                 hm.clear();
                 hm.put(p, lhsToRhs);

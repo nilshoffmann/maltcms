@@ -27,18 +27,18 @@
  */
 package net.sf.maltcms.evaluation.spi.classification;
 
-import cross.tools.MathTools;
+import cross.datastructures.tuple.Tuple2D;
+import cross.datastructures.tuple.TupleND;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import static net.sf.maltcms.evaluation.spi.classification.PerformanceMetrics.Vars.*;
+import static net.sf.maltcms.evaluation.api.classification.IPerformanceMetrics.Vars.*;
 import java.util.Set;
 import maltcms.datastructures.array.IFeatureVector;
 import net.sf.maltcms.evaluation.api.classification.Category;
@@ -46,37 +46,57 @@ import net.sf.maltcms.evaluation.api.classification.Entity;
 import net.sf.maltcms.evaluation.api.classification.EntityGroup;
 import net.sf.maltcms.evaluation.api.classification.EntityGroupList;
 import net.sf.maltcms.evaluation.api.classification.IFeatureVectorComparator;
-import net.sf.maltcms.evaluation.api.classification.PeakRTFeatureVectorComparator;
+import net.sf.maltcms.evaluation.api.classification.INamedPeakFeatureVector;
+import net.sf.maltcms.evaluation.api.classification.IPerformanceMetrics;
+import net.sf.maltcms.evaluation.api.classification.PeakNameFeatureVectorComparator;
+import net.sf.maltcms.evaluation.api.classification.PeakRowIndexFeatureVectorComparator;
+import net.sf.maltcms.evaluation.spi.EntityGroupBuilder;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class PairwiseClassificationPerformanceTest<T extends IFeatureVector> {
+public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVector> {
 
-	private final List<EntityGroup> groundTruth;
+	private final EntityGroupList<T> groundTruth;
 	private final int numberOfGroundTruthEntities;
 	private final IFeatureVectorComparator ifvc;
+	private final ChromaTOFPeakListEntityTable<T> peakTable;
 
-	public PairwiseClassificationPerformanceTest(List<EntityGroup> groundTruth, IFeatureVectorComparator ifvc) {
+	public PairwiseClassificationPerformanceTest(ChromaTOFPeakListEntityTable<T> peakTable, EntityGroupList<T> groundTruth, IFeatureVectorComparator ifvc) {
+		this.peakTable = peakTable;
 		this.groundTruth = groundTruth;
 		int nent = 0;
-		for (EntityGroup eg : this.groundTruth) {
+		for (EntityGroup<T> eg : this.groundTruth) {
 			nent += eg.getCategories().size();
 		}
 		this.numberOfGroundTruthEntities = nent;
 		this.ifvc = ifvc;
 	}
 
-	public static Map<String, EntityGroupList> createPairMap(EntityGroupList entities) {
-		Map<String, EntityGroupList> m = new LinkedHashMap<String, EntityGroupList>();
+	public static <T extends IFeatureVector> Map<String, EntityGroupList<T>> createMspaPairMap(EntityGroupList<T> entities) {
+		Map<String, EntityGroupList<T>> m = new LinkedHashMap<String, EntityGroupList<T>>();
+		int cnt = 0;
+		int size = entities.getCategoriesSize() - 1;
+		Category[] categories = entities.getCategories().toArray(new Category[entities.getCategoriesSize()]);
+		for (int i = 0; i < entities.getCategoriesSize() - 1; i++) {
+//			System.out.println("Adding pair " + (cnt + 1) + " of " + size);
+			m.put(i + "-" + (i + 1), entities.getSubList(categories[i], categories[(i + 1)]));
+			cnt++;
+		}
+		return m;
+	}
+
+	public static <T extends IFeatureVector> Map<String, EntityGroupList<T>> createPairMap(EntityGroupList<T> entities) {
+		Map<String, EntityGroupList<T>> m = new LinkedHashMap<String, EntityGroupList<T>>();
 		int cnt = 0;
 		int size = entities.getCategoriesSize() * (entities.getCategoriesSize() - 1) / 2;
 		Category[] categories = entities.getCategories().toArray(new Category[entities.getCategoriesSize()]);
 		for (int i = 0; i < entities.getCategoriesSize() - 1; i++) {
 			for (int j = i + 1; j < entities.getCategoriesSize(); j++) {
-				System.out.println("Adding pair " + (cnt + 1) + " of " + size);
+//				System.out.println("Adding pair " + (cnt + 1) + " of " + size);
 				m.put(i + "-" + j, entities.getSubList(categories[i], categories[j]));
 				cnt++;
 			}
@@ -85,82 +105,125 @@ public class PairwiseClassificationPerformanceTest<T extends IFeatureVector> {
 	}
 
 	public static void main(String[] args) {
-		Category c1 = new Category("c1");
-		Category c2 = new Category("c2");
-		Category c3 = new Category("c3");
-		Category[] cats = new Category[]{c1, c2, c3};
+		EntityGroupBuilder egb = new EntityGroupBuilder();
+		File[] files = FileUtils.listFiles(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/chlamy/data/chlamy_Dataset_I/"), new String[]{"csv"}, false).toArray(new File[0]);
+		ChromaTOFPeakListEntityTable<INamedPeakFeatureVector> t = new ChromaTOFPeakListEntityTable<INamedPeakFeatureVector>(files);
+		List<EntityGroup<INamedPeakFeatureVector>> ref = egb.buildCSVPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/chlamy/groundTruth/chlamy_Dataset_I/reference-alignment.txt"), t);
+		EntityGroupList referenceGroups = new EntityGroupList(ref.get(0).getCategories().toArray(new Category[0]));
+		referenceGroups.addAll(ref);
+		Map<String, List<EntityGroup<INamedPeakFeatureVector>>> tools = new LinkedHashMap<String, List<EntityGroup<INamedPeakFeatureVector>>>();
+		///home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/chlamy_Dataset_I/mspa/b1cf508f-fd7a-37b8-bb13-848ca9f2b0f0/PAM/1
+		tools.put("mSPA", egb.buildMSPAPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/chlamy_Dataset_I/mspa/b1cf508f-fd7a-37b8-bb13-848ca9f2b0f0/PAM/1/"), t));
+		tools.put("SWPA", egb.buildMSPAPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/chlamy_Dataset_I/swpa/9ae74e7a-e0d8-32ac-af61-53a925ef05d0/SWRE/1/"), t));
+		tools.put("BiPACE 2D", egb.buildCSVPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/chlamy_Dataset_I/bipace2D/52bba786-1957-35e8-b67a-72dccab87560/0_PeakCliqueAlignment/multiple-alignment.csv"), t));
+		//guineu 9a34522f-7fed-39dc-9420-dcc32ccaf3b5
+		tools.put("Guineu", egb.buildCSVPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/chlamy_Dataset_I/guineu/7415d41b-0193-3868-948a-e1915aa21a9d/multiple-alignment.csv"), t));
+		for (String key : tools.keySet()) {
+			System.out.println("Tool: "+key);
+			EntityGroupList toolGroups = new EntityGroupList(tools.get(key).get(0).getCategories().toArray(new Category[0]));
+			toolGroups.addAll(tools.get(key));
+//		Category c1 = new Category("c1");
+//		Category c2 = new Category("c2");
+//		Category c3 = new Category("c3");
+//		Category[] cats = new Category[]{c1, c2, c3};
+//
+//		double[][] gt = new double[6][];
+//		gt[0] = new double[]{1, 1, 2};
+//		gt[1] = new double[]{Double.NaN, 2, 3};
+//		gt[2] = new double[]{4, 4, 4};
+//		gt[3] = new double[]{6, 6, Double.NaN};
+//		gt[4] = new double[]{7, 7, 8};
+//		gt[5] = new double[]{5, 8, 5};
+//
+//		EntityGroupList egl = new EntityGroupList(cats);
+//		for (int i = 0; i < gt.length; i++) {
+//			Entity[] e = new Entity[gt[i].length];
+//			for (int j = 0; j < e.length; j++) {
+//				e[j] = new Entity(new PeakRTFeatureVector(gt[i][j]), cats[j], "gt" + (i + 1));
+//			}
+//			EntityGroup eg = new EntityGroup(e);
+//			egl.add(eg);
+//		}
+//
+//		double[][] data = new double[6][];
+//		data[0] = new double[]{1, 1, 1}; //1 FP, 2 TP
+//		data[1] = new double[]{Double.NaN, 2, 3}; // 1 TN, 2 TP
+//		data[2] = new double[]{4, 4, 4}; // 3 TP
+//		data[3] = new double[]{6, Double.NaN, 6}; // 1 TP, 1 FN, 1 FP
+//		data[4] = new double[]{7, 7, Double.NaN}; // 2 TP, 1 FN
+//		data[5] = new double[]{Double.NaN, Double.NaN, 5}; // 2 FN, 1 TP
+//		/*
+//		 * expected result row-wise:
+//		 *		c1 c2 c3
+//		 * 0:	TP TP FP
+//		 * 1:	TN TP TP
+//		 * 2:	TP TP TP
+//		 * 3:	TP FN FP
+//		 * 4:	TP TP FN
+//		 * 5:	FN FN TP
+//		 * 
+//		 * TP: 2 + 2 + 3 + 1 + 2 + 1 = 11 TP 
+//		 * FP: 1 + 1 = 2 FP
+//		 * TN: 1 = 1 TN
+//		 * FN: 1 + 1 + 2 = 4 FN
+//		 * 
+//		 * expected result pair-wise:
+//		 *     c1-c2 c2-c3 c1-c3 
+//		 * 0:  TP TP TP FP TP FP
+//		 * 1:  TN TP TP TP TN TP
+//		 * 2:  TP TP TP TP TP TP
+//		 * 3:  TP FN FN FP TP FP
+//		 * 4:  TP TP TP FN TP FN
+//		 * 5:  FN FN FN TP FN TP
+//		 * 
+//		 * TP: 8     7     7	= 21 TP
+//		 * FP: 0     2     2	= 4 FP
+//		 * TN: 1     0     1		= 2 TN
+//		 * FN: 3     2     2	= 7 FN
+//		 */
+//		EntityGroupList datal = new EntityGroupList(cats);
+//		for (int i = 0; i < data.length; i++) {
+//			Entity[] e = new Entity[data[i].length];
+//			for (int j = 0; j < e.length; j++) {
+//				e[j] = new Entity(new PeakRTFeatureVector(data[i][j]), cats[j], "data" + (i + 1));
+//			}
+//			EntityGroup eg = new EntityGroup(e);
+//			datal.add(eg);
+//		}
 
-		double[][] gt = new double[6][];
-		gt[0] = new double[]{1.42, 1.44, 1.45};
-		gt[1] = new double[]{Double.NaN, 2.2, 2.1};
-		gt[2] = new double[]{4.62, 4.58, 4.6};
-		gt[3] = new double[]{6.34, 6.32, Double.NaN};
-		gt[4] = new double[]{6.7, 6.65, 6.71};
-		gt[5] = new double[]{7.23, 7.12, 7.123};
-
-		EntityGroupList egl = new EntityGroupList(cats);
-		for (int i = 0; i < gt.length; i++) {
-			Entity[] e = new Entity[gt[i].length];
-			for (int j = 0; j < e.length; j++) {
-				e[j] = new Entity(new PeakRTFeatureVector(gt[i][j]), cats[j], "gt" + (i + 1));
+			PairwiseClassificationPerformanceTest<INamedPeakFeatureVector> cpt = new PairwiseClassificationPerformanceTest<INamedPeakFeatureVector>(t, referenceGroups, new PeakNameFeatureVectorComparator());
+			List<PairwisePerformanceMetrics> pm = cpt.performTest(key, toolGroups);
+			MultiMap<IPerformanceMetrics.Vars, Number> metricsMap = new MultiMap<IPerformanceMetrics.Vars, Number>();
+			System.out.println("Pairwise evaluation:");
+			System.out.println("INSTANCE\tTP\tFP\tTN\tFN\tF1");
+			for (PairwisePerformanceMetrics metrics : pm) {
+//			System.out.println(metrics);
+				metricsMap.put(TP, metrics.getTp());
+				metricsMap.put(FP, metrics.getFp());
+				metricsMap.put(TN, metrics.getTn());
+				metricsMap.put(FN, metrics.getFn());
+				metricsMap.put(F1, metrics.getF1());
+				System.out.println(metrics.getInstanceName() + "\t" + metrics.getTp() + "\t" + metrics.getFp() + "\t" + metrics.getTn() + "\t" + metrics.getFn() + "\t" + metrics.getF1());
 			}
-			EntityGroup eg = new EntityGroup(e);
-			egl.add(eg);
-		}
-
-		double[][] data = new double[6][];
-		data[0] = new double[]{1.421, 1.435, 1.446};
-		data[1] = new double[]{Double.NaN, 2.207, 2.075};
-		data[2] = new double[]{4.622, 4.581, 4.586};
-		data[3] = new double[]{5.31, 5.27, 5.5};
-		data[4] = new double[]{6.34999, 6.321, Double.NaN};
-		data[5] = new double[]{7.23, Double.NaN, 7.12};
-
-		EntityGroupList datal = new EntityGroupList(cats);
-		for (int i = 0; i < data.length; i++) {
-			Entity[] e = new Entity[data[i].length];
-			for (int j = 0; j < e.length; j++) {
-				e[j] = new Entity(new PeakRTFeatureVector(data[i][j]), cats[j], "data" + (i + 1));
+			for (IPerformanceMetrics.Vars var : metricsMap.keySet()) {
+				double[] values = toArray(metricsMap.get(var));
+				DescriptiveStatistics ds = new DescriptiveStatistics(values);
+				System.out.println(var.toString() + ": totalValue=" + ds.getSum() + "; min=" + ds.getMin() + "; max=" + ds.getMax() + "; mean=" + ds.getMean() + "+/-" + ds.getStandardDeviation());
 			}
-			EntityGroup eg = new EntityGroup(e);
-			datal.add(eg);
-		}
-
-		Map<String, EntityGroupList> refMap = createPairMap(egl);
-		Map<String, EntityGroupList> resultMap = createPairMap(datal);
-		String toolName = "testTool";
-		MultiMap<PerformanceMetrics.Vars, Number> metricsMap = new MultiMap<PerformanceMetrics.Vars, Number>();
-		for (String s : resultMap.keySet()) {
-			EntityGroupList egl1 = refMap.get(s);
-			EntityGroupList resultMap1 = resultMap.get(s);
-			ClassificationPerformanceTest<PeakRTFeatureVector> cpt = new ClassificationPerformanceTest<PeakRTFeatureVector>(egl1, new PeakRTFeatureVectorComparator(0.02));
-			PerformanceMetrics pm = cpt.performTest(egl1.getCategories().toString(), resultMap1);
-			metricsMap.put(TP, pm.getTp());
-			metricsMap.put(FP, pm.getFp());
-			metricsMap.put(TN, pm.getTn());
-			metricsMap.put(FN, pm.getFn());
-			metricsMap.put(F1, pm.getF1());
-//			System.out.println(pm);
-		}
-		System.out.println("Pairwise evaluation:");
-		for (PerformanceMetrics.Vars var : metricsMap.keySet()) {
-			double[] values = toArray(metricsMap.get(var));
-			DescriptiveStatistics ds = new DescriptiveStatistics(values);
-			System.out.println(var.toString() + ": totalValue=" + ds.getSum() + "; min=" + ds.getMin() + "; max=" + ds.getMax() + "; mean=" + ds.getMean() + "+/-" + ds.getStandardDeviation());
-		}
-		ClassificationPerformanceTest<PeakRTFeatureVector> cpt = new ClassificationPerformanceTest<PeakRTFeatureVector>(egl, new PeakRTFeatureVectorComparator(0.02));
-		PerformanceMetrics pm = cpt.performTest(toolName, datal);
-		MultiMap<PerformanceMetrics.Vars, Number> metricsMap2 = new MultiMap<PerformanceMetrics.Vars, Number>();
-		metricsMap2.put(TP, pm.getTp());
-		metricsMap2.put(FP, pm.getFp());
-		metricsMap2.put(TN, pm.getTn());
-		metricsMap2.put(FN, pm.getFn());
-		metricsMap2.put(F1, pm.getF1());
-		System.out.println("Row-wise evaluation:");
-		for (PerformanceMetrics.Vars var : metricsMap2.keySet()) {
-			double[] values = toArray(metricsMap2.get(var));
-			DescriptiveStatistics ds = new DescriptiveStatistics(values);
-			System.out.println(var.toString() + ": totalValue=" + ds.getSum()+"; min=" + ds.getMin() + "; max=" + ds.getMax() + "; mean=" + ds.getMean() + "+/-" + ds.getStandardDeviation());
+			ClassificationPerformanceTest<INamedPeakFeatureVector> rpt = new ClassificationPerformanceTest<INamedPeakFeatureVector>(referenceGroups, new PeakRowIndexFeatureVectorComparator());
+			PerformanceMetrics rpm = rpt.performTest("testTool", toolGroups);
+			MultiMap<PerformanceMetrics.Vars, Number> metricsMap2 = new MultiMap<PerformanceMetrics.Vars, Number>();
+			metricsMap2.put(TP, rpm.getTp());
+			metricsMap2.put(FP, rpm.getFp());
+			metricsMap2.put(TN, rpm.getTn());
+			metricsMap2.put(FN, rpm.getFn());
+			metricsMap2.put(F1, rpm.getF1());
+			System.out.println("Row-wise evaluation:");
+			for (PerformanceMetrics.Vars var : metricsMap2.keySet()) {
+				double[] values = toArray(metricsMap2.get(var));
+				DescriptiveStatistics ds = new DescriptiveStatistics(values);
+				System.out.println(var.toString() + ": totalValue=" + ds.getSum() + "; min=" + ds.getMin() + "; max=" + ds.getMax() + "; mean=" + ds.getMean() + "+/-" + ds.getStandardDeviation());
+			}
 		}
 //		System.out.println(cpt.performTest("test", datal));
 	}
@@ -176,223 +239,172 @@ public class PairwiseClassificationPerformanceTest<T extends IFeatureVector> {
 
 	public String getPairwisePerformanceMetrics() {
 		return null;
-//		cscore <- function(d1,d2){
-//    d1.name = as.character(d1$name)
+
+	}
+
+	public int getNumberOfNonNulls(List<Entity<T>> l) {
+		int n = 0;
+		for (Entity<T> e : l) {
+//			System.out.println("EG: "+eg);
+			if (e.getFeatureVector().getName() != null) {
+				n++;
+			}
+		}
+		return n;
+	}
+	public PairwisePerformanceMetrics performPairTest(String toolName, String instanceName, EntityGroupList<T> tool, String comparisonFeatureName) {
+
+//		d1.name = as.character(d1$name)
 //    d2.name = as.character(d2$name)
-//	total number of matching rows between 1 and 2 (identical name)
-//    total.pos = length(na.omit(match(d1.name,d2.name))) 
-// total number of peaks with the same name in common, these should be found	
-//	product of names in 1 and names in 2 (omitting empty rows)
-// total number of peaks that could be assigned, but would score as wrong assignments
+//    # match names of d1 to names of d2, should be unique, maximum length = |d1|
+//    total.pos = length(na.omit(match(d1.name,d2.name)))
 //    total.neg = length(d1.name)*length(d2.name) - total.pos
 //
-//	select only peaks that have a match in ref
 //    d1 = d1[d1$nflag!=0,] # ref
-//	select only peaks that have a match in target
 //    d2 = d2[d2$nflag!=0,] # tar
 //    d1 = d1[order(d1$nflag),]
-//    d2 = d2[order(d2$nflag),]
+//    d2 = d2[order(d2$nflag),] 
+//nflag refers to the index of the match in the other peak list
 //    d1$name = as.character(d1$name)
 //    d2$name = as.character(d2$name)
-//	total number of matches (including TP, FP matches) from d1 into d2
 //    total.match = dim(d1)[1]
+//number of peaks in d1
 //    t.p = 0
 //    for(i in 1:total.match){
-//			count true positives
 //        if(d1$name[i] == d2$name[i]){
 //            t.p = t.p + 1
 //        }
 //    }
-// FP = #MATCHES - TP
 //    f.p = total.match - t.p
-// FN = #POSITIVES - TP
 //    f.n = total.pos - t.p
-// TN = #NEGATIVES - FP
 //    t.n = total.neg - f.p
-//	  total.pos <- t.p + f.n		
-//    t.p.r = t.p/total.pos
+//    t.p.r = t.p/total.pos # t.p/t.p+f.n
 //    p.p.v = t.p/(t.p+f.p)
 //    f1 = 2*t.p.r*p.p.v/(t.p.r+p.p.v)
 //
 //    rlt=c(t.p.r,p.p.v,t.p,f.p,f.n,t.n,f1)
 //    rlt
-//}
-	}
-
-	public List<PerformanceMetrics> performTest(String toolname, List<EntityGroup> testGroup) throws IllegalArgumentException {
-		//log.debug("Performing classification performance test for " + toolname);
-		if (!checkCategories(this.groundTruth, testGroup)) {
-			throw new IllegalArgumentException("Could not match categories to ground truth for tool: " + toolname + "!");
+//		System.out.println("Instance: " + instanceName);
+		//count the number of peaks in the reference
+		int totalPos = 0;
+		int lhsPeaks = 0;
+		int rhsPeaks = 0;
+		//check assignments from tool -> Kim et al remove the unmatched peaks before comparing
+		//nflag is recreated for each pairwise alignment, based on the original peak lists
+		//thus, unassigned peaks are not counted at all!
+		TupleND<Category> toolCategories = new TupleND<Category>(tool.getCategories());
+		if (toolCategories.size() != 2) {
+			throw new IllegalArgumentException("Can only process category pairs!");
 		}
 
-		//total number of elements
-		int N = this.numberOfGroundTruthEntities;
-
-		//number of different categories/files
-		//double M = this.groundTruth.getCategories().size();
-
-		//we need to compare all out testGroups against
-		//the ground truth.
-		//we first try to find the ground truth EntityGroup, which best matches
-		//to a given testGroup entity group
-
-		HashMap<EntityGroup, EntityGroupClassificationResult> gtToClsRes = new LinkedHashMap<EntityGroup, EntityGroupClassificationResult>();
-
-		int M = 0;
-		for (EntityGroup eg : testGroup) {
-			M += eg.getCategories().size();
+		for (Tuple2D<Category, Category> t : toolCategories.getPairs()) {
+			List<Entity<T>> lhsEntities = groundTruth.getEntities(t.getFirst());
+			List<Entity<T>> rhsEntities = groundTruth.getEntities(t.getSecond());
+			lhsPeaks += getNumberOfNonNulls(lhsEntities);
+			rhsPeaks += getNumberOfNonNulls(rhsEntities);
+			System.out.println("Lhs Peaks: " + lhsPeaks + " Rhs Peaks: " + rhsPeaks);
+			for (EntityGroup<T> lhs : groundTruth.getSubList(t.getFirst(),t.getSecond())) {
+				int nonNulls = getNumberOfNonNulls(lhs.getEntities());
+				if(nonNulls==2) {
+					totalPos++;
+				}
+//				String lhsName = lhs.getFeatureVector().getName();
+//				for (Entity<T> rhs : groundTruth.getEntities(t.getSecond())) {
+//					String rhsName = rhs.getFeatureVector().getName();
+//					if (lhsName != null && rhsName != null) {
+////						if (lhsName.equals(rhsName)) {
+////							System.out.println(lhsName + "==" + rhsName);
+//							totalPos++;
+////							break;
+////						}
+//					}
+//				}
+			}
+			System.out.println("Matched peaks: "+totalPos);
 		}
-
-		int K = testGroup.get(0).getCategories().size();
-
-		int cnt = 0;
-
-		//log.debug("Matching " + M + " entities against ground truth!");
-		for (EntityGroup tgEg : testGroup) {
-			//log.debug("Entity group " + (++cnt) + "/" + testGroup.size());
-			//find the ground truth group, which has the highest tp1+tn1 number
-			//may be null if no tp1 and/or tn1 hits are found
-			EntityGroupClassificationResult gtg = findBest(tgEg, this.groundTruth);
-
-			if (gtg != null) {
-				//log.debug("GT group: \n" + gtg.getGroundTruthEntityGroup());
-				//log.debug("Best tool group: \n" + gtg.getToolEntityGroup());
-				EntityGroup gtEntityGroup = gtg.getGroundTruthEntityGroup();
-				if (gtToClsRes.containsKey(gtEntityGroup)) {
-					//System.err.println("Warning: GT EntityGroup already assigned!");
-					//test for reassignment
-					EntityGroupClassificationResult other = gtToClsRes.get(gtEntityGroup);
-					int comp = gtg.compareTo(other);
-					if (comp > 0) {
-						//gtg is better than other
-						//log.debug("Changing assignment for ground truth group " + gtEntityGroup + "\n from group " + other.getToolEntityGroup() + "\n to group: " + gtg.getToolEntityGroup() + "\n");
-						gtToClsRes.put(gtEntityGroup, gtg);
-					} else if (comp < 0) {
-						//other is better, do nothing
-						//log.debug("Retaining assignment");
-					} else {
-						//both are equal, something fishy is happening here!
-						//log.warn("Warning: classification results are equal!");
+		int totalMatch = 0;
+		int nentities = lhsPeaks + rhsPeaks;
+		int totalNeg = (lhsPeaks * rhsPeaks) - totalPos;
+//		System.out.println("number of peaks: " + nentities + " total.pos=" + totalPos + " total.neg=" + totalNeg + "; totalNeg+totalPos=" + (totalNeg + totalPos));
+		int tp = 0;
+		for (Tuple2D<Category, Category> c : toolCategories.getPairs()) {
+//			System.out.println("Comparing category " + c.getFirst() + " with " + c.getSecond());
+			for (EntityGroup<T> tgEg : tool) {
+				Entity<T> lhsEnt = tgEg.getEntityForCategory(c.getFirst());
+				Entity<T> rhsEnt = tgEg.getEntityForCategory(c.getSecond());
+				if(groundTruth.containsEntity(lhsEnt, comparisonFeatureName) && groundTruth.containsEntity(rhsEnt, comparisonFeatureName)) {
+					String lhsName = lhsEnt.getFeatureVector().getName();
+					String rhsName = rhsEnt.getFeatureVector().getName();
+					//we skip single and double gaps
+					if (lhsName != null && rhsName != null) {
+						totalMatch++;
 					}
-				} else {
-					gtToClsRes.put(gtEntityGroup, gtg);
-				}
-			}
-		}
-		HashSet<EntityGroup> matchedToolGroups = new LinkedHashSet<EntityGroup>();
-		int tp = 0, tn = 0, fp = 0, fn = 0;
-		double dist = 0;
-		for (EntityGroup gtGroup : gtToClsRes.keySet()) {
-			EntityGroupClassificationResult egcr = gtToClsRes.get(gtGroup);
-			tp += egcr.getTp();
-			tn += egcr.getTn();
-			fp += egcr.getFp();
-			fn += egcr.getFn();
-			dist += egcr.getDist();
-			EntityGroup toolGroup = gtToClsRes.get(gtGroup).getToolEntityGroup();
-			matchedToolGroups.add(toolGroup);
-		}
-		HashSet<EntityGroup> unmatchedToolGroups = new LinkedHashSet<EntityGroup>(testGroup);
-		unmatchedToolGroups.removeAll(matchedToolGroups);
-
-		HashSet<EntityGroup> matchedGTGroups = new LinkedHashSet<EntityGroup>(gtToClsRes.keySet());
-		HashSet<EntityGroup> unmatchedGTGroups = new LinkedHashSet<EntityGroup>(groundTruth);
-		unmatchedGTGroups.removeAll(matchedGTGroups);
-
-		PerformanceMetrics pm = new PerformanceMetrics(toolname, tp, fp, tn, fn, N, M, K, dist, unmatchedToolGroups, unmatchedGTGroups, gtToClsRes);
-		return Arrays.asList(pm);
-	}
-
-	/**
-	 * We expect to find at least one positive assignment in a group. To rank
-	 * the groups, we focus on TP and TN first.
-	 *
-	 * @param testGroup
-	 * @param groundTruth
-	 * @return
-	 */
-	public EntityGroupClassificationResult findBest(EntityGroup testGroup, List<EntityGroup> groundTruth, Category... categories) {
-		//int tmpCorrect = 1;
-
-		//int tmpFalse = categories.size() - 1;
-		//int tpOpt = 0, fpOpt = categories.size(), tnOpt = 0, fnOpt = categories.size();
-		//double minDist = Double.POSITIVE_INFINITY;
-		EntityGroupClassificationResult bestGroup = null;
-		for (EntityGroup groundTruthEntityGroup : groundTruth) {
-			int tp = 0;
-			int tn = 0;
-			int fp = 0;
-			int fn = 0;
-			//the optimal group has only true assignments
-			//however, TN are assigned if value NaN is encountered
-			//thus, if we choose to use the sum of TP and TN as our indicator,
-			//we may get the situation, that we have only TN assignments
-			//a complete true negative assignment is not allowed, since such
-			//a group would not occur in the ground truth anyway.
-			//What we require is at least one TP match or a FP or a FN hit in any of the categories,
-			//or any number of TN together with at least one FP or FN hit.
-			//Since the group, which scores the highest number of TPs or TNs will get the assignment,
-			//we will "optimize" towards the group with the highest TP + TN
-			//This approach is thus greedy, but performTest prints a warning,
-			//if a group is assigned to a gt group, which has already been assigned before.
-			double dist = 0;
-			for (Category c : categories) {
-				Entity gtEntity = groundTruthEntityGroup.getEntityForCategory(c);
-				Entity testEntity = testGroup.getEntityForCategory(c);
-				if (this.ifvc.isTP(gtEntity.getFeatureVector(), testEntity.getFeatureVector())) {
-					tp++;
-				}
-				if (this.ifvc.isTN(gtEntity.getFeatureVector(), testEntity.getFeatureVector())) {
-					tn++;
-				}
-				if (this.ifvc.isFP(gtEntity.getFeatureVector(), testEntity.getFeatureVector())) {
-					fp++;
-				}
-				if (this.ifvc.isFN(gtEntity.getFeatureVector(), testEntity.getFeatureVector())) {
-					fn++;
-				}
-				dist += this.ifvc.getSquaredDiff(gtEntity.getFeatureVector(), testEntity.getFeatureVector());
-			}
-			dist = Math.sqrt(dist);
-			//minimum one tp
-			if (tp > 0) {
-				EntityGroupClassificationResult egcr = new EntityGroupClassificationResult(testGroup, groundTruthEntityGroup, tp, tn, fp, fn, dist);
-				//System.out.println(egcr);
-				if (bestGroup == null) {
-					bestGroup = egcr;
-				} else {
-					try {
-						int comp = egcr.compareTo(bestGroup);
-						//System.out.println("CompareTo returned: " + comp);
-						if (comp > 0) {
-							bestGroup = egcr;
-						} else if (comp == 0) {
-							//System.err.println("Warning: Entity groups are equal!");
+					if (lhsName != null && rhsName != null) {
+						if (lhsName.equals(rhsName)) {
+//							System.out.println("TP: "+lhsEnt.getFeatureVector()+" -/- "+rhsEnt.getFeatureVector());
+	//						System.out.println("TP: " + lhsName + "\t" + rhsName);
+	//						System.out.println("TP");
+							tp++;
+						} else {
+//							System.out.println("FP: "+lhsEnt.getFeatureVector()+" -/- "+rhsEnt.getFeatureVector());
+	//						System.out.println("FP: " + lhsName + "\t" + rhsName);
 						}
-					} catch (IllegalArgumentException iae) {
-						//System.err.println("IllegalArgumentException: " + iae.getLocalizedMessage());
 					}
 				}
 			}
 		}
-		return bestGroup;
+
+		int fn = totalPos - tp;
+		int fp = totalMatch - tp;
+		int tn = totalNeg - fp;
+//		System.out.println("Total match: " + totalMatch + " TP: " + tp + " FP: " + fp + " total pos: " + totalPos + " FN: " + fn + " total neg: " + totalNeg + " TN: " + tn);
+		if ((totalPos + totalNeg) != (tp + fp + tn + fn)) {
+			throw new IllegalArgumentException("Sum of positives+negatives!=tp+fp+tn+fn");
+		}
+		PairwisePerformanceMetrics ppm = new PairwisePerformanceMetrics(toolName, instanceName, tp, fp, tn, fn);
+		return ppm;
 	}
 
-	public boolean checkCategories(List<EntityGroup> gt, List<EntityGroup> testGroup) {
+	public List<PairwisePerformanceMetrics> performTest(String toolName, EntityGroupList<T> toolGroups) throws IllegalArgumentException {
+		//log.debug("Performing classification performance test for " + toolname);
+		if (!checkCategories(this.groundTruth, toolGroups)) {
+			throw new IllegalArgumentException("Could not match categories to ground truth for tool: " + toolName + "!");
+		}
+
+//		Map<String, EntityGroupList<T>> refMap = createMspaPairMap(this.groundTruth);
+		Map<String, EntityGroupList<T>> resultMap = createMspaPairMap(toolGroups);
+		MultiMap<IPerformanceMetrics.Vars, Number> metricsMap = new MultiMap<IPerformanceMetrics.Vars, Number>();
+		List<PairwisePerformanceMetrics> pml = new ArrayList<PairwisePerformanceMetrics>();
+		for (String s : resultMap.keySet()) {
+//			EntityGroupList<T> ref1 = refMap.get(s);
+			EntityGroupList<T> result1 = resultMap.get(s);
+			PairwisePerformanceMetrics pm = performPairTest(toolName, result1.getCategories().toString(), result1, "ROWINDEX");
+			metricsMap.put(TP, pm.getTp());
+			metricsMap.put(FP, pm.getFp());
+			metricsMap.put(TN, pm.getTn());
+			metricsMap.put(FN, pm.getFn());
+			metricsMap.put(F1, pm.getF1());
+			pml.add(pm);
+//			System.out.println(pm);
+		}
+		return pml;
+	}
+
+	public boolean checkCategories(List<EntityGroup<T>> gt, List<EntityGroup<T>> testGroup) {
 		boolean check = false;
 		int ncat = -1;
 		//test all pairs
-		for (EntityGroup eg : gt) {
+		for (EntityGroup<T> eg : gt) {
 			if (ncat == -1) {
 				ncat = eg.getCategories().size();
 			} else {
 				if (ncat != eg.getCategories().size()) {
-					//log.warn("Number of categories in ground truth differs! Check rows!");
+					//log.warn("Number of toolCategories in ground truth differs! Check rows!");
 				}
 			}
-			for (EntityGroup tg : testGroup) {
+			for (EntityGroup<T> tg : testGroup) {
 				if (ncat != tg.getCategories().size()) {
-					//log.warn("Number of categories in test group differs! Check rows!");
+					//log.warn("Number of toolCategories in test group differs! Check rows!");
 				}
 				check = checkCategories(eg, tg);
 			}
@@ -400,7 +412,7 @@ public class PairwiseClassificationPerformanceTest<T extends IFeatureVector> {
 		return check;
 	}
 
-	public boolean checkCategories(EntityGroup gt, EntityGroup testGroup) {
+	public boolean checkCategories(EntityGroup<T> gt, EntityGroup<T> testGroup) {
 		//categories need to be the same
 		Set<Category> gtCats = gt.getCategories();
 		Set<Category> tgCats = testGroup.getCategories();

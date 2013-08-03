@@ -1,4 +1,4 @@
-/* 
+/*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
@@ -27,47 +27,12 @@
  */
 package net.sf.maltcms.evaluation.api.classification;
 
-import java.io.Serializable;
-import maltcms.datastructures.array.IFeatureVector;
-
 /**
- * An entity represents a classified object. It has a feature vector, a category
- * and a class label.
  *
  * @author Nils Hoffmann
- *
- *
  */
-public class Entity<T extends IFeatureVector> implements Serializable {
+public interface IRowIndexNamedPeakFeatureVector extends INamedPeakFeatureVector {
 
-    private final String classLabel;
-    private final Category c;
-    private final T featureVector;
-
-    public Entity(T featureVector, Category c, String classLabel) {
-        this.featureVector = featureVector;
-        this.c = c;
-        this.classLabel = classLabel;
-    }
-
-    public String getClassLabel() {
-        return classLabel;
-    }
-
-    public Category getCategory() {
-        return c;
-    }
-
-    public T getFeatureVector() {
-        return featureVector;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-//		sb.append("Entity for category "+getCategory()+" with label "+getClassLabel()+"\n");
-//                sb.append(getClassLabel());
-        sb.append(getFeatureVector().toString());
-        return sb.toString();
-    }
+	int getRowIndex();
+	
 }

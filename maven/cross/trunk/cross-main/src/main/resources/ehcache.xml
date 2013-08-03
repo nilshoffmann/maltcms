@@ -74,5 +74,5 @@ used with JMX monitors.
 
     The defaultCache has an implicit name "default" which is a reserved cache name.
     -->
-    <defaultCache maxElementsInMemory="100" eternal="true" overflowToDisk="true" memoryStoreEvictionPolicy="LFU" statistics="false"/>
+    <defaultCache maxElementsInMemory="10000" eternal="true" overflowToDisk="true" memoryStoreEvictionPolicy="LFU" statistics="false"/>
 </ehcache>

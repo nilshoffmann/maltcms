@@ -1,4 +1,4 @@
-/* 
+/*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
@@ -27,47 +27,41 @@
  */
 package net.sf.maltcms.evaluation.api.classification;
 
-import java.io.Serializable;
-import maltcms.datastructures.array.IFeatureVector;
-
 /**
- * An entity represents a classified object. It has a feature vector, a category
- * and a class label.
  *
  * @author Nils Hoffmann
- *
- *
  */
-public class Entity<T extends IFeatureVector> implements Serializable {
+public interface IPerformanceMetrics {
 
-    private final String classLabel;
-    private final Category c;
-    private final T featureVector;
+	public static enum Vars {
 
-    public Entity(T featureVector, Category c, String classLabel) {
-        this.featureVector = featureVector;
-        this.c = c;
-        this.classLabel = classLabel;
-    }
+		TP, FP, TN, FN, F1, SENSITIVITY, SPECIFICITY, FPR, FNR, RECALL, ACCURACY, GAIN
+	};
+	
+	double getAccuracy();
 
-    public String getClassLabel() {
-        return classLabel;
-    }
+	double getF1();
 
-    public Category getCategory() {
-        return c;
-    }
+	double getFNR();
 
-    public T getFeatureVector() {
-        return featureVector;
-    }
+	double getFPR();
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-//		sb.append("Entity for category "+getCategory()+" with label "+getClassLabel()+"\n");
-//                sb.append(getClassLabel());
-        sb.append(getFeatureVector().toString());
-        return sb.toString();
-    }
+	int getFn();
+
+	int getFp();
+
+	double getGain();
+
+	double getPrecision();
+
+	double getRecall();
+
+	double getSensitivity();
+
+	double getSpecificity();
+
+	int getTn();
+
+	int getTp();
+	
 }
