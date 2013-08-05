@@ -61,8 +61,8 @@ public class ChromaTOFParser {
                 if (!line.isEmpty()) {
                     String[] lineArray = line.split(String.valueOf(FIELD_SEPARATOR));
                     if (lineCount > 0) {
-                        System.out.println(
-                                "Adding file to group mapping: " + lineArray[0] + " " + lineArray[1]);
+//                        System.out.println(
+//                                "Adding file to group mapping: " + lineArray[0] + " " + lineArray[1]);
                         filenameToGroupMap.put(lineArray[0], lineArray[1]);
                     }
                     lineCount++;
@@ -232,11 +232,11 @@ public class ChromaTOFParser {
     public static Tuple2D<LinkedHashSet<String>, List<TableRow>> parseReport(
             File f, boolean normalizeColumnNames) {
 		if (f.getName().toLowerCase().endsWith("csv")) {
-            System.out.println("CSV Mode");
+//            System.out.println("CSV Mode");
             ChromaTOFParser.FIELD_SEPARATOR = ",";
             ChromaTOFParser.QUOTATION_CHARACTER = "\"";
         } else if (f.getName().toLowerCase().endsWith("tsv") || f.getName().toLowerCase().endsWith("txt")) {
-            System.out.println("TSV Mode");
+//            System.out.println("TSV Mode");
             ChromaTOFParser.FIELD_SEPARATOR = "\t";
             ChromaTOFParser.QUOTATION_CHARACTER = "";
         }
@@ -278,9 +278,9 @@ public class ChromaTOFParser {
     }
 
     public static double parseDouble(String fieldName, TableRow tr) {
-        System.out.println("Retrieving " + fieldName);
+//        System.out.println("Retrieving " + fieldName);
         String value = tr.get(fieldName);
-        System.out.println("Value: " + value);
+//        System.out.println("Value: " + value);
         return parseDouble(value);
     }
 

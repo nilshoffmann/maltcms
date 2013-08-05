@@ -33,9 +33,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import static net.sf.maltcms.evaluation.api.classification.IPerformanceMetrics.Vars.*;
@@ -302,7 +300,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
 			List<Entity<T>> rhsEntities = groundTruth.getEntities(t.getSecond());
 			lhsPeaks += getNumberOfNonNulls(lhsEntities);
 			rhsPeaks += getNumberOfNonNulls(rhsEntities);
-			System.out.println("Lhs Peaks: " + lhsPeaks + " Rhs Peaks: " + rhsPeaks);
+			//System.out.println("Lhs Peaks: " + lhsPeaks + " Rhs Peaks: " + rhsPeaks);
 			for (EntityGroup<T> lhs : groundTruth.getSubList(t.getFirst(),t.getSecond())) {
 				int nonNulls = getNumberOfNonNulls(lhs.getEntities());
 				if(nonNulls==2) {
@@ -320,7 +318,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
 //					}
 //				}
 			}
-			System.out.println("Matched peaks: "+totalPos);
+			//System.out.println("Matched peaks: "+totalPos);
 		}
 		int totalMatch = 0;
 		int nentities = lhsPeaks + rhsPeaks;
