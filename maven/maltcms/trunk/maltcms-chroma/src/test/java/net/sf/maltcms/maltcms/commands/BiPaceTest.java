@@ -93,4 +93,5 @@ public class BiPaceTest extends AFragmentCommandTest {
                 inputFile1, inputFile2));
         testWorkflow(w);
     }
+
 }

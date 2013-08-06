@@ -27,6 +27,7 @@
  */
 package maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory;
 
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
@@ -72,7 +73,7 @@ public class Peak1DMSFactory implements IPeakFactory {
         private final Array satArray;
 
         public Peak1DMSFactoryImpl(IFileFragment sourceFile, boolean storeOnlyBestSimilarites, Tuple2D<Double, Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, boolean savePeakSimilarities) {
-            this.sourceFile = sourceFile;
+            this.sourceFile = new FileFragment(sourceFile.getUri());
             this.storeOnlyBestSimilarites = storeOnlyBestSimilarites;
             this.minMaxMassRange = minMaxMassRange;
             this.size = size;
