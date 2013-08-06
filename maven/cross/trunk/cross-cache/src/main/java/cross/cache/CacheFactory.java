@@ -77,7 +77,7 @@ public class CacheFactory {
 			cc.setMaxElementsInMemory(maxElementsInMemory);
 //        cc.setEternal(true);
 			cc.overflowToDisk(true);
-			cc.maxElementsOnDisk(1000000000);
+			cc.maxElementsOnDisk(Integer.MAX_VALUE);
 			cc.memoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LFU);
 			DiskStore ds = DiskStore.create(cache, cacheDir.getAbsolutePath());
 		}
