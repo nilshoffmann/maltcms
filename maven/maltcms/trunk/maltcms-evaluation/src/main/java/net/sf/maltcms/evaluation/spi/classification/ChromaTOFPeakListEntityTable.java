@@ -61,7 +61,7 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
 			Category c = new Category(StringTools.removeFileExt(f.getName()));
 			peakTableMap.put(c, buildEntities(c, t));
 		}
-		System.out.println("Holding "+peakTableMap.keySet().size()+" categories: "+peakTableMap.keySet());
+//		System.out.println("Holding "+peakTableMap.keySet().size()+" categories: "+peakTableMap.keySet());
 	}
 	
 	public Collection<Category> getCategories() {

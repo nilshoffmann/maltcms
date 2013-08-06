@@ -60,8 +60,6 @@ import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.NetcdfFileWriteable;
 import ucar.nc2.Variable;
-import ucar.nc2.iosp.IOServiceProvider;
-import ucar.unidata.io.RandomAccessFile;
 
 /**
  * Joins a number of sequentially acquired chromatograms into a two-dimensional

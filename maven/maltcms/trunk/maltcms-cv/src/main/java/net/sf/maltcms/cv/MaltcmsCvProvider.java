@@ -114,7 +114,7 @@ public final class MaltcmsCvProvider implements IControlledVocabularyProvider {
         if (deprecatedVariables.contains(variable)) {
             StringBuilder message = new StringBuilder();
             checkDeprecation(variable, pc, message);
-            log.warn("{}", message);
+            log.info("{}", message);
         }
         if (pc.containsKey(resolvedVariableName)) {
             return pc.getString(resolvedVariableName);
