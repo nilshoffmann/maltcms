@@ -269,11 +269,11 @@ public class EntityGroupBuilder {
 				return Integer.compare(suff1, suff2);
 			}
 		});
-		System.out.println("Entities for: "+baseDir.getName());
+//		System.out.println("Entities for: "+baseDir.getName());
 		Set<Category> orderedSet = new LinkedHashSet<Category>();
 //		Map<Category, Map<Integer, Entity<INamedPeakFeatureVector>>> map = new LinkedHashMap<Category, Map<Integer, Entity<INamedPeakFeatureVector>>>();
 		for (File f : pal) {
-			System.out.println("Processing file "+f.getName());
+//			System.out.println("Processing file "+f.getName());
 			CSVReader csvr = new CSVReader();
 			csvr.setFirstLineHeaders(true);
 			try {
@@ -290,22 +290,24 @@ public class EntityGroupBuilder {
 				int nrows = table.getFirst().size();
 				for (int i = 0; i < nrows; i++) {
 					List<Entity<INamedPeakFeatureVector>> entityGroup = new LinkedList<Entity<INamedPeakFeatureVector>>();
-					for (int j = 0; j < c.length; j++) {
+					Vector<String> row = table.getFirst().get(i);
+//					System.out.println("Row "+i+" = "+row);
+					for (int j = 0; j < row.size(); j++) {
 						//System.out.println("Parsing cell "+i+" "+j);
 						int rowIndex = -1;
-						String cell = table.getFirst().get(i).get(j);
+						String cell = row.get(j);
 						//					System.out.println("Cell: "+cell);
 						try {
-							rowIndex = Integer.parseInt(cell)-1;
+							rowIndex = Integer.parseInt(cell);
 						} catch (NumberFormatException nfe) {
 							//System.out.println("NumberFormatException on parsing: "+cell+" converting to "+val);
 						}
-						//					System.out.println("RowIndex: "+rowIndex);
+//						System.out.println("Peak RowIndex: "+rowIndex);
 						Entity<INamedPeakFeatureVector> e = new Entity(new Peak2DFeatureVector(null, rowIndex, Double.NaN, Double.NaN, Double.NaN), c[j], "" + i);
 						List<Entity<INamedPeakFeatureVector>> matches = plet.findMatching(e, Peak2DFeatureVector.FEATURE.ROWINDEX.name());
 						if (!matches.isEmpty()) {
 							Entity<INamedPeakFeatureVector> matching = matches.get(0);
-							//						System.out.println("Found matching entity: "+matching);
+//							System.out.println("Found matching entity: "+matching+" from category "+matching.getCategory());
 							entityGroup.add(matching);
 						} else {
 							e = new Entity<INamedPeakFeatureVector>(new Peak2DFeatureVector(null, -1, Double.NaN, Double.NaN, Double.NaN), c[j], "" + i);
@@ -316,6 +318,8 @@ public class EntityGroupBuilder {
 						throw new IllegalArgumentException();
 					}
 					addGroup(al, entityGroup.get(0), entityGroup.get(1));
+//					System.out.println(entityGroup.get(0).getCategory()+"\t"+entityGroup.get(1).getCategory());
+//					System.out.println(entityGroup);
 				}
 
 			} catch (FileNotFoundException e) {
@@ -333,7 +337,7 @@ public class EntityGroupBuilder {
 					group.addEntity(c, new Entity<INamedPeakFeatureVector>(new Peak2DFeatureVector(null, -1, Double.NaN, Double.NaN, Double.NaN), c, "NA"));
 //					System.out.print("-\t");
 				}
-				int rowIndex = ((Peak2DFeatureVector)group.getEntityForCategory(c).getFeatureVector()).getRowIndex();
+//				int rowIndex = ((Peak2DFeatureVector)group.getEntityForCategory(c).getFeatureVector()).getRowIndex();
 //				System.out.print((rowIndex==-1?"-":rowIndex)+"\t");
 			}
 //			System.out.println("");

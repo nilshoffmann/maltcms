@@ -104,18 +104,18 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
 
 	public static void main(String[] args) {
 		EntityGroupBuilder egb = new EntityGroupBuilder();
-		File[] files = FileUtils.listFiles(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/chlamy/data/chlamy_Dataset_I/"), new String[]{"csv"}, false).toArray(new File[0]);
+		File[] files = FileUtils.listFiles(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/mSPA/data/mSPA_Dataset_I/"), new String[]{"csv"}, false).toArray(new File[0]);
 		ChromaTOFPeakListEntityTable<INamedPeakFeatureVector> t = new ChromaTOFPeakListEntityTable<INamedPeakFeatureVector>(files);
-		List<EntityGroup<INamedPeakFeatureVector>> ref = egb.buildCSVPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/chlamy/groundTruth/chlamy_Dataset_I/reference-alignment.txt"), t);
+		List<EntityGroup<INamedPeakFeatureVector>> ref = egb.buildCSVPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/mSPA/groundTruth/mSPA_Dataset_I/reference-alignment.txt"), t);
 		EntityGroupList referenceGroups = new EntityGroupList(ref.get(0).getCategories().toArray(new Category[0]));
 		referenceGroups.addAll(ref);
 		Map<String, List<EntityGroup<INamedPeakFeatureVector>>> tools = new LinkedHashMap<String, List<EntityGroup<INamedPeakFeatureVector>>>();
 		///home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/chlamy_Dataset_I/mspa/b1cf508f-fd7a-37b8-bb13-848ca9f2b0f0/PAM/1
-		tools.put("mSPA", egb.buildMSPAPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/chlamy_Dataset_I/mspa/b1cf508f-fd7a-37b8-bb13-848ca9f2b0f0/PAM/1/"), t));
-		tools.put("SWPA", egb.buildMSPAPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/chlamy_Dataset_I/swpa/9ae74e7a-e0d8-32ac-af61-53a925ef05d0/SWRE/1/"), t));
-		tools.put("BiPACE 2D", egb.buildCSVPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/chlamy_Dataset_I/bipace2D/52bba786-1957-35e8-b67a-72dccab87560/0_PeakCliqueAlignment/multiple-alignment.csv"), t));
+		tools.put("mSPA", egb.buildMSPAPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/mSPA_Dataset_I_short/mspa/847570cb-09d1-3411-a74c-8f1b2697baed/PAM/1/"), t));
+		tools.put("SWPA", egb.buildMSPAPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/mSPA_Dataset_I_short/swpa/dd1978d5-be59-3dcf-ad8a-56002c341bad/SWRE/1/"), t));
+		tools.put("BiPACE 2D", egb.buildCSVPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/mSPA_Dataset_I_short/bipace2D/5c4d6c12-72e7-3d89-8d4f-ef2117d06df7/0_PeakCliqueAlignment/multiple-alignment.csv"), t));
 		//guineu 9a34522f-7fed-39dc-9420-dcc32ccaf3b5
-		tools.put("Guineu", egb.buildCSVPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/chlamy_Dataset_I/guineu/7415d41b-0193-3868-948a-e1915aa21a9d/multiple-alignment.csv"), t));
+		tools.put("Guineu", egb.buildCSVPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/mSPA_Dataset_I_short/guineu/0e029001-7d61-3b29-8d0e-20f05c413ded/multiple-alignment.csv"), t));
 		for (String key : tools.keySet()) {
 			System.out.println("Tool: "+key);
 			EntityGroupList toolGroups = new EntityGroupList(tools.get(key).get(0).getCategories().toArray(new Category[0]));

@@ -32,6 +32,7 @@ import cross.tools.StringTools;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -124,7 +125,11 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
 //		for(Category c:peakTableMap.keySet()) {
 ////			System.out.println("Category "+c.getName()+" contains "+peakTableMap.get(c).size()+" entities!");
 //		}
-		return peakTableMap.get(category);
+		List<Entity<T>> l = peakTableMap.get(category);
+		if(l==null) {
+			return Collections.emptyList();
+		}
+		return l;
 	}
 	
 	public List<Entity<T>> findMatching(Entity<T> query, String feature) {
