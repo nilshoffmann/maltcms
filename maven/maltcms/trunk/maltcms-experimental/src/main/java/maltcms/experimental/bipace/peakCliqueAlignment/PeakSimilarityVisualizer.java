@@ -43,7 +43,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.MinMaxNormalizationFilter;
 import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.Peak;
 import maltcms.io.csv.CSVWriter;
 import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ImageTools;

@@ -43,7 +43,6 @@ import java.util.Locale;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.Peak;
 import maltcms.io.csv.CSVWriter;
 import org.jdom.Element;
 

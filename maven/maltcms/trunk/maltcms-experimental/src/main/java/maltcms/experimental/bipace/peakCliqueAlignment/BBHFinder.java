@@ -36,9 +36,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.Peak;
 
 /**
  *
@@ -165,7 +165,7 @@ public class BBHFinder {
         for (final String s : fragmentToPeaks.keySet()) {
             for (final IPeak p : fragmentToPeaks.get(s)) {
                 for (final IFileFragment iff : t) {
-                    final List<IPeak> l = p.getPeaksSortedBySimilarity(iff.getName());
+                    final List<UUID> l = p.getPeaksSortedBySimilarity(iff.getName());
                     // clear similarities, if a best hit hasn't been assigned
                     if (l.size() > 1) {
                         log.debug("Clearing similarities for {} and {}",

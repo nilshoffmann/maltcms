@@ -68,7 +68,7 @@ public interface IPeak {
 
 	Array getMsIntensities();
 
-	IPeak getPeakWithHighestSimilarity(final String key);
+	UUID getPeakWithHighestSimilarity(final String key);
 
 	/**
 	 * Only call this method, after having added all similarities!
@@ -76,7 +76,7 @@ public interface IPeak {
 	 * @param key
 	 * @return
 	 */
-	List<IPeak> getPeaksSortedBySimilarity(final String key);
+	List<UUID> getPeaksSortedBySimilarity(final String key);
 
 	double getScanAcquisitionTime();
 

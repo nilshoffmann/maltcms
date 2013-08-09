@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.Data;
-import maltcms.datastructures.peak.Peak;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.experimental.bipace.datastructures.api.Clique;
 
 /**
@@ -40,7 +40,7 @@ import maltcms.experimental.bipace.datastructures.api.Clique;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
-public class BiPaceResult<T extends Peak> {
+public class BiPaceResult<T extends IPeak> {
 
     private Map<T, Clique<T>> peakToClique = new HashMap<T, Clique<T>>();
     private List<Clique<T>> cliques;

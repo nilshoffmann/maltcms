@@ -33,7 +33,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.peak.Peak;
+import maltcms.datastructures.peak.PeakNG;
 import ucar.ma2.Array;
 
 /**
@@ -41,7 +41,7 @@ import ucar.ma2.Array;
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Slf4j
-public class Peak2D extends Peak {
+public class Peak2D extends PeakNG {
 
     @Getter
     @Setter

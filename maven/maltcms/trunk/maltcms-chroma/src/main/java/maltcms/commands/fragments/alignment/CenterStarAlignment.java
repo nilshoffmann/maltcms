@@ -38,7 +38,7 @@ import java.util.Locale;
 
 import maltcms.commands.fragments.warp.ChromatogramWarp;
 import maltcms.datastructures.alignment.AlignmentFactory;
-import maltcms.datastructures.peak.Peak;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.io.csv.CSVWriter;
 import maltcms.io.xml.bindings.alignment.Alignment;
 import maltcms.tools.MaltcmsTools;
@@ -228,20 +228,20 @@ public class CenterStarAlignment extends AFragmentCommand {
      * @param ll
      */
     private void saveToXMLAlignment(final TupleND<IFileFragment> tuple,
-            final List<List<Peak>> ll) {
+            final List<List<IPeak>> ll) {
         AlignmentFactory af = new AlignmentFactory();
         Alignment a = af.createNewAlignment(this.getClass().getName(), false);
         HashMap<IFileFragment, List<Integer>> fragmentToScanIndexMap = new HashMap<IFileFragment, List<Integer>>();
-        for (final List<Peak> l : ll) {
+        for (final List<IPeak> l : ll) {
             log.debug("Adding {} peaks: {}", l.size(), l);
-            HashMap<String, Peak> fragToPeak = new HashMap<String, Peak>();
-            for (final Peak p : l) {
+            HashMap<String, IPeak> fragToPeak = new HashMap<String, IPeak>();
+            for (final IPeak p : l) {
                 fragToPeak.put(p.getAssociation(), p);
             }
             for (final IFileFragment iff : tuple) {
                 int scanIndex = -1;
                 if (fragToPeak.containsKey(iff.getName())) {
-                    Peak p = fragToPeak.get(iff.getName());
+                    IPeak p = fragToPeak.get(iff.getName());
                     scanIndex = p.getScanIndex();
                 }
 

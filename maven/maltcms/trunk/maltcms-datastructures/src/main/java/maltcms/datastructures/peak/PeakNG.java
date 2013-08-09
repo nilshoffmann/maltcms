@@ -27,18 +27,10 @@
  */
 package maltcms.datastructures.peak;
 
-import com.carrotsearch.hppc.ObjectDoubleOpenHashMap;
-import com.carrotsearch.hppc.ObjectObjectOpenHashMap;
-import com.carrotsearch.hppc.cursors.ObjectCursor;
-import com.carrotsearch.hppc.sorting.IndirectComparator;
-import com.carrotsearch.hppc.sorting.IndirectSort;
 import cross.datastructures.cache.SerializableArray;
-import cross.datastructures.tuple.Tuple2D;
 import cross.exception.NotImplementedException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 
 
@@ -46,6 +38,8 @@ import ucar.ma2.Array;
 import cross.exception.ResourceNotAvailableException;
 import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -72,21 +66,23 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
 	private static final Ehcache peakArrayCache;
     private final int scanIndex;
     private final double sat;
-//    private final Map<String, ObjectDoubleOpenHashMap<IPeak>> sims = new ConcurrentHashMap<String, ObjectDoubleOpenHashMap<IPeak>>();
-	private final ConcurrentHashMap<String, PeakEntry> sims = new ConcurrentHashMap<String,PeakEntry>(20,0.8f,4);//new ConcurrentHashMap<String, PeakEntry>(200, 0.9f, 4);
-//    private final Map<String, IPeak[]> sortedPeaks = new ConcurrentHashMap<String, IPeak[]>();
+	private ConcurrentHashMap<String, PeakEdge> sims = new ConcurrentHashMap<String,PeakEdge>(20,0.8f,4);
     private String name = "";
     private int peakIndex = -1;
     private final String association;
     private final boolean storeOnlyBestSimilarities;
-//	private final Array msIntensities;
 	
-	private final class PeakEntry {
-		final IPeak peak;
+	private final class PeakEdge implements Serializable {
+		final UUID sourcePeakId, targetPeakId;
 		final double similarity;
-		public PeakEntry(IPeak peak, double similarity) {
-			this.peak = peak;
+		public PeakEdge(IPeak sourcePeak, IPeak targetPeak, double similarity) {
+			this.sourcePeakId = sourcePeak.getUniqueId();
+			this.targetPeakId = targetPeak.getUniqueId();
 			this.similarity = similarity;
+		}
+		
+		public Serializable key() {
+			return sourcePeakId+"-"+targetPeakId;
 		}
 	}
 	
@@ -98,6 +94,7 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
 		cc.setMaxElementsOnDisk(Integer.MAX_VALUE);
 		cc.setOverflowToDisk(true);
 		cc.setMemoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LRU.toString());
+		
 	}
 	
 	public PeakNG(int scanIndex, Array array, double sat, String association, boolean storeOnlyBestSimilarities) {
@@ -106,14 +103,12 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
 		this.sat = sat;
 		this.association = association.intern();
 		this.storeOnlyBestSimilarities = storeOnlyBestSimilarities;
-//		this.msIntensities = array.copy();
     }
 	
 	@Override
 	public Array getMsIntensities() {
 		Serializable s = peakArrayCache.get(getUniqueId()).getValue();
 		return ((SerializableArray)s).getArray();
-//		return msIntensities;
 	}
 	
     /**
@@ -121,7 +116,7 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
      * associated FileFragment of Peak p, so that a subsequent call to
      * getPeakWithHighestSimilarity or getPeaksSortedBySimilarity will rebuild
      * the list of peaks sorted ascending according to their similarity to this
-     * peak.
+     * peakId.
      *
      * @param p
      * @param similarity
@@ -131,65 +126,36 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
         if (this.storeOnlyBestSimilarities) {
             if (!Double.isInfinite(similarity) && !Double.isNaN(similarity)) {
 				String key = p.getAssociation();
-				PeakEntry t = this.sims.get(key);
+				PeakEdge t = getSims().get(key);
 				if(t!=null) {
 					if(t.similarity<similarity) {
-						this.sims.put(key,new PeakEntry(p,similarity));
+						this.sims.put(key,new PeakEdge(this,p,similarity));
 					}
 				}else{
-					this.sims.put(key,new PeakEntry(p,similarity));
+					this.sims.put(key,new PeakEdge(this,p,similarity));
 				}
-//                if (this.sims.containsKey(p.getAssociation())) {
-//					
-//                    hm = this.sims.get(p.getAssociation());
-//                    IPeak s = p;
-//                    double sim = similarity;
-//                    //since we only keep the best sim, hm will only contain at
-//                    //most one key
-//                    for (ObjectCursor<IPeak> q : hm.keys()) {
-//                        double qsim = hm.get(q.value);
-//                        if (qsim > similarity) {
-//                            s = q.value;
-//                            sim = q.value.getSimilarity(this);
-//                        }
-//                    }
-//                    hm.clear();
-//                    hm.put(s, sim);
-//                    best = s;
-//                } else {
-//                    hm = new ObjectDoubleOpenHashMap<IPeak>(1);
-//                    hm.put(p, similarity);
-//                    this.sims.put(p.getAssociation(), hm);
-//                }
-//                this.sortedPeaks.put(best.getAssociation(), new IPeak[]{best});
-//                if (this.sortedPeaks.containsKey(p.getAssociation())) {
-//                    this.sortedPeaks.remove(p.getAssociation());
-//                }
             }
         } else {
 			throw new NotImplementedException();
-//            if (!Double.isInfinite(similarity) && !Double.isNaN(similarity)) {
-//                ObjectDoubleOpenHashMap<IPeak> hm = null;
-//                if (this.sims.containsKey(p.getAssociation())) {
-//                    hm = this.sims.get(p.getAssociation());
-//                    hm.put(p, similarity);
-//                } else {
-//                    hm = new ObjectDoubleOpenHashMap<IPeak>();
-//                    hm.put(p, similarity);
-//                    this.sims.put(p.getAssociation(), hm);
-//                }
-//                if (this.sortedPeaks.containsKey(p.getAssociation())) {
-//                    this.sortedPeaks.remove(p.getAssociation());
-//                }
-//            }
         }
     }
 
 	@Override
     public void clearSimilarities() {
-        this.sims.clear();
-//        this.sortedPeaks.clear();
+		if(this.sims!=null) {
+			this.sims.clear();
+			this.sims = null;
+		}
     }
+	
+	private Map<String,PeakEdge> getSims() {
+		if(sims==null) {
+			synchronized(sims) {
+				sims = new ConcurrentHashMap<String,PeakEdge>(20,0.8f,4);
+			}
+		}
+		return sims;
+	}
 
     /**
      * Only call this method, after having added all similarities!
@@ -198,49 +164,23 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
      * @return
      */
 	@Override
-    public List<IPeak> getPeaksSortedBySimilarity(final String key) {
-        if (this.sims.containsKey(key)) {
-			return Arrays.asList(this.sims.get(key).peak);
-//            List<IPeak> peaks = null;
-//            if (this.sortedPeaks.containsKey(key)) {
-//                peaks = Arrays.asList(this.sortedPeaks.get(key));
-//            } else {
-//				double[] similarities = this.sims.get(key).values;
-//				int[] indices = IndirectSort.mergesort(0, similarities.length, new IndirectComparator.AscendingDoubleComparator(similarities));
-//                peaks = new ArrayList<IPeak>();
-//				for(int idx:indices) {
-//					IPeak peak = this.sims.get(key).keys[idx];
-//					if (!peak.getAssociation().equals(getAssociation())) {
-//                        peaks.add(peak);
-//                    }
-//				}
-//                this.sortedPeaks.put(key, peaks.toArray(new IPeak[peaks.size()]));
-//            }
-//            return peaks;
+    public List<UUID> getPeaksSortedBySimilarity(final String key) {
+        if (getSims().containsKey(key)) {
+			return Arrays.asList(this.sims.get(key).targetPeakId);
         }
         return java.util.Collections.emptyList();
     }
 
 	@Override
-    public IPeak getPeakWithHighestSimilarity(final String key) {
+    public UUID getPeakWithHighestSimilarity(final String key) {
 		if(storeOnlyBestSimilarities) {
-			if(this.sims.containsKey(key)) {
-				return this.sims.get(key).peak;
+			if(getSims().containsKey(key)) {
+				return this.sims.get(key).targetPeakId;
 			}
 			return null;
-//			if(sortedPeaks.containsKey(key)) {
-//				return this.sortedPeaks.get(key)[0];
-//			}else{
-//				return null;
-//			}
 		}else{
 			throw new NotImplementedException();
 		}
-//        final List<IPeak> l = getPeaksSortedBySimilarity(key);
-//        if (l.isEmpty()) {
-//            return null;
-//        }
-//        return l.get(l.size() - 1);
     }
 
 	@Override
@@ -256,27 +196,22 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
 	@Override
     public double getSimilarity(final IPeak p) {
 		String key = p.getAssociation();
-//        if (this.sims.containsKey(key)) {
-//            if (this.sims.get(p.getAssociation()).containsKey(p)) {
-//                return this.sims.get(p.getAssociation()).get(p);
-//            }
-			PeakEntry t = this.sims.get(key);
-			if(t!=null && t.peak.equals(p)) {
+			PeakEdge t = getSims().get(key);
+			if(t!=null && t.targetPeakId.equals(p.getUniqueId())) {
 				return t.similarity;
 			}
-//        }
         return Double.NaN;
     }
 
 	@Override
     public boolean isBidiBestHitFor(final IPeak p) {
-        final IPeak pT = getPeakWithHighestSimilarity(p.getAssociation());
-        final IPeak qT = p.getPeakWithHighestSimilarity(this.getAssociation());
+        final UUID pT = getPeakWithHighestSimilarity(p.getAssociation());
+        final UUID qT = p.getPeakWithHighestSimilarity(this.getAssociation());
         if (qT == null || pT == null) {
             return false;
         }
 
-        if ((qT == this) && (pT == p)) {
+        if ((qT == this.getUniqueId()) && (pT == p.getUniqueId())) {
             return true;
         }
         return false;
@@ -284,23 +219,6 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
 
 	@Override
     public void retainSimilarityRemoveRest(final IPeak p) {
-//		String key = p.getAssociation();
-//        if (this.sims.containsKey(key)) {
-//			Tuple2D<IPeak,Double> t = this.sims.get(key);
-//			if(t.getFirst().equals(p)) {
-//				
-//			}
-////            final ObjectDoubleOpenHashMap<IPeak> hm = this.sims.get(p.getAssociation());
-////            if (hm.containsKey(p)) {
-////                log.debug("Retaining similarity to {} in {}", p, this);
-////                final double lhsToRhs = hm.get(p);
-////                // Double rhsToLhs = p.getSimilarity(this);
-////                hm.clear();
-////                hm.put(p, lhsToRhs);
-////                this.sims.put(p.getAssociation(),hm);
-////                this.sortedPeaks.put(p.getAssociation(), new IPeak[]{p});
-////            }
-//        }
     }
 
     @Override

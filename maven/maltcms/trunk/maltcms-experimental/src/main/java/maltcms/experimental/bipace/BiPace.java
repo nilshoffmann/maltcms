@@ -46,7 +46,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.peak.Peak;
+import maltcms.datastructures.peak.IPeak;
 import maltcms.experimental.bipace.datastructures.api.Clique;
 import maltcms.experimental.bipace.datastructures.spi.PairwisePeakListSimilarities;
 import maltcms.experimental.bipace.api.IPeakListProvider;
@@ -60,7 +60,7 @@ import net.sf.mpaxs.spi.concurrent.MpaxsCompletionService;
  */
 @Slf4j
 @Data
-public class BiPace<T extends Peak> implements Callable<BiPaceResult<T>> {
+public class BiPace<T extends IPeak> implements Callable<BiPaceResult<T>> {
 
     private final List<File> inputFiles;
     private final IPeakListProvider<T> peakListProvider;

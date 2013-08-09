@@ -35,7 +35,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import maltcms.datastructures.peak.Clique;
 import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.Peak;
 import ucar.ma2.ArrayBoolean;
 
 /**

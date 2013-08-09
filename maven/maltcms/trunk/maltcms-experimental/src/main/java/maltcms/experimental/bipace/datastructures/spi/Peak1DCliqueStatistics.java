@@ -31,7 +31,6 @@ import maltcms.experimental.bipace.datastructures.api.CliqueStatistics;
 import java.util.ArrayList;
 import java.util.List;
 import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.Peak;
 
 /**
  *

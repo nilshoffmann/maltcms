@@ -36,7 +36,6 @@ import java.util.LinkedHashSet;
 import java.util.Vector;
 
 import maltcms.datastructures.peak.Clique;
-import maltcms.datastructures.peak.Peak;
 import maltcms.io.csv.CSVReader;
 import maltcms.tools.ArrayTools;
 import maltcms.ui.charts.PlotRunner;

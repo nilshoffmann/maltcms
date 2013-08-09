@@ -29,7 +29,6 @@ package maltcms.experimental.bipace.spi;
 
 import lombok.Data;
 import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.Peak;
 import maltcms.experimental.bipace.api.PeakSimilarityCalculator;
 
 /**

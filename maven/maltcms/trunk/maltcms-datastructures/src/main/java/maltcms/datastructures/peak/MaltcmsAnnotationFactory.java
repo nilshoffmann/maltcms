@@ -101,7 +101,7 @@ public class MaltcmsAnnotationFactory {
         return mat;
     }
 
-    public void addPeakAnnotation(MaltcmsAnnotation ma, String creator, Peak p) {
+    public void addPeakAnnotation(MaltcmsAnnotation ma, String creator, IPeak p) {
         AnnotationsType peaks = getAnnotationsTypeFor(ma, creator, p);
         AnnotationType at = new AnnotationType();
         at.setType(p.getClass().getName());

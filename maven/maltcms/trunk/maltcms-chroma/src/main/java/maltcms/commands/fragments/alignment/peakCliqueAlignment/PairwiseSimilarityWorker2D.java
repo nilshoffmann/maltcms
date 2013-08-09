@@ -34,7 +34,6 @@ import java.util.concurrent.Callable;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.Peak;
 import maltcms.math.functions.IScalarArraySimilarity;
 
 /**

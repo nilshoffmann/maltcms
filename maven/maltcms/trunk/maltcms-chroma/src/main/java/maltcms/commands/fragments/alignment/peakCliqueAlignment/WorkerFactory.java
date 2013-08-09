@@ -36,7 +36,6 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import lombok.Data;
 import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.Peak;
 import maltcms.math.functions.IScalarArraySimilarity;
 import maltcms.math.functions.ProductSimilarity;
 import maltcms.math.functions.similarities.ArrayCorr;

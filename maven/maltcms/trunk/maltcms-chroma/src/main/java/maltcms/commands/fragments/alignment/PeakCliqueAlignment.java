@@ -27,6 +27,8 @@
  */
 package maltcms.commands.fragments.alignment;
 
+import com.carrotsearch.hppc.ObjectObjectMap;
+import com.carrotsearch.hppc.ObjectObjectOpenHashMap;
 import java.io.File;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -83,6 +85,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.AccessLevel;
@@ -103,7 +106,6 @@ import maltcms.datastructures.alignment.AlignmentFactory;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.ms.Metabolite;
 import maltcms.datastructures.peak.PeakNG;
-import maltcms.experimental.bipace.peakCliqueAlignment.io.MultipleAlignmentWriter;
 import maltcms.io.xml.bindings.alignment.Alignment;
 import maltcms.tools.MaltcmsTools;
 import net.sf.mpaxs.api.ICompletionService;
@@ -614,6 +616,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 		peakToClique = new HashMap<IPeak, Clique>();
 		Set<IPeak> incompatiblePeaks = new LinkedHashSet<IPeak>();
 		Set<IPeak> unassignedPeaks = new LinkedHashSet<IPeak>();
+		ObjectObjectOpenHashMap<UUID,IPeak> peakRepository = new ObjectObjectOpenHashMap<UUID,IPeak>();
+		for(String key:fragmentToPeaks.keySet()) {
+			for(IPeak p:fragmentToPeaks.get(key)) {
+				peakRepository.put(p.getUniqueId(), p);
+			}
+		}
 		// every peak is assigned to at most one clique!!!
 		// reassignment is invalid and should not occur
 		// for all files
@@ -634,7 +642,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 				if (!iff.getName().equals(jff.getName())) {
 					for (final IPeak p : peaks) {
 						// retrieve list of most similar peaks
-						final IPeak q = p.getPeakWithHighestSimilarity(jff.getName());
+						final IPeak q = peakRepository.get(p.getPeakWithHighestSimilarity(jff.getName()));
 						if (q == null) {
 							// null peaks have no bidi best hit, so they are
 							// removed
@@ -1294,7 +1302,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 		for (final String s : fragmentToPeaks.keySet()) {
 			for (final IPeak p : fragmentToPeaks.get(s)) {
 				for (final IFileFragment iff : t) {
-					final List<IPeak> l = p.getPeaksSortedBySimilarity(iff.getName());
+					final List<UUID> l = p.getPeaksSortedBySimilarity(iff.getName());
 					// clear similarities, if a best hit hasn't been assigned
 					if (l.size() > 1) {
 						log.debug("Clearing similarities for {} and {}",

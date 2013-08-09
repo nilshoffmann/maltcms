@@ -36,7 +36,6 @@ import lombok.Data;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.Peak2D;
 import maltcms.datastructures.array.Sparse;
 import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.Peak;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 

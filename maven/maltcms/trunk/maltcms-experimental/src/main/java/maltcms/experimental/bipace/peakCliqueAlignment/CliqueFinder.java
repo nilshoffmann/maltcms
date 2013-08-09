@@ -41,6 +41,8 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.UUID;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.peak.IPeak;
@@ -98,6 +100,12 @@ public class CliqueFinder<T extends IPeak> implements IWorkflowElement {
         // a minimum size for a clique from when on it is considered valid
         HashSet<T> incompatiblePeaks = new LinkedHashSet<T>();
         HashSet<T> unassignedPeaks = new LinkedHashSet<T>();
+		Map<UUID,T> peakRepository = new HashMap<UUID,T>();
+		for(String key:fragmentToPeaks.keySet()) {
+			for(T t:fragmentToPeaks.get(key)) {
+				peakRepository.put(t.getUniqueId(), t);
+			}
+		}
         // every peak is assigned to at most one clique!!!
         // reassignment is invalid and should not occur
         // for all files
@@ -118,7 +126,7 @@ public class CliqueFinder<T extends IPeak> implements IWorkflowElement {
                 if (!iff.getName().equals(jff.getName())) {
                     for (final T p : peaks) {
                         // retrieve list of most similar peaks
-                        final T q = (T) p.getPeakWithHighestSimilarity(jff.getName());
+                        final T q = (T) peakRepository.get(p.getPeakWithHighestSimilarity(jff.getName()));
                         if (q == null) {
                             // null peaks have no bidi best hit, so they are
                             // removed

@@ -41,7 +41,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.alignment.AlignmentFactory;
 import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.Peak;
 import maltcms.io.xml.bindings.alignment.Alignment;
 import org.jdom.Element;
 

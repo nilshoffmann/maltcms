@@ -40,7 +40,6 @@ import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.Peak;
 import maltcms.experimental.bipace.datastructures.api.Clique;
 import maltcms.io.csv.CSVWriter;
 import org.jdom.Element;
