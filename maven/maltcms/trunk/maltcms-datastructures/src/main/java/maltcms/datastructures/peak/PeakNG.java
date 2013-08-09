@@ -59,222 +59,242 @@ import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 @Slf4j
 public class PeakNG extends DefaultFeatureVector implements IPeak {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = -4337180586706400884L;
-	private static final Ehcache peakArrayCache;
-    private final int scanIndex;
-    private final double sat;
-	private ConcurrentHashMap<String, PeakEdge> sims = new ConcurrentHashMap<String,PeakEdge>(20,0.8f,4);
-    private String name = "";
-    private int peakIndex = -1;
-    private final String association;
-    private final boolean storeOnlyBestSimilarities;
-	
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -4337180586706400884L;
+	private static final Ehcache peakArrayCache, edgeCache;
+	private final int scanIndex;
+	private final double sat;
+	private ConcurrentHashMap<String, UUID> sims = new ConcurrentHashMap<String, UUID>();
+	private String name = "";
+	private int peakIndex = -1;
+	private final String association;
+	private final boolean storeOnlyBestSimilarities;
+
 	private final class PeakEdge implements Serializable {
-		final UUID sourcePeakId, targetPeakId;
+		
+		final UUID sourcePeakId, targetPeakId, edgeId;
 		final double similarity;
+
 		public PeakEdge(IPeak sourcePeak, IPeak targetPeak, double similarity) {
 			this.sourcePeakId = sourcePeak.getUniqueId();
 			this.targetPeakId = targetPeak.getUniqueId();
 			this.similarity = similarity;
+			edgeId = UUID.randomUUID();
 		}
-		
-		public Serializable key() {
-			return sourcePeakId+"-"+targetPeakId;
+
+		public UUID key() {
+			return edgeId;
 		}
 	}
-	
+
 	static {
 		peakArrayCache = net.sf.ehcache.CacheManager.getInstance().addCacheIfAbsent("PEAKNG-CACHE");
 		CacheConfiguration cc = peakArrayCache.getCacheConfiguration();
-		cc.setDiskSpoolBufferSizeMB(128);
-		cc.setMaxElementsInMemory(100000);
+		cc.setDiskSpoolBufferSizeMB(512);
+		cc.setMaxElementsInMemory(1000000);
 		cc.setMaxElementsOnDisk(Integer.MAX_VALUE);
 		cc.setOverflowToDisk(true);
 		cc.setMemoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LRU.toString());
-		
+		edgeCache = net.sf.ehcache.CacheManager.getInstance().addCacheIfAbsent("PEAKNG-EDGE-CACHE");
+		CacheConfiguration cc2 = edgeCache.getCacheConfiguration();
+		cc2.setDiskSpoolBufferSizeMB(256);
+		cc2.setMaxElementsInMemory(100000);
+		cc2.setMaxElementsOnDisk(Integer.MAX_VALUE);
+		cc2.setOverflowToDisk(true);
+		cc2.setMemoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LFU.toString());
 	}
-	
+
 	public PeakNG(int scanIndex, Array array, double sat, String association, boolean storeOnlyBestSimilarities) {
-        this.scanIndex = scanIndex;
+		this.scanIndex = scanIndex;
 		peakArrayCache.put(new Element(this.getUniqueId(), new SerializableArray(array.copy())));
 		this.sat = sat;
 		this.association = association.intern();
 		this.storeOnlyBestSimilarities = storeOnlyBestSimilarities;
-    }
-	
+//		this.msIntensities = array;
+	}
+
 	@Override
 	public Array getMsIntensities() {
 		Serializable s = peakArrayCache.get(getUniqueId()).getValue();
-		return ((SerializableArray)s).getArray();
+		return ((SerializableArray) s).getArray();
+//		return msIntensities;
 	}
-	
-    /**
-     * Add a similarity to Peak p. Resets the sortedPeaks list for the
-     * associated FileFragment of Peak p, so that a subsequent call to
-     * getPeakWithHighestSimilarity or getPeaksSortedBySimilarity will rebuild
-     * the list of peaks sorted ascending according to their similarity to this
-     * peakId.
-     *
-     * @param p
-     * @param similarity
-     */
+
+	/**
+	 * Add a similarity to Peak p. Resets the sortedPeaks list for the
+	 * associated FileFragment of Peak p, so that a subsequent call to
+	 * getPeakWithHighestSimilarity or getPeaksSortedBySimilarity will rebuild
+	 * the list of peaks sorted ascending according to their similarity to this
+	 * peakId.
+	 *
+	 * @param p
+	 * @param similarity
+	 */
 	@Override
-    public void addSimilarity(final IPeak p, final double similarity) {
-        if (this.storeOnlyBestSimilarities) {
-            if (!Double.isInfinite(similarity) && !Double.isNaN(similarity)) {
+	public void addSimilarity(final IPeak p, final double similarity) {
+		if (this.storeOnlyBestSimilarities) {
+			if (!Double.isInfinite(similarity) && !Double.isNaN(similarity)) {
 				String key = p.getAssociation();
-				PeakEdge t = getSims().get(key);
-				if(t!=null) {
-					if(t.similarity<similarity) {
-						this.sims.put(key,new PeakEdge(this,p,similarity));
+				UUID t = getSims().get(key);
+				if (t != null) {
+					PeakEdge pe = (PeakEdge) edgeCache.get(t).getValue();
+					if (pe.similarity < similarity) {
+						edgeCache.remove(pe.edgeId);
+						PeakEdge edge = new PeakEdge(this, p, similarity);
+						edgeCache.put(new Element(edge.edgeId, edge));
+						this.sims.put(key, edge.edgeId);
 					}
-				}else{
-					this.sims.put(key,new PeakEdge(this,p,similarity));
+				} else {
+					PeakEdge edge = new PeakEdge(this, p, similarity);
+					edgeCache.put(new Element(edge.edgeId, edge));
+					this.sims.put(key, edge.edgeId);
 				}
-            }
-        } else {
+			}
+		} else {
 			throw new NotImplementedException();
-        }
-    }
+		}
+	}
 
 	@Override
-    public void clearSimilarities() {
-		if(this.sims!=null) {
+	public void clearSimilarities() {
+		if (this.sims != null) {
 			this.sims.clear();
 			this.sims = null;
 		}
-    }
-	
-	private Map<String,PeakEdge> getSims() {
-		if(sims==null) {
-			synchronized(sims) {
-				sims = new ConcurrentHashMap<String,PeakEdge>(20,0.8f,4);
-			}
+	}
+
+	private Map<String, UUID> getSims() {
+		if (sims == null) {
+			sims = new ConcurrentHashMap<String, UUID>(20, 0.8f, 4);
 		}
 		return sims;
 	}
 
-    /**
-     * Only call this method, after having added all similarities!
-     *
-     * @param key
-     * @return
-     */
+	/**
+	 * Only call this method, after having added all similarities!
+	 *
+	 * @param key
+	 * @return
+	 */
 	@Override
-    public List<UUID> getPeaksSortedBySimilarity(final String key) {
-        if (getSims().containsKey(key)) {
-			return Arrays.asList(this.sims.get(key).targetPeakId);
-        }
-        return java.util.Collections.emptyList();
-    }
+	public List<UUID> getPeaksSortedBySimilarity(final String key) {
+		if (getSims().containsKey(key)) {
+			PeakEdge pe = (PeakEdge) edgeCache.get(sims.get(key)).getValue();
+			return Arrays.asList(pe.targetPeakId);
+		}
+		return java.util.Collections.emptyList();
+	}
 
 	@Override
-    public UUID getPeakWithHighestSimilarity(final String key) {
-		if(storeOnlyBestSimilarities) {
-			if(getSims().containsKey(key)) {
-				return this.sims.get(key).targetPeakId;
+	public UUID getPeakWithHighestSimilarity(final String key) {
+		if (storeOnlyBestSimilarities) {
+			if (getSims().containsKey(key)) {
+				PeakEdge pe = (PeakEdge) edgeCache.get(sims.get(key)).getValue();
+				return pe.targetPeakId;
 			}
 			return null;
-		}else{
+		} else {
 			throw new NotImplementedException();
 		}
-    }
+	}
 
 	@Override
-    public double getScanAcquisitionTime() {
-        return this.sat;
-    }
+	public double getScanAcquisitionTime() {
+		return this.sat;
+	}
 
 	@Override
-    public int getScanIndex() {
-        return this.scanIndex;
-    }
+	public int getScanIndex() {
+		return this.scanIndex;
+	}
 
 	@Override
-    public double getSimilarity(final IPeak p) {
+	public double getSimilarity(final IPeak p) {
 		String key = p.getAssociation();
-			PeakEdge t = getSims().get(key);
-			if(t!=null && t.targetPeakId.equals(p.getUniqueId())) {
+		UUID id = getSims().get(key);
+		if (id != null) {
+			PeakEdge t = (PeakEdge) edgeCache.get(id).getValue();
+			if (t != null && t.targetPeakId.equals(p.getUniqueId())) {
 				return t.similarity;
 			}
-        return Double.NaN;
-    }
+		}
+		return Double.NaN;
+	}
 
 	@Override
-    public boolean isBidiBestHitFor(final IPeak p) {
-        final UUID pT = getPeakWithHighestSimilarity(p.getAssociation());
-        final UUID qT = p.getPeakWithHighestSimilarity(this.getAssociation());
-        if (qT == null || pT == null) {
-            return false;
-        }
+	public boolean isBidiBestHitFor(final IPeak p) {
+		final UUID pT = getPeakWithHighestSimilarity(p.getAssociation());
+		final UUID qT = p.getPeakWithHighestSimilarity(this.getAssociation());
+		if (qT == null || pT == null) {
+			return false;
+		}
 
-        if ((qT == this.getUniqueId()) && (pT == p.getUniqueId())) {
-            return true;
-        }
-        return false;
-    }
+		if ((qT == this.getUniqueId()) && (pT == p.getUniqueId())) {
+			return true;
+		}
+		return false;
+	}
 
 	@Override
-    public void retainSimilarityRemoveRest(final IPeak p) {
-    }
+	public void retainSimilarityRemoveRest(final IPeak p) {
+	}
 
-    @Override
-    public int hashCode() {
-        return getUniqueId().hashCode();
-    }
+	@Override
+	public int hashCode() {
+		return getUniqueId().hashCode();
+	}
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("Peak number " + this.peakIndex + " at position " + this.scanIndex + " and rt: " + this.sat
-                + " in file " + this.association);
-        return sb.toString();
-    }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Peak number " + this.peakIndex + " at position " + this.scanIndex + " and rt: " + this.sat
+				+ " in file " + this.association);
+		return sb.toString();
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
-     */
-    @Override
-    public Array getFeature(String name) {
-        if (name.equals("scan_acquisition_time")) {
-            return Array.factory(this.sat);
-        } else if (name.equals("scan_index")) {
-            return Array.factory(this.scanIndex);
-        } else if (name.equals("binned_intensity_values")) {
-            return getMsIntensities();
-        }
-        Array retVal = super.getFeature(name);
-        if(retVal!=null) {
-            return retVal;
-        }
-        throw new ResourceNotAvailableException("No such feature: " + name);
-    }
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
+	 */
+	@Override
+	public Array getFeature(String name) {
+		if (name.equals("scan_acquisition_time")) {
+			return Array.factory(this.sat);
+		} else if (name.equals("scan_index")) {
+			return Array.factory(this.scanIndex);
+		} else if (name.equals("binned_intensity_values")) {
+			return getMsIntensities();
+		}
+		Array retVal = super.getFeature(name);
+		if (retVal != null) {
+			return retVal;
+		}
+		throw new ResourceNotAvailableException("No such feature: " + name);
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
-     */
-    @Override
-    public List<String> getFeatureNames() {
-        List<String> superFeatureNames = super.getFeatureNames();
-        LinkedList<String> allFeatures = new LinkedList<String>(superFeatureNames);
-        allFeatures.addAll(Arrays.asList("scan_acquisition_time", "scan_index",
-                "binned_intensity_values"));
-        return allFeatures;
-    }
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
+	 */
+	@Override
+	public List<String> getFeatureNames() {
+		List<String> superFeatureNames = super.getFeatureNames();
+		LinkedList<String> allFeatures = new LinkedList<String>(superFeatureNames);
+		allFeatures.addAll(Arrays.asList("scan_acquisition_time", "scan_index",
+				"binned_intensity_values"));
+		return allFeatures;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (o!=null && o instanceof PeakNG) {
-            return getUniqueId().equals(((PeakNG)o).getUniqueId());
-        }
-        return false;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (o != null && o instanceof PeakNG) {
+			return getUniqueId().equals(((PeakNG) o).getUniqueId());
+		}
+		return false;
+	}
 }
