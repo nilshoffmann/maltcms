@@ -27,7 +27,6 @@
  */
 package maltcms.commands.fragments.alignment;
 
-import com.carrotsearch.hppc.ObjectObjectMap;
 import com.carrotsearch.hppc.ObjectObjectOpenHashMap;
 import java.io.File;
 import java.math.RoundingMode;
@@ -168,8 +167,11 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 	private boolean savePeakSimilarities = false;
 	@Configurable
 	private boolean saveXMLAlignment = true;
+	@Deprecated
 	@Configurable
 	private int maxBBHErrors = 0;
+	@Configurable
+	private double minBbhFraction = 1.0d;
 	@Configurable
 	private boolean savePlots = false;
 	@Configurable
@@ -804,7 +806,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 		Clique c;
 		// assigned yet
 		c = new Clique();
-		c.setMaxBBHErrors(this.maxBBHErrors);
+//		c.setMaxBBHErrors(this.maxBBHErrors);
+		c.setMinBbhFraction(this.minBbhFraction);
 		if (c.addPeak(p)) {
 			peakToClique.put(p, c);
 		}
@@ -1021,7 +1024,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 		int unmatchedAdded = 0, incompatibleAdded = 0, unassignedAdded = 0;
 		//reinspect
 		if (postProcessCliques) {
-			log.info("Post processing cliques and unmatched peaks");
+			log.error("Post processing cliques and unmatched peaks");
 //			SparseDoubleMatrix2D sdm = new SparseDoubleMatrix2D(cliques.size(), result.getIncompatiblePeaks().size() + result.getUnassignedPeaks().size() + unmatchedPeaks.size());
 			//identify all peaks that are not contained in the final cliques
 //			int clique = 0;
@@ -1031,18 +1034,19 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 					//log.info("RT variance within clique {} containing {} peaks ={}; Stdev: {}", new Object[]{c.getCliqueRTMean(), c.getPeakList().size(), c.getCliqueRTVariance(), Math.sqrt(c.getCliqueRTVariance())});
 					int peak = 0;
 					for (IPeak q : result.getIncompatiblePeaks()) {
-						double ratio = c.getRatioOfRTDistanceToCentroidAndCliqueVariance(q);
-//						double distToCentroid = c.getRTDistanceToCentroid(q);
-//						log.info("Distance to centroid of clique: {}", distToCentroid);
-//						log.info("Similarity to centroid of clique: {}", q.getSimilarity(p));
-//						sdm.set(clique, peak, distToCentroid);
-						if (ratio <= 1) {
-							if (c.addPeak(q, true)) {
+//						
+//						double ratio = c.getRatioOfRTDistanceToCentroidAndCliqueVariance(q);
+////						double distToCentroid = c.getRTDistanceToCentroid(q);
+////						log.info("Distance to centroid of clique: {}", distToCentroid);
+////						log.info("Similarity to centroid of clique: {}", q.getSimilarity(p));
+////						sdm.set(clique, peak, distToCentroid);
+//						if (ratio <= 1) {
+							if (c.addPeak(q)) {
 								log.debug("Adding formerly incompatible peak {} to clique", q);
 								peakNumberCorrection++;
 								incompatibleAdded++;
 							}
-						}
+//						}
 						peak++;
 					}
 					for (IPeak q : result.getUnassignedPeaks()) {
@@ -1051,13 +1055,13 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 //						sdm.set(clique, peak, distToCentroid);
 //						log.info("Distance to centroid of clique: {}", distToCentroid);
 //						log.info("Similarity to centroid of clique: {}", q.getSimilarity(p));
-						if (ratio <= 1) {
-							if (c.addPeak(q, true)) {
+//						if (ratio <= 1) {
+							if (c.addPeak(q)) {
 								log.debug("Adding formerly unassigned peak {} to clique", q);
 								peakNumberCorrection++;
 								unassignedAdded++;
 							}
-						}
+//						}
 						peak++;
 					}
 					for (IPeak q : unmatchedPeaks) {
@@ -1066,20 +1070,20 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 //						sdm.set(clique, peak, distToCentroid);
 //						log.info("Distance to centroid of clique: {}", distToCentroid);
 //						log.info("Similarity to centroid of clique: {}", q.getSimilarity(p));
-						if (ratio <= 1) {
-							if (c.addPeak(q, true)) {
+//						if (ratio <= 1) {
+							if (c.addPeak(q)) {
 								log.debug("Adding formerly unmatched peak {} to clique", q);
 								peakNumberCorrection++;
 								unmatchedAdded++;
 							}
-						}
+//						}
 						peak++;
 					}
 				} else {
 					log.debug("Skipping empty clique at {}", c.getCliqueRTMean());
 				}
 			}
-			log.info("Post processing assigned {} incompatible, {} unassigned, and {} unmatched peaks to cliques!", new Object[]{incompatibleAdded, unassignedAdded, unmatchedAdded});
+			log.error("Post processing assigned {} incompatible, {} unassigned, and {} unmatched peaks to cliques!", new Object[]{incompatibleAdded, unassignedAdded, unmatchedAdded});
 		}
 		ListIterator<Clique> li = cliques.listIterator();
 		while (li.hasNext()) {

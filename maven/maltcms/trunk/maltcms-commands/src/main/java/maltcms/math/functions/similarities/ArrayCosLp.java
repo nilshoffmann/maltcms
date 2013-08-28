@@ -62,6 +62,6 @@ public class ArrayCosLp implements IArraySimilarity {
                 t1, 1.0d / n1), ArrayTools.mult(t2, 1.0d / n2));
         final double dim = t1.getShape()[0];
         final double dist = (lpd / dim) * (1.0d - cosd);
-        return SimilarityTools.asSimilarity(dist);
+        return SimilarityTools.toSimilarity(dist);
     }
 }

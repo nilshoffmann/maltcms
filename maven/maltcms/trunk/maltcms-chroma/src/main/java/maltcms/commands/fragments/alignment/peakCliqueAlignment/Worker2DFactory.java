@@ -46,61 +46,64 @@ import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
  * @author nilshoffmann
  */
 @Data
-public class Worker2DFactory implements IWorkerFactory{
+public class Worker2DFactory implements IWorkerFactory {
 
-    private double maxRTDifferenceRt1 = 60.0d;
-    private double maxRTDifferenceRt2 = 60.0d;
-    private IScalarArraySimilarity similarityFunction;
-    private boolean assumeSymmetricSimilarity = false;
+	private double maxRTDifferenceRt1 = 60.0d;
+	private double maxRTDifferenceRt2 = 60.0d;
+	private IScalarArraySimilarity similarityFunction;
+	private boolean assumeSymmetricSimilarity = false;
 
-    public Worker2DFactory() {
-        similarityFunction = new ProductSimilarity();
-        GaussianDifferenceSimilarity gds1 = new GaussianDifferenceSimilarity();
-        GaussianDifferenceSimilarity gds2 = new GaussianDifferenceSimilarity();
-        similarityFunction.setScalarSimilarities(gds1,gds2);
-        ArrayCorr ac = new ArrayCorr();
-        similarityFunction.setArraySimilarities(ac);
-    }
+	public Worker2DFactory() {
+		similarityFunction = new ProductSimilarity();
+		GaussianDifferenceSimilarity gds1 = new GaussianDifferenceSimilarity();
+		GaussianDifferenceSimilarity gds2 = new GaussianDifferenceSimilarity();
+		similarityFunction.setScalarSimilarities(gds1, gds2);
+		ArrayCorr ac = new ArrayCorr();
+		similarityFunction.setArraySimilarities(ac);
+	}
 
-    @Override
-    public List<Callable<Integer>> create(TupleND<IFileFragment> input, Map<String, List<IPeak>> fragmentToPeaks) {
-        List<Callable<Integer>> worker = new LinkedList<Callable<Integer>>();
-        if (assumeSymmetricSimilarity) {
-            for (Tuple2D<IFileFragment, IFileFragment> t : input.getPairs()) {
-                // calculate similarity between peaks
-                final List<IPeak> lhsPeaks = fragmentToPeaks.get(t.getFirst().getName());
-                final List<IPeak> rhsPeaks = fragmentToPeaks.get(t.getSecond().getName());
+	@Override
+	public List<Callable<Integer>> create(TupleND<IFileFragment> input, Map<String, List<IPeak>> fragmentToPeaks) {
+		List<Callable<Integer>> worker = new LinkedList<Callable<Integer>>();
+		if (assumeSymmetricSimilarity) {
+			for (Tuple2D<IFileFragment, IFileFragment> t : input.getPairs()) {
+				// calculate similarity between peaks
+				final List<IPeak> lhsPeaks = fragmentToPeaks.get(t.getFirst().getName());
+				final List<IPeak> rhsPeaks = fragmentToPeaks.get(t.getSecond().getName());
 //                log.debug("Comparing {} and {}", t.getFirst().getName(),
 //                        t.getSecond().getName());
-                PairwiseSimilarityWorker2D psw = new PairwiseSimilarityWorker2D();
-                psw.setMaxRTDifferenceRt1(maxRTDifferenceRt1);
-                psw.setMaxRTDifferenceRt2(maxRTDifferenceRt2);
-                psw.setSimilarityFunction(similarityFunction);
-                psw.setLhsPeaks(lhsPeaks);
-                psw.setRhsPeaks(rhsPeaks);
-                psw.setName("Calculating pairwise peak similarities between " + t.getFirst().getName() + " and " + t.getSecond().getName());
-                worker.add(psw);
-            }
-        } else {
-            for (IFileFragment f1 : input) {
-                for (IFileFragment f2 : input) {
-                    // calculate similarity between peaks
-                    final List<IPeak> lhsPeaks = fragmentToPeaks.get(f1.getName());
-                    final List<IPeak> rhsPeaks = fragmentToPeaks.get(f2.getName());
+				PairwiseSimilarityWorker2D psw = new PairwiseSimilarityWorker2D();
+				psw.setMaxRTDifferenceRt1(maxRTDifferenceRt1);
+				psw.setMaxRTDifferenceRt2(maxRTDifferenceRt2);
+				psw.setSimilarityFunction(similarityFunction);
+				psw.setLhsPeaks(lhsPeaks);
+				psw.setRhsPeaks(rhsPeaks);
+				psw.setName("Calculating pairwise peak similarities between " + t.getFirst().getName() + " and " + t.getSecond().getName());
+				worker.add(psw);
+			}
+		} else {
+			for (IFileFragment f1 : input) {
+				for (IFileFragment f2 : input) {
+//			for (Tuple2D<IFileFragment, IFileFragment> t : input.getPairsWithFirstElement()) {
+					// calculate similarity between peaks
+//				IFileFragment f1 = t.getFirst();
+//				IFileFragment f2 = t.getSecond();
+					final List<IPeak> lhsPeaks = fragmentToPeaks.get(f1.getName());
+					final List<IPeak> rhsPeaks = fragmentToPeaks.get(f2.getName());
 //                log.debug("Comparing {} and {}", t.getFirst().getName(),
 //                        t.getSecond().getName());
-                    PairwiseSimilarityWorker2D psw = new PairwiseSimilarityWorker2D();
-                    psw.setMaxRTDifferenceRt1(maxRTDifferenceRt1);
-                    psw.setMaxRTDifferenceRt2(maxRTDifferenceRt2);
-                    psw.setSimilarityFunction(similarityFunction);
-                    psw.setLhsPeaks(lhsPeaks);
-                    psw.setRhsPeaks(rhsPeaks);
-                    psw.setName("Calculating pairwise peak similarities between " + f1.getName() + " and " + f2.getName());
-                    worker.add(psw);
-                }
-            }
-        }
+					PairwiseSimilarityWorker2D psw = new PairwiseSimilarityWorker2D();
+					psw.setMaxRTDifferenceRt1(maxRTDifferenceRt1);
+					psw.setMaxRTDifferenceRt2(maxRTDifferenceRt2);
+					psw.setSimilarityFunction(similarityFunction);
+					psw.setLhsPeaks(lhsPeaks);
+					psw.setRhsPeaks(rhsPeaks);
+					psw.setName("Calculating pairwise peak similarities between " + f1.getName() + " and " + f2.getName());
+					worker.add(psw);
+				}
+			}
+		}
 
-        return worker;
-    }
+		return worker;
+	}
 }

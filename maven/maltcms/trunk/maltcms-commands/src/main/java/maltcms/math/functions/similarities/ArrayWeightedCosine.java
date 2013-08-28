@@ -27,11 +27,15 @@
  */
 package maltcms.math.functions.similarities;
 
+import cross.cache.CacheFactory;
+import cross.cache.ICacheDelegate;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
+import net.sf.ehcache.CacheManager;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.MAMath;
 
 /**
  * @author Nils Hoffmann
@@ -41,23 +45,36 @@ import org.openide.util.lookup.ServiceProvider;
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayWeightedCosine implements IArraySimilarity {
-
+	
+	private final ICacheDelegate<Array, Double> arrayToIntensityCache;
+	
+	public ArrayWeightedCosine() {
+		arrayToIntensityCache = CacheFactory.createVolatileCache("ArrayWeightedCosineMaxCache", 120, 180, 10000);
+	}
+	
+	private double getMaximumIntensity(final Array a) {
+		Double d = arrayToIntensityCache.get(a);
+		if(d==null) {
+			d = MAMath.getMaximum(a);
+			arrayToIntensityCache.put(a, d);
+		}
+		return d.doubleValue();
+	}
+	
     @Override
     public double apply(final Array t1, final Array t2) {
-        Index i1idx = t1.getIndex();
-        Index i2idx = t2.getIndex();
-        double s1 = 0, s2 = 0;
-        double v = 0.0d;
+		double maxI1 = getMaximumIntensity(t1);
+		double maxI2 = getMaximumIntensity(t2);
+        double s1 = 0, s2 = 0, c = 0;
         for (int i = 0; i < t1.getShape()[0]; i++) {
-            s1 += (i + 1.0) * t1.getDouble(i1idx.set(i));
-            s2 += (i + 1.0) * t2.getDouble(i2idx.set(i));
+			s1 += miProduct(i+1, t1.getDouble(i)/maxI1);
+			s2 += miProduct(i+1, t2.getDouble(i)/maxI2);
+			c += miProduct(i+1, Math.sqrt(t1.getDouble(i)/maxI1 * t2.getDouble(i)/maxI2));
         }
-        double w1 = 0, w2 = 0;
-        for (int i = 0; i < t1.getShape()[0]; i++) {
-            w1 = (i + 1.0) * t1.getDouble(i1idx.set(i)) / s1;
-            w2 = (i + 1.0) * t2.getDouble(i2idx.set(i)) / s2;
-            v += (w1 * w2);
-        }
-        return v;
+        return (c * c / (s1 * s2));
     }
+	
+	private double miProduct(double mass, double intensity) {
+		return mass*mass*intensity;
+	}
 }

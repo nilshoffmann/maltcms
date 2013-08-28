@@ -54,6 +54,7 @@ public class Clique {
 	private double cliqueMean = 0, cliqueVar = 0;
 	private Map<String, IPeak> clique = new ConcurrentHashMap<String, IPeak>();
 	private IPeak centroid = null;
+	private double minBbhFraction = 1.0d;
 	private int maxBBHErrors = 0;
 	private int bbhErrors = 0;
 	private int bidiHits = 0;
@@ -73,8 +74,8 @@ public class Clique {
 				if (p.equals(q)) {
 					return true;
 				}
-				log.debug("Clique already contains peak from file: {}",
-						p.getAssociation());
+//				log.debug("Clique already contains peak from file: {}",
+//						p.getAssociation());
 				return false;
 			}
 			return handleForceAddPeak(p);
@@ -94,28 +95,6 @@ public class Clique {
 	 * @throws IllegalArgumentException
 	 */
 	public boolean addPeak(IPeak p) throws IllegalArgumentException {
-		// if (clique.contains(p)) {
-		// log.debug("Peak {} already contained in clique!", p);
-		// return false;
-		// } else {
-		// // if (clique.isEmpty()) {
-		//
-		// // check bidi best hit assumption
-		// // bail out if assumption fails!
-		// for (Peak q : getPeakList()) {
-		// if (!p.isBidiBestHitFor(q)) {
-		// log.debug(
-		// "Peak q: {} in clique is not a bidirectional best hit for peak p: {}",
-		// q, p);
-		// return false;
-		// }
-		// }
-		// log.debug("Adding peak {} to clique", p);
-		// update(p);
-		// clique.add(p);
-		// selectCentroid();
-		// return true;
-		// }
 		return addPeak2(p);
 	}
 
@@ -125,8 +104,8 @@ public class Clique {
 			if (p.equals(q)) {
 				return true;
 			}
-			log.debug("Clique already contains peak from file: {}",
-					p.getAssociation());
+//			log.debug("Clique already contains peak from file: {}",
+//					p.getAssociation());
 			return handleConflictingPeak(p);
 		}
 		return handleNonConflictingPeak(p);
@@ -149,26 +128,34 @@ public class Clique {
 			// since we did not add p
 			return false;
 		} else if (bbh1 < bbh2) {
+//			log.debug("Replacing peak with better bbh candidate: " + p);
 			// return true, since we add p
 			removePeak(q);
 			// call addPeak, since we removed q, this
 			// should be okay
 			return addPeak2(p);
 		} else {
-			log.debug("BBH count draw between peaks p:{}, q:{} with value: {}",
-					new Object[]{p, q, bbh1});
+			if (bbh1 == 0 && bbh2 == 0) {
+//				log.debug("Neither peak has a bbh, retaining original peak!");
+				//do nothing, the original peak was okay already
+				return false;
+			}
+//			log.debug("BBH count draw between peaks p:{}, q:{} with value: {}",
+//					new Object[]{p, q, bbh1});
 			// if we have a draw, we need to consider the
 			// distance to the center
 			double p1 = Math.abs(getCliqueRTMean() - p.getScanAcquisitionTime());
 			double q2 = Math.abs(getCliqueRTMean() - q.getScanAcquisitionTime());
 			//conflict resolution: nearest rt neighbor to clique RT mean wins
 			if (p1 < q2) {
+//				log.debug("Selecting peak p: {}", p);
 				removePeak(q);
 				return addPeak2(p);
 			} else if (p1 > q2) {
+//				log.debug("Retaining peak q: {}", q);
 				return false;
 			} else {
-				log.warn("Draw resolution failed!");
+				log.warn("Draw resolution failed, retaining peak q: {}");
 			}
 		}
 		return false;
@@ -180,7 +167,7 @@ public class Clique {
 	 */
 	private boolean handleNonConflictingPeak(IPeak p) {
 		if (clique.containsValue(p)) {
-			log.debug("Peak {} already contained in clique!", p);
+//			log.debug("Peak {} already contained in clique!", p);
 			return false;
 		} else if (clique.isEmpty()) {
 			update(p);
@@ -190,24 +177,30 @@ public class Clique {
 		} else {
 			int actualBidiHits = getBBHCount(p);
 			int diff = clique.size() - actualBidiHits;
-			if (((bbhErrors + diff) > maxBBHErrors)) {
+			double fraction = (double) actualBidiHits / (double) clique.size();
+//			log.debug("Clique bbh fraction for peak: " + fraction);
+			if (((fraction) < minBbhFraction)) {
+//				log.error("Rejected: below minBbhFraction!");
 				return false;
 			}
+//			if (((bbhErrors + diff) > maxBBHErrors)) {
+//				return false;
+//			}
 			bbhErrors += diff;
-			log.debug(
-					"Adding peak {} with {}/{} bbh hit(s) to clique",
-					new Object[]{p.getAssociation() + "@"
-				+ p.getScanAcquisitionTime(), actualBidiHits, clique.size()});
+//			log.debug(
+//					"Adding peak {} with {}/{} bbh hit(s) to clique",
+//					new Object[]{p.getAssociation() + "@"
+//				+ p.getScanAcquisitionTime(), actualBidiHits, clique.size()});
 			update(p);
 			clique.put(p.getAssociation(), p);
 			selectCentroid();
 			return true;
 		}
 	}
-	
+
 	private boolean handleForceAddPeak(IPeak p) {
 		if (clique.containsValue(p)) {
-			log.debug("Peak {} already contained in clique!", p);
+//			log.debug("Peak {} already contained in clique!", p);
 			return false;
 		} else if (clique.isEmpty()) {
 			update(p);
@@ -218,10 +211,10 @@ public class Clique {
 			int actualBidiHits = getBBHCount(p);
 			int diff = clique.size() - actualBidiHits;
 			bbhErrors += diff;
-			log.debug(
-					"Adding peak {} with {}/{} bbh hit(s) to clique",
-					new Object[]{p.getAssociation() + "@"
-				+ p.getScanAcquisitionTime(), actualBidiHits, clique.size()});
+//			log.debug(
+//					"Adding peak {} with {}/{} bbh hit(s) to clique",
+//					new Object[]{p.getAssociation() + "@"
+//				+ p.getScanAcquisitionTime(), actualBidiHits, clique.size()});
 			update(p);
 			clique.put(p.getAssociation(), p);
 			selectCentroid();
@@ -240,11 +233,11 @@ public class Clique {
 	private int getBBHCount(IPeak p, Collection<IPeak> c) {
 		int bidiHits = 0;
 		// check and count bidi best hit
-		for (IPeak q : getPeakList()) {
+		for (IPeak q : c) {
 			if (!p.isBidiBestHitFor(q)) {
-				log.debug(
-						"Peak q: {} in clique is not a bidirectional best hit for peak p: {}",
-						q, p);
+//				log.debug(
+//						"Peak q: {} in clique is not a bidirectional best hit for peak p: {}",
+//						q, p);
 			} else {
 				bidiHits++;
 			}
@@ -345,9 +338,9 @@ public class Clique {
 		int n = 0;
 		double mean = cliqueMean;
 		double var = cliqueVar;
-		log.debug(
-				"Clique variance before adding peak: {}, clique mean before: {}",
-				var, mean);
+//		log.debug(
+//				"Clique variance before adding peak: {}, clique mean before: {}",
+//				var, mean);
 		double delta = 0;
 		double rt = p.getScanAcquisitionTime();
 		n = clique.size() + 1;
@@ -360,18 +353,18 @@ public class Clique {
 		}
 		cliqueMean = mean;
 		cliqueVar = var;
-		log.debug(
-				"Clique variance after adding peak: {}, clique mean before: {}",
-				var, mean);
+//		log.debug(
+//				"Clique variance after adding peak: {}, clique mean before: {}",
+//				var, mean);
 	}
 
 	private void updateRemoval(IPeak p) {
 		int n = 0;
 		double mean = cliqueMean;
 		double var = cliqueVar;
-		log.debug(
-				"Clique variance before removing peak: {}, clique mean before: {}",
-				var, mean);
+//		log.debug(
+//				"Clique variance before removing peak: {}, clique mean before: {}",
+//				var, mean);
 		double delta = 0;
 		double rt = p.getScanAcquisitionTime();
 		n = clique.size() - 1;
@@ -384,9 +377,9 @@ public class Clique {
 		}
 		cliqueMean = mean;
 		cliqueVar = var;
-		log.debug(
-				"Clique variance after removing peak: {}, clique mean before: {}",
-				var, mean);
+//		log.debug(
+//				"Clique variance after removing peak: {}, clique mean before: {}",
+//				var, mean);
 	}
 
 	public double getCliqueRTVariance() {
@@ -473,5 +466,16 @@ public class Clique {
 
 	public void setMaxBBHErrors(int maxBBHErrors) {
 		this.maxBBHErrors = maxBBHErrors;
+	}
+
+	public void setMinBbhFraction(double fraction) {
+		if (fraction <= 0.0d || fraction > 1.0d) {
+			throw new IllegalArgumentException("Value of minBbhFraction must be in the left open interval (0,1] (zero exclusive, one inclusive). Was: " + fraction);
+		}
+		this.minBbhFraction = fraction;
+	}
+
+	public double getMinBbhFraction() {
+		return this.minBbhFraction;
 	}
 }

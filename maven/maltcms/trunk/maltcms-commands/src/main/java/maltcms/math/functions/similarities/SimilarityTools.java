@@ -27,6 +27,9 @@
  */
 package maltcms.math.functions.similarities;
 
+import maltcms.math.functions.IArraySimilarity;
+import ucar.ma2.Array;
+
 /**
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
@@ -38,7 +41,19 @@ public class SimilarityTools {
      * @param distance
      * @return
      */
-    public static double asSimilarity(double distance) {
+    public static double toSimilarity(double distance) {
         return -distance;
     }
+	
+	/**
+	 * 
+	 * @return 
+	 */
+	public static double toDistance(IArraySimilarity sim, Array a, Array b) {
+		double dist = 0.0d;
+		dist+=sim.apply(a, a);
+		dist+=sim.apply(b, b);
+		dist-=(2*sim.apply(a,b));
+		return Math.sqrt(dist);
+	}
 }

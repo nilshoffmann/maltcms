@@ -35,6 +35,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.peak.IPeak;
 import maltcms.math.functions.IScalarArraySimilarity;
+import maltcms.tools.MaltcmsTools;
 
 /**
  *
@@ -71,7 +72,7 @@ public class PairwiseSimilarityWorker2D implements Callable<Integer>, Serializab
                 // within the similarity function only
                 // of course, this limit should be larger
                 // than the limit within the similarity function
-                if (Math.abs(rt1p1 - rt1p2) < this.maxRTDifferenceRt1 || Math.abs(rt2p1 - rt2p2) < this.maxRTDifferenceRt2) {
+                if ((Math.abs(rt1p1 - rt1p2) < this.maxRTDifferenceRt1 && Math.abs(rt2p1 - rt2p2) < this.maxRTDifferenceRt2)) {
                     // the similarity is symmetric:
                     // sim(a,b) = sim(b,a)
                     final double d = similarityFunction.apply(new double[]{rt1p1,rt2p1}, new double[]{rt1p2,rt2p2}, p1.getMsIntensities(), p2.getMsIntensities());

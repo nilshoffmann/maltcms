@@ -27,10 +27,8 @@
  */
 package maltcms.math.functions.similarities;
 
-import maltcms.tools.ArrayTools;
 
 import ucar.ma2.Array;
-import ucar.ma2.MAMath;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import org.openide.util.lookup.ServiceProvider;

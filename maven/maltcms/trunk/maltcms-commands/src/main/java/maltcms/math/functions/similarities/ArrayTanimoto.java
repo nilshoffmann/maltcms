@@ -27,10 +27,13 @@
  */
 package maltcms.math.functions.similarities;
 
+import cross.cache.CacheFactory;
+import cross.cache.ICacheDelegate;
 import ucar.ma2.Array;
 import ucar.ma2.MAVector;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
+import maltcms.tools.ArrayTools;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -42,6 +45,21 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayTanimoto implements IArraySimilarity {
 
+	private final ICacheDelegate<MAVector, Double> arrayToIntensityCache;
+	
+	public ArrayTanimoto() {
+		arrayToIntensityCache = CacheFactory.createVolatileCache("ArrayTanimotoDotProductCache", 120, 180, 10000);
+	}
+	
+	private double getDotProduct(MAVector a) {
+		Double d = arrayToIntensityCache.get(a);
+		if(d==null) {
+			d = a.dot(a);
+			arrayToIntensityCache.put(a, d);
+		}
+		return d.doubleValue();
+	}
+	
     /**
      * {@inheritDoc}
      */
@@ -55,7 +73,7 @@ public class ArrayTanimoto implements IArraySimilarity {
             final MAVector ma2 = new MAVector(t2);
 
             final double dot = ma1.dot(ma2);
-            score = dot / (ma1.dot(ma1) + ma2.dot(ma2) - dot);
+            score = dot / (getDotProduct(ma1) + getDotProduct(ma2) - dot);
 
         }
 

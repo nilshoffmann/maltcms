@@ -27,40 +27,49 @@
  */
 package maltcms.math.functions.similarities;
 
+import cross.cache.CacheFactory;
+import cross.cache.ICacheDelegate;
 import ucar.ma2.Array;
-import ucar.ma2.IndexIterator;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
+import maltcms.tools.ArrayTools;
 import org.openide.util.lookup.ServiceProvider;
 
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayBhattacharryya implements IArraySimilarity {
 
+	private final ICacheDelegate<Array, Double> arrayToIntensityCache;
+	
+	public ArrayBhattacharryya() {
+		arrayToIntensityCache = CacheFactory.createVolatileCache("ArrayBhattacharryyaSumCache", 120, 180, 10000);
+	}
+	
+	private double getSum(Array a) {
+		Double d = arrayToIntensityCache.get(a);
+		if(d==null) {
+			d = ArrayTools.integrate(a);
+			arrayToIntensityCache.put(a, d);
+		}
+		return d.doubleValue();
+	}
+	
     @Override
     public double apply(Array t1,
             Array t2) {
         if ((t1.getRank() == 1) && (t2.getRank() == 1)) {
-            IndexIterator iter1 = t1.getIndexIterator();
             double s1 = 0, s2 = 0;
-            while (iter1.hasNext()) {
-                s1 += iter1.getDoubleNext();
-            }
-            IndexIterator iter2 = t2.getIndexIterator();
-            while (iter2.hasNext()) {
-                s2 += iter2.getDoubleNext();
-            }
-            iter1 = t1.getIndexIterator();
-            iter2 = t2.getIndexIterator();
+			s1 = getSum(t1);
+			s2 = getSum(t2);
             double sum = 0;
-            while (iter1.hasNext() && iter2.hasNext()) {
-                sum += Math.sqrt((iter1.getDoubleNext() / s1)
-                        * (iter2.getDoubleNext() / s2));
+            for(int i = 0; i< t1.getShape()[0]; i++) {
+                sum += Math.sqrt((t1.getDouble(i) / s1)
+                        * (t2.getDouble(i) / s2));
             }
             //transformation into Hellinger distance
             final double ret = Math.sqrt(1 - sum);
             if (ret > 0.0d && ret <= 1.0d) {
-                return SimilarityTools.asSimilarity(ret);
+                return SimilarityTools.toSimilarity(ret);
             }
             return Double.NEGATIVE_INFINITY;
         }
