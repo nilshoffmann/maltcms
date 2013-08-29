@@ -90,7 +90,7 @@ public class CSVAnchorReader extends AFragmentCommand {
     @Configurable(name = "csvri.retention.index")
     private boolean index = true;
     @Configurable(name = "csvri.retention.scan")
-    private boolean scan = false;
+    private boolean scan = true;
     @Configurable
     private List<String> location = Collections.emptyList();
     @Configurable(name = "csvri.filemarker")

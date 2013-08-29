@@ -93,10 +93,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHFinder;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHPeaksList;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.CliqueTable;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.IWorkerFactory;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakComparator;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakSimilarityVisualizer;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.UnmatchedPeaksList;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.WorkerFactory;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.IPeakFactory;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.IPeakFactoryImpl;
@@ -165,6 +167,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 	private int minCliqueSize = -1;
 	@Configurable
 	private boolean savePeakSimilarities = false;
+	@Configurable
+	private boolean savePeakMatchRTTable = true;
+	@Configurable
+	private boolean savePeakMatchAreaTable = true;
+	@Configurable
+	private boolean savePeakMatchAreaPercentTable = true;
 	@Configurable
 	private boolean saveXMLAlignment = true;
 	@Deprecated
@@ -504,7 +512,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 	 * @param n the number of peaks TODO: Paralellize like in
 	 * PairwiseDistanceCalculator
 	 */
-	private void calculatePeakSimilarities(final TupleND<IFileFragment> al,
+	private UnmatchedPeaksList calculatePeakSimilarities(final TupleND<IFileFragment> al,
 			final Map<String, List<IPeak>> fragmentToPeaks, final int n) {
 		log.info(
 				"Calculating {} pairwise peak similarities for {} peaks!",
@@ -512,15 +520,29 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 //        log.info("Using {} as pairwise peak similarity!",
 //                this.similarityFunction.getClass().getName());
 		// Loop over all pairs of FileFragments
-		ICompletionService<Integer> ics = createCompletionService(Integer.class);
-		List<Callable<Integer>> workers = workerFactory.create(al, fragmentToPeaks);
-		log.info("Running {} pairwise similarity tasks!",workers.size());
-		for (Callable<Integer> worker : workers) {
+		ICompletionService<BBHPeaksList> ics = createCompletionService(BBHPeaksList.class);
+		List<Callable<BBHPeaksList>> workers = workerFactory.create(al, fragmentToPeaks);
+		log.info("Running {} pairwise similarity tasks!", workers.size());
+		for (Callable<BBHPeaksList> worker : workers) {
 			ics.submit(worker);
 		}
-
+		final Set<IPeak> unmatchedPeaks = new LinkedHashSet<IPeak>();
+		final Set<UUID> bbhPeaks = new LinkedHashSet<UUID>();
 		try {
-			ics.call();
+			List<BBHPeaksList> bbhPeaksList = ics.call();
+			for (BBHPeaksList upl : bbhPeaksList) {
+				for (Tuple2D<UUID, UUID> t : upl) {
+					bbhPeaks.add(t.getFirst());
+					bbhPeaks.add(t.getSecond());
+				}
+			}
+			for (IFileFragment f : al) {
+				for (IPeak peak : fragmentToPeaks.get(f.getName())) {
+					if (!bbhPeaks.contains(peak.getUniqueId())) {
+						unmatchedPeaks.add(peak);
+					}
+				}
+			}
 		} catch (Exception ex) {
 			log.error("Caught exception while executing workers: ", ex);
 			throw new RuntimeException(ex);
@@ -532,6 +554,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 			psv.visualizePeakSimilarities(
 					fragmentToPeaks, 256, "beforeBIDI");
 		}
+		return new UnmatchedPeaksList(unmatchedPeaks);
 	}
 
 	/**
@@ -546,51 +569,51 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 		// Check for already defined peaks
 		final HashMap<String, List<IPeak>> definedAnchors = new HashMap<String, List<IPeak>>();
 		for (final IFileFragment t : al) {
-			IVariableFragment anames = null;
-			IVariableFragment ascans = null;
-			try {
-				anames = t.getChild(this.anchorNames);
-				ascans = t.getChild(this.anchorScanIndex);
-				final ArrayChar.D2 peakNames = (ArrayChar.D2) anames.getArray();
-				final Array peakScans = ascans.getArray();
-				final Index peakScansI = peakScans.getIndex();
-
-				IVariableFragment biv = t.getChild(this.binnedIntensities);
-				IVariableFragment bsi = t.getChild(this.binnedScanIndex);
-				biv.setIndex(bsi);
-				log.info("Checking user supplied anchors for: {}", t);
-				final Array scan_acquisition_time = t.getChild(
-						this.scanAcquisitionTime).getArray();
-				List<IPeak> peaks = null;
-				if (definedAnchors.containsKey(t.getName())) {
-					peaks = definedAnchors.get(t.getName());
-				} else {
-					peaks = new ArrayList<IPeak>();
-				}
-
-				final Index sat1 = scan_acquisition_time.getIndex();
-				final List<Array> bintens = biv.getIndexedArray();
-				for (int i = 0; i < peakScans.getShape()[0]; i++) {
-					final String name = peakNames.getString(i);
-					final int scan = peakScans.getInt(peakScansI.set(i));
-					final double sat = scan_acquisition_time.getDouble(sat1.set(
-							scan));
-					log.debug("{}", t.getName());
-					final IPeak p = new PeakNG(scan, bintens.get(scan),
-							sat, t.getName(), this.savePeakSimilarities);
-					p.setName(name);
-					log.debug(
-							"Adding user supplied anchor {} with name {}", p,
-							p.getName());
-					peaks.add(p);
-				}
-				definedAnchors.put(t.getName(), peaks);
-			} catch (final ResourceNotAvailableException rne) {
-				log.debug("Could not find any user-defined anchors!");
-				definedAnchors.put(t.getName(), new ArrayList<IPeak>(0));
-			}
+			List<IPeak> anchors = checkUserSuppliedAnchors(t);
+			log.info("Using {} user-supplied anchors for file {}!",anchors.size(),t.getName());
+			definedAnchors.put(t.getName(), anchors);
 		}
 		return definedAnchors;
+	}
+
+	public List<IPeak> checkUserSuppliedAnchors(final IFileFragment t) {
+		IVariableFragment anames = null;
+		IVariableFragment ascans = null;
+		List<IPeak> peaks = new ArrayList<IPeak>();
+		try {
+			anames = t.getChild(this.anchorNames);
+			ascans = t.getChild(this.anchorScanIndex);
+			final ArrayChar.D2 peakNames = (ArrayChar.D2) anames.getArray();
+			final Array peakScans = ascans.getArray();
+			final Index peakScansI = peakScans.getIndex();
+
+			IVariableFragment biv = t.getChild(this.binnedIntensities);
+			IVariableFragment bsi = t.getChild(this.binnedScanIndex);
+			biv.setIndex(bsi);
+			log.info("Checking user supplied anchors for: {}", t);
+			final Array scan_acquisition_time = t.getChild(
+					this.scanAcquisitionTime).getArray();
+			final Index sat1 = scan_acquisition_time.getIndex();
+			final List<Array> bintens = biv.getIndexedArray();
+			for (int i = 0; i < peakScans.getShape()[0]; i++) {
+				final String name = peakNames.getString(i);
+				final int scan = peakScans.getInt(peakScansI.set(i));
+				final double sat = scan_acquisition_time.getDouble(sat1.set(
+						scan));
+				log.debug("{}", t.getName());
+				final IPeak p = new PeakNG(scan, bintens.get(scan),
+						sat, t.getName(), this.savePeakSimilarities);
+				p.setName(name);
+				log.debug(
+						"Adding user supplied anchor {} with name {}", p,
+						p.getName());
+				peaks.add(p);
+			}
+			return peaks;
+		} catch (final ResourceNotAvailableException rne) {
+			log.debug("Could not find any user-defined anchors!");
+			return Collections.emptyList();
+		}
 	}
 
 	@Data
@@ -618,9 +641,9 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 		peakToClique = new HashMap<IPeak, Clique>();
 		Set<IPeak> incompatiblePeaks = new LinkedHashSet<IPeak>();
 		Set<IPeak> unassignedPeaks = new LinkedHashSet<IPeak>();
-		ObjectObjectOpenHashMap<UUID,IPeak> peakRepository = new ObjectObjectOpenHashMap<UUID,IPeak>();
-		for(String key:fragmentToPeaks.keySet()) {
-			for(IPeak p:fragmentToPeaks.get(key)) {
+		ObjectObjectOpenHashMap<UUID, IPeak> peakRepository = new ObjectObjectOpenHashMap<UUID, IPeak>();
+		for (String key : fragmentToPeaks.keySet()) {
+			for (IPeak p : fragmentToPeaks.get(key)) {
 				peakRepository.put(p.getUniqueId(), p);
 			}
 		}
@@ -784,14 +807,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 			}
 		});
 
-		String groupFileLocation = Factory.getInstance().getConfiguration().
-				getString("groupFileLocation", "");
-
-		OneWayPeakAnova owa = new OneWayPeakAnova();
-		owa.setWorkflow(getWorkflow());
-		owa.calcFisherRatios(l, al, groupFileLocation);
-
 		if (this.savePlots) {
+			String groupFileLocation = Factory.getInstance().getConfiguration().
+					getString("groupFileLocation", "");
+			OneWayPeakAnova owa = new OneWayPeakAnova();
+			owa.setWorkflow(getWorkflow());
+			owa.calcFisherRatios(l, al, groupFileLocation);
 			saveCliquePlots(l, al);
 		}
 
@@ -987,12 +1008,10 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 		for (String key : fragmentToPeaks.keySet()) {
 			n += fragmentToPeaks.get(key).size();
 		}
-		calculatePeakSimilarities(t, fragmentToPeaks, n);
-
 		log.info("Searching for bidirectional best hits");
 		final long startT = System.currentTimeMillis();
-		final List<IPeak> unmatchedPeaks = new BBHFinder().findBiDiBestHits(t,
-				fragmentToPeaks);
+		final List<IPeak> unmatchedPeaks = calculatePeakSimilarities(t, fragmentToPeaks, n);
+		log.info("Found {}/{} unmatched peaks!", unmatchedPeaks.size(), n);
 		if (saveUnmatchedPeaks) {
 			savePeakList(nameToFragment, unmatchedPeaks, "unmatchedPeaks.msp", "UNMATCHED");
 		}
@@ -1041,11 +1060,11 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 ////						log.info("Similarity to centroid of clique: {}", q.getSimilarity(p));
 ////						sdm.set(clique, peak, distToCentroid);
 //						if (ratio <= 1) {
-							if (c.addPeak(q)) {
-								log.debug("Adding formerly incompatible peak {} to clique", q);
-								peakNumberCorrection++;
-								incompatibleAdded++;
-							}
+						if (c.addPeak(q)) {
+							log.debug("Adding formerly incompatible peak {} to clique", q);
+							peakNumberCorrection++;
+							incompatibleAdded++;
+						}
 //						}
 						peak++;
 					}
@@ -1056,11 +1075,11 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 //						log.info("Distance to centroid of clique: {}", distToCentroid);
 //						log.info("Similarity to centroid of clique: {}", q.getSimilarity(p));
 //						if (ratio <= 1) {
-							if (c.addPeak(q)) {
-								log.debug("Adding formerly unassigned peak {} to clique", q);
-								peakNumberCorrection++;
-								unassignedAdded++;
-							}
+						if (c.addPeak(q)) {
+							log.debug("Adding formerly unassigned peak {} to clique", q);
+							peakNumberCorrection++;
+							unassignedAdded++;
+						}
 //						}
 						peak++;
 					}
@@ -1071,11 +1090,11 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 //						log.info("Distance to centroid of clique: {}", distToCentroid);
 //						log.info("Similarity to centroid of clique: {}", q.getSimilarity(p));
 //						if (ratio <= 1) {
-							if (c.addPeak(q)) {
-								log.debug("Adding formerly unmatched peak {} to clique", q);
-								peakNumberCorrection++;
-								unmatchedAdded++;
-							}
+						if (c.addPeak(q)) {
+							log.debug("Adding formerly unmatched peak {} to clique", q);
+							peakNumberCorrection++;
+							unmatchedAdded++;
+						}
 //						}
 						peak++;
 					}
@@ -1114,9 +1133,15 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
 		log.info("Saving peak match tables!");
 		savePeakMatchTable(columnMap, ll);
-		savePeakMatchRTTable(columnMap, ll);
-		savePeakMatchAreaTable(columnMap, ll, nameToFragment);
-		savePeakMatchAreaPercentTable(columnMap, ll, nameToFragment);
+		if (savePeakMatchRTTable) {
+			savePeakMatchRTTable(columnMap, ll);
+		}
+		if (savePeakMatchAreaTable) {
+			savePeakMatchAreaTable(columnMap, ll, nameToFragment);
+		}
+		if (savePeakMatchAreaPercentTable) {
+			savePeakMatchAreaPercentTable(columnMap, ll, nameToFragment);
+		}
 		if (saveXMLAlignment) {
 			log.info("Saving alignment to xml!");
 			saveToXMLAlignment(t, ll);
@@ -1198,7 +1223,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 			}
 
 			if ((userDefinedAnchors != null) && this.useUserSuppliedAnchors) {
-				log.info("Using user-defined anchors for {}",t.getName());
+				log.info("Using user-defined anchors for {}", t.getName());
 				for (final IPeak p : userDefinedAnchors) {
 
 					final int n = Collections.binarySearch(peaks, p,

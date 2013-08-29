@@ -481,8 +481,8 @@ public class FileFragment implements IFileFragment {
     @Override
     public ICacheDelegate<IVariableFragment, List<Array>> getCache() {
         if (this.persistentCache == null) {
-            String cacheLocation = UUID.nameUUIDFromBytes(getUri().toString().getBytes()).toString();
-            this.persistentCache = Fragments.createFragmentCache(cacheLocation);
+//            String cacheLocation = UUID.nameUUIDFromBytes(getUri().toString().getBytes()).toString();
+            this.persistentCache = Fragments.createFragmentCache("FileFragmentCache");
         }
         return this.persistentCache;
     }

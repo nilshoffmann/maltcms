@@ -63,8 +63,8 @@ public class Worker2DFactory implements IWorkerFactory {
 	}
 
 	@Override
-	public List<Callable<Integer>> create(TupleND<IFileFragment> input, Map<String, List<IPeak>> fragmentToPeaks) {
-		List<Callable<Integer>> worker = new LinkedList<Callable<Integer>>();
+	public List<Callable<BBHPeaksList>> create(TupleND<IFileFragment> input, Map<String, List<IPeak>> fragmentToPeaks) {
+		List<Callable<BBHPeaksList>> worker = new LinkedList<Callable<BBHPeaksList>>();
 		if (assumeSymmetricSimilarity) {
 			for (Tuple2D<IFileFragment, IFileFragment> t : input.getPairs()) {
 				// calculate similarity between peaks
@@ -84,10 +84,6 @@ public class Worker2DFactory implements IWorkerFactory {
 		} else {
 			for (IFileFragment f1 : input) {
 				for (IFileFragment f2 : input) {
-//			for (Tuple2D<IFileFragment, IFileFragment> t : input.getPairsWithFirstElement()) {
-					// calculate similarity between peaks
-//				IFileFragment f1 = t.getFirst();
-//				IFileFragment f2 = t.getSecond();
 					final List<IPeak> lhsPeaks = fragmentToPeaks.get(f1.getName());
 					final List<IPeak> rhsPeaks = fragmentToPeaks.get(f2.getName());
 //                log.debug("Comparing {} and {}", t.getFirst().getName(),

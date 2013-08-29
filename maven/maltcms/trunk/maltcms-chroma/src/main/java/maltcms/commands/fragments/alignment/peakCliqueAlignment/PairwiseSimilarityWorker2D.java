@@ -35,7 +35,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.peak.IPeak;
 import maltcms.math.functions.IScalarArraySimilarity;
-import maltcms.tools.MaltcmsTools;
 
 /**
  *
@@ -43,7 +42,7 @@ import maltcms.tools.MaltcmsTools;
  */
 @Data
 @Slf4j
-public class PairwiseSimilarityWorker2D implements Callable<Integer>, Serializable {
+public class PairwiseSimilarityWorker2D implements Callable<BBHPeaksList>, Serializable {
 
     private String name;
     private List<? extends IPeak> lhsPeaks;
@@ -53,7 +52,7 @@ public class PairwiseSimilarityWorker2D implements Callable<Integer>, Serializab
     private double maxRTDifferenceRt2 = 1.0d;
 
     @Override
-    public Integer call() {
+    public BBHPeaksList call() {
         log.debug(name);
         EvalTools.notNull(lhsPeaks, this);
         EvalTools.notNull(rhsPeaks, this);
@@ -82,7 +81,8 @@ public class PairwiseSimilarityWorker2D implements Callable<Integer>, Serializab
                 elemCnt++;
             }
         }
-        return elemCnt;
+		BBHFinder bbhfinder = new BBHFinder();
+		return bbhfinder.findBiDiBestHits(lhsPeaks,rhsPeaks);
     }
     
     @Override

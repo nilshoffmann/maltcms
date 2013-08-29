@@ -37,8 +37,11 @@ import java.util.List;
 import ucar.ma2.Array;
 import cross.exception.ResourceNotAvailableException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Data;
@@ -47,6 +50,7 @@ import maltcms.datastructures.feature.DefaultFeatureVector;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.config.CacheConfiguration;
+import net.sf.ehcache.config.CacheWriterConfiguration;
 import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 
 /**
@@ -63,17 +67,21 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
 	 *
 	 */
 	private static final long serialVersionUID = -4337180586706400884L;
-	private static final Ehcache peakArrayCache, edgeCache;
+//	private static final Ehcache edgeCache;//, peakIdEdgeIdCache;//,peakArrayCache;
 	private final int scanIndex;
 	private final double sat;
-	private ConcurrentHashMap<String, UUID> sims = new ConcurrentHashMap<String, UUID>();
+	private static ConcurrentHashMap<UUID, UUID> peakIdEdgeIdCache = new ConcurrentHashMap<UUID, UUID>(20, 0.8f, 8);
+	private static ConcurrentHashMap<UUID, PeakEdge> edgeCache = new ConcurrentHashMap<UUID, PeakEdge>(20, 0.8f, 8);
+	private static Set<String> associations = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 	private String name = "";
+	private final String peakKey;
 	private int peakIndex = -1;
 	private final String association;
 	private final boolean storeOnlyBestSimilarities;
+	private final SerializableArray msIntensities;
 
 	private final class PeakEdge implements Serializable {
-		
+
 		final UUID sourcePeakId, targetPeakId, edgeId;
 		final double similarity;
 
@@ -81,7 +89,7 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
 			this.sourcePeakId = sourcePeak.getUniqueId();
 			this.targetPeakId = targetPeak.getUniqueId();
 			this.similarity = similarity;
-			edgeId = UUID.randomUUID();
+			edgeId = UUID.nameUUIDFromBytes((sourcePeakId.toString() + targetPeakId.toString()).getBytes());
 		}
 
 		public UUID key() {
@@ -90,36 +98,65 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
 	}
 
 	static {
-		peakArrayCache = net.sf.ehcache.CacheManager.getInstance().addCacheIfAbsent("PEAKNG-CACHE");
-		CacheConfiguration cc = peakArrayCache.getCacheConfiguration();
-		cc.setDiskSpoolBufferSizeMB(512);
-		cc.setMaxElementsInMemory(1000000);
-		cc.setMaxElementsOnDisk(Integer.MAX_VALUE);
-		cc.setOverflowToDisk(true);
-		cc.setMemoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LRU.toString());
-		edgeCache = net.sf.ehcache.CacheManager.getInstance().addCacheIfAbsent("PEAKNG-EDGE-CACHE");
-		CacheConfiguration cc2 = edgeCache.getCacheConfiguration();
-		cc2.setDiskSpoolBufferSizeMB(256);
-		cc2.setMaxElementsInMemory(100000);
-		cc2.setMaxElementsOnDisk(Integer.MAX_VALUE);
-		cc2.setOverflowToDisk(true);
-		cc2.setMemoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LFU.toString());
+//		peakArrayCache = net.sf.ehcache.CacheManager.getInstance().addCacheIfAbsent("PEAKNG-CACHE");
+//		CacheConfiguration cc = peakArrayCache.getCacheConfiguration();
+//		cc.setDiskSpoolBufferSizeMB(512);
+//		cc.setMaxElementsInMemory(100000);
+//		cc.setMaxElementsOnDisk(Integer.MAX_VALUE);
+//		cc.setOverflowToDisk(true);
+//		cc.setMemoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LRU.toString());
+//		edgeCache = net.sf.ehcache.CacheManager.getInstance().addCacheIfAbsent("PEAKNG-EDGE-CACHE");
+//		CacheWriterConfiguration cwc1 = new CacheWriterConfiguration();
+//		cwc1.setWriteBatching(true);
+//		cwc1.setWriteBatchSize(100);
+//		cwc1.setWriteCoalescing(true);
+//		cwc1.setMaxWriteDelay(5);
+//		cwc1.setWriteMode(CacheWriterConfiguration.WriteMode.WRITE_BEHIND.toString());
+//		CacheConfiguration cc2 = edgeCache.getCacheConfiguration();
+//		cc2.cacheWriter(cwc1);
+//		cc2.setDiskSpoolBufferSizeMB(512);
+//		cc2.setDiskAccessStripes(8);
+//		cc2.setMaxElementsInMemory(10000000);
+//		cc2.setMaxElementsOnDisk(Integer.MAX_VALUE);
+//		cc2.setTransactionalMode(CacheConfiguration.TransactionalMode.OFF.toString());
+//		cc2.setOverflowToDisk(true);
+//		cc2.setDiskPersistent(false);
+//		cc2.setMemoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LFU.toString());
+//		peakIdEdgeIdCache = net.sf.ehcache.CacheManager.getInstance().addCacheIfAbsent("PEAKNG-ID-EDGE-CACHE");
+//		CacheWriterConfiguration cwc2 = new CacheWriterConfiguration();
+//		cwc2.setWriteBatching(true);
+//		cwc2.setWriteBatchSize(100);
+//		cwc2.setMaxWriteDelay(1);
+//		cwc2.setWriteCoalescing(true);
+//		cwc2.setWriteMode(CacheWriterConfiguration.WriteMode.WRITE_BEHIND.toString());
+//		CacheConfiguration cc3 = edgeCache.getCacheConfiguration();
+//		cc3.cacheWriter(cwc2);
+//		cc3.setDiskSpoolBufferSizeMB(512);
+//		cc3.setDiskAccessStripes(8);
+//		cc3.setMaxElementsInMemory(10000000);
+//		cc3.setMaxElementsOnDisk(Integer.MAX_VALUE);
+//		cc3.setTransactionalMode(CacheConfiguration.TransactionalMode.OFF.toString());
+//		cc3.setOverflowToDisk(true);
+//		cc3.setMemoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LFU.toString());
 	}
 
 	public PeakNG(int scanIndex, Array array, double sat, String association, boolean storeOnlyBestSimilarities) {
 		this.scanIndex = scanIndex;
-		peakArrayCache.put(new Element(this.getUniqueId(), new SerializableArray(array.copy())));
+//		peakArrayCache.put(new Element(this.getUniqueId(), new SerializableArray(array.copy())));
+		this.msIntensities = new SerializableArray(array.copy());
 		this.sat = sat;
 		this.association = association.intern();
+		associations.add(this.association);
 		this.storeOnlyBestSimilarities = storeOnlyBestSimilarities;
+		this.peakKey = (this.association + "-" + this.scanIndex).intern();
 //		this.msIntensities = array;
 	}
 
 	@Override
 	public Array getMsIntensities() {
-		Serializable s = peakArrayCache.get(getUniqueId()).getValue();
-		return ((SerializableArray) s).getArray();
-//		return msIntensities;
+//		Serializable s = peakArrayCache.get(getUniqueId()).getValue();
+//		return ((SerializableArray) s).getArray();
+		return msIntensities.getArray();
 	}
 
 	/**
@@ -136,20 +173,21 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
 	public void addSimilarity(final IPeak p, final double similarity) {
 		if (this.storeOnlyBestSimilarities) {
 			if (!Double.isInfinite(similarity) && !Double.isNaN(similarity)) {
-				String key = p.getAssociation();
-				UUID t = getSims().get(key);
-				if (t != null) {
-					PeakEdge pe = (PeakEdge) edgeCache.get(t).getValue();
+//				String peakToEdgeId = p.getAssociation();
+				UUID key = keyTo(p);
+				UUID id = getSims().get(key);
+				if (id != null) {
+					PeakEdge pe = (PeakEdge) edgeCache.get(id);
 					if (pe.similarity < similarity) {
 						edgeCache.remove(pe.edgeId);
 						PeakEdge edge = new PeakEdge(this, p, similarity);
-						edgeCache.put(new Element(edge.edgeId, edge));
-						this.sims.put(key, edge.edgeId);
+						edgeCache.put(edge.edgeId, edge);
+						peakIdEdgeIdCache.put(key, edge.edgeId);
 					}
 				} else {
 					PeakEdge edge = new PeakEdge(this, p, similarity);
-					edgeCache.put(new Element(edge.edgeId, edge));
-					this.sims.put(key, edge.edgeId);
+					edgeCache.put(edge.edgeId, edge);
+					peakIdEdgeIdCache.put(key, edge.edgeId);
 				}
 			}
 		} else {
@@ -157,41 +195,58 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
 		}
 	}
 
-	@Override
-	public void clearSimilarities() {
-		if (this.sims != null) {
-			this.sims.clear();
-			this.sims = null;
+	private UUID keyTo(IPeak p) {
+		return keyTo(p.getAssociation());
+	}
+
+	private UUID keyTo(String association) {
+		try {
+			String key = peakKey + "-" + association;
+			return UUID.nameUUIDFromBytes(key.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException ex) {
+			return null;
 		}
 	}
 
-	private Map<String, UUID> getSims() {
-		if (sims == null) {
-			sims = new ConcurrentHashMap<String, UUID>(20, 0.8f, 4);
+	@Override
+	public void clearSimilarities() {
+		if (peakIdEdgeIdCache != null) {
+			peakIdEdgeIdCache.clear();
+//			peakIdEdgeIdCache.dispose();
 		}
-		return sims;
+	}
+
+	private Map<UUID, UUID> getSims() {
+//		if (sims == null) {
+//			sims = new ConcurrentHashMap<UUID, UUID>(20, 0.8f, 4);
+//		}
+		return peakIdEdgeIdCache;
 	}
 
 	/**
 	 * Only call this method, after having added all similarities!
 	 *
-	 * @param key
+	 * @param association
 	 * @return
 	 */
 	@Override
-	public List<UUID> getPeaksSortedBySimilarity(final String key) {
-		if (getSims().containsKey(key)) {
-			PeakEdge pe = (PeakEdge) edgeCache.get(sims.get(key)).getValue();
+	public List<UUID> getPeaksSortedBySimilarity(final String association) {
+		UUID key = keyTo(association);
+		UUID id = getSims().get(key);
+		if (id != null) {
+			PeakEdge pe = (PeakEdge) edgeCache.get((UUID) peakIdEdgeIdCache.get(key));
 			return Arrays.asList(pe.targetPeakId);
 		}
 		return java.util.Collections.emptyList();
 	}
 
 	@Override
-	public UUID getPeakWithHighestSimilarity(final String key) {
+	public UUID getPeakWithHighestSimilarity(final String association) {
+		UUID key = keyTo(association);
 		if (storeOnlyBestSimilarities) {
-			if (getSims().containsKey(key)) {
-				PeakEdge pe = (PeakEdge) edgeCache.get(sims.get(key)).getValue();
+			UUID id = getSims().get(key);
+			if (id != null) {
+				PeakEdge pe = (PeakEdge) edgeCache.get((UUID) peakIdEdgeIdCache.get(key));
 				return pe.targetPeakId;
 			}
 			return null;
@@ -212,10 +267,10 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
 
 	@Override
 	public double getSimilarity(final IPeak p) {
-		String key = p.getAssociation();
-		UUID id = getSims().get(key);
+		UUID key = keyTo(p);//p.getAssociation();
+		UUID id = (UUID) peakIdEdgeIdCache.get(key);
 		if (id != null) {
-			PeakEdge t = (PeakEdge) edgeCache.get(id).getValue();
+			PeakEdge t = (PeakEdge) edgeCache.get(id);
 			if (t != null && t.targetPeakId.equals(p.getUniqueId())) {
 				return t.similarity;
 			}
@@ -226,7 +281,7 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
 	@Override
 	public boolean isBidiBestHitFor(final IPeak p) {
 		final UUID pT = getPeakWithHighestSimilarity(p.getAssociation());
-		final UUID qT = p.getPeakWithHighestSimilarity(this.getAssociation());
+		final UUID qT = p.getPeakWithHighestSimilarity(this.association);
 		if (qT == null || pT == null) {
 			return false;
 		}
@@ -239,6 +294,16 @@ public class PeakNG extends DefaultFeatureVector implements IPeak {
 
 	@Override
 	public void retainSimilarityRemoveRest(final IPeak p) {
+//		for (String association : associations) {
+//			if (!p.getAssociation().equals(association)) {
+//				UUID peakToEdgeId = keyTo(association);
+//				UUID edgeId = (UUID) peakIdEdgeIdCache.get(peakToEdgeId);
+//				if(edgeId!=null) {
+//					edgeCache.remove(edgeId);
+//				}
+//				peakIdEdgeIdCache.remove(peakToEdgeId);
+//			}
+//		}
 	}
 
 	@Override

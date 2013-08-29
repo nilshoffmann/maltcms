@@ -27,15 +27,11 @@
  */
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
-import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
-import cross.datastructures.tuple.TupleND;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.peak.IPeak;
 
@@ -46,55 +42,23 @@ import maltcms.datastructures.peak.IPeak;
 @Slf4j
 public class BBHFinder {
 
-    /**
-     * @param al
-     * @param fragmentToPeaks
-     */
-    public List<IPeak> findBiDiBestHits(final TupleND<IFileFragment> al,
-            final Map<String, List<IPeak>> fragmentToPeaks) {
-        // For each pair of FileFragments
-        final Set<IPeak> matchedPeaks = new HashSet<IPeak>();
-        for (final Tuple2D<IFileFragment, IFileFragment> t : al.getPairs()) {
-
-            final List<IPeak> lhsPeaks = fragmentToPeaks.get(t.getFirst().getName());
-            final List<IPeak> rhsPeaks = fragmentToPeaks.get(t.getSecond().getName());
-            log.debug("lhsPeaks: {}", lhsPeaks.size());
-            log.debug("rhsPeaks: {}", rhsPeaks.size());
-            for (final IPeak plhs : lhsPeaks) {
-                for (final IPeak prhs : rhsPeaks) {
-                    log.debug("Checking peaks {} and {}", plhs, prhs);
-                    if (plhs.isBidiBestHitFor(prhs)) {
-                        log.debug(
-                                "Found a bidirectional best hit: {} and {}",
-                                plhs, prhs);
-                        matchedPeaks.add(plhs);
-                        matchedPeaks.add(prhs);
-                        prhs.retainSimilarityRemoveRest(plhs);
-                        plhs.retainSimilarityRemoveRest(prhs);
-                    }
-
-                }
-            }
-        }
-
-        log.info("Retained {} matched peaks!", matchedPeaks.size());
-        log.debug("Counting and removing unmatched peaks!");
-        int peaks = 0;
-        List<IPeak> unmatchedPeaks = new ArrayList<IPeak>();
-        for (final IFileFragment t : al) {
-            final List<IPeak> lhsPeaks = fragmentToPeaks.get(t.getName());
-            log.debug("lhsPeaks: {}", lhsPeaks.size());
-            ListIterator<IPeak> liter = lhsPeaks.listIterator();
-            while (liter.hasNext()) {
-                final IPeak plhs = liter.next();
-                if (!matchedPeaks.contains(plhs)) {
-                    unmatchedPeaks.add(plhs);
-                    peaks++;
-                    liter.remove();
-                }
-            }
-        }
-        log.info("Removed {} unmatched peaks!", peaks);
-        return unmatchedPeaks;
-    }
+	public BBHPeaksList findBiDiBestHits(List<? extends IPeak> a, List<? extends IPeak> b) {
+		final Set<Tuple2D<UUID,UUID>> matchedPeaks = new LinkedHashSet<Tuple2D<UUID,UUID>>();
+		for (final IPeak plhs : a) {
+			for (final IPeak prhs : b) {
+				log.debug("Checking peaks {} and {}", plhs, prhs);
+				if (plhs.isBidiBestHitFor(prhs)) {
+					log.debug(
+							"Found a bidirectional best hit: {} and {}",
+							plhs, prhs);
+					matchedPeaks.add(new Tuple2D<UUID,UUID>(plhs.getUniqueId(),prhs.getUniqueId()));
+//					matchedPeaks.add(prhs);
+					plhs.retainSimilarityRemoveRest(prhs);
+					prhs.retainSimilarityRemoveRest(plhs);
+				}
+			}
+		}
+		log.info("Matched peak pairs: {}",matchedPeaks.size());
+		return new BBHPeaksList(matchedPeaks);
+	}
 }

@@ -1,6 +1,6 @@
 /*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2013, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -27,20 +27,26 @@
  */
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.tuple.TupleND;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import maltcms.datastructures.peak.IPeak;
+import cross.datastructures.tuple.Tuple2D;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public interface IWorkerFactory extends Serializable {
+public class BBHPeaksList extends ArrayList<Tuple2D<UUID,UUID>>{
 
-    List<Callable<BBHPeaksList>> create(TupleND<IFileFragment> input, Map<String, List<IPeak>> fragmentToPeaks);
-    
+	public BBHPeaksList(int initialCapacity) {
+		super(initialCapacity);
+	}
+
+	public BBHPeaksList() {
+	}
+
+	public BBHPeaksList(Collection<? extends Tuple2D<UUID,UUID>> c) {
+		super(c);
+	}
+	
 }

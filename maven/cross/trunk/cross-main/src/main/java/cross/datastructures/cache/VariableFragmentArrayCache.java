@@ -134,13 +134,18 @@ public class VariableFragmentArrayCache implements ICacheDelegate<IVariableFragm
 
 	@Override
 	public void close() {
-		cache.dispose();
+		for(IVariableFragment key:keys.keySet()) {
+			cache.remove(key);
+		}
+//		cache.dispose();
 	}
 
 	public Ehcache getCache() {
 		if (cache.getStatus() != Status.STATUS_ALIVE) {
 			cache.dispose();
-			cache.initialise();
+			if(cache.getStatus() == Status.STATUS_UNINITIALISED) {
+				cache.initialise();
+			}
 		}
 		return cache;
 	}
