@@ -68,17 +68,20 @@ public class SoftReferenceCache<K, V> implements ICacheDelegate<K, V> {
 
     @Override
     public V get(K key) {
-        SoftReference<? extends V> softReference = map.get(key);
-        //soft reference is null, no entry for key
-        if (softReference == null) {
-            return null;
-        }
-        V value = softReference.get();
-        if (value == null) {
-            //value was garbage collected
-            map.remove(key);
-        }
-        return value;
+		if(map.containsKey(key)) {
+			SoftReference<? extends V> softReference = map.get(key);
+			//soft reference is null, no entry for key
+			if (softReference == null) {
+				return null;
+			}
+			V value = softReference.get();
+			if (value == null) {
+				//value was garbage collected
+				map.remove(key);
+			}
+			return value;
+		}
+		return null;
     }
 
     @Override
