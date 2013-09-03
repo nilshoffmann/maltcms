@@ -226,7 +226,9 @@ public class CliqueFinder<T extends IPeak> implements IWorkflowElement {
         }
 
         for (T p : incompatiblePeaks) {
-            p.clearSimilarities();
+			for(IFileFragment f:al) {
+				p.clearSimilarities(f.getName());
+			}
         }
 
         // retain all cliques, which exceed minimum size

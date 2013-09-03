@@ -170,7 +170,7 @@ public class BBHFinder {
                     if (l.size() > 1) {
                         log.debug("Clearing similarities for {} and {}",
                                 iff.getName(), p);
-                        p.clearSimilarities();
+                        p.clearSimilarities(iff.getName());
                     }
                 }
             }
