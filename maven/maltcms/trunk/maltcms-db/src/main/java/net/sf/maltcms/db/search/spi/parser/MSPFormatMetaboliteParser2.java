@@ -90,10 +90,19 @@ public class MSPFormatMetaboliteParser2 {
     private int metaboliteCounter = 1;
     private Locale locale = Locale.US;
 	private URL link;
+	private NumberFormat localeAwareFormat;
 
     public void setLocale(Locale locale) {
         this.locale = locale;
+		this.localeAwareFormat = null;
     }
+	
+	public NumberFormat getNumberFormat() {
+		if(localeAwareFormat==null) {
+			localeAwareFormat = NumberFormat.getInstance(locale);
+		}
+		return localeAwareFormat;
+	}
 
     public IMetabolite handleLine(String line) {
         IMetabolite metabolite = null;
@@ -228,10 +237,10 @@ public class MSPFormatMetaboliteParser2 {
     public void handleSynonNist2Lib(String nist2LibSynon) {
         if (nist2LibSynon.startsWith("Retention-Index") && nist2LibSynon.contains("=")) {
             String[] split = nist2LibSynon.split("=");
-            this.ri = parseNumericString(split[1].trim());
+            this.ri = parseDoubleString(split[1].trim());
         } else if (nist2LibSynon.startsWith("Retention-Time") && nist2LibSynon.contains("=")) {
             String[] split = nist2LibSynon.split("=");
-            this.rt = parseNumericString(split[1].trim());
+            this.rt = parseDoubleString(split[1].trim());
         }
     }
 
@@ -261,20 +270,19 @@ public class MSPFormatMetaboliteParser2 {
     }
 
     public void handleSynonRI(String ri) {
-        // System.out.println("Synon: RI:"+ri);
-        this.ri = Double.parseDouble(ri);
+		// System.out.println("Synon: RI:"+ri);
+		this.ri = parseDoubleString(ri);
     }
 
     public void handleSynonRT(String rt) {
         // System.out.println("Synon: RT:"+rt);
-        // this.rt = Double.parseDouble(rt);
         // Assume sec or min prefix
         if (rt.startsWith("sec") || rt.startsWith("min")) {
             this.rtUnit = rt.substring(0, 3);
-            this.rt = Double.parseDouble(rt.substring(4));
+			this.rt = parseDoubleString(rt.substring(4));
         } else {
             this.rtUnit = "sec";
-            this.rt = Double.parseDouble(rt);
+			this.rt = parseDoubleString(rt);
         }
 
     }
@@ -300,20 +308,10 @@ public class MSPFormatMetaboliteParser2 {
 
     public void handleMW(String mw) {
         // System.out.println("MW: "+mw);
-        try {
-            this.mw = Double.parseDouble(mw);
-        } catch (NumberFormatException nfe) {
-            if (mw.indexOf(",") < mw.indexOf(".")) {
-                String tmp = mw.replace(",", "");
-                // tmp = tmp.replace(",", ".");
-                this.mw = Double.parseDouble(tmp);
-            } else {
-                this.mw = Double.NaN;
-            }
-        }
+		this.mw = parseDoubleString(mw);
     }
 
-    protected double parseNumericString(String number) {
+    protected double parseDoubleString(String number) {
         double num = Double.NaN;
         NumberFormat nf = NumberFormat.getInstance(locale);
         Number parsedNumber;
@@ -322,6 +320,21 @@ public class MSPFormatMetaboliteParser2 {
             num = parsedNumber.doubleValue();
         } catch (ParseException ex) {
             log.error("Exception while parsing: ", ex);
+			throw new RuntimeException(ex);
+        }
+        return num;
+    }
+	
+	protected int parseIntString(String number) {
+        int num = -1;
+        NumberFormat nf = NumberFormat.getInstance(locale);
+        Number parsedNumber;
+        try {
+            parsedNumber = nf.parse(number);
+            num = parsedNumber.intValue();
+        } catch (ParseException ex) {
+            log.error("Exception while parsing: ", ex);
+			throw new RuntimeException(ex);
         }
         return num;
     }
@@ -333,12 +346,12 @@ public class MSPFormatMetaboliteParser2 {
 
     public void handleDBNo(String dbno) {
         // System.out.println("DB#: "+dbno);
-        this.dbno = Integer.parseInt(dbno);
+        this.dbno = parseIntString(dbno);
     }
 
     public void handleNumPeaks(String numpeaks) {
         // System.out.println("Num Peaks: "+numpeaks);
-        this.npeaks = Integer.parseInt(numpeaks);
+        this.npeaks = parseIntString(numpeaks);
     }
 
     public void handleData(String data) {
@@ -374,8 +387,8 @@ public class MSPFormatMetaboliteParser2 {
 //                System.out.println(Arrays.toString(pair));
                 if (pair.length == 2) {
                     this.masses.set(this.points,
-                            Double.parseDouble(pair[0].trim()));
-                    this.intensities.set(this.points, Integer.parseInt(pair[1].trim()));
+                            parseDoubleString(pair[0].trim()));
+                    this.intensities.set(this.points, parseIntString(pair[1].trim()));
                     this.points++;
                 } else {
                     System.err.println("Incorrect split result for pair: " + p
