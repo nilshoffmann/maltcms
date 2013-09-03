@@ -82,6 +82,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -92,8 +93,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHFinder;
-import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHPeaksList;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHPeakEdgeList;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.CliqueTable;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.IWorkerFactory;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakComparator;
@@ -106,6 +106,7 @@ import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak
 import maltcms.datastructures.alignment.AlignmentFactory;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.ms.Metabolite;
+import maltcms.datastructures.peak.PeakEdge;
 import maltcms.datastructures.peak.PeakNG;
 import maltcms.io.xml.bindings.alignment.Alignment;
 import maltcms.tools.MaltcmsTools;
@@ -520,27 +521,26 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 //        log.info("Using {} as pairwise peak similarity!",
 //                this.similarityFunction.getClass().getName());
 		// Loop over all pairs of FileFragments
-		ICompletionService<BBHPeaksList> ics = createCompletionService(BBHPeaksList.class);
-		List<Callable<BBHPeaksList>> workers = workerFactory.create(al, fragmentToPeaks);
+		ICompletionService<BBHPeakEdgeList> ics = createCompletionService(BBHPeakEdgeList.class);
+		List<Callable<BBHPeakEdgeList>> workers = workerFactory.create(al, fragmentToPeaks);
 		log.info("Running {} pairwise similarity tasks!", workers.size());
-		for (Callable<BBHPeaksList> worker : workers) {
+		for (Callable<BBHPeakEdgeList> worker : workers) {
 			ics.submit(worker);
 		}
-		final Set<IPeak> unmatchedPeaks = new LinkedHashSet<IPeak>();
-		final Set<UUID> bbhPeaks = new LinkedHashSet<UUID>();
+		final Map<UUID,IPeak> unmatchedPeaks = new LinkedHashMap<UUID,IPeak>();
 		try {
-			List<BBHPeaksList> bbhPeaksList = ics.call();
-			for (BBHPeaksList upl : bbhPeaksList) {
-				for (Tuple2D<UUID, UUID> t : upl) {
-					bbhPeaks.add(t.getFirst());
-					bbhPeaks.add(t.getSecond());
+			List<BBHPeakEdgeList> bbhPeaksList = ics.call();
+			for (IFileFragment f : al) {
+				for(IPeak peak:fragmentToPeaks.get(f.getName())) {
+					unmatchedPeaks.put(peak.getUniqueId(),peak);
 				}
 			}
-			for (IFileFragment f : al) {
-				for (IPeak peak : fragmentToPeaks.get(f.getName())) {
-					if (!bbhPeaks.contains(peak.getUniqueId())) {
-						unmatchedPeaks.add(peak);
-					}
+			for (BBHPeakEdgeList upl : bbhPeaksList) {
+				for (Tuple2D<PeakEdge, PeakEdge> t : upl) {
+					PeakEdge p1 = t.getFirst();
+					PeakEdge p2 = t.getSecond();
+					unmatchedPeaks.remove(p1.getSourcePeakId());
+					unmatchedPeaks.remove(p2.getSourcePeakId());
 				}
 			}
 		} catch (Exception ex) {
@@ -554,7 +554,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 			psv.visualizePeakSimilarities(
 					fragmentToPeaks, 256, "beforeBIDI");
 		}
-		return new UnmatchedPeaksList(unmatchedPeaks);
+		return new UnmatchedPeaksList(unmatchedPeaks.values());
 	}
 
 	/**
@@ -1336,7 +1336,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 					if (l.size() > 1) {
 						log.debug("Clearing similarities for {} and {}",
 								iff.getName(), p);
-						p.clearSimilarities();
+						p.clearSimilarities(iff.getName());
 					}
 				}
 			}

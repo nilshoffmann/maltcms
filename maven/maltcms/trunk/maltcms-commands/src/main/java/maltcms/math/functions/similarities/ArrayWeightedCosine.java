@@ -27,13 +27,11 @@
  */
 package maltcms.math.functions.similarities;
 
-import cross.cache.CacheFactory;
 import cross.cache.ICacheDelegate;
+import cross.cache.softReference.SoftReferenceCache;
 import ucar.ma2.Array;
-import ucar.ma2.Index;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
-import net.sf.ehcache.CacheManager;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.MAMath;
 
@@ -49,7 +47,7 @@ public class ArrayWeightedCosine implements IArraySimilarity {
 	private final ICacheDelegate<Array, Double> arrayToIntensityCache;
 	
 	public ArrayWeightedCosine() {
-		arrayToIntensityCache = CacheFactory.createVolatileCache("ArrayWeightedCosineMaxCache", 120, 180, 10000);
+		arrayToIntensityCache = new SoftReferenceCache<Array, Double>("ArrayWeightedCosineMaxCache");
 	}
 	
 	private double getMaximumIntensity(final Array a) {
@@ -63,8 +61,8 @@ public class ArrayWeightedCosine implements IArraySimilarity {
 	
     @Override
     public double apply(final Array t1, final Array t2) {
-		double maxI1 = getMaximumIntensity(t1);
-		double maxI2 = getMaximumIntensity(t2);
+		final double maxI1 = getMaximumIntensity(t1);
+		final double maxI2 = getMaximumIntensity(t2);
         double s1 = 0, s2 = 0, c = 0;
         for (int i = 0; i < t1.getShape()[0]; i++) {
 			s1 += miProduct(i+1, t1.getDouble(i)/maxI1);

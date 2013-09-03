@@ -44,14 +44,11 @@ public class ArrayDot implements IArraySimilarity {
 
     @Override
     public double apply(final Array t1, final Array t2) {
-        // log.info("{},{}",Arrays.toString(t1.getShape()),Arrays.toString(t2.
-        // getShape()));
-        // if (MAMath.conformable(t1, t2)) {
-        if ((t1.getRank() == 1) && (t2.getRank() == 1)) {
-            final MAVector ma1 = new MAVector(t1);
-            final MAVector ma2 = new MAVector(t2);
-            return ma1.dot(ma2);
-        }
-        throw new IllegalArgumentException("Arrays shapes are incompatible!");
+		final int len = t1.getShape()[0];
+		double dot = 0.0d;
+		for (int i = 0; i < len; i++) {
+			dot+=(t1.getDouble(i)*t2.getDouble(i));
+		}
+		return dot;
     }
 }

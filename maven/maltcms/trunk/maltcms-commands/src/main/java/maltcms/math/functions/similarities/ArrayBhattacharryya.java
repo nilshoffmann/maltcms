@@ -29,6 +29,7 @@ package maltcms.math.functions.similarities;
 
 import cross.cache.CacheFactory;
 import cross.cache.ICacheDelegate;
+import cross.cache.softReference.SoftReferenceCache;
 import ucar.ma2.Array;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
@@ -42,7 +43,7 @@ public class ArrayBhattacharryya implements IArraySimilarity {
 	private final ICacheDelegate<Array, Double> arrayToIntensityCache;
 	
 	public ArrayBhattacharryya() {
-		arrayToIntensityCache = CacheFactory.createVolatileCache("ArrayBhattacharryyaSumCache", 120, 180, 10000);
+		arrayToIntensityCache = new SoftReferenceCache<Array,Double>("ArrayBhattacharryyaSumCache");
 	}
 	
 	private double getSum(Array a) {
@@ -57,7 +58,7 @@ public class ArrayBhattacharryya implements IArraySimilarity {
     @Override
     public double apply(Array t1,
             Array t2) {
-        if ((t1.getRank() == 1) && (t2.getRank() == 1)) {
+//        if ((t1.getRank() == 1) && (t2.getRank() == 1)) {
             double s1 = 0, s2 = 0;
 			s1 = getSum(t1);
 			s2 = getSum(t2);
@@ -72,8 +73,8 @@ public class ArrayBhattacharryya implements IArraySimilarity {
                 return SimilarityTools.toSimilarity(ret);
             }
             return Double.NEGATIVE_INFINITY;
-        }
-        throw new IllegalArgumentException("Arrays shapes are incompatible! "
-                + t1.getShape()[0] + " != " + t2.getShape()[0]);
+//        }
+//        throw new IllegalArgumentException("Arrays shapes are incompatible! "
+//                + t1.getShape()[0] + " != " + t2.getShape()[0]);
     }
 }

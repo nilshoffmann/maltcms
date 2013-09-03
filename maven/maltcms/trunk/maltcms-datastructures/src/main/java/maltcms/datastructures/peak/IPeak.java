@@ -49,7 +49,7 @@ public interface IPeak {
 	 */
 	void addSimilarity(final IPeak p, final double similarity);
 
-	void clearSimilarities();
+	void clearSimilarities(String association);
 
 	/*
 	 * (non-Javadoc)

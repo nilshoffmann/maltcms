@@ -27,12 +27,14 @@
  */
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
+import cern.colt.matrix.impl.SparseDoubleMatrix2D;
 import cross.datastructures.tools.EvalTools;
 import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.Callable;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.feature.PairwiseValueMap;
 import maltcms.datastructures.peak.IPeak;
 import maltcms.math.functions.IScalarArraySimilarity;
 
@@ -42,7 +44,7 @@ import maltcms.math.functions.IScalarArraySimilarity;
  */
 @Data
 @Slf4j
-public class PairwiseSimilarityWorker2D implements Callable<BBHPeaksList>, Serializable {
+public class PairwiseSimilarityWorker2D implements Callable<BBHPeakEdgeList>, Serializable {
 
     private String name;
     private List<? extends IPeak> lhsPeaks;
@@ -52,20 +54,19 @@ public class PairwiseSimilarityWorker2D implements Callable<BBHPeaksList>, Seria
     private double maxRTDifferenceRt2 = 1.0d;
 
     @Override
-    public BBHPeaksList call() {
+    public BBHPeakEdgeList call() {
         log.debug(name);
         EvalTools.notNull(lhsPeaks, this);
         EvalTools.notNull(rhsPeaks, this);
-        int elemCnt = 0;
         for (final IPeak p1 : lhsPeaks) {
+            final Peak2D p12d = (Peak2D)p1;
+            final double rt1p1 = p12d.getFirstColumnElutionTime();
+            final double rt2p1 = p12d.getSecondColumnElutionTime();
             for (final IPeak p2 : rhsPeaks) {
-                Peak2D p12d = (Peak2D)p1;
-                Peak2D p22d = (Peak2D)p2;
+                final Peak2D p22d = (Peak2D)p2;
                 // skip peaks, which are too far apart
-                double rt1p1 = p12d.getFirstColumnElutionTime();
-                double rt1p2 = p22d.getFirstColumnElutionTime();
-                double rt2p1 = p12d.getSecondColumnElutionTime();
-                double rt2p2 = p22d.getSecondColumnElutionTime();
+                final double rt1p2 = p22d.getFirstColumnElutionTime();
+                final double rt2p2 = p22d.getSecondColumnElutionTime();
                 // cutoff to limit calculation work
                 // this has a better effect, than applying the limit
                 // within the similarity function only
@@ -78,7 +79,6 @@ public class PairwiseSimilarityWorker2D implements Callable<BBHPeaksList>, Seria
 					p1.addSimilarity(p2, d);
 					p2.addSimilarity(p1, d);
                 }
-                elemCnt++;
             }
         }
 		BBHFinder bbhfinder = new BBHFinder();

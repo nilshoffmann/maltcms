@@ -126,11 +126,9 @@ public class PairwiseValueMap implements Serializable {
 
     public class PermutationSwapper implements Swapper {
 
-        private final DoubleMatrix1D column;
         private final int[] permutation;
 
         public PermutationSwapper(DoubleMatrix1D column) {
-            this.column = column;
             permutation = MathTools.seq(0, column.size() - 1, 1);
         }
 
@@ -190,4 +188,12 @@ public class PairwiseValueMap implements Serializable {
         }
         return true;
     }
+	
+	public int rows() {
+		return matrix.rows();
+	}
+	
+	public int columns() {
+		return matrix.columns();
+	}
 }

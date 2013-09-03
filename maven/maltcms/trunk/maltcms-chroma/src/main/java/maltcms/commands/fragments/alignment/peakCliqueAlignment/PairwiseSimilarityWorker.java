@@ -30,10 +30,14 @@ package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 import cross.datastructures.tools.EvalTools;
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.feature.PairwiseValueMap;
 import maltcms.datastructures.peak.IPeak;
+import maltcms.datastructures.peak.PeakEdge;
 import maltcms.math.functions.IScalarArraySimilarity;
 
 /**
@@ -42,7 +46,7 @@ import maltcms.math.functions.IScalarArraySimilarity;
  */
 @Data
 @Slf4j
-public class PairwiseSimilarityWorker implements Callable<BBHPeaksList>, Serializable {
+public class PairwiseSimilarityWorker implements Callable<BBHPeakEdgeList>, Serializable {
 
     private String name;
     private List<IPeak> lhsPeaks;
@@ -51,16 +55,15 @@ public class PairwiseSimilarityWorker implements Callable<BBHPeaksList>, Seriali
     private double maxRTDifference = 60.0d;
 
     @Override
-    public BBHPeaksList call() {
+    public BBHPeakEdgeList call() {
         log.debug(name);
         EvalTools.notNull(lhsPeaks, this);
         EvalTools.notNull(rhsPeaks, this);
-        int elemCnt = 0;
         for (final IPeak p1 : lhsPeaks) {
+            final double rt1 = p1.getScanAcquisitionTime();
             for (final IPeak p2 : rhsPeaks) {
                 // skip peaks, which are too far apart
-                double rt1 = p1.getScanAcquisitionTime();
-                double rt2 = p2.getScanAcquisitionTime();
+                final double rt2 = p2.getScanAcquisitionTime();
                 // cutoff to limit calculation work
                 // this has a better effect, than applying the limit
                 // within the similarity function only
@@ -69,15 +72,15 @@ public class PairwiseSimilarityWorker implements Callable<BBHPeaksList>, Seriali
                 if (Math.abs(rt1 - rt2) < this.maxRTDifference) {
                     // the similarity is symmetric:
                     // sim(a,b) = sim(b,a)
-                    final double d = similarityFunction.apply(new double[]{rt1}, new double[]{rt2}, p1.getMsIntensities(), p2.getMsIntensities());
-                    p1.addSimilarity(p2, d);
-                    p2.addSimilarity(p1, d);
-                }
-                elemCnt++;
+					final double d = similarityFunction.apply(new double[]{rt1}, new double[]{rt2}, p1.getMsIntensities(), p2.getMsIntensities());
+					p1.addSimilarity(p2, d);
+					p2.addSimilarity(p1, d);
+				}
             }
         }
         BBHFinder bbhfinder = new BBHFinder();
-		return bbhfinder.findBiDiBestHits(lhsPeaks,rhsPeaks);
+		BBHPeakEdgeList bbhpr = bbhfinder.findBiDiBestHits(lhsPeaks,rhsPeaks);
+		return bbhpr;
     }
     
     @Override

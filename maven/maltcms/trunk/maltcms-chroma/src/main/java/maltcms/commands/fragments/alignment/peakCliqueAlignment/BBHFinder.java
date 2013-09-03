@@ -33,7 +33,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.feature.PairwiseValueMap;
 import maltcms.datastructures.peak.IPeak;
+import maltcms.datastructures.peak.PeakEdge;
 
 /**
  *
@@ -41,24 +43,19 @@ import maltcms.datastructures.peak.IPeak;
  */
 @Slf4j
 public class BBHFinder {
-
-	public BBHPeaksList findBiDiBestHits(List<? extends IPeak> a, List<? extends IPeak> b) {
-		final Set<Tuple2D<UUID,UUID>> matchedPeaks = new LinkedHashSet<Tuple2D<UUID,UUID>>();
-		for (final IPeak plhs : a) {
-			for (final IPeak prhs : b) {
-				log.debug("Checking peaks {} and {}", plhs, prhs);
-				if (plhs.isBidiBestHitFor(prhs)) {
-					log.debug(
-							"Found a bidirectional best hit: {} and {}",
-							plhs, prhs);
-					matchedPeaks.add(new Tuple2D<UUID,UUID>(plhs.getUniqueId(),prhs.getUniqueId()));
-//					matchedPeaks.add(prhs);
-					plhs.retainSimilarityRemoveRest(prhs);
-					prhs.retainSimilarityRemoveRest(plhs);
+	
+	public BBHPeakEdgeList findBiDiBestHits(List<? extends IPeak> a, List<? extends IPeak> b) {
+		final Set<Tuple2D<PeakEdge, PeakEdge>> matchedPeaks = new LinkedHashSet<Tuple2D<PeakEdge, PeakEdge>>();
+		for (IPeak lapeak : a) {
+			for (IPeak lbpeak : b) {
+				if (lapeak != lbpeak && lapeak.isBidiBestHitFor(lbpeak)) {
+					Tuple2D<PeakEdge, PeakEdge> t = new Tuple2D<>(new PeakEdge(lapeak, lbpeak, lapeak.getSimilarity(lbpeak)),
+							new PeakEdge(lbpeak, lapeak, lapeak.getSimilarity(lapeak)));
+					matchedPeaks.add(t);
 				}
 			}
 		}
-		log.info("Matched peak pairs: {}",matchedPeaks.size());
-		return new BBHPeaksList(matchedPeaks);
+		log.debug("Found {} BBH peak pairs!", matchedPeaks.size());
+		return new BBHPeakEdgeList(matchedPeaks);
 	}
 }

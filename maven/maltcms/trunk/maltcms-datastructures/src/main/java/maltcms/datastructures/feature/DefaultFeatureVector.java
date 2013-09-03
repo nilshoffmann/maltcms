@@ -48,7 +48,18 @@ public class DefaultFeatureVector implements IFeatureVector {
     private static final long serialVersionUID = -2245293151270164895L;
     private Map<String, Integer> featureToIndex = null;
     private List<Array> datalist = null;
-    private UUID uniqueId = UUID.randomUUID();
+    private final UUID uniqueId;
+	
+	public DefaultFeatureVector() {
+		this(UUID.randomUUID());
+	}
+	
+	public DefaultFeatureVector(UUID uniqueId) {
+		if(uniqueId == null) {
+			throw new NullPointerException();
+		}
+		this.uniqueId = uniqueId;
+	}
     
     private List<Array> getDataList() {
         if(this.datalist == null) {

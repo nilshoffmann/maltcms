@@ -27,11 +27,14 @@
  */
 package maltcms.math.functions.similarities;
 
+import cross.cache.ICacheDelegate;
+import cross.cache.softReference.SoftReferenceCache;
 import ucar.ma2.Array;
 import ucar.ma2.MAVector;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.MAMath;
 
 /**
  * Cosine similarity between arrays.
@@ -43,14 +46,36 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayCos implements IArraySimilarity {
 
+	private final ICacheDelegate<Array, Double> arrayLengthCache;
+	
+	public ArrayCos() {
+		arrayLengthCache = new SoftReferenceCache<Array,Double>("ArrayCosArrayLengthCache");
+	}
+	
+	private double getLength(Array a) {
+		Double d = arrayLengthCache.get(a);
+		if(d==null) {
+			MAVector mav = new MAVector(a);
+			d = mav.norm();
+			arrayLengthCache.put(a, d);
+		}
+		return d.doubleValue();
+	}
+	
     @Override
     public double apply(final Array t1, final Array t2) {
-        if ((t1.getRank() == 1) && (t2.getRank() == 1)) {
-            final MAVector ma1 = new MAVector(t1);
-            final MAVector ma2 = new MAVector(t2);
-            return ma1.cos(ma2);
-        }
-        throw new IllegalArgumentException("Arrays shapes are incompatible! "
-                + t1.getShape()[0] + " != " + t2.getShape()[0]);
+//        if ((t1.getRank() == 1) && (t2.getRank() == 1)) {
+			final double l1 = getLength(t1);
+			final double l2 = getLength(t2);
+			final int len = t1.getShape()[0];
+			double dot = 0.0d;
+			for (int i = 0; i < len; i++) {
+				dot+=(t1.getDouble(i)*t2.getDouble(i));
+			}
+			return dot/(l1*l2);
+//        }
+		
+//        throw new IllegalArgumentException("Arrays shapes are incompatible! "
+//                + t1.getShape()[0] + " != " + t2.getShape()[0]);
     }
 }

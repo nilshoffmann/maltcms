@@ -30,22 +30,22 @@ package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 import cross.datastructures.tuple.Tuple2D;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
+import maltcms.datastructures.peak.PeakEdge;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class BBHPeaksList extends ArrayList<Tuple2D<UUID,UUID>>{
+public class BBHPeakEdgeList extends ArrayList<Tuple2D<PeakEdge,PeakEdge>>{
 
-	public BBHPeaksList(int initialCapacity) {
+	public BBHPeakEdgeList(int initialCapacity) {
 		super(initialCapacity);
 	}
 
-	public BBHPeaksList() {
+	public BBHPeakEdgeList() {
 	}
 
-	public BBHPeaksList(Collection<? extends Tuple2D<UUID,UUID>> c) {
+	public BBHPeakEdgeList(Collection<? extends Tuple2D<PeakEdge,PeakEdge>> c) {
 		super(c);
 	}
 	
