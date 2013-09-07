@@ -31,6 +31,7 @@ import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import lombok.Data;
+import maltcms.datastructures.peak.IBipacePeak;
 import maltcms.datastructures.peak.IPeak;
 import maltcms.datastructures.peak.PeakNG;
 import ucar.ma2.Array;
@@ -78,7 +79,7 @@ public class Peak1DFactory implements IPeakFactory {
         }
 
         @Override
-        public IPeak create(int peakIndex, int scanIndex) {
+        public IBipacePeak create(int peakIndex, int scanIndex) {
             Array a = new ArrayDouble.D1(1);
             if (peakAreaArray.getShape()[0] != satArray.getShape()[0]) {
                 a.setDouble(0, peakAreaArray.getDouble(peakIndex));

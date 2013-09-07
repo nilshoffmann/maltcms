@@ -61,10 +61,8 @@ import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.peak.IPeak;
+import maltcms.datastructures.peak.IBipacePeak;
 import net.sf.mpaxs.api.ICompletionService;
 import net.sf.mpaxs.spi.concurrent.CompletionServiceFactory;
 
@@ -78,16 +76,16 @@ public class OneWayPeakAnova implements IWorkflowElement {
 
     private IWorkflow workflow;
 
-    private HashMap<String, HashSet<IPeak>> getClasses(Clique c,
+    private HashMap<String, HashSet<IBipacePeak>> getClasses(Clique<IBipacePeak> c,
             HashMap<IFileFragment, String> fileToClass) {
-        HashMap<String, HashSet<IPeak>> classToPeak = new HashMap<String, HashSet<IPeak>>();
-        for (IPeak p : c.getPeakList()) {
+        HashMap<String, HashSet<IBipacePeak>> classToPeak = new HashMap<String, HashSet<IBipacePeak>>();
+        for (IBipacePeak p : c.getPeakList()) {
             final String classAssoc = fileToClass.get(p.getAssociation());
-            HashSet<IPeak> hs = null;
+            HashSet<IBipacePeak> hs = null;
             if (classToPeak.containsKey(classAssoc)) {
                 hs = classToPeak.get(classAssoc);
             } else {
-                hs = new HashSet<IPeak>();
+                hs = new HashSet<IBipacePeak>();
                 classToPeak.put(classAssoc, hs);
             }
             hs.add(p);
@@ -95,31 +93,31 @@ public class OneWayPeakAnova implements IWorkflowElement {
         return classToPeak;
     }
 
-    private double[] getIntensityValuesForPeaks(Collection<IPeak> s) {
+    private double[] getIntensityValuesForPeaks(Collection<IBipacePeak> s) {
         if (s == null || s.isEmpty() || s.size() < 2) {
             return new double[]{};
         }
         double[] d = new double[s.size()];
         int i = 0;
-        for (IPeak p : s) {
+        for (IBipacePeak p : s) {
             d[i++] = ArrayTools.integrate(p.getMsIntensities());
         }
         return d;
     }
 
-    private double calcMeanForPeaks(Collection<IPeak> s) {
+    private double calcMeanForPeaks(Collection<IBipacePeak> s) {
         if (s == null || s.isEmpty()) {
             return 0.0d;
         }
         double[] values = new double[s.size()];
         int i = 0;
-        for (IPeak p : s) {
+        for (IBipacePeak p : s) {
             values[i++] = ArrayTools.integrate(p.getMsIntensities());
         }
         return MathTools.average(values, 0, values.length - 1);
     }
 
-    public void calcFisherRatios(Collection<Clique> c,
+    public void calcFisherRatios(Collection<Clique<IBipacePeak>> c,
             Collection<IFileFragment> f, String groupFileLocation) {
         if (groupFileLocation.isEmpty()) {
             log.warn("No group file given!");
@@ -147,7 +145,7 @@ public class OneWayPeakAnova implements IWorkflowElement {
         double[][] fRatio = new double[2][c.size()];
         double[][] pValue = new double[2][c.size()];
         int i = 0;
-        for (Clique clq : c) {
+        for (Clique<IBipacePeak> clq : c) {
             log.debug("RTMean of clique: {}", clq.getCliqueRTMean());
             fRatio[0][i] = clq.getCliqueRTMean();
             pValue[0][i] = clq.getCliqueRTMean();
@@ -207,7 +205,7 @@ public class OneWayPeakAnova implements IWorkflowElement {
     }
 
     private double[] calcFisherRatio(
-            HashMap<IFileFragment, String> fileToClass, Clique c) {
+            HashMap<IFileFragment, String> fileToClass, Clique<IBipacePeak> c) {
         // double cliqueMean = calcMeanForPeaks(c.getPeakList());
         LinkedHashSet<String> classes = new LinkedHashSet<String>();
         for (String cls : fileToClass.values()) {
@@ -215,7 +213,7 @@ public class OneWayPeakAnova implements IWorkflowElement {
         }
         log.debug("Classes: {}", classes);
         // double[] clsMeans = new double[classes.size()];
-        HashMap<String, HashSet<IPeak>> classToPeaks = getClasses(c, fileToClass);
+        HashMap<String, HashSet<IBipacePeak>> classToPeaks = getClasses(c, fileToClass);
         log.debug("Class to Peaks: {}", classToPeaks);
         Collection<double[]> groupValues = new ArrayList<double[]>();
         // int i = 0;
@@ -292,12 +290,12 @@ public class OneWayPeakAnova implements IWorkflowElement {
      * @return
      */
     private double calculateIntraClassVariation(LinkedHashSet<String> classes,
-            HashMap<String, HashSet<IPeak>> classToPeaks, double cliqueMean) {
+            HashMap<String, HashSet<IBipacePeak>> classToPeaks, double cliqueMean) {
         double intraClsVariation = 0;
         for (String cls : classes) {
             // double intraClassMean = calcMeanForPeaks(classToPeaks.get(cls));
             if (classToPeaks.containsKey(cls)) {
-                for (IPeak p : classToPeaks.get(cls)) {
+                for (IBipacePeak p : classToPeaks.get(cls)) {
                     intraClsVariation += Math.pow(ArrayTools.integrate(p
                             .getMsIntensities())
                             - cliqueMean, 2);
@@ -317,7 +315,7 @@ public class OneWayPeakAnova implements IWorkflowElement {
      */
     private double calculateInterClassVariation(double cliqueMean,
             LinkedHashSet<String> classes, double[] clsMeans,
-            HashMap<String, HashSet<IPeak>> classToPeaks) {
+            HashMap<String, HashSet<IBipacePeak>> classToPeaks) {
         int i;
         double sigmaSqCls = 0;
         i = 0;

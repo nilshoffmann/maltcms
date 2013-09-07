@@ -28,14 +28,15 @@
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import cross.datastructures.tuple.Tuple2D;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.feature.PairwiseValueMap;
+import maltcms.datastructures.peak.IBipacePeak;
 import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.PeakEdge;
 
 /**
  *
@@ -43,19 +44,38 @@ import maltcms.datastructures.peak.PeakEdge;
  */
 @Slf4j
 public class BBHFinder {
-	
-	public BBHPeakEdgeList findBiDiBestHits(List<? extends IPeak> a, List<? extends IPeak> b) {
-		final Set<Tuple2D<PeakEdge, PeakEdge>> matchedPeaks = new LinkedHashSet<Tuple2D<PeakEdge, PeakEdge>>();
-		for (IPeak lapeak : a) {
-			for (IPeak lbpeak : b) {
-				if (lapeak != lbpeak && lapeak.isBidiBestHitFor(lbpeak)) {
-					Tuple2D<PeakEdge, PeakEdge> t = new Tuple2D<>(new PeakEdge(lapeak, lbpeak, lapeak.getSimilarity(lbpeak)),
-							new PeakEdge(lbpeak, lapeak, lapeak.getSimilarity(lapeak)));
+
+	public BBHPeakEdgeList findBiDiBestHits(List<? extends IBipacePeak> a, List<? extends IBipacePeak> b) {
+		final Set<Tuple2D<IBipacePeak, IBipacePeak>> matchedPeaks = new LinkedHashSet<Tuple2D<IBipacePeak, IBipacePeak>>();
+		String laassociation = a.get(0).getAssociation();
+		String lbassociation = b.get(0).getAssociation();
+		Map<UUID, IBipacePeak> peaks = new HashMap<UUID, IBipacePeak>();
+		for (IBipacePeak p : a) {
+			peaks.put(p.getUniqueId(), p);
+		}
+		for (IBipacePeak p : b) {
+			peaks.put(p.getUniqueId(), p);
+		}
+		for (IBipacePeak lapeak : a) {
+			UUID bestPeak = lapeak.getPeakWithHighestSimilarity(lbassociation);
+			IBipacePeak other = peaks.get(bestPeak);
+			if (other != null) {
+				UUID otherBestPeak = other.getPeakWithHighestSimilarity(laassociation);
+				if (otherBestPeak != null && lapeak.getUniqueId().equals(otherBestPeak)) {
+					Tuple2D<IBipacePeak, IBipacePeak> t = new Tuple2D<>(lapeak, other);
 					matchedPeaks.add(t);
+					peaks.remove(lapeak.getUniqueId());
+					peaks.remove(other.getUniqueId());
 				}
 			}
 		}
-		log.debug("Found {} BBH peak pairs!", matchedPeaks.size());
+		for(IBipacePeak p:peaks.values()) {
+			if(p.getAssociation().equals(laassociation)) {
+				p.clearSimilarities(lbassociation);
+			}else if(p.getAssociation().equals(lbassociation)) {
+				p.clearSimilarities(laassociation);
+			}
+		}
 		return new BBHPeakEdgeList(matchedPeaks);
 	}
 }

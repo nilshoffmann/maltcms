@@ -35,6 +35,7 @@ import java.util.List;
 import lombok.Data;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.Peak2D;
 import maltcms.datastructures.array.Sparse;
+import maltcms.datastructures.peak.IBipacePeak;
 import maltcms.datastructures.peak.IPeak;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -109,7 +110,7 @@ public class Peak2DMSFactory implements IPeakFactory {
         }
         
         @Override
-        public IPeak create(int peakIndex, int scanIndex) {
+        public IBipacePeak create(int peakIndex, int scanIndex) {
             Peak2D p;
             if (useSparseArrays) {
                 ArrayDouble.D1 sparse = new Sparse(indexedMassValues.get(scanIndex), indexedIntensityValues.get(scanIndex),

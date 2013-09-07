@@ -27,10 +27,7 @@
  */
 package maltcms.math.functions.similarities;
 
-import java.util.WeakHashMap;
-
 import org.apache.commons.math.stat.correlation.PearsonsCorrelation;
-
 import ucar.ma2.Array;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;

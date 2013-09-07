@@ -30,14 +30,11 @@ package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 import cross.datastructures.tools.EvalTools;
 import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.feature.PairwiseValueMap;
+import maltcms.datastructures.peak.IBipacePeak;
 import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.PeakEdge;
 import maltcms.math.functions.IScalarArraySimilarity;
 
 /**
@@ -49,8 +46,8 @@ import maltcms.math.functions.IScalarArraySimilarity;
 public class PairwiseSimilarityWorker implements Callable<BBHPeakEdgeList>, Serializable {
 
     private String name;
-    private List<IPeak> lhsPeaks;
-    private List<IPeak> rhsPeaks;
+    private List<? extends IBipacePeak> lhsPeaks;
+    private List<? extends IBipacePeak> rhsPeaks;
     private IScalarArraySimilarity similarityFunction;
     private double maxRTDifference = 60.0d;
 
@@ -59,9 +56,9 @@ public class PairwiseSimilarityWorker implements Callable<BBHPeakEdgeList>, Seri
         log.debug(name);
         EvalTools.notNull(lhsPeaks, this);
         EvalTools.notNull(rhsPeaks, this);
-        for (final IPeak p1 : lhsPeaks) {
+        for (final IBipacePeak p1 : lhsPeaks) {
             final double rt1 = p1.getScanAcquisitionTime();
-            for (final IPeak p2 : rhsPeaks) {
+            for (final IBipacePeak p2 : rhsPeaks) {
                 // skip peaks, which are too far apart
                 final double rt2 = p2.getScanAcquisitionTime();
                 // cutoff to limit calculation work

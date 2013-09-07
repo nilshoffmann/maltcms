@@ -29,13 +29,13 @@ package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import maltcms.datastructures.peak.IPeak;
+import maltcms.datastructures.peak.IBipacePeak;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class UnmatchedPeaksList extends ArrayList<IPeak>{
+public class UnmatchedPeaksList extends ArrayList<IBipacePeak>{
 
 	public UnmatchedPeaksList(int initialCapacity) {
 		super(initialCapacity);
@@ -44,7 +44,7 @@ public class UnmatchedPeaksList extends ArrayList<IPeak>{
 	public UnmatchedPeaksList() {
 	}
 
-	public UnmatchedPeaksList(Collection<? extends IPeak> c) {
+	public UnmatchedPeaksList(Collection<? extends IBipacePeak> c) {
 		super(c);
 	}
 	

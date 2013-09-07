@@ -34,6 +34,7 @@ import cross.datastructures.tuple.Tuple2D;
 import java.util.List;
 import lombok.Data;
 import maltcms.datastructures.array.Sparse;
+import maltcms.datastructures.peak.IBipacePeak;
 import maltcms.datastructures.peak.IPeak;
 import maltcms.datastructures.peak.PeakNG;
 import ucar.ma2.Array;
@@ -101,8 +102,8 @@ public class Peak1DMSFactory implements IPeakFactory {
         }
 
         @Override
-        public IPeak create(int peakIndex, int scanIndex) {
-            IPeak p;
+        public IBipacePeak create(int peakIndex, int scanIndex) {
+            IBipacePeak p;
             if (useSparseArrays) {
                 ArrayDouble.D1 sparse = new Sparse(indexedMassValues.get(scanIndex), indexedIntensityValues.get(scanIndex),
                         (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),

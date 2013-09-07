@@ -370,7 +370,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
 		}
 
 //		Map<String, EntityGroupList<T>> refMap = createMspaPairMap(this.groundTruth);
-		Map<String, EntityGroupList<T>> resultMap = createMspaPairMap(toolGroups);
+		Map<String, EntityGroupList<T>> resultMap = createPairMap(toolGroups);
 		MultiMap<IPerformanceMetrics.Vars, Number> metricsMap = new MultiMap<IPerformanceMetrics.Vars, Number>();
 		List<PairwisePerformanceMetrics> pml = new ArrayList<PairwisePerformanceMetrics>();
 		for (String s : resultMap.keySet()) {

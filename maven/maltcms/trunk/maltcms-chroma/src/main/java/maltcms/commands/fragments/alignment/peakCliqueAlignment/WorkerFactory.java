@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import lombok.Data;
+import maltcms.datastructures.peak.IBipacePeak;
 import maltcms.datastructures.peak.IPeak;
 import maltcms.math.functions.IScalarArraySimilarity;
 import maltcms.math.functions.ProductSimilarity;
@@ -61,13 +62,13 @@ public class WorkerFactory implements IWorkerFactory {
     }
 
     @Override
-    public List<Callable<BBHPeakEdgeList>> create(TupleND<IFileFragment> input, Map<String, List<IPeak>> fragmentToPeaks) {
+    public List<Callable<BBHPeakEdgeList>> create(TupleND<IFileFragment> input, Map<String, List<IBipacePeak>> fragmentToPeaks) {
         List<Callable<BBHPeakEdgeList>> worker = new LinkedList<Callable<BBHPeakEdgeList>>();
         if (assumeSymmetricSimilarity) {
             for (Tuple2D<IFileFragment, IFileFragment> t : input.getPairs()) {
                 // calculate similarity between peaks
-                final List<IPeak> lhsPeaks = fragmentToPeaks.get(t.getFirst().getName());
-                final List<IPeak> rhsPeaks = fragmentToPeaks.get(t.getSecond().getName());
+                final List<IBipacePeak> lhsPeaks = fragmentToPeaks.get(t.getFirst().getName());
+                final List<IBipacePeak> rhsPeaks = fragmentToPeaks.get(t.getSecond().getName());
 //                log.debug("Comparing {} and {}", t.getFirst().getName(),
 //                        t.getSecond().getName());
                 PairwiseSimilarityWorker psw = new PairwiseSimilarityWorker();
@@ -82,8 +83,8 @@ public class WorkerFactory implements IWorkerFactory {
             for (IFileFragment f1 : input) {
                 for (IFileFragment f2 : input) {
                     // calculate similarity between peaks
-                    final List<IPeak> lhsPeaks = fragmentToPeaks.get(f1.getName());
-                    final List<IPeak> rhsPeaks = fragmentToPeaks.get(f2.getName());
+                    final List<IBipacePeak> lhsPeaks = fragmentToPeaks.get(f1.getName());
+                    final List<IBipacePeak> rhsPeaks = fragmentToPeaks.get(f2.getName());
 //                log.debug("Comparing {} and {}", t.getFirst().getName(),
 //                        t.getSecond().getName());
                     PairwiseSimilarityWorker psw = new PairwiseSimilarityWorker();

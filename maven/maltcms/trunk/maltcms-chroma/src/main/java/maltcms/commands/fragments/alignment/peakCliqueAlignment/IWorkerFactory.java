@@ -33,7 +33,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import maltcms.datastructures.peak.IPeak;
+import maltcms.datastructures.peak.IBipacePeak;
 
 /**
  *
@@ -41,6 +41,6 @@ import maltcms.datastructures.peak.IPeak;
  */
 public interface IWorkerFactory extends Serializable {
 
-    List<Callable<BBHPeakEdgeList>> create(TupleND<IFileFragment> input, Map<String, List<IPeak>> fragmentToPeaks);
+    List<Callable<BBHPeakEdgeList>> create(TupleND<IFileFragment> input, Map<String, List<IBipacePeak>> fragmentToPeaks);
     
 }

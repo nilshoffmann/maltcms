@@ -27,14 +27,14 @@
  */
 package maltcms.math.functions.similarities;
 
-import cross.cache.ICacheDelegate;
-import cross.cache.softReference.SoftReferenceCache;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
 import ucar.ma2.Array;
 import ucar.ma2.MAVector;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import org.openide.util.lookup.ServiceProvider;
-import ucar.ma2.MAMath;
 
 /**
  * Cosine similarity between arrays.
@@ -46,10 +46,10 @@ import ucar.ma2.MAMath;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayCos implements IArraySimilarity {
 
-	private final ICacheDelegate<Array, Double> arrayLengthCache;
+	private final Map<Array, Double> arrayLengthCache;
 	
 	public ArrayCos() {
-		arrayLengthCache = new SoftReferenceCache<Array,Double>("ArrayCosArrayLengthCache");
+		arrayLengthCache = new WeakHashMap<Array, Double>();
 	}
 	
 	private double getLength(Array a) {

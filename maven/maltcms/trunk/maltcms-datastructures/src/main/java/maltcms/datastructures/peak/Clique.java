@@ -47,13 +47,13 @@ import org.jfree.data.statistics.BoxAndWhiskerItem;
  *
  */
 @Slf4j
-public class Clique {
+public class Clique<T extends IBipacePeak> {
 
 	private static long CLIQUEID = -1;
 	private long id = -1;
 	private double cliqueMean = 0, cliqueVar = 0;
-	private Map<String, IPeak> clique = new ConcurrentHashMap<String, IPeak>();
-	private IPeak centroid = null;
+	private Map<String, T> clique = new ConcurrentHashMap<String, T>();
+	private IBipacePeak centroid = null;
 	private double minBbhFraction = 1.0d;
 	private int maxBBHErrors = 0;
 	private int bbhErrors = 0;
@@ -67,10 +67,10 @@ public class Clique {
 		return this.id;
 	}
 
-	public boolean addPeak(IPeak p, boolean force) {
+	public boolean addPeak(T p, boolean force) {
 		if (force) {
 			if (clique.containsKey(p.getAssociation())) {
-				IPeak q = clique.get(p.getAssociation());
+				T q = clique.get(p.getAssociation());
 				if (p.equals(q)) {
 					return true;
 				}
@@ -94,13 +94,13 @@ public class Clique {
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public boolean addPeak(IPeak p) throws IllegalArgumentException {
+	public boolean addPeak(T p) throws IllegalArgumentException {
 		return addPeak2(p);
 	}
 
-	public boolean addPeak2(IPeak p) throws IllegalArgumentException {
+	public boolean addPeak2(T p) throws IllegalArgumentException {
 		if (clique.containsKey(p.getAssociation())) {
-			IPeak q = clique.get(p.getAssociation());
+			T q = clique.get(p.getAssociation());
 			if (p.equals(q)) {
 				return true;
 			}
@@ -115,9 +115,9 @@ public class Clique {
 	 * @param p
 	 * @return
 	 */
-	private boolean handleConflictingPeak(IPeak p) {
-		Collection<IPeak> currentPeaks = clique.values();
-		IPeak q = clique.get(p.getAssociation());
+	private boolean handleConflictingPeak(T p) {
+		Collection<T> currentPeaks = clique.values();
+		T q = clique.get(p.getAssociation());
 		currentPeaks.remove(q);
 		// calculate bbh scores for both peaks
 		int bbh1 = getBBHCount(q, currentPeaks);
@@ -165,7 +165,7 @@ public class Clique {
 	 * @param p
 	 * @return
 	 */
-	private boolean handleNonConflictingPeak(IPeak p) {
+	private boolean handleNonConflictingPeak(T p) {
 		if (clique.containsValue(p)) {
 //			log.debug("Peak {} already contained in clique!", p);
 			return false;
@@ -198,7 +198,7 @@ public class Clique {
 		}
 	}
 
-	private boolean handleForceAddPeak(IPeak p) {
+	private boolean handleForceAddPeak(T p) {
 		if (clique.containsValue(p)) {
 //			log.debug("Peak {} already contained in clique!", p);
 			return false;
@@ -226,14 +226,14 @@ public class Clique {
 	 * @param p
 	 * @return
 	 */
-	private int getBBHCount(IPeak p) {
+	private int getBBHCount(T p) {
 		return getBBHCount(p, getPeakList());
 	}
 
-	private int getBBHCount(IPeak p, Collection<IPeak> c) {
+	private int getBBHCount(T p, Collection<T> c) {
 		int bidiHits = 0;
 		// check and count bidi best hit
-		for (IPeak q : c) {
+		for (T q : c) {
 			if (!p.isBidiBestHitFor(q)) {
 //				log.debug(
 //						"Peak q: {} in clique is not a bidirectional best hit for peak p: {}",
@@ -245,7 +245,7 @@ public class Clique {
 		return bidiHits;
 	}
 
-	public boolean removePeak(IPeak p) {
+	public boolean removePeak(T p) {
 		if (clique.containsValue(p)) {
 			clique.remove(p.getAssociation());
 			if (clique.isEmpty()) {
@@ -304,9 +304,9 @@ public class Clique {
 		double mindist = Double.POSITIVE_INFINITY;
 		double[] dists = new double[clique.size()];
 		int i = 0;
-		IPeak[] peaks = clique.values().toArray(new IPeak[]{});
-		for (IPeak peak : peaks) {
-			for (IPeak peak1 : peaks) {
+		IBipacePeak[] peaks = clique.values().toArray(new IBipacePeak[]{});
+		for (IBipacePeak peak : peaks) {
+			for (IBipacePeak peak1 : peaks) {
 				dists[i] += Math.pow(
 						peak.getScanAcquisitionTime()
 						- peak1.getScanAcquisitionTime(), 2.0d);
@@ -415,11 +415,11 @@ public class Clique {
 		return sb.toString();
 	}
 
-	public List<IPeak> getPeakList() {
-		List<IPeak> peaks = new ArrayList<IPeak>(this.clique.values());
-		Collections.sort(peaks, new Comparator<IPeak>() {
+	public List<T> getPeakList() {
+		List<T> peaks = new ArrayList<T>(this.clique.values());
+		Collections.sort(peaks, new Comparator<T>() {
 			@Override
-			public int compare(IPeak o1, IPeak o2) {
+			public int compare(T o1, T o2) {
 				return o1.getAssociation().compareTo(o2.getAssociation());
 			}
 		});

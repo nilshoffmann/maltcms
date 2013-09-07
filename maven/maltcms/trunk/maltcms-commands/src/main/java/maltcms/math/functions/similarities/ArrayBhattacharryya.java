@@ -27,9 +27,8 @@
  */
 package maltcms.math.functions.similarities;
 
-import cross.cache.CacheFactory;
-import cross.cache.ICacheDelegate;
-import cross.cache.softReference.SoftReferenceCache;
+import java.util.Map;
+import java.util.WeakHashMap;
 import ucar.ma2.Array;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
@@ -40,41 +39,41 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayBhattacharryya implements IArraySimilarity {
 
-	private final ICacheDelegate<Array, Double> arrayToIntensityCache;
-	
+	private final Map<Array, Double> arrayToIntensityCache;
+
 	public ArrayBhattacharryya() {
-		arrayToIntensityCache = new SoftReferenceCache<Array,Double>("ArrayBhattacharryyaSumCache");
+		arrayToIntensityCache = new WeakHashMap<Array, Double>();
 	}
-	
+
 	private double getSum(Array a) {
 		Double d = arrayToIntensityCache.get(a);
-		if(d==null) {
+		if (d == null) {
 			d = ArrayTools.integrate(a);
 			arrayToIntensityCache.put(a, d);
 		}
 		return d.doubleValue();
 	}
-	
-    @Override
-    public double apply(Array t1,
-            Array t2) {
+
+	@Override
+	public double apply(Array t1,
+			Array t2) {
 //        if ((t1.getRank() == 1) && (t2.getRank() == 1)) {
-            double s1 = 0, s2 = 0;
-			s1 = getSum(t1);
-			s2 = getSum(t2);
-            double sum = 0;
-            for(int i = 0; i< t1.getShape()[0]; i++) {
-                sum += Math.sqrt((t1.getDouble(i) / s1)
-                        * (t2.getDouble(i) / s2));
-            }
-            //transformation into Hellinger distance
-            final double ret = Math.sqrt(1 - sum);
-            if (ret > 0.0d && ret <= 1.0d) {
-                return SimilarityTools.toSimilarity(ret);
-            }
-            return Double.NEGATIVE_INFINITY;
+		double s1 = 0, s2 = 0;
+		s1 = getSum(t1);
+		s2 = getSum(t2);
+		double sum = 0;
+		for (int i = 0; i < t1.getShape()[0]; i++) {
+			sum += Math.sqrt((t1.getDouble(i) / s1)
+					* (t2.getDouble(i) / s2));
+		}
+		//transformation into Hellinger distance
+		final double ret = Math.sqrt(1 - sum);
+		if (ret > 0.0d && ret <= 1.0d) {
+			return SimilarityTools.toSimilarity(ret);
+		}
+		return Double.NEGATIVE_INFINITY;
 //        }
 //        throw new IllegalArgumentException("Arrays shapes are incompatible! "
 //                + t1.getShape()[0] + " != " + t2.getShape()[0]);
-    }
+	}
 }

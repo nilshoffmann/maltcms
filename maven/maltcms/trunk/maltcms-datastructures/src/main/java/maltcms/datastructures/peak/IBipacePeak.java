@@ -1,6 +1,6 @@
 /*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2013, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -35,36 +35,40 @@ import ucar.ma2.Array;
  *
  * @author Nils Hoffmann
  */
-public interface IPeak {
+public interface IBipacePeak extends IPeak{
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Add a similarity to Peak p. Resets the sortedPeaks list for the
+	 * associated FileFragment of Peak p, so that a subsequent call to
+	 * getPeakWithHighestSimilarity or getPeaksSortedBySimilarity will rebuild
+	 * the list of peaks sorted ascending according to their similarity to this
+	 * peak.
 	 *
-	 * @see
-	 * maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
+	 * @param p
+	 * @param similarity
 	 */
-	Array getFeature(String name);
+	void addSimilarity(final IBipacePeak p, final double similarity);
 
-	/*
-	 * (non-Javadoc)
+	void clearSimilarities(String association);
+
+	Array getMsIntensities();
+	
+	void setMsIntensities(Array a);
+
+	UUID getPeakWithHighestSimilarity(final String key);
+
+	/**
+	 * Only call this method, after having added all similarities!
 	 *
-	 * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
+	 * @param key
+	 * @return
 	 */
-	List<String> getFeatureNames();
+	List<UUID> getPeaksSortedBySimilarity(final String key);
 
-	double getScanAcquisitionTime();
+	double getSimilarity(final IBipacePeak p);
 
-	int getScanIndex();
+	boolean isBidiBestHitFor(final IBipacePeak p);
+
+	void retainSimilarityRemoveRest(final IBipacePeak p);
 	
-	String getAssociation();
-	
-	void setName(String name);
-	
-	String getName();
-	
-	int getPeakIndex();
-	
-	void setPeakIndex(int index);
-	
-	UUID getUniqueId();
 }

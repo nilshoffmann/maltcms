@@ -33,7 +33,6 @@ import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
 import maltcms.datastructures.peak.PeakNG;
-import net.sf.ehcache.Ehcache;
 import ucar.ma2.Array;
 
 /**

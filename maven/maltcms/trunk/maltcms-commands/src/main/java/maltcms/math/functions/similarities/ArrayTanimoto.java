@@ -27,8 +27,9 @@
  */
 package maltcms.math.functions.similarities;
 
-import cross.cache.ICacheDelegate;
-import cross.cache.softReference.SoftReferenceCache;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import ucar.ma2.Array;
 import ucar.ma2.MAVector;
 import lombok.Data;
@@ -44,34 +45,34 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayTanimoto implements IArraySimilarity {
 
-	private final ICacheDelegate<Array, Double> arrayToIntensityCache;
-	
+	private final Map<Array, Double> arrayToIntensityCache;
+
 	public ArrayTanimoto() {
-		arrayToIntensityCache = new SoftReferenceCache<Array, Double>("ArrayTanimotoDotProductCache");
+		arrayToIntensityCache = new WeakHashMap<Array, Double>();;
 	}
-	
+
 	private double getDotProduct(MAVector v, Array a) {
 		Double d = arrayToIntensityCache.get(a);
-		if(d==null) {
+		if (d == null) {
 			d = v.dot(v);
 			arrayToIntensityCache.put(a, d);
 		}
 		return d.doubleValue();
 	}
-	
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public double apply(final Array t1, final Array t2) {
-        double score = Double.MIN_VALUE;
-        if ((t1.getRank() == 1) && (t2.getRank() == 1)) {
-            final MAVector ma1 = new MAVector(t1);
-            final MAVector ma2 = new MAVector(t2);
 
-            final double dot = ma1.dot(ma2);
-            score = dot / (getDotProduct(ma1,t1) + getDotProduct(ma2,t2) - dot);
-        }
-        return score;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public double apply(final Array t1, final Array t2) {
+		double score = Double.MIN_VALUE;
+		if ((t1.getRank() == 1) && (t2.getRank() == 1)) {
+			final MAVector ma1 = new MAVector(t1);
+			final MAVector ma2 = new MAVector(t2);
+
+			final double dot = ma1.dot(ma2);
+			score = dot / (getDotProduct(ma1, t1) + getDotProduct(ma2, t2) - dot);
+		}
+		return score;
+	}
 }

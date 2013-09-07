@@ -28,7 +28,6 @@
 package maltcms.math.functions.similarities;
 
 import ucar.ma2.Array;
-import ucar.ma2.MAVector;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import org.openide.util.lookup.ServiceProvider;

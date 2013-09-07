@@ -27,8 +27,10 @@
  */
 package maltcms.math.functions.similarities;
 
-import cross.cache.ICacheDelegate;
-import cross.cache.softReference.SoftReferenceCache;
+import cross.cache.CacheFactory;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import ucar.ma2.Array;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
@@ -43,36 +45,36 @@ import ucar.ma2.MAMath;
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayWeightedCosine implements IArraySimilarity {
-	
-	private final ICacheDelegate<Array, Double> arrayToIntensityCache;
-	
+
+	private final Map<Array, Double> arrayToIntensityCache;
+
 	public ArrayWeightedCosine() {
-		arrayToIntensityCache = new SoftReferenceCache<Array, Double>("ArrayWeightedCosineMaxCache");
+		arrayToIntensityCache = new WeakHashMap<Array, Double>();
 	}
-	
+
 	private double getMaximumIntensity(final Array a) {
 		Double d = arrayToIntensityCache.get(a);
-		if(d==null) {
+		if (d == null) {
 			d = MAMath.getMaximum(a);
 			arrayToIntensityCache.put(a, d);
 		}
 		return d.doubleValue();
 	}
-	
-    @Override
-    public double apply(final Array t1, final Array t2) {
+
+	@Override
+	public double apply(final Array t1, final Array t2) {
 		final double maxI1 = getMaximumIntensity(t1);
 		final double maxI2 = getMaximumIntensity(t2);
-        double s1 = 0, s2 = 0, c = 0;
-        for (int i = 0; i < t1.getShape()[0]; i++) {
-			s1 += miProduct(i+1, t1.getDouble(i)/maxI1);
-			s2 += miProduct(i+1, t2.getDouble(i)/maxI2);
-			c += miProduct(i+1, Math.sqrt(t1.getDouble(i)/maxI1 * t2.getDouble(i)/maxI2));
-        }
-        return (c * c / (s1 * s2));
-    }
-	
+		double s1 = 0, s2 = 0, c = 0;
+		for (int i = 0; i < t1.getShape()[0]; i++) {
+			s1 += miProduct(i + 1, t1.getDouble(i) / maxI1);
+			s2 += miProduct(i + 1, t2.getDouble(i) / maxI2);
+			c += miProduct(i + 1, Math.sqrt(t1.getDouble(i) / maxI1 * t2.getDouble(i) / maxI2));
+		}
+		return (c * c / (s1 * s2));
+	}
+
 	private double miProduct(double mass, double intensity) {
-		return mass*mass*intensity;
+		return mass * mass * intensity;
 	}
 }

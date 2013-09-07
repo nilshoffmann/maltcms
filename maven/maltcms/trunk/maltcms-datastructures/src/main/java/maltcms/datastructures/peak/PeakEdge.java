@@ -36,19 +36,15 @@ import java.util.UUID;
  * @author Nils Hoffmann
  */
 public final class PeakEdge implements Serializable {
-
-	final UUID sourcePeakId, targetPeakId, edgeId;
+	
+	final UUID sourcePeakId, targetPeakId;//, edgeId;
 	final double similarity;
-
+	
 	public PeakEdge(IPeak sourcePeak, IPeak targetPeak, double similarity) {
 		this.sourcePeakId = sourcePeak.getUniqueId();
 		this.targetPeakId = targetPeak.getUniqueId();
 		this.similarity = similarity;
-		edgeId = UUID.nameUUIDFromBytes((sourcePeakId.toString() + targetPeakId.toString()).getBytes());
-	}
-
-	public UUID key() {
-		return edgeId;
+//		System.out.println("Peak Edge from "+sourcePeak.getAssociation()+" at "+sourcePeak.getPeakIndex()+ " to "+targetPeak.getAssociation()+" at "+targetPeak.getPeakIndex()+ " = "+similarity);
 	}
 
 	@Override
@@ -56,7 +52,6 @@ public final class PeakEdge implements Serializable {
 		int hash = 3;
 		hash = 47 * hash + Objects.hashCode(this.sourcePeakId);
 		hash = 47 * hash + Objects.hashCode(this.targetPeakId);
-		hash = 47 * hash + Objects.hashCode(this.edgeId);
 		return hash;
 	}
 
@@ -75,9 +70,6 @@ public final class PeakEdge implements Serializable {
 		if (!Objects.equals(this.targetPeakId, other.targetPeakId)) {
 			return false;
 		}
-		if (!Objects.equals(this.edgeId, other.edgeId)) {
-			return false;
-		}
 		return true;
 	}
 
@@ -87,10 +79,6 @@ public final class PeakEdge implements Serializable {
 
 	public UUID getTargetPeakId() {
 		return targetPeakId;
-	}
-
-	public UUID getEdgeId() {
-		return edgeId;
 	}
 
 	public double getSimilarity() {
