@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.peak.IPeak;
+import maltcms.datastructures.peak.IBipacePeak;
 import maltcms.experimental.bipace.datastructures.api.Clique;
 import maltcms.io.csv.CSVWriter;
 import org.jdom.Element;
@@ -52,7 +52,7 @@ import ucar.ma2.ArrayDouble;
  */
 @Slf4j
 @Data
-public class CenterFinder<T extends IPeak> implements IWorkflowElement {
+public class CenterFinder<T extends IBipacePeak> implements IWorkflowElement {
 
     private IWorkflow workflow;
 

@@ -39,19 +39,20 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayBhattacharryya implements IArraySimilarity {
 
-	private final Map<Array, Double> arrayToIntensityCache;
+//	private final Map<Array, Double> arrayToIntensityCache;
 
 	public ArrayBhattacharryya() {
-		arrayToIntensityCache = new WeakHashMap<Array, Double>();
+//		arrayToIntensityCache = new WeakHashMap<Array, Double>();
 	}
 
 	private double getSum(Array a) {
-		Double d = arrayToIntensityCache.get(a);
-		if (d == null) {
-			d = ArrayTools.integrate(a);
-			arrayToIntensityCache.put(a, d);
-		}
-		return d.doubleValue();
+//		Double d = arrayToIntensityCache.get(a);
+//		if (d == null) {
+//			d = ArrayTools.integrate(a);
+//			arrayToIntensityCache.put(a, d);
+//		}
+//		return d.doubleValue();
+		return ArrayTools.integrate(a);
 	}
 
 	@Override

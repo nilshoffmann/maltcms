@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.peak.IBipacePeak;
 import maltcms.datastructures.peak.IPeak;
 import maltcms.experimental.bipace.datastructures.api.Clique;
 import maltcms.experimental.bipace.peakCliqueAlignment.CenterFinder;
@@ -54,7 +55,7 @@ import ucar.ma2.ArrayInt;
  */
 @Slf4j
 @Data
-public class AnchorExporter<T extends IPeak> implements IWorkflowElement {
+public class AnchorExporter<T extends IBipacePeak> implements IWorkflowElement {
 
     private String anchorNames;
     private String anchorTimes;
@@ -79,9 +80,9 @@ public class AnchorExporter<T extends IPeak> implements IWorkflowElement {
      * @param peakToClique
      * @return
      */
-    public TupleND<IFileFragment> addAnchors(final List<List<IPeak>> al,
+    public TupleND<IFileFragment> addAnchors(final List<List<T>> al,
             final TupleND<IFileFragment> newFragments,
-            final List<Clique<T>> cliques, final HashMap<IPeak, Clique<T>> peakToClique) {
+            final List<Clique<T>> cliques, final HashMap<T, Clique<T>> peakToClique) {
 
         final String ri_names = this.anchorNames;
         final String ri_times = this.anchorTimes;

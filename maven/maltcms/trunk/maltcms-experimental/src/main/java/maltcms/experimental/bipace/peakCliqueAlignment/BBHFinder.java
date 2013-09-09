@@ -38,6 +38,7 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.peak.IBipacePeak;
 import maltcms.datastructures.peak.IPeak;
 
 /**
@@ -51,20 +52,20 @@ public class BBHFinder {
      * @param al
      * @param fragmentToPeaks
      */
-    public List<IPeak> findBiDiBestHits(final TupleND<IFileFragment> al,
-            final HashMap<String, List<IPeak>> fragmentToPeaks) {
+    public List<IBipacePeak> findBiDiBestHits(final TupleND<IFileFragment> al,
+            final HashMap<String, List<IBipacePeak>> fragmentToPeaks) {
         // For each pair of FileFragments
         final Set<IPeak> matchedPeaks = new HashSet<IPeak>();
         for (final Tuple2D<IFileFragment, IFileFragment> t : al.getPairs()) {
 
-            final List<IPeak> lhsPeaks = fragmentToPeaks.get(
+            final List<IBipacePeak> lhsPeaks = fragmentToPeaks.get(
                     t.getFirst().getName());
-            final List<IPeak> rhsPeaks = fragmentToPeaks.get(t.getSecond().
+            final List<IBipacePeak> rhsPeaks = fragmentToPeaks.get(t.getSecond().
                     getName());
             log.debug("lhsPeaks: {}", lhsPeaks.size());
             log.debug("rhsPeaks: {}", rhsPeaks.size());
-            for (final IPeak plhs : lhsPeaks) {
-                for (final IPeak prhs : rhsPeaks) {
+            for (final IBipacePeak plhs : lhsPeaks) {
+                for (final IBipacePeak prhs : rhsPeaks) {
                     log.debug("Checking peaks {} and {}", plhs, prhs);
                     if (plhs.isBidiBestHitFor(prhs)) {
                         log.debug(
@@ -83,13 +84,13 @@ public class BBHFinder {
         log.info("Retained {} matched peaks!", matchedPeaks.size());
         log.debug("Counting and removing unmatched peaks!");
         int peaks = 0;
-        List<IPeak> unmatchedPeaks = new ArrayList<IPeak>();
+        List<IBipacePeak> unmatchedPeaks = new ArrayList<IBipacePeak>();
         for (final IFileFragment t : al) {
-            final List<IPeak> lhsPeaks = fragmentToPeaks.get(t.getName());
+            final List<IBipacePeak> lhsPeaks = fragmentToPeaks.get(t.getName());
             log.debug("lhsPeaks: {}", lhsPeaks.size());
-            ListIterator<IPeak> liter = lhsPeaks.listIterator();
+            ListIterator<IBipacePeak> liter = lhsPeaks.listIterator();
             while (liter.hasNext()) {
-                final IPeak plhs = liter.next();
+                final IBipacePeak plhs = liter.next();
                 if (!matchedPeaks.contains(plhs)) {
                     unmatchedPeaks.add(plhs);
                     peaks++;
@@ -101,17 +102,17 @@ public class BBHFinder {
         return unmatchedPeaks;
     }
 
-    public boolean isBidiBestHitForAll(final List<IPeak> peaks,
+    public boolean isBidiBestHitForAll(final List<IBipacePeak> peaks,
             final int numberOfFiles) {
         return isBidiBestHitForK(peaks, numberOfFiles, numberOfFiles);
     }
 
-    public boolean isBidiBestHitForK(final List<IPeak> peaks,
+    public boolean isBidiBestHitForK(final List<IBipacePeak> peaks,
             final int numberOfFiles, final int minCliqueSize) {
         int i = 0;
         int j = 0;
-        for (final IPeak p : peaks) {
-            for (final IPeak q : peaks) {
+        for (final IBipacePeak p : peaks) {
+            for (final IBipacePeak q : peaks) {
                 if (!p.equals(q)) {
                     if (q.isBidiBestHitFor(p)) {
                         i++;
@@ -135,11 +136,11 @@ public class BBHFinder {
         return false;
     }
 
-    public boolean isFirstBidiBestHitForRest(final List<IPeak> peaks,
+    public boolean isFirstBidiBestHitForRest(final List<IBipacePeak> peaks,
             final int expectedHits) {
         int i = 0;
-        final IPeak p0 = peaks.get(0);
-        for (final IPeak p : peaks) {
+        final IBipacePeak p0 = peaks.get(0);
+        for (final IBipacePeak p : peaks) {
             // for(Peak q:peaks) {
             if (!p.equals(p0)) {
                 if (p0.isBidiBestHitFor(p)) {
@@ -159,11 +160,11 @@ public class BBHFinder {
 
     public void removePeakSimilaritiesWhichHaveNoBestHits(
             final TupleND<IFileFragment> t,
-            final HashMap<String, List<IPeak>> fragmentToPeaks) {
+            final HashMap<String, List<IBipacePeak>> fragmentToPeaks) {
         // no best hits means, that the corresponding list of sorted peaks has
         // length greater than one
         for (final String s : fragmentToPeaks.keySet()) {
-            for (final IPeak p : fragmentToPeaks.get(s)) {
+            for (final IBipacePeak p : fragmentToPeaks.get(s)) {
                 for (final IFileFragment iff : t) {
                     final List<UUID> l = p.getPeaksSortedBySimilarity(iff.getName());
                     // clear similarities, if a best hit hasn't been assigned

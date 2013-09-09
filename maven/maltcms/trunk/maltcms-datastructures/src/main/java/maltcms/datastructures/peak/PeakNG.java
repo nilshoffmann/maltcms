@@ -39,10 +39,11 @@ import cross.exception.ResourceNotAvailableException;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.feature.DefaultFeatureVector;
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
+import org.cliffc.high_scale_lib.NonBlockingHashMapLong;
 
 /**
  * Shorthand class for peaks.
@@ -60,8 +61,8 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 	private static final long serialVersionUID = -4337180586706400884L;
 	private final int scanIndex;
 	private final double sat;
-	private static ConcurrentHashMap<Long, PeakEdge> bestHits = new ConcurrentHashMap<Long, PeakEdge>(20, 0.67f, 8);
-	private static ConcurrentHashMap<String, Integer> keyMap = new ConcurrentHashMap<String, Integer>();
+	private static NonBlockingHashMapLong<PeakEdge> bestHits = new NonBlockingHashMapLong<PeakEdge>();
+	private static NonBlockingHashMap<String, Integer> keyMap = new NonBlockingHashMap<String, Integer>();
 	private String name = "";
 	private final String peakKey;
 	private int peakIndex = -1;
@@ -112,7 +113,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 	public void addSimilarity(final IBipacePeak p, final double similarity) {
 		if (this.storeOnlyBestSimilarities) {
 			if (!Double.isInfinite(similarity) && !Double.isNaN(similarity)) {
-				Long key = keyTo(p);
+				long key = keyTo(p);
 				PeakEdge peakEdge = bestHits.get(key);
 				if (peakEdge != null) {
 					if (peakEdge.similarity < similarity) {
@@ -131,11 +132,11 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 		}
 	}
 
-	private Long keyTo(IPeak p) {
+	private long keyTo(IPeak p) {
 		return keyTo(p.getAssociation());
 	}
 
-	private Long keyTo(String association) {
+	private long keyTo(String association) {
 		int partitionKey = -1;
 		if (keyMap.containsKey(association)) {
 			partitionKey = keyMap.get(association);
@@ -146,7 +147,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 //		System.out.println("Partition: "+association+" with key="+partitionKey);
 		long key = cantorPair(partitionKey, peakId);
 //		System.out.println("Key from "+getAssociation()+" at "+getPeakIndex()+" to "+association+" = "+key);
-		return Long.valueOf(key);
+		return key;//Long.valueOf(key);
 //		String uid = new StringBuilder(peakKey.length()+association.length()+1).append(peakKey).append("-").append(association).toString();
 //		keyMap.put(association, uid);
 //		return uid;
@@ -160,7 +161,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 
 	@Override
 	public void clearSimilarities(String association) {
-		Long key = keyTo(association);
+		long key = keyTo(association);
 		bestHits.remove(key);
 //		keyMap.remove(association);
 	}
@@ -177,7 +178,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 	 */
 	@Override
 	public List<UUID> getPeaksSortedBySimilarity(final String association) {
-		Long key = keyTo(association);
+		long key = keyTo(association);
 		PeakEdge id = bestHits.get(key);
 		if (id != null) {
 			return Arrays.asList(id.targetPeakId);
@@ -187,7 +188,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 
 	@Override
 	public UUID getPeakWithHighestSimilarity(final String association) {
-		Long key = keyTo(association);
+		long key = keyTo(association);
 		if (storeOnlyBestSimilarities) {
 			PeakEdge id = bestHits.get(key);
 			if (id != null) {
@@ -211,7 +212,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 
 	@Override
 	public double getSimilarity(final IBipacePeak p) {
-		Long key = keyTo(p);
+		long key = keyTo(p);
 		PeakEdge id = bestHits.get(key);
 		if (id != null && id.targetPeakId.equals(p.getUniqueId())) {
 			return id.similarity;

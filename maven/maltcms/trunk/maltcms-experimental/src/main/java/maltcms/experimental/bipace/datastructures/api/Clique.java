@@ -37,7 +37,7 @@ import java.util.List;
 import cross.datastructures.fragments.IFileFragment;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.peak.IPeak;
+import maltcms.datastructures.peak.IBipacePeak;
 
 /**
  * @author Nils Hoffmann
@@ -45,7 +45,7 @@ import maltcms.datastructures.peak.IPeak;
  *
  */
 @Slf4j
-public class Clique<T extends IPeak> {
+public class Clique<T extends IBipacePeak> {
 
     private static long CLIQUEID = -1;
     private long id = -1;

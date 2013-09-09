@@ -28,14 +28,14 @@
 package maltcms.experimental.bipace.datastructures.api;
 
 import lombok.Data;
-import maltcms.datastructures.peak.IPeak;
+import maltcms.datastructures.peak.IBipacePeak;
 
 /**
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
 @Data
-public abstract class CliqueStatistics<T extends IPeak> {
+public abstract class CliqueStatistics<T extends IBipacePeak> {
 
     private double[] cliqueMean;
     private double[] cliqueVariance;

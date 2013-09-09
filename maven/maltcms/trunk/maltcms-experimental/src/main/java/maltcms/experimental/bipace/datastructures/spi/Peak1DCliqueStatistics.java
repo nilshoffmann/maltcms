@@ -30,22 +30,23 @@ package maltcms.experimental.bipace.datastructures.spi;
 import maltcms.experimental.bipace.datastructures.api.CliqueStatistics;
 import java.util.ArrayList;
 import java.util.List;
+import maltcms.datastructures.peak.IBipacePeak;
 import maltcms.datastructures.peak.IPeak;
 
 /**
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  */
-public class Peak1DCliqueStatistics extends CliqueStatistics<IPeak> {
+public class Peak1DCliqueStatistics extends CliqueStatistics<IBipacePeak> {
 
     @Override
     public void selectCentroid() {
         double mindist = Double.POSITIVE_INFINITY;
         double[] dists = new double[getClique().getPeakList().size()];
         int i = 0;
-        List<IPeak> peaks = new ArrayList<IPeak>(getClique().getPeakList());
-        for (IPeak peak : peaks) {
-            for (IPeak peak1 : peaks) {
+        List<IBipacePeak> peaks = new ArrayList<IBipacePeak>(getClique().getPeakList());
+        for (IBipacePeak peak : peaks) {
+            for (IBipacePeak peak1 : peaks) {
                 dists[i] += Math.pow(
                         peak.getScanAcquisitionTime()
                         - peak1.getScanAcquisitionTime(), 2.0d);
@@ -65,7 +66,7 @@ public class Peak1DCliqueStatistics extends CliqueStatistics<IPeak> {
     }
 
     @Override
-    public double getDistanceToCentroid(IPeak p) {
+    public double getDistanceToCentroid(IBipacePeak p) {
         double[] mean = getCliqueMean();
         double d = 0.0d;
         d += Math.pow(mean[0] - p.getScanAcquisitionTime(), 2);

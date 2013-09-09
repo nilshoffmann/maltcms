@@ -46,20 +46,23 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayCos implements IArraySimilarity {
 
-	private final Map<Array, Double> arrayLengthCache;
+//	private final Map<Array, Double> arrayLengthCache;
+	
+	private double minimumSimilarity = 0.0d;
 	
 	public ArrayCos() {
-		arrayLengthCache = new WeakHashMap<Array, Double>();
+//		arrayLengthCache = new WeakHashMap<Array, Double>();
 	}
 	
 	private double getLength(Array a) {
-		Double d = arrayLengthCache.get(a);
-		if(d==null) {
-			MAVector mav = new MAVector(a);
-			d = mav.norm();
-			arrayLengthCache.put(a, d);
-		}
-		return d.doubleValue();
+//		Double d = arrayLengthCache.get(a);
+//		if(d==null) {
+//			MAVector mav = new MAVector(a);
+//			d = mav.norm();
+//			arrayLengthCache.put(a, d);
+//		}
+//		return d.doubleValue();
+		return new MAVector(a).norm();
 	}
 	
     @Override
@@ -72,7 +75,8 @@ public class ArrayCos implements IArraySimilarity {
 			for (int i = 0; i < len; i++) {
 				dot+=(t1.getDouble(i)*t2.getDouble(i));
 			}
-			return dot/(l1*l2);
+			final double val = dot/(l1*l2);
+			return val>minimumSimilarity?val: Double.NEGATIVE_INFINITY;
 //        }
 		
 //        throw new IllegalArgumentException("Arrays shapes are incompatible! "

@@ -46,19 +46,22 @@ import ucar.ma2.MAMath;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayWeightedCosine implements IArraySimilarity {
 
-	private final Map<Array, Double> arrayToIntensityCache;
+//	private final Map<Array, Double> arrayToIntensityCache;
+	
+	private double minimumSimilarity = 0.0d;
 
 	public ArrayWeightedCosine() {
-		arrayToIntensityCache = new WeakHashMap<Array, Double>();
+//		arrayToIntensityCache = new ConcurrentHashMap<Array, Double>();
 	}
 
 	private double getMaximumIntensity(final Array a) {
-		Double d = arrayToIntensityCache.get(a);
-		if (d == null) {
-			d = MAMath.getMaximum(a);
-			arrayToIntensityCache.put(a, d);
-		}
-		return d.doubleValue();
+//		Double d = arrayToIntensityCache.get(a);
+//		if (d == null) {
+//			d = MAMath.getMaximum(a);
+//			arrayToIntensityCache.put(a, d);
+//		}
+//		return d.doubleValue();
+		return MAMath.getMaximum(a);
 	}
 
 	@Override
@@ -71,7 +74,11 @@ public class ArrayWeightedCosine implements IArraySimilarity {
 			s2 += miProduct(i + 1, t2.getDouble(i) / maxI2);
 			c += miProduct(i + 1, Math.sqrt(t1.getDouble(i) / maxI1 * t2.getDouble(i) / maxI2));
 		}
-		return (c * c / (s1 * s2));
+		final double val = (c * c / (s1 * s2));
+		if(val>minimumSimilarity) {
+			return val;
+		}
+		return val>minimumSimilarity?val: Double.NEGATIVE_INFINITY;
 	}
 
 	private double miProduct(double mass, double intensity) {
