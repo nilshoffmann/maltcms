@@ -1,2 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module-Localizing-Bundle: com/db4o/nbm/Bundle.properties

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<content group="news" ident="news/bmcBioinformatics1" nname="Featured Publication" publish="yes" toRoot="../" lastchanged="$Date by $Author">
-    <column id="content">
-        <h1>Publication: BiPace and Cemapp-DTW in BMC Bioinformatics, 2012</h1>
-        <p>A methodology article on the alignment algorithms used in Maltcms has been published in BMC Bioinformatics:
-	<a href="http://www.biomedcentral.com/1471-2105/13/214">Combining peak- and chromatogram-based retention time alignment algorithms for multiple chromatography-mass spectrometry datasets</a>.
-        </p>
-    </column>
-</content>
