@@ -1,0 +1,59 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1378662828610
+Build-Jdk: 1.7.0_25
+Built-By: Nils Hoffmann
+Bundle-Description: Maltcms, short for "Modular Application Toolkit for 
+ Chromatography Mass-Spectrometry" is an application framework mainly su
+ ited for developers working in the domain of bioinformatics for metabol
+ omics and proteomics. Its aim is to provide reusable, efficient datastr
+ uctures, abstracting from the various low-level data-formats like netcd
+ f (ANDIMS), mzXML, mzData and mzML and providing consistent access to d
+ ata features like mass spectra, chromatograms and metadata. Furthermore
+ , Maltcms provides a platform for the implementation and execution of p
+ rocessing pipelines. New and existing algorithms can be easily implemen
+ ted or included and executed together with existing processing elements
+ .
+Bundle-License: http://www.gnu.org/licenses/lgpl.html, http://www.eclips
+ e.org/org/documents/epl-v10.php
+Bundle-ManifestVersion: 2
+Bundle-Name: Maltcms ChromA4D CWT
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,JavaSE-1.6
+Bundle-SymbolicName: maltcms-chroma4D-cwt
+Bundle-Version: 1.3.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: maltcms.commands.fragments2d.peakfinding.cwt;uses:="cros
+ s.datastructures.tuple,cross.datastructures.fragments,net.sf.mpaxs.api,
+ cross.datastructures.workflow,cross.commands.fragments,org.slf4j,cross.
+ annotations,maltcms.commands.filters.array.wavelet,maltcms.datastructur
+ es.caches,cross.exception,maltcms.datastructures.quadTree,org.jfree.cha
+ rt.annotations,ucar.ma2,maltcms.tools,maltcms.io.xml.bindings.annotatio
+ n,javax.imageio,maltcms.commands.filters.array,org.apache.commons.math.
+ stat,maltcms.datastructures.peak,maltcms.datastructures.rank,org.jfree.
+ data.xy,maltcms.commands.scanners,maltcms.commands.fragments2d.peakfind
+ ing,maltcms.datastructures.ridge,maltcms.datastructures.ms,maltcms.comm
+ ands.fragments2d.peakfinding.output,maltcms.commands.fragments2d.peakfi
+ nding.picking,cross.tools,org.apache.commons.math.stat.descriptive.rank
+ ,cross.datastructures,org.apache.commons.configuration";version="1.3.0.
+ SNAPSHOT"
+Import-Package: cross.annotations;version="[1.2,2)",cross.commands.fragm
+ ents;version="[1.2,2)",cross.datastructures;version="[1.2,2)",cross.dat
+ astructures.fragments;version="[1.2,2)",cross.datastructures.tuple;vers
+ ion="[1.2,2)",cross.datastructures.workflow;version="[1.2,2)",cross.exc
+ eption;version="[1.2,2)",cross.tools;version="[1.2,2)",javax.imageio,ma
+ ltcms.commands.filters.array;version="[1.3,2)",maltcms.commands.filters
+ .array.wavelet;version="[1.3,2)",maltcms.commands.fragments2d.peakfindi
+ ng;version="[1.3,2)",maltcms.commands.fragments2d.peakfinding.output;ve
+ rsion="[1.3,2)",maltcms.commands.fragments2d.peakfinding.picking;versio
+ n="[1.3,2)",maltcms.commands.scanners;version="[1.3,2)",maltcms.datastr
+ uctures.caches;version="[1.3,2)",maltcms.datastructures.ms;version="[1.
+ 3,2)",maltcms.datastructures.peak;version="[1.3,2)",maltcms.datastructu
+ res.quadTree;version="[1.3,2)",maltcms.datastructures.rank;version="[1.
+ 3,2)",maltcms.datastructures.ridge;version="[1.3,2)",maltcms.io.xml.bin
+ dings.annotation;version="[1.3,2)",maltcms.tools;version="[1.3,2)",net.
+ sf.mpaxs.api;version="[1.6,2)",org.apache.commons.configuration;version
+ ="[1.9,2)",org.apache.commons.math.stat;version="[2.2,3)",org.apache.co
+ mmons.math.stat.descriptive.rank;version="[2.2,3)",org.jfree.chart.anno
+ tations;version="[1.0,2)",org.jfree.data.xy;version="[1.0,2)",org.slf4j
+ ;version="[1.7,2)",ucar.ma2
+Originally-Created-By: Apache Maven Bundle Plugin
+Tool: Bnd-1.50.0

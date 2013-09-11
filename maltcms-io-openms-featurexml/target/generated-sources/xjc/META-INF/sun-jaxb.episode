@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb">
+  <!--
+
+Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.5-2 generiert 
+Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+Generiert: 2013.09.03 um 04:00:41 PM CEST 
+
+  -->
+  <jaxb:bindings scd="x-schema::">
+    <jaxb:schemaBindings map="false">
+      <jaxb:package name="maltcms.io.xml.bindings.openms.featurexml"/>
+    </jaxb:schemaBindings>
+    <jaxb:bindings scd="featureMap">
+      <jaxb:class ref="maltcms.io.xml.bindings.openms.featurexml.FeatureMap"/>
+    </jaxb:bindings>
+    <jaxb:bindings scd="~featureType">
+      <jaxb:class ref="maltcms.io.xml.bindings.openms.featurexml.FeatureType"/>
+    </jaxb:bindings>
+    <jaxb:bindings scd="~userParam">
+      <jaxb:class ref="maltcms.io.xml.bindings.openms.featurexml.UserParam"/>
+    </jaxb:bindings>
+    <jaxb:bindings scd="~MassType">
+      <jaxb:typesafeEnumClass ref="maltcms.io.xml.bindings.openms.featurexml.MassType"/>
+    </jaxb:bindings>
+    <jaxb:bindings scd="~DigestionEnzyme">
+      <jaxb:typesafeEnumClass ref="maltcms.io.xml.bindings.openms.featurexml.DigestionEnzyme"/>
+    </jaxb:bindings>
+    <jaxb:bindings scd="~UserParamType">
+      <jaxb:typesafeEnumClass ref="maltcms.io.xml.bindings.openms.featurexml.UserParamType"/>
+    </jaxb:bindings>
+  </jaxb:bindings>
+</jaxb:bindings>
+

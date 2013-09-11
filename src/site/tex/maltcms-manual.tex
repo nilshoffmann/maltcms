@@ -1,0 +1,187 @@
+\documentclass[10pt,a4paper,onecolumn,twoside,titlepage,headsepline,open=any]{scrbook}
+\usepackage[utf8x]{inputenc}
+\usepackage{ucs}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{
+   colorlinks=true,
+   urlcolor=cyan,
+   pdfborder= 0 0 0
+}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{listings}
+\usepackage[toc,acronym]{glossaries}
+\usepackage[T1]{fontenc}
+\usepackage{palatino}
+\usepackage{helvet}
+%the following font may need to be installed seperately
+\usepackage{inconsolata}
+%\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\ttdefault}{inconsolata}
+\linespread{1.05}        % Palatino needs more leading
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[automark]{scrpage2}    % Kopfzeile definieren
+\ohead{}
+\chead{\headmark}                           % Lebender Header in die Mitte
+\pagestyle{scrheadings} 
+
+\definecolor{codebg}{RGB}{255,255,240}
+\definecolor{textfg}{RGB}{60,110,60}
+\definecolor{middlegray}{rgb}{0.5,0.5,0.5}
+\definecolor{lightgray}{rgb}{0.8,0.8,0.8}
+\definecolor{darkred}{rgb}{0.6,0.1,0.1}
+\definecolor{yac}{rgb}{0.6,0.6,0.1}
+
+\lstdefinestyle{java}{
+	language=Java,
+   numbers=left,
+   backgroundcolor=\color{codebg},
+   keywordstyle=\bfseries\ttfamily\color{darkred},
+   basicstyle=\footnotesize,    
+   numberstyle=\tiny\color{gray},
+   numbersep=5pt, 
+   stringstyle=\color{textfg}\ttfamily,
+   commentstyle=\color{middlegray}\ttfamily,
+   emph={square}, 
+   emphstyle=\color{blue}\texttt,
+   emph={[2]root,base},
+   emphstyle={[2]\color{yac}\texttt},
+   showstringspaces=false,
+   flexiblecolumns=false,
+   keepspaces=true,
+   tabsize=4,
+   breaklines=true,
+   breakautoindent=true,
+   breakatwhitespace=true,
+   prebreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\downarrow}},
+   postbreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\hookrightarrow\space}},
+   captionpos=b
+}%
+\lstdefinestyle{script}{
+   language=bash,
+   numbers=left,
+   backgroundcolor=\color{codebg},
+   basicstyle=\footnotesize,    
+   numberstyle=\tiny\color{gray},
+   numbersep=5pt, 
+   stringstyle=\color{textfg}\ttfamily,
+   commentstyle=\color{middlegray}\ttfamily,
+   showstringspaces=false,
+   flexiblecolumns=false,
+   keepspaces=true,
+   tabsize=4,
+   breaklines=true,
+   breakautoindent=true,
+   breakatwhitespace=true,
+   prebreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\downarrow}},
+   postbreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\hookrightarrow\space}},
+   captionpos=b
+}
+\lstdefinestyle{groovy}{
+   language=Java,
+   numbers=left,
+   backgroundcolor=\color{codebg},
+   keywordstyle=\bfseries\ttfamily\color{darkred},
+   basicstyle=\footnotesize,    
+   numberstyle=\tiny\color{gray},
+   numbersep=5pt, 
+   stringstyle=\color{textfg}\ttfamily,
+   commentstyle=\color{middlegray}\ttfamily,
+   emph={square}, 
+   emphstyle=\color{blue}\texttt,
+   emph={[2]root,base},
+   emphstyle={[2]\color{yac}\texttt},
+   showstringspaces=false,
+   flexiblecolumns=false,
+   keepspaces=true,
+   tabsize=4,
+   breaklines=true,
+   breakautoindent=true,
+   breakatwhitespace=true,
+   prebreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\downarrow}},
+   postbreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\hookrightarrow\space}},
+   captionpos=b
+}
+\lstdefinestyle{xml}{
+   language=Java,
+   numbers=left,
+   backgroundcolor=\color{codebg},
+   keywordstyle=\bfseries\ttfamily\color{darkred},
+   basicstyle=\footnotesize,    
+   numberstyle=\tiny\color{gray},
+   numbersep=5pt, 
+   stringstyle=\color{textfg}\ttfamily,
+   commentstyle=\color{middlegray}\ttfamily,
+   emph={square}, 
+   emphstyle=\color{blue}\texttt,
+   emph={[2]root,base},
+   emphstyle={[2]\color{yac}\texttt},
+   showstringspaces=false,
+   flexiblecolumns=false,
+   keepspaces=true,
+   tabsize=4,
+   breaklines=true,
+   breakautoindent=true,
+   breakatwhitespace=true,
+   prebreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\downarrow}},
+   postbreak=\raisebox{0ex}[0ex][0ex]
+        {\ensuremath{\hookrightarrow\space}},
+   captionpos=b
+}
+
+
+\author{Nils Hoffmann}
+\title{The Modular Application Toolkit for Chromatography-Mass Spectrometry\\\vspace{1ex}\begin{Large}
+User Guide\\
+Version 1.2.1-SNAPSHOT
+\end{Large}}
+\date{\today}
+
+%include glossary definitions
+\include{glossary}
+%include acronym definitions
+\include{acronyms}
+
+\makeglossaries
+\makeindex
+
+%include hyphenation patterns
+\include{hyphenation}
+
+\begin{document}
+\frontmatter    %römische Nummerierung aktivieren
+\maketitle       % Titel
+\include{preface}
+
+%\listoffigures    %Abbildungsverzeichnis
+%\listoftables     % Tabellenverzeichnis
+
+\lstinputlisting[style=java,firstline=52,lastline=75,float,caption=Programmatic assembly of a workflow,label=lst:myWorkflow]{../../../maltcms-chroma/src/main/java/net/sf/maltcms/tutorials/MyWorkflow.java}
+
+\tableofcontents   %Inhaltsverzeichnis
+ 
+\mainmatter    %Arabische Seitenummerierung
+\include{intro/chapter}
+\part{Using Maltcms}
+\include{usage/chapter}
+\include{samples/chapter}
+\part{Developing Maltcms}
+\include{concepts/chapter}
+\backmatter
+\chapter{Appendix}
+\lstlistoflistings
+\printglossaries
+\end{document}

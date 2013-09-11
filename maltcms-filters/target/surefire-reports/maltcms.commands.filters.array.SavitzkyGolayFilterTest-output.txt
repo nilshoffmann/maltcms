@@ -1,0 +1,16 @@
+Extracting /cdf/1D/glucoseA.cdf.gz to directory: /tmp/junit2474924140437803287/cdf
+glucoseA.cdf.gz
+0    [main] INFO  cross.datastructures.fragments.FileFragment  - Setting resource location to: file:/opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-filters/0000000000.cdf
+11   [main] INFO  cross.datastructures.fragments.FileFragment  - Setting resource location to: file:/tmp/junit2474924140437803287/cdf/glucoseA.cdf
+52   [main] INFO  cross.datastructures.fragments.FileFragment  - Trying to load source files from file: file:/tmp/junit2474924140437803287/cdf/glucoseA.cdf
+53   [main] INFO  cross.datastructures.fragments.BfsVariableSearcher  - Level 0
+53   [main] INFO  cross.datastructures.fragments.BfsVariableSearcher  - Checking file file:/tmp/junit2474924140437803287/cdf/glucoseA.cdf> for variable total_intensity
+68   [main] INFO  cross.ObjectFactory  - Using regular configuration mechanism on instance of type cross.io.DataSourceFactory
+75   [main] WARN  cross.ObjectFactory  - ObjectFactory's configuration is null or empty! Skipping configuration of maltcms.io.andims.NetcdfDataSource
+76   [main] WARN  cross.ObjectFactory  - ObjectFactory's configuration is null or empty! Skipping configuration of maltcms.io.andims.NetcdfDataSource
+76   [main] WARN  cross.ObjectFactory  - ObjectFactory's configuration is null or empty! Skipping configuration of cross.io.DataSourceFactory
+76   [main] WARN  cross.ObjectFactory  - ObjectFactory's configuration is null or empty! Skipping configuration of cross.io.DataSourceFactory
+76   [main] INFO  maltcms.io.andims.NetcdfDataSource  - Opening netcdf file file:/tmp/junit2474924140437803287/cdf/glucoseA.cdf
+151  [main] INFO  cross.datastructures.fragments.BfsVariableSearcher  - Found as persistent child!
+152  [main] INFO  cross.datastructures.fragments.FileFragment  - Found matches for total_intensity in [file:/tmp/junit2474924140437803287/cdf/glucoseA.cdf>total_intensity[0:5397:1]]
+152  [main] INFO  maltcms.io.andims.NetcdfDataSource  - Opening netcdf file file:/tmp/junit2474924140437803287/cdf/glucoseA.cdf

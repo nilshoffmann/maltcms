@@ -1,0 +1,96 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1378663177252
+Build-Jdk: 1.7.0_25
+Built-By: Nils Hoffmann
+Bundle-Description: Maltcms, short for "Modular Application Toolkit for 
+ Chromatography Mass-Spectrometry" is an application framework mainly su
+ ited for developers working in the domain of bioinformatics for metabol
+ omics and proteomics. Its aim is to provide reusable, efficient datastr
+ uctures, abstracting from the various low-level data-formats like netcd
+ f (ANDIMS), mzXML, mzData and mzML and providing consistent access to d
+ ata features like mass spectra, chromatograms and metadata. Furthermore
+ , Maltcms provides a platform for the implementation and execution of p
+ rocessing pipelines. New and existing algorithms can be easily implemen
+ ted or included and executed together with existing processing elements
+ .
+Bundle-License: http://www.gnu.org/licenses/lgpl.html, http://www.eclips
+ e.org/org/documents/epl-v10.php
+Bundle-ManifestVersion: 2
+Bundle-Name: Maltcms Datastructures
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,JavaSE-1.6
+Bundle-SymbolicName: maltcms-datastructures
+Bundle-Version: 1.3.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: maltcms.datastructures;uses:="cross.datastructures.fragm
+ ents,cross";version="1.3.0.SNAPSHOT",maltcms.datastructures.alignment;u
+ ses:="cross.exception,cross.datastructures.tuple,maltcms.datastructures
+ .ms,org.slf4j,cross.annotations,cross,org.apache.commons.configuration"
+ ;version="1.3.0.SNAPSHOT",maltcms.datastructures.array;uses:="maltcms.d
+ atastructures.alignment,ucar.ma2,maltcms.datastructures.constraint,cros
+ s.datastructures.tuple,maltcms.tools,cross.annotations,org.slf4j,cern.c
+ olt.matrix.impl";version="1.3.0.SNAPSHOT",maltcms.datastructures.caches
+ ;uses:="cross.datastructures.fragments,ucar.ma2,cross.annotations,org.a
+ pache.commons.configuration,cross.datastructures.tuple,maltcms.tools,or
+ g.slf4j,cross,cross.exception";version="1.3.0.SNAPSHOT",maltcms.datastr
+ uctures.cluster;uses:="ucar.ma2,maltcms.datastructures.array,maltcms.da
+ tastructures.feature,org.slf4j,maltcms.datastructures.peak,cross.except
+ ion";version="1.3.0.SNAPSHOT",maltcms.datastructures.constraint;uses:="
+ maltcms.datastructures.alignment,cross.datastructures.tuple,cross.datas
+ tructures.tools,org.slf4j";version="1.3.0.SNAPSHOT",maltcms.datastructu
+ res.feature;uses:="cross.datastructures.tuple,cross.datastructures.frag
+ ments,maltcms.datastructures.array,ucar.ma2,maltcms.tools,maltcms.datas
+ tructures.ms,cross.datastructures.tools,cross.exception,org.apache.comm
+ ons.configuration,maltcms.datastructures,cern.colt.matrix,cern.colt.fun
+ ction,cern.colt,cross.tools";version="1.3.0.SNAPSHOT",maltcms.datastruc
+ tures.filters.array;uses:="maltcms.commands.filters.array,ucar.ma2,malt
+ cms.datastructures.array,cross.datastructures.tools";version="1.3.0.SNA
+ PSHOT",maltcms.datastructures.ms;uses:="cross.datastructures.fragments,
+ cross.exception,ucar.ma2,maltcms.tools,org.slf4j,cross.annotations,cros
+ s.datastructures.tuple,org.apache.commons.configuration,cross,maltcms.d
+ atastructures.caches,cross.datastructures,ucar.nc2,cross.cache,org.jdom
+ ,cross.datastructures.tools,maltcms.datastructures.array,cross.datastru
+ ctures.cache";version="1.3.0.SNAPSHOT",maltcms.datastructures.peak;uses
+ :="ucar.ma2,org.jfree.data.statistics,maltcms.tools,org.slf4j,maltcms.i
+ o.xml.bindings.annotation,javax.xml.bind,cross.exception,cross.datastru
+ ctures.fragments,maltcms.datastructures.peak.normalization,cross.datast
+ ructures.tools,ucar.nc2,maltcms.datastructures.peak.annotations,maltcms
+ .datastructures.array,cross.datastructures.tuple,cross.tools,maltcms.da
+ tastructures.ms,org.cliffc.high_scale_lib,cross.datastructures.cache,ma
+ ltcms.datastructures.feature";version="1.3.0.SNAPSHOT",maltcms.datastru
+ ctures.peak.annotations;uses:="maltcms.datastructures.ms";version="1.3.
+ 0.SNAPSHOT",maltcms.datastructures.peak.normalization;uses:="cross.data
+ structures.fragments,cross.cache,ucar.ma2,maltcms.tools";version="1.3.0
+ .SNAPSHOT",maltcms.datastructures.rank;uses:="maltcms.datastructures.ri
+ dge";version="1.3.0.SNAPSHOT",maltcms.datastructures.ridge;uses:="cross
+ .datastructures.tuple";version="1.3.0.SNAPSHOT",maltcms.datastructures.
+ warp;uses:="cross.datastructures.fragments,cross.datastructures.tuple,u
+ car.ma2,cross.datastructures.workflow,maltcms.tools,cross.datastructure
+ s.tools,org.slf4j";version="1.3.0.SNAPSHOT",maltcms.tools;uses:="ucar.m
+ a2,cross.datastructures.collections,cross.exception,cross.datastructure
+ s.tools,org.slf4j,cross.datastructures.tuple,maltcms.datastructures.arr
+ ay,cross,org.apache.commons.configuration,cross.datastructures.fragment
+ s,maltcms.commands.filters.array,org.jfree.chart,maltcms.io.csv,javax.i
+ mageio,javax.media.jai,cross.datastructures.workflow,javax.swing,maltcm
+ s.datastructures.peak,javax.media.jai.operator,cross.tools,org.jfree.ch
+ art.encoders,org.jfree.data.xy,maltcms.datastructures.ms,cross.datastru
+ ctures,ucar.nc2,cross.io,maltcms.commands.scanners,cross.annotations";v
+ ersion="1.3.0.SNAPSHOT"
+Import-Package: cern.colt,cern.colt.function,cern.colt.matrix,cern.colt.
+ matrix.impl,cross;version="[1.2,2)",cross.annotations;version="[1.2,2)"
+ ,cross.cache;version="[1.2,2)",cross.datastructures;version="[1.2,2)",c
+ ross.datastructures.cache;version="[1.2,2)",cross.datastructures.collec
+ tions;version="[1.2,2)",cross.datastructures.fragments;version="[1.2,2)
+ ",cross.datastructures.tools;version="[1.2,2)",cross.datastructures.tup
+ le;version="[1.2,2)",cross.datastructures.workflow;version="[1.2,2)",cr
+ oss.exception;version="[1.2,2)",cross.io;version="[1.2,2)",cross.tools;
+ version="[1.2,2)",javax.imageio,javax.media.jai;version="[1.1,2)",javax
+ .media.jai.operator;version="[1.1,2)",javax.swing,javax.xml.bind,maltcm
+ s.commands.filters.array;version="[1.3,2)",maltcms.commands.scanners;ve
+ rsion="[1.3,2)",maltcms.io.csv;version="[1.3,2)",maltcms.io.xml.binding
+ s.annotation;version="[1.3,2)",org.apache.commons.configuration;version
+ ="[1.9,2)",org.cliffc.high_scale_lib,org.jdom;version="[1.1,2)",org.jfr
+ ee.chart;version="[1.0,2)",org.jfree.chart.encoders;version="[1.0,2)",o
+ rg.jfree.data.statistics;version="[1.0,2)",org.jfree.data.xy;version="[
+ 1.0,2)",org.slf4j;version="[1.7,2)",ucar.ma2,ucar.nc2
+Originally-Created-By: Apache Maven Bundle Plugin
+Tool: Bnd-1.50.0

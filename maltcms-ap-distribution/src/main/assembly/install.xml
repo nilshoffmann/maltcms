@@ -1,0 +1,119 @@
+
+<!--
+ Copyright (C) 2008-2012 Nils Hoffmann
+ Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
+
+ This file is part of Cross/Maltcms.
+
+ Cross/Maltcms is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Cross/Maltcms is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public License
+ along with Cross/Maltcms.  If not, see &lt;http://www.gnu.org/licenses/>.
+
+ $Id: install.xml 638 2012-12-28 11:57:09Z nilshoffmann $
+
+-->
+<assembly
+    xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <id>bin</id>
+    <formats>
+        <format>dir</format>
+        <!--        <format>zip</format>-->
+        <!--        <format>tar.gz</format>-->
+    </formats>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <includeSiteDirectory>false</includeSiteDirectory>
+    <dependencySets>
+        <!-- Inclusion of all dependencies -->
+        <dependencySet>
+            <unpack>false</unpack>
+            <useTransitiveDependencies>true</useTransitiveDependencies>
+            <excludes>
+                <!--exclude other dependencies for unpacking--> 
+                <!--                <exclude>commons-math:commons-math:jar:1.2</exclude>
+                 <exclude>net.sf.maltcms:maltcms-resources:jar</exclude>
+                <exclude>net.sf.maltcms:maltcms-chroma:jar</exclude>
+                <exclude>net.sf.maltcms:maltcms-chroma4D:jar</exclude>
+                <exclude>net.sf.maltcms:maltcms-chroma4D-srg:jar</exclude>
+                <exclude>net.sf.maltcms:maltcms-chroma4D-cwt:jar</exclude>
+                <exclude>net.sf.maltcms:maltcms-evaluation:jar</exclude>
+                <exclude>net.sf.maltcms:maltcms-spectratyping:jar</exclude>-->
+                <exclude>net.sf.maltcms:*:pom</exclude>
+                <exclude>*:*:pom</exclude>
+            </excludes>
+            <outputFileNameMapping>${artifact.artifactId}-${artifact.baseVersion}.${artifact.extension}</outputFileNameMapping>
+            <fileMode>0644</fileMode>
+            <directoryMode>0755</directoryMode>
+            <outputDirectory>lib/</outputDirectory>
+        </dependencySet>
+
+        <dependencySet>
+            <!--unpack resources jar--> 
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <unpack>true</unpack>
+            <includes>
+                <include>net.sf.maltcms:maltcms-resources:jar</include>
+				<include>net.sf.maltcms:maltcms-ap:jar</include>
+            </includes>
+            <unpackOptions>
+                <excludes>
+                    <exclude>META-INF/**</exclude>
+                </excludes>
+                <includes>
+                    <include>**/cfg/**</include>
+                    <include>**/bin/**</include>
+                    <include>**/res/**</include>
+                    <include>**/licenses/**</include>
+                    <include>README</include>
+                    <include>LICENSE</include>
+                </includes>
+            </unpackOptions>
+            <fileMode>0644</fileMode>
+            <directoryMode>0755</directoryMode>
+            <outputDirectory>/</outputDirectory>
+        </dependencySet>
+        <!-- configuration options from other packages -->
+        <dependencySet>
+            <!-- unpack fragment command jars with configurations -->
+            <useTransitiveDependencies>true</useTransitiveDependencies>
+            <useProjectArtifact>true</useProjectArtifact>
+            <unpack>true</unpack>
+            <includes>
+				<include>net.sf.maltcms:cross-main:jar</include>
+				<include>net.sf.maltcms:maltcms-*:jar</include>
+<!--                <include>net.sf.maltcms:maltcms-chroma:jar</include>
+                <include>net.sf.maltcms:maltcms-chroma4D:jar</include>
+                <include>net.sf.maltcms:maltcms-chroma4D-srg:jar</include>
+                <include>net.sf.maltcms:maltcms-chroma4D-cwt:jar</include>
+                <include>net.sf.maltcms:maltcms-evaluation:jar</include>
+                <include>net.sf.maltcms:maltcms-spectratyping:jar</include>
+                <include>net.sf.maltcms:maltcms-cv:jar</include>
+                <include>net.sf.maltcms:maltcms-ap:jar</include>
+				<include>net.sf.maltcms:maltcms-io-mzml:jar</include>-->
+                <!--<include>net.sf.maltcms:maltcms-resources:jar</include>-->
+            </includes>
+            <fileMode>0644</fileMode>
+            <directoryMode>0755</directoryMode>
+            <unpackOptions>
+                <excludes>
+                    <exclude>META-INF/**</exclude>
+                </excludes>
+                <includes>
+                    <include>**/cfg/**</include>
+                </includes>
+            </unpackOptions>
+            <outputDirectory>/</outputDirectory>
+        </dependencySet>
+    </dependencySets>
+</assembly>
+

@@ -1,0 +1,76 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1378662808165
+Build-Jdk: 1.7.0_25
+Built-By: Nils Hoffmann
+Bundle-Description: Maltcms, short for "Modular Application Toolkit for 
+ Chromatography Mass-Spectrometry" is an application framework mainly su
+ ited for developers working in the domain of bioinformatics for metabol
+ omics and proteomics. Its aim is to provide reusable, efficient datastr
+ uctures, abstracting from the various low-level data-formats like netcd
+ f (ANDIMS), mzXML, mzData and mzML and providing consistent access to d
+ ata features like mass spectra, chromatograms and metadata. Furthermore
+ , Maltcms provides a platform for the implementation and execution of p
+ rocessing pipelines. New and existing algorithms can be easily implemen
+ ted or included and executed together with existing processing elements
+ .
+Bundle-License: http://www.gnu.org/licenses/lgpl.html, http://www.eclips
+ e.org/org/documents/epl-v10.php
+Bundle-ManifestVersion: 2
+Bundle-Name: Maltcms DB
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,JavaSE-1.6
+Bundle-SymbolicName: maltcms-db
+Bundle-Version: 1.3.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: maltcms.commands.fragments.assignment;uses:="maltcms.db.
+ predicates.metabolite,cross.datastructures.fragments,com.db4o.query,mal
+ tcms.datastructures.ms,ucar.ma2,cross.tools,org.slf4j,maltcms.db,com.db
+ 4o,cross.annotations,maltcms.io.csv,cross.datastructures.tuple,cross.da
+ tastructures.workflow,cross.commands.fragments,org.apache.commons.confi
+ guration";version="1.3.0.SNAPSHOT",maltcms.db;uses:="cross.datastructur
+ es.tuple,com.db4o.query,maltcms.datastructures.ms,com.db4o.config,ucar.
+ ma2,com.db4o,maltcms.db.predicates.metabolite,org.slf4j,maltcms.tools,j
+ avax.swing";version="1.3.0.SNAPSHOT",maltcms.db.connection;uses:="com.d
+ b4o.ext,com.db4o";version="1.3.0.SNAPSHOT",maltcms.db.predicates;versio
+ n="1.3.0.SNAPSHOT",maltcms.db.predicates.metabolite;uses:="cross.datast
+ ructures.tuple,maltcms.datastructures.ms,com.db4o.query,maltcms.tools,c
+ ross.datastructures.tools,maltcms.db.predicates,maltcms.math.functions,
+ ucar.ma2,maltcms.math.functions.similarities";version="1.3.0.SNAPSHOT",
+ maltcms.db.ui;uses:="maltcms.db.predicates.metabolite,javax.swing,com.d
+ b4o.query,maltcms.datastructures.ms,org.jfree.data.xy,org.jfree.chart,j
+ avax.swing.border,ucar.ma2,org.jfree.chart.axis,org.jfree.chart.rendere
+ r.xy,cross.datastructures.tuple,maltcms.commands.filters.array,org.jfre
+ e.chart.plot,javax.swing.event,com.db4o,javax.swing.table,maltcms.tools
+ ";version="1.3.0.SNAPSHOT",net.sf.maltcms.apps;uses:="maltcms.db.ui,com
+ .db4o,javax.swing.filechooser,javax.swing,com.db4o.ext";version="1.3.0.
+ SNAPSHOT",net.sf.maltcms.db.search.api;version="1.3.0.SNAPSHOT",net.sf.
+ maltcms.db.search.api.ri;uses:="maltcms.datastructures.ms,cross.excepti
+ on,ucar.ma2,maltcms.tools,cross.tools,cross.datastructures.tools";versi
+ on="1.3.0.SNAPSHOT",net.sf.maltcms.db.search.api.similarities;uses:="cr
+ oss.cache,cross.datastructures.tuple,com.db4o.query,maltcms.datastructu
+ res.ms,ucar.ma2,net.sf.maltcms.db.search.api,maltcms.tools";version="1.
+ 3.0.SNAPSHOT",net.sf.maltcms.db.search.spi.parser;uses:="com.db4o.query
+ ,maltcms.datastructures.ms,cross.exception,cross.datastructures.collect
+ ions,org.slf4j,com.db4o.config,ucar.ma2,com.db4o";version="1.3.0.SNAPSH
+ OT",net.sf.maltcms.db.search.spi.similarities;uses:="cross.datastructur
+ es.tuple,ucar.ma2,maltcms.tools,maltcms.datastructures.ms,cross.cache,n
+ et.sf.maltcms.db.search.api.similarities,maltcms.math.functions,maltcms
+ .math.functions.similarities";version="1.3.0.SNAPSHOT"
+Import-Package: com.db4o;version="[8.0,9)",com.db4o.config;version="[8.0
+ ,9)",com.db4o.ext;version="[8.0,9)",com.db4o.query;version="[8.0,9)",cr
+ oss.annotations;version="[1.2,2)",cross.cache;version="[1.2,2)",cross.c
+ ommands.fragments;version="[1.2,2)",cross.datastructures.collections;ve
+ rsion="[1.2,2)",cross.datastructures.fragments;version="[1.2,2)",cross.
+ datastructures.tools;version="[1.2,2)",cross.datastructures.tuple;versi
+ on="[1.2,2)",cross.datastructures.workflow;version="[1.2,2)",cross.exce
+ ption;version="[1.2,2)",cross.tools;version="[1.2,2)",javax.swing,javax
+ .swing.border,javax.swing.event,javax.swing.filechooser,javax.swing.tab
+ le,maltcms.commands.filters.array;version="[1.3,2)",maltcms.datastructu
+ res.ms;version="[1.3,2)",maltcms.io.csv;version="[1.3,2)",maltcms.math.
+ functions;version="[1.3,2)",maltcms.math.functions.similarities;version
+ ="[1.3,2)",maltcms.tools;version="[1.3,2)",org.apache.commons.configura
+ tion;version="[1.9,2)",org.jfree.chart;version="[1.0,2)",org.jfree.char
+ t.axis;version="[1.0,2)",org.jfree.chart.plot;version="[1.0,2)",org.jfr
+ ee.chart.renderer.xy;version="[1.0,2)",org.jfree.data.xy;version="[1.0,
+ 2)",org.slf4j;version="[1.7,2)",ucar.ma2
+Originally-Created-By: Apache Maven Bundle Plugin
+Tool: Bnd-1.50.0

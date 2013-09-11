@@ -1,0 +1,3 @@
+net.sf.maltcms.db.search.spi.similarities.Cosine
+net.sf.maltcms.db.search.spi.similarities.CosineWithMassBonus
+net.sf.maltcms.db.search.spi.similarities.SteinAndScott

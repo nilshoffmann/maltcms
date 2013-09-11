@@ -4,12 +4,12 @@
 	<parent>
 		<artifactId>cross-nbm-cluster</artifactId>
 		<groupId>net.sf.maltcms</groupId>
-		<version>1.2.12-SNAPSHOT</version>
+		<version>1.2.13-SNAPSHOT</version>
 	</parent>
 
 	<groupId>org.slf4j</groupId>
 	<artifactId>slf4j-nbm</artifactId>
-	<version>1.2.12-SNAPSHOT</version>
+	<version>1.2.13-SNAPSHOT</version>
 	<packaging>nbm</packaging>
 
 	<name>slf4j-nbm</name>

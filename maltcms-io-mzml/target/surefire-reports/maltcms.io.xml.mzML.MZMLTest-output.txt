@@ -1,0 +1,15 @@
+Extracting /mzML/small.pwiz.1.1.mzML.gz to directory: /tmp/junit5153466817522207927/junit5495112758051131125
+small.pwiz.1.1.mzML.gz
+Extracting /mzML/tiny.pwiz.1.1.mzML.gz to directory: /tmp/junit5153466817522207927/junit5495112758051131125
+tiny.pwiz.1.1.mzML.gz
+Extracting /mzML/MzMLFile_PDA.mzML.xml.gz to directory: /tmp/junit5153466817522207927/junit5495112758051131125
+MzMLFile_PDA.mzML.xml.gz
+################################################################################
+# testRoundTripReadWriteRead
+################################################################################
+2013-09-08 19:54:12,035 WARN ObjectFactory - ObjectFactory's configuration is null or empty! Skipping configuration of maltcms.io.xml.mzML.MZMLDataSource
+2013-09-08 19:54:13,060 ERROR StandardXpathAccess - The index does not contain any entry for the requested xpath: /indexedmzML/indexList
+2013-09-08 19:54:13,197 ERROR StandardXpathAccess - The index does not contain any entry for the requested xpath: /indexedmzML/indexList
+2013-09-08 19:54:13,209 ERROR StandardXpathAccess - The index does not contain any entry for the requested xpath: /indexedmzML/indexList
+2013-09-08 19:54:13,218 ERROR StandardXpathAccess - The index does not contain any entry for the requested xpath: /indexedmzML/indexList
+2013-09-08 19:54:13,226 ERROR StandardXpathAccess - The index does not contain any entry for the requested xpath: /indexedmzML/indexList

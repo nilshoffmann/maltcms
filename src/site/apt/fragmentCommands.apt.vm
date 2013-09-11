@@ -1,0 +1,116 @@
+Available Fragment Commands     
+
+	To get a list of available commands, you can query maltcms directly:
+
++------------------------------------------+
+>maltcms.sh -l cross.commands.fragments.AFragmentCommand 
++------------------------------------------+
+
+	To find out about the parameters supported by an individual command:
+
++------------------------------------------+
+>maltcms.sh -s maltcms.commands.fragments.peakfinding.TICPeakFinder
++------------------------------------------+
+
+	If you want to generate a basic configuration file for a number of commands:
+
++------------------------------------------+
+>maltcms.sh -b maltcms.commands.fragments.peakfinding.TICPeakFinder
++------------------------------------------+
+
+	You can provide multiple commands by separating them with a ','. The created
+	pipeline will be in the 'maltcmsOutput/pipelines/' directory below the current
+	working directory. The created files are just a starting point and will most probably 
+	not work immediately. For hints on completing the configuration files, please 
+	consult the provided pipelines below 'cfg/pipelines/' and 'cfg/pipelines/xml'.
+	
+	If you have further questions, please feel free to contact {{{http://maltcms.sourceforge.net/info/contact.html}the author}}.
+
+List of Fragment Commands
+	
+	Currently, the following fragment commands are available for execution 
+    within the pipeline. Other fragment commands may be available, but have not yet been 
+    finalized for description in this file.
+
+* maltcms.commands.fragments.preprocessing.
+
+    * TICPeakFinder : Finds well conserved peaks in the TIC
+
+    * DenseArrayProducer : produces evenly binned intensity profiles
+
+    * DefaultVarLoader : loads default variables
+
+* maltcms.commands.fragments.io.
+
+    * ANDIChromImporter : import for AIA/AndiChrom files
+
+    * ANDIMSExporter : export to AIA/ANDIMS files	
+
+    * CSVAnchorReader : read anchors in csv format
+
+    * ObiWarplmataExporter : export profile matrices to ObiWarp's lmata format
+
+    * VariableDataExporter : exports selected variables to csv files
+
+* maltcms.commands.fragments.cluster.
+
+    * PairwiseDistanceCalculator : calculates pairwise distances/similarities between chromatograms
+
+    * CompleteLinkageAlgorithm : applies CompleteLinkage based on pairwise distances
+
+    * NeighborJoinAlgorithm : applies NeighborJoining 
+
+    * SingleLinkageAlgorithm : applies SingleLinkage
+
+    * UPGMAAlgorithm : applies UPGMA (AverageLinkage)
+
+* maltcms.commands.fragments.assignment.
+
+    * PeakCliqueAssignment : assigns peaks to cliques based on ms similarity, rt deviation and a bidirectional best hits criterion
+
+    * EIMSMDBetaboliteAssignment : assigns peaks with possibly multiple matches against a MetaboliteDB instance with cosine score criterion
+
+* maltcms.commands.fragments.alignment.
+
+    * CenterStarAlignment : selects the chromatogram with smallest overall distance to other chroms as alignment reference
+
+    * ProgressiveTreeAlignment : generates a consensus, time corrected chromatogram as alignment reference
+
+* maltcms.commands.fragments.visualization.
+
+    * Array1DVisualizer : visualize 1D data, e.g. TICs
+
+    * ChromatogramVisualizer : visualize chromatograms as heatmaps
+
+    * MZIDistributionVisualizer : visualize distribution of m/z values as histogram
+
+    * PairwiseAlignmentMatrixVisualizer : visualize pairwise alignment matrix
+
+    * PairwiseAlignmentVisualizer : visualize pairwise alignments
+
+    * ScoreDistributionVisualizer : visualize score distribution histogram
+
+* maltcms.commands.fragments2d.preprocessing
+
+    * Data2DNormalizer : normalization and filtering of 2D TIC data
+
+    * ModulationExtractor : extracts slices of 2D GCxGC-MS data
+
+    * GCGCToGCMSConverter : resamples 2D GCxGC-MS data to GC-MS data by integrating modulations
+
+* maltcms.commands.fragments2d.visualization
+
+    * Chromatogram2DVisualizer : 2D heatmap visualization of 2D TIC data
+
+* maltcms.commands.fragments2d.warp
+
+    * Variants of Dynamic Time Warping for alignment of 2D TIC data
+
+* maltcms.commands.fragments2d.warp.visualization
+
+    * Visualizations for Dynamic Time Warping alignments of 2D TIC data
+
+* maltcms.commands.fragments2d.peakfinding
+
+    * SeededRegionGrowing : locates and integrates 2D-TIC peaks in GCxGC-MS data,
+      performs putative database identification and multiple peak alignment

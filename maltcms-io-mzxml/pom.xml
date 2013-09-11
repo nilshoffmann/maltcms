@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>maltcms-modules</artifactId>
+        <groupId>net.sf.maltcms</groupId>
+        <version>1.3-SNAPSHOT</version>
+    </parent>
+    <artifactId>maltcms-io-mzxml</artifactId>
+    <name>Maltcms IO Provider MZXML</name>
+    <url>http://maltcms.sourceforge.net</url>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-io-netcdf</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta-regexp</groupId>
+            <artifactId>jakarta-regexp</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.maltcms.test</groupId>
+            <artifactId>maltcms-test-data</artifactId>
+            <version>1.3-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.maltcms.test</groupId>
+            <artifactId>maltcms-test-defaults</artifactId>
+            <version>1.3-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.sashimi</groupId>
+            <artifactId>jrapStAX-osgi</artifactId>
+            <version>5.2.0</version>
+        </dependency>
+    </dependencies>
+    <packaging>jar</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+</project>

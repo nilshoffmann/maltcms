@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+
+Project website: http://maltcms.sf.net
+
+Maltcms may be used under the terms of either the
+
+GNU Lesser General Public License (LGPL)
+http://www.gnu.org/licenses/lgpl.html
+
+or the
+
+Eclipse Public License (EPL)
+http://www.eclipse.org/org/documents/epl-v10.php
+
+As a user/recipient of Maltcms, you may choose which license to receive the code 
+under. Certain files or entire directories may not be covered by this 
+dual license, but are subject to licenses compatible to both LGPL and EPL.
+License exceptions are explicitly declared in all relevant files or in a 
+LICENSE file in the relevant directories.
+
+Maltcms is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
+for details.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <description>
+        This file defines elements of the default ChromA pipeline.
+    </description>
+    
+    <!-- a command pipeline consists of a list of 
+    commands to be executed -->
+    <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
+        <property name="checkCommandDependencies" value="true"/>
+        <property name="commands">
+            <list>
+                <ref bean="csvAnchorReader" />
+                <!-- uncomment and define scans to extract for processing -->
+                <!--<ref bean="scanExtractor" />-->
+                <ref bean="defaultVarLoader" />
+                <ref bean="massFilter" />
+                <ref bean="ticHeatmapCoplotBeforeAlignment"/>
+                <!--                <ref bean="eicHeatmapCoplotBeforeAlignment"/>-->
+                <ref bean="denseArrayProducer" />
+                <ref bean="ticPeakFinder" />
+                <ref bean="peakCliqueAlignment" />
+                <ref bean="pairwiseDistanceCalculator" />
+                <ref bean="centerStarAlignment" />
+                <ref bean="chromatogramWarp" />
+                <ref bean="ticHeatmapCoplotAfterAlignment"/>
+                <!--                <ref bean="eicHeatmapCoplotAfterAlignment"/>-->
+                <ref bean="andimsExporter" />
+            </list>
+        </property>    
+    </bean>
+    <!-- commands -->
+               
+    <!-- CSVAnchorReader, reads pre-defined alignment anchors -->
+    <bean id="csvAnchorReader" class="maltcms.commands.fragments.io.CSVAnchorReader">
+
+    </bean>
+    
+    <!-- ScanExtractor, extracts pre-defined scans between startScan and endScan (inclusive)
+         Will correct indexing to start at 0.
+    -->
+    <bean id="scanExtractor" class="maltcms.commands.fragments.preprocessing.ScanExtractor">
+        <!-- start with first scan: 0 -->
+        <property name="startScan" value="0"/>
+        <!-- -1: determine endScan automatically -->
+        <property name="endScan" value="-1"/>
+    </bean>
+    
+    <!-- DefaultVarLoader, loads default variables, see cfg/cv/cv_maltcms.properties for default values for these -->
+    <bean id="defaultVarLoader" class="maltcms.commands.fragments.preprocessing.DefaultVarLoader">
+        <property name="defaultVariables">
+            <list>
+                <!-- uncomment to explicitly load default variables -->
+                <!--
+                <value>scan_index</value>
+                <value>mass_values</value>
+                <value>intensity_values</value>
+                <value>total_intensity</value>
+                <value>mass_range_min</value>
+                <value>mass_range_max</value>
+                <value>scan_acquisition_time</value> -->
+            </list>
+        </property>
+        <property name="additionalVariables">
+            <list>
+                <!-- uncomment to explicitly load additional variables -->
+                <!--
+                <value>retention_scans</value>
+                <value>source_files</value> -->
+            </list>
+        </property>
+    </bean>
+    
+    <!-- MassFilter, removes intensities associated to specified masses in raw data -->
+    <bean id="massFilter" class="maltcms.commands.fragments.preprocessing.MassFilter">
+        <property name="epsilon" value="1.0"/>
+        <property name="excludeMasses">
+            <list>
+                <!-- <value>73</value> -->
+                <!-- <value>74</value> --> 
+                <!-- <value>75</value> --> 
+                <!-- <value>147</value> --> 
+                <!-- <value>148</value> --> 
+                <!-- <value>149</value> --> 
+            </list>
+        </property>
+    </bean>
+    
+    <!-- DenseArrayProducer, creates a dense profile matrix -->
+    <bean id="denseArrayProducer" class="maltcms.commands.fragments.preprocessing.DenseArrayProducer">
+        <property name="maskedMasses">
+            <list>
+                <!-- <value>73</value> -->
+                <!-- <value>74</value> --> 
+                <!-- <value>75</value> --> 
+                <!-- <value>147</value> --> 
+                <!-- <value>148</value> --> 
+                <!-- <value>149</value> --> 
+            </list>
+        </property> 
+        <property name="invertMaskedMasses" value="false"/>  
+        <property name="normalizeScans" value="true"/> 
+        <property name="normalizeMeanVariance" value="false"/>
+        <property name="massBinResolution" value="1.0d"/>
+        <property name="ignoreMinMaxMassArrays" value="false"/>
+    </bean>
+    
+    
+    <!-- filter beans used by ticPeakFinder -->
+    <bean id="savitzkyGolayFilter" class="maltcms.commands.filters.array.SavitzkyGolayFilter" >
+        <property name="window" value="12"/>
+    </bean>
+    
+    <bean id="movingAverageFilter" class="maltcms.commands.filters.array.MovingAverageFilter" >
+        <property name="window" value="10"/>
+    </bean>
+    <bean id="topHatFilter" class="maltcms.commands.filters.array.TopHatFilter" scope="prototype">
+        <property name="window" value="50"/>
+    </bean>
+    
+    <bean id="loessBaselineEstimator" class="maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator" scope="prototype">
+        <property name="bandwidth" value="0.3"/>
+        <property name="accuracy" value="1.0E-12"/>
+        <property name="robustnessIterations" value="2"/>
+        <!-- set to < 1/10th of the number of scans in the chromatogram --> 
+        <property name="minimaWindow" value="100"/>
+    </bean>
+    
+    <bean id="ticAreaNormalizer" class="maltcms.datastructures.peak.normalization.TicAreaNormalizer">
+        <property name="ticVariableName" value="total_intensity"/>
+    </bean>
+    
+    <!-- TicPeakFinder -->
+    <bean id="ticPeakFinder" class="maltcms.commands.fragments.peakfinding.TICPeakFinder">
+        <property name="peakThreshold" value="3.0"/>
+        <property name="baselineEstimator" ref="loessBaselineEstimator"/>
+        <property name="filter">
+            <list>
+                <ref bean="savitzkyGolayFilter"/>
+            </list>
+        </property>
+        <property name="snrWindow" value="50"/>
+        <property name="peakSeparationWindow" value="10"/>
+        <property name="integratePeaks" value="true"/>
+        <property name="integrateRawTic" value="true"/>
+        <property name="saveGraphics" value="false"/>
+        <property name="peakNormalizers">
+            <list>
+                <!-- default: none, alternative: ticAreaNormalizer -->
+                <!--<ref bean="ticAreaNormalizer"/>-->
+            </list>
+        </property>
+    </bean>
+    
+    <!-- CwtTicPeakFinder -->
+    <bean id="cwtTicPeakFinder" class="maltcms.commands.fragments.peakfinding.CwtTicPeakFinder">
+        <property name="minScale" value="10"/>
+        <property name="maxScale" value="100"/>
+        <property name="minPercentile" value="5.0d"/>
+        <property name="integratePeaks" value="false"/>
+        <property name="integrateRawTic" value="true"/>
+        <property name="saveGraphics" value="false"/>
+    </bean>
+    
+    <bean id="gaussianDifferenceSimilarity" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity" scope="prototype">
+        <property name="tolerance" value="2.0d"/>
+        <property name="threshold" value="0.5d"/>
+    </bean>
+    <bean id="inverseGaussianDifferenceSimilarity" class="maltcms.math.functions.similarities.InverseGaussianDifferenceSimilarity" scope="prototype">
+        <property name="lambda" value="2.0d"/>
+        <property name="threshold" value="0.5d"/>
+        <property name="normalize" value="false"/>
+    </bean>
+    <bean id="dtwGaussianDifferenceSimilarity" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity" scope="prototype">
+        <property name="tolerance" value="2.0d"/>
+        <property name="threshold" value="0.0d"/>
+    </bean>
+    
+    <!-- array similarity functions -->
+    <bean id="cosineSimilarity" class="maltcms.math.functions.similarities.ArrayCos" scope="prototype"/>
+    <bean id="lpSimilarity" class="maltcms.math.functions.similarities.ArrayLp" scope="prototype"/>
+    
+    <!-- time penalized functions -->
+    <bean id="timePenalizedDotProduct" class="maltcms.math.functions.ProductSimilarity" scope="prototype">
+        <property name="scalarSimilarities">
+            <array>
+                <ref bean="gaussianDifferenceSimilarity"/>
+            </array>
+        </property>
+        <property name="arraySimilarities">
+            <array>
+                <ref bean="cosineSimilarity"/>
+            </array>
+        </property>
+    </bean>
+    
+    <bean id="workerFactory" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.WorkerFactory" scope="prototype">
+        <property name="maxRTDifference" value="60.0d"/>
+        <property name="similarityFunction" ref="timePenalizedDotProduct"/>
+        <!-- set this to false for inverseGaussian -->
+        <property name="assumeSymmetricSimilarity" value="true"/>
+    </bean>
+    
+    <bean id="peakFactory1D" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak1DFactory" scope="prototype">
+	
+    </bean>
+ 
+    <bean id="peakFactory1DMS" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak1DMSFactory" scope="prototype">
+	
+    </bean>
+    
+    <!-- PeakCliqueAlignment -->
+    <bean id="peakCliqueAlignment" class="maltcms.commands.fragments.alignment.PeakCliqueAlignment">
+        <property name="workerFactory" ref="workerFactory"/>
+        <property name="useSparseArrays" value="false"/>
+        <property name="minCliqueSize" value="2"/>
+        <property name="maxBBHErrors" value="0"/>
+        <property name="savePeakSimilarities" value="false"/>
+        <property name="useUserSuppliedAnchors" value="false"/>
+        <property name="saveXMLAlignment" value="true"/>
+        <property name="savePlots" value="false"/>
+        <property name="saveUnmatchedPeaks" value="false"/>
+        <property name="saveUnassignedPeaks" value="false"/>
+        <property name="saveIncompatiblePeaks" value="false"/>
+        <!-- which peak area definition to use, default: peak_area, alternative: peak_area_normalized -->
+        <property name="peakAreaVariable" value="peak_area"/>
+        <property name="peakFactory" ref="peakFactory1DMS"/>
+		<!-- 1/60 th -> from second to minute conversion, set to 1 to output unaltered rts -->
+		<property name="rtNormalizationFactor" value="0.016666667"/>
+		<!-- output format for rt alignment, add more '0' to output more decimal places -->
+		<property name="rtOutputFormat" value="0.000"/>
+    </bean>
+    
+    <!--     PairwiseDistanceCalculator -->
+    <bean id="pairwiseDistanceCalculator" class="maltcms.commands.fragments.cluster.PairwiseDistanceCalculator">
+        <property name="pairsWithFirstElement" value="false"/> 
+        <property name="workerFactory" ref="mziDtwWorkerFactory"/>
+        <!-- alternative -->
+        <!--<property name="workerFactory" ref="ticDtwWorkerFactory"/>-->
+    </bean>
+    
+    <bean id="cumulativeDistance" class="maltcms.commands.distances.DtwRecurrence" scope="prototype">
+        <property name="globalGapPenalty" value="0"/>
+    </bean>
+    
+    <bean id="pairwiseDistance" class="maltcms.math.functions.DtwTimePenalizedPairwiseSimilarity" scope="prototype">
+        <property name="expansionWeight" value="1.0"/>
+        <property name="matchWeight" value="2.25"/>
+        <property name="compressionWeight" value="1.0"/>
+        <property name="retentionTimeSimilarity" ref="dtwGaussianDifferenceSimilarity"/>
+        <property name="denseMassSpectraSimilarity" ref="cosineSimilarity"/>
+    </bean>
+        
+    <bean id="ticDtwWorkerFactory" class="maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.TicDtwWorkerFactory">
+        <property name="anchorRadius" value="1"/>
+        <property name="useAnchors" value="true"/>
+        <property name="minScansBetweenAnchors" value="10"/>
+        <property name="globalBand" value="false"/>
+        <property name="bandWidthPercentage" value="0.25"/>
+        <property name="precalculatePairwiseDistances" value="false"/>
+        <property name="extension" value=""/>
+        <property name="saveLayoutImage" value="false"/>
+        <property name="similarity" ref="pairwiseDistance"/>
+    </bean>
+    
+    <bean id="mziDtwWorkerFactory" class="maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.MziDtwWorkerFactory">
+        <property name="anchorRadius" value="1"/>
+        <property name="useAnchors" value="true"/>
+        <property name="minScansBetweenAnchors" value="10"/>
+        <property name="globalBand" value="false"/>
+        <property name="bandWidthPercentage" value="0.25"/>
+        <property name="precalculatePairwiseDistances" value="false"/>
+        <property name="extension" value=""/>
+        <property name="saveLayoutImage" value="false"/>
+        <property name="similarity" ref="pairwiseDistance"/>
+    </bean>
+    
+    <!-- CenterStarAlignment -->
+    
+    <bean id="centerStarAlignment" class="maltcms.commands.fragments.alignment.CenterStarAlignment">
+        <property name="alignToFirst" value="false"/>
+        <property name="centerSequence" value=""/>
+    </bean>
+    
+    <!--  ChromatogramWarp -->
+    <bean id="chromatogramWarp" class="maltcms.commands.fragments.warp.ChromatogramWarp2">
+        <property name="indexedVars">
+            <list><!-- uncomment the following two to recalculate the mass spectra to the aligned time -->
+                <value>mass_values</value>
+                <value>intensity_values</value>
+            </list>
+        </property>
+        <property name="plainVars">
+            <list>
+                <value>scan_acquisition_time</value>
+                <!-- uncomment the following line if you just want to have alignment corrected retention time -->
+                <value>total_intensity</value>
+            </list>
+        </property>
+        <property name="averageCompressions" value="false"/>
+    </bean>
+    <bean id="ticHeatmapCoplotBeforeAlignment" class="maltcms.commands.fragments.visualization.TICHeatmapCoplot"></bean>
+    <bean id="ticHeatmapCoplotAfterAlignment" class="maltcms.commands.fragments.visualization.TICHeatmapCoplot"></bean>
+    <bean id="eicHeatmapCoplotBeforeAlignment" class="maltcms.commands.fragments.visualization.EICHeatmapCoplot"></bean>
+    <bean id="eicHeatmapCoplotAfterAlignment" class="maltcms.commands.fragments.visualization.EICHeatmapCoplot"></bean>
+
+    <!-- ANDIMSExporter, exports internal data format to ANDI-MS compliant output -->
+    <bean id="andimsExporter" class="maltcms.commands.fragments.io.ANDIMSExporter">
+        <!-- skip variables created by other fragment commands, not included in AndiMS specification? -->
+        <property name="skipAggregatedVariables" value="true"/>
+    </bean>
+    
+</beans>

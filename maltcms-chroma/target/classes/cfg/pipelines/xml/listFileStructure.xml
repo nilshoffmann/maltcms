@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+
+Project website: http://maltcms.sf.net
+
+Maltcms may be used under the terms of either the
+
+GNU Lesser General Public License (LGPL)
+http://www.gnu.org/licenses/lgpl.html
+
+or the
+
+Eclipse Public License (EPL)
+http://www.eclipse.org/org/documents/epl-v10.php
+
+As a user/recipient of Maltcms, you may choose which license to receive the code 
+under. Certain files or entire directories may not be covered by this 
+dual license, but are subject to licenses compatible to both LGPL and EPL.
+License exceptions are explicitly declared in all relevant files or in a 
+LICENSE file in the relevant directories.
+
+Maltcms is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
+for details.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <description>
+        This file defines elements of the default ChromA pipeline.
+    </description>
+    
+    <!-- a command pipeline consists of a list of 
+    commands to be executed -->
+    <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
+        <property name="checkCommandDependencies" value="true"/>
+        <property name="commands">
+            <list>
+                <ref bean="dataFileVariablePrinter" />
+            </list>
+        </property>    
+    </bean>
+    <!-- commands -->
+    <!-- prints structure of data files -->
+    <bean id="dataFileVariablePrinter" class="maltcms.commands.fragments.io.DataFileVariablePrinter"/>
+</beans>

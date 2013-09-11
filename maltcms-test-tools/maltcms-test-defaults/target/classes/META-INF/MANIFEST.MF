@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1378662779914
+Build-Jdk: 1.7.0_25
+Built-By: Nils Hoffmann
+Bundle-Description: Maltcms, short for "Modular Application Toolkit for 
+ Chromatography Mass-Spectrometry" is an application framework mainly su
+ ited for developers working in the domain of bioinformatics for metabol
+ omics and proteomics. Its aim is to provide reusable, efficient datastr
+ uctures, abstracting from the various low-level data-formats like netcd
+ f (ANDIMS), mzXML, mzData and mzML and providing consistent access to d
+ ata features like mass spectra, chromatograms and metadata. Furthermore
+ , Maltcms provides a platform for the implementation and execution of p
+ rocessing pipelines. New and existing algorithms can be easily implemen
+ ted or included and executed together with existing processing elements
+ .
+Bundle-License: http://www.gnu.org/licenses/lgpl.html, http://www.eclips
+ e.org/org/documents/epl-v10.php
+Bundle-ManifestVersion: 2
+Bundle-Name: Maltcms Test Defaults
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,JavaSE-1.6
+Bundle-SymbolicName: maltcms-test-defaults
+Bundle-Version: 1.3.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: maltcms.test;uses:="cross.datastructures.fragments,org.a
+ pache.log4j,cross.test,org.junit,org.slf4j,org.junit.rules,cross.datast
+ ructures.tuple,cross.datastructures.workflow,cross.datastructures.pipel
+ ine,cross.commands.fragments,org.apache.commons.io";version="1.3.0.SNAP
+ SHOT"
+Import-Package: cross.commands.fragments;version="[1.2,2)",cross.datastr
+ uctures.fragments;version="[1.2,2)",cross.datastructures.pipeline;versi
+ on="[1.2,2)",cross.datastructures.tuple;version="[1.2,2)",cross.datastr
+ uctures.workflow;version="[1.2,2)",cross.test;version="[1.2,2)",org.apa
+ che.commons.io;version="[1.4,2)",org.apache.log4j;version="[1.2,2)",org
+ .junit,org.junit.rules,org.slf4j;version="[1.7,2)"
+Originally-Created-By: Apache Maven Bundle Plugin
+Tool: Bnd-1.50.0

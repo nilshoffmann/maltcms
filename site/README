@@ -1,0 +1,10 @@
+To build the new jekyll based maltcms site,
+you need to install ruby, ruby gems, and rake on your system.
+
+Information on installing ruby and ruby-gems can be found here:
+http://www.ruby-lang.org
+and here:
+http://rubygems.org/pages/download
+
+More information on jekyll can be found here:
+http://jekyllrb.com/

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>maltcms-modules</artifactId>
+		<groupId>net.sf.maltcms</groupId>
+		<version>1.3-SNAPSHOT</version>
+	</parent>
+	<groupId>org.jfree</groupId>
+	<artifactId>jfreechart-osgi</artifactId>
+	<version>1.0.14.1</version>
+	<name>JFreeChart OSGI</name>
+	<url>http://jfreechart.sourceforge.net/</url>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<packaging>bundle</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.0.14</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>itext</artifactId>
+					<groupId>com.lowagie</groupId>
+				</exclusion>
+			</exclusions>
+			<!--<scope>provided</scope>-->
+		</dependency>
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jcommon</artifactId>
+			<version>1.0.17</version>
+			<!--<scope>provided</scope>-->
+		</dependency>
+		<dependency>
+			<artifactId>xml-apis</artifactId>
+			<groupId>xml-apis</groupId>
+			<type>jar</type>
+			<version>1.3.04</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin> 
+				<groupId>org.apache.felix</groupId> 
+				<artifactId>maven-bundle-plugin</artifactId> 
+				<extensions>true</extensions> 
+				<configuration> 
+					<instructions> 
+						<!-- ignore servlet package dependencies -->
+						<Import-Package>!javax.servlet.*;!com.lowagie;*</Import-Package>
+						<Embed-Dependency>jcommon,jfreechart</Embed-Dependency>
+						<!-- 
+							state the packages to export, separated by ';' 
+							if these are not given, dependencies are NOT included 
+							by bnd
+						-->
+						<Export-Package>org.jfree.*;com.keypoint.*</Export-Package>
+						<!--
+							state the url of the license
+						-->
+						<Bundle-License>http://www.gnu.org/licenses/lgpl.html</Bundle-License>
+						<!--
+							short description of the bundle 
+						-->
+						<Bundle-Description>JFreeChart</Bundle-Description>
+					</instructions> 
+				</configuration> 
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>package</phase>
+						<goals>
+							<goal>bundle</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin> 
+		</plugins>
+	</build>
+</project>
+

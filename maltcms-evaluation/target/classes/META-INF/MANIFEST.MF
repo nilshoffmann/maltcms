@@ -1,0 +1,88 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1378662877001
+Build-Jdk: 1.7.0_25
+Built-By: Nils Hoffmann
+Bundle-Description: Maltcms, short for "Modular Application Toolkit for 
+ Chromatography Mass-Spectrometry" is an application framework mainly su
+ ited for developers working in the domain of bioinformatics for metabol
+ omics and proteomics. Its aim is to provide reusable, efficient datastr
+ uctures, abstracting from the various low-level data-formats like netcd
+ f (ANDIMS), mzXML, mzData and mzML and providing consistent access to d
+ ata features like mass spectra, chromatograms and metadata. Furthermore
+ , Maltcms provides a platform for the implementation and execution of p
+ rocessing pipelines. New and existing algorithms can be easily implemen
+ ted or included and executed together with existing processing elements
+ .
+Bundle-License: http://www.gnu.org/licenses/lgpl.html, http://www.eclips
+ e.org/org/documents/epl-v10.php
+Bundle-ManifestVersion: 2
+Bundle-Name: Maltcms Evaluation
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,JavaSE-1.6
+Bundle-SymbolicName: maltcms-evaluation
+Bundle-Version: 1.3.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: net.sf.maltcms.apps;uses:="groovy.lang,org.codehaus.groo
+ vy.reflection,org.codehaus.groovy.runtime,org.codehaus.groovy.runtime.c
+ allsite,org.codehaus.groovy.runtime.wrappers,org.codehaus.groovy.runtim
+ e.typehandling";version="1.3.0.SNAPSHOT",net.sf.maltcms.evaluation.api;
+ uses:="maltcms.datastructures.array,ucar.ma2";version="1.3.0.SNAPSHOT",
+ net.sf.maltcms.evaluation.api.alignment;uses:="maltcms.datastructures.a
+ rray,ucar.ma2,cross.datastructures.tools,net.sf.maltcms.evaluation.api"
+ ;version="1.3.0.SNAPSHOT",net.sf.maltcms.evaluation.api.classification;
+ uses:="maltcms.datastructures.array,ucar.ma2,net.sf.maltcms.evaluation.
+ spi.classification";version="1.3.0.SNAPSHOT",net.sf.maltcms.evaluation.
+ api.tasks;version="1.3.0.SNAPSHOT",net.sf.maltcms.evaluation.spi;uses:=
+ "cross.math,org.slf4j,cross.datastructures.combinations,org.apache.comm
+ ons.configuration,net.sf.maltcms.evaluation.spi.classification,cross.to
+ ols,net.sf.maltcms.evaluation.spi.hohenheim,net.sf.maltcms.evaluation.a
+ pi.classification,com.db4o,maltcms.io.csv,cross.datastructures.tuple,or
+ g.apache.commons.io.filefilter,maltcms.datastructures.array,org.apache.
+ commons.io,net.sf.maltcms.evaluation.spi.xcalibur";version="1.3.0.SNAPS
+ HOT",net.sf.maltcms.evaluation.spi.alignment;version="1.3.0.SNAPSHOT",n
+ et.sf.maltcms.evaluation.spi.caap;uses:="cross.datastructures.fragments
+ ,maltcms.io.xml.bindings.openms.featurexml,ucar.nc2,ucar.ma2,cross.tool
+ s,javax.xml.bind,org.apache.commons.configuration,cross";version="1.3.0
+ .SNAPSHOT",net.sf.maltcms.evaluation.spi.classification;uses:="net.sf.m
+ altcms.evaluation.api.classification,cross.datastructures.tuple,maltcms
+ .io.csv.chromatof,ucar.ma2,maltcms.datastructures.array,cross.tools,org
+ .apache.commons.math.stat.descriptive,net.sf.maltcms.evaluation.spi,org
+ .apache.commons.io,cross.exception";version="1.3.0.SNAPSHOT",net.sf.mal
+ tcms.evaluation.spi.hohenheim;uses:="com.db4o.query,net.sf.maltcms.eval
+ uation.spi.xcalibur,ucar.ma2,com.db4o.config,com.db4o.ext,cross.tools,c
+ om.db4o,maltcms.io.csv,jxl,cross.datastructures.tuple";version="1.3.0.S
+ NAPSHOT",net.sf.maltcms.evaluation.spi.tasks;uses:="net.sf.maltcms.eval
+ uation.spi.tasks.maltcms,com.db4o.config.annotations,net.sf.maltcms.eva
+ luation.api.tasks";version="1.3.0.SNAPSHOT",net.sf.maltcms.evaluation.s
+ pi.tasks.execution;uses:="net.sf.mpaxs.spi.concurrent,net.sf.mpaxs.api"
+ ;version="1.3.0.SNAPSHOT",net.sf.maltcms.evaluation.spi.tasks.maltcms;u
+ ses:="net.sf.maltcms.evaluation.api.tasks,org.jdom.input,org.jdom,org.j
+ dom.xpath";version="1.3.0.SNAPSHOT",net.sf.maltcms.evaluation.spi.xcali
+ bur;uses:="ucar.ma2,maltcms.datastructures.array,jxl.write,jxl,javax.sw
+ ing,jxl.read.biff,javax.swing.table,com.db4o";version="1.3.0.SNAPSHOT",
+ net.sf.maltcms.groovy;uses:="groovy.lang,org.codehaus.groovy.runtime.ty
+ pehandling,org.codehaus.groovy.reflection,org.codehaus.groovy.runtime,o
+ rg.codehaus.groovy.runtime.callsite";version="1.3.0.SNAPSHOT"
+Import-Package: com.db4o;version="[8.0,9)",com.db4o.config;version="[8.0
+ ,9)",com.db4o.config.annotations;version="[8.0,9)",com.db4o.ext;version
+ ="[8.0,9)",com.db4o.query;version="[8.0,9)",cross;version="[1.2,2)",cro
+ ss.datastructures.combinations;version="[1.2,2)",cross.datastructures.f
+ ragments;version="[1.2,2)",cross.datastructures.tools;version="[1.2,2)"
+ ,cross.datastructures.tuple;version="[1.2,2)",cross.exception;version="
+ [1.2,2)",cross.math;version="[1.2,2)",cross.tools;version="[1.2,2)",gro
+ ovy.lang;version="[1.8,2)",javax.swing,javax.swing.table,javax.xml.bind
+ ,jxl;version="[2.6,3)",jxl.read.biff;version="[2.6,3)",jxl.write;versio
+ n="[2.6,3)",maltcms.datastructures.array;version="[1.3,2)",maltcms.io.c
+ sv;version="[1.3,2)",maltcms.io.csv.chromatof;version="[1.3,2)",maltcms
+ .io.xml.bindings.openms.featurexml;version="[1.3,2)",net.sf.mpaxs.api;v
+ ersion="[1.6,2)",net.sf.mpaxs.spi.concurrent;version="[1.6,2)",org.apac
+ he.commons.configuration;version="[1.9,2)",org.apache.commons.io;versio
+ n="[1.4,2)",org.apache.commons.io.filefilter;version="[1.4,2)",org.apac
+ he.commons.math.stat.descriptive;version="[2.2,3)",org.codehaus.groovy.
+ reflection;version="[1.8,2)",org.codehaus.groovy.runtime;version="[1.8,
+ 2)",org.codehaus.groovy.runtime.callsite;version="[1.8,2)",org.codehaus
+ .groovy.runtime.typehandling;version="[1.8,2)",org.codehaus.groovy.runt
+ ime.wrappers;version="[1.8,2)",org.jdom;version="[1.1,2)",org.jdom.inpu
+ t;version="[1.1,2)",org.jdom.xpath;version="[1.1,2)",org.slf4j;version=
+ "[1.7,2)",ucar.ma2,ucar.nc2
+Originally-Created-By: Apache Maven Bundle Plugin
+Tool: Bnd-1.50.0

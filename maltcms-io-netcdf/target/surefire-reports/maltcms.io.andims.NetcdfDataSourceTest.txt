@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: maltcms.io.andims.NetcdfDataSourceTest
+-------------------------------------------------------------------------------
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.182 sec

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <echo message="Correcting file permissions in /opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-ap-distribution/target/maltcms-ap-1.3-SNAPSHOT-bin/maltcms-ap-1.3-SNAPSHOT"/>
+  <copy file="/opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-ap-distribution/target/maltcms-ap-1.3-SNAPSHOT-bin/maltcms-ap-1.3-SNAPSHOT/bin/maltcms.sh" toFile="/opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-ap-distribution/target/maltcms-ap-1.3-SNAPSHOT-bin/maltcms-ap-1.3-SNAPSHOT/bin/maltcms.command"/>
+  <copy file="/opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-ap-distribution/target/maltcms-ap-1.3-SNAPSHOT-bin/maltcms-ap-1.3-SNAPSHOT/bin/maltcms-ap.sh" toFile="/opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-ap-distribution/target/maltcms-ap-1.3-SNAPSHOT-bin/maltcms-ap-1.3-SNAPSHOT/bin/maltcms-ap.command"/>
+  <chmod dir="/opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-ap-distribution/target/maltcms-ap-1.3-SNAPSHOT-bin/maltcms-ap-1.3-SNAPSHOT/" includes="*.sh,*.command,*.bat,*.jar" perm="ugo+rx"/>
+  <chmod dir="/opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-ap-distribution/target/maltcms-ap-1.3-SNAPSHOT-bin/maltcms-ap-1.3-SNAPSHOT/bin" includes="*.sh,*.command,*.bat,*.jar" perm="ugo+rx"/>
+  <copy file="/opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-ap-distribution/target/maltcms.jar" toDir="/opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-ap-distribution/target/maltcms-ap-1.3-SNAPSHOT-bin/maltcms-ap-1.3-SNAPSHOT/"/>
+  <zip destfile="/opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-ap-distribution/target/maltcms-ap-1.3-SNAPSHOT-bin.zip">
+    <zipfileset filemode="755" dir="/opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-ap-distribution/target/maltcms-ap-1.3-SNAPSHOT-bin/maltcms-ap-1.3-SNAPSHOT/bin/" prefix="maltcms-ap-1.3-SNAPSHOT/bin">
+      <include name="*.sh"/>
+      <include name="*.command"/>
+    </zipfileset>
+    <zipfileset dir="/opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-ap-distribution/target/maltcms-ap-1.3-SNAPSHOT-bin/maltcms-ap-1.3-SNAPSHOT/" prefix="maltcms-ap-1.3-SNAPSHOT">
+      <include name="**"/>
+      <exclude name="bin/*.sh"/>
+      <exclude name="bin/*.command"/>
+    </zipfileset>
+  </zip>
+  <attachartifact file="/opt/projects/sf/maltcms-git/maven/maltcms/trunk/maltcms-ap-distribution/target/maltcms-ap-1.3-SNAPSHOT-bin.zip" type="zip"/>
+</target>
+</project>

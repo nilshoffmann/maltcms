@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content group="users" ident="users/support" nname="Support"
+         publish="yes" toRoot="../"
+         lastchanged="$Date$ by $Author$">
+    <column id="content">
+        <h1>Getting support</h1>
+        <h2>Mailing list</h2>
+        <p>
+            We generally recommend the use of the mailing list maltcms-user for
+            novice users of Maltcms, ChromA and ChromAUI. This is the place to
+            get in contact with the
+            developers
+            quickly and ask questions on just
+            about everything. You can subscribe to the mailing list
+            <a href="https://lists.sourceforge.net/lists/listinfo/maltcms-user"
+            >here
+            </a>
+            or post a message anonymously, which will then be published at the
+            list moderator's discretion. If you discover bugs and are not sure on
+            how to report them, we would also recommend to post your
+            findings on the list, so that we can create a bug tracker item for you.
+        </p>
+        <h2>Bug reporting</h2>
+        <p>
+            If you happen to stumble across bugs in Maltcms or any associated
+            application, we would appreciate your feedback.
+            We provide a publicly accessible
+            <a href="https://sourceforge.net/tracker/?group_id=251287&amp;atid=1126545">issue tracker</a>, which does not require
+            you to have an account at sourceforge. However, in order to be able to
+            contact you, we recommend to register an account with sourceforge, or
+            register on
+            the mailing list, where you can also submit a bug report directly. These
+            will then be transferred to our Trac instance issue tracking system.
+        </p>
+    </column>
+</content>

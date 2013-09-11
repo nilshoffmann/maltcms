@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Cross, common runtime object support system. 
+Copyright (C) 2008-2012, The authors of Cross. All rights reserved.
+
+Project website: http://maltcms.sf.net
+
+Cross may be used under the terms of either the
+
+GNU Lesser General Public License (LGPL)
+http://www.gnu.org/licenses/lgpl.html
+
+or the
+
+Eclipse Public License (EPL)
+http://www.eclipse.org/org/documents/epl-v10.php
+
+As a user/recipient of Cross, you may choose which license to receive the code 
+under. Certain files or entire directories may not be covered by this 
+dual license, but are subject to licenses compatible to both LGPL and EPL.
+License exceptions are explicitly declared in all relevant files or in a 
+LICENSE file in the relevant directories.
+
+Cross is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
+for details.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <description>
+        This file defines elements of the default workflow.
+    </description>
+    
+    <bean id="workflow" class="cross.datastructures.workflow.DefaultWorkflow" scope="singleton">
+        <property name="commandSequence" ref="commandPipeline"/>
+        <property name="name" value="workflow"/>
+        <property name="executeLocal" value="true"/>
+        <property name="workflowPostProcessors">
+            <list>
+                <!-- uncomment the following line to enable zipping of workflows -->
+                <!--<ref bean="zipPostProcessor" />-->
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="zipPostProcessor" class="cross.datastructures.workflow.ZipWorkflowPostProcessor" scope="singleton">
+        <property name="encodeBase64" value="false"/>
+        <!-- if set to true, fileName is used as the output zip archive's name -->
+        <!-- defaults to workflow output directory -->
+        <property name="useCustomName" value="false"/>
+        <property name="fileName" value="maltcmsResults.zip"/>
+        <property name="workflowZipper" ref="workflowZipper"/>
+        <!-- only set to true, if you also set flatten=true below -->
+        <property name="saveInOutputDirectory" value="false"/>
+    </bean>   
+    
+    <bean id="workflowZipper" class="cross.io.misc.WorkflowZipper" scope="singleton">
+        <!-- create a flat collection of result files -->
+        <!-- recommended setting is false, otherwise some files might be replaced accidentally -->
+        <property name="flatten" value="false"/>
+        <!-- delete output directory and child files on exit of vm -->
+        <property name="deleteOnExit" value="false"/>
+        <!-- replace matchAllFileFilter with configurableFileFilter if you want to select which files to include in zipped workflow -->
+        <property name="fileFilter" ref="matchAllFileFilter"/>
+        <!-- create a zip archive of the workflow -->
+        <property name="zipWorkflow" value="true"/>
+    </bean>
+    
+    <bean id="matchAllFileFilter" class="cross.io.misc.DefaultMatchAllFileFilter" scope="singleton"/>
+    
+    <bean id="configurableFileFilter" class="cross.io.misc.DefaultConfigurableFileFilter" scope="singleton">
+        <property name="fileTypesToKeep">
+            <list>
+                <value>png</value>
+                <value>jpg</value>
+                <value>jpeg</value>
+                <value>svg</value>
+                <value>txt</value>
+                <value>properties</value>
+                <value>csv</value>
+                <value>tsv</value>
+            </list>
+        </property>
+        <property name="prefixesToMatch">
+            <list>
+                <value>warped</value>
+            </list>
+        </property>
+        <property name="suffixesToMatch">
+            <list>
+                <value>ChromatogramWarp</value>
+                <value>PathWarp</value>
+            </list>
+        </property>
+    </bean>
+</beans>

@@ -1,0 +1,10 @@
+Extracting /cdf/1D/glucoseA.cdf.gz to directory: /tmp/junit2208633485775076984/CDF_1D
+glucoseA.cdf.gz
+Extracting /mzML/MzMLFile_PDA.mzML.xml.gz to directory: /tmp/junit2208633485775076984/MZML
+MzMLFile_PDA.mzML.xml.gz
+Extracting /mzXML/tiny1.mzXML3.0.mzXML.gz to directory: /tmp/junit2208633485775076984/MZXML
+tiny1.mzXML3.0.mzXML.gz
+Extracting /mzData/tiny1.mzData1.05.mzData.xml.gz to directory: /tmp/junit2208633485775076984/MZDATA
+tiny1.mzData1.05.mzData.xml.gz
+Extracting /mz5/small_raw.mz5.gz to directory: /tmp/junit2208633485775076984/MZ5
+small_raw.mz5.gz

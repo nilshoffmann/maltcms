@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>maltcms-modules</artifactId>
+		<groupId>net.sf.maltcms</groupId>
+		<version>1.3-SNAPSHOT</version>
+	</parent>
+	<artifactId>maltcms-nbm-cluster</artifactId>
+	<name>Maltcms Distribution NBM</name>
+	<url>http://maltcms.sourceforge.net</url>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>db4o-nbm</module>
+		<module>jai-nbm</module>
+		<module>jfreechart-nbm</module>
+		<module>maltcms-nbm</module>
+		<module>groovy-nbm</module>
+	</modules>
+  
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>nbm-maven-plugin</artifactId>
+					<extensions>true</extensions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<configuration>
+						<!-- to have the jar plugin pickup the nbm generated manifest -->
+						<useDefaultManifestFile>true</useDefaultManifestFile>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>nbm-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<executions>
+                    <execution>
+                        <id>extra</id>
+                        <goals>
+							<goal>cluster</goal>
+                            <goal>autoupdate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+				<configuration>
+					<outputDirectory>${nbm.updatecenter.outputDir}</outputDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+  
+	<!--	<build>
+		<plugins>      
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>nbm-maven-plugin</artifactId>
+				<version>3.9</version>
+				<extensions>true</extensions>
+				<configuration>
+					<useOSGiDependencies>false</useOSGiDependencies>
+					<author>Nils Hoffmann</author>
+					<cluster>maltcms</cluster>
+					<publicPackages>
+						<publicPackage>maltcms.*</publicPackage>
+						<publicPackage>net.sf.maltcms.*</publicPackage>
+						<publicPackage>net.sf.mpaxs.*</publicPackage>
+												<publicPackage>org.apache.*</publicPackage>
+						<publicPackage>groovy.*</publicPackage>
+						<publicPackage>org.codehaus.groovy.*</publicPackage>
+						<publicPackage>ucar.*</publicPackage>
+						<publicPackage>thredds.*</publicPackage>
+						<publicPackage>org.jfree.*</publicPackage>
+						<publicPackage>javax.media.*</publicPackage>
+						<publicPackage>javax.xml.bind.*</publicPackage>
+						<publicPackage>com.sun.media.jai.*</publicPackage>
+						<publicPackage>com.db4o.*</publicPackage>
+					</publicPackages>
+					<brandingToken>maltcms-nbm</brandingToken>
+					<defaultCluster>maltcms</defaultCluster>
+					<codeNameBase>net.sf.maltcms.nbm</codeNameBase>
+				</configuration>
+			</plugin>
+			<plugin>  required since nbm-plugin 3.0
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<useDefaultManifestFile>true</useDefaultManifestFile>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>-->
+	<properties>
+		<nbm.updatecenter.outputDir>${project.build.directory}</nbm.updatecenter.outputDir>
+	</properties>
+</project>

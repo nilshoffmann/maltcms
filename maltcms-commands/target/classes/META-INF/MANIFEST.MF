@@ -1,0 +1,74 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1378662806678
+Build-Jdk: 1.7.0_25
+Built-By: Nils Hoffmann
+Bundle-Description: Maltcms, short for "Modular Application Toolkit for 
+ Chromatography Mass-Spectrometry" is an application framework mainly su
+ ited for developers working in the domain of bioinformatics for metabol
+ omics and proteomics. Its aim is to provide reusable, efficient datastr
+ uctures, abstracting from the various low-level data-formats like netcd
+ f (ANDIMS), mzXML, mzData and mzML and providing consistent access to d
+ ata features like mass spectra, chromatograms and metadata. Furthermore
+ , Maltcms provides a platform for the implementation and execution of p
+ rocessing pipelines. New and existing algorithms can be easily implemen
+ ted or included and executed together with existing processing elements
+ .
+Bundle-License: http://www.gnu.org/licenses/lgpl.html, http://www.eclips
+ e.org/org/documents/epl-v10.php
+Bundle-ManifestVersion: 2
+Bundle-Name: Maltcms Commands
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,JavaSE-1.6
+Bundle-SymbolicName: maltcms-commands
+Bundle-Version: 1.3.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: maltcms.commands.distances;uses:="cross.exception,maltcm
+ s.datastructures.array,ucar.ma2,cross.tools,org.slf4j,cross.annotations
+ ,org.apache.commons.configuration,cross,cross.datastructures.fragments,
+ cross.datastructures.workflow,cross.commands,cross.datastructures";vers
+ ion="1.3.0.SNAPSHOT",maltcms.commands.distances.dtw;uses:="org.jfree.ch
+ art,cross.datastructures.fragments,cross.exception,ucar.ma2,org.jfree.d
+ ata.statistics,maltcms.tools,cross.annotations,javax.imageio,maltcms.da
+ tastructures.alignment,cross.datastructures.workflow,org.jdom,maltcms.d
+ atastructures.array,maltcms.datastructures.fragments,org.jfree.data.xy,
+ maltcms.commands.scanners,cross.datastructures.tools,cross.tools,org.sl
+ f4j,cross.datastructures,cross.datastructures.tuple,org.jfree.chart.plo
+ t,maltcms.commands.distances,cross,org.apache.commons.configuration";ve
+ rsion="1.3.0.SNAPSHOT",maltcms.commands.distances.dtwng;uses:="cross.da
+ tastructures.tuple,cross.datastructures.fragments,ucar.ma2,maltcms.tool
+ s,cross.datastructures.tools,javax.imageio,maltcms.datastructures.array
+ ,org.apache.commons.configuration,cross,maltcms.math.functions,maltcms.
+ commands.distances,maltcms.datastructures,cross.tools,cross.annotations
+ ,ucar.nc2";version="1.3.0.SNAPSHOT",maltcms.datastructures.fragments;us
+ es:="org.apache.commons.math.analysis.interpolation,cross.datastructure
+ s.fragments,org.apache.commons.math.analysis,ucar.ma2,maltcms.tools,org
+ .apache.commons.math,cross.annotations,maltcms.io.csv,ucar.nc2,maltcms.
+ datastructures.alignment,cross.datastructures.workflow,org.jdom,maltcms
+ .datastructures.array,cross.io,maltcms.datastructures.ms,cross.tools,cr
+ oss.datastructures.tools,org.slf4j,cross.datastructures.tuple,maltcms.c
+ ommands.distances,cross,org.apache.commons.configuration,cross.exceptio
+ n,maltcms.datastructures";version="1.3.0.SNAPSHOT",maltcms.math.functio
+ ns;uses:="ucar.ma2,maltcms.commands.distances,maltcms.math.functions.si
+ milarities,org.apache.commons.configuration";version="1.3.0.SNAPSHOT",m
+ altcms.math.functions.similarities;uses:="maltcms.math.functions,ucar.m
+ a2,maltcms.tools,org.apache.commons.math.stat.correlation";version="1.3
+ .0.SNAPSHOT"
+Import-Package: cross;version="[1.2,2)",cross.annotations;version="[1.2,
+ 2)",cross.commands;version="[1.2,2)",cross.datastructures;version="[1.2
+ ,2)",cross.datastructures.fragments;version="[1.2,2)",cross.datastructu
+ res.tools;version="[1.2,2)",cross.datastructures.tuple;version="[1.2,2)
+ ",cross.datastructures.workflow;version="[1.2,2)",cross.exception;versi
+ on="[1.2,2)",cross.io;version="[1.2,2)",cross.tools;version="[1.2,2)",j
+ avax.imageio,maltcms.commands.scanners;version="[1.3,2)",maltcms.datast
+ ructures;version="[1.3,2)",maltcms.datastructures.alignment;version="[1
+ .3,2)",maltcms.datastructures.array;version="[1.3,2)",maltcms.datastruc
+ tures.ms;version="[1.3,2)",maltcms.io.csv;version="[1.3,2)",maltcms.too
+ ls;version="[1.3,2)",org.apache.commons.configuration;version="[1.9,2)"
+ ,org.apache.commons.math;version="[2.2,3)",org.apache.commons.math.anal
+ ysis;version="[2.2,3)",org.apache.commons.math.analysis.interpolation;v
+ ersion="[2.2,3)",org.apache.commons.math.stat.correlation;version="[2.2
+ ,3)",org.jdom;version="[1.1,2)",org.jfree.chart;version="[1.0,2)",org.j
+ free.chart.plot;version="[1.0,2)",org.jfree.data.statistics;version="[1
+ .0,2)",org.jfree.data.xy;version="[1.0,2)",org.slf4j;version="[1.7,2)",
+ ucar.ma2,ucar.nc2
+Originally-Created-By: Apache Maven Bundle Plugin
+Tool: Bnd-1.50.0

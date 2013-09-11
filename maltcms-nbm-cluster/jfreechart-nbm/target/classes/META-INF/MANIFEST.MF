@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Localizing-Bundle: org/jfree/nbm/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.3
+OpenIDE-Module-Implementation-Version: 1.3-20130908
+OpenIDE-Module-Build-Version: 201309081755
+OpenIDE-Module: org.jfree.jfreechart.nbm
+OpenIDE-Module-Public-Packages: org.jfree.**
+OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
+OpenIDE-Module-Display-Category: org.jfree
+OpenIDE-Module-Name: Lib JFreeChart
+OpenIDE-Module-Short-Description: Maltcms, short for "Modular Applicat
+ ion Toolkit for Chromatography Mass-Spectrometry" is an application f
+ ramework mainly suited for developers working in the domain of bioinf
+ ormatics for metabolomics and proteomics.
+OpenIDE-Module-Long-Description: Maltcms, short for "Modular Applicati
+ on Toolkit for Chromatography Mass-Spectrometry" is an application fr
+ amework mainly suited for developers working in the domain of bioinfo
+ rmatics for metabolomics and proteomics. Its aim is to provide reusab
+ le, efficient datastructures, abstracting from the various low-level 
+ data-formats like netcdf (ANDIMS), mzXML, mzData and mzML and providi
+ ng consistent access to data features like mass spectra, chromatogram
+ s and metadata. Furthermore, Maltcms provides a platform for the impl
+ ementation and execution of processing pipelines. New and existing al
+ gorithms can be easily implemented or included and executed together 
+ with existing processing elements.
+X-Class-Path: ext/org.jfree/jfreechart-osgi-1.0.14.1.jar
+Maven-Class-Path: org.jfree:jfreechart-osgi:1.0.14.1
+

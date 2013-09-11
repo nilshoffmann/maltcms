@@ -4,12 +4,12 @@
 	<parent>
 		<artifactId>cross-nbm-cluster</artifactId>
 		<groupId>net.sf.maltcms</groupId>
-		<version>1.2.12-SNAPSHOT</version>
+		<version>1.2.13-SNAPSHOT</version>
 	</parent>
 
 	<groupId>ucar</groupId>
 	<artifactId>netcdf-nbm</artifactId>
-	<version>1.2.12-SNAPSHOT</version>
+	<version>1.2.13-SNAPSHOT</version>
 	<packaging>nbm</packaging>
 
 	<name>netcdf-nbm</name>

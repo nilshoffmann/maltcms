@@ -1,0 +1,25 @@
+File Origin and original authors:
+
+The .cdf.gz files contained within the cdf.1D folder were recorded and kindly provided by
+Tony Watt (Metabolomics and Proteomics Group) and Heiko Neuweger (Computational Genomics/Bioinformatics Resource Facility),
+Bielefeld University, Germany.
+The .txt files within the same folder were created by 
+Heiko Neuweger.
+
+The .cdf.gz files contained withing the cdf.2D folder 
+were recorded and kindly provided by Anja Doebbe (Algae Biotechnology Group) and Matthias Keck (Metabolomics and Proteomics Group),
+Bielefeld University, Germany.
+
+The files within the mzData, mzXML and mzML folders 
+were downloaded from the psidev specification website at http://www.psidev.info/mzml.
+
+The files
+R1_RG59_B4_1.mzXML.gz
+and 
+jmzreader-mzdata_example.mzdata.xml.gz
+
+were downloaded from the jmzreader project and converted using ProteoWizard's
+msconvert function to create a subset of the original files with fewer mass spectra.
+
+Some files have been renamed to conform with Maltcms IO-Provider policy, that xml-based formats 
+should indicate their filetype within the file name. E.g. for file.mzData or file.mzData.xml.

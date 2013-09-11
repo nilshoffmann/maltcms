@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="org.groovy.groovy.nbm">
+    <module_version install_time="1378662925072" last="true" origin="installer" specification_version="1.3">
+        <file crc="682214749" name="config/Modules/org-groovy-groovy-nbm.xml"/>
+        <file crc="2989975027" name="modules/ext/org.codehaus.groovy/groovy-all-1.8.9.jar"/>
+        <file crc="1825557377" name="modules/org-groovy-groovy-nbm.jar"/>
+        <file crc="3707211164" name="update_tracking/org-groovy-groovy-nbm.xml"/>
+    </module_version>
+</module>

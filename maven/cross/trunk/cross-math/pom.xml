@@ -4,11 +4,11 @@
     <parent>
         <artifactId>cross</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.2.12-SNAPSHOT</version>
+        <version>1.2.13-SNAPSHOT</version>
     </parent>
     <groupId>net.sf.maltcms</groupId>
     <artifactId>cross-math</artifactId>
-    <version>1.2.12-SNAPSHOT</version>
+    <version>1.2.13-SNAPSHOT</version>
     <name>Cross Math</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

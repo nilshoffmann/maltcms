@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content group="news" ident="news/latestBuilds" nname="Latest Builds" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
+    <column id="content">
+        <h1>Latest stable builds of Maltcms and Maui are now available</h1>
+		<p>The latest stable builds of Maltcms and Maui are available from our continuous integration system.</p>
+		<message class="info" title="Information">We recommend these distributions only to experienced users or developers.</message>
+		<ul>
+        <li>Maltcms stable builds, passing all unit and integration tests are available <a href="http://maltcms.de/maltcms/latest/maltcms-distribution-latest.zip">here</a>.</li>
+		<li>Maui stable builds, passing all unit and integration tests are available <a href="http://maltcms.de/maui/latest/maui-latest.zip">here</a>.</li>
+		</ul>
+    </column>
+</content>

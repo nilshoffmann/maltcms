@@ -1,0 +1,50 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1378662838909
+Build-Jdk: 1.7.0_25
+Built-By: Nils Hoffmann
+Bundle-Description: Maltcms, short for "Modular Application Toolkit for 
+ Chromatography Mass-Spectrometry" is an application framework mainly su
+ ited for developers working in the domain of bioinformatics for metabol
+ omics and proteomics. Its aim is to provide reusable, efficient datastr
+ uctures, abstracting from the various low-level data-formats like netcd
+ f (ANDIMS), mzXML, mzData and mzML and providing consistent access to d
+ ata features like mass spectra, chromatograms and metadata. Furthermore
+ , Maltcms provides a platform for the implementation and execution of p
+ rocessing pipelines. New and existing algorithms can be easily implemen
+ ted or included and executed together with existing processing elements
+ .
+Bundle-License: http://www.gnu.org/licenses/lgpl.html, http://www.eclips
+ e.org/org/documents/epl-v10.php
+Bundle-ManifestVersion: 2
+Bundle-Name: Maltcms IO Provider MZML
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,JavaSE-1.6
+Bundle-SymbolicName: maltcms-io-mzml
+Bundle-Version: 1.3.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: maltcms.commands.fragments.io;uses:="cross.datastructure
+ s.tuple,cross.datastructures.fragments,net.sf.mpaxs.api,cross.datastruc
+ tures.workflow,cross.commands.fragments,org.slf4j,cross.annotations,uca
+ r.ma2,cross.exception,cross.datastructures.tools,uk.ac.ebi.jmzml.model.
+ mzml,ucar.nc2,uk.ac.ebi.jmzml.xml.io,cross.tools";version="1.3.0.SNAPSH
+ OT",maltcms.commands.fragments.io.mzml;uses:="cross.cache,cross.datastr
+ uctures.collections,uk.ac.ebi.jmzml.model.mzml";version="1.3.0.SNAPSHOT
+ ",maltcms.io.xml.mzML;uses:="cross.exception,cross.datastructures.fragm
+ ents,maltcms.io.andims,ucar.ma2,cross.tools,cross.datastructures.tools,
+ cross.datastructures.cache,org.slf4j,cross.annotations,ucar.nc2,cross.c
+ ache,cross.datastructures.tuple,org.apache.commons.configuration.event,
+ uk.ac.ebi.jmzml.xml.io,cross.io,uk.ac.ebi.jmzml.model.mzml,cross,org.ap
+ ache.commons.configuration";version="1.3.0.SNAPSHOT"
+Import-Package: cross;version="[1.2,2)",cross.annotations;version="[1.2,
+ 2)",cross.cache;version="[1.2,2)",cross.commands.fragments;version="[1.
+ 2,2)",cross.datastructures.cache;version="[1.2,2)",cross.datastructures
+ .collections;version="[1.2,2)",cross.datastructures.fragments;version="
+ [1.2,2)",cross.datastructures.tools;version="[1.2,2)",cross.datastructu
+ res.tuple;version="[1.2,2)",cross.datastructures.workflow;version="[1.2
+ ,2)",cross.exception;version="[1.2,2)",cross.io;version="[1.2,2)",cross
+ .tools;version="[1.2,2)",maltcms.io.andims;version="[1.3,2)",net.sf.mpa
+ xs.api;version="[1.6,2)",org.apache.commons.configuration;version="[1.9
+ ,2)",org.apache.commons.configuration.event;version="[1.9,2)",org.slf4j
+ ;version="[1.7,2)",ucar.ma2,ucar.nc2,uk.ac.ebi.jmzml.model.mzml,uk.ac.e
+ bi.jmzml.xml.io
+Originally-Created-By: Apache Maven Bundle Plugin
+Tool: Bnd-1.50.0

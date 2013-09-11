@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="javax.jai.jai.nbm">
+    <module_version install_time="1378662921239" last="true" origin="installer" specification_version="1.3">
+        <file crc="1763704676" name="config/Modules/javax-jai-jai-nbm.xml"/>
+        <file crc="240595349" name="modules/ext/javax.media.jai/com.springsource.javax.media.jai.codec-1.1.3.jar"/>
+        <file crc="3174268964" name="modules/ext/javax.media.jai/com.springsource.javax.media.jai.core-1.1.3.jar"/>
+        <file crc="2039715386" name="modules/javax-jai-jai-nbm.jar"/>
+        <file crc="3141987921" name="update_tracking/javax-jai-jai-nbm.xml"/>
+    </module_version>
+</module>
