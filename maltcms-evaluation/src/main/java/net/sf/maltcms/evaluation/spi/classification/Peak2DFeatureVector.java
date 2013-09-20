@@ -52,7 +52,7 @@ public class Peak2DFeatureVector implements IRowIndexNamedPeakFeatureVector {
 	private final double rt1, rt2, area;
 	private final int rowIndex;
 	private final String name;
-	private final UUID uniqueId = UUID.randomUUID();
+	private final UUID uniqueId;
 
 	public enum FEATURE {
 
@@ -65,6 +65,7 @@ public class Peak2DFeatureVector implements IRowIndexNamedPeakFeatureVector {
 		this.rt2 = rt2;
 		this.rowIndex = rowIndex;
 		this.area = area;
+		this.uniqueId = UUID.nameUUIDFromBytes((name+"-"+rowIndex+"-"+rt1+"-"+rt2+"-"+area).getBytes());
 	}
 
 	/* (non-Javadoc)

@@ -37,7 +37,7 @@ import java.util.UUID;
  */
 public final class PeakEdge implements Serializable {
 	
-	final UUID sourcePeakId, targetPeakId;//, edgeId;
+	final UUID sourcePeakId, targetPeakId;
 	final double similarity;
 	
 	public PeakEdge(IPeak sourcePeak, IPeak targetPeak, double similarity) {
@@ -84,4 +84,5 @@ public final class PeakEdge implements Serializable {
 	public double getSimilarity() {
 		return similarity;
 	}
+
 }

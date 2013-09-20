@@ -27,7 +27,6 @@
  */
 package maltcms.datastructures.peak;
 
-import cross.datastructures.cache.SerializableArray;
 import cross.exception.NotImplementedException;
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +36,6 @@ import java.util.List;
 import ucar.ma2.Array;
 import cross.exception.ResourceNotAvailableException;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -61,15 +59,15 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 	private static final long serialVersionUID = -4337180586706400884L;
 	private final int scanIndex;
 	private final double sat;
-	private static NonBlockingHashMapLong<PeakEdge> bestHits = new NonBlockingHashMapLong<PeakEdge>();
-	private static NonBlockingHashMap<String, Integer> keyMap = new NonBlockingHashMap<String, Integer>();
 	private String name = "";
 	private final String peakKey;
 	private int peakIndex = -1;
 	private final String association;
 	private final boolean storeOnlyBestSimilarities;
-	private SerializableArray msIntensities;
+	private Array msIntensities;
 	private final int peakId;
+	private static NonBlockingHashMapLong<PeakEdge> bestHits = new NonBlockingHashMapLong<PeakEdge>(true);
+	private static final NonBlockingHashMap<String, Integer> keyMap = new NonBlockingHashMap<String, Integer>();
 	private static int peakIDs = 0;
 	private static int partitionIDs = 0;
 
@@ -78,24 +76,23 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 		this.scanIndex = scanIndex;
 		this.association = association.intern();
 		this.peakKey = (this.association + "-" + this.scanIndex);
-		this.msIntensities = new SerializableArray(array.copy());
+		this.msIntensities = array.copy();
 		this.sat = sat;
 		this.storeOnlyBestSimilarities = storeOnlyBestSimilarities;
 		this.peakId = peakIDs++;
-//		System.out.println("Peak ID: "+peakId);
 	}
 
 	@Override
 	public Array getMsIntensities() {
-		return msIntensities.getArray();
+		return msIntensities;
 	}
-	
+
 	@Override
 	public void setMsIntensities(Array a) {
-		if(a == null) {
-			this.msIntensities = new SerializableArray(a);
-		}else{
-			this.msIntensities = null;
+		if (a == null) {
+			msIntensities = null;
+		} else {
+			msIntensities = a.copy();
 		}
 	}
 
@@ -166,10 +163,9 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 //		keyMap.remove(association);
 	}
 
-	private Map<Long, PeakEdge> getBestHits() {
-		return bestHits;
-	}
-
+//	private Map<Long, PeakEdge> getBestHits() {
+//		return bestHits;
+//	}
 	/**
 	 * Only call this method, after having added all similarities!
 	 *

@@ -49,7 +49,7 @@ public class PeakRTFeatureVector implements INamedPeakFeatureVector {
 	private static final long serialVersionUID = -5936343655074144856L;
 	private final ArrayDouble.D0 rt, area;
 	private final String name;
-	private final UUID uniqueId = UUID.randomUUID();
+	private final UUID uniqueId;
 
 	public PeakRTFeatureVector(double rt, double area) {
 		this(null, rt, area);
@@ -61,6 +61,7 @@ public class PeakRTFeatureVector implements INamedPeakFeatureVector {
 		this.rt.set(rt);
 		this.area = new ArrayDouble.D0();
 		this.area.set(area);
+		this.uniqueId = UUID.nameUUIDFromBytes((name+"-"+rt+"-"+area).getBytes());
 	}
 
 	/* (non-Javadoc)
