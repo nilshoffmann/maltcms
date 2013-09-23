@@ -27,25 +27,24 @@
  */
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
-import cross.datastructures.tuple.Tuple2D;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import maltcms.datastructures.peak.IBipacePeak;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class BBHPeakEdgeList extends ArrayList<Tuple2D<IBipacePeak,IBipacePeak>>{
+public class UnmatchedPeaksSet extends LinkedHashSet<IBipacePeak>{
 
-	public BBHPeakEdgeList(int initialCapacity) {
+	public UnmatchedPeaksSet(int initialCapacity) {
 		super(initialCapacity);
 	}
 
-	public BBHPeakEdgeList() {
+	public UnmatchedPeaksSet() {
 	}
 
-	public BBHPeakEdgeList(Collection<? extends Tuple2D<IBipacePeak,IBipacePeak>> c) {
+	public UnmatchedPeaksSet(Collection<? extends IBipacePeak> c) {
 		super(c);
 	}
 	

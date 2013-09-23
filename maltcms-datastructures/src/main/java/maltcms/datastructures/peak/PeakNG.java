@@ -129,7 +129,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 		}
 	}
 
-	private long keyTo(IPeak p) {
+	private long keyTo(IBipacePeak p) {
 		return keyTo(p.getAssociation());
 	}
 

@@ -79,6 +79,8 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.Tuple2D;
+import cross.exception.ConstraintViolationException;
+import cross.math.SetOperations;
 import cross.tools.StringTools;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -95,12 +97,12 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHPeakEdgeList;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHPeakEdgeSet;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.CliqueTable;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.IWorkerFactory;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakComparator;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakSimilarityVisualizer;
-import maltcms.commands.fragments.alignment.peakCliqueAlignment.UnmatchedPeaksList;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.UnmatchedPeaksSet;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.WorkerFactory;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.IPeakFactory;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.IPeakFactoryImpl;
@@ -204,6 +206,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 	private double rtNormalizationFactor = 1 / 60.0d;
 	@Configurable
 	private String rtOutputFormat = "0.000";
+	@Deprecated
 	@Configurable
 	private boolean postProcessCliques = false;
 	/*
@@ -513,10 +516,9 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 	/**
 	 * @param al the list of FileFragments
 	 * @param fragmentToPeaks the map of FileFragment names to IPeak lists
-	 * @param n the number of peaks TODO: Paralellize like in
-	 * PairwiseDistanceCalculator
+	 * @param n the number of peaks
 	 */
-	private UnmatchedPeaksList calculatePeakSimilarities(final TupleND<IFileFragment> al,
+	private UnmatchedPeaksSet calculatePeakSimilarities(final TupleND<IFileFragment> al,
 			final Map<String, List<IBipacePeak>> fragmentToPeaks, final int n) {
 		log.info(
 				"Calculating {} pairwise peak similarities for {} peaks!",
@@ -524,25 +526,22 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 //        log.info("Using {} as pairwise peak similarity!",
 //                this.similarityFunction.getClass().getName());
 		// Loop over all pairs of FileFragments
-		ICompletionService<BBHPeakEdgeList> ics = createCompletionService(BBHPeakEdgeList.class);
-		List<Callable<BBHPeakEdgeList>> workers = workerFactory.create(al, fragmentToPeaks);
+		ICompletionService<BBHPeakEdgeSet> ics = createCompletionService(BBHPeakEdgeSet.class);
+		List<Callable<BBHPeakEdgeSet>> workers = workerFactory.create(al, fragmentToPeaks);
 		log.info("Running {} pairwise similarity tasks!", workers.size());
-		for (Callable<BBHPeakEdgeList> worker : workers) {
+		for (Callable<BBHPeakEdgeSet> worker : workers) {
 			ics.submit(worker);
 		}
-		final Map<UUID,IBipacePeak> unmatchedPeaks = new LinkedHashMap<UUID,IBipacePeak>();
+		final Set<IBipacePeak> unmatchedPeaks = new LinkedHashSet<IBipacePeak>();
 		try {
-			List<BBHPeakEdgeList> bbhPeaksList = ics.call();
 			for (IFileFragment f : al) {
-				for(IBipacePeak peak:fragmentToPeaks.get(f.getName())) {
-					unmatchedPeaks.put(peak.getUniqueId(),peak);
-					peak.setMsIntensities(null);
-				}
+				unmatchedPeaks.addAll(fragmentToPeaks.get(f.getName()));
 			}
-			for (BBHPeakEdgeList upl : bbhPeaksList) {
+			List<BBHPeakEdgeSet> bbhPeaksList = ics.call();
+			for (BBHPeakEdgeSet upl : bbhPeaksList) {
 				for (Tuple2D<IBipacePeak, IBipacePeak> t : upl) {
-					unmatchedPeaks.remove(t.getFirst().getUniqueId());
-					unmatchedPeaks.remove(t.getSecond().getUniqueId());
+					unmatchedPeaks.remove(t.getFirst());
+					unmatchedPeaks.remove(t.getSecond());
 				}
 			}
 		} catch (Exception ex) {
@@ -556,7 +555,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 			psv.visualizePeakSimilarities(
 					fragmentToPeaks, 256, "beforeBIDI");
 		}
-		return new UnmatchedPeaksList(unmatchedPeaks.values());
+		return new UnmatchedPeaksSet(unmatchedPeaks);
 	}
 
 	/**
@@ -572,7 +571,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 		final HashMap<String, List<IBipacePeak>> definedAnchors = new HashMap<String, List<IBipacePeak>>();
 		for (final IFileFragment t : al) {
 			List<IBipacePeak> anchors = checkUserSuppliedAnchors(t);
-			log.info("Using {} user-supplied anchors for file {}!",anchors.size(),t.getName());
+			log.info("Using {} user-supplied anchors for file {}!", anchors.size(), t.getName());
 			definedAnchors.put(t.getName(), anchors);
 		}
 		return definedAnchors;
@@ -620,6 +619,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
 	@Data
 	private class BBHResult {
+
 		private final List<Clique<IBipacePeak>> cliques;
 		private final Set<IBipacePeak> incompatiblePeaks;
 		private final Set<IBipacePeak> unassignedPeaks;
@@ -632,10 +632,11 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 	 * @param fragmentToPeaks
 	 * @param minCliqueSize
 	 * @param npeaks
+	 * @param unmatchedPeaks
 	 * @return a BBHResult
 	 */
 	private BBHResult combineBiDiBestHits(final TupleND<IFileFragment> al, final Map<String, IFileFragment> nameToFragment,
-			final Map<String, List<IBipacePeak>> fragmentToPeaks, final int minCliqueSize, int npeaks) {
+			final Map<String, List<IBipacePeak>> fragmentToPeaks, final int minCliqueSize, int npeaks, final Set<IBipacePeak> unmatchedPeaks) {
 
 		// given: a hashmap of name<->peak list
 		// an empty list of peaks belonging to a clique
@@ -756,36 +757,32 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 			}
 		}
 
-//        if (incompatiblePeaks.size() > 0) {
 		log.info("Found {}/{} incompatible peaks.",
 				incompatiblePeaks.size(), npeaks);
-//        }
-//        if (unassignedPeaks.size() > 0) {
 		log.info("Found {}/{} unassigned peaks.", unassignedPeaks.size(), npeaks);
-//        }
 
 		if (saveIncompatiblePeaks) {
 			savePeakList(nameToFragment, incompatiblePeaks, "incompatiblePeaks.msp", "INCOMPATIBLE");
 		}
-		
+
 		for (IBipacePeak p : incompatiblePeaks) {
 			log.debug("Incompatible peak: " + p);
-			for(String partition:nameToFragment.keySet()) {
+			for (String partition : nameToFragment.keySet()) {
 				p.clearSimilarities(partition);
 				p.setMsIntensities(null);
 			}
-        }
+		}
 
 		if (saveUnassignedPeaks) {
 			savePeakList(nameToFragment, unassignedPeaks, "unassignedPeaks.msp", "UNASSIGNED");
 		}
-		
+
 		for (IBipacePeak p : unassignedPeaks) {
-            for(String partition:nameToFragment.keySet()) {
+			for (String partition : nameToFragment.keySet()) {
 				p.clearSimilarities(partition);
 				p.setMsIntensities(null);
 			}
-        }
+		}
 
 		// retain all cliques, which exceed minimum size
 		HashSet<Clique<IBipacePeak>> cliques = new HashSet<Clique<IBipacePeak>>();
@@ -996,7 +993,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 		final Map<String, List<IBipacePeak>> fragmentToPeaks = new ConcurrentHashMap<String, List<IBipacePeak>>();
 		final Map<String, Integer> columnMap = new ConcurrentHashMap<String, Integer>(
 				originalFragments.size());
-
 		final ArrayList<IFileFragment> al2 = new ArrayList<IFileFragment>();
 		for (final IFileFragment iff : originalFragments) {
 			final IFileFragment iff2 = new FileFragment(new File(getWorkflow().
@@ -1016,9 +1012,9 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 		}
 		log.info("Searching for bidirectional best hits");
 		final long startT = System.currentTimeMillis();
-		final List<IBipacePeak> unmatchedPeaks = calculatePeakSimilarities(t, fragmentToPeaks, n);
+		final Set<IBipacePeak> unmatchedPeaks = calculatePeakSimilarities(t, fragmentToPeaks, n);
 		log.info("Found {}/{} unmatched peaks!", unmatchedPeaks.size(), n);
-		log.info("Continuing with {} matched peaks!", (n-unmatchedPeaks.size()));
+		log.info("Continuing with {} matched peaks!", (n - unmatchedPeaks.size()));
 		if (saveUnmatchedPeaks) {
 			savePeakList(nameToFragment, unmatchedPeaks, "unmatchedPeaks.msp", "UNMATCHED");
 		}
@@ -1031,7 +1027,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 		BBHResult result;
 		if (this.minCliqueSize == -1 || this.minCliqueSize == t.size()) {
 			log.info("Combining bidirectional best hits if present in all files");
-			result = combineBiDiBestHits(t, nameToFragment, fragmentToPeaks, t.size(), n - unmatchedPeaks.size());
+			result = combineBiDiBestHits(t, nameToFragment, fragmentToPeaks, t.size(), n - unmatchedPeaks.size(), new HashSet<IBipacePeak>(unmatchedPeaks));
 		} else {
 			if (this.minCliqueSize > t.size()) {
 				log.info("Resetting minimum group size to: {}, was: {}",
@@ -1041,79 +1037,18 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 			log.info("Combining bidirectional best hits, minimum group size: {}",
 					this.minCliqueSize);
 			result = combineBiDiBestHits(t, nameToFragment, fragmentToPeaks,
-					this.minCliqueSize, n - unmatchedPeaks.size());
+					this.minCliqueSize, n - unmatchedPeaks.size(), new HashSet<IBipacePeak>(unmatchedPeaks));
 		}
 		// add all remaining cliques to ll
 		log.info("Minimum clique size: {}", minCliqueSize);
 		final List<Clique<IBipacePeak>> cliques = result.getCliques();
-		int peakNumberCorrection = 0;
-		int unmatchedAdded = 0, incompatibleAdded = 0, unassignedAdded = 0;
-		//reinspect
-		if (postProcessCliques) {
-			log.error("Post processing cliques and unmatched peaks");
-//			SparseDoubleMatrix2D sdm = new SparseDoubleMatrix2D(cliques.size(), result.getIncompatiblePeaks().size() + result.getUnassignedPeaks().size() + unmatchedPeaks.size());
-			//identify all peaks that are not contained in the final cliques
-//			int clique = 0;
-			for (Clique<IBipacePeak> c : cliques) {
-				if (!c.getPeakList().isEmpty()) {
-					log.debug("Checking clique at {} with size {} and rtvariance {}", new Object[]{c.getCliqueRTMean(), c.getPeakList().size(), c.getCliqueRTVariance()});
-					//log.info("RT variance within clique {} containing {} peaks ={}; Stdev: {}", new Object[]{c.getCliqueRTMean(), c.getPeakList().size(), c.getCliqueRTVariance(), Math.sqrt(c.getCliqueRTVariance())});
-					int peak = 0;
-					for (IBipacePeak q : result.getIncompatiblePeaks()) {
-//						
-//						double ratio = c.getRatioOfRTDistanceToCentroidAndCliqueVariance(q);
-////						double distToCentroid = c.getRTDistanceToCentroid(q);
-////						log.info("Distance to centroid of clique: {}", distToCentroid);
-////						log.info("Similarity to centroid of clique: {}", q.getSimilarity(p));
-////						sdm.set(clique, peak, distToCentroid);
-//						if (ratio <= 1) {
-						if (c.addPeak(q)) {
-							log.debug("Adding formerly incompatible peak {} to clique", q);
-							peakNumberCorrection++;
-							incompatibleAdded++;
-						}
-//						}
-						peak++;
-					}
-					for (IBipacePeak q : result.getUnassignedPeaks()) {
-						double ratio = c.getRatioOfRTDistanceToCentroidAndCliqueVariance(q);
-//						double distToCentroid = c.getRTDistanceToCentroid(q);
-//						sdm.set(clique, peak, distToCentroid);
-//						log.info("Distance to centroid of clique: {}", distToCentroid);
-//						log.info("Similarity to centroid of clique: {}", q.getSimilarity(p));
-//						if (ratio <= 1) {
-						if (c.addPeak(q)) {
-							log.debug("Adding formerly unassigned peak {} to clique", q);
-							peakNumberCorrection++;
-							unassignedAdded++;
-						}
-//						}
-						peak++;
-					}
-					for (IBipacePeak q : unmatchedPeaks) {
-						double ratio = c.getRatioOfRTDistanceToCentroidAndCliqueVariance(q);
-//						double distToCentroid = c.getRTDistanceToCentroid(q);
-//						sdm.set(clique, peak, distToCentroid);
-//						log.info("Distance to centroid of clique: {}", distToCentroid);
-//						log.info("Similarity to centroid of clique: {}", q.getSimilarity(p));
-//						if (ratio <= 1) {
-						if (c.addPeak(q)) {
-							log.debug("Adding formerly unmatched peak {} to clique", q);
-							peakNumberCorrection++;
-							unmatchedAdded++;
-						}
-//						}
-						peak++;
-					}
-				} else {
-					log.debug("Skipping empty clique at {}", c.getCliqueRTMean());
-				}
-			}
-			log.error("Post processing assigned {} incompatible, {} unassigned, and {} unmatched peaks to cliques!", new Object[]{incompatibleAdded, unassignedAdded, unmatchedAdded});
-		}
 		ListIterator<Clique<IBipacePeak>> li = cliques.listIterator();
+		Set<IBipacePeak> peakCliqueSet = new HashSet<IBipacePeak>();
+		int peaksInCliques = 0;
 		while (li.hasNext()) {
 			Clique<IBipacePeak> c = li.next();
+			peaksInCliques += c.getPeakList().size();
+			peakCliqueSet.addAll(c.getPeakList());
 			try {
 				log.debug("Clique {}", c);
 			} catch (NullPointerException npe) {
@@ -1124,16 +1059,15 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 			} else {
 				li.remove();
 			}
-			for(IBipacePeak peak:c.getPeakList()) {
+			for (IBipacePeak peak : c.getPeakList()) {
 				peak.setMsIntensities(null);
 			}
 		}
 
 		removePeakSimilaritiesWhichHaveNoBestHits(t, fragmentToPeaks);
-		log.info("Found {} cliques in {} milliseconds", cliques.size(),
+		log.info("Found {} cliques covering {} peaks of {} total peaks in {} milliseconds", cliques.size(), peaksInCliques, n,
 				System.currentTimeMillis() - startT2);
-		float matchedPeaks = n - (unmatchedPeaks.size() + result.incompatiblePeaks.size() + result.unassignedPeaks.size() - peakNumberCorrection);
-		log.info("Percentage of peaks covered in cliques: {}%", 100.0f * (matchedPeaks / (float) n));
+		log.info("Percentage of peaks covered in cliques: {}%", 100.0f * (peaksInCliques / (float) n));
 		if (this.savePeakSimilarities) {
 			PeakSimilarityVisualizer psv = new PeakSimilarityVisualizer();
 			psv.setWorkflow(getWorkflow());
@@ -1608,13 +1542,13 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 				for (int j = 0; j < shape; j++) {
 					double intensVal = intensities.getDouble(j);
 					double massVal = masses.getDouble(j);
-					if(intensities.getDouble(j) > 0) {
-						intensList.add((int)intensVal);
+					if (intensities.getDouble(j) > 0) {
+						intensList.add((int) intensVal);
 						mzList.add(massVal);
 					}
 				}
-				ArrayInt.D1 intens = (ArrayInt.D1)Array.factory(intensList.toArray());
-				ArrayDouble.D1 massArray = (ArrayDouble.D1)Array.factory(mzList.toArray());
+				ArrayInt.D1 intens = (ArrayInt.D1) Array.factory(intensList.toArray());
+				ArrayDouble.D1 massArray = (ArrayDouble.D1) Array.factory(mzList.toArray());
 				String name = p.getAssociation() + "-IDX_" + p.getScanIndex() + "-RT_" + p.getScanAcquisitionTime();
 				IMetabolite im = new Metabolite(p.getName().isEmpty() ? name : p.getName(), p.getAssociation() + "-IDX_" + p.getScanIndex() + "-RT_" + p.getScanAcquisitionTime(), getClass().getSimpleName() + "-" + type, i++, "", "", "", Double.NaN, p.getScanAcquisitionTime(), "sec", -1, "", p.getName(), massArray, intens);
 				bw.write(im.toString());

@@ -121,11 +121,14 @@ for details.
     </bean>
     
     <!-- array similarity functions -->
+	<bean id="dotSimilarity" class="maltcms.math.functions.similarities.ArrayDot" scope="prototype"/>
     <bean id="cosineSimilarity" class="maltcms.math.functions.similarities.ArrayCos" scope="prototype"/>
-    <bean id="lpSimilarity" class="maltcms.math.functions.similarities.ArrayLp" scope="prototype"/>
+    <bean id="linCorrSimilarity" class="maltcms.math.functions.similarities.ArrayCorr" scope="prototype"/>
+    <bean id="rankCorrSimilarity" class="maltcms.math.functions.similarities.ArrayRankCorr" scope="prototype"/>
+    <bean id="weightedCosineSimilarity" class="maltcms.math.functions.similarities.ArrayWeightedCosine" scope="prototype"/>
     
     <!-- time penalized functions -->
-    <bean id="timePenalizedDotProduct" class="maltcms.math.functions.ProductSimilarity" scope="prototype">
+    <bean id="timePenalizedProductSimilarity" class="maltcms.math.functions.ProductSimilarity" scope="prototype">
         <property name="scalarSimilarities">
             <array>
                 <ref bean="gaussianDifferenceSimilarity"/>
@@ -133,14 +136,14 @@ for details.
         </property>
         <property name="arraySimilarities">
             <array>
-                <ref bean="cosineSimilarity"/>
+                <ref bean="weightedCosineSimilarity"/>
             </array>
         </property>
     </bean>
     
     <bean id="worker1DFactory" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.WorkerFactory" scope="prototype">
         <property name="maxRTDifference" value="60.0d"/>
-        <property name="similarityFunction" ref="timePenalizedDotProduct"/>
+        <property name="similarityFunction" ref="timePenalizedProductSimilarity"/>
         <property name="assumeSymmetricSimilarity" value="true"/>
     </bean>
 
@@ -152,9 +155,7 @@ for details.
     <bean id="peakCliqueAlignment" class="maltcms.commands.fragments.alignment.PeakCliqueAlignment">
         <property name="workerFactory" ref="worker1DFactory"/>
         <property name="use2DRetentionTimes" value="false"/>
-        <property name="useSparseArrays" value="false"/>
         <property name="minCliqueSize" value="2"/>
-        <property name="maxBBHErrors" value="0"/>
         <property name="savePeakSimilarities" value="false"/>
         <property name="useUserSuppliedAnchors" value="false"/>
         <property name="saveXMLAlignment" value="true"/>

@@ -29,14 +29,11 @@ package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import cross.datastructures.tuple.Tuple2D;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.peak.IBipacePeak;
-import maltcms.datastructures.peak.IPeak;
 
 /**
  *
@@ -45,14 +42,14 @@ import maltcms.datastructures.peak.IPeak;
 @Slf4j
 public class BBHFinder {
 
-	public BBHPeakEdgeList findBiDiBestHits(List<? extends IBipacePeak> a, List<? extends IBipacePeak> b) {
-		final Set<Tuple2D<IBipacePeak, IBipacePeak>> matchedPeaks = new LinkedHashSet<Tuple2D<IBipacePeak, IBipacePeak>>();
+	public BBHPeakEdgeSet findBiDiBestHits(List<? extends IBipacePeak> a, List<? extends IBipacePeak> b) {
+		final BBHPeakEdgeSet matchedPeaks = new BBHPeakEdgeSet();
 		String laassociation = a.get(0).getAssociation();
 		String lbassociation = b.get(0).getAssociation();
-		Map<UUID, IBipacePeak> peaks = new HashMap<UUID, IBipacePeak>();
-		for (IBipacePeak p : a) {
-			peaks.put(p.getUniqueId(), p);
+		if(laassociation.equals(lbassociation)) {
+			return matchedPeaks;
 		}
+		Map<UUID, IBipacePeak> peaks = new HashMap<UUID, IBipacePeak>();
 		for (IBipacePeak p : b) {
 			peaks.put(p.getUniqueId(), p);
 		}
@@ -64,18 +61,9 @@ public class BBHFinder {
 				if (otherBestPeak != null && lapeak.getUniqueId().equals(otherBestPeak)) {
 					Tuple2D<IBipacePeak, IBipacePeak> t = new Tuple2D<>(lapeak, other);
 					matchedPeaks.add(t);
-					peaks.remove(lapeak.getUniqueId());
-					peaks.remove(other.getUniqueId());
 				}
 			}
 		}
-		for(IBipacePeak p:peaks.values()) {
-			if(p.getAssociation().equals(laassociation)) {
-				p.clearSimilarities(lbassociation);
-			}else if(p.getAssociation().equals(lbassociation)) {
-				p.clearSimilarities(laassociation);
-			}
-		}
-		return new BBHPeakEdgeList(matchedPeaks);
+		return matchedPeaks;
 	}
 }

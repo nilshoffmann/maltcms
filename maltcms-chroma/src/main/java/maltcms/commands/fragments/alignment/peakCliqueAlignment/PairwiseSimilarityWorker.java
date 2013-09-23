@@ -43,7 +43,7 @@ import maltcms.math.functions.IScalarArraySimilarity;
  */
 @Data
 @Slf4j
-public class PairwiseSimilarityWorker implements Callable<BBHPeakEdgeList>, Serializable {
+public class PairwiseSimilarityWorker implements Callable<BBHPeakEdgeSet>, Serializable {
 
     private String name;
     private List<? extends IBipacePeak> lhsPeaks;
@@ -52,7 +52,7 @@ public class PairwiseSimilarityWorker implements Callable<BBHPeakEdgeList>, Seri
     private double maxRTDifference = 60.0d;
 
     @Override
-    public BBHPeakEdgeList call() {
+    public BBHPeakEdgeSet call() {
         log.debug(name);
         EvalTools.notNull(lhsPeaks, this);
         EvalTools.notNull(rhsPeaks, this);
@@ -76,7 +76,7 @@ public class PairwiseSimilarityWorker implements Callable<BBHPeakEdgeList>, Seri
             }
         }
         BBHFinder bbhfinder = new BBHFinder();
-		BBHPeakEdgeList bbhpr = bbhfinder.findBiDiBestHits(lhsPeaks,rhsPeaks);
+		BBHPeakEdgeSet bbhpr = bbhfinder.findBiDiBestHits(lhsPeaks,rhsPeaks);
 		return bbhpr;
     }
     

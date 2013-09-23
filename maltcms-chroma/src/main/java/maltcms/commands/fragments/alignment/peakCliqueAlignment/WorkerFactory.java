@@ -62,8 +62,8 @@ public class WorkerFactory implements IWorkerFactory {
     }
 
     @Override
-    public List<Callable<BBHPeakEdgeList>> create(TupleND<IFileFragment> input, Map<String, List<IBipacePeak>> fragmentToPeaks) {
-        List<Callable<BBHPeakEdgeList>> worker = new LinkedList<Callable<BBHPeakEdgeList>>();
+    public List<Callable<BBHPeakEdgeSet>> create(TupleND<IFileFragment> input, Map<String, List<IBipacePeak>> fragmentToPeaks) {
+        List<Callable<BBHPeakEdgeSet>> worker = new LinkedList<Callable<BBHPeakEdgeSet>>();
         if (assumeSymmetricSimilarity) {
             for (Tuple2D<IFileFragment, IFileFragment> t : input.getPairs()) {
                 // calculate similarity between peaks

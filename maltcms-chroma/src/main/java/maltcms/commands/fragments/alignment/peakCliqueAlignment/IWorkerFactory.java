@@ -41,6 +41,6 @@ import maltcms.datastructures.peak.IBipacePeak;
  */
 public interface IWorkerFactory extends Serializable {
 
-    List<Callable<BBHPeakEdgeList>> create(TupleND<IFileFragment> input, Map<String, List<IBipacePeak>> fragmentToPeaks);
+    List<Callable<BBHPeakEdgeSet>> create(TupleND<IFileFragment> input, Map<String, List<IBipacePeak>> fragmentToPeaks);
     
 }
