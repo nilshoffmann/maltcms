@@ -1,2 +1,0 @@
-Extracting /cdf/1D/glucoseA.cdf.gz to directory: /tmp/junit433359653228882985/junit4139969672669921880
-glucoseA.cdf.gz

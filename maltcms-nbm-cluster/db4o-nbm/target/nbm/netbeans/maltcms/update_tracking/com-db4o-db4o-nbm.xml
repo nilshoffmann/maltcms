@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><module codename="com.db4o.db4o.nbm">
-    <module_version install_time="1378662919190" last="true" origin="installer" specification_version="1.3">
-        <file crc="4168798303" name="config/Modules/com-db4o-db4o-nbm.xml"/>
-        <file crc="2925406246" name="modules/com-db4o-db4o-nbm.jar"/>
-        <file crc="2863199596" name="modules/ext/com.db4o/db4o-all-8.0.249.jar"/>
-        <file crc="4116711484" name="update_tracking/com-db4o-db4o-nbm.xml"/>
-    </module_version>
-</module>
