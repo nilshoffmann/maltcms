@@ -38,3 +38,7 @@ Thumbs.db
 
 target/
 private/
+**/target
+**/private
+**/target/*
+**/private/*
