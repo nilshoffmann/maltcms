@@ -4,7 +4,7 @@
     <parent>
         <artifactId>maltcms-modules</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.3-SNAPSHOT</version>
+        <version>1.3</version>
     </parent>
     <artifactId>maltcms-io-mz5</artifactId>
     <name>Maltcms IO Provider MZ5</name>
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>net.sf.maltcms.test</groupId>
             <artifactId>maltcms-test-data</artifactId>
-            <version>1.3-SNAPSHOT</version>
+            <version>1.3</version>
             <scope>test</scope>
             <type>jar</type>
         </dependency>

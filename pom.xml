@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-modules</artifactId>
     <packaging>pom</packaging>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.3</version>
     <name>Maltcms-Modules</name>
     <description>Maltcms, short for "Modular Application Toolkit for Chromatography Mass-Spectrometry" is an application framework mainly suited for developers working in the domain of bioinformatics for metabolomics and proteomics. Its aim is to provide reusable, efficient datastructures, abstracting from the various low-level data-formats like netcdf (ANDIMS), mzXML, mzData and mzML and providing consistent access to data features like mass spectra, chromatograms and metadata. Furthermore, Maltcms provides a platform for the implementation and execution of processing pipelines. New and existing algorithms can be easily implemented or included and executed together with existing processing elements. </description>
     <url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}</url>
@@ -83,7 +82,8 @@
         <developerConnection>scm:git:https://git.code.sf.net/p/maltcms/code</developerConnection>
         <connection>scm:git:git://git.code.sf.net/p/maltcms/code</connection>
         <url>https://git.code.sf.net/p/maltcms/code</url>
-    </scm>
+      <tag>1.3.0</tag>
+  </scm>
     <distributionManagement>
         <repository>
             <id>maltcms-release</id>
@@ -676,7 +676,7 @@
             <dependency>
                 <groupId>net.sf.maltcms</groupId>
                 <artifactId>cross-test</artifactId>
-                <version>${version.cross}</version>
+                <version>1.3.0</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>commons-logging</artifactId>
@@ -757,7 +757,7 @@
             <dependency>
                 <groupId>org.jfree</groupId>
                 <artifactId>jfreechart-osgi</artifactId>
-                <version>1.0.14.1</version>
+                <version>1.3</version>
             </dependency>
             <!--			<dependency>
                     <groupId>org.jfree</groupId>
@@ -793,7 +793,7 @@
             <dependency>
                 <groupId>net.sf.maltcms</groupId>
                 <artifactId>cross-main</artifactId>
-                <version>${version.cross}</version>
+                <version>1.3.0</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
