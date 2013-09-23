@@ -42,3 +42,6 @@ private/
 **/private
 **/target/*
 **/private/*
+classes/
+**/classes
+**/classes/*
