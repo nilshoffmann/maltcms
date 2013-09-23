@@ -4,11 +4,11 @@
     <parent>
         <artifactId>maltcms-modules</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.3</version>
+        <version>1.3.1-SNAPSHOT</version>
     </parent>
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-spectratyping</artifactId>
-    <version>1.3</version>
+    <version>1.3.1-SNAPSHOT</version>
     <name>Maltcms Spectratyping</name>
     <url>http://maltcms.sourceforge.net</url>
     <properties>
