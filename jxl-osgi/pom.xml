@@ -39,7 +39,7 @@
 				<extensions>true</extensions> 
 				<configuration> 
 					<instructions> 
-						<Import-Package>!junit.*;*</Import-Package>
+						<!--<Import-Package>!junit.*;*</Import-Package>-->
 						<!-- 
 							state the packages to export, separated by ';' 
 							if these are not given, dependencies are NOT included 
@@ -54,7 +54,7 @@
 							short description of the bundle 
 						-->
 						<Bundle-Description>Java Excel API - A Java API to read, write, and modify Excel spreadsheets</Bundle-Description>
-						<Include-Resource>{maven-resources},@jxl-${project.version}.jar!/**</Include-Resource>
+						<Include-Resource>{maven-resources},@jxl-2.6.12.jar!/**</Include-Resource>
 					</instructions> 
 				</configuration> 
 				<executions>
