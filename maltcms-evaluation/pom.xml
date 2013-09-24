@@ -154,6 +154,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>cross-math</artifactId>
+            <version>${version.cross}</version>
         </dependency>
         <dependency>
             <groupId>com.db4o</groupId>
