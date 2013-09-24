@@ -687,7 +687,6 @@
                         <groupId>log4j</groupId>
                     </exclusion>
                 </exclusions>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>javax.media.jai</groupId>
