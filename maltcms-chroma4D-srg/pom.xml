@@ -4,7 +4,7 @@
     <parent>
         <artifactId>maltcms-modules</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.3.1-SNAPSHOT</version>
+        <version>1.3.0</version>
     </parent>
     <artifactId>maltcms-chroma4D-srg</artifactId>
     <name>Maltcms ChromA4D SRG</name>
@@ -78,13 +78,13 @@
         <dependency>
             <groupId>net.sf.maltcms.test</groupId>
             <artifactId>maltcms-test-data</artifactId>
-            <version>1.3.1-SNAPSHOT</version>
+            <version>1.3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.sf.maltcms.test</groupId>
             <artifactId>maltcms-test-defaults</artifactId>
-            <version>1.3.1-SNAPSHOT</version>
+            <version>1.3.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
