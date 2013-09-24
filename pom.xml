@@ -275,7 +275,8 @@
                         <sourcepath>target/generated-sources/delombok</sourcepath>
                     </configuration>
                     <executions>
-                        <execution>
+                        <!-- this lets the release plugin fail -->
+                        <!--<execution>
                             <id>aggregate</id>
                             <goals>
                                 <goal>aggregate</goal>
@@ -284,7 +285,7 @@
                             <configuration>
                                 <show>public</show>
                             </configuration>
-                        </execution>
+                        </execution>-->
                         <execution>
                             <id>javadoc-jar</id>
                             <phase>package</phase>
@@ -440,7 +441,7 @@
                             <configuration>
                                 <show>public</show>
                                 <links>
-                                    <link>http://docs.oracle.com/javase/6/docs/api/</link>
+                                    <link>http://docs.oracle.com/javase/7/docs/api/</link>
                                     <!-- version 4.1 api not available -->
                                     <link>http://www.unidata.ucar.edu/software/netcdf-java/v4.2/javadoc/</link>
                                 </links>
