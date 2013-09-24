@@ -89,26 +89,41 @@ available:
 The newest version supports NetBeans Templates automatically, so you can simply
 select the 'maltcms' license from the dropdown menu of available license templates.
 
+Preparations:
+1. Make sure that you have merged all upstream changes to be included in the release
+2. Create a release branch (e.g. for release version 1.3.0):
+> git checkout -b --track release-1.3.0 origin/release-1.3.0
+3. Begin to prepare the site files, documentation and resources for the next release 
+   version. Update the changes etc. 
+3.a) Merging intermediate changes from master into the branch
+> git rebase master 
+4. commit and push your changes 
+> git push 
 
-Creating a tagged release:
-1. Update local repository clone
->git pull
-2. Commit local changes
->git commit
+Creating a tagged release (this can be cumbersome):
+1. Update local repository clone (you should do this from your release branch)
+> git pull
+2. Commit any outstanding local changes
+> git commit
 and push to trunk
->git push
+> git push
 3. Build Maltcms with all tests enabled
->mvn -Dmaven.test.skip=false install
+> mvn -Dmaven.test.skip=false install
 If all tests succeed, continue, otherwise, correct errors and go back to 2.
 4. Prepare release
->mvn release:prepare -Dusername=MYSOURCEFORGEUSERNAME =Dpassword=MYSOURCEFORGEPASSWD
+> mvn release:prepare -Dusername=MYSOURCEFORGEUSERNAME -Dpassword=MYSOURCEFORGEPASSWD
 If everything looks fine:
 5. Open ssh connection
->ssh -t MYSOURCEFORGEUSERNAME,maltcms@shell.sourceforge.net create
+> ssh MYSOURCEFORGEUSERNAME,maltcms@shell.sourceforge.net -t create
 6. Perform release
->mvn release:perform 
+> mvn release:perform 
 This builds the next release and also creates and deploys the site to sourceforge.
-7. Relax ;-)
+7. The tag will be created by the release plugin.
+8. Change your local repository back to master
+> git checkout master
+9. Merge the changes on your branch back into master
+> git merge release-1.3.0
+10. Relax ;-)
 
 --------------------------------------------------------------------------------
 	Deploying a snapshot to the artifactory repository *
