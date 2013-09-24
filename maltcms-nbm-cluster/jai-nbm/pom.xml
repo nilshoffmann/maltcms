@@ -4,12 +4,12 @@
 	<parent>
 		<artifactId>maltcms-nbm-cluster</artifactId>
 		<groupId>net.sf.maltcms</groupId>
-		<version>1.3.0</version>
+		<version>1.3.1-SNAPSHOT</version>
 	</parent>
 
 	<groupId>javax.jai</groupId>
 	<artifactId>jai-nbm</artifactId>
-	<version>1.3.0</version>
+	<version>1.3.1-SNAPSHOT</version>
 	<packaging>nbm</packaging>
 
 	<name>Lib JAI</name>
