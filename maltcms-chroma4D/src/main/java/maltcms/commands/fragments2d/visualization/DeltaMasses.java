@@ -59,7 +59,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @Slf4j
 @Data
-@RequiresVariables(names = {""})
+@RequiresVariables(names = {"var.v_mass_values", "var.meanms_1d_horizontal", "meanms_1d_horizontal_index"})
 @RequiresOptionalVariables(names = {""})
 @ProvidesVariables(names = {""})
 @ServiceProvider(service = AFragmentCommand.class)

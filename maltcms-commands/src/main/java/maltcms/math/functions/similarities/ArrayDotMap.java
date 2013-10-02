@@ -97,4 +97,12 @@ public class ArrayDotMap implements IArraySimilarity {
     public void setStdArray(final ArrayDouble.D1 stdArray) {
         this.std = (ArrayDouble.D1) stdArray.copy();
     }
+	
+	@Override
+	public IArraySimilarity copy() {
+		ArrayDotMap ac = new ArrayDotMap();
+		ac.setScore(getScore());
+		ac.setStdArray(getStd());
+		return ac;
+	}
 }

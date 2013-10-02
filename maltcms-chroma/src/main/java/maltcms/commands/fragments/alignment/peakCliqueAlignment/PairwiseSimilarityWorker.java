@@ -27,35 +27,42 @@
  */
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
+import com.carrotsearch.hppc.LongObjectOpenHashMap;
+import com.carrotsearch.hppc.cursors.LongObjectCursor;
 import cross.datastructures.tools.EvalTools;
+import java.io.File;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
-import lombok.Data;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.peak.IBipacePeak;
-import maltcms.datastructures.peak.IPeak;
 import maltcms.math.functions.IScalarArraySimilarity;
 
 /**
  *
  * @author nilshoffmann
  */
-@Data
+@Value
 @Slf4j
-public class PairwiseSimilarityWorker implements Callable<BBHPeakEdgeSet>, Serializable {
+public final class PairwiseSimilarityWorker implements Callable<PairwiseSimilarityResult>, Serializable {
 
-    private String name;
-    private List<? extends IBipacePeak> lhsPeaks;
-    private List<? extends IBipacePeak> rhsPeaks;
-    private IScalarArraySimilarity similarityFunction;
-    private double maxRTDifference = 60.0d;
-
+    private final String name;
+	private final String lhsName;
+	private final String rhsName;
+    private final List<? extends IBipacePeak> lhsPeaks;
+    private final List<? extends IBipacePeak> rhsPeaks;
+    private final IScalarArraySimilarity similarityFunction;
+	private final boolean savePeakSimilarities;
+	private final File outputDirectory;
+    private final double maxRTDifference;
+	
     @Override
-    public BBHPeakEdgeSet call() {
+    public PairwiseSimilarityResult call() {
         log.debug(name);
         EvalTools.notNull(lhsPeaks, this);
         EvalTools.notNull(rhsPeaks, this);
+		LongObjectOpenHashMap<PeakEdge> edgeMap = new LongObjectOpenHashMap<>();
         for (final IBipacePeak p1 : lhsPeaks) {
             final double rt1 = p1.getScanAcquisitionTime();
             for (final IBipacePeak p2 : rhsPeaks) {
@@ -70,14 +77,33 @@ public class PairwiseSimilarityWorker implements Callable<BBHPeakEdgeSet>, Seria
                     // the similarity is symmetric:
                     // sim(a,b) = sim(b,a)
 					final double d = similarityFunction.apply(new double[]{rt1}, new double[]{rt2}, p1.getMsIntensities(), p2.getMsIntensities());
-					p1.addSimilarity(p2, d);
-					p2.addSimilarity(p1, d);
+					p1.addSimilarity(edgeMap, p2, d);
+					p2.addSimilarity(edgeMap, p1, d);
 				}
             }
         }
+		if(savePeakSimilarities) {
+			PeakSimilarityVisualizer psv = new PeakSimilarityVisualizer();
+			psv.visualizePairwisePeakSimilarities(outputDirectory, edgeMap, lhsName, lhsPeaks, rhsName, rhsPeaks, 256, "beforeBIDI", false);
+		}
         BBHFinder bbhfinder = new BBHFinder();
-		BBHPeakEdgeSet bbhpr = bbhfinder.findBiDiBestHits(lhsPeaks,rhsPeaks);
-		return bbhpr;
+		BBHPeakEdgeSet bbhpr = bbhfinder.findBiDiBestHits(edgeMap,lhsPeaks,rhsPeaks);
+		long[] keys = new long[edgeMap.size()];
+		PeakEdge[] values = new PeakEdge[edgeMap.size()];
+		int i = 0;
+		Iterator<LongObjectCursor<PeakEdge>> iter = edgeMap.iterator();
+		while(iter.hasNext()) {
+			LongObjectCursor<PeakEdge> l = iter.next();
+			keys[i] = l.key;
+			values[i] = l.value;
+			i++;
+		}
+		if(savePeakSimilarities) {
+			PeakSimilarityVisualizer psv = new PeakSimilarityVisualizer();
+			psv.visualizePairwisePeakSimilarities(outputDirectory, edgeMap, lhsName, lhsPeaks, rhsName, rhsPeaks, 256, "afterBIDI", false);
+		}
+		PairwiseSimilarityResult result = new PairwiseSimilarityResult(bbhpr, keys, values);
+		return result;
     }
     
     @Override

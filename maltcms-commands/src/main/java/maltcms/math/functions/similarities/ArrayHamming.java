@@ -58,4 +58,9 @@ public class ArrayHamming implements IArraySimilarity {
         }
         return SimilarityTools.toSimilarity(d);
     }
+		
+	@Override
+	public IArraySimilarity copy() {
+		return new ArrayHamming();
+	}
 }

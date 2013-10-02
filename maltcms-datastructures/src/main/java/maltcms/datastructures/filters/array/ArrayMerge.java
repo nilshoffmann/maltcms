@@ -27,7 +27,7 @@
  */
 package maltcms.datastructures.filters.array;
 
-import maltcms.datastructures.array.Sparse;
+import ucar.ma2.Sparse;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import cross.datastructures.tools.EvalTools;

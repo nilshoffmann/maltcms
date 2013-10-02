@@ -29,7 +29,6 @@ package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import maltcms.datastructures.peak.IBipacePeak;
 
 /**
  *

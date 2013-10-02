@@ -878,12 +878,12 @@ public class NetcdfDataSource implements IDataSource {
 			nfw.create();
 			return nfw;
 		} catch (final IOException e) {
-			log.error(e.getLocalizedMessage());
+			log.error("Caught IOException while creating netcdf file: ",e);
 			if (nfw != null) {
 				try {
 					nfw.close();
 				} catch (IOException ex) {
-					log.error(ex.getLocalizedMessage());
+					log.error("Caught IOException while closing file:",ex);
 				}
 			}
 		}

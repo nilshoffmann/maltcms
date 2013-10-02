@@ -27,12 +27,11 @@
  */
 package maltcms.datastructures.peak.normalization;
 
-import cross.cache.CacheFactory;
 import cross.cache.ICacheDelegate;
 import cross.cache.ICacheElementProvider;
+import cross.cache.softReference.SoftReferenceCacheManager;
 import cross.datastructures.fragments.IFileFragment;
 import lombok.Data;
-import maltcms.datastructures.peak.Peak1D;
 import maltcms.tools.ArrayTools;
 
 /**
@@ -47,7 +46,7 @@ public class TicAreaNormalizer implements IPeakNormalizer {
 
     private ICacheDelegate<IFileFragment, Double> getCache() {
         if (this.cache == null) {
-            this.cache = CacheFactory.createAutoRetrievalCache("TicAreaNormalizerCache", new ICacheElementProvider<IFileFragment, Double>() {
+            this.cache = SoftReferenceCacheManager.getInstance().getAutoRetrievalCache("TicAreaNormalizerCache", new ICacheElementProvider<IFileFragment, Double>() {
                 @Override
                 public Double provide(IFileFragment key) {
                     return ArrayTools.integrate(key.getChild(ticVariableName).getArray());

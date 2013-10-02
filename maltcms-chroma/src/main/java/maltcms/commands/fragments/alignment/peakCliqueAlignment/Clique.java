@@ -25,16 +25,19 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.datastructures.peak;
+package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
+import com.carrotsearch.hppc.IntObjectMap;
+import com.carrotsearch.hppc.IntObjectOpenHashMap;
+import com.carrotsearch.hppc.LongObjectMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.peak.IPeak;
 
 import maltcms.tools.ArrayTools;
 
@@ -52,7 +55,7 @@ public class Clique<T extends IBipacePeak> {
 	private static long CLIQUEID = -1;
 	private long id = -1;
 	private double cliqueMean = 0, cliqueVar = 0;
-	private Map<String, T> clique = new ConcurrentHashMap<String, T>();
+	private IntObjectMap<T> clique = new IntObjectOpenHashMap<T>();
 	private IBipacePeak centroid = null;
 	private double minBbhFraction = 1.0d;
 	private int maxBBHErrors = 0;
@@ -67,10 +70,10 @@ public class Clique<T extends IBipacePeak> {
 		return this.id;
 	}
 
-	public boolean addPeak(T p, boolean force) {
+	public boolean addPeak(LongObjectMap<PeakEdge> edgeMap, T p, boolean force) {
 		if (force) {
-			if (clique.containsKey(p.getAssociation())) {
-				T q = clique.get(p.getAssociation());
+			if (clique.containsKey(p.getAssociationId())) {
+				T q = clique.get(p.getAssociationId());
 				if (p.equals(q)) {
 					return true;
 				}
@@ -78,9 +81,9 @@ public class Clique<T extends IBipacePeak> {
 //						p.getAssociation());
 				return false;
 			}
-			return handleForceAddPeak(p);
+			return handleForceAddPeak(edgeMap, p);
 		} else {
-			return addPeak(p);
+			return addPeak(edgeMap, p);
 		}
 	}
 
@@ -94,34 +97,36 @@ public class Clique<T extends IBipacePeak> {
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public boolean addPeak(T p) throws IllegalArgumentException {
-		return addPeak2(p);
+	public boolean addPeak(LongObjectMap<PeakEdge> edgeMap, T p) throws IllegalArgumentException {
+		return addPeak2(edgeMap, p);
 	}
 
-	public boolean addPeak2(T p) throws IllegalArgumentException {
-		if (clique.containsKey(p.getAssociation())) {
-			T q = clique.get(p.getAssociation());
+	public boolean addPeak2(LongObjectMap<PeakEdge> edgeMap, T p) throws IllegalArgumentException {
+		if (clique.containsKey(p.getAssociationId())) {
+			T q = clique.get(p.getAssociationId());
 			if (p.equals(q)) {
 				return true;
 			}
 //			log.debug("Clique already contains peak from file: {}",
 //					p.getAssociation());
-			return handleConflictingPeak(p);
+			return handleConflictingPeak(edgeMap, p);
 		}
-		return handleNonConflictingPeak(p);
+		return handleNonConflictingPeak(edgeMap, p);
 	}
 
 	/**
 	 * @param p
 	 * @return
 	 */
-	private boolean handleConflictingPeak(T p) {
-		Collection<T> currentPeaks = clique.values();
-		T q = clique.get(p.getAssociation());
+	private boolean handleConflictingPeak(LongObjectMap<PeakEdge> edgeMap, T p) {
+		Collection<T> currentPeaks = new ArrayList<T>();
+		T[] t = clique.values().toArray(IBipacePeak.class);
+		currentPeaks.addAll(Arrays.asList(t));
+		T q = clique.get(p.getAssociationId());
 		currentPeaks.remove(q);
 		// calculate bbh scores for both peaks
-		int bbh1 = getBBHCount(q, currentPeaks);
-		int bbh2 = getBBHCount(p, currentPeaks);
+		int bbh1 = getBBHCount(edgeMap, q, currentPeaks);
+		int bbh2 = getBBHCount(edgeMap, p, currentPeaks);
 		// use the peak, with the higher bbh count
 		if (bbh1 > bbh2) {
 			// do nothing, but return false,
@@ -130,10 +135,10 @@ public class Clique<T extends IBipacePeak> {
 		} else if (bbh1 < bbh2) {
 //			log.debug("Replacing peak with better bbh candidate: " + p);
 			// return true, since we add p
-			removePeak(q);
+			removePeak(edgeMap, q);
 			// call addPeak, since we removed q, this
 			// should be okay
-			return addPeak2(p);
+			return addPeak2(edgeMap, p);
 		} else {
 			if (bbh1 == 0 && bbh2 == 0) {
 //				log.debug("Neither peak has a bbh, retaining original peak!");
@@ -149,8 +154,8 @@ public class Clique<T extends IBipacePeak> {
 			//conflict resolution: nearest rt neighbor to clique RT mean wins
 			if (p1 < q2) {
 //				log.debug("Selecting peak p: {}", p);
-				removePeak(q);
-				return addPeak2(p);
+				removePeak(edgeMap, q);
+				return addPeak2(edgeMap, p);
 			} else if (p1 > q2) {
 //				log.debug("Retaining peak q: {}", q);
 				return false;
@@ -165,17 +170,17 @@ public class Clique<T extends IBipacePeak> {
 	 * @param p
 	 * @return
 	 */
-	private boolean handleNonConflictingPeak(T p) {
-		if (clique.containsValue(p)) {
+	private boolean handleNonConflictingPeak(LongObjectMap<PeakEdge> edgeMap, T p) {
+		if (clique.containsKey(p.getAssociationId()) && clique.get(p.getAssociationId()).equals(p)) {
 //			log.debug("Peak {} already contained in clique!", p);
 			return false;
 		} else if (clique.isEmpty()) {
 			update(p);
-			clique.put(p.getAssociation(), p);
+			clique.put(p.getAssociationId(), p);
 			selectCentroid();
 			return true;
 		} else {
-			int actualBidiHits = getBBHCount(p);
+			int actualBidiHits = getBBHCount(edgeMap, p);
 			int diff = clique.size() - actualBidiHits;
 			double fraction = (double) actualBidiHits / (double) clique.size();
 //			log.debug("Clique bbh fraction for peak: " + fraction);
@@ -192,23 +197,23 @@ public class Clique<T extends IBipacePeak> {
 //					new Object[]{p.getAssociation() + "@"
 //				+ p.getScanAcquisitionTime(), actualBidiHits, clique.size()});
 			update(p);
-			clique.put(p.getAssociation(), p);
+			clique.put(p.getAssociationId(), p);
 			selectCentroid();
 			return true;
 		}
 	}
 
-	private boolean handleForceAddPeak(T p) {
-		if (clique.containsValue(p)) {
+	private boolean handleForceAddPeak(LongObjectMap<PeakEdge> edgeMap, T p) {
+		if (clique.containsKey(p.getAssociationId()) && clique.get(p.getAssociationId()).equals(p)) {
 //			log.debug("Peak {} already contained in clique!", p);
 			return false;
 		} else if (clique.isEmpty()) {
 			update(p);
-			clique.put(p.getAssociation(), p);
+			clique.put(p.getAssociationId(), p);
 			selectCentroid();
 			return true;
 		} else {
-			int actualBidiHits = getBBHCount(p);
+			int actualBidiHits = getBBHCount(edgeMap, p);
 			int diff = clique.size() - actualBidiHits;
 			bbhErrors += diff;
 //			log.debug(
@@ -216,7 +221,7 @@ public class Clique<T extends IBipacePeak> {
 //					new Object[]{p.getAssociation() + "@"
 //				+ p.getScanAcquisitionTime(), actualBidiHits, clique.size()});
 			update(p);
-			clique.put(p.getAssociation(), p);
+			clique.put(p.getAssociationId(), p);
 			selectCentroid();
 			return true;
 		}
@@ -226,15 +231,15 @@ public class Clique<T extends IBipacePeak> {
 	 * @param p
 	 * @return
 	 */
-	private int getBBHCount(T p) {
-		return getBBHCount(p, getPeakList());
+	private int getBBHCount(LongObjectMap<PeakEdge> edgeMap, T p) {
+		return getBBHCount(edgeMap, p, getPeakList());
 	}
 
-	private int getBBHCount(T p, Collection<T> c) {
+	private int getBBHCount(LongObjectMap<PeakEdge> edgeMap, T p, Collection<T> c) {
 		int bidiHits = 0;
 		// check and count bidi best hit
 		for (T q : c) {
-			if (!p.isBidiBestHitFor(q)) {
+			if (!p.isBidiBestHitFor(edgeMap, q)) {
 //				log.debug(
 //						"Peak q: {} in clique is not a bidirectional best hit for peak p: {}",
 //						q, p);
@@ -245,19 +250,21 @@ public class Clique<T extends IBipacePeak> {
 		return bidiHits;
 	}
 
-	public boolean removePeak(T p) {
-		if (clique.containsValue(p)) {
-			clique.remove(p.getAssociation());
-			if (clique.isEmpty()) {
-				clear();
+	public boolean removePeak(LongObjectMap<PeakEdge> edgeMap, T p) {
+		if (clique.containsKey(p.getAssociationId())) {
+			if(clique.get(p.getAssociationId()).equals(p)) {
+				clique.remove(p.getAssociationId());
+				if (clique.isEmpty()) {
+					clear();
+					return true;
+				}
+				int actualBidiHits = getBBHCount(edgeMap, p);
+				int diff = clique.size() - actualBidiHits;
+				bbhErrors -= diff;
+				updateRemoval(p);
+				selectCentroid();
 				return true;
 			}
-			int actualBidiHits = getBBHCount(p);
-			int diff = clique.size() - actualBidiHits;
-			bbhErrors -= diff;
-			updateRemoval(p);
-			selectCentroid();
-			return true;
 		}
 		return false;
 	}
@@ -284,7 +291,7 @@ public class Clique<T extends IBipacePeak> {
 
 	public BoxAndWhiskerItem createRTBoxAndWhisker() {
 		List<Double> l = new ArrayList<Double>();
-		for (String f : this.clique.keySet()) {
+		for (int f : this.clique.keys().toArray()) {
 			l.add(centroid.getScanAcquisitionTime()
 					- this.clique.get(f).getScanAcquisitionTime());
 		}
@@ -293,7 +300,7 @@ public class Clique<T extends IBipacePeak> {
 
 	public BoxAndWhiskerItem createApexTicBoxAndWhisker() {
 		List<Double> l = new ArrayList<Double>();
-		for (String f : this.clique.keySet()) {
+		for (int f : this.clique.keys().toArray()) {
 			l.add(Math.log(ArrayTools.integrate(centroid.getMsIntensities()))
 					- ArrayTools.integrate(this.clique.get(f).getMsIntensities()));
 		}
@@ -304,7 +311,7 @@ public class Clique<T extends IBipacePeak> {
 		double mindist = Double.POSITIVE_INFINITY;
 		double[] dists = new double[clique.size()];
 		int i = 0;
-		IBipacePeak[] peaks = clique.values().toArray(new IBipacePeak[]{});
+		IBipacePeak[] peaks = clique.values().toArray(IBipacePeak.class);
 		for (IBipacePeak peak : peaks) {
 			for (IBipacePeak peak1 : peaks) {
 				dists[i] += Math.pow(
@@ -404,7 +411,7 @@ public class Clique<T extends IBipacePeak> {
 		}
 		sb.append("\tMean: ").append(this.cliqueMean).append("\n");
 		sb.append("\tVariance: ").append(this.cliqueVar).append("\n");
-		for (String f : this.clique.keySet()) {
+		for (int f : this.clique.keys().toArray()) {
 			if (this.clique.get(f) != null) {
 				sb.append(this.clique.get(f).toString());
 			} else {
@@ -416,7 +423,7 @@ public class Clique<T extends IBipacePeak> {
 	}
 
 	public List<T> getPeakList() {
-		List<T> peaks = new ArrayList<T>(this.clique.values());
+		List<T> peaks = Arrays.asList(this.clique.values().toArray(IBipacePeak.class));
 		Collections.sort(peaks, new Comparator<T>() {
 			@Override
 			public int compare(T o1, T o2) {
@@ -426,8 +433,8 @@ public class Clique<T extends IBipacePeak> {
 		return peaks;
 	}
 
-	public double getSimilarityForPeaks(String a, String b) {
-		return this.clique.get(a).getSimilarity(this.clique.get(b));
+	public double getSimilarityForPeaks(int a, int b, LongObjectMap<PeakEdge> peakEdgeMap) {
+		return this.clique.get(a).getSimilarity(peakEdgeMap, this.clique.get(b));
 	}
 
 	@Override

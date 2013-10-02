@@ -64,7 +64,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import maltcms.commands.filters.array.MinMaxNormalizationFilter;
-import maltcms.datastructures.array.Sparse;
+import ucar.ma2.Sparse;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.io.csv.ColorRampReader;

@@ -28,7 +28,7 @@
 package maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory;
 
 import java.io.Serializable;
-import maltcms.datastructures.peak.IBipacePeak;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak;
 
 /**
  *

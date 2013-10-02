@@ -25,7 +25,7 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.statistics;
+package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Vector;
 
-import maltcms.datastructures.peak.Clique;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.Clique;
 import maltcms.io.csv.CSVReader;
 import maltcms.tools.ArrayTools;
 import maltcms.ui.charts.PlotRunner;
@@ -62,7 +62,6 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.peak.IBipacePeak;
 import net.sf.mpaxs.api.ICompletionService;
 import net.sf.mpaxs.spi.concurrent.CompletionServiceFactory;
 

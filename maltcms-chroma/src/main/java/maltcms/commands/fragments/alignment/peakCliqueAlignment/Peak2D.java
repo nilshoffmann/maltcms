@@ -32,7 +32,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
-import maltcms.datastructures.peak.PeakNG;
 import ucar.ma2.Array;
 
 /**
@@ -45,8 +44,8 @@ public class Peak2D extends PeakNG {
     private double firstColumnElutionTime;
     private double secondColumnElutionTime;
 
-    public Peak2D(int scanIndex, Array array, double sat, String association, boolean storeOnlyBestSimilarities) {
-        super(scanIndex, array, sat, association, storeOnlyBestSimilarities);
+    public Peak2D(int scanIndex, Array array, double sat, String association, int associationId) {
+        super(scanIndex, array, sat, association, associationId);
     }
     
     @Override

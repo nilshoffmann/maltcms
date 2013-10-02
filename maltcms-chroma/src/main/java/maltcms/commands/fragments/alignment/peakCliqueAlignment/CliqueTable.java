@@ -33,8 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import maltcms.datastructures.peak.Clique;
-import maltcms.datastructures.peak.IBipacePeak;
 import ucar.ma2.ArrayBoolean;
 
 /**

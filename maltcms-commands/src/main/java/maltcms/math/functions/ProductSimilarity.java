@@ -62,4 +62,20 @@ public class ProductSimilarity implements IScalarArraySimilarity {
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
+
+	@Override
+	public IScalarArraySimilarity copy() {
+		ProductSimilarity psim = new ProductSimilarity();
+		IScalarSimilarity[] isas = new IScalarSimilarity[getScalarSimilarities().length];
+		IArraySimilarity[] ias = new IArraySimilarity[getArraySimilarities().length];
+		for (int i = 0; i < isas.length; i++) {
+			isas[i] = getScalarSimilarities()[i].copy();
+		}
+		for (int i = 0; i < ias.length; i++) {
+			ias[i] = getArraySimilarities()[i].copy();
+		}
+		psim.setArraySimilarities(arraySimilarities);
+		psim.setScalarSimilarities(scalarSimilarities);
+		return psim;
+	}
 }

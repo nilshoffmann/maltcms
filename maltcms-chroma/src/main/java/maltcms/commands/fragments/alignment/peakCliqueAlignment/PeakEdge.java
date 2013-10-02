@@ -25,11 +25,12 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.datastructures.peak;
+package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
+import maltcms.datastructures.peak.IPeak;
 
 /**
  *

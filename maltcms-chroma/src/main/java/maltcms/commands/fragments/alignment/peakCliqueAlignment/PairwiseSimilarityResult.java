@@ -1,6 +1,6 @@
-/* 
+/*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2013, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -25,25 +25,18 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.experimental.bipace.peakCliqueAlignment;
+package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
-import java.util.Comparator;
-import maltcms.datastructures.peak.IPeak;
+import java.io.Serializable;
+import lombok.experimental.Value;
 
 /**
  *
- * @author nils
+ * @author Nils Hoffmann
  */
-public class PeakComparator
-        implements Comparator<IPeak> {
-
-    @Override
-    public int compare(final IPeak o1, final IPeak o2) {
-        if (o1.getScanIndex() == o2.getScanIndex()) {
-            return 0;
-        } else if (o1.getScanIndex() < o2.getScanIndex()) {
-            return -1;
-        }
-        return 1;
-    }
+@Value
+public class PairwiseSimilarityResult implements Serializable {
+	private final BBHPeakEdgeSet bbhPeakedgeSet;
+	private final long[] peakEdgeKeys;
+	private final PeakEdge[] peakEdgeValues;
 }

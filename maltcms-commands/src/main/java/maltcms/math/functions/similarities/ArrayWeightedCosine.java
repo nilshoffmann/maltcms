@@ -46,22 +46,22 @@ import ucar.ma2.MAMath;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayWeightedCosine implements IArraySimilarity {
 
-//	private final Map<Array, Double> arrayToIntensityCache;
+	private final Map<Array, Double> arrayToIntensityCache;
 	
 	private double minimumSimilarity = 0.0d;
 
 	public ArrayWeightedCosine() {
-//		arrayToIntensityCache = new ConcurrentHashMap<Array, Double>();
+		arrayToIntensityCache = new WeakHashMap<Array, Double>();
 	}
 
 	private double getMaximumIntensity(final Array a) {
-//		Double d = arrayToIntensityCache.get(a);
-//		if (d == null) {
-//			d = MAMath.getMaximum(a);
-//			arrayToIntensityCache.put(a, d);
-//		}
-//		return d.doubleValue();
-		return MAMath.getMaximum(a);
+		Double d = arrayToIntensityCache.get(a);
+		if (d == null) {
+			d = MAMath.getMaximum(a);
+			arrayToIntensityCache.put(a, d);
+		}
+		return d.doubleValue();
+//		return MAMath.getMaximum(a);
 	}
 
 	@Override
@@ -83,5 +83,12 @@ public class ArrayWeightedCosine implements IArraySimilarity {
 
 	private double miProduct(double mass, double intensity) {
 		return mass * mass * intensity;
+	}
+	
+	@Override
+	public IArraySimilarity copy() {
+		ArrayWeightedCosine alp = new ArrayWeightedCosine();
+		alp.setMinimumSimilarity(getMinimumSimilarity());
+		return alp;
 	}
 }

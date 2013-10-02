@@ -29,11 +29,12 @@ package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import maltcms.datastructures.peak.IBipacePeak;
+import maltcms.math.functions.IScalarArraySimilarity;
 
 /**
  *
@@ -41,6 +42,14 @@ import maltcms.datastructures.peak.IBipacePeak;
  */
 public interface IWorkerFactory extends Serializable {
 
-    List<Callable<BBHPeakEdgeSet>> create(TupleND<IFileFragment> input, Map<String, List<IBipacePeak>> fragmentToPeaks);
+    List<Callable<PairwiseSimilarityResult>> create(File outputDirectory, TupleND<IFileFragment> input, Map<String, List<IBipacePeak>> fragmentToPeaks);
+	
+	void setSimilarityFunction(IScalarArraySimilarity similarityFunction);
+	void setAssumeSymmetricSimilarity(boolean assumeSymmetricSimilarity);
+	void setSavePeakSimilarities(boolean savePeakSimilarities);
+	
+	IScalarArraySimilarity getSimilarityFunction();
+	boolean isAssumeSymmetricSimilarity();
+	boolean isSavePeakSimilarities();
     
 }

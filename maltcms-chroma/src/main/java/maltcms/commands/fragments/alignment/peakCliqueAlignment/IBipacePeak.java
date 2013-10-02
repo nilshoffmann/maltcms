@@ -25,10 +25,12 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.datastructures.peak;
+package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
+import com.carrotsearch.hppc.LongObjectMap;
 import java.util.List;
 import java.util.UUID;
+import maltcms.datastructures.peak.IPeak;
 import ucar.ma2.Array;
 
 /**
@@ -47,29 +49,29 @@ public interface IBipacePeak extends IPeak{
 	 * @param p
 	 * @param similarity
 	 */
-	void addSimilarity(final IBipacePeak p, final double similarity);
+	void addSimilarity(LongObjectMap<PeakEdge> edgeMap, final IBipacePeak p, final double similarity);
 
-	void clearSimilarities(String association);
+	void clearSimilarities(LongObjectMap<PeakEdge> edgeMap, int associationId);
 
 	Array getMsIntensities();
 	
 	void setMsIntensities(Array a);
 
-	UUID getPeakWithHighestSimilarity(final String key);
+	UUID getPeakWithHighestSimilarity(LongObjectMap<PeakEdge> edgeMap, final int associationId);
 
 	/**
 	 * Only call this method, after having added all similarities!
 	 *
-	 * @param key
+	 * @param associationId
 	 * @return
 	 */
-	List<UUID> getPeaksSortedBySimilarity(final String key);
+	List<UUID> getPeaksSortedBySimilarity(LongObjectMap<PeakEdge> edgeMap, final int associationId);
 
-	double getSimilarity(final IBipacePeak p);
+	double getSimilarity(LongObjectMap<PeakEdge> edgeMap, final IBipacePeak p);
 
-	boolean isBidiBestHitFor(final IBipacePeak p);
+	boolean isBidiBestHitFor(LongObjectMap<PeakEdge> edgeMap, final IBipacePeak p);
 
-	void retainSimilarityRemoveRest(final IBipacePeak p);
+	void retainSimilarityRemoveRest(LongObjectMap<PeakEdge> edgeMap, final IBipacePeak p);
 	
 	/**
 	 * This is a sequential id of the peak in the order the peak objects 
@@ -78,5 +80,11 @@ public interface IBipacePeak extends IPeak{
 	 * @return 
 	 */
 	public int getPeakId();
+	
+	public int getAssociationId();
+	
+	public long keyTo(IBipacePeak p);
+
+	public long keyTo(int associationId);
 	
 }

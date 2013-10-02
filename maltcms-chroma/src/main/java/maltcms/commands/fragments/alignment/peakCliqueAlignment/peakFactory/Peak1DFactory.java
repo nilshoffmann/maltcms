@@ -31,9 +31,8 @@ import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import lombok.Data;
-import maltcms.datastructures.peak.IBipacePeak;
-import maltcms.datastructures.peak.IPeak;
-import maltcms.datastructures.peak.PeakNG;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakNG;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
@@ -48,34 +47,32 @@ public class Peak1DFactory implements IPeakFactory {
     private String scanAcquisitionTimeVar = "scan_acquisition_time";
 
     @Override
-    public IPeakFactoryImpl createInstance(IFileFragment sourceFile, boolean storeOnlyBestSimilarites, Tuple2D<Double, Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, boolean savePeakSimilarities) {
-        return new Peak1DFactoryImpl(sourceFile, storeOnlyBestSimilarites, minMaxMassRange, size, massBinResolution, useSparseArrays, savePeakSimilarities);
+    public IPeakFactoryImpl createInstance(IFileFragment sourceFile, Tuple2D<Double, Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, int associationId) {
+        return new Peak1DFactoryImpl(sourceFile, minMaxMassRange, size, massBinResolution, useSparseArrays, associationId);
     }
 
     @Data
     private class Peak1DFactoryImpl implements IPeakFactoryImpl {
 
         private final IFileFragment sourceFile;
-        private final boolean storeOnlyBestSimilarites;
         private final Tuple2D<Double, Double> minMaxMassRange;
         private final int size;
         private final double massBinResolution;
         private final boolean useSparseArrays;
-        private final boolean savePeakSimilarities;
         private final Array peakAreaArray;
         private final Array satArray;
+		private final int associationId;
 
-        public Peak1DFactoryImpl(IFileFragment sourceFile, boolean storeOnlyBestSimilarites, Tuple2D<Double, Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, boolean savePeakSimilarities) {
+        public Peak1DFactoryImpl(IFileFragment sourceFile, Tuple2D<Double, Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, int associationId) {
             this.sourceFile = new FileFragment(sourceFile.getUri());
 //			this.sourceFile = sourceFile;
-            this.storeOnlyBestSimilarites = storeOnlyBestSimilarites;
             this.minMaxMassRange = minMaxMassRange;
             this.size = size;
             this.massBinResolution = massBinResolution;
             this.useSparseArrays = useSparseArrays;
-            this.savePeakSimilarities = savePeakSimilarities;
             this.peakAreaArray = sourceFile.getChild(peakAreaVar).getArray();
             this.satArray = sourceFile.getChild(scanAcquisitionTimeVar).getArray();
+			this.associationId = associationId;
         }
 
         @Override
@@ -88,7 +85,7 @@ public class Peak1DFactory implements IPeakFactory {
                 a.setDouble(0, peakAreaArray.getDouble(scanIndex));
             }
             PeakNG p = new PeakNG(scanIndex, a,
-                    satArray.getDouble(scanIndex), sourceFile.getName(), storeOnlyBestSimilarites);
+                    satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
             p.setPeakIndex(peakIndex);
             return p;
         }

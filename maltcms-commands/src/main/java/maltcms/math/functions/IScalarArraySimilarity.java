@@ -45,4 +45,11 @@ public interface IScalarArraySimilarity extends Serializable {
     public IArraySimilarity[] getArraySimilarities();
 
     public void setArraySimilarities(IArraySimilarity... arraySimilarities);
+	
+	/**
+	 * Creates and returns a semantic deep copy of this similarity.
+	 *
+	 * @return
+	 */
+	public IScalarArraySimilarity copy();
 }

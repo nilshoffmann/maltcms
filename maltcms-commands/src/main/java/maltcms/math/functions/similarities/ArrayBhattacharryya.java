@@ -77,4 +77,9 @@ public class ArrayBhattacharryya implements IArraySimilarity {
 //        throw new IllegalArgumentException("Arrays shapes are incompatible! "
 //                + t1.getShape()[0] + " != " + t2.getShape()[0]);
 	}
+
+	@Override
+	public IArraySimilarity copy() {
+		return new ArrayBhattacharryya();
+	}
 }

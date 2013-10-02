@@ -27,13 +27,13 @@
  */
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
+import com.carrotsearch.hppc.LongObjectMap;
 import cross.datastructures.tuple.Tuple2D;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.peak.IBipacePeak;
 
 /**
  *
@@ -42,11 +42,11 @@ import maltcms.datastructures.peak.IBipacePeak;
 @Slf4j
 public class BBHFinder {
 
-	public BBHPeakEdgeSet findBiDiBestHits(List<? extends IBipacePeak> a, List<? extends IBipacePeak> b) {
+	public BBHPeakEdgeSet findBiDiBestHits(LongObjectMap<PeakEdge> edgeMap, List<? extends IBipacePeak> a, List<? extends IBipacePeak> b) {
 		final BBHPeakEdgeSet matchedPeaks = new BBHPeakEdgeSet();
-		String laassociation = a.get(0).getAssociation();
-		String lbassociation = b.get(0).getAssociation();
-		if(laassociation.equals(lbassociation)) {
+		int laassociation = a.get(0).getAssociationId();
+		int lbassociation = b.get(0).getAssociationId();
+		if(laassociation == lbassociation) {
 			return matchedPeaks;
 		}
 		Map<UUID, IBipacePeak> peaks = new HashMap<UUID, IBipacePeak>();
@@ -54,10 +54,10 @@ public class BBHFinder {
 			peaks.put(p.getUniqueId(), p);
 		}
 		for (IBipacePeak lapeak : a) {
-			UUID bestPeak = lapeak.getPeakWithHighestSimilarity(lbassociation);
+			UUID bestPeak = lapeak.getPeakWithHighestSimilarity(edgeMap, lbassociation);
 			IBipacePeak other = peaks.get(bestPeak);
 			if (other != null) {
-				UUID otherBestPeak = other.getPeakWithHighestSimilarity(laassociation);
+				UUID otherBestPeak = other.getPeakWithHighestSimilarity(edgeMap, laassociation);
 				if (otherBestPeak != null && lapeak.getUniqueId().equals(otherBestPeak)) {
 					Tuple2D<IBipacePeak, IBipacePeak> t = new Tuple2D<>(lapeak, other);
 					matchedPeaks.add(t);

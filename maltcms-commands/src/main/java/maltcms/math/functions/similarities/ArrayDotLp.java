@@ -51,4 +51,9 @@ public class ArrayDotLp implements IArraySimilarity {
         final double d = this.lp.apply(t1, t2);
         return SimilarityTools.toSimilarity(d) * dotv;
     }
+		
+	@Override
+	public IArraySimilarity copy() {
+		return new ArrayDotLp();
+	}
 }

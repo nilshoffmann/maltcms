@@ -29,7 +29,6 @@ package maltcms.math.functions.similarities;
 
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import ucar.ma2.Array;
 import ucar.ma2.MAVector;
 import lombok.Data;
@@ -45,20 +44,20 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayTanimoto implements IArraySimilarity {
 
-//	private final Map<Array, Double> arrayToIntensityCache;
+	private final Map<Array, Double> arrayToIntensityCache;
 
 	public ArrayTanimoto() {
-//		arrayToIntensityCache = new WeakHashMap<Array, Double>();;
+		arrayToIntensityCache = new WeakHashMap<Array, Double>();;
 	}
 
 	private double getDotProduct(MAVector v, Array a) {
-//		Double d = arrayToIntensityCache.get(a);
-//		if (d == null) {
-//			d = v.dot(v);
-//			arrayToIntensityCache.put(a, d);
-//		}
-//		return d.doubleValue();
-		return v.dot(v);
+		Double d = arrayToIntensityCache.get(a);
+		if (d == null) {
+			d = v.dot(v);
+			arrayToIntensityCache.put(a, d);
+		}
+		return d.doubleValue();
+//		return v.dot(v);
 	}
 
 	/**
@@ -75,5 +74,11 @@ public class ArrayTanimoto implements IArraySimilarity {
 			score = dot / (ma1.dot(ma1) + ma2.dot(ma2) - dot);
 		}
 		return score;
+	}
+	
+	@Override
+	public IArraySimilarity copy() {
+		ArrayTanimoto alp = new ArrayTanimoto();
+		return alp;
 	}
 }

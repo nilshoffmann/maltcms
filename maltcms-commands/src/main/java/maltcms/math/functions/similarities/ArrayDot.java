@@ -50,4 +50,9 @@ public class ArrayDot implements IArraySimilarity {
 		}
 		return dot;
     }
+		
+	@Override
+	public IArraySimilarity copy() {
+		return new ArrayDot();
+	}
 }

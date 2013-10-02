@@ -30,13 +30,12 @@ package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import lombok.Data;
-import maltcms.datastructures.peak.IBipacePeak;
-import maltcms.datastructures.peak.IPeak;
 import maltcms.math.functions.IScalarArraySimilarity;
 import maltcms.math.functions.ProductSimilarity;
 import maltcms.math.functions.similarities.ArrayCorr;
@@ -52,6 +51,7 @@ public class WorkerFactory implements IWorkerFactory {
     private double maxRTDifference = 60.0d;
     private IScalarArraySimilarity similarityFunction;
     private boolean assumeSymmetricSimilarity = false;
+	private boolean savePeakSimilarities = false;
 
     public WorkerFactory() {
         similarityFunction = new ProductSimilarity();
@@ -62,8 +62,8 @@ public class WorkerFactory implements IWorkerFactory {
     }
 
     @Override
-    public List<Callable<BBHPeakEdgeSet>> create(TupleND<IFileFragment> input, Map<String, List<IBipacePeak>> fragmentToPeaks) {
-        List<Callable<BBHPeakEdgeSet>> worker = new LinkedList<Callable<BBHPeakEdgeSet>>();
+    public List<Callable<PairwiseSimilarityResult>> create(File outputDirectory, TupleND<IFileFragment> input, Map<String, List<IBipacePeak>> fragmentToPeaks) {
+        List<Callable<PairwiseSimilarityResult>> worker = new LinkedList<Callable<PairwiseSimilarityResult>>();
         if (assumeSymmetricSimilarity) {
             for (Tuple2D<IFileFragment, IFileFragment> t : input.getPairs()) {
                 // calculate similarity between peaks
@@ -71,12 +71,17 @@ public class WorkerFactory implements IWorkerFactory {
                 final List<IBipacePeak> rhsPeaks = fragmentToPeaks.get(t.getSecond().getName());
 //                log.debug("Comparing {} and {}", t.getFirst().getName(),
 //                        t.getSecond().getName());
-                PairwiseSimilarityWorker psw = new PairwiseSimilarityWorker();
-                psw.setMaxRTDifference(maxRTDifference);
-                psw.setSimilarityFunction(similarityFunction);
-                psw.setLhsPeaks(lhsPeaks);
-                psw.setRhsPeaks(rhsPeaks);
-                psw.setName("Calculating pairwise peak similarities between " + t.getFirst().getName() + " and " + t.getSecond().getName());
+                PairwiseSimilarityWorker psw = new PairwiseSimilarityWorker(
+					t.getFirst().getName()+"-"+t.getSecond().getName(),
+					t.getFirst().getName(),
+					t.getSecond().getName(),
+					lhsPeaks,
+					rhsPeaks,
+					similarityFunction.copy(),
+					savePeakSimilarities,
+					outputDirectory,
+					maxRTDifference
+				);
                 worker.add(psw);
             }
         } else {
@@ -87,12 +92,17 @@ public class WorkerFactory implements IWorkerFactory {
                     final List<IBipacePeak> rhsPeaks = fragmentToPeaks.get(f2.getName());
 //                log.debug("Comparing {} and {}", t.getFirst().getName(),
 //                        t.getSecond().getName());
-                    PairwiseSimilarityWorker psw = new PairwiseSimilarityWorker();
-                    psw.setMaxRTDifference(maxRTDifference);
-                    psw.setSimilarityFunction(similarityFunction);
-                    psw.setLhsPeaks(lhsPeaks);
-                    psw.setRhsPeaks(rhsPeaks);
-                    psw.setName("Calculating pairwise peak similarities between " + f1.getName() + " and " + f2.getName());
+                    PairwiseSimilarityWorker psw = new PairwiseSimilarityWorker(
+						f1.getName()+"-"+f2.getName(),
+						f1.getName(),
+						f2.getName(),
+						lhsPeaks,
+						rhsPeaks,
+						similarityFunction.copy(),
+						savePeakSimilarities,
+						outputDirectory,
+						maxRTDifference
+					);
                     worker.add(psw);
                 }
             }

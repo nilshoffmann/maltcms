@@ -27,6 +27,7 @@
  */
 package maltcms.math.functions.similarities;
 
+import java.util.WeakHashMap;
 import org.apache.commons.math.stat.correlation.PearsonsCorrelation;
 import ucar.ma2.Array;
 import lombok.Data;
@@ -43,33 +44,40 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayCorr implements IArraySimilarity {
 
-    //private final WeakHashMap<Array, double[]> arrayCache = new WeakHashMap<Array, double[]>();
-    private boolean returnCoeffDetermination = false;
-    private final PearsonsCorrelation pc = new PearsonsCorrelation();
+	private final WeakHashMap<Array, double[]> arrayCache = new WeakHashMap<Array, double[]>();
+	private boolean returnCoeffDetermination = false;
+	private final PearsonsCorrelation pc = new PearsonsCorrelation();
 
-    @Override
-    public double apply(final Array t1, final Array t2) {
-        double[] t1a = null, t2a = null;
-        /*
-         if (arrayCache.containsKey(t1)) {
-         t1a = arrayCache.get(t1);
-         } else {
-         t1a = (double[]) t1.get1DJavaArray(double.class);
-         arrayCache.put(t1, t1a);
-         }
-         if (arrayCache.containsKey(t2)) {
-         t2a = arrayCache.get(t2);
-         } else {
-         t2a = (double[]) t2.get1DJavaArray(double.class);
-         arrayCache.put(t2, t2a);
-         }
-         */
-        t1a = (double[]) t1.get1DJavaArray(double.class);
-        t2a = (double[]) t2.get1DJavaArray(double.class);
-        double pcv = pc.correlation(t1a, t2a);
-        if (this.returnCoeffDetermination) {
-            return pcv * pcv;
-        }
-        return pcv;
-    }
+	@Override
+	public double apply(final Array t1, final Array t2) {
+		double[] t1a = null, t2a = null;
+
+		if (arrayCache.containsKey(t1)) {
+			t1a = arrayCache.get(t1);
+		} else {
+			t1a = (double[]) t1.get1DJavaArray(double.class);
+			arrayCache.put(t1, t1a);
+		}
+		if (arrayCache.containsKey(t2)) {
+			t2a = arrayCache.get(t2);
+		} else {
+			t2a = (double[]) t2.get1DJavaArray(double.class);
+			arrayCache.put(t2, t2a);
+		}
+//
+//		t1a = (double[]) t1.get1DJavaArray(double.class);
+//		t2a = (double[]) t2.get1DJavaArray(double.class);
+		double pcv = pc.correlation(t1a, t2a);
+		if (this.returnCoeffDetermination) {
+			return pcv * pcv;
+		}
+		return pcv;
+	}
+
+	@Override
+	public IArraySimilarity copy() {
+		ArrayCorr ac = new ArrayCorr();
+		ac.setReturnCoeffDetermination(isReturnCoeffDetermination());
+		return ac;
+	}
 }

@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.TreeMap;
 
-import maltcms.datastructures.array.Sparse;
+import ucar.ma2.Sparse;
 
 import java.util.Collections;
 import org.slf4j.Logger;
@@ -1411,7 +1411,7 @@ public class ArrayTools {
         final ArrayDouble.D1 indices = new ArrayDouble.D1(values.size());
         int offset = 0;
         for (int i = 0; i < values.size(); i++) {
-            final ArrayDouble.D1 scan = al.get(i);
+            final Array scan = al.get(i);
             if (scan instanceof Sparse) {
                 return ((Sparse) scan).toArrays();
             } else {

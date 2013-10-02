@@ -34,8 +34,8 @@ import cross.datastructures.tuple.Tuple2D;
 import java.util.List;
 import lombok.Data;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.Peak2D;
-import maltcms.datastructures.array.Sparse;
-import maltcms.datastructures.peak.IBipacePeak;
+import ucar.ma2.Sparse;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak;
 import maltcms.datastructures.peak.IPeak;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -58,35 +58,32 @@ public class Peak2DMSFactory implements IPeakFactory {
     private String scanAcquisitionTimeVar = "scan_acquisition_time";
 
     @Override
-    public IPeakFactoryImpl createInstance(IFileFragment sourceFile, boolean storeOnlyBestSimilarites, Tuple2D<Double, Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, boolean savePeakSimilarities) {
-        return new Peak2DMSFactoryImpl(sourceFile, storeOnlyBestSimilarites, minMaxMassRange, size, massBinResolution, useSparseArrays, savePeakSimilarities);
+    public IPeakFactoryImpl createInstance(IFileFragment sourceFile, Tuple2D<Double, Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, int associationId) {
+        return new Peak2DMSFactoryImpl(sourceFile, minMaxMassRange, size, massBinResolution, useSparseArrays, associationId);
     }
 
     @Data
     private class Peak2DMSFactoryImpl implements IPeakFactoryImpl {
 
         private final IFileFragment sourceFile;
-        private final boolean storeOnlyBestSimilarites;
         private final Tuple2D<Double, Double> minMaxMassRange;
         private final int size;
         private final double massBinResolution;
         private final boolean useSparseArrays;
-        private final boolean savePeakSimilarities;
         private final List<Array> indexedMassValues;
         private final List<Array> indexedIntensityValues;
         private final Array satArray;
         private final Array fctArray;
         private final Array sctArray;
+		private final int associationId;
 
-        public Peak2DMSFactoryImpl(IFileFragment sourceFile, boolean storeOnlyBestSimilarites, Tuple2D<Double, Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, boolean savePeakSimilarities) {
+        public Peak2DMSFactoryImpl(IFileFragment sourceFile, Tuple2D<Double, Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, int associationId) {
             this.sourceFile = new FileFragment(sourceFile.getUri());
 //			this.sourceFile = sourceFile;
-            this.storeOnlyBestSimilarites = storeOnlyBestSimilarites;
             this.minMaxMassRange = minMaxMassRange;
             this.size = size;
             this.massBinResolution = massBinResolution;
             this.useSparseArrays = useSparseArrays;
-            this.savePeakSimilarities = savePeakSimilarities;
             if(useSparseArrays) {
                 IVariableFragment scanIndex = sourceFile.getChild(scanIndexVar);
                 IVariableFragment masses = sourceFile.getChild(massesVar);
@@ -107,20 +104,21 @@ public class Peak2DMSFactory implements IPeakFactory {
             satArray = sourceFile.getChild(scanAcquisitionTimeVar).getArray();
             fctArray = sourceFile.getChild(firstColumnElutionTimeVar).getArray();
             sctArray = sourceFile.getChild(secondColumnElutionTimeVar).getArray();
+			this.associationId = associationId;
         }
         
         @Override
         public IBipacePeak create(int peakIndex, int scanIndex) {
             Peak2D p;
             if (useSparseArrays) {
-                ArrayDouble.D1 sparse = new Sparse(indexedMassValues.get(scanIndex), indexedIntensityValues.get(scanIndex),
+                Array sparse = new Sparse(indexedMassValues.get(scanIndex), indexedIntensityValues.get(scanIndex),
                         (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
                         size, massBinResolution);
                 p = new Peak2D(scanIndex, sparse,
-                        satArray.getDouble(scanIndex), sourceFile.getName(), storeOnlyBestSimilarites);
+                        satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
             } else {
                 p = new Peak2D(scanIndex, indexedIntensityValues.get(scanIndex),
-                        satArray.getDouble(scanIndex), sourceFile.getName(), storeOnlyBestSimilarites);
+                        satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
             }
             p.setFirstColumnElutionTime(fctArray.getFloat(scanIndex));
             p.setSecondColumnElutionTime(sctArray.getFloat(scanIndex));

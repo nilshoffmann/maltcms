@@ -64,4 +64,12 @@ public class GaussianDifferenceSimilarity implements
         }
         return weight;
     }
+
+	@Override
+	public IScalarSimilarity copy() {
+		GaussianDifferenceSimilarity gds = new GaussianDifferenceSimilarity();
+		gds.setThreshold(getThreshold());
+		gds.setTolerance(getTolerance());
+		return gds;
+	}
 }

@@ -1,6 +1,6 @@
-/* 
+/*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2013, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -25,24 +25,18 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.experimental.bipace;
+package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import lombok.Data;
-import maltcms.datastructures.peak.IBipacePeak;
-import maltcms.experimental.bipace.datastructures.api.Clique;
+import lombok.Value;
 
 /**
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  */
-@Data
-public class BiPaceResult<T extends IBipacePeak> {
-
-    private Map<T, Clique<T>> peakToClique = new HashMap<T, Clique<T>>();
-    private List<Clique<T>> cliques;
-    private Set<PeakList> unmatchedPeaks;
+@Value
+public class BBHResult {
+	private final List<Clique<IBipacePeak>> cliques;
+	private final HashMap<IBipacePeak, Clique<IBipacePeak>> peakToClique;
 }

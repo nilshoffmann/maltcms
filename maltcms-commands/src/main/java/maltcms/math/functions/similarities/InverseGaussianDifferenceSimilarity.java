@@ -69,4 +69,14 @@ public class InverseGaussianDifferenceSimilarity implements
         }
         return weight;
     }
+
+	
+	@Override
+	public IScalarSimilarity copy() {
+		InverseGaussianDifferenceSimilarity gds = new InverseGaussianDifferenceSimilarity();
+		gds.setLambda(getLambda());
+		gds.setNormalize(isNormalize());
+		gds.setThreshold(getThreshold());
+		return gds;
+	}
 }

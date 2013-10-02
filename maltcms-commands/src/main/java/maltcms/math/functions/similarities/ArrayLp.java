@@ -43,8 +43,11 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayLp implements IArraySimilarity {
 
+	@Deprecated
     private double p = 2.0d;
+	@Deprecated
     private boolean normalizeByLength = false;
+	@Deprecated
     private double sqrtn = Double.NaN;
 
     @Override
@@ -56,4 +59,13 @@ public class ArrayLp implements IArraySimilarity {
         }
         return -Math.sqrt(value);
     }
+			
+	@Override
+	public IArraySimilarity copy() {
+		ArrayLp alp = new ArrayLp();
+		alp.setNormalizeByLength(isNormalizeByLength());
+		alp.setP(getP());
+		alp.setSqrtn(getSqrtn());
+		return alp;
+	}
 }

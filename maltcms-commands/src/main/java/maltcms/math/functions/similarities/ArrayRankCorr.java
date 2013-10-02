@@ -27,6 +27,7 @@
  */
 package maltcms.math.functions.similarities;
 
+import java.util.WeakHashMap;
 import org.apache.commons.math.stat.correlation.SpearmansCorrelation;
 
 import ucar.ma2.Array;
@@ -45,19 +46,39 @@ import org.openide.util.lookup.ServiceProvider;
 public class ArrayRankCorr implements IArraySimilarity {
 
     private boolean returnCoeffDetermination = false;
-    //private final WeakHashMap<Array, double[]> arrayCache = new WeakHashMap<Array, double[]>();
+    private final WeakHashMap<Array, double[]> arrayCache = new WeakHashMap<Array, double[]>();
     private final SpearmansCorrelation sc = new SpearmansCorrelation();
 
     @Override
     public double apply(final Array t1, final Array t2) {
         // SpearmansCorrelation sc = new SpearmansCorrelation();
         double[] t1a = null, t2a = null;
-        t1a = (double[]) t1.get1DJavaArray(double.class);
-        t2a = (double[]) t2.get1DJavaArray(double.class);
+
+		if (arrayCache.containsKey(t1)) {
+			t1a = arrayCache.get(t1);
+		} else {
+			t1a = (double[]) t1.get1DJavaArray(double.class);
+			arrayCache.put(t1, t1a);
+		}
+		if (arrayCache.containsKey(t2)) {
+			t2a = arrayCache.get(t2);
+		} else {
+			t2a = (double[]) t2.get1DJavaArray(double.class);
+			arrayCache.put(t2, t2a);
+		}
+//        t1a = (double[]) t1.get1DJavaArray(double.class);
+//        t2a = (double[]) t2.get1DJavaArray(double.class);
         double pcv = sc.correlation(t1a, t2a);
         if (this.returnCoeffDetermination) {
             return pcv * pcv;
         }
         return pcv;
     }
+	
+	@Override
+	public IArraySimilarity copy() {
+		ArrayRankCorr alp = new ArrayRankCorr();
+		alp.setReturnCoeffDetermination(isReturnCoeffDetermination());
+		return alp;
+	}
 }

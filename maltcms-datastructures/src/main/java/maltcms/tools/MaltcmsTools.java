@@ -44,7 +44,7 @@ import java.util.TreeSet;
 import maltcms.commands.filters.array.SqrtFilter;
 import maltcms.commands.filters.array.TopHatFilter;
 import maltcms.commands.scanners.ArrayStatsScanner;
-import maltcms.datastructures.array.Sparse;
+import ucar.ma2.Sparse;
 import maltcms.datastructures.ms.Chromatogram1D;
 import maltcms.datastructures.ms.ChromatogramFactory;
 import maltcms.datastructures.ms.IAnchor;
@@ -1806,7 +1806,7 @@ public class MaltcmsTools {
 			MaltcmsTools.log.debug("Processing scan {}/{}", i + 1, mza.size());
 			// Fill arrays with values, massValues starts at min_mass, goes until
 			// max_mass, with unit increment
-			final ArrayDouble.D1 sparse = new Sparse(mza.get(i), intena.get(i),
+			final Array sparse = new Sparse(mza.get(i), intena.get(i),
 					(int) Math.floor(min_mass), (int) Math.ceil(max_mass),
 					size, massBinResolution);
 			EvalTools.eqI(size, sparse.getShape()[0], MaltcmsTools.class);

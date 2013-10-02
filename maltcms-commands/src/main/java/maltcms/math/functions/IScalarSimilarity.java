@@ -43,4 +43,11 @@ import java.io.Serializable;
 public interface IScalarSimilarity extends Serializable{
 
     public double apply(double a, double b);
+	
+	/**
+	 * Creates and returns a semantic deep copy of this similarity.
+	 *
+	 * @return
+	 */
+	public IScalarSimilarity copy();
 }

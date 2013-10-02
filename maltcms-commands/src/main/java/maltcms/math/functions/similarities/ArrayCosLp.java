@@ -64,4 +64,11 @@ public class ArrayCosLp implements IArraySimilarity {
         final double dist = (lpd / dim) * (1.0d - cosd);
         return SimilarityTools.toSimilarity(dist);
     }
+	
+		
+	@Override
+	public IArraySimilarity copy() {
+		ArrayCosLp acl = new ArrayCosLp();
+		return acl;
+	}
 }
