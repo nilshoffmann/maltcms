@@ -31,6 +31,7 @@ import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.ArrayTools2;
+import net.jcip.annotations.NotThreadSafe;
 
 
 import ucar.ma2.Array;
@@ -45,6 +46,7 @@ import ucar.ma2.IndexIterator;
  */
 @Data
 //@ServiceProvider(service = IArraySimilarity.class)
+@NotThreadSafe
 public class ArrayDotMap implements IArraySimilarity {
 
     private ArrayDouble.D1 std;

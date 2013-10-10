@@ -34,6 +34,7 @@ import ucar.ma2.Array;
 import ucar.ma2.MAVector;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
+import net.jcip.annotations.NotThreadSafe;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -43,6 +44,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
+@NotThreadSafe
 public class ArrayCosLp implements IArraySimilarity {
 
     private final IArraySimilarity cos = new ArrayCos();

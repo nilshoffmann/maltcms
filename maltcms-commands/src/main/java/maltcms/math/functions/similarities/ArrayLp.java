@@ -43,13 +43,6 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayLp implements IArraySimilarity {
 
-	@Deprecated
-    private double p = 2.0d;
-	@Deprecated
-    private boolean normalizeByLength = false;
-	@Deprecated
-    private double sqrtn = Double.NaN;
-
     @Override
     public double apply(final Array t1, final Array t2) {
         double value = 0.0d;
@@ -63,9 +56,6 @@ public class ArrayLp implements IArraySimilarity {
 	@Override
 	public IArraySimilarity copy() {
 		ArrayLp alp = new ArrayLp();
-		alp.setNormalizeByLength(isNormalizeByLength());
-		alp.setP(getP());
-		alp.setSqrtn(getSqrtn());
 		return alp;
 	}
 }

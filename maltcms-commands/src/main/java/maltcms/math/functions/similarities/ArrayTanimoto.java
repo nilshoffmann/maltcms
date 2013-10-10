@@ -27,8 +27,7 @@
  */
 package maltcms.math.functions.similarities;
 
-import java.util.Map;
-import java.util.WeakHashMap;
+import com.carrotsearch.hppc.ObjectDoubleOpenHashMap;
 import ucar.ma2.Array;
 import ucar.ma2.MAVector;
 import lombok.Data;
@@ -43,22 +42,6 @@ import org.openide.util.lookup.ServiceProvider;
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayTanimoto implements IArraySimilarity {
-
-	private final Map<Array, Double> arrayToIntensityCache;
-
-	public ArrayTanimoto() {
-		arrayToIntensityCache = new WeakHashMap<Array, Double>();;
-	}
-
-	private double getDotProduct(MAVector v, Array a) {
-		Double d = arrayToIntensityCache.get(a);
-		if (d == null) {
-			d = v.dot(v);
-			arrayToIntensityCache.put(a, d);
-		}
-		return d.doubleValue();
-//		return v.dot(v);
-	}
 
 	/**
 	 * {@inheritDoc}

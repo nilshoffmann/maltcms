@@ -25,6 +25,9 @@
             <h1>News</h1>
             <ul class="plainunbulletedlist">
 				<li>
+					<ref target="news/maltcms1_3" alt="Maltcms 1.3 Released on October 10th, 2013"/>
+				</li>
+				<li>
 					<ref target="news/latestBuilds" alt="Latest Stable Builds available"/>
 				</li>
 				<li>

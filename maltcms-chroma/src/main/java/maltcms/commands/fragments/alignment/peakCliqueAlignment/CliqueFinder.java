@@ -227,7 +227,7 @@ public class CliqueFinder {
 		for (Clique<IBipacePeak> c : peakToClique.values()) {
 			if (!cliques.contains(c)) {
 				log.debug("Size of clique: {}\n{}",
-						c.getPeakList().size(), c);
+						c.size(), c);
 				cliques.add(c);
 			}
 		}
@@ -274,8 +274,8 @@ public class CliqueFinder {
 	 * @return
 	 */
 	private List<IBipacePeak> mergeCliques(HashMap<IBipacePeak, Clique<IBipacePeak>> peakToClique, Clique<IBipacePeak> c, Clique<IBipacePeak> d, final LongObjectMap<PeakEdge> edgeMap) {
-		int ds = d.getPeakList().size();
-		int cs = c.getPeakList().size();
+		int ds = d.size();
+		int cs = c.size();
 		//if either clique is empty, we can not merge,
 		//so we can not have any incompatible peaks,
 		//so we return an empty list
@@ -284,8 +284,8 @@ public class CliqueFinder {
 		}
 
 		//start merging if both cliques have at least one peak in them
-		log.debug("Merging cliques: c={}, d={}", c.toString(),
-				d.toString());
+		log.debug("Merging cliques: c={}, d={}", c.getID(),
+				d.getID());
 		// ds has more peaks than cs -> join cs into
 		// ds
 		List<IBipacePeak> incompatiblePeaks = new LinkedList<IBipacePeak>();
@@ -300,7 +300,7 @@ public class CliqueFinder {
 				}
 
 			}
-			log.debug("Clique {} has {} peaks left!", c, c.getPeakList().size());
+			log.debug("Clique {} has {} peaks left!", c, c.size());
 			c.clear();
 		} else {// ds has less peaks than cs -> join
 			// ds into cs
@@ -314,7 +314,7 @@ public class CliqueFinder {
 				}
 
 			}
-			log.debug("Clique {} has {} peaks left!", d, d.getPeakList().size());
+			log.debug("Clique {} has {} peaks left!", d, d.size());
 			d.clear();
 		}
 		return incompatiblePeaks;

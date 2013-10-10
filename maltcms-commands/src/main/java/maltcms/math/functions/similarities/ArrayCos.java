@@ -27,13 +27,14 @@
  */
 package maltcms.math.functions.similarities;
 
-import java.util.HashMap;
+import com.carrotsearch.hppc.ObjectDoubleOpenHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 import ucar.ma2.Array;
 import ucar.ma2.MAVector;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
+import net.jcip.annotations.NotThreadSafe;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -44,45 +45,38 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
+@NotThreadSafe
 public class ArrayCos implements IArraySimilarity {
 
-	private final Map<Array, Double> arrayLengthCache;
-	
+	private final ObjectDoubleOpenHashMap<Array> cache;
 	private double minimumSimilarity = 0.0d;
-	
+
 	public ArrayCos() {
-		arrayLengthCache = new WeakHashMap<Array, Double>();
+		cache = new ObjectDoubleOpenHashMap<>();
 	}
-	
+
 	private double getLength(Array a) {
-		Double d = arrayLengthCache.get(a);
-		if(d==null) {
+		if (!cache.containsKey(a)) {
 			MAVector mav = new MAVector(a);
-			d = mav.norm();
-			arrayLengthCache.put(a, d);
+			double d = mav.norm();
+			cache.put(a, d);
 		}
-		return d.doubleValue();
-//		return new MAVector(a).norm();
+		return cache.get(a);
 	}
-	
-    @Override
-    public double apply(final Array t1, final Array t2) {
-//        if ((t1.getRank() == 1) && (t2.getRank() == 1)) {
-			final double l1 = getLength(t1);
-			final double l2 = getLength(t2);
-			final int len = t1.getShape()[0];
-			double dot = 0.0d;
-			for (int i = 0; i < len; i++) {
-				dot+=(t1.getDouble(i)*t2.getDouble(i));
-			}
-			final double val = dot/(l1*l2);
-			return val>minimumSimilarity?val: Double.NEGATIVE_INFINITY;
-//        }
-		
-//        throw new IllegalArgumentException("Arrays shapes are incompatible! "
-//                + t1.getShape()[0] + " != " + t2.getShape()[0]);
-    }
-	
+
+	@Override
+	public double apply(final Array t1, final Array t2) {
+		final double l1 = getLength(t1);
+		final double l2 = getLength(t2);
+		final int len = t1.getShape()[0];
+		double dot = 0.0d;
+		for (int i = 0; i < len; i++) {
+			dot += (t1.getDouble(i) * t2.getDouble(i));
+		}
+		final double val = dot / (l1 * l2);
+		return val > minimumSimilarity ? val : Double.NEGATIVE_INFINITY;
+	}
+
 	@Override
 	public IArraySimilarity copy() {
 		ArrayCos ac = new ArrayCos();

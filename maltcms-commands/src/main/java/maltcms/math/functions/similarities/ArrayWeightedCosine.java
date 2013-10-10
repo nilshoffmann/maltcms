@@ -27,13 +27,11 @@
  */
 package maltcms.math.functions.similarities;
 
-import cross.cache.CacheFactory;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
+import com.carrotsearch.hppc.ObjectDoubleOpenHashMap;
 import ucar.ma2.Array;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
+import net.jcip.annotations.NotThreadSafe;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.MAMath;
 
@@ -44,24 +42,23 @@ import ucar.ma2.MAMath;
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
+@NotThreadSafe
 public class ArrayWeightedCosine implements IArraySimilarity {
 
-	private final Map<Array, Double> arrayToIntensityCache;
+	private final ObjectDoubleOpenHashMap<Array> cache;
 	
 	private double minimumSimilarity = 0.0d;
 
 	public ArrayWeightedCosine() {
-		arrayToIntensityCache = new WeakHashMap<Array, Double>();
+		cache = new ObjectDoubleOpenHashMap<>();
 	}
 
 	private double getMaximumIntensity(final Array a) {
-		Double d = arrayToIntensityCache.get(a);
-		if (d == null) {
-			d = MAMath.getMaximum(a);
-			arrayToIntensityCache.put(a, d);
+		if (!cache.containsKey(a)) {
+			double d = MAMath.getMaximum(a);
+			cache.put(a, d);
 		}
-		return d.doubleValue();
-//		return MAMath.getMaximum(a);
+		return cache.get(a);
 	}
 
 	@Override

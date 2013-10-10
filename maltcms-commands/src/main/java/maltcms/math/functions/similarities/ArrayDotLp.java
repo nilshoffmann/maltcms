@@ -29,6 +29,7 @@ package maltcms.math.functions.similarities;
 
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
+import net.jcip.annotations.NotThreadSafe;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -40,6 +41,7 @@ import ucar.ma2.Array;
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
+@NotThreadSafe
 public class ArrayDotLp implements IArraySimilarity {
 
     private final IArraySimilarity dot = new ArrayDot();

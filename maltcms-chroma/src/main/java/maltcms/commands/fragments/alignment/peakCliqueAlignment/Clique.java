@@ -30,6 +30,7 @@ package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 import com.carrotsearch.hppc.IntObjectMap;
 import com.carrotsearch.hppc.IntObjectOpenHashMap;
 import com.carrotsearch.hppc.LongObjectMap;
+import com.carrotsearch.hppc.cursors.IntObjectCursor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -85,6 +86,10 @@ public class Clique<T extends IBipacePeak> {
 		} else {
 			return addPeak(edgeMap, p);
 		}
+	}
+	
+	public int size() {
+		return clique.size();
 	}
 
 	/**
@@ -232,14 +237,26 @@ public class Clique<T extends IBipacePeak> {
 	 * @return
 	 */
 	private int getBBHCount(LongObjectMap<PeakEdge> edgeMap, T p) {
-		return getBBHCount(edgeMap, p, getPeakList());
+//		return getBBHCount(edgeMap, p, clique);
+		int bidiHits = 0;
+		// check and count bidi best hit
+		for(IntObjectCursor<T> t:clique) {
+			if (!p.isBidiBestHitFor(edgeMap, t.value)) {
+//				log.debug(
+//						"Peak q: {} in clique is not a bidirectional best hit for peak p: {}",
+//						q, p);
+			} else {
+				bidiHits++;
+			}
+		}
+		return bidiHits;
 	}
 
 	private int getBBHCount(LongObjectMap<PeakEdge> edgeMap, T p, Collection<T> c) {
 		int bidiHits = 0;
 		// check and count bidi best hit
-		for (T q : c) {
-			if (!p.isBidiBestHitFor(edgeMap, q)) {
+		for(T t:c) {
+			if (!p.isBidiBestHitFor(edgeMap, t)) {
 //				log.debug(
 //						"Peak q: {} in clique is not a bidirectional best hit for peak p: {}",
 //						q, p);

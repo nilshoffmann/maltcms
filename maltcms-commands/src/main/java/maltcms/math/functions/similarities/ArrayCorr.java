@@ -27,7 +27,7 @@
  */
 package maltcms.math.functions.similarities;
 
-import java.util.WeakHashMap;
+import com.carrotsearch.hppc.ObjectObjectOpenHashMap;
 import org.apache.commons.math.stat.correlation.PearsonsCorrelation;
 import ucar.ma2.Array;
 import lombok.Data;
@@ -44,25 +44,29 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayCorr implements IArraySimilarity {
 
-	private final WeakHashMap<Array, double[]> arrayCache = new WeakHashMap<Array, double[]>();
+	private final ObjectObjectOpenHashMap<Array,double[]> cache;
 	private boolean returnCoeffDetermination = false;
 	private final PearsonsCorrelation pc = new PearsonsCorrelation();
 
+	public ArrayCorr() {
+		cache = new ObjectObjectOpenHashMap<>();
+	}
+	
 	@Override
 	public double apply(final Array t1, final Array t2) {
 		double[] t1a = null, t2a = null;
 
-		if (arrayCache.containsKey(t1)) {
-			t1a = arrayCache.get(t1);
+		if (cache.containsKey(t1)) {
+			t1a = cache.get(t1);
 		} else {
 			t1a = (double[]) t1.get1DJavaArray(double.class);
-			arrayCache.put(t1, t1a);
+			cache.put(t1, t1a);
 		}
-		if (arrayCache.containsKey(t2)) {
-			t2a = arrayCache.get(t2);
+		if (cache.containsKey(t2)) {
+			t2a = cache.get(t2);
 		} else {
 			t2a = (double[]) t2.get1DJavaArray(double.class);
-			arrayCache.put(t2, t2a);
+			cache.put(t2, t2a);
 		}
 //
 //		t1a = (double[]) t1.get1DJavaArray(double.class);

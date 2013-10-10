@@ -330,7 +330,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
 		this.o.addOption(addOption(
 				"b",
 				"createBeanXml",
-				"Creates a fragmentCommands.xml file in spring format for all instances of cross.commands.fragments.AFragmentCommand",
+				"Creates an xml file in spring format for all given of cross.commands.fragments.AFragmentCommand. '*' as an argument will create one xml file for every available AFragmentCommand implementation.",
 				true, ',', true, true, 0, false, false, 0,
 				"class1,class2, ...", false));
 	}
@@ -816,21 +816,36 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
 		outputDir.mkdirs();
 		File xmlDir = new File(outputDir, "xml");
 		xmlDir.mkdirs();
-		File contextFile = new File(xmlDir, "customContext.xml");
 		LinkedList<String> beanList = new LinkedList<String>();
-//        beanList.add(IWorkflow.class.getCanonicalName());
-//        beanList.add(ICommandSequence.class.getCanonicalName());
-		beanList.addAll(Arrays.asList(beans));
-		ReflectionApplicationContextGenerator.createContextXml(contextFile, "3.0", "prototype", beanList.toArray(new String[beanList.size()]));
-		try {
-			PropertiesConfiguration pc = new PropertiesConfiguration(new File(outputDir, "customPipeline.mpl"));
-			pc.setProperty("pipeline.xml", "file:${config.basedir}/xml/" + contextFile.getName());
-			pc.save();
+		if (beans.length == 1 && beans[0].equals("*")) {
+			Class<?> c;
+			try {
+				c = Class.forName("cross.commands.fragments.AFragmentCommand");
+				ServiceLoader<?> sl = ServiceLoader.load(c);
+				for (Object o : sl) {
+					File contextFile = new File(xmlDir,o.getClass().getSimpleName()+".xml");
+					ReflectionApplicationContextGenerator.createContextXml(contextFile, "3.0", "prototype", o.getClass().getCanonicalName());
+				}
+
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		} else {
+			File contextFile = new File(xmlDir, "customContext.xml");
+			//        beanList.add(IWorkflow.class.getCanonicalName());
+			//        beanList.add(ICommandSequence.class.getCanonicalName());
+			beanList.addAll(Arrays.asList(beans));
+			ReflectionApplicationContextGenerator.createContextXml(contextFile, "3.0", "prototype", beanList.toArray(new String[beanList.size()]));
+			try {
+				PropertiesConfiguration pc = new PropertiesConfiguration(new File(outputDir, "customPipeline.mpl"));
+				pc.setProperty("pipeline.xml", "file:${config.basedir}/xml/" + contextFile.getName());
+				pc.save();
 
 
-		} catch (ConfigurationException ex) {
-			java.util.logging.Logger.getLogger(Maltcms.class
-					.getName()).log(Level.SEVERE, null, ex);
+			} catch (ConfigurationException ex) {
+				java.util.logging.Logger.getLogger(Maltcms.class
+						.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 	}
 }

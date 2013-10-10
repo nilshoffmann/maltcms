@@ -74,8 +74,8 @@ public class ProductSimilarity implements IScalarArraySimilarity {
 		for (int i = 0; i < ias.length; i++) {
 			ias[i] = getArraySimilarities()[i].copy();
 		}
-		psim.setArraySimilarities(arraySimilarities);
-		psim.setScalarSimilarities(scalarSimilarities);
+		psim.setArraySimilarities(ias);
+		psim.setScalarSimilarities(isas);
 		return psim;
 	}
 }

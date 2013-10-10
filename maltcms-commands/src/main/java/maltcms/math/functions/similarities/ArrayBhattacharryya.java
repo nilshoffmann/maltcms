@@ -27,38 +27,36 @@
  */
 package maltcms.math.functions.similarities;
 
-import java.util.Map;
-import java.util.WeakHashMap;
+import com.carrotsearch.hppc.ObjectDoubleOpenHashMap;
 import ucar.ma2.Array;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.tools.ArrayTools;
+import net.jcip.annotations.NotThreadSafe;
 import org.openide.util.lookup.ServiceProvider;
 
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
+@NotThreadSafe
 public class ArrayBhattacharryya implements IArraySimilarity {
 
-//	private final Map<Array, Double> arrayToIntensityCache;
+	private final ObjectDoubleOpenHashMap<Array> cache;
 
 	public ArrayBhattacharryya() {
-//		arrayToIntensityCache = new WeakHashMap<Array, Double>();
+		cache = new ObjectDoubleOpenHashMap<>();
 	}
 
 	private double getSum(Array a) {
-//		Double d = arrayToIntensityCache.get(a);
-//		if (d == null) {
-//			d = ArrayTools.integrate(a);
-//			arrayToIntensityCache.put(a, d);
-//		}
-//		return d.doubleValue();
-		return ArrayTools.integrate(a);
+		if (!cache.containsKey(a)) {
+			double d = ArrayTools.integrate(a);
+			cache.put(a, d);
+		}
+		return cache.get(a);
 	}
 
 	@Override
 	public double apply(Array t1,
 			Array t2) {
-//        if ((t1.getRank() == 1) && (t2.getRank() == 1)) {
 		double s1 = 0, s2 = 0;
 		s1 = getSum(t1);
 		s2 = getSum(t2);
@@ -73,9 +71,6 @@ public class ArrayBhattacharryya implements IArraySimilarity {
 			return SimilarityTools.toSimilarity(ret);
 		}
 		return Double.NEGATIVE_INFINITY;
-//        }
-//        throw new IllegalArgumentException("Arrays shapes are incompatible! "
-//                + t1.getShape()[0] + " != " + t2.getShape()[0]);
 	}
 
 	@Override
