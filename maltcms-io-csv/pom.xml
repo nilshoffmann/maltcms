@@ -8,7 +8,7 @@
     </parent>
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-io-csv</artifactId>
-    <version>1.3.1-SNAPSHOT</version>
+    <version>1.3.0</version>
     <name>Maltcms IO Provider CSV</name>
     <url>http://maltcms.sourceforge.net</url>
     <properties>

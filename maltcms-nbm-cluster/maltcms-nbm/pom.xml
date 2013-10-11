@@ -9,7 +9,6 @@
 
 	<groupId>net.sf.maltcms</groupId>
 	<artifactId>maltcms-nbm</artifactId>
-	<version>1.3.1-SNAPSHOT</version>
 	<packaging>nbm</packaging>
 
 	<name>Lib Maltcms</name>
