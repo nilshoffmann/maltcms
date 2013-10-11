@@ -4,7 +4,7 @@
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-modules</artifactId>
     <packaging>pom</packaging>
-    <version>1.3.1-SNAPSHOT</version>
+    <version>1.3.0</version>
     <name>Maltcms-Modules</name>
     <description>Maltcms, short for "Modular Application Toolkit for Chromatography Mass-Spectrometry" is an application framework mainly suited for developers working in the domain of bioinformatics for metabolomics and proteomics. Its aim is to provide reusable, efficient datastructures, abstracting from the various low-level data-formats like netcdf (ANDIMS), mzXML, mzData and mzML and providing consistent access to data features like mass spectra, chromatograms and metadata. Furthermore, Maltcms provides a platform for the implementation and execution of processing pipelines. New and existing algorithms can be easily implemented or included and executed together with existing processing elements. </description>
     <url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}</url>
@@ -239,6 +239,8 @@
                         </execution>
                     </executions>
                 </plugin>
+<!-- deactivated due to problems with javadoc / site generation -->
+<!--
                 <plugin>
                     <groupId>org.projectlombok</groupId>
                     <artifactId>lombok-maven-plugin</artifactId>
@@ -255,7 +257,7 @@
                         <addOutputDirectory>false</addOutputDirectory>
                         <sourceDirectory>src/main/java</sourceDirectory>
                     </configuration>
-                </plugin>
+                </plugin>-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -271,8 +273,8 @@
                         <excludes>
                             <exclude>**/site.xml</exclude>
                         </excludes>
-                        <sourcepath>${basedir}/src/main/java</sourcepath>
-                        <sourcepath>target/generated-sources/delombok</sourcepath>
+                        <!--<sourcepath>${basedir}/src/main/java</sourcepath>
+                        <sourcepath>target/generated-sources/delombok</sourcepath>-->
                     </configuration>
                     <executions>
                         <execution>
@@ -443,9 +445,10 @@
                                     <link>http://docs.oracle.com/javase/7/docs/api/</link>
                                     <!-- version 4.1 api not available -->
                                     <link>http://www.unidata.ucar.edu/software/netcdf-java/v4.2/javadoc/</link>
+                                    <link>http://maltcms.sourceforge.net/maven/cross/1.3.0/apidocs/</link>
                                 </links>
-                                <sourcepath>${basedir}/src/main/java</sourcepath>
-                                <sourcepath>target/generated-sources/delombok</sourcepath>
+                <!--                <sourcepath>${basedir}/src/main/java</sourcepath>
+                                <sourcepath>target/generated-sources/delombok</sourcepath>-->
                             </configuration>
                         </plugin>
                         <!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>jxr-maven-plugin</artifactId> 
@@ -513,7 +516,7 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Bundle-RequiredExecutionEnvironment>J2SE-1.5,JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
+                        <Bundle-RequiredExecutionEnvironment>JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
                         <!--<Bundle-Version>${project.version}</Bundle-Version>--> 
                         <!-- Allow each bundle to override these settings by creating a file --> 
                         <!--<_include>src/main/resources/META-INF/MANIFEST.MF</_include>--> 
