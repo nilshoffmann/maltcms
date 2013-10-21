@@ -36,7 +36,7 @@ import lombok.experimental.Value;
  */
 @Value
 public class PairwiseSimilarityResult implements Serializable {
-	private final BBHPeakEdgeSet bbhPeakedgeSet;
+	private final BBHPeakList bbhPeakedgeSet;
 	private final long[] peakEdgeKeys;
 	private final PeakEdge[] peakEdgeValues;
 }

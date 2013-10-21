@@ -87,7 +87,7 @@ public final class PairwiseSimilarityWorker implements Callable<PairwiseSimilari
 			psv.visualizePairwisePeakSimilarities(outputDirectory, edgeMap, lhsName, lhsPeaks, rhsName, rhsPeaks, 256, "beforeBIDI", false);
 		}
         BBHFinder bbhfinder = new BBHFinder();
-		BBHPeakEdgeSet bbhpr = bbhfinder.findBiDiBestHits(edgeMap,lhsPeaks,rhsPeaks);
+		BBHPeakList bbhpr = bbhfinder.findBiDiBestHits(edgeMap,lhsPeaks,rhsPeaks);
 		long[] keys = new long[edgeMap.size()];
 		PeakEdge[] values = new PeakEdge[edgeMap.size()];
 		int i = 0;

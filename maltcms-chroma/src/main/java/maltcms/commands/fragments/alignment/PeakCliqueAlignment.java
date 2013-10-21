@@ -525,9 +525,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 			}
 			List<PairwiseSimilarityResult> bbhPeaksList = ics.call();
 			for (PairwiseSimilarityResult upl : bbhPeaksList) {
-				for (Tuple2D<IBipacePeak, IBipacePeak> t : upl.getBbhPeakedgeSet()) {
-					unmatchedPeaks.remove(t.getFirst());
-					unmatchedPeaks.remove(t.getSecond());
+				for (IBipacePeak p : upl.getBbhPeakedgeSet()) {
+					unmatchedPeaks.remove(p);
 				}
 				long[] edgeKeys = upl.getPeakEdgeKeys();
 				PeakEdge[] edges = upl.getPeakEdgeValues();

@@ -42,8 +42,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BBHFinder {
 
-	public BBHPeakEdgeSet findBiDiBestHits(LongObjectMap<PeakEdge> edgeMap, List<? extends IBipacePeak> a, List<? extends IBipacePeak> b) {
-		final BBHPeakEdgeSet matchedPeaks = new BBHPeakEdgeSet();
+	public BBHPeakList findBiDiBestHits(LongObjectMap<PeakEdge> edgeMap, List<? extends IBipacePeak> a, List<? extends IBipacePeak> b) {
+		final BBHPeakList matchedPeaks = new BBHPeakList();
 		int laassociation = a.get(0).getAssociationId();
 		int lbassociation = b.get(0).getAssociationId();
 		if(laassociation == lbassociation) {
@@ -59,8 +59,8 @@ public class BBHFinder {
 			if (other != null) {
 				UUID otherBestPeak = other.getPeakWithHighestSimilarity(edgeMap, laassociation);
 				if (otherBestPeak != null && lapeak.getUniqueId().equals(otherBestPeak)) {
-					Tuple2D<IBipacePeak, IBipacePeak> t = new Tuple2D<>(lapeak, other);
-					matchedPeaks.add(t);
+					matchedPeaks.add(lapeak);
+					matchedPeaks.add(other);
 				}
 			}
 		}

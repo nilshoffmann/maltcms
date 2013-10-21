@@ -47,6 +47,7 @@ import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.Data;
@@ -111,6 +112,7 @@ public class ANDIMSExporter extends AFragmentCommand {
             //FIXME amalgamate attributes over all ancestors???
             List<Attribute> lattributes = deepestAncestors.get(0).getAttributes();
             int scans = f.getChild("scan_index").getArray().getShape()[0];
+			lattributes = updateScanIndexCount(lattributes, scans);
             int points = f.getChild("mass_values", true).getArray().getShape()[0];
 
             Dimension scan_number = new Dimension("scan_number", scans, true);
@@ -197,6 +199,18 @@ public class ANDIMSExporter extends AFragmentCommand {
         }
         return t;
     }
+	
+	private List<Attribute> updateScanIndexCount(List<Attribute> attributes, int scanCount) {
+		List<Attribute> modified = new ArrayList<Attribute>(attributes);
+		int i = 0;
+		for(Attribute a:attributes) {
+			if(a.getName().equals("number_of_scans")) {
+				modified.set(i, new Attribute(a.getName(), scanCount));
+			}
+			i++;
+		}
+		return modified;
+	}
 
     class VariableInfo {
 
