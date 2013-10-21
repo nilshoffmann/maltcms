@@ -69,15 +69,12 @@ public class MZMLExporter extends AFragmentCommand {
 	
 	@Override
 	public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
-		System.out.println("Starting mzML export");
+		log.info("Starting mzML export");
 		ICompletionService<URI> ics = createCompletionService(URI.class);
-		int i = 0;
-		UUID randomWorkflowPrefix = UUID.randomUUID();
 		for(IFileFragment f:in) {
-			System.out.println("Exporting "+f.getUri());
+			log.info("Exporting "+f.getUri());
 			MZMLExporterWorker worker = new MZMLExporterWorker();
 			worker.setInputFile(f.getUri());
-			worker.setInputFileId("maltcms-"+randomWorkflowPrefix+"-"+i+"");
 			worker.setOutputFile(createWorkFragment(f).getUri());
 			worker.setCompressSpectra(compressSpectra);
 			worker.setIntensityValuesVariable(intensityValuesVariable);
@@ -88,9 +85,8 @@ public class MZMLExporter extends AFragmentCommand {
 			worker.setPsiMsVersion(psiMsVersion);
 			worker.setUnitOntologyVersion(unitOntologyVersion);
 			ics.submit(worker);
-			i++;
 		}
-		System.out.println("Waiting for workers to return!");
+		log.info("Waiting for workers to return!");
 		//processed files are stored by the worker, so no need to 
 		//call save() here.
 		TupleND<IFileFragment> ret = postProcessUri(ics, in);
