@@ -97,8 +97,7 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
             Assert.fail(ex.getLocalizedMessage());
         }
     }
-
-	@Test
+	
     public IFileFragment testDirectRemoteRead(URI testCdf) throws ResourceNotAvailableException {
         System.out.println("Tesing direct remote read!");
         //read in the created file
@@ -134,7 +133,6 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
         return readFragment;
     }
 
-	@Test
     public IFileFragment testIndirectRemoteRead(URI testCdf) throws ResourceNotAvailableException {
         System.out.println("Testing indirect remote read!");
         IFileFragment readFragment = new ImmutableFileFragment(new FileFragment(testCdf));
