@@ -97,14 +97,14 @@ public class NetcdfDataSource implements IDataSource {
 			dimname = this.pointDimensionName;
 			log.debug("Renaming dimension {} to {} for variable {}",
 					new Object[]{element.getName(), dimname,
-				vf.getName()});
+						vf.getName()});
 		}
 
 		if (this.scanDimensionVars.contains(vf.getName())) {
 			dimname = this.scanDimensionName;
 			log.debug("Renaming dimension {} to {} for variable {}",
 					new Object[]{element.getName(), dimname,
-				vf.getName()});
+						vf.getName()});
 		}
 		Dimension d = addDimension(dimensions, dimname, nfw, element);
 		return d;
@@ -215,19 +215,19 @@ public class NetcdfDataSource implements IDataSource {
 				+ ".pointDimensionName", "point_number");
 		this.saveNCML = configuration.getBoolean(
 				"ucar.nc2.NetcdfFile.saveNCML", false);
-		if(useNetcdfFileCache) {
+		if (useNetcdfFileCache) {
 			NetcdfDataset.initNetcdfFileCache(minCachedFiles, maxCachedFiles, secondsUntilCleanup);
 			Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHook()));
 		}
 	}
-	
+
 	private static class ShutdownHook implements Runnable {
 
 		@Override
 		public void run() {
 			NetcdfDataset.shutdown();
 		}
-		
+
 	}
 
 	public IVariableFragment convert(final IFileFragment ff, final Variable v,
@@ -519,23 +519,29 @@ public class NetcdfDataSource implements IDataSource {
 			} else {
 				data_end = index_array.getInt((index_start + i + 1)) - 1;
 			}
-			try {
-				log.debug("Reading array {}, from {} to {}", new Object[]{
-					i, data_start, data_end});
-				// Read from data_start to data_end incl. with data_stride
-				final Array ai = data_var.read(data_start + ":" + data_end
-						+ ":" + data_stride);
-				// Update new index to the changed value
-				// new_index.set(i, index_offset);
-				// Increase the next start offset by the length of array ai
-				// log.debug("new_index[i] = {}, Index offset =
-				// {}",i,index_offset);
-				index_offset += (data_end - data_start);
-				al.add(ai);
-			} catch (final InvalidRangeException e) {
-				log.error(e.getLocalizedMessage());
+			//safety net
+			data_end = Math.min(data_dim.getLength() - 1, data_end);
+			if (data_start > data_end) {
+				log.warn("scan_index contains an invalid last scan offset. Inserting terminating array with length 0!");
+				al.add(Array.factory(data_var.getDataType(), new int[0]));
+			} else {
+				try {
+					log.debug("Reading array {}, from {} to {}", new Object[]{
+						i, data_start, data_end});
+					// Read from data_start to data_end incl. with data_stride
+					final Array ai = data_var.read(data_start + ":" + data_end
+							+ ":" + data_stride);
+					// Update new index to the changed value
+					// new_index.set(i, index_offset);
+					// Increase the next start offset by the length of array ai
+					// log.debug("new_index[i] = {}, Index offset =
+					// {}",i,index_offset);
+					index_offset += (data_end - data_start);
+					al.add(ai);
+				} catch (final InvalidRangeException e) {
+					log.error(e.getLocalizedMessage());
+				}
 			}
-
 		}
 		EvalTools.notNull(al, this);
 		index.setRange(index_range);
@@ -852,13 +858,13 @@ public class NetcdfDataSource implements IDataSource {
 
 						// SET DATA TYPE
 						DataType dt = null;
-						if(vf.getDataType() == null) {
-							if(vf.getIndex()!=null) {
+						if (vf.getDataType() == null) {
+							if (vf.getIndex() != null) {
 								dt = DataType.getType(vf.getIndexedArray().get(0).getElementType());
-							}else{
+							} else {
 								dt = DataType.getType(vf.getArray().getElementType());
 							}
-						}else{
+						} else {
 							dt = vf.getDataType();
 						}
 						v.setDataType(dt);
@@ -878,12 +884,12 @@ public class NetcdfDataSource implements IDataSource {
 			nfw.create();
 			return nfw;
 		} catch (final IOException e) {
-			log.error("Caught IOException while creating netcdf file: ",e);
+			log.error("Caught IOException while creating netcdf file: ", e);
 			if (nfw != null) {
 				try {
 					nfw.close();
 				} catch (IOException ex) {
-					log.error("Caught IOException while closing file:",ex);
+					log.error("Caught IOException while closing file:", ex);
 				}
 			}
 		}
