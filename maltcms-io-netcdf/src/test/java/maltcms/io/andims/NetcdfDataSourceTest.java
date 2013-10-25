@@ -656,7 +656,61 @@ public class NetcdfDataSourceTest {
         Assert.assertNull(f.getChild("indexVar1").getIndex());
         Assert.assertFalse(f.getChild("variable1").getIndexedArray().isEmpty());
     }
+	
+	@Test
+    public void testInvalidIndexFragment() {
+		IFileFragment f = createInvalidIndexTestFragment();
+        f.save();
+        //first check that all are there
+        Assert.assertNotNull(f.getChild("variable1"));
+        Assert.assertNotNull(f.getChild("variable2"));
+        Assert.assertNotNull(f.getChild("indexVar1"));
+		Assert.assertNotNull(f.getChild("indexVar2"));
+        Assert.assertNotNull(f.getChild("variable3"));
+        try {
+            f.getChild("variable3");
+        } catch (ResourceNotAvailableException rnae) {
+            log.info("Caught expected exception for non-existing child {}", "variable3");
+        }
+        Assert.assertNull(f.getChild("indexVar1").getIndex());
+        f.getChild("variable1").setIndex(f.getChild("indexVar1"));
+        Assert.assertNotNull(f.getChild("variable1").getIndex());
+        f.getChild("variable2").setIndex(f.getChild("indexVar2"));
+        Assert.assertNotNull(f.getChild("variable2").getIndex());
+        Assert.assertEquals(f.getChild("indexVar1"), f.getChild("variable1").getIndex());
+		Assert.assertEquals(f.getChild("indexVar2"), f.getChild("variable2").getIndex());
+        Assert.assertNull(f.getChild("variable3").getIndex());
+        Assert.assertNull(f.getChild("indexVar1").getIndex());
+		Assert.assertNull(f.getChild("indexVar2").getIndex());
+        Assert.assertFalse(f.getChild("variable1").getIndexedArray().isEmpty());
+		Assert.assertFalse(f.getChild("variable2").getIndexedArray().isEmpty());
+	}
 
+	public IFileFragment createInvalidIndexTestFragment() {
+        try {
+            File folder = tf.newFolder();
+            IFileFragment f = new FileFragment(new File(folder, "invalidIndexTestFrag.cdf"));
+            f.addChild("variable1").setIndex(f.addChild("indexVar1"));
+            List<Array> l1 = new ArrayList<Array>();
+            l1.add(Array.factory(new double[]{1.2, 1.5}));
+            l1.add(Array.factory(new double[]{2.2, 2.6, 2.87}));
+            l1.add(Array.factory(new double[]{3.67}));
+            f.getChild("variable1").setIndexedArray(l1);
+            f.addChild("variable2").setIndex(f.addChild("indexVar2"));
+            List<Array> l2 = new ArrayList<Array>();
+            l2.add(Array.factory(new int[]{1, 1}));
+            l2.add(Array.factory(new int[]{2, 2, 2}));
+            l2.add(Array.factory(new int[]{3}));
+            f.getChild("variable2").setIndexedArray(l2);
+            f.addChild("variable3").setArray(Array.factory(new double[]{2, 3.3, 235.32, 352.3}));
+            f.getChild("indexVar1").setArray(Array.factory(new int[]{2, 3, 1, 4}));
+			f.getChild("indexVar2").setArray(Array.factory(new int[]{2, 3}));
+            return f;
+        } catch (IOException ioex) {
+            throw new RuntimeException(ioex);
+        }
+    }
+	
     public IFileFragment createTestFragment() {
         try {
             File folder = tf.newFolder();
