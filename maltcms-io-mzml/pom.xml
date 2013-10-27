@@ -54,6 +54,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>cross-main</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-chroma</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <packaging>jar</packaging>
     <repositories>

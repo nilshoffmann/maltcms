@@ -77,6 +77,7 @@ import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
 import uk.ac.ebi.jmzml.model.mzml.FileDescription;
 import uk.ac.ebi.jmzml.model.mzml.SourceFile;
 import uk.ac.ebi.jmzml.model.mzml.SourceFileList;
+import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 @Slf4j
@@ -118,11 +119,11 @@ public class MZMLDataSource implements IDataSource {
 	private String total_ion_current_chromatogram_scan_acquisition_timeAccession = "MS:1000595";
 	private String ms_level = "ms_level";
 	private String msLevelAccession = "MS:1000511";
-	private static ICacheDelegate<IFileFragment, MzMLUnmarshaller> fileToIndex = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller", 300, 600, 20);
+	private static ICacheDelegate<URI, MzMLUnmarshaller> fileToIndex = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller", 300, 600, 20);
 //	private static ICacheDelegate<MzMLUnmarshaller, Run> unmarshallerToRun = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller-to-run", 300, 600, 2);
-	private static ICacheDelegate<IVariableFragment, SerializableArray> variableToArrayCache = CacheFactory.createDefaultCache(MZMLDataSource.class.getName(), 10);
+	private static ICacheDelegate<String, SerializableArray> variableToArrayCache = CacheFactory.createDefaultCache(MZMLDataSource.class.getName(), 10);
 
-	private ICacheDelegate<IVariableFragment, SerializableArray> getCache() {
+	private ICacheDelegate<String, SerializableArray> getCache() {
 		return MZMLDataSource.variableToArrayCache;
 	}
 
@@ -177,15 +178,15 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private MzMLUnmarshaller getUnmarshaller(final IFileFragment ff) {
-		MzMLUnmarshaller um = MZMLDataSource.fileToIndex.get(ff);
+		MzMLUnmarshaller um = MZMLDataSource.fileToIndex.get(ff.getUri());
 		if (um != null) {
 			log.info("Retrieved unmarshaller from cache!");
 			return um;
 		}
 		try {
 			log.debug("Initializing unmarshaller for file {}", ff.getUri());
-			um = new MzMLUnmarshaller(ff.getUri().toURL());
-			MZMLDataSource.fileToIndex.put(ff, um);
+			um = new MzMLUnmarshaller(ff.getUri().toURL(), true);
+			MZMLDataSource.fileToIndex.put(ff.getUri(), um);
 			log.debug("mzML file {} is indexed: {}", ff.getUri(), um.isIndexedmzML());
 			return um;
 		} catch (MalformedURLException ex) {
@@ -305,10 +306,11 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private int getScanCount(final MzMLUnmarshaller um) {
-		if (um.isIndexedmzML()) {
-			return um.getSpectrumIDs().size();
-		}
-		return getRun(um).getSpectrumList().getCount();
+		return um.getObjectCountForXpath("/run/spectrumList/spectrum");
+//		if (um.isIndexedmzML()) {
+//			return um.getSpectrumIDs().size();
+//		}
+//		return getRun(um).getSpectrumList().getCount();
 	}
 
 	private IVariableFragment getVariable(final IFileFragment f,
@@ -340,14 +342,19 @@ public class MZMLDataSource implements IDataSource {
 		final ArrayDouble.D1 mass_range_max1 = new ArrayDouble.D1(scans);
 		double min_mass = Double.MAX_VALUE;
 		double max_mass = Double.MIN_VALUE;
-		for (int i = start; i < start + scans; i++) {
-			Spectrum spec = getSpectrum(um, i);
-			Array a = getMassValues(spec);
-			final Tuple2D<Double, Double> t = getMinMaxMassRange(a);
-			min_mass = Math.min(min_mass, t.getFirst());
-			max_mass = Math.max(max_mass, t.getSecond());
+		MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+		int i = 0;
+		while (spectrumIterator.hasNext()) {
+			Spectrum spectrum = spectrumIterator.next();
+			if (i >= start && i < start + scans) {
+				Array a = getMassValues(spectrum);
+				final Tuple2D<Double, Double> t = getMinMaxMassRange(a);
+				min_mass = Math.min(min_mass, t.getFirst());
+				max_mass = Math.max(max_mass, t.getSecond());
+				i++;
+			}
 		}
-		for (int i = 0; i < start + scans; i++) {
+		for (i = 0; i < start + scans; i++) {
 			mass_range_min1.setDouble(i, Math.floor(min_mass));
 			mass_range_max1.setDouble(i, Math.ceil(max_mass));
 		}
@@ -355,7 +362,7 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private Array loadArray(final IFileFragment f, final IVariableFragment var) {
-		SerializableArray sa = getCache().get(var);
+		SerializableArray sa = getCache().get(f.getUri()+">"+var.getName());
 		if (sa != null) {
 			log.debug("Retrieved variable data array from cache for " + var);
 			return sa.getArray();
@@ -405,7 +412,7 @@ public class MZMLDataSource implements IDataSource {
 					"Unknown variable name to mzML mapping for " + varname);
 		}
 		if (a != null) {
-			getCache().put(var, new SerializableArray(a));
+			getCache().put(var.getParent().getUri()+">"+var.getName(), new SerializableArray(a));
 		}
 		return a;
 	}
@@ -437,8 +444,14 @@ public class MZMLDataSource implements IDataSource {
 					len = Math.min(len, r[0].length());
 				}
 			}
-			for (int i = start; i < start + len; i++) {
-				al.add(getMassValues(getSpectrum(um, i)));
+			MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+			int i = 0;
+			while (spectrumIterator.hasNext()) {
+				Spectrum spectrum = spectrumIterator.next();
+				if (i >= start && i < start + len) {
+					al.add(getMassValues(spectrum));
+					i++;
+				}
 			}
 			return al;
 		}
@@ -453,8 +466,14 @@ public class MZMLDataSource implements IDataSource {
 					len = Math.min(len, r[0].length());
 				}
 			}
-			for (int i = start; i < start + len; i++) {
-				al.add(getIntensityValues(getSpectrum(um, i)));
+			MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+			int i = 0;
+			while (spectrumIterator.hasNext()) {
+				Spectrum spectrum = spectrumIterator.next();
+				if (i >= start && i < start + len) {
+					al.add(getIntensityValues(spectrum));
+					i++;
+				}
 			}
 			return al;
 		}
@@ -486,13 +505,18 @@ public class MZMLDataSource implements IDataSource {
 		}
 		log.debug("Creating index array with {} elements", scans);
 		final ArrayDouble.D1 elutionTime = new ArrayDouble.D1(scans);
-		for (int i = start; i < start + scans; i++) {
-			Spectrum s = getSpectrum(um, i);
-			List<CVParam> cvParams = s.getCvParam();
-			CVParam cvp = findParam(cvParams, accession);
-			String value = cvp.getValue();
-			double rt = convertRT(Double.parseDouble(value), cvp.getUnitName());
-			elutionTime.set(i, rt);
+		MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+		int i = 0;
+		while (spectrumIterator.hasNext()) {
+			Spectrum s = spectrumIterator.next();
+			if (i >= start && i < start + scans) {
+				List<CVParam> cvParams = s.getCvParam();
+				CVParam cvp = findParam(cvParams, accession);
+				String value = cvp.getValue();
+				double rt = convertRT(Double.parseDouble(value), cvp.getUnitName());
+				elutionTime.set(i, rt);
+				i++;
+			}
 		}
 		EvalTools.notNull(elutionTime, this);
 		return elutionTime;
@@ -533,9 +557,15 @@ public class MZMLDataSource implements IDataSource {
 		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
 		if (var.getName().equals(this.intensity_values)) {
 			double sum = 0.0d;
-			for (int i = start; i < start + scans; i++) {
-				log.debug("Reading scan {} of {}", (i + 1), scans);
-				tic.setDouble(i, MAMath.sumDouble(getIntensityValues(getSpectrum(um, i))));
+			MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+			int i = 0;
+			while (spectrumIterator.hasNext()) {
+				Spectrum spectrum = spectrumIterator.next();
+				if (i >= start && i < start + scans) {
+					log.debug("Reading scan {} of {}", (i + 1), scans);
+					tic.setDouble(i, MAMath.sumDouble(getIntensityValues(spectrum)));
+					i++;
+				}
 			}
 			return tic;
 		}
@@ -566,33 +596,52 @@ public class MZMLDataSource implements IDataSource {
 			}
 		}
 		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
-		for (int i = start; i < start + scans; i++) {
-			npeaks += getPointCount(getSpectrum(um, i));
+
+		MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+		int i = 0;
+		while (spectrumIterator.hasNext()) {
+			Spectrum spectrum = spectrumIterator.next();
+			if (i >= start && i < start + scans) {
+				npeaks += getPointCount(getSpectrum(um, i));
+				i++;
+			}
 		}
 
 		if (var.getName().equals(this.mass_values)) {
 			final Array a = new ArrayDouble.D1(npeaks);
 			npeaks = 0;
-			for (int i = start; i < start + scans; i++) {
-				log.debug("Reading scan {} of {}", (i + 1), scans);
-				final Array b = getMassValues(getSpectrum(um, i));
-				Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
-				npeaks += b.getShape()[0];
+			spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+			i = 0;
+			while (spectrumIterator.hasNext()) {
+				Spectrum spectrum = spectrumIterator.next();
+				if (i >= start && i < start + scans) {
+					log.debug("Reading scan {} of {}", (i + 1), scans);
+					final Array b = getMassValues(spectrum);
+					Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
+					npeaks += b.getShape()[0];
+					i++;
+				}
 			}
 			return a;
 			// f.setArray(a);
 		} else if (var.getName().equals(this.intensity_values)) {
 			final Array a = new ArrayDouble.D1(npeaks);
 			npeaks = 0;
-			for (int i = start; i < start + scans; i++) {
-				log.debug("Reading scan {} of {}", (i + 1), scans);
-				final Array b = getIntensityValues(getSpectrum(um, i));
-				Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
-				npeaks += b.getShape()[0];
-				log.debug("npeaks after: {}", npeaks);
+			spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+			i = 0;
+			while (spectrumIterator.hasNext()) {
+				Spectrum spectrum = spectrumIterator.next();
+				if (i >= start && i < start + scans) {
+					log.debug("Reading scan {} of {}", (i + 1), scans);
+					final Array b = getIntensityValues(spectrum);
+					Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
+					npeaks += b.getShape()[0];
+					log.debug("npeaks after: {}", npeaks);
+					i++;
+				}
+				// f.setArray(a);
 			}
 			return a;
-			// f.setArray(a);
 		}
 		throw new IllegalArgumentException(
 				"Don't know how to handle variable: " + var.getName());
@@ -610,13 +659,19 @@ public class MZMLDataSource implements IDataSource {
 		}
 		Array a = new ArrayInt.D1(scans);
 		log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
-		for (int i = start; i < start + scans; i++) {
-			CVParam param = findParam(getSpectrum(um, i).getCvParam(), msLevelAccession);
-			int paramMsLevel = -1;
-			if (param != null && !param.getValue().isEmpty()) {
-				paramMsLevel = Integer.parseInt(param.getValue());
+		MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+		int i = 0;
+		while (spectrumIterator.hasNext()) {
+			Spectrum spectrum = spectrumIterator.next();
+			if (i >= start && i < start + scans) {
+				CVParam param = findParam(spectrum.getCvParam(), msLevelAccession);
+				int paramMsLevel = -1;
+				if (param != null && !param.getValue().isEmpty()) {
+					paramMsLevel = Integer.parseInt(param.getValue());
+				}
+				a.setInt(i, paramMsLevel);
+				i++;
 			}
-			a.setInt(i, paramMsLevel);
 		}
 		return a;
 	}
@@ -632,11 +687,16 @@ public class MZMLDataSource implements IDataSource {
 			scans = Math.min(scans, r[0].length());
 		}
 		final ArrayDouble.D1 sat = new ArrayDouble.D1(scans);
-		for (int i = start; i < start + scans; i++) {
-			sat.set(i, getRT(getSpectrum(um, i)));
-			log.debug("RT({})={}", i, sat.get(i));
+		MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+		int i = 0;
+		while (spectrumIterator.hasNext()) {
+			Spectrum spectrum = spectrumIterator.next();
+			if (i >= start && i < start + scans) {
+				sat.set(i, getRT(spectrum));
+				log.debug("RT({})={}", i, sat.get(i));
+				i++;
+			}
 		}
-		// f.setArray(sat);
 		return sat;
 	}
 
@@ -651,21 +711,28 @@ public class MZMLDataSource implements IDataSource {
 		}
 		log.debug("Creating index array with {} elements", scans);
 		final ArrayInt.D1 scan_index = new ArrayInt.D1(scans);
-		for (int i = start; i < start + scans; i++) {
-			final int peaks = getMassValues(getSpectrum(um, i)).getShape()[0];
-			// current npeaks is index into larger arrays for current scan
-			log.debug("Scan {} from {} to {}", new Object[]{i, npeaks,
-				(npeaks + peaks - 1)});
-			scan_index.set(i, npeaks);
-			npeaks += peaks;
+		MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+		int i = 0;
+		while (spectrumIterator.hasNext()) {
+			Spectrum spectrum = spectrumIterator.next();
+			if (i >= start && i < start + scans) {
+				final int peaks = spectrum.getDefaultArrayLength();
+				// current npeaks is index into larger arrays for current scan
+				log.debug("Scan {} from {} to {}", new Object[]{i, npeaks,
+					(npeaks + peaks - 1)});
+				scan_index.set(i, npeaks);
+				npeaks += peaks;
+				i++;
+			}
 		}
 		EvalTools.notNull(scan_index, this);
 		return scan_index;
 	}
 
 	private Array readModulationTimeArray(IVariableFragment var, MzMLUnmarshaller um) {
-		List<CVParam> parameters = getRun(um).getCvParam();
-		for (CVParam param : parameters) {
+		MzMLObjectIterator<CVParam> parameters = um.unmarshalCollectionFromXpath("/run/cvParam", CVParam.class);
+		while (parameters.hasNext()) {
+			CVParam param = parameters.next();
 			if (param.getAccession().equalsIgnoreCase(modulationTimeAccession)) {
 				log.info("Found modulation time parameter as attribute of run");
 				ArrayDouble.D0 a = new ArrayDouble.D0();
@@ -743,10 +810,10 @@ public class MZMLDataSource implements IDataSource {
 		final int scancount = getScanCount(um);
 		final String varname = f.getName();
 		// Read mass_values or intensity_values for whole chromatogram
-		if(varname.equals(this.source_files)) {
+		if (varname.equals(this.source_files)) {
 			throw new ResourceNotAvailableException(
 					"Unknown varname to mzML mapping for varname " + varname);
-		}else if (varname.equals(this.scan_index)
+		} else if (varname.equals(this.scan_index)
 				|| varname.equals(this.total_intensity)
 				|| varname.equals(this.mass_range_min)
 				|| varname.equals(this.mass_range_max)
@@ -768,8 +835,10 @@ public class MZMLDataSource implements IDataSource {
 				|| varname.equals(this.intensity_values)) {
 			int npeaks = 0;
 			try {
-				for (int i = 0; i < scancount; i++) {
-					npeaks += getPointCount(getSpectrum(um, i));
+				MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+				while (spectrumIterator.hasNext()) {
+					Spectrum spectrum = spectrumIterator.next();
+					npeaks += getPointCount(spectrum);
 				}
 				final Dimension[] dims = new Dimension[]{new Dimension(
 					"point_number", npeaks, true)};

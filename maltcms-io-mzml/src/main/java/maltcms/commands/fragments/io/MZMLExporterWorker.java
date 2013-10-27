@@ -1,5 +1,5 @@
 /*
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -55,6 +55,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
 import static ucar.ma2.DataType.DOUBLE;
@@ -75,7 +76,6 @@ import uk.ac.ebi.jmzml.model.mzml.InstrumentConfiguration;
 import uk.ac.ebi.jmzml.model.mzml.InstrumentConfigurationList;
 import uk.ac.ebi.jmzml.model.mzml.MzML;
 import uk.ac.ebi.jmzml.model.mzml.ParamGroup;
-import uk.ac.ebi.jmzml.model.mzml.Precursor;
 import uk.ac.ebi.jmzml.model.mzml.ProcessingMethod;
 import uk.ac.ebi.jmzml.model.mzml.Run;
 import uk.ac.ebi.jmzml.model.mzml.Sample;
@@ -88,6 +88,7 @@ import uk.ac.ebi.jmzml.model.mzml.SpectrumList;
 import uk.ac.ebi.jmzml.xml.io.MzMLMarshaller;
 
 /**
+ * Worker implementation for writing of mzML files.
  *
  * @author Nils Hoffmann
  */
@@ -105,11 +106,16 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 	private String unitOntologyVersion = "12:10:2011";
 	@Configurable(description = "Whether spectral data should be gzip compressed or not.")
 	private boolean compressSpectra = true;
-	private String scanIndexVariable;
-	private String massValuesVariable;
-	private String intensityValuesVariable;
-	private String totalIntensityVariable;
-	private String scanAcquisitionTimeVariable;
+	@Configurable(description = "Whether chromatogram data should be gzip compressed or not.")
+	private boolean compressChromatogram = true;
+	private String scanIndexVariable = "scan_index";
+	private String massValuesVariable = "mass_values";
+	private String intensityValuesVariable = "intensity_values";
+	private String totalIntensityVariable = "total_intensity";
+	private String scanAcquisitionTimeVariable = "scan_acquisition_time";
+	private String firstColumnElutionTimeVariable = "first_column_elution_time";
+	private String secondColumnElutionTimeVariable = "second_column_elution_time";
+	private String msLevelVariable = "ms_level";
 
 	@Override
 	public URI call() throws Exception {
@@ -167,7 +173,6 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 			fileHash.setCvRef("MS");
 			sourceFile.getCvParam().add(fileHash);
 		}
-		
 
 		FileDescription fileDescription = new FileDescription();
 		ParamGroup fileContent = new ParamGroup();
@@ -177,14 +182,14 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 		sfl.setCount(1);
 		fileDescription.setSourceFileList(sfl);
 		mzML.setFileDescription(fileDescription);
-		
+
 		mzML.setSoftwareList(createSoftwareList());
 		DataProcessingList dpl = createDataProcessingList();
 		mzML.setDataProcessingList(dpl);
 //			//create spectra
 		SpectrumList csl = createSpectraList(inputFileName, inputFileFragment, psiMs, dpl.getDataProcessing().get(0));
 //			//create chromatogram
-		ChromatogramList cl = createChromatogramList(inputFileFragment, psiMs, dpl.getDataProcessing().get(0));
+		ChromatogramList cl = createChromatogramList(inputFileFragment, psiMs, compressChromatogram, dpl.getDataProcessing().get(0));
 //			//mzML.setAccession(accession);
 //			//mzML.setCvList(null);
 //			//mzML.setFileDescription(null);
@@ -307,8 +312,33 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 		return list;
 	}
 
-	protected ChromatogramList createChromatogramList(FileFragment inputFileFragment, CV psiMs, DataProcessing dataProcessing) throws ResourceNotAvailableException {
-		IVariableFragment ticValues = inputFileFragment.getChild(totalIntensityVariable);
+	protected BinaryDataArray createBinaryDataArray(Array a, DataType dataType, boolean compress, DataProcessing dataProcessing, CV cv) {
+		BinaryDataArray bda = new BinaryDataArray();
+		int dataArrayLength = a.getShape()[0];
+		Object ticDataArray = a.get1DJavaArray(dataType.getPrimitiveClassType());
+		switch (dataType) {
+			case DOUBLE:
+				bda.set64BitFloatArrayAsBinaryData((double[]) ticDataArray, compress, cv);
+				break;
+			case FLOAT:
+				bda.set32BitFloatArrayAsBinaryData((float[]) ticDataArray, compress, cv);
+				break;
+			case INT:
+				bda.set32BitIntArrayAsBinaryData((int[]) ticDataArray, compress, cv);
+				break;
+			case LONG:
+				bda.set64BitIntArrayAsBinaryData((long[]) ticDataArray, compress, cv);
+				break;
+		}
+		bda.setArrayLength(dataArrayLength);
+		bda.setEncodedLength(getEncodedLength(bda.getBinary()));
+		if (dataProcessing != null) {
+			bda.setDataProcessing(dataProcessing);
+		}
+		return bda;
+	}
+
+	protected ChromatogramList createChromatogramList(FileFragment inputFileFragment, CV psiMs, boolean compress, DataProcessing dataProcessing) throws ResourceNotAvailableException {
 		ChromatogramList cl = new ChromatogramList();
 		cl.setDefaultDataProcessing(dataProcessing);
 		Chromatogram c = new Chromatogram();
@@ -321,27 +351,10 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 		c.getCvParam().add(ticParam);
 		BinaryDataArrayList cbdal = new BinaryDataArrayList();
 		List<BinaryDataArray> l = cbdal.getBinaryDataArray();
+		//tic data
+		IVariableFragment ticValues = inputFileFragment.getChild(totalIntensityVariable);
 		DataType ticDataType = ticValues.getDataType();
-		BinaryDataArray cbda = new BinaryDataArray();
-		c.setDefaultArrayLength(ticValues.getRange()[0].length());
-		Object ticDataArray = ticValues.getArray().get1DJavaArray(ticDataType.getPrimitiveClassType());
-		int cbdaEncodedLength = 0;
-		switch (ticDataType) {
-			case DOUBLE:
-				cbdaEncodedLength = cbda.set64BitFloatArrayAsBinaryData((double[]) ticDataArray, true, psiMs);
-				break;
-			case FLOAT:
-				cbdaEncodedLength = cbda.set32BitFloatArrayAsBinaryData((float[]) ticDataArray, true, psiMs);
-				break;
-			case INT:
-				cbdaEncodedLength = cbda.set32BitIntArrayAsBinaryData((int[]) ticDataArray, true, psiMs);
-				break;
-			case LONG:
-				cbdaEncodedLength = cbda.set64BitIntArrayAsBinaryData((long[]) ticDataArray, true, psiMs);
-				break;
-		}
-		cbda.setEncodedLength(cbdaEncodedLength);
-		cbda.setDataProcessing(dataProcessing);
+		BinaryDataArray cbda = createBinaryDataArray(ticValues.getArray(), ticDataType, compress, dataProcessing, psiMs);
 		CVParam ticCvParam = new CVParam();
 		ticCvParam.setCvRef("MS");
 		ticCvParam.setAccession("MS:1000515");
@@ -351,27 +364,10 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 		ticCvParam.setUnitName("number of counts");
 		cbda.getCvParam().add(ticCvParam);
 		l.add(cbda);
+		//sat data
 		IVariableFragment satValues = inputFileFragment.getChild(scanAcquisitionTimeVariable);
 		DataType satDataType = satValues.getDataType();
-		BinaryDataArray satbda = new BinaryDataArray();
-		Object satDataArray = satValues.getArray().get1DJavaArray(satDataType.getPrimitiveClassType());
-		int satbdaEncodedLength = 0;
-		switch (satDataType) {
-			case DOUBLE:
-				satbdaEncodedLength = satbda.set64BitFloatArrayAsBinaryData((double[]) satDataArray, true, psiMs);
-				break;
-			case FLOAT:
-				satbdaEncodedLength = satbda.set32BitFloatArrayAsBinaryData((float[]) satDataArray, true, psiMs);
-				break;
-			case INT:
-				satbdaEncodedLength = satbda.set32BitIntArrayAsBinaryData((int[]) satDataArray, true, psiMs);
-				break;
-			case LONG:
-				satbdaEncodedLength = satbda.set64BitIntArrayAsBinaryData((long[]) satDataArray, true, psiMs);
-				break;
-		}
-		satbda.setEncodedLength(satbdaEncodedLength);
-		satbda.setDataProcessing(dataProcessing);
+		BinaryDataArray satbda = createBinaryDataArray(satValues.getArray(), satDataType, compress, dataProcessing, psiMs);
 		CVParam satCvParam = new CVParam();
 		satCvParam.setCvRef("MS");
 		satCvParam.setAccession("MS:1000595");
@@ -383,10 +379,17 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 		satbda.getCvParam().add(satCvParam);
 		l.add(satbda);
 		cbdal.setCount(l.size());
+		//update chromatogram
 		c.setBinaryDataArrayList(cbdal);
+		c.setDefaultArrayLength(Math.max(cbda.getArrayLength(), satbda.getArrayLength()));
 		cl.getChromatogram().add(c);
-		cl.setCount(1);
+		cl.setCount(cl.getChromatogram().size());
 		return cl;
+	}
+
+	protected int getEncodedLength(byte[] binaryData) {
+		byte[] encoded = Base64.encodeBase64(binaryData);
+		return encoded.length;
 	}
 
 	protected SpectrumList createSpectraList(String inputFileName, FileFragment inputFileFragment, CV psiMs, DataProcessing dataProcessing) throws ResourceNotAvailableException {
@@ -406,6 +409,23 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 		DataType massDataType = massValues.getDataType();
 		System.out.println("Mass data type: " + massDataType.getPrimitiveClassType());
 		DataType intensityDataType = intensityValues.getDataType();
+		//TODO: Finish 2D chromatography support
+		Array firstColumnElutionTime = null;
+		Array secondColumnElutionTime = null;
+		try {
+			firstColumnElutionTime = inputFileFragment.getChild(firstColumnElutionTimeVariable).getArray();
+			secondColumnElutionTime = inputFileFragment.getChild(secondColumnElutionTimeVariable).getArray();
+		} catch (ResourceNotAvailableException ex) {
+			log.debug("Not writing first and second column elution time. Not present in source file!");
+		}
+		//TODO: Finish msn support
+		Array msLevelArray = null;
+		try {
+			IVariableFragment msLevel = inputFileFragment.getChild(msLevelVariable);
+			msLevelArray = msLevel.getArray();
+		} catch (ResourceNotAvailableException ex) {
+			log.debug("Not writing msLevel. Not present in source file!");
+		}
 		System.out.println("Intensity values data type: " + intensityDataType.getPrimitiveClassType());
 		for (int i = 0; i < scans; i++) {
 			Spectrum s = new Spectrum();
@@ -413,47 +433,33 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 			s.setId(i + "");
 			BinaryDataArrayList bdal = new BinaryDataArrayList();
 			List<BinaryDataArray> bdas = bdal.getBinaryDataArray();
-			BinaryDataArray masses = new BinaryDataArray();
-			Object massDataArray = indexedMassValues.get(i).get1DJavaArray(massDataType.getPrimitiveClassType());
-			int massesEncodedLength = 0;
-			switch (massDataType) {
-				case DOUBLE:
-					massesEncodedLength = masses.set64BitFloatArrayAsBinaryData((double[]) massDataArray, true, psiMs);
-					break;
-				case FLOAT:
-					massesEncodedLength = masses.set32BitFloatArrayAsBinaryData((float[]) massDataArray, true, psiMs);
-					break;
-				case INT:
-					massesEncodedLength = masses.set32BitIntArrayAsBinaryData((int[]) massDataArray, true, psiMs);
-					break;
-				case LONG:
-					massesEncodedLength = masses.set64BitIntArrayAsBinaryData((long[]) massDataArray, true, psiMs);
-					break;
-			}
-			masses.setEncodedLength(massesEncodedLength);
+			BinaryDataArray masses = createBinaryDataArray(indexedMassValues.get(i), massDataType, compressSpectra, dataProcessing, psiMs);
 			bdas.add(masses);
-			BinaryDataArray intensities = new BinaryDataArray();
-			Object intensityDataArray = indexedIntensityValues.get(i).get1DJavaArray(intensityDataType.getPrimitiveClassType());
-			int intensitiesEncodedLength = 0;
-			switch (intensityDataType) {
-				case DOUBLE:
-					intensitiesEncodedLength = intensities.set64BitFloatArrayAsBinaryData((double[]) intensityDataArray, true, psiMs);
-					break;
-				case FLOAT:
-					intensitiesEncodedLength = intensities.set32BitFloatArrayAsBinaryData((float[]) intensityDataArray, true, psiMs);
-					break;
-				case INT:
-					intensitiesEncodedLength = intensities.set32BitIntArrayAsBinaryData((int[]) intensityDataArray, true, psiMs);
-					break;
-				case LONG:
-					intensitiesEncodedLength = intensities.set64BitIntArrayAsBinaryData((long[]) intensityDataArray, true, psiMs);
-					break;
-			}
-			intensities.setEncodedLength(intensitiesEncodedLength);
+			BinaryDataArray intensities = createBinaryDataArray(indexedIntensityValues.get(i), intensityDataType, compressSpectra, dataProcessing, psiMs);
 			bdas.add(intensities);
 			bdal.setCount(bdas.size());
 			s.setBinaryDataArrayList(bdal);
+			s.setDefaultArrayLength(Math.max(masses.getArrayLength(), intensities.getArrayLength()));
 			s.setId("scan=" + i);
+			//cv params
+			CVParam mzCvParam = new CVParam();
+			mzCvParam.setCvRef("MS");
+			mzCvParam.setAccession("MS:1000514");
+			mzCvParam.setName("m/z array");
+			mzCvParam.setUnitCvRef("MS");
+			mzCvParam.setUnitAccession("MS:1000040");
+			mzCvParam.setUnitName("m/z");
+			masses.getCvParam().add(mzCvParam);
+
+			CVParam intenCvParam = new CVParam();
+			intenCvParam.setCvRef("MS");
+			intenCvParam.setAccession("MS:1000515");
+			intenCvParam.setName("intensity array");
+			intenCvParam.setUnitCvRef("MS");
+			intenCvParam.setUnitAccession("MS:1000131");
+			intenCvParam.setUnitName("number of counts");
+			intensities.getCvParam().add(intenCvParam);
+
 			csl.add(s);
 		}
 		sl.setCount(csl.size());
