@@ -121,7 +121,7 @@ def importTab = swing.panel(constraints: BL.CENTER, id: "importTab", name: "Impo
                                 userProps.lastDirectory = fc.getSelectedFiles()[0].getParentFile()
 							}
                             List files = fc.getSelectedFiles().collect{
-                                file -> 
+                                file ->
 								if(file.name.toLowerCase().endsWith(".d")) {
 									mode = "ap-direct"
 								}
@@ -463,78 +463,82 @@ def maltcmsRuntimeTab = swing.panel(constraints: BL.CENTER, id: "maltcmsTab", na
  * Content panel
  */
 def contentPanel = swing.panel(constraints: BL.CENTER, border: swing.emptyBorder(5),id: "contentPanel") {
-    tableLayout(cellpadding: 1) {
-        tr {
-            td(colspan: 2, colfill: true, rowfill: true, align: "LEFT") {
-                tabbedPane(id: "tabbedPane") {
-					widget(importTab)
-					widget(preprocessingTab)
-					widget(peakDetectionTab)
-					widget(peakNormalizationTab)
-					widget(peakAlignmentTab)
-					widget(maltcmsRuntimeTab)
-				}
-            }
-            td(colspan: 1, colfill: true, rowfill: true, rowspan: 10) {
-                panel(border: titledBorder("Maltcms Output")) {
-                    borderLayout()
-                    scrollPane(constraints: BL.CENTER, preferredSize: [400,500]){
-                        widget(processMonitorTextArea)
-                    }
-                }
-            }
-        }
-    }
+	borderLayout()
+	//    tableLayout(cellpadding: 1) {
+	//        tr {
+	//            td(colspan: 3, colfill: true, rowfill: true, align: "LEFT") {
+	splitPane(constraints: BL.CENTER, dividerLocation: 400, oneTouchExpandable: true) {
+		tabbedPane(id: "tabbedPane") {
+			widget(importTab)
+			widget(preprocessingTab)
+			widget(peakDetectionTab)
+			widget(peakNormalizationTab)
+			widget(peakAlignmentTab)
+			widget(maltcmsRuntimeTab)
+		}
+		panel(border: titledBorder("Maltcms Output")) {
+			borderLayout()
+			scrollPane(constraints: BL.CENTER, preferredSize: [400,500]){
+				widget(processMonitorTextArea)
+			}
+		}
+	}
+	//            }
+	//            td(colspan: 1, colfill: true, rowfill: true, rowspan: 10) {
+	//
+	//            }
+	//        }
+	//}
 }
 
 /*
  * Buttons
  */
 def buttonPanel = swing.panel(constraints: BL.SOUTH, id: "buttonPanel") {
-    button("Load Defaults", actionPerformed: {
+	button("Load Defaults", actionPerformed: {
 			props.load(new File(System.getProperty("ap.home"),"cfg/pipelines/ap-defaultParameters.properties"))
 		})
-    separator(orientation: javax.swing.SwingConstants.VERTICAL)
-    button("Save", actionPerformed: {
+	separator(orientation: javax.swing.SwingConstants.VERTICAL)
+	button("Save", actionPerformed: {
 			props.save()
 			userProps.save()
 		})
-    button("Reload", actionPerformed: {
+	button("Reload", actionPerformed: {
 			props.load()
 			userProps.load()
 		})
-    separator(orientation: javax.swing.SwingConstants.VERTICAL)
-    button("Start", actionPerformed: {
-            props.save()
-            userProps.save()
-            if(execution!=null) {
-                execution.cancel()
-                execution = null
-            }
-            if(execution==null) {
-                println "Creating new MaltcmsExecution"
-                execution = new MaltcmsExecution(textArea: processMonitorTextArea, inputFiles: props.ifiles.files, arguments: props.mr.arguments, parallelThreads: props.mr.parallelThreads, apProperties: props.mr.pipelineFile)//, //workingDirectory: props.wdir)
-            }
-            execution.start()
-        })
-    button("Stop", actionPerformed: {
-            if(execution!=null) {
-                execution.cancel()
-                execution = null
-            }
-        })
-    separator(orientation: javax.swing.SwingConstants.VERTICAL)
-    button("Close", actionPerformed: {System.exit(0)})
+	separator(orientation: javax.swing.SwingConstants.VERTICAL)
+	button("Start", actionPerformed: {
+			props.save()
+			userProps.save()
+			if(execution!=null) {
+				execution.cancel()
+				execution = null
+			}
+			if(execution==null) {
+				println "Creating new MaltcmsExecution"
+				execution = new MaltcmsExecution(textArea: processMonitorTextArea, inputFiles: props.ifiles.files, arguments: props.mr.arguments, parallelThreads: props.mr.parallelThreads, apProperties: props.mr.pipelineFile)//, //workingDirectory: props.wdir)
+			}
+			execution.start()
+		})
+	button("Stop", actionPerformed: {
+			if(execution!=null) {
+				execution.cancel()
+				execution = null
+			}
+		})
+	separator(orientation: javax.swing.SwingConstants.VERTICAL)
+	button("Close", actionPerformed: {System.exit(0)})
 }
 
 swing.edt {
-    frame(title: 'Maltcms Analytical Pyrolysis Settings', show: true,
-        pack: true,
-        defaultCloseOperation: JFrame.EXIT_ON_CLOSE, id: "mainFrame") {
-        borderLayout(vgap: 5)
-        widget(contentPanel, constraints: BL.CENTER)
-        widget(buttonPanel, constraints: BL.SOUTH)
-    }
+	frame(title: 'Maltcms Analytical Pyrolysis Settings', show: true,
+		pack: true,
+		defaultCloseOperation: JFrame.EXIT_ON_CLOSE, id: "mainFrame") {
+		borderLayout(vgap: 5)
+		widget(contentPanel, constraints: BL.CENTER)
+		widget(buttonPanel, constraints: BL.SOUTH)
+	}
 }
 
 props.load()

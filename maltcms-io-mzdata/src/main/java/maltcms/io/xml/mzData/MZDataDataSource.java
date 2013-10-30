@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,27 +27,6 @@
  */
 package maltcms.io.xml.mzData;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
-import maltcms.io.andims.NetcdfDataSource;
-import maltcms.io.xml.mzData.MzData.SpectrumList.Spectrum;
-
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.event.ConfigurationEvent;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
-import ucar.ma2.Range;
-import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.cache.CacheFactory;
 import cross.cache.ICacheDelegate;
@@ -55,16 +34,33 @@ import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
+import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.io.misc.Base64Util;
-import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.io.andims.NetcdfDataSource;
+import maltcms.io.xml.mzData.MzData.SpectrumList.Spectrum;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayInt;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.MAMath;
+import ucar.ma2.Range;
+import ucar.nc2.Dimension;
 
 @Slf4j
 @ServiceProvider(service = IDataSource.class)
@@ -80,21 +76,14 @@ public class MZDataDataSource implements IDataSource {
 	private String mass_range_max = "mass_range_max";
 	private NetcdfDataSource ndf = null;
 	private String source_files = "source_files";
-	private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = null;
-
-	private ICacheDelegate<IVariableFragment, Array> getCache() {
-		if (this.variableToArrayCache == null) {
-			this.variableToArrayCache = CacheFactory.createDefaultCache(MZDataDataSource.class.getName());
-		}
-		return this.variableToArrayCache;
-	}
+	private static final ICacheDelegate<IVariableFragment, Array> variableToArrayCache = CacheFactory.createVolatileCache("maltcms.io.readcache");
 
 	@Override
 	public int canRead(final IFileFragment ff) {
 		final int dotindex = ff.getName().lastIndexOf(".");
 		if (dotindex == -1) {
 			throw new RuntimeException("Could not determine File extension of "
-					+ ff);
+				+ ff);
 		}
 		final String filename = ff.getName().toLowerCase();
 		for (final String s : this.fileEnding) {
@@ -120,40 +109,40 @@ public class MZDataDataSource implements IDataSource {
 
 	public void configure(final Configuration configuration) {
 		this.mass_values = configuration.getString("var.mass_values",
-				"mass_values");
+			"mass_values");
 		this.intensity_values = configuration.getString("var.intensity_values",
-				"intensity_values");
+			"intensity_values");
 		this.total_intensity = configuration.getString("var.total_intensity",
-				"total_intensity");
+			"total_intensity");
 		this.scan_index = configuration.getString("var.scan_index",
-				"scan_index");
+			"scan_index");
 		this.mass_range_min = configuration.getString("var.mass_range_min",
-				"mass_range_min");
+			"mass_range_min");
 		this.mass_range_max = configuration.getString("var.mass_range_max",
-				"mass_range_max");
+			"mass_range_max");
 		this.source_files = configuration.getString("var.source_files",
-				"source_files");
+			"source_files");
 		this.ndf = new NetcdfDataSource();
 		this.ndf.configure(configuration);
 	}
 
 	private Array getIntensityValues(final MzData mz, final int j) {
 		final PeakListBinaryType blbt = mz.getSpectrumList().getSpectrum().get(
-				j).getIntenArrayBinary();
+			j).getIntenArrayBinary();
 		return getPeakListArray(blbt);
 	}
 
 	private Array getMassValues(final MzData mz, final int j) {
 		final PeakListBinaryType blbt = mz.getSpectrumList().getSpectrum().get(
-				j).getMzArrayBinary();
+			j).getMzArrayBinary();
 		return getPeakListArray(blbt);
 	}
 
 	private Tuple2D<Double, Double> getMinMaxMassRange(final MzData mp,
-			final int scan) {
+		final int scan) {
 		final SpectrumSettingsType.SpectrumInstrument si = mp.spectrumList.spectrum.get(scan).getSpectrumDesc().getSpectrumSettings().getSpectrumInstrument();
 		return new Tuple2D<Double, Double>(
-				Double.valueOf(si.getMzRangeStart()), Double.valueOf(si.getMzRangeStop()));
+			Double.valueOf(si.getMzRangeStart()), Double.valueOf(si.getMzRangeStop()));
 	}
 
 	private int getNumPeaks(final MzData mz, final int i) {
@@ -218,9 +207,9 @@ public class MZDataDataSource implements IDataSource {
 	}
 
 	private IVariableFragment getVariable(final IFileFragment f,
-			final String name) {
+		final String name) {
 		return (f.hasChild(name) ? f.getChild(name) : new ImmutableVariableFragment2(f,
-				name));
+			name));
 	}
 
 	/**
@@ -229,10 +218,10 @@ public class MZDataDataSource implements IDataSource {
 	 * @param var
 	 * @param mp
 	 * @return a Tuple2D<Array,Array> with mass_range_min as first and
-	 * mass_range_max as second array
+	 *         mass_range_max as second array
 	 */
 	protected Tuple2D<Array, Array> initMinMaxMZ(final IVariableFragment var,
-			final MzData mp) {
+		final MzData mp) {
 		log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
 			this.mass_range_max});
 		int scans = getScanCount(mp);
@@ -260,7 +249,7 @@ public class MZDataDataSource implements IDataSource {
 
 	private Array loadArray(final IFileFragment f, final IVariableFragment var) {
 		final MzData mzd = unmarshal(f);
-		Array a = getCache().get(var);
+		Array a = variableToArrayCache.get(var);
 		if (a != null) {
 			log.info("Retrieved variable data array from cache for " + var);
 			return a;
@@ -268,7 +257,7 @@ public class MZDataDataSource implements IDataSource {
 		final String varname = var.getName();
 		// Read mass_values or intensity_values for whole chromatogram
 		if (varname.equals(this.mass_values)
-				|| varname.equals(this.intensity_values)) {
+			|| varname.equals(this.intensity_values)) {
 			a = readMZI(var, mzd);
 		} else if (varname.equals(this.scan_index)) {
 			a = readScanIndex(var, mzd);
@@ -277,24 +266,24 @@ public class MZDataDataSource implements IDataSource {
 			a = readTotalIntensitiesArray(var, mzd);
 			// read min and max_mass_range
 		} else if (varname.equals(this.mass_range_min)
-				|| varname.equals(this.mass_range_max)) {
+			|| varname.equals(this.mass_range_max)) {
 			a = readMinMaxMassValueArray(var, mzd);
 			// read scan_acquisition_time
 		} else if (varname.equals(this.scan_acquisition_time)) {
 			a = readScanAcquisitionTimeArray(var, mzd);
 		} else {
 			throw new ResourceNotAvailableException(
-					"Unknown varname to mzXML mapping for varname " + varname);
+				"Unknown varname to mzXML mapping for varname " + varname);
 		}
 		if (a != null) {
-			getCache().put(var, a);
+			variableToArrayCache.put(var, a);
 		}
 		return a;
 	}
 
 	@Override
 	public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
-			ResourceNotAvailableException {
+		ResourceNotAvailableException {
 		final ArrayList<IVariableFragment> al = readStructure(f);
 		final ArrayList<Array> ral = new ArrayList<Array>(al.size());
 		for (final IVariableFragment vf : al) {
@@ -306,7 +295,7 @@ public class MZDataDataSource implements IDataSource {
 
 	@Override
 	public ArrayList<Array> readIndexed(final IVariableFragment f)
-			throws IOException, ResourceNotAvailableException {
+		throws IOException, ResourceNotAvailableException {
 		if (f.getName().equals(this.mass_values)) {
 			final ArrayList<Array> al = new ArrayList<Array>();
 			final MzData mzd = unmarshal(f.getParent());
@@ -348,7 +337,7 @@ public class MZDataDataSource implements IDataSource {
 	}
 
 	private Array readMinMaxMassValueArray(final IVariableFragment var,
-			final MzData mp) {
+		final MzData mp) {
 		log.debug("readMinMaxMassValueArray");
 		final Tuple2D<Array, Array> t = initMinMaxMZ(var, mp);
 		if (var.getName().equals(this.mass_range_min)) {
@@ -358,7 +347,7 @@ public class MZDataDataSource implements IDataSource {
 			return t.getSecond();
 		}
 		throw new IllegalArgumentException(
-				"Method accepts only one of mass_range_min or mass_range_max as varname!");
+			"Method accepts only one of mass_range_min or mass_range_max as varname!");
 	}
 
 	private Array readMZI(final IVariableFragment var, final MzData mp) {
@@ -412,13 +401,13 @@ public class MZDataDataSource implements IDataSource {
 			// f.setArray(a);
 		}
 		throw new IllegalArgumentException(
-				"Don't know how to handle variable: " + var.getName());
+			"Don't know how to handle variable: " + var.getName());
 		// }
 		// return f.getArray();
 	}
 
 	private Array readScanAcquisitionTimeArray(final IVariableFragment var,
-			final MzData mp) {
+		final MzData mp) {
 		log.debug("readScanAcquisitionTimeArray");
 		int scans = getScanCount(mp);
 		int start = 0;
@@ -461,7 +450,7 @@ public class MZDataDataSource implements IDataSource {
 
 	@Override
 	public Array readSingle(final IVariableFragment f) throws IOException,
-			ResourceNotAvailableException {
+		ResourceNotAvailableException {
 		log.debug("readSingle of {} in {}", f.getName(), f.getParent().getUri());
 		if (f.hasArray()) {
 			log.warn("{} already has an array set!", f);
@@ -469,7 +458,7 @@ public class MZDataDataSource implements IDataSource {
 		final Array a = loadArray(f.getParent(), f);
 		if (a == null) {
 			throw new ResourceNotAvailableException("Could not find variable "
-					+ f.getName() + " in file " + f.getParent().getName());
+				+ f.getName() + " in file " + f.getParent().getName());
 		}
 		// f.setArray(a);
 		return a;
@@ -483,7 +472,7 @@ public class MZDataDataSource implements IDataSource {
 	 */
 	@Override
 	public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
-			throws IOException {
+		throws IOException {
 		final IVariableFragment ti = getVariable(f, this.total_intensity);
 		final IVariableFragment sat = getVariable(f, this.scan_acquisition_time);
 		final IVariableFragment si = getVariable(f, this.scan_index);
@@ -508,16 +497,16 @@ public class MZDataDataSource implements IDataSource {
 	 */
 	@Override
 	public IVariableFragment readStructure(final IVariableFragment f)
-			throws IOException, ResourceNotAvailableException {
+		throws IOException, ResourceNotAvailableException {
 		final MzData mp = unmarshal(f.getParent());
 		final int scancount = getScanCount(mp);
 		final String varname = f.getName();
 		// Read mass_values or intensity_values for whole chromatogram
 		if (varname.equals(this.scan_index)
-				|| varname.equals(this.total_intensity)
-				|| varname.equals(this.mass_range_min)
-				|| varname.equals(this.mass_range_max)
-				|| varname.equals(this.scan_acquisition_time)) {
+			|| varname.equals(this.total_intensity)
+			|| varname.equals(this.mass_range_min)
+			|| varname.equals(this.mass_range_max)
+			|| varname.equals(this.scan_acquisition_time)) {
 			final Dimension[] dims = new Dimension[]{new Dimension(
 				"scan_number", scancount, true)};
 			f.setDimensions(dims);
@@ -529,7 +518,7 @@ public class MZDataDataSource implements IDataSource {
 				log.warn("Invalid range: ", ex);
 			}
 		} else if (varname.equals(this.mass_values)
-				|| varname.equals(this.intensity_values)) {
+			|| varname.equals(this.intensity_values)) {
 			int npeaks = 0;
 			try {
 				for (int i = 0; i < scancount; i++) {
@@ -547,18 +536,18 @@ public class MZDataDataSource implements IDataSource {
 				}
 			} catch (final NullPointerException npe) {
 				throw new ResourceNotAvailableException(
-						"Could not rap header of file "
-						+ f.getParent().getUri());
+					"Could not rap header of file "
+					+ f.getParent().getUri());
 			}
 		} else {
 			throw new ResourceNotAvailableException(
-					"Unknown varname to mzXML mapping for varname " + varname);
+				"Unknown varname to mzXML mapping for varname " + varname);
 		}
 		return f;
 	}
 
 	private Array readTotalIntensitiesArray(final IVariableFragment var,
-			final MzData mp) {
+		final MzData mp) {
 		final double[] d = new double[getScanCount(mp)];
 		for (int i = 0; i < getScanCount(mp); i++) {
 			final Array a = getIntensityValues(mp, i);
