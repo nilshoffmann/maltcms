@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,28 +27,6 @@
  */
 package maltcms.io.xml.mzML;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import maltcms.io.andims.NetcdfDataSource;
-
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.event.ConfigurationEvent;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
-import ucar.ma2.MAMath;
-import ucar.ma2.Range;
-import ucar.ma2.MAMath.MinMax;
-import ucar.nc2.Dimension;
-import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
-import uk.ac.ebi.jmzml.model.mzml.CVParam;
-import uk.ac.ebi.jmzml.model.mzml.Run;
-import uk.ac.ebi.jmzml.model.mzml.Spectrum;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.cache.CacheFactory;
@@ -58,26 +36,45 @@ import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
+import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tools.FragmentTools;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
-import cross.datastructures.tools.EvalTools;
-import cross.datastructures.tools.FragmentTools;
 import cross.tools.StringTools;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.io.andims.NetcdfDataSource;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayInt;
 import ucar.ma2.InvalidRangeException;
+import ucar.ma2.MAMath;
+import ucar.ma2.MAMath.MinMax;
+import ucar.ma2.Range;
+import ucar.nc2.Dimension;
+import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
+import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
 import uk.ac.ebi.jmzml.model.mzml.FileDescription;
+import uk.ac.ebi.jmzml.model.mzml.Run;
 import uk.ac.ebi.jmzml.model.mzml.SourceFile;
 import uk.ac.ebi.jmzml.model.mzml.SourceFileList;
+import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
+import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 @Slf4j
@@ -119,9 +116,9 @@ public class MZMLDataSource implements IDataSource {
 	private String total_ion_current_chromatogram_scan_acquisition_timeAccession = "MS:1000595";
 	private String ms_level = "ms_level";
 	private String msLevelAccession = "MS:1000511";
-	private static ICacheDelegate<URI, MzMLUnmarshaller> fileToIndex = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller", 300, 600, 20);
+	private static final ICacheDelegate<URI, MzMLUnmarshaller> fileToIndex = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller", 300, 600, 20);
 //	private static ICacheDelegate<MzMLUnmarshaller, Run> unmarshallerToRun = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller-to-run", 300, 600, 2);
-	private static ICacheDelegate<String, SerializableArray> variableToArrayCache = CacheFactory.createDefaultCache(MZMLDataSource.class.getName(), 10);
+	private static final ICacheDelegate<String, SerializableArray> variableToArrayCache = CacheFactory.createVolatileCache("maltcms.io.readcache");
 
 	private ICacheDelegate<String, SerializableArray> getCache() {
 		return MZMLDataSource.variableToArrayCache;
@@ -132,7 +129,7 @@ public class MZMLDataSource implements IDataSource {
 		final int dotindex = ff.getName().lastIndexOf(".");
 		if (dotindex == -1) {
 			throw new RuntimeException("Could not determine File extension of "
-					+ ff);
+				+ ff);
 		}
 		final String filename = ff.getName().toLowerCase();
 		for (final String s : this.fileEnding) {
@@ -151,25 +148,25 @@ public class MZMLDataSource implements IDataSource {
 	@Override
 	public void configure(final Configuration configuration) {
 		this.mass_values = configuration.getString("var.mass_values",
-				"mass_values");
+			"mass_values");
 		this.intensity_values = configuration.getString("var.intensity_values",
-				"intensity_values");
+			"intensity_values");
 		this.total_intensity = configuration.getString("var.total_intensity",
-				"total_intensity");
+			"total_intensity");
 		this.scan_index = configuration.getString("var.scan_index",
-				"scan_index");
+			"scan_index");
 		this.mass_range_min = configuration.getString("var.mass_range_min",
-				"mass_range_min");
+			"mass_range_min");
 		this.mass_range_max = configuration.getString("var.mass_range_max",
-				"mass_range_max");
+			"mass_range_max");
 		this.source_files = configuration.getString("var.source_files",
-				"source_files");
+			"source_files");
 		this.modulation_time = configuration.getString("var.modulation_time",
-				"modulation_time");
+			"modulation_time");
 		this.first_column_elution_time = configuration.getString("var.first_column_elution_time",
-				"first_column_elution_time");
+			"first_column_elution_time");
 		this.second_column_elution_time = configuration.getString("var.second_column_elution_time",
-				"second_column_elution_time");
+			"second_column_elution_time");
 		this.total_ion_current_chromatogram = configuration.getString("var.total_ion_current_chromatogram", "total_ion_current_chromatogram");
 		this.total_ion_current_chromatogram_scan_acquisition_time = configuration.getString("var.total_ion_current_chromatogram_scan_acquisition_time", "total_ion_current_chromatogram_scan_acquisition_time");
 		this.ms_level = configuration.getString("var.ms_level", "ms_level");
@@ -266,7 +263,7 @@ public class MZMLDataSource implements IDataSource {
 			}
 		}
 		throw new ResourceNotAvailableException("CVParam with accession "
-				+ accession + " not contained in list!");
+			+ accession + " not contained in list!");
 	}
 
 	private String getRTUnit(final Spectrum s) {
@@ -314,9 +311,9 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private IVariableFragment getVariable(final IFileFragment f,
-			final String name) {
+		final String name) {
 		return (f.hasChild(name) ? f.getChild(name) : new ImmutableVariableFragment2(f,
-				name));
+			name));
 	}
 
 	/**
@@ -325,10 +322,10 @@ public class MZMLDataSource implements IDataSource {
 	 * @param var
 	 * @param run
 	 * @return a Tuple2D<Array,Array> with mass_range_min as first and
-	 * mass_range_max as second array
+	 *         mass_range_max as second array
 	 */
 	protected Tuple2D<Array, Array> initMinMaxMZ(final IVariableFragment var,
-			final MzMLUnmarshaller um) {
+		final MzMLUnmarshaller um) {
 		log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
 			this.mass_range_max});
 		int scans = getScanCount(um);
@@ -362,7 +359,7 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private Array loadArray(final IFileFragment f, final IVariableFragment var) {
-		SerializableArray sa = getCache().get(f.getUri()+">"+var.getName());
+		SerializableArray sa = getCache().get(f.getUri() + ">" + var.getName());
 		if (sa != null) {
 			log.debug("Retrieved variable data array from cache for " + var);
 			return sa.getArray();
@@ -381,7 +378,7 @@ public class MZMLDataSource implements IDataSource {
 			return a;
 		}
 		if (varname.equals(this.mass_values)
-				|| varname.equals(this.intensity_values)) {
+			|| varname.equals(this.intensity_values)) {
 			a = readMZI(var, mzu);
 		} else if (varname.equals(this.scan_index)) {
 			a = readScanIndex(var, mzu);
@@ -390,7 +387,7 @@ public class MZMLDataSource implements IDataSource {
 			a = readTotalIntensitiesArray(var.getParent(), intensity_values, mzu);
 			// read min and max_mass_range
 		} else if (varname.equals(this.mass_range_min)
-				|| varname.equals(this.mass_range_max)) {
+			|| varname.equals(this.mass_range_max)) {
 			a = readMinMaxMassValueArray(var, mzu);
 			// read scan_acquisition_time
 		} else if (varname.equals(this.scan_acquisition_time)) {
@@ -409,17 +406,17 @@ public class MZMLDataSource implements IDataSource {
 			a = readElutionTimeArray(var, getRun(mzu), mzu, this.second_column_elution_timeAccession);
 		} else {
 			throw new ResourceNotAvailableException(
-					"Unknown variable name to mzML mapping for " + varname);
+				"Unknown variable name to mzML mapping for " + varname);
 		}
 		if (a != null) {
-			getCache().put(var.getParent().getUri()+">"+var.getName(), new SerializableArray(a));
+			getCache().put(var.getParent().getUri() + ">" + var.getName(), new SerializableArray(a));
 		}
 		return a;
 	}
 
 	@Override
 	public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
-			ResourceNotAvailableException {
+		ResourceNotAvailableException {
 		final ArrayList<IVariableFragment> al = readStructure(f);
 		final ArrayList<Array> ral = new ArrayList<Array>(al.size());
 		for (final IVariableFragment vf : al) {
@@ -431,7 +428,7 @@ public class MZMLDataSource implements IDataSource {
 
 	@Override
 	public ArrayList<Array> readIndexed(final IVariableFragment f)
-			throws IOException, ResourceNotAvailableException {
+		throws IOException, ResourceNotAvailableException {
 		MzMLUnmarshaller um = getUnmarshaller(f.getParent());
 		if (f.getName().equals(this.mass_values)) {
 			final ArrayList<Array> al = new ArrayList<Array>();
@@ -523,7 +520,7 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private Array readMinMaxMassValueArray(final IVariableFragment var,
-			final MzMLUnmarshaller um) {
+		final MzMLUnmarshaller um) {
 		log.debug("readMinMaxMassValueArray");
 		final Tuple2D<Array, Array> t = initMinMaxMZ(var, um);
 		if (var.getName().equals(this.mass_range_min)) {
@@ -533,7 +530,7 @@ public class MZMLDataSource implements IDataSource {
 			return t.getSecond();
 		}
 		throw new IllegalArgumentException(
-				"Method accepts only one of mass_range_min or mass_range_max as varname!");
+			"Method accepts only one of mass_range_min or mass_range_max as varname!");
 	}
 
 	private Array readTicFromMzi(final IVariableFragment var, final MzMLUnmarshaller um) {
@@ -570,7 +567,7 @@ public class MZMLDataSource implements IDataSource {
 			return tic;
 		}
 		throw new IllegalArgumentException(
-				"Don't know how to handle variable: " + var.getName());
+			"Don't know how to handle variable: " + var.getName());
 		// }
 		// return f.getArray();
 	}
@@ -644,7 +641,7 @@ public class MZMLDataSource implements IDataSource {
 			return a;
 		}
 		throw new IllegalArgumentException(
-				"Don't know how to handle variable: " + var.getName());
+			"Don't know how to handle variable: " + var.getName());
 		// }
 		// return f.getArray();
 	}
@@ -677,7 +674,7 @@ public class MZMLDataSource implements IDataSource {
 	}
 
 	private Array readScanAcquisitionTimeArray(final IVariableFragment var,
-			final MzMLUnmarshaller um) {
+		final MzMLUnmarshaller um) {
 		log.debug("readScanAcquisitionTimeArray");
 		int scans = getScanCount(um);
 		int start = 0;
@@ -753,7 +750,7 @@ public class MZMLDataSource implements IDataSource {
 
 	@Override
 	public Array readSingle(final IVariableFragment f) throws IOException,
-			ResourceNotAvailableException {
+		ResourceNotAvailableException {
 		log.debug("readSingle of {} in {}", f.getName(), f.getParent().getUri());
 		if (f.hasArray()) {
 			log.warn("{} already has an array set!", f);
@@ -761,7 +758,7 @@ public class MZMLDataSource implements IDataSource {
 		final Array a = loadArray(f.getParent(), f);
 		if (a == null) {
 			throw new ResourceNotAvailableException("Could not find variable "
-					+ f.getName() + " in file " + f.getParent().getName());
+				+ f.getName() + " in file " + f.getParent().getName());
 		}
 		// f.setArray(a);
 		return a;
@@ -775,7 +772,7 @@ public class MZMLDataSource implements IDataSource {
 	 */
 	@Override
 	public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
-			throws IOException {
+		throws IOException {
 		final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
 		final IVariableFragment ti = getVariable(f, this.total_intensity);
 		final IVariableFragment sat = getVariable(f, this.scan_acquisition_time);
@@ -787,7 +784,7 @@ public class MZMLDataSource implements IDataSource {
 //		final IVariableFragment msLevel = getVariable(f, this.ms_level);
 //		final IVariableFragment tic = getVariable(f, this.total_ion_current_chromatogram);
 //		final IVariableFragment ticSat = getVariable(f, this.total_ion_current_chromatogram_scan_acquisition_time);
-		//TODO add first and second_column_elution_time with fast query, whether they 
+		//TODO add first and second_column_elution_time with fast query, whether they
 		//are contained in the file
 		al.addAll(Arrays.asList(new IVariableFragment[]{ti, sat, si, mrmin,
 			mrmax, mv, iv}));// msLevel}));//, tic, ticSat}));
@@ -805,22 +802,22 @@ public class MZMLDataSource implements IDataSource {
 	 */
 	@Override
 	public IVariableFragment readStructure(final IVariableFragment f)
-			throws IOException, ResourceNotAvailableException {
+		throws IOException, ResourceNotAvailableException {
 		MzMLUnmarshaller um = getUnmarshaller(f.getParent());
 		final int scancount = getScanCount(um);
 		final String varname = f.getName();
 		// Read mass_values or intensity_values for whole chromatogram
 		if (varname.equals(this.source_files)) {
 			throw new ResourceNotAvailableException(
-					"Unknown varname to mzML mapping for varname " + varname);
+				"Unknown varname to mzML mapping for varname " + varname);
 		} else if (varname.equals(this.scan_index)
-				|| varname.equals(this.total_intensity)
-				|| varname.equals(this.mass_range_min)
-				|| varname.equals(this.mass_range_max)
-				|| varname.equals(this.scan_acquisition_time)
-				|| varname.equals(this.first_column_elution_time)
-				|| varname.equals(this.second_column_elution_time)
-				|| varname.equals(this.ms_level)) {
+			|| varname.equals(this.total_intensity)
+			|| varname.equals(this.mass_range_min)
+			|| varname.equals(this.mass_range_max)
+			|| varname.equals(this.scan_acquisition_time)
+			|| varname.equals(this.first_column_elution_time)
+			|| varname.equals(this.second_column_elution_time)
+			|| varname.equals(this.ms_level)) {
 			final Dimension[] dims = new Dimension[]{new Dimension(
 				"scan_number", scancount, true)};
 			f.setDimensions(dims);
@@ -832,7 +829,7 @@ public class MZMLDataSource implements IDataSource {
 				log.warn("Invalid range: ", ex);
 			}
 		} else if (varname.equals(this.mass_values)
-				|| varname.equals(this.intensity_values)) {
+			|| varname.equals(this.intensity_values)) {
 			int npeaks = 0;
 			try {
 				MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
@@ -853,8 +850,8 @@ public class MZMLDataSource implements IDataSource {
 
 			} catch (final NullPointerException npe) {
 				throw new ResourceNotAvailableException(
-						"Could not read header of file "
-						+ f.getParent().getUri());
+					"Could not read header of file "
+					+ f.getParent().getUri());
 			}
 		} else if (varname.equals(this.modulation_time)) {
 			Array a = readModulationTimeArray(f, um);
@@ -870,7 +867,7 @@ public class MZMLDataSource implements IDataSource {
 			f.setRange(ranges);
 		} else {
 			throw new ResourceNotAvailableException(
-					"Unknown varname to mzML mapping for varname " + varname);
+				"Unknown varname to mzML mapping for varname " + varname);
 		}
 		return f;
 	}

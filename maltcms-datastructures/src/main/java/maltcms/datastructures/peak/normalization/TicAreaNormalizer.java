@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -41,28 +41,35 @@ import maltcms.tools.ArrayTools;
 @Data
 public class TicAreaNormalizer implements IPeakNormalizer {
 
-    private String ticVariableName = "total_intensity";
-    private ICacheDelegate<IFileFragment, Double> cache = null;
+	private String ticVariableName = "total_intensity";
+	private ICacheDelegate<IFileFragment, Double> cache = null;
 
-    private ICacheDelegate<IFileFragment, Double> getCache() {
-        if (this.cache == null) {
-            this.cache = SoftReferenceCacheManager.getInstance().getAutoRetrievalCache("TicAreaNormalizerCache", new ICacheElementProvider<IFileFragment, Double>() {
-                @Override
-                public Double provide(IFileFragment key) {
-                    return ArrayTools.integrate(key.getChild(ticVariableName).getArray());
-                }
-            });
-        }
-        return this.cache;
-    }
+	private ICacheDelegate<IFileFragment, Double> getCache() {
+		if (this.cache == null) {
+			this.cache = SoftReferenceCacheManager.getInstance().getAutoRetrievalCache("TicAreaNormalizerCache", new ICacheElementProvider<IFileFragment, Double>() {
+				@Override
+				public Double provide(IFileFragment key) {
+					return ArrayTools.integrate(key.getChild(ticVariableName).getArray());
+				}
+			});
+		}
+		return this.cache;
+	}
 
-    @Override
-    public double getNormalizationFactor(IFileFragment fragment, int peakIndex) {
-        return 1.0d / getCache().get(fragment).doubleValue();
-    }
+	@Override
+	public double getNormalizationFactor(IFileFragment fragment, int peakIndex) {
+		return 1.0d / getCache().get(fragment).doubleValue();
+	}
 
-    @Override
-    public String getNormalizationName() {
-        return "normalization to sum of "+ticVariableName;
-    }
+	@Override
+	public String getNormalizationName() {
+		return "normalization to sum of " + ticVariableName;
+	}
+
+	@Override
+	public TicAreaNormalizer copy() {
+		TicAreaNormalizer tan = new TicAreaNormalizer();
+		tan.setTicVariableName(ticVariableName);
+		return tan;
+	}
 }

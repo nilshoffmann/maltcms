@@ -51,9 +51,9 @@ for details.
     <!-- commands -->
 	<bean id="scanExtractor" class="maltcms.commands.fragments.preprocessing.ScanExtractor">
 		<!-- determines the first included scan to extract -->
-		<property name="startIndex" value="0"/>
+		<property name="startScan" value="0"/>
 		<!-- determines the last included scan to extract, -1 determines endIndex automatically, set to a value > 0 for specific scan extraction -->
-		<property name="endIndex" value="-1"/>
+		<property name="endScan" value="-1"/>
 	</bean>
     <!-- ANDIMSExporter, exports internal data format to ANDI-MS compliant output -->
     <bean id="andimsExporter" class="maltcms.commands.fragments.io.ANDIMSExporter" />

@@ -1,6 +1,6 @@
 /*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry.
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2013, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -25,18 +25,23 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.datastructures.peak.normalization;
+package maltcms.commands.fragments.peakfinding.ticPeakFinder;
 
-import cross.ICopyable;
-import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.workflow.WorkflowSlot;
+import java.io.Serializable;
+import java.net.URI;
+import lombok.Data;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
-public interface IPeakNormalizer extends ICopyable<IPeakNormalizer> {
+@Data
+public class WorkflowResult implements Serializable {
 
-	double getNormalizationFactor(IFileFragment fragment, int peakIndex);
+	private final URI resource;
+	private final String generator;
+	private final WorkflowSlot workflowSlot;
+	private final URI[] resources;
 
-	String getNormalizationName();
 }

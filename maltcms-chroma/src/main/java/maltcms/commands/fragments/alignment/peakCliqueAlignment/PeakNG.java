@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -28,19 +28,15 @@
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import com.carrotsearch.hppc.LongObjectMap;
-import cross.exception.NotImplementedException;
-import java.util.Arrays;
-import java.util.List;
-
-
-
-import ucar.ma2.Array;
 import cross.exception.ResourceNotAvailableException;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.feature.DefaultFeatureVector;
+import ucar.ma2.Array;
 
 /**
  * Shorthand class for peaks.
@@ -246,7 +242,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Peak number " + this.peakIndex + " at position " + this.scanIndex + " and rt: " + this.sat
-				+ " in file " + this.association);
+			+ " in file " + this.association);
 		return sb.toString();
 	}
 
@@ -282,7 +278,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 		List<String> superFeatureNames = super.getFeatureNames();
 		LinkedList<String> allFeatures = new LinkedList<String>(superFeatureNames);
 		allFeatures.addAll(Arrays.asList("scan_acquisition_time", "scan_index",
-				"binned_intensity_values"));
+			"binned_intensity_values"));
 		return allFeatures;
 	}
 

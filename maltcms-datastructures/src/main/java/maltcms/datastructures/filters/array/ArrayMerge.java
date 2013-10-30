@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,11 +27,11 @@
  */
 package maltcms.datastructures.filters.array;
 
-import ucar.ma2.Sparse;
-import ucar.ma2.Array;
-import ucar.ma2.IndexIterator;
 import cross.datastructures.tools.EvalTools;
 import maltcms.commands.filters.array.AArrayFilter;
+import ucar.ma2.Array;
+import ucar.ma2.IndexIterator;
+import ucar.ma2.Sparse;
 
 /**
  * Returns a list of all arrays, processed to be consistent with this objects
@@ -44,28 +44,33 @@ import maltcms.commands.filters.array.AArrayFilter;
  */
 public class ArrayMerge extends AArrayFilter {
 
-    public ArrayMerge() {
-        super();
-    }
+	public ArrayMerge() {
+		super();
+	}
 
-    @Override
-    public Array[] apply(final Array[] a) {
-        final Array[] b = super.apply(a);
-        EvalTools.inRangeI(2, 2, b.length, this);
-        final IndexIterator ii1 = b[0].getIndexIterator();
-        final IndexIterator ii2 = b[1].getIndexIterator();
-        Array ret = null;
-        if ((b[0] instanceof Sparse) && (b[1] instanceof Sparse)) {
-            ret = new Sparse(((Sparse) b[0]).getNumKeys(), ((Sparse) b[0])
-                    .getMinIndex(), ((Sparse) b[0]).getMaxIndex());
-        } else {
-            ret = Array.factory(b[0].getElementType(), b[0].getShape());
-        }
-        final IndexIterator iir = ret.getIndexIterator();
-        while (ii1.hasNext() && ii2.hasNext() && iir.hasNext()) {
-            iir
-                    .setDoubleNext((ii1.getDoubleNext() + ii2.getDoubleNext()) / 2.0d);
-        }
-        return new Array[]{ret};
-    }
+	@Override
+	public Array[] apply(final Array[] a) {
+		final Array[] b = super.apply(a);
+		EvalTools.inRangeI(2, 2, b.length, this);
+		final IndexIterator ii1 = b[0].getIndexIterator();
+		final IndexIterator ii2 = b[1].getIndexIterator();
+		Array ret = null;
+		if ((b[0] instanceof Sparse) && (b[1] instanceof Sparse)) {
+			ret = new Sparse(((Sparse) b[0]).getNumKeys(), ((Sparse) b[0])
+				.getMinIndex(), ((Sparse) b[0]).getMaxIndex());
+		} else {
+			ret = Array.factory(b[0].getElementType(), b[0].getShape());
+		}
+		final IndexIterator iir = ret.getIndexIterator();
+		while (ii1.hasNext() && ii2.hasNext() && iir.hasNext()) {
+			iir
+				.setDoubleNext((ii1.getDoubleNext() + ii2.getDoubleNext()) / 2.0d);
+		}
+		return new Array[]{ret};
+	}
+
+	@Override
+	public ArrayMerge copy() {
+		return new ArrayMerge();
+	}
 }
