@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,27 +27,6 @@
  */
 package maltcms.io.xml.mzXML;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import maltcms.io.andims.NetcdfDataSource;
-
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.systemsbiology.jrap.stax.MSXMLParser;
-import org.systemsbiology.jrap.stax.Scan;
-import org.systemsbiology.jrap.stax.ScanHeader;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
-import ucar.ma2.Index;
-import ucar.ma2.MAMath;
-import ucar.ma2.Range;
-import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.cache.CacheFactory;
@@ -56,13 +35,31 @@ import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
+import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
-import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.io.andims.NetcdfDataSource;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.systemsbiology.jrap.stax.MSXMLParser;
+import org.systemsbiology.jrap.stax.Scan;
+import org.systemsbiology.jrap.stax.ScanHeader;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayInt;
+import ucar.ma2.Index;
 import ucar.ma2.InvalidRangeException;
+import ucar.ma2.MAMath;
+import ucar.ma2.Range;
+import ucar.nc2.Dimension;
 
 /**
  * Implements {@link cross.io.IDataSource} for mzXML Files.
@@ -86,14 +83,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 	@Configurable(description = "The mslevel for mass spectra to extract. Set to 0 to extract all mass spectra.")
 	private int mslevel = 1;
 	private MSXMLParser parser = null;
-	private ICacheDelegate<IVariableFragment, Array> variableToArrayCache = null;
-
-	private ICacheDelegate<IVariableFragment, Array> getCache() {
-		if (this.variableToArrayCache == null) {
-			this.variableToArrayCache = CacheFactory.createDefaultCache(MZXMLStaxDataSource.class.getName());
-		}
-		return this.variableToArrayCache;
-	}
+	private static final ICacheDelegate<IVariableFragment, Array> variableToArrayCache = CacheFactory.createVolatileCache("maltcms.io.readcache");
 
 	/**
 	 * Checks, if passed in file is valid mzXML, by trying to invoke the parser
@@ -104,7 +94,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 		final int dotindex = ff.getName().lastIndexOf(".");
 		if (dotindex == -1) {
 			throw new RuntimeException("Could not determine File extension of "
-					+ ff);
+				+ ff);
 		}
 		final String filename = ff.getName().toLowerCase();
 		for (final String s : this.fileEnding) {
@@ -126,27 +116,27 @@ public class MZXMLStaxDataSource implements IDataSource {
 
 	public void configure(final Configuration configuration) {
 		this.mass_values = configuration.getString("var.mass_values",
-				"mass_values");
+			"mass_values");
 		this.intensity_values = configuration.getString("var.intensity_values",
-				"intensity_values");
+			"intensity_values");
 		this.total_intensity = configuration.getString("var.total_intensity",
-				"total_intensity");
+			"total_intensity");
 		this.scan_index = configuration.getString("var.scan_index",
-				"scan_index");
+			"scan_index");
 		this.mass_range_min = configuration.getString("var.mass_range_min",
-				"mass_range_min");
+			"mass_range_min");
 		this.mass_range_max = configuration.getString("var.mass_range_max",
-				"mass_range_max");
+			"mass_range_max");
 		this.source_files = configuration.getString("var.source_files",
-				"source_files");
+			"source_files");
 		this.mslevel = configuration.getInt(this.getClass().getName()
-				+ ".mslevel", 1);
+			+ ".mslevel", 1);
 		this.ndf = new NetcdfDataSource();
 		this.ndf.configure(configuration);
 	}
 
 	protected void convertScanIntensity(final int offset, final Scan s,
-			final Array i) {
+		final Array i) {
 		final double[][] mzi = s.getMassIntensityList();
 		log.debug("Scan has {} peaks", s.header.getPeaksCount());
 		final Index iind = i.getIndex();
@@ -167,10 +157,10 @@ public class MZXMLStaxDataSource implements IDataSource {
 				mz.setDouble(mzind.set(k + offset), mzi[0][k]);
 			} catch (final RuntimeException re) {
 				log.error(
-						"At offset {} and k={}, shape of mz array {}, Caught exception {}",
-						new Object[]{offset, k,
-					Arrays.toString(mz.getShape()),
-					re.getLocalizedMessage()});
+					"At offset {} and k={}, shape of mz array {}, Caught exception {}",
+					new Object[]{offset, k,
+						Arrays.toString(mz.getShape()),
+						re.getLocalizedMessage()});
 			}
 		}
 	}
@@ -263,9 +253,9 @@ public class MZXMLStaxDataSource implements IDataSource {
 	}
 
 	private IVariableFragment getVariable(final IFileFragment f,
-			final String name) {
+		final String name) {
 		return (f.hasChild(name) ? f.getChild(name) : new ImmutableVariableFragment2(f,
-				name));
+			name));
 	}
 
 	/**
@@ -274,10 +264,10 @@ public class MZXMLStaxDataSource implements IDataSource {
 	 * @param var
 	 * @param mp
 	 * @return a Tuple2D<Array,Array> with mass_range_min as first and
-	 * mass_range_max as second array
+	 *         mass_range_max as second array
 	 */
 	protected Tuple2D<Array, Array> initMinMaxMZ(final IVariableFragment var,
-			final MSXMLParser mp) {
+		final MSXMLParser mp) {
 		log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
 			this.mass_range_max});
 		int scans = getScans(mp, this.mslevel);
@@ -307,7 +297,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 
 	private Array loadArray(final IFileFragment f, final IVariableFragment var) {
 		final MSXMLParser mp = getParser(f);
-		Array a = getCache().get(var);
+		Array a = variableToArrayCache.get(var);
 		if (a != null) {
 			log.info("Retrieved variable data array from cache for " + var);
 			return a;
@@ -315,7 +305,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 		final String varname = var.getName();
 		// Read mass_values or intensity_values for whole chromatogram
 		if (varname.equals(this.mass_values)
-				|| varname.equals(this.intensity_values)) {
+			|| varname.equals(this.intensity_values)) {
 			a = readMZI(var, mp, this.mslevel);
 		} else if (varname.equals(this.scan_index)) {
 			a = readScanIndex(var, mp);
@@ -324,17 +314,17 @@ public class MZXMLStaxDataSource implements IDataSource {
 			a = readTotalIntensitiesArray(var, mp);
 			// read min and max_mass_range
 		} else if (varname.equals(this.mass_range_min)
-				|| varname.equals(this.mass_range_max)) {
+			|| varname.equals(this.mass_range_max)) {
 			a = readMinMaxMassValueArray(var, mp);
 			// read scan_acquisition_time
 		} else if (varname.equals(this.scan_acquisition_time)) {
 			a = readScanAcquisitionTimeArray(var, mp);
 		} else {
 			throw new ResourceNotAvailableException(
-					"Unknown varname to mzXML mapping for varname " + varname);
+				"Unknown varname to mzXML mapping for varname " + varname);
 		}
 		if (a != null) {
-			getCache().put(var, a);
+			variableToArrayCache.put(var, a);
 		}
 		return a;
 	}
@@ -345,7 +335,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 	}
 
 	public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
-			ResourceNotAvailableException {
+		ResourceNotAvailableException {
 		final ArrayList<IVariableFragment> al = readStructure(f);
 		final ArrayList<Array> ral = new ArrayList<Array>(al.size());
 		for (final IVariableFragment vf : al) {
@@ -356,12 +346,12 @@ public class MZXMLStaxDataSource implements IDataSource {
 	}
 
 	public ArrayList<Array> readIndexed(final IVariableFragment f)
-			throws IOException, ResourceNotAvailableException {
+		throws IOException, ResourceNotAvailableException {
 		log.debug("{}", f.getParent().toString());
 		if (f.getName().equals("mass_values")
-				|| f.getName().equals("intensity_values")) {
+			|| f.getName().equals("intensity_values")) {
 			log.debug("Reading {} and {}", this.mass_values,
-					this.intensity_values);
+				this.intensity_values);
 			// Tuple2D<ArrayList<Array>, ArrayList<Array>> t = MaltcmsTools
 			// .getMZIs(f.getParent());
 			// if (f.getVarname().equals("mass_values")) {
@@ -375,12 +365,12 @@ public class MZXMLStaxDataSource implements IDataSource {
 			return al;
 		} else {
 			throw new ResourceNotAvailableException(
-					"Only mass_values and intensity_values can be read indexed!");
+				"Only mass_values and intensity_values can be read indexed!");
 		}
 	}
 
 	private Array readMinMaxMassValueArray(final IVariableFragment var,
-			final MSXMLParser mp) {
+		final MSXMLParser mp) {
 		log.debug("readMinMaxMassValueArray");
 		final Tuple2D<Array, Array> t = initMinMaxMZ(var, mp);
 		if (var.getName().equals(this.mass_range_min)) {
@@ -390,11 +380,11 @@ public class MZXMLStaxDataSource implements IDataSource {
 			return t.getSecond();
 		}
 		throw new IllegalArgumentException(
-				"Method accepts only one of mass_range_min or mass_range_max as varname!");
+			"Method accepts only one of mass_range_min or mass_range_max as varname!");
 	}
 
 	private Array readMZI(final IVariableFragment var, final MSXMLParser mp,
-			final int mslevel) {
+		final int mslevel) {
 		if (var.getIndex() == null) {
 			IVariableFragment scanIndex = null;
 			try {
@@ -429,8 +419,8 @@ public class MZXMLStaxDataSource implements IDataSource {
 				final Scan s = mp.rap((i + 1));
 				if (mslevel == 0 || s.getHeader().getMsLevel() == mslevel) {
 					log.debug("Converting scan {} of {} with {} peaks",
-							new Object[]{(i + 1), scans,
-						s.header.getPeaksCount()});
+						new Object[]{(i + 1), scans,
+							s.header.getPeaksCount()});
 					convertScanMZ(npeaks, s, a);
 					log.debug("npeaks before: {}", npeaks);
 					npeaks += s.header.getPeaksCount();
@@ -445,8 +435,8 @@ public class MZXMLStaxDataSource implements IDataSource {
 				final Scan s = mp.rap((i + 1));
 				if (mslevel == 0 || s.getHeader().getMsLevel() == mslevel) {
 					log.debug("Converting scan {} of {} with {} peaks",
-							new Object[]{(i + 1), scans,
-						s.header.getPeaksCount()});
+						new Object[]{(i + 1), scans,
+							s.header.getPeaksCount()});
 					convertScanIntensity(npeaks, s, a);
 					log.debug("npeaks before: {}", npeaks);
 					npeaks += s.header.getPeaksCount();
@@ -461,7 +451,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 	}
 
 	private ArrayList<Array> readMZIScans(final IVariableFragment var,
-			final MSXMLParser mp, final int mslevel) {
+		final MSXMLParser mp, final int mslevel) {
 		int scans = mp.getScanCount();
 		int start = 0;
 		final Range[] r = var.getRange();
@@ -478,8 +468,8 @@ public class MZXMLStaxDataSource implements IDataSource {
 				if (mslevel == 0 || ((s != null) && (s.getHeader().getMsLevel() == mslevel))) {
 					final ArrayDouble.D1 a = new ArrayDouble.D1(s.header.getPeaksCount());
 					log.debug("Converting scan {} of {} with {} peaks",
-							new Object[]{(i + 1), scans,
-						s.header.getPeaksCount()});
+						new Object[]{(i + 1), scans,
+							s.header.getPeaksCount()});
 					convertScanMZ(0, s, a);
 					log.debug("npeaks before: {}", npeaks);
 					npeaks += s.header.getPeaksCount();
@@ -495,8 +485,8 @@ public class MZXMLStaxDataSource implements IDataSource {
 				if (mslevel == 0 || ((s != null) && (s.getHeader().getMsLevel() == mslevel))) {
 					final ArrayDouble.D1 a = new ArrayDouble.D1(s.header.getPeaksCount());
 					log.debug("Converting scan {} of {} with {} peaks",
-							new Object[]{(i + 1), scans,
-						s.header.getPeaksCount()});
+						new Object[]{(i + 1), scans,
+							s.header.getPeaksCount()});
 					convertScanIntensity(0, s, a);
 					log.debug("npeaks before: {}", npeaks);
 					npeaks += s.header.getPeaksCount();
@@ -509,7 +499,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 	}
 
 	private Array readScanAcquisitionTimeArray(final IVariableFragment var,
-			final MSXMLParser mp) {
+		final MSXMLParser mp) {
 		log.debug("readScanAcquisitionTimeArray");
 		int scans = mp.getScanCount();
 		int levelnscans = getScans(mp, this.mslevel);
@@ -532,7 +522,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 	}
 
 	private Array readScanIndex(final IVariableFragment var,
-			final MSXMLParser mp) {
+		final MSXMLParser mp) {
 		int npeaks = 0;
 		int scans = mp.getScanCount();
 		int levelnscans = getScans(mp, this.mslevel);
@@ -564,7 +554,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 	 * mimics the semantics of {@link maltcms.io.andims.NetcdfDataSource}.
 	 */
 	public Array readSingle(final IVariableFragment f) throws IOException,
-			ResourceNotAvailableException {
+		ResourceNotAvailableException {
 		log.info("readSingle of {} in {}", f.getName(), f.getParent().getUri());
 		if (f.hasArray()) {
 			log.debug("{} already has an array set!", f);
@@ -572,14 +562,14 @@ public class MZXMLStaxDataSource implements IDataSource {
 		final Array a = loadArray(f.getParent(), f);
 		if (a == null) {
 			throw new ResourceNotAvailableException("Could not find variable "
-					+ f.getName() + " in file " + f.getParent().getName());
+				+ f.getName() + " in file " + f.getParent().getName());
 		}
 		// f.setArray(a);
 		return a;
 	}
 
 	public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
-			throws IOException {
+		throws IOException {
 		final IVariableFragment ti = getVariable(f, this.total_intensity);
 		final IVariableFragment sat = getVariable(f, this.scan_acquisition_time);
 		final IVariableFragment si = getVariable(f, this.scan_index);
@@ -604,16 +594,16 @@ public class MZXMLStaxDataSource implements IDataSource {
 	 */
 	@Override
 	public IVariableFragment readStructure(final IVariableFragment f)
-			throws IOException, ResourceNotAvailableException {
+		throws IOException, ResourceNotAvailableException {
 		final MSXMLParser mp = getParser(f.getParent());
 		final int scancount = getScans(mp, this.mslevel);
 		final String varname = f.getName();
 		// Read mass_values or intensity_values for whole chromatogram
 		if (varname.equals(this.scan_index)
-				|| varname.equals(this.total_intensity)
-				|| varname.equals(this.mass_range_min)
-				|| varname.equals(this.mass_range_max)
-				|| varname.equals(this.scan_acquisition_time)) {
+			|| varname.equals(this.total_intensity)
+			|| varname.equals(this.mass_range_min)
+			|| varname.equals(this.mass_range_max)
+			|| varname.equals(this.scan_acquisition_time)) {
 			final Dimension[] dims = new Dimension[]{new Dimension(
 				"scan_number", scancount, true)};
 			f.setDimensions(dims);
@@ -625,7 +615,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 				log.warn("Invalid range: ", ex);
 			}
 		} else if (varname.equals(this.mass_values)
-				|| varname.equals(this.intensity_values)) {
+			|| varname.equals(this.intensity_values)) {
 			int npeaks = 0;
 			try {
 				for (int i = 0; i < scancount; i++) {
@@ -646,18 +636,18 @@ public class MZXMLStaxDataSource implements IDataSource {
 				}
 			} catch (final NullPointerException npe) {
 				throw new ResourceNotAvailableException(
-						"Could not rap header of file "
-						+ f.getParent().getUri());
+					"Could not rap header of file "
+					+ f.getParent().getUri());
 			}
 		} else {
 			throw new ResourceNotAvailableException(
-					"Unknown varname to mzXML mapping for varname " + varname);
+				"Unknown varname to mzXML mapping for varname " + varname);
 		}
 		return f;
 	}
 
 	private Array readTotalIntensitiesArray(final IVariableFragment var,
-			final MSXMLParser mp) {
+		final MSXMLParser mp) {
 		log.debug("readTotalIntensitiesArray");
 		int levelnscans = getScans(mp, this.mslevel);
 		int scans = mp.getScanCount();
@@ -735,7 +725,7 @@ public class MZXMLStaxDataSource implements IDataSource {
 	}
 
 	public boolean structureWrite(final IFileFragment f,
-			final ArrayList<IVariableFragment> a) {
+		final ArrayList<IVariableFragment> a) {
 		return write(f);
 	}
 
