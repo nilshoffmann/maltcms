@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,14 +27,13 @@
  */
 package maltcms.commands.filters.array;
 
-import maltcms.commands.filters.AElementFilter;
-
-import org.apache.commons.configuration.Configuration;
-
-import ucar.ma2.Array;
+import cross.ICopyable;
 import cross.annotations.Configurable;
 import cross.commands.ICommand;
 import lombok.Data;
+import maltcms.commands.filters.AElementFilter;
+import org.apache.commons.configuration.Configuration;
+import ucar.ma2.Array;
 
 /**
  * AArrayFilter applicable to Array objects, returning Array objects.
@@ -43,36 +42,37 @@ import lombok.Data;
  *
  */
 @Data
-public abstract class AArrayFilter implements ICommand<Array, Array> {
+public abstract class AArrayFilter implements ICommand<Array, Array>, ICopyable<AArrayFilter> {
 
-    protected transient AElementFilter ef = null;
-    @Configurable
-    private boolean copyArray = true;
+	protected transient AElementFilter ef = null;
+	@Configurable
+	private boolean copyArray = true;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see maltcms.ucar.ma2.Filter#filter(java.lang.Object)
-     */
-    @Override
-    public Array apply(final Array a) {
-        if (this.copyArray) {
-            return a.copy();
-        }
-        return a;
-    }
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see maltcms.ucar.ma2.Filter#filter(java.lang.Object)
+	 */
+	@Override
+	public Array apply(final Array a) {
+		if (this.copyArray) {
+			return a.copy();
+		}
+		return a;
+	}
 
-    public Array[] apply(final Array[] a) {
-        Array[] ret = new Array[a.length];
-        for (int i = 0; i < a.length; i++) {
-            ret[i] = apply(a[i]);
-        }
-        return ret;
-    }
+	public Array[] apply(final Array[] a) {
+		Array[] ret = new Array[a.length];
+		for (int i = 0; i < a.length; i++) {
+			ret[i] = apply(a[i]);
+		}
+		return ret;
+	}
 
-    @Override
-    public void configure(final Configuration cfg) {
-        this.copyArray = cfg.getBoolean(this.getClass().getName()
-                + ".copyArray", true);
-    }
+	@Override
+	public void configure(final Configuration cfg) {
+		this.copyArray = cfg.getBoolean(this.getClass().getName()
+			+ ".copyArray", true);
+	}
+
 }
