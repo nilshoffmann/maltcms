@@ -107,26 +107,26 @@ public class MSPFormatMetaboliteParser2 {
     public IMetabolite handleLine(String line) {
         IMetabolite metabolite = null;
         if (line.startsWith("Name: ")) {
-            handleName(line.substring("Name: ".length()));
+            handleName(line.substring("Name: ".length()).trim());
         } else if (line.startsWith("Synon: ")) {
-            handleSynon(line.substring("Synon: ".length()));
+            handleSynon(line.substring("Synon: ".length()).trim());
         } else if (line.startsWith("DB#: ")) {
-            handleDBNo(line.substring("DB#: ".length()));
+            handleDBNo(line.substring("DB#: ".length()).trim());
         } else if (line.startsWith("Comment: ")) {
-            handleComments(line.substring("Comment: ".length()));
+            handleComments(line.substring("Comment: ".length()).trim());
         } else if (line.startsWith("Comments: ")) {
-            handleComments(line.substring("Comments: ".length()));
+            handleComments(line.substring("Comments: ".length()).trim());
         } else if (line.startsWith("CAS#: ") || line.startsWith("CASNO: ")) {
-            handleCasNumber(line);
+            handleCasNumber(line.trim());
             // System.out.println("Skipping "+line);
         } else if (line.startsWith("Num Peaks: ")) {
             nnpeaks++;
-            handleNumPeaks(line.substring(("Num Peaks: ").length()));
+            handleNumPeaks(line.substring(("Num Peaks: ").length()).trim());
             nextIsPeakData = true;
         } else if (line.startsWith("Formula: ")) {
-            handleFormula(line.substring(("Formula: ").length()));
+            handleFormula(line.substring(("Formula: ").length()).trim());
         } else if (line.startsWith("MW: ")) {
-            handleMW(line.substring(("MW: ").length()));
+            handleMW(line.substring(("MW: ").length()).trim());
         } else if (line.isEmpty()) {// next metabolite
             if (data != null) {
                 handleData(data.toString());
@@ -203,29 +203,29 @@ public class MSPFormatMetaboliteParser2 {
 
     public void handleSynon(String synon) {
         if (synon.startsWith("DATE:")) {
-            handleSynonDate(synon.substring("DATE:".length()));
+            handleSynonDate(synon.substring("DATE:".length()).trim());
         } else if (synon.startsWith("NAME:")) {
-            handleSynonName(synon.substring("NAME:".length()));
+            handleSynonName(synon.substring("NAME:".length()).trim());
         } else if (synon.startsWith("SP:")) {
-            handleSynonSP(synon.substring("SP:".length()));
+            handleSynonSP(synon.substring("SP:".length()).trim());
         } else if (synon.startsWith("CHROMA4D-ID:")) {
             this.idType = "CHROMA4D-ID";
-            handleSynonID(synon.substring("CHROMA4D-ID:".length()));
+            handleSynonID(synon.substring("CHROMA4D-ID:".length()).trim());
         } else if (synon.startsWith("MPIMP-ID:")) {
             this.idType = "MPIMP-ID";
-            handleSynonMPIMPID(synon.substring("MPIMP-ID:".length()));
+            handleSynonMPIMPID(synon.substring("MPIMP-ID:".length()).trim());
 		} else if (synon.startsWith("GMD LINK:")) {
 			this.idType = "MPIMP-GUID";
-			handleSynonGmdLink(synon.substring("GMD LINK:".length()));
+			handleSynonGmdLink(synon.substring("GMD LINK:".length()).trim());
         } else if (synon.startsWith("ID:")) {
             this.idType = "ID";
-            handleSynonID(synon.substring("ID:".length()));
+            handleSynonID(synon.substring("ID:".length()).trim());
         } else if (synon.startsWith("RI:")) {
-            handleSynonRI(synon.substring(("RI:").length()));
+            handleSynonRI(synon.substring(("RI:").length()).trim());
         } else if (synon.startsWith("RT:")) {
-            handleSynonRT(synon.substring(("RT:").length()));
+            handleSynonRT(synon.substring(("RT:").length()).trim());
         } else if (synon.startsWith("MATCH:")) {
-            handleSynonMATCH(synon.substring(("MATCH:").length()));
+            handleSynonMATCH(synon.substring(("MATCH:").length()).trim());
         } else if (synon.startsWith("##")) {
             handleSynonNist2Lib(synon.substring(("##").length()));
         } else {

@@ -29,6 +29,7 @@ package net.sf.maltcms.db.search.spi.similarities;
 
 import cross.datastructures.tuple.Tuple2D;
 import java.util.BitSet;
+import maltcms.math.functions.similarities.ArrayWeightedCosine;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
 import ucar.ma2.Array;
@@ -43,78 +44,80 @@ import ucar.ma2.MAMath.MinMax;
  */
 public class AMDISMSSimilarity {
 
-    private Array getIndexSubset(Array a, BitSet bs) {
-        Array ret = Array.factory(a.getElementType(),
-                new int[]{bs.cardinality()});
-        int idx = 0;
-        for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
-            ret.setDouble(idx, a.getDouble(i));
-            idx++;
-        }
-        return ret;
-    }
-
-    private void fillBitSet(Array t, double threshold, BitSet tpeaks) {
-        IndexIterator iter1 = t.getIndexIterator();
-        int idx = 0;
-        while (iter1.hasNext()) {
-            double val = iter1.getDoubleNext();
-            if (val > threshold) {
-                tpeaks.set(idx);
-            }
-            idx++;
-        }
-    }
-
-    public Double applyOnShared(Array mra, Array ira, Array mqa, Array iqa,
-            double massExponent, double intensityExponent) {
-
-
-//        BitSet libraryPeaks = new BitSet();
-//        fillBitSet(ira, 0.0, libraryPeaks);
-//        BitSet unknownPeaks = new BitSet();
-//        fillBitSet(iqa, 0.0, unknownPeaks);
+	private final ArrayWeightedCosine awc = new ArrayWeightedCosine();
+	
+//    private Array getIndexSubset(Array a, BitSet bs) {
+//        Array ret = Array.factory(a.getElementType(),
+//                new int[]{bs.cardinality()});
+//        int idx = 0;
+//        for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
+//            ret.setDouble(idx, a.getDouble(i));
+//            idx++;
+//        }
+//        return ret;
+//    }
 //
-////        BitSet unionPeaks = new BitSet();
-////        unionPeaks.or(libraryPeaks);
-////        unionPeaks.or(unknownPeaks);
+//    private void fillBitSet(Array t, double threshold, BitSet tpeaks) {
+//        IndexIterator iter1 = t.getIndexIterator();
+//        int idx = 0;
+//        while (iter1.hasNext()) {
+//            double val = iter1.getDoubleNext();
+//            if (val > threshold) {
+//                tpeaks.set(idx);
+//            }
+//            idx++;
+//        }
+//    }
 //
-//        BitSet intersecPeaks = new BitSet();
-//        intersecPeaks.and(unknownPeaks);
-//        intersecPeaks.and(libraryPeaks);
-
-        return getMixedValue(mra, ira, mqa,
-                iqa, massExponent,
-                intensityExponent);
-//        return getMixedValue(getIndexSubset(mra, intersecPeaks), getIndexSubset(
-//                ira, intersecPeaks), getIndexSubset(mqa, intersecPeaks),
-//                getIndexSubset(iqa, intersecPeaks), massExponent,
+//    public Double applyOnShared(Array mra, Array ira, Array mqa, Array iqa,
+//            double massExponent, double intensityExponent) {
+//
+//
+////        BitSet libraryPeaks = new BitSet();
+////        fillBitSet(ira, 0.0, libraryPeaks);
+////        BitSet unknownPeaks = new BitSet();
+////        fillBitSet(iqa, 0.0, unknownPeaks);
+////
+//////        BitSet unionPeaks = new BitSet();
+//////        unionPeaks.or(libraryPeaks);
+//////        unionPeaks.or(unknownPeaks);
+////
+////        BitSet intersecPeaks = new BitSet();
+////        intersecPeaks.and(unknownPeaks);
+////        intersecPeaks.and(libraryPeaks);
+//
+//        return getMixedValue(mra, ira, mqa,
+//                iqa, massExponent,
 //                intensityExponent);
-    }
-
-    public double getMixedValue(Array mra, Array ira, Array mqa, Array iqa,
-            double massExponent, double intensityExponent) {
-        double mixedValue = getPairedProductSumOfSquares(mra, ira, mqa, iqa,
-                massExponent, intensityExponent);
-//        double refValue = getPairedProductSumOfSquares(mra, ira, mra, ira,
+////        return getMixedValue(getIndexSubset(mra, intersecPeaks), getIndexSubset(
+////                ira, intersecPeaks), getIndexSubset(mqa, intersecPeaks),
+////                getIndexSubset(iqa, intersecPeaks), massExponent,
+////                intensityExponent);
+//    }
+//
+//    public double getMixedValue(Array mra, Array ira, Array mqa, Array iqa,
+//            double massExponent, double intensityExponent) {
+//        double mixedValue = getPairedProductSumOfSquares(mra, ira, mqa, iqa,
 //                massExponent, intensityExponent);
-//        double queryValue = getPairedProductSumOfSquares(mqa, iqa, mqa, iqa,
-//                massExponent, intensityExponent);
-
-//        return mixedValue / (refValue * queryValue);
-        double refValue = ArrayTools.integrate(ArrayTools.mult(ArrayTools.pow(
-                mra, 2 * massExponent), ArrayTools.pow(ira,
-                2 * intensityExponent)));
-        double queryValue = ArrayTools.integrate(ArrayTools.mult(ArrayTools.pow(
-                mqa, 2 * massExponent), ArrayTools.pow(iqa,
-                2 * intensityExponent)));
-        return mixedValue / refValue * queryValue;
-    }
+////        double refValue = getPairedProductSumOfSquares(mra, ira, mra, ira,
+////                massExponent, intensityExponent);
+////        double queryValue = getPairedProductSumOfSquares(mqa, iqa, mqa, iqa,
+////                massExponent, intensityExponent);
+//
+////        return mixedValue / (refValue * queryValue);
+//        double refValue = ArrayTools.integrate(ArrayTools.mult(ArrayTools.pow(
+//                mra, 2 * massExponent), ArrayTools.pow(ira,
+//                2 * intensityExponent)));
+//        double queryValue = ArrayTools.integrate(ArrayTools.mult(ArrayTools.pow(
+//                mqa, 2 * massExponent), ArrayTools.pow(iqa,
+//                2 * intensityExponent)));
+//        return mixedValue / refValue * queryValue;
+//    }
 
     public double apply(Tuple2D<Array, Array> referenceMassSpectrum,
             Tuple2D<Array, Array> queryMassSpectrum) {
-        double massExponent = 1.0;
-        double intensityExponent = 0.5;
+//        double massExponent = 1.0;
+//        double intensityExponent = 0.5;
 
         double resolution = 1.0;
 
@@ -147,21 +150,22 @@ public class AMDISMSSimilarity {
 
 //        double maxS2 = MAMath.getMaximum(iqa);
 //        iqa = (ArrayDouble.D1) ArrayTools.mult(iqa, 1.0d / maxS2);
-        return applyOnShared(mra, ira, mqa, iqa, massExponent, intensityExponent);
+		return awc.apply(mqa, iqa);
+//        return applyOnShared(mra, ira, mqa, iqa, massExponent, intensityExponent);
     }
 
-    public double getPairedProductSumOfSquares(Array mra, Array ira, Array mqa,
-            Array iqa, double massExponent, double intensityExponent) {
-        double commonProduct = 0;
-
-        for (int i = 0; i < mra.getShape()[0]; i++) {
-            double mr = mra.getDouble(i);
-            double mq = mqa.getDouble(i);
-            double ir = ira.getDouble(i);
-            double iq = iqa.getDouble(i);
-            commonProduct += Math.pow(Math.pow(mr * mq, massExponent) * Math.pow(
-                    ir * iq, intensityExponent), 2.0);
-        }
-        return commonProduct;
-    }
+//    public double getPairedProductSumOfSquares(Array mra, Array ira, Array mqa,
+//            Array iqa, double massExponent, double intensityExponent) {
+//        double commonProduct = 0;
+//
+//        for (int i = 0; i < mra.getShape()[0]; i++) {
+//            double mr = mra.getDouble(i);
+//            double mq = mqa.getDouble(i);
+//            double ir = ira.getDouble(i);
+//            double iq = iqa.getDouble(i);
+//            commonProduct += Math.pow(Math.pow(mr * mq, massExponent) * Math.pow(
+//                    ir * iq, intensityExponent), 2.0);
+//        }
+//        return commonProduct;
+//    }
 }
