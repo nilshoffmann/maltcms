@@ -35,7 +35,7 @@ for details.
         This file defines elements of the ChromA4D SRG seeded region growing.
     </description>
     
-    <bean id="identificationSim" class="maltcms.math.functions.similarities.ArrayCos"/>
+    <bean id="identificationSim" class="maltcms.math.functions.similarities.ArrayWeightedCosine" scope="prototype"/>
     
     <bean id="peakIdentification" class="maltcms.commands.fragments2d.peakfinding.output.PeakIdentification">
         <property name="doSearch" value="false" />
@@ -92,7 +92,7 @@ for details.
         <property name="tolerance" value="1.0"/>
         <property name="threshold" value="0.0"/>
     </bean>
-    <bean id="arrayshouldBeSeparatedSim" class="maltcms.math.functions.similarities.ArrayCos"/>
+    <bean id="arrayshouldBeSeparatedSim" class="maltcms.math.functions.similarities.ArrayWeightedCosine" scope="prototype"/>
     <bean id="shouldBeSeparatedSim" class="maltcms.math.functions.ProductSimilarity">
         <property name="scalarSimilarities">
             <array>
@@ -114,8 +114,8 @@ for details.
         <property name="tolerance" value="1.0"/>
         <property name="threshold" value="0.0"/>
     </bean>
-    <bean id="arrayseparationSim" class="maltcms.math.functions.similarities.ArrayCos"/>
-    <bean id="separationSim" class="maltcms.math.functions.ProductSimilarity">
+    <bean id="arrayseparationSim" class="maltcms.math.functions.similarities.ArrayWeightedCosine" scope="prototype"/>
+    <bean id="separationSim" class="maltcms.math.functions.ProductSimilarity" scope="prototype">
         <property name="scalarSimilarities">
             <array>
                 <ref bean="rt1separationSim"/>
@@ -125,35 +125,6 @@ for details.
         <property name="arraySimilarities">
             <array>
                 <ref bean="arrayseparationSim"/>
-            </array>
-        </property>
-    </bean>
-    
-    <bean id="bbhImpl" class="maltcms.commands.fragments2d.peakfinding.bbh.FastBidirectionalBestHit" >
-        <property name="useMeanMS" value="false" />
-        <property name="threshold" value="0.9" />
-        <property name="maxRetDiff" value="500.0" />
-        <property name="similarity" ref="bbhSimilarity" />
-    </bean>
-    <bean id="rt1bbhSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
-        <property name="tolerance" value="15.0"/>
-        <property name="threshold" value="0.0"/>
-    </bean>
-    <bean id="rt2bbhSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
-        <property name="tolerance" value="1.0"/>
-        <property name="threshold" value="0.0"/>
-    </bean>
-    <bean id="arraybbhSim" class="maltcms.math.functions.similarities.ArrayCos"/>
-    <bean id="bbhSimilarity" class="maltcms.math.functions.ProductSimilarity">
-        <property name="scalarSimilarities">
-            <array>
-                <ref bean="rt1bbhSim"/>
-                <ref bean="rt2bbhSim"/>
-            </array>
-        </property>
-        <property name="arraySimilarities">
-            <array>
-                <ref bean="arraybbhSim"/>
             </array>
         </property>
     </bean>
@@ -170,53 +141,66 @@ for details.
         <property name="useAlternativFiltering" value="true" />
         <property name="useMeanMS" value="false" />
     </bean>
-    <bean id="regionGrowingSim" class="maltcms.math.functions.similarities.ArrayCos"/>
+    <bean id="regionGrowingSim" class="maltcms.math.functions.similarities.ArrayWeightedCosine" scope="prototype"/>
     
-    <bean id="seededRegionGrowing" class="maltcms.commands.fragments2d.peakfinding.SeededRegionGrowing">
-        <property name="totalIntensityVar" value="total_intensity_filtered" />
-        <property name="colorrampLocation" value="res/colorRamps/bcgyr.csv" />
-        <property name="doubleFillValue" value="9.9692099683868690e+36d" />
-        <property name="threshold" value="0.0" />
-        <property name="doBBH" value="true"/>
-        <property name="separate" value="true" />
-        <property name="secondRun" value="true" />
-        <property name="doNormalization" value="false"/>
-        <property name="doIntegration" value="false"/>
-        <property name="secondSeedMinDistance" value="0.95" />
-        <property name="seedNotInRegion" value="false" />
-        <property name="similaritySecondRun" ref="secondRunSim"/>
-        <property name="peakPicking" ref="peakPickerMax"/>
-        <property name="regionGrowing" ref="regionGrower" />
-        <property name="bbh" ref="bbhImpl"/>
-        <property name="identification" ref="peakIdentification"/>
-        <property name="integration" ref="peakIntegration"/>
-        <property name="peakExporter" ref="peakExporter"/>
-        <property name="peakSeparator" ref="peakSeparator"/>
-        <!-- java -jar maltcms.jar -DmyProperty=0.3f -->
-        <!-- <property name="myProperty" value="#{systemProperties.myProperty}"/>-->
+    <bean id="gaussianDifferenceSimilarityRt1" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity" scope="prototype">
+        <property name="tolerance" value="30.0d"/>
+        <property name="threshold" value="0.5d"/>
     </bean>
-   
-    <bean id="rt1SecondRunSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
-        <property name="tolerance" value="15.0"/>
-        <property name="threshold" value="0.0"/>
+    <bean id="gaussianDifferenceSimilarityRt2" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity" scope="prototype">
+        <property name="tolerance" value="1.0d"/>
+        <property name="threshold" value="0.5d"/>
     </bean>
-    <bean id="rt2SecondRunSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
-        <property name="tolerance" value="1.0"/>
-        <property name="threshold" value="0.0"/>
-    </bean>
-    <bean id="arraySecondRunSim" class="maltcms.math.functions.similarities.ArrayCos"/>
-    <bean id="secondRunSim" class="maltcms.math.functions.ProductSimilarity">
+    
+    <!-- array similarity functions -->
+	<bean id="dotSimilarity" class="maltcms.math.functions.similarities.ArrayDot" scope="prototype"/>
+    <bean id="cosineSimilarity" class="maltcms.math.functions.similarities.ArrayCos" scope="prototype"/>
+    <bean id="linCorrSimilarity" class="maltcms.math.functions.similarities.ArrayCorr" scope="prototype"/>
+    <bean id="rankCorrSimilarity" class="maltcms.math.functions.similarities.ArrayRankCorr" scope="prototype"/>
+    <bean id="weightedCosineSimilarity" class="maltcms.math.functions.similarities.ArrayWeightedCosine" scope="prototype"/>
+    
+    <!-- time penalized functions -->
+    <bean id="timePenalizedProductSimilarity" class="maltcms.math.functions.ProductSimilarity" scope="prototype">
         <property name="scalarSimilarities">
             <array>
-                <ref bean="rt1SecondRunSim"/>
-                <ref bean="rt2SecondRunSim"/>
+                <ref bean="gaussianDifferenceSimilarityRt1"/>
+                <ref bean="gaussianDifferenceSimilarityRt2"/>
             </array>
         </property>
         <property name="arraySimilarities">
             <array>
-                <ref bean="arraySecondRunSim"/>
+                <ref bean="weightedCosineSimilarity"/>
             </array>
         </property>
+    </bean>
+    
+    <bean id="worker2DFactory" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.Worker2DFactory" scope="prototype">
+        <property name="maxRTDifferenceRt1" value="60.0d"/>
+        <property name="maxRTDifferenceRt2" value="5.0d"/>
+        <property name="similarityFunction" ref="timePenalizedProductSimilarity"/>
+        <property name="assumeSymmetricSimilarity" value="true"/>
+    </bean>
+
+    <bean id="peakFactory2DMS" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak2DMSFactory" scope="prototype">
+    
+    </bean>
+    
+    <!-- PeakCliqueAlignment -->
+    <bean id="peakCliqueAlignment" class="maltcms.commands.fragments.alignment.PeakCliqueAlignment">
+        <property name="workerFactory" ref="worker2DFactory"/>
+        <property name="use2DRetentionTimes" value="true"/>
+        <property name="minCliqueSize" value="2"/>
+		<property name="useSparseArrays" value="true"/>
+        <property name="savePeakSimilarities" value="false"/>
+        <property name="useUserSuppliedAnchors" value="false"/>
+        <property name="saveXMLAlignment" value="true"/>
+        <property name="savePlots" value="false"/>
+        <property name="saveUnmatchedPeaks" value="false"/>
+        <property name="saveUnassignedPeaks" value="false"/>
+        <property name="saveIncompatiblePeaks" value="false"/>
+        <!-- which peak area definition to use, default: peak_area, alternative: peak_area_normalized -->
+        <property name="peakAreaVariable" value="peak_area"/>
+        <property name="peakFactory" ref="peakFactory2DMS"/>
     </bean>
    
 </beans>

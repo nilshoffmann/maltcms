@@ -89,8 +89,6 @@ import maltcms.commands.fragments.alignment.peakCliqueAlignment.CliqueTable;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.IWorkerFactory;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PairwiseSimilarityResult;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakComparator;
-import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakSimilarityVisualizer;
-import maltcms.commands.fragments.alignment.peakCliqueAlignment.UnmatchedPeaksSet;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.WorkerFactory;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.IPeakFactory;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.IPeakFactoryImpl;
@@ -99,7 +97,6 @@ import maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.OneWayPeakAnova;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakEdge;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakListWriter;
-import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakNG;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.XmlAlignmentWriter;
 import maltcms.tools.MaltcmsTools;
 import net.sf.mpaxs.api.ICompletionService;
@@ -114,12 +111,12 @@ import org.openide.util.lookup.ServiceProvider;
  *
  *
  */
-@RequiresVariables(names = {"var.binned_mass_values",
-	"var.binned_intensity_values", "var.binned_scan_index",
+@RequiresVariables(names = {
 	"var.scan_acquisition_time", "var.mass_values", "var.intensity_values",
 	"var.scan_index"})
-@RequiresOptionalVariables(names = {"var.tic_peaks",
-	"var.first_column_elution_time", "var.second_column_elution_time", "var.peak_area"})
+@RequiresOptionalVariables(names = {"var.binned_mass_values",
+	"var.binned_intensity_values", "var.binned_scan_index", "var.tic_peaks",
+	"var.first_column_elution_time", "var.second_column_elution_time", "var.peak_area", "var.peak_index_list"})
 @ProvidesVariables(names = {"var.anchors.retention_index_names",
 	"var.anchors.retention_times", "var.anchors.retention_indices",
 	"var.anchors.retention_scans"})
@@ -131,6 +128,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 //    private IScalarArraySimilarity similarityFunction;
 	@Configurable(name = "var.tic_peaks")
 	private String ticPeaks = "tic_peaks";
+	@Configurable(name = "var.peak_index_list")
+	private String peakIndexList = "peak_index_list";
 	@Configurable(name = "var.mass_values")
 	private String massValues = "mass_values";
 	@Configurable(name = "var.scan_index")
@@ -301,6 +300,9 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 			// make sure, that work array data is removed
 			if (ff.hasChild(this.ticPeaks)) {
 				ff.removeChild(ff.getChild(this.ticPeaks));
+			}
+			if (ff.hasChild(this.peakIndexList)) {
+				ff.removeChild(ff.getChild(this.peakIndexList));
 			}
 			if (ff.hasChild(this.binnedIntensities)) {
 				ff.removeChild(ff.getChild(this.binnedIntensities));
@@ -477,8 +479,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 			log.warn("At least two files are required for peak clique alignment!");
 		} else {
 			List<IFileFragment> l = new ArrayList<IFileFragment>(t);
-			Collections.sort(l,new Comparator<IFileFragment>() {
-
+			Collections.sort(l, new Comparator<IFileFragment>() {
 				@Override
 				public int compare(IFileFragment o1, IFileFragment o2) {
 					return o1.getName().compareTo(o2.getName());
@@ -501,7 +502,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 	 * @param peakEdgeMap the map in which to store global peak edges
 	 * @return the number of unmatched peaks
 	 */
-	private int calculatePeakSimilarities(final TupleND<IFileFragment> al, Map<String, IFileFragment> nameToFragment, 
+	private int calculatePeakSimilarities(final TupleND<IFileFragment> al, Map<String, IFileFragment> nameToFragment,
 			final Map<String, List<IBipacePeak>> fragmentToPeaks, final int n, final LongObjectMap<PeakEdge> peakEdgeMap) {
 		log.info(
 				"Calculating {} pairwise peak similarities for {} peaks!",
@@ -510,7 +511,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 //                this.similarityFunction.getClass().getName());
 		// Loop over all pairs of FileFragments
 		ICompletionService<PairwiseSimilarityResult> ics = createCompletionService(PairwiseSimilarityResult.class);
-		File outputDirectory = new File(getWorkflow().getOutputDirectory(this),"PeakSimilarityVisualizer");
+		File outputDirectory = new File(getWorkflow().getOutputDirectory(this), "PeakSimilarityVisualizer");
 		outputDirectory.mkdirs();
 		workerFactory.setSavePeakSimilarities(savePeakSimilarities);
 		List<Callable<PairwiseSimilarityResult>> workers = workerFactory.create(outputDirectory, al, fragmentToPeaks);
@@ -557,12 +558,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 	 * @return
 	 */
 	private HashMap<String, List<IBipacePeak>> checkUserSuppliedAnchors(
-			final TupleND<IFileFragment> al, final Map<String, Integer> fragmentToId, final double massBinResolution, final Tuple2D<Double,Double> minMaxMassRange, final int size) {
+			final TupleND<IFileFragment> al, final Map<String, Integer> fragmentToId, final double massBinResolution, final Tuple2D<Double, Double> minMaxMassRange, final int size) {
 		// Check for already defined peaks
 		final HashMap<String, List<IBipacePeak>> definedAnchors = new HashMap<String, List<IBipacePeak>>();
 		for (final IFileFragment t : al) {
 			List<IBipacePeak> anchors = checkUserSuppliedAnchors(t, fragmentToId.get(t.getName()), massBinResolution, minMaxMassRange, size);
-			if(!anchors.isEmpty()) {
+			if (!anchors.isEmpty()) {
 				log.info("Using {} user-supplied anchors for file {}!", anchors.size(), t.getName());
 				definedAnchors.put(t.getName(), anchors);
 			}
@@ -570,7 +571,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 		return definedAnchors;
 	}
 
-	public List<IBipacePeak> checkUserSuppliedAnchors(final IFileFragment t, final int associationId, final double massBinResolution, final Tuple2D<Double,Double> minMaxMassRange, final int size) {
+	public List<IBipacePeak> checkUserSuppliedAnchors(final IFileFragment t, final int associationId, final double massBinResolution, final Tuple2D<Double, Double> minMaxMassRange, final int size) {
 		IVariableFragment anames = null;
 		IVariableFragment ascans = null;
 		List<IBipacePeak> peaks = new ArrayList<IBipacePeak>();
@@ -582,19 +583,19 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 			final Array peakScans = ascans.getArray();
 			final Index peakScansI = peakScans.getIndex();
 
-			IVariableFragment biv = t.getChild(this.binnedIntensities);
-			IVariableFragment bsi = t.getChild(this.binnedScanIndex);
-			biv.setIndex(bsi);
+//			IVariableFragment biv = t.getChild(this.binnedIntensities);
+//			IVariableFragment bsi = t.getChild(this.binnedScanIndex);
+//			biv.setIndex(bsi);
 			log.info("Checking user supplied anchors for: {}", t);
 			final Array scan_acquisition_time = t.getChild(
 					this.scanAcquisitionTime).getArray();
 			final Index sat1 = scan_acquisition_time.getIndex();
-			final List<Array> bintens = biv.getIndexedArray();
+//			final List<Array> bintens = biv.getIndexedArray();
 			for (int i = 0; i < peakScans.getShape()[0]; i++) {
 				final String name = peakNames.getString(i);
 				final int scan = peakScans.getInt(peakScansI.set(i));
-				final double sat = scan_acquisition_time.getDouble(sat1.set(
-						scan));
+//				final double sat = scan_acquisition_time.getDouble(sat1.set(
+//						scan));
 				log.debug("{}", t.getName());
 				final IBipacePeak p = peakFactoryImpl.create(scan, scan);
 //				final IBipacePeak p = new PeakNG(scan, bintens.get(scan),
@@ -615,29 +616,29 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 	@Override
 	public void configure(final Configuration cfg) {
 		super.configure(cfg);
-		/*
-		 this.scanAcquisitionTime = cfg.getString(
-		 "var.scan_acquisition_time", "scan_acquisition_time");
-		 this.binnedIntensities = cfg.getString(
-		 "var.binned_intensity_values", "binned_intensity_values");
-		 this.binnedScanIndex = cfg.getString(
-		 "var.binned_scan_index", "binned_scan_index");
-		 this.anchorNames = cfg.getString(
-		 "var.anchors.retention_index_names", "retention_index_names");
-		 this.anchorTimes = cfg.getString(
-		 "var.anchors.retention_times", "retention_times");
-		 this.anchorRetentionIndex = cfg.getString(
-		 "var.anchors.retention_indices", "retention_indices");
-		 this.anchorScanIndex = cfg.getString(
-		 "var.anchors.retention_scans", "retention_scans");
-		 this.massValues = cfg.getString("var.mass_values",
-		 "mass_values");
-		 this.scanIndex = cfg.getString("var.scan_index",
-		 "scan_index");
-		 this.intensityValues = cfg.getString(
-		 "var.intensity_values", "intensity_values");
-		 this.ticPeaks = cfg.getString("var.tic_peaks", "tic_peaks");
-		 */
+
+		this.scanAcquisitionTime = cfg.getString(
+				"var.scan_acquisition_time", "scan_acquisition_time");
+		this.binnedIntensities = cfg.getString(
+				"var.binned_intensity_values", "binned_intensity_values");
+		this.binnedScanIndex = cfg.getString(
+				"var.binned_scan_index", "binned_scan_index");
+		this.anchorNames = cfg.getString(
+				"var.anchors.retention_index_names", "retention_index_names");
+		this.anchorTimes = cfg.getString(
+				"var.anchors.retention_times", "retention_times");
+		this.anchorRetentionIndex = cfg.getString(
+				"var.anchors.retention_indices", "retention_indices");
+		this.anchorScanIndex = cfg.getString(
+				"var.anchors.retention_scans", "retention_scans");
+		this.massValues = cfg.getString("var.mass_values",
+				"mass_values");
+		this.scanIndex = cfg.getString("var.scan_index",
+				"scan_index");
+		this.intensityValues = cfg.getString(
+				"var.intensity_values", "intensity_values");
+		this.ticPeaks = cfg.getString("var.tic_peaks", "tic_peaks");
+		this.peakIndexList = cfg.getString("var.peak_index_list", "peak_index_list");
 		//this.peakAreaVariable = cfg.getString("var.peak_area", "peak_area");
 	}
 
@@ -740,7 +741,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
 		final long startT2 = System.currentTimeMillis();
 		final List<List<IBipacePeak>> cliqueList = new ArrayList<List<IBipacePeak>>();
-		
+
 		BBHResult result;
 		if (this.minCliqueSize == -1 || this.minCliqueSize == t.size()) {
 			log.info("Combining bidirectional best hits if present in all files");
@@ -871,9 +872,16 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 				log.debug("Peaks for file {}: {}", t.getUri(),
 						peakCandidates1);
 			} catch (ResourceNotAvailableException rnae) {
-				// otherwise, create an index array for all scans!!!
-				Array sidx = t.getChild(this.binnedScanIndex).getArray();
-				peakCandidates1 = ArrayTools.indexArray(sidx.getShape()[0], 0);
+				try {
+					IVariableFragment peakCandidates = t.getChild(this.peakIndexList);
+					peakCandidates1 = peakCandidates.getArray();
+					log.debug("Peaks for file {}: {}", t.getUri(),
+							peakCandidates1);
+				} catch (ResourceNotAvailableException rnae2) {
+					// otherwise, create an index array for all scans!!!
+					Array sidx = t.getChild(this.binnedScanIndex).getArray();
+					peakCandidates1 = ArrayTools.indexArray(sidx.getShape()[0], 0);
+				}
 			}
 			EvalTools.notNull(peakCandidates1, this);
 			List<IBipacePeak> peaks = null;

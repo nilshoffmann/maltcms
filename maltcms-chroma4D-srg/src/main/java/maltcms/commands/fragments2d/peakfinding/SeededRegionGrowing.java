@@ -151,24 +151,6 @@ public class SeededRegionGrowing extends AFragmentCommand {
     private double threshold = 0;
     @Configurable(value = "true", type = String.class)
     private boolean doBBH = true;
-    @Configurable(value = "maltcms.commands.fragments2d.peakfinding.picking.MaxSortPeakPicking",
-    type = IPeakPicking.class)
-    private String pickingClass = "maltcms.commands.fragments2d.peakfinding.picking.MaxSortPeakPicking";
-    @Configurable(value = "maltcms.commands.fragments2d.peakfinding.srg.OneByOneRegionGrowing",
-    type = IRegionGrowing.class)
-    private String srgClass = "maltcms.commands.fragments2d.peakfinding.srg.OneByOneRegionGrowing";
-    @Configurable(value = "maltcms.commands.fragments2d.peakfinding.bbh.FastBidirectionalBestHit",
-    type = IBidirectionalBestHit.class)
-    private String bbhClass = "maltcms.commands.fragments2d.peakfinding.bbh.FastBidirectionalBestHit";
-    @Configurable(value = "maltcms.commands.fragments2d.peakfinding.output.PeakIdentification",
-    type = IPeakIdentification.class)
-    private String identificationClass = "maltcms.commands.fragments2d.peakfinding.output.PeakIdentification";
-    @Configurable(value = "maltcms.commands.fragments2d.peakfinding.output.PeakIntegration",
-    type = IPeakIntegration.class)
-    private String integrationClass = "maltcms.commands.fragments2d.peakfinding.output.PeakIntegration";
-    @Configurable(value = "maltcms.commands.fragments2d.peakfinding.output.PeakExporter",
-    type = IPeakExporter.class)
-    private String exportClass = "maltcms.commands.fragments2d.peakfinding.output.PeakExporter";
     @Configurable(value = "true", type = boolean.class)
     private boolean separate = true;
     @Configurable(value = "true", type = boolean.class)
@@ -222,17 +204,17 @@ public class SeededRegionGrowing extends AFragmentCommand {
             this.peakLists.add(peaklist);
         }
 
-        // finding BBHs
-        List<List<Point>> bidiBestHitList = null;
-        if (t.size() > 1 && this.doBBH) {
-            bidiBestHitList = bbh.getBidiBestHitList(this.peakLists);
-            this.bbh.clear();
-        }
-
-        // second run
-        if (bidiBestHitList != null && this.secondRun) {
-            bidiBestHitList = startSecondRun(bidiBestHitList, t);
-        }
+//        // finding BBHs
+//        List<List<Point>> bidiBestHitList = null;
+//        if (t.size() > 1 && this.doBBH) {
+//            bidiBestHitList = bbh.getBidiBestHitList(this.peakLists);
+//            this.bbh.clear();
+//        }
+//
+//        // second run
+//        if (bidiBestHitList != null && this.secondRun) {
+//            bidiBestHitList = startSecondRun(bidiBestHitList, t);
+//        }
 
         for (int i = 0; i < t.size(); i++) {
             addAdditionalInformation(this.peakLists.get(i), t.get(i));
@@ -240,20 +222,20 @@ public class SeededRegionGrowing extends AFragmentCommand {
         log.info("Saving all Peaks");
         // exporting bbh information + doing normalization + statistical
         // evaluation
-        if (t.size() > 1 && this.doBBH) {
-            BBHTools.exportBBHInformation(bidiBestHitList, this.peakLists,
-                    this.bbh, this.peakExporter, getNamesFor(t));
-
-            if (this.doNormalization) {
-                PeakNormalization pn = new PeakNormalization();
-                pn.normalize(this.peakLists, bidiBestHitList, t);
-            }
-
-            final LogDeltaEvaluation lde = new LogDeltaEvaluation();
-            lde.setWorkflow(getWorkflow());
-            lde.calcRatios(BBHTools.getPeak2DCliqueList(t, bidiBestHitList,
-                    this.peakLists), t);
-        }
+//        if (t.size() > 1 && this.doBBH) {
+//            BBHTools.exportBBHInformation(bidiBestHitList, this.peakLists,
+//                    this.bbh, this.peakExporter, getNamesFor(t));
+//
+//            if (this.doNormalization) {
+//                PeakNormalization pn = new PeakNormalization();
+//                pn.normalize(this.peakLists, bidiBestHitList, t);
+//            }
+//
+//            final LogDeltaEvaluation lde = new LogDeltaEvaluation();
+//            lde.setWorkflow(getWorkflow());
+//            lde.calcRatios(BBHTools.getPeak2DCliqueList(t, bidiBestHitList,
+//                    this.peakLists), t);
+//        }
         // exporting peak lists
         for (int i = 0; i < t.size(); i++) {
             final IFileFragment fret = new FileFragment(
