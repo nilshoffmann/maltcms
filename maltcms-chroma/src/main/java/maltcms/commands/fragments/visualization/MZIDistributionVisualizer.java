@@ -119,10 +119,14 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
                     getOutputDirectory(this));
             pl.configure(Factory.getInstance().getConfiguration());
             final File file = pl.getFile();
+			try {
+				pl.call();
+			} catch (Exception ex) {
+				log.error(ex.getLocalizedMessage());
+			}
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(file,
                     this, WorkflowSlot.VISUALIZATION, f);
             getWorkflow().append(dwr);
-            Factory.getInstance().submitJob(pl);
         }
         return t;
     }

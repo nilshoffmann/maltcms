@@ -64,7 +64,6 @@ import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
-import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;

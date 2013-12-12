@@ -345,17 +345,17 @@ public class Default2DTWVisualizer implements IVisualization {
     public void configure(final Configuration cfg) {
         this.peakListVar = cfg.getString("var.peak_index_list",
                 "peak_index_list");
-        this.holdi = cfg.getBoolean(this.getClass().getName() + ".holdi", true);
-        this.holdj = cfg.getBoolean(this.getClass().getName() + ".holdj", false);
-        this.globalmax = cfg.getBoolean(this.getClass().getName()
-                + ".globalmax", false);
-        this.black = cfg.getBoolean(this.getClass().getName() + ".black", true);
-        this.filter = cfg.getBoolean(this.getClass().getName() + ".filter",
-                true);
-        this.threshold = cfg.getDouble(
-                this.getClass().getName() + ".threshold", 6.0d);
-        this.horizontal = cfg.getBoolean(this.getClass().getName()
-                + ".horizontal", true);
+//        this.holdi = cfg.getBoolean(this.getClass().getName() + ".holdi", true);
+//        this.holdj = cfg.getBoolean(this.getClass().getName() + ".holdj", false);
+//        this.globalmax = cfg.getBoolean(this.getClass().getName()
+//                + ".globalmax", false);
+//        this.black = cfg.getBoolean(this.getClass().getName() + ".black", true);
+//        this.filter = cfg.getBoolean(this.getClass().getName() + ".filter",
+//                true);
+//        this.threshold = cfg.getDouble(
+//                this.getClass().getName() + ".threshold", 6.0d);
+//        this.horizontal = cfg.getBoolean(this.getClass().getName()
+//                + ".horizontal", true);
     }
 
     /**

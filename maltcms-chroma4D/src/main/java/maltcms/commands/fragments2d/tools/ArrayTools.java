@@ -61,7 +61,7 @@ public class ArrayTools {
      * @param quantil array quantils
      * @param visualize visualize sorted array
      */
-    public static double[] getQuantilValue(final IFileFragment ff,
+    public static double[] getQuantileValue(final IFileFragment ff,
             final Array sd, final double[] quantil, final boolean visualize,
             final AFragmentCommand ac) {
         final IndexIterator iter = sd.getIndexIterator();

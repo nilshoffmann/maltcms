@@ -97,11 +97,9 @@ public class ScoreDistributionVisualizer extends AFragmentCommand {
                     sw.flush();
                     sw.close();
                 } catch (final FileNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    log.error(e.getLocalizedMessage());
                 } catch (final IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    log.error(e.getLocalizedMessage());
                 }
                 final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
                         this, WorkflowSlot.STATISTICS, iff);

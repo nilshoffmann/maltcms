@@ -27,6 +27,7 @@
  */
 package maltcms.commands.fragments2d.warp;
 
+import cross.annotations.Configurable;
 import java.util.List;
 
 import maltcms.commands.distances.dtw.ADynamicTimeWarp;
@@ -54,8 +55,8 @@ import lombok.extern.slf4j.Slf4j;
 @ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
 public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
 
+	@Configurable(name = "scale", description = "Whether scan line intensity arrays should be scaled using sqrt.", value="true")
     private boolean scale = true;
-    private int k = 1;
 
     /**
      *
@@ -84,11 +85,9 @@ public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
                 queryname + "_" + refname + "-tv").getIndexedArray();
 
         if (this.scale) {
-//            for (int i = 0; i < k; i++) {
             log.info("Scaling");
             scanlineRef = ArrayTools2.sqrt(scanlineRef);
             scanlineQuery = ArrayTools2.sqrt(scanlineQuery);
-//            }
         }
 
         return new Tuple2D<List<Array>, List<Array>>(scanlineRef, scanlineQuery);

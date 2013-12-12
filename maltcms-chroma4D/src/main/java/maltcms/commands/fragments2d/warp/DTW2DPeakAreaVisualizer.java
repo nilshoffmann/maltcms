@@ -42,8 +42,6 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
 import cross.Factory;
 import cross.annotations.Configurable;
-import cross.annotations.ProvidesVariables;
-import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
@@ -87,8 +85,8 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
                 "boundary_index_list");
         this.regionIndexListVar = cfg.getString("var.region_index_list",
                 "region_index_list");
-        this.fillPeakArea = cfg.getBoolean(this.getClass().getName()
-                + ".fillPeakArea", false);
+//        this.fillPeakArea = cfg.getBoolean(this.getClass().getName()
+//                + ".fillPeakArea", false);
     }
 
     /**

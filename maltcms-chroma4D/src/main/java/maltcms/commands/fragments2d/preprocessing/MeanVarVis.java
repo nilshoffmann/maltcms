@@ -48,8 +48,6 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
 import cross.Factory;
 import cross.annotations.Configurable;
-import cross.annotations.ProvidesVariables;
-import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
@@ -116,9 +114,9 @@ public class MeanVarVis extends AFragmentCommand {
     @Configurable(name = "maltcms.ui.charts.PlotRunner.filetype", value = "png")
     private String format = "png";
     @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv")
-    private final String colorrampLocation = "res/colorRamps/bcgyr.csv";
+    private String colorrampLocation = "res/colorRamps/bcgyr.csv";
     @Configurable(name = "images.thresholdLow", value = "0")
-    private final double lowThreshold = 0.0d;
+    private double lowThreshold = 0.0d;
     @Configurable(value = "false")
     private boolean differentVisualizations = false;
     @Configurable(value = "false")
@@ -141,7 +139,7 @@ public class MeanVarVis extends AFragmentCommand {
             createChartXY(sd, "Standard deviation of mz bins", StringTools.removeFileExt(ff.getName())
                     + "_standardDeviation", this.useLogScale, ff);
             boolean visualize = true;
-            double[] quantil = ArrayTools.getQuantilValue(ff, sd, new double[]{0.001, 0.002,
+            double[] quantil = ArrayTools.getQuantileValue(ff, sd, new double[]{0.001, 0.002,
                         0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5}, visualize, this);
 
             // 1D TIC VIS
@@ -223,6 +221,9 @@ public class MeanVarVis extends AFragmentCommand {
                 "var.maxms_1d_vertical_index", "maxms_1d_vertical_index");
         this.usedMassValuesVar = cfg.getString("var.used_mass_values",
                 "used_mass_values");
+		this.lowThreshold = cfg.getDouble("images.thresholdLow", 0.0d);
+		this.colorrampLocation = cfg.getString("images.colorramp","res/colorRamps/bcgyr.csv");
+		this.format = cfg.getString("maltcms.ui.charts.PlotRunner.filetype", "png");
     }
 
     /**

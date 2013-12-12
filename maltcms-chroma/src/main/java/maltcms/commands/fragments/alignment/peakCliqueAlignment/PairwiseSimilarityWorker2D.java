@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -55,7 +55,7 @@ public final class PairwiseSimilarityWorker2D implements Callable<PairwiseSimila
 	private final IScalarArraySimilarity similarityFunction;
 	private final boolean savePeakSimilarities;
 	private final File outputDirectory;
-	
+
 	private final double maxRTDifferenceRt1;
 	private final double maxRTDifferenceRt2;
 
@@ -64,6 +64,7 @@ public final class PairwiseSimilarityWorker2D implements Callable<PairwiseSimila
 		log.debug(name);
 		EvalTools.notNull(lhsPeaks, this);
 		EvalTools.notNull(rhsPeaks, this);
+		IScalarArraySimilarity sim = similarityFunction.copy();
 		LongObjectOpenHashMap<PeakEdge> edgeMap = new LongObjectOpenHashMap<>();
 		for (final IBipacePeak p1 : lhsPeaks) {
 			final Peak2D p12d = (Peak2D) p1;
@@ -82,33 +83,34 @@ public final class PairwiseSimilarityWorker2D implements Callable<PairwiseSimila
 				if ((Math.abs(rt1p1 - rt1p2) < this.maxRTDifferenceRt1 && Math.abs(rt2p1 - rt2p2) < this.maxRTDifferenceRt2)) {
 					// the similarity is symmetric:
 					// sim(a,b) = sim(b,a)
-					final double d = similarityFunction.apply(new double[]{rt1p1, rt2p1}, new double[]{rt1p2, rt2p2}, p1.getMsIntensities(), p2.getMsIntensities());
+					final double d = sim.apply(new double[]{rt1p1, rt2p1}, new double[]{rt1p2, rt2p2}, p1.getMsIntensities(), p2.getMsIntensities());
 					p1.addSimilarity(edgeMap, p2, d);
 					p2.addSimilarity(edgeMap, p1, d);
 				}
 			}
 		}
-		if(savePeakSimilarities) {
+		if (savePeakSimilarities) {
 			PeakSimilarityVisualizer psv = new PeakSimilarityVisualizer();
 			psv.visualizePairwisePeakSimilarities(outputDirectory, edgeMap, lhsName, lhsPeaks, rhsName, rhsPeaks, 256, "beforeBIDI", false);
 		}
 		BBHFinder bbhfinder = new BBHFinder();
-		BBHPeakList bbhpr = bbhfinder.findBiDiBestHits(edgeMap,lhsPeaks,rhsPeaks);
+		BBHPeakList bbhpr = bbhfinder.findBiDiBestHits(edgeMap, lhsPeaks, rhsPeaks);
 		long[] keys = new long[edgeMap.size()];
 		PeakEdge[] values = new PeakEdge[edgeMap.size()];
 		int i = 0;
 		Iterator<LongObjectCursor<PeakEdge>> iter = edgeMap.iterator();
-		while(iter.hasNext()) {
+		while (iter.hasNext()) {
 			LongObjectCursor<PeakEdge> l = iter.next();
 			keys[i] = l.key;
 			values[i] = l.value;
 			i++;
 		}
-		if(savePeakSimilarities) {
+		if (savePeakSimilarities) {
 			PeakSimilarityVisualizer psv = new PeakSimilarityVisualizer();
 			psv.visualizePairwisePeakSimilarities(outputDirectory, edgeMap, lhsName, lhsPeaks, rhsName, rhsPeaks, 256, "afterBIDI", false);
 		}
 		PairwiseSimilarityResult result = new PairwiseSimilarityResult(bbhpr, keys, values);
+		//restore similarity function
 		return result;
 	}
 

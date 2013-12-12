@@ -27,6 +27,7 @@
  */
 package maltcms.commands.filters.array.wavelet;
 
+import cross.datastructures.tools.EvalTools;
 import java.io.Serializable;
 import java.util.List;
 
@@ -121,4 +122,25 @@ public final class ContinuousWaveletTransform implements Serializable {
 				params);
 		}
 	}
+
+	final int getClosestPowerOfTwo(int length) {
+		double log2 = Math.ceil(Math.log(length) / Math.log(2));
+		return (int) Math.pow(2, (int) log2);
+	}
+
+	final double[] pad(double[] input) {
+		int newLength = getClosestPowerOfTwo(input.length);
+		double[] padded = new double[newLength];
+		System.arraycopy(input, 0, padded, 0, input.length);
+		return padded;
+	}
+
+	final double[] pad(double[] input, int length) {
+		EvalTools.geq(input.length, length, this);
+		int newLength = getClosestPowerOfTwo(length);
+		double[] padded = new double[newLength];
+		System.arraycopy(input, 0, padded, 0, input.length);
+		return padded;
+	}
+
 }

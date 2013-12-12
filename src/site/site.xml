@@ -41,10 +41,12 @@
 			<item name="Release Notes" href="releaseNotes.html"/>
             <item name="Download" href="download.html"/>
             <item name="Getting Started" href="gettingStarted.html"/>
-            <item name="BiPACE and BiPACE 2D" href="bipace2d.html"/>
-            <item name="Available Commands" href="fragmentCommands.html"/>
-            <item name="Metabolite Database" href="metaboliteDb.html"/>
-            <item name="API" href="./apidocs/index.html" />
+            <item name="Documentation" href="./documentation/index.html" collapse="true">
+                <item name="BiPACE and BiPACE 2D" href="./documentation/bipace2d.html"/>
+                <item name="Available Commands" href="./documentation/fragmentCommands.html"/>
+                <item name="Metabolite Database" href="./documentation/metaboliteDb.html"/>
+                <item name="Java API" href="./apidocs/index.html" />
+            </item>
             <!--            <item name="General Information" href="about.html"/>-->
             <!--            <item name="Road Map" href="roadmap.html" />-->
         </menu>

@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -28,8 +28,6 @@
 package maltcms.math.functions.similarities;
 
 import com.carrotsearch.hppc.ObjectDoubleOpenHashMap;
-import java.util.Map;
-import java.util.WeakHashMap;
 import ucar.ma2.Array;
 import ucar.ma2.MAVector;
 import lombok.Data;
@@ -56,6 +54,9 @@ public class ArrayCos implements IArraySimilarity {
 	}
 
 	private double getLength(Array a) {
+		if (cache.size() > 5000) {
+			cache.clear();
+		}
 		if (!cache.containsKey(a)) {
 			MAVector mav = new MAVector(a);
 			double d = mav.norm();
@@ -82,5 +83,12 @@ public class ArrayCos implements IArraySimilarity {
 		ArrayCos ac = new ArrayCos();
 		ac.setMinimumSimilarity(getMinimumSimilarity());
 		return ac;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName()).append("{" + "}");
+		return sb.toString();
 	}
 }

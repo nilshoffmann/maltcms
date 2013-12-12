@@ -171,6 +171,7 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
 				"tic-derivatives-"
 				+ StringTools.removeFileExt(filename),
 				outputDirectory);
+			pr.setSizeOverride(true);
 			pr.configure(ConfigurationConverter.getConfiguration(properties));
 			CompletionServiceFactory<JFreeChart> csf = new CompletionServiceFactory<JFreeChart>();
 			ICompletionService<JFreeChart> ics = csf.newLocalCompletionService();
@@ -220,7 +221,7 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
 			if (overlaps.size() > 0) {
 				log.info("Overlapping peaks: {}", overlaps);
 			}
-			if (removeOverlappingPeaks) {
+			if (removeOverlappingPeaks && overlaps.size() > 0) {
 				log.warn("Removal of overlapping peaks currently disabled!");
 //                log.info("Removing overlapping peaks");
 //                pbs.removeAll(overlaps);
@@ -736,7 +737,7 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
 				pb.getStartIndex() + "", pb.getStopIndex() + "",
 				df.format(pb.getApexTime()), df.format(pb.getStartTime()),
 				df.format(pb.getStopTime()), pb.getArea() + "", pb.getNormalizedArea() + "",
-				pb.getNormalizedArea() * 100.0 + "",
+				(pb.getNormalizationMethods().length == 0) ? "" : pb.getNormalizedArea() * 100.0 + "",
 				Arrays.toString(pb.getNormalizationMethods()),
 				"" + pb.getMw(), "" + pb.getApexIntensity(), "" + pb.getSnr()};
 			final List<String> v = Arrays.asList(line);
@@ -849,7 +850,8 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
 			x_label, false, al);
 		final PlotRunner pr = new PlotRunner(cdt.create(),
 			"TIC and Peak information for " + f.getName(),
-			"combinedTICandPeakChart-" + f.getName(), outputDirectory);
+			"combinedTICandPeakChart-" + StringTools.removeFileExt(f.getName()) + ".png", outputDirectory);
+		pr.setSizeOverride(true);
 		pr.configure(ConfigurationConverter.getConfiguration(properties));
 		CompletionServiceFactory<JFreeChart> csf = new CompletionServiceFactory<JFreeChart>();
 		ICompletionService<JFreeChart> ics = csf.newLocalCompletionService();

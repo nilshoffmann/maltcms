@@ -57,6 +57,7 @@ import cross.tools.StringTools;
 import maltcms.commands.distances.dtwng.FeatureVectorDtwSimilarity;
 import maltcms.math.functions.DtwPairwiseSimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -68,6 +69,7 @@ import maltcms.math.functions.similarities.ArrayCos;
     "var.second_column_scan_index"})
 @RequiresOptionalVariables(names = {""})
 @ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
+//@ServiceProvider(service = AFragmentCommand.class)
 public class Alignment2D extends AFragmentCommand {
 
     @Configurable(name = "var.maxms_1d_horizontal",

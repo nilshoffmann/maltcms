@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -28,29 +28,25 @@
 package maltcms.datastructures.ms;
 
 import cross.annotations.Configurable;
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
-import maltcms.datastructures.caches.IScanLine;
-import maltcms.datastructures.caches.ScanLineCacheFactory;
-import maltcms.tools.MaltcmsTools;
-
-import org.apache.commons.configuration.Configuration;
-
-import ucar.ma2.Array;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.caches.IScanLine;
+import maltcms.datastructures.caches.ScanLineCacheFactory;
+import maltcms.tools.MaltcmsTools;
+import org.apache.commons.configuration.Configuration;
+import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 
 /**
@@ -81,11 +77,14 @@ public class Chromatogram2D implements IChromatogram2D {
 
 	public Chromatogram2D(final IFileFragment e) {
 		this.parent = e;
+		Tuple2D<Double, Double> massRange = getMassRange();
+		ScanLineCacheFactory.setMinMass(massRange.getFirst());
+		ScanLineCacheFactory.setMaxMass(massRange.getSecond());
 		this.isl = ScanLineCacheFactory.getScanLineCache(e);
 		this.spm = this.isl.getScansPerModulation();
 		this.slc = this.isl.getScanLineCount();
 		this.satOffset = e.getChild("scan_acquisition_time").getArray().
-				getDouble(0);
+			getDouble(0);
 		this.md = getModulationDuration();
 		this.scanAcquisitionTimeVar = e.getChild(scan_acquisition_time_var);
 		try {
@@ -124,9 +123,9 @@ public class Chromatogram2D implements IChromatogram2D {
 	 * @param secondColumnScanIndex
 	 */
 	public IScan2D getScan2D(final int firstColumnScanIndex,
-			final int secondColumnScanIndex) {
+		final int secondColumnScanIndex) {
 		return buildScan((firstColumnScanIndex * isl.getScansPerModulation())
-				+ secondColumnScanIndex);
+			+ secondColumnScanIndex);
 	}
 
 	/**
@@ -140,7 +139,7 @@ public class Chromatogram2D implements IChromatogram2D {
 
 	protected IScan2D buildScan(int i) {
 		Point p = this.isl.mapIndex(i);
-		final Tuple2D<Array, Array> t = this.isl.getSparseMassSpectra(p.x, p.y);
+		final Tuple2D<Array, Array> t = this.isl.getSparseMassSpectrum(p.x, p.y);
 		double sat1 = satOffset + (p.x * getModulationDuration());
 		double sat = MaltcmsTools.getScanAcquisitionTime(this.parent, i);
 		double sat2 = sat - sat1;
@@ -149,7 +148,7 @@ public class Chromatogram2D implements IChromatogram2D {
 			scanMsLevel = msLevel.getByte(i);
 		}
 		final Scan2D s = new Scan2D(t.getFirst(), t.getSecond(), i, sat, p.x,
-				p.y, sat1, sat2, scanMsLevel);
+			p.y, sat1, sat2, scanMsLevel);
 		return s;
 	}
 
@@ -231,7 +230,7 @@ public class Chromatogram2D implements IChromatogram2D {
 			@Override
 			public void remove() {
 				throw new UnsupportedOperationException(
-						"Can not remove scans with iterator!");
+					"Can not remove scans with iterator!");
 			}
 		};
 		return iter;
@@ -242,7 +241,7 @@ public class Chromatogram2D implements IChromatogram2D {
 			this.parent = (IExperiment2D) e;
 		}
 		throw new IllegalArgumentException(
-				"Parameter must be of type IExperiment2D!");
+			"Parameter must be of type IExperiment2D!");
 	}
 
 	/*
@@ -289,11 +288,11 @@ public class Chromatogram2D implements IChromatogram2D {
 	@Override
 	public int getIndexFor(double scan_acquisition_time) {
 		double[] d = (double[]) getScanAcquisitionTime().get1DJavaArray(
-				double.class);
+			double.class);
 		int idx = Arrays.binarySearch(d, scan_acquisition_time);
 		if (idx >= 0) {// exact hit
 			log.info("sat {}, scan_index {}",
-					scan_acquisition_time, idx);
+				scan_acquisition_time, idx);
 			return idx;
 		} else {// imprecise hit, find closest element
 			int insertionPosition = (-idx) - 1;
@@ -309,7 +308,7 @@ public class Chromatogram2D implements IChromatogram2D {
 			double previous = d[Math.max(0, insertionPosition - 1)];
 //			System.out.println("Value before insertion position: "+previous);
 			if (Math.abs(scan_acquisition_time - previous) <= Math.abs(
-					scan_acquisition_time - current)) {
+				scan_acquisition_time - current)) {
 				int index = Math.max(0, insertionPosition - 1);
 //				System.out.println("Returning "+index);
 				return index;
@@ -344,11 +343,10 @@ public class Chromatogram2D implements IChromatogram2D {
 		}
 		return this.md;
 	}
-	
-	
+
 	@Override
 	public int getNumberOfScansForMsLevel(short msLevelValue) {
-		if(msLevelValue==(short)1 && msScanMap==null) {
+		if (msLevelValue == (short) 1 && msScanMap == null) {
 			return getNumberOfScans();
 		}
 		return msScanMap.get(msLevelValue).size();
@@ -368,8 +366,8 @@ public class Chromatogram2D implements IChromatogram2D {
 
 	@Override
 	public Collection<Short> getMsLevels() {
-		if(msScanMap==null) {
-			return Arrays.asList(Short.valueOf((short)1));
+		if (msScanMap == null) {
+			return Arrays.asList(Short.valueOf((short) 1));
 		}
 		List<Short> l = new ArrayList<Short>(msScanMap.keySet());
 		Collections.sort(l);
@@ -378,7 +376,7 @@ public class Chromatogram2D implements IChromatogram2D {
 
 	@Override
 	public IScan2D getScanForMsLevel(int i, short level) {
-		if (level == (short)1 && msScanMap == null) {
+		if (level == (short) 1 && msScanMap == null) {
 			return getScan(i);
 		}
 		if (msScanMap == null) {
@@ -386,37 +384,37 @@ public class Chromatogram2D implements IChromatogram2D {
 		}
 		return getScan(msScanMap.get(level).get(i));
 	}
-	
+
 	@Override
 	public List<Integer> getIndicesOfScansForMsLevel(short level) {
-		if (level == (short)1 && msScanMap == null) {
-			int scans = getNumberOfScansForMsLevel((short)1);
+		if (level == (short) 1 && msScanMap == null) {
+			int scans = getNumberOfScansForMsLevel((short) 1);
 			ArrayList<Integer> indices = new ArrayList<Integer>(scans);
 			for (int i = 0; i < scans; i++) {
 				indices.add(i);
 			}
 			return indices;
 		}
-		if(msScanMap == null) {
+		if (msScanMap == null) {
 			throw new ResourceNotAvailableException("No ms fragmentation level available for chromatogram " + getParent().getName());
 		}
 		return Collections.unmodifiableList(msScanMap.get(Short.valueOf(level)));
 	}
-		
+
 	private class Scan2DIterator implements Iterator<IScan2D> {
 
 		private final int maxScans;
 		private int scan = 0;
 		private short msLevel = 1;
-		
+
 		public Scan2DIterator(short msLevel) {
 			maxScans = getNumberOfScansForMsLevel(msLevel);
 			this.msLevel = msLevel;
 		}
-		
+
 		@Override
 		public boolean hasNext() {
-			return scan<maxScans-1;
+			return scan < maxScans - 1;
 		}
 
 		@Override
@@ -428,6 +426,6 @@ public class Chromatogram2D implements IChromatogram2D {
 		public void remove() {
 			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 		}
-		
+
 	}
 }

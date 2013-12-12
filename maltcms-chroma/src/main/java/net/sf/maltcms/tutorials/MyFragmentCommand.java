@@ -43,6 +43,7 @@ import lombok.Data;
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.BatchFilter;
 import maltcms.commands.filters.array.MultiplicationFilter;
+import maltcms.commands.filters.array.SavitzkyGolayFilter;
 
 /**
  *
@@ -63,15 +64,30 @@ public class MyFragmentCommand extends AFragmentCommand {
 
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
+		//initialize progress
         initProgress(in.size());
+		//create a savitzky golay filter (local polynomial smoothing) for 2*10 +1 = 21 points
+		SavitzkyGolayFilter sgf = new SavitzkyGolayFilter(10);
+		filter = new LinkedList<AArrayFilter>();
+		filter.add(sgf);
         TupleND<IFileFragment> out = createWorkFragments(in);
         for(int i = 0; i<in.size(); i++) {
+			//the input fragment
+			IFileFragment inputFragment = in.get(i);
+			//the output fragment
+			IFileFragment outputFragment = out.get(i);
+			//updated the progress
             getProgress().nextStep();
-            IVariableFragment inTicVar = in.get(i).getChild(resolve("var.total_intensity"));
-            IVariableFragment outTicVar = VariableFragment.createCompatible(out.get(i), inTicVar);
+			//retrieve the total_intensity variable
+            IVariableFragment inTicVar = inputFragment.getChild(resolve("var.total_intensity"));
+			//create a compatible output variable with same dimensions and data type
+            IVariableFragment outTicVar = VariableFragment.createCompatible(outputFragment, inTicVar);
+			//set the array after applying a batch filter
             outTicVar.setArray(BatchFilter.applyFilters(inTicVar.getArray(),filter));
-            out.get(i).save();
-            addWorkflowResult(out.get(i));
+			//save the corresponding output file fragment
+            outputFragment.save();
+			//add the result to the workflow
+            addWorkflowResult(outputFragment);
         }
         return out;
     }

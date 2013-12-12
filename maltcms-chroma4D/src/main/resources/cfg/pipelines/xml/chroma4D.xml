@@ -38,7 +38,6 @@ for details.
     <import resource="chroma4D-base.xml"/>
     <import resource="chroma4D-cwt.xml"/>
     <import resource="chroma4D-srg.xml"/>
-    <!--    <import resource="chroma4D-cwt.xml"/>-->
     
     <!-- a command pipeline consists of a list of 
     commands to be executed -->
@@ -46,11 +45,12 @@ for details.
         <property name="checkCommandDependencies" value="true"/>
         <property name="commands">
             <list>
-                <!--                <ref bean="modulationTimeEstimator" />-->
                 <ref bean="default2DVarLoader" />
                 <ref bean="chromatogram2DVisualizer" />
                 <ref bean="data2DNormalizer" />
+				<ref bean="cwtPeakFinder" />
                 <ref bean="seededRegionGrowing" />
+				<ref bean="peakCliqueAlignment" />
             </list>
         </property>    
     </bean>

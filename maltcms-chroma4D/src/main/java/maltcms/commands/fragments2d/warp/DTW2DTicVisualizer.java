@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,25 +27,6 @@
  */
 package maltcms.commands.fragments2d.warp;
 
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.List;
-
-import maltcms.commands.fragments2d.testing.Visualization2D;
-import maltcms.commands.fragments2d.warp.visualization.IVisualization;
-import maltcms.tools.ImageTools;
-import maltcms.tools.MaltcmsTools;
-import maltcms.tools.PathTools;
-import maltcms.ui.charts.EPlotRunner;
-import maltcms.ui.charts.PlotRunner;
-
-import org.apache.commons.configuration.Configuration;
-import org.jfree.chart.JFreeChart;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.Index;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.RequiresOptionalVariables;
@@ -59,9 +40,26 @@ import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import cross.tools.StringTools;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.fragments2d.testing.Visualization2D;
+import maltcms.commands.fragments2d.warp.visualization.IVisualization;
+import maltcms.datastructures.caches.ScanLineCacheFactory;
+import maltcms.tools.ImageTools;
+import maltcms.tools.MaltcmsTools;
+import maltcms.tools.PathTools;
+import maltcms.ui.charts.EPlotRunner;
+import maltcms.ui.charts.PlotRunner;
+import org.apache.commons.configuration.Configuration;
+import org.jfree.chart.JFreeChart;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.Index;
 
 /**
  * Default visualization pipeline command.
@@ -86,25 +84,25 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 	@Configurable(name = "var.total_intensity", value = "total_intensity")
 	private String totalIntensity = "total_intensity";
 	@Configurable(name = "var.scan_acquisition_time_1d",
-			value = "scan_acquisition_time_1d")
+		value = "scan_acquisition_time_1d")
 	private String scanAcquTime = "scan_acquisition_time_1d";
 	@Configurable(name = "var.modulation_time", value = "modulation_time")
 	private String modulationVar = "modulation_time";
 	@Configurable(name = "var.scan_rate", value = "scan_rate")
 	private String scanRateVar = "scan_rate";
 	@Configurable(name = "var.second_column_scan_index",
-			value = "second_column_scan_index")
+		value = "second_column_scan_index")
 	private String secondColumnScanIndexVar = "second_column_scan_index";
 	@Configurable(name = "var.second_column_time", value = "second_column_time")
 	private String secondColumnTimeVar = "second_column_time";
 	private int scanspermodulation = -1;
 	@Configurable(name = "maltcms.ui.charts.PlotRunner.serializeJFreeChart",
-			value = "true")
+		value = "true")
 	private boolean createSerialized = true;
 	@Configurable(name = "maltcms.ui.charts.PlotRunner.filetype", value = "png")
-	private final String format = "png";
+	private String format = "png";
 	@Configurable(
-			value = "maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer")
+		value = "maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer")
 	private String visualizerClass = "maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer";
 	private IVisualization visualizer;
 
@@ -113,12 +111,15 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 	 */
 	@Override
 	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
+		Tuple2D<Double, Double> massRange = MaltcmsTools.getMinMaxMassRange(t);
+		ScanLineCacheFactory.setMinMass(massRange.getFirst());
+		ScanLineCacheFactory.setMaxMass(massRange.getSecond());
 		// final TupleND<IFileFragment> alignmenttuple = new
 		// TupleND<IFileFragment>();
 		IFileFragment pwHorizontalAlignmentFragment = null, pwVerticalAlignmentFragment = null;
 		try {
 			pwHorizontalAlignmentFragment = MaltcmsTools.
-					getPairwiseDistanceFragment(t, "-horizontal");
+				getPairwiseDistanceFragment(t, "-horizontal");
 			log.info("horizontal pairwise distance file found");
 		} catch (final ResourceNotAvailableException e) {
 			log.error(e.getMessage());
@@ -135,13 +136,13 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 		// }
 
 		if (pwHorizontalAlignmentFragment == null
-				&& pwVerticalAlignmentFragment == null) {
+			&& pwVerticalAlignmentFragment == null) {
 			log.error("Cant find horizontal or vertical pairwise distance"
-					+ " fragment. Trying to find normal distance"
-					+ " fragment. Assuming horizontal warping.");
+				+ " fragment. Trying to find normal distance"
+				+ " fragment. Assuming horizontal warping.");
 			try {
 				pwHorizontalAlignmentFragment = MaltcmsTools.
-						getPairwiseDistanceFragment(t);
+					getPairwiseDistanceFragment(t);
 			} catch (final ResourceNotAvailableException e) {
 				log.error(e.getMessage());
 				log.error("Aborting visualization.");
@@ -160,45 +161,45 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 				final IFileFragment query = t.get(j);
 
 				log.info("Visualization for {},{}", ref.getName(),
-						query.getName());
+					query.getName());
 				// log.info("i: {}({})", ref.getName());
 				// log.info("j: {}", query.getName());
 
 				final Index idx = Index.scalarIndexImmutable;
 				final Double modulationi = ref.getChild(this.modulationVar).
-						getArray().getDouble(idx);
+					getArray().getDouble(idx);
 				final Double modulationj = query.getChild(this.modulationVar).
-						getArray().getDouble(idx);
+					getArray().getDouble(idx);
 				final Integer scanRatei = ref.getChild(this.scanRateVar).
-						getArray().getInt(idx);
+					getArray().getInt(idx);
 				final Integer scanRatej = query.getChild(this.scanRateVar).
-						getArray().getInt(idx);
+					getArray().getInt(idx);
 
 				if ((modulationi.intValue() == modulationj.intValue())
-						&& (scanRatei.intValue() == scanRatej.intValue())) {
+					&& (scanRatei.intValue() == scanRatej.intValue())) {
 
 					this.scanspermodulation = modulationi.intValue()
-							* scanRatei.intValue();
+						* scanRatei.intValue();
 					log.info("Using {} for TICs", this.totalIntensity);
 					final List<Array> scanlinesi = getScanlineFor(ref,
-							modulationi.intValue() * scanRatei.intValue());
+						modulationi.intValue() * scanRatei.intValue());
 					final List<Array> scanlinesj = getScanlineFor(query,
-							modulationj.intValue() * scanRatej.intValue());
+						modulationj.intValue() * scanRatej.intValue());
 
 					log.info("scanlines size i: {}", scanlinesi.size());
 					log.info("scanlines size j: {}", scanlinesj.size());
 
 					if (pwHorizontalAlignmentFragment != null) {
 						alignmentHorizontal = MaltcmsTools.getPairwiseAlignment(
-								pwHorizontalAlignmentFragment, ref,
-								query);
+							pwHorizontalAlignmentFragment, ref,
+							query);
 						// alignmenttuple.add(alignmentHorizontal);
 						log.info("{}", alignmentHorizontal.getUri());
 
 						warpiH = alignmentHorizontal.getChild(this.warpPathi).
-								getArray();
+							getArray();
 						warpjH = alignmentHorizontal.getChild(this.warpPathj).
-								getArray();
+							getArray();
 						pathH = PathTools.pointListFromArrays(warpiH, warpjH);
 					} else {
 						pathH = null;
@@ -206,14 +207,14 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 
 					if (pwVerticalAlignmentFragment != null) {
 						alignmentVertical = MaltcmsTools.getPairwiseAlignment(
-								pwVerticalAlignmentFragment, ref, query);
+							pwVerticalAlignmentFragment, ref, query);
 						// alignmenttuple.add(alignmentVertical);
 						log.info("{}", alignmentVertical.getUri());
 
 						warpiV = alignmentVertical.getChild(this.warpPathi).
-								getArray();
+							getArray();
 						warpjV = alignmentVertical.getChild(this.warpPathj).
-								getArray();
+							getArray();
 						pathV = PathTools.pointListFromArrays(warpiV, warpjV);
 					} else {
 						pathV = null;
@@ -223,16 +224,16 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 					// final BufferedImage image = this.visualizer.createImage(
 					// scanlinesi, scanlinesj, warpi, warpj);
 					image = vis2d.createImage(scanlinesi, scanlinesj, pathH,
-							pathV);
+						pathV);
 
 					final String baseFilename = StringTools.removeFileExt(ref.
-							getName())
-							+ "_vs_"
-							+ StringTools.removeFileExt(query.getName());
+						getName())
+						+ "_vs_"
+						+ StringTools.removeFileExt(query.getName());
 					final String filename = baseFilename + "_rgb";
 					// final File out =
 					ImageTools.saveImage(image, filename, this.format,
-							getWorkflow().getOutputDirectory(this), this);
+						getWorkflow().getOutputDirectory(this), this);
 
 					if (this.createSerialized) {
 						// createChart(ref, query, filename, warpi, warpj,
@@ -240,21 +241,21 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 						// out);
 					} else {
 						log.info(
-								"If you want to create a serialized Plot change the "
-								+ "maltcms.ui.charts.PlotRunner.serializeJFreeChart option to true.");
+							"If you want to create a serialized Plot change the "
+							+ "maltcms.ui.charts.PlotRunner.serializeJFreeChart option to true.");
 					}
 				} else {
 					// FIXME: isnt the visualization independent from modulation
 					// and scan rate?
 					log.error(
-							"Could not visualize time warp for {} vs {}.", ref.
-							getName(), query.getName());
+						"Could not visualize time warp for {} vs {}.", ref.
+						getName(), query.getName());
 					log.error("Different scanRates or different modulations.");
 					log.error(ref.getName() + " modulation{} scanRate{}",
-							modulationi, scanRatei);
+						modulationi, scanRatei);
 					log.error(
-							query.getName() + " modulation{} scanRate{}",
-							modulationj, scanRatej);
+						query.getName() + " modulation{} scanRate{}",
+						modulationj, scanRatej);
 					System.out.println(scanRatei + "-" + scanRatej);
 					System.out.println(modulationi + "-" + modulationj);
 				}
@@ -271,64 +272,65 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 		this.warpPathi = cfg.getString("var.warp_path_i", "warp_path_i");
 		this.warpPathj = cfg.getString("var.warp_path_j", "warp_path_j");
 		this.totalIntensity = cfg.getString(this.getClass().getName()
-				+ ".total_intensity", "total_intensity");
+			+ ".total_intensity", "total_intensity");
 		this.scanAcquTime = cfg.getString("var.scan_acquisition_time_1d",
-				"scan_acquisition_time_1d");
+			"scan_acquisition_time_1d");
 		this.createSerialized = cfg.getBoolean(
-				"maltcms.ui.charts.PlotRunner.serializeJFreeChart", true);
+			"maltcms.ui.charts.PlotRunner.serializeJFreeChart", true);
+		this.format = cfg.getString("maltcms.ui.charts.PlotRunner.filetype", "png");
 		this.modulationVar = cfg.getString("var.modulation_time",
-				"modulation_time");
+			"modulation_time");
 		this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
 		this.secondColumnTimeVar = cfg.getString("var.second_column_time",
-				"second_column_time");
+			"second_column_time");
 		this.secondColumnScanIndexVar = cfg.getString(
-				"var.second_column_scan_index", "second_column_scan_index");
+			"var.second_column_scan_index", "second_column_scan_index");
 
-		this.visualizerClass = cfg.getString(
-				this.getClass().getName() + ".visualizerClass",
-				"maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer");
-		this.visualizer = Factory.getInstance().getObjectFactory().instantiate(
-				this.visualizerClass, IVisualization.class);
+//		this.visualizerClass = cfg.getString(
+//				this.getClass().getName() + ".visualizerClass",
+//				"maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer");
+//		this.visualizer = Factory.getInstance().getObjectFactory().instantiate(
+//				this.visualizerClass, IVisualization.class);
 	}
 
 	/**
 	 * Create a serialized chart.
 	 *
-	 * @param ref reference file fragment
-	 * @param query query file fragment
+	 * @param ref      reference file fragment
+	 * @param query    query file fragment
 	 * @param filename background image
-	 * @param warpi warp path i
-	 * @param warpj warp path j
-	 * @param spm scans per modulation
-	 * @param in infile for chart background image
+	 * @param warpi    warp path i
+	 * @param warpj    warp path j
+	 * @param spm      scans per modulation
+	 * @param in       infile for chart background image
 	 */
 	private void createChart(final IFileFragment ref,
-			final IFileFragment query, final String filename,
-			final Array warpi, final Array warpj, final int spm, final File in) {
+		final IFileFragment query, final String filename,
+		final Array warpi, final Array warpj, final int spm, final File in) {
 		log.info("Creating a serialized Plot.");
 		final ArrayDouble.D1 ret1 = (ArrayDouble.D1) ref.getChild(
-				this.scanAcquTime).getArray();
+			this.scanAcquTime).getArray();
 		final ArrayDouble.D1 ret2 = (ArrayDouble.D1) query.getChild(
-				this.scanAcquTime).getArray();
+			this.scanAcquTime).getArray();
 		log.info("Using file {} for AChart", in.getAbsolutePath());
 
 		IVariableFragment sctv = ref.getChild(this.secondColumnTimeVar);
 		IVariableFragment scsiv = ref.getChild(this.secondColumnScanIndexVar);
 		sctv.setIndex(scsiv);
 		final ArrayDouble.D1 secondrettime = (ArrayDouble.D1) ref.getChild(
-				this.secondColumnTimeVar).getIndexedArray().get(0);
+			this.secondColumnTimeVar).getIndexedArray().get(0);
 		final JFreeChart chart = this.visualizer.createChart(
-				in.getAbsolutePath(), ref.getName(), query.getName(),
-				new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(ret1,
+			in.getAbsolutePath(), ref.getName(), query.getName(),
+			new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(ret1,
 				secondrettime),
-				new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(ret2,
+			new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(ret2,
 				secondrettime));
 		if (chart != null) {
 			this.visualizer.addPeakMarker(chart, new Tuple2D<Array, Array>(
-					warpi, warpj), ref, query,
-					new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(ret1,
+				warpi, warpj), ref, query,
+				new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(ret1,
 					secondrettime),
-					new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(ret2,
+				new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(ret2,
 					secondrettime), this.scanspermodulation);
 			saveChart(chart, ref, query);
 		} else {
@@ -342,14 +344,14 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 	@Override
 	public String getDescription() {
 		return "Creates an image containing both chromatograms in different"
-				+ " color channels of the image using the warp path. Optionaly"
-				+ " it will create a serialized XYBPlot";
+			+ " color channels of the image using the warp path. Optionaly"
+			+ " it will create a serialized XYBPlot";
 	}
 
 	/**
 	 * Getter.
 	 *
-	 * @param ff file fragment
+	 * @param ff  file fragment
 	 * @param spm scans per modulation
 	 * @return scanlines
 	 */
@@ -360,7 +362,7 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 		IVariableFragment scsiv = ff.getChild(this.secondColumnScanIndexVar);
 		ticVar.setIndex(scsiv);
 		final List<Array> scanlines = ff.getChild(this.totalIntensity).
-				getIndexedArray();
+			getIndexedArray();
 		return scanlines;
 	}
 
@@ -385,19 +387,19 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
 	 * Will the generated Chart.
 	 *
 	 * @param chart chart
-	 * @param ref reference file fragment
+	 * @param ref   reference file fragment
 	 * @param query query file fragment
 	 */
 	protected void saveChart(final JFreeChart chart, final IFileFragment ref,
-			final IFileFragment query) {
+		final IFileFragment query) {
 		final PlotRunner pl = new EPlotRunner(chart,
-				StringTools.removeFileExt(ref.getName())
-				+ "_vs_" + StringTools.removeFileExt(query.getName()) + "-D",
-				getWorkflow().getOutputDirectory(this));
+			StringTools.removeFileExt(ref.getName())
+			+ "_vs_" + StringTools.removeFileExt(query.getName()) + "-D",
+			getWorkflow().getOutputDirectory(this));
 		pl.configure(Factory.getInstance().getConfiguration());
 		final File f = pl.getFile();
 		final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f, this,
-				WorkflowSlot.VISUALIZATION, ref, query);
+			WorkflowSlot.VISUALIZATION, ref, query);
 		getWorkflow().append(dwr);
 		Factory.getInstance().submitJob(pl);
 	}

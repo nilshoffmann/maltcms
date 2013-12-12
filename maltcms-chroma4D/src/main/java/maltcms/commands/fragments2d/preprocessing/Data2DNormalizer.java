@@ -28,7 +28,6 @@
 package maltcms.commands.fragments2d.preprocessing;
 
 import java.awt.image.RenderedImage;
-import java.util.ArrayList;
 import java.util.List;
 
 import maltcms.commands.filters.array.MovingAverageFilter;
@@ -41,8 +40,6 @@ import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
-import ucar.ma2.IndexIterator;
-import ucar.ma2.InvalidRangeException;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.commands.fragments.AFragmentCommand;

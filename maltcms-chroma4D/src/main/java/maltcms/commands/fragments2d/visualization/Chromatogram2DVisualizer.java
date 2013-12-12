@@ -32,19 +32,15 @@ import java.io.File;
 import java.util.List;
 
 import maltcms.io.csv.ColorRampReader;
-import maltcms.tools.ArrayTools;
 import maltcms.tools.ImageTools;
 import maltcms.ui.charts.AChart;
-import maltcms.ui.charts.BHeatMapChart;
 import maltcms.ui.charts.MassSpectrumPlot;
 import maltcms.ui.charts.PlotRunner;
-import maltcms.ui.charts.XYBPlot;
 
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.plot.XYPlot;
 
 import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
@@ -56,7 +52,6 @@ import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
-import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
@@ -189,23 +184,23 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
             final File out = ImageTools.saveImage(bi, filename, this.format,
                     getWorkflow().getOutputDirectory(this), this);
 
-            final ArrayDouble.D1 firstRetTime = (ArrayDouble.D1) ArrayTools.
-                    divBy60(ff.getChild(this.scanAcquTime).getArray());
-            IVariableFragment sctv = ff.getChild(this.secondColumnTimeVar);
-			sctv.setIndex(tic2DScanIndexVar);
-            final ArrayDouble.D1 secondRetTime = (ArrayDouble.D1) sctv.getIndexedArray().get(0);
-            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times = new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(
-                    firstRetTime, secondRetTime);
-
-            log.info("Using file {} for AChart", out.getAbsolutePath());
-            final AChart<XYBPlot> chart = new BHeatMapChart(
-                    out.getAbsolutePath(), "first retention time[min]",
-                    "second retention time[s]", times, filename);
-            final PlotRunner pl = new PlotRunner(chart.create(),
-                    "Chromatogram", StringTools.removeFileExt(ff.getName()),
-                    getWorkflow().getOutputDirectory(this));
-            pl.configure(Factory.getInstance().getConfiguration());
-            Factory.getInstance().submitJob(pl);
+//            final ArrayDouble.D1 firstRetTime = (ArrayDouble.D1) ArrayTools.
+//                    divBy60(ff.getChild(this.scanAcquTime).getArray());
+//            IVariableFragment sctv = ff.getChild(this.secondColumnTimeVar);
+//			sctv.setIndex(tic2DScanIndexVar);
+//            final ArrayDouble.D1 secondRetTime = (ArrayDouble.D1) sctv.getIndexedArray().get(0);
+//            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times = new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(
+//                    firstRetTime, secondRetTime);
+//
+//            log.info("Using file {} for AChart", out.getAbsolutePath());
+//            final AChart<XYBPlot> chart = new BHeatMapChart(
+//                    out.getAbsolutePath(), "first retention time[min]",
+//                    "second retention time[s]", times, filename);
+//            final PlotRunner pl = new PlotRunner(chart.create(),
+//                    "Chromatogram", StringTools.removeFileExt(ff.getName()),
+//                    getWorkflow().getOutputDirectory(this));
+//            pl.configure(Factory.getInstance().getConfiguration());
+//            Factory.getInstance().submitJob(pl);
 
             final ArrayInt.D1 histo = new ArrayInt.D1(256);
             int[] a = new int[3];

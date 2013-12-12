@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,22 +27,6 @@
  */
 package maltcms.commands.fragments2d.preprocessing;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.sf.mpaxs.api.ICompletionService;
-import org.apache.commons.configuration.Configuration;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
-import ucar.ma2.Index;
-import ucar.ma2.IndexIterator;
-import ucar.ma2.InvalidRangeException;
-import ucar.nc2.Dimension;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.commands.fragments.AFragmentCommand;
@@ -57,12 +41,26 @@ import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.preprocessing.default2dVarLoader.ModulationTimeEstimatorTask;
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.tools.ArrayTools;
+import net.sf.mpaxs.api.ICompletionService;
+import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayInt;
+import ucar.ma2.Index;
+import ucar.ma2.IndexIterator;
+import ucar.ma2.InvalidRangeException;
+import ucar.nc2.Dimension;
 
 /**
  * This command should be the first in all 2d pipelines. It creates different
@@ -93,14 +91,14 @@ public class Default2DVarLoader extends AFragmentCommand {
 	@Configurable(name = "var.second_column_time", value = "second_column_time")
 	private String secondColumnTimeVar = "second_column_time";
 	@Configurable(name = "var.second_column_scan_index",
-			value = "second_column_scan_index")
+		value = "second_column_scan_index")
 	private String secondColumnScanIndexVar = "second_column_scan_index";
 	@Configurable(name = "var.total_intensity_1d", value = "total_intensity_1d")
 	private String totalIntensity1dVar = "total_intensity_1d";
 	@Configurable(name = "var.scan_acquisition", value = "scan_acquisition_time")
 	private String scanAcquisitionTimeVar = "scan_acquisition_time";
 	@Configurable(name = "var.scan_acquisition_1d",
-			value = "scan_acquisition_time_1d")
+		value = "scan_acquisition_time_1d")
 	private String scanAcquisitionTime1dVar = "scan_acquisition_time_1d";
 	@Configurable(name = "var.total_intensity_2d", value = "total_intensity_2d")
 	private String totalIntensity2dVar = "total_intensity_2d";
@@ -118,7 +116,7 @@ public class Default2DVarLoader extends AFragmentCommand {
 	private double modulationTime = 5.0d;
 	private double scanDuration = 0.0d;
 	private double scanRate = -1.0d;
-	private double scanAcquisitionTimeOffset = 0.0d;
+//	private double scanAcquisitionTimeOffset = 0.0d;
 	private String modulationIndex0Dimension = "modulation_index_0";
 	private String modulationIndex1Dimension = "modulation_index_1";
 	private String modulationTimeDimension = "modulation_time";
@@ -146,11 +144,9 @@ public class Default2DVarLoader extends AFragmentCommand {
 		for (final IFileFragment ff : t) {
 			log.info("Running var loader for {}", ff.getName());
 			final IFileFragment fret = new FileFragment(
-					new File(getWorkflow().getOutputDirectory(this),
+				new File(getWorkflow().getOutputDirectory(this),
 					ff.getName()));
 			fret.addSourceFile(ff);
-			this.scanAcquisitionTimeOffset = ff.getChild("scan_acquisition_time").getArray().
-					getDouble(0);
 			createScanRate(ff, fret);
 			createModulation(ff, fret);
 			create1DTic(ff, fret);
@@ -160,8 +156,8 @@ public class Default2DVarLoader extends AFragmentCommand {
 			createSecondColumnElutionTime(ff, fret);
 			createTIC2D(ff, fret);
 			final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-					fret.getUri(), this, getWorkflowSlot(),
-					ff);
+				fret.getUri(), this, getWorkflowSlot(),
+				ff);
 			getWorkflow().append(dwr);
 			fret.save();
 			ret.add(fret);
@@ -174,20 +170,20 @@ public class Default2DVarLoader extends AFragmentCommand {
 	 * Build a list containing scansPerModulation elements.
 	 *
 	 * @param scansPerModulation scans per modulation
-	 * @param array array
+	 * @param array              array
 	 * @return list of array
 	 */
 	private ArrayList<Array> buildIndexedArray(final int scansPerModulation,
-			final Array array) {
+		final Array array) {
 		final int size = array.getShape()[0] / scansPerModulation;
 		final int modulus = array.getShape()[0] % scansPerModulation;
 		if (modulus != 0) {
 			log.info(
-					"Warning: found {} dangling scans at end of chromatogram, will truncate!",
-					modulus);
+				"Warning: found {} dangling scans at end of chromatogram, will truncate!",
+				modulus);
 		}
 		log.info("Size of array: {}, reading {} scans!",
-				array.getShape()[0], size);
+			array.getShape()[0], size);
 		final ArrayList<Array> al = new ArrayList<Array>(size);
 		int offset = 0;
 		final int len = scansPerModulation;
@@ -197,7 +193,7 @@ public class Default2DVarLoader extends AFragmentCommand {
 				log.debug("reading until {}", offset + len - 1);
 				if ((offset + len) <= array.getShape()[0]) {
 					final Array a = array.section(new int[]{offset},
-							new int[]{len});
+						new int[]{len});
 					al.add(a);
 				}
 			} catch (final InvalidRangeException e) {
@@ -216,33 +212,30 @@ public class Default2DVarLoader extends AFragmentCommand {
 	@Override
 	public void configure(final Configuration cfg) {
 		this.totalIntensityVar = cfg.getString("var.total_intensity",
-				"total_intensity");
+			"total_intensity");
 		this.modulationTimeVar = cfg.getString("var.modulation_time",
-				"modulation_time");
+			"modulation_time");
 		this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
 		this.scanDurationVar = cfg.getString("var.scan_duration",
-				"scan_duration");
+			"scan_duration");
 		this.secondColumnTimeVar = cfg.getString("var.second_column_time",
-				"second_column_time");
+			"second_column_time");
 		this.secondColumnScanIndexVar = cfg.getString(
-				"var.second_column_scan_index", "second_column_scan_index");
+			"var.second_column_scan_index", "second_column_scan_index");
 		this.totalIntensity1dVar = cfg.getString("var.total_intensity_1d",
-				"total_intensity_1d");
+			"total_intensity_1d");
 		this.scanAcquisitionTimeVar = cfg.getString(
-				"var.scan_acquisition_time", "scan_acquisition_time");
+			"var.scan_acquisition_time", "scan_acquisition_time");
 		this.scanAcquisitionTime1dVar = cfg.getString(
-				"var.scan_acquisition_time_1d", "scan_acquisition_time_1d");
+			"var.scan_acquisition_time_1d", "scan_acquisition_time_1d");
 		this.totalIntensity2dVar = cfg.getString("var.total_intensity_2d",
-				"total_intensity_2d");
+			"total_intensity_2d");
 
 		this.intensityValuesVar = cfg.getString("var.intensity_values", "intensity_values");
 		this.massValuesVar = cfg.getString("var.mass_values", "mass_values");
 		this.scanIndexVar = cfg.getString("var.scan_index", "scan_index");
 		this.firstColumnElutionTimeVar = cfg.getString("var.first_column_elution_time", "first_column_elution_time");
 		this.secondColumnElutionTimeVar = cfg.getString("var.second_column_elution_time", "second_column_elution_time");
-
-//        this.scanRate = cfg.getDouble("var.scan_rate.default", 200.0d);
-//        this.modulationTime = cfg.getDouble("var.modulation_time.default", 5.0d);
 	}
 
 	/**
@@ -253,21 +246,17 @@ public class Default2DVarLoader extends AFragmentCommand {
 	 * @return {@link IVariableFragment} for total_intensity_1d
 	 */
 	private IVariableFragment create1DTic(final IFileFragment source,
-			final IFileFragment parent) {
+		final IFileFragment parent) {
 		try {
 			return retrieveAndCopy(source, parent, totalIntensity1dVar);
 		} catch (ResourceNotAvailableException ex) {
 		}
 
 		final int scanspermodulation = (int) (this.scanRate * this.modulationTime);
-		// FIXME sollte eigentlich schon mit indexed array laufen. leider nur
-		// fehler
-		// Could not find physical file for
-		// /homes/mwilhelm/maltcms/Default2DVarLoader/090303-Gc4H210mg_1.cdf
 		Array totalIntensityArray;
 		try {
 			totalIntensityArray = source.getChild(this.totalIntensityVar).
-					getArray();
+				getArray();
 		} catch (ResourceNotAvailableException ex) {
 			//
 			log.warn("Could not retrieve chromatogram data from mzML file, rebuilding TIC!");
@@ -279,9 +268,9 @@ public class Default2DVarLoader extends AFragmentCommand {
 			ticVar.setArray(totalIntensityArray);
 		}
 		final List<Array> tic = buildIndexedArray(scanspermodulation,
-				totalIntensityArray);
+			totalIntensityArray);
 		final List<Array> sat = buildIndexedArray(scanspermodulation, source.
-				getChild(this.scanAcquisitionTimeVar).getArray());
+			getChild(this.scanAcquisitionTimeVar).getArray());
 		log.info("Number of scans in list: {}", tic.size());
 		final Array tic1d = Array.factory(totalIntensityArray.getElementType(), new int[]{tic.
 			size()});
@@ -302,13 +291,13 @@ public class Default2DVarLoader extends AFragmentCommand {
 		}
 
 		final IVariableFragment tic1dvar = new VariableFragment(parent,
-				this.totalIntensity1dVar);
+			this.totalIntensity1dVar);
 		tic1dvar.setArray(tic1d);
 		tic1dvar.setDimensions(new Dimension[]{new Dimension(
 			modulationIndex0Dimension,
 			tic.size(), true)});
 		final IVariableFragment sat1dvar = new VariableFragment(parent,
-				this.scanAcquisitionTime1dVar);
+			this.scanAcquisitionTime1dVar);
 		sat1dvar.setArray(sat1d);
 		sat1dvar.setDimensions(new Dimension[]{new Dimension(
 			modulationIndex0Dimension,
@@ -331,9 +320,11 @@ public class Default2DVarLoader extends AFragmentCommand {
 	 * @return {@link IVariableFragment} for modulation_time
 	 */
 	private IVariableFragment createModulation(final IFileFragment source,
-			final IFileFragment parent) {
+		final IFileFragment parent) {
 		try {
-			return retrieveAndCopy(source, parent, this.modulationTimeVar);
+			IVariableFragment modulationTimeVariable = retrieveAndCopy(source, parent, this.modulationTimeVar);
+			this.modulationTime = modulationTimeVariable.getArray().getDouble(0);
+			return modulationTimeVariable;
 		} catch (ResourceNotAvailableException ex) {
 		}
 		try {
@@ -343,12 +334,12 @@ public class Default2DVarLoader extends AFragmentCommand {
 		}
 		final Index idx = Index.scalarIndexImmutable;
 		final IVariableFragment modulationvar = new VariableFragment(parent,
-				this.modulationTimeVar);
+			this.modulationTimeVar);
 		final Array modulationArray = Array.factory(Double.class,
-				new int[]{1});
+			new int[]{1});
 		if (estimateModulationTime) {
 			ICompletionService<Double> mcs = createCompletionService(
-					Double.class);
+				Double.class);
 			ModulationTimeEstimatorTask mtet = new ModulationTimeEstimatorTask();
 			mtet.setInput(source.getUri());
 			mtet.setNumberOfScans(100000);
@@ -358,7 +349,7 @@ public class Default2DVarLoader extends AFragmentCommand {
 				this.modulationTime = mcs.call().get(0);
 			} catch (Exception ex) {
 				Logger.getLogger(Default2DVarLoader.class.getName()).
-						log(Level.SEVERE, null, ex);
+					log(Level.SEVERE, null, ex);
 			}
 		}
 //        if (Math.rint(this.modulationTime) != this.modulationTime) {
@@ -382,25 +373,27 @@ public class Default2DVarLoader extends AFragmentCommand {
 	 * @return {@link IVariableFragment} for scan_rate
 	 */
 	private IVariableFragment createScanRate(final IFileFragment source,
-			final IFileFragment parent) {
+		final IFileFragment parent) {
 		try {
-			return retrieveAndCopy(source, parent, scanRateVar);
+			IVariableFragment scanRateVariable = retrieveAndCopy(source, parent, scanRateVar);
+			this.scanRate = scanRateVariable.getArray().getDouble(0);
+			return scanRateVariable;
 		} catch (ResourceNotAvailableException ex) {
 		}
 		if (this.scanRate == -1.0d) {
 			log.info("Cannot find default scan rate. Estimating scan rate based on the first element in scan duration. This can lead to rounding errors, so be carefull with this.");
 			try {
 				final Array durationarray = source.getChild(this.scanDurationVar).
-						getArray();
+					getArray();
 				final IndexIterator iter = durationarray.getIndexIterator();
 				this.scanDuration = iter.getDoubleNext();
 				this.scanRate = 1.0d / this.scanDuration;
 				log.info("Found " + this.scanDurationVar + "({}) and "
-						+ this.scanRateVar + "({})", this.scanDuration,
-						this.scanRate);
+					+ this.scanRateVar + "({})", this.scanDuration,
+					this.scanRate);
 			} catch (final ResourceNotAvailableException e) {
 				log.warn("Couldnt find {} using default {}",
-						this.scanDurationVar, this.scanDuration);
+					this.scanDurationVar, this.scanDuration);
 				log.warn("Falling back to scan_acquisition_time delta! This may fail if acquisition time deltas are not equal!");
 				final Array satArray = source.getChild(this.scanAcquisitionTimeVar).getArray();
 				if (satArray.getShape()[0] >= 2) {
@@ -420,18 +413,18 @@ public class Default2DVarLoader extends AFragmentCommand {
 					StatsMap sm = scanner.apply(new Array[]{deltas})[0];
 					double mean = sm.get(Vars.Mean.name());
 					double stdev = Math.sqrt(sm.get(Vars.Variance.name()));
-					if(stdev<this.maxScanAcquisitionTimeDelta) {
+					if (stdev < this.maxScanAcquisitionTimeDelta) {
 						this.scanDuration = mean;
 						this.scanRate = 1.0d / this.scanDuration;
 						log.info("Estimated " + this.scanDurationVar + "({}) and "
-								+ this.scanRateVar + "({})", this.scanDuration,
-								this.scanRate);
+							+ this.scanRateVar + "({})", this.scanDuration,
+							this.scanRate);
 					}
 				} else {
 					throw new ConstraintViolationException(this.scanAcquisitionTimeVar + " did not contain at least 2 elements!");
 				}
 			}
-			if(this.scanRate == -1.0d) {
+			if (this.scanRate == -1.0d) {
 				throw new ConstraintViolationException("Could not initialize scan rate value!");
 			}
 		} else {
@@ -441,7 +434,7 @@ public class Default2DVarLoader extends AFragmentCommand {
 
 		final Index idx = Index.scalarIndexImmutable;
 		final IVariableFragment scanratevar = new VariableFragment(parent,
-				this.scanRateVar);
+			this.scanRateVar);
 		final Array scanRateArray = Array.factory(Double.class, new int[]{1});
 		scanRateArray.setDouble(idx, this.scanRate);
 		scanratevar.setArray(scanRateArray);
@@ -457,7 +450,7 @@ public class Default2DVarLoader extends AFragmentCommand {
 	 * @return {@link IVariableFragment} for second_column_scan_index
 	 */
 	private IVariableFragment createSecondColumnIndex(
-			final IFileFragment source, final IFileFragment parent) {
+		final IFileFragment source, final IFileFragment parent) {
 		try {
 			return retrieveAndCopy(source, parent, secondColumnScanIndexVar);
 		} catch (ResourceNotAvailableException ex) {
@@ -469,14 +462,14 @@ public class Default2DVarLoader extends AFragmentCommand {
 			tic = parent.getChild(this.totalIntensityVar).getArray();
 		}
 		final Integer ticcount = (int) (tic
-				.getShape()[0]);
+			.getShape()[0]);
 		final Integer scanspermodulation = (int) (this.scanRate * this.modulationTime);
 		Integer modulationCnt;
 		// if (ticcount % scanspermodulation == 0) {
 		modulationCnt = (ticcount / scanspermodulation);
 		System.out.println("Chromatogram has " + modulationCnt + " modulations");
 		log.info("ticcount: {}, scanspermodulation: {}, scancount: {}",
-				new Object[]{ticcount, scanspermodulation, modulationCnt});
+			new Object[]{ticcount, scanspermodulation, modulationCnt});
 		// } else {
 		// scancount = (ticcount / scanspermodulation) + 1;
 		// }
@@ -485,7 +478,7 @@ public class Default2DVarLoader extends AFragmentCommand {
 			secondColumnIndex.set(i, scanspermodulation * i);
 		}
 		final IVariableFragment index2dvar = new VariableFragment(parent,
-				this.secondColumnScanIndexVar);
+			this.secondColumnScanIndexVar);
 		index2dvar.setArray(secondColumnIndex);
 		index2dvar.setDimensions(new Dimension[]{new Dimension(
 			modulationIndex0Dimension, modulationCnt, true)});
@@ -501,15 +494,15 @@ public class Default2DVarLoader extends AFragmentCommand {
 	 * @return {@link IVariableFragment} for second_column_time
 	 */
 	private IVariableFragment createFirstColumnElutionTime(
-			final IFileFragment source, final IFileFragment parent) {
+		final IFileFragment source, final IFileFragment parent) {
 		try {
 			return retrieveAndCopy(source, parent, firstColumnElutionTimeVar);
 		} catch (ResourceNotAvailableException ex) {
 		}
 		final IVariableFragment originalTICVar = parent.getChild(
-				this.totalIntensityVar);
+			this.totalIntensityVar);
 		final Array firstRetTimeArray = Array.factory(Double.class, originalTICVar.
-				getArray().getShape());
+			getArray().getShape());
 		final IndexIterator timeiter = firstRetTimeArray.getIndexIterator();
 
 		double c = 0;
@@ -522,7 +515,7 @@ public class Default2DVarLoader extends AFragmentCommand {
 		}
 
 		final IVariableFragment firstcolumnvar = new VariableFragment(parent,
-				this.firstColumnElutionTimeVar);
+			this.firstColumnElutionTimeVar);
 		firstcolumnvar.setArray(firstRetTimeArray);
 		firstcolumnvar.setDimensions(new Dimension[]{new Dimension(scanNumberDimension,
 			firstRetTimeArray.getShape()[0], true)});
@@ -538,16 +531,16 @@ public class Default2DVarLoader extends AFragmentCommand {
 	 * @return {@link IVariableFragment} for second_column_time
 	 */
 	private IVariableFragment createSecondColumnElutionTime(
-			final IFileFragment source, final IFileFragment parent) {
+		final IFileFragment source, final IFileFragment parent) {
 
 		try {
 			return retrieveAndCopy(source, parent, secondColumnElutionTimeVar);
 		} catch (ResourceNotAvailableException ex) {
 		}
 		final IVariableFragment originalTICVar = parent.getChild(
-				this.totalIntensityVar);
+			this.totalIntensityVar);
 		final Array secondRetTimeArray = Array.factory(Double.class, originalTICVar.
-				getArray().getShape());
+			getArray().getShape());
 
 //		final IndexIterator ticiter = source.getChild(this.totalIntensityVar)
 //		        .getArray().getIndexIterator();
@@ -557,14 +550,14 @@ public class Default2DVarLoader extends AFragmentCommand {
 		final Integer scanspermodulation = (int) (this.scanRate * this.modulationTime);
 		while (timeiter.hasNext()) {
 			timeiter.setDoubleNext(
-					((c % scanspermodulation) * this.scanDuration));
+				((c % scanspermodulation) * this.scanDuration));
 //			                + this.scanDuration);
 //			ticiter.next();
 			c++;
 		}
 
 		final IVariableFragment secondcolumnvar = new VariableFragment(parent,
-				this.secondColumnElutionTimeVar);
+			this.secondColumnElutionTimeVar);
 		secondcolumnvar.setArray(secondRetTimeArray);
 		secondcolumnvar.setDimensions(new Dimension[]{new Dimension(scanNumberDimension,
 			secondRetTimeArray.getShape()[0], true)});
@@ -580,15 +573,15 @@ public class Default2DVarLoader extends AFragmentCommand {
 	 * @return {@link IVariableFragment} for second_column_time
 	 */
 	private IVariableFragment createSecondColumnTime(
-			final IFileFragment source, final IFileFragment parent) {
+		final IFileFragment source, final IFileFragment parent) {
 		try {
 			return retrieveAndCopy(source, parent, secondColumnTimeVar);
 		} catch (ResourceNotAvailableException ex) {
 		}
 		final IVariableFragment originalTICVar = parent.getChild(
-				this.totalIntensityVar);
+			this.totalIntensityVar);
 		final Array secondRetTimeArray = Array.factory(Double.class, originalTICVar.
-				getArray().getShape());
+			getArray().getShape());
 
 //		final IndexIterator ticiter = source.getChild(this.totalIntensityVar)
 //		        .getArray().getIndexIterator();
@@ -598,14 +591,14 @@ public class Default2DVarLoader extends AFragmentCommand {
 		final Integer scanspermodulation = (int) (this.scanRate * this.modulationTime);
 		while (timeiter.hasNext()) {
 			timeiter.setDoubleNext(
-					((c % scanspermodulation) * this.scanDuration));
+				((c % scanspermodulation) * this.scanDuration));
 //			                + this.scanDuration);
 //			ticiter.next();
 			c++;
 		}
 
 		final IVariableFragment secondcolumnvar = new VariableFragment(parent,
-				this.secondColumnTimeVar);
+			this.secondColumnTimeVar);
 		secondcolumnvar.setArray(secondRetTimeArray);
 		secondcolumnvar.setDimensions(new Dimension[]{new Dimension(scanNumberDimension,
 			secondRetTimeArray.getShape()[0], true)});
@@ -613,14 +606,14 @@ public class Default2DVarLoader extends AFragmentCommand {
 	}
 
 	private IVariableFragment createTIC2D(final IFileFragment source,
-			final IFileFragment parent) {
+		final IFileFragment parent) {
 		try {
 			return retrieveAndCopy(source, parent, totalIntensity2dVar);
 		} catch (ResourceNotAvailableException ex) {
 		}
 		final int scanspermodulation = (int) (this.scanRate * this.modulationTime);
 		final List<Array> tic = buildIndexedArray(scanspermodulation, parent.
-				getChild(this.totalIntensityVar).getArray());
+			getChild(this.totalIntensityVar).getArray());
 		log.info("Number of scans in list: {}", tic.size());
 		final Array tic2d = Array.factory(tic.get(0).getElementType(), new int[]{tic.
 			size(), scanspermodulation});
@@ -635,7 +628,7 @@ public class Default2DVarLoader extends AFragmentCommand {
 		}
 
 		final IVariableFragment tic2dvar = new VariableFragment(parent,
-				this.totalIntensity2dVar);
+			this.totalIntensity2dVar);
 		tic2dvar.setArray(tic2d);
 		tic2dvar.setDimensions(new Dimension[]{new Dimension(
 			modulationIndex0Dimension,

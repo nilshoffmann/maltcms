@@ -90,4 +90,11 @@ public class ArrayCov implements IArraySimilarity {
 		ac.setReturnCoeffDetermination(isReturnCoeffDetermination());
 		return ac;
 	}
+		
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName()).append("{"+"}");
+		return sb.toString();
+	}
 }

@@ -96,11 +96,11 @@ public class ScanlineMaxMSWarp extends ADynamicTimeWarp {
                 "maxms_1d_vertical");
         this.maxMSVerticalIndexVar = cfg.getString(
                 "var.maxms_1d_vertical_index", "maxms_1d_vertical_index");
-        this.horizontal = cfg.getBoolean(this.getClass().getName()
-                + ".horizontal", false);
-        this.scale = cfg.getBoolean(this.getClass().getName() + ".scale", true);
-        this.filter = cfg.getBoolean(this.getClass().getName() + ".filter",
-                true);
+//        this.horizontal = cfg.getBoolean(this.getClass().getName()
+//                + ".horizontal", false);
+//        this.scale = cfg.getBoolean(this.getClass().getName() + ".scale", true);
+//        this.filter = cfg.getBoolean(this.getClass().getName() + ".filter",
+//                true);
     }
 
     /**

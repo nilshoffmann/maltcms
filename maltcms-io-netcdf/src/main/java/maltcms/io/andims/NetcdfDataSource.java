@@ -428,7 +428,7 @@ public class NetcdfDataSource implements IDataSource {
 		// This will be the range of Arrays in the returned ArrayList
 		Range[] index_range = index.getRange();
 		// Unset the range, so we can read in the full index_array at first
-		index.setRange(null);
+		index.setRange((Range)null);
 
 		// read in the full index_array
 		log.debug("Reading index array {}", index);

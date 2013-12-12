@@ -76,7 +76,7 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
 	private boolean saveGraphics = true;
 
 	public PlotRunner(final Plot plot1, final String title1,
-		final String filename1, final File outputDir) {
+			final String filename1, final File outputDir) {
 		this.plot = plot1;
 		this.title = title1;
 		this.filename = filename1;
@@ -85,19 +85,19 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
 
 	@Override
 	public JFreeChart call() throws Exception {
-		this.log
-			.info("#############################################################################");
+		log
+				.info("#############################################################################");
 		final String s = this.getClass().getName();
-		this.log.info("# {} running", s);
-		this.log
-			.info("#############################################################################");
+		log.info("# {} running", s);
+		log
+				.info("#############################################################################");
 		if (this.plot.getBackgroundImage() != null) {
 			this.imgheight = this.plot.getBackgroundImage().getHeight(null);
 			this.imgwidth = this.plot.getBackgroundImage().getWidth(null);
 			this.sizeOverride = true;
 		}
 		final StandardChartTheme sct = (StandardChartTheme) StandardChartTheme
-			.createLegacyTheme();
+				.createLegacyTheme();
 		final Font elf = new Font(this.fontFamily, Font.BOLD, 20);
 		final Font lf = new Font(this.fontFamily, Font.BOLD, 14);
 		final Font rf = new Font(this.fontFamily, Font.PLAIN, 12);
@@ -123,27 +123,27 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
 		jfc.setTitle(this.title);
 		jfc.setBackgroundPaint(Color.WHITE);
 		if (this.headless && this.saveGraphics) {
-			this.log.info("Creating plot {} with filename {}", this.title,
-				getFile().getAbsolutePath());
+			log.info("Creating plot {} with filename {}", this.title,
+					getFile().getAbsolutePath());
 			ImageTools
-				.writeImage(jfc, getFile(), this.imgwidth, this.imgheight);
+					.writeImage(jfc, getFile(), this.imgwidth, this.imgheight);
 		}
 		if (this.serializeJFreeChart) {
 			try {
 				final String filename = StringTools.removeFileExt(getFile()
-					.getAbsolutePath())
-					+ ".serialized";
-				this.log.info("Creating serialized plot {} with filename {}",
-					this.title, filename);
+						.getAbsolutePath())
+						+ ".serialized";
+				log.info("Creating serialized plot {} with filename {}",
+						this.title, filename);
 				final ObjectOutputStream oos = new ObjectOutputStream(
-					new BufferedOutputStream(new FileOutputStream(filename)));
+						new BufferedOutputStream(new FileOutputStream(filename)));
 				oos.writeObject(jfc);
 				oos.flush();
 				oos.close();
 			} catch (final FileNotFoundException e) {
-				this.log.warn("{}", e.getLocalizedMessage());
+				log.warn("{}", e.getLocalizedMessage());
 			} catch (final IOException e) {
-				this.log.warn("{}", e.getLocalizedMessage());
+				log.warn("{}", e.getLocalizedMessage());
 			}
 		}
 		return jfc;
@@ -154,31 +154,31 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
 		if (!this.sizeOverride) {
 			this.imgwidth = cfg.getInt(this.getClass().getName() + ".imgwidth");
 			this.imgheight = cfg.getInt(this.getClass().getName()
-				+ ".imgheight");
+					+ ".imgheight");
 		}
 		this.filetype = cfg.getString(this.getClass().getName() + ".filetype");
 		this.headless = cfg.getBoolean(this.getClass().getName() + ".headless",
-			true);
+				true);
 		this.fontFamily = cfg.getString(this.getClass().getName()
-			+ ".fontFamily");
+				+ ".fontFamily");
 		this.serializeJFreeChart = cfg.getBoolean(this.getClass().getName()
-			+ ".serializeJFreeChart", false);
+				+ ".serializeJFreeChart", false);
 		this.saveGraphics = cfg.getBoolean(this.getClass().getName()
-			+ ".saveGraphics", true);
-		this.log.debug("configure called on {}", this.getClass().getName());
-		this.log.debug("filetype = {}", this.filetype);
-		this.log.debug("Image height: {} width: {}", this.imgheight,
-			this.imgwidth);
+				+ ".saveGraphics", true);
+		log.debug("configure called on {}", this.getClass().getName());
+		log.debug("filetype = {}", this.filetype);
+		log.debug("Image height: {} width: {}", this.imgheight,
+				this.imgwidth);
 	}
 
 	public File getFile() {
 		if (this.file == null) {
 			String ext = StringTools.getFileExtension(this.filename);
 			String fname = ext.isEmpty() ? this.filename : StringTools
-				.removeFileExt(this.filename);
+					.removeFileExt(this.filename);
 			fname = StringTools.deBlank(fname);// + "." + this.filetype;
 			this.file = FileTools.prepareOutput(this.outputDir
-				.getAbsolutePath(), fname, ext);
+					.getAbsolutePath(), fname, filetype);
 		}
 		log.debug("Filename: " + this.file.getAbsolutePath());
 		return this.file;
