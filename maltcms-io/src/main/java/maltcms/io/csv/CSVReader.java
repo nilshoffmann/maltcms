@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -48,7 +48,6 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import org.slf4j.Logger;
 import cross.datastructures.tuple.Tuple2D;
 import java.util.LinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +69,7 @@ public class CSVReader {
         for (final String s : args) {
             final CSVReader cr = new CSVReader();
             final Tuple2D<Vector<Vector<String>>, Vector<String>> t = cr
-                    .read(s);
+                .read(s);
             final HashMap<String, Vector<String>> hm = cr.getColumns(t);
             final DefaultTableModel dtm = new DefaultTableModel();
             final String[] keys = hm.keySet().toArray(new String[]{});
@@ -120,7 +119,7 @@ public class CSVReader {
     }
 
     public HashMap<String, Vector<String>> getColumns(
-            final Tuple2D<Vector<Vector<String>>, Vector<String>> t) {
+        final Tuple2D<Vector<Vector<String>>, Vector<String>> t) {
         final int columns = t.getFirst().size();
         Vector<String> headers = t.getSecond();
         if ((headers == null) || headers.isEmpty()) {
@@ -181,11 +180,11 @@ public class CSVReader {
     }
 
     public Tuple2D<Vector<Vector<String>>, Vector<String>> read(
-            final InputStream is) {
+        final InputStream is) {
 
         try {
             final BufferedReader br = new BufferedReader(new InputStreamReader(
-                    is));
+                is));
             String line = "";
             final Vector<Vector<String>> rows = new Vector<Vector<String>>();
             Vector<String> headers = new Vector<String>();
@@ -197,53 +196,53 @@ public class CSVReader {
 
             while ((line = br.readLine()) != null) {
                 this.log.debug("Parsing row: {}", cnt);
-				if (line.trim().isEmpty()) {
-					this.log.debug("Skipping empty line!");
-				}else {
-					if (line.startsWith(this.comment)) {
-						if (this.skipCommentLines) {
-							this.log.debug("Skipping comment row: {} = {}", cnt,
-									line);
-							// skip to next line
-							comment1++;
-							cnt++;
-							continue;
-						} else {
-							// Add row if comments should not be skipped
-							this.log.debug("Adding row: {}", cnt);
-							addLine(rows, line);
-							cnt++;// increase counter only on added lines
-						}
-					} else {
-						// Skip row
-						if (line.startsWith(this.skip)) {
-							this.log.debug("Skipping row: {} = {}", cnt, line);
-							this.skippedLines.add(line);
-							skipped++;
-							cnt++;
-							continue;
-						}
-						// we haven't seen any content yet, so suspect the next line
-						// to contain column labels
-						if (this.firstLineHeaders && (content == 0)) {
-							this.log.debug("Adding headers: {}", cnt);
-							headers = addColumns(line);
-							cnt++;
-							this.firstLineHeaders = false;
-						} else {// add content row
-							this.log.debug("Adding row: {}", cnt);
-							addLine(rows, line);
-							content++;
-							cnt++;
-						}
-					}
-				}
+                if (line.trim().isEmpty()) {
+                    this.log.debug("Skipping empty line!");
+                } else {
+                    if (line.startsWith(this.comment)) {
+                        if (this.skipCommentLines) {
+                            this.log.debug("Skipping comment row: {} = {}", cnt,
+                                line);
+                            // skip to next line
+                            comment1++;
+                            cnt++;
+                            continue;
+                        } else {
+                            // Add row if comments should not be skipped
+                            this.log.debug("Adding row: {}", cnt);
+                            addLine(rows, line);
+                            cnt++;// increase counter only on added lines
+                        }
+                    } else {
+                        // Skip row
+                        if (line.startsWith(this.skip)) {
+                            this.log.debug("Skipping row: {} = {}", cnt, line);
+                            this.skippedLines.add(line);
+                            skipped++;
+                            cnt++;
+                            continue;
+                        }
+                        // we haven't seen any content yet, so suspect the next line
+                        // to contain column labels
+                        if (this.firstLineHeaders && (content == 0)) {
+                            this.log.debug("Adding headers: {}", cnt);
+                            headers = addColumns(line);
+                            cnt++;
+                            this.firstLineHeaders = false;
+                        } else {// add content row
+                            this.log.debug("Adding row: {}", cnt);
+                            addLine(rows, line);
+                            content++;
+                            cnt++;
+                        }
+                    }
+                }
             }
             br.close();
             this.log.debug("Read {} lines, skipped {}, comments {}",
-                    new Object[]{cnt, skipped, comment1});
+                new Object[]{cnt, skipped, comment1});
             return new Tuple2D<Vector<Vector<String>>, Vector<String>>(rows,
-                    headers);
+                headers);
         } catch (final ArrayIndexOutOfBoundsException aie) {
             this.log.error("Can not parse input, check file syntax!");
         } catch (final FileNotFoundException e) {
@@ -252,7 +251,7 @@ public class CSVReader {
             this.log.error(e.getLocalizedMessage());
         }
         return new Tuple2D<Vector<Vector<String>>, Vector<String>>(
-                new Vector<Vector<String>>(), new Vector<String>());
+            new Vector<Vector<String>>(), new Vector<String>());
     }
 
     public Tuple2D<Vector<Vector<String>>, Vector<String>> read(final String url) {
@@ -267,7 +266,7 @@ public class CSVReader {
             }
         } else {
             final InputStream is = this.getClass().getClassLoader()
-                    .getResourceAsStream(url);
+                .getResourceAsStream(url);
             if (is != null) {
                 return read(is);
             } else {
@@ -276,7 +275,7 @@ public class CSVReader {
         }
 
         return new Tuple2D<Vector<Vector<String>>, Vector<String>>(
-                new Vector<Vector<String>>(), new Vector<String>());
+            new Vector<Vector<String>>(), new Vector<String>());
     }
 
     public void setComment(final String comment1) {

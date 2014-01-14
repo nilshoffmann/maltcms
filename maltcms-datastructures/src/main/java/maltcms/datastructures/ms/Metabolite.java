@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,14 +27,14 @@
  */
 package maltcms.datastructures.ms;
 
+import cross.datastructures.tuple.Tuple2D;
+import java.net.URI;
 import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayDouble.D1;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
-import ucar.ma2.ArrayDouble.D1;
 import ucar.ma2.MAMath.MinMax;
-import cross.datastructures.tuple.Tuple2D;
-import java.net.URI;
 
 /**
  * Concrete implementation of a Metabolite.
@@ -52,7 +52,7 @@ public class Metabolite implements IMetabolite {
     private int dbno = -1;
     private String comments = null;
     private double min_mass, max_mass, min_intensity, max_intensity,
-            min_intensity_norm, max_intensity_norm;
+        min_intensity_norm, max_intensity_norm;
     private String date;
     private double ri = -1.0d;
     private String sp;
@@ -63,17 +63,17 @@ public class Metabolite implements IMetabolite {
     private int scanIndex = -1;
     private int mw;
     private double molecularWeight;
-	private URI link;
+    private URI link;
 
     public Metabolite() {
     }
 
     public Metabolite(final String name1, final String id1,
-            final String id_type1, final int dbno1, final String comments1,
-            final String formula1, final String date1, final double ri1,
-            final double retentionTime1, final String retentionTimeUnit1,
-            final int mw1, final String sp1, final String shortName,
-            final ArrayDouble.D1 masses1, final ArrayInt.D1 intensities1) {
+        final String id_type1, final int dbno1, final String comments1,
+        final String formula1, final String date1, final double ri1,
+        final double retentionTime1, final String retentionTimeUnit1,
+        final int mw1, final String sp1, final String shortName,
+        final ArrayDouble.D1 masses1, final ArrayInt.D1 intensities1) {
         this();
         this.name = name1;
         this.id = id1;
@@ -92,7 +92,7 @@ public class Metabolite implements IMetabolite {
         setMassSpectrum(masses1, intensities1);
     }
 
-	@Override
+    @Override
     public int compareTo(final IAnchor o) {
         if (o instanceof IMetabolite) {
             // TODO include distance based comparison
@@ -100,7 +100,7 @@ public class Metabolite implements IMetabolite {
         if (o instanceof IRetentionInfo) {
             // If no retention index is given, use names as comparison criterion
             if ((((IRetentionInfo) o).getRetentionIndex() < 0)
-                    || (getRetentionIndex() < 0)) {
+                || (getRetentionIndex() < 0)) {
                 return getName().compareTo(o.getName());
             }
             if (((IRetentionInfo) o).getRetentionIndex() < getRetentionIndex()) {
@@ -121,12 +121,12 @@ public class Metabolite implements IMetabolite {
         }
     }
 
-	@Override
+    @Override
     public String getComments() {
         return this.comments;
     }
 
-	@Override
+    @Override
     public String getDate() {
         return this.date;
     }
@@ -135,123 +135,124 @@ public class Metabolite implements IMetabolite {
         return this.dbno;
     }
 
-	@Override
+    @Override
     public String getFormula() {
         return this.formula;
     }
 
-	@Override
+    @Override
     public String getID() {
         return this.id;
     }
-	
-	@Override
-	public URI getLink() {
-		return this.link;
-	}
+
+    @Override
+    public URI getLink() {
+        return this.link;
+    }
 
     public String getIDType() {
         return this.id_type;
     }
 
-	@Override
+    @Override
     public Tuple2D<D1, ucar.ma2.ArrayInt.D1> getMassSpectrum() {
         return new Tuple2D<D1, ucar.ma2.ArrayInt.D1>(this.masses,
-                this.intensities);
+            this.intensities);
     }
 
-	@Override
+    @Override
     public double getMaxIntensity() {
         return this.max_intensity;
     }
 
-	@Override
+    @Override
     public double getMaxMass() {
         return this.max_mass;
     }
 
-	@Override
+    @Override
     public double getMinIntensity() {
         return this.min_intensity;
     }
 
-	@Override
+    @Override
     public double getMinMass() {
         return this.min_mass;
     }
 
-	@Override
+    @Override
     public int getMW() {
         return this.mw;
     }
 
-	@Override
+    @Override
     public double getMw() {
         return this.molecularWeight;
     }
 
-	@Override
+    @Override
     public String getName() {
         return this.name;
     }
 
-	@Override
+    @Override
     public double getRetentionIndex() {
         return this.ri;
     }
 
-	@Override
+    @Override
     public double getRetentionTime() {
         return this.retentionTime;
     }
 
-	@Override
+    @Override
     public String getRetentionTimeUnit() {
         return this.retentionTimeUnit;
     }
 
-	@Override
+    @Override
     public int getScanIndex() {
         return this.scanIndex;
     }
 
-	@Override
+    @Override
     public String getShortName() {
         return this.sname;
     }
 
-	@Override
+    @Override
     public String getSP() {
         return this.sp;
     }
 
-	@Override
+    @Override
     public void setComments(final String comments1) {
         this.comments = comments1;
     }
 
-	@Override
+    @Override
     public void setDate(final String date1) {
         this.date = date1;
     }
 
-	@Override
+    @Override
     public void setFormula(final String formula1) {
         this.formula = formula1;
     }
 
-	@Override
+    @Override
     public void setID(final String id1) {
         this.id = id1;
     }
-	
-	public void setLink(final URI link) {
-		this.link = link;
-	}
 
-	@Override
+    @Override
+    public void setLink(final URI link) {
+        this.link = link;
+    }
+
+    @Override
     public void setMassSpectrum(final D1 masses1,
-            final ucar.ma2.ArrayInt.D1 intensities1) {
+        final ucar.ma2.ArrayInt.D1 intensities1) {
         if ((masses1 != null) && (intensities1 != null)) {
             final MinMax mm = MAMath.getMinMax(masses1);
             this.min_mass = mm.min;
@@ -270,69 +271,69 @@ public class Metabolite implements IMetabolite {
         }
     }
 
-	@Override
+    @Override
     public void setMaxIntensity(final double intens) {
         this.max_intensity = intens;
     }
 
-	@Override
+    @Override
     public void setMaxMass(final double m) {
         this.max_mass = m;
     }
 
-	@Override
+    @Override
     public void setMinIntensity(final double intens) {
         this.min_intensity = intens;
     }
 
-	@Override
+    @Override
     public void setMinMass(final double m) {
         this.min_mass = m;
     }
 
-	@Override
+    @Override
     public void setMW(final int mw1) {
         this.mw = mw1;
         this.molecularWeight = mw1;
     }
 
-	@Override
+    @Override
     public void setMw(final double mw1) {
         this.molecularWeight = mw1;
         this.mw = (int) mw1;
     }
 
-	@Override
+    @Override
     public void setName(final String s) {
         this.name = s;
     }
 
-	@Override
+    @Override
     public void setRetentionIndex(final double d) {
         this.ri = d;
     }
 
-	@Override
+    @Override
     public void setRetentionTime(final double d) {
         this.retentionTime = d;
     }
 
-	@Override
+    @Override
     public void setRetentionTimeUnit(final String s) {
         this.retentionTimeUnit = s;
     }
 
-	@Override
+    @Override
     public void setScanIndex(final int scan) {
         this.scanIndex = scan;
     }
 
-	@Override
+    @Override
     public void setShortName(final String sname1) {
         this.sname = sname1;
     }
 
-	@Override
+    @Override
     public void setSP(final String sp1) {
         this.sp = sp1;
     }
@@ -346,10 +347,10 @@ public class Metabolite implements IMetabolite {
         sb.append("\n");
         sb.append("Synon: NAME:" + getShortName());
         sb.append("\n");
-		if(link!=null) {
-			sb.append("Synon: LINK:" + getLink());
-			sb.append("\n");
-		}
+        if (link != null) {
+            sb.append("Synon: LINK:" + getLink());
+            sb.append("\n");
+        }
         sb.append("Synon: SP:" + getSP());
         sb.append("\n");
         sb.append("Synon: " + getIDType() + ":" + getID());
@@ -358,7 +359,7 @@ public class Metabolite implements IMetabolite {
         sb.append("\n");
         if (getRetentionTime() > 0) {
             sb.append("Synon: RT:" + getRetentionTimeUnit()
-                    + getRetentionTime());
+                + getRetentionTime());
             sb.append("\n");
         }
         if (getMw() >= 0) {
@@ -396,7 +397,7 @@ public class Metabolite implements IMetabolite {
         return sb.toString();
     }
 
-	@Override
+    @Override
     public void update(final IMetabolite m) {
         if (getID().equals(m.getID())) {
             if ((m.getComments() != null) && !m.getComments().equals("")) {
@@ -412,9 +413,9 @@ public class Metabolite implements IMetabolite {
                 setName(m.getName());
             }
             if ((m.getMassSpectrum().getFirst() != null)
-                    && (m.getMassSpectrum().getSecond() != null)) {
+                && (m.getMassSpectrum().getSecond() != null)) {
                 setMassSpectrum(m.getMassSpectrum().getFirst(), m
-                        .getMassSpectrum().getSecond());
+                    .getMassSpectrum().getSecond());
             }
             if (m.getMW() > 0) {
                 setMW(m.getMW());
@@ -426,7 +427,7 @@ public class Metabolite implements IMetabolite {
                 setRetentionTime(m.getRetentionTime());
             }
             if ((m.getRetentionTimeUnit() != null)
-                    && !m.getRetentionTimeUnit().equals("")) {
+                && !m.getRetentionTimeUnit().equals("")) {
                 setRetentionTimeUnit(m.getRetentionTimeUnit());
             }
             if ((m.getShortName() != null) && !m.getShortName().equals("")) {
@@ -437,7 +438,7 @@ public class Metabolite implements IMetabolite {
             }
         } else {
             throw new IllegalArgumentException(
-                    "IDs do not match, cannot update!");
+                "IDs do not match, cannot update!");
         }
 
     }

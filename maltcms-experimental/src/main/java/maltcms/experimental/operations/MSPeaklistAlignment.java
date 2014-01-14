@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,25 +27,23 @@
  */
 package maltcms.experimental.operations;
 
-import maltcms.commands.distances.dtwng.TwoFeatureVectorOperation;
-import java.awt.Point;
-import java.util.ArrayList;
-
-import javax.swing.JFrame;
-
-import maltcms.datastructures.array.IFeatureVector;
-import maltcms.experimental.ui.ImagePanel;
-
-import org.apache.commons.configuration.Configuration;
-
-import ucar.ma2.Array;
 import cross.annotations.Configurable;
 import cross.annotations.RequiresVariables;
+import java.awt.Point;
+import java.util.ArrayList;
+import javax.swing.JFrame;
+import lombok.Data;
+import maltcms.commands.distances.dtwng.TwoFeatureVectorOperation;
+import maltcms.datastructures.array.IFeatureVector;
+import maltcms.experimental.ui.ImagePanel;
+import org.apache.commons.configuration.Configuration;
+import ucar.ma2.Array;
 
 /**
  *
  * @author Nils Hoffmann
  */
+@Data
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values"})
 public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
 
@@ -53,6 +51,8 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
     private String mass_values = "mass_values";
     @Configurable(name = "var.intensity_values")
     private String intensity_values = "intensity_values";
+    @Configurable
+    private double epsilon = 0.0001;
 
     public double matchMass(double m1, double m2, double epsilon) {
         if (Math.abs(m1 - m2) <= epsilon) {
@@ -62,7 +62,7 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
     }
 
     public double recurse(double[][] amat, int i, int j, double m1, double m2,
-            double i1, double i2, Point[][] p) {
+        double i1, double i2, Point[][] p) {
         // fill gaps
         if (i == 0 && j > 0) {
             amat[i][j] = amat[i][j - 1] - 1;
@@ -72,7 +72,7 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
             return amat[i][j];
         }
         double sc = 0;
-        sc = matchMass(m1, m2, 0.2);
+        sc = matchMass(m1, m2, epsilon);
         double up = amat[i - 1][j] + 1;
         double left = amat[i][j - 1] + 1;
         double diag = amat[i - 1][j - 1] + sc;
@@ -117,9 +117,9 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
     }
 
     public double peakCntAlignment(double[] masses1, double[] intens1,
-            double[] masses2, double[] intens2) {
+        double[] masses2, double[] intens2) {
         System.out.println("Length 1: " + masses1.length + " length 2: "
-                + masses2.length);
+            + masses2.length);
         Point[][] trace = new Point[masses1.length + 1][masses2.length + 1];
         double[][] amat = new double[masses1.length + 1][masses2.length + 1];
         amat[0][0] = 0;
@@ -127,7 +127,7 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
         for (int i = 1; i < amat.length; i++) {
             for (int j = 1; j < amat[0].length; j++) {
                 recurse(amat, i, j, masses1[i - 1], masses2[j - 1],
-                        intens1[i - 1], intens2[j - 1], trace);
+                    intens1[i - 1], intens2[j - 1], trace);
             }
         }
         printMatrix(amat, masses1, masses2);
@@ -135,7 +135,7 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
     }
 
     public void printMatrix(final double[][] mat, final double[] masses1,
-            final double[] masses2) {
+        final double[] masses2) {
         ImagePanel jp = new ImagePanel();
         jp.setData(mat, masses1, masses2);
         JFrame jf = new JFrame();
@@ -151,16 +151,16 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
         Array i1 = f1.getFeature(this.intensity_values);
         Array i2 = f2.getFeature(this.intensity_values);
         return peakCntAlignment((double[]) m1.get1DJavaArray(double.class),
-                (double[]) i1.get1DJavaArray(double.class), (double[]) m2
-                .get1DJavaArray(double.class), (double[]) i2
-                .get1DJavaArray(double.class));
+            (double[]) i1.get1DJavaArray(double.class), (double[]) m2
+            .get1DJavaArray(double.class), (double[]) i2
+            .get1DJavaArray(double.class));
     }
 
     public double apply(Array m1, Array m2, Array i1, Array i2) {
         return peakCntAlignment((double[]) m1.get1DJavaArray(double.class),
-                (double[]) i1.get1DJavaArray(double.class), (double[]) m2
-                .get1DJavaArray(double.class), (double[]) i2
-                .get1DJavaArray(double.class));
+            (double[]) i1.get1DJavaArray(double.class), (double[]) m2
+            .get1DJavaArray(double.class), (double[]) i2
+            .get1DJavaArray(double.class));
     }
 
     @Override
