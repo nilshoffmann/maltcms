@@ -113,7 +113,7 @@ public class MZMLDataSource implements IDataSource {
     private String first_column_elution_timeAccession = "MS:1002082";
     @Configurable(name = "var.second_column_elution_time", value = "second_column_elution_time")
     private String second_column_elution_time = "second_column_elution_time";
-    private String second_column_elution_timeAccession = "MS:1002083 ";
+    private String second_column_elution_timeAccession = "MS:1002083";
     @Configurable(name = "var.total_ion_current_chromatogram", value = "total_ion_current_chromatogram")
     private String total_ion_current_chromatogram = "total_ion_current_chromatogram";
     private String total_ion_current_chromatogramAccession = "MS:1000235";
@@ -520,16 +520,35 @@ public class MZMLDataSource implements IDataSource {
         while (spectrumIterator.hasNext()) {
             Spectrum s = spectrumIterator.next();
             if (i >= start && i < start + scans) {
-                List<CVParam> cvParams = s.getCvParam();
-                CVParam cvp = findParam(cvParams, accession);
-                String value = cvp.getValue();
-                double rt = convertRT(Double.parseDouble(value), cvp.getUnitName());
+                double rt = readElutionTime(s, accession);
+                //fallback for legacy maltcms < 1.3.1
+                if (Double.isNaN(rt)) {
+                    List<CVParam> cvParams = s.getCvParam();
+                    CVParam cvp = findParam(cvParams, accession);
+                    String value = cvp.getValue();
+                    rt = convertRT(Double.parseDouble(value), cvp.getUnitName());
+                }
                 elutionTime.set(i, rt);
                 i++;
             }
         }
         EvalTools.notNull(elutionTime, this);
         return elutionTime;
+    }
+
+    private double readElutionTime(Spectrum s, final String accession) {
+        double rt = Double.NaN;
+        try {
+            CVParam rtp = findParam(s.getScanList().getScan().get(0).getCvParam(), accession);
+            rt = Double.parseDouble(rtp.getValue());
+            String unit = getRTUnit(s);
+            rt = convertRT(rt, unit);
+        } catch (NullPointerException npe) {
+            log.warn("Could not retrieve elution time!");
+        } catch (ResourceNotAvailableException rne) {
+            log.warn("Could not retrieve elution time!", rne);
+        }
+        return rt;
     }
 
     private Array readMinMaxMassValueArray(final IVariableFragment var,
