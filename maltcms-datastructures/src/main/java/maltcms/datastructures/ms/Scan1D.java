@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -28,6 +28,8 @@
 package maltcms.datastructures.ms;
 
 import cross.datastructures.cache.SerializableArray;
+import cross.datastructures.tools.EvalTools;
+import cross.exception.ResourceNotAvailableException;
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -35,11 +37,7 @@ import java.io.ObjectOutput;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
 import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
-import ucar.ma2.ArrayShort;
 import ucar.ma2.IndexIterator;
 
 /**
@@ -54,51 +52,95 @@ public class Scan1D implements IScan1D, Externalizable {
      *
      */
     private static final long serialVersionUID = 2937381605461829269L;
-    private ArrayInt.D0 scanNumber = new ArrayInt.D0();
-    private ArrayDouble.D0 scanAcquisitionTime = new ArrayDouble.D0();
-    private ArrayDouble.D0 total_intensity = new ArrayDouble.D0();
+//    private ArrayInt.D0 scanNumber = new ArrayInt.D0();
+    private int scanNumber = 0;
+//    private ArrayDouble.D0 scanAcquisitionTime = new ArrayDouble.D0();
+    private double scanAcquisitionTime = Double.NaN;
+//    private ArrayDouble.D0 total_intensity = new ArrayDouble.D0();
+    private double total_intensity = Double.NaN;
     private Array masses = null;
     private Array intensities = null;
     private UUID uniqueId = UUID.randomUUID();
-	private ArrayShort.D0 msLevel = new ArrayShort.D0();
+    private short msLevel = 1;
+    private double precursorCharge = Double.NaN;
+    private double precursorMz = Double.NaN;
+    private double precursorIntensity = Double.NaN;
+//    private ArrayShort.D0 msLevel = new ArrayShort.D0();
+//    private ArrayDouble.D0 precursorCharge = null;
+//    private ArrayDouble.D0 precursorMz = null;
+//    private ArrayDouble.D0 precursorIntensity = null;
 
     public Scan1D(final Array masses1, final Array intensities1,
-            final int scanNumber1, final double scanAcquisitionTime1) {
+        final int scanNumber1, final double scanAcquisitionTime1) {
+        //enforce equal lengths for masses and intensities
+        EvalTools.eqI(masses1.getShape()[0], intensities1.getShape()[0], Scan1D.class);
         this.masses = masses1;
         this.intensities = intensities1;
-        this.scanNumber.set(scanNumber1);
-        this.scanAcquisitionTime.set(scanAcquisitionTime1);
-        this.total_intensity.set(integrate(this.intensities));
+        EvalTools.geq(0, scanNumber1, Scan1D.class);
+        this.scanNumber = scanNumber1;
+//        this.scanNumber.set(scanNumber1);
+        //scan acquisition time can be negative sometimes, so no checking required
+        this.scanAcquisitionTime = scanAcquisitionTime1;
+//        this.scanAcquisitionTime.set(scanAcquisitionTime1);
+        this.total_intensity = integrate(this.intensities);
+//        this.total_intensity.set(integrate(this.intensities));
     }
-	
-	public Scan1D(final Array masses1, final Array intensities1,
-            final int scanNumber1, final double scanAcquisitionTime1, final short msLevel) {
+
+    public Scan1D(final Array masses1, final Array intensities1,
+        final int scanNumber1, final double scanAcquisitionTime1, final short msLevel) {
         this(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
-		this.msLevel.set(msLevel);
+        EvalTools.geq(1, msLevel, Scan1D.class);
+        this.msLevel = msLevel;
+    }
+
+    public Scan1D(final Array masses1, final Array intensities1,
+        final int scanNumber1, final double scanAcquisitionTime1, final short msLevel, final int precursorCharge, final double precursorMz, final double precursorIntensity) {
+        this(masses1, intensities1, scanNumber1, scanAcquisitionTime1, msLevel);
+        //ensure that precursor information is only set with msLevel>=2
+        EvalTools.geq(2, msLevel, Scan1D.class);
+        this.precursorCharge = precursorCharge;
+        this.precursorMz = precursorMz;
+        this.precursorIntensity = precursorIntensity;
     }
 
     @Override
     public Array getFeature(final String name) {
-        if (name.equals("mass_values")) {
-            return this.masses;
-        } else if (name.equals("intensity_values")) {
-            return this.intensities;
-        } else if (name.equals("scan_index")) {
-            return this.scanNumber;
-        } else if (name.equals("scan_acquisition_time")) {
-            return this.scanAcquisitionTime;
-        } else if (name.equals("total_intensity")) {
-            return this.total_intensity;
-        } else if (name.equals("ms_level")) {
-			return this.msLevel;
-		}
+        switch (name) {
+            case "mass_values":
+                return this.masses;
+            case "intensity_values":
+                return this.intensities;
+            case "scan_index":
+                return Array.factory(new int[]{this.scanNumber});
+            case "scan_acquisition_time":
+                return Array.factory(new double[]{this.scanAcquisitionTime});
+            case "total_intensity":
+                return Array.factory(new double[]{this.total_intensity});
+            case "ms_level":
+                return Array.factory(new short[]{this.msLevel});
+            case "precursor_charge":
+                if (Double.isNaN(precursorCharge)) {
+                    throw new ResourceNotAvailableException("precursor_charge not available!");
+                }
+                return Array.factory(new int[]{(int) this.precursorCharge});
+            case "precursor_intensity":
+                if (Double.isNaN(precursorIntensity)) {
+                    throw new ResourceNotAvailableException("precursor_intensity not available!");
+                }
+                return Array.factory(new double[]{this.precursorIntensity});
+            case "precursor_mz":
+                if (Double.isNaN(precursorMz)) {
+                    throw new ResourceNotAvailableException("precursor_mz not available!");
+                }
+                return Array.factory(new double[]{this.precursorMz});
+        }
         throw new IllegalArgumentException("Feature name " + name + " unknown!");
     }
 
     @Override
     public List<String> getFeatureNames() {
         return Arrays.asList(new String[]{"mass_values", "intensity_values",
-                    "scan_index", "scan_acquisition_time", "total_intensity", "ms_level"});
+            "scan_index", "scan_acquisition_time", "total_intensity", "ms_level", "precursor_charge", "precursor_mz", "precursor_intensity"});
     }
 
     @Override
@@ -113,17 +155,17 @@ public class Scan1D implements IScan1D, Externalizable {
 
     @Override
     public double getScanAcquisitionTime() {
-        return this.scanAcquisitionTime.get();
+        return this.scanAcquisitionTime;
     }
 
     @Override
     public int getScanIndex() {
-        return this.scanNumber.get();
+        return this.scanNumber;
     }
 
     @Override
     public double getTotalIntensity() {
-        return this.total_intensity.get();
+        return this.total_intensity;
     }
 
     private double integrate(final Array intensities) {
@@ -140,42 +182,55 @@ public class Scan1D implements IScan1D, Externalizable {
         return uniqueId;
     }
 
-	@Override
-	public void writeExternal(ObjectOutput out) throws IOException {
-		out.writeObject(uniqueId);
-		SerializableArray scanNumberArray = new SerializableArray(scanNumber);
-		scanNumberArray.writeExternal(out);
-		SerializableArray scanAcquisitionTimeArray = new SerializableArray(scanNumber);
-		scanAcquisitionTimeArray.writeExternal(out);
-		SerializableArray totalIntensityArray = new SerializableArray(scanNumber);
-		totalIntensityArray.writeExternal(out);
-		SerializableArray massesArray = new SerializableArray(masses);
-		massesArray.writeExternal(out);
-		SerializableArray intensitiesArray = new SerializableArray(intensities);
-		intensitiesArray.writeExternal(out);
-		SerializableArray msLevelArray = new SerializableArray(msLevel);
-		msLevelArray.writeExternal(out);
-	}
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(uniqueId);
+        out.writeInt(scanNumber);
+        out.writeDouble(scanAcquisitionTime);
+        out.writeDouble(total_intensity);
+        SerializableArray massesArray = new SerializableArray(masses);
+        massesArray.writeExternal(out);
+        SerializableArray intensitiesArray = new SerializableArray(intensities);
+        intensitiesArray.writeExternal(out);
+        out.writeShort(msLevel);
+        out.writeDouble(precursorCharge);
+        out.writeDouble(precursorMz);
+        out.writeDouble(precursorIntensity);
+    }
 
-	@Override
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-		uniqueId = (UUID)in.readObject();
-		SerializableArray scanNumberArray = (SerializableArray)in.readObject();
-		scanNumber = (ArrayInt.D0)scanNumberArray.getArray();
-		SerializableArray scanAcquisitionTimeArray = (SerializableArray)in.readObject();
-		scanAcquisitionTime = (ArrayDouble.D0)scanAcquisitionTimeArray.getArray();
-		SerializableArray totalIntensityArray = (SerializableArray)in.readObject();
-		total_intensity = (ArrayDouble.D0)totalIntensityArray.getArray();
-		SerializableArray massesArray = (SerializableArray)in.readObject();
-		masses = (Array)massesArray.getArray();
-		SerializableArray intensitiesArray = (SerializableArray)in.readObject();
-		intensities = (Array)intensitiesArray.getArray();
-		SerializableArray msLevelArray = (SerializableArray)in.readObject();
-		msLevel = (ArrayShort.D0)msLevelArray.getArray();
-	}
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        uniqueId = (UUID) in.readObject();
+        scanNumber = in.readInt();
+        scanAcquisitionTime = in.readDouble();
+        total_intensity = in.readDouble();
+        SerializableArray massesArray = (SerializableArray) in.readObject();
+        masses = (Array) massesArray.getArray();
+        SerializableArray intensitiesArray = (SerializableArray) in.readObject();
+        intensities = (Array) intensitiesArray.getArray();
+        msLevel = in.readShort();
+        precursorCharge = in.readDouble();
+        precursorMz = in.readDouble();
+        precursorIntensity = in.readDouble();
+    }
 
-	@Override
-	public short getMsLevel() {
-		return msLevel.get();
-	}
+    @Override
+    public short getMsLevel() {
+        return msLevel;
+    }
+
+    @Override
+    public double getPrecursorCharge() {
+        return precursorCharge;
+    }
+
+    @Override
+    public double getPrecursorMz() {
+        return precursorMz;
+    }
+
+    @Override
+    public double getPrecursorIntensity() {
+        return precursorIntensity;
+    }
 }

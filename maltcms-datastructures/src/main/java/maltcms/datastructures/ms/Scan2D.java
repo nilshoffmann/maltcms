@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,10 +27,11 @@
  */
 package maltcms.datastructures.ms;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
-
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -41,7 +42,6 @@ import ucar.ma2.ArrayInt;
  *
  * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
  *
- * FIXME add support for IFeatureVector, extend Scan1D functionality
  *
  */
 public class Scan2D extends Scan1D implements IScan2D {
@@ -54,26 +54,44 @@ public class Scan2D extends Scan1D implements IScan2D {
     private int fcind = -1, scind = -1;
 
     public Scan2D(Array masses1, Array intensities1, int scanNumber1,
-            double scanAcquisitionTime1) {
+        double scanAcquisitionTime1) {
         super(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
     }
 
     public Scan2D(Array masses1, Array intensities1, int scanNumber1,
-            double scanAcquisitionTime1, int idx1, int idx2, double rt1,
-            double rt2) {
+        double scanAcquisitionTime1, int idx1, int idx2, double rt1,
+        double rt2) {
         this(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
         this.fcind = idx1;
         this.scind = idx2;
         this.fctime = rt1;
         this.sctime = rt2;
     }
-	
-	public Scan2D(Array masses1, Array intensities1, int scanNumber1,
-            double scanAcquisitionTime1, int idx1, int idx2, double rt1,
-            double rt2, short msLevel) {
+
+    public Scan2D(Array masses1, Array intensities1, int scanNumber1,
+        double scanAcquisitionTime1, int idx1, int idx2, double rt1,
+        double rt2, short msLevel) {
         super(masses1, intensities1, scanNumber1, scanAcquisitionTime1, msLevel);
-		this.fcind = idx1;
+        this.fcind = idx1;
         this.scind = idx2;
+        this.fctime = rt1;
+        this.sctime = rt2;
+    }
+
+    public Scan2D(Array masses1, Array intensities1, int scanNumber1,
+        double scanAcquisitionTime1, int idx1, int idx2, double rt1,
+        double rt2, short msLevel, final int precursorCharge, final double precursorMz, final double precursorIntensity) {
+        super(masses1, intensities1, scanNumber1, scanAcquisitionTime1, msLevel, precursorCharge, precursorMz, precursorIntensity);
+        this.fcind = idx1;
+        this.scind = idx2;
+        this.fctime = rt1;
+        this.sctime = rt2;
+    }
+
+    public Scan2D(Array masses1, Array intensities1, int scanNumber1,
+        double scanAcquisitionTime1, double rt1,
+        double rt2, short msLevel, final int precursorCharge, final double precursorMz, final double precursorIntensity) {
+        super(masses1, intensities1, scanNumber1, scanAcquisitionTime1, msLevel, precursorCharge, precursorMz, precursorIntensity);
         this.fctime = rt1;
         this.sctime = rt2;
     }
@@ -120,33 +138,60 @@ public class Scan2D extends Scan1D implements IScan2D {
 
     @Override
     public Array getFeature(final String name) {
-        if (name.equals("first_column_scan_index")) {
-            ArrayInt.D0 a = new ArrayInt.D0();
-            a.set(this.fcind);
-            return a;
-        } else if (name.equals("second_column_scan_index")) {
-            ArrayInt.D0 a = new ArrayInt.D0();
-            a.set(this.scind);
-            return a;
-        } else if (name.equals("first_column_time") || name.equals("first_column_elution_time")) {
-            ArrayDouble.D0 a = new ArrayDouble.D0();
-            a.set(this.fctime);
-            return a;
-        } else if (name.equals("second_column_time") || name.equals("second_column_elution_time")) {
-            ArrayDouble.D0 a = new ArrayDouble.D0();
-            a.set(this.sctime);
-            return a;
-        } else {
-            return super.getFeature(name);
+        switch (name) {
+            case "first_column_scan_index": {
+                ArrayInt.D0 a = new ArrayInt.D0();
+                a.set(this.fcind);
+                return a;
+            }
+            case "second_column_scan_index": {
+                ArrayInt.D0 a = new ArrayInt.D0();
+                a.set(this.scind);
+                return a;
+            }
+            case "first_column_time":
+            case "first_column_elution_time": {
+                ArrayDouble.D0 a = new ArrayDouble.D0();
+                a.set(this.fctime);
+                return a;
+            }
+            case "second_column_time":
+            case "second_column_elution_time": {
+                ArrayDouble.D0 a = new ArrayDouble.D0();
+                a.set(this.sctime);
+                return a;
+            }
+            default:
+                return super.getFeature(name);
         }
     }
 
     @Override
     public List<String> getFeatureNames() {
         return Arrays.asList(new String[]{"mass_values", "intensity_values",
-                    "scan_index", "scan_acquisition_time", "total_intensity",
-                    "first_column_scan_index", "second_column_scan_index",
-                    "first_column_elution_time", "second_column_elution_time","ms_level"});
+            "scan_index", "scan_acquisition_time", "total_intensity",
+            "first_column_scan_index", "second_column_scan_index",
+            "first_column_elution_time", "second_column_elution_time",
+            "ms_level", "precursor_charge", "precursor_mz",
+            "precursor_intensity"});
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+        out.writeInt(fcind);
+        out.writeInt(scind);
+        out.writeDouble(fctime);
+        out.writeDouble(sctime);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+        fcind = in.readInt();
+        scind = in.readInt();
+        fctime = in.readDouble();
+        sctime = in.readDouble();
     }
 
 }
