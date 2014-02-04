@@ -60,6 +60,7 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
+import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
@@ -122,7 +123,7 @@ public class MZMLDataSource implements IDataSource {
     private String total_ion_current_chromatogram_scan_acquisition_timeAccession = "MS:1000595";
     private String ms_level = "ms_level";
     private String msLevelAccession = "MS:1000511";
-    private static final ICacheDelegate<URI, MzMLUnmarshaller> fileToIndex = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller", 300, 600, 20);
+    private static final ICacheDelegate<URI, MzMLUnmarshaller> fileToIndex = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller", 3600, 7200, 100);
 //	private static ICacheDelegate<MzMLUnmarshaller, Run> unmarshallerToRun = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller-to-run", 300, 600, 2);
     private static final ICacheDelegate<String, SerializableArray> variableToArrayCache = CacheFactory.createVolatileCache("maltcms.io.readcache");
 
@@ -187,14 +188,17 @@ public class MZMLDataSource implements IDataSource {
             return um;
         }
         try {
-            log.debug("Initializing unmarshaller for file {}", ff.getUri());
-            um = new MzMLUnmarshaller(ff.getUri().toURL(), true);
-            MZMLDataSource.fileToIndex.put(ff.getUri(), um);
-            log.debug("mzML file {} is indexed: {}", ff.getUri(), um.isIndexedmzML());
-            return um;
+            if (new File(ff.getUri()).exists()) {
+                log.debug("Initializing unmarshaller for file {}", ff.getUri());
+                um = new MzMLUnmarshaller(ff.getUri().toURL(), true);
+                MZMLDataSource.fileToIndex.put(ff.getUri(), um);
+                log.debug("mzML file {} is indexed: {}", ff.getUri(), um.isIndexedmzML());
+                return um;
+            }
         } catch (MalformedURLException ex) {
             throw new RuntimeException(ex);
         }
+        throw new ResourceNotAvailableException("File fragment " + ff.getUri() + " does not exist!");
     }
 
     private Run getRun(MzMLUnmarshaller mzmlu) {
@@ -708,25 +712,58 @@ public class MZMLDataSource implements IDataSource {
     private Array readScanAcquisitionTimeArray(final IVariableFragment var,
         final MzMLUnmarshaller um) {
         log.debug("readScanAcquisitionTimeArray");
-        int scans = getScanCount(um);
-        int start = 0;
-        final Range[] r = var.getRange();
-        if (r != null) {
-            start = Math.max(0, r[0].first());
-            scans = Math.min(scans, r[0].length());
-        }
-        final ArrayDouble.D1 sat = new ArrayDouble.D1(scans);
-        MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
-        int i = 0;
-        while (spectrumIterator.hasNext()) {
-            Spectrum spectrum = spectrumIterator.next();
-            if (i >= start && i < start + scans) {
-                sat.set(i, getRT(spectrum));
-                log.debug("RT({})={}", i, sat.get(i));
-                i++;
+        IteratedSpectrumFunction<ArrayDouble.D1> f = new IteratedSpectrumFunction<>(DataType.DOUBLE, um, new SpectrumFunction<ArrayDouble.D1>() {
+            @Override
+            public void apply(Spectrum spectrum, ArrayDouble.D1 array, int i) {
+                array.set(i, getRT(spectrum));
+                log.debug("RT({})={}", i, array.get(i));
             }
+        }, var);
+        return f.apply();
+    }
+
+    private interface SpectrumFunction<T extends Array> {
+
+        void apply(Spectrum spectrum, T array, int i);
+    }
+
+    private class IteratedSpectrumFunction<T extends Array> {
+
+        private int start;
+        private int scans;
+        private final T array;
+        private final MzMLObjectIterator<Spectrum> spectrumIterator;
+        private final SpectrumFunction<T> spectrumFunction;
+
+        public IteratedSpectrumFunction(DataType arrayType, MzMLUnmarshaller um, SpectrumFunction spectrumFunction, IVariableFragment var) {
+            this.spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+            this.spectrumFunction = spectrumFunction;
+            this.array = create(arrayType, um, var);
         }
-        return sat;
+
+        final T create(DataType arrayType, MzMLUnmarshaller um, IVariableFragment var) {
+            scans = getScanCount(um);
+            start = 0;
+            final Range[] r = var.getRange();
+            if (r != null) {
+                start = Math.max(0, r[0].first());
+                scans = Math.min(scans, r[0].length());
+            }
+            Array a = Array.factory(arrayType, new int[]{scans});
+            return (T) a;
+        }
+
+        final T apply() {
+            int i = 0;
+            while (spectrumIterator.hasNext()) {
+                Spectrum spectrum = spectrumIterator.next();
+                if (i >= start && i < start + scans) {
+                    spectrumFunction.apply(spectrum, array, i);
+                    i++;
+                }
+            }
+            return array;
+        }
     }
 
     private Array readScanIndex(final IVariableFragment var, final MzMLUnmarshaller um) {

@@ -30,6 +30,7 @@ package maltcms.commands.fragments.io;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.FileFragment;
+import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
@@ -130,8 +131,6 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         String inputFileName = StringTools.removeFileExt(FileTools.getFilename(inputFile));
         FileFragment inputFileFragment = new FileFragment(inputFile);
         FileFragment outputFileFragment = new FileFragment(outputFile);
-        //add input file as source file
-        outputFileFragment.addSourceFile(inputFileFragment);
         MzML mzML = new MzML();
         mzML.setVersion(mzMLVersion);
         CVList cvlist = new CVList();
@@ -159,18 +158,11 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         icl.getInstrumentConfiguration().add(instrumentConfiguration);
         icl.setCount(0);
         mzML.setInstrumentConfigurationList(icl);
-//
-//			//add source file
+
         SourceFile sourceFile = new SourceFile();
         sourceFile.setLocation(inputFileFragment.getUri().toString());
         sourceFile.setName(inputFileName);
         sourceFile.setId(inputFileFragment.getName());
-//			<cvParam cvRef="MS" accession="MS:1000567" name="Bruker/Agilent YEP file" value=""/>
-//          <cvParam cvRef="MS" accession="MS:1000569" name="SHA-1" value="1234567890123456789012345678901234567890"/>
-//			CVParam fileType = new CVParam();
-//			fileType.setAccession();
-//			fileType.setValue();
-//			sourceFile.getCvParam().add();
         String hash = sha1Hash(inputFile);
         if (!hash.isEmpty()) {
             CVParam fileHash = new CVParam();
@@ -216,9 +208,16 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
             bos.close();
         }
         //add the mzml file as a source file of the returned fragment for later reuse and variable retrieval
-        outputFileFragment.addSourceFile(new FileFragment(f));
+        IFileFragment mzMLFragment = new FileFragment(f);
+        if (!mzMLFragment.getUri().equals(outputFileFragment.getUri())) {
+            outputFileFragment.addSourceFile(mzMLFragment);
+        }
         //persist to file
         log.info("Saving output file fragment!");
+        //add input file as source file
+        if (!mzMLFragment.getUri().equals(inputFileFragment.getUri())) {
+            outputFileFragment.addSourceFile(inputFileFragment);
+        }
         outputFileFragment.save();
         return outputFileFragment.getUri();
 //		} catch (Exception e) {
@@ -402,7 +401,6 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         SpectrumList sl = new SpectrumList();
         sl.setDefaultDataProcessing(dataProcessing);
         List<Spectrum> csl = sl.getSpectrum();
-//		CachedSpectrumList csl = new CachedSpectrumList(inputFileName);
         IVariableFragment scanIndex = inputFileFragment.getChild(scanIndexVariable);
         IVariableFragment massValues = inputFileFragment.getChild(massValuesVariable);
         massValues.setIndex(scanIndex);
@@ -412,7 +410,6 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         List<Array> indexedMassValues = massValues.getIndexedArray();
         List<Array> indexedIntensityValues = intensityValues.getIndexedArray();
         DataType massDataType = massValues.getDataType();
-        System.out.println("Mass data type: " + massDataType.getPrimitiveClassType());
         DataType intensityDataType = intensityValues.getDataType();
         //TODO: Finish 2D chromatography support
         Array firstColumnElutionTimeArray = null;
@@ -431,7 +428,6 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         } catch (ResourceNotAvailableException ex) {
             log.debug("Not writing msLevel. Not present in source file!");
         }
-        System.out.println("Intensity values data type: " + intensityDataType.getPrimitiveClassType());
         for (int i = 0; i < scans; i++) {
             Spectrum s = new Spectrum();
 

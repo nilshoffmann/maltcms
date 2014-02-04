@@ -32,11 +32,11 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>net.sf.sashimi</groupId>
             <artifactId>jrapStAX-osgi</artifactId>
             <version>5.2.0</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
     <packaging>jar</packaging>
     <properties>
