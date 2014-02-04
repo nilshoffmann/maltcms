@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,26 +27,22 @@
  */
 package maltcms.commands.fragments.preprocessing;
 
-import java.io.File;
-import java.util.List;
-
-
-import org.apache.commons.configuration.Configuration;
-
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
-import cross.datastructures.tools.EvalTools;
-import java.lang.Double;
+import java.io.File;
+import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.preprocessing.denseArrayProducer.DenseArrayProducerWorker;
 import maltcms.commands.fragments.preprocessing.denseArrayProducer.MinMaxMassFinderWorker;
 import net.sf.mpaxs.api.ICompletionService;
+import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -107,7 +103,7 @@ public class DenseArrayProducer extends AFragmentCommand {
         log.debug("Looking for minimum and maximum values!");
         //this needs to be done for all fragments before we can do anything else
         ICompletionService<double[]> massRangeCompletionService = createCompletionService(
-                double[].class);
+            double[].class);
 
         for (IFileFragment f : t) {
             MinMaxMassFinderWorker mmmfw = new MinMaxMassFinderWorker();
@@ -122,7 +118,7 @@ public class DenseArrayProducer extends AFragmentCommand {
         try {
             List<double[]> massRangeResults = massRangeCompletionService.call();
             EvalTools.geq(1, massRangeResults.size(),
-                    DenseArrayProducer.class);
+                DenseArrayProducer.class);
             for (double[] result : massRangeResults) {
                 massRange[0] = Math.min(massRange[0], result[0]);
                 massRange[1] = Math.max(massRange[1], result[1]);
@@ -133,7 +129,7 @@ public class DenseArrayProducer extends AFragmentCommand {
 
         EvalTools.notNull(massRange, this);
         log.info("Minimum mass: {}; Maximum mass; {}", massRange[0],
-                massRange[1]);
+            massRange[1]);
         ICompletionService<File> ics = createCompletionService(File.class);
         for (final IFileFragment ff : t) {
             DenseArrayProducerWorker dapw = new DenseArrayProducerWorker();
@@ -167,19 +163,19 @@ public class DenseArrayProducer extends AFragmentCommand {
     public void configure(final Configuration cfg) {
         this.massValues = cfg.getString("var.mass_values", "mass_values");
         this.intensityValues = cfg.getString("var.intensity_values",
-                "intensity_values");
+            "intensity_values");
         this.totalIntensity = cfg.getString("var.total_intensity",
-                "total_intensity");
+            "total_intensity");
         this.massRangeMin = cfg.getString("var.mass_range_min",
-                "mass_range_min");
+            "mass_range_min");
         this.massRangeMax = cfg.getString("var.mass_range_max",
-                "mass_range_max");
+            "mass_range_max");
         this.scanIndex = cfg.getString("var.scan_index", "scan_index");
         this.binnedIntensityValues = cfg.getString(
-                "var.binned_intensity_values", "binned_intensity_values");
+            "var.binned_intensity_values", "binned_intensity_values");
         this.binnedMassValues = cfg.getString("var.binned_mass_values",
-                "binned_mass_values");
+            "binned_mass_values");
         this.binnedScanIndex = cfg.getString("var.binned_scan_index",
-                "binned_scan_index");
+            "binned_scan_index");
     }
 }
