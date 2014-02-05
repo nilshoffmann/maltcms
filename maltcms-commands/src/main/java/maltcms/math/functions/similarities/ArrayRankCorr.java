@@ -27,7 +27,7 @@
  */
 package maltcms.math.functions.similarities;
 
-import com.carrotsearch.hppc.ObjectObjectOpenHashMap;
+import cross.cache.ICacheDelegate;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import net.jcip.annotations.NotThreadSafe;
@@ -46,51 +46,45 @@ import ucar.ma2.Array;
 @NotThreadSafe
 public class ArrayRankCorr implements IArraySimilarity {
 
-	private boolean returnCoeffDetermination = false;
-	private final ObjectObjectOpenHashMap<Array, double[]> cache;
-	private final SpearmansCorrelation sc = new SpearmansCorrelation();
+    private boolean returnCoeffDetermination = false;
+    private final ICacheDelegate<Array, double[]> cache;
+    private final SpearmansCorrelation sc = new SpearmansCorrelation();
 
-	public ArrayRankCorr() {
-		cache = new ObjectObjectOpenHashMap<>();
-	}
+    public ArrayRankCorr() {
+        cache = SimilarityTools.newValueCache("ArrayCovCache");
+    }
 
-	@Override
-	public double apply(final Array t1, final Array t2) {
-		if (cache.size() > 5000) {
-			cache.clear();
-		}
-		double[] t1a = null, t2a = null;
+    @Override
+    public double apply(final Array t1, final Array t2) {
+        double[] t1a = null, t2a = null;
+        t1a = cache.get(t1);
+        t2a = cache.get(t2);
+        if (t1a == null) {
+            t1a = (double[]) t1.get1DJavaArray(double.class);
+            cache.put(t1, t1a);
+        }
+        if (t2a == null) {
+            t2a = (double[]) t2.get1DJavaArray(double.class);
+            cache.put(t2, t2a);
+        }
+        double pcv = sc.correlation(t1a, t2a);
+        if (this.returnCoeffDetermination) {
+            return pcv * pcv;
+        }
+        return pcv;
+    }
 
-		if (cache.containsKey(t1)) {
-			t1a = cache.get(t1);
-		} else {
-			t1a = (double[]) t1.get1DJavaArray(double.class);
-			cache.put(t1, t1a);
-		}
-		if (cache.containsKey(t2)) {
-			t2a = cache.get(t2);
-		} else {
-			t2a = (double[]) t2.get1DJavaArray(double.class);
-			cache.put(t2, t2a);
-		}
-		double pcv = sc.correlation(t1a, t2a);
-		if (this.returnCoeffDetermination) {
-			return pcv * pcv;
-		}
-		return pcv;
-	}
+    @Override
+    public IArraySimilarity copy() {
+        ArrayRankCorr alp = new ArrayRankCorr();
+        alp.setReturnCoeffDetermination(isReturnCoeffDetermination());
+        return alp;
+    }
 
-	@Override
-	public IArraySimilarity copy() {
-		ArrayRankCorr alp = new ArrayRankCorr();
-		alp.setReturnCoeffDetermination(isReturnCoeffDetermination());
-		return alp;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getClass().getSimpleName()).append("{" + "}");
-		return sb.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName()).append("{" + "}");
+        return sb.toString();
+    }
 }

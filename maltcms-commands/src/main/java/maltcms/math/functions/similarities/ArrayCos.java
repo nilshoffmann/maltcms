@@ -27,13 +27,13 @@
  */
 package maltcms.math.functions.similarities;
 
-import com.carrotsearch.hppc.ObjectDoubleOpenHashMap;
-import ucar.ma2.Array;
-import ucar.ma2.MAVector;
+import cross.cache.ICacheDelegate;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import net.jcip.annotations.NotThreadSafe;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
+import ucar.ma2.MAVector;
 
 /**
  * Cosine similarity between arrays.
@@ -46,49 +46,48 @@ import org.openide.util.lookup.ServiceProvider;
 @NotThreadSafe
 public class ArrayCos implements IArraySimilarity {
 
-	private final ObjectDoubleOpenHashMap<Array> cache;
-	private double minimumSimilarity = 0.0d;
+    private final ICacheDelegate<Array, Double> cache;
+    private double minimumSimilarity = 0.0d;
 
-	public ArrayCos() {
-		cache = new ObjectDoubleOpenHashMap<>();
-	}
+    public ArrayCos() {
+        cache = SimilarityTools.newValueCache("ArrayCosCache");
+    }
 
-	private double getLength(Array a) {
-		if (cache.size() > 5000) {
-			cache.clear();
-		}
-		if (!cache.containsKey(a)) {
-			MAVector mav = new MAVector(a);
-			double d = mav.norm();
-			cache.put(a, d);
-		}
-		return cache.get(a);
-	}
+    private double getLength(Array a) {
+        Double d = cache.get(a);
+        if (d == null) {
+            MAVector mav = new MAVector(a);
+            d = mav.norm();
+            cache.put(a, d);
+            return d;
+        }
+        return d;
+    }
 
-	@Override
-	public double apply(final Array t1, final Array t2) {
-		final double l1 = getLength(t1);
-		final double l2 = getLength(t2);
-		final int len = t1.getShape()[0];
-		double dot = 0.0d;
-		for (int i = 0; i < len; i++) {
-			dot += (t1.getDouble(i) * t2.getDouble(i));
-		}
-		final double val = dot / (l1 * l2);
-		return val > minimumSimilarity ? val : Double.NEGATIVE_INFINITY;
-	}
+    @Override
+    public double apply(final Array t1, final Array t2) {
+        final double l1 = getLength(t1);
+        final double l2 = getLength(t2);
+        final int len = t1.getShape()[0];
+        double dot = 0.0d;
+        for (int i = 0; i < len; i++) {
+            dot += (t1.getDouble(i) * t2.getDouble(i));
+        }
+        final double val = dot / (l1 * l2);
+        return val > minimumSimilarity ? val : Double.NEGATIVE_INFINITY;
+    }
 
-	@Override
-	public IArraySimilarity copy() {
-		ArrayCos ac = new ArrayCos();
-		ac.setMinimumSimilarity(getMinimumSimilarity());
-		return ac;
-	}
+    @Override
+    public IArraySimilarity copy() {
+        ArrayCos ac = new ArrayCos();
+        ac.setMinimumSimilarity(getMinimumSimilarity());
+        return ac;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getClass().getSimpleName()).append("{" + "}");
-		return sb.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName()).append("{" + "}");
+        return sb.toString();
+    }
 }
