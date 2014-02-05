@@ -27,7 +27,7 @@
  */
 package maltcms.math.functions.similarities;
 
-import com.carrotsearch.hppc.ObjectDoubleOpenHashMap;
+import cross.cache.ICacheDelegate;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import net.jcip.annotations.NotThreadSafe;
@@ -45,57 +45,56 @@ import ucar.ma2.MAMath;
 @NotThreadSafe
 public class ArrayWeightedCosine implements IArraySimilarity {
 
-	private final ObjectDoubleOpenHashMap<Array> cache;
+    private final ICacheDelegate<Array, Double> cache;
 
-	private double minimumSimilarity = 0.0d;
+    private double minimumSimilarity = 0.0d;
 
-	public ArrayWeightedCosine() {
-		cache = new ObjectDoubleOpenHashMap<>();
-	}
+    public ArrayWeightedCosine() {
+        cache = SimilarityTools.newValueCache("ArrayWeightedCosineCache");
+    }
 
-	private double getMaximumIntensity(final Array a) {
-		if (cache.size() > 5000) {
-			cache.clear();
-		}
-		if (!cache.containsKey(a)) {
-			double d = MAMath.getMaximum(a);
-			cache.put(a, d);
-		}
-		return cache.get(a);
-	}
+    private double getMaximumIntensity(final Array a) {
+        Double d = cache.get(a);
+        if (d == null) {
+            d = MAMath.getMaximum(a);
+            cache.put(a, d);
+            return d;
+        }
+        return d;
+    }
 
-	@Override
-	public double apply(final Array t1, final Array t2) {
-		final double maxI1 = getMaximumIntensity(t1);
-		final double maxI2 = getMaximumIntensity(t2);
-		double s1 = 0, s2 = 0, c = 0;
-		for (int i = 0; i < t1.getShape()[0]; i++) {
-			s1 += miProduct(i + 1, t1.getDouble(i) / maxI1);
-			s2 += miProduct(i + 1, t2.getDouble(i) / maxI2);
-			c += miProduct(i + 1, Math.sqrt(t1.getDouble(i) / maxI1 * t2.getDouble(i) / maxI2));
-		}
-		final double val = (c * c / (s1 * s2));
-		if (val > minimumSimilarity) {
-			return val;
-		}
-		return val > minimumSimilarity ? val : Double.NEGATIVE_INFINITY;
-	}
+    @Override
+    public double apply(final Array t1, final Array t2) {
+        final double maxI1 = getMaximumIntensity(t1);
+        final double maxI2 = getMaximumIntensity(t2);
+        double s1 = 0, s2 = 0, c = 0;
+        for (int i = 0; i < t1.getShape()[0]; i++) {
+            s1 += miProduct(i + 1, t1.getDouble(i) / maxI1);
+            s2 += miProduct(i + 1, t2.getDouble(i) / maxI2);
+            c += miProduct(i + 1, Math.sqrt(t1.getDouble(i) / maxI1 * t2.getDouble(i) / maxI2));
+        }
+        final double val = (c * c / (s1 * s2));
+        if (val > minimumSimilarity) {
+            return val;
+        }
+        return val > minimumSimilarity ? val : Double.NEGATIVE_INFINITY;
+    }
 
-	private double miProduct(double mass, double intensity) {
-		return mass * mass * intensity;
-	}
+    private double miProduct(double mass, double intensity) {
+        return mass * mass * intensity;
+    }
 
-	@Override
-	public IArraySimilarity copy() {
-		ArrayWeightedCosine alp = new ArrayWeightedCosine();
-		alp.setMinimumSimilarity(getMinimumSimilarity());
-		return alp;
-	}
+    @Override
+    public IArraySimilarity copy() {
+        ArrayWeightedCosine alp = new ArrayWeightedCosine();
+        alp.setMinimumSimilarity(getMinimumSimilarity());
+        return alp;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getClass().getSimpleName()).append("{" + "}");
-		return sb.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName()).append("{" + "}");
+        return sb.toString();
+    }
 }
