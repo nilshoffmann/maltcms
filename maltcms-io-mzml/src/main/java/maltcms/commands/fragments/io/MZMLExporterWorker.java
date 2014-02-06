@@ -32,6 +32,7 @@ import cross.annotations.Configurable;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import static cross.datastructures.tools.ArrayTools.checkFullArrayEquality;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
 import cross.exception.ConstraintViolationException;
@@ -209,17 +210,18 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         }
         //add the mzml file as a source file of the returned fragment for later reuse and variable retrieval
         IFileFragment mzMLFragment = new FileFragment(f);
-        if (!mzMLFragment.getUri().equals(outputFileFragment.getUri())) {
-            outputFileFragment.addSourceFile(mzMLFragment);
-        }
+//        if (!mzMLFragment.getUri().equals(outputFileFragment.getUri())) {
+//        outputFileFragment.addSourceFile(mzMLFragment);
+//        }
         //persist to file
-        log.info("Saving output file fragment!");
+//        log.info("Saving output file fragment!");
         //add input file as source file
-        if (!mzMLFragment.getUri().equals(inputFileFragment.getUri())) {
-            outputFileFragment.addSourceFile(inputFileFragment);
-        }
+//        if (!mzMLFragment.getUri().equals(inputFileFragment.getUri())) {
+        outputFileFragment.addSourceFile(mzMLFragment);
+        outputFileFragment.addSourceFile(inputFileFragment);
+//        }
         outputFileFragment.save();
-        return outputFileFragment.getUri();
+        return f.toURI();
 //		} catch (Exception e) {
 //			log.error("Caught exception while exporting to mzML:", e);
 //			throw e;
@@ -359,6 +361,27 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         IVariableFragment ticValues = inputFileFragment.getChild(totalIntensityVariable);
         DataType ticDataType = ticValues.getDataType();
         BinaryDataArray cbda = createBinaryDataArray(ticValues.getArray(), ticDataType, compress, dataProcessing, psiMs);
+        Number[] intensities = cbda.getBinaryDataAsNumberArray();
+        DataType dataType = ticValues.getDataType();
+        final Array intensA = Array.factory(dataType, ticValues.getArray().getShape());
+        for (int i = 0; i < intensities.length; i++) {
+            switch (dataType) {
+                case DOUBLE:
+                    intensA.setDouble(i, intensities[i].doubleValue());
+                    break;
+                case FLOAT:
+                    intensA.setFloat(i, intensities[i].floatValue());
+                    break;
+                case INT:
+                    intensA.setInt(i, intensities[i].intValue());
+                    break;
+                case LONG:
+                    intensA.setLong(i, intensities[i].longValue());
+                    break;
+            }
+//            intensA.set(i, intensities[i].doubleValue());
+        }
+        checkFullArrayEquality(ticValues.getArray(), intensA);
         CVParam ticCvParam = new CVParam();
         ticCvParam.setCvRef("MS");
         ticCvParam.setAccession("MS:1000515");
@@ -372,6 +395,26 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         IVariableFragment satValues = inputFileFragment.getChild(scanAcquisitionTimeVariable);
         DataType satDataType = satValues.getDataType();
         BinaryDataArray satbda = createBinaryDataArray(satValues.getArray(), satDataType, compress, dataProcessing, psiMs);
+        Number[] sats = satbda.getBinaryDataAsNumberArray();
+        final Array satA = Array.factory(satValues.getDataType(), satValues.getArray().getShape());
+        dataType = satValues.getDataType();
+        for (int i = 0; i < sats.length; i++) {
+            switch (dataType) {
+                case DOUBLE:
+                    satA.setDouble(i, sats[i].doubleValue());
+                    break;
+                case FLOAT:
+                    satA.setFloat(i, sats[i].floatValue());
+                    break;
+                case INT:
+                    satA.setInt(i, sats[i].intValue());
+                    break;
+                case LONG:
+                    satA.setLong(i, sats[i].longValue());
+                    break;
+            }
+        }
+        checkFullArrayEquality(satValues.getArray(), satA);
         CVParam satCvParam = new CVParam();
         satCvParam.setCvRef("MS");
         satCvParam.setAccession("MS:1000595");
@@ -385,7 +428,7 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         cbdal.setCount(l.size());
         //update chromatogram
         c.setBinaryDataArrayList(cbdal);
-        c.setDefaultArrayLength(Math.max(cbda.getArrayLength(), satbda.getArrayLength()));
+//        c.setDefaultArrayLength(Math.max(cbda.getArrayLength(), satbda.getArrayLength()));
         cl.getChromatogram().add(c);
         cl.setCount(cl.getChromatogram().size());
         return cl;
@@ -411,6 +454,9 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         List<Array> indexedIntensityValues = intensityValues.getIndexedArray();
         DataType massDataType = massValues.getDataType();
         DataType intensityDataType = intensityValues.getDataType();
+        IVariableFragment totalIntensity = inputFileFragment.getChild(totalIntensityVariable);
+        IVariableFragment scanAcquisitionTime = inputFileFragment.getChild(scanAcquisitionTimeVariable);
+        Array scanAcquisitionTimeArray = scanAcquisitionTime.getArray();
         //TODO: Finish 2D chromatography support
         Array firstColumnElutionTimeArray = null;
         Array secondColumnElutionTimeArray = null;
@@ -463,29 +509,39 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
             intenCvParam.setUnitName("number of counts");
             intensities.getCvParam().add(intenCvParam);
 
-            if (firstColumnElutionTimeArray != null && secondColumnElutionTimeArray != null) {
-                ScanList scanListType = s.getScanList();
-                if (scanListType == null) {
-                    scanListType = new ScanList();
-                    s.setScanList(scanListType);
-                }
+            ScanList scanListType = s.getScanList();
+            if (scanListType == null) {
+                scanListType = new ScanList();
+                s.setScanList(scanListType);
+            }
 
-                List<Scan> scanList = s.getScanList().getScan();
-                Scan scanObject = null;
-                if (scanList.isEmpty()) {
-                    scanObject = new Scan();
-                    scanList.add(scanObject);
-                    s.getScanList().setCount(scanList.size());
-                }
-                for (Scan scanObj : scanList) {
+            List<Scan> scanList = s.getScanList().getScan();
+            Scan scanObject = null;
+            if (scanList.isEmpty()) {
+                scanObject = new Scan();
+                scanList.add(scanObject);
+                s.getScanList().setCount(scanList.size());
+            }
+            for (Scan scanObj : scanList) {
+//                <cvParam cvRef="MS" accession="MS:1000016" name="scan start time" value="0.034924999999999998" unitCvRef="UO" unitAccession="UO:0000031" unitName="minute"/>
+                CVParam sst = new CVParam();
+                sst.setCvRef("MS");
+                sst.setAccession("MS:1000016");
+                sst.setName("scan start time");
+                sst.setUnitCvRef("UO");
+                sst.setUnitAccession("UO:0000010");
+                sst.setUnitName("second");
+                sst.setValue(scanAcquisitionTimeArray.getDouble(i) + "");
+                scanObj.getCvParam().add(sst);
+                if (firstColumnElutionTimeArray != null && secondColumnElutionTimeArray != null) {
                     //first column elution time
                     CVParam fcet = new CVParam();
                     fcet.setCvRef("MS");
                     fcet.setAccession("MS:1002082");
                     fcet.setName("first column elution time");
-                    fcet.setUnitCvRef("MS");
-                    fcet.setUnitAccession("MS:1000016");
-                    fcet.setUnitName("seconds");
+                    fcet.setUnitCvRef("UO");
+                    fcet.setUnitAccession("UO:0000010");
+                    fcet.setUnitName("second");
                     fcet.setValue(firstColumnElutionTimeArray.getDouble(i) + "");
                     scanObj.getCvParam().add(fcet);
                     //first column elution time
@@ -493,14 +549,13 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
                     scet.setCvRef("MS");
                     scet.setAccession("MS:1002083");
                     scet.setName("second column elution time");
-                    scet.setUnitCvRef("MS");
-                    scet.setUnitAccession("MS:1000016");
-                    scet.setUnitName("seconds");
+                    scet.setUnitCvRef("UO");
+                    scet.setUnitAccession("UO:0000010");
+                    scet.setUnitName("second");
                     scet.setValue(secondColumnElutionTimeArray.getDouble(i) + "");
                     scanObj.getCvParam().add(scet);
                     scanObj.setSpectrum(s);
                 }
-
             }
 
             if (msLevelArray != null) {
@@ -513,6 +568,32 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
                 s.getCvParam().add(msLevel);
             }
 
+            //total intensity
+//            <cvParam cvRef="MS" accession="MS:1000285" name="total ion current" value="15245068"/>
+            CVParam totalIonCurrent = new CVParam();
+            totalIonCurrent.setCvRef("MS");
+            totalIonCurrent.setAccession("MS:1000285");
+            totalIonCurrent.setName("total ion current");
+            DataType dataType = totalIntensity.getDataType();
+            switch (dataType) {
+                case DOUBLE:
+                    totalIonCurrent.setValue("" + totalIntensity.getArray().getDouble(i));
+                    break;
+                case FLOAT:
+                    totalIonCurrent.setValue("" + totalIntensity.getArray().getFloat(i));
+                    break;
+                case INT:
+                    totalIonCurrent.setValue("" + totalIntensity.getArray().getInt(i));
+                    break;
+                case LONG:
+                    totalIonCurrent.setValue("" + totalIntensity.getArray().getLong(i));
+                    break;
+            }
+
+//            <cvParam cvRef="MS" accession="MS:1000130" name="positive scan" value=""/>
+//          <cvParam cvRef="MS" accession="MS:1000128" name="profile spectrum" value=""/>
+//          <cvParam cvRef="MS" accession="MS:1000504" name="base peak m/z" value="810.415283203125" unitCvRef="MS" unitAccession="MS:1000040" unitName="m/z"/>
+//          <cvParam cvRef="MS" accession="MS:1000505" name="base peak intensity" value="1471973.875" unitCvRef="MS" unitAccession="MS:1000131" unitName="number of counts"/>
 //            minMaxMasses
             CVParam minMass = new CVParam();
             minMass.setCvRef("MS");

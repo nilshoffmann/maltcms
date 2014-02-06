@@ -142,8 +142,8 @@ public class MZMLExporterTest extends AFragmentCommandTest {
         System.err.println("Test workflow");
 //        //execute workflow
         results = testWorkflow(w);
-        Collection<String> variablesToCheck = Arrays.asList(new String[]{"mass_values", "intensity_values", "scan_index", "total_intensity"});//AnnotationInspector.getProvidedVariables(DenseArrayProducer.class);
-        Assert.assertTrue(results.size() == 2);
+        Collection<String> variablesToCheck = Arrays.asList(new String[]{"mass_values", "intensity_values", "scan_index", "total_intensity", "scan_acquisition_time"});//AnnotationInspector.getProvidedVariables(DenseArrayProducer.class);
+        Assert.assertTrue("Expected more than " + results.size() + " results for input files " + ecpf.getFiles(), results.size() > 0);
         int i = 0;
         for (IFileFragment f : results) {
             File processedCdfFile = new File(f.getUri());
@@ -154,24 +154,21 @@ public class MZMLExporterTest extends AFragmentCommandTest {
             validate(mzMLFile);
             FileFragment ff = new FileFragment(mzMLFile);
             File scanexDir = w.getOutputDirectory(scanExtractor);
-            IFileFragment originalFileFragment = new FileFragment(new File(scanexDir, f.getName()));
+            IFileFragment originalFileFragment = new FileFragment(new File(scanexDir, StringTools.removeFileExt(f.getName()) + ".cdf"));
             for (String variable : variablesToCheck) {
                 log.info("Checking variable: {}", variable);
-                try {
-                    //get structure, no data
-                    IVariableFragment v = ff.getChild(variable, true);
-                    //load array explicitly
-                    Array a = v.getArray();
-                    Assert.assertNotNull(a);
-                    IVariableFragment v1 = originalFileFragment.getChild(variable, true);
+                //get structure, no data
+                IVariableFragment v = ff.getChild(variable, true);
+                //load array explicitly
+                Array a = v.getArray();
+                Assert.assertNotNull("Array for variable " + variable + " must not be null!", a);
+                IVariableFragment v1 = originalFileFragment.getChild(variable, true);
 //					v1.setRange(new Range(10,100,1));
-                    Array a1 = v1.getArray();
-                    Assert.assertNotNull(a1);
-                    Assert.assertEquals(a.getShape()[0], a1.getShape()[0]);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Assert.fail(e.getLocalizedMessage());
-                }
+                Array a1 = v1.getArray();
+                Assert.assertNotNull(a1);
+                Assert.assertEquals("Checking variable " + variable, a.getElementType(), a1.getElementType());
+                Assert.assertEquals("Checking variable " + variable, a.getShape()[0], a1.getShape()[0]);
+//                ArrayTools.checkFullArrayEquality(a, a1);
             }
         }
     }

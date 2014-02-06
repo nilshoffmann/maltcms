@@ -39,6 +39,7 @@ import cross.datastructures.fragments.ImmutableVariableFragment2;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FragmentTools;
 import cross.datastructures.tuple.Tuple2D;
+import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
 import cross.tools.StringTools;
@@ -48,6 +49,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -67,6 +69,7 @@ import ucar.ma2.MAMath.MinMax;
 import ucar.ma2.Range;
 import ucar.nc2.Dimension;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
+import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray.Precision;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
 import uk.ac.ebi.jmzml.model.mzml.FileDescription;
@@ -248,24 +251,112 @@ public class MZMLDataSource implements IDataSource {
         return s.getBinaryDataArrayList().getBinaryDataArray().get(0).getBinaryDataAsNumberArray().length;
     }
 
-    private Array getMassValues(final Spectrum s) {
-        Number[] n = s.getBinaryDataArrayList().getBinaryDataArray().get(0).getBinaryDataAsNumberArray();
-        ArrayDouble.D1 masses = new ArrayDouble.D1(n.length);
-        int j = 0;
-        for (Number num : n) {
-            masses.set(j++, num.doubleValue());
+    private Array createCompatibleArray(Precision p, int[] shape) {
+        Array array = null;
+        switch (p) {
+            case FLOAT32BIT:
+                array = Array.factory(DataType.FLOAT, shape);
+                break;
+            case FLOAT64BIT:
+                array = Array.factory(DataType.DOUBLE, shape);
+                break;
+            case INT32BIT:
+                array = Array.factory(DataType.INT, shape);
+                break;
+            case INT64BIT:
+                array = Array.factory(DataType.LONG, shape);
+                break;
+            default:
+                throw new ConstraintViolationException("Unsupported precision for binary data array: " + p.name());
         }
-        return masses;
+        return array;
+    }
+
+    private Array createCompatibleArray(BinaryDataArray bda) {
+        Integer arrayLength = bda.getArrayLength();
+        if (arrayLength == null) {
+            arrayLength = bda.getBinaryDataAsNumberArray().length;
+        }
+        return createCompatibleArray(bda.getPrecision(), new int[]{arrayLength});
+    }
+
+    private Array fillArrayFromBinaryData(BinaryDataArray bda) {
+        Number[] n = bda.getBinaryDataAsNumberArray();
+        log.info("{}", bda.toString());
+//        EvalTools.gt(0, n.length, MZMLDataSource.class);
+        Precision p = bda.getPrecision();
+        Array array = createCompatibleArray(bda);
+        switch (p) {
+            case FLOAT32BIT:
+                int j = 0;
+                for (Number num : n) {
+                    array.setFloat(j++, num.floatValue());
+                }
+                break;
+            case FLOAT64BIT:
+                j = 0;
+                for (Number num : n) {
+                    array.setDouble(j++, num.doubleValue());
+                }
+                break;
+            case INT32BIT:
+                j = 0;
+                for (Number num : n) {
+                    array.setInt(j++, num.intValue());
+                }
+                break;
+            case INT64BIT:
+                j = 0;
+                for (Number num : n) {
+                    array.setLong(j++, num.longValue());
+                }
+                break;
+            default:
+                throw new ConstraintViolationException("Unsupported precision for binary data array: " + p.name());
+        }
+        return array;
+    }
+
+    private BinaryDataArray getMzBinaryDataArray(final Spectrum s) {
+        for (BinaryDataArray bda : s.getBinaryDataArrayList().getBinaryDataArray()) {
+            try {
+                CVParam param = findParam(bda.getCvParam(), "MS:1000514");
+                if (param != null) {
+                    return bda;
+                }
+            } catch (ResourceNotAvailableException rnae) {
+                log.warn("m/z binary data array is not annotated with expected CVParam MS:1000514. Falling back to selecting the first binary data array in list!");
+                if (s.getBinaryDataArrayList().getCount() > 0) {
+                    return s.getBinaryDataArrayList().getBinaryDataArray().get(0);
+                }
+            }
+        }
+        throw new ResourceNotAvailableException("Could not find m/z binary data array as child of spectrum " + s.getId());
+    }
+
+    private BinaryDataArray getIntensityBinaryDataArray(final Spectrum s) {
+        for (BinaryDataArray bda : s.getBinaryDataArrayList().getBinaryDataArray()) {
+            try {
+                CVParam param = findParam(bda.getCvParam(), "MS:1000515");
+                if (param != null) {
+                    return bda;
+                }
+            } catch (ResourceNotAvailableException rnae) {
+                log.warn("intensity binary data array is not annotated with expected CVParam MS:1000515. Falling back to selecting the second binary data array in list!");
+                if (s.getBinaryDataArrayList().getCount() > 1) {
+                    return s.getBinaryDataArrayList().getBinaryDataArray().get(1);
+                }
+            }
+        }
+        throw new ResourceNotAvailableException("Could not find intensity binary data array as child of spectrum " + s.getId());
+    }
+
+    private Array getMassValues(final Spectrum s) {
+        return fillArrayFromBinaryData(getMzBinaryDataArray(s));
     }
 
     private Array getIntensityValues(final Spectrum s) {
-        Number[] n = s.getBinaryDataArrayList().getBinaryDataArray().get(1).getBinaryDataAsNumberArray();
-        ArrayDouble.D1 intensities = new ArrayDouble.D1(n.length);
-        int j = 0;
-        for (Number num : n) {
-            intensities.set(j++, num.doubleValue());
-        }
-        return intensities;
+        return fillArrayFromBinaryData(getIntensityBinaryDataArray(s));
     }
 
     private Tuple2D<Double, Double> getMinMaxMassRange(final Array massValues) {
@@ -289,6 +380,7 @@ public class MZMLDataSource implements IDataSource {
             CVParam rtp = findParam(s.getScanList().getScan().get(0).getCvParam(), "MS:1000016");
             rtUnit = rtp.getUnitName();
         } catch (ResourceNotAvailableException rne) {
+            log.warn("Could not retrieve rt unit for spectrum {}!", s.getId());
         }
         return rtUnit;
     }
@@ -314,7 +406,7 @@ public class MZMLDataSource implements IDataSource {
         } catch (NullPointerException npe) {
             log.warn("Could not retrieve spectrum acquisition time!");
         } catch (ResourceNotAvailableException rne) {
-            log.warn("Could not retrieve spectrum acquisition time!", rne);
+            log.warn("Could not retrieve spectrum acquisition time!");
         }
         return rt;
     }
@@ -386,13 +478,7 @@ public class MZMLDataSource implements IDataSource {
         final String varname = var.getName();
         log.info("Trying to read variable " + var.getName());
         if (varname.equals(this.source_files)) {
-            //FIXME this may include files without a valid IO provider or files that do not exist
-//			a = readSourceFiles(f, mzu);
-//			// Read mass_values or intensity_values for whole chromatogram
-//			if (a != null) {
-//				getCache().put(var, new SerializableArray(a));
-//			}
-            return a;
+            a = readSourceFiles(f, mzu);
         }
         if (varname.equals(this.mass_values)
             || varname.equals(this.intensity_values)) {
@@ -427,6 +513,8 @@ public class MZMLDataSource implements IDataSource {
         }
         if (a != null) {
             getCache().put(var.getParent().getUri() + ">" + var.getName(), new SerializableArray(a));
+        } else {
+            throw new ResourceNotAvailableException("Array for variable " + var.getName() + " could not be loaded!");
         }
         return a;
     }
@@ -498,8 +586,19 @@ public class MZMLDataSource implements IDataSource {
     private Array readSourceFiles(final IFileFragment f, final MzMLUnmarshaller mzmu) {
         SourceFileList sfl = getSourceFiles(mzmu);
         List<IFileFragment> sourceFilePaths = new LinkedList<IFileFragment>();
+        Set<String> allowedSchemes = new HashSet<String>(Arrays.asList(new String[]{"http", "https", "ftp"}));
         for (SourceFile sfs : sfl.getSourceFile()) {
-            sourceFilePaths.add(new FileFragment(URI.create(sfs.getLocation())));
+            try {
+                IFileFragment fragment = new FileFragment(URI.create(sfs.getLocation()));
+                File fragmentFile = new File(fragment.getUri());
+                if ((fragmentFile.isFile() && fragmentFile.exists()) || (allowedSchemes.contains(fragment.getUri().getScheme()))) {
+                    sourceFilePaths.add(fragment);
+                } else {
+                    log.info("Not adding non-existant source file to active source files of " + f.getUri());
+                }
+            } catch (java.lang.IllegalArgumentException ex) {
+                log.warn("Location is not a valid URI: {}", sfs.getLocation());
+            }
         }
         if (sourceFilePaths.isEmpty()) {
             return null;
@@ -527,10 +626,16 @@ public class MZMLDataSource implements IDataSource {
                 double rt = readElutionTime(s, accession);
                 //fallback for legacy maltcms < 1.3.1
                 if (Double.isNaN(rt)) {
-                    List<CVParam> cvParams = s.getCvParam();
-                    CVParam cvp = findParam(cvParams, accession);
-                    String value = cvp.getValue();
-                    rt = convertRT(Double.parseDouble(value), cvp.getUnitName());
+                    try {
+                        List<CVParam> cvParams = s.getCvParam();
+                        CVParam cvp = findParam(cvParams, accession);
+                        String value = cvp.getValue();
+                        rt = convertRT(Double.parseDouble(value), cvp.getUnitName());
+                    } catch (NullPointerException npe) {
+                        log.warn("Could not retrieve legacy elution time!");
+                    } catch (ResourceNotAvailableException rnae) {
+                        log.warn("Could not retrieve legacy elution time!");
+                    }
                 }
                 elutionTime.set(i, rt);
                 i++;
@@ -629,7 +734,7 @@ public class MZMLDataSource implements IDataSource {
             }
         }
         log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
-
+        DataType dataType = null;
         MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
         int i = 0;
         while (spectrumIterator.hasNext()) {
@@ -639,17 +744,22 @@ public class MZMLDataSource implements IDataSource {
                 i++;
             }
         }
+        int pointCount = npeaks;
 
         if (var.getName().equals(this.mass_values)) {
-            final Array a = new ArrayDouble.D1(npeaks);
+            Array a = null;
             npeaks = 0;
             spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
             i = 0;
             while (spectrumIterator.hasNext()) {
                 Spectrum spectrum = spectrumIterator.next();
                 if (i >= start && i < start + scans) {
+                    if (a == null) {
+                        a = createCompatibleArray(getMzBinaryDataArray(spectrum).getPrecision(), new int[]{pointCount});
+                    }
                     log.debug("Reading scan {} of {}", (i + 1), scans);
                     final Array b = getMassValues(spectrum);
+                    EvalTools.eq(a.getElementType(), b.getElementType());
                     Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
                     npeaks += b.getShape()[0];
                     i++;
@@ -658,15 +768,19 @@ public class MZMLDataSource implements IDataSource {
             return a;
             // f.setArray(a);
         } else if (var.getName().equals(this.intensity_values)) {
-            final Array a = new ArrayDouble.D1(npeaks);
+            Array a = null;
             npeaks = 0;
             spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
             i = 0;
             while (spectrumIterator.hasNext()) {
                 Spectrum spectrum = spectrumIterator.next();
                 if (i >= start && i < start + scans) {
+                    if (a == null) {
+                        a = createCompatibleArray(getIntensityBinaryDataArray(spectrum).getPrecision(), new int[]{pointCount});
+                    }
                     log.debug("Reading scan {} of {}", (i + 1), scans);
                     final Array b = getIntensityValues(spectrum);
+                    EvalTools.eq(a.getElementType(), b.getElementType());
                     Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
                     npeaks += b.getShape()[0];
                     log.debug("npeaks after: {}", npeaks);
@@ -697,12 +811,18 @@ public class MZMLDataSource implements IDataSource {
         while (spectrumIterator.hasNext()) {
             Spectrum spectrum = spectrumIterator.next();
             if (i >= start && i < start + scans) {
-                CVParam param = findParam(spectrum.getCvParam(), msLevelAccession);
-                int paramMsLevel = -1;
-                if (param != null && !param.getValue().isEmpty()) {
-                    paramMsLevel = Integer.parseInt(param.getValue());
+                try {
+                    CVParam param = findParam(spectrum.getCvParam(), msLevelAccession);
+                    int paramMsLevel = -1;
+                    if (param != null && !param.getValue().isEmpty()) {
+                        paramMsLevel = Integer.parseInt(param.getValue());
+                    }
+                    a.setInt(i, paramMsLevel);
+                } catch (NullPointerException npe) {
+                    log.warn("Could not retrieve ms level for spectrum {}!", spectrum.getId());
+                } catch (ResourceNotAvailableException rnae) {
+                    log.warn("Could not retrieve ms level for spectrum {}!", spectrum.getId());
                 }
-                a.setInt(i, paramMsLevel);
                 i++;
             }
         }
@@ -877,8 +997,13 @@ public class MZMLDataSource implements IDataSource {
         final String varname = f.getName();
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.source_files)) {
-            throw new ResourceNotAvailableException(
-                "Unknown varname to mzML mapping for varname " + varname);
+            Array a = readSourceFiles(f.getParent(), um);
+            final Dimension d1 = new Dimension("source_file_number", a.getShape()[0], true);
+            final Dimension d2 = new Dimension("source_file_max_chars", a.getShape()[1], true);
+            final Dimension[] dims = new Dimension[]{d1, d2};
+            f.setDimensions(dims);
+            final Range[] ranges = new Range[]{new Range(d1.getLength()), new Range(d2.getLength())};
+            f.setRange(ranges);
         } else if (varname.equals(this.scan_index)
             || varname.equals(this.total_intensity)
             || varname.equals(this.mass_range_min)
@@ -945,30 +1070,19 @@ public class MZMLDataSource implements IDataSource {
         // Current assumption is, that global time for ms scans correspond to
         // chromatogram times
         Set<String> chromatograms = um.getChromatogramIDs();
-        if (chromatograms == null || chromatograms.isEmpty()) {
-            throw new ResourceNotAvailableException("No chromatograms defined in mzML file {}" + f.getName());
+        if (chromatograms != null && !chromatograms.isEmpty()) {
+            Chromatogram ticChromatogram = null;
+            try {
+                ticChromatogram = readTotalIonCurrentChromatogram(um, f);
+                BinaryDataArray intensitiesArray = ticChromatogram.getBinaryDataArrayList().getBinaryDataArray().get(1);
+                return fillArrayFromBinaryData(intensitiesArray);
+            } catch (ResourceNotAvailableException rnae) {
+                //ignore, will handle null chromatogram further down
+            }
+
         }
-        Chromatogram ticChromatogram = null;
-        try {
-            ticChromatogram = readTotalIonCurrentChromatogram(um, f);
-        } catch (ResourceNotAvailableException rnae) {
-            //ignore, will handle null chromatogram further down
-        }
-        if (ticChromatogram != null && ticChromatogram.getDefaultArrayLength() != getScanCount(um)) {
-            log.warn("TIC Chromatogram point number does not match scan count! Recreating TIC from spectra!");
-            ticChromatogram = null;
-        }
-        if (ticChromatogram == null) {
-            log.warn("No TIC chromatograms defined in mzML file {} reconstructing from spectra!", f.getName());
-            return readTicFromMzi(f.getChild(fallback), um);
-        }
-        BinaryDataArray intensitiesArray = ticChromatogram.getBinaryDataArrayList().getBinaryDataArray().get(1);
-        Number[] intensities = intensitiesArray.getBinaryDataAsNumberArray();
-        final ArrayDouble.D1 intensA = new ArrayDouble.D1(intensities.length);
-        for (int i = 0; i < intensities.length; i++) {
-            intensA.set(i, intensities[i].doubleValue());
-        }
-        return intensA;
+        log.warn("No TIC chromatograms defined in mzML file {} reconstructing from spectra!", f.getUri());
+        return readTicFromMzi(f.getChild(fallback), um);
     }
 
     private BinaryDataArray getBinaryDataArrayForCV(Chromatogram chrom, String cv) {
@@ -1014,8 +1128,14 @@ public class MZMLDataSource implements IDataSource {
             }
             Number[] time = ticSatArray.getBinaryDataAsNumberArray();
             final ArrayDouble.D1 ticSats = new ArrayDouble.D1(time.length);
-            CVParam rtp = findParam(ticSatArray.getCvParam(), "MS:1000595");
-            String unit = rtp.getUnitName();
+            CVParam rtp = null;
+            String unit = "second";
+            try {
+                rtp = findParam(ticSatArray.getCvParam(), "MS:1000595");
+                unit = rtp.getUnitName();
+            } catch (ResourceNotAvailableException rna) {
+                log.warn("Could not find time unit for chromatogram {}! Assuming seconds!", ticChromatogram.getId());
+            }
             for (int i = 0; i < time.length; i++) {
                 double value = convertRT(time[i].doubleValue(), unit);
                 ticSats.set(i, value);
