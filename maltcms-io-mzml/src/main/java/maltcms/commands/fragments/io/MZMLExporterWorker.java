@@ -57,6 +57,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.io.xml.mzML.MZMLValidator;
+import maltcms.io.xml.mzML.MZMLValidator.ValidationResult;
 import org.apache.commons.codec.binary.Base64;
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
@@ -116,6 +118,8 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
     private boolean compressSpectra = true;
     @Configurable(description = "Whether chromatogram data should be gzip compressed or not.")
     private boolean compressChromatogram = true;
+    @Configurable(description = "Whether the result mzML file should be validated or not.")
+    private boolean validate = false;
     private String scanIndexVariable = "scan_index";
     private String massValuesVariable = "mass_values";
     private String intensityValuesVariable = "intensity_values";
@@ -207,6 +211,13 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f))) {
             mzmlMarshaller.marshall(mzML, bos);
             bos.close();
+        }
+        if (validate) {
+            MZMLValidator validator = new MZMLValidator();
+            ValidationResult result = validator.validateMzML(f);
+            if (!result.isValid()) {
+                throw new ConstraintViolationException("MzML file " + f.getAbsolutePath() + " is invalid!");
+            }
         }
         //add the mzml file as a source file of the returned fragment for later reuse and variable retrieval
         IFileFragment mzMLFragment = new FileFragment(f);

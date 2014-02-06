@@ -35,29 +35,22 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
 import cross.tools.StringTools;
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import junit.framework.Assert;
-import static junit.framework.Assert.assertNotNull;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.preprocessing.ScanExtractor;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.io.xml.mzML.MZMLDataSource;
+import maltcms.io.xml.mzML.MZMLValidator;
+import maltcms.io.xml.mzML.MZMLValidator.ValidationResult;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 import ucar.ma2.Array;
 
 /**
@@ -78,51 +71,6 @@ public class MZMLExporterTest extends AFragmentCommandTest {
         setLogLevelFor(MZMLExporterWorker.class, Level.INFO);
     }
 
-    private void validate(File mzML) throws SAXException {
-        // 1. Lookup a factory for the W3C XML Schema language
-        SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
-
-        // 2. Compile the schema.
-        URL schemaLocation;
-        // Note: not checking against external schema, because of performance and availability (internet connection) issues
-//        try {
-//            if (indexed) {
-        schemaLocation = this.getClass().getClassLoader().getResource("mzML1.1.1-idx.xsd");
-//                schemaLocation = new URL("http://psidev.cvs.sourceforge.net/*checkout*/psidev/psi/psi-ms/mzML/schema/mzML1.1.0_idx.xsd");
-//            } else {
-//                schemaLocation = this.getClass().getClassLoader().getResource("mzML1.1.0.xsd");
-//                schemaLocation = new URL("http://psidev.cvs.sourceforge.net/*checkout*/psidev/psi/psi-ms/mzML/schema/mzML1.1.0.xsd");
-//            }
-//        } catch (MalformedURLException e) {
-//            throw new IllegalStateException("Could not load external schema location!", e);
-//        }
-        assertNotNull(schemaLocation);
-
-        Schema schema;
-        try {
-            schema = factory.newSchema(schemaLocation);
-        } catch (SAXException e) {
-            e.printStackTrace();
-            throw new IllegalStateException("Could not compile Schema for file: " + schemaLocation);
-        }
-
-        // 3. Get a validator from the schema.
-        Validator validator = schema.newValidator();
-
-        // 4. Parse the document you want to check.
-        Source source = new StreamSource(mzML);
-
-        // 5. Check the document (throws an Exception if not valid)
-        try {
-            validator.validate(source);
-        } catch (SAXException ex) {
-            throw ex;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new IllegalStateException("Could not validate file because of file read problems for source: " + mzML.getAbsolutePath());
-        }
-    }
-
     /**
      * Test of apply method, of class DenseArrayProducer.
      */
@@ -135,7 +83,9 @@ public class MZMLExporterTest extends AFragmentCommandTest {
         scanExtractor.setStartScan(10);
         scanExtractor.setEndScan(100);
         commands.add(scanExtractor);
-        commands.add(new MZMLExporter());
+        MZMLExporter mzmlExporter = new MZMLExporter();
+        mzmlExporter.setValidate(true);
+        commands.add(mzmlExporter);
         System.err.println("testApply creating workflow");
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         TupleND<IFileFragment> results;
@@ -151,7 +101,9 @@ public class MZMLExporterTest extends AFragmentCommandTest {
             File mzMLFile = new File(processedCdfFile.getParentFile(), StringTools.removeFileExt(f.getName()) + ".mzml");
             System.err.println("mzML file: " + mzMLFile.getAbsolutePath());
             Assert.assertTrue(mzMLFile.exists() && mzMLFile.isFile());
-            validate(mzMLFile);
+            MZMLValidator validator = new MZMLValidator();
+            ValidationResult result = validator.validateMzML(mzMLFile);
+            Assert.assertTrue("MzML file did not pass validation!", result.isValid());
             FileFragment ff = new FileFragment(mzMLFile);
             File scanexDir = w.getOutputDirectory(scanExtractor);
             IFileFragment originalFileFragment = new FileFragment(new File(scanexDir, StringTools.removeFileExt(f.getName()) + ".cdf"));
