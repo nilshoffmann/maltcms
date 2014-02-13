@@ -154,15 +154,15 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     @Override
     public void configure(final Configuration cfg) {
         if (!this.sizeOverride) {
-            this.imgwidth = cfg.getInt(this.getClass().getName() + ".imgwidth");
+            this.imgwidth = cfg.getInt(this.getClass().getName() + ".imgwidth",1280);
             this.imgheight = cfg.getInt(this.getClass().getName()
-                + ".imgheight");
+                + ".imgheight",1024);
         }
-        this.filetype = cfg.getString(this.getClass().getName() + ".filetype");
+        this.filetype = cfg.getString(this.getClass().getName() + ".filetype","png");
         this.headless = cfg.getBoolean(this.getClass().getName() + ".headless",
             true);
         this.fontFamily = cfg.getString(this.getClass().getName()
-            + ".fontFamily");
+            + ".fontFamily","sans");
         this.serializeJFreeChart = cfg.getBoolean(this.getClass().getName()
             + ".serializeJFreeChart", false);
         this.saveGraphics = cfg.getBoolean(this.getClass().getName()
