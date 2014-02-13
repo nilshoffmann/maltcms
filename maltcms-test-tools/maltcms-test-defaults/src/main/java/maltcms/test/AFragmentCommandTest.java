@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,14 +27,6 @@
  */
 package maltcms.test;
 
-import cross.test.SetupLogging;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.log4j.PropertyConfigurator;
-
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
@@ -43,14 +35,18 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflow;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.LogMethodName;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import cross.test.SetupLogging;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Level;
+import org.apache.log4j.PropertyConfigurator;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
@@ -126,6 +122,7 @@ public abstract class AFragmentCommandTest {
 
     public TupleND<IFileFragment> testWorkflow(IWorkflow w) {
         try {
+            w.getConfiguration().setProperty("output.overwrite", true);
             TupleND<IFileFragment> t = w.call();
             w.save();
             return t;
@@ -148,7 +145,7 @@ public abstract class AFragmentCommandTest {
             try {
                 bw = new PrintWriter(f);
                 Throwable cause = t.getCause();
-                while(cause!=null) {
+                while (cause != null) {
                     cause.printStackTrace(bw);
                     cause = cause.getCause();
                 }

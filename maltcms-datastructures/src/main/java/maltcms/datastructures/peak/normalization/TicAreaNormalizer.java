@@ -32,6 +32,7 @@ import cross.cache.ICacheElementProvider;
 import cross.cache.softReference.SoftReferenceCacheManager;
 import cross.datastructures.fragments.IFileFragment;
 import lombok.Data;
+import lombok.ToString;
 import maltcms.tools.ArrayTools;
 
 /**
@@ -39,37 +40,38 @@ import maltcms.tools.ArrayTools;
  * @author nilshoffmann
  */
 @Data
+@ToString(exclude = "cache")
 public class TicAreaNormalizer implements IPeakNormalizer {
 
-	private String ticVariableName = "total_intensity";
-	private ICacheDelegate<IFileFragment, Double> cache = null;
+    private String ticVariableName = "total_intensity";
+    private transient ICacheDelegate<IFileFragment, Double> cache = null;
 
-	private ICacheDelegate<IFileFragment, Double> getCache() {
-		if (this.cache == null) {
-			this.cache = SoftReferenceCacheManager.getInstance().getAutoRetrievalCache("TicAreaNormalizerCache", new ICacheElementProvider<IFileFragment, Double>() {
-				@Override
-				public Double provide(IFileFragment key) {
-					return ArrayTools.integrate(key.getChild(ticVariableName).getArray());
-				}
-			});
-		}
-		return this.cache;
-	}
+    private ICacheDelegate<IFileFragment, Double> getCache() {
+        if (this.cache == null) {
+            this.cache = SoftReferenceCacheManager.getInstance().getAutoRetrievalCache("TicAreaNormalizerCache", new ICacheElementProvider<IFileFragment, Double>() {
+                @Override
+                public Double provide(IFileFragment key) {
+                    return ArrayTools.integrate(key.getChild(ticVariableName).getArray());
+                }
+            });
+        }
+        return this.cache;
+    }
 
-	@Override
-	public double getNormalizationFactor(IFileFragment fragment, int peakIndex) {
-		return 1.0d / getCache().get(fragment).doubleValue();
-	}
+    @Override
+    public double getNormalizationFactor(IFileFragment fragment, int peakIndex) {
+        return 1.0d / getCache().get(fragment).doubleValue();
+    }
 
-	@Override
-	public String getNormalizationName() {
-		return "normalization to sum of " + ticVariableName;
-	}
+    @Override
+    public String getNormalizationName() {
+        return "normalization to sum of " + ticVariableName;
+    }
 
-	@Override
-	public TicAreaNormalizer copy() {
-		TicAreaNormalizer tan = new TicAreaNormalizer();
-		tan.setTicVariableName(ticVariableName);
-		return tan;
-	}
+    @Override
+    public TicAreaNormalizer copy() {
+        TicAreaNormalizer tan = new TicAreaNormalizer();
+        tan.setTicVariableName(ticVariableName);
+        return tan;
+    }
 }
