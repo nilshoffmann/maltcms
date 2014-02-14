@@ -65,10 +65,10 @@ class APProperties {
         }
         ifiles.files = props["inputFiles"]
         wdir = new File(props["workingDirectory"])
-		if(!wdir.exists()) {
-			//reset in case of leftovers from old layout
-			wdir = new File(System.getProperty("ap.home"))
-		}
+        if(!wdir.exists()) {
+            //reset in case of leftovers from old layout
+            wdir = new File(System.getProperty("ap.home"))
+        }
         se.startTime = u.convDouble(props["scanExtractor.startTime"],Double.NEGATIVE_INFINITY)
         se.endTime = u.convDouble(props["scanExtractor.endTime"],Double.POSITIVE_INFINITY)
         sgf.window = u.convInteger(props["savitzkyGolayFilter.window"],12)
@@ -85,19 +85,20 @@ class APProperties {
         pca.maxRTDifference =  u.convDouble(props["peakCliqueAlignment.maxRTDifference"],60.0)
         pca.minCliqueSize =  u.convInteger(props["peakCliqueAlignment.minCliqueSize"],-1)
         pca.peakAreaVariable = u.convString(props["peakCliqueAlignment.peakAreaVariable"],"peak_area_normalized")
-		pca.rtNormalizationFactor = u.convDouble(props["peakCliqueAlignment.rtNormalizationFactor"],1.0)
-		pca.rtOutputFormat = u.convString(props["peakCliqueAlignment.rtOutputFormat"],"0.00000000000000")
+        pca.rtNormalizationFactor = u.convDouble(props["peakCliqueAlignment.rtNormalizationFactor"],1.0)
+        pca.rtOutputFormat = u.convString(props["peakCliqueAlignment.rtOutputFormat"],"0.00000000000000")
         mr.arguments = u.convString(props["maltcmsRuntime.arguments"],"-Xmx1G")
         mr.parallelThreads = u.convInteger(props["maltcmsRuntime.parallelThreads"],1)
-		mr.pipelineMode = u.convString(props["maltcmsRuntime.pipelineMode"],"ap")
-		mr.pipelineFile = new File(u.convString(props["maltcmsRuntime.pipelineFile"],new File(System.getProperty("ap.home"),"pipelines/${mr.pipelineMode}.mpl").absolutePath))
+        mr.pipelineMode = u.convString(props["maltcmsRuntime.pipelineMode"],"ap")
+        mr.pipelineFile = new File(u.convString(props["maltcmsRuntime.pipelineFile"],new File(System.getProperty("ap.home"),"pipelines/${mr.pipelineMode}.mpl").absolutePath))
+        mr.uniqueOutputDir = u.convBoolean(props["maltcmsRuntime.uniqueOutputDir"],true)
     }
 
     public void save() {
         File f = new File(System.getProperty("user.dir"),"ap-parameters.properties")
         def props = new Properties()
-//        props["workingDirectory"] = new File(System.getProperty("ap.home"),wdir.path).absolutePath
-		props["workingDirectory"] = wdir.absolutePath
+        //        props["workingDirectory"] = new File(System.getProperty("ap.home"),wdir.path).absolutePath
+        props["workingDirectory"] = wdir.absolutePath
         props["inputFiles"] = ifiles.files
         props["scanExtractor.startTime"] = se.startTime.toString()
         props["scanExtractor.endTime"] = se.endTime.toString()
@@ -115,12 +116,13 @@ class APProperties {
         props["peakCliqueAlignment.maxRTDifference"] = pca.maxRTDifference.toString()
         props["peakCliqueAlignment.minCliqueSize"] = pca.minCliqueSize.toString()
         props["peakCliqueAlignment.peakAreaVariable"] = pca.peakAreaVariable.toString()
-		props["peakCliqueAlignment.rtNormalizationFactor"] = pca.rtNormalizationFactor.toString()
-		props["peakCliqueAlignment.rtOutputFormat"] = pca.rtOutputFormat.toString()
+        props["peakCliqueAlignment.rtNormalizationFactor"] = pca.rtNormalizationFactor.toString()
+        props["peakCliqueAlignment.rtOutputFormat"] = pca.rtOutputFormat.toString()
         props["maltcmsRuntime.arguments"] = mr.arguments.toString()
         props["maltcmsRuntime.parallelThreads"] = mr.parallelThreads.toString()
-		props["maltcmsRuntime.pipelineMode"] = mr.pipelineMode.toString()
-		props["maltcmsRuntime.pipelineFile"] = mr.pipelineFile.absolutePath
+        props["maltcmsRuntime.pipelineMode"] = mr.pipelineMode.toString()
+        props["maltcmsRuntime.pipelineFile"] = mr.pipelineFile.absolutePath
+        props["maltcmsRuntime.uniqueOutputDir"] = mr.uniqueOutputDir.toString()
         f.withOutputStream {
             stream -> props.store(stream, "maltcms-ap parameters")
         }

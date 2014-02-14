@@ -44,20 +44,20 @@ for details.
 
     <!-- a command pipeline consists a list of
     commands to be executed -->
-    <bean id="commandPipeline" class="cross.datastructures.pipeline.CommandPipeline">
+    <bean id="commandPipeline" class="cross.datastructures.pipeline.ResultAwareCommandPipeline">
         <property name="checkCommandDependencies" value="false"/>
         <property name="commands">
             <list>
-				<ref bean="defaultVarLoader" />
-				<ref bean="denseArrayProducer" />
-				<ref bean="peakAreaNormalizer" />
+                <ref bean="defaultVarLoader" />
+                <ref bean="denseArrayProducer" />
+                <ref bean="peakAreaNormalizer" />
                 <ref bean="peakCliqueAlignment" />
             </list>
         </property>
     </bean>
     <!-- commands -->
 
-	<!-- DefaultVarLoader, loads default variables, see cfg/cv/cv_maltcms.properties for default values for these -->
+    <!-- DefaultVarLoader, loads default variables, see cfg/cv/cv_maltcms.properties for default values for these -->
     <bean id="defaultVarLoader" class="maltcms.commands.fragments.preprocessing.DefaultVarLoader">
         <property name="defaultVariables">
             <list>
@@ -73,7 +73,7 @@ for details.
         </property>
         <property name="additionalVariables">
             <list>
-				<value>peak_area</value>
+                <value>peak_area</value>
             </list>
         </property>
     </bean>
@@ -96,13 +96,13 @@ for details.
         <property name="massBinResolution" value="1.0d"/>
     </bean>
 
-	<bean id="peakAreaNormalizer" class="maltcms.commands.fragments.peakfinding.PeakAreaNormalizer">
-		<property name="peakNormalizers">
+    <bean id="peakAreaNormalizer" class="maltcms.commands.fragments.peakfinding.PeakAreaNormalizer">
+        <property name="peakNormalizers">
             <list>
                 <ref bean="ticAreaNormalizer"/>
             </list>
         </property>
-	</bean>
+    </bean>
 
     <bean id="ticAreaNormalizer" class="maltcms.datastructures.peak.normalization.TicAreaNormalizer">
         <!-- use either total_intensity or total_intensity_filtered -->
@@ -140,7 +140,7 @@ for details.
 
     <bean id="peakFactory1D" class="maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak1DFactory" scope="prototype">
         <!-- was: peak_area_normalized -->
-		<property name="peakAreaVar" value="${peakCliqueAlignment.peakAreaVariable}"/>
+        <property name="peakAreaVar" value="${peakCliqueAlignment.peakAreaVariable}"/>
     </bean>
 
     <!-- PeakCliqueAlignment -->
@@ -159,7 +159,7 @@ for details.
         <!-- which peak area definition to use, default: peak_area, alternative: peak_area_normalized -->
         <property name="peakAreaVariable" value="${peakCliqueAlignment.peakAreaVariable}"/>
         <property name="peakFactory" ref="peakFactory1D"/>
-		<property name="rtNormalizationFactor" value="${peakCliqueAlignment.rtNormalizationFactor}"/>
-		<property name="rtOutputFormat" value="${peakCliqueAlignment.rtOutputFormat}"/>
+        <property name="rtNormalizationFactor" value="${peakCliqueAlignment.rtNormalizationFactor}"/>
+        <property name="rtOutputFormat" value="${peakCliqueAlignment.rtOutputFormat}"/>
     </bean>
 </beans>

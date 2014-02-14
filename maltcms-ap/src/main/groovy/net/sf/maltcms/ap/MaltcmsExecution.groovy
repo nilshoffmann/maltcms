@@ -42,6 +42,7 @@ class MaltcmsExecution {
     JTextArea textArea
     MaltcmsProcess activeProcess
     String inputFiles
+    Boolean uniqueOutputDir = true
     File outputBaseDir = new File(System.getProperty("user.dir"),"ap-output")
     File workingDirectory = new File(System.getProperty("user.dir"))
     File apProperties = null
@@ -56,10 +57,10 @@ class MaltcmsExecution {
             textArea.setText("")
             File outputDir = getOutputDir(outputBaseDir)
             File apDir = new File(System.getProperty("ap.home"))
-			if(apProperties==null) {
-				apProperties = new File(apDir,"cfg/pipelines/ap.mpl")
-			}
-			println "Using pipeline ${apProperties}"
+            if(apProperties==null) {
+                apProperties = new File(apDir,"cfg/pipelines/ap.mpl")
+            }
+            println "Using pipeline ${apProperties}"
             File apParameters = new File(System.getProperty("user.dir"),"ap-parameters.properties")
             File maltcmsDir = new File(System.getProperty("maltcms.home"))
             def commandLine = ["java"]
@@ -67,6 +68,7 @@ class MaltcmsExecution {
             argsList.each{ arg ->
                 commandLine << arg
             }
+
             commandLine << "-Dmaltcms.parallelThreads=${parallelThreads}"
             commandLine << "-Dmaltcms.home=${maltcmsDir.absolutePath}"
             commandLine << "-Djava.util.logging.config.file=${maltcmsDir.absolutePath}/cfg/logging.properties"
@@ -94,13 +96,19 @@ class MaltcmsExecution {
     }
 
     File getOutputDir(File baseDir) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "MM-dd-yyyy_HH-mm-ss", Locale.US);
-        String userName = System.getProperty("user.name", "default");
-        File outputDir = new File(baseDir, userName);
-        outputDir = new File(outputDir, dateFormat.format(
-                new Date()));
-        return outputDir
+        if(uniqueOutputDir) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "MM-dd-yyyy_HH-mm-ss", Locale.US)
+            String userName = System.getProperty("user.name", "default")
+            File outputDir = new File(baseDir, userName)
+            outputDir = new File(outputDir, dateFormat.format(
+                    new Date()))
+            return outputDir
+        }else{
+            String userName = System.getProperty("user.name", "default")
+            File outputDir = new File(baseDir, userName)
+            return outputDir
+        }
     }
 
     public void cancel() {
