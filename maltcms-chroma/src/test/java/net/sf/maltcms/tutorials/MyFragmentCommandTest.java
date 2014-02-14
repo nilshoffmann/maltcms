@@ -1,5 +1,5 @@
 /*
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -51,24 +51,24 @@ import org.springframework.context.ApplicationContext;
  * @author Nils Hoffmann
  */
 public class MyFragmentCommandTest extends AFragmentCommandTest {
-    
+
     @Rule
     public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
-            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
-    
+        "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
+
     /**
      * Test of getDescription method, of class MyFragmentCommand.
      */
     @Test
     public void testProgrammaticWorkflow() throws IOException {
-        File outputBase = tf.newFolder("chromaTestOut");
+        File outputBase = tf.newFolder();
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         MyFragmentCommand cmd = new MyFragmentCommand();
         cmd.setFilter(Arrays.asList(new AArrayFilter[]{new SqrtFilter()}));
         commands.add(cmd);
         //add a transparent fragment command
         commands.add(new SameInSameOutFragmentCommand());
-        //add a second filter fragment command that retrieves data already 
+        //add a second filter fragment command that retrieves data already
         //written by cmd
         MyFragmentCommand cmd2 = new MyFragmentCommand();
         cmd2.setFilter(Arrays.asList(new AArrayFilter[]{new LogFilter()}));
@@ -84,9 +84,9 @@ public class MyFragmentCommandTest extends AFragmentCommandTest {
      * Test of apply method, of class MyFragmentCommand.
      */
     @Test
-    public void testApplicationContextWorkflow() throws IOException  {
-        File outputBase = tf.newFolder("chromaTestOut");
-        DefaultApplicationContextFactory dacf = new DefaultApplicationContextFactory(Arrays.asList("/cfg/pipelines/xml/workflowDefaults.xml","/cfg/pipelines/xml/myFragmentCommand.xml"), new PropertiesConfiguration());
+    public void testApplicationContextWorkflow() throws IOException {
+        File outputBase = tf.newFolder();
+        DefaultApplicationContextFactory dacf = new DefaultApplicationContextFactory(Arrays.asList("/cfg/pipelines/xml/workflowDefaults.xml", "/cfg/pipelines/xml/myFragmentCommand.xml"), new PropertiesConfiguration());
         ApplicationContext ac = dacf.createClassPathApplicationContext();
         IWorkflow w = ac.getBean(IWorkflow.class);
         w.getCommandSequence().setInput(FragmentTools.immutable(ecpf.getFiles()));

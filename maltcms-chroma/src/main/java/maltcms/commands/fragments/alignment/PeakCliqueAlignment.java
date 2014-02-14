@@ -195,12 +195,6 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     @Deprecated
     @Configurable
     private boolean postProcessCliques = false;
-    /*
-     * private scope
-     */
-//	@Getter(value = AccessLevel.PRIVATE)
-//	@Setter(value = AccessLevel.PRIVATE)
-//	private HashMap<IBipacePeak, Clique<IBipacePeak>> peakToClique = new HashMap<IBipacePeak, Clique<IBipacePeak>>();
 
     @Override
     public String toString() {
@@ -260,7 +254,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         int[] nextIndex = new int[newFragments.size()];
         HashMap<String, Integer> placeMap = new HashMap<String, Integer>();
         int cnt = 0;
-		// fill placeMap with unique id aka slot in cliqueNumbers for each
+        // fill placeMap with unique id aka slot in cliqueNumbers for each
         // FileFragment
         for (IFileFragment f : newFragments) {
             placeMap.put(f.getName(), cnt++);
@@ -364,18 +358,18 @@ public class PeakCliqueAlignment extends AFragmentCommand {
      */
     private void findCenter(final TupleND<IFileFragment> newFragments,
         final List<Clique<IBipacePeak>> cliques, final Map<String, Integer> nameToIdMap, final LongObjectMap<PeakEdge> peakEdgeMap) {
-		// cliqueNumbers -> number of cliques per FileFragment
+        // cliqueNumbers -> number of cliques per FileFragment
         // FileFragments with highest number of cliques are favorites
         double[] cliqueNumbers = new double[newFragments.size()];
         double[] cliqueSize = new double[newFragments.size()];
         HashMap<String, Integer> placeMap = new HashMap<String, Integer>();
         int cnt = 0;
-		// fill placeMap with unique id aka slot in cliqueNumbers for each
+        // fill placeMap with unique id aka slot in cliqueNumbers for each
         // FileFragment
         for (IFileFragment f : newFragments) {
             placeMap.put(f.getName(), cnt++);
         }
-		// for all peaks, increment number of cliques for FileFragment
+        // for all peaks, increment number of cliques for FileFragment
         // associated to each peak
         int npeaks = 0;
         for (Clique<IBipacePeak> c : cliques) {
@@ -387,7 +381,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
         }
 
-		// which FileFragment is the best reference for alignment?
+        // which FileFragment is the best reference for alignment?
         // the one, which participates in the highest number of cliques
         // or the one, which has the overall highest average similarity to all
         // others
@@ -875,7 +869,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         });
         // Insert Peaks into HashMap
         for (final IFileFragment t : fragments) {
-			// if we have a valid variable defined,
+            // if we have a valid variable defined,
             // use those peak indices
             Array peakCandidates1;
             try {
@@ -1104,7 +1098,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         rows.add(headers);
         final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
             Locale.US);
-		// this is a fix, default rounding convention is HALF_EVEN,
+        // this is a fix, default rounding convention is HALF_EVEN,
         // which allows less error to accumulate, but is seldomly used
         // outside of java...
         df.setRoundingMode(RoundingMode.HALF_UP);
