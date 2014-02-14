@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,28 +27,27 @@
  */
 package net.sf.maltcms.evaluation.spi.caap;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.List;
-import java.util.TreeMap;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
-import ucar.nc2.Dimension;
 import cross.Factory;
+import cross.IFactory;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.tools.StringTools;
+import java.io.File;
+import java.io.FileFilter;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import maltcms.io.xml.bindings.openms.featurexml.FeatureMap;
 import maltcms.io.xml.bindings.openms.featurexml.FeatureType;
 import maltcms.io.xml.bindings.openms.featurexml.FeatureType.Position;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayInt;
+import ucar.nc2.Dimension;
 
 /**
  *
@@ -192,7 +191,7 @@ public class PeakFactory {
     }
 
     public static void main(String[] args) {
-        Factory fac = Factory.getInstance();
+        IFactory fac = Factory.getInstance();
         fac.getConfiguration().setProperty("output.overwrite", true);
         //args[0] is output dir
         String output = args[0];
