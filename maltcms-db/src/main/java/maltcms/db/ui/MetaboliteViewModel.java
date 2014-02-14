@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,22 +27,19 @@
  */
 package maltcms.db.ui;
 
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.query.Predicate;
+import cross.tools.PublicMemberGetters;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
-
 import maltcms.datastructures.ms.IMetabolite;
-import maltcms.tools.PublicMemberGetters;
-
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.query.Predicate;
 
 public class MetaboliteViewModel extends AbstractTableModel {
 
@@ -91,8 +88,8 @@ public class MetaboliteViewModel extends AbstractTableModel {
             map.put(m.getID(), m);
         }
 //		Collections.sort(elements,new Comparator<IMetabolite>() {
-//		
-//			
+//
+//
 //			public int compare(IMetabolite arg0, IMetabolite arg1) {
 //				if(arg0.getRetentionIndex()<arg1.getRetentionIndex()){
 //					return -1;
@@ -102,7 +99,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
 //				}
 //				return 0;
 //			}
-//		
+//
 //		});
 
         //setDataVector(elements, DefaultTableModel.convertToVector(tableHeader));
@@ -111,9 +108,9 @@ public class MetaboliteViewModel extends AbstractTableModel {
         }
 
 //		query(new Predicate<IMetabolite>() {
-//		
+//
 //			/**
-//			 * 
+//			 *
 //			 */
 //			private static final long serialVersionUID = 2435586279861149123L;
 //
@@ -121,7 +118,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
 //			public boolean match(IMetabolite arg0) {
 //				return true;
 //			}
-//		
+//
 //		});
 //		elements.add(new Metabolite("Fructose","FRUC","",1,"","","",1,10,"",0,"","",null,null));
 //		elements.add(new Metabolite("Undecane","UNDEC","",2,"","","",1,10,"",0,"","",null,null));

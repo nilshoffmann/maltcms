@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,18 +27,15 @@
  */
 package maltcms.db.predicates.metabolite;
 
+import com.db4o.query.Predicate;
+import cross.datastructures.tools.EvalTools;
+import cross.tools.PublicMemberGetters;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-
 import maltcms.datastructures.ms.IMetabolite;
-import maltcms.tools.PublicMemberGetters;
-
-import com.db4o.query.Predicate;
-
-import cross.datastructures.tools.EvalTools;
 
 public class MAggregatePredicateFactory implements
-        IAggregatePredicateFactory<IMetabolite> {
+    IAggregatePredicateFactory<IMetabolite> {
 
     private Predicate<IMetabolite> defaultPredicate = null;
 
@@ -52,7 +49,7 @@ public class MAggregatePredicateFactory implements
      */
     public Predicate<IMetabolite> digestCommandLine(String[] args) {
         PublicMemberGetters<IMetabolite> pmg = new PublicMemberGetters<IMetabolite>(
-                IMetabolite.class);
+            IMetabolite.class);
         ArrayList<MetabolitePredicate> nl = new ArrayList<MetabolitePredicate>();
         for (String s : args) {
             split(pmg, nl, s);
@@ -66,7 +63,7 @@ public class MAggregatePredicateFactory implements
     }
 
     private void split(PublicMemberGetters<IMetabolite> pmg,
-            ArrayList<MetabolitePredicate> nl, String s) {
+        ArrayList<MetabolitePredicate> nl, String s) {
         String[] split = s.split("=");
         if (split.length == 2) {
             String method = split[0];
@@ -85,13 +82,13 @@ public class MAggregatePredicateFactory implements
     }
 
     private void handleString(ArrayList<MetabolitePredicate> sl, Method m,
-            String arg) {
+        String arg) {
         MStringMatchPredicate msmp = null;
         if (arg.endsWith("<")) {//substring matching
             msmp = new MStringContainsPredicate(arg.substring(0,
-                    arg.length() - 1));
+                arg.length() - 1));
             System.out.println("Substring matching on " + arg.substring(0, arg.
-                    length() - 1));
+                length() - 1));
         } else {
             msmp = new MStringMatchPredicate(arg);
 
@@ -103,7 +100,7 @@ public class MAggregatePredicateFactory implements
     }
 
     private void handleNumRange(ArrayList<MetabolitePredicate> nl, Method m,
-            String arg) {
+        String arg) {
         arg = arg.substring(1, arg.length() - 1);
         String[] range = arg.split(",");
         if (range.length > 0 && range.length <= 2) {
@@ -120,7 +117,7 @@ public class MAggregatePredicateFactory implements
 //						mnrp = new NumRangePredicate<T>(b1,b2);
 //					} catch (NumberFormatException nfe3) {
                     System.err.println(
-                            "Could not parse strings as numbers: " + range[0] + " and " + range[1]);
+                        "Could not parse strings as numbers: " + range[0] + " and " + range[1]);
                     //}
                 }
             }
@@ -146,7 +143,7 @@ public class MAggregatePredicateFactory implements
         }
 
         if (d1.floatValue() >= Float.MIN_VALUE && d1.floatValue() <= Float.MAX_VALUE && d2.
-                floatValue() >= Float.MIN_VALUE && d2.floatValue() <= Float.MAX_VALUE) {
+            floatValue() >= Float.MIN_VALUE && d2.floatValue() <= Float.MAX_VALUE) {
             Float f1 = d1.floatValue();
             Float f2 = d2.floatValue();
             mnrp = new MNumRangePredicate(f1, f2, m);
@@ -168,7 +165,7 @@ public class MAggregatePredicateFactory implements
             l2 = l1;
         }
         if (l1.intValue() >= Integer.MIN_VALUE && l1.intValue() <= Integer.MAX_VALUE && l2.
-                intValue() >= Integer.MIN_VALUE && l2.intValue() <= Integer.MAX_VALUE) {
+            intValue() >= Integer.MIN_VALUE && l2.intValue() <= Integer.MAX_VALUE) {
             Integer i1 = l1.intValue();
             Integer i2 = l2.intValue();
             mnrp = new MNumRangePredicate(i1, i2, m);
