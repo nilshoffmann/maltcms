@@ -29,6 +29,7 @@ package maltcms.math.functions.similarities;
 
 import cross.cache.ICacheDelegate;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import maltcms.math.functions.IArraySimilarity;
 import net.jcip.annotations.NotThreadSafe;
 import org.openide.util.lookup.ServiceProvider;
@@ -41,6 +42,7 @@ import ucar.ma2.MAMath;
  *
  */
 @Data
+@EqualsAndHashCode(exclude = {"cache"})
 @ServiceProvider(service = IArraySimilarity.class)
 @NotThreadSafe
 public class ArrayWeightedCosine implements IArraySimilarity {
