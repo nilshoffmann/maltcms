@@ -42,6 +42,7 @@ class MaltcmsRuntime {
 	String pipelineMode = "ap"
 	File pipelineFile = new File(System.getProperty("ap.home"),"cfg/pipelines/ap.mpl")
     Boolean uniqueOutputDir = true
+    File lastOutputDir = null
 	Map activePanels = [
 		"ap"		:
         [

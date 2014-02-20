@@ -92,6 +92,10 @@ class APProperties {
         mr.pipelineMode = u.convString(props["maltcmsRuntime.pipelineMode"],"ap")
         mr.pipelineFile = new File(u.convString(props["maltcmsRuntime.pipelineFile"],new File(System.getProperty("ap.home"),"pipelines/${mr.pipelineMode}.mpl").absolutePath))
         mr.uniqueOutputDir = u.convBoolean(props["maltcmsRuntime.uniqueOutputDir"],true)
+        def lastOutputDirProp = u.convString(props["maltcmsRuntime.lastOutputDir"],null)
+        if(lastOutputDirProp!=null) {
+            mr.lastOutputDir = new File(lastOutputDirProp)
+        }
     }
 
     public void save() {
@@ -123,6 +127,7 @@ class APProperties {
         props["maltcmsRuntime.pipelineMode"] = mr.pipelineMode.toString()
         props["maltcmsRuntime.pipelineFile"] = mr.pipelineFile.absolutePath
         props["maltcmsRuntime.uniqueOutputDir"] = mr.uniqueOutputDir.toString()
+        props["maltcmsRuntime.lastOutputDir"] = mr.lastOutputDir?.toString()
         f.withOutputStream {
             stream -> props.store(stream, "maltcms-ap parameters")
         }

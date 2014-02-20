@@ -43,6 +43,7 @@ class MaltcmsExecution {
     MaltcmsProcess activeProcess
     String inputFiles
     Boolean uniqueOutputDir = true
+    File lastOutputDir = null
     File outputBaseDir = new File(System.getProperty("user.dir"),"ap-output")
     File workingDirectory = new File(System.getProperty("user.dir"))
     File apProperties = null
@@ -105,9 +106,19 @@ class MaltcmsExecution {
                     new Date()))
             return outputDir
         }else{
-            String userName = System.getProperty("user.name", "default")
-            File outputDir = new File(baseDir, userName)
-            return outputDir
+            if(lastOutputDir==null) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "MM-dd-yyyy_HH-mm-ss", Locale.US)
+                String userName = System.getProperty("user.name", "default")
+                File outputDir = new File(baseDir, userName)
+                outputDir = new File(outputDir, dateFormat.format(
+                        new Date()))
+                lastOutputDir = outputDir
+            }
+            return lastOutputDir
+            //            String userName = System.getProperty("user.name", "default")
+            //            File outputDir = new File(baseDir, userName)
+            //            return outputDir
         }
     }
 
