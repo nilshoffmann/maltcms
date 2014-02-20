@@ -48,6 +48,7 @@ public class SimilarityTools {
     }
 
     /**
+     * Converts the given similarity s(a,b) to d(a,b):=sqrt(s(a,a)+s(b,b)- 2*s(a,b)).
      *
      * @return
      */
@@ -60,6 +61,6 @@ public class SimilarityTools {
     }
 
     public static <K, V> ICacheDelegate<K, V> newValueCache(String name) {
-        return CacheFactory.createVolatileCache(name, 30, 60, 10000);
+        return CacheFactory.createVolatileCache(name, 30, 60, 100000);
     }
 }
