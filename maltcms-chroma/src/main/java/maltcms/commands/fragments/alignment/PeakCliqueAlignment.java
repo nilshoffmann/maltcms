@@ -526,7 +526,10 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 unmatchedPeaks.addAll(fragmentToPeaks.get(f.getName()));
             }
             List<PairwiseSimilarityResult> bbhPeaksList = ics.call();
-            for (PairwiseSimilarityResult upl : bbhPeaksList) {
+            ListIterator<PairwiseSimilarityResult> resultIterator = bbhPeaksList.listIterator();
+            while (resultIterator.hasNext()) {
+                PairwiseSimilarityResult upl = resultIterator.next();
+                resultIterator.remove();
                 for (IBipacePeak p : upl.getBbhPeakedgeSet()) {
                     unmatchedPeaks.remove(p);
                 }
@@ -536,6 +539,16 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                     peakEdgeMap.put(edgeKeys[i], edges[i]);
                 }
             }
+//            for (PairwiseSimilarityResult upl : bbhPeaksList) {
+//                for (IBipacePeak p : upl.getBbhPeakedgeSet()) {
+//                    unmatchedPeaks.remove(p);
+//                }
+//                long[] edgeKeys = upl.getPeakEdgeKeys();
+//                PeakEdge[] edges = upl.getPeakEdgeValues();
+//                for (int i = 0; i < edgeKeys.length; i++) {
+//                    peakEdgeMap.put(edgeKeys[i], edges[i]);
+//                }
+//            }
         } catch (Exception ex) {
             log.error("Caught exception while executing workers: ", ex);
             throw new RuntimeException(ex);
