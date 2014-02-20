@@ -42,7 +42,7 @@ class MaltcmsRuntime {
 	String pipelineMode = "ap"
 	File pipelineFile = new File(System.getProperty("ap.home"),"cfg/pipelines/ap.mpl")
     Boolean uniqueOutputDir = true
-    File lastOutputDir = null
+    String lastOutputDir = ""
 	Map activePanels = [
 		"ap"		:
         [
@@ -59,6 +59,15 @@ class MaltcmsRuntime {
 				"peakNormalizationTab",
 				"peakAlignmentTab",
 				"maltcmsTab"
+        ],
+        "ap-ms" :
+        [
+                "importTab",
+                "preprocessingTab",
+                "peakDetectionTab",
+                "peakNormalizationTab",
+                "peakAlignmentTab",
+                "maltcmsTab"
         ]
 	]
 }

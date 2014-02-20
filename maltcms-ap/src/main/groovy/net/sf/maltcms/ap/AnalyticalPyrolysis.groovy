@@ -29,6 +29,8 @@ package net.sf.maltcms.ap;
 
 import groovy.swing.SwingBuilder
 import groovy.transform.Canonical
+import cross.datastructures.fragments.FileFragment
+import cross.exception.ResourceNotAvailableException
 import groovy.beans.Bindable
 import java.awt.BorderLayout as BL
 import java.text.DecimalFormat
@@ -133,7 +135,15 @@ def importTab = swing.panel(constraints: BL.CENTER, id: "importTab", name: "Impo
                                 file ->
                                 if(file.name.toLowerCase().endsWith(".d")) {
                                     mode = "ap-direct"
+                                }else{
+                                    FileFragment f = new FileFragment(file)
+                                    try {
+                                        def child = f.getChild "ordinate_values",true
+                                    } catch(ResourceNotAvailableException rnae) {
+                                        mode = "ap-ms"
+                                    }
                                 }
+
                                 file.path
                             }
                             inputFiles.text = files.join(",")
@@ -156,7 +166,7 @@ def importTab = swing.panel(constraints: BL.CENTER, id: "importTab", name: "Impo
         tr {
             td(colfill: false, align: "RIGHT") {label "Mode"}
             td(colspan: 3, colfill: true, align: "LEFT") {
-                textField(id: "pipelineMode", columns: 20, editable: false, toolTipText: "Operating mode of this pipeline, either ap (w/ peakfinding) or ap-direct (w/ imported peaks)")
+                textField(id: "pipelineMode", columns: 20, editable: false, toolTipText: "Operating mode of this pipeline, either ap (w/ peakfinding), ap-direct (w/ imported peaks), or ap-ms (w/ ms data)")
                 bind(source: pipelineMode, sourceProperty: "text", target: props.mr, targetProperty: "pipelineMode",
                     mutual:true)
             }
@@ -535,7 +545,7 @@ def buttonPanel = swing.panel(constraints: BL.SOUTH, id: "buttonPanel") {
             }
             if(execution==null) {
                 println "Creating new MaltcmsExecution"
-                execution = new MaltcmsExecution(textArea: processMonitorTextArea, inputFiles: props.ifiles.files, arguments: props.mr.arguments, parallelThreads: props.mr.parallelThreads, apProperties: props.mr.pipelineFile, uniqueOutputDir: props.mr.uniqueOutputDir, lastOutputDir: props.mr.lastOutputDir)//, //workingDirectory: props.wdir)
+                execution = new MaltcmsExecution(textArea: processMonitorTextArea, inputFiles: props.ifiles.files, arguments: props.mr.arguments, parallelThreads: props.mr.parallelThreads, apProperties: props.mr.pipelineFile, uniqueOutputDir: props.mr.uniqueOutputDir, props: props)//, //workingDirectory: props.wdir)
             }
             execution.start()
         })

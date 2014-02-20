@@ -43,12 +43,12 @@ class MaltcmsExecution {
     MaltcmsProcess activeProcess
     String inputFiles
     Boolean uniqueOutputDir = true
-    File lastOutputDir = null
     File outputBaseDir = new File(System.getProperty("user.dir"),"ap-output")
     File workingDirectory = new File(System.getProperty("user.dir"))
     File apProperties = null
     ExecutorService es = Executors.newSingleThreadExecutor()
     String arguments = "-Xmx1G"
+    APProperties props
     Integer parallelThreads = 1
 
     public void start() {
@@ -101,21 +101,27 @@ class MaltcmsExecution {
             SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "MM-dd-yyyy_HH-mm-ss", Locale.US)
             String userName = System.getProperty("user.name", "default")
-            File outputDir = new File(baseDir, userName)
+            File pipelineDir = new File(baseDir, props.mr.pipelineMode)
+            File outputDir = new File(pipelineDir, userName)
             outputDir = new File(outputDir, dateFormat.format(
                     new Date()))
             return outputDir
         }else{
-            if(lastOutputDir==null) {
+            if(props.mr.lastOutputDir.isEmpty()) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "MM-dd-yyyy_HH-mm-ss", Locale.US)
                 String userName = System.getProperty("user.name", "default")
-                File outputDir = new File(baseDir, userName)
+                File pipelineDir = new File(baseDir, props.mr.pipelineMode)
+                File outputDir = new File(pipelineDir, userName)
                 outputDir = new File(outputDir, dateFormat.format(
                         new Date()))
-                lastOutputDir = outputDir
+                def lastOutputDir = outputDir.absolutePath
+                props.mr.lastOutputDir = lastOutputDir
+                return new File(lastOutputDir)
+            }else{
+                return new File(props.mr.lastOutputDir)
             }
-            return lastOutputDir
+
             //            String userName = System.getProperty("user.name", "default")
             //            File outputDir = new File(baseDir, userName)
             //            return outputDir
