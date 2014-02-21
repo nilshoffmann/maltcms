@@ -82,6 +82,9 @@ public void setMode(String mode, SwingBuilder swing, APProperties props) {
     props.mr.activePanels[mode].each{
         apit -> enableComponent(swing."$apit",true )
     }
+    if(mode!=props.mr.pipelineMode) {
+        props.mr.lastOutputDir = ""
+    }
     props.mr.pipelineMode = mode
     props.mr.pipelineFile = new File(System.getProperty("ap.home"),"cfg/pipelines/${mode}.mpl")
 }
@@ -479,9 +482,23 @@ def maltcmsRuntimeTab = swing.panel(constraints: BL.CENTER, id: "maltcmsTab", na
             td(colfill: true) {hglue()}
             td(align: "RIGHT") {label "Unique Output Directory"}
             td(colspan: 2, colfill: true, align: "LEFT") {
-                checkBox(id: 'uniqueOutputDir')
+                checkBox(id: 'uniqueOutputDir', actionPerformed: { if(uniqueOutputDir.isSelected()) {props.mr.lastOutputDir = ""}}, toolTipText:"If selected will create a new output directory for each run,\notherwise, the last output directory is reused!")
                 bind(source: uniqueOutputDir, sourceProperty: "selected", target: props.mr,
                     targetProperty: "uniqueOutputDir", mutual: true)
+            }
+        }
+        tr {
+            td(colfill: true) {hglue()}
+            td(align: "RIGHT") {label "Last Output Directory"}
+            td(colspan: 1, colfill: true, align: "LEFT") {
+                textField(id: 'lastOutputDir', columns: 20, toolTipText: "The last active output directory.", editable: false)
+                bind(source: lastOutputDir, sourceProperty: "text", target: props.mr,
+                    targetProperty: "lastOutputDir", mutual: true)
+            }
+            td(colfill: true, align: "LEFT") {
+                button("Reset", id: "uniqueOutputDirButton", actionPerformed: {
+                        props.mr.lastOutputDir = ""
+                    })
             }
         }
     }

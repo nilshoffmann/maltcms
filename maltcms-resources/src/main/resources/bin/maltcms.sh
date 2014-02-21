@@ -1,6 +1,23 @@
 #!/usr/bin/env bash
 # Maltcms startup script for Unix/MacOS X/Linux, adapted from www.gradle.org gradle.sh
 SCRIPTFILE="$0"
+
+# OS specific support (must be 'true' or 'false'). Shamelessly copied from Gradle.
+cygwin=false
+msys=false
+darwin=false
+case "`uname`" in
+  CYGWIN* )
+    cygwin=true
+    ;;
+  Darwin* )
+    darwin=true
+    ;;
+  MINGW* )
+    msys=true
+    ;;
+esac
+
 # Follow relative symlinks to resolve script location
 while [ -h "$SCRIPTFILE" ] ; do
     ls=`ls -ld "$SCRIPTFILE"`
@@ -171,6 +188,12 @@ JVMARGS+=("-Dlog4j.configuration=file://$MALTCMSUSRDIR/cfg/log4j.properties")
 JVMARGS+=("-Djava.util.logging.config.file=$MALTCMSUSRDIR/cfg/logging.properties")
 JVMARGS+=("-Dmaltcms.home=$MALTCMSUSRDIR")
 
+# For Darwin, add options to specify how the application appears in the dock
+if $darwin; then
+    JVMARGS+=("-Xdock:name=$APP_NAME")
+    JVMARGS+=("-Xdock:icon=$APP_HOME/res/icons/maltcms-ap-icon.icns")
+fi
+
 # set up classpath
 #for i in $(ls $MALTCMSUSRDIR/lib/*.jar);
 #do
@@ -194,4 +217,3 @@ CMDLINE+=("${MALTCMSARGS[@]}")
 echo "Executing ${CMDLINE[@]}"
 exec -a maltcms "${CMDLINE[@]}"
 exit $?
-

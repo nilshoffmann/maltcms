@@ -9,7 +9,7 @@
 if "%OS%"=="Windows_NT" setlocal
 
 @rem Add default JVM options here. You can also use JAVA_OPTS to pass JVM options to this script.
-set DEFAULT_JVM_OPTS=-Xmx1200M
+set DEFAULT_JVM_OPTS=-Dswing.aatext=true -Dawt.useSystemAAFontSettings=on -Dsun.java2d.dpiaware=true -Xmx1200M
 
 set DIRNAME=%~dp0
 if "%DIRNAME%" == "" set DIRNAME=.

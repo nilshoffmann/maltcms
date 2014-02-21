@@ -111,7 +111,7 @@ fi
 # For Darwin, add options to specify how the application appears in the dock
 if $darwin; then
     #\"-Xdock:icon=$APP_HOME/media/gradle.icns\"
-    MALTCMS_OPTS="$MALTCMS_OPTS \"-Xdock:name=$APP_NAME\" "
+    MALTCMS_OPTS="$MALTCMS_OPTS \"-Xdock:name=$APP_NAME\" \"-Xdock:icon=$APP_HOME/res/icons/maltcms-ap-icon.icns\""
 fi
 
 # For Cygwin, switch paths to Windows format before running java

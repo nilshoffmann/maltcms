@@ -105,6 +105,7 @@ class MaltcmsExecution {
             File outputDir = new File(pipelineDir, userName)
             outputDir = new File(outputDir, dateFormat.format(
                     new Date()))
+            props.mr.lastOutputDir = outputDir
             return outputDir
         }else{
             if(props.mr.lastOutputDir.isEmpty()) {
