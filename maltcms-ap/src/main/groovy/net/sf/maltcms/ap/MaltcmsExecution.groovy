@@ -96,31 +96,38 @@ class MaltcmsExecution {
         }
     }
 
+    private File createOutputDir(File baseDir) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "MM-dd-yyyy_HH-mm-ss", Locale.US)
+        String userName = System.getProperty("user.name", "default")
+        File pipelineDir = new File(baseDir, props.mr.pipelineMode)
+        File outputDir = new File(pipelineDir, userName)
+        outputDir = new File(outputDir, dateFormat.format(
+                new Date()))
+    }
+
     File getOutputDir(File baseDir) {
         if(uniqueOutputDir) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "MM-dd-yyyy_HH-mm-ss", Locale.US)
-            String userName = System.getProperty("user.name", "default")
-            File pipelineDir = new File(baseDir, props.mr.pipelineMode)
-            File outputDir = new File(pipelineDir, userName)
-            outputDir = new File(outputDir, dateFormat.format(
-                    new Date()))
-            props.mr.lastOutputDir = outputDir
+            File outputDir = createOutputDir baseDir
+            //overwrite
+            props.mr.lastOutputDir = outputDir.absolutePath
             return outputDir
         }else{
             if(props.mr.lastOutputDir.isEmpty()) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "MM-dd-yyyy_HH-mm-ss", Locale.US)
-                String userName = System.getProperty("user.name", "default")
-                File pipelineDir = new File(baseDir, props.mr.pipelineMode)
-                File outputDir = new File(pipelineDir, userName)
-                outputDir = new File(outputDir, dateFormat.format(
-                        new Date()))
-                def lastOutputDir = outputDir.absolutePath
-                props.mr.lastOutputDir = lastOutputDir
-                return new File(lastOutputDir)
+                File outputDir = createOutputDir baseDir
+                //set new
+                props.mr.lastOutputDir = outputDir.absolutePath
+                return outputDir
             }else{
-                return new File(props.mr.lastOutputDir)
+                if(props.mr.uniqueOutputDir) {
+                    File outputDir = createOutputDir baseDir
+                    //overwrite
+                    props.mr.lastOutputDir = outputDir.absolutePath
+                    return outputDir
+                }else{
+                    //reuse previous output
+                    return new File(props.mr.lastOutputDir)
+                }
             }
 
             //            String userName = System.getProperty("user.name", "default")

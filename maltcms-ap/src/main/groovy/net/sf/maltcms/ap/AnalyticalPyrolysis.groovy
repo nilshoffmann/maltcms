@@ -482,7 +482,7 @@ def maltcmsRuntimeTab = swing.panel(constraints: BL.CENTER, id: "maltcmsTab", na
             td(colfill: true) {hglue()}
             td(align: "RIGHT") {label "Unique Output Directory"}
             td(colspan: 2, colfill: true, align: "LEFT") {
-                checkBox(id: 'uniqueOutputDir', actionPerformed: { if(uniqueOutputDir.isSelected()) {props.mr.lastOutputDir = ""}}, toolTipText:"If selected will create a new output directory for each run,\notherwise, the last output directory is reused!")
+                checkBox(id: 'uniqueOutputDir', toolTipText:"If selected will create a new output directory for each run,\notherwise, the last output directory is reused!")
                 bind(source: uniqueOutputDir, sourceProperty: "selected", target: props.mr,
                     targetProperty: "uniqueOutputDir", mutual: true)
             }
