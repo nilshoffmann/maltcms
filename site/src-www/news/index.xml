@@ -2,29 +2,53 @@
 <content group="news" ident="news/index" nname="News" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
     <column id="content">
         <h1>News</h1>
-	<h2>2013</h2>
-		<ul class="plainunbulletedlist">
-            <li><ref target="news/maui1_3" alt="Maltcms 1.3 Release on October 10th, 2013" /></li>
-			<li><ref target="news/latestBuilds" alt="Latest Builds available for testing" /></li>
-            <li><ref target="news/maui1_2_1" alt="Maui 1.2.1 Release on April 24th, 2013" /></li>
+        <h2>2013</h2>
+        <ul class="unbulletedlist">
+            <li>
+                <ref target="news/bipace2dBioinformatics" alt="Publication: BiPACE 2d" /> (<ref target="info/publications" alt="View all"/>)</li>
+            <li>
+                <ref target="news/maui1_3" alt="Maltcms 1.3 Release on October 10th, 2013" />
+            </li>
+            <li>
+                <ref target="news/latestBuilds" alt="Latest Builds available for testing" />
+            </li>
+            <li>
+                <ref target="news/maui1_2_1" alt="Maui 1.2.1 Release on April 24th, 2013" />
+            </li>
         </ul>
-	<h2>2012</h2>
-        <ul class="plainunbulletedlist">
-            <li><ref target="news/bmcBioinformatics1" alt="Publication: Peak- and chromatogram-based retention time alignment" /> (<ref target="info/publications" alt="View all"/>)</li>
-            <li><a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta2">Maui 1.0 Beta2 Preview Released on May 18th, 2012</a></li>
-            <li><ref target="news/maltcms1_2" alt="Maltcms 1.2 Released on April 20th, 2012"/></li>
-            <li><ref target="news/netbeansRcpTraining2" alt="Yet another Netbeans RCP Training at Bielefeld University"/></li>
-            <li><ref target="news/maltcms1_1" alt="Maltcms 1.1 Released on February 10th, 2012"/></li>
-            <li><ref target="news/bookChapterMetabolomics" alt="Publication: Generic Software Frameworks for GC-MS based Metabolomics" /> (<ref target="info/publications" alt="View all"/>)</li>
+        <h2>2012</h2>
+        <ul class="unbulletedlist">
+            <li>
+                <ref target="news/bmcBioinformatics1" alt="Publication: Peak- and chromatogram-based retention time alignment" /> (<ref target="info/publications" alt="View all"/>)</li>
+            <li>
+                <a href="https://sourceforge.net/projects/maltcms/files/maui/1.0/beta2">Maui 1.0 Beta2 Preview Released on May 18th, 2012</a>
+            </li>
+            <li>
+                <ref target="news/maltcms1_2" alt="Maltcms 1.2 Released on April 20th, 2012"/>
+            </li>
+            <li>
+                <ref target="news/netbeansRcpTraining2" alt="Yet another Netbeans RCP Training at Bielefeld University"/>
+            </li>
+            <li>
+                <ref target="news/maltcms1_1" alt="Maltcms 1.1 Released on February 10th, 2012"/>
+            </li>
+            <li>
+                <ref target="news/bookChapterMetabolomics" alt="Publication: Generic Software Frameworks for GC-MS based Metabolomics" /> (<ref target="info/publications" alt="View all"/>)</li>
         </ul>
-	<h2>2011</h2>
-        <ul class="plainunbulletedlist">
-	</ul>
-	<h2>2010</h2>
-        <ul class="plainunbulletedlist">
-            <li><ref target="news/perspektive2010" alt="Maui at the Perspektive 2010 Science Fair"/></li>
-            <li><ref target="news/netbeansRcpTraining" alt="Netbeans RCP Training at Bielefeld University"/></li>
-            <li><ref target="news/netbeansMauiFeature" alt="Maui featured as a Netbeans RCP application"/></li>
-	</ul>
+        <h2>2011</h2>
+        <ul class="unbulletedlist">
+        </ul>
+        <h2>2010</h2>
+        <ul class="unbulletedlist">
+            <li>
+                <ref target="news/perspektive2010" alt="Maui at the Perspektive 2010 Science Fair"/>
+            </li>
+            <li>
+                <ref target="news/netbeansRcpTraining" alt="Netbeans RCP Training at Bielefeld University"/>
+            </li>
+            <li>
+                <ref target="news/netbeansMauiFeature" alt="Maui featured as a Netbeans RCP application"/>
+            </li>
+        </ul>
     </column>
 </content>

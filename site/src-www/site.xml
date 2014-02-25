@@ -1,118 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<header>
-		<div id="affiliation">
-			<ul>
-				<li>
-					<a href="http://www.uni-bielefeld.de" title="Bielefeld University, Germany">Bielefeld University</a>
-				</li>
-				<li>
-					<a href="http://www.cebitec.uni-bielefeld.de" title="Center for Biotechnology, Bielefeld">CeBiTeC</a>
-				</li>
-				<li>
-					<a href="http://gi.cebitec.uni-bielefeld.de/" title="Genome Informatics Group, Bielefeld University">Genome
-						Informatics Group
-					</a>
-				</li>
-				<li>
-					<a href="http://bibiserv.techfak.uni-bielefeld.de/" title="Bielefeld Bioinformatics Server">BiBiServ</a>
-				</li>
-			</ul>
-		</div>
-		<download href="http://maltcms.de/maui/installation.html" title="Download" text="Get Maui 1.2.1" provider="Provided by sourceforge.net"/>
-		<download href="http://sf.net/projects/maltcms/files/maltcms/maltcms-1.3/" title="Download" text="Get Maltcms 1.3" provider="Provided by sourceforge.net"/>
-		<siteimage/>
-	</header>
-	<categories>
-		<ref target="home/index" alt="Home" />
-		<ref target="news/index" alt="News" />
-		<ref target="users/features" alt="Maltcms" />
-		<ref target="maui/index" alt="Maui" />
-		<ref target="developers/api" alt="Developers" />
-		<ref target="info/publications" alt="Info"/>
-	</categories>
-	<nav>
-		<group nname="Home" ident="home">
-			<ref target="home/index" />
-			<ref target="home/gettingStarted" />
-			<ref target="news/index" />
-			<ref target="info/publications" />
-			<ref target="info/license" />
-			<ref target="info/contact" />
-			<a href="http://sf.net/p/maltcms" title="Project Homepage">Project@SF</a>
-		</group>
+    <header>
+        <div id="affiliation">
+            <ul>
+                <li>
+                    <a href="http://www.uni-bielefeld.de" title="Bielefeld University, Germany">Bielefeld University</a>
+                </li>
+                <li>
+                    <a href="http://www.cebitec.uni-bielefeld.de" title="Center for Biotechnology, Bielefeld">CeBiTeC</a>
+                </li>
+                <li>
+                    <a href="http://gi.cebitec.uni-bielefeld.de/" title="Genome Informatics Group, Bielefeld University">Genome
+                        Informatics Group
+                    </a>
+                </li>
+                <li>
+                    <a href="http://bibiserv.techfak.uni-bielefeld.de/" title="Bielefeld Bioinformatics Server">BiBiServ</a>
+                </li>
+            </ul>
+        </div>
+        <download href="http://maltcms.de/maui/installation.html" title="Download" text="Get Maui 1.2.1" provider="Provided by sourceforge.net"/>
+        <download href="http://sf.net/projects/maltcms/files/maltcms/maltcms-1.3/" title="Download" text="Get Maltcms 1.3" provider="Provided by sourceforge.net"/>
+        <siteimage/>
+    </header>
+    <categories class="nav nav-pills">
+        <ref target="index" alt="Home" />
+        <ref target="users/features" alt="Maltcms" />
+        <ref target="maui/index" alt="Maui" />
+        <ref target="developers/api" alt="Developers" />
+        <ref target="news/index" alt="News" />
+        <ref target="info/publications" alt="Info"/>
+    </categories>
+    <nav>
+        <group nname="Home" ident="about">
+            <ref target="index" />
+<!--            <ref target="users/gettingStarted" />
+            <ref target="news/index" />
+            <ref target="info/publications" />
+            <ref target="info/license" />
+            <ref target="info/contact" />
+            -->
+        </group>
 
-		<group nname="Maltcms" ident="users">
-			<ref target="users/features" />
-			<ref target="users/support" />
-			<a href="https://sourceforge.net/p/maltcms/wiki" title="Wiki">Wiki</a>
-		</group>
+        <group nname="Maltcms" ident="users">
+            <ref target="users/features" />
+            <ref target="users/gettingStarted" />
+            <ref target="users/support" />
+            <a href="https://sourceforge.net/p/maltcms/wiki" title="Wiki">Wiki</a>
+        </group>
 
-		<group nname="Maui" ident="maui">
-			<!--<a href="http://maltcms.de/maui" title="Maui">Maui</a>-->
-			<ref target="maui/index" />
-		</group>
+        <group nname="Maui" ident="maui">
+            <ref target="maui/index" />
+        </group>
 
-		<group nname="News" ident="news">
-			<ref target="news/index" />
-		</group>
+        <group nname="News" ident="news">
+            <ref target="news/index" />
+        </group>
 
-		<group nname="Developers" ident="developers">
-			<ref target="developers/api" />
-			<a href="http://sf.net/projects/maltcms/" title="Project Website at Sourceforge">Project@SF</a>
-			<a href="http://sf.net/p/maltcms/wiki" title="Wiki">Wiki</a>
-			<group nname="Tutorials" ident="tutorials">
-				<ref target="developers/tutorials/programmaticWorkflow" />
-			</group>
-		</group>
-		<group nname="Info" ident="info">
-			<ref target="info/publications" />
-			<ref target="info/relatedProjects" />
-			<ref target="info/license" />
-			<ref target="info/contact" />
-		</group>
-	</nav>
+        <group nname="Developers" ident="developers">
+            <ref target="developers/api" />
+            <a href="http://sf.net/projects/maltcms/" title="Project Website at Sourceforge">Project@SF</a>
+            <a href="http://sf.net/p/maltcms/wiki" title="Wiki">Wiki</a>
+            <!--			<group nname="Tutorials" ident="tutorials">
+                <ref target="developers/tutorials/programmaticWorkflow" />
+            </group>-->
+        </group>
+        <group nname="Info" ident="info">
+            <ref target="info/publications" />
+            <ref target="info/relatedProjects" />
+            <ref target="info/license" />
+            <ref target="info/contact" />
+        </group>
+    </nav>
 
-	<div id="footer">
-		<span>
-            &#169; 2008-2013,
-		</span>
-		<a title="Contact" href="../info/contact.html">Nils Hoffmann</a> | Maltcms is hosted by
-		<a title="Hosting by sourceforge.net" href="http://sourceforge.net/">sourceforge.net</a> |
-		<a href="http://validator.w3.org/check?uri=http%3A%2F%2Fmaltcms.sourceforge.net%2Fhome%2Findex.html">Valid XHTML 1.0 Transitional</a>
-	</div>
+    <div id="footer">
+        <span>
+            &#169; 2008-2014,
+        </span>
+        <a title="Contact" href="../info/contact.html">Nils Hoffmann</a> | Maltcms is hosted by
+        <a title="Hosting by sourceforge.net" href="http://sourceforge.net/">sourceforge.net</a> | 
+        <a title="Style adapted from Twitter's bootstrap" href="http://getbootstrap.com">Made with Bootstrap</a>
+        <!--<a href="http://validator.w3.org/check?uri=http%3A%2F%2Fmaltcms.sourceforge.net%2Fhome%2Findex.html">Valid XHTML 1.0 Transitional</a>-->
+    </div>
 
-	<!-- Home -->
-	<xi:include href="home/index.xml" parse="xml"/>
-	<xi:include href="home/gettingStarted.xml" parse="xml" />
-	<!--    News -->
-	<xi:include href="news/index.xml" parse="xml"/>
-	<xi:include href="news/netbeansRcpTraining.xml" parse="xml"/>
-	<xi:include href="news/netbeansRcpTraining2.xml" parse="xml"/>
-	<xi:include href="news/netbeansMauiFeature.xml" parse="xml"/>
-	<xi:include href="news/perspektive2010.xml" parse="xml"/>
-	<xi:include href="news/maltcms1_3.xml" parse="xml"/>
-	<xi:include href="news/maltcms1_2_1.xml" parse="xml"/>
-	<xi:include href="news/maltcms1_2.xml" parse="xml"/>
-	<xi:include href="news/maltcms1_1.xml" parse="xml"/>
-	<xi:include href="news/bookChapterMetabolomics.xml" parse="xml"/>
-	<xi:include href="news/bmcBioinformatics1.xml" parse="xml"/>
-	<xi:include href="news/maui1_2_1.xml" parse="xml"/>
-	<xi:include href="news/latestBuilds.xml" parse="xml"/>
-	<!--    Users -->
-	<xi:include href="users/features.xml" parse="xml" />
-	<xi:include href="users/tutorials.xml" parse="xml" /> 
-	<xi:include href="users/support.xml" parse="xml" />
-	<!--    Developers -->
-	<xi:include href="developers/concepts.xml" parse="xml" /> 
-	<xi:include href="developers/api.xml" parse="xml" />
-	<xi:include href="developers/tutorials/programmaticWorkflow.xml" parse="xml" />
-	<xi:include href="developers/styleGuide.xml" parse="xml" />
-	<!--    Info -->
-	<xi:include href="info/publications.xml" parse="xml" />
-	<xi:include href="info/relatedProjects.xml" parse="xml" />
-	<xi:include href="info/license.xml" parse="xml" />
-	<xi:include href="info/contact.xml" parse="xml" />
-	<!--    Maui -->
-	<xi:include href="maui/index.xml" parse="xml" />
+    <!-- Root -->
+    <xi:include href="index.xml" parse="xml"/>
+    <!--    News -->
+    <xi:include href="news/index.xml" parse="xml"/>
+    <xi:include href="news/netbeansRcpTraining.xml" parse="xml"/>
+    <xi:include href="news/netbeansRcpTraining2.xml" parse="xml"/>
+    <xi:include href="news/netbeansMauiFeature.xml" parse="xml"/>
+    <xi:include href="news/perspektive2010.xml" parse="xml"/>
+    <xi:include href="news/maltcms1_3.xml" parse="xml"/>
+    <xi:include href="news/maltcms1_2_1.xml" parse="xml"/>
+    <xi:include href="news/maltcms1_2.xml" parse="xml"/>
+    <xi:include href="news/maltcms1_1.xml" parse="xml"/>
+    <xi:include href="news/bookChapterMetabolomics.xml" parse="xml"/>
+    <xi:include href="news/bmcBioinformatics1.xml" parse="xml"/>
+    <xi:include href="news/maui1_2_1.xml" parse="xml"/>
+    <xi:include href="news/latestBuilds.xml" parse="xml"/>
+    <xi:include href="news/bipace2dBioinformatics.xml" parse="xml"/>
+    <!--    Users -->
+    <xi:include href="users/features.xml" parse="xml" />
+    <xi:include href="users/gettingStarted.xml" parse="xml" />
+    <xi:include href="users/support.xml" parse="xml" />
+    <!--    Developers -->
+    <xi:include href="developers/concepts.xml" parse="xml" /> 
+    <xi:include href="developers/api.xml" parse="xml" />
+    <!--	<xi:include href="developers/tutorials/programmaticWorkflow.xml" parse="xml" />-->
+    <!--	<xi:include href="developers/styleGuide.xml" parse="xml" />-->
+    <!--    Info -->
+    <xi:include href="info/publications.xml" parse="xml" />
+    <xi:include href="info/relatedProjects.xml" parse="xml" />
+    <xi:include href="info/license.xml" parse="xml" />
+    <xi:include href="info/contact.xml" parse="xml" />
+    <!--    Maui -->
+    <xi:include href="maui/index.xml" parse="xml" />
 </site>

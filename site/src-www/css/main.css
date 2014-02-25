@@ -1,138 +1,7 @@
-body {
-    background: none repeat scroll 0 0 #FFFFFF;
-    font-family: Arial,sans-serif;
-    font-size: 0.9em;
-    font-weight: normal;
-    margin: 0 auto;
-    padding: 0;
-    width: 1024px;
-}
-a {
-    color: #0000BB;
-    font-weight: normal;
-    text-decoration: underline;
-}
-a:hover {
-    text-decoration: none;
-}
-div.nav_dotted ul.unbulletedlist li a {
-    text-decoration: underline;
-}
-div.nav_dotted ul.unbulletedlist li a:hover {
-    background: inherit;
-    color: #1B1E26;
-    text-decoration: none;
-}
-div.nav_dotted ul.unbulletedlist {
-    border-top: 1px solid;
-    color: #000000;
-    padding-bottom: 0.5em;
-}
-
-div.warn {
-    background: #FFEEEE;
-    padding: 0.5em;
-    border: 1px solid #FF0000;
-    border-radius: 5px;
-    margin-bottom: 0.5em;
-    margin-top: 0.5em;
-}
-div.warn h1 {
-    color: #FF0000;
-    font-weight: bold;
-}
-div.warn p {
-    color: #FF0000;
-}
-div.info {
-    background: #EEEEFF;
-    padding: 0.5em;
-    border: 1px solid #0000FF;
-    border-radius: 5px;
-    margin-bottom: 0.5em;
-    margin-top: 0.5em;
-}
-div.info h1 {
-    color: #0000FF;
-    font-weight: bold;
-}
-div.info p {
-    color: #0000FF;
-}
-
-.plainunbulletedlist {
-    list-style-type: none;
-    margin-bottom: 0;
-    margin-top: 0;
-    padding-bottom: 0;
-    padding-top: 0;
-    padding-left: 1em;
-}
-
-ul.plainunbulletedlist li {
-    background: none repeat scroll 0 0 transparent; 
-    color: #000000;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-}
-
-ul.plainunbulletedlist li:before {
+.unbulletedlist li:before {
     content: "\00BB \0020";
 }
-
-div.nav_dotted ul.unbulletedlist li:before {
-    content: "\00BB \0020";
-}
-div.nav_stroked {
-    padding: 0.5em;
-}
-div.nav_dotted ul.unbulletedlist li {
-    background: none repeat scroll 0 0 transparent;
-    border-bottom: 1px solid;
-    border-left: 1px solid;
-    border-right: 1px solid;
-    color: #000000;
-    padding: 0.2em;
-}
-div.nav_dotted ul.unbulletedlist li:hover {
-    background: none repeat scroll 0 0 #BBFF99;
-}
-div.block {
-/*    border: 1px solid #CCCCCC;
-    border-radius: 10px;*/
-	border-bottom: 1px solid #CCCCCC;
-    padding: 0.5em;
-    margin-bottom: 0.5em;
-}
-.copyright {
-    font-size: 0.7em;
-    padding: 0.5em;
-    text-align: right;
-    vertical-align: text-bottom;
-}
-.hrule {
-    border-top: 1px solid;
-    color: #333333;
-    margin-bottom: 0.5em;
-    margin-top: 0.5em;
-}
-h2 {
-    color: #666666;
-    font-size: 0.9em;
-    font-weight: bold;
-    margin: 0;
-}
-h1 {
-    color: #AA3333;
-    font-size: 1em;
-    font-weight: bold;
-    margin: 0;
-    padding: 0;
-}
-.rightHeader {
-    border-bottom: 1px solid;
-}
-p {
+/*p {
     color: #333333;
     margin-left: 0;
     margin-top: 0.1em;
@@ -147,18 +16,18 @@ p:last-child {
     margin-bottom: 0.1em;
     overflow: auto;
     z-index: 15;
-}
+}*/
 
-div.nav_dotted ul.unbulletedlist li.active {
-    background: none repeat scroll 0 0 #CCEEAA;
+.active {
+    background: none repeat scroll 0 0 #DDFFAA;
     text-decoration: none;
 }
+
 .unbulletedlist {
     list-style-type: none;
-    margin-bottom: 0;
-    margin-top: 0;
-    padding-bottom: 0;
-    padding-top: 0;
+    margin-left: 0;
+    padding-left: 0.5em;
+    text-indent:  0em;
 }
 .date {
     color: #FF0000;
@@ -175,20 +44,48 @@ div.nav_dotted ul.unbulletedlist li.active {
 .indent {
     text-indent: 1em;
 }
-#header {
-/*    border-left: 1px solid #AACC88;
-    border-right: 1px solid #AACC88;*/
-}
 #categories {
     background: none repeat scroll 0 0 #CCEE99;
     border-bottom: 1px solid #AACC88;
     border-top: 1px solid #AACC88;
     clear: both;
-    padding: 0.25em;
+    padding: 0.5em;
 }
-#categories ul li {
-    display: inline;
-    padding: 1em;
+#categories ul li.active a {
+    background-color: #AACC88;
+}
+#categories ul li a {
+    border: 1px solid #CCEE99;
+    text-decoration: none;
+}
+#categories ul li a:hover {
+    background-color: #AACC88;
+    color: #FFFFFF;
+    border: 1px solid #668833;
+    text-decoration: none;
+}
+a {
+    color: #335500;
+    text-decoration: underline;
+}
+a:hover {
+    /*color: #335500;*/
+    text-decoration: none;
+}
+#nav ul li a {
+    text-decoration: none;
+}
+#nav ul li a:hover {
+    text-decoration: underline;
+}
+a.btn {
+    text-decoration: none;
+}
+a.btn:hover {
+    text-decoration: none;
+}
+#colcontent div ~ a {
+    color: #428BCA;
 }
 #footer {
     background: none repeat scroll 0 0 #EEEEEE;
@@ -204,7 +101,7 @@ div.nav_dotted ul.unbulletedlist li.active {
     background: none repeat scroll 0 0 #FFFFFF;
     color: #999999;
     float: left;
-    font-size: 0.8em;
+    font-size: .8em;
     width: 100%;
 }
 #sitemap div {
@@ -216,6 +113,12 @@ div.nav_dotted ul.unbulletedlist li.active {
     list-style-type: none;
     margin: 0;
     padding: 0;
+}
+#sitemap ul li a {
+    text-decoration: none;
+}
+#sitemap ul li a:hover {
+    text-decoration: underline;
 }
 .sitemapHeading {
     font-weight: bold;
@@ -229,7 +132,7 @@ div.nav_dotted ul.unbulletedlist li.active {
 #content {
     background-color: #FFFFFF;
     float: left;
-    width: 75%;
+    width: 85%;
 }
 .download {
     width: 12em;
@@ -246,7 +149,6 @@ div.nav_dotted ul.unbulletedlist li.active {
     text-align: left;
 }
 .download a {
-    font-family: Arial,sans-serif;
     font-weight: bold;
     text-decoration: none;    
 }
@@ -288,16 +190,17 @@ div.nav_dotted ul.unbulletedlist li.active {
     clear: left;
     float: right;
     padding-right: 1em;
+    padding-top: 0.5em;
 }
 #affiliation a {
     background-color: inherit;
-    color: #0000BB;
-    text-decoration: underline;
+    /*color: #0000BB;*/
+    /*text-decoration: underline;*/
 }
 #affiliation a:hover {
     background-color: inherit;
-    color: #1B1E26;
-    text-decoration: none;
+    /*color: #1B1E26;*/
+    /*text-decoration: none;*/
 }
 #affiliation li {
     list-style-type: none;
@@ -310,23 +213,18 @@ div.nav_dotted ul.unbulletedlist li.active {
     padding: 0.5em;
 }
 #colcontent {
-    /*background: url("/img/background.png") repeat-x scroll 0 0 transparent;*/
+    /*background: url("./img/background.png") repeat-x scroll 0 0 transparent;*/
     min-height: 25em;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    padding-top: 0.5em;
+    /*    padding-left: 0.5em;
+        padding-right: 0.5em;
+        padding-top: 0.5em;*/
 }
 #nav {
     color: #333333;
     float: left;
-    width: 25%;
-}
-#navcontent {
-    background: none repeat scroll 0 0 transparent;
-/*    border-bottom: 1px solid #AACC88;
-    border-left: 1px solid #AACC88;
-    border-radius: 0 0 0 10px;
-    border-right: 1px solid #AACC88;*/
+    width: 15%;
+    margin-top: 2em;
+    padding-right: 1em;
 }
 #logo {
     background-color: transparent;
@@ -337,26 +235,3 @@ div.nav_dotted ul.unbulletedlist li.active {
     padding: 0.5em;
     width: 100%;
 }
-#categories ul li a {
-    padding: 0.5em;
-    color: #668833;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 10px;
-    border: 1px solid #CCEE99;
-    background-color: #CCEE99;
-}
-#navRight {
-    background-color: transparent;
-    float: left;
-    margin: 0.5em 0.5em 0.5em 0;
-    padding: 0.5em;
-    width: 25%;
-}
-#categories ul li a:hover {
-    color: #FFFFFF;
-    border-radius: 10px;
-    border: 1px solid #668833;
-    background-color: #AACC88;
-}
-

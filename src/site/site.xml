@@ -42,8 +42,9 @@
             <item name="Download" href="download.html"/>
             <item name="Getting Started" href="gettingStarted.html"/>
             <item name="Documentation" href="./documentation/index.html" collapse="true">
-                <item name="BiPACE and BiPACE 2D" href="./documentation/bipace2d.html"/>
+                <item name="Workflow Configuration" href="./documentation/workflowConfiguration.html"/>
                 <item name="Available Commands" href="./documentation/fragmentCommands.html"/>
+                <item name="BiPACE and BiPACE 2D" href="./documentation/bipace2d.html"/>
                 <item name="Metabolite Database" href="./documentation/metaboliteDb.html"/>
                 <item name="Java API" href="./apidocs/index.html" />
             </item>
