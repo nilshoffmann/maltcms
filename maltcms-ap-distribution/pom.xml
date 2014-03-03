@@ -4,7 +4,7 @@
     <parent>
         <artifactId>maltcms-modules</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.3.1-SNAPSHOT</version>
+        <version>1.3.1</version>
     </parent>
     <artifactId>maltcms-ap-distribution</artifactId>
     <name>Maltcms Analytical Pyrolysis Distribution Binary</name>
