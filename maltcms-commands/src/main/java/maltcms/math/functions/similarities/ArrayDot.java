@@ -1,6 +1,6 @@
 /*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry.
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -35,7 +35,7 @@ import ucar.ma2.Array;
 /**
  * Dot product as similarity measure between arrays.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)

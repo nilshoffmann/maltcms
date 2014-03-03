@@ -1,6 +1,6 @@
 /*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry.
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -69,7 +69,7 @@ import ucar.ma2.MAMath.MinMax;
  * Visualizes a chromatogram as a heat map, based on the empirical distribution
  * of intensity values, using a user defined sample model and color model.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @RequiresVariables(names = {"var.scan_acquisition_time", "var.mass_values",

@@ -1,6 +1,6 @@
 /*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry.
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -34,7 +34,7 @@ import ucar.ma2.Array;
  * Interface to define classes, comparing arrays, especially mass spectra by
  * some function and returning a double value as result.
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  *
  */
 public interface IDtwSimilarityFunction extends IConfigurable {

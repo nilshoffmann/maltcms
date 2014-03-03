@@ -1,6 +1,6 @@
 /*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry.
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -63,7 +63,7 @@ import ucar.ma2.MAMath.MinMax;
 /**
  * Calculates pairwise scores or costs between time series of different lengths.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  */
 @ProvidesVariables(names = {"var.minimizing_array_comp",
     "var.pairwise_distance_matrix", "var.pairwise_distance_names"})

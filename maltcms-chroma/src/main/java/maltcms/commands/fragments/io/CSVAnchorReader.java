@@ -1,6 +1,6 @@
 /*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry.
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -66,7 +66,7 @@ import ucar.ma2.IndexIterator;
  * specialized tab-separated structure. Should be reworked to blend in with the
  * other IO-Provider Classes and should thus implement IDataSource.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @RequiresOptionalVariables(names = {"var.scan_acquisition_time"})

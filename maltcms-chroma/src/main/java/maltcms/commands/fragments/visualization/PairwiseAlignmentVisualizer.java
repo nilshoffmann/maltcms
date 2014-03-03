@@ -1,6 +1,6 @@
 /*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry.
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -86,7 +86,7 @@ import ucar.ma2.MAMath.MinMax;
  * Plots a pairwise alignment, by displaying both time series' tics, connected
  * by lines depicting the path obtained from alignment.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 //"var.pairwise_distance_matrix"

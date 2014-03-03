@@ -1,6 +1,6 @@
 /* 
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 public class ColumnWiseComparisonTest {
 

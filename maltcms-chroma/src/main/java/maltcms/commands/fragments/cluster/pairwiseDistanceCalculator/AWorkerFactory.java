@@ -1,6 +1,6 @@
 /* 
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -32,7 +32,7 @@ import java.io.Serializable;
 /**
  * Extend this Factory in order to create custom worker instances.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  */
 public abstract class AWorkerFactory implements Serializable {
 

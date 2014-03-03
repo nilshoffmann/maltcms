@@ -1,6 +1,6 @@
 /*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry.
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -38,7 +38,7 @@ import java.io.Serializable;
  * that -Inf is reserved for special cases, where the similarity is not
  * determinable or was not calculated due to an unmet threshold criterion.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  */
 public interface IScalarSimilarity extends Serializable {
 

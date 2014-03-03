@@ -1,6 +1,6 @@
 /*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry.
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -42,7 +42,7 @@ import ucar.ma2.ArrayDouble;
  * Refinement of PairwiseFeatureSequenceSimilarity, adding necessary methods for
  * alignment with DTW.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public interface IDynamicTimeWarp extends PairwiseFeatureSequenceSimilarity {

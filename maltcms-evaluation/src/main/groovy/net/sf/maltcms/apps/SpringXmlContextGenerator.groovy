@@ -1,6 +1,6 @@
 /* 
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
- * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
+ * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
  *
@@ -33,7 +33,7 @@ import net.sf.maltcms.groovy.Utils
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 def cli = new CliBuilder(usage:'SpringXmlGenerator')
 cli.n(args:1, argName:'classNames', 'use given classes',valueSeparator: (char)',')
