@@ -43,37 +43,37 @@ import ucar.ma2.Array;
 @ServiceProvider(service = AArrayFilter.class)
 public class BottomHatFilter extends AArrayFilter {
 
-	@Configurable
-	private int window = 10;
+    @Configurable
+    private int window = 10;
 
-	public BottomHatFilter() {
-		super();
-	}
+    public BottomHatFilter() {
+        super();
+    }
 
-	@Override
-	public Array apply(final Array a) {
-		Array arr = super.apply(a);
-		if (arr.getRank() == 1) {
-			final double[] d = (double[]) arr.get1DJavaArray(double.class);
-			final double[] th = MathTools.bottomHat(this.window, d);
-			arr = Array.factory(th);
-		} else {
-			throw new IllegalArgumentException(
-				"Can only work on arrays of dimension 1");
-		}
-		return arr;
-	}
+    @Override
+    public Array apply(final Array a) {
+        Array arr = super.apply(a);
+        if (arr.getRank() == 1) {
+            final double[] d = (double[]) arr.get1DJavaArray(double.class);
+            final double[] th = MathTools.bottomHat(this.window, d);
+            arr = Array.factory(th);
+        } else {
+            throw new IllegalArgumentException(
+                "Can only work on arrays of dimension 1");
+        }
+        return arr;
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		super.configure(cfg);
-		this.window = cfg.getInt(this.getClass().getName() + ".window", 10);
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+        super.configure(cfg);
+        this.window = cfg.getInt(this.getClass().getName() + ".window", 10);
+    }
 
-	@Override
-	public BottomHatFilter copy() {
-		BottomHatFilter bhf = new BottomHatFilter();
-		bhf.setWindow(window);
-		return bhf;
-	}
+    @Override
+    public BottomHatFilter copy() {
+        BottomHatFilter bhf = new BottomHatFilter();
+        bhf.setWindow(window);
+        return bhf;
+    }
 }

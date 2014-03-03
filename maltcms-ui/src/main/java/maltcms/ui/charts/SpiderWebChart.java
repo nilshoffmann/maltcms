@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,11 +27,10 @@
  */
 package maltcms.ui.charts;
 
+import cross.datastructures.tools.EvalTools;
 import org.jfree.chart.plot.SpiderWebPlot;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-
-import cross.datastructures.tools.EvalTools;
 
 /**
  * Chart displaying a plot of different variables organized as a spider's web.
@@ -42,8 +41,8 @@ import cross.datastructures.tools.EvalTools;
 public class SpiderWebChart extends AChart<SpiderWebPlot> {
 
     public static CategoryDataset createCategoryDataset(
-            final String[] collabels, final String[] rowlabels,
-            final double[][] data) {
+        final String[] collabels, final String[] rowlabels,
+        final double[][] data) {
         final DefaultCategoryDataset cd = new DefaultCategoryDataset();
         EvalTools.eqI(collabels.length, data[0].length, cd);
         EvalTools.eqI(rowlabels.length, data.length, cd);
@@ -63,9 +62,9 @@ public class SpiderWebChart extends AChart<SpiderWebPlot> {
     }
 
     public SpiderWebChart(final String title1, final String[] collabels,
-            final String[] rowlabels, final double[][] data) {
+        final String[] rowlabels, final double[][] data) {
         this(title1, SpiderWebChart.createCategoryDataset(collabels, rowlabels,
-                data));
+            data));
     }
 
     @Override

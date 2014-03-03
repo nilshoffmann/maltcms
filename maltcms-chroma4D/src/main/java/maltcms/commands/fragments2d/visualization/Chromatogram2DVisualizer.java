@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,23 +27,6 @@
  */
 package maltcms.commands.fragments2d.visualization;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.List;
-
-import maltcms.io.csv.ColorRampReader;
-import maltcms.tools.ImageTools;
-import maltcms.ui.charts.AChart;
-import maltcms.ui.charts.MassSpectrumPlot;
-import maltcms.ui.charts.PlotRunner;
-
-import org.apache.commons.configuration.Configuration;
-import org.jfree.chart.plot.XYPlot;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayInt;
-import ucar.ma2.Index;
-import ucar.ma2.IndexIterator;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
@@ -55,9 +38,23 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.io.csv.ColorRampReader;
+import maltcms.tools.ImageTools;
+import maltcms.ui.charts.AChart;
+import maltcms.ui.charts.MassSpectrumPlot;
+import maltcms.ui.charts.PlotRunner;
+import org.apache.commons.configuration.Configuration;
+import org.jfree.chart.plot.XYPlot;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayInt;
+import ucar.ma2.Index;
+import ucar.ma2.IndexIterator;
 
 /**
  * Creates an image for a two-dimensional chromatogram.
@@ -80,17 +77,17 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";
     @Configurable(name = "var.second_column_scan_index",
-    value = "second_column_scan_index")
+        value = "second_column_scan_index")
     private String secondScanIndexVar = "second_column_scan_index";
     @Configurable(name = "var.scan_rate", value = "scan_rate")
     private String scanRateVar = "scan_rate";
     @Configurable(name = "var.modulation_time", value = "modulation_time")
     private String modulationTimeVar = "modulation_time";
     @Configurable(name = "var.scan_acquisition_time",
-    value = "scan_acquisition_time")
+        value = "scan_acquisition_time")
     private String scanAcquTime = "scan_acquisition_time";
     @Configurable(name = "var.second_column_scan_index",
-    value = "second_column_scan_index")
+        value = "second_column_scan_index")
     private final String secondColumnScanIndexVar = "second_column_scan_index";
     @Configurable(name = "var.second_column_time", value = "second_column_time")
     private String secondColumnTimeVar = "second_column_time";
@@ -99,7 +96,7 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
     @Configurable(name = "maltcms.ui.charts.PlotRunner.filetype", value = "png")
     private final String format = "png";
     @Configurable(name = "ucar.nc2.NetcdfFile.fillValueDouble",
-    value = "9.9692099683868690e+36d")
+        value = "9.9692099683868690e+36d")
     private double doubleFillValue;
     @Configurable(name = "images.thresholdLow", value = "0")
     private double threshold = 0;
@@ -118,15 +115,15 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
             log.info("Creating image for {}", ff.getName());
             log.info("Using {} as data", this.totalIntensityVar);
             final double scanRate = ff.getChild(this.scanRateVar).getArray().getDouble(
-                    Index.scalarIndexImmutable);
+                Index.scalarIndexImmutable);
             final double modulationTime = ff.getChild(this.modulationTimeVar).
-                    getArray().getDouble(Index.scalarIndexImmutable);
+                getArray().getDouble(Index.scalarIndexImmutable);
             final int scansPerModulation = (int) (scanRate * modulationTime);
-			IVariableFragment ticVar = ff.getChild(this.totalIntensityVar);
-			IVariableFragment tic2DScanIndexVar = ff.getChild(this.secondScanIndexVar);
-			ticVar.setIndex(tic2DScanIndexVar);
+            IVariableFragment ticVar = ff.getChild(this.totalIntensityVar);
+            IVariableFragment tic2DScanIndexVar = ff.getChild(this.secondScanIndexVar);
+            ticVar.setIndex(tic2DScanIndexVar);
             List<Array> intensities = ticVar.
-                    getIndexedArray();
+                getIndexedArray();
             boolean truncateLast = false;
             int shapeZero = -1;
             for (Array a : intensities) {
@@ -165,24 +162,24 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
                 }
 
                 final AChart<XYPlot> plot = new MassSpectrumPlot(
-                        "Scanline TIC mean", StringTools.removeFileExt(ff.
+                    "Scanline TIC mean", StringTools.removeFileExt(ff.
                         getName()), means, false, false);
                 final PlotRunner pl1 = new PlotRunner(plot.create(),
-                        "Scanline TIC mean", StringTools.removeFileExt(ff.
+                    "Scanline TIC mean", StringTools.removeFileExt(ff.
                         getName())
-                        + "_tic-mean", getWorkflow().getOutputDirectory(this));
+                    + "_tic-mean", getWorkflow().getOutputDirectory(this));
                 pl1.configure(Factory.getInstance().getConfiguration());
                 Factory.getInstance().submitJob(pl1);
 
             }
 
             final BufferedImage bi = ImageTools.create2DImage(ff.getName(),
-                    intensities, scansPerModulation, this.doubleFillValue,
-                    this.threshold, colorRamp, this.getClass());
+                intensities, scansPerModulation, this.doubleFillValue,
+                this.threshold, colorRamp, this.getClass());
             final String filename = StringTools.removeFileExt(ff.getName())
-                    + "_empty";
+                + "_empty";
             final File out = ImageTools.saveImage(bi, filename, this.format,
-                    getWorkflow().getOutputDirectory(this), this);
+                getWorkflow().getOutputDirectory(this), this);
 
 //            final ArrayDouble.D1 firstRetTime = (ArrayDouble.D1) ArrayTools.
 //                    divBy60(ff.getChild(this.scanAcquTime).getArray());
@@ -201,7 +198,6 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
 //                    getWorkflow().getOutputDirectory(this));
 //            pl.configure(Factory.getInstance().getConfiguration());
 //            Factory.getInstance().submitJob(pl);
-
             final ArrayInt.D1 histo = new ArrayInt.D1(256);
             int[] a = new int[3];
             for (int i = 0; i < bi.getWidth(); i++) {
@@ -214,12 +210,12 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
             }
 
             final AChart<XYPlot> plot = new MassSpectrumPlot(
-                    "Verteilung Farbe",
-                    StringTools.removeFileExt(ff.getName()), histo, false,
-                    false);
+                "Verteilung Farbe",
+                StringTools.removeFileExt(ff.getName()), histo, false,
+                false);
             final PlotRunner pl1 = new PlotRunner(plot.create(),
-                    "Verteilung Farbe", StringTools.removeFileExt(ff.getName())
-                    + "_v", getWorkflow().getOutputDirectory(this));
+                "Verteilung Farbe", StringTools.removeFileExt(ff.getName())
+                + "_v", getWorkflow().getOutputDirectory(this));
             pl1.configure(Factory.getInstance().getConfiguration());
             Factory.getInstance().submitJob(pl1);
         }
@@ -232,17 +228,17 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
     @Override
     public void configure(final Configuration cfg) {
         this.totalIntensityVar = cfg.getString(this.getClass().getName()
-                + ".total_intensity", "total_intensity");
+            + ".total_intensity", "total_intensity");
         this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
         this.modulationTimeVar = cfg.getString("var.modulation_time",
-                "modulation_time");
+            "modulation_time");
         this.secondScanIndexVar = cfg.getString("var.second_column_scan_index",
-                "second_column_scan_index");
+            "second_column_scan_index");
         this.doubleFillValue = cfg.getDouble(
-                "ucar.nc2.NetcdfFile.fillValueDouble", 9.9692099683868690e+36);
+            "ucar.nc2.NetcdfFile.fillValueDouble", 9.9692099683868690e+36);
         this.secondColumnTimeVar = cfg.getString("var.second_column_time",
-                "second_column_time");
+            "second_column_time");
         this.scanAcquTime = cfg.getString("var.scan_acquisition_time",
-                "scan_acquisition_time");
+            "scan_acquisition_time");
     }
 }

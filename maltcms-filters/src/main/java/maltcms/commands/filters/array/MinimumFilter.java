@@ -42,48 +42,48 @@ import ucar.ma2.IndexIterator;
 @ServiceProvider(service = AArrayFilter.class)
 public class MinimumFilter extends AArrayFilter {
 
-	private AElementFilter aef = null;
-	private double minimum = 0.0d;
+    private AElementFilter aef = null;
+    private double minimum = 0.0d;
 
-	public MinimumFilter() {
-		super();
-	}
+    public MinimumFilter() {
+        super();
+    }
 
-	/**
-	 * Default constructor.
-	 *
-	 * @param iMinimum minimum
-	 */
-	public MinimumFilter(final double minimum) {
-		this();
-		this.minimum = minimum;
-		this.aef = new AElementFilter() {
-			@Override
-			public Double apply(final Double d) {
-				if (d < minimum) {
-					return 0.0d;
-				} else {
-					return d;
-				}
-			}
-		};
-	}
+    /**
+     * Default constructor.
+     *
+     * @param iMinimum minimum
+     */
+    public MinimumFilter(final double minimum) {
+        this();
+        this.minimum = minimum;
+        this.aef = new AElementFilter() {
+            @Override
+            public Double apply(final Double d) {
+                if (d < minimum) {
+                    return 0.0d;
+                } else {
+                    return d;
+                }
+            }
+        };
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Array apply(final Array a) {
-		Array arr = super.apply(a);
-		final IndexIterator ii = arr.getIndexIteratorFast();
-		while (ii.hasNext()) {
-			ii.setDoubleCurrent(this.aef.apply(ii.getDoubleNext()));
-		}
-		return arr;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Array apply(final Array a) {
+        Array arr = super.apply(a);
+        final IndexIterator ii = arr.getIndexIteratorFast();
+        while (ii.hasNext()) {
+            ii.setDoubleCurrent(this.aef.apply(ii.getDoubleNext()));
+        }
+        return arr;
+    }
 
-	@Override
-	public MinimumFilter copy() {
-		return new MinimumFilter(minimum);
-	}
+    @Override
+    public MinimumFilter copy() {
+        return new MinimumFilter(minimum);
+    }
 }

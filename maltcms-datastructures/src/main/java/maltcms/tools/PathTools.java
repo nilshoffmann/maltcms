@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,45 +27,42 @@
  */
 package maltcms.tools;
 
-import java.awt.Point;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import maltcms.datastructures.array.IArrayD2Double;
-import maltcms.io.csv.CSVWriter;
-
-import org.apache.commons.configuration.Configuration;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
-import ucar.ma2.IndexIterator;
-import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.IConfigurable;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
+import cross.datastructures.tools.FragmentTools;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.Tuple2DI;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.WorkflowSlot;
-import cross.datastructures.tools.FragmentTools;
 import cross.tools.MathTools;
 import cross.tools.StringTools;
+import java.awt.Point;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.array.IArrayD2Double;
+import maltcms.io.csv.CSVWriter;
+import org.apache.commons.configuration.Configuration;
+import ucar.ma2.Array;
 import ucar.ma2.ArrayByte;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayInt;
+import ucar.ma2.IndexIterator;
+import ucar.nc2.Dimension;
 
 /**
  * Utility class providing methods for handling of the path obtained from
@@ -90,9 +87,9 @@ public class PathTools implements IConfigurable {
     private double threshold = 0.95;
 
     public static boolean allInfinite(final double a, final double b,
-            final double c) {
+        final double c) {
         return (Double.isInfinite(a) && Double.isInfinite(b) && Double
-                .isInfinite(c));
+            .isInfinite(c));
     }
 
     /**
@@ -138,15 +135,15 @@ public class PathTools implements IConfigurable {
      * @param ia
      */
     public static void getFragments(final IFileFragment parent,
-            final List<Tuple2DI> al, final IArrayD2Double ia) {
+        final List<Tuple2DI> al, final IArrayD2Double ia) {
         final Tuple2D<Array, Array> t = PathTools.toArrays(al);
         final Dimension d = new Dimension("steps", al.size(), true, false,
-                false);
+            false);
         final IVariableFragment pathDist = new VariableFragment(parent, Factory
-                .getInstance().getConfiguration().getString(
+            .getInstance().getConfiguration().getString(
                 "var.warp_path_distance", "warp_path_distance"));
         final IVariableFragment wpi = new VariableFragment(parent, Factory
-                .getInstance().getConfiguration().getString("var.warp.path.i",
+            .getInstance().getConfiguration().getString("var.warp.path.i",
                 "warp_path_i"));
         wpi.setDimensions(new Dimension[]{d});
         pathDist.setDimensions(new Dimension[]{d});
@@ -158,7 +155,7 @@ public class PathTools implements IConfigurable {
         }
         pathDist.setArray(dists);
         final IVariableFragment wpj = new VariableFragment(parent, Factory
-                .getInstance().getConfiguration().getString("var.warp.path.j",
+            .getInstance().getConfiguration().getString("var.warp.path.j",
                 "warp_path_j"));
         wpj.setDimensions(new Dimension[]{d});
         wpi.setArray(t.getFirst());
@@ -280,7 +277,7 @@ public class PathTools implements IConfigurable {
      */
     @Deprecated
     public Tuple2DI addStepN(final Integer a, final Integer b,
-            final List<Tuple2DI> l, final StringBuffer sb) {
+        final List<Tuple2DI> l, final StringBuffer sb) {
         sb.append("+");
         PathTools.log.debug("NORTH");
         final Tuple2DI t = new Tuple2DI(Math.max(0, a - 1), Math.max(0, b));
@@ -298,7 +295,7 @@ public class PathTools implements IConfigurable {
      */
     @Deprecated
     public Tuple2DI addStepNW(final Integer a, final Integer b,
-            final List<Tuple2DI> l, final StringBuffer sb) {
+        final List<Tuple2DI> l, final StringBuffer sb) {
         sb.append("o");
         PathTools.log.debug("NORTHWEST");
         final Tuple2DI t = new Tuple2DI(Math.max(0, a - 1), Math.max(0, b - 1));
@@ -316,7 +313,7 @@ public class PathTools implements IConfigurable {
      */
     @Deprecated
     public Tuple2DI addStepW(final Integer a, final Integer b,
-            final List<Tuple2DI> l, final StringBuffer sb) {
+        final List<Tuple2DI> l, final StringBuffer sb) {
         sb.append("-");
         PathTools.log.debug("WEST");
         final Tuple2DI t = new Tuple2DI(Math.max(0, a), Math.max(0, b - 1));
@@ -326,7 +323,7 @@ public class PathTools implements IConfigurable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
      * )
@@ -335,7 +332,7 @@ public class PathTools implements IConfigurable {
     public void configure(final Configuration cfg) {
         this.window = cfg.getInt(this.getClass().getName() + ".window", 1);
         this.threshold = cfg.getDouble(
-                this.getClass().getName() + ".threshold", 0.95);
+            this.getClass().getName() + ".threshold", 0.95);
     }
 
     /**
@@ -349,7 +346,7 @@ public class PathTools implements IConfigurable {
         final Tuple2DI start = new Tuple2DI(-1, -1);
         PathTools.log.debug("Creating smooth path!");
         final Tuple2DI finish = new Tuple2DI(map1.get(map1.size() - 1)
-                .getFirst() + 1, map1.get(map1.size() - 1).getSecond() + 1);
+            .getFirst() + 1, map1.get(map1.size() - 1).getSecond() + 1);
         int lastKink = 0;
         for (int i = 0; i < map1.size(); i++) {
             Tuple2DI last = null;
@@ -367,25 +364,25 @@ public class PathTools implements IConfigurable {
             }
             if ((current != null) && (next != null) && (last != null)) {// kinks
                 final int di_lc = Math
-                        .abs(last.getFirst() - current.getFirst());
+                    .abs(last.getFirst() - current.getFirst());
                 final int dj_lc = Math.abs(last.getSecond()
-                        - current.getSecond());
+                    - current.getSecond());
                 final int di_cn = Math
-                        .abs(next.getFirst() - current.getFirst());
+                    .abs(next.getFirst() - current.getFirst());
                 final int dj_cn = Math.abs(next.getSecond()
-                        - current.getSecond());
+                    - current.getSecond());
                 if ((di_lc == 0) && (dj_lc == 1) && (di_cn == 1)
-                        && (dj_cn == 0) && (i - lastKink > 1)) {// right corner
+                    && (dj_cn == 0) && (i - lastKink > 1)) {// right corner
                     PathTools.log.debug("Left Kink at {}", current);
                     lastKink = i;
                 } else {
                     if ((di_lc == 1) && (dj_lc == 0) && (di_cn == 0)
-                            && (dj_cn == 1) && (i - lastKink > 1)) {
+                        && (dj_cn == 1) && (i - lastKink > 1)) {
                         PathTools.log.debug("Right Kink at {}", current);
                         lastKink = i;
                     } else {
                         PathTools.log.debug("King detector not matching at {}",
-                                current);
+                            current);
                         ret.add(current);
                     }
                 }
@@ -415,7 +412,7 @@ public class PathTools implements IConfigurable {
         // path_i.setArray(ai);
         // path_j.setArray(aj);
         PathTools.log.debug("Found {} potential seeds for backtracking!",
-                this.nbranches);
+            this.nbranches);
         PathTools.log.debug("Created and set variables");
     }
 
@@ -425,8 +422,8 @@ public class PathTools implements IConfigurable {
      * @param isDist
      */
     private ArrayList<Tuple2DI> findLocalPathOptima(
-            final IArrayD2Double pwdist, final List<Tuple2DI> map1,
-            final boolean isDist) {
+        final IArrayD2Double pwdist, final List<Tuple2DI> map1,
+        final boolean isDist) {
         final SortedSet<Integer> localPathOptima = new TreeSet<Integer>();
         final double[] arr = new double[map1.size()];
         int i = 0;
@@ -456,7 +453,7 @@ public class PathTools implements IConfigurable {
                 state = STATE.C;
                 PathTools.log.info("Next state: Match");
                 PathTools.log.info("rangeStart: {}, rangeEnd: {}", rangeStart,
-                        rangeEnd);
+                    rangeEnd);
             } else {// skip all other modes, these will mostly be
                 // non-bidirectional
                 // hits
@@ -466,10 +463,10 @@ public class PathTools implements IConfigurable {
                     PathTools.log.info("Previous state: Match");
                     if (isDist) {
                         localPathOptima.addAll(getMinInRange(map1, rangeStart,
-                                rangeEnd - 1, arr));
+                            rangeEnd - 1, arr));
                     } else {
                         localPathOptima.addAll(getMaxInRange(map1, rangeStart,
-                                rangeEnd - 1, arr));
+                            rangeEnd - 1, arr));
                     }
                 }
                 // set state to other
@@ -479,7 +476,7 @@ public class PathTools implements IConfigurable {
                 rangeStart = -1;
                 rangeEnd = -1;
                 PathTools.log.info("rangeStart: {}, rangeEnd: {}", rangeStart,
-                        rangeEnd);
+                    rangeEnd);
             }
         }
         final ArrayList<Tuple2DI> al = new ArrayList<Tuple2DI>();
@@ -490,7 +487,7 @@ public class PathTools implements IConfigurable {
     }
 
     private List<Tuple2DI> getAlignedPeaksAlongPath(final boolean minimize,
-            final IArrayD2Double pwdist, final List<Tuple2DI> map1) {
+        final IArrayD2Double pwdist, final List<Tuple2DI> map1) {
         // double[] values = new double[map1.size()];
         // int cnt = 0;
         // for(Tuple2DI t:map1) {
@@ -513,7 +510,7 @@ public class PathTools implements IConfigurable {
     }
 
     private List<Integer> getMaxInRange(final List<Tuple2DI> path,
-            final int start, final int end, final double[] values) {
+        final int start, final int end, final double[] values) {
         final ArrayList<Integer> al = new ArrayList<Integer>();
         for (int i = start; i <= Math.min(values.length - 1, end); i++) {
             if (isMaxCandidate(i, values, start, end)) {
@@ -524,7 +521,7 @@ public class PathTools implements IConfigurable {
     }
 
     private List<Integer> getMinInRange(final List<Tuple2DI> path,
-            final int start, final int end, final double[] values) {
+        final int start, final int end, final double[] values) {
         final ArrayList<Integer> al = new ArrayList<Integer>();
         for (int i = start; i <= Math.min(values.length - 1, end); i++) {
             if (isMinCandidate(i, values, start, end)) {
@@ -568,8 +565,8 @@ public class PathTools implements IConfigurable {
      */
     @Deprecated
     public void handleOneInfinite(final int neq, final double val,
-            final double i, final double j, final double k, final Integer a,
-            final Integer b, final List<Tuple2DI> l, final StringBuffer sb) {
+        final double i, final double j, final double k, final Integer a,
+        final Integer b, final List<Tuple2DI> l, final StringBuffer sb) {
         if (Double.isInfinite(i)) {// j and k cannot be infinite
             if (neq == 2) {// let j win, if j = k
                 addStepNW(a, b, l, sb);
@@ -585,7 +582,7 @@ public class PathTools implements IConfigurable {
             if (neq == 2) {// Problem, branching at i,k
                 this.nbranches++;
                 PathTools.log
-                        .debug(
+                    .debug(
                         "BACKTRACKING SEED: WEST and NORTH have equal values {}={}",
                         i, k);
                 addStepN(a, b, l, sb);
@@ -621,11 +618,11 @@ public class PathTools implements IConfigurable {
      */
     @Deprecated
     public void handleThreeEqual(final double i, final double j,
-            final double k, final Integer a, final Integer b,
-            final List<Tuple2DI> l, final StringBuffer sb) {
+        final double k, final Integer a, final Integer b,
+        final List<Tuple2DI> l, final StringBuffer sb) {
         this.nbranches++;
         PathTools.log
-                .debug(
+            .debug(
                 "BACKTRACKING SEED: WEST and NORTH and NORTHWEST have equal values {}={}={}",
                 new Object[]{i, j, k});
         addStepNW(a, b, l, sb);
@@ -643,24 +640,24 @@ public class PathTools implements IConfigurable {
      */
     @Deprecated
     public void handleTwoEqual(final double i, final double j, final double k,
-            final Integer a, final Integer b, final List<Tuple2DI> l,
-            final StringBuffer sb) {
+        final Integer a, final Integer b, final List<Tuple2DI> l,
+        final StringBuffer sb) {
         this.nbranches++;
         if ((i == j)) {// prefer the diagonal
             PathTools.log
-                    .debug(
+                .debug(
                     "BACKTRACKING SEED: WEST and NORTHWEST have equal values {}={}",
                     i, j);
             addStepNW(a, b, l, sb);
         } else if ((j == k)) {// prefer the diagonal
             PathTools.log
-                    .debug(
+                .debug(
                     "BACKTRACKING SEED: WEST and NORTHWEST have equal values {}={}",
                     k, j);
             addStepNW(a, b, l, sb);
         } else if ((i == k)) {// requires backtracking!!!
             PathTools.log
-                    .debug(
+                .debug(
                     "BACKTRACKING SEED: WEST and NORTH have equal values {}={}",
                     i, k);
             addStepN(a, b, l, sb);
@@ -679,8 +676,8 @@ public class PathTools implements IConfigurable {
      */
     @Deprecated
     public void handleTwoInfinites(final double i, final double j,
-            final double k, final Integer a, final Integer b,
-            final List<Tuple2DI> l, final StringBuffer sb) {
+        final double k, final Integer a, final Integer b,
+        final List<Tuple2DI> l, final StringBuffer sb) {
         if (Double.isInfinite(i) && Double.isInfinite(k)) {
             addStepNW(a, b, l, sb);
         } else if (Double.isInfinite(i) && Double.isInfinite(j)) {
@@ -703,8 +700,8 @@ public class PathTools implements IConfigurable {
      */
     @Deprecated
     public void handleZeroEqual(final double val, final double i,
-            final double j, final double k, final Integer a, final Integer b,
-            final List<Tuple2DI> l, final StringBuffer sb) {
+        final double j, final double k, final Integer a, final Integer b,
+        final List<Tuple2DI> l, final StringBuffer sb) {
         if (val == j) {
             addStepNW(a, b, l, sb);
         } else if (val == i) {
@@ -715,10 +712,10 @@ public class PathTools implements IConfigurable {
     }
 
     private boolean isCandidate(final int index, final double[] values,
-            final int window, final boolean minimize) {
+        final int window, final boolean minimize) {
         if (minimize) {
             final double min = MathTools.min(values, index - window, index
-                    + window);
+                + window);
             final double indxVal = values[index];
             if (min == indxVal) {
                 return true;
@@ -726,7 +723,7 @@ public class PathTools implements IConfigurable {
             return false;
         } else {
             final double max = MathTools.max(values, index - window, index
-                    + window);
+                + window);
             final double indxVal = values[index];
             if (max == indxVal) {
                 return true;
@@ -736,7 +733,7 @@ public class PathTools implements IConfigurable {
     }
 
     private boolean isMaxCandidate(final int index, final double[] values,
-            final int start, final int end) {
+        final int start, final int end) {
         final double max = MathTools.max(values, start, end);
         final double indxVal = values[index];
         if ((max == indxVal) && (max > this.threshold)) {
@@ -746,7 +743,7 @@ public class PathTools implements IConfigurable {
     }
 
     private boolean isMinCandidate(final int index, final double[] values,
-            final int start, final int end) {
+        final int start, final int end) {
         final double min = MathTools.min(values, start, end);
         final double indxVal = values[index];
         if ((min == indxVal) && (min < this.threshold)) {
@@ -756,18 +753,18 @@ public class PathTools implements IConfigurable {
     }
 
     public void savePathCSV(final IFileFragment parent,
-            final IArrayD2Double cdist, final IArrayD2Double pwdist,
-            final List<Tuple2DI> map1, final IWorkflow iw, final boolean isDist) {
+        final IArrayD2Double cdist, final IArrayD2Double pwdist,
+        final List<Tuple2DI> map1, final IWorkflow iw, final boolean isDist) {
         final CSVWriter csvw = Factory.getInstance().getObjectFactory()
-                .instantiate(CSVWriter.class);
+            .instantiate(CSVWriter.class);
         final String filename = StringTools.removeFileExt(parent.getName());
         final File pathCSV = new File(new File(parent.getUri())
-                .getParent(), filename + "_path.csv");
+            .getParent(), filename + "_path.csv");
         final File pathPWCSV = new File(new File(parent.getUri())
-                .getParent(), filename + "_path_pw.csv");
+            .getParent(), filename + "_path_pw.csv");
         final File pathPWAlignedPeaks = new File(new File(parent
-                .getUri()).getParent(), filename
-                + "_path_alignedPeaks.csv");
+            .getUri()).getParent(), filename
+            + "_path_alignedPeaks.csv");
         // final File pathCondensed = new File(new
         // File(parent.getUri())
         // .getParent(), filename + "_path_condensed.csv");
@@ -786,29 +783,29 @@ public class PathTools implements IConfigurable {
 
         csvw.setWorkflow(iw);
         csvw.writeAlignmentPath(pathCSV.getParent(), pathCSV.getName(), map1,
-                pathValues, cdist.rows(), cdist.columns(), FragmentTools.getLHSFile(parent).getName(),
-                FragmentTools.getRHSFile(parent).getName(),
-                "cumulative_distance", this.symbolicPath);
+            pathValues, cdist.rows(), cdist.columns(), FragmentTools.getLHSFile(parent).getName(),
+            FragmentTools.getRHSFile(parent).getName(),
+            "cumulative_distance", this.symbolicPath);
         // ArrayList<Tuple2DI> condensedFeatures = findLocalPathOptima(parent,
         // pwdist, map1, isDist);
         csvw.writeAlignmentPath(pathPWCSV.getParent(), pathPWCSV.getName(),
-                map1, pathValues, cdist.rows(), cdist.columns(), FragmentTools.getLHSFile(parent).getName(),
-                FragmentTools.getRHSFile(parent).getName(),
-                "pairwise_distance", this.symbolicPath);
+            map1, pathValues, cdist.rows(), cdist.columns(), FragmentTools.getLHSFile(parent).getName(),
+            FragmentTools.getRHSFile(parent).getName(),
+            "pairwise_distance", this.symbolicPath);
         csvw.writeAlignmentPath(pathPWAlignedPeaks.getParent(),
-                pathPWAlignedPeaks.getName(), getAlignedPeaksAlongPath(isDist,
+            pathPWAlignedPeaks.getName(), getAlignedPeaksAlongPath(isDist,
                 pwdist, map1), pathValues, cdist.rows(), cdist.columns(), FragmentTools.getLHSFile(parent)
-                .getName(), FragmentTools.getRHSFile(parent).getName(),
-                "pairwise_distance", this.symbolicPath);
+            .getName(), FragmentTools.getRHSFile(parent).getName(),
+            "pairwise_distance", this.symbolicPath);
         // csvw.writeAlignmentPath(pathCondensed.getParent(), pathCondensed
         // .getName(), map1, pwdist, FragmentTools.getLHSFile(parent)
         // .getName(), FragmentTools.getRHSFile(parent).getName(),
         // "pairwise-distance", this.symbolicPath);
 
         final File f = new File(new File(parent.getUri()).getParent(),
-                filename + "_path-symbolic.txt");
+            filename + "_path-symbolic.txt");
         final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(f, csvw,
-                WorkflowSlot.ALIGNMENT, parent);
+            WorkflowSlot.ALIGNMENT, parent);
         iw.append(dwr2);
         try {
             final BufferedWriter bw = new BufferedWriter(new FileWriter(f));
@@ -829,7 +826,7 @@ public class PathTools implements IConfigurable {
      * @return
      */
     public List<Tuple2DI> traceback(final ArrayByte.D2 predecessors,
-            final IFileFragment ref, final IFileFragment target) {
+        final IFileFragment ref, final IFileFragment target) {
         log.info("Shape of predecessors: {}", Arrays.toString(predecessors.getShape()));
         int a = predecessors.getShape()[0] - 1;
         int b = predecessors.getShape()[1] - 1;
@@ -866,7 +863,7 @@ public class PathTools implements IConfigurable {
                 }
                 default: {
                     log
-                            .warn(
+                        .warn(
                             "While tracing back alignment of {} and {}: Encountered unknown predecessor value {} at position {},{}",
                             new Object[]{ref.getName(),
                                 target.getName(), i, a, b});
@@ -878,8 +875,8 @@ public class PathTools implements IConfigurable {
                     // break;
 
                     throw new IllegalArgumentException(
-                            "Don't know how to handle predecessor of type " + i
-                            + " at position " + a + " " + b);
+                        "Don't know how to handle predecessor of type " + i
+                        + " at position " + a + " " + b);
                 }
             }
             prev = i;

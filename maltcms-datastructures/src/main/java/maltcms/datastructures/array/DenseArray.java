@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,19 +27,18 @@
  */
 package maltcms.datastructures.array;
 
+import cross.datastructures.tuple.Tuple2D;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
-
 import maltcms.tools.ArrayTools;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
 import ucar.ma2.ArrayDouble.D2;
+import ucar.ma2.ArrayInt;
 import ucar.ma2.ArrayInt.D1;
-import cross.datastructures.tuple.Tuple2D;
 
 /**
  * A simple dense array encapsulation class.
@@ -50,9 +49,9 @@ import cross.datastructures.tuple.Tuple2D;
 public class DenseArray implements IArrayD2Double {
 
     public static BufferedImage createLayoutImage(final DenseArray pa,
-            final Color bg, final Color fg) {
+        final Color bg, final Color fg) {
         final BufferedImage bi = new BufferedImage(pa.rows(), pa.columns(),
-                BufferedImage.TYPE_4BYTE_ABGR);
+            BufferedImage.TYPE_4BYTE_ABGR);
         final Graphics2D g = (Graphics2D) bi.getGraphics();
         final Color b = bg;
         g.setColor(b);
@@ -87,7 +86,7 @@ public class DenseArray implements IArrayD2Double {
      * @param defaultValue1
      */
     public DenseArray(final int rows, final int columns,
-            final double defaultValue1) {
+        final double defaultValue1) {
         this.data = new ArrayDouble.D2(rows, columns);
         this.defaultValue = defaultValue1;
         ArrayTools.fill(this.data, defaultValue1);
@@ -95,7 +94,7 @@ public class DenseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#columns()
      */
     @Override
@@ -105,13 +104,13 @@ public class DenseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.array.IArrayD2Double#flatten()
      */
     @Override
     public Tuple2D<D1, ucar.ma2.ArrayDouble.D1> flatten() {
         final ArrayDouble.D1 arr = new ArrayDouble.D1(
-                getNumberOfStoredElements());
+            getNumberOfStoredElements());
         final ArrayInt.D1 si = new ArrayInt.D1(rows());
         int offset = 0;
         for (int i = 0; i < rows(); i++) {
@@ -126,7 +125,7 @@ public class DenseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#get(int, int)
      */
     @Override
@@ -136,7 +135,7 @@ public class DenseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#getArray()
      */
     @Override
@@ -146,7 +145,7 @@ public class DenseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.array.IArrayD2Double#getColumnBounds(int)
      */
     @Override
@@ -156,7 +155,7 @@ public class DenseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#getDefaultValue()
      */
     @Override
@@ -166,7 +165,7 @@ public class DenseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.datastructures.alignment.IArrayD2Double#getNumberOfStoredElements
      * ()
@@ -178,7 +177,7 @@ public class DenseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.array.IArrayD2Double#getShape()
      */
     @Override
@@ -196,7 +195,7 @@ public class DenseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#rows()
      */
     @Override
@@ -206,13 +205,13 @@ public class DenseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#set(int, int,
      * double)
      */
     @Override
     public void set(final int row, final int col, final double d)
-            throws ArrayIndexOutOfBoundsException {
+        throws ArrayIndexOutOfBoundsException {
         this.data.set(row, col, d);
     }
 }

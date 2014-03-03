@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
-
 import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.axis.LogarithmicAxis;
 import org.jfree.chart.axis.NumberAxis;
@@ -43,7 +42,6 @@ import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.xy.XYBarDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 
@@ -67,12 +65,12 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
     /**
      * Constructor to create an empty plot.
      *
-     * @param iTitle title
+     * @param iTitle       title
      * @param iUseLogScale use logarithmic scale for the y axis
-     * @param iShowLegend show legend items
+     * @param iShowLegend  show legend items
      */
     public MassSpectrumPlot(final String iTitle, final boolean iUseLogScale,
-            final boolean iShowLegend) {
+        final boolean iShowLegend) {
         this.title = iTitle;
         this.showLegend = iShowLegend;
         this.useLogScale = iUseLogScale;
@@ -84,15 +82,15 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
     /**
      * Default constructor.
      *
-     * @param iTitle title of this plot
-     * @param iLegendName series name
-     * @param iValues values
+     * @param iTitle       title of this plot
+     * @param iLegendName  series name
+     * @param iValues      values
      * @param iUseLogScale use logarithmic scale for range axis
-     * @param iShowLegend show legend label
+     * @param iShowLegend  show legend label
      */
     public MassSpectrumPlot(final String iTitle, final String iLegendName,
-            final Array iValues, final boolean iUseLogScale,
-            final boolean iShowLegend) {
+        final Array iValues, final boolean iUseLogScale,
+        final boolean iShowLegend) {
         this(iTitle, iUseLogScale, iShowLegend);
         addSeries(iLegendName, iValues, Color.RED.darker());
     }
@@ -101,11 +99,11 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
      * Add a new mass spectra to the plot.
      *
      * @param nLegendName legend name
-     * @param nValues mass spectra
-     * @param nColor color
+     * @param nValues     mass spectra
+     * @param nColor      color
      */
     public void addSeries(final String nLegendName, final Array nValues,
-            final Color nColor) {
+        final Color nColor) {
         this.legendName.add(nLegendName);
         this.values.add(nValues);
         this.seriesColor.add(nColor);
@@ -166,14 +164,14 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
 
         final XYPlot plot = new XYPlot(dataset, xaxis, yaxis, renderer);
         final TreeSet<Double> sortedKeys = new TreeSet<Double>(
-                new Comparator<Double>() {
-                    public int compare(final Double double1,
-                            final Double double2) {
-                        return -1
-                                * Double.valueOf(double1.compareTo(double2))
-                                .intValue();
-                    }
-                });
+            new Comparator<Double>() {
+                public int compare(final Double double1,
+                    final Double double2) {
+                    return -1
+                    * Double.valueOf(double1.compareTo(double2))
+                    .intValue();
+                }
+            });
         for (int i = 0; i < lists.size(); i++) {
             sortedKeys.clear();
             sortedKeys.addAll(lists.get(i).values());
@@ -181,7 +179,7 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
             for (Double value : sortedKeys) {
                 for (Integer x : getXList(lists.get(i), value)) {
                     final XYPointerAnnotation pointer = new XYPointerAnnotation(
-                            x + "", x, value.intValue(), 7 * Math.PI / 4.0d);
+                        x + "", x, value.intValue(), 7 * Math.PI / 4.0d);
                     pointer.setPaint(this.seriesColor.get(i));
                     pointer.setTipRadius(0.0d);
                     plot.addAnnotation(pointer);
@@ -217,12 +215,12 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
     /**
      * Getter.
      *
-     * @param map map
+     * @param map   map
      * @param value value
      * @return list of indices of all occurrences of value
      */
     private List<Integer> getXList(final Map<Integer, Double> map,
-            final double value) {
+        final double value) {
         final List<Integer> xlist = new ArrayList<Integer>();
         for (Integer x : map.keySet()) {
             if (map.get(x) == value) {

@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,10 +27,6 @@
  */
 package maltcms.commands.scanners;
 
-import org.apache.commons.configuration.Configuration;
-
-import ucar.ma2.Array;
-import ucar.ma2.IndexIterator;
 import cross.annotations.Configurable;
 import cross.commands.ICommand;
 import cross.datastructures.StatsMap;
@@ -40,6 +36,9 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import java.io.File;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration.Configuration;
+import ucar.ma2.Array;
+import ucar.ma2.IndexIterator;
 
 /**
  * Scans a number of arrays for statistics, such as mean and variance, storing
@@ -63,7 +62,7 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.ucar.ma2.Scanner#scan(java.lang.Object)
      */
     @Override
@@ -91,7 +90,7 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
                 final double d = iter.getDoubleNext();
                 if (this.ignorePositiveInfinity || this.ignoreNegativeInfinity) {
                     if ((d < Double.POSITIVE_INFINITY)
-                            && (d > Double.NEGATIVE_INFINITY)) {
+                        && (d > Double.NEGATIVE_INFINITY)) {
                         max = Math.max(max, d);
                         min = Math.min(min, d);
                         globalmin = Math.min(globalmin, min);
@@ -126,7 +125,7 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
                     // !
                     // !
                     if ((d < Double.POSITIVE_INFINITY)
-                            && (d > Double.NEGATIVE_INFINITY)) {
+                        && (d > Double.NEGATIVE_INFINITY)) {
                         variance += Math.pow((d - mean), 2.0d);
                         skew += Math.pow((d - mean), 3.0d);
                         // globalvar += Math.pow((d - globalmean), 2.0d);
@@ -170,7 +169,7 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
                     // !
                     // !
                     if ((d < Double.POSITIVE_INFINITY)
-                            && (d > Double.NEGATIVE_INFINITY)) {
+                        && (d > Double.NEGATIVE_INFINITY)) {
                         globalvar += Math.pow((d - globalmean), 2.0d);
                         globalskew += Math.pow((d - globalmean), 3.0d);
                         // globalvar += Math.pow((d - globalmean), 2.0d);
@@ -198,9 +197,9 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
     @Override
     public void configure(final Configuration cfg) {
         this.ignorePositiveInfinity = cfg.getBoolean(this.getClass().getName()
-                + ".ignorePositiveInfinity", true);
+            + ".ignorePositiveInfinity", true);
         this.ignoreNegativeInfinity = cfg.getBoolean(this.getClass().getName()
-                + ".ignoreNegativeInfinity", true);
+            + ".ignoreNegativeInfinity", true);
     }
 
     public StatsMap getGlobalStatsMap() {

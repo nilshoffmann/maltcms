@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,23 +27,19 @@
  */
 package maltcms.commands.fragments2d.warp;
 
-import java.util.List;
-
-import maltcms.commands.distances.dtw.ADynamicTimeWarp;
-import maltcms.tools.ArrayTools2;
-
-import org.apache.commons.configuration.Configuration;
-
-import ucar.ma2.Array;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
-import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
+import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.distances.dtw.ADynamicTimeWarp;
+import maltcms.tools.ArrayTools2;
+import org.apache.commons.configuration.Configuration;
+import ucar.ma2.Array;
 
 /**
  * Warps two chromatogramms according to their mean mass spectra of the scan
@@ -61,15 +57,15 @@ import lombok.extern.slf4j.Slf4j;
 public class ScanlineMaxMSWarp extends ADynamicTimeWarp {
 
     @Configurable(name = "var.maxms_1d_horizontal",
-    value = "maxms_1d_horizontal")
+        value = "maxms_1d_horizontal")
     private String maxMSHorizontalVar = "maxms_1d_horizontal";
     @Configurable(name = "var.maxms_1d_horizontal_index",
-    value = "maxms_1d_horizontal_index")
+        value = "maxms_1d_horizontal_index")
     private String maxMSHorizontalIndexVar = "maxms_1d_horizontal_index";
     @Configurable(name = "var.maxms_1d_vertical", value = "maxms_1d_vertical")
     private String maxMSVerticalVar = "maxms_1d_vertical";
     @Configurable(name = "var.maxms_1d_vertical_index",
-    value = "maxms_1d_vertical_index")
+        value = "maxms_1d_vertical_index")
     private String maxMSVerticalIndexVar = "maxms_1d_vertical_index";
     @Configurable(name = "var.used_mass_values", value = "used_mass_values")
     private String usedMassValuesVar = "used_mass_values";
@@ -89,13 +85,13 @@ public class ScanlineMaxMSWarp extends ADynamicTimeWarp {
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.maxMSHorizontalVar = cfg.getString("var.maxms_1d_horizontal",
-                "maxms_1d_horizontal");
+            "maxms_1d_horizontal");
         this.maxMSHorizontalIndexVar = cfg.getString(
-                "var.maxms_1d_horizontal_index", "maxms_1d_horizontal_index");
+            "var.maxms_1d_horizontal_index", "maxms_1d_horizontal_index");
         this.maxMSVerticalVar = cfg.getString("var.maxms_1d_vertical",
-                "maxms_1d_vertical");
+            "maxms_1d_vertical");
         this.maxMSVerticalIndexVar = cfg.getString(
-                "var.maxms_1d_vertical_index", "maxms_1d_vertical_index");
+            "var.maxms_1d_vertical_index", "maxms_1d_vertical_index");
 //        this.horizontal = cfg.getBoolean(this.getClass().getName()
 //                + ".horizontal", false);
 //        this.scale = cfg.getBoolean(this.getClass().getName() + ".scale", true);
@@ -108,7 +104,7 @@ public class ScanlineMaxMSWarp extends ADynamicTimeWarp {
      */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
-            final Tuple2D<IFileFragment, IFileFragment> t) {
+        final Tuple2D<IFileFragment, IFileFragment> t) {
 
         if (this.horizontal) {
             this.meanMSVar = this.maxMSHorizontalVar;
@@ -139,9 +135,9 @@ public class ScanlineMaxMSWarp extends ADynamicTimeWarp {
 
         if (this.filter) {
             final List<Integer> usedMassesRef = ArrayTools2.getUsedMasses(t.
-                    getFirst(), this.usedMassValuesVar);
+                getFirst(), this.usedMassValuesVar);
             final List<Integer> usedMassesQuery = ArrayTools2.getUsedMasses(t.
-                    getSecond(), this.usedMassValuesVar);
+                getSecond(), this.usedMassValuesVar);
             ref = ArrayTools2.filterInclude(ref, usedMassesRef);
             query = ArrayTools2.filterInclude(query, usedMassesQuery);
         }

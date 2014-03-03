@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,19 +27,6 @@
  */
 package maltcms.commands.fragments2d.warp;
 
-import java.io.File;
-import java.util.List;
-
-import maltcms.tools.ArrayTools;
-import maltcms.ui.charts.EPlotRunner;
-import maltcms.ui.charts.PlotRunner;
-
-import org.apache.commons.configuration.Configuration;
-import org.jfree.chart.JFreeChart;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.IndexIterator;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.RequiresVariables;
@@ -48,9 +35,19 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import java.io.File;
+import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.tools.ArrayTools;
+import maltcms.ui.charts.EPlotRunner;
+import maltcms.ui.charts.PlotRunner;
+import org.apache.commons.configuration.Configuration;
+import org.jfree.chart.JFreeChart;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.IndexIterator;
 
 /**
  * Default visualization pipeline command.
@@ -68,7 +65,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
 
     @Configurable(name = "var.boundary_index_list",
-    value = "boundary_index_list")
+        value = "boundary_index_list")
     private String boundaryPeakListVar = "boundary_index_list";
     @Configurable(name = "var.region_index_list", value = "region_index_list")
     private String regionIndexListVar = "region_index_list";
@@ -82,9 +79,9 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.boundaryPeakListVar = cfg.getString("var.boundary_index_list",
-                "boundary_index_list");
+            "boundary_index_list");
         this.regionIndexListVar = cfg.getString("var.region_index_list",
-                "region_index_list");
+            "region_index_list");
 //        this.fillPeakArea = cfg.getBoolean(this.getClass().getName()
 //                + ".fillPeakArea", false);
     }
@@ -103,11 +100,11 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
         Array refBoundary = null;
         if (this.fillPeakArea) {
             log.info("Filling peak area; using {}",
-                    this.regionIndexListVar);
+                this.regionIndexListVar);
             refBoundary = ff.getChild(this.regionIndexListVar).getArray();
         } else {
             log.info("Do not fill peak area; using {}",
-                    this.boundaryPeakListVar);
+                this.boundaryPeakListVar);
             refBoundary = ff.getChild(this.boundaryPeakListVar).getArray();
         }
         final IndexIterator iter = refBoundary.getIndexIterator();
@@ -120,7 +117,7 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
                 tmp.set(k % spm, 1.0d);
             } catch (final IndexOutOfBoundsException e) {
                 log.error("IndexOutOfBounds for index {}(" + (k / spm)
-                        + "," + (k % spm) + ")", k);
+                    + "," + (k % spm) + ")", k);
             }
         }
 
@@ -132,15 +129,15 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
      */
     @Override
     protected void saveChart(final JFreeChart chart, final IFileFragment ref,
-            final IFileFragment query) {
+        final IFileFragment query) {
         final PlotRunner pl = new EPlotRunner(chart,
-                StringTools.removeFileExt(ref.getName())
-                + "_vs_" + StringTools.removeFileExt(query.getName()) + "-PA",
-                getWorkflow().getOutputDirectory(this));
+            StringTools.removeFileExt(ref.getName())
+            + "_vs_" + StringTools.removeFileExt(query.getName()) + "-PA",
+            getWorkflow().getOutputDirectory(this));
         pl.configure(Factory.getInstance().getConfiguration());
         final File f = pl.getFile();
         final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f, this,
-                WorkflowSlot.VISUALIZATION, ref, query);
+            WorkflowSlot.VISUALIZATION, ref, query);
         getWorkflow().append(dwr);
         Factory.getInstance().submitJob(pl);
     }

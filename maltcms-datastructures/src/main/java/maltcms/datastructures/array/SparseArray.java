@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,16 +27,14 @@
  */
 package maltcms.datastructures.array;
 
-import java.awt.Rectangle;
-import java.awt.geom.Area;
-
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
-import ucar.ma2.ArrayDouble.D2;
-import ucar.ma2.ArrayInt.D1;
 import cern.colt.matrix.impl.SparseDoubleMatrix2D;
 import cross.datastructures.tuple.Tuple2D;
-import java.io.Serializable;
+import java.awt.Rectangle;
+import java.awt.geom.Area;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayDouble.D2;
+import ucar.ma2.ArrayInt;
+import ucar.ma2.ArrayInt.D1;
 
 /**
  * @author Nils Hoffmann
@@ -53,7 +51,7 @@ public final class SparseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.array.IArrayD2Double#columns()
      */
     @Override
@@ -63,7 +61,7 @@ public final class SparseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.array.IArrayD2Double#flatten()
      */
     @Override
@@ -85,7 +83,7 @@ public final class SparseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.array.IArrayD2Double#get(int, int)
      */
     @Override
@@ -95,7 +93,7 @@ public final class SparseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.array.IArrayD2Double#getArray()
      */
     @Override
@@ -111,7 +109,7 @@ public final class SparseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.array.IArrayD2Double#getColumnBounds(int)
      */
     @Override
@@ -121,7 +119,7 @@ public final class SparseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#getDefaultValue()
      */
     @Override
@@ -131,7 +129,7 @@ public final class SparseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.datastructures.alignment.IArrayD2Double#getNumberOfStoredElements
      * ()
@@ -143,7 +141,7 @@ public final class SparseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.array.IArrayD2Double#getShape()
      */
     @Override
@@ -161,7 +159,7 @@ public final class SparseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.array.IArrayD2Double#rows()
      */
     @Override
@@ -171,12 +169,12 @@ public final class SparseArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.array.IArrayD2Double#set(int, int, double)
      */
     @Override
     public void set(int row, int col, double d)
-            throws ArrayIndexOutOfBoundsException {
+        throws ArrayIndexOutOfBoundsException {
         this.sdm.set(row, col, d);
     }
 }

@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -50,9 +50,9 @@ import java.util.Set;
 public class JoinScans {
 
     public static void createConcatenatedFile(final String filename,
-            final String[] filenames, final String[] headers,
-            final HashSet<Integer> keys,
-            final HashMap<String, HashMap<Integer, Integer>> hm) {
+        final String[] filenames, final String[] headers,
+        final HashSet<Integer> keys,
+        final HashMap<String, HashMap<Integer, Integer>> hm) {
         final File dir = new File(filenames[0]).getParentFile();
         final File f = new File(dir, filename);
         System.out.println(f.getAbsolutePath());
@@ -60,7 +60,7 @@ public class JoinScans {
         try {
             fos = new FileOutputStream(f);
             final BufferedWriter bw = new BufferedWriter(
-                    new OutputStreamWriter(fos));
+                new OutputStreamWriter(fos));
             final StringBuffer sb = new StringBuffer();
             for (int i = 0; i < headers.length; i++) {
                 System.out.println(headers[i]);
@@ -102,17 +102,17 @@ public class JoinScans {
     }
 
     public static void createReducedFile(final String originalFilename,
-            final String header, final Set<Integer> keys,
-            final HashMap<Integer, Integer> map) {
+        final String header, final Set<Integer> keys,
+        final HashMap<Integer, Integer> map) {
         final File f = new File(originalFilename);
         final String name = f.getName().substring(0, f.getName().length() - 4)
-                + "_reduced.txt";
+            + "_reduced.txt";
         System.out.println(name);
         FileOutputStream fos;
         try {
             fos = new FileOutputStream(new File(f.getParentFile(), name));
             final BufferedWriter bw = new BufferedWriter(
-                    new OutputStreamWriter(fos));
+                new OutputStreamWriter(fos));
             bw.write(header);
             bw.newLine();
             final ArrayList<Integer> al = new ArrayList<Integer>(keys);
@@ -147,7 +147,7 @@ public class JoinScans {
             try {
                 final FileInputStream fis = new FileInputStream(s);
                 final BufferedReader br = new BufferedReader(
-                        new InputStreamReader(fis));
+                    new InputStreamReader(fis));
                 String line = "";
                 int linecounter = 0;
                 final HashMap<Integer, Integer> scanToScan = new HashMap<Integer, Integer>();
@@ -159,7 +159,7 @@ public class JoinScans {
                         final String[] parts = line.split("\t");
                         if (parts.length != 2) {
                             System.err
-                                    .println("Split length is wrong (should be 2), check input!");
+                                .println("Split length is wrong (should be 2), check input!");
                             System.exit(-1);
                         } else {
                             final Integer lhs = Integer.parseInt(parts[0]);
@@ -190,19 +190,19 @@ public class JoinScans {
         int i = 0;
         for (final String s : args) {
             JoinScans.createReducedFile(s, headers[i], retainedPeaks,
-                    fileRefToQueryMap.get(s));
+                fileRefToQueryMap.get(s));
             i++;
         }
 
         JoinScans.createConcatenatedFile("peak_map_matrix.txt", args, headers,
-                allPeaks, fileRefToQueryMap);
+            allPeaks, fileRefToQueryMap);
         JoinScans.createConcatenatedFile("peak_map_matrix_cons.txt", args,
-                headers, retainedPeaks, fileRefToQueryMap);
+            headers, retainedPeaks, fileRefToQueryMap);
 
     }
 
     public static void printMap(final String filename,
-            final HashMap<Integer, Integer> map) {
+        final HashMap<Integer, Integer> map) {
         System.out.println("Map for " + filename);
         final Set<Integer> s = map.keySet();
         final ArrayList<Integer> al = new ArrayList<Integer>(s);

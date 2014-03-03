@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -29,12 +29,12 @@ package maltcms.mpaxs;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.sf.mpaxs.spi.concurrent.CompletionServiceFactory;
-import net.sf.mpaxs.spi.concurrent.ComputeServerFactory;
-import net.sf.mpaxs.api.ICompletionService;
 import net.sf.mpaxs.api.ConfigurationKeys;
 import net.sf.mpaxs.api.ExecutionType;
+import net.sf.mpaxs.api.ICompletionService;
 import net.sf.mpaxs.api.Impaxs;
+import net.sf.mpaxs.spi.concurrent.CompletionServiceFactory;
+import net.sf.mpaxs.spi.concurrent.ComputeServerFactory;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
@@ -49,7 +49,7 @@ public class ImpaxsExecution {
         Impaxs impxs = ComputeServerFactory.getComputeServer();
         impxs.startMasterServer(pc);
         final ICompletionService<String> mcs = new CompletionServiceFactory<String>().
-                newDistributedCompletionService();
+            newDistributedCompletionService();
 
         mcs.submit(new TestCallable());
         mcs.submit(new TestCallable());
@@ -61,11 +61,11 @@ public class ImpaxsExecution {
             System.out.println("MCS1 Results (RMI execution): " + mcs.call());
         } catch (Exception ex) {
             Logger.getLogger(ImpaxsExecution.class.getName()).
-                    log(Level.SEVERE, null, ex);
+                log(Level.SEVERE, null, ex);
         }
 
         final ICompletionService<String> mcs2 = new CompletionServiceFactory<String>().
-                newLocalCompletionService();
+            newLocalCompletionService();
         mcs2.submit(new TestCallable());
         mcs2.submit(new TestCallable());
         mcs2.submit(new TestCallable());
@@ -76,7 +76,7 @@ public class ImpaxsExecution {
             System.out.println("MCS2 Results (local execution): " + mcs2.call());
         } catch (Exception ex) {
             Logger.getLogger(ImpaxsExecution.class.getName()).
-                    log(Level.SEVERE, null, ex);
+                log(Level.SEVERE, null, ex);
         }
         impxs.stopMasterServer();
         System.exit(0);

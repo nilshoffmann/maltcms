@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,30 +27,28 @@
  */
 package maltcms.datastructures.ms;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.configuration.Configuration;
-import org.jdom.Element;
-
-import ucar.nc2.Attribute;
-import ucar.nc2.Dimension;
-import cross.datastructures.StatsMap;
 import cross.cache.ICacheDelegate;
+import cross.datastructures.StatsMap;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IFragment;
 import cross.datastructures.fragments.IGroupFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.exception.ResourceNotAvailableException;
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.net.URI;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import org.apache.commons.configuration.Configuration;
+import org.jdom.Element;
 import ucar.ma2.Array;
+import ucar.nc2.Attribute;
+import ucar.nc2.Dimension;
 
 /**
  * Concrete implementation of an Experiment containing a 1-dimensional
@@ -72,7 +70,7 @@ public class Experiment1D implements IExperiment1D {
     public Experiment1D(final IFileFragment ff1) {
         this.ff = ff1;
     }
-    
+
     @Override
     public IVariableFragment addChild(String name) {
         return this.ff.addChild(name);
@@ -125,7 +123,7 @@ public class Experiment1D implements IExperiment1D {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.datastructures.fragments.IFileFragment#clearArrays()
      */
     @Override
@@ -135,7 +133,7 @@ public class Experiment1D implements IExperiment1D {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.datastructures.fragments.IFileFragment#clearDimensions()
      */
     @Override
@@ -180,7 +178,7 @@ public class Experiment1D implements IExperiment1D {
 
     /**
      * @return @see
-     * cross.datastructures.fragments.IFileFragment#getAbsolutePath()
+     *         cross.datastructures.fragments.IFileFragment#getAbsolutePath()
      */
     public String getAbsolutePath() {
         return this.ff.getAbsolutePath();
@@ -217,7 +215,7 @@ public class Experiment1D implements IExperiment1D {
     public ICacheDelegate<IVariableFragment, List<Array>> getCache() {
         return this.ff.getCache();
     }
-    
+
     /**
      * @param varname
      * @return
@@ -235,7 +233,7 @@ public class Experiment1D implements IExperiment1D {
      * @see cross.datastructures.fragments.IGroupFragment#getChild(String)
      */
     public IVariableFragment getChild(final String varname,
-            final boolean loadStructureOnly) {
+        final boolean loadStructureOnly) {
         return this.ff.getChild(varname, loadStructureOnly);
     }
 
@@ -258,7 +256,7 @@ public class Experiment1D implements IExperiment1D {
     public List<IVariableFragment> getImmediateChildren() {
         return this.ff.getImmediateChildren();
     }
-    
+
     public HashMap<String, String> getMetadata() {
         if (this.metaData == null) {
             this.metaData = new HashMap<String, String>();
@@ -289,7 +287,7 @@ public class Experiment1D implements IExperiment1D {
 
     /**
      * @return @see
-     * cross.datastructures.fragments.IFileFragment#getSourceFiles()
+     *         cross.datastructures.fragments.IFileFragment#getSourceFiles()
      */
     public Collection<IFileFragment> getSourceFiles() {
         return this.ff.getSourceFiles();
@@ -364,7 +362,7 @@ public class Experiment1D implements IExperiment1D {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.datastructures.fragments.IFileFragment#isModified()
      */
     @Override
@@ -388,12 +386,12 @@ public class Experiment1D implements IExperiment1D {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
      */
     @Override
     public void readExternal(final ObjectInput in) throws IOException,
-            ClassNotFoundException {
+        ClassNotFoundException {
         this.ff.readExternal(in);
     }
 
@@ -495,7 +493,7 @@ public class Experiment1D implements IExperiment1D {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
      */
     @Override
@@ -505,7 +503,7 @@ public class Experiment1D implements IExperiment1D {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.ms.IExperiment#getMetadata(java.lang.String)
      */
     @Override
@@ -514,7 +512,7 @@ public class Experiment1D implements IExperiment1D {
             return this.metaData.get(key);
         }
         throw new ResourceNotAvailableException("Metadata key " + key
-                + " is unknown!");
+            + " is unknown!");
     }
 
     @Override

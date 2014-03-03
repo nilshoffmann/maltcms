@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -70,10 +70,10 @@ public final class MaltcmsCvProvider implements IControlledVocabularyProvider {
         }
         try {
             pc = new PropertiesConfiguration(file);
-            log.info("Using {}.cv.version={}", getName(), pc.getString(getName()+".cv.version"));
+            log.info("Using {}.cv.version={}", getName(), pc.getString(getName() + ".cv.version"));
             deprecatedVariables = new LinkedHashSet<String>();
             StringBuilder message = new StringBuilder();
-            List<String> l = StringTools.toStringList(pc.getList(getName()+".deprecated.variables", Collections.emptyList()));
+            List<String> l = StringTools.toStringList(pc.getList(getName() + ".deprecated.variables", Collections.emptyList()));
             for (String s : l) {
                 String key = checkDeprecation(s, pc, message);
                 deprecatedVariables.add(key);
@@ -90,10 +90,10 @@ public final class MaltcmsCvProvider implements IControlledVocabularyProvider {
             String[] split = s.split(":");
             key = split[0];
             message.append("Variable name ").
-                    append(pc.getString(key)).
-                    append(" is deprecated. Please replace with ").
-                    append(pc.getString(split[1])).
-                    append("!");
+                append(pc.getString(key)).
+                append(" is deprecated. Please replace with ").
+                append(pc.getString(split[1])).
+                append("!");
         } else {
             key = s;
             message.append("Variable name ").append(pc.getString(key)).append(" is deprecated!");

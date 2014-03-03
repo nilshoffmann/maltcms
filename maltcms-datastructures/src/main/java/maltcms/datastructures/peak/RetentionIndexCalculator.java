@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -28,7 +28,6 @@
 package maltcms.datastructures.peak;
 
 import java.util.Arrays;
-
 import maltcms.tools.ArrayTools;
 
 /**
@@ -42,7 +41,7 @@ public class RetentionIndexCalculator {
     private final int[] nCarbAtoms;
 
     public RetentionIndexCalculator(int[] numberOfCarbonAtoms,
-            Peak1D... riPeaks) {
+        Peak1D... riPeaks) {
         riRTs = new double[riPeaks.length];
         for (int i = 0; i < riRTs.length; i++) {
             riRTs[i] = riPeaks[i].getApexTime();
@@ -69,7 +68,7 @@ public class RetentionIndexCalculator {
         // System.out.println("RT of next ri: " + nextRIrt);
         int nCAtoms = nCarbAtoms[prevRIIdx];
         double ri = 100 * (((Math.log10(rt) - Math.log10(prevRIrt)) / (Math
-                .log10(nextRIrt) - Math.log10(prevRIrt))) + nCAtoms);
+            .log10(nextRIrt) - Math.log10(prevRIrt))) + nCAtoms);
         // System.out.println("cAtoms before: " + nCarbAtoms[prevRIIdx]
         // + " after: " + nCarbAtoms[nextRIIdx]);
         // System.out.println(prevRIrt + " < " + rt + " < " + nextRIrt + " RI: "
@@ -130,7 +129,7 @@ public class RetentionIndexCalculator {
         int prevRIIdx = getIndexOfPreviousRI(rt);
         int nextRIIdx = getIndexOfNextRI(rt);
         System.out.println("Previous idx: " + prevRIIdx + " next idx: "
-                + nextRIIdx);
+            + nextRIIdx);
         // if (prevRIIdx == -1 || nextRIIdx == -1 || prevRIIdx == nextRIIdx) {
         // return Double.NaN;
         // }
@@ -147,13 +146,13 @@ public class RetentionIndexCalculator {
         // System.out.println("cAtoms before: " + nCarbAtoms[prevRIIdx]
         // + " after: " + nCarbAtoms[nextRIIdx]);
         System.out.println(prevRIrt + " < " + rt + " < " + nextRIrt + " RI: "
-                + ri);
+            + ri);
         return ri;
     }
 
     public static void main(String[] args) {
         int[] cs = (int[]) ArrayTools.indexArray(38, 10).get1DJavaArray(
-                int.class);
+            int.class);
         double[] rts = new double[cs.length * 5];
         double[] rirts = new double[cs.length];
         rts = rirts;
@@ -177,8 +176,8 @@ public class RetentionIndexCalculator {
             // + istRI);
             double tcRI = ric.getTemperatureProgrammedKovatsIndex(rts[i]);
             System.out.println("Linear RI for peak at rt " + rts[i] + " = "
-                    + tcRI + "; RI rt range: [" + rirts[0] + ":"
-                    + rirts[rirts.length - 1] + "]");
+                + tcRI + "; RI rt range: [" + rirts[0] + ":"
+                + rirts[rirts.length - 1] + "]");
         }
     }
 }

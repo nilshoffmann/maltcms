@@ -118,7 +118,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
         }
         try {
             Object o = m.invoke(this, new Object[]{});
-			// if (o.getClass().isPrimitive()) {
+            // if (o.getClass().isPrimitive()) {
             // throw new NotImplementedException();
             // }
             if (o == null) {

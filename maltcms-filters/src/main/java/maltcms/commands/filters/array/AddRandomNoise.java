@@ -46,43 +46,43 @@ import ucar.ma2.IndexIterator;
 @ServiceProvider(service = AArrayFilter.class)
 public class AddRandomNoise extends AArrayFilter {
 
-	private Random rg = null;
-	@Configurable
-	private double mean = 0.0d;
-	@Configurable
-	private double stddev = 1.0d;
+    private Random rg = null;
+    @Configurable
+    private double mean = 0.0d;
+    @Configurable
+    private double stddev = 1.0d;
 
-	public AddRandomNoise() {
-		super();
-		this.rg = new Random();
-	}
+    public AddRandomNoise() {
+        super();
+        this.rg = new Random();
+    }
 
-	public AddRandomNoise(final double mean1, final double stddev1) {
-		this();
-		this.mean = mean1;
-		this.stddev = stddev1;
-	}
+    public AddRandomNoise(final double mean1, final double stddev1) {
+        this();
+        this.mean = mean1;
+        this.stddev = stddev1;
+    }
 
-	@Override
-	public Array apply(final Array a) {
-		final Array b = super.apply(a);
-		final IndexIterator ii = b.getIndexIteratorFast();
-		while (ii.hasNext()) {
-			final double v = ii.getDoubleNext();
-			ii.setDoubleCurrent(v + (this.stddev * this.rg.nextGaussian())
-				+ this.mean);
-		}
-		return b;
-	}
+    @Override
+    public Array apply(final Array a) {
+        final Array b = super.apply(a);
+        final IndexIterator ii = b.getIndexIteratorFast();
+        while (ii.hasNext()) {
+            final double v = ii.getDoubleNext();
+            ii.setDoubleCurrent(v + (this.stddev * this.rg.nextGaussian())
+                + this.mean);
+        }
+        return b;
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		this.mean = cfg.getDouble(this.getClass().getName() + ".mean");
-		this.stddev = cfg.getDouble(this.getClass().getName() + ".stddev");
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+        this.mean = cfg.getDouble(this.getClass().getName() + ".mean");
+        this.stddev = cfg.getDouble(this.getClass().getName() + ".stddev");
+    }
 
-	@Override
-	public AddRandomNoise copy() {
-		return new AddRandomNoise(mean, stddev);
-	}
+    @Override
+    public AddRandomNoise copy() {
+        return new AddRandomNoise(mean, stddev);
+    }
 }

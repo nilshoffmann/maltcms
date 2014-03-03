@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -26,12 +26,6 @@
  * for details.
  */
 package maltcms.io.misc;
-
-import java.io.File;
-
-import maltcms.io.csv.CSVWriter;
-
-import org.jdom.Element;
 
 import cross.Factory;
 import cross.datastructures.StatsMap;
@@ -43,7 +37,10 @@ import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import java.io.File;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.io.csv.CSVWriter;
+import org.jdom.Element;
 
 /**
  * Writes StatsMap objects to CSV Files.
@@ -58,7 +55,7 @@ public class StatsWriter implements IWorkflowElement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.io.misc.IXMLSerializable#appendXML(org.jdom.Element)
      */
     @Override
@@ -67,7 +64,7 @@ public class StatsWriter implements IWorkflowElement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
      */
     @Override
@@ -77,7 +74,7 @@ public class StatsWriter implements IWorkflowElement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
     @Override
@@ -87,7 +84,7 @@ public class StatsWriter implements IWorkflowElement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seecross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
      * datastructures.workflow.IWorkflow)
      */
@@ -116,22 +113,22 @@ public class StatsWriter implements IWorkflowElement {
                 if (map != null) {
                     final IFragment f = map.getAssociation();
                     final CSVWriter csvw = Factory.getInstance()
-                            .getObjectFactory().instantiate(CSVWriter.class);
+                        .getObjectFactory().instantiate(CSVWriter.class);
                     csvw.setWorkflow(getWorkflow());
                     // if (f instanceof IGroupFragment) {
                     // csvw.write(f
                     // , map);
                     if (f instanceof IVariableFragment) {
                         final IFileFragment parent = ((IVariableFragment) f)
-                                .getParent();
+                            .getParent();
                         final String basename = StringTools
-                                .removeFileExt(FileTools.getFilename(parent.getUri()));
+                            .removeFileExt(FileTools.getFilename(parent.getUri()));
                         final String path = new File(parent.getUri())
-                                .getParent();
+                            .getParent();
                         csvw.writeStatsMap(path,
-                                basename + "-"
-                                + ((IVariableFragment) f).getName()
-                                + ".csv", map);
+                            basename + "-"
+                            + ((IVariableFragment) f).getName()
+                            + ".csv", map);
                     } else if (f instanceof IFileFragment) {
                         csvw.writeStatsMap((IFileFragment) f, map);
                     }

@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,6 +27,11 @@
  */
 package smueller.datastructure;
 
+import cross.Factory;
+import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tuple.Tuple2DI;
+import cross.datastructures.workflow.IWorkflow;
+import cross.tools.StringTools;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -35,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Vector;
-
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.array.ArrayFactory;
 import maltcms.datastructures.fragments.PairwiseAlignment;
 import smueller.SymbolicRepresentationAlignment;
@@ -43,12 +48,6 @@ import smueller.alignment.Alignment;
 import smueller.alignment.OptimalAlignmentVector;
 import smueller.tools.SymbolConvert;
 import ucar.ma2.Array;
-import cross.Factory;
-import cross.datastructures.tuple.Tuple2DI;
-import cross.datastructures.workflow.IWorkflow;
-import cross.datastructures.tools.EvalTools;
-import cross.tools.StringTools;
-import lombok.extern.slf4j.Slf4j;
 
 // Speichern der optimalen Alignments in einem vom User gewählten Format
 /**
@@ -64,7 +63,7 @@ public class AlignmentOutput {
     private IWorkflow iw;
 
     private void createPairwiseAlignment(final String a, final String b,
-            final Alignment ali, final int[][] test, final double value) {
+        final Alignment ali, final int[][] test, final double value) {
         this.al = getAsPairList(test);
         final PairwiseAlignment pa = new PairwiseAlignment();
         pa.setFileFragments(ali.getRef(), ali.getQuery(), this.getClass());
@@ -73,10 +72,10 @@ public class AlignmentOutput {
         final double[][] matrx = ali.getMatrix();
         // log.info(Arrays.deepToString(matrx));
         log.info("MATRX {}x{}", matrx.length,
-                matrx[0].length);
+            matrx[0].length);
         EvalTools.notNull(matrx, this);
         final ArrayFactory f = Factory.getInstance().getObjectFactory()
-                .instantiate(ArrayFactory.class);
+            .instantiate(ArrayFactory.class);
         pa.setAlignment(f.create(Array.factory(matrx)));
         final double[][] pwdm = ali.getPairwiseDistance();
         // log.info(Arrays.deepToString(pwdm));
@@ -103,8 +102,8 @@ public class AlignmentOutput {
     }
 
     private int[][] erstelleGrossenPfad(final String a, final String b,
-            final String c, final String d, final int aoriglen,
-            final int boriglen) {
+        final String c, final String d, final int aoriglen,
+        final int boriglen) {
         final int fenstergr = SymbolicRepresentationAlignment.getFenstergr();
         final int u = a.length();
         final int v = b.length();
@@ -116,7 +115,7 @@ public class AlignmentOutput {
         System.out.println(b);
         final int[][] pfad = new int[aoriglen][boriglen];
         System.out
-                .println("Grosser Pfad " + pfad.length + " " + pfad[0].length);
+            .println("Grosser Pfad " + pfad.length + " " + pfad[0].length);
         try {
             while ((y < (u)) && (z < (v))) {
 
@@ -186,7 +185,7 @@ public class AlignmentOutput {
 
     // Backtracking Pfad visualisieren
     private int[][] erstellepfad(final String a, final String b,
-            final String c, final String d) {
+        final String c, final String d) {
         final int u = c.length();
         final int v = d.length();
         int i = 0;
@@ -269,17 +268,17 @@ public class AlignmentOutput {
      * @param iw
      */
     public void writefile(final String a, final String b,
-            final Vector<OptimalAlignmentVector> all, final double[][] matrix,
-            final String format, final double[][] dima, final String location,
-            final int alnumber, final Alignment ali, final int aoriglen,
-            final int boriglen, final IWorkflow iw) {
+        final Vector<OptimalAlignmentVector> all, final double[][] matrix,
+        final String format, final double[][] dima, final String location,
+        final int alnumber, final Alignment ali, final int aoriglen,
+        final int boriglen, final IWorkflow iw) {
         this.iw = iw;
         Date datum;
         datum = new Date();
         final Locale loc = new Locale(location);
         Locale.setDefault(loc);
         final SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_HH-mm",
-                Locale.getDefault());
+            Locale.getDefault());
         final String localeString = sdf.format(datum);
         int identity = 0;
         int similarity = 0;
@@ -291,16 +290,16 @@ public class AlignmentOutput {
         int start1 = 1;
         int start2 = 1;
         final String refname = StringTools
-                .removeFileExt(ali.getRef().getName());
+            .removeFileExt(ali.getRef().getName());
         final String queryname = StringTools.removeFileExt(ali.getQuery()
-                .getName());
+            .getName());
         final String refloc = ali.getRef().getUri().toString();
         final String queryloc = ali.getQuery().getUri().toString();
 
         if (format.equals("txt")) {
             try {
                 final File out = new File(iw.getOutputDirectory(this), refname
-                        + "-vs-" + queryname + ".txt");
+                    + "-vs-" + queryname + ".txt");
                 this.outputStream = new FileWriter(out);
                 this.outputStream.write(refloc + " in Stringrep:");
                 this.outputStream.write(a);
@@ -311,16 +310,16 @@ public class AlignmentOutput {
                 this.outputStream.write("\n");
                 this.outputStream.write("\n");
                 this.outputStream
-                        .write("Die zur Datenreduktion verwendete Fenstergroesse betrug:"
+                    .write("Die zur Datenreduktion verwendete Fenstergroesse betrug:"
                         + SymbolicRepresentationAlignment
                         .getFenstergr());
                 this.outputStream.write("\n");
                 this.outputStream.write("Die Alphabetgroesse betraegt:"
-                        + SymbolicRepresentationAlignment.getAlphabetgr());
+                    + SymbolicRepresentationAlignment.getAlphabetgr());
                 this.outputStream.write("\n");
                 this.outputStream.write("Es existieren " + all.size()
-                        + " optimale Alignments mit Distanz: "
-                        + matrix[(a.length() - 1)][(b.length() - 1)]);
+                    + " optimale Alignments mit Distanz: "
+                    + matrix[(a.length() - 1)][(b.length() - 1)]);
                 this.outputStream.write("\n");
                 this.outputStream.write("\n");
                 this.outputStream.write("\n");
@@ -346,9 +345,9 @@ public class AlignmentOutput {
 
                     }
                     final int[][] test = erstelleGrossenPfad(str1, str2, a, b,
-                            aoriglen, boriglen);
+                        aoriglen, boriglen);
                     createPairwiseAlignment(a, b, ali, test,
-                            matrix[(a.length() - 1)][(b.length() - 1)]);
+                        matrix[(a.length() - 1)][(b.length() - 1)]);
                     this.outputStream.write("\n");
                     this.outputStream.write(str2);
                     this.outputStream.write("\n");
@@ -366,11 +365,11 @@ public class AlignmentOutput {
         if (format.equals("fasta")) {
             try {
                 final File out = new File(iw.getOutputDirectory(this), refname
-                        + "-vs-" + queryname + ".fasta");
+                    + "-vs-" + queryname + ".fasta");
                 this.outputStream = new FileWriter(out);
                 for (int p = 0; p < all.size(); p++) {
                     this.outputStream.write(">" + refloc
-                            + " of optimal Alignment  " + (p + 1));
+                        + " of optimal Alignment  " + (p + 1));
                     this.outputStream.write("\n");
                     final OptimalAlignmentVector holeAlignment = all.get(p);
                     for (int q = holeAlignment.countAlChars() - 1; q >= 0; q--) {
@@ -378,13 +377,13 @@ public class AlignmentOutput {
                         str2 += holeAlignment.getCharPair(q).getB();
                     }
                     final int[][] test = erstelleGrossenPfad(str1, str2, a, b,
-                            aoriglen, boriglen);
+                        aoriglen, boriglen);
                     createPairwiseAlignment(a, b, ali, test,
-                            matrix[(a.length() - 1)][(b.length() - 1)]);
+                        matrix[(a.length() - 1)][(b.length() - 1)]);
                     this.outputStream.write(str1);
                     this.outputStream.write("\n");
                     this.outputStream.write(">" + queryloc
-                            + " of optimal Alignment  " + (p + 1));
+                        + " of optimal Alignment  " + (p + 1));
                     this.outputStream.write("\n");
                     this.outputStream.write(str2);
                     this.outputStream.write("\n");
@@ -402,17 +401,17 @@ public class AlignmentOutput {
         if (format.equals("pair")) {
             try {
                 final File out = new File(iw.getOutputDirectory(this), refname
-                        + "-vs-" + queryname + alnumber + ".pair");
+                    + "-vs-" + queryname + alnumber + ".pair");
                 this.outputStream = new FileWriter(out);
                 final OptimalAlignmentVector holeAlignment = all.get(alnumber);
                 for (int q = holeAlignment.countAlChars() - 1; q >= 0; q--) {
                     str1 += holeAlignment.getCharPair(q).getA();
                     str2 += holeAlignment.getCharPair(q).getB();
                     if (holeAlignment.getCharPair(q).getA() == (holeAlignment
-                            .getCharPair(q).getB())) {
+                        .getCharPair(q).getB())) {
                         identity++;
                     } else if ((holeAlignment.getCharPair(q).getA() != '-')
-                            && (holeAlignment.getCharPair(q).getB() != '-')) {
+                        && (holeAlignment.getCharPair(q).getB() != '-')) {
                         similarity++;
                     } else if (holeAlignment.getCharPair(q).getA() == '-') {
                         gaps++;
@@ -422,20 +421,20 @@ public class AlignmentOutput {
                 similarity += identity;
 
                 this.outputStream
-                        .write("########################################");
+                    .write("########################################");
                 this.outputStream.write("\n");
                 this.outputStream.write("# Program: maltcms-red");
                 this.outputStream.write("\n");
                 this.outputStream.write("# Rundate:  " + localeString);
                 this.outputStream.write("\n");
                 this.outputStream.write("# Report_file:  " + "pairalignment"
-                        + alnumber + ".txt");
+                    + alnumber + ".txt");
                 this.outputStream.write("\n");
                 this.outputStream
-                        .write("########################################");
+                    .write("########################################");
                 this.outputStream.write("\n");
                 this.outputStream
-                        .write("#=======================================");
+                    .write("#=======================================");
                 this.outputStream.write("\n");
                 this.outputStream.write("#");
                 this.outputStream.write("\n");
@@ -448,57 +447,57 @@ public class AlignmentOutput {
                 this.outputStream.write("# Matrix: dynamic computation");
                 this.outputStream.write("\n");
                 this.outputStream.write("# Gap_penalty: "
-                        + SymbolicRepresentationAlignment.getGapinit());
+                    + SymbolicRepresentationAlignment.getGapinit());
                 this.outputStream.write("\n");
                 this.outputStream
-                        .write("# Extend_penalty: based on char, look up in txt");
+                    .write("# Extend_penalty: based on char, look up in txt");
                 this.outputStream.write("\n");
                 this.outputStream.write("#");
                 this.outputStream.write("\n");
                 this.outputStream.write("# Length: "
-                        + Math.max(a.length() - 1, b.length() - 1));
+                    + Math.max(a.length() - 1, b.length() - 1));
                 this.outputStream.write("\n");
                 this.outputStream.write("# Identity:   "
-                        + identity
-                        + "/"
-                        + Math.max(a.length() - 1, b.length() - 1)
-                        + "("
-                        + ((double) identity / (double) Math.max(
+                    + identity
+                    + "/"
+                    + Math.max(a.length() - 1, b.length() - 1)
+                    + "("
+                    + ((double) identity / (double) Math.max(
                         a.length() - 1, b.length() - 1)) * 100 + "%)");
                 this.outputStream.write("\n");
                 this.outputStream.write("# Similarity: "
-                        + similarity
-                        + "/"
-                        + Math.max(a.length() - 1, b.length() - 1)
-                        + "("
-                        + ((double) similarity / (double) Math.max(
+                    + similarity
+                    + "/"
+                    + Math.max(a.length() - 1, b.length() - 1)
+                    + "("
+                    + ((double) similarity / (double) Math.max(
                         a.length() - 1, b.length() - 1)) * 100 + "%)");
                 this.outputStream.write("\n");
                 this.outputStream.write("# Gaps:       "
-                        + gaps
-                        + "/"
-                        + Math.max(a.length() - 1, b.length() - 1)
-                        + "("
-                        + ((double) gaps / (double) Math.max(a.length() - 1, b
+                    + gaps
+                    + "/"
+                    + Math.max(a.length() - 1, b.length() - 1)
+                    + "("
+                    + ((double) gaps / (double) Math.max(a.length() - 1, b
                         .length() - 1)) * 100 + "%)");
                 this.outputStream.write("\n");
                 this.outputStream.write("# Distance: "
-                        + matrix[(a.length() - 1)][(b.length() - 1)]);
+                    + matrix[(a.length() - 1)][(b.length() - 1)]);
                 this.outputStream.write("\n");
                 this.outputStream.write("#");
                 this.outputStream.write("\n");
                 this.outputStream.write("#");
                 this.outputStream.write("\n");
                 this.outputStream
-                        .write("#=======================================");
+                    .write("#=======================================");
                 this.outputStream.write("\n");
                 this.outputStream.write("\n");
                 // FileTools.prependDefaultDirs("pairlist.cdf",
                 // SymbolicRepresentationAlignment.class).getAbsolutePath()
                 final int[][] test = erstelleGrossenPfad(str1, str2, a, b,
-                        aoriglen, boriglen);
+                    aoriglen, boriglen);
                 createPairwiseAlignment(a, b, ali, test,
-                        matrix[(a.length() - 1)][(b.length() - 1)]);
+                    matrix[(a.length() - 1)][(b.length() - 1)]);
 
                 final String[] str1ar = new String[str1.length() / 50 + 1];
                 for (int s = 0; s <= (double) str1.length() / 50; s++) {
@@ -520,17 +519,17 @@ public class AlignmentOutput {
                 EvalTools.notNull(str1ar, this);
                 for (int y = 0; y < str2ar.length; y++) {
                     end1 += str1ar[y].length()
-                            - smueller.tools.ArrayTools.countChar(str1ar[y],
+                        - smueller.tools.ArrayTools.countChar(str1ar[y],
                             '-');
                     if (start1 < 10) {
                         this.outputStream.write("Sequ1name       " + start1
-                                + " " + str1ar[y] + "     " + end1);
+                            + " " + str1ar[y] + "     " + end1);
                     } else if (start1 < 100) {
                         this.outputStream.write("Sequ1name      " + start1
-                                + " " + str1ar[y] + "     " + end1);
+                            + " " + str1ar[y] + "     " + end1);
                     } else if (start1 < 1000) {
                         this.outputStream.write("Sequ1name     " + start1 + " "
-                                + str1ar[y] + "     " + end1);
+                            + str1ar[y] + "     " + end1);
                     }
                     this.outputStream.write("\n");
                     this.outputStream.write("                  ");
@@ -548,17 +547,17 @@ public class AlignmentOutput {
                     }
                     this.outputStream.write("\n");
                     end2 += str2ar[y].length()
-                            - smueller.tools.ArrayTools.countChar(str2ar[y],
+                        - smueller.tools.ArrayTools.countChar(str2ar[y],
                             '-');
                     if (start2 < 10) {
                         this.outputStream.write("Sequ2name       " + start2
-                                + " " + str2ar[y] + "     " + end2);
+                            + " " + str2ar[y] + "     " + end2);
                     } else if (start2 < 100) {
                         this.outputStream.write("Sequ2name      " + start2
-                                + " " + str2ar[y] + "     " + end2);
+                            + " " + str2ar[y] + "     " + end2);
                     } else if (start2 < 1000) {
                         this.outputStream.write("Sequ2name     " + start2 + " "
-                                + str2ar[y] + "     " + end2);
+                            + str2ar[y] + "     " + end2);
                     }
                     this.outputStream.write("\n");
                     this.outputStream.write("\n");
@@ -567,23 +566,23 @@ public class AlignmentOutput {
 
                 this.outputStream.write("\n");
                 this.outputStream
-                        .write("#---------------------------------------");
+                    .write("#---------------------------------------");
                 this.outputStream.write("\n");
                 this.outputStream
-                        .write("#---------------------------------------");
+                    .write("#---------------------------------------");
                 this.outputStream.write("\n");
 
                 this.outputStream.close();
                 final File out2 = new File(iw.getOutputDirectory(this), refname
-                        + "-vs-" + queryname + "-pairalignment" + alnumber
-                        + ".txt");
+                    + "-vs-" + queryname + "-pairalignment" + alnumber
+                    + ".txt");
                 this.outputStream2 = new FileWriter(out2);
                 this.outputStream2.write("Distance Matrix:");
                 this.outputStream2.write("\n");
                 this.outputStream2.write("\n");
                 for (int k = 0; k < SymbolConvert.getAlphabet().length(); k++) {
                     this.outputStream2.write("	"
-                            + SymbolConvert.getAlphabet().charAt(k));
+                        + SymbolConvert.getAlphabet().charAt(k));
                 }
                 this.outputStream2.write("\n");
                 // for (int i = 0; i < SymbolicRepresentationAlignment
@@ -610,8 +609,8 @@ public class AlignmentOutput {
                     this.outputStream2.write(a.charAt(i) + "");
                     for (int j = 0; j < b.length(); j++) {
                         this.outputStream2.write("	"
-                                + SymbolicRepresentationAlignment.getAl()
-                                .getMatrix()[i][j]);
+                            + SymbolicRepresentationAlignment.getAl()
+                            .getMatrix()[i][j]);
                     }
                     this.outputStream2.write("\n");
                 }

@@ -42,36 +42,36 @@ import ucar.ma2.IndexIterator;
 @ServiceProvider(service = AArrayFilter.class)
 public class SqrtFilter extends AArrayFilter {
 
-	private AElementFilter aef = null;
+    private AElementFilter aef = null;
 
-	/**
-	 * Default constructor.
-	 */
-	public SqrtFilter() {
-		super();
-		this.aef = new AElementFilter() {
-			@Override
-			public Double apply(final Double d) {
-				return Math.sqrt(d);
-			}
-		};
-	}
+    /**
+     * Default constructor.
+     */
+    public SqrtFilter() {
+        super();
+        this.aef = new AElementFilter() {
+            @Override
+            public Double apply(final Double d) {
+                return Math.sqrt(d);
+            }
+        };
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Array apply(final Array a) {
-		final Array arr = super.apply(a);
-		final IndexIterator ii = arr.getIndexIteratorFast();
-		while (ii.hasNext()) {
-			ii.setDoubleCurrent(this.aef.apply(ii.getDoubleNext()));
-		}
-		return arr;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Array apply(final Array a) {
+        final Array arr = super.apply(a);
+        final IndexIterator ii = arr.getIndexIteratorFast();
+        while (ii.hasNext()) {
+            ii.setDoubleCurrent(this.aef.apply(ii.getDoubleNext()));
+        }
+        return arr;
+    }
 
-	@Override
-	public SqrtFilter copy() {
-		return new SqrtFilter();
-	}
+    @Override
+    public SqrtFilter copy() {
+        return new SqrtFilter();
+    }
 }

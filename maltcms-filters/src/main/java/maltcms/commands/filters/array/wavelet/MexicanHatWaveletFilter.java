@@ -42,65 +42,65 @@ import ucar.ma2.Array;
 @Slf4j
 public class MexicanHatWaveletFilter extends AArrayFilter {
 
-	@Configurable(value = "1", type = double.class)
-	private double scale = 1;
-	//number from Percival and Walden's Wavelet Methods for Time Series Analysis
-	@Configurable(value = "0.63628", type = double.class)
-	private double variance = 0.63628;
-	private final IWavelet w;
-	private final ContinuousWaveletTransform cwt;
+    @Configurable(value = "1", type = double.class)
+    private double scale = 1;
+    //number from Percival and Walden's Wavelet Methods for Time Series Analysis
+    @Configurable(value = "0.63628", type = double.class)
+    private double variance = 0.63628;
+    private final IWavelet w;
+    private final ContinuousWaveletTransform cwt;
 
-	public MexicanHatWaveletFilter() {
-		super();
-		w = new MexicanHatWavelet();
-		cwt = new ContinuousWaveletTransform(w);
-	}
+    public MexicanHatWaveletFilter() {
+        super();
+        w = new MexicanHatWavelet();
+        cwt = new ContinuousWaveletTransform(w);
+    }
 
-	public MexicanHatWaveletFilter(double scale, double variance) {
-		this();
-		this.scale = scale;
-		this.variance = variance;
-	}
+    public MexicanHatWaveletFilter(double scale, double variance) {
+        this();
+        this.scale = scale;
+        this.variance = variance;
+    }
 
-	public void setScale(final double scale) {
-		this.scale = scale;
-	}
+    public void setScale(final double scale) {
+        this.scale = scale;
+    }
 
-	public double getVariance() {
-		return variance;
-	}
+    public double getVariance() {
+        return variance;
+    }
 
-	public void setVariance(double variance) {
-		this.variance = variance;
-	}
+    public void setVariance(double variance) {
+        this.variance = variance;
+    }
 
-	@Override
-	public Array apply(final Array a) {
-		Array arr = super.apply(a);
+    @Override
+    public Array apply(final Array a) {
+        Array arr = super.apply(a);
 
-		if (arr.getRank() == 1) {
-			return Array.factory(cwt.apply((double[]) arr
-				.get1DJavaArray(double.class), this.scale, this.variance));
-		} else {
-			throw new IllegalArgumentException(getClass().getSimpleName()
-				+ " can only be applied to one dimensional arrays!");
-		}
-	}
+        if (arr.getRank() == 1) {
+            return Array.factory(cwt.apply((double[]) arr
+                .get1DJavaArray(double.class), this.scale, this.variance));
+        } else {
+            throw new IllegalArgumentException(getClass().getSimpleName()
+                + " can only be applied to one dimensional arrays!");
+        }
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		super.configure(cfg);
-		this.scale = cfg.getDouble(this.getClass().getName() + ".scale", 2.0);
-		this.variance = cfg.getDouble(this.getClass().getName() + ".variance",
-			0.63628);
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+        super.configure(cfg);
+        this.scale = cfg.getDouble(this.getClass().getName() + ".scale", 2.0);
+        this.variance = cfg.getDouble(this.getClass().getName() + ".variance",
+            0.63628);
+    }
 
-	public ContinuousWaveletTransform getContinuousWaveletTransform() {
-		return this.cwt;
-	}
+    public ContinuousWaveletTransform getContinuousWaveletTransform() {
+        return this.cwt;
+    }
 
-	@Override
-	public MexicanHatWaveletFilter copy() {
-		return new MexicanHatWaveletFilter(scale, variance);
-	}
+    @Override
+    public MexicanHatWaveletFilter copy() {
+        return new MexicanHatWaveletFilter(scale, variance);
+    }
 }

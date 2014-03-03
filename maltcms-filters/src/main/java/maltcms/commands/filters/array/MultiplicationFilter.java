@@ -44,43 +44,43 @@ import ucar.ma2.IndexIterator;
 @ServiceProvider(service = AArrayFilter.class)
 public class MultiplicationFilter extends AArrayFilter {
 
-	@Configurable
-	private double factor = 1.0d;
+    @Configurable
+    private double factor = 1.0d;
 
-	public MultiplicationFilter() {
-		super();
-	}
+    public MultiplicationFilter() {
+        super();
+    }
 
-	public MultiplicationFilter(final double multiplyFactor) {
-		this();
-		this.factor = multiplyFactor;
-	}
+    public MultiplicationFilter(final double multiplyFactor) {
+        this();
+        this.factor = multiplyFactor;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
-	 */
-	@Override
-	public Array apply(final Array a) {
-		final Array arr = super.apply(a);
-		final IndexIterator ii = arr.getIndexIteratorFast();
-		double next = 0.0d;
-		while (ii.hasNext()) {
-			next = ii.getDoubleNext();
-			final double res = this.factor * next;
-			ii.setDoubleCurrent(res);
-		}
-		return arr;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
+     */
+    @Override
+    public Array apply(final Array a) {
+        final Array arr = super.apply(a);
+        final IndexIterator ii = arr.getIndexIteratorFast();
+        double next = 0.0d;
+        while (ii.hasNext()) {
+            next = ii.getDoubleNext();
+            final double res = this.factor * next;
+            ii.setDoubleCurrent(res);
+        }
+        return arr;
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		this.factor = cfg.getDouble(this.getClass().getName() + ".factor", 1.0d);
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+        this.factor = cfg.getDouble(this.getClass().getName() + ".factor", 1.0d);
+    }
 
-	@Override
-	public MultiplicationFilter copy() {
-		return new MultiplicationFilter(factor);
-	}
+    @Override
+    public MultiplicationFilter copy() {
+        return new MultiplicationFilter(factor);
+    }
 }

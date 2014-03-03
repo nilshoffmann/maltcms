@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -44,16 +44,16 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import maltcms.commands.distances.dtw.ADynamicTimeWarp;
+import maltcms.commands.distances.dtwng.AlignmentFactory;
+import maltcms.commands.distances.dtwng.FeatureVectorDtwSimilarity;
+import maltcms.commands.distances.dtwng.IAlignment;
+import maltcms.commands.distances.dtwng.ThreePredecessorsOptimization;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.constraint.ConstraintFactory;
 import maltcms.datastructures.feature.FeatureVectorFactory;
-import maltcms.commands.distances.dtwng.AlignmentFactory;
-import maltcms.commands.distances.dtwng.FeatureVectorDtwSimilarity;
-import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.experimental.operations.EditDistance;
-import maltcms.commands.distances.dtwng.IAlignment;
-import maltcms.commands.distances.dtwng.ThreePredecessorsOptimization;
 import maltcms.math.functions.DtwTimePenalizedPairwiseSimilarity;
+import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
 import org.apache.commons.configuration.CompositeConfiguration;
 import ucar.ma2.Array;
@@ -73,11 +73,11 @@ public class DTWNew {
         CompositeConfiguration cfg = m.parseCommandLine(args);
         cfg.setProperty("maltcms.ui.charts.PlotRunner.headless", Boolean.valueOf(false));
         cfg.setProperty(
-                "cross.datastructures.fragments.VariableFragment.useCachedList",
-                Boolean.valueOf(false));
+            "cross.datastructures.fragments.VariableFragment.useCachedList",
+            Boolean.valueOf(false));
         cfg.setProperty(
-                "maltcms.datastructures.fragments.PairwiseAlignment.normalizeAlignmentValueByMapWeights",
-                Boolean.valueOf(true));
+            "maltcms.datastructures.fragments.PairwiseAlignment.normalizeAlignmentValueByMapWeights",
+            Boolean.valueOf(true));
         String pipeline = "maltcms.commands.fragments.preprocessing.DefaultVarLoader,maltcms.commands.fragments.preprocessing.DenseArrayProducer";
         cfg.setProperty("pipeline", pipeline);
         cfg.setProperty("cross.io.IDataSource", Arrays.asList(new String[]{"maltcms.io.andims.NetcdfDataSource"}));
@@ -86,14 +86,14 @@ public class DTWNew {
         cfg.setProperty("alignment.save.cumulative.distance.matrix", true);
         cfg.setProperty("alignment.save.pairwise.distance.matrix", true);
         cfg.setProperty("alignment.algorithm.distance",
-                "maltcms.commands.distances.ArrayCos");
+            "maltcms.commands.distances.ArrayCos");
         cfg.setProperty("alignment.algorithm.windowsize", 0.05);
         cfg.setProperty(
-                "maltcms.commands.distances.ArrayCos.compression_weight", 1.0);
+            "maltcms.commands.distances.ArrayCos.compression_weight", 1.0);
         cfg.setProperty("maltcms.commands.distances.ArrayCos.expansion_weight",
-                1.0);
+            1.0);
         cfg.setProperty("maltcms.commands.distances.ArrayCos.diagonal_weight",
-                1.0);
+            1.0);
         // cfg.save(new BufferedOutputStream(System.out));
         cross.Factory.getInstance().configure(cfg);
         System.out.println("Preparing command sequence");
@@ -112,15 +112,15 @@ public class DTWNew {
         // prepare feature vectors
         FeatureVectorFactory fvf = FeatureVectorFactory.getInstance();
         iff3.getChild("binned_intensity_values").setIndex(
-                iff3.getChild("binned_scan_index"));
+            iff3.getChild("binned_scan_index"));
         List<Array> bi1 = iff3.getChild("binned_intensity_values").getIndexedArray();
         System.out.println("Length of binned intensity values: " + bi1.size());
 
         //
         List<IFeatureVector> l1 = fvf.createBinnedMSFeatureVectorList(iff3,
-                true);
+            true);
         List<IFeatureVector> l2 = fvf.createBinnedMSFeatureVectorList(iff4,
-                true);
+            true);
 
         System.out.println("Preparing alignment");
         // prepare alignment
@@ -138,8 +138,8 @@ public class DTWNew {
         tpo.setWeight(ThreePredecessorsOptimization.State.NW.name(), dtwtpps.getMatchWeight());
         tpo.setWeight(ThreePredecessorsOptimization.State.W.name(), dtwtpps.getCompressionWeight());
         IAlignment ia = af.getDTWInstance(Factory.getInstance().getObjectFactory().instantiate(
-                ThreePredecessorsOptimization.class), fvds,
-                constraints);
+            ThreePredecessorsOptimization.class), fvds,
+            constraints);
         // set alignment properties
         ia.setLeftHandSideId(iff3.getName());
         ia.setRightHandSideId(iff4.getName());
@@ -157,8 +157,8 @@ public class DTWNew {
         ia.modify(ares);
         ares.save();
         ADynamicTimeWarp adtw = Factory.getInstance().getObjectFactory().instantiate(
-                "maltcms.commands.distances.dtw.MZIDynamicTimeWarp",
-                ADynamicTimeWarp.class);
+            "maltcms.commands.distances.dtw.MZIDynamicTimeWarp",
+            ADynamicTimeWarp.class);
         adtw.setWorkflow(cp.getWorkflow());
         IFileFragment iff = adtw.apply(iff3, iff4);
         iff.clearArrays();

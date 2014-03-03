@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -28,20 +28,17 @@
 package maltcms.commands.fragments2d.warp;
 
 import cross.annotations.Configurable;
-import java.util.List;
-
-import maltcms.commands.distances.dtw.ADynamicTimeWarp;
-import maltcms.tools.ArrayTools2;
-
-
-import ucar.ma2.Array;
 import cross.annotations.ProvidesVariables;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.tools.StringTools;
+import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.distances.dtw.ADynamicTimeWarp;
+import maltcms.tools.ArrayTools2;
+import ucar.ma2.Array;
 
 /**
  * Implementation of pairwise Dynamic-Time-Warping for time-series data. This
@@ -55,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
 public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
 
-	@Configurable(name = "scale", description = "Whether scan line intensity arrays should be scaled using sqrt.", value="true")
+    @Configurable(name = "scale", description = "Whether scan line intensity arrays should be scaled using sqrt.", value = "true")
     private boolean scale = true;
 
     /**
@@ -65,24 +62,24 @@ public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
      */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
-            Tuple2D<IFileFragment, IFileFragment> t) {
+        Tuple2D<IFileFragment, IFileFragment> t) {
 
         final IFileFragment ref = t.getFirst(), query = t.getSecond();
 
         final String refname = StringTools.removeFileExt(ref.getName()), queryname = StringTools.
-                removeFileExt(query.getName());
+            removeFileExt(query.getName());
 
         IVariableFragment var1 = ref.getChild(refname + "_" + queryname + "-tv");
-		IVariableFragment index1 = ref.getChild(refname + "_" + queryname + "-idx");
-		var1.setIndex(index1);
+        IVariableFragment index1 = ref.getChild(refname + "_" + queryname + "-idx");
+        var1.setIndex(index1);
         List<Array> scanlineRef = ref.getChild(
-                refname + "_" + queryname + "-tv").getIndexedArray();
+            refname + "_" + queryname + "-tv").getIndexedArray();
 
         IVariableFragment var2 = query.getChild(queryname + "_" + refname + "-tv");
-		IVariableFragment index2 = query.getChild(queryname + "_" + refname + "-idx");
-		var2.setIndex(index2);
+        IVariableFragment index2 = query.getChild(queryname + "_" + refname + "-idx");
+        var2.setIndex(index2);
         List<Array> scanlineQuery = query.getChild(
-                queryname + "_" + refname + "-tv").getIndexedArray();
+            queryname + "_" + refname + "-tv").getIndexedArray();
 
         if (this.scale) {
             log.info("Scaling");

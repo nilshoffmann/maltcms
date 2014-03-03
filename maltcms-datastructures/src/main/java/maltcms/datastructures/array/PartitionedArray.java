@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,6 +27,7 @@
  */
 package maltcms.datastructures.array;
 
+import cross.datastructures.tuple.Tuple2D;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -34,20 +35,14 @@ import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.List;
-
-
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.alignment.AnchorPairSet;
 import maltcms.datastructures.constraint.ConstraintFactory;
 import maltcms.tools.ArrayTools;
-
-import org.slf4j.Logger;
-
 import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
 import ucar.ma2.ArrayDouble.D2;
+import ucar.ma2.ArrayInt;
 import ucar.ma2.ArrayInt.D1;
-import cross.datastructures.tuple.Tuple2D;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Array, which has been partitioned into rectangular areas, e.g. by anchors.
@@ -62,36 +57,36 @@ public class PartitionedArray implements IArrayD2Double {
     public static PartitionedArray copyLayout(final PartitionedArray pa) {
         final Area a = new Area(pa.getShape());
         return new PartitionedArray(pa.rows(), pa.columns(), (ArrayInt.D1) pa
-                .getColStart().copy(), (ArrayInt.D1) pa.getRowLength().copy(),
-                (ArrayInt.D1) pa.getRowOffset().copy(), pa.getDataArray(), pa
-                .getDefaultValue(), a);
+            .getColStart().copy(), (ArrayInt.D1) pa.getRowLength().copy(),
+            (ArrayInt.D1) pa.getRowOffset().copy(), pa.getDataArray(), pa
+            .getDefaultValue(), a);
     }
 
     public static PartitionedArray create(final int rows, final int cols,
-            final AnchorPairSet aps, final int neighborhood1,
-            final double band, final double defaultValue,
-            final boolean globalBand) {
+        final AnchorPairSet aps, final int neighborhood1,
+        final double band, final double defaultValue,
+        final boolean globalBand) {
         Area shape = null;
         if (globalBand) {
             shape = ConstraintFactory.getInstance().calculateLayout(rows, cols,
-                    neighborhood1, aps, -1, 0, 0);
+                neighborhood1, aps, -1, 0, 0);
             if ((band > 0.0) && (band < 1.0)) {
                 final Area bandshape = ConstraintFactory.getInstance()
-                        .createBandConstraint(0, 0, rows, cols, band);
+                    .createBandConstraint(0, 0, rows, cols, band);
                 // final Area intersection = new Area(bandshape);
                 shape.intersect(bandshape);
                 // shape = intersection;
             }
         } else {
             shape = ConstraintFactory.getInstance().calculateLayout(rows, cols,
-                    neighborhood1, aps, band, 0, 0);
+                neighborhood1, aps, band, 0, 0);
         }
 
         return PartitionedArray.create(rows, cols, defaultValue, shape);
     }
 
     public static PartitionedArray create(final int rows, final int cols,
-            final double defaultValue, final Area shape) {
+        final double defaultValue, final Area shape) {
         final ArrayInt.D1 colStart = new ArrayInt.D1(rows);// first valid index
         // of each row
         final ArrayInt.D1 rowLength = new ArrayInt.D1(rows);// last valid index
@@ -99,24 +94,24 @@ public class PartitionedArray implements IArrayD2Double {
         final ArrayInt.D1 rowOffset = new ArrayInt.D1(rows);// offsets of row
         // storage in
         final ArrayDouble.D1 dataArray = PartitionedArray.initArrays(rows,
-                cols, shape, colStart, rowLength, rowOffset);
+            cols, shape, colStart, rowLength, rowOffset);
         final PartitionedArray pa = new PartitionedArray(rows, cols, colStart,
-                rowLength, rowOffset, dataArray, defaultValue, shape);
+            rowLength, rowOffset, dataArray, defaultValue, shape);
         log.info(
-                "Number of elements to calculate: "
-                + pa.getElementsToCalculate());
+            "Number of elements to calculate: "
+            + pa.getElementsToCalculate());
         log.info(
-                "Number of virtual elements to calculate: "
-                + pa.getTotalNumElements());
+            "Number of virtual elements to calculate: "
+            + pa.getTotalNumElements());
         log.debug(
-                "Columns: " + pa.columns() + "\tRows: " + pa.rows());
+            "Columns: " + pa.columns() + "\tRows: " + pa.rows());
         return pa;
     }
 
     public static BufferedImage createLayoutImage(final PartitionedArray pa,
-            final Color bg, final Color fg) {
+        final Color bg, final Color fg) {
         final BufferedImage bi = new BufferedImage(pa.columns(), pa.rows(),
-                BufferedImage.TYPE_4BYTE_ABGR);
+            BufferedImage.TYPE_4BYTE_ABGR);
         final Graphics2D g = (Graphics2D) bi.getGraphics();
         final Area a = pa.getShape();
         final Color b = bg;
@@ -129,8 +124,8 @@ public class PartitionedArray implements IArrayD2Double {
     }
 
     public static ArrayDouble.D1 initArrays(final int rows, final int cols,
-            final Area bounds, final ArrayInt.D1 colStart,
-            final ArrayInt.D1 rowLength, final ArrayInt.D1 rowOffset) {
+        final Area bounds, final ArrayInt.D1 colStart,
+        final ArrayInt.D1 rowLength, final ArrayInt.D1 rowOffset) {
         final long start = System.currentTimeMillis();
         int offset = 0;
         Area a = null;// new Area(r);
@@ -169,12 +164,12 @@ public class PartitionedArray implements IArrayD2Double {
             // r.setBounds(0, r.getBounds().y+1, cols, 1);
             // System.out.println("Offset before adding cols: "+offset);
             offset = PartitionedArray.prepareRow(offset, i, startCol, len + 1,
-                    rowOffset, colStart, rowLength);
+                rowOffset, colStart, rowLength);
             // System.out.println("Offset after adding cols: "+offset);
         }
         final long end = System.currentTimeMillis() - start;
         log.debug(
-                "Time to calculate row layout: " + end);
+            "Time to calculate row layout: " + end);
         return new ArrayDouble.D1(offset);
     }
 
@@ -289,8 +284,8 @@ public class PartitionedArray implements IArrayD2Double {
 //		jf.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 //	}
     public static int prepareRow(int offset, final int row, final int startcol,
-            final int len, final ArrayInt.D1 rowOffset,
-            final ArrayInt.D1 colStart, final ArrayInt.D1 rowLength) {
+        final int len, final ArrayInt.D1 rowOffset,
+        final ArrayInt.D1 colStart, final ArrayInt.D1 rowLength) {
         // + " size of offset array: " + rowOffset.getShape()[0]);
 
         rowOffset.set(row, offset);
@@ -312,8 +307,8 @@ public class PartitionedArray implements IArrayD2Double {
 
     public static PartitionedArray shareLayout(final PartitionedArray pa) {
         return new PartitionedArray(pa.rows(), pa.columns(), pa.getColStart(),
-                pa.getRowLength(), pa.getRowOffset(), pa.getDataArray(), pa
-                .getDefaultValue(), pa.getShape());
+            pa.getRowLength(), pa.getRowOffset(), pa.getDataArray(), pa
+            .getDefaultValue(), pa.getShape());
     }
     private Area shape = null;
     private ArrayInt.D1 colStart;
@@ -331,9 +326,9 @@ public class PartitionedArray implements IArrayD2Double {
     private int virtualRows = 0;
 
     public PartitionedArray(final int rows, final int cols,
-            final ArrayInt.D1 colStart1, final ArrayInt.D1 rowLength1,
-            final ArrayInt.D1 rowOffset1, final ArrayDouble.D1 dataArray1,
-            final double defaultValue1, final Area shape1) {
+        final ArrayInt.D1 colStart1, final ArrayInt.D1 rowLength1,
+        final ArrayInt.D1 rowOffset1, final ArrayDouble.D1 dataArray1,
+        final double defaultValue1, final Area shape1) {
         this.virtualRows = rows;
         this.virtualCols = cols;
         this.colStart = colStart1;
@@ -349,7 +344,7 @@ public class PartitionedArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#columns()
      */
     public int columns() {
@@ -358,13 +353,13 @@ public class PartitionedArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.array.IArrayD2Double#flatten()
      */
     @Override
     public Tuple2D<D1, ucar.ma2.ArrayDouble.D1> flatten() {
         final ArrayDouble.D1 arr = new ArrayDouble.D1(
-                getNumberOfStoredElements());
+            getNumberOfStoredElements());
         final ArrayInt.D1 si = new ArrayInt.D1(rows());
         int offset = 0;
         for (int i = 0; i < rows(); i++) {
@@ -382,7 +377,7 @@ public class PartitionedArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#get(int, int)
      */
     public double get(final int row, final int col) {
@@ -406,7 +401,7 @@ public class PartitionedArray implements IArrayD2Double {
     }
 
     protected int getAddressInDataArrayFast(final int row, final int col)
-            throws ArrayIndexOutOfBoundsException {
+        throws ArrayIndexOutOfBoundsException {
         final int rowOffsetPos = this.rowOffset.get(row);
         final int colStart = this.colStart.get(row);
         // int len = this.rowLength.get(row);
@@ -415,7 +410,7 @@ public class PartitionedArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#getArray()
      */
     @Override
@@ -440,7 +435,7 @@ public class PartitionedArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.array.IArrayD2Double#getColumnBounds(int)
      */
     @Override
@@ -462,7 +457,7 @@ public class PartitionedArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#getDefaultValue()
      */
     public double getDefaultValue() {
@@ -483,7 +478,7 @@ public class PartitionedArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.datastructures.alignment.IArrayD2Double#getNumberOfStoredElements
      * ()
@@ -544,7 +539,7 @@ public class PartitionedArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#rows()
      */
     public int rows() {
@@ -553,12 +548,12 @@ public class PartitionedArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#set(int, int,
      * double)
      */
     public void set(final int row, final int col, final double d)
-            throws ArrayIndexOutOfBoundsException {
+        throws ArrayIndexOutOfBoundsException {
         final int index = getAddressInDataArray(row, col);
         // System.out.println("Row "+row+" Column "+col+
         // " Index in dataArray array: "+
@@ -601,7 +596,7 @@ public class PartitionedArray implements IArrayD2Double {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.datastructures.alignment.IArrayD2Double#toString()
      */
     @Override

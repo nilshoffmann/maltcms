@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,14 +27,13 @@
  */
 package maltcms.datastructures.cluster;
 
+import cross.exception.NotImplementedException;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-
 import maltcms.datastructures.array.IArrayD2Double;
 import maltcms.datastructures.peak.Peak1D;
-import cross.exception.NotImplementedException;
 
 /**
  * @author Nils Hoffmann
@@ -43,7 +42,7 @@ import cross.exception.NotImplementedException;
  *
  */
 public class Peak1DBidiBestHitsCriterion implements
-        ICliqueMemberCriterion<Peak1D> {
+    ICliqueMemberCriterion<Peak1D> {
 
     public class Peak1DSimilarities {
 
@@ -55,7 +54,7 @@ public class Peak1DBidiBestHitsCriterion implements
             this.sims = sims;
             if (sims.rows() != peaks.size() || sims.columns() != peaks.size()) {
                 throw new IllegalArgumentException(
-                        "Number of peaks and dimensions of similarity matrix differ! Check for transposition!");
+                    "Number of peaks and dimensions of similarity matrix differ! Check for transposition!");
             }
         }
 
@@ -131,7 +130,7 @@ public class Peak1DBidiBestHitsCriterion implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.datastructures.cluster.ICliqueMemberCriterion#shouldBeMemberOf
      * (maltcms.datastructures.cluster.Clique,

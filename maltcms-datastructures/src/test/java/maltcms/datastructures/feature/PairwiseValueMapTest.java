@@ -1,5 +1,5 @@
 /*
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -49,13 +49,13 @@ public class PairwiseValueMapTest {
     @Test
     public void testDenseMatrix() {
         DoubleMatrix2D matrix = DoubleFactory2D.dense.make(3, 4, Double.NEGATIVE_INFINITY);
-        Assert.assertEquals(Double.NEGATIVE_INFINITY,matrix.get(0, 1),1.0e-10);
+        Assert.assertEquals(Double.NEGATIVE_INFINITY, matrix.get(0, 1), 1.0e-10);
         matrix.setQuick(0, 2, 0.89);
         matrix.setQuick(1, 2, 0.414);
         final DoubleMatrix1D column = matrix.viewColumn(2);
-        Assert.assertEquals(column.size(),3);
-        final int[] permutation = MathTools.seq(0, column.size()-1, 1);
-        Assert.assertEquals(column.size(),permutation.length);
+        Assert.assertEquals(column.size(), 3);
+        final int[] permutation = MathTools.seq(0, column.size() - 1, 1);
+        Assert.assertEquals(column.size(), permutation.length);
         Swapper swapper = new Swapper() {
             @Override
             public void swap(int a, int b) {
@@ -72,24 +72,24 @@ public class PairwiseValueMapTest {
         };
         GenericSorting.mergeSort(0, column.size(), comp, swapper);
         //return index of largest element
-        Assert.assertArrayEquals(new int[]{2,1,0}, permutation);
-        Assert.assertEquals(0.89, column.getQuick(permutation[permutation.length-1]),1.0e-10);
-        Assert.assertEquals(Double.NEGATIVE_INFINITY, column.getQuick(permutation[0]),1.0e-10);
+        Assert.assertArrayEquals(new int[]{2, 1, 0}, permutation);
+        Assert.assertEquals(0.89, column.getQuick(permutation[permutation.length - 1]), 1.0e-10);
+        Assert.assertEquals(Double.NEGATIVE_INFINITY, column.getQuick(permutation[0]), 1.0e-10);
     }
-    
+
     /**
      * Test of sparse matrix.
      */
     @Test
     public void testSparseMatrix() {
         DoubleMatrix2D matrix = DoubleFactory2D.sparse.make(3, 4, Double.NEGATIVE_INFINITY);
-        Assert.assertEquals(Double.NEGATIVE_INFINITY,matrix.get(0, 1),1.0e-10);
+        Assert.assertEquals(Double.NEGATIVE_INFINITY, matrix.get(0, 1), 1.0e-10);
         matrix.setQuick(0, 2, 0.89);
         matrix.setQuick(1, 2, 0.414);
         final DoubleMatrix1D column = matrix.viewColumn(2);
-        Assert.assertEquals(column.size(),3);
-        final int[] permutation = MathTools.seq(0, column.size()-1, 1);
-        Assert.assertEquals(column.size(),permutation.length);
+        Assert.assertEquals(column.size(), 3);
+        final int[] permutation = MathTools.seq(0, column.size() - 1, 1);
+        Assert.assertEquals(column.size(), permutation.length);
         Swapper swapper = new Swapper() {
             @Override
             public void swap(int a, int b) {
@@ -106,9 +106,9 @@ public class PairwiseValueMapTest {
         };
         GenericSorting.mergeSort(0, column.size(), comp, swapper);
         //return index of largest element
-        Assert.assertArrayEquals(new int[]{2,1,0}, permutation);
-        Assert.assertEquals(0.89, column.getQuick(permutation[permutation.length-1]),1.0e-10);
-        Assert.assertEquals(Double.NEGATIVE_INFINITY, column.getQuick(permutation[0]),1.0e-10);
+        Assert.assertArrayEquals(new int[]{2, 1, 0}, permutation);
+        Assert.assertEquals(0.89, column.getQuick(permutation[permutation.length - 1]), 1.0e-10);
+        Assert.assertEquals(Double.NEGATIVE_INFINITY, column.getQuick(permutation[0]), 1.0e-10);
     }
 
     /**
@@ -120,11 +120,11 @@ public class PairwiseValueMapTest {
         pvm.setValue(0, 2, 0.89);
         pvm.setValue(1, 2, 0.414);
         Assert.assertEquals(0, pvm.indexOfMaxInColumn(2));
-        Assert.assertEquals(0.89, pvm.getValue(pvm.indexOfMaxInColumn(2),2),1.0e-10);
+        Assert.assertEquals(0.89, pvm.getValue(pvm.indexOfMaxInColumn(2), 2), 1.0e-10);
         Assert.assertEquals(2, pvm.indexOfMinInColumn(2));
-        Assert.assertEquals(Double.NEGATIVE_INFINITY, pvm.getValue(pvm.indexOfMinInColumn(2),2),1.0e-10);
+        Assert.assertEquals(Double.NEGATIVE_INFINITY, pvm.getValue(pvm.indexOfMinInColumn(2), 2), 1.0e-10);
     }
-    
+
     /**
      * Test of indexOfMax and indexOfMin method, of class PairwiseValueMap.
      */
@@ -134,11 +134,11 @@ public class PairwiseValueMapTest {
         pvm.setValue(0, 2, 0.89);
         pvm.setValue(1, 2, 0.414);
         Assert.assertEquals(0, pvm.indexOfMaxInColumn(2));
-        Assert.assertEquals(0.89, pvm.getValue(pvm.indexOfMaxInColumn(2),2),1.0e-10);
+        Assert.assertEquals(0.89, pvm.getValue(pvm.indexOfMaxInColumn(2), 2), 1.0e-10);
         Assert.assertEquals(2, pvm.indexOfMinInColumn(2));
-        Assert.assertEquals(Double.NEGATIVE_INFINITY, pvm.getValue(pvm.indexOfMinInColumn(2),2),1.0e-10);
+        Assert.assertEquals(Double.NEGATIVE_INFINITY, pvm.getValue(pvm.indexOfMinInColumn(2), 2), 1.0e-10);
     }
-    
+
     /**
      * Test of indexOfMax and indexOfMin method, of class PairwiseValueMap.
      */
@@ -148,8 +148,8 @@ public class PairwiseValueMapTest {
         pvm.setValue(0, 2, 0.89);
         pvm.setValue(1, 2, 0.414);
         Assert.assertEquals(0, pvm.indexOfMaxInColumn(2));
-        Assert.assertEquals(0.89, pvm.getValue(pvm.indexOfMaxInColumn(2),2),1.0e-10);
+        Assert.assertEquals(0.89, pvm.getValue(pvm.indexOfMaxInColumn(2), 2), 1.0e-10);
         Assert.assertEquals(2, pvm.indexOfMinInColumn(2));
-        Assert.assertEquals(Double.NEGATIVE_INFINITY, pvm.getValue(pvm.indexOfMinInColumn(2),2),1.0e-10);
+        Assert.assertEquals(Double.NEGATIVE_INFINITY, pvm.getValue(pvm.indexOfMinInColumn(2), 2), 1.0e-10);
     }
 }

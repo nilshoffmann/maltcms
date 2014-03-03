@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  */
 @Deprecated
 public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowResult> implements
-        IListener<IEvent<IWorkflowResult>>, IEventSource<IWorkflowResult> {
+    IListener<IEvent<IWorkflowResult>>, IEventSource<IWorkflowResult> {
 
     private Configuration cfg = null;
     private final EventSource<IWorkflowResult> es = new EventSource<IWorkflowResult>();
@@ -70,7 +70,7 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
     public IWorkflow doInBackground() throws Exception {
         log.info("Starting up Maltcms!");
         log.info("Running Maltcms version {}",
-                this.cfg.getString("application.version"));
+            this.cfg.getString("application.version"));
         log.info("Configuring Factory");
 
         Factory.getInstance().configure(this.cfg);
@@ -79,7 +79,7 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
         final ICommandSequence cs = Factory.getInstance().createCommandSequence();
         Date startup = cs.getWorkflow().getStartupDate();
         final AFragmentCommand[] commands = cs.getCommands().toArray(
-                new AFragmentCommand[]{});
+            new AFragmentCommand[]{});
         final float nsteps = commands.length;
         cs.getWorkflow().addListener(this);
         EvalTools.notNull(cs, cs);
@@ -118,7 +118,7 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
         log.info("Progress: {}", progress);
         // Save configuration
         Factory.dumpConfig("runtime.properties",
-                startup);
+            startup);
         // Save workflow
         final IWorkflow iw = cs.getWorkflow();
         iw.save();

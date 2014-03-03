@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,21 +27,25 @@
  */
 package maltcms.tools;
 
+import cross.Factory;
+import cross.datastructures.collections.CachedLazyList;
+import cross.datastructures.collections.IElementProvider;
+import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tuple.Tuple2D;
+import cross.datastructures.tuple.Tuple2DI;
+import cross.exception.ConstraintViolationException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.TreeMap;
-
-import ucar.ma2.Sparse;
-
-import java.util.Collections;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
-
 import ucar.ma2.Array;
 import ucar.ma2.ArrayBoolean;
 import ucar.ma2.ArrayByte;
@@ -56,14 +60,7 @@ import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.MAMath;
-import cross.Factory;
-import cross.datastructures.collections.CachedLazyList;
-import cross.datastructures.collections.IElementProvider;
-import cross.datastructures.tuple.Tuple2D;
-import cross.datastructures.tuple.Tuple2DI;
-import cross.exception.ConstraintViolationException;
-import cross.datastructures.tools.EvalTools;
-import lombok.extern.slf4j.Slf4j;
+import ucar.ma2.Sparse;
 
 /**
  * Utility class providing methods for Sparse and Dense Arrays.
@@ -83,7 +80,7 @@ public class ArrayTools {
     }
 
     public static ArrayDouble.D2 combine(final ArrayDouble.D1 a1,
-            final ArrayDouble.D1 a2, final boolean asColumns) {
+        final ArrayDouble.D1 a2, final boolean asColumns) {
         if (a1.getShape().length == a2.getShape().length) {
             ArrayDouble.D2 ret = null;
             if (asColumns) {
@@ -110,7 +107,7 @@ public class ArrayTools {
             return ret;
         } else {
             throw new IllegalArgumentException(
-                    "Shapes of input Arrays to be combined differ!");
+                "Shapes of input Arrays to be combined differ!");
         }
     }
 
@@ -172,7 +169,7 @@ public class ArrayTools {
                 return a;
             }
             throw new IllegalArgumentException(
-                    "Primitive type " + o.getClass() + " is not supported!");
+                "Primitive type " + o.getClass() + " is not supported!");
         }
         if (o instanceof Double) {
             ArrayDouble.D0 a = new ArrayDouble.D0();
@@ -204,7 +201,7 @@ public class ArrayTools {
             return a;
         } else if (o instanceof String) {
             int size = (int) Math.pow(2.0d, 1.0d + (Math.log10(((String) o).
-                    length()) / Math.log(2.0d)));
+                length()) / Math.log(2.0d)));
             // check for overflow
             if (size <= 0) {
                 size = ((String) o).length();
@@ -212,14 +209,14 @@ public class ArrayTools {
             return ArrayChar.makeFromString((String) o, size);
         }
         throw new IllegalArgumentException(
-                "Could not create Array for Object: " + o + " of type: "
-                + o.getClass().getName());
+            "Could not create Array for Object: " + o + " of type: "
+            + o.getClass().getName());
     }
 
     public static ArrayDouble.D1 compress(final List<Array> sourceA,
-            final int source, final int length) {
+        final int source, final int length) {
         final ArrayDouble.D1 res = ArrayTools.vector(sourceA.get(source).
-                getShape()[0]);
+            getShape()[0]);
         for (int i = 0; i < length; i++) {
             final Array sa = sourceA.get(source + i);
             if (sa instanceof ArrayDouble.D1) {
@@ -229,7 +226,7 @@ public class ArrayTools {
                 }
             } else {
                 throw new IllegalArgumentException(
-                        "Compression only works on ArrayDouble.D1!");
+                    "Compression only works on ArrayDouble.D1!");
             }
         }
         for (int i = 0; i < length; i++) {
@@ -241,7 +238,7 @@ public class ArrayTools {
 
     public static List<ArrayDouble.D1> convertArrays(final List<Array> al) {
         final ArrayList<ArrayDouble.D1> ret = new ArrayList<ArrayDouble.D1>(al.
-                size());
+            size());
         // System.out.println("Copying "+al.size()+" scans!");
         for (int i = 0; i < al.size(); i++) {
             final Array a = al.get(i);
@@ -273,8 +270,8 @@ public class ArrayTools {
                 ret.add(b);
             } else {
                 throw new ClassCastException(
-                        "Only Arrays of type ArrayDouble.D1 can be converted! Received type was "
-                        + a.getClass().getName());
+                    "Only Arrays of type ArrayDouble.D1 can be converted! Received type was "
+                    + a.getClass().getName());
             }
         }
         return ret;
@@ -288,28 +285,28 @@ public class ArrayTools {
                 ret.add((ArrayInt.D1) a);
             } else {
                 throw new ClassCastException(
-                        "Only Arrays of type ArrayDouble.D1 can be converted!");
+                    "Only Arrays of type ArrayDouble.D1 can be converted!");
             }
         }
         return ret;
     }
 
     public static TreeMap<Double, Integer> convertScan(final Array masses,
-            final Array intensities) {
+        final Array intensities) {
         // Convert masses and intensities to tree map holding the mass-intensity
         // value pairs
         EvalTools.eqI(masses.getShape()[0], intensities.getShape()[0],
-                ArrayTools.class);
+            ArrayTools.class);
         ArrayTools.log.debug("Adding {} elems", masses.getShape()[0]);
         final TreeMap<Double, Integer> ts = new TreeMap<Double, Integer>();
         final IndexIterator im = masses.getIndexIterator(), ii = intensities.
-                getIndexIterator();
+            getIndexIterator();
         while (im.hasNext() && ii.hasNext()) {
             final double key = im.getDoubleNext();
             if (ts.containsKey(Double.valueOf(key))) {
                 final int value = ts.get(Double.valueOf(key));
                 ts.put(Double.valueOf(key), Integer.valueOf(ii.getIntNext()
-                        + value));
+                    + value));
             } else {
                 ts.put(Double.valueOf(key), Integer.valueOf(ii.getIntNext()));
             }
@@ -325,7 +322,7 @@ public class ArrayTools {
      * @return
      */
     public static Tuple2D<Array, Tuple2D<Array, Array>> createCombinedArray(
-            final List<Sparse> al) {
+        final List<Sparse> al) {
         final int size = ArrayTools.getRequiredSize(al);
         final ArrayInt.D1 scanIndices = new ArrayInt.D1(al.size());
         final ArrayDouble.D1 targetIndices = new ArrayDouble.D1(size);
@@ -334,7 +331,7 @@ public class ArrayTools {
         for (int scan = 0; scan < al.size(); scan++) {
             // j = i+al.get(scan).getShape()[0]-1;
             final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> tuple = al.get(scan).
-                    toArrays();
+                toArrays();
             final int length = tuple.getFirst().getShape()[0];
             Array.arraycopy(tuple.getFirst(), 0, targetIndices, i, length);
             Array.arraycopy(tuple.getSecond(), 0, targetValues, i, length);
@@ -343,9 +340,9 @@ public class ArrayTools {
             scan++;
         }
         final Tuple2D<Array, Array> mzi = new Tuple2D<Array, Array>(
-                targetIndices, targetValues);
+            targetIndices, targetValues);
         final Tuple2D<Array, Tuple2D<Array, Array>> ret = new Tuple2D<Array, Tuple2D<Array, Array>>(
-                scanIndices, mzi);
+            scanIndices, mzi);
         return ret;
     }
 
@@ -365,20 +362,20 @@ public class ArrayTools {
      * @param fillvalue
      */
     public static void createDenseArray(final Array source_ind,
-            final Array source_val, final Tuple2D<Array, Array> tiv,
-            final double min, final double max, final int nbins,
-            final double resolution, final double fillvalue) {
+        final Array source_val, final Tuple2D<Array, Array> tiv,
+        final double min, final double max, final int nbins,
+        final double resolution, final double fillvalue) {
         // System.out.println("Creating a dense Array!");
         final Index nii = source_ind.getIndex();
         final Index vii = source_val.getIndex();
         ArrayTools.log.debug("Size of new arrays {}", (nbins));
         if (tiv.getFirst() == null) {
             tiv.setFirst(Array.factory(source_ind.getElementType(),
-                    new int[]{nbins}));
+                new int[]{nbins}));
         }
         if (tiv.getSecond() == null) {
             tiv.setSecond(Array.factory(source_val.getElementType(),
-                    new int[]{nbins}));
+                new int[]{nbins}));
         }
         final Array target_ind = tiv.getFirst();
         final Array target_val = tiv.getSecond();
@@ -397,7 +394,7 @@ public class ArrayTools {
         double lastm = -1;
         double currm = 0;
         final boolean average = Factory.getInstance().getConfiguration().
-                getBoolean("ArrayTools.createDenseArray.average_bins", true);
+            getBoolean("ArrayTools.createDenseArray.average_bins", true);
         MaltcmsTools.setBinMZbyConfig();
         final ArrayInt.D1 overlapCounter = new ArrayInt.D1(nbins);
         for (int i = 0; i < source_ind.getShape()[0]; i++) {// fill in real
@@ -406,7 +403,7 @@ public class ArrayTools {
             currm = d;
             if (d < min) {
                 throw new IllegalArgumentException(
-                        "Found mass value below minimum! " + d + "<" + min);
+                    "Found mass value below minimum! " + d + "<" + min);
             }
             // System.out.println("Index "+i+" d="+d);
             // values
@@ -424,7 +421,7 @@ public class ArrayTools {
                 // increase overlap counter
                 if (last_v != 0) {
                     ArrayTools.log.debug("Overlapping masses {},{} for bin {}",
-                            new Object[]{lastm, currm, curr});
+                        new Object[]{lastm, currm, curr});
                     ArrayTools.log.debug("With values {},{}", last_v, v);
                     overlapCounter.set(curr, overlapCounter.get(curr) + 1);
                 }
@@ -432,16 +429,16 @@ public class ArrayTools {
                 ArrayTools.log.debug("Setting {} = {}", curr, avg);
                 // log.debug("mz {}, min_mz {}",f,min);
                 target_ind.setDouble(tnii.set(curr), MaltcmsTools.binMZ(d, 0,
-                        max, resolution)
-                        / resolution);
+                    max, resolution)
+                    / resolution);
                 target_val.setDouble(tvii.set(curr), avg);
             } catch (final ArrayIndexOutOfBoundsException aioe) {
                 ArrayTools.log.error(
-                        "ArrayIndexOutOfBounds: tried to access binned mz {} with original value {}, min_mz {}",
-                        new Object[]{curr, d, min});
+                    "ArrayIndexOutOfBounds: tried to access binned mz {} with original value {}, min_mz {}",
+                    new Object[]{curr, d, min});
                 ArrayTools.log.error(
-                        "ArrayIndexOutOfBounds: Shape of target array: {}",
-                        Arrays.toString(target_ind.getShape()));
+                    "ArrayIndexOutOfBounds: Shape of target array: {}",
+                    Arrays.toString(target_ind.getShape()));
                 throw (new RuntimeException(aioe.getLocalizedMessage()));
             }
             lastm = currm;
@@ -462,10 +459,10 @@ public class ArrayTools {
     }
 
     public static Sparse createSparseIndexArray(final ArrayDouble.D1 index,
-            final ArrayDouble.D1 values, final int minindex,
-            final int maxindex, final int nbins, final double massBinResolution) {
+        final ArrayDouble.D1 values, final int minindex,
+        final int maxindex, final int nbins, final double massBinResolution) {
         final Sparse s = new Sparse(index, values, minindex, maxindex, nbins,
-                massBinResolution);
+            massBinResolution);
         return s;
     }
 
@@ -558,7 +555,7 @@ public class ArrayTools {
      * @return
      */
     public static List<ArrayDouble.D1> expand(final Array source,
-            final int length) {
+        final int length) {
         if (source instanceof ArrayDouble.D1) {
             final ArrayDouble.D1 sourceA = (ArrayDouble.D1) source;
             final ArrayDouble.D1[] arr = new ArrayDouble.D1[length];
@@ -570,7 +567,7 @@ public class ArrayTools {
             return new ArrayList<ArrayDouble.D1>(Arrays.asList(arr));
         } else {
             throw new IllegalArgumentException(
-                    "Expansion only works on ArrayDouble.D1!");
+                "Expansion only works on ArrayDouble.D1!");
         }
     }
 
@@ -629,7 +626,7 @@ public class ArrayTools {
      * @return
      */
     public static List<Array> fromCRS(final ArrayInt.D1 indices,
-            final Array values) {
+        final Array values) {
         final int size = indices.getShape()[0];
         final ArrayList<Array> al = new ArrayList<Array>(size);
         int offset = 0;
@@ -638,10 +635,10 @@ public class ArrayTools {
             offset = indices.get(i);
             len = indices.get(i + 1) - 1 - offset;
             ArrayTools.log.debug("Range for scan {}: Offset {}, Length: {}",
-                    new Object[]{i, offset, len});
+                new Object[]{i, offset, len});
             try {
                 final Array a = values.section(new int[]{offset},
-                        new int[]{len});
+                    new int[]{len});
                 // System.out.println("Scan " + (i + 1));
                 // System.out.println(a.toString());
                 al.add(a);
@@ -652,11 +649,11 @@ public class ArrayTools {
         offset = indices.get(size - 1);
         len = values.getShape()[0] - offset;
         ArrayTools.log.debug("Offset: {}, len: {}, shape of array: {}",
-                new Object[]{
-                    offset, len, Arrays.toString(values.getShape())});
+            new Object[]{
+                offset, len, Arrays.toString(values.getShape())});
         try {
             final Array a = values.section(new int[]{offset},
-                    new int[]{len});
+                new int[]{len});
             // System.out.println("Scan " + size);
             // System.out.println(a.toString());
             al.add(a);
@@ -678,7 +675,7 @@ public class ArrayTools {
     }
 
     public static int getNewIndexOnLHS(final int oldIndex,
-            final List<Tuple2DI> al) {
+        final List<Tuple2DI> al) {
         final List<Integer> indices = new ArrayList<Integer>(1);
         for (final Tuple2DI t : al) {
             if (t.getSecond() == oldIndex) {
@@ -696,7 +693,7 @@ public class ArrayTools {
     }
 
     public static int getNewIndexOnRHS(final int oldIndex,
-            final List<Tuple2DI> al) {
+        final List<Tuple2DI> al) {
 
         final List<Integer> indices = new ArrayList<Integer>(1);
         for (final Tuple2DI t : al) {
@@ -728,8 +725,8 @@ public class ArrayTools {
                 i += k;
             } else {
                 throw new IllegalArgumentException(
-                        "Exceeded maximum Integer value " + Integer.MAX_VALUE
-                        + " for array size!");
+                    "Exceeded maximum Integer value " + Integer.MAX_VALUE
+                    + " for array size!");
             }
         }
         return i;
@@ -750,7 +747,7 @@ public class ArrayTools {
         }
         if (l >= Integer.MAX_VALUE) {
             throw new IllegalArgumentException(
-                    "Size exceeds integer precision!");
+                "Size exceeds integer precision!");
         }
         return (int) l;
     }
@@ -780,10 +777,10 @@ public class ArrayTools {
     }
 
     public static List<Array> insertRandomGauss(
-            final List<Array> intensity_values, final int at_position,
-            final int number_of_scans, final int dim1) {
+        final List<Array> intensity_values, final int at_position,
+        final int number_of_scans, final int dim1) {
         final int dim = intensity_values.size() > 0 ? intensity_values.get(0).
-                getShape()[0] : dim1;
+            getShape()[0] : dim1;
         final ArrayList<Array> newScans = new ArrayList<Array>(number_of_scans);
         for (int i = 0; i < number_of_scans; i++) {
             newScans.add(ArrayTools.randomGaussian(dim, 0.0, 1.0));
@@ -819,20 +816,20 @@ public class ArrayTools {
     }
 
     public static TreeMap<Double, Integer> merge(
-            final List<TreeMap<Double, Integer>> rhs, final boolean average) {
+        final List<TreeMap<Double, Integer>> rhs, final boolean average) {
         final HashMap<Double, Integer> bincounter = new HashMap<Double, Integer>();
         final TreeMap<Double, Integer> lhs = new TreeMap<Double, Integer>();
         // Build cumulated bins
         for (final TreeMap<Double, Integer> tm : rhs) {
             ArrayTools.log.debug("Merging scan with {} elements", tm.keySet().
-                    size());
+                size());
             final ArrayList<Double> keys = new ArrayList<Double>(tm.keySet());
             // Collections.sort(keys);
             for (final Double d : keys) {
                 if (lhs.containsKey(d)) {
                     // accumulate new intensity in bin
                     final Integer tmp = Integer.valueOf(lhs.get(d).intValue()
-                            + tm.get(d).intValue());
+                        + tm.get(d).intValue());
                     lhs.put(d, tmp);
                     // Count number of hits in mass bin
                     if (bincounter.containsKey(d)) {
@@ -854,23 +851,23 @@ public class ArrayTools {
                 final Integer count = bincounter.get(d);
                 final Integer val = lhs.get(d);
                 lhs.put(d, Integer.valueOf((int) Math.rint(((double) val.
-                        intValue())
-                        / ((double) count.intValue()))));
+                    intValue())
+                    / ((double) count.intValue()))));
             }
         }
         return lhs;
     }
 
     public static Tuple2D<List<Array>, List<Array>> merge2(
-            final List<Array> lhsMasses, final List<Array> lhsIntensities,
-            final List<Array> rhsMasses, final List<Array> rhsIntensities,
-            final List<Tuple2DI> al, final boolean average) {
+        final List<Array> lhsMasses, final List<Array> lhsIntensities,
+        final List<Array> rhsMasses, final List<Array> rhsIntensities,
+        final List<Tuple2DI> al, final boolean average) {
 
         // Create warped lists
         final ArrayList<ArrayList<Array>> warpedMasses = new ArrayList<ArrayList<Array>>(
-                al.size());
+            al.size());
         final ArrayList<ArrayList<Array>> warpedIntens = new ArrayList<ArrayList<Array>>(
-                al.size());
+            al.size());
         // Initialize ArrayLists
         for (int i = 0; i < al.size(); i++) {
             warpedMasses.add(new ArrayList<Array>(0));
@@ -878,9 +875,9 @@ public class ArrayTools {
         }
         // Create final ArrayLists, which will contain warped arrays
         final ArrayList<Array> wmasses = new ArrayList<Array>(
-                warpedMasses.size());
+            warpedMasses.size());
         final ArrayList<Array> wintens = new ArrayList<Array>(
-                warpedIntens.size());
+            warpedIntens.size());
         // Proceed through path
         int i = 0;
         for (final Tuple2DI t : al) {
@@ -892,7 +889,7 @@ public class ArrayTools {
 
             // Create TreeMaps for scans
             final ArrayList<TreeMap<Double, Integer>> al1 = new ArrayList<TreeMap<Double, Integer>>(
-                    2);
+                2);
             al1.add(ArrayTools.convertScan(lhsM, lhsI));
             al1.add(ArrayTools.convertScan(rhsM, rhsI));
             // Merge TreeMaps
@@ -944,7 +941,7 @@ public class ArrayTools {
     }
 
     public static long printPercentDone(final double percentDone,
-            final long parts, final long partCnt1, final Logger log) {
+        final long parts, final long partCnt1, final Logger log) {
         long partCnt = partCnt1;
         if (percentDone >= (double) (partCnt + 1) / (double) parts) {
             log.info("{}%", (int) (percentDone * 100));
@@ -955,7 +952,7 @@ public class ArrayTools {
     }
 
     public static long printPercentDone(final double percentDone,
-            final long parts, final long partCnt1, final OutputStream os) {
+        final long parts, final long partCnt1, final OutputStream os) {
         long partCnt = partCnt1;
         if (percentDone >= (double) (partCnt + 1) / (double) parts) {
             try {
@@ -969,19 +966,19 @@ public class ArrayTools {
     }
 
     public static Tuple2D<List<Array>, List<Array>> project2(
-            final boolean toLHS, final List<Array> massesRef,
-            final List<Array> intenRef, final List<Tuple2DI> al,
-            final List<Array> massesToBeWarped,
-            final List<Array> intenToBeWarped, final boolean average) {
+        final boolean toLHS, final List<Array> massesRef,
+        final List<Array> intenRef, final List<Tuple2DI> al,
+        final List<Array> massesToBeWarped,
+        final List<Array> intenToBeWarped, final boolean average) {
         // Check, that dimensions match
         EvalTools.eqI(massesToBeWarped.size(), intenToBeWarped.size(),
-                ArrayTools.class);
+            ArrayTools.class);
         EvalTools.eqI(massesRef.size(), intenRef.size(), ArrayTools.class);
         // Create warped lists
         final ArrayList<ArrayList<Array>> warpedMasses = new ArrayList<ArrayList<Array>>(
-                massesRef.size());
+            massesRef.size());
         final ArrayList<ArrayList<Array>> warpedIntens = new ArrayList<ArrayList<Array>>(
-                massesRef.size());
+            massesRef.size());
         // Initialize ArrayLists
         for (int i = 0; i < massesRef.size(); i++) {
             warpedMasses.add(new ArrayList<Array>(0));
@@ -991,21 +988,21 @@ public class ArrayTools {
         for (final Tuple2DI t : al) {
             if (toLHS) {
                 warpedMasses.get(t.getFirst()).add(
-                        massesToBeWarped.get(t.getSecond()).copy());
+                    massesToBeWarped.get(t.getSecond()).copy());
                 warpedIntens.get(t.getFirst()).add(
-                        intenToBeWarped.get(t.getSecond()).copy());
+                    intenToBeWarped.get(t.getSecond()).copy());
             } else {
                 warpedMasses.get(t.getSecond()).add(
-                        massesToBeWarped.get(t.getFirst()).copy());
+                    massesToBeWarped.get(t.getFirst()).copy());
                 warpedIntens.get(t.getSecond()).add(
-                        intenToBeWarped.get(t.getFirst()).copy());
+                    intenToBeWarped.get(t.getFirst()).copy());
             }
         }
         // Create final ArrayLists, which will contain warped arrays
         final ArrayList<Array> wmasses = new ArrayList<Array>(
-                warpedMasses.size());
+            warpedMasses.size());
         final ArrayList<Array> wintens = new ArrayList<Array>(
-                warpedIntens.size());
+            warpedIntens.size());
         for (int i = 0; i < warpedMasses.size(); i++) {
             final ArrayList<Array> mz = warpedMasses.get(i);
             final ArrayList<Array> in = warpedIntens.get(i);
@@ -1013,13 +1010,13 @@ public class ArrayTools {
             if (mz.size() > 1) {
                 // Create TreeMaps for scans
                 final ArrayList<TreeMap<Double, Integer>> al1 = new ArrayList<TreeMap<Double, Integer>>(
-                        mz.size());
+                    mz.size());
                 for (int j = 0; j < mz.size(); j++) {
                     al1.add(ArrayTools.convertScan(mz.get(j), in.get(j)));
                 }
                 // Merge TreeMaps
                 final TreeMap<Double, Integer> tm = ArrayTools.merge(al1,
-                        average);
+                    average);
                 final Tuple2D<Array, Array> tple = ArrayTools.toArrays(tm);
                 wmasses.add(tple.getFirst());
                 // wmasses.add(mz.get(0));
@@ -1031,18 +1028,18 @@ public class ArrayTools {
                 wintens.add(in.get(0));
             } else {
                 throw new ConstraintViolationException(
-                        "No scans to be warped at " + i
-                        + "! Check path mappping for missing pairs!");
+                    "No scans to be warped at " + i
+                    + "! Check path mappping for missing pairs!");
             }
         }
         return new Tuple2D<List<Array>, List<Array>>(wmasses, wintens);
     }
 
     public static Array projectToLHS(final Array lhs, final List<Tuple2DI> al,
-            final Array rhs, final boolean average) {
+        final Array rhs, final boolean average) {
         final Array rhsm = Array.factory(lhs.getElementType(), lhs.getShape());
         final Array binCounter = Array.factory(lhs.getElementType(), lhs.
-                getShape());
+            getShape());
         final Index bci = binCounter.getIndex();
         final Index rhsi = rhs.getIndex();
         final Index rhsmi = rhsm.getIndex();
@@ -1069,10 +1066,10 @@ public class ArrayTools {
     }
 
     public static Array projectToRHS(final Array rhs, final List<Tuple2DI> al,
-            final Array lhs, final boolean average) {
+        final Array lhs, final boolean average) {
         final Array lhsm = Array.factory(rhs.getElementType(), rhs.getShape());
         final Array binCounter = Array.factory(rhs.getElementType(), rhs.
-                getShape());
+            getShape());
         final Index bci = binCounter.getIndex();
         final Index lhsi = lhs.getIndex();
         final Index lhsmi = lhsm.getIndex();
@@ -1099,7 +1096,7 @@ public class ArrayTools {
     }
 
     public static ArrayDouble.D1 randomGaussian(final int size,
-            final double mean, final double stddev) {
+        final double mean, final double stddev) {
         final ArrayDouble.D1 arr = ArrayTools.vector(size);
         for (int i = 0; i < size; i++) {
             arr.set(i, (ArrayTools.nextGaussian() - mean) * stddev);
@@ -1108,7 +1105,7 @@ public class ArrayTools {
     }
 
     public static ArrayDouble.D1 randomUniform(final int size,
-            final double mean, final double scale) {
+        final double mean, final double scale) {
         final ArrayDouble.D1 arr = ArrayTools.vector(size);
         for (int i = 0; i < size; i++) {
             arr.set(i, (ArrayTools.nextUniform() - mean) * scale);
@@ -1190,13 +1187,13 @@ public class ArrayTools {
     // new Tuple2D<Array, Array>(mz, intens));
     // }
     public static double rootMeanSquareError(final List<Tuple2DI> map,
-            final List<Array> refInt, final List<Array> queryInt) {
+        final List<Array> refInt, final List<Array> queryInt) {
         // ArrayList<Array> res = new ArrayList<Array>(refInt.size());
         // int i = 0;
         double res = 0.0d;
         for (final Tuple2DI t : map) {
             res += ArrayTools.integrate(ArrayTools.pow(
-                    ArrayTools.diff(refInt.get(t.getFirst()).copy(), queryInt.
+                ArrayTools.diff(refInt.get(t.getFirst()).copy(), queryInt.
                     get(t.getSecond()).copy()), 2.0d));
         }
         return Math.sqrt((res / (map.size())));
@@ -1241,9 +1238,9 @@ public class ArrayTools {
             return ret;
         } else {
             throw new IllegalArgumentException(
-                    "Arrays are not conformable with shapes "
-                    + Arrays.toString(a.getShape()) + " and "
-                    + Arrays.toString(b.getShape()));
+                "Arrays are not conformable with shapes "
+                + Arrays.toString(a.getShape()) + " and "
+                + Arrays.toString(b.getShape()));
         }
     }
 
@@ -1268,7 +1265,7 @@ public class ArrayTools {
             public long sizeLong() {
                 return lazySize;
             }
-            
+
             @Override
             public int size() {
                 return lazySize;
@@ -1276,14 +1273,14 @@ public class ArrayTools {
 
             @Override
             public Array get(long index) {
-                return get((int)index);
+                return get((int) index);
             }
-            
+
             @Override
             public Array get(int index) {
                 final int nscans = originalList.size();
                 Array ret = Array.factory(al.get(0).getElementType(),
-                        new int[]{nscans});
+                    new int[]{nscans});
                 for (int scans = 0; scans < nscans; scans++) {
                     final Array source = al.get(scans);
                     // iterate over elements in each ArrayDouble.D1
@@ -1298,9 +1295,9 @@ public class ArrayTools {
 
             @Override
             public List<Array> get(long start, long stop) {
-                return get((int)start,(int)stop);
+                return get((int) start, (int) stop);
             }
-            
+
             @Override
             public List<Array> get(int start, int stop) {
                 final ArrayList<Array> ret = new ArrayList<Array>();
@@ -1308,7 +1305,7 @@ public class ArrayTools {
                 // initialize new arrays
                 for (int i = 0; i < stop - start; i++) {
                     ret.add(Array.factory(al.get(0).getElementType(),
-                            new int[]{nscans}));
+                        new int[]{nscans}));
                 }
                 for (int scans = 0; scans < nscans; scans++) {
                     final Array source = al.get(scans);
@@ -1318,7 +1315,7 @@ public class ArrayTools {
                         // get array for dim i, set value at scan to value of dim i in
                         // source
                         ret.get(i).setDouble(scans,
-                                source.getDouble(i));
+                            source.getDouble(i));
                     }
                 }
                 return ret;
@@ -1381,7 +1378,7 @@ public class ArrayTools {
     }
 
     public static Tuple2D<Array, Array> toArrays(
-            final TreeMap<Double, Integer> s) {
+        final TreeMap<Double, Integer> s) {
         // Convert treemap of scan to mass and intensity array of scan
         final int elems = s.size();
         ArrayTools.log.debug("Number of elems in scan {}", elems);
@@ -1401,9 +1398,9 @@ public class ArrayTools {
     }
 
     public static Tuple2D<ArrayDouble.D1, ArrayDouble.D1> toCRS(
-            final List<Array> values) {
+        final List<Array> values) {
         final int size = cross.datastructures.tools.ArrayTools.
-                getSizeForFlattenedArrays(values);
+            getSizeForFlattenedArrays(values);
         ArrayTools.log.debug("Number of Arrays in List: {}", values.size());
         ArrayTools.log.debug("Size for flattened Arrays: {}", size);
         final List<ArrayDouble.D1> al = ArrayTools.convertArrays(values);
@@ -1417,8 +1414,8 @@ public class ArrayTools {
             } else {
                 final int len = scan.getShape()[0];
                 ArrayTools.log.debug("Scan " + i + " from " + 0
-                        + " with length " + len + " to target with size "
-                        + target.getShape()[0] + " at position " + (offset));
+                    + " with length " + len + " to target with size "
+                    + target.getShape()[0] + " at position " + (offset));
                 // System.out.println(scan.toString());
                 Array.arraycopy(scan, 0, target, offset, len);
                 indices.set(i, offset);
@@ -1434,7 +1431,7 @@ public class ArrayTools {
     }
 
     public static Array filterIndices(Array a, List<Integer> removeIndices,
-            double defaultValue) {
+        double defaultValue) {
         return filterIndices(a, removeIndices, false, defaultValue);
     }
 
@@ -1448,16 +1445,16 @@ public class ArrayTools {
      * @return
      */
     public static Array filterIndices(Array a, List<Integer> removeIndices,
-            boolean invert, double defaultValue) {
+        boolean invert, double defaultValue) {
         if (removeIndices.isEmpty()) {
             return a;
         }
         ArrayTools.log.debug("Before: {}", a);
         int shape = a.getShape()[0];// - removeIndices.size();
         ArrayTools.log.debug("a:" + a.getShape()[0] + " removeIndices:"
-                + removeIndices.size() + " new size:" + shape);
+            + removeIndices.size() + " new size:" + shape);
         Array b = Array.factory(DataType.getType(a.getElementType()),
-                new int[]{shape});
+            new int[]{shape});
         Index ib = b.getIndex();
         Index ia = a.getIndex();
         // at least one element is present in removeIndices

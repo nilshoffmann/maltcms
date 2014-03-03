@@ -36,7 +36,7 @@ import cross.datastructures.fragments.IFileFragment;
  */
 public interface IPeakNormalizer extends ICopyable<IPeakNormalizer> {
 
-	double getNormalizationFactor(IFileFragment fragment, int peakIndex);
+    double getNormalizationFactor(IFileFragment fragment, int peakIndex);
 
-	String getNormalizationName();
+    String getNormalizationName();
 }

@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,17 +27,16 @@
  */
 package maltcms.datastructures.feature;
 
+import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tuple.Tuple2D;
 import java.util.ArrayList;
 import java.util.List;
-
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.ms.Chromatogram1D;
+import maltcms.datastructures.ms.IScan1D;
 import maltcms.tools.MaltcmsTools;
 import ucar.ma2.Array;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.tuple.Tuple2D;
-import cross.datastructures.tools.EvalTools;
-import maltcms.datastructures.ms.IScan1D;
 
 /**
  * Implementation of a Factory for some common FeatureVector types.
@@ -65,7 +64,7 @@ public class FeatureVectorFactory {
     }
 
     public List<IFeatureVector> createBinnedMSFeatureVectorList(
-            IFileFragment iff, int start, int stop, boolean useFastFeatureVector) {
+        IFileFragment iff, int start, int stop, boolean useFastFeatureVector) {
         List<IFeatureVector> l = new ArrayList<IFeatureVector>();
         int ns = Math.min(stop, MaltcmsTools.getNumberOfBinnedScans(iff));
 //		System.out.println("Reading from " + start + " to " + stop);
@@ -78,7 +77,7 @@ public class FeatureVectorFactory {
             }
         } else {
             Tuple2D<List<Array>, List<Array>> t = MaltcmsTools
-                    .getBinnedMZIs(iff);
+                .getBinnedMZIs(iff);
             for (int i = start; i < ns; i++) {
 //				System.out.println("Reading scan " + i);
                 IFeatureVector fbmf;
@@ -91,7 +90,7 @@ public class FeatureVectorFactory {
     }
 
     public List<IFeatureVector> createBinnedMSFeatureVectorList(
-            IFileFragment iff, boolean useFastFeatureVector) {
+        IFileFragment iff, boolean useFastFeatureVector) {
         int ns = MaltcmsTools.getNumberOfBinnedScans(iff);
         return createBinnedMSFeatureVectorList(iff, 0, ns, useFastFeatureVector);
     }
@@ -112,7 +111,7 @@ public class FeatureVectorFactory {
     }
 
     public DefaultFeatureVector addFeatureToFeatureVector(
-            DefaultFeatureVector ifv, Array a, String featureName) {
+        DefaultFeatureVector ifv, Array a, String featureName) {
         DefaultFeatureVector dfv = ifv;
         if (ifv == null) {
             dfv = new DefaultFeatureVector();
@@ -122,7 +121,7 @@ public class FeatureVectorFactory {
     }
 
     public List<DefaultFeatureVector> addFeaturesToFeatureVectorList(
-            List<DefaultFeatureVector> l, List<Array> la, String featureName) {
+        List<DefaultFeatureVector> l, List<Array> la, String featureName) {
         EvalTools.eqI(l.size(), la.size(), this);
         int i = 0;
         for (Array a : la) {
@@ -133,7 +132,7 @@ public class FeatureVectorFactory {
     }
 
     public List<IFeatureVector> createFeatureVectorList(List<Array> la,
-            String featureName) {
+        String featureName) {
         List<IFeatureVector> l = new ArrayList<IFeatureVector>();
         for (Array a : la) {
             DefaultFeatureVector dfv = createFeatureVector(a, featureName);

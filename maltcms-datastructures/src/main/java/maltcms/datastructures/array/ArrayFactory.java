@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -30,7 +30,6 @@ package maltcms.datastructures.array;
 import java.awt.Color;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
-
 import maltcms.datastructures.alignment.AnchorPairSet;
 import maltcms.datastructures.constraint.ConstraintFactory;
 import ucar.ma2.Array;
@@ -71,15 +70,15 @@ public class ArrayFactory {
      * @return
      */
     public IArrayD2Double create(final int rows, final int cols,
-            final AnchorPairSet aps, final int neighborhood, final double band,
-            final double default_value, final boolean globalBand) {
+        final AnchorPairSet aps, final int neighborhood, final double band,
+        final double default_value, final boolean globalBand) {
         // More than start and end are present
         if (aps.getSize() > 2) {
             return PartitionedArray.create(rows, cols, aps, neighborhood, band,
-                    default_value, globalBand);
+                default_value, globalBand);
         } else if (band > 0.0d) {
             return PartitionedArray.create(rows, cols, default_value,
-                    ConstraintFactory.getInstance().createBandConstraint(0, 0,
+                ConstraintFactory.getInstance().createBandConstraint(0, 0,
                     rows, cols, band));
         }
         return create(rows, cols, default_value);
@@ -95,7 +94,7 @@ public class ArrayFactory {
      * @return
      */
     public IArrayD2Double create(final int rows, final int cols,
-            final double default_value) {
+        final double default_value) {
         return new DenseArray(rows, cols, default_value);
     }
 
@@ -110,7 +109,7 @@ public class ArrayFactory {
      * @return
      */
     public IArrayD2Double create(final int rows, final int cols,
-            final double default_value, final Area bounds) {
+        final double default_value, final Area bounds) {
         return PartitionedArray.create(rows, cols, default_value, bounds);
     }
 
@@ -132,10 +131,10 @@ public class ArrayFactory {
     public BufferedImage createLayoutImage(final IArrayD2Double ia) {
         if (ia instanceof DenseArray) {
             return DenseArray.createLayoutImage((DenseArray) ia,
-                    Color.lightGray, Color.darkGray);
+                Color.lightGray, Color.darkGray);
         } else if (ia instanceof PartitionedArray) {
             return PartitionedArray.createLayoutImage((PartitionedArray) ia,
-                    Color.lightGray, Color.darkGray);
+                Color.lightGray, Color.darkGray);
         }
         throw new IllegalArgumentException("Unsupported IArrayD2Double object of class: " + ia.getClass().getName());
     }
@@ -148,7 +147,7 @@ public class ArrayFactory {
      *
      * @param ia the array used as blueprint for layout
      * @return either a PartitionedArray if ia is a PartitionedArray, otherwise
-     * a DenseArray
+     *         a DenseArray
      */
     public IArrayD2Double createSharedLayout(final IArrayD2Double ia) {
         if (ia instanceof PartitionedArray) {

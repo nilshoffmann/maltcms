@@ -38,37 +38,37 @@ import ucar.ma2.Array;
  */
 public class BatchFilter {
 
-	/**
-	 * Creates a deep copy of the filters in the argument list.
-	 *
-	 * @param filters a list of filters to be copied
-	 * @return the list of copied filters
-	 *
-	 * @since 1.3.1
-	 */
-	public static List<AArrayFilter> copy(List<AArrayFilter> filters) {
-		List<AArrayFilter> copies = new ArrayList<AArrayFilter>(filters.size());
-		for (AArrayFilter filter : filters) {
-			copies.add((AArrayFilter) filter.copy());
-		}
-		return copies;
-	}
+    /**
+     * Creates a deep copy of the filters in the argument list.
+     *
+     * @param filters a list of filters to be copied
+     * @return the list of copied filters
+     *
+     * @since 1.3.1
+     */
+    public static List<AArrayFilter> copy(List<AArrayFilter> filters) {
+        List<AArrayFilter> copies = new ArrayList<AArrayFilter>(filters.size());
+        for (AArrayFilter filter : filters) {
+            copies.add((AArrayFilter) filter.copy());
+        }
+        return copies;
+    }
 
-	/**
-	 * Applies filters in argument list to the provided array.
-	 * The array is returned unchanged, if the filters list is empty.
-	 *
-	 * @param a       the array to be filtered
-	 * @param filters the filters to be applied
-	 * @return the filtered array
-	 */
-	public static Array applyFilters(Array a, List<AArrayFilter> filters) {
-		Array b = a;
-		for (AArrayFilter filter : filters) {
-			LoggerFactory.getLogger(BatchFilter.class).info(
-				"Applying Filter: {}", filter.getClass().getName());
-			b = filter.apply(b);
-		}
-		return b;
-	}
+    /**
+     * Applies filters in argument list to the provided array.
+     * The array is returned unchanged, if the filters list is empty.
+     *
+     * @param a       the array to be filtered
+     * @param filters the filters to be applied
+     * @return the filtered array
+     */
+    public static Array applyFilters(Array a, List<AArrayFilter> filters) {
+        Array b = a;
+        for (AArrayFilter filter : filters) {
+            LoggerFactory.getLogger(BatchFilter.class).info(
+                "Applying Filter: {}", filter.getClass().getName());
+            b = filter.apply(b);
+        }
+        return b;
+    }
 }

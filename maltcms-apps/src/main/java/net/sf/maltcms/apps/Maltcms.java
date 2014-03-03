@@ -434,7 +434,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
 
             }
         }
-		// Create the class loader by using the given URL
+        // Create the class loader by using the given URL
         // Use contextClassLoader as parent to maintain current visibility
         ClassLoader urlCl
             = URLClassLoader.newInstance(contextUrls.toArray(new URL[contextUrls.size()]), contextClassLoader);
@@ -829,7 +829,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             }
         } else {
             File contextFile = new File(xmlDir, "customContext.xml");
-			//        beanList.add(IWorkflow.class.getCanonicalName());
+            //        beanList.add(IWorkflow.class.getCanonicalName());
             //        beanList.add(ICommandSequence.class.getCanonicalName());
             beanList.addAll(Arrays.asList(beans));
             ReflectionApplicationContextGenerator.createContextXml(contextFile, "3.0", "prototype", beanList.toArray(new String[beanList.size()]));

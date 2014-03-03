@@ -43,58 +43,58 @@ import ucar.ma2.IndexIterator;
 @ServiceProvider(service = AArrayFilter.class)
 public class LogFilter extends AArrayFilter {
 
-	private AElementFilter aef = null;
-	private final boolean naturalLog;
+    private AElementFilter aef = null;
+    private final boolean naturalLog;
 
-	public LogFilter() {
-		super();
-		naturalLog = false;
-		this.aef = new AElementFilter() {
-			@Override
-			public Double apply(final Double t) {
-				return Math.log10(t);
-			}
-		};
-	}
+    public LogFilter() {
+        super();
+        naturalLog = false;
+        this.aef = new AElementFilter() {
+            @Override
+            public Double apply(final Double t) {
+                return Math.log10(t);
+            }
+        };
+    }
 
-	public LogFilter(final boolean natural) {
-		this.naturalLog = natural;
-		if (natural) {
-			this.aef = new AElementFilter() {
-				@Override
-				public Double apply(final Double t) {
-					return Math.log(t);
-				}
-			};
-		} else {
-			this.aef = new AElementFilter() {
-				@Override
-				public Double apply(final Double t) {
-					return Math.log10(t);
-				}
-			};
-		}
-	}
+    public LogFilter(final boolean natural) {
+        this.naturalLog = natural;
+        if (natural) {
+            this.aef = new AElementFilter() {
+                @Override
+                public Double apply(final Double t) {
+                    return Math.log(t);
+                }
+            };
+        } else {
+            this.aef = new AElementFilter() {
+                @Override
+                public Double apply(final Double t) {
+                    return Math.log10(t);
+                }
+            };
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
-	 */
-	@Override
-	public Array apply(final Array a) {
-		final Array arr = super.apply(a);
-		final IndexIterator ii = arr.getIndexIteratorFast();
-		double next = 0.0d;
-		while (ii.hasNext()) {
-			next = ii.getDoubleNext();
-			ii.setDoubleCurrent(this.aef.apply(next));
-		}
-		return arr;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
+     */
+    @Override
+    public Array apply(final Array a) {
+        final Array arr = super.apply(a);
+        final IndexIterator ii = arr.getIndexIteratorFast();
+        double next = 0.0d;
+        while (ii.hasNext()) {
+            next = ii.getDoubleNext();
+            ii.setDoubleCurrent(this.aef.apply(next));
+        }
+        return arr;
+    }
 
-	@Override
-	public LogFilter copy() {
-		return new LogFilter(naturalLog);
-	}
+    @Override
+    public LogFilter copy() {
+        return new LogFilter(naturalLog);
+    }
 }

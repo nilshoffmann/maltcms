@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,6 +27,7 @@
  */
 package maltcms.ui.charts;
 
+import cross.IConfigurable;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Paint;
@@ -34,7 +35,6 @@ import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Arrays;
-
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -42,13 +42,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
-
 import maltcms.tools.ImageTools;
-
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.renderer.PaintScale;
-
-import cross.IConfigurable;
 
 /**
  * @author Nils Hoffmann
@@ -56,7 +52,7 @@ import cross.IConfigurable;
  *
  */
 public class GradientPaintScale implements PaintScale, IConfigurable,
-        Serializable {
+    Serializable {
 
     /**
      *
@@ -98,7 +94,7 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
     // min, max);
     // }
     public GradientPaintScale(double[] sampleTable, double min, double max,
-            Color[] colors) {
+        Color[] colors) {
         this.sampleTable = sampleTable;
         this.st = this.sampleTable;
         this.min = min;
@@ -109,11 +105,11 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
     }
 
     private BufferedImage createLookupImage(double[] sampleTable,
-            Color... colors) {
+        Color... colors) {
         // System.out.println("" + sampleTable.length + " samples");
         // System.out.println("" + colors.length + " colors");
         return ImageTools.createColorRampImage(sampleTable,
-                BufferedImage.TRANSLUCENT, colors);
+            BufferedImage.TRANSLUCENT, colors);
     }
 
     public void setRamp(int[][] r) {
@@ -136,14 +132,14 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
     public void setAlpha(double alpha) {
         this.alpha = alpha;
         this.lookupImage = ImageTools.createModifiedLookupImage(this.colors,
-                this.st, this.alpha, this.beta, Transparency.TRANSLUCENT, 1.0f);
+            this.st, this.alpha, this.beta, Transparency.TRANSLUCENT, 1.0f);
         this.lookupColors = createLookupColors();
     }
 
     public void setBeta(double beta) {
         this.beta = beta;
         this.lookupImage = ImageTools.createModifiedLookupImage(this.colors,
-                this.st, this.alpha, this.beta, Transparency.TRANSLUCENT, 1.0f);
+            this.st, this.alpha, this.beta, Transparency.TRANSLUCENT, 1.0f);
         this.lookupColors = createLookupColors();
     }
 
@@ -151,7 +147,7 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
         this.alpha = alpha;
         this.beta = beta;
         this.lookupImage = ImageTools.createModifiedLookupImage(this.colors,
-                this.st, this.alpha, this.beta, Transparency.TRANSLUCENT, 1.0f);
+            this.st, this.alpha, this.beta, Transparency.TRANSLUCENT, 1.0f);
         this.lookupColors = createLookupColors();
     }
 
@@ -181,12 +177,12 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
         double relativeIndex = ((arg0 - this.min) / (this.max - this.min));
         // System.out.println("RelIdx: " + relativeIndex);
         int sample = Math.max(0, Math.min(
-                (int) ((this.st.length - 1) * relativeIndex),
-                this.st.length - 1));
+            (int) ((this.st.length - 1) * relativeIndex),
+            this.st.length - 1));
         // System.out.println("value: " + arg0);
         // System.out.println("Sample: " + sample);
         return this.lookupColors[Math.max(0, Math
-                .min(this.lookupImage.getWidth() - 1,
+            .min(this.lookupImage.getWidth() - 1,
                 (int) ((this.st.length - 1) * this.st[sample])))];
         // return new Color(this.ramp[(int) arg0][0], this.ramp[(int) arg0][1],
         // this.ramp[(int) arg0][2]);
@@ -248,7 +244,7 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
      * )
@@ -264,8 +260,8 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
         double min = 564.648;
         double max = 24334.234;
         GradientPaintScale gps = new GradientPaintScale(st, min, max,
-                new Color[]{Color.BLACK, Color.RED, Color.orange,
-                    Color.yellow, Color.white});
+            new Color[]{Color.BLACK, Color.RED, Color.orange,
+                Color.yellow, Color.white});
         double val = min;
         double incr = (max - min) / (st.length - 1);
         System.out.println("Increment: " + incr);
@@ -283,8 +279,8 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
         jl.setCellRenderer(new ListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList list,
-                    Object value, int index, boolean isSelected,
-                    boolean cellHasFocus) {
+                Object value, int index, boolean isSelected,
+                boolean cellHasFocus) {
                 if (value instanceof JLabel) {
                     // Border b =
                     // BorderFactory.createCompoundBorder(BorderFactory

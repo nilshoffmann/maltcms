@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -36,12 +36,9 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.extern.slf4j.Slf4j;
-
-import ucar.ma2.Sparse;
-
-
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
+import ucar.ma2.Sparse;
 
 /**
  * Class providing static utility methods for
@@ -55,7 +52,7 @@ public class SparseTools {
 
     protected static final ExecutorService es = Executors.newFixedThreadPool(4);
     public static final Map<Sparse, Double> normalized = Collections
-            .synchronizedMap(new HashMap<Sparse, Double>());
+        .synchronizedMap(new HashMap<Sparse, Double>());
 
 //	public static double arccos(final Sparse s, final Sparse t) {
 //		return Math.acos(SparseTools.cos(s, t));
@@ -94,8 +91,8 @@ public class SparseTools {
 //		return cos;
 //	}
     public static Array[] create(final List<Array> indices,
-            final List<Array> values, final int minindex, final int maxindex,
-            final int nbins, final double massPrecision) {
+        final List<Array> values, final int minindex, final int maxindex,
+        final int nbins, final double massPrecision) {
         // FutureTask<Array[]> future = new FutureTask<Array[]>(
         // new Callable<Array[]>() {
         // public Array[] call() {
@@ -113,7 +110,7 @@ public class SparseTools {
                     vls.remove();
                     // System.out.println("Sparse array "+i);
                     s[i++] = new Sparse(a, b, minindex, maxindex, nbins,
-                            massPrecision);
+                        massPrecision);
                 } catch (final ClassCastException cce) {
                     cce.printStackTrace();
                 }
@@ -121,14 +118,14 @@ public class SparseTools {
             return s;
         }
         throw new IllegalArgumentException(
-                "Number of elements in argument lists differ!");
+            "Number of elements in argument lists differ!");
     }
 
     public static List<Array> createAsList(final List<Array> indices,
-            final List<Array> values, final int minindex, final int maxindex,
-            final int nbins, final double massPrecision) {
+        final List<Array> values, final int minindex, final int maxindex,
+        final int nbins, final double massPrecision) {
         final Array[] a = SparseTools.create(indices, values, minindex,
-                maxindex, nbins, massPrecision);
+            maxindex, nbins, massPrecision);
         log.info("Length of Array[] created: {}", a.length);
         final ArrayList<Array> arr = new ArrayList<Array>(a.length);
         for (final Array element : a) {
@@ -160,7 +157,7 @@ public class SparseTools {
 //		return norm;
 //	}
     public static Sparse randomGaussian(final int minindex, final int size,
-            final double mean, final double stddev) {
+        final double mean, final double stddev) {
         final Sparse s = new Sparse(size, minindex, minindex + size - 1);
         for (int i = 0; i < size; i++) {
             s.set(i, (ArrayTools.nextGaussian() - mean) * stddev);
@@ -169,7 +166,7 @@ public class SparseTools {
     }
 
     public static Sparse randomUniform(final int minindex, final int size,
-            final double mean, final double scale) {
+        final double mean, final double scale) {
         final Sparse s = new Sparse(size, minindex, minindex + size - 1);
         for (int i = 0; i < size; i++) {
             s.set(i, (ArrayTools.nextUniform() - mean) * scale);

@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -58,7 +58,7 @@ public class SymbolConvert {
         final Array reduced = reduced1.copy();
         // erzeuge neues Array f�r Daten in Stringrep.
         final Array stringrep = Array
-                .factory(DataType.CHAR, reduced.getShape());
+            .factory(DataType.CHAR, reduced.getShape());
         // Alphabetgr��e ermitteln
         final int buchstanz = bp.length - 1;
         double save = 0;
@@ -76,7 +76,7 @@ public class SymbolConvert {
         // }
         // characters[i] = offset+i;
         // }
-        //		
+        //
         final IndexIterator ii4 = reduced.getIndexIterator();
         final IndexIterator stre = stringrep.getIndexIterator();
         // int bpcnt = 0;

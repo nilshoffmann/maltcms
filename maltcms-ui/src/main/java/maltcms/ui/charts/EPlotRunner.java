@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,20 +27,17 @@
  */
 package maltcms.ui.charts;
 
+import cross.tools.StringTools;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.Plot;
-import org.slf4j.Logger;
-
-import cross.tools.StringTools;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class is an extension of the normal {@link PlotRunner} and will generate
@@ -57,28 +54,28 @@ public class EPlotRunner extends PlotRunner {
     /**
      * Old constructor.
      *
-     * @param plot1 plot
-     * @param title1 title
+     * @param plot1     plot
+     * @param title1    title
      * @param filename1 filename
      * @param outputdir output directory
      */
     public EPlotRunner(final Plot plot1, final String title1,
-            final String filename1, final File outputdir) {
+        final String filename1, final File outputdir) {
         super(plot1, title1, filename1, outputdir);
         throw new RuntimeException(
-                "Use the original PlotRunner instead of the EPlotRunner.");
+            "Use the original PlotRunner instead of the EPlotRunner.");
     }
 
     /**
      * Default constructor.
      *
-     * @param ichart this chart will be plotted
+     * @param ichart    this chart will be plotted
      * @param ifilename filename of background image
      */
     public EPlotRunner(final JFreeChart ichart, final String ifilename,
-            final File outputdir) {
+        final File outputdir) {
         super(ichart.getPlot(), ichart.getTitle().toString(), ifilename,
-                outputdir);
+            outputdir);
         this.chart = ichart;
     }
 
@@ -95,19 +92,19 @@ public class EPlotRunner extends PlotRunner {
     @Override
     public JFreeChart call() throws Exception {
         this.log
-                .info("#############################################################################");
+            .info("#############################################################################");
         final String s = this.getClass().getName();
         this.log.info("# {} running", s);
         this.log
-                .info("#############################################################################");
+            .info("#############################################################################");
 
         if (isSerializeJFreeChart()) {
             try {
                 final ObjectOutputStream oos = new ObjectOutputStream(
-                        new BufferedOutputStream(new FileOutputStream(
-                        StringTools.removeFileExt(getFile()
-                        .getAbsolutePath())
-                        + ".serialized")));
+                    new BufferedOutputStream(new FileOutputStream(
+                            StringTools.removeFileExt(getFile()
+                                .getAbsolutePath())
+                            + ".serialized")));
                 oos.writeObject(this.chart);
                 oos.flush();
                 oos.close();

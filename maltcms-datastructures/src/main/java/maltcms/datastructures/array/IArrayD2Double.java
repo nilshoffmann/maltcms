@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,12 +27,11 @@
  */
 package maltcms.datastructures.array;
 
+import cross.datastructures.tuple.Tuple2D;
 import java.awt.geom.Area;
 import java.io.Serializable;
-
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
-import cross.datastructures.tuple.Tuple2D;
 
 /**
  * Interface abstraction of 2-dimensional arrays storing double values.
@@ -60,7 +59,7 @@ public interface IArrayD2Double extends Serializable {
      * @param row
      * @param col
      * @return element if row and col are in valid range, otherwise returns
-     * default value
+     *         default value
      */
     public abstract double get(int row, int col);
 
@@ -109,11 +108,11 @@ public interface IArrayD2Double extends Serializable {
      *
      * @param row
      * @param col
-     * @param d the value to be set at row,col
+     * @param d   the value to be set at row,col
      * @throws ArrayIndexOutOfBoundsException
      */
     public abstract void set(int row, int col, double d)
-            throws ArrayIndexOutOfBoundsException;
+        throws ArrayIndexOutOfBoundsException;
 
     /**
      *

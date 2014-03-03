@@ -43,41 +43,41 @@ import ucar.ma2.Array;
 @ServiceProvider(service = AArrayFilter.class)
 public class MinMaxNormalizationFilter extends AArrayFilter {
 
-	@Configurable
-	private double min = 0;
-	@Configurable
-	private double max = 1;
+    @Configurable
+    private double min = 0;
+    @Configurable
+    private double max = 1;
 
-	public MinMaxNormalizationFilter() {
-		super();
-	}
+    public MinMaxNormalizationFilter() {
+        super();
+    }
 
-	public MinMaxNormalizationFilter(final double min, final double max) {
-		this();
-		this.min = min;
-		this.max = max;
-	}
+    public MinMaxNormalizationFilter(final double min, final double max) {
+        this();
+        this.min = min;
+        this.max = max;
+    }
 
-	@Override
-	public Array apply(final Array a) {
-		// final Array[] b = super.apply(a);
-		final AdditionFilter af = new AdditionFilter(-this.min);
-		// shift by minimum
-		Array c = af.apply(a);
-		// normalize by max-min
-		final MultiplicationFilter mf = new MultiplicationFilter(
-			1.0d / (this.max - this.min));
-		c = mf.apply(c);
-		return c;
-	}
+    @Override
+    public Array apply(final Array a) {
+        // final Array[] b = super.apply(a);
+        final AdditionFilter af = new AdditionFilter(-this.min);
+        // shift by minimum
+        Array c = af.apply(a);
+        // normalize by max-min
+        final MultiplicationFilter mf = new MultiplicationFilter(
+            1.0d / (this.max - this.min));
+        c = mf.apply(c);
+        return c;
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		super.configure(cfg);
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+        super.configure(cfg);
+    }
 
-	@Override
-	public MinMaxNormalizationFilter copy() {
-		return new MinMaxNormalizationFilter(min, max);
-	}
+    @Override
+    public MinMaxNormalizationFilter copy() {
+        return new MinMaxNormalizationFilter(min, max);
+    }
 }

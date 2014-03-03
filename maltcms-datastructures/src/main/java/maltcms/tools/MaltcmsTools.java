@@ -98,26 +98,6 @@ public class MaltcmsTools {
     }
     private static RoundMode binMZMode = RoundMode.RFLOORINT;
 
-	// private static HashMap<String, IFileFragment> pairwiseAlignments = new
-    // HashMap<String, IFileFragment>();
-    // public static void addPairwiseAlignment(final IFileFragment ref,
-    // final IFileFragment query, final IFileFragment pa) {
-    // // FIXME: replace "" by ?
-    // MaltcmsTools.addPairwiseAlignment(ref, query, pa, "");
-    // }
-    // public static void addPairwiseAlignment(final IFileFragment ref,
-    // final IFileFragment query, final IFileFragment pa,
-    // final String extension) {
-    // final String key1 = MaltcmsTools.getKey(ref, query, extension);
-    // final String key2 = MaltcmsTools.getKey(query, ref, extension);
-    // if (MaltcmsTools.hasPairwiseAlignment(ref, query, extension)) {
-    // MaltcmsTools.log.warn(
-    // "PairwiseAlignment of {} and {} already contained in map!",
-    // ref.getAbsolutePath(), query.getAbsolutePath());
-    // }
-    // MaltcmsTools.pairwiseAlignments.put(key1, pa);
-    // MaltcmsTools.pairwiseAlignments.put(key2, pa);
-    // }
     /**
      * Calculates the normalized index of massValues, by subtracting minmz and
      * dividing by maxmz-minmz.
@@ -135,7 +115,7 @@ public class MaltcmsTools {
         // Logging.getLogger(MaltcmsTools.class).debug("massValues: {}, v: {}",massValues,v);
         final double scaledMz = mz * resolution;
         final double scaledMinMz = minmz * resolution;
-		// Logging.getLogger(MaltcmsTools.class).debug("smz: {}",scaledMz);
+        // Logging.getLogger(MaltcmsTools.class).debug("smz: {}",scaledMz);
         // v = v*massValues;
         // Logging.getLogger(MaltcmsTools.class).info("v*massValues: {}",v);
         // v = v*resolution;
@@ -153,7 +133,7 @@ public class MaltcmsTools {
             minMzRval = MaltcmsTools.binMZFloor(scaledMinMz);
         }
         final double z = (double) rval - (double) minMzRval;
-		// Logging.getLogger(MaltcmsTools.class).debug(
+        // Logging.getLogger(MaltcmsTools.class).debug(
         // "rval: {}, minMzRval: {}, z: {}",new Object[]{rval,minMzRval,z});
         // double y = (((double)rval)*(maxmz-minmz))/mz/resolution;
         // Logging.getLogger(MaltcmsTools.class).info(
@@ -171,7 +151,7 @@ public class MaltcmsTools {
      */
     public static int binMZDefault(final double mz) {
         return (int) Math.rint(mz);
-		// binMZFloor produces a high number of artifacts (wrongly binned
+        // binMZFloor produces a high number of artifacts (wrongly binned
         // intensities),
         // so differences between chromatograms will tend to be higher
         // return binMZFloor(massValues);
@@ -419,7 +399,7 @@ public class MaltcmsTools {
                 final Sparse s = ((Sparse) a);
                 minmassv = Math.min(minmassv, s.getMinIndex());
                 maxmassv = Math.max(minmassv, s.getMaxIndex());
-				// size += s.getKeySet().size();// FIXME if this doesnt work use
+                // size += s.getKeySet().size();// FIXME if this doesnt work use
                 // s.getMaxIndex()-s.getMinIndex()
             } else {
                 // size += a.getShape()[0];
@@ -517,7 +497,7 @@ public class MaltcmsTools {
                 }
             }
             if (useFallback) {
-				// There are some vendor formats of netcdf, where values in min
+                // There are some vendor formats of netcdf, where values in min
                 // mass
                 // value
                 // array are 0, which is not the minimum of measured masses, so
@@ -637,17 +617,6 @@ public class MaltcmsTools {
         return new Tuple2D<List<Array>, List<Array>>(mzs, is);
     }
 
-	// public static IFileFragment getDenseArrayFragmentFor(final IFileFragment
-    // iff) {
-    // return MaltcmsTools.getDenseArrayFragmentFor(iff.getName());
-    // }
-    // public static IFileFragment getDenseArrayFragmentFor(
-    // final String fragmentName) {
-    // if (MaltcmsTools.denseArrays.containsKey(fragmentName)) {
-    // return MaltcmsTools.denseArrays.get(fragmentName);
-    // }
-    // return null;
-    // }
     /**
      *
      * @param f
@@ -915,13 +884,6 @@ public class MaltcmsTools {
         return Arrays.copyOf(ranksByIntensity, k);
     }
 
-	// private static String getKey(final IFileFragment ref,
-    // final IFileFragment query, final String extension) {
-    // // final String key = ref.getAbsolutePath() "-"
-    // // + query.getAbsolutePath() + extension;
-    // final String key = ref.getName() + "-" + query.getName() + extension;
-    // return key;
-    // }
     /**
      * Returns mass of signal with maximum intensity.
      *
@@ -929,7 +891,8 @@ public class MaltcmsTools {
      * @param intens
      * @return
      */
-    public static double getMaxMass(final Array masses, final Array intens) {
+    public static double getMaxMass(final Array masses, final Array intens
+    ) {
         final int[] ranksByIntensity = MaltcmsTools.ranksByIntensity(intens);
         if (ranksByIntensity.length > 0) {
             final Index idx = masses.getIndex();
@@ -1036,7 +999,7 @@ public class MaltcmsTools {
         for (int i = 0; i < bins; i++) {
             Array arr = MaltcmsTools.getEIC(f, lmass, lmass + massResolution,
                 false, false, start, nscans);
-			// scan range is from
+            // scan range is from
             // start (inclusive) to start+nscans (exclusive)
             // apex should be at position
             // apex-start in arr since apex >= start and apex < start+nscans
@@ -1228,11 +1191,6 @@ public class MaltcmsTools {
         return scan_index.getArray().getShape()[0];
     }
 
-	// public static IFileFragment getPairwiseAlignment(final IFileFragment ref,
-    // final IFileFragment query) {
-    // // FIXME: replace "" by ?
-    // return MaltcmsTools.getPairwiseAlignment(ref, query, "");
-    // }
     /**
      *
      * @param f
@@ -1241,7 +1199,8 @@ public class MaltcmsTools {
      * @throws ResourceNotAvailableException
      */
     public static IFileFragment getPairwiseDistanceFragment(
-        final IFileFragment f, final String pwdExtension)
+        final IFileFragment f, final String pwdExtension
+    )
         throws ResourceNotAvailableException {
         IVariableFragment matrix = f.getChild(Factory.getInstance().getConfiguration().getString("var.pairwise_distance_matrix",
             "pairwise_distance_matrix"));
@@ -1697,10 +1656,10 @@ public class MaltcmsTools {
         // Check, that original indexed arrays are present
         EvalTools.notNull(massValuesList, MaltcmsTools.class);
         EvalTools.notNull(intensityValuesList, MaltcmsTools.class);
-		// Set fillvalue for missing intensities, e.g. if a mass channel was
+        // Set fillvalue for missing intensities, e.g. if a mass channel was
         // not recorded for a given bin
         final double fillvalue = Factory.getInstance().getConfiguration().getDouble("intensity.missing.value", 0.0d);
-		// Number of bins, currently only resolution of 1 m/z
+        // Number of bins, currently only resolution of 1 m/z
         // TODO integrate resolution
         final double massBinResolution = Factory.getInstance().getConfiguration().getDouble("dense_arrays.massBinResolution",
             1.0d);
@@ -1725,7 +1684,7 @@ public class MaltcmsTools {
             // Create a binned intensity array
             final Array vals = Array.factory(massValues.getDataType(),
                 new int[]{size});
-			// Fill arrays with values, massValues starts at min_mass, goes until
+            // Fill arrays with values, massValues starts at min_mass, goes until
             // max_mass, with unit increment
             ArrayTools.createDenseArray(massValuesList.get(i), intensityValuesList.get(i),
                 new Tuple2D<Array, Array>(indx, vals), ((int) Math.floor(min_mass)), ((int) Math.ceil(max_mass)),
@@ -1825,7 +1784,7 @@ public class MaltcmsTools {
                             eicFragment, intV, indexf);
                         indf.setArray(intensities);
                         eicFragment.addSourceFile(iff);
-						// eicFragment.save();
+                        // eicFragment.save();
                         // initIff.clearArrays();
                     }
                 }
@@ -1889,7 +1848,7 @@ public class MaltcmsTools {
         final List<Array> intena = inten.getIndexedArray();
         EvalTools.notNull(mza, MaltcmsTools.class);
         EvalTools.notNull(intena, MaltcmsTools.class);
-		// Set fillvalue for missing intensities, e.g. if a mass channel was
+        // Set fillvalue for missing intensities, e.g. if a mass channel was
         // not recorded for a given bin
         // Number of bins, currently only resolution of 1 m/z
         // TODO integrate resolution
@@ -1905,7 +1864,7 @@ public class MaltcmsTools {
         // For all scans
         for (int i = 0; i < mza.size(); i++) {
             MaltcmsTools.log.debug("Processing scan {}/{}", i + 1, mza.size());
-			// Fill arrays with values, massValues starts at min_mass, goes until
+            // Fill arrays with values, massValues starts at min_mass, goes until
             // max_mass, with unit increment
             final Array sparse = new Sparse(mza.get(i), intena.get(i),
                 (int) Math.floor(min_mass), (int) Math.ceil(max_mass),
@@ -2072,7 +2031,7 @@ public class MaltcmsTools {
         ArrayList<Double> massChannelsToFilter = new ArrayList<Double>();
         // calculate coefficient of variation, stddev/mean
         for (int j = 0; j < bins; j++) {
-			// s>mean -> cvar > 1 -> -log(cvar) < 0 => channels with large std
+            // s>mean -> cvar > 1 -> -log(cvar) < 0 => channels with large std
             // deviation profile
             // s<mean -> cvar < 1 -> -log(cvar) > 0 => channels with small std
             // deviation profile
@@ -2157,7 +2116,7 @@ public class MaltcmsTools {
         ArrayList<Integer> massChannelsToFilter = new ArrayList<Integer>();
         // calculate coefficient of variation, stddev/mean
         for (int j = 0; j < bins; j++) {
-			// s>mean -> cvar > 1 -> -log(cvar) < 0 => channels with large std
+            // s>mean -> cvar > 1 -> -log(cvar) < 0 => channels with large std
             // deviation profile
             // s<mean -> cvar < 1 -> -log(cvar) > 0 => channels with small std
             // deviation profile
@@ -2211,7 +2170,7 @@ public class MaltcmsTools {
         int[] ret = null;
         for (int i = 0; i < ranks.length; i++) {
             sum += l.get(i).getSecond();
-			// return partial ranks, as soon as we reach the limit of intensity
+            // return partial ranks, as soon as we reach the limit of intensity
             // to cover
             if (sum / totalIntensity >= (intensityRange * totalIntensity)) {
                 ret = new int[i + 1];
@@ -2239,22 +2198,14 @@ public class MaltcmsTools {
         MaltcmsTools.binMZMode = RoundMode.valueOf(s);
     }
 
-	// public static void setDenseArrayFragmentFor(final IFileFragment iff,
-    // final IFileFragment daFragment) {
-    // MaltcmsTools.setDenseArrayFragmentFor(iff.getName(), daFragment);
-    // }
-    //
-    // public static void setDenseArrayFragmentFor(final String fragmentName,
-    // final IFileFragment daFragment) {
-    // MaltcmsTools.denseArrays.put(fragmentName, daFragment);
-    // }
     /**
      * @param masses
      * @return FIXME this could be implemented more efficiently Complexity:
      *         every element in masses needs to be checked once
      */
     public static List<Integer> findMaskedMasses(final Array masses,
-        final List<Double> maskedMasses, final double epsilon) {
+        final List<Double> maskedMasses, final double epsilon
+    ) {
         IndexIterator ii = masses.getIndexIterator();
         ArrayList<Integer> masked = new ArrayList<Integer>();
         int i = 0;
@@ -2262,7 +2213,7 @@ public class MaltcmsTools {
         while (ii.hasNext()) {
             double cm = ii.getDoubleNext();
             int j = 0;
-			// O(m), could be improved by using a datastructure supporting ranqe
+            // O(m), could be improved by using a datastructure supporting ranqe
             // queries
             for (; j < maskedMasses.size(); j++) {
                 // if mass is within range

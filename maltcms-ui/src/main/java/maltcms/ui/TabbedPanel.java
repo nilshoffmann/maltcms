@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,6 +27,8 @@
  */
 package maltcms.ui;
 
+import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tuple.Tuple2D;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
@@ -38,13 +40,9 @@ import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-
 import javax.swing.JPanel;
-
 import maltcms.datastructures.alignment.AnchorPairSet;
 import maltcms.datastructures.array.PartitionedArray;
-import cross.datastructures.tuple.Tuple2D;
-import cross.datastructures.tools.EvalTools;
 
 /**
  * Visual class displaying the proposed partitioning of an array with a given
@@ -63,7 +61,7 @@ public class TabbedPanel extends JPanel implements ActionListener {
             if ((this.g2 != null) && (getContent() != null)) {
                 final BufferedImage bi = getContent();
                 this.g2.drawImage(bi, 0, 0, getWidth(), getHeight(), 0, 0, bi
-                        .getWidth(), bi.getHeight(), null);
+                    .getWidth(), bi.getHeight(), null);
                 this.g2.dispose();
             }
         }
@@ -88,7 +86,7 @@ public class TabbedPanel extends JPanel implements ActionListener {
         this.aps = aps1;
         this.paSize = pa1.getEnclosingRectangle().getSize();
         this.paIm = new BufferedImage(this.paSize.width, this.paSize.height,
-                BufferedImage.TYPE_INT_ARGB);
+            BufferedImage.TYPE_INT_ARGB);
         createPAIm(this.paIm);
     }
 
@@ -114,7 +112,7 @@ public class TabbedPanel extends JPanel implements ActionListener {
         this.paSize = rect.getBounds().getSize();
         // System.out.println(this.paSize);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-                1.0f));
+            1.0f));
         g2.setColor(Color.BLACK);
         g2.fill(rect);
         setPreferredSize(new Dimension(getWidth(), getHeight()));
@@ -123,7 +121,7 @@ public class TabbedPanel extends JPanel implements ActionListener {
         final Color[] cls = new Color[]{Color.GREEN, Color.CYAN};
         final Composite comp = g2.getComposite();
         final Composite alpha = AlphaComposite.getInstance(
-                AlphaComposite.SRC_OVER, 0.7f);
+            AlphaComposite.SRC_OVER, 0.7f);
         final Shape r = this.pa.getShape();
         EvalTools.notNull(r, this);
         g2.setComposite(alpha);
@@ -142,7 +140,7 @@ public class TabbedPanel extends JPanel implements ActionListener {
         // g2.setColor(Color.BLUE);
         // g2.setComposite(alpha);
         for (final Tuple2D<Integer, Integer> t : this.aps
-                .getCorrespondingScans()) {
+            .getCorrespondingScans()) {
             g2.setColor(cls[(t.getFirst() + t.getSecond()) % cls.length]);
             g2.fillRect(t.getSecond(), t.getFirst(), 1, 1);
         }

@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,16 +27,14 @@
  */
 package maltcms.ui.charts;
 
+import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tuple.Tuple2D;
 import java.awt.Color;
 import java.io.IOException;
-
 import org.jfree.chart.LegendItem;
 import org.jfree.chart.LegendItemCollection;
 import org.jfree.chart.axis.NumberAxis;
-
 import ucar.ma2.ArrayDouble;
-import cross.datastructures.tuple.Tuple2D;
-import cross.datastructures.tools.EvalTools;
 
 /**
  * Creates a chart with labeled domain axis, displaying a heatmap as
@@ -56,16 +54,16 @@ public class BHeatMapChart extends AChart<XYBPlot> {
     /**
      * Default constructor.
      *
-     * @param bFilename filename of the background image
-     * @param xLabel x axis label
-     * @param yLabel y axis label
-     * @param axis axis ranges
+     * @param bFilename   filename of the background image
+     * @param xLabel      x axis label
+     * @param yLabel      y axis label
+     * @param axis        axis ranges
      * @param seriesLabel series label
      */
     public BHeatMapChart(final String bFilename, final String xLabel,
-            final String yLabel,
-            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> axis,
-            final String seriesLabel) {
+        final String yLabel,
+        final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> axis,
+        final String seriesLabel) {
         EvalTools.notNull(new Object[]{bFilename, xLabel, yLabel}, this);
         this.filename = bFilename;
         this.xlabel = xLabel;

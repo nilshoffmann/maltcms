@@ -45,54 +45,54 @@ import ucar.ma2.IndexIterator;
 @ServiceProvider(service = AArrayFilter.class)
 public class AdditionFilter extends AArrayFilter {
 
-	private AElementFilter aef = null;
-	@Configurable
-	private double add = 0.0d;
+    private AElementFilter aef = null;
+    @Configurable
+    private double add = 0.0d;
 
-	public AdditionFilter() {
-		super();
-	}
+    public AdditionFilter() {
+        super();
+    }
 
-	public AdditionFilter(final double add) {
-		this();
-		this.aef = new AElementFilter() {
-			@Override
-			public Double apply(final Double d) {
-				return d + add;
-			}
-		};
-	}
+    public AdditionFilter(final double add) {
+        this();
+        this.aef = new AElementFilter() {
+            @Override
+            public Double apply(final Double d) {
+                return d + add;
+            }
+        };
+    }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
-	 */
-	@Override
-	public Array apply(final Array a) {
-		final Array b = super.apply(a);
-		final IndexIterator ii = b.getIndexIteratorFast();
-		double next = 0.0d;
-		while (ii.hasNext()) {
-			next = ii.getDoubleNext();
-			ii.setDoubleCurrent(this.aef.apply(next));
-		}
-		return b;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
+     */
+    @Override
+    public Array apply(final Array a) {
+        final Array b = super.apply(a);
+        final IndexIterator ii = b.getIndexIteratorFast();
+        double next = 0.0d;
+        while (ii.hasNext()) {
+            next = ii.getDoubleNext();
+            ii.setDoubleCurrent(this.aef.apply(next));
+        }
+        return b;
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		this.add = cfg.getDouble(this.getClass().getName() + ".add");
-		this.aef = new AElementFilter() {
-			@Override
-			public Double apply(Double t) {
-				return Double.valueOf(t.doubleValue() + add);
-			}
-		};
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+        this.add = cfg.getDouble(this.getClass().getName() + ".add");
+        this.aef = new AElementFilter() {
+            @Override
+            public Double apply(Double t) {
+                return Double.valueOf(t.doubleValue() + add);
+            }
+        };
+    }
 
-	@Override
-	public AdditionFilter copy() {
-		return new AdditionFilter(add);
-	}
+    @Override
+    public AdditionFilter copy() {
+        return new AdditionFilter(add);
+    }
 }

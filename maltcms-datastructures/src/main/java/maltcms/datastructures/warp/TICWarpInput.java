@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,15 +27,14 @@
  */
 package maltcms.datastructures.warp;
 
-import java.util.List;
-
-import maltcms.tools.MaltcmsTools;
-import ucar.ma2.Array;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.tools.FragmentTools;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.Tuple2DI;
 import cross.datastructures.workflow.IWorkflow;
-import cross.datastructures.tools.FragmentTools;
+import java.util.List;
+import maltcms.tools.MaltcmsTools;
+import ucar.ma2.Array;
 
 /**
  * Specialization for TICs.
@@ -56,10 +55,10 @@ public class TICWarpInput implements IWarpInput {
         this.refFile = FragmentTools.getLHSFile(ff);
         this.queryFile = FragmentTools.getRHSFile(ff);
         this.targetFile = FragmentTools.createFragment(this.refFile,
-                this.queryFile, iw.getOutputDirectory(this));
+            this.queryFile, iw.getOutputDirectory(this));
         this.tuple = MaltcmsTools
-                .prepareInputArraysTICasList(new Tuple2D<IFileFragment, IFileFragment>(
-                this.refFile, this.queryFile));
+            .prepareInputArraysTICasList(new Tuple2D<IFileFragment, IFileFragment>(
+                    this.refFile, this.queryFile));
     }
 
     public String getAlgorithm() {

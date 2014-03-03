@@ -43,37 +43,37 @@ import ucar.ma2.IndexIterator;
 @ServiceProvider(service = AArrayFilter.class)
 public class ExpFilter extends AArrayFilter {
 
-	private AElementFilter aef = null;
+    private AElementFilter aef = null;
 
-	public ExpFilter() {
-		super();
-		this.aef = new AElementFilter() {
-			@Override
-			public Double apply(final Double t) {
-				return Math.exp(t);//Math.exp(t);
-			}
-		};
-	}
+    public ExpFilter() {
+        super();
+        this.aef = new AElementFilter() {
+            @Override
+            public Double apply(final Double t) {
+                return Math.exp(t);//Math.exp(t);
+            }
+        };
+    }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
-	 */
-	@Override
-	public Array apply(final Array a) {
-		final Array arr = super.apply(a);
-		final IndexIterator ii = arr.getIndexIteratorFast();
-		double next = 0.0d;
-		while (ii.hasNext()) {
-			next = ii.getDoubleNext();
-			ii.setDoubleCurrent(this.aef.apply(next));
-		}
-		return arr;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
+     */
+    @Override
+    public Array apply(final Array a) {
+        final Array arr = super.apply(a);
+        final IndexIterator ii = arr.getIndexIteratorFast();
+        double next = 0.0d;
+        while (ii.hasNext()) {
+            next = ii.getDoubleNext();
+            ii.setDoubleCurrent(this.aef.apply(next));
+        }
+        return arr;
+    }
 
-	@Override
-	public ExpFilter copy() {
-		return new ExpFilter();
-	}
+    @Override
+    public ExpFilter copy() {
+        return new ExpFilter();
+    }
 }

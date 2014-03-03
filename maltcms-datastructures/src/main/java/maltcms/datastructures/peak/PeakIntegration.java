@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -33,5 +33,5 @@ package maltcms.datastructures.peak;
  */
 public enum PeakIntegration {
 
-    AREA_TIC, AREA_UNIQUE_MASS, APEX_TIC, APEX_UNIQUE_MASS, AREA_QUANT_MASSES,APEX_QUANT_MASSES;
+    AREA_TIC, AREA_UNIQUE_MASS, APEX_TIC, APEX_UNIQUE_MASS, AREA_QUANT_MASSES, APEX_QUANT_MASSES;
 }

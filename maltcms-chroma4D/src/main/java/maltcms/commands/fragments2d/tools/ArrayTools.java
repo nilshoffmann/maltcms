@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -56,14 +56,14 @@ public class ArrayTools {
     /**
      * Visualization of the sorted standard deviation.
      *
-     * @param ff file fragment
-     * @param sd standard deviation
-     * @param quantil array quantils
+     * @param ff        file fragment
+     * @param sd        standard deviation
+     * @param quantil   array quantils
      * @param visualize visualize sorted array
      */
     public static double[] getQuantileValue(final IFileFragment ff,
-            final Array sd, final double[] quantil, final boolean visualize,
-            final AFragmentCommand ac) {
+        final Array sd, final double[] quantil, final boolean visualize,
+        final AFragmentCommand ac) {
         final IndexIterator iter = sd.getIndexIterator();
         final List<Tuple2D<Integer, Integer>> stdL = new ArrayList<Tuple2D<Integer, Integer>>();
         int c = 0;
@@ -77,7 +77,7 @@ public class ArrayTools {
         Collections.sort(stdL, new Comparator<Tuple2D<Integer, Integer>>() {
             @Override
             public int compare(final Tuple2D<Integer, Integer> o1,
-                    final Tuple2D<Integer, Integer> o2) {
+                final Tuple2D<Integer, Integer> o2) {
                 return Double.compare(o1.getSecond(), o2.getSecond());
             }
         });
@@ -107,22 +107,22 @@ public class ArrayTools {
         }
         if (visualize) {
             final AChart<XYPlot> xyc1 = new XYChart(
-                    "Visualization of sorted standard deviation",
-                    new String[]{StringTools.removeFileExt(ff.getName())},
-                    new Array[]{h}, new Array[]{g}, "#",
-                    "standard deviation", true);
+                "Visualization of sorted standard deviation",
+                new String[]{StringTools.removeFileExt(ff.getName())},
+                new Array[]{h}, new Array[]{g}, "#",
+                "standard deviation", true);
             final XYPlot plot = xyc1.create();
             for (int i = 0; i < quantil.length; i++) {
                 plot.addDomainMarker(new ValueMarker(position[i]));
             }
             final PlotRunner pr1 = new PlotRunner(plot,
-                    "Plot of sorted standard deviation", StringTools.
-                    removeFileExt(ff.getName())
-                    + "_sortedStd", ac.getWorkflow().getOutputDirectory(ac));
+                "Plot of sorted standard deviation", StringTools.
+                removeFileExt(ff.getName())
+                + "_sortedStd", ac.getWorkflow().getOutputDirectory(ac));
             pr1.configure(Factory.getInstance().getConfiguration());
             final File f1 = pr1.getFile();
             final DefaultWorkflowResult dwr1 = new DefaultWorkflowResult(f1,
-                    ac, ac.getWorkflowSlot(), ff);
+                ac, ac.getWorkflowSlot(), ff);
             ac.getWorkflow().append(dwr1);
             Factory.getInstance().submitJob(pr1);
         }

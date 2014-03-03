@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,16 +27,15 @@
  */
 package maltcms.datastructures.constraint;
 
+import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tuple.Tuple2D;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.List;
-
-import maltcms.datastructures.alignment.AnchorPairSet;
-import cross.datastructures.tuple.Tuple2D;
-import cross.datastructures.tools.EvalTools;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.alignment.AnchorPairSet;
 
 /**
  *
@@ -55,8 +54,8 @@ public class ConstraintFactory {
     }
 
     public Area calculateLayout(final int rows, final int cols,
-            final int neighborhood1, final AnchorPairSet aps,
-            final double band, final int rowoverlap, final int coloverlap) {
+        final int neighborhood1, final AnchorPairSet aps,
+        final double band, final int rowoverlap, final int coloverlap) {
         final List<Tuple2D<Integer, Integer>> ris = aps.getCorrespondingScans();
         // by convention, the first contained pair should be (0,0)
         // the last contained pair should be rows-1, cols-1
@@ -88,11 +87,11 @@ public class ConstraintFactory {
             }
             // add partition rectangle
             final Rectangle r = new Rectangle(j0, i0, j1 - j0 + coverlap, i1
-                    - i0 + roverlap);
+                - i0 + roverlap);
             // add local band constraint
             if ((band > 0.0d) && (band < 1.0d)) {
                 final Area bandArea = createBandConstraint(j0, i0, r.height,
-                        r.width, band);
+                    r.width, band);
                 final Area b = new Area(r);
                 b.intersect(bandArea);
                 bounds.add(b);
@@ -109,7 +108,7 @@ public class ConstraintFactory {
             // add anchor rectangle from x to x+1, y to y+1
             if (cnt < npartitions - 1) {
                 final Rectangle anchor = new Rectangle(ax, ay,
-                        (neighborhood1 * 2) + 1, (neighborhood1 * 2) + 1);
+                    (neighborhood1 * 2) + 1, (neighborhood1 * 2) + 1);
                 bounds.add(new Area(anchor));
                 // final Area dr2 = new Area(r);
                 final Area dr2 = new Area(anchor);
@@ -118,7 +117,7 @@ public class ConstraintFactory {
                 // System.out.println("Adding anchor region: "+anchor.toString())
                 // ;
                 log.debug(
-                        "Anchor # " + cnt + " at " + x + "," + y);
+                    "Anchor # " + cnt + " at " + x + "," + y);
                 // partitions.add(anchor);
             }
             x = j1 + 1;
@@ -135,14 +134,14 @@ public class ConstraintFactory {
     }
 
     public Area createBandConstraint(final int x, final int y, final int rows,
-            final int cols, final double r) {
+        final int cols, final double r) {
         final double maxdev = Math.max(1, Math.ceil(Math.max(rows, cols) * r));
         final double ascent = (double) cols / (double) rows;
         log.info(
-                "Using band constraint with width {}, |REF| = {}, |QUERY| = {}",
-                new Object[]{maxdev, rows, cols});
+            "Using band constraint with width {}, |REF| = {}, |QUERY| = {}",
+            new Object[]{maxdev, rows, cols});
         log.info(
-                "Ascent of diagonal is {}", ascent);
+            "Ascent of diagonal is {}", ascent);
         final GeneralPath band = new GeneralPath();
         // create the band
         band.moveTo(x, y);

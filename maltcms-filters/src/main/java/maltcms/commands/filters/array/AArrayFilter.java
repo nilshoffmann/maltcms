@@ -44,35 +44,35 @@ import ucar.ma2.Array;
 @Data
 public abstract class AArrayFilter implements ICommand<Array, Array>, ICopyable<AArrayFilter> {
 
-	protected transient AElementFilter ef = null;
-	@Configurable
-	private boolean copyArray = true;
+    protected transient AElementFilter ef = null;
+    @Configurable
+    private boolean copyArray = true;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see maltcms.ucar.ma2.Filter#filter(java.lang.Object)
-	 */
-	@Override
-	public Array apply(final Array a) {
-		if (this.copyArray) {
-			return a.copy();
-		}
-		return a;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see maltcms.ucar.ma2.Filter#filter(java.lang.Object)
+     */
+    @Override
+    public Array apply(final Array a) {
+        if (this.copyArray) {
+            return a.copy();
+        }
+        return a;
+    }
 
-	public Array[] apply(final Array[] a) {
-		Array[] ret = new Array[a.length];
-		for (int i = 0; i < a.length; i++) {
-			ret[i] = apply(a[i]);
-		}
-		return ret;
-	}
+    public Array[] apply(final Array[] a) {
+        Array[] ret = new Array[a.length];
+        for (int i = 0; i < a.length; i++) {
+            ret[i] = apply(a[i]);
+        }
+        return ret;
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		this.copyArray = cfg.getBoolean(this.getClass().getName()
-			+ ".copyArray", true);
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+        this.copyArray = cfg.getBoolean(this.getClass().getName()
+            + ".copyArray", true);
+    }
 
 }

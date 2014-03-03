@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,10 +27,12 @@
  */
 package maltcms.ui.charts;
 
+import cross.Factory;
+import cross.exception.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.axis.LogarithmicAxis;
@@ -46,13 +48,9 @@ import org.jfree.data.Range;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.TextAnchor;
-
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
-import cross.Factory;
-import cross.exception.ConstraintViolationException;
-import lombok.extern.slf4j.Slf4j;
 import ucar.ma2.MAMath;
 
 /**
@@ -78,10 +76,10 @@ public class XYChart extends AChart<XYPlot> {
     private boolean logScale = false;
 
     public XYChart(final String title1, final String[] labels1,
-            final Array[] arrays1, final Array[] domains1,
-            final Array annotation_positions_x1,
-            final Array annotation_positions_y1, final String[] annotations1,
-            final String x_axis, final String y_axis) {
+        final Array[] arrays1, final Array[] domains1,
+        final Array annotation_positions_x1,
+        final Array annotation_positions_y1, final String[] annotations1,
+        final String x_axis, final String y_axis) {
         this(title1, labels1, arrays1, domains1, x_axis, y_axis);
         this.annotation_positions_x = annotation_positions_x1;
         this.annotation_positions_y = annotation_positions_y1;
@@ -89,8 +87,8 @@ public class XYChart extends AChart<XYPlot> {
     }
 
     public XYChart(final String title1, final String[] labels1,
-            final Array[] arrays1, final Array[] domains1, final String x_axis,
-            final String y_axis, final boolean useLogScale) {
+        final Array[] arrays1, final Array[] domains1, final String x_axis,
+        final String y_axis, final boolean useLogScale) {
         this.title = title1;
         this.labels.addAll(Arrays.asList(labels1));
         this.arrays.addAll(Arrays.asList(arrays1));
@@ -101,13 +99,13 @@ public class XYChart extends AChart<XYPlot> {
     }
 
     public XYChart(final String title1, final String[] labels1,
-            final Array[] arrays1, final Array[] domains1, final String x_axis,
-            final String y_axis) {
+        final Array[] arrays1, final Array[] domains1, final String x_axis,
+        final String y_axis) {
         this(title1, labels1, arrays1, domains1, x_axis, y_axis, false);
     }
 
     public XYChart(final String title1, final String[] labels1,
-            final Array[] arrays1, final String x_axis, final String y_axis) {
+        final Array[] arrays1, final String x_axis, final String y_axis) {
         this(title1, labels1, arrays1, null, x_axis, y_axis);
     }
 
@@ -115,11 +113,11 @@ public class XYChart extends AChart<XYPlot> {
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.renderArea = cfg.getBoolean(this.getClass().getName()
-                + ".renderArea", false);
+            + ".renderArea", false);
         this.fgAlpha = cfg.getFloat(this.getClass().getName()
-                + ".foregroundAlpha", 1.0f);
+            + ".foregroundAlpha", 1.0f);
         this.diffRender = cfg.getBoolean(this.getClass().getName()
-                + ".differenceRenderer", false);
+            + ".differenceRenderer", false);
     }
 
     @Override
@@ -132,7 +130,7 @@ public class XYChart extends AChart<XYPlot> {
         final XYSeriesCollection xysc = new XYSeriesCollection();
         for (int k = 0; k < this.arrays.size(); k++) {
             final String key = ((this.labels == null) || this.labels.isEmpty() || (this.labels
-                    .get(k) == null)) ? "" + k : this.labels.get(k);
+                .get(k) == null)) ? "" + k : this.labels.get(k);
             Array domainK = null;
             if (this.domains != null) {
                 if (this.domains.length == 1) {
@@ -144,10 +142,10 @@ public class XYChart extends AChart<XYPlot> {
             final XYSeries xs = new XYSeries(key);
             final Index idx = this.arrays.get(k).getIndex();
             if (domainK != null) {
-				if(!MAMath.conformable(arrays.get(k).getShape(), domainK.getShape())) {
-					throw new ConstraintViolationException("Arrays for domain and values do not have the same dimensions!");
-				}
-			}
+                if (!MAMath.conformable(arrays.get(k).getShape(), domainK.getShape())) {
+                    throw new ConstraintViolationException("Arrays for domain and values do not have the same dimensions!");
+                }
+            }
             final Array a = this.arrays.get(k);
             for (int j = 0; j < a.getShape()[0]; j++) {
                 double domX = j;
@@ -175,14 +173,14 @@ public class XYChart extends AChart<XYPlot> {
             ynumberaxis = new NumberAxis(this.yaxis);
         }
         final XYPlot p = new XYPlot(xysc, new NumberAxis(this.xaxis),
-                ynumberaxis, dir);
+            ynumberaxis, dir);
         int labelCounter = 0;
         if ((this.annotation_positions_x != null)
-                && (this.annotation_positions_y != null)) {
+            && (this.annotation_positions_y != null)) {
             final IndexIterator ii = this.annotation_positions_x
-                    .getIndexIterator();
+                .getIndexIterator();
             final IndexIterator jj = this.annotation_positions_y
-                    .getIndexIterator();
+                .getIndexIterator();
             while (ii.hasNext() && jj.hasNext()) {
                 String label = "";
                 final double pos = ii.getDoubleNext();
@@ -193,7 +191,7 @@ public class XYChart extends AChart<XYPlot> {
                     label = val + "";
                 }
                 final XYPointerAnnotation ta = new XYPointerAnnotation(label,
-                        pos, val, -0.7);
+                    pos, val, -0.7);
                 ta.setTipRadius(0);
                 ta.setTextAnchor(TextAnchor.BASELINE_LEFT);
 
@@ -205,7 +203,7 @@ public class XYChart extends AChart<XYPlot> {
         }
         if ((getYaxis_min() != -1) || (getYaxis_max() != -1)) {
             p.getRangeAxis().setRangeWithMargins(
-                    new Range(getYaxis_min(), getYaxis_max()), true, true);
+                new Range(getYaxis_min(), getYaxis_max()), true, true);
         }
         ((NumberAxis) p.getDomainAxis()).setAutoRangeIncludesZero(false);
         p.setDomainCrosshairVisible(false);

@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,23 +27,6 @@
  */
 package maltcms.commands.fragments2d.testing;
 
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import maltcms.datastructures.array.IFeatureVector;
-import maltcms.datastructures.constraint.ConstraintFactory;
-import maltcms.datastructures.feature.FeatureVectorFactory;
-import maltcms.commands.distances.dtwng.AlignmentFactory;
-import maltcms.commands.distances.dtwng.IAlignment;
-import maltcms.commands.distances.dtwng.IOptimizationFunction;
-import maltcms.commands.distances.dtwng.ThreePredecessorsOptimization;
-import maltcms.commands.distances.dtwng.TwoFeatureVectorOperation;
-import maltcms.tools.ArrayTools2;
-import maltcms.tools.ImageTools;
-import ucar.ma2.Array;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
@@ -54,10 +37,25 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import maltcms.commands.distances.dtwng.AlignmentFactory;
 import maltcms.commands.distances.dtwng.FeatureVectorDtwSimilarity;
+import maltcms.commands.distances.dtwng.IAlignment;
+import maltcms.commands.distances.dtwng.IOptimizationFunction;
+import maltcms.commands.distances.dtwng.ThreePredecessorsOptimization;
+import maltcms.commands.distances.dtwng.TwoFeatureVectorOperation;
+import maltcms.datastructures.array.IFeatureVector;
+import maltcms.datastructures.constraint.ConstraintFactory;
+import maltcms.datastructures.feature.FeatureVectorFactory;
 import maltcms.math.functions.DtwPairwiseSimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
-import org.openide.util.lookup.ServiceProvider;
+import maltcms.tools.ArrayTools2;
+import maltcms.tools.ImageTools;
+import ucar.ma2.Array;
 
 /**
  *
@@ -73,20 +71,20 @@ import org.openide.util.lookup.ServiceProvider;
 public class Alignment2D extends AFragmentCommand {
 
     @Configurable(name = "var.maxms_1d_horizontal",
-    value = "maxms_1d_horizontal")
+        value = "maxms_1d_horizontal")
     private String horizontalVar = "maxms_1d_horizontal";
     @Configurable(name = "var.maxms_1d_horizontal_index",
-    value = "maxms_1d_horizontal_index")
+        value = "maxms_1d_horizontal_index")
     private String horizontalIndexVar = "maxms_1d_horizontal_index";
     @Configurable(name = "var.maxms_1d_vertical", value = "maxms_1d_vertical")
     private String verticalVar = "maxms_1d_vertical";
     @Configurable(name = "var.maxms_1d_vertical_index",
-    value = "maxms_1d_vertical_index")
+        value = "maxms_1d_vertical_index")
     private String verticalIndexVar = "maxms_1d_vertical_index";
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensity = "total_intensity";
     @Configurable(name = "var.second_column_scan_index",
-    value = "second_column_scan_index")
+        value = "second_column_scan_index")
     private String secondColumnScanIndexVar = "second_column_scan_index";
     private TwoFeatureVectorOperation dtwSimilarity;
     @Configurable(value = "false")
@@ -173,14 +171,14 @@ public class Alignment2D extends AFragmentCommand {
                 // HORIZONTAL
                 // prepare feature vectors
                 l1h = getFeatureList(lhsff, this.horizontalVar,
-                        this.horizontalIndexVar, this.filter, this.scale);
+                    this.horizontalIndexVar, this.filter, this.scale);
                 l2h = getFeatureList(rhsff, this.horizontalVar,
-                        this.horizontalIndexVar, this.filter, this.scale);
+                    this.horizontalIndexVar, this.filter, this.scale);
                 System.out.println("l1v size: " + l1h.size());
 
                 // set constraints
                 ia.setConstraints(ConstraintFactory.getInstance().
-                        createBandConstraint(0, 0, l1h.size(),
+                    createBandConstraint(0, 0, l1h.size(),
                         l2h.size(), 0.5));
                 // apply and retrieve score
                 cost = ia.apply(l1h, l2h);
@@ -195,14 +193,14 @@ public class Alignment2D extends AFragmentCommand {
                 // VERTICAL
                 // prepare feature vectors
                 l1v = getFeatureList(lhsff, this.verticalVar,
-                        this.verticalIndexVar, this.filter, this.scale);
+                    this.verticalIndexVar, this.filter, this.scale);
                 l2v = getFeatureList(rhsff, this.verticalVar,
-                        this.verticalIndexVar, this.filter, this.scale);
+                    this.verticalIndexVar, this.filter, this.scale);
                 System.out.println("l1v size: " + l1v.size());
 
                 // set constraints
                 ia.setConstraints(ConstraintFactory.getInstance().
-                        createBandConstraint(0, 0, l1v.size(),
+                    createBandConstraint(0, 0, l1v.size(),
                         l2v.size(), 0.5));
                 // apply and retrieve score
                 cost = ia.apply(l1v, l2v);
@@ -213,14 +211,14 @@ public class Alignment2D extends AFragmentCommand {
                 Visualization2D vis = new Visualization2D();
 
                 final BufferedImage image = vis.createImage(scanlinesi,
-                        scanlinesj, h, v);
+                    scanlinesj, h, v);
 
                 final String baseFilename = StringTools.removeFileExt(lhsff.
-                        getName())
-                        + "_vs_" + StringTools.removeFileExt(rhsff.getName());
+                    getName())
+                    + "_vs_" + StringTools.removeFileExt(rhsff.getName());
                 final String filename = baseFilename + "_rgb";
                 final File out = ImageTools.saveImage(image, filename, "png",
-                        getWorkflow().getOutputDirectory(this), this);
+                    getWorkflow().getOutputDirectory(this), this);
 
                 // for (Point p : v) {
                 // System.out.println(p.x + ":" + p.y);
@@ -232,12 +230,12 @@ public class Alignment2D extends AFragmentCommand {
     }
 
     private List<IFeatureVector> getFeatureList(final IFileFragment ff,
-            final String varName, final String indexName, final boolean filter,
-            final boolean scale) {
+        final String varName, final String indexName, final boolean filter,
+        final boolean scale) {
         final FeatureVectorFactory fvf = FeatureVectorFactory.getInstance();
         IVariableFragment ivf = ff.getChild(varName);
-		IVariableFragment si = ff.getChild(indexName);
-		ivf.setIndex(si);
+        IVariableFragment si = ff.getChild(indexName);
+        ivf.setIndex(si);
 
         List<Array> feature = ff.getChild(varName).getIndexedArray();
         if (filter) {
@@ -249,7 +247,7 @@ public class Alignment2D extends AFragmentCommand {
         }
 
         final List<IFeatureVector> featureList = fvf.createFeatureVectorList(
-                feature);
+            feature);
 
         return featureList;
     }
@@ -272,10 +270,10 @@ public class Alignment2D extends AFragmentCommand {
      */
     protected List<Array> getScanlineFor(final IFileFragment ff) {
         IVariableFragment ticVar = ff.getChild(this.totalIntensity);
-		IVariableFragment si = ff.getChild(this.secondColumnScanIndexVar);
-		ticVar.setIndex(si);
+        IVariableFragment si = ff.getChild(this.secondColumnScanIndexVar);
+        ticVar.setIndex(si);
         final List<Array> scanlines = ff.getChild(this.totalIntensity).
-                getIndexedArray();
+            getIndexedArray();
         return scanlines;
     }
 }

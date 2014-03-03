@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -32,12 +32,10 @@ import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-
 import maltcms.io.xml.bindings.annotation.AnnotationType;
 import maltcms.io.xml.bindings.annotation.AnnotationsType;
 import maltcms.io.xml.bindings.annotation.AttributeType;
@@ -83,12 +81,12 @@ public class MaltcmsAnnotationFactory {
     }
 
     public AnnotationsType getAnnotationsTypeFor(MaltcmsAnnotation ma,
-            String creator, Object annotationObject) {
+        String creator, Object annotationObject) {
         List<AnnotationsType> l = ma.getAnnotations();
         AnnotationsType mat = null;
         for (AnnotationsType at : l) {
             if (at.getType().equals(annotationObject.getClass().getName())
-                    && at.getGenerator().equals(creator)) {
+                && at.getGenerator().equals(creator)) {
                 mat = at;
             }
         }
@@ -136,7 +134,7 @@ public class MaltcmsAnnotationFactory {
                 if (!atl.isEmpty()) {
                     if (atl.size() != 1) {
                         throw new IllegalArgumentException(
-                                "Peak annotation contained multiple annotation lists!");
+                            "Peak annotation contained multiple annotation lists!");
                     }
                     AnnotationType annt = atl.get(0);
                     for (AttributeType at : annt.getAttribute()) {
@@ -384,7 +382,6 @@ public class MaltcmsAnnotationFactory {
         // si.setValue(sb.toString());
         // }
         // addIfNew(si, at);
-
         PeakArea2D pa = p.getPeakArea();
         if (pa != null) {
             StringBuilder sb = new StringBuilder();

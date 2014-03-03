@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,10 +27,10 @@
  */
 package smueller.tools;
 
+import cross.tools.MathTools;
 import smueller.SymbolicRepresentationAlignment;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
-import cross.tools.MathTools;
 
 // Statische Methode, die zur Standardisiereung be�tigt werden
 /**
@@ -53,7 +53,7 @@ public class Standardizer {
      * @return
      */
     public Array cleanbase(final Array a1, final double median1,
-            final double deviation) {
+        final double deviation) {
         final Array a = a1.copy();
         final IndexIterator ii4 = a.getIndexIterator();
         final IndexIterator ii5 = a.getIndexIterator();
@@ -84,9 +84,9 @@ public class Standardizer {
         // in
         // Java Array kopiert werden muss.
         SymbolicRepresentationAlignment.getSorti().setSortedjavarray1(
-                (double[]) a.copyTo1DJavaArray());
+            (double[]) a.copyTo1DJavaArray());
         this.median = MathTools.median(SymbolicRepresentationAlignment
-                .getSorti().getSortedjavarray1());
+            .getSorti().getSortedjavarray1());
         SymbolicRepresentationAlignment.getSorti().setSortedjavarray1(null);
         final double standarddev = standardDeviation(a, this.median);
         Array b = a;
@@ -187,7 +187,7 @@ public class Standardizer {
         int counter = 0;
         final double minmax = 1 / (this.max - this.min);
         System.out.println("Larifari" + Math.round(minmax) + "Min" + this.min
-                + "max" + this.max);
+            + "max" + this.max);
         while (ii4.hasNext()) {
             final double save = ((ii4.getDoubleNext() - this.min) * minmax);
             ii4.setDoubleCurrent(save);

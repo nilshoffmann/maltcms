@@ -44,39 +44,39 @@ public class ScanLineCacheFactory {
 
 //    private static Map<String, IScanLine> scanlinecaches = null;
 //	private static boolean useSparseSLC = true;
-	private static double minMass = 0;
-	private static double maxMass = 1000;
-	private static double massResolution = 1.0;
+    private static double minMass = 0;
+    private static double maxMass = 1000;
+    private static double massResolution = 1.0;
 
-	public static void setMinMass(double minMass) {
-		ScanLineCacheFactory.minMass = minMass;
-	}
+    public static void setMinMass(double minMass) {
+        ScanLineCacheFactory.minMass = minMass;
+    }
 
-	public static void setMaxMass(double maxMass) {
-		ScanLineCacheFactory.maxMass = maxMass;
-	}
+    public static void setMaxMass(double maxMass) {
+        ScanLineCacheFactory.maxMass = maxMass;
+    }
 
-	public static void setMassResolution(double massResolution) {
-		ScanLineCacheFactory.massResolution = massResolution;
-	}
+    public static void setMassResolution(double massResolution) {
+        ScanLineCacheFactory.massResolution = massResolution;
+    }
 
 //    static {
 //        if (ScanLineCacheFactory.scanlinecaches == null) {
 //            ScanLineCacheFactory.scanlinecaches = new HashMap<String, IScanLine>();
 //        }
 //    }
-	/**
-	 * Creates a new {@link IScanLine} for {@link IFileFragment} and stores it
-	 * in a {@link HashMap}.
-	 *
-	 * The concrete instance of {@link IScanLine} depends on the configuration
-	 * cross.datastructures.fragments.VariableFragment.useCachedList. If its set
-	 * to true, the {@link IScanLine} will be the {@link CachedScanLineList},
-	 * otherwise the {@link ScanLineCache}
-	 *
-	 * @param ff file fragment
-	 * @return scanline cache for this file fragment
-	 */
+    /**
+     * Creates a new {@link IScanLine} for {@link IFileFragment} and stores it
+     * in a {@link HashMap}.
+     *
+     * The concrete instance of {@link IScanLine} depends on the configuration
+     * cross.datastructures.fragments.VariableFragment.useCachedList. If its set
+     * to true, the {@link IScanLine} will be the {@link CachedScanLineList},
+     * otherwise the {@link ScanLineCache}
+     *
+     * @param ff file fragment
+     * @return scanline cache for this file fragment
+     */
 //	private static IScanLine createScanLineCache(final IFileFragment ff) {
 //		IScanLine slc = null;
 //		final Configuration cfg = Factory.getInstance().getConfiguration();
@@ -88,15 +88,15 @@ public class ScanLineCacheFactory {
 ////        scanlinecaches.put(ff.getName(), slc);
 //		return slc;
 //	}
-	/**
-	 * This method will automatically create a new {@link IScanLine} for the
-	 * given {@link IFileFragment} if no one is cached. Otherwise it will return
-	 * the known {@link IScanLine}.
-	 *
-	 * @param ff file fragment
-	 * @return scanline cache for this file fragment
-	 */
-	public static IScanLine getScanLineCache(final IFileFragment ff) {
+    /**
+     * This method will automatically create a new {@link IScanLine} for the
+     * given {@link IFileFragment} if no one is cached. Otherwise it will return
+     * the known {@link IScanLine}.
+     *
+     * @param ff file fragment
+     * @return scanline cache for this file fragment
+     */
+    public static IScanLine getScanLineCache(final IFileFragment ff) {
 
 //        if (ScanLineCacheFactory.scanlinecaches.containsKey(ff.getName())) {
 //            return ScanLineCacheFactory.scanlinecaches.get(ff.getName());
@@ -104,19 +104,19 @@ public class ScanLineCacheFactory {
 //        } else {
 //		return ScanLineCacheFactory.createScanLineCache(ff);
 //        }
-		return ScanLineCacheFactory.getSparseScanLineCache(ff);
-	}
+        return ScanLineCacheFactory.getSparseScanLineCache(ff);
+    }
 
-	public static IScanLine getSparseScanLineCache(final IFileFragment ff) {
+    public static IScanLine getSparseScanLineCache(final IFileFragment ff) {
 //        if (ScanLineCacheFactory.scanlinecaches.containsKey(ff.getName())) {
 //            return ScanLineCacheFactory.scanlinecaches.get(ff.getName());
 //        }
-		IScanLine slc = null;
-		slc = new SparseScanLineCache(ff, minMass, maxMass, massResolution);
-		log.info("Using scan line cache implementation: {}", slc.getClass().getName());
+        IScanLine slc = null;
+        slc = new SparseScanLineCache(ff, minMass, maxMass, massResolution);
+        log.info("Using scan line cache implementation: {}", slc.getClass().getName());
 //        scanlinecaches.put(ff.getName(), slc);
-		return slc;
-	}
+        return slc;
+    }
 //
 //	public static IScanLine getDefaultScanLineCache(final IFileFragment ff) {
 ////        if (ScanLineCacheFactory.scanlinecaches.containsKey(ff.getName())) {
