@@ -30,7 +30,7 @@ package maltcms.datastructures.ms;
 /**
  * Interface representing a 1-dimensional chromatogram.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public interface IChromatogram1D extends IChromatogram, IScan1DProvider {

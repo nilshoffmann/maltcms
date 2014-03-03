@@ -42,7 +42,7 @@ import ucar.ma2.InvalidRangeException;
  * Estimate a local baseline using a windowed median and perform baseline
  * subtraction.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Data

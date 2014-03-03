@@ -29,7 +29,7 @@ package maltcms.datastructures.ms;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 public interface IScan2D extends IScan1D {
 

@@ -31,7 +31,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 public class TestRunnable implements Runnable, Serializable {
 

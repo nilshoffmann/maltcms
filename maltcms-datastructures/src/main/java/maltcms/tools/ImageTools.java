@@ -89,7 +89,7 @@ import ucar.ma2.Sparse;
 /**
  * Utility class concerned with creation and saving of images.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

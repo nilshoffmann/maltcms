@@ -38,7 +38,7 @@ import ucar.ma2.Array;
 /**
  * AArrayFilter applicable to Array objects, returning Array objects.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Data

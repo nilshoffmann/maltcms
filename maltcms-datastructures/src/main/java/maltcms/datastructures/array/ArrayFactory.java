@@ -37,7 +37,7 @@ import ucar.ma2.Array;
 /**
  * A factory abstraction for creation of IArrayD2Double implementations.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class ArrayFactory {

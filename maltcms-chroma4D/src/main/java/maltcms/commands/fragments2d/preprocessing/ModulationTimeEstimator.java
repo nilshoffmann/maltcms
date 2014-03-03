@@ -73,7 +73,7 @@ import ucar.ma2.InvalidRangeException;
  *
  * @see Default2DVarLoader} instead with flag estimateModulationTime=true
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

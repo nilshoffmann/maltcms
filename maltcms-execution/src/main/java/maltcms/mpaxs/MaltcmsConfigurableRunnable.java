@@ -34,7 +34,7 @@ import net.sf.mpaxs.api.job.Progress;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 public class MaltcmsConfigurableRunnable implements ConfigurableRunnable<URI> {
 

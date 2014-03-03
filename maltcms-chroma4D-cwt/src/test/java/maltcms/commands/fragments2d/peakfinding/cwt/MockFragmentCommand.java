@@ -34,7 +34,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 
 /**
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  */
 public class MockFragmentCommand extends AFragmentCommand {
 

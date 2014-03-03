@@ -53,7 +53,7 @@ import ucar.ma2.MAMath;
 /**
  * Concrete Implementation of a 1-dimensional chromatogram.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

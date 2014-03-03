@@ -37,7 +37,7 @@ import maltcms.tools.ArrayTools;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 @Data
 @ToString(exclude = "cache")

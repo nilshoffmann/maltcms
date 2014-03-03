@@ -33,7 +33,7 @@ import maltcms.datastructures.array.IMutableFeatureVector;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 public interface IClique<T extends IFeatureVector> {
 

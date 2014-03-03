@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 public class MpaxsExecutorServiceTest {
 

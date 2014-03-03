@@ -39,7 +39,7 @@ import ucar.ma2.Array;
 /**
  * Abstract base class for Charts of Type T extending Plot of JFreeChart.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  * @param <T extends Plot>
  */

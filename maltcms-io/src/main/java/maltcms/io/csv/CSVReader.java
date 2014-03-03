@@ -55,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Configurable Reader for CSV-like files.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

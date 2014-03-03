@@ -52,7 +52,7 @@ import org.jfree.ui.RectangleInsets;
  * Callable which returns a JFreeChart object. Chart is saved to file, if
  * running in headless mode.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

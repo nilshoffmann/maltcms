@@ -54,7 +54,7 @@ import ucar.nc2.Dimension;
  * Concrete implementation of an Experiment containing a 1-dimensional
  * chromatogram.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class Experiment1D implements IExperiment1D {

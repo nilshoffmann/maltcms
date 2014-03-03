@@ -39,7 +39,7 @@ import ucar.ma2.Array;
 /**
  * Specialization for TICs.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class TICWarpInput implements IWarpInput {

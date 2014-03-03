@@ -30,7 +30,7 @@ package maltcms.datastructures.cluster;
 /**
  * Interface for general, n-ary clusters.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public interface ICluster {

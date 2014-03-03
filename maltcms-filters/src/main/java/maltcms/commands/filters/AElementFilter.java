@@ -34,7 +34,7 @@ import cross.commands.ICommand;
 /**
  * Transformation base class to perform operations on Double values.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public abstract class AElementFilter implements ICommand<Double, Double> {

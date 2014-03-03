@@ -74,7 +74,7 @@ import org.slf4j.Logger;
  * overriding default options.
  *
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

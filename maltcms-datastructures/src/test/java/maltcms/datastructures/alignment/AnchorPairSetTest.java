@@ -38,7 +38,7 @@ import maltcms.datastructures.ms.RetentionInfo;
 /**
  * Test for {@link maltcms.datastructures.alignment.AnchorPairSet}.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class AnchorPairSetTest extends TestCase {

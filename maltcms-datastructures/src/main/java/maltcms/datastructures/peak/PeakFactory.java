@@ -40,7 +40,7 @@ import ucar.ma2.InvalidRangeException;
 
 /**
  *
- * @author nils
+ * @author Nils Hoffmann
  */
 public class PeakFactory {
 

@@ -36,7 +36,7 @@ import ucar.ma2.IndexIterator;
 /**
  * Applies exp(x) to all elements of an array.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Data

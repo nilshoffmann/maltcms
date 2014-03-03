@@ -38,7 +38,7 @@ import maltcms.datastructures.ms.RetentionInfo;
 /**
  * Represents a set of matched pairs of anchors.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

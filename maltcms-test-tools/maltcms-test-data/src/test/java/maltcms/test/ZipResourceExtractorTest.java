@@ -39,7 +39,7 @@ import org.junit.Assert;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 @Slf4j
 public class ZipResourceExtractorTest {

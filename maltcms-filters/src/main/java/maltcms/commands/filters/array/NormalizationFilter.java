@@ -45,7 +45,7 @@ import ucar.ma2.MAVector;
  * Normalize all values of given arrays to the interval of 0..1, given min and
  * max values.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Data

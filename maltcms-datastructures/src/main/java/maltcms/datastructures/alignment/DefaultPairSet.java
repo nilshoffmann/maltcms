@@ -41,7 +41,7 @@ import maltcms.datastructures.ms.IAnchor;
  * Implementation of a pairset for anything implementing
  * {@code maltcms.datastructures.alignment.DefaultPairSet}.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  * @param <T>
  */

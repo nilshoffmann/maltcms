@@ -32,7 +32,7 @@ import java.awt.Point;
 /**
  * Interface representing a 2-dimensional chromatogram.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public interface IChromatogram2D extends IChromatogram, IScan2DProvider {

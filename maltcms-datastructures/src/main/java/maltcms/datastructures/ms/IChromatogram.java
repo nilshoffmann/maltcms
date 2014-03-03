@@ -36,7 +36,7 @@ import ucar.ma2.Array;
 /**
  * Interface representing a Chromatogram.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  */
 public interface IChromatogram extends IConfigurable {
 

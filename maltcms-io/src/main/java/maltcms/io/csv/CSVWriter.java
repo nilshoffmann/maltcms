@@ -65,7 +65,7 @@ import ucar.ma2.MAMath;
 /**
  * Provides various methods to write arrays and other data to csv files.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

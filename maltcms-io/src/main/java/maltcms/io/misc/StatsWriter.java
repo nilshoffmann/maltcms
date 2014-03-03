@@ -45,7 +45,7 @@ import org.jdom.Element;
 /**
  * Writes StatsMap objects to CSV Files.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

@@ -32,7 +32,7 @@ import cross.datastructures.fragments.IFileFragment;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 public interface IPeakNormalizer extends ICopyable<IPeakNormalizer> {
 

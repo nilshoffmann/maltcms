@@ -65,7 +65,7 @@ import ucar.nc2.Dimension;
 /**
  * Implements {@link cross.io.IDataSource} for mzXML Files.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

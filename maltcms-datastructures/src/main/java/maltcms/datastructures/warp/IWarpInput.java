@@ -37,7 +37,7 @@ import cross.datastructures.tuple.Tuple2DI;
 /**
  * Parameter Object encapsulating required data for Warp after alignment.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public interface IWarpInput {

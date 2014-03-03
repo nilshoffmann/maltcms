@@ -39,7 +39,7 @@ import ucar.ma2.IndexIterator;
  * Add additive gaussian noise to array values with given mean and std
  * deviation.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Data

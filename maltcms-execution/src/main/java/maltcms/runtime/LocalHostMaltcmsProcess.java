@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 @Deprecated
 public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowResult> implements

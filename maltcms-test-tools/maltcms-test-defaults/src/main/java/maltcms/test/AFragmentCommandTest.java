@@ -52,7 +52,7 @@ import org.junit.rules.TemporaryFolder;
 
 /**
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  */
 @Slf4j
 public abstract class AFragmentCommandTest {

@@ -42,7 +42,7 @@ import ucar.ma2.Index;
 /**
  * Creates a Plot displaying the mapping between two aligned time series.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

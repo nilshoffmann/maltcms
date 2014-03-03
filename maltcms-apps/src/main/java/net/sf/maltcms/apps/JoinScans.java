@@ -44,7 +44,7 @@ import java.util.Set;
 
 /**
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class JoinScans {

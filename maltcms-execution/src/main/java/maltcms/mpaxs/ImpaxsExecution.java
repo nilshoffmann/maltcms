@@ -39,7 +39,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 public class ImpaxsExecution {
 

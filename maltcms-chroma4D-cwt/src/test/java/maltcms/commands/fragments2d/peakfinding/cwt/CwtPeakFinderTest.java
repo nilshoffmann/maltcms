@@ -49,7 +49,7 @@ import org.junit.experimental.categories.Category;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 @Slf4j
 @Category(IntegrationTest.class)

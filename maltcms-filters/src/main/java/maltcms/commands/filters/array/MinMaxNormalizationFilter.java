@@ -36,7 +36,7 @@ import ucar.ma2.Array;
 /**
  * Normalize all values of an array given a normalization string.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Data

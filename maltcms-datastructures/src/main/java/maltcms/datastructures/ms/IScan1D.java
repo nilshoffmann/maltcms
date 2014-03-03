@@ -31,7 +31,7 @@ import ucar.ma2.Array;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 public interface IScan1D extends IScan {
 

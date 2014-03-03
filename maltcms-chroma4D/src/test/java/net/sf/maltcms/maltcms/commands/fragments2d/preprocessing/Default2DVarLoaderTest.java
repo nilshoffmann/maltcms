@@ -56,7 +56,7 @@ import ucar.ma2.Array;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 @Slf4j
 @Category(IntegrationTest.class)

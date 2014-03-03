@@ -35,7 +35,7 @@ import ucar.ma2.ArrayInt;
 /**
  * Interface representing a Metabolite.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public interface IMetabolite extends IRetentionInfo {

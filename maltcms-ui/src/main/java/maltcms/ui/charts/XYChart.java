@@ -57,7 +57,7 @@ import ucar.ma2.MAMath;
  * Chart to display one Variable's data, or additionally combined with domain
  * values.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

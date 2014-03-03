@@ -68,7 +68,7 @@ import ucar.nc2.Dimension;
  * Utility class providing methods for handling of the path obtained from
  * alignment.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

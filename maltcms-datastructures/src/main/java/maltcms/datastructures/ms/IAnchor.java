@@ -30,7 +30,7 @@ package maltcms.datastructures.ms;
 /**
  * Interface for alignment anchors.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public interface IAnchor extends Comparable<IAnchor> {

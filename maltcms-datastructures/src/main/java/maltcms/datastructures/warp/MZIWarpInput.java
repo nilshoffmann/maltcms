@@ -41,7 +41,7 @@ import ucar.ma2.Array;
 /**
  * Specialization for MZIWarp, using mass spectra.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

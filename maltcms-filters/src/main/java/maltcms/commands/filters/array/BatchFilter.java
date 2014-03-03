@@ -34,7 +34,7 @@ import ucar.ma2.Array;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 public class BatchFilter {
 

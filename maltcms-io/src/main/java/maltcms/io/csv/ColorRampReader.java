@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Reads in custom color ramps.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

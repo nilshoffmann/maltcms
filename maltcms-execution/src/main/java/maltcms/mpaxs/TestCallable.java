@@ -32,7 +32,7 @@ import java.util.concurrent.Callable;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 public class TestCallable implements Callable<String>, Serializable {
 

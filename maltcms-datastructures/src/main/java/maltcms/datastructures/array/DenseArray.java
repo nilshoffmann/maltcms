@@ -43,7 +43,7 @@ import ucar.ma2.ArrayInt.D1;
 /**
  * A simple dense array encapsulation class.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class DenseArray implements IArrayD2Double {

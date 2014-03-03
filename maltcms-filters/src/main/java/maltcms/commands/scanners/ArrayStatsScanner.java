@@ -46,7 +46,7 @@ import ucar.ma2.IndexIterator;
  *
  * @link{cross.Vars} .
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

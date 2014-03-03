@@ -41,7 +41,7 @@ import ucar.ma2.Index;
  * Heatmap like chart, using to variable's values as indices for a third
  * variable's value.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

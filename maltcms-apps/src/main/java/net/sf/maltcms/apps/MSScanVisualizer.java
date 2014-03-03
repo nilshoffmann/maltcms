@@ -57,7 +57,7 @@ import ucar.ma2.Array;
 import ucar.ma2.Index;
 
 /**
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class MSScanVisualizer {

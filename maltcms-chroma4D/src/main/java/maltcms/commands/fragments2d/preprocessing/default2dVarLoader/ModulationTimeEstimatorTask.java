@@ -52,7 +52,7 @@ import ucar.ma2.Range;
 
 /**
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  */
 @Slf4j
 @Data

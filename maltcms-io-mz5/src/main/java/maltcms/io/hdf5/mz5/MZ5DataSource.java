@@ -65,7 +65,7 @@ import ucar.nc2.Variable;
  * Implementation of {@link cross.io.IDataSource} for mz5 files, following the
  * mzML standard.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

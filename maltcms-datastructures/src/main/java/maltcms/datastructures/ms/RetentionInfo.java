@@ -30,7 +30,7 @@ package maltcms.datastructures.ms;
 /**
  * Concrete implementation of {@link maltcms.datastructures.ms.IRetentionInfo}.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class RetentionInfo implements IRetentionInfo {

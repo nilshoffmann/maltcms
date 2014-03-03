@@ -44,7 +44,7 @@ import ucar.ma2.Sparse;
  * Class providing static utility methods for
  * {@link maltcms.datastructures.array.Sparse} arrays.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  * @deprecated You can use the usual array operations on Sparse array instances.
  */
 @Slf4j

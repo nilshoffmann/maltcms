@@ -38,7 +38,7 @@ import ucar.ma2.IndexIterator;
 /**
  * Add a given double to elements of an array.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Data

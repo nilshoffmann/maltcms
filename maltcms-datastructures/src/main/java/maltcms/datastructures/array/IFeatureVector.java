@@ -36,7 +36,7 @@ import ucar.ma2.Array;
 
 /**
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  */
 public interface IFeatureVector extends Serializable {
 

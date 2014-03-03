@@ -30,7 +30,7 @@ package maltcms.datastructures.ms;
 /**
  * Interface representing a 2-dimensional chromatogram.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public interface IExperiment2D extends IExperiment1D {

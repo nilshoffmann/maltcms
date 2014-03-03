@@ -33,7 +33,7 @@ import java.util.Locale;
 /**
  * Concrete implementation of a binary cluster.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class BinaryCluster extends ACluster {

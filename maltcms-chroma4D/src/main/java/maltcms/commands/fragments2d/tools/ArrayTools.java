@@ -49,7 +49,7 @@ import ucar.ma2.IndexIterator;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 public class ArrayTools {
 

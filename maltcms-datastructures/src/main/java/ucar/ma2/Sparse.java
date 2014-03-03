@@ -46,7 +46,7 @@ import ucar.ma2.MAMath.MinMax;
  *
  *
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public final class Sparse extends Array {

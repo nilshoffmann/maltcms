@@ -65,7 +65,7 @@ import ucar.ma2.Sparse;
 /**
  * Utility class providing methods for Sparse and Dense Arrays.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

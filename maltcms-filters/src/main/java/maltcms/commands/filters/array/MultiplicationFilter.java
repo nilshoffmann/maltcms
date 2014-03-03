@@ -37,7 +37,7 @@ import ucar.ma2.IndexIterator;
 /**
  * Multiply a value with all values of an array.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Data

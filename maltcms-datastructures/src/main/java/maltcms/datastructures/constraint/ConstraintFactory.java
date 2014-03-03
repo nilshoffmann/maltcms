@@ -41,7 +41,7 @@ import maltcms.datastructures.alignment.AnchorPairSet;
  *
  * Factory for pairwise DTW alignment layout constraints.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

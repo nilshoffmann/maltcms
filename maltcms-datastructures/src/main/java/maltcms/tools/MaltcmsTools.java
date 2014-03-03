@@ -86,7 +86,7 @@ import ucar.nc2.Dimension;
  * Utility class providing many comfort methods, providing more direct access to
  * andims compatible variables. Sort of an abstraction layer.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

@@ -34,7 +34,7 @@ import cross.datastructures.tools.EvalTools;
 /**
  * Factory to create Experiments.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class ExperimentFactory {

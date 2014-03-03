@@ -31,7 +31,7 @@ import lombok.Data;
 
 /**
  *
- * @author nils
+ * @author Nils Hoffmann
  */
 @Data
 public class RetentionIndexPeakAnnotation extends PeakAnnotation {

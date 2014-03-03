@@ -29,7 +29,7 @@ package maltcms.datastructures.peak;
 
 /**
  *
- * @author nils
+ * @author Nils Hoffmann
  */
 public enum PeakType {
 

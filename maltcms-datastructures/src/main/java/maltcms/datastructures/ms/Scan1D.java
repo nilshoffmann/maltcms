@@ -43,7 +43,7 @@ import ucar.ma2.IndexIterator;
 /**
  * Implementation of a 1-dimensional scan.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class Scan1D implements IScan1D, Externalizable {

@@ -33,7 +33,7 @@ import cross.datastructures.fragments.IFileFragment;
  * Concrete Implementation containing a 2-dimensional chromatogram, e.g. from
  * GCxGC-MS.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class Experiment2D extends Experiment1D implements IExperiment2D {

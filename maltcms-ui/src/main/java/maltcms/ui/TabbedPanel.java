@@ -48,7 +48,7 @@ import maltcms.datastructures.array.PartitionedArray;
  * Visual class displaying the proposed partitioning of an array with a given
  * set of anchors.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class TabbedPanel extends JPanel implements ActionListener {

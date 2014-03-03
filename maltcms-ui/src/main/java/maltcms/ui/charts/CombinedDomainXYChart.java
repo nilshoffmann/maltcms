@@ -39,7 +39,7 @@ import org.jfree.chart.plot.XYPlot;
  * Combines Different plots (favorably XYPlots) to share a common domain, such
  * that they are vertically stacked (default).
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class CombinedDomainXYChart extends AChart<XYPlot> {

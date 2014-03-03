@@ -48,7 +48,7 @@ import ucar.ma2.ArrayInt.D1;
  * Array, which has been partitioned into rectangular areas, e.g. by anchors.
  * Allows overlap of areas, as well as for neighborhoods around anchors.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

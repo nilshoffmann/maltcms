@@ -39,7 +39,7 @@ import ucar.ma2.MAMath.MinMax;
 /**
  * Concrete implementation of a Metabolite.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public class Metabolite implements IMetabolite {

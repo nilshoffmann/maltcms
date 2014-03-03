@@ -40,7 +40,7 @@ import ucar.ma2.ArrayInt;
  * Specialization of Scan1D, adding second column times and indices, indicating
  * the modulation periods scans belong to.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  *
  */

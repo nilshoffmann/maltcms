@@ -30,7 +30,7 @@ package maltcms.datastructures.cluster;
 /**
  * Abstract base class for general, n-ary clusters.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public abstract class ACluster implements ICluster {

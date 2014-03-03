@@ -32,7 +32,7 @@ import maltcms.datastructures.ms.IMetabolite;
 
 /**
  *
- * @author nils
+ * @author Nils Hoffmann
  */
 @Data
 public class PeakAnnotation {

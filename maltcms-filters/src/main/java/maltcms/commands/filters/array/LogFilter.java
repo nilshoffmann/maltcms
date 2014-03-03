@@ -36,7 +36,7 @@ import ucar.ma2.IndexIterator;
 /**
  * Applies log10 or ln to all elements of an array.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Data

@@ -48,7 +48,7 @@ import ucar.ma2.Range;
  * Copy the named Variables given on the command line from a source file to an
  * output file in a different directory.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

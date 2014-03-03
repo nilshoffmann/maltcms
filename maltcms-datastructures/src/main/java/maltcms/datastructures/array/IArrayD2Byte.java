@@ -36,7 +36,7 @@ import ucar.ma2.ArrayInt;
 /**
  * Interface abstraction of 2-dimensional arrays storing double values.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public interface IArrayD2Byte extends Serializable {

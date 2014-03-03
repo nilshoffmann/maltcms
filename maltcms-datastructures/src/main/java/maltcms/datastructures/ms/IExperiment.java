@@ -37,7 +37,7 @@ import cross.exception.ResourceNotAvailableException;
  * Interface representing an experiment. Delegate/Facade to cover a real
  * IFileFragment.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public interface IExperiment extends IConfigurable, IFileFragment {

@@ -39,7 +39,7 @@ import cross.datastructures.tuple.Tuple2D;
 
 /**
  *
- * @author nilshoffmann
+ * @author Nils Hoffmann
  */
 public class WarpMap2D {
 

@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Interface giving access to specific scans within an experiment.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  *
  */
 public interface IScanProvider<T extends IScan> extends IConfigurable, Iterable<T> {

@@ -40,7 +40,7 @@ import ucar.ma2.Sparse;
  * to the second, will lead to two arrays, the first with the consensus m/z
  * scale, and the second with the corresponding intensity values.
  *
- * @author Nils.Hoffmann@cebitec.uni-bielefeld.de
+ * @author Nils Hoffmann
  */
 public class ArrayMerge extends AArrayFilter {
 
