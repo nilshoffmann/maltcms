@@ -20,7 +20,7 @@
                                 <h1>Gas Chromatography - Mass Spectrometry</h1>
                                 <p>Note: If you're viewing this page via a <code>file://</code> URL, the "next" and "previous" Glyphicon buttons on the left and right might not load/display properly due to web browser security rules.</p>
                                 <p>
-                                    <a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a>
+                                    <a class="btn btn-lg btn-primary" href="#">Sign up today</a>
                                 </p>
                             </div>
                         </div>
@@ -33,7 +33,7 @@
                                 <h1>2D Gas Chromatography - Mass Spectrometry</h1>
                                 <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
                                 <p>
-                                    <a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a>
+                                    <a class="btn btn-lg btn-primary" href="#">Learn more</a>
                                 </p>
                             </div>
                         </div>
@@ -46,7 +46,7 @@
                                 <h1>Analytical Pyrolysis</h1>
                                 <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
                                 <p>
-                                    <a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a>
+                                    <a class="btn btn-lg btn-primary" href="#">Browse gallery</a>
                                 </p>
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                     for the implementation and execution of processing pipelines. New and existing algorithms can be easily implemented or included and executed together with 
                     existing processing elements.</p>
                 <p>
-                    <a class="btn btn-primary btn-lg" role="button" href="users/features.html">View Features &#187;</a>
+                    <a class="btn btn-primary btn-lg" href="users/features.html">View Features &#187;</a>
                 </p>
             </div>
             <div class="col-md-6" style="text-align:justify;">
@@ -82,7 +82,7 @@
                     Anova and PCA are provided via integration of the R statistical framwork. Maui can export normalized, aligned and putatively identified peak tables in csv format for easy downstream 
                     integration into existing workflows and third-party software.</p>
                 <p>
-                    <a class="btn btn-primary btn-lg" role="button" href="maui/index.html">View Features &#187;</a>
+                    <a class="btn btn-primary btn-lg" href="maui/index.html">View Features &#187;</a>
                 </p>
             </div>
         </div>

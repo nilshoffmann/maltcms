@@ -260,6 +260,9 @@
                                     <xsl:attribute name="src">
                                         <xsl:text>https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js</xsl:text>
                                     </xsl:attribute>
+                                    <xsl:attribute name="type">
+                                        <xsl:text>text/javascript</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:text> </xsl:text>
                                 </xsl:element>
                                 <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -269,6 +272,9 @@
                                             select="$pathToRoot" />
                                         <xsl:text>js/bootstrap.min.js</xsl:text>
                                     </xsl:attribute>
+                                    <xsl:attribute name="type">
+                                        <xsl:text>text/javascript</xsl:text>
+                                    </xsl:attribute>
                                     <xsl:text> </xsl:text>
                                 </xsl:element>
                                 <!-- Include holder.js -->
@@ -277,6 +283,9 @@
                                         <xsl:value-of
                                             select="$pathToRoot" />
                                         <xsl:text>js/holder.js</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="type">
+                                        <xsl:text>text/javascript</xsl:text>
                                     </xsl:attribute>
                                     <xsl:text> </xsl:text>
                                 </xsl:element>
