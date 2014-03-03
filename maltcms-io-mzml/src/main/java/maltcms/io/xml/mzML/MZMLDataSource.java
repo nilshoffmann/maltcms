@@ -127,7 +127,7 @@ public class MZMLDataSource implements IDataSource {
     private String ms_level = "ms_level";
     private String msLevelAccession = "MS:1000511";
     private static final ICacheDelegate<URI, MzMLUnmarshaller> fileToIndex = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller", 3600, 7200, 100);
-//	private static ICacheDelegate<MzMLUnmarshaller, Run> unmarshallerToRun = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller-to-run", 300, 600, 2);
+    private static final ICacheDelegate<MzMLUnmarshaller, Run> unmarshallerToRun = CacheFactory.createVolatileCache(MZMLDataSource.class.getName() + "-unmarshaller-to-run", 3600, 7200, 20);
     private static final ICacheDelegate<String, SerializableArray> variableToArrayCache = CacheFactory.createVolatileCache("maltcms.io.readcache");
 
     private ICacheDelegate<String, SerializableArray> getCache() {
@@ -205,13 +205,13 @@ public class MZMLDataSource implements IDataSource {
     }
 
     private Run getRun(MzMLUnmarshaller mzmlu) {
-//		Run run = MZMLDataSource.unmarshallerToRun.get(mzmlu);
-//		if (run != null) {
-//			log.info("Retrieved run from cache!");
-//			return run;
-//		}
-        Run run = mzmlu.unmarshalFromXpath("/run", Run.class);
-//		MZMLDataSource.unmarshallerToRun.put(mzmlu, run);
+        Run run = MZMLDataSource.unmarshallerToRun.get(mzmlu);
+        if (run != null) {
+            log.debug("Retrieved run from cache!");
+            return run;
+        }
+        run = mzmlu.unmarshalFromXpath("/run", Run.class);
+        MZMLDataSource.unmarshallerToRun.put(mzmlu, run);
         return run;
     }
 
@@ -374,10 +374,10 @@ public class MZMLDataSource implements IDataSource {
             + accession + " not contained in list!");
     }
 
-    private String getRTUnit(final Spectrum s) {
+    private String getRTUnit(final Spectrum s, final String cvTerm) {
         String rtUnit = "seconds";
         try {
-            CVParam rtp = findParam(s.getScanList().getScan().get(0).getCvParam(), "MS:1000016");
+            CVParam rtp = findParam(s.getScanList().getScan().get(0).getCvParam(), cvTerm);
             rtUnit = rtp.getUnitName();
         } catch (ResourceNotAvailableException rne) {
             log.warn("Could not retrieve rt unit for spectrum {}!", s.getId());
@@ -401,7 +401,7 @@ public class MZMLDataSource implements IDataSource {
         try {
             CVParam rtp = findParam(s.getScanList().getScan().get(0).getCvParam(), "MS:1000016");
             rt = Double.parseDouble(rtp.getValue());
-            String unit = getRTUnit(s);
+            String unit = getRTUnit(s, "MS:1000016");
             rt = convertRT(rt, unit);
         } catch (NullPointerException npe) {
             log.warn("Could not retrieve spectrum acquisition time!");
@@ -504,9 +504,9 @@ public class MZMLDataSource implements IDataSource {
         } else if (varname.equals(this.total_ion_current_chromatogram_scan_acquisition_time)) {
             a = readTotalIonCurrentChromatogram(var, mzu, false);
         } else if (varname.equals(this.first_column_elution_time)) {
-            a = readElutionTimeArray(var, getRun(mzu), mzu, this.first_column_elution_timeAccession);
+            a = readElutionTimeArray(var, mzu, this.first_column_elution_timeAccession);
         } else if (varname.equals(this.second_column_elution_time)) {
-            a = readElutionTimeArray(var, getRun(mzu), mzu, this.second_column_elution_timeAccession);
+            a = readElutionTimeArray(var, mzu, this.second_column_elution_timeAccession);
         } else {
             throw new ResourceNotAvailableException(
                 "Unknown variable name to mzML mapping for " + varname);
@@ -608,7 +608,7 @@ public class MZMLDataSource implements IDataSource {
         return a;
     }
 
-    private Array readElutionTimeArray(final IVariableFragment var, final Run run, final MzMLUnmarshaller um, final String accession) {
+    private Array readElutionTimeArray(final IVariableFragment var, final MzMLUnmarshaller um, final String accession) {
         int scans = getScanCount(um);
         int start = 0;
         final Range[] r = var.getRange();
@@ -650,7 +650,7 @@ public class MZMLDataSource implements IDataSource {
         try {
             CVParam rtp = findParam(s.getScanList().getScan().get(0).getCvParam(), accession);
             rt = Double.parseDouble(rtp.getValue());
-            String unit = getRTUnit(s);
+            String unit = getRTUnit(s, accession);
             rt = convertRT(rt, unit);
         } catch (NullPointerException npe) {
             log.warn("Could not retrieve elution time!");
@@ -1074,8 +1074,10 @@ public class MZMLDataSource implements IDataSource {
             Chromatogram ticChromatogram = null;
             try {
                 ticChromatogram = readTotalIonCurrentChromatogram(um, f);
-                BinaryDataArray intensitiesArray = ticChromatogram.getBinaryDataArrayList().getBinaryDataArray().get(1);
-                return fillArrayFromBinaryData(intensitiesArray);
+                BinaryDataArray bda = getBinaryDataArrayForCV(ticChromatogram, "MS:1000235");
+                if (bda != null) {
+                    return fillArrayFromBinaryData(bda);
+                }
             } catch (ResourceNotAvailableException rnae) {
                 //ignore, will handle null chromatogram further down
             }

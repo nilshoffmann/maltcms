@@ -31,6 +31,7 @@ import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.tools.ArrayTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
 import cross.tools.StringTools;
@@ -85,6 +86,7 @@ public class MZMLExporterTest extends AFragmentCommandTest {
         commands.add(scanExtractor);
         MZMLExporter mzmlExporter = new MZMLExporter();
         mzmlExporter.setValidate(true);
+        mzmlExporter.setSpectrumCacheSize(20);
         commands.add(mzmlExporter);
         System.err.println("testApply creating workflow");
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
@@ -120,7 +122,7 @@ public class MZMLExporterTest extends AFragmentCommandTest {
                 Assert.assertNotNull(a1);
                 Assert.assertEquals("Checking variable " + variable, a.getElementType(), a1.getElementType());
                 Assert.assertEquals("Checking variable " + variable, a.getShape()[0], a1.getShape()[0]);
-//                ArrayTools.checkFullArrayEquality(a, a1);
+                ArrayTools.checkFullArrayEquality(a, a1);
             }
         }
     }

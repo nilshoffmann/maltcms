@@ -55,18 +55,25 @@ public class MZMLExporter extends AFragmentCommand {
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;
 
     @Configurable(description = "The psi ms controlled vocabulary version to use.")
-    private String psiMsVersion = "3.48.0";
+    private String psiMsVersion = "3.60.0";
     @Configurable(description = "The unit ontology controlled vocabulary version to use.")
     private String unitOntologyVersion = "12:10:2011";
     @Configurable(description = "Whether spectral data should be gzip compressed or not.")
     private boolean compressSpectra = true;
     @Configurable(description = "Whether the result mzML file should be validated or not.")
     private boolean validate = false;
+    @Configurable(description = "The mzML version to use.")
+    private String mzMLVersion = "1.1.0";
+    @Configurable(description = "Maximum number of spectra to keep in memory during file creation.")
+    private int spectrumCacheSize = 2000;
     private String scanIndexVariable = "scan_index";
     private String massValuesVariable = "mass_values";
     private String intensityValuesVariable = "intensity_values";
     private String totalIntensityVariable = "total_intensity";
     private String scanAcquisitionTimeVariable = "scan_acquisition_time";
+    private String firstColumnElutionTimeVariable = "first_column_elution_time";
+    private String secondColumnElutionTimeVariable = "second_column_elution_time";
+    private String msLevelVariable = "ms_level";
 
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
@@ -83,13 +90,18 @@ public class MZMLExporter extends AFragmentCommand {
             worker.setScanAcquisitionTimeVariable(scanAcquisitionTimeVariable);
             worker.setScanIndexVariable(scanIndexVariable);
             worker.setTotalIntensityVariable(totalIntensityVariable);
+            worker.setFirstColumnElutionTimeVariable(firstColumnElutionTimeVariable);
+            worker.setSecondColumnElutionTimeVariable(secondColumnElutionTimeVariable);
+            worker.setMsLevelVariable(msLevelVariable);
+            worker.setSpectrumCacheSize(spectrumCacheSize);
+            worker.setMzMLVersion(mzMLVersion);
             worker.setPsiMsVersion(psiMsVersion);
             worker.setUnitOntologyVersion(unitOntologyVersion);
             worker.setValidate(validate);
             ics.submit(worker);
         }
         log.info("Waiting for workers to return!");
-		//processed files are stored by the worker, so no need to
+        //processed files are stored by the worker, so no need to
         //call save() here.
         TupleND<IFileFragment> ret = postProcessUri(ics, in);
         return ret;

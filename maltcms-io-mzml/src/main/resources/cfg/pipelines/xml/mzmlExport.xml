@@ -74,10 +74,15 @@ for details.
         </property>
     </bean>
     <!-- ANDIMSExporter, exports internal data format to ANDI-MS compliant output -->
-	<bean id="mzmlExporter" class="maltcms.commands.fragments.io.MZMLExporter" >
-		<property name="compressSpectra" value="true"/>
-		<property name="psiMsVersion" value="3.48.0"/>
-		<property name="unitOntologyVersion" value="12:10:2011"/>
-	</bean>
+    <bean id="mzmlExporter" class="maltcms.commands.fragments.io.MZMLExporter" >
+        <!-- version settings for mzML and the controlled vocabularies -->
+        <property name="psiMsVersion" value="3.60.0"/>
+        <property name="unitOntologyVersion" value="12:10:2011"/>
+        <property name="mzMLVersion" value="1.1.0"/>
+        <!-- whether spectra should be compressed to save space -->
+        <property name="compressSpectra" value="true"/>
+        <!-- validate the created mzML file against the mzML schema -->
+        <property name="validate" value="true"/>
+    </bean>
     
 </beans>

@@ -32,7 +32,6 @@ import cross.annotations.Configurable;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
-import static cross.datastructures.tools.ArrayTools.checkFullArrayEquality;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
 import cross.exception.ConstraintViolationException;
@@ -73,6 +72,7 @@ import uk.ac.ebi.jmzml.model.mzml.BinaryDataArrayList;
 import uk.ac.ebi.jmzml.model.mzml.CV;
 import uk.ac.ebi.jmzml.model.mzml.CVList;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
+import uk.ac.ebi.jmzml.model.mzml.CachedSpectrumList;
 import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
 import uk.ac.ebi.jmzml.model.mzml.ChromatogramList;
 import uk.ac.ebi.jmzml.model.mzml.DataProcessing;
@@ -111,7 +111,7 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
     @Configurable(description = "The mzML version to use.")
     private String mzMLVersion = "1.1.0";
     @Configurable(description = "The psi ms controlled vocabulary version to use.")
-    private String psiMsVersion = "3.48.0";
+    private String psiMsVersion = "3.60.0";
     @Configurable(description = "The unit ontology controlled vocabulary version to use.")
     private String unitOntologyVersion = "12:10:2011";
     @Configurable(description = "Whether spectral data should be gzip compressed or not.")
@@ -120,6 +120,8 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
     private boolean compressChromatogram = true;
     @Configurable(description = "Whether the result mzML file should be validated or not.")
     private boolean validate = false;
+    @Configurable(description = "Maximum number of spectra to keep in memory during file creation.")
+    private int spectrumCacheSize = 2000;
     private String scanIndexVariable = "scan_index";
     private String massValuesVariable = "mass_values";
     private String intensityValuesVariable = "intensity_values";
@@ -198,7 +200,7 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 //			//create spectra
         SpectrumList csl = createSpectraList(inputFileName, inputFileFragment, psiMs, dpl.getDataProcessing().get(0));
 //			//create chromatogram
-        ChromatogramList cl = createChromatogramList(inputFileFragment, psiMs, compressChromatogram, dpl.getDataProcessing().get(0));
+        ChromatogramList cl = createChromatogramList(inputFileFragment, psiMs, false, dpl.getDataProcessing().get(0));
 //			//mzML.setSampleList(null);
 //			//mzML.setScanSettingsList(null);
         RunBuilder runBuilder = new RunBuilder();
@@ -372,27 +374,27 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         IVariableFragment ticValues = inputFileFragment.getChild(totalIntensityVariable);
         DataType ticDataType = ticValues.getDataType();
         BinaryDataArray cbda = createBinaryDataArray(ticValues.getArray(), ticDataType, compress, dataProcessing, psiMs);
-        Number[] intensities = cbda.getBinaryDataAsNumberArray();
-        DataType dataType = ticValues.getDataType();
-        final Array intensA = Array.factory(dataType, ticValues.getArray().getShape());
-        for (int i = 0; i < intensities.length; i++) {
-            switch (dataType) {
-                case DOUBLE:
-                    intensA.setDouble(i, intensities[i].doubleValue());
-                    break;
-                case FLOAT:
-                    intensA.setFloat(i, intensities[i].floatValue());
-                    break;
-                case INT:
-                    intensA.setInt(i, intensities[i].intValue());
-                    break;
-                case LONG:
-                    intensA.setLong(i, intensities[i].longValue());
-                    break;
-            }
-//            intensA.set(i, intensities[i].doubleValue());
-        }
-        checkFullArrayEquality(ticValues.getArray(), intensA);
+//        Number[] intensities = cbda.getBinaryDataAsNumberArray();
+//        DataType dataType = ticValues.getDataType();
+//        final Array intensA = Array.factory(dataType, ticValues.getArray().getShape());
+//        for (int i = 0; i < intensities.length; i++) {
+//            switch (dataType) {
+//                case DOUBLE:
+//                    intensA.setDouble(i, intensities[i].doubleValue());
+//                    break;
+//                case FLOAT:
+//                    intensA.setFloat(i, intensities[i].floatValue());
+//                    break;
+//                case INT:
+//                    intensA.setInt(i, intensities[i].intValue());
+//                    break;
+//                case LONG:
+//                    intensA.setLong(i, intensities[i].longValue());
+//                    break;
+//            }
+////            intensA.set(i, intensities[i].doubleValue());
+//        }
+//        checkFullArrayEquality(ticValues.getArray(), intensA);
         CVParam ticCvParam = new CVParam();
         ticCvParam.setCvRef("MS");
         ticCvParam.setAccession("MS:1000515");
@@ -406,26 +408,26 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         IVariableFragment satValues = inputFileFragment.getChild(scanAcquisitionTimeVariable);
         DataType satDataType = satValues.getDataType();
         BinaryDataArray satbda = createBinaryDataArray(satValues.getArray(), satDataType, compress, dataProcessing, psiMs);
-        Number[] sats = satbda.getBinaryDataAsNumberArray();
-        final Array satA = Array.factory(satValues.getDataType(), satValues.getArray().getShape());
-        dataType = satValues.getDataType();
-        for (int i = 0; i < sats.length; i++) {
-            switch (dataType) {
-                case DOUBLE:
-                    satA.setDouble(i, sats[i].doubleValue());
-                    break;
-                case FLOAT:
-                    satA.setFloat(i, sats[i].floatValue());
-                    break;
-                case INT:
-                    satA.setInt(i, sats[i].intValue());
-                    break;
-                case LONG:
-                    satA.setLong(i, sats[i].longValue());
-                    break;
-            }
-        }
-        checkFullArrayEquality(satValues.getArray(), satA);
+//        Number[] sats = satbda.getBinaryDataAsNumberArray();
+//        final Array satA = Array.factory(satValues.getDataType(), satValues.getArray().getShape());
+//        dataType = satValues.getDataType();
+//        for (int i = 0; i < sats.length; i++) {
+//            switch (dataType) {
+//                case DOUBLE:
+//                    satA.setDouble(i, sats[i].doubleValue());
+//                    break;
+//                case FLOAT:
+//                    satA.setFloat(i, sats[i].floatValue());
+//                    break;
+//                case INT:
+//                    satA.setInt(i, sats[i].intValue());
+//                    break;
+//                case LONG:
+//                    satA.setLong(i, sats[i].longValue());
+//                    break;
+//            }
+//        }
+//        checkFullArrayEquality(satValues.getArray(), satA);
         CVParam satCvParam = new CVParam();
         satCvParam.setCvRef("MS");
         satCvParam.setAccession("MS:1000595");
@@ -452,7 +454,7 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 
     protected SpectrumList createSpectraList(String inputFileName, FileFragment inputFileFragment, CV psiMs, DataProcessing dataProcessing) throws ResourceNotAvailableException {
         //prepare spectra
-        SpectrumList sl = new SpectrumList();
+        SpectrumList sl = new CachedSpectrumList(inputFileName, 2000);
         sl.setDefaultDataProcessing(dataProcessing);
         List<Spectrum> csl = sl.getSpectrum();
         IVariableFragment scanIndex = inputFileFragment.getChild(scanIndexVariable);
