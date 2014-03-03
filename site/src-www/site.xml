@@ -31,7 +31,7 @@
         <ref target="news/index" alt="News" />
         <ref target="info/publications" alt="Info"/>
     </categories>
-    <nav>
+    <nav id="nav" class="nav col-md-4">
         <group nname="Home" ident="about">
             <ref target="index" />
 <!--            <ref target="users/gettingStarted" />

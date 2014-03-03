@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content group="users" ident="users/features" nname="Features" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
-    <column id="content" class="container">
+    <column id="content" class="col-md-8">
         <div class="row">
             <div class="col-md-4">
                 <h2>Open Data Formats</h2>

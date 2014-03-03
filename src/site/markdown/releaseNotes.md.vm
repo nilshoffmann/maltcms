@@ -17,6 +17,7 @@ Changes for version 1.3.1
 * Added missing maltcms.home variable in maltcms.bat. 
 * Updated ehcache configuration.
 * Added new pipeline for scan extraction and andims export. 
+* Fixed issues with XML-based io providers.
 
 #API Changes
 
