@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,16 +27,16 @@
  */
 package net.sf.maltcms.evaluation.spi.xcalibur;
 
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
-
 import javax.swing.JFileChooser;
 import javax.swing.JTable;
-
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -44,9 +44,6 @@ import jxl.read.biff.BiffException;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
-
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
 
 /**
  * Based on ExcelTools by Alexander Bunkowski. Uses Jexcel API,
@@ -333,10 +330,10 @@ public class XLSIOProvider {
         Vector<String[]> v = new Vector<String[]>();
 
         String[] head = new String[table.getTableHeader().getColumnModel()
-                .getColumnCount()];
+            .getColumnCount()];
         for (int i = 0; i < head.length; i++) {
             head[i] = table.getTableHeader().getColumnModel().getColumn(i)
-                    .getHeaderValue().toString();
+                .getHeaderValue().toString();
         }
         v.add(head);
 

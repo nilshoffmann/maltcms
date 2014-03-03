@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,6 +27,11 @@
  */
 package maltcms.commands.distances.dtwng;
 
+import cross.Factory;
+import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.fragments.VariableFragment;
+import cross.datastructures.tools.FragmentTools;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -42,22 +47,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.imageio.ImageIO;
-
 import maltcms.datastructures.array.ArrayFactory;
 import maltcms.datastructures.array.IArrayD2Double;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.tools.ArrayTools;
-
 import org.apache.commons.configuration.Configuration;
-
 import ucar.ma2.ArrayDouble;
-import cross.Factory;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IVariableFragment;
-import cross.datastructures.fragments.VariableFragment;
-import cross.datastructures.tools.FragmentTools;
 
 /**
  * @author Nils Hoffmann
@@ -78,7 +74,7 @@ public class DTW implements IAlignment, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.experimental.operation.PairwiseFeatureVectorSequenceOperation
      * #apply(java.util.List, java.util.List)
@@ -86,9 +82,9 @@ public class DTW implements IAlignment, Serializable {
     @Override
     public Double apply(List<IFeatureVector> l1, List<IFeatureVector> l2) {
         final ArrayFactory f = Factory.getInstance().getObjectFactory()
-                .instantiate(ArrayFactory.class);
+            .instantiate(ArrayFactory.class);
         final IArrayD2Double alignment = f.create(l1.size(), l2.size(),
-                this.defaultValue, this.area);
+            this.defaultValue, this.area);
         final IArrayD2Double pwvalues = f.createSharedLayout(alignment);
         // saveImage(this.lhsID + "-" + this.rhsID + "_layout", alignment,
         // new ArrayList<Point>());
@@ -103,7 +99,7 @@ public class DTW implements IAlignment, Serializable {
             for (int j = bounds[0]; j < bounds[0] + bounds[1]; j++) {
                 percentDone = ArrayTools.calcPercentDone(elements, elemCnt);
                 partCnt = ArrayTools.printPercentDone(percentDone, 10, partCnt,
-                        System.out);
+                    System.out);
                 elemCnt++;
                 point[0] = i;
                 point[1] = j;
@@ -116,10 +112,9 @@ public class DTW implements IAlignment, Serializable {
         ArrayTools.printPercentDone(percentDone, 10, partCnt, System.out);
         this.alignmentMap = optimizationFunction.getTrace();
         System.out.println("Number of Points in trace: "
-                + this.alignmentMap.size());
+            + this.alignmentMap.size());
 
         // minimum of four points for each polynomial
-
         // UnivariateRealInterpolator interpolator = new SplineInterpolator();
         // try {
         //
@@ -137,7 +132,7 @@ public class DTW implements IAlignment, Serializable {
         List<Point> interp20 = canb20.eval(l, 3);
 
         ContinuityArgmaxNodeBuilder canb100 = new ContinuityArgmaxNodeBuilder(
-                100);
+            100);
         List<Point> interp100 = canb100.eval(l, 3);
         // remove start and end point -> fixed anchors
         // double[] start = l.remove(0);
@@ -176,21 +171,21 @@ public class DTW implements IAlignment, Serializable {
         addAlignmentMap(bi, interp20, Color.BLUE);
         addAlignmentMap(bi, interp100, Color.GREEN);
         saveImage(this.leftHandSideId + "-" + this.rightHandSideId
-                + "_interpolatedLayoutWithTrace", bi);
+            + "_interpolatedLayoutWithTrace", bi);
         // } catch (MathException e) {
         //
         // e.printStackTrace();
         // }
         BufferedImage rp = createRecurrencePlot(pwvalues, 0.99);
         saveImage("recurrencePlot-" + this.leftHandSideId + "-"
-                + this.rightHandSideId, rp);
+            + this.rightHandSideId, rp);
         saveImage(this.leftHandSideId + "-" + this.rightHandSideId
-                + "_layoutWithTrace", alignment, this.alignmentMap);
+            + "_layoutWithTrace", alignment, this.alignmentMap);
         return optimizationFunction.getOptimalValue();
     }
 
     private void saveImage(String name, IArrayD2Double alignment,
-            List<Point> l, Color mapColor) {
+        List<Point> l, Color mapColor) {
         BufferedImage bi = createImage(alignment);
         addAlignmentMap(bi, l, mapColor);
         saveImage(name, bi);
@@ -199,8 +194,8 @@ public class DTW implements IAlignment, Serializable {
     private void saveImage(String name, BufferedImage bi) {
         try {
             ImageIO.write(bi, "PNG", new File(Factory.getInstance()
-                    .getConfiguration().getString("output.basedir"), name
-                    + ".png"));
+                .getConfiguration().getString("output.basedir"), name
+                + ".png"));
         } catch (IOException ex) {
             Logger.getLogger(DTW.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -208,13 +203,13 @@ public class DTW implements IAlignment, Serializable {
 
     private BufferedImage createImage(IArrayD2Double alignment) {
         final ArrayFactory f = Factory.getInstance().getObjectFactory()
-                .instantiate(ArrayFactory.class);
+            .instantiate(ArrayFactory.class);
         BufferedImage bi = f.createLayoutImage(alignment);
         return bi;
     }
 
     private BufferedImage createRecurrencePlot(IArrayD2Double pwd,
-            double threshold) {
+        double threshold) {
         BufferedImage bi = createImage(pwd);
         Graphics2D g2 = bi.createGraphics();
         Color hit = Color.BLACK;
@@ -237,7 +232,7 @@ public class DTW implements IAlignment, Serializable {
         Color c = mapColor;
         Graphics2D g2 = (Graphics2D) bi.getGraphics();
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-                0.3f));
+            0.3f));
         g2.setColor(c);
         Point last = null;
         for (Point p : l) {
@@ -249,7 +244,7 @@ public class DTW implements IAlignment, Serializable {
             }
         }
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-                0.8f));
+            0.8f));
         GeneralPath gp = new GeneralPath();
         gp.moveTo(0, 0);
         for (Point p : l) {
@@ -320,7 +315,7 @@ public class DTW implements IAlignment, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.experimental.datastructures.IFileFragmentModifier#decorate(cross
      * .datastructures.fragments.IFileFragment)
@@ -328,28 +323,28 @@ public class DTW implements IAlignment, Serializable {
     @Override
     public void modify(IFileFragment iff) {
         String arrayComparatorVariableName = Factory
-                .getInstance()
-                .getConfiguration()
-                .getString("var.alignment.pairwise_distance.class",
+            .getInstance()
+            .getConfiguration()
+            .getString("var.alignment.pairwise_distance.class",
                 "pairwise_distance_class");
         String arrayDistanceClassName = Factory
-                .getInstance()
-                .getConfiguration()
-                .getString("var.alignment.cumulative_distance.class",
+            .getInstance()
+            .getConfiguration()
+            .getString("var.alignment.cumulative_distance.class",
                 "cumulative_distance_class");
         String alignmentClassVariableName = Factory.getInstance()
-                .getConfiguration()
-                .getString("var.alignment.class", "alignment_class");
+            .getConfiguration()
+            .getString("var.alignment.class", "alignment_class");
         FragmentTools.createString(iff, arrayComparatorVariableName,
-                this.similarity.getClass().getName());
+            this.similarity.getClass().getName());
         FragmentTools.createString(iff, arrayDistanceClassName,
-                this.optimizationFunction.getClass().getName());
+            this.optimizationFunction.getClass().getName());
         FragmentTools.createString(iff, alignmentClassVariableName, this
-                .getClass().getName());
+            .getClass().getName());
         ArrayDouble.D0 result = new ArrayDouble.D0();
         result.set(getOptimizationFunction().getOptimalValue());
         final String distvar = Factory.getInstance().getConfiguration()
-                .getString("var.alignment.distance", "distance");
+            .getString("var.alignment.distance", "distance");
         final IVariableFragment dvar = new VariableFragment(iff, distvar);
         dvar.setArray(result);
         this.optimizationFunction.modify(iff);
@@ -357,7 +352,7 @@ public class DTW implements IAlignment, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
      * )

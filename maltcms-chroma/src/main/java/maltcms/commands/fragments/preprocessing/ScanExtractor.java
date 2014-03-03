@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -41,13 +41,15 @@ import cross.exception.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
-import ucar.ma2.*;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayInt;
+import ucar.ma2.IndexIterator;
+import ucar.ma2.InvalidRangeException;
+import ucar.ma2.Range;
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 
@@ -78,7 +80,7 @@ public class ScanExtractor extends AFragmentCommand {
     private int startScan = -1;
     @Configurable(value = "-1")
     private int endScan = -1;
-    
+
     @Configurable(value = "-Inf")
     private double startTime = Double.NEGATIVE_INFINITY;
     @Configurable(value = "+Inf")
@@ -88,7 +90,7 @@ public class ScanExtractor extends AFragmentCommand {
         int scans = endIndex - startIndex + 1;
         try {
             Range r = new Range(startIndex, endIndex);
-            EvalTools.eqI(scans,r.length(),this);
+            EvalTools.eqI(scans, r.length(), this);
             return a.section(Arrays.asList(r));
         } catch (InvalidRangeException ex) {
             throw new IllegalArgumentException(ex);
@@ -102,22 +104,22 @@ public class ScanExtractor extends AFragmentCommand {
             iter.setIntCurrent(idx - startIndex);
         }
     }
-    
+
     protected int getLowerIndexForRetentionTime(Array sat, double rt) {
-        for(int i = 0;i <sat.getShape()[0]; i++) {    
+        for (int i = 0; i < sat.getShape()[0]; i++) {
             double satValue = sat.getDouble(i);
-            if(satValue>=rt) {
-               return i;
+            if (satValue >= rt) {
+                return i;
             }
         }
         return -1;
     }
-    
+
     protected int getUpperIndexForRetentionTime(Array sat, double rt) {
-        for(int i = 0;i <sat.getShape()[0]; i++) {    
+        for (int i = 0; i < sat.getShape()[0]; i++) {
             double satValue = sat.getDouble(i);
-            if(satValue>=rt) {
-               return Math.max(0,i-1);
+            if (satValue >= rt) {
+                return Math.max(0, i - 1);
             }
         }
         return -1;
@@ -181,19 +183,19 @@ public class ScanExtractor extends AFragmentCommand {
                 final IFileFragment work = createWorkFragment(ff);
                 int startScan = this.startScan;
                 int endScan = this.endScan;
-                if(!Double.isInfinite(startTime)) {
-                    log.info("Using startTime: {}",startTime);
+                if (!Double.isInfinite(startTime)) {
+                    log.info("Using startTime: {}", startTime);
                     startScan = getLowerIndexForRetentionTime(ff.getChild(scanAcquisitionTimeVar).getArray(), startTime);
                 }
-                if(!Double.isInfinite(endTime)) {
-                    log.info("Using endTime: {}",endTime);
+                if (!Double.isInfinite(endTime)) {
+                    log.info("Using endTime: {}", endTime);
                     endScan = getUpperIndexForRetentionTime(ff.getChild(scanAcquisitionTimeVar).getArray(), endTime);
                 }
-                if(startScan==-1 && endScan==-1) {
+                if (startScan == -1 && endScan == -1) {
                     log.info("Skipping scan extraction, startScan=endScan=-1");
                     work.save();
                     res.add(work);
-                }else{
+                } else {
                     int[] ranges = checkRanges(ff, startScan, endScan);
                     int nscans = (ranges[1] - ranges[0] + 1);
                     log.info("Reading {} scans, from index {} to index {} (inclusive) for {}", new Object[]{nscans, ranges[0], ranges[1], ff.getName()});
@@ -259,7 +261,7 @@ public class ScanExtractor extends AFragmentCommand {
                     res.add(work);
                 }
             } catch (InvalidRangeException ex) {
-                log.error("Invalid range:",ex);
+                log.error("Invalid range:", ex);
             }
         }
         return res;

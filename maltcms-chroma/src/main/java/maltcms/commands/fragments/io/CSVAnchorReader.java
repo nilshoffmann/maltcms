@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,25 +27,6 @@
  */
 package maltcms.commands.fragments.io;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
-import maltcms.io.csv.CSVReader;
-
-import org.apache.commons.configuration.Configuration;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayChar;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.DataType;
-import ucar.ma2.Index;
-import ucar.ma2.IndexIterator;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
@@ -55,14 +36,30 @@ import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
+import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
-import cross.datastructures.tools.EvalTools;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.io.csv.CSVReader;
+import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayChar;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.DataType;
+import ucar.ma2.Index;
+import ucar.ma2.IndexIterator;
 
 /**
  * Class reading retention indices/anchors/identified compounds from files with
@@ -139,7 +136,7 @@ public class CSVAnchorReader extends AFragmentCommand {
             if (filename.equals("*.txt") || filename.equals("*.tsv")) {
                 final File f = new File(this.basedir);
                 log.debug("Trying to load anchors from {}", f.
-                        getAbsolutePath());
+                    getAbsolutePath());
                 if (f.isDirectory()) {
                     final String[] files = f.list(new FilenameFilter() {
                         @Override
@@ -164,15 +161,15 @@ public class CSVAnchorReader extends AFragmentCommand {
             log.debug("Reading anchors from file {}", s);
             final CSVReader csvr = new CSVReader();
             final HashMap<String, Vector<String>> cols = csvr.getColumns(csvr.
-                    read(f.getAbsolutePath()));
+                read(f.getAbsolutePath()));
             final Vector<String> skippedLines = csvr.getSkippedLines();
             EvalTools.eqI(skippedLines.size(), 1, this);
             final String associatedToFile = skippedLines.get(0).substring(
-                    this.fileDesignation.length());
+                this.fileDesignation.length());
             log.debug("Associated to file: {}", associatedToFile);
             final File targetFile = new File(associatedToFile);
             final String inputBasedir = Factory.getInstance().getConfiguration().
-                    getString("input.basedir", "");
+                getString("input.basedir", "");
             File g = null;
             if (targetFile.isAbsolute()) {
                 log.info("File association is absolute");
@@ -183,7 +180,7 @@ public class CSVAnchorReader extends AFragmentCommand {
                 if (!g.exists() && !inputBasedir.isEmpty()) {
                     // locate file based on filename and input files
                     final List<IFileFragment> l = Factory.getInstance().
-                            getInputDataFactory().getInitialFiles();
+                        getInputDataFactory().getInitialFiles();
                     int collision = 0;
                     for (final IFileFragment iff : l) {
                         if (iff.getName().equals(associatedToFile)) {
@@ -193,8 +190,8 @@ public class CSVAnchorReader extends AFragmentCommand {
                     }
                     if (collision > 1) {
                         log.warn(
-                                "Found {} files with the same name, can not associate!",
-                                collision);
+                            "Found {} files with the same name, can not associate!",
+                            collision);
                         g = null;
                     }
                 }
@@ -205,7 +202,7 @@ public class CSVAnchorReader extends AFragmentCommand {
                 log.debug("Full path: {}", name);
                 // create new working fragment
                 final IFileFragment parentFragment = new FileFragment(
-                        new File(getWorkflow().getOutputDirectory(this), g.
+                    new File(getWorkflow().getOutputDirectory(this), g.
                         getName()));
                 // add associatedToFile fragment as source file, create if
                 // non-existant
@@ -222,13 +219,13 @@ public class CSVAnchorReader extends AFragmentCommand {
                 createName(cols.get("Name"), parentFragment);
                 parentFragment.save();
                 final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                        parentFragment.getUri(), this,
-                        WorkflowSlot.FILEIO, parentFragment);
+                    parentFragment.getUri(), this,
+                    WorkflowSlot.FILEIO, parentFragment);
                 getWorkflow().append(dwr);
                 retF.add(parentFragment);
             } else {
                 log.warn("No association possible, skipping file: {}",
-                        associatedToFile);
+                    associatedToFile);
                 g = null;
             }
         }
@@ -237,10 +234,10 @@ public class CSVAnchorReader extends AFragmentCommand {
 
     private void augmentRT(final IFileFragment parent) {
         final IVariableFragment rt = parent.getChild(
-                this.anchorTimesVariableName);
+            this.anchorTimesVariableName);
         Array rta = rt.getArray();
         final IVariableFragment rs = parent.getChild(
-                this.anchorScanIndexVariableName);
+            this.anchorScanIndexVariableName);
         final Array rsa = rs.getArray();
         if (rta.getShape()[0] != rsa.getShape()[0]) {
             rta = new ArrayDouble.D1(rsa.getShape()[0]);
@@ -293,15 +290,15 @@ public class CSVAnchorReader extends AFragmentCommand {
         }
 
         this.anchorNamesVariableName = cfg.getString(
-                "var.anchors.retention_index_names", "retention_index_names");
+            "var.anchors.retention_index_names", "retention_index_names");
         this.anchorTimesVariableName = cfg.getString(
-                "var.anchors.retention_times", "retention_times");
+            "var.anchors.retention_times", "retention_times");
         this.anchorRetentionIndexVariableName = cfg.getString(
-                "var.anchors.retention_indices", "retention_indices");
+            "var.anchors.retention_indices", "retention_indices");
         this.anchorScanIndexVariableName = cfg.getString(
-                "var.anchors.retention_scans", "retention_scans");
+            "var.anchors.retention_scans", "retention_scans");
         this.satVariableName = cfg.getString("var.scan_acquisition_time",
-                "scan_acquisition_time");
+            "scan_acquisition_time");
 
     }
 
@@ -311,9 +308,9 @@ public class CSVAnchorReader extends AFragmentCommand {
      * @return
      */
     private IVariableFragment createIndex(final List<String> indices,
-            final IFileFragment parentFragment) {
+        final IFileFragment parentFragment) {
         final Array a = Array.factory(DataType.INT,
-                new int[]{indices.size()});
+            new int[]{indices.size()});
         final IndexIterator ii = a.getIndexIterator();
         final Iterator<String> indi = indices.iterator();
         while (ii.hasNext() && indi.hasNext()) {
@@ -326,7 +323,7 @@ public class CSVAnchorReader extends AFragmentCommand {
             }
         }
         final IVariableFragment riindices = new VariableFragment(
-                parentFragment, this.anchorRetentionIndexVariableName);
+            parentFragment, this.anchorRetentionIndexVariableName);
         riindices.setArray(a);
         // riindices.setProtect(true);
         log.debug(riindices.toString());
@@ -339,21 +336,21 @@ public class CSVAnchorReader extends AFragmentCommand {
      * @return
      */
     private IVariableFragment createName(final List<String> names,
-            final IFileFragment parentFragment) {
+        final IFileFragment parentFragment) {
         int maxlength = 0;
         for (final String s : names) {
             maxlength = Math.max(maxlength, s.length());
         }
         this.max_names_length = Math.max(this.max_names_length, maxlength);
         final ArrayChar.D2 c = new ArrayChar.D2(names.size(),
-                this.max_names_length);
+            this.max_names_length);
         final Iterator<String> nit = names.iterator();
         int row = 0;
         while (nit.hasNext()) {
             c.setString(row++, nit.next());
         }
         final IVariableFragment rinames = new VariableFragment(parentFragment,
-                this.anchorNamesVariableName);
+            this.anchorNamesVariableName);
         rinames.setArray(c);
         // rinames.setProtect(true);
         log.debug(rinames.toString());
@@ -366,7 +363,7 @@ public class CSVAnchorReader extends AFragmentCommand {
      * @return
      */
     private IVariableFragment createScan(final List<String> scans,
-            final IFileFragment parentFragment) {
+        final IFileFragment parentFragment) {
         final Array d = Array.factory(DataType.INT, new int[]{scans.size()});
         final IndexIterator ii = d.getIndexIterator();
         final Iterator<String> timi = scans.iterator();
@@ -381,7 +378,7 @@ public class CSVAnchorReader extends AFragmentCommand {
             // ii.setIntNext(Integer.parseInt(timi.next()));
         }
         final IVariableFragment riscans = new VariableFragment(parentFragment,
-                this.anchorScanIndexVariableName);
+            this.anchorScanIndexVariableName);
         riscans.setArray(d);
         // riscans.setProtect(true);
         log.debug(riscans.toString());
@@ -394,9 +391,9 @@ public class CSVAnchorReader extends AFragmentCommand {
      * @return
      */
     private IVariableFragment createTime(final List<String> times,
-            final IFileFragment parentFragment) {
+        final IFileFragment parentFragment) {
         final Array b = Array.factory(DataType.DOUBLE,
-                new int[]{times.size()});
+            new int[]{times.size()});
         final IndexIterator ii = b.getIndexIterator();
         final Iterator<String> timi = times.iterator();
         while (ii.hasNext() && timi.hasNext()) {
@@ -410,7 +407,7 @@ public class CSVAnchorReader extends AFragmentCommand {
             // ii.setDoubleNext(Double.parseDouble(timi.next()));
         }
         final IVariableFragment ritimes = new VariableFragment(parentFragment,
-                this.anchorTimesVariableName);
+            this.anchorTimesVariableName);
         ritimes.setArray(b);
         // ritimes.setProtect(true);
         log.debug(ritimes.toString());
@@ -474,7 +471,7 @@ public class CSVAnchorReader extends AFragmentCommand {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
     @Override
@@ -491,10 +488,10 @@ public class CSVAnchorReader extends AFragmentCommand {
 
     /**
      * @param anchorRetentionIndexVariableName the
-     * anchorRetentionIndexVariableName to set
+     *                                         anchorRetentionIndexVariableName to set
      */
     public void setAnchorRetentionIndexVariableName(
-            final String anchorRetentionIndexVariableName) {
+        final String anchorRetentionIndexVariableName) {
         this.anchorRetentionIndexVariableName = anchorRetentionIndexVariableName;
     }
 
@@ -502,7 +499,7 @@ public class CSVAnchorReader extends AFragmentCommand {
      * @param anchorScanIndexVariableName the anchorScanIndexVariableName to set
      */
     public void setAnchorScanIndexVariableName(
-            final String anchorScanIndexVariableName) {
+        final String anchorScanIndexVariableName) {
         this.anchorScanIndexVariableName = anchorScanIndexVariableName;
     }
 

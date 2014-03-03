@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,14 +27,6 @@
  */
 package maltcms.commands.fragments.io;
 
-import cross.annotations.AnnotationInspector;
-import java.io.File;
-import java.util.ArrayList;
-
-import org.apache.commons.configuration.Configuration;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresVariables;
@@ -44,14 +36,15 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
-import cross.exception.ExitVmException;
-import cross.exception.ResourceNotAvailableException;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.File;
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.tools.ArrayTools;
+import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
 /**
@@ -95,19 +88,19 @@ public class ANDIChromImporter extends AFragmentCommand {
         final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
         for (final IFileFragment iff : t) {
             final IFileFragment fret = new FileFragment(
-                    new File(getWorkflow().getOutputDirectory(this),
+                new File(getWorkflow().getOutputDirectory(this),
                     iff.getName()));
             final Array a = iff.getChild(this.ordinateValuesVariable).getArray();
             final VariableFragment tic = new VariableFragment(fret, "total_intensity");
             tic.setArray(a);
             final Array sa = iff.getChild(this.actualSamplingIntervalVariable).
-                    getArray();
+                getArray();
             final ArrayInt.D1 scanIndex = ArrayTools.indexArray(a.getShape()[0], 0);
             final VariableFragment siV = new VariableFragment(fret, "scan_index");
             siV.setArray(scanIndex);
             final ArrayDouble.D1 sat = new ArrayDouble.D1(a.getShape()[0]);
             final Array adt = iff.getChild(this.actualDelayTimeVariable).
-                    getArray();
+                getArray();
             final double rtStart = adt.getDouble(0);
             final double asi = sa.getDouble(0);
             for (int i = 0; i < sat.getShape()[0]; i++) {
@@ -115,7 +108,7 @@ public class ANDIChromImporter extends AFragmentCommand {
             }
             fret.addSourceFile(iff);
             final VariableFragment vf = new VariableFragment(fret,
-                    this.scanAcquisitionTimeVariable);
+                this.scanAcquisitionTimeVariable);
             vf.setArray(sat);
             final Array mass_values = new ArrayDouble.D1(a.getShape()[0]);
             final Array intensity_values = new ArrayDouble.D1(a.getShape()[0]);
@@ -144,13 +137,13 @@ public class ANDIChromImporter extends AFragmentCommand {
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.ordinateValuesVariable = cfg.getString(getClass().getName()
-                + ".ordinate_values", "ordinate_values");
+            + ".ordinate_values", "ordinate_values");
         this.scanAcquisitionTimeVariable = cfg.getString(getClass().getName()
-                + ".scan_acquisition_time", "scan_acquisition_time");
+            + ".scan_acquisition_time", "scan_acquisition_time");
         this.actualSamplingIntervalVariable = cfg.getString(getClass().getName()
-                + ".actual_sampling_interval", "actual_sampling_interval");
+            + ".actual_sampling_interval", "actual_sampling_interval");
         this.actualDelayTimeVariable = cfg.getString(getClass().getName()
-                + ".actual_delay_time", "actual_delay_time");
+            + ".actual_delay_time", "actual_delay_time");
     }
 
     /*

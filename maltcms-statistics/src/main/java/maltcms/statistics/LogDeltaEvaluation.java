@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,27 +27,6 @@
  */
 package maltcms.statistics;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Vector;
-
-import maltcms.datastructures.peak.Peak2DClique;
-import maltcms.io.csv.CSVReader;
-import maltcms.io.csv.CSVWriter;
-import maltcms.ui.charts.PlotRunner;
-
-import org.jdom.Element;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.xy.StandardXYBarPainter;
-import org.jfree.chart.renderer.xy.XYBarRenderer;
-import org.jfree.data.xy.DefaultXYDataset;
-import org.jfree.data.xy.XYBarDataset;
-
 import cross.Factory;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
@@ -56,7 +35,25 @@ import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Vector;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.peak.Peak2DClique;
+import maltcms.io.csv.CSVReader;
+import maltcms.io.csv.CSVWriter;
+import maltcms.ui.charts.PlotRunner;
+import org.jdom.Element;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.xy.StandardXYBarPainter;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
+import org.jfree.data.xy.DefaultXYDataset;
+import org.jfree.data.xy.XYBarDataset;
 
 @Slf4j
 public class LogDeltaEvaluation implements IWorkflowElement {
@@ -68,7 +65,7 @@ public class LogDeltaEvaluation implements IWorkflowElement {
     public void calcRatios(List<Peak2DClique> peaks, Collection<IFileFragment> f) {
         this.peakCliques = peaks;
         final String groupFileLocation = Factory.getInstance().getConfiguration().
-                getString("groupFileLocation", "");
+            getString("groupFileLocation", "");
         if (groupFileLocation.isEmpty()) {
             this.log.warn("No group file given!");
             return;
@@ -76,7 +73,7 @@ public class LogDeltaEvaluation implements IWorkflowElement {
         // Read group information
         final CSVReader csvr = new CSVReader();
         final Tuple2D<Vector<Vector<String>>, Vector<String>> v = csvr.read(
-                groupFileLocation);
+            groupFileLocation);
         final HashMap<String, IFileFragment> fileToShortFile = new HashMap<String, IFileFragment>();
         for (IFileFragment frag : f) {
             fileToShortFile.put(StringTools.removeFileExt(frag.getName()), frag);
@@ -89,16 +86,16 @@ public class LogDeltaEvaluation implements IWorkflowElement {
             if (line.size() > 1 && !line.isEmpty()) {
                 this.log.debug("line: {}", line);
                 if (fileToShortFile.keySet().contains(
-                        StringTools.removeFileExt(line.get(0)))) {
+                    StringTools.removeFileExt(line.get(0)))) {
                     fileToClass.put(fileToShortFile.get(line.get(0)),
-                            line.get(1));
+                        line.get(1));
                     if (!classToFiles.containsKey(line.get(1))) {
                         // classes.add(line.get(1));
                         classToFiles.put(line.get(1),
-                                new ArrayList<IFileFragment>());
+                            new ArrayList<IFileFragment>());
                     }
                     classToFiles.get(line.get(1)).add(
-                            fileToShortFile.get(line.get(0)));
+                        fileToShortFile.get(line.get(0)));
                 }
             }
         }
@@ -124,28 +121,28 @@ public class LogDeltaEvaluation implements IWorkflowElement {
                         for (IFileFragment ff : classToFiles.get(c1)) {
                             try {
                                 mean1 += pc.get(ff).getPeakArea().
-                                        getAreaIntensity();
+                                    getAreaIntensity();
                                 cc1++;
                             } catch (NullPointerException e) {
                                 this.log.info("NULLPOINTER in c1: " + c1 + "-"
-                                        + c2);
+                                    + c2);
                             }
                         }
                         for (IFileFragment ff : classToFiles.get(c2)) {
                             try {
                                 mean2 += pc.get(ff).getPeakArea().
-                                        getAreaIntensity();
+                                    getAreaIntensity();
                                 cc2++;
                             } catch (NullPointerException e) {
                                 this.log.info("NULLPOINTER in c2: " + c1 + "-"
-                                        + c2);
+                                    + c2);
                             }
                         }
                         if (this.logNaturalis) {
                             r = Math.log(mean1 / cc1) - Math.log(mean2 / cc2);
                         } else {
                             r = Math.log10(mean1 / cc1)
-                                    - Math.log10(mean2 / cc2);
+                                - Math.log10(mean2 / cc2);
                         }
                         pc.addRatio(c1, c2, r);
                     }
@@ -198,19 +195,19 @@ public class LogDeltaEvaluation implements IWorkflowElement {
                     XYBarDataset dscdRT = new XYBarDataset(fxyds, 1.0);
                     fxyds.addSeries(c1 + " - " + c2, values);
                     JFreeChart jfc = ChartFactory.createXYBarChart(
-                            "Log deltas for peak cliques " + c1 + " and " + c2,
-                            "Clique number", false, "Log Deltas for " + c1
-                            + " and " + c2, dscdRT,
-                            PlotOrientation.VERTICAL, true, true, true);
+                        "Log deltas for peak cliques " + c1 + " and " + c2,
+                        "Clique number", false, "Log Deltas for " + c1
+                        + " and " + c2, dscdRT,
+                        PlotOrientation.VERTICAL, true, true, true);
                     customizeBarChart(jfc);
                     PlotRunner pr = new PlotRunner(jfc.getXYPlot(),
-                            "Log Deltas", "cliqueslogDelta" + c1 + "-" + c2,
-                            getWorkflow().getOutputDirectory(this));
+                        "Log Deltas", "cliqueslogDelta" + c1 + "-" + c2,
+                        getWorkflow().getOutputDirectory(this));
                     pr.configure(Factory.getInstance().getConfiguration());
                     final File file = pr.getFile();
                     final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                            file, this, WorkflowSlot.VISUALIZATION,
-                            t.toArray(new IFileFragment[]{}));
+                        file, this, WorkflowSlot.VISUALIZATION,
+                        t.toArray(new IFileFragment[]{}));
                     getWorkflow().append(dwr);
                     Factory.getInstance().submitJob(pr);
                     c++;
@@ -221,8 +218,8 @@ public class LogDeltaEvaluation implements IWorkflowElement {
         final CSVWriter csvw = new CSVWriter();
         csvw.setWorkflow(this.workflow);
         csvw.writeTableByRows(this.workflow.getOutputDirectory(this).
-                getAbsolutePath(), "classDifferences.csv", metaTable,
-                WorkflowSlot.PEAKFINDING);
+            getAbsolutePath(), "classDifferences.csv", metaTable,
+            WorkflowSlot.PEAKFINDING);
     }
 
     private void customizeBarChart(JFreeChart jfc) {

@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,35 +27,31 @@
  */
 package net.sf.maltcms.db.search.spi.parser;
 
-import com.db4o.config.EmbeddedConfiguration;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import maltcms.datastructures.ms.IMetabolite;
-import maltcms.datastructures.ms.Metabolite;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
-
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.query.Predicate;
 import cross.datastructures.collections.CachedLazyList;
 import cross.datastructures.collections.IElementProvider;
 import cross.exception.ConstraintViolationException;
-import java.io.*;
-import java.lang.Number;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.NumberFormat;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.ms.IMetabolite;
+import maltcms.datastructures.ms.Metabolite;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayInt;
 
 /**
  *
@@ -89,20 +85,20 @@ public class MSPFormatMetaboliteParser2 {
     private int nnpeaks = 0;
     private int metaboliteCounter = 1;
     private Locale locale = Locale.US;
-	private URL link;
-	private NumberFormat localeAwareFormat;
+    private URL link;
+    private NumberFormat localeAwareFormat;
 
     public void setLocale(Locale locale) {
         this.locale = locale;
-		this.localeAwareFormat = null;
+        this.localeAwareFormat = null;
     }
-	
-	public NumberFormat getNumberFormat() {
-		if(localeAwareFormat==null) {
-			localeAwareFormat = NumberFormat.getInstance(locale);
-		}
-		return localeAwareFormat;
-	}
+
+    public NumberFormat getNumberFormat() {
+        if (localeAwareFormat == null) {
+            localeAwareFormat = NumberFormat.getInstance(locale);
+        }
+        return localeAwareFormat;
+    }
 
     public IMetabolite handleLine(String line) {
         IMetabolite metabolite = null;
@@ -154,14 +150,14 @@ public class MSPFormatMetaboliteParser2 {
         }
         if (this.name == null) {
             System.err.println("Error creating metabolite, name=" + this.name
-                    + "; id=" + this.id);
+                + "; id=" + this.id);
             throw new RuntimeException("Error creating metabolite, name=" + this.name
-                    + "; id=" + this.id);
+                + "; id=" + this.id);
         }
         IMetabolite m = new Metabolite(this.name, this.id, this.idType,
-                this.dbno, this.comments, this.formula, this.syndate, this.ri,
-                this.rt, this.rtUnit, (int) this.mw, this.sp, this.synname,
-                this.masses, this.intensities);
+            this.dbno, this.comments, this.formula, this.syndate, this.ri,
+            this.rt, this.rtUnit, (int) this.mw, this.sp, this.synname,
+            this.masses, this.intensities);
         if (m == null) {
             System.err.println("Error creating metabolite");
             throw new RuntimeException("Error creating metabolite");
@@ -214,9 +210,9 @@ public class MSPFormatMetaboliteParser2 {
         } else if (synon.startsWith("MPIMP-ID:")) {
             this.idType = "MPIMP-ID";
             handleSynonMPIMPID(synon.substring("MPIMP-ID:".length()).trim());
-		} else if (synon.startsWith("GMD LINK:")) {
-			this.idType = "MPIMP-GUID";
-			handleSynonGmdLink(synon.substring("GMD LINK:".length()).trim());
+        } else if (synon.startsWith("GMD LINK:")) {
+            this.idType = "MPIMP-GUID";
+            handleSynonGmdLink(synon.substring("GMD LINK:".length()).trim());
         } else if (synon.startsWith("ID:")) {
             this.idType = "ID";
             handleSynonID(synon.substring("ID:".length()).trim());
@@ -270,8 +266,8 @@ public class MSPFormatMetaboliteParser2 {
     }
 
     public void handleSynonRI(String ri) {
-		// System.out.println("Synon: RI:"+ri);
-		this.ri = parseDoubleString(ri);
+        // System.out.println("Synon: RI:"+ri);
+        this.ri = parseDoubleString(ri);
     }
 
     public void handleSynonRT(String rt) {
@@ -279,23 +275,23 @@ public class MSPFormatMetaboliteParser2 {
         // Assume sec or min prefix
         if (rt.startsWith("sec") || rt.startsWith("min")) {
             this.rtUnit = rt.substring(0, 3);
-			this.rt = parseDoubleString(rt.substring(4));
+            this.rt = parseDoubleString(rt.substring(4));
         } else {
             this.rtUnit = "sec";
-			this.rt = parseDoubleString(rt);
+            this.rt = parseDoubleString(rt);
         }
 
     }
-	
-	public void handleSynonGmdLink(String link) {
-		try {
-			this.link = new URL(link);
-		} catch (MalformedURLException ex) {
-			log.error("Exception while parsing: ", ex);
-		}
-		this.id = link.substring(link.lastIndexOf("/")+1,link.length());
-		this.id = this.id.substring(this.id.lastIndexOf("."));
-	}
+
+    public void handleSynonGmdLink(String link) {
+        try {
+            this.link = new URL(link);
+        } catch (MalformedURLException ex) {
+            log.error("Exception while parsing: ", ex);
+        }
+        this.id = link.substring(link.lastIndexOf("/") + 1, link.length());
+        this.id = this.id.substring(this.id.lastIndexOf("."));
+    }
 
     public void handleSynonMATCH(String match) {
         System.out.println("IGNORING ATTRIBUTE MATCH=" + match);
@@ -308,7 +304,7 @@ public class MSPFormatMetaboliteParser2 {
 
     public void handleMW(String mw) {
         // System.out.println("MW: "+mw);
-		this.mw = parseDoubleString(mw);
+        this.mw = parseDoubleString(mw);
     }
 
     protected double parseDoubleString(String number) {
@@ -320,12 +316,12 @@ public class MSPFormatMetaboliteParser2 {
             num = parsedNumber.doubleValue();
         } catch (ParseException ex) {
             log.error("Exception while parsing: ", ex);
-			throw new RuntimeException(ex);
+            throw new RuntimeException(ex);
         }
         return num;
     }
-	
-	protected int parseIntString(String number) {
+
+    protected int parseIntString(String number) {
         int num = -1;
         NumberFormat nf = NumberFormat.getInstance(locale);
         Number parsedNumber;
@@ -334,7 +330,7 @@ public class MSPFormatMetaboliteParser2 {
             num = parsedNumber.intValue();
         } catch (ParseException ex) {
             log.error("Exception while parsing: ", ex);
-			throw new RuntimeException(ex);
+            throw new RuntimeException(ex);
         }
         return num;
     }
@@ -387,12 +383,12 @@ public class MSPFormatMetaboliteParser2 {
 //                System.out.println(Arrays.toString(pair));
                 if (pair.length == 2) {
                     this.masses.set(this.points,
-                            parseDoubleString(pair[0].trim()));
+                        parseDoubleString(pair[0].trim()));
                     this.intensities.set(this.points, parseIntString(pair[1].trim()));
                     this.points++;
                 } else {
                     System.err.println("Incorrect split result for pair: " + p
-                            + "! Omitting rest!");
+                        + "! Omitting rest!");
                     return;
                 }
             }
@@ -447,13 +443,13 @@ public class MSPFormatMetaboliteParser2 {
 
         @Override
         public int size() {
-            return (int)records;
+            return (int) records;
         }
 
         @Override
         public IMetabolite get(int i) {
             try {
-                System.out.println("Retrieving index "+i);
+                System.out.println("Retrieving index " + i);
                 raf = new RandomAccessFile(f, "r");
                 raf.seek(metaboliteStartIndices.get(i));
                 long end = raf.length();
@@ -509,17 +505,17 @@ public class MSPFormatMetaboliteParser2 {
 
         @Override
         public long sizeLong() {
-            return (int)size();
+            return (int) size();
         }
 
         @Override
         public IMetabolite get(long l) {
-            return get((int)l);
+            return get((int) l);
         }
 
         @Override
         public List<IMetabolite> get(long start, long stop) {
-            return get((int)start,(int)stop);
+            return get((int) start, (int) stop);
         }
     }
 
@@ -562,7 +558,7 @@ public class MSPFormatMetaboliteParser2 {
             ObjectContainer db = Db4oEmbedded.openFile(args[0]);
             EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
             configuration.common().objectClass("maltcms.ms.IMetabolite").cascadeOnUpdate(
-                    true);
+                true);
             String[] files = new String[args.length - 1];
             System.arraycopy(args, 1, files, 0, files.length);
             try {
@@ -582,7 +578,7 @@ public class MSPFormatMetaboliteParser2 {
                         }
                     });
                     System.out.println("DB holding " + numMet.size()
-                            + " metabolites!");
+                        + " metabolites!");
                     int i = 0;
                     int size = al.size();
                     for (IMetabolite me : al) {
@@ -605,7 +601,7 @@ public class MSPFormatMetaboliteParser2 {
                         // });
                         // if(os.size() == 0) {
                         System.out.println("Adding metabolite " + (i + 1) + "/"
-                                + size + " :" + me.getName() + " to db!");
+                            + size + " :" + me.getName() + " to db!");
                         System.out.println("ID: " + ID);
                         db.store(me);
                         // }else if(os.size()==1) {
@@ -627,8 +623,8 @@ public class MSPFormatMetaboliteParser2 {
                 }
                 int committed = db.query(IMetabolite.class).size();
                 System.out.println("Processed " + cnt
-                        + " Metabolites, total in database: "
-                        + committed + "!");
+                    + " Metabolites, total in database: "
+                    + committed + "!");
                 db.close();
 
             } finally {
@@ -637,7 +633,7 @@ public class MSPFormatMetaboliteParser2 {
 
         } else {
             System.out.println(
-                    "Usage: MSPFormatMetaboliteParser <OUTFILE> <INFILE_1> ... <INFILE_N>");
+                "Usage: MSPFormatMetaboliteParser <OUTFILE> <INFILE_1> ... <INFILE_N>");
         }
         System.exit(0);
     }

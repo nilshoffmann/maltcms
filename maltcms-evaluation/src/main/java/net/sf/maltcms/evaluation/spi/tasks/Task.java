@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,6 +27,7 @@
  */
 package net.sf.maltcms.evaluation.spi.tasks;
 
+import com.db4o.config.annotations.Indexed;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -35,8 +36,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.db4o.config.annotations.Indexed;
 import net.sf.maltcms.evaluation.api.tasks.IPostProcessor;
 import net.sf.maltcms.evaluation.api.tasks.ITask;
 import net.sf.maltcms.evaluation.api.tasks.ITaskResult;
@@ -69,14 +68,14 @@ public class Task implements ITask<ITaskResult> {
     @Override
     public ITaskResult call() throws Exception {
         ProcessBuilder pb = new ProcessBuilder(commandLine).directory(
-                workingDirectory).redirectErrorStream(true);
+            workingDirectory).redirectErrorStream(true);
         pb.environment().putAll(additionalEnvironment);
         System.out.println(pb.environment());
         Process p = pb.start();
         try {
             String line;
-            BufferedReader input =
-                    new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader input
+                = new BufferedReader(new InputStreamReader(p.getInputStream()));
             while ((line = input.readLine()) != null) {
                 System.out.println(line);
             }
@@ -87,7 +86,7 @@ public class Task implements ITask<ITaskResult> {
         int status = p.waitFor();
         if (status != 0) {
             throw new RuntimeException(
-                    "Task finished with non-zero exit status: " + status + "\n Commandline: " + commandLine + ", working directory: " + workingDirectory);
+                "Task finished with non-zero exit status: " + status + "\n Commandline: " + commandLine + ", working directory: " + workingDirectory);
         }
         for (IPostProcessor postProcessor : postProcessors) {
             postProcessor.process(this);
@@ -98,7 +97,7 @@ public class Task implements ITask<ITaskResult> {
             return new MaltcmsTaskResult(outputDirectory);
         }
         Logger.getLogger(Task.class.getName()).
-                log(Level.INFO, "Output directory for task " + getTaskId() + " was removed by post processor!");
+            log(Level.INFO, "Output directory for task " + getTaskId() + " was removed by post processor!");
         //otherwise return the singleton empty result
         return DefaultTaskResult.EMPTY;
     }

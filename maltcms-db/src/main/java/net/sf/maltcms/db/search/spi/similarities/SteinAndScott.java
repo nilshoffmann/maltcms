@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,16 +27,14 @@
  */
 package net.sf.maltcms.db.search.spi.similarities;
 
-import maltcms.datastructures.ms.IMetabolite;
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
 import cross.datastructures.tuple.Tuple2D;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
+import maltcms.datastructures.ms.IMetabolite;
 import net.sf.maltcms.db.search.api.similarities.AMetabolitePredicate;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
 @ServiceProvider(service = AMetabolitePredicate.class)
@@ -46,12 +44,12 @@ public class SteinAndScott extends AMetabolitePredicate {
     private AMDISMSSimilarity iadc = new AMDISMSSimilarity();
     private double resolution = 1.0d;
     private double lastMin = Double.POSITIVE_INFINITY,
-            lastMax = Double.NEGATIVE_INFINITY;
+        lastMax = Double.NEGATIVE_INFINITY;
     private boolean normalize = true;
     private final Comparator<Tuple2D<Double, IMetabolite>> comparator = Collections.reverseOrder(new Comparator<Tuple2D<Double, IMetabolite>>() {
         @Override
         public int compare(Tuple2D<Double, IMetabolite> t,
-                Tuple2D<Double, IMetabolite> t1) {
+            Tuple2D<Double, IMetabolite> t1) {
             if (t.getFirst() > t1.getFirst()) {
                 return 1;
             } else if (t.getFirst() < t1.getFirst()) {
@@ -94,7 +92,7 @@ public class SteinAndScott extends AMetabolitePredicate {
     }
 
     protected double similarity(Array massesRef, Array intensitiesRef,
-            Array massesQuery, Array intensitiesQuery, double mw) {
+        Array massesQuery, Array intensitiesQuery, double mw) {
         return iadc.apply(new Tuple2D<Array, Array>(massesRef, intensitiesRef), new Tuple2D<Array, Array>(massesQuery, intensitiesQuery));
     }
 
@@ -109,11 +107,11 @@ public class SteinAndScott extends AMetabolitePredicate {
         s1 = filterMaskedMasses(m1, s1);
         s2 = filterMaskedMasses(m2, s2);
         double sim = similarity(m1, s1, m2, s2,
-                et.getMW());
+            et.getMW());
         System.out.println("Similarity score: " + sim);
         if (sim >= getScoreThreshold()) {
             Tuple2D<Double, IMetabolite> tple = new Tuple2D<Double, IMetabolite>(
-                    sim, et);
+                sim, et);
             getScoreMap().add(tple);
             return true;
         }

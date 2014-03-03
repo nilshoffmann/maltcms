@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,8 +27,10 @@
  */
 package maltcms.commands.distances;
 
+import cross.Factory;
+import cross.IConfigurable;
+import cross.annotations.Configurable;
 import java.awt.Rectangle;
-import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,21 +41,15 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import maltcms.datastructures.array.IArrayD2Double;
-
-import org.apache.commons.configuration.Configuration;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import cross.Factory;
-import cross.IConfigurable;
-import cross.annotations.Configurable;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.array.IArrayD2Double;
+import org.apache.commons.configuration.Configuration;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
 
 /**
  * Class used to calculate a pairwise score or cost between mass-spectra.
@@ -81,11 +77,11 @@ public class PairwiseFeatureSimilarity implements IConfigurable {
     private IArrayD2Double pad = null;
 
     private void calcPWD(final Executor e,
-            final Collection<Callable<Integer>> solvers,
-            final IArrayD2Double pairwiseDistance) throws InterruptedException,
-            ExecutionException {
+        final Collection<Callable<Integer>> solvers,
+        final IArrayD2Double pairwiseDistance) throws InterruptedException,
+        ExecutionException {
         final CompletionService<Integer> ecs = new ExecutorCompletionService<Integer>(
-                e);
+            e);
         for (final Callable<Integer> s : solvers) {
             ecs.submit(s);
         }
@@ -100,7 +96,7 @@ public class PairwiseFeatureSimilarity implements IConfigurable {
             }
         }
         log.info("Calculated {}/{} similarities/distances", cnt,
-                pairwiseDistance.getNumberOfStoredElements());
+            pairwiseDistance.getNumberOfStoredElements());
     }
 
     /**
@@ -113,18 +109,18 @@ public class PairwiseFeatureSimilarity implements IConfigurable {
      * @param query
      */
     public void calculatePairwiseDistances(final IArrayD2Double d,
-            final ArrayDouble.D1 satRef1, final ArrayDouble.D1 satQuery1,
-            final List<Array> ref, final List<Array> query) {
+        final ArrayDouble.D1 satRef1, final ArrayDouble.D1 satQuery1,
+        final List<Array> ref, final List<Array> query) {
         if (this.nthreads == 1) {
             log.info("Skipping precalculation, only one thread available!");
             return;
         }
 
         final ArrayDouble.D1 satRef = (satRef1 == null) ? new ArrayDouble.D1(
-                ref.size()) : satRef1;
+            ref.size()) : satRef1;
         final ArrayDouble.D1 satQuery = (satQuery1 == null) ? new ArrayDouble.D1(
-                query.size())
-                : satQuery1;
+            query.size())
+            : satQuery1;
 
         final int rows = ref.size();
         final int cols = query.size();
@@ -138,21 +134,21 @@ public class PairwiseFeatureSimilarity implements IConfigurable {
         // int threadpoolsize = Math.max(1, Math.min(50, Math.max(sx, sy)/10));
         // ExecutorService es = Executors.newFixedThreadPool(nthreads);
         log.info("Precalculating the distance matrix with {} thread(s)!",
-                this.nthreads);
+            this.nthreads);
         final int tilesRows = 2;
         final int tilesCols = 2;
         final int tileSizeRows = (int) Math.ceil((float) rows
-                / (float) tilesRows);
+            / (float) tilesRows);
         final int tileSizeCols = (int) Math.ceil((float) cols
-                / (float) tilesCols);
+            / (float) tilesCols);
         final ArrayList<Callable<Integer>> solvers = new ArrayList<Callable<Integer>>();
         for (i = 0; i < tilesRows; i++) {
             for (j = 0; j < tilesCols; j++) {
                 final Rectangle r = new Rectangle(i * tileSizeCols, j
-                        * tileSizeRows, tileSizeCols, tileSizeRows);
+                    * tileSizeRows, tileSizeCols, tileSizeRows);
                 log.debug("Creating rectangle: {}", r);
                 final PartitionCalculator pc = new PartitionCalculator(r,
-                        this.pad, satRef, satQuery, ref, query);
+                    this.pad, satRef, satQuery, ref, query);
                 pc.configure(Factory.getInstance().getConfiguration());
                 solvers.add(pc);
             }
@@ -190,7 +186,7 @@ public class PairwiseFeatureSimilarity implements IConfigurable {
 //        return this.similarityFunction;
 //    }
     public double getDistance(final int i, final int j, final double time_i,
-            final double time_j, final Array a, final Array b) {
+        final double time_j, final Array a, final Array b) {
         double d = 0.0d;
         if (this.pad == null) {
             d = this.similarityFunction.apply(i, j, time_i, time_j, a, b);

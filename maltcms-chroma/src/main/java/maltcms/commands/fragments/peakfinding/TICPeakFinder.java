@@ -70,139 +70,139 @@ import org.openide.util.lookup.ServiceProvider;
 @RequiresVariables(names = {"var.total_intensity"})
 @RequiresOptionalVariables(names = {"var.scan_acquisition_time"})
 @ProvidesVariables(names = {"var.tic_peaks", "var.tic_filtered", "andichrom.var.peak_name",
-	"andichrom.dimension.peak_number", "andichrom.var.peak_retention_time", "andichrom.var.peak_start_time",
-	"andichrom.var.peak_end_time", "andichrom.var.peak_area", "andichrom.var.baseline_start_time",
-	"andichrom.var.baseline_stop_time", "andichrom.var.baseline_start_value", "andichrom.var.baseline_stop_value"})
+    "andichrom.dimension.peak_number", "andichrom.var.peak_retention_time", "andichrom.var.peak_start_time",
+    "andichrom.var.peak_end_time", "andichrom.var.peak_area", "andichrom.var.baseline_start_time",
+    "andichrom.var.baseline_stop_time", "andichrom.var.baseline_start_value", "andichrom.var.baseline_stop_value"})
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class TICPeakFinder extends AFragmentCommand {
 
-	@Configurable
-	private double peakThreshold = 0.01d;
-	@Configurable
-	private boolean saveGraphics = false;
-	@Configurable
-	private boolean integratePeaks = false;
-	@Configurable
-	private boolean integrateTICPeaks = true;
-	@Configurable
-	private int snrWindow = 50;
-	@Configurable(name = "var.total_intensity")
-	private String ticVarName = "total_intensity";
-	@Configurable(name = "var.scan_acquisition_time")
-	private String satVarName = "scan_acquisition_time";
-	@Configurable
-	private String ticPeakVarName = "tic_peaks";
-	@Configurable
-	private String ticFilteredVarName = "tic_filtered";
-	@Configurable
-	private boolean integrateRawTic = true;
-	@Configurable
-	private int peakSeparationWindow = 10;
-	@Configurable
-	private boolean removeOverlappingPeaks = true;
-	@Configurable
-	private IBaselineEstimator baselineEstimator = new LoessMinimaBaselineEstimator();
-	@Configurable
-	private List<AArrayFilter> filter = Arrays.asList(
-		(AArrayFilter) new MultiplicationFilter());
-	@Configurable
-	private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
+    @Configurable
+    private double peakThreshold = 0.01d;
+    @Configurable
+    private boolean saveGraphics = false;
+    @Configurable
+    private boolean integratePeaks = false;
+    @Configurable
+    private boolean integrateTICPeaks = true;
+    @Configurable
+    private int snrWindow = 50;
+    @Configurable(name = "var.total_intensity")
+    private String ticVarName = "total_intensity";
+    @Configurable(name = "var.scan_acquisition_time")
+    private String satVarName = "scan_acquisition_time";
+    @Configurable
+    private String ticPeakVarName = "tic_peaks";
+    @Configurable
+    private String ticFilteredVarName = "tic_filtered";
+    @Configurable
+    private boolean integrateRawTic = true;
+    @Configurable
+    private int peakSeparationWindow = 10;
+    @Configurable
+    private boolean removeOverlappingPeaks = true;
+    @Configurable
+    private IBaselineEstimator baselineEstimator = new LoessMinimaBaselineEstimator();
+    @Configurable
+    private List<AArrayFilter> filter = Arrays.asList(
+        (AArrayFilter) new MultiplicationFilter());
+    @Configurable
+    private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
-	@Override
-	public String toString() {
-		return getClass().getName();
-	}
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
-	@Override
-	public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-		EvalTools.notNull(t, this);
-		log.info("Searching for peaks");
-		// create new ProgressResult
-		final DefaultWorkflowProgressResult dwpr = new DefaultWorkflowProgressResult(
-			t.getSize(), this, getWorkflowSlot());
-		ICompletionService<TICPeakFinderWorkerResult> completionService = createCompletionService(TICPeakFinderWorkerResult.class);
-		for (final IFileFragment f : t) {
-			List<IPeakNormalizer> peakNormalizerCopy = new ArrayList<IPeakNormalizer>();
-			for (IPeakNormalizer normalizer : peakNormalizers) {
-				peakNormalizerCopy.add((IPeakNormalizer) normalizer.copy());
-			}
-			TICPeakFinderWorker tpf = new TICPeakFinderWorker(
-				getWorkflow().getOutputDirectory(this),
-				f.getUri(),
-				integratePeaks,
-				integrateTICPeaks,
-				integrateRawTic,
-				saveGraphics,
-				removeOverlappingPeaks,
-				peakThreshold,
-				peakSeparationWindow,
-				snrWindow,
-				(IBaselineEstimator) baselineEstimator.copy(),
-				BatchFilter.copy(filter),
-				peakNormalizerCopy,
-				ticVarName,
-				satVarName,
-				ticPeakVarName,
-				ticFilteredVarName,
-				ConfigurationConverter.getProperties(Factory.getInstance().getConfiguration())
-			);
-			completionService.submit(tpf);
-			// notify workflow
-		}
-		try {
-			List<URI> resultsUris = new ArrayList<URI>();
-			List<TICPeakFinderWorkerResult> results = completionService.call();
-			for (TICPeakFinderWorkerResult res : results) {
-				resultsUris.add(res.getResultUri());
-				for (WorkflowResult wf : res.getWorkflowResults()) {
-					getWorkflow().append(new DefaultWorkflowResult(wf.getResource(), this, wf.getWorkflowSlot(), wf.getResources()));
-				}
-				getWorkflow().append(dwpr.nextStep());
-			}
-			TupleND<IFileFragment> resultFragments = mapToInputUri(resultsUris, t);
-			addWorkflowResults(resultFragments);
-			return resultFragments;
-		} catch (Exception e) {
-			log.warn("Caught exception while waiting for results: ", e);
-		}
-		return new TupleND<IFileFragment>();
-	}
+    @Override
+    public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
+        EvalTools.notNull(t, this);
+        log.info("Searching for peaks");
+        // create new ProgressResult
+        final DefaultWorkflowProgressResult dwpr = new DefaultWorkflowProgressResult(
+            t.getSize(), this, getWorkflowSlot());
+        ICompletionService<TICPeakFinderWorkerResult> completionService = createCompletionService(TICPeakFinderWorkerResult.class);
+        for (final IFileFragment f : t) {
+            List<IPeakNormalizer> peakNormalizerCopy = new ArrayList<IPeakNormalizer>();
+            for (IPeakNormalizer normalizer : peakNormalizers) {
+                peakNormalizerCopy.add((IPeakNormalizer) normalizer.copy());
+            }
+            TICPeakFinderWorker tpf = new TICPeakFinderWorker(
+                getWorkflow().getOutputDirectory(this),
+                f.getUri(),
+                integratePeaks,
+                integrateTICPeaks,
+                integrateRawTic,
+                saveGraphics,
+                removeOverlappingPeaks,
+                peakThreshold,
+                peakSeparationWindow,
+                snrWindow,
+                (IBaselineEstimator) baselineEstimator.copy(),
+                BatchFilter.copy(filter),
+                peakNormalizerCopy,
+                ticVarName,
+                satVarName,
+                ticPeakVarName,
+                ticFilteredVarName,
+                ConfigurationConverter.getProperties(Factory.getInstance().getConfiguration())
+            );
+            completionService.submit(tpf);
+            // notify workflow
+        }
+        try {
+            List<URI> resultsUris = new ArrayList<URI>();
+            List<TICPeakFinderWorkerResult> results = completionService.call();
+            for (TICPeakFinderWorkerResult res : results) {
+                resultsUris.add(res.getResultUri());
+                for (WorkflowResult wf : res.getWorkflowResults()) {
+                    getWorkflow().append(new DefaultWorkflowResult(wf.getResource(), this, wf.getWorkflowSlot(), wf.getResources()));
+                }
+                getWorkflow().append(dwpr.nextStep());
+            }
+            TupleND<IFileFragment> resultFragments = mapToInputUri(resultsUris, t);
+            addWorkflowResults(resultFragments);
+            return resultFragments;
+        } catch (Exception e) {
+            log.warn("Caught exception while waiting for results: ", e);
+        }
+        return new TupleND<IFileFragment>();
+    }
 
-	@Override
-	public void configure(final Configuration cfg) {
-		log.debug("Configure called on TICPeakFinder");
-		this.ticPeakVarName = cfg.getString("var.tic_peaks", "tic_peaks");
-		this.ticVarName = cfg.getString("var.total_intensity",
-			"total_intensity");
-		this.satVarName = cfg.getString("var.scan_acquisition_time",
-			"scan_acquisition_time");
-		this.ticPeakVarName = cfg.getString("var.tic_peaks", "tic_peaks");
-		this.ticFilteredVarName = cfg.getString("var.tic_filtered",
-			"tic_filtered");
-	}
+    @Override
+    public void configure(final Configuration cfg) {
+        log.debug("Configure called on TICPeakFinder");
+        this.ticPeakVarName = cfg.getString("var.tic_peaks", "tic_peaks");
+        this.ticVarName = cfg.getString("var.total_intensity",
+            "total_intensity");
+        this.satVarName = cfg.getString("var.scan_acquisition_time",
+            "scan_acquisition_time");
+        this.ticPeakVarName = cfg.getString("var.tic_peaks", "tic_peaks");
+        this.ticFilteredVarName = cfg.getString("var.tic_filtered",
+            "tic_filtered");
+    }
 
-	/**
-	 *
-	 * @return
-	 */
-	@Override
-	public String getDescription() {
-		return "Finds peaks based on total ion current (TIC), using a simple extremum search within a window, combined with a signal-to-noise parameter to select peaks.";
-	}
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String getDescription() {
+        return "Finds peaks based on total ion current (TIC), using a simple extremum search within a window, combined with a signal-to-noise parameter to select peaks.";
+    }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
-	 */
-	/**
-	 *
-	 * @return
-	 */
-	@Override
-	public WorkflowSlot getWorkflowSlot() {
-		return WorkflowSlot.PEAKFINDING;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
+     */
+    /**
+     *
+     * @return
+     */
+    @Override
+    public WorkflowSlot getWorkflowSlot() {
+        return WorkflowSlot.PEAKFINDING;
+    }
 }

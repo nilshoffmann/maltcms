@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,37 +27,34 @@
  */
 package net.sf.maltcms.maltcms.commands;
 
+import cross.commands.fragments.AFragmentCommand;
+import cross.commands.fragments.IFragmentCommand;
+import cross.datastructures.workflow.IWorkflow;
+import cross.test.IntegrationTest;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.filters.array.AArrayFilter;
+import maltcms.commands.filters.array.SavitzkyGolayFilter;
+import maltcms.commands.fragments.alignment.CenterStarAlignment;
 import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.commands.fragments.cluster.PairwiseDistanceCalculator;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.TicDtwWorkerFactory;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
+import maltcms.commands.fragments.preprocessing.ScanExtractor;
+import maltcms.commands.fragments.warp.ChromatogramWarp2;
 import maltcms.math.functions.DtwPairwiseSimilarity;
 import maltcms.math.functions.similarities.ArrayLp;
 import maltcms.test.AFragmentCommandTest;
-
-import org.junit.Test;
-
-import cross.commands.fragments.AFragmentCommand;
-import cross.commands.fragments.IFragmentCommand;
-import cross.datastructures.workflow.IWorkflow;
-import java.util.LinkedList;
-import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.filters.array.AArrayFilter;
-import maltcms.commands.filters.array.SavitzkyGolayFilter;
-import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
-import cross.test.IntegrationTest;
-import java.io.IOException;
-import maltcms.commands.fragments.alignment.CenterStarAlignment;
-import maltcms.commands.fragments.preprocessing.ScanExtractor;
-import maltcms.commands.fragments.warp.ChromatogramWarp2;
 import maltcms.test.ExtractClassPathFiles;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 /**
@@ -70,10 +67,10 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
-            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
+        "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
 
     @Test
-    public void testCemappDtwTICFull() throws IOException  {
+    public void testCemappDtwTICFull() throws IOException {
         File outputBase = tf.newFolder("testCemappDtwFullTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         ScanExtractor se = new ScanExtractor();
@@ -83,11 +80,11 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
         commands.add(se);
         commands.add(new DenseArrayProducer());
         commands.add(createPairwiseDistanceCalculatorTIC(false, 0, true,
-                1.0d));
-		commands.add(new CenterStarAlignment());
-		ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
+            1.0d));
+        commands.add(new CenterStarAlignment());
+        ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
-		commands.add(cwarp2);
+        commands.add(cwarp2);
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }
@@ -115,7 +112,7 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
      *
      */
     @Test
-    public void testCemappDtwTICConstrained() throws IOException  {
+    public void testCemappDtwTICConstrained() throws IOException {
         File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         commands.add(new DefaultVarLoader());
@@ -138,10 +135,10 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
         commands.add(tpf);
         commands.add(new PeakCliqueAlignment());
         commands.add(createPairwiseDistanceCalculatorTIC(true, 5, false, 0.25d));
-		commands.add(new CenterStarAlignment());
-		ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
+        commands.add(new CenterStarAlignment());
+        ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
-		commands.add(cwarp2);
+        commands.add(cwarp2);
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }

@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -36,7 +36,6 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableFileFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tools.EvalTools;
-
 import java.io.File;
 import java.io.Serializable;
 import java.net.URI;
@@ -97,9 +96,9 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
 
         log.info("Loading scans for file {}", output.getName());
         MaltcmsTools.prepareDenseArraysMZI(input, output,
-                scanIndex, massValues, intensityValues,
-                binnedScanIndex, binnedMassValues,
-                binnedIntensityValues, minMass, maxMass, null);
+            scanIndex, massValues, intensityValues,
+            binnedScanIndex, binnedMassValues,
+            binnedIntensityValues, minMass, maxMass, null);
         log.debug("Loaded scans for file {}, stored in {}", fileToLoad, fileToSave);
         log.debug("Source Files of f={} : {}", output, output.getSourceFiles());
         final int bins = MaltcmsTools.getNumberOfIntegerMassBins(minMass, maxMass, massBinResolution);
@@ -144,7 +143,7 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
      * @param bins
      */
     protected void maskMasses(final IFileFragment f, final double minMass, final double maxMass, final double massBinResolution,
-            final int bins, final List<Double> maskedMasses, final boolean invertMaskedMasses, final String binnedIntensityVariable, final String binnedScanIndexVariable, final String totalIntensityVariable) {
+        final int bins, final List<Double> maskedMasses, final boolean invertMaskedMasses, final String binnedIntensityVariable, final String binnedScanIndexVariable, final String totalIntensityVariable) {
         // set masked masschannels to zero intensity
         if ((maskedMasses != null) && !maskedMasses.isEmpty()) {
             log.info("Filtering masked masses!");
@@ -153,18 +152,18 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
                 ArrayTools.fill(selector, 1.0d);
                 for (final Double integ : maskedMasses) {
                     log.info("Retaining mass {} at index {}", integ,
-                            MaltcmsTools.binMZ(integ, minMass, maxMass, massBinResolution));
+                        MaltcmsTools.binMZ(integ, minMass, maxMass, massBinResolution));
 
                     selector.set(MaltcmsTools.binMZ(integ, minMass,
-                            maxMass, massBinResolution), 0.0d);
+                        maxMass, massBinResolution), 0.0d);
                     // - (int) (Math.floor(minmax.getFirst())), 0.0d);
                 }
             } else {
                 for (final Double integ : maskedMasses) {
                     log.info("Filtering mass {} at index {}", integ,
-                            MaltcmsTools.binMZ(integ, minMass, maxMass, massBinResolution));
+                        MaltcmsTools.binMZ(integ, minMass, maxMass, massBinResolution));
                     selector.set(MaltcmsTools.binMZ(integ, minMass,
-                            maxMass, massBinResolution), 1.0d);
+                        maxMass, massBinResolution), 1.0d);
                     // - (int) (Math.floor(minmax.getFirst())), 1.0d);
                 }
             }
@@ -174,7 +173,7 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
             // TIC
             // in this case, we shadow previous definitions
             final IVariableFragment total_intens = f.hasChild(totalIntensityVariable) ? f.getChild(totalIntensityVariable) : new VariableFragment(f,
-                    totalIntensityVariable);
+                totalIntensityVariable);
             final Array tan = Array.factory(DataType.DOUBLE, sidx.getArray().getShape());
             final Index tanidx = tan.getIndex();
             ivf.setIndex(sidx);
@@ -231,7 +230,7 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
             for (int i = 0; i < normIntens.size(); i++) {
                 final Array a = normIntens.get(i);
                 normIntens.set(i, ArrayTools.div(ArrayTools.diff(a, mean),
-                        var));
+                    var));
             }
         } else if (normalizeEicsToUnity) {
             log.info("Normalizing by subtracting min and dividing by max-min!");
@@ -247,7 +246,7 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
             for (int i = 0; i < normIntens.size(); i++) {
                 final Array a = normIntens.get(i);
                 normIntens.set(i, ArrayTools.div(ArrayTools.diff(a, min),
-                        max));
+                    max));
             }
         }
         if (normalizeScans) {

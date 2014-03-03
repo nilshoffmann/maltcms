@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,25 +27,6 @@
  */
 package maltcms.commands.distances.dtwng;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import maltcms.datastructures.array.IArrayD2Double;
-import maltcms.datastructures.array.IFeatureVector;
-import maltcms.tools.PathTools;
-
-import org.apache.commons.configuration.Configuration;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.DataType;
-import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
@@ -53,6 +34,22 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.tools.MathTools;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import maltcms.datastructures.array.IArrayD2Double;
+import maltcms.datastructures.array.IFeatureVector;
+import maltcms.tools.PathTools;
+import org.apache.commons.configuration.Configuration;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.DataType;
+import ucar.nc2.Dimension;
 
 /**
  *
@@ -132,8 +129,8 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
 
     @Override
     public void init(List<IFeatureVector> l, List<IFeatureVector> r,
-            IArrayD2Double cumulatedScore, IArrayD2Double pwScores,
-            TwoFeatureVectorOperation tfvo) {
+        IArrayD2Double cumulatedScore, IArrayD2Double pwScores,
+        TwoFeatureVectorOperation tfvo) {
         this.l = l;
         this.r = r;
         this.cumulatedScores = cumulatedScore;
@@ -152,19 +149,19 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
     @Override
     public void apply(int... current) {
         cumDistM(current[0], current[1], l.get(current[0]), r.get(current[1]),
-                cumulatedScores, pwScores, traceMatrix);
+            cumulatedScores, pwScores, traceMatrix);
     }
 
     private State cumDistM(final int row, final int column, IFeatureVector l,
-            IFeatureVector r, final IArrayD2Double cumDistMatrix,
-            final IArrayD2Double pwvalues, final State[][] predecessors) {
+        IFeatureVector r, final IArrayD2Double cumDistMatrix,
+        final IArrayD2Double pwvalues, final State[][] predecessors) {
         final double cij = this.tfvo.apply(l, r);
         pwvalues.set(row, column, cij);
         // System.out.println(l.getFeature("FEATURE0") + " gegen " +
         // r.getFeature("FEATURE0") + ":" + cij);
         // System.out.println("Score(" + row + "," + column + ")=" + cij);
         final double init = this.minimize ? Double.POSITIVE_INFINITY
-                : Double.NEGATIVE_INFINITY;
+            : Double.NEGATIVE_INFINITY;
         double n = init, w = init, nw = init;
         if ((row == 0) && (column == 0)) {
             nw = weights[NW.ordinal()] * cij;
@@ -176,7 +173,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
             return NW;
         } else if ((row > 0) && (column == 0)) {
             n = ((weights[N.ordinal()] * cij) + cumDistMatrix.get(row - 1, 0))
-                    + this.ins;
+                + this.ins;
             // System.out.println("i="+row+" j="+column+" cij = "+cij +
             // ", n= "+n);
             cumDistMatrix.set(row, column, n);
@@ -195,14 +192,14 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
             return W;
         } else {
             n = (weights[N.ordinal()] * cij)
-                    + cumDistMatrix.get(row - 1, column) + this.ins;
+                + cumDistMatrix.get(row - 1, column) + this.ins;
             nw = (weights[NW.ordinal()] * cij)
-                    + cumDistMatrix.get(row - 1, column - 1);
+                + cumDistMatrix.get(row - 1, column - 1);
             w = (weights[W.ordinal()] * cij)
-                    + cumDistMatrix.get(row, column - 1) + this.del;
+                + cumDistMatrix.get(row, column - 1) + this.del;
 
             final double m = minimize ? MathTools.min(n, w, nw) : MathTools.max(
-                    n, w, nw);
+                n, w, nw);
             cumDistMatrix.set(row, column, m);
             // System.out.println("Scores: " + m + " | " + nw + " | " + n +
             // " | "
@@ -266,7 +263,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
                 }
                 default: {
                     throw new IllegalArgumentException(
-                            "Don't know how to handle predecessor of type " + val);
+                        "Don't know how to handle predecessor of type " + val);
                 }
             }
         }
@@ -310,15 +307,15 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
      * @param ia
      */
     private void getFragments(final IFileFragment parent, final List<Point> al,
-            final IArrayD2Double ia) {
+        final IArrayD2Double ia) {
         final Tuple2D<Array, Array> t = PathTools.pointListToArrays(al);
         final Dimension d = new Dimension("steps", al.size(), true, false,
-                false);
+            false);
         final IVariableFragment pathDist = new VariableFragment(parent, Factory.
-                getInstance().getConfiguration().getString(
+            getInstance().getConfiguration().getString(
                 "var.warp_path_distance", "warp_path_distance"));
         final IVariableFragment wpi = new VariableFragment(parent, Factory.
-                getInstance().getConfiguration().getString("var.warp.path.i",
+            getInstance().getConfiguration().getString("var.warp.path.i",
                 "warp_path_i"));
         wpi.setDimensions(new Dimension[]{d});
         pathDist.setDimensions(new Dimension[]{d});
@@ -330,7 +327,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
         }
         pathDist.setArray(dists);
         final IVariableFragment wpj = new VariableFragment(parent, Factory.
-                getInstance().getConfiguration().getString("var.warp.path.j",
+            getInstance().getConfiguration().getString("var.warp.path.j",
                 "warp_path_j"));
         wpj.setDimensions(new Dimension[]{d});
         wpi.setArray(t.getFirst());
@@ -339,7 +336,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.experimental.datastructures.IFileFragmentModifier#decorate(cross
      * .datastructures.fragments.IFileFragment)
@@ -347,25 +344,25 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
     public void modify(IFileFragment iff) {
         if (this.saveCDM) {
             final IVariableFragment vf = new VariableFragment(iff,
-                    this.cumulativeDistanceVariableName, null);
+                this.cumulativeDistanceVariableName, null);
             vf.setDimensions(new Dimension[]{
-                        new Dimension("reference_scan", this.l.size(), true,
-                        false,
-                        false),
-                        new Dimension("query_scan", this.r.size(), true, false,
-                        false)});
+                new Dimension("reference_scan", this.l.size(), true,
+                false,
+                false),
+                new Dimension("query_scan", this.r.size(), true, false,
+                false)});
             vf.setDataType(DataType.DOUBLE);
             vf.setArray(this.cumulatedScores.getArray());
         }
         if (this.savePWDM) {
             final IVariableFragment vf = new VariableFragment(iff,
-                    this.pairwiseDistanceVariableName, null);
+                this.pairwiseDistanceVariableName, null);
             vf.setDimensions(new Dimension[]{
-                        new Dimension("reference_scan", this.l.size(), true,
-                        false,
-                        false),
-                        new Dimension("query_scan", this.r.size(), true, false,
-                        false)});
+                new Dimension("reference_scan", this.l.size(), true,
+                false,
+                false),
+                new Dimension("query_scan", this.r.size(), true, false,
+                false)});
             vf.setDataType(DataType.DOUBLE);
             vf.setArray(this.pwScores.getArray());
         }
@@ -374,7 +371,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
      * )
@@ -382,20 +379,20 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
     @Override
     public void configure(Configuration cfg) {
         this.saveCDM = cfg.getBoolean(
-                "alignment.save.cumulative.distance.matrix", false);
+            "alignment.save.cumulative.distance.matrix", false);
         this.savePWDM = cfg.getBoolean(
-                "alignment.save.pairwise.distance.matrix", false);
+            "alignment.save.pairwise.distance.matrix", false);
         this.cumulativeDistanceVariableName = cfg.getString(
-                "var.alignment.cumulative_distance", "cumulative_distance");
+            "var.alignment.cumulative_distance", "cumulative_distance");
         this.pairwiseDistanceVariableName = cfg.getString(
-                "var.alignment.pairwise_distance", "pairwise_distance");
+            "var.alignment.pairwise_distance", "pairwise_distance");
         this.normalizeAlignmentValueByMapWeights = cfg.getBoolean(
-                "alignment.normalizeAlignmentValueByMapWeights", false);
+            "alignment.normalizeAlignmentValueByMapWeights", false);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.experimental.operations.IOptimizationFunction#getOptimalValue()
      */
@@ -405,14 +402,14 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
             double[] vals = new double[this.opcounter.length];
             for (State s : State.values()) {
                 vals[s.ordinal()] = this.weights[s.ordinal()]
-                        * this.opcounter[s.ordinal()];
+                    * this.opcounter[s.ordinal()];
             }
             double sum = 0;
             for (double d : vals) {
                 sum += d;
             }
             return this.cumulatedScores.get(this.l.size() - 1,
-                    this.r.size() - 1) / sum;
+                this.r.size() - 1) / sum;
         }
         return this.cumulatedScores.get(this.l.size() - 1, this.r.size() - 1);
     }
@@ -420,10 +417,10 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
     public void showCumScoreMatrix() {
         System.out.println("");
         for (int i = 0; i < this.cumulatedScores.getShape().getBounds2D().
-                getMaxX(); i++) {
+            getMaxX(); i++) {
             System.out.print(i + ": ");
             for (int j = 0; j < this.cumulatedScores.getShape().getBounds2D().
-                    getMaxY(); j++) {
+                getMaxY(); j++) {
                 System.out.print(this.cumulatedScores.get(i, j) + " ");
             }
             System.out.println("");
@@ -443,7 +440,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.experimental.operations.IOptimizationFunction#getStates()
      */
     @Override

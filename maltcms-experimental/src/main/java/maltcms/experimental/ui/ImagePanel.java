@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -30,9 +30,7 @@ package maltcms.experimental.ui;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-
 import javax.swing.JPanel;
-
 import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ImageTools;
 import ucar.ma2.ArrayDouble;
@@ -50,11 +48,11 @@ public class ImagePanel extends JPanel {
     private BufferedImage bi = null;
 
     public void setData(final double[][] mat, final double[] masses1,
-            final double[] masses2) {
+        final double[] masses2) {
         BufferedImage bi = new BufferedImage(mat[0].length, mat.length,
-                BufferedImage.TYPE_INT_RGB);
+            BufferedImage.TYPE_INT_RGB);
         System.out.println("Creating image: " + mat.length + "x"
-                + mat[0].length);
+            + mat[0].length);
         double max = 0;
         double min = 0;
         ArrayDouble.D2 a = new ArrayDouble.D2(mat.length, mat[0].length);
@@ -70,9 +68,9 @@ public class ImagePanel extends JPanel {
         int[][] colorRamp = crr.getDefaultRamp();
         int samples = 1024;
         double[] d = ImageTools.getBreakpoints(a, samples,
-                Double.NEGATIVE_INFINITY);
+            Double.NEGATIVE_INFINITY);
         ImageTools.makeImage2D(bi.getRaster(), a.transpose(1, 0), samples,
-                colorRamp, 0.0, d);
+            colorRamp, 0.0, d);
         // double minMass = Math.min(masses1[0], masses2[0]);
         // double maxMass = Math.max(masses1[0], masses2[0]);
         // Graphics2D g2 = (Graphics2D)bi.getGraphics();
@@ -100,7 +98,7 @@ public class ImagePanel extends JPanel {
         if (this.bi != null) {
             // System.out.println("Painting image");
             setPreferredSize(new Dimension(this.bi.getWidth(), this.bi
-                    .getHeight()));
+                .getHeight()));
             g.drawImage(this.bi, 0, 0, getWidth(), getHeight(), null);
         }
     }

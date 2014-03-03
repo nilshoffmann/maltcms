@@ -53,81 +53,81 @@ import org.apache.commons.configuration.Configuration;
 @Data
 public class TicPeakPicking implements IPeakPicking {
 
-	@Configurable(name = "totalIntensityRedoVar", value = "total_intensity")
-	private String totalIntensityRedoVar = "total_intensity";
-	@Configurable(name = "totalIntensityVar", value = "total_intensity")
-	private String totalIntensityVar = "total_intensity";
-	@Configurable(name = "var.second_column_scan_index",
-		value = "second_column_scan_index")
-	private String secondScanIndexVar = "second_column_scan_index";
-	@Configurable(value = "1")
-	private int maxDx = 1;
-	@Configurable(value = "1")
-	private int maxDy = 1;
-	@Configurable(value = "-1")
-	private int minVerticalScanIndex = -1;
-	@Configurable(value = "100")
-	private int k = 100;
-	private QuadTree<Peak1D> quadTree;
+    @Configurable(name = "totalIntensityRedoVar", value = "total_intensity")
+    private String totalIntensityRedoVar = "total_intensity";
+    @Configurable(name = "totalIntensityVar", value = "total_intensity")
+    private String totalIntensityVar = "total_intensity";
+    @Configurable(name = "var.second_column_scan_index",
+        value = "second_column_scan_index")
+    private String secondScanIndexVar = "second_column_scan_index";
+    @Configurable(value = "1")
+    private int maxDx = 1;
+    @Configurable(value = "1")
+    private int maxDy = 1;
+    @Configurable(value = "-1")
+    private int minVerticalScanIndex = -1;
+    @Configurable(value = "100")
+    private int k = 100;
+    private QuadTree<Peak1D> quadTree;
 
-	@Override
-	public String toString() {
-		return getClass().getName();
-	}
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
-	private QuadTree<Peak1D> getQuadTree(IFileFragment ff) {
-		if (this.quadTree == null) {
-			IScanLine isl = ScanLineCacheFactory.getSparseScanLineCache(ff);
-			quadTree = new QuadTree<Peak1D>(0, 0, isl.getScanLineCount(), isl.getScansPerModulation(), 6);
-			for (Peak1D p : Peak1D.fromFragment(ff)) {
-				Point pt = isl.mapIndex(p.getApexIndex());
-				quadTree.put(new Point2D.Double(pt.x, pt.y), p);
-			}
-		}
-		return quadTree;
-	}
+    private QuadTree<Peak1D> getQuadTree(IFileFragment ff) {
+        if (this.quadTree == null) {
+            IScanLine isl = ScanLineCacheFactory.getSparseScanLineCache(ff);
+            quadTree = new QuadTree<Peak1D>(0, 0, isl.getScanLineCount(), isl.getScansPerModulation(), 6);
+            for (Peak1D p : Peak1D.fromFragment(ff)) {
+                Point pt = isl.mapIndex(p.getApexIndex());
+                quadTree.put(new Point2D.Double(pt.x, pt.y), p);
+            }
+        }
+        return quadTree;
+    }
 
-	@Override
-	public List<Point> findPeaks(IFileFragment ff) {
-		log.info("Running {} with:", this.getClass().getName());
-		log.info("	total_intensity: {}", this.totalIntensityVar);
-		List<Peak1D> peaks = Peak1D.fromFragment(ff);
-		IScanLine isl = ScanLineCacheFactory.getSparseScanLineCache(ff);
-		List<Point> pointList = new ArrayList<Point>();
-		for (Peak1D peak : peaks) {
-			pointList.add(isl.mapIndex(peak.getApexIndex()));
-		}
-		return pointList;
-	}
+    @Override
+    public List<Point> findPeaks(IFileFragment ff) {
+        log.info("Running {} with:", this.getClass().getName());
+        log.info("	total_intensity: {}", this.totalIntensityVar);
+        List<Peak1D> peaks = Peak1D.fromFragment(ff);
+        IScanLine isl = ScanLineCacheFactory.getSparseScanLineCache(ff);
+        List<Point> pointList = new ArrayList<Point>();
+        for (Peak1D peak : peaks) {
+            pointList.add(isl.mapIndex(peak.getApexIndex()));
+        }
+        return pointList;
+    }
 
-	public class PointComparator implements Comparator<Point> {
+    public class PointComparator implements Comparator<Point> {
 
-		@Override
-		public int compare(Point p1, Point p2) {
-			if (Double.compare(p1.x, p2.x) == 0) {
-				return Double.compare(p1.y, p2.y);
-			} else {
-				return Double.compare(p1.x, p2.x);
-			}
-		}
-	}
+        @Override
+        public int compare(Point p1, Point p2) {
+            if (Double.compare(p1.x, p2.x) == 0) {
+                return Double.compare(p1.y, p2.y);
+            } else {
+                return Double.compare(p1.x, p2.x);
+            }
+        }
+    }
 
-	@Override
-	public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
-		QuadTree<Peak1D> tree = getQuadTree(ff);
-		List<Tuple2D<Point2D, Peak1D>> l = tree.getChildrenInRange(new Rectangle2D.Double(p.x - dx, p.y - dy, 2 * dx, 2 * dy));
-		ArrayList<Point> al = new ArrayList<Point>();
-		for (Tuple2D<Point2D, Peak1D> t : l) {
-			al.add(new Point((int) t.getFirst().getX(), (int) t.getFirst().getY()));
-		}
-		return al;
-	}
+    @Override
+    public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
+        QuadTree<Peak1D> tree = getQuadTree(ff);
+        List<Tuple2D<Point2D, Peak1D>> l = tree.getChildrenInRange(new Rectangle2D.Double(p.x - dx, p.y - dy, 2 * dx, 2 * dy));
+        ArrayList<Point> al = new ArrayList<Point>();
+        for (Tuple2D<Point2D, Peak1D> t : l) {
+            al.add(new Point((int) t.getFirst().getX(), (int) t.getFirst().getY()));
+        }
+        return al;
+    }
 
-	@Override
-	public void configure(Configuration cfg) {
-		// this.totalIntensityVar = cfg.getString(SeededRegionGrowing.class
-		// .getName()
-		// + ".totalIntensityVar", "total_intensity");
+    @Override
+    public void configure(Configuration cfg) {
+        // this.totalIntensityVar = cfg.getString(SeededRegionGrowing.class
+        // .getName()
+        // + ".totalIntensityVar", "total_intensity");
 //        this.totalIntensityVar = cfg.getString(this.getClass().getName()
 //                + ".totalIntensityVar", "total_intensity");
 //        this.totalIntensityRedoVar = cfg.getString(this.getClass().getName()
@@ -137,5 +137,5 @@ public class TicPeakPicking implements IPeakPicking {
 //        this.minVerticalScanIndex = cfg.getInt(this.getClass().getName()
 //                + ".minVerticalScanIndex", -1);
 //        this.k = cfg.getInt(this.getClass().getName() + ".k", 100);
-	}
+    }
 }

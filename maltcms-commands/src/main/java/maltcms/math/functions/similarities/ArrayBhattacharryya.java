@@ -40,51 +40,51 @@ import ucar.ma2.Array;
 @NotThreadSafe
 public class ArrayBhattacharryya implements IArraySimilarity {
 
-	private final ObjectDoubleOpenHashMap<Array> cache;
+    private final ObjectDoubleOpenHashMap<Array> cache;
 
-	public ArrayBhattacharryya() {
-		cache = new ObjectDoubleOpenHashMap<>();
-	}
+    public ArrayBhattacharryya() {
+        cache = new ObjectDoubleOpenHashMap<>();
+    }
 
-	private double getSum(Array a) {
-		if (cache.size() > 5000) {
-			cache.clear();
-		}
-		if (!cache.containsKey(a)) {
-			double d = ArrayTools.integrate(a);
-			cache.put(a, d);
-		}
-		return cache.get(a);
-	}
+    private double getSum(Array a) {
+        if (cache.size() > 5000) {
+            cache.clear();
+        }
+        if (!cache.containsKey(a)) {
+            double d = ArrayTools.integrate(a);
+            cache.put(a, d);
+        }
+        return cache.get(a);
+    }
 
-	@Override
-	public double apply(Array t1,
-		Array t2) {
-		double s1 = 0, s2 = 0;
-		s1 = getSum(t1);
-		s2 = getSum(t2);
-		double sum = 0;
-		for (int i = 0; i < t1.getShape()[0]; i++) {
-			sum += Math.sqrt((t1.getDouble(i) / s1)
-				* (t2.getDouble(i) / s2));
-		}
-		//transformation into Hellinger distance
-		final double ret = Math.sqrt(1 - sum);
-		if (ret > 0.0d && ret <= 1.0d) {
-			return SimilarityTools.toSimilarity(ret);
-		}
-		return Double.NEGATIVE_INFINITY;
-	}
+    @Override
+    public double apply(Array t1,
+        Array t2) {
+        double s1 = 0, s2 = 0;
+        s1 = getSum(t1);
+        s2 = getSum(t2);
+        double sum = 0;
+        for (int i = 0; i < t1.getShape()[0]; i++) {
+            sum += Math.sqrt((t1.getDouble(i) / s1)
+                * (t2.getDouble(i) / s2));
+        }
+        //transformation into Hellinger distance
+        final double ret = Math.sqrt(1 - sum);
+        if (ret > 0.0d && ret <= 1.0d) {
+            return SimilarityTools.toSimilarity(ret);
+        }
+        return Double.NEGATIVE_INFINITY;
+    }
 
-	@Override
-	public IArraySimilarity copy() {
-		return new ArrayBhattacharryya();
-	}
+    @Override
+    public IArraySimilarity copy() {
+        return new ArrayBhattacharryya();
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getClass().getSimpleName()).append("{" + "}");
-		return sb.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName()).append("{" + "}");
+        return sb.toString();
+    }
 }

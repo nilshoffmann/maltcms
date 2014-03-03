@@ -37,6 +37,6 @@ import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
  */
 public interface IBaselineEstimator extends Serializable, ICopyable<IBaselineEstimator> {
 
-	PolynomialSplineFunction findBaseline(double[] values, double[] yvalues);
+    PolynomialSplineFunction findBaseline(double[] values, double[] yvalues);
 
 }

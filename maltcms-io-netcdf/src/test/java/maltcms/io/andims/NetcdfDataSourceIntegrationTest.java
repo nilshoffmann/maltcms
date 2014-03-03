@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -33,6 +33,9 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableFileFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.exception.ResourceNotAvailableException;
+import cross.test.IntegrationTest;
+import cross.test.LogMethodName;
+import cross.test.SetupLogging;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -40,12 +43,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
-import cross.test.IntegrationTest;
-import cross.test.LogMethodName;
-import cross.test.SetupLogging;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 import ucar.ma2.Array;
@@ -69,12 +69,12 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
 
     @Before
     public void extractTestData() {
-        if(remoteFileFragment == null) {
+        if (remoteFileFragment == null) {
             remoteFileFragment = new FileFragment(URI.create("http://bibiserv.techfak.uni-bielefeld.de/chroma/data/glucoseA.cdf"));
             remoteFileFragment.readStructure();
         }
     }
-    
+
     /**
      * Test of indirectly reading data from a remote file fragment via a local chain of file fragments.
      */
@@ -83,8 +83,8 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
         try {
             FileFragment localProxy = new FileFragment(tf.newFolder(), "localProxy.cdf");
             localProxy.addSourceFile(remoteFileFragment);
-            Array total_intensityArray = remoteFileFragment.getChild("total_intensity",true).getArray();
-            VariableFragment tic = new VariableFragment(localProxy,"total_intensity");
+            Array total_intensityArray = remoteFileFragment.getChild("total_intensity", true).getArray();
+            VariableFragment tic = new VariableFragment(localProxy, "total_intensity");
             tic.setArray(total_intensityArray);
             tic.setDimensions(remoteFileFragment.getChild("total_intensity").getDimensions());
             localProxy.save();
@@ -97,7 +97,7 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
             Assert.fail(ex.getLocalizedMessage());
         }
     }
-	
+
     public IFileFragment testDirectRemoteRead(URI testCdf) throws ResourceNotAvailableException {
         System.out.println("Tesing direct remote read!");
         //read in the created file
@@ -137,7 +137,7 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
         System.out.println("Testing indirect remote read!");
         IFileFragment readFragment = new ImmutableFileFragment(new FileFragment(testCdf));
         IVariableFragment sourceFiles = readFragment.getChild("source_files");
-        System.out.println("SourceFiles for "+testCdf.toString()+": "+sourceFiles.getArray());
+        System.out.println("SourceFiles for " + testCdf.toString() + ": " + sourceFiles.getArray());
         //check variables
         IVariableFragment rivf1 = readFragment.getChild("total_intensity");
         Dimension[] rdims1 = rivf1.getDimensions();

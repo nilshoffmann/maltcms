@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,14 +27,12 @@
  */
 package maltcms.db.ui;
 
+import cross.datastructures.tuple.Tuple2D;
 import java.awt.Component;
-
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-
 import maltcms.datastructures.ms.IMetabolite;
-import cross.datastructures.tuple.Tuple2D;
 
 public class QueryResultListCellRenderer extends JLabel implements ListCellRenderer {
 
@@ -50,7 +48,7 @@ public class QueryResultListCellRenderer extends JLabel implements ListCellRende
     }
 
     public Component getListCellRendererComponent(JList list, Object value,
-            int index, boolean isSelected, boolean cellHasFocus) {
+        int index, boolean isSelected, boolean cellHasFocus) {
 
         if (isSelected) {
             setBackground(list.getSelectionBackground());
@@ -90,7 +88,6 @@ public class QueryResultListCellRenderer extends JLabel implements ListCellRende
         } else {
             System.err.println("Unknow Object type returned from list!");
         }
-
 
         return this;
     }

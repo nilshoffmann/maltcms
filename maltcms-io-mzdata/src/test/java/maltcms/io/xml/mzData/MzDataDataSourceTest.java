@@ -1,5 +1,5 @@
 /*
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -53,9 +53,9 @@ import java.util.logging.Logger;
 import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.test.ExtractClassPathFiles;
-import org.junit.Test;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -70,7 +70,7 @@ import ucar.nc2.Dimension;
  */
 @Slf4j
 public class MzDataDataSourceTest {
-	
+
     @Rule
     public SetupLogging sl = new SetupLogging();
     @Rule
@@ -101,7 +101,7 @@ public class MzDataDataSourceTest {
         for (File f : ecpf.getFiles()) {
             Assert.assertEquals(1, getDataSource().canRead(new FileFragment(f)));
             Assert.assertEquals(1, getDataSource().
-                    canRead(new ImmutableFileFragment(new FileFragment(f.toURI()))));
+                canRead(new ImmutableFileFragment(new FileFragment(f.toURI()))));
         }
     }
 
@@ -110,25 +110,25 @@ public class MzDataDataSourceTest {
      */
     @Test
     public void testReadAll() throws Exception {
-		sl.setLogLevel("cross.datastructures.fragments",
-                "DEBUG");
+        sl.setLogLevel("cross.datastructures.fragments",
+            "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
-		sl.setLogLevel("maltcms.io.xml.mzData", "DEBUG");
+        sl.setLogLevel("maltcms.io.xml.mzData", "DEBUG");
         for (File f : ecpf.getFiles()) {
             List<Array> l = getDataSource().readAll(new FileFragment(f));
             Assert.assertTrue(l.size() > 0);
             try {
                 List<Array> l2 = getDataSource().
-                        readAll(new ImmutableFileFragment(f));
+                    readAll(new ImmutableFileFragment(f));
                 Assert.assertEquals(l.size(), l2.size());
             } catch (UnsupportedOperationException uoe) {
                 Assert.fail(uoe.getLocalizedMessage());
             }
         }
-		sl.setLogLevel("cross.datastructures.fragments",
-                "INFO");
+        sl.setLogLevel("cross.datastructures.fragments",
+            "INFO");
         sl.setLogLevel("maltcms.io.andims", "INFO");
-		sl.setLogLevel("maltcms.io.xml.mzData", "INFO");
+        sl.setLogLevel("maltcms.io.xml.mzData", "INFO");
     }
 
     /**
@@ -222,7 +222,7 @@ public class MzDataDataSourceTest {
     public void testSupportedFormats() {
         String[] fileEnding = new String[]{"mzdata", "mzdata.xml"};
         Assert.assertEquals(new MZDataDataSource().supportedFormats(), Arrays.
-                asList(fileEnding));
+            asList(fileEnding));
     }
 
     public List<Dimension> copyDims(Dimension... dim) {
@@ -258,7 +258,7 @@ public class MzDataDataSourceTest {
         VariableFragment ivf1 = new VariableFragment(ff, "variable1");
         ivf1.setDimensions(new Dimension[]{dim1, dim2, dim3});
         ivf1.setAttributes(new Attribute("description",
-                "three-dimensional array"));
+            "three-dimensional array"));
         ArrayDouble.D3 arr1 = new ArrayDouble.D3(15, 8, 10);
         ivf1.setArray(arr1);
         usedDimensions.put("variable1", copyDims(dim1, dim2, dim3));
@@ -273,7 +273,7 @@ public class MzDataDataSourceTest {
         usedDimensions.put("variable2", copyDims(dim3));
         variableNames.add("variable2");
 
-        //unused dimension 
+        //unused dimension
         Dimension dim4 = new Dimension("dim4", 214);
         ff.addDimensions(dim4);
         unusedDimensions.addAll(copyDims(dim4));
@@ -341,7 +341,7 @@ public class MzDataDataSourceTest {
     public void testWriteRead() throws IOException {
 //        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
-                "DEBUG");
+            "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
         List<Attribute> attributes = new LinkedList<Attribute>();
         List<String> variableNames = new LinkedList<String>();
@@ -355,7 +355,7 @@ public class MzDataDataSourceTest {
         File testCdf = new File(outputFolder, "testWriteRead.cdf").getAbsoluteFile();
         URI testCdfUri = testCdf.toURI();
         IFileFragment ff = createTestFragment(testCdfUri, variableNames, indexedVariableNames, attributes, variableAttributes,
-                usedDimensions, unusedDimensions, variableToArray);
+            usedDimensions, unusedDimensions, variableToArray);
         Assert.assertEquals(testCdf, new File(ff.getUri()));
         Assert.assertEquals(testCdfUri, ff.getUri());
         boolean b = ff.save();
@@ -364,13 +364,13 @@ public class MzDataDataSourceTest {
         IVariableFragment variable1 = Factory.getInstance().getDataSourceFactory().getDataSourceFor(ff).readStructure(new ImmutableVariableFragment2(ff, "variable1"));
         Assert.assertNotNull(variable1.getArray());
         testDirectRead(testCdfUri, variableNames, indexedVariableNames, attributes, variableAttributes, usedDimensions, unusedDimensions,
-                variableToArray);
+            variableToArray);
 //        FileFragment.clearFragments();
 //        testIndirectRead(testCdfUri, variableNames, indexedVariableNames, attributes, variableAttributes, usedDimensions, unusedDimensions,
 //                variableToArray);
 //        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
-                "OFF");
+            "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
     }
 
@@ -398,7 +398,7 @@ public class MzDataDataSourceTest {
         IndexIterator rii1 = b.getIndexIterator();
         log.info("Original shape: {}", Arrays.toString(a.getShape()));
         log.info("Restored shape: {}", Arrays.toString(b.
-                getShape()));
+            getShape()));
         while (ii1.hasNext() && rii1.hasNext()) {
             Assert.assertEquals(ii1.getDoubleNext(), rii1.getDoubleNext());
         }
@@ -406,10 +406,10 @@ public class MzDataDataSourceTest {
 
     public void testDirectRead(URI testCdf, List<String> variableNames, Map<String, String> indexedVariableNames, List<Attribute> attributes, Map<String, List<Attribute>> variableAttributes, Map<String, List<Dimension>> usedDimensions, List<Dimension> unusedDimensions, Map<String, List<Array>> variableToArray) throws ResourceNotAvailableException {
         System.out.
-                println("###################################################");
+            println("###################################################");
         System.out.println("# Testing direct read on file " + testCdf);
         sl.setLogLevel("cross.datastructures.fragments",
-                "DEBUG");
+            "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
         //read in the created file
         IFileFragment readFragment = new FileFragment(testCdf);
@@ -423,7 +423,7 @@ public class MzDataDataSourceTest {
             System.out.println("Variable: " + v.toString());
             System.out.println("\tDataType: " + v.getDataType());
             System.out.println("\tDimensions: " + Arrays.toString(v.
-                    getDimensions()));
+                getDimensions()));
         }
         System.out.println("Global attributes: ");
         for (Attribute attribute : readFragment.getAttributes()) {
@@ -465,17 +465,17 @@ public class MzDataDataSourceTest {
 
         System.out.println("###################################################");
         sl.setLogLevel("cross.datastructures.fragments",
-                "OFF");
+            "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
         //test direct read
     }
 
     public void testIndirectRead(URI testCdf, List<String> variableNames, Map<String, String> indexedVariableNames, List<Attribute> attributes, Map<String, List<Attribute>> variableAttributes, Map<String, List<Dimension>> usedDimensions, List<Dimension> unusedDimensions, Map<String, List<Array>> variableToArray) throws ResourceNotAvailableException {
         System.out.
-                println("###################################################");
+            println("###################################################");
         System.out.println("# Testing indirect read on file " + testCdf);
         sl.setLogLevel("cross.datastructures.fragments",
-                "DEBUG");
+            "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
         File outputFolder;
         try {
@@ -526,13 +526,13 @@ public class MzDataDataSourceTest {
                 }
             }
             System.out.println(
-                    "###################################################");
+                "###################################################");
         } catch (IOException ex) {
             log.error("Caught exception", ex);
             Assert.fail(ex.getLocalizedMessage());
         }
         sl.setLogLevel("cross.datastructures.fragments",
-                "OFF");
+            "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
         //test indirect read
     }
@@ -544,7 +544,7 @@ public class MzDataDataSourceTest {
     public void testMultiChainedReadWrite() {
 //        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
-                "DEBUG");
+            "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
         List<IFileFragment> sources = new LinkedList<IFileFragment>();
         for (File f : ecpf.getFiles()) {
@@ -566,11 +566,11 @@ public class MzDataDataSourceTest {
                     work.addSourceFile(fragments[i]);
                     //create a shadowing variable
                     IVariableFragment shadow = new VariableFragment(work,
-                            "shadow-" + i);
+                        "shadow-" + i);
                     shadow.setArray(Array.factory(new int[]{j}));
                     //create unique variable
                     IVariableFragment unique = new VariableFragment(work,
-                            "unique-" + j);
+                        "unique-" + j);
                     unique.setArray(Array.factory(new int[]{i, j}));
                     System.out.println(work.toString());
                     work.save();
@@ -597,12 +597,12 @@ public class MzDataDataSourceTest {
             }
         } catch (Exception ex) {
             Logger.getLogger(MZDataDataSource.class.getName()).
-                    log(Level.SEVERE, null, ex);
+                log(Level.SEVERE, null, ex);
             Assert.fail(ex.getLocalizedMessage());
         }
 //        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
-                "OFF");
+            "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
     }
 

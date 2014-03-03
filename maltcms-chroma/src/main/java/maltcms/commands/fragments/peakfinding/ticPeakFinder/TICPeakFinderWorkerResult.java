@@ -39,6 +39,6 @@ import lombok.Data;
 @Data
 public class TICPeakFinderWorkerResult implements Serializable {
 
-	private final URI resultUri;
-	private final Collection<WorkflowResult> workflowResults;
+    private final URI resultUri;
+    private final Collection<WorkflowResult> workflowResults;
 }

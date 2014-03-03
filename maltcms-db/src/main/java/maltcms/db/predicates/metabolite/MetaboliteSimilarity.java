@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -28,13 +28,6 @@
 package maltcms.db.predicates.metabolite;
 
 import com.db4o.query.Predicate;
-import maltcms.datastructures.ms.IMetabolite;
-import maltcms.tools.ArrayTools;
-import maltcms.tools.MaltcmsTools;
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.MAMath;
-import ucar.ma2.MAMath.MinMax;
 import cross.datastructures.tuple.Tuple2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,11 +38,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.ms.IScan;
 import maltcms.datastructures.ms.Scan1D;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
+import maltcms.tools.ArrayTools;
+import maltcms.tools.MaltcmsTools;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
+import ucar.ma2.MAMath;
+import ucar.ma2.MAMath.MinMax;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -67,24 +67,24 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private double lastMin = Double.POSITIVE_INFINITY,
-            lastMax = Double.NEGATIVE_INFINITY;
+        lastMax = Double.NEGATIVE_INFINITY;
     private final List<Tuple2D<Double, IMetabolite>> matches = new ArrayList<Tuple2D<Double, IMetabolite>>();
     private final Comparator<Tuple2D<Double, IMetabolite>> comparator = Collections.
-            reverseOrder(new Comparator<Tuple2D<Double, IMetabolite>>() {
-        @Override
-        public int compare(Tuple2D<Double, IMetabolite> t,
+        reverseOrder(new Comparator<Tuple2D<Double, IMetabolite>>() {
+            @Override
+            public int compare(Tuple2D<Double, IMetabolite> t,
                 Tuple2D<Double, IMetabolite> t1) {
-            if (t.getFirst() > t1.getFirst()) {
-                return 1;
-            } else if (t.getFirst() < t1.getFirst()) {
-                return -1;
+                if (t.getFirst() > t1.getFirst()) {
+                    return 1;
+                } else if (t.getFirst() < t1.getFirst()) {
+                    return -1;
+                }
+                return 0;
             }
-            return 0;
-        }
-    });
+        });
 
     public MetaboliteSimilarity(IScan scan, double scoreThreshold,
-            int maxHits, boolean normalize) {
+        int maxHits, boolean normalize) {
         this.scan = scan;
         this.scoreThreshold = scoreThreshold;
         this.numberOfHitsToReturn = maxHits;
@@ -92,19 +92,19 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
     }
 
     public MetaboliteSimilarity(Array masses, Array intensities,
-            double scoreThreshold,
-            int maxHits, boolean normalize) {
+        double scoreThreshold,
+        int maxHits, boolean normalize) {
         this(new Scan1D(masses, intensities, -1,
-                Double.NaN), scoreThreshold, maxHits,
-                normalize);
+            Double.NaN), scoreThreshold, maxHits,
+            normalize);
     }
 
     public MetaboliteSimilarity(IMetabolite metabolite, double scoreThreshold,
-            int maxHits, boolean normalize) {
+        int maxHits, boolean normalize) {
         this(new Scan1D(metabolite.getMassSpectrum().getFirst(), metabolite.
-                getMassSpectrum().getSecond(), metabolite.getScanIndex(),
-                metabolite.getRetentionTime()), scoreThreshold, maxHits,
-                normalize);
+            getMassSpectrum().getSecond(), metabolite.getScanIndex(),
+            metabolite.getRetentionTime()), scoreThreshold, maxHits,
+            normalize);
     }
 
     public List<Tuple2D<Double, IMetabolite>> getMatches() {
@@ -113,7 +113,7 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
     }
 
     protected double similarity(Array massesRef, Array intensitiesRef,
-            Array massesQuery, Array intensitiesQuery) {
+        Array massesQuery, Array intensitiesQuery) {
         MinMax mm1 = MAMath.getMinMax(massesRef);
         MinMax mm2 = MAMath.getMinMax(massesQuery);
         // Union, greatest possible interval
@@ -125,9 +125,9 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
         ArrayDouble.D1 dmasses1 = new ArrayDouble.D1(bins);
         s1 = new ArrayDouble.D1(bins);
         ArrayTools.createDenseArray(massesRef, intensitiesRef,
-                new Tuple2D<Array, Array>(dmasses1, s1), ((int) Math.floor(min)),
-                ((int) Math.ceil(max)), bins,
-                resolution, 0.0d);
+            new Tuple2D<Array, Array>(dmasses1, s1), ((int) Math.floor(min)),
+            ((int) Math.ceil(max)), bins,
+            resolution, 0.0d);
 //		}
         //normalization to 0..1
         if (normalize) {
@@ -137,9 +137,9 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
         ArrayDouble.D1 dmasses2 = new ArrayDouble.D1(bins);
         s2 = new ArrayDouble.D1(bins);
         ArrayTools.createDenseArray(massesQuery, intensitiesQuery,
-                new Tuple2D<Array, Array>(dmasses2, s2),
-                ((int) Math.floor(min)), ((int) Math.ceil(max)), bins,
-                resolution, 0.0d);
+            new Tuple2D<Array, Array>(dmasses2, s2),
+            ((int) Math.floor(min)), ((int) Math.ceil(max)), bins,
+            resolution, 0.0d);
 
         //normalization
         if (normalize) {
@@ -154,7 +154,7 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
 //                commonMasses++;
 //            }
 //        }
-        //FIXME try whether it makes a difference if the minimal interval of overlap 
+        //FIXME try whether it makes a difference if the minimal interval of overlap
         //is used
 //        double relativeCommonMasses = (commonMasses) / (double) bins;
         double d = this.similarityFunction.apply(s1, s2);
@@ -165,12 +165,12 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
     public boolean match(IMetabolite et) {
         Tuple2D<ArrayDouble.D1, ArrayInt.D1> etMs = et.getMassSpectrum();
         double sim = similarity(scan.getMasses(), scan.getIntensities(), etMs.
-                getFirst(), etMs.getSecond());
+            getFirst(), etMs.getSecond());
         if (sim >= scoreThreshold) {
             if (matches.size() == numberOfHitsToReturn) {
                 Collections.sort(matches, comparator);
                 Tuple2D<Double, IMetabolite> tple = new Tuple2D<Double, IMetabolite>(
-                        sim, et);
+                    sim, et);
                 int idx = Collections.binarySearch(matches, tple, comparator);
                 if (idx >= 0) {
                     matches.add(idx, tple);

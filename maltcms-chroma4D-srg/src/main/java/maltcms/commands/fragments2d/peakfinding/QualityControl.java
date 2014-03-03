@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -33,32 +33,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.peak.Peak2D;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.distribution.NormalDistribution;
 import org.apache.commons.math.distribution.NormalDistributionImpl;
-
-import maltcms.datastructures.peak.Peak2D;
 
 @Slf4j
 @Data
 public class QualityControl {
 
     public List<Reliability> calc(List<Peak2D> pl1, List<Peak2D> pl2,
-            List<List<Point>> bidibesthits) {
+        List<List<Point>> bidibesthits) {
         Map<Integer, Integer> m = new HashMap<Integer, Integer>();
         for (List<Point> l : bidibesthits) {
             m.put(l.get(0).y, l.get(1).y);
         }
         List<Entry<Integer, Integer>> map = new ArrayList<Entry<Integer, Integer>>(
-                m.entrySet());
+            m.entrySet());
         return calcV(pl1, pl2, map);
     }
 
     private List<Reliability> calcV(List<Peak2D> pl1, List<Peak2D> pl2,
-            List<Entry<Integer, Integer>> map) {
+        List<Entry<Integer, Integer>> map) {
         List<Double> values = new ArrayList<Double>();
 
         Peak2D p1, p2;
@@ -70,9 +68,9 @@ public class QualityControl {
                 p1 = pl1.get(m.getKey());
                 p2 = pl2.get(m.getValue());
                 rt1dsi = Math.abs(p1.getFirstScanIndex()
-                        - p2.getFirstScanIndex());
+                    - p2.getFirstScanIndex());
                 rt2dsi = Math.abs(p1.getSecondScanIndex()
-                        - p2.getSecondScanIndex());
+                    - p2.getSecondScanIndex());
                 rt1dsiSum += rt1dsi;
                 rt2dsiSum += rt2dsi;
                 c++;
@@ -86,9 +84,9 @@ public class QualityControl {
                 p1 = pl1.get(m.getKey());
                 p2 = pl2.get(m.getValue());
                 rt1dsi = Math.abs(p1.getFirstScanIndex()
-                        - p2.getFirstScanIndex());
+                    - p2.getFirstScanIndex());
                 rt2dsi = Math.abs(p1.getSecondScanIndex()
-                        - p2.getSecondScanIndex());
+                    - p2.getSecondScanIndex());
 
                 rt1dsivarSum += Math.pow(meanRT1dsi - rt1dsi, 2.0d);
                 rt2dsivarSum += Math.pow(meanRT2dsi - rt2dsi, 2.0d);
@@ -107,11 +105,11 @@ public class QualityControl {
         // System.out.println("RT1: mean= " + meanRT1dsi + ", std= "
         // + Math.sqrt(varRT1dsi));
         NormalDistribution ndrt1 = new NormalDistributionImpl(0, Math.sqrt(
-                varRT1dsi));
+            varRT1dsi));
         // System.out.println("RT2: mean= " + meanRT2dsi + ", std= "
         // + Math.sqrt(varRT2dsi));
         NormalDistribution ndrt2 = new NormalDistributionImpl(0, Math.sqrt(
-                varRT2dsi));
+            varRT2dsi));
 
         double rt1p, rt2p;
         double drt1, drt2;
@@ -121,10 +119,10 @@ public class QualityControl {
                 p1 = pl1.get(m.getKey());
                 p2 = pl2.get(m.getValue());
                 drt1 = Math.abs(meanRT1dsi
-                        - Math.abs(p1.getFirstScanIndex()
+                    - Math.abs(p1.getFirstScanIndex()
                         - p2.getFirstScanIndex()));
                 drt2 = Math.abs(meanRT2dsi
-                        - Math.abs(p1.getSecondScanIndex()
+                    - Math.abs(p1.getSecondScanIndex()
                         - p2.getSecondScanIndex()));
                 try {
                     rt1p = 1 - ndrt1.cumulativeProbability(-drt1, drt1);

@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -42,9 +42,9 @@ import java.net.URI;
 import java.util.concurrent.Callable;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
 import maltcms.io.misc.StatsWriter;
 import maltcms.tools.MaltcmsTools;
-import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
 
 /**
  *
@@ -53,7 +53,7 @@ import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
 @Slf4j
 @Data
 public class PairwiseDistanceWorker implements
-        Callable<PairwiseDistanceResult>, Serializable {
+    Callable<PairwiseDistanceResult>, Serializable {
 
     private static final long serialVersionUID = 4556712389798130L;
     private PairwiseFeatureSequenceSimilarity similarity;
@@ -73,18 +73,18 @@ public class PairwiseDistanceWorker implements
         final String input1 = FileTools.getFilename(input.getFirst());
         final String input2 = FileTools.getFilename(input.getSecond());
         final String filename = "PW_DISTANCE_"
-                + StringTools.removeFileExt(input1)
-                + "_"
-                + StringTools.removeFileExt(input2) + ".csv";
+            + StringTools.removeFileExt(input1)
+            + "_"
+            + StringTools.removeFileExt(input2) + ".csv";
         final IFileFragment iff = new FileFragment(new File(outputDirectory, filename).toURI());
         final StatsMap sm = new StatsMap(iff);
         similarity.setStatsMap(sm);
         final long t_start = System.currentTimeMillis();
         log.info(
-                "Running job {}/{}: {} with {}",
-                new Object[]{jobNumber + 1, nJobs,
-                    input1,
-                    input2});
+            "Running job {}/{}: {} with {}",
+            new Object[]{jobNumber + 1, nJobs,
+                input1,
+                input2});
         IFileFragment ff;
         ff = similarity.apply(new FileFragment(input.getFirst()), new FileFragment(input.getSecond()));
         final long t_end = System.currentTimeMillis() - t_start;
@@ -93,12 +93,12 @@ public class PairwiseDistanceWorker implements
         final int maplength = MaltcmsTools.getWarpPath(ff).size();
         log.info("Map length: {}", maplength);
         sm.setLabel(input1 + "-"
-                + input2);
+            + input2);
         sm.put("time", new Double(t_end));
         sm.put("value", new Double(d));
         sm.put("maplength", new Double(maplength));
         final StatsWriter sw = Factory.getInstance().
-                getObjectFactory().instantiate(StatsWriter.class);
+            getObjectFactory().instantiate(StatsWriter.class);
         sw.setWorkflow(getWorkflow());
         sw.write(sm);
         log.info("Distance: " + d);

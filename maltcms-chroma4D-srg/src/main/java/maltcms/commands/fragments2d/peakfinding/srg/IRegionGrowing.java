@@ -27,16 +27,15 @@
  */
 package maltcms.commands.fragments2d.peakfinding.srg;
 
-import java.awt.Point;
-import java.util.List;
-
-import maltcms.datastructures.caches.IScanLine;
-import maltcms.datastructures.peak.PeakArea2D;
 import cross.IConfigurable;
 import cross.datastructures.fragments.IFileFragment;
+import java.awt.Point;
+import java.util.List;
+import maltcms.datastructures.caches.IScanLine;
+import maltcms.datastructures.peak.PeakArea2D;
 
 public interface IRegionGrowing extends IConfigurable {
 
-	List<PeakArea2D> getAreasFor(List<Point> seeds, IFileFragment ff, IScanLine slc);
+    List<PeakArea2D> getAreasFor(List<Point> seeds, IFileFragment ff, IScanLine slc);
 
 }

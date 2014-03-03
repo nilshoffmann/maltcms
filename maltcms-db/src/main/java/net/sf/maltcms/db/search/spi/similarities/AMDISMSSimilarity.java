@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -28,13 +28,11 @@
 package net.sf.maltcms.db.search.spi.similarities;
 
 import cross.datastructures.tuple.Tuple2D;
-import java.util.BitSet;
 import maltcms.math.functions.similarities.ArrayWeightedCosine;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
-import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 
@@ -44,8 +42,8 @@ import ucar.ma2.MAMath.MinMax;
  */
 public class AMDISMSSimilarity {
 
-	private final ArrayWeightedCosine awc = new ArrayWeightedCosine();
-	
+    private final ArrayWeightedCosine awc = new ArrayWeightedCosine();
+
 //    private Array getIndexSubset(Array a, BitSet bs) {
 //        Array ret = Array.factory(a.getElementType(),
 //                new int[]{bs.cardinality()});
@@ -113,9 +111,8 @@ public class AMDISMSSimilarity {
 //                2 * intensityExponent)));
 //        return mixedValue / refValue * queryValue;
 //    }
-
     public double apply(Tuple2D<Array, Array> referenceMassSpectrum,
-            Tuple2D<Array, Array> queryMassSpectrum) {
+        Tuple2D<Array, Array> queryMassSpectrum) {
 //        double massExponent = 1.0;
 //        double intensityExponent = 0.5;
 
@@ -132,25 +129,24 @@ public class AMDISMSSimilarity {
         ArrayDouble.D1 mra = new ArrayDouble.D1(bins);
         ira = new ArrayDouble.D1(bins);
         ArrayTools.createDenseArray(referenceMassSpectrum.getFirst(),
-                referenceMassSpectrum.getSecond(),
-                new Tuple2D<Array, Array>(mra, ira), ((int) Math.floor(min)),
-                ((int) Math.ceil(max)), bins,
-                resolution, 0.0d);
+            referenceMassSpectrum.getSecond(),
+            new Tuple2D<Array, Array>(mra, ira), ((int) Math.floor(min)),
+            ((int) Math.ceil(max)), bins,
+            resolution, 0.0d);
 //		}
         ArrayDouble.D1 mqa = new ArrayDouble.D1(bins);
         iqa = new ArrayDouble.D1(bins);
         ArrayTools.createDenseArray(queryMassSpectrum.getFirst(),
-                queryMassSpectrum.getSecond(),
-                new Tuple2D<Array, Array>(mqa, iqa),
-                ((int) Math.floor(min)), ((int) Math.ceil(max)), bins,
-                resolution, 0.0d);
+            queryMassSpectrum.getSecond(),
+            new Tuple2D<Array, Array>(mqa, iqa),
+            ((int) Math.floor(min)), ((int) Math.ceil(max)), bins,
+            resolution, 0.0d);
 
 //        double maxS1 = MAMath.getMaximum(ira);
 //        ira = (ArrayDouble.D1) ArrayTools.mult(ira, 1.0d / maxS1);
-
 //        double maxS2 = MAMath.getMaximum(iqa);
 //        iqa = (ArrayDouble.D1) ArrayTools.mult(iqa, 1.0d / maxS2);
-		return awc.apply(mqa, iqa);
+        return awc.apply(mqa, iqa);
 //        return applyOnShared(mra, ira, mqa, iqa, massExponent, intensityExponent);
     }
 

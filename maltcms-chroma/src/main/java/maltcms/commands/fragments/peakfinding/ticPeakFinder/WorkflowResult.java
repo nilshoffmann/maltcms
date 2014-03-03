@@ -39,9 +39,9 @@ import lombok.Data;
 @Data
 public class WorkflowResult implements Serializable {
 
-	private final URI resource;
-	private final String generator;
-	private final WorkflowSlot workflowSlot;
-	private final URI[] resources;
+    private final URI resource;
+    private final String generator;
+    private final WorkflowSlot workflowSlot;
+    private final URI[] resources;
 
 }

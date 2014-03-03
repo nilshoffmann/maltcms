@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -28,16 +28,14 @@
 package net.sf.maltcms.evaluation.api;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import maltcms.datastructures.array.IFeatureVector;
-
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import maltcms.datastructures.array.IFeatureVector;
 
 /**
  * Performs a classification performance test of a collection of EntityGroup
@@ -121,12 +119,10 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
 
         //number of different categories/files
         //double M = this.groundTruth.getCategories().size();
-
         //we need to compare all out testGroups against
         //the ground truth.
         //we first try to find the ground truth EntityGroup, which best matches
         //to a given testGroup entity group
-
 //        HashSet<Entity> tp = new HashSet<Entity>();
 //        HashSet<Entity> fp = new HashSet<Entity>();
 //        HashSet<Entity> fn = new HashSet<Entity>();
@@ -181,7 +177,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
 //                    System.err.println("Warning: Tool EntityGroup already assigned!");
 //                    continue;
 //                }
-//                
+//
 //                if (matchedGroundTruthGroups.contains(gtEntityGroup)) {
 //                    System.out.println("Entity group " + (++cnt) + "/" + testGroup.size());
 ////                    System.err.println("Warning: tried to reassign ground truth EntityGroup to test group!");// "+gtg+" to "+tgEg);

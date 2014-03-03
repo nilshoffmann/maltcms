@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,6 +27,8 @@
  */
 package net.sf.maltcms.evaluation.spi;
 
+import cross.datastructures.combinations.ChoiceFactory;
+import cross.math.Combinatorics;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -44,8 +46,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import cross.math.Combinatorics;
-import cross.datastructures.combinations.ChoiceFactory;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.LoggerFactory;
@@ -65,10 +65,10 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
     private static org.slf4j.Logger log = LoggerFactory.getLogger(BeansXmlGenerator.class);
 
     public BeansXmlGenerator(LinkedHashMap<String, List<?>> parameterMap,
-            File template, File outputDirectory, HashMap<String, String> tokenMap) {
+        File template, File outputDirectory, HashMap<String, String> tokenMap) {
         keys = parameterMap.keySet();
         this.choices = ChoiceFactory.getKPartiteChoices(Combinatorics.
-                toObjectArray(parameterMap));
+            toObjectArray(parameterMap));
         this.template = template;
         this.outputDirectory = outputDirectory;
         this.tokenMap = tokenMap;
@@ -87,11 +87,11 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
     public File next() {
         UUID instanceId = UUID.randomUUID();
         File instanceDirectory = new File(this.outputDirectory, instanceId.
-                toString());
+            toString());
         instanceDirectory.mkdirs();
         try {
             File pcFile = new File(
-                    instanceDirectory, instanceId.toString() + ".parameters");
+                instanceDirectory, instanceId.toString() + ".parameters");
             PropertiesConfiguration pc = new PropertiesConfiguration(pcFile);
             Object[] choice = choices.get(idx++);
             int i = 0;
@@ -100,32 +100,32 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
             }
             pc.save();
             File outputFile = new File(instanceDirectory,
-                    instanceId.toString() + ".xml");
+                instanceId.toString() + ".xml");
 
             tokenMap.put("paramsLocation", pcFile.getAbsolutePath());
             try {
                 writeStreamToFile(template.toURI().toURL().openStream(),
-                        outputFile, tokenMap);
+                    outputFile, tokenMap);
                 return outputFile;
             } catch (IOException ex) {
                 log.error("Caught exception while trying to create " + outputFile.
-                        getAbsolutePath(),
-                        ex);
+                    getAbsolutePath(),
+                    ex);
             }
         } catch (ConfigurationException ex) {
             Logger.getLogger(BeansXmlGenerator.class.getName()).
-                    log(Level.SEVERE, null, ex);
+                log(Level.SEVERE, null, ex);
         }
 
         return null;
     }
 
     private void writeStreamToFile(InputStream istream, File outputFile,
-            HashMap<String, String> tokenMap) {
+        HashMap<String, String> tokenMap) {
         BufferedReader bis = new BufferedReader(new InputStreamReader(istream));
         try {
             BufferedWriter bos = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
-                    outputFile)));
+                outputFile)));
             String line = null;
             int state = -1;
             try {
@@ -144,27 +144,27 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
                 bos.close();
             } catch (IOException ex) {
                 Logger.getLogger(BeansXmlGenerator.class.getName()).
-                        log(Level.SEVERE, null, ex);
+                    log(Level.SEVERE, null, ex);
             } finally {
                 if (bos != null) {
                     try {
                         bos.close();
                     } catch (IOException ex) {
                         Logger.getLogger(BeansXmlGenerator.class.getName()).
-                                log(Level.SEVERE, null, ex);
+                            log(Level.SEVERE, null, ex);
                     }
                 }
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(BeansXmlGenerator.class.getName()).
-                    log(Level.SEVERE, null, ex);
+                log(Level.SEVERE, null, ex);
         } finally {
             if (bis != null) {
                 try {
                     bis.close();
                 } catch (IOException ex) {
                     Logger.getLogger(BeansXmlGenerator.class.getName()).
-                            log(Level.SEVERE, null, ex);
+                        log(Level.SEVERE, null, ex);
                 }
             }
         }

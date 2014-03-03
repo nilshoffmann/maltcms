@@ -59,36 +59,36 @@ import ucar.ma2.IndexIterator;
 @Data
 public class PeakIdentification implements IPeakIdentification {
 
-	private MetaboliteQueryDB mqdb;
+    private MetaboliteQueryDB mqdb;
 //    private ObjectContainer oc;
 //    private List<ObjectContainer> ocl = new ArrayList<ObjectContainer>();
-	@Configurable(value = "false", type = boolean.class)
-	private boolean doSearch = false;
-	@Configurable(type = String.class)
-	private String dbFile = null;
-	private List<String> dbFiles = new ArrayList<String>();
-	@Configurable(name = "dbThreshold", value = "0.9d", type = double.class)
-	private double threshold = 0.08d;
-	@Configurable(name = "kBest", value = "1", type = int.class)
-	private int k = 1;
-	private boolean dbAvailable = true;
-	private IArraySimilarity similarity = new ArrayCos();
-	private List<Integer> masqMasses = new ArrayList<Integer>();
+    @Configurable(value = "false", type = boolean.class)
+    private boolean doSearch = false;
+    @Configurable(type = String.class)
+    private String dbFile = null;
+    private List<String> dbFiles = new ArrayList<String>();
+    @Configurable(name = "dbThreshold", value = "0.9d", type = double.class)
+    private double threshold = 0.08d;
+    @Configurable(name = "kBest", value = "1", type = int.class)
+    private int k = 1;
+    private boolean dbAvailable = true;
+    private IArraySimilarity similarity = new ArrayCos();
+    private List<Integer> masqMasses = new ArrayList<Integer>();
 //    private ObjectSet<IMetabolite> dbMetabolites = null;
-	private List<ObjectSet<IMetabolite>> dbMetabolitesList = new ArrayList<ObjectSet<IMetabolite>>();
+    private List<ObjectSet<IMetabolite>> dbMetabolitesList = new ArrayList<ObjectSet<IMetabolite>>();
 
-	@Override
-	public String toString() {
-		return getClass().getName();
-	}
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void configure(final Configuration cfg) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void configure(final Configuration cfg) {
         // this.doDBSearch = cfg.getBoolean(this.getClass().getName()
-		// + ".doDBSearch", false);
+        // + ".doDBSearch", false);
 //        this.dbFile = cfg.getString(this.getClass().getName() + ".dbFile", null);
 //        for (String single : cfg.getStringArray(
 //                this.getClass().getName() + ".dbFile")) {
@@ -107,64 +107,64 @@ public class PeakIdentification implements IPeakIdentification {
 //                log.info("Can not parse " + single + " to an integer");
 //            }
 //        }
-	}
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setName(final Peak2D peak) {
-		if (this.dbFiles.isEmpty()) {
-			this.dbAvailable = false;
-		}
-		if (this.dbAvailable && this.doSearch) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setName(final Peak2D peak) {
+        if (this.dbFiles.isEmpty()) {
+            this.dbAvailable = false;
+        }
+        if (this.dbAvailable && this.doSearch) {
 //            if (this.ocl.isEmpty()) {
-			List<DBMatch> hits = new ArrayList<DBMatch>();
-			for (String dbf : this.dbFiles) {
-				final ArrayDouble.D1 massValues = new ArrayDouble.D1(peak.
-					getPeakArea().getSeedMS().getShape()[0]);
-				final IndexIterator iter = massValues.getIndexIterator();
-				int c = 0;
-				while (iter.hasNext()) {
-					iter.setIntNext(c++);
-				}
-				Array intensityValues = prepareMS(peak.getPeakArea().getSeedMS());
-				MetaboliteSimilarity ms = new MetaboliteSimilarity(massValues,
-					intensityValues,
-					threshold, k, false);
-				ms.setSimilarityFunction(similarity);
-				MetaboliteQueryDB mqdb = new MetaboliteQueryDB(dbf, ms);
-				QueryCallable<IMetabolite> qc = mqdb.getCallable();
-				ObjectSet<IMetabolite> osRes = null;
-				try {
-					osRes = qc.call();
-					log.info("Received {} hits from ObjectSet!",
-						osRes.size());
-					for (Tuple2D<Double, IMetabolite> t : ms.getMatches()) {
-						hits.add(new DBMatch(dbf, t.getFirst(), t.getSecond()));
-					}
-					qc.terminate();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					e.printStackTrace();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+            List<DBMatch> hits = new ArrayList<DBMatch>();
+            for (String dbf : this.dbFiles) {
+                final ArrayDouble.D1 massValues = new ArrayDouble.D1(peak.
+                    getPeakArea().getSeedMS().getShape()[0]);
+                final IndexIterator iter = massValues.getIndexIterator();
+                int c = 0;
+                while (iter.hasNext()) {
+                    iter.setIntNext(c++);
+                }
+                Array intensityValues = prepareMS(peak.getPeakArea().getSeedMS());
+                MetaboliteSimilarity ms = new MetaboliteSimilarity(massValues,
+                    intensityValues,
+                    threshold, k, false);
+                ms.setSimilarityFunction(similarity);
+                MetaboliteQueryDB mqdb = new MetaboliteQueryDB(dbf, ms);
+                QueryCallable<IMetabolite> qc = mqdb.getCallable();
+                ObjectSet<IMetabolite> osRes = null;
+                try {
+                    osRes = qc.call();
+                    log.info("Received {} hits from ObjectSet!",
+                        osRes.size());
+                    for (Tuple2D<Double, IMetabolite> t : ms.getMatches()) {
+                        hits.add(new DBMatch(dbf, t.getFirst(), t.getSecond()));
+                    }
+                    qc.terminate();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-			}
+            }
 
-			Collections.sort(hits);
+            Collections.sort(hits);
 //            }
 
-			if (hits != null) {
-				peak.setNames(DBMatch.asMatchList(hits));
-			}
-		}
-	}
+            if (hits != null) {
+                peak.setNames(DBMatch.asMatchList(hits));
+            }
+        }
+    }
 
-	private Array prepareMS(Array ms) {
-		ms = ArrayTools2.createIntegerArray(ms, this.masqMasses);
-		return ms;
-	}
+    private Array prepareMS(Array ms) {
+        ms = ArrayTools2.createIntegerArray(ms, this.masqMasses);
+        return ms;
+    }
 }

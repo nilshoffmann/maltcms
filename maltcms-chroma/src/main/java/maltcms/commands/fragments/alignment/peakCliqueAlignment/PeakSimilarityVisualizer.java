@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -57,92 +57,92 @@ import ucar.ma2.MAMath.MinMax;
 @Data
 public class PeakSimilarityVisualizer implements IWorkflowElement {
 
-	private IWorkflow workflow;
-	private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
+    private IWorkflow workflow;
+    private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
 
-	public File visualizePairwisePeakSimilarities(File outputDir, final LongObjectMap<PeakEdge> edgeMap,
-			final String lhsName, final List<? extends IBipacePeak> lhsPeaks,
-			final String rhsName, final List<? extends IBipacePeak> rhsPeaks,
-			final int samples, final String prefix, boolean minimize) {
-		final List<? extends IBipacePeak> l = lhsPeaks;
-		if (!lhsName.equals(rhsName)) {
-			final List<? extends IBipacePeak> r = rhsPeaks;
-			final ArrayDouble.D2 psims = new ArrayDouble.D2(l.size(),
-					r.size());
-			int i = 0;
-			for (final IBipacePeak pl : l) {
-				int j = 0;
-				for (final IBipacePeak pr : r) {
-					double sim = pl.getSimilarity(edgeMap, pr);
-					if (Double.isNaN(sim)) {
-						if(minimize) {
-							sim = Double.POSITIVE_INFINITY;
-						}else{
-							sim = Double.NEGATIVE_INFINITY;
-						}
-					}
-					log.debug("Setting index {}/{},{}/{}",
-							new Object[]{i, l.size() - 1, j,
-						r.size() - 1});
-					psims.set(
-							i,
-							j,
-							sim == Double.NEGATIVE_INFINITY ? 0
-							: sim == Double.POSITIVE_INFINITY ? Double.MAX_VALUE
-							: sim);
-					j++;
-				}
-				i++;
-			}
+    public File visualizePairwisePeakSimilarities(File outputDir, final LongObjectMap<PeakEdge> edgeMap,
+        final String lhsName, final List<? extends IBipacePeak> lhsPeaks,
+        final String rhsName, final List<? extends IBipacePeak> rhsPeaks,
+        final int samples, final String prefix, boolean minimize) {
+        final List<? extends IBipacePeak> l = lhsPeaks;
+        if (!lhsName.equals(rhsName)) {
+            final List<? extends IBipacePeak> r = rhsPeaks;
+            final ArrayDouble.D2 psims = new ArrayDouble.D2(l.size(),
+                r.size());
+            int i = 0;
+            for (final IBipacePeak pl : l) {
+                int j = 0;
+                for (final IBipacePeak pr : r) {
+                    double sim = pl.getSimilarity(edgeMap, pr);
+                    if (Double.isNaN(sim)) {
+                        if (minimize) {
+                            sim = Double.POSITIVE_INFINITY;
+                        } else {
+                            sim = Double.NEGATIVE_INFINITY;
+                        }
+                    }
+                    log.debug("Setting index {}/{},{}/{}",
+                        new Object[]{i, l.size() - 1, j,
+                            r.size() - 1});
+                    psims.set(
+                        i,
+                        j,
+                        sim == Double.NEGATIVE_INFINITY ? 0
+                        : sim == Double.POSITIVE_INFINITY ? Double.MAX_VALUE
+                        : sim);
+                    j++;
+                }
+                i++;
+            }
 
-			MinMax mm = MAMath.getMinMax(psims);
+            MinMax mm = MAMath.getMinMax(psims);
 
-			MinMaxNormalizationFilter mmnf = new MinMaxNormalizationFilter(
-					mm.min, mm.max);
-			ArrayDouble.D2 img = (ArrayDouble.D2) mmnf.apply(psims);
-			final RenderedImage bi = ImageTools.makeImage2D(img,
-					samples, Double.NEGATIVE_INFINITY);
-			outputDir.mkdirs();
-			JAI.create("filestore", bi, new File(outputDir, prefix + "_" + lhsName
-					+ "-" + rhsName + "_peak_similarities.png").
-					getAbsolutePath(), "PNG");
-			final CSVWriter csvw = new CSVWriter();
-			File f = csvw.writeArray2DWithHeader(outputDir.
-					getAbsolutePath(), prefix + "_" + lhsName + "-"
-					+ rhsName + "_peak_similarities.csv", psims, new String[]{lhsName,rhsName,"value"});
-			return f;
-		}
-		return null;
-	}
+            MinMaxNormalizationFilter mmnf = new MinMaxNormalizationFilter(
+                mm.min, mm.max);
+            ArrayDouble.D2 img = (ArrayDouble.D2) mmnf.apply(psims);
+            final RenderedImage bi = ImageTools.makeImage2D(img,
+                samples, Double.NEGATIVE_INFINITY);
+            outputDir.mkdirs();
+            JAI.create("filestore", bi, new File(outputDir, prefix + "_" + lhsName
+                + "-" + rhsName + "_peak_similarities.png").
+                getAbsolutePath(), "PNG");
+            final CSVWriter csvw = new CSVWriter();
+            File f = csvw.writeArray2DWithHeader(outputDir.
+                getAbsolutePath(), prefix + "_" + lhsName + "-"
+                + rhsName + "_peak_similarities.csv", psims, new String[]{lhsName, rhsName, "value"});
+            return f;
+        }
+        return null;
+    }
 
-	public void visualizePeakSimilarities(final LongObjectMap<PeakEdge> edgeMap,
-			final Map<String, List<? extends IBipacePeak>> hm, final int samples,
-			final String prefix) {
+    public void visualizePeakSimilarities(final LongObjectMap<PeakEdge> edgeMap,
+        final Map<String, List<? extends IBipacePeak>> hm, final int samples,
+        final String prefix) {
 
-		int npeaks = 0;
-		for (final String key : hm.keySet()) {
-			npeaks += hm.get(key).size();
-		}
-		if (npeaks == 0) {
-			log.warn("No peak similarities to visualize!");
-			return;
-		}
-		log.info("Saving pairwise peak similarity images.");
-		final List<String> keys = new ArrayList<String>(hm.keySet());
-		Collections.sort(keys);
-		boolean minimize = false;
-		File outputDir = workflow.getOutputDirectory(this);
-		for (final String keyl : keys) {
-			final List<? extends IBipacePeak> l = hm.get(keyl);
-			for (final String keyr : keys) {
-				File f = visualizePairwisePeakSimilarities(outputDir, edgeMap, keyl, l, keyr, hm.get(keyr), samples, prefix, minimize);
-				workflow.append(new DefaultWorkflowResult(f, this, workflowSlot));
-			}
-		}
+        int npeaks = 0;
+        for (final String key : hm.keySet()) {
+            npeaks += hm.get(key).size();
+        }
+        if (npeaks == 0) {
+            log.warn("No peak similarities to visualize!");
+            return;
+        }
+        log.info("Saving pairwise peak similarity images.");
+        final List<String> keys = new ArrayList<String>(hm.keySet());
+        Collections.sort(keys);
+        boolean minimize = false;
+        File outputDir = workflow.getOutputDirectory(this);
+        for (final String keyl : keys) {
+            final List<? extends IBipacePeak> l = hm.get(keyl);
+            for (final String keyr : keys) {
+                File f = visualizePairwisePeakSimilarities(outputDir, edgeMap, keyl, l, keyr, hm.get(keyr), samples, prefix, minimize);
+                workflow.append(new DefaultWorkflowResult(f, this, workflowSlot));
+            }
+        }
 
-	}
+    }
 
-	@Override
-	public void appendXML(Element e) {
-	}
+    @Override
+    public void appendXML(Element e) {
+    }
 }

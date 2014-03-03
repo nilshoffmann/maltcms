@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,26 +27,24 @@
  */
 package maltcms.datastructures.alignment;
 
+import cross.datastructures.fragments.IFileFragment;
+import cross.exception.ResourceNotAvailableException;
+import cross.tools.StringTools;
 import java.io.File;
 import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-
 import maltcms.io.xml.bindings.alignment.Alignment;
 import maltcms.io.xml.bindings.alignment.MappedPointsType;
 import maltcms.io.xml.bindings.alignment.PointMapType;
 import maltcms.io.xml.bindings.alignment.PointType;
-import maltcms.io.xml.bindings.alignment.ResourceType;
 import maltcms.io.xml.bindings.alignment.PointType.Dimension;
-import cross.datastructures.fragments.IFileFragment;
-import cross.exception.ResourceNotAvailableException;
-import cross.tools.StringTools;
+import maltcms.io.xml.bindings.alignment.ResourceType;
 
 /**
  * @author Nils Hoffmann
@@ -86,7 +84,7 @@ public class AlignmentFactory {
     }
 
     public MappedPointsType getMappedPoints(Alignment a, IFileFragment f)
-            throws ResourceNotAvailableException {
+        throws ResourceNotAvailableException {
         List<MappedPointsType> l = a.getMappedPoints();
         for (MappedPointsType mpt : l) {
             String uri = mpt.getResource().getUri();
@@ -97,12 +95,12 @@ public class AlignmentFactory {
             }
         }
         throw new ResourceNotAvailableException(
-                "Could not find a mappedPoints entry for "
-                + f.getUri());
+            "Could not find a mappedPoints entry for "
+            + f.getUri());
     }
 
     public List<Integer> convertToScanIndexMap(MappedPointsType mpt)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
         PointMapType pmt = mpt.getPointMap();
         List<PointType> points = pmt.getPoint();
         List<Integer> list = new ArrayList<Integer>();
@@ -113,15 +111,15 @@ public class AlignmentFactory {
                 list.add(Integer.parseInt(d.getValue()));
             } catch (ResourceNotAvailableException rnae) {
                 throw new IllegalArgumentException(
-                        "Could not find required Dimension with name scan_index below PointType.",
-                        rnae);
+                    "Could not find required Dimension with name scan_index below PointType.",
+                    rnae);
             }
         }
         return list;
     }
 
     public Dimension getDimensionByName(String name, PointType pt)
-            throws ResourceNotAvailableException {
+        throws ResourceNotAvailableException {
         List<Dimension> l = pt.getDimension();
         for (Dimension d : l) {
             if (d.getName().equals(name)) {
@@ -129,12 +127,12 @@ public class AlignmentFactory {
             }
         }
         throw new ResourceNotAvailableException(
-                "Could not find Dimension with name " + name
-                + " for PointType!");
+            "Could not find Dimension with name " + name
+            + " for PointType!");
     }
 
     public void addScanIndexMap(Alignment a, URI resource, List<Integer> l,
-            boolean isAlignmentReference) {
+        boolean isAlignmentReference) {
         List<MappedPointsType> mp = a.getMappedPoints();
 
         MappedPointsType mpt = new MappedPointsType();

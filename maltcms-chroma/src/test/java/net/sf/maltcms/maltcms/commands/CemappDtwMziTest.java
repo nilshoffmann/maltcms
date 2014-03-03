@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,40 +27,37 @@
  */
 package net.sf.maltcms.maltcms.commands;
 
+import cross.cache.CacheType;
+import cross.commands.fragments.AFragmentCommand;
+import cross.commands.fragments.IFragmentCommand;
+import cross.datastructures.fragments.Fragments;
+import cross.datastructures.workflow.IWorkflow;
+import cross.test.IntegrationTest;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.filters.array.AArrayFilter;
+import maltcms.commands.filters.array.SavitzkyGolayFilter;
+import maltcms.commands.fragments.alignment.CenterStarAlignment;
 import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.commands.fragments.cluster.PairwiseDistanceCalculator;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.MziDtwWorkerFactory;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
+import maltcms.commands.fragments.preprocessing.ScanExtractor;
+import maltcms.commands.fragments.warp.ChromatogramWarp2;
 import maltcms.math.functions.DtwPairwiseSimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.test.AFragmentCommandTest;
-
-import org.junit.Test;
-
-import cross.commands.fragments.AFragmentCommand;
-import cross.commands.fragments.IFragmentCommand;
-import cross.cache.CacheType;
-import cross.datastructures.fragments.Fragments;
-import cross.datastructures.workflow.IWorkflow;
-import java.util.LinkedList;
-import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.filters.array.AArrayFilter;
-import maltcms.commands.filters.array.SavitzkyGolayFilter;
-import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
-import cross.test.IntegrationTest;
-import java.io.IOException;
-import maltcms.commands.fragments.alignment.CenterStarAlignment;
-import maltcms.commands.fragments.preprocessing.ScanExtractor;
-import maltcms.commands.fragments.warp.ChromatogramWarp2;
 import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 /**
@@ -73,10 +70,10 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
-            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
+        "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
 
     @Test
-    public void testCemappDtwMZIFull() throws IOException  {
+    public void testCemappDtwMZIFull() throws IOException {
         setLogLevelFor("cross", Level.OFF);
         setLogLevelFor("maltcms", Level.OFF);
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
@@ -91,7 +88,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         commands.add(se);
         commands.add(new DenseArrayProducer());
         commands.add(createPairwiseDistanceCalculatorMZI(false, 0, true,
-                1.0d));
+            1.0d));
         commands.add(new CenterStarAlignment());
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
@@ -99,9 +96,9 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }
-	
-	@Test
-    public void testCemappDtwMZIFullEhcache() throws IOException  {
+
+    @Test
+    public void testCemappDtwMZIFullEhcache() throws IOException {
         setLogLevelFor("cross", Level.OFF);
         setLogLevelFor("maltcms", Level.OFF);
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
@@ -116,7 +113,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         commands.add(se);
         commands.add(new DenseArrayProducer());
         commands.add(createPairwiseDistanceCalculatorMZI(false, 0, true,
-                1.0d));
+            1.0d));
         commands.add(new CenterStarAlignment());
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
@@ -147,7 +144,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
      *
      */
     @Test
-    public void testCemappDtwMZIConstrained() throws IOException  {
+    public void testCemappDtwMZIConstrained() throws IOException {
         setLogLevelFor("cross", Level.OFF);
         setLogLevelFor("maltcms", Level.OFF);
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
@@ -182,16 +179,16 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         commands.add(new CenterStarAlignment());
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
-		commands.add(cwarp2);
+        commands.add(cwarp2);
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }
-	
-	/**
+
+    /**
      *
      */
     @Test
-    public void testCemappDtwMZIConstrainedEhcache() throws IOException  {
+    public void testCemappDtwMZIConstrainedEhcache() throws IOException {
         setLogLevelFor("cross", Level.OFF);
         setLogLevelFor("maltcms", Level.OFF);
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
@@ -226,7 +223,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         commands.add(new CenterStarAlignment());
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
-		commands.add(cwarp2);
+        commands.add(cwarp2);
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }

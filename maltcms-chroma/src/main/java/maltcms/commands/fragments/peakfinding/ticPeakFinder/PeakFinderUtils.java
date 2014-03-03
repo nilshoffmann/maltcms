@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -53,7 +53,7 @@ public class PeakFinderUtils {
     }
 
     public static boolean isCandidate(final int index, final double[] values,
-            final int window) {
+        final int window) {
         final double max = MathTools.max(values, index - window, index + window);
         final double indxVal = values[index];
         if (max == indxVal) {
@@ -63,7 +63,7 @@ public class PeakFinderUtils {
     }
 
     public static boolean isMinCandidate(final int index, final double[] values,
-            final int window) {
+        final int window) {
         final double min = MathTools.min(values, index - window, index + window);
         final double indxVal = values[index];
         if (min == indxVal) {
@@ -73,32 +73,32 @@ public class PeakFinderUtils {
     }
 
     public static void checkExtremum(final double[] values, final double[] snr,
-            final ArrayList<Integer> ts, final double threshold, final int i,
-            final int window) {
+        final ArrayList<Integer> ts, final double threshold, final int i,
+        final int window) {
         EvalTools.notNull(new Object[]{values, i, threshold}, PeakFinderUtils.class);
         if ((values[i] > 0) && isAboveThreshold(snr[i], threshold)
-                && isCandidate(i, values, window)) {
+            && isCandidate(i, values, window)) {
             ts.add(i);
             log.debug(
-                    "Found extremum above snr threshold {} with value {} at scan: {}",
-                    new Object[]{threshold, values[i], i});
+                "Found extremum above snr threshold {} with value {} at scan: {}",
+                new Object[]{threshold, values[i], i});
         }
     }
 
     public static void checkMinimum(final double[] values,
-            final Collection<Integer> ts, final int i,
-            final int window) {
+        final Collection<Integer> ts, final int i,
+        final int window) {
         EvalTools.notNull(new Object[]{values, i}, PeakFinderUtils.class);
         if (isMinCandidate(i, values, window)) {
             ts.add(i);
             log.debug(
-                    "Found extremum with value {} at scan: {}",
-                    new Object[]{values[i], i});
+                "Found extremum with value {} at scan: {}",
+                new Object[]{values[i], i});
         }
     }
 
     public static boolean isMinimum(final double prev, final double current,
-            final double next) {
+        final double next) {
         if ((current < prev) && (current < next)) {
             return true;
         }
@@ -109,7 +109,7 @@ public class PeakFinderUtils {
     }
 
     public static ArrayInt.D1 createPeakCandidatesArray(final Array tic,
-            final ArrayList<Integer> ts) {
+        final ArrayList<Integer> ts) {
         EvalTools.notNull(ts, PeakFinderUtils.class);
         final ArrayInt.D1 extr = new ArrayInt.D1(ts.size());
         // checkUniformDistribution(tic.getShape()[0], ts);
@@ -124,9 +124,9 @@ public class PeakFinderUtils {
         for (int i = 0; i < ticValues.length; i++) {
             log.debug("i=" + i);
             PeakFinderUtils.checkMinimum(ticValues, ts, i,
-                    baselineEstimationMinimaWindow);
+                baselineEstimationMinimaWindow);
         }
-        
+
         log.info("Found {} minima for baseline estimation!", ts.size());
         ArrayList<Integer> tss = new ArrayList<Integer>(ts);
         //add the first index

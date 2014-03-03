@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,19 +27,6 @@
  */
 package maltcms.commands.fragments.io;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Vector;
-
-import maltcms.io.csv.CSVReader;
-
-import org.apache.commons.configuration.Configuration;
-
-import ucar.ma2.ArrayInt;
-import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
@@ -52,15 +39,25 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Vector;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.io.csv.CSVReader;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.ArrayInt;
+import ucar.nc2.Dimension;
 
 /**
  * @author Nils Hoffmann
@@ -91,7 +88,7 @@ public class TICPeakListImporter extends AFragmentCommand {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
     @Override
@@ -119,31 +116,31 @@ public class TICPeakListImporter extends AFragmentCommand {
 
             for (String s : this.filesToRead) {
                 if (StringTools.removeFileExt(s).endsWith(
-                        StringTools.removeFileExt(ff.getName()))) {
+                    StringTools.removeFileExt(ff.getName()))) {
                     log.warn("Loading TIC peaks from file {}", s);
                     IFileFragment work = new FileFragment(new File(
-                            getWorkflow().getOutputDirectory(this),
-                            ff.getName()));
+                        getWorkflow().getOutputDirectory(this),
+                        ff.getName()));
                     work.addSourceFile(ff);
                     CSVReader csvr = Factory.getInstance().getObjectFactory().
-                            instantiate(CSVReader.class);
+                        instantiate(CSVReader.class);
                     Tuple2D<Vector<Vector<String>>, Vector<String>> table;
                     try {
                         table = csvr.read(new FileInputStream(s));
                         HashMap<String, Vector<String>> hm = csvr.getColumns(
-                                table);
+                            table);
                         Vector<String> peakScanIndex = hm.get(
-                                scanIndexColumnName);
+                            scanIndexColumnName);
                         ArrayInt.D1 extr = new ArrayInt.D1(peakScanIndex.size());
                         for (int i = 0; i < peakScanIndex.size(); i++) {
                             extr.set(i,
-                                    Integer.parseInt(peakScanIndex.get(i)) + scanIndexOffset);
+                                Integer.parseInt(peakScanIndex.get(i)) + scanIndexOffset);
                         }
                         final IVariableFragment peaks = new VariableFragment(
-                                work, this.ticPeakVarName);
+                            work, this.ticPeakVarName);
                         final Dimension peak_number = new Dimension(
-                                "peak_number", peakScanIndex.size(), true,
-                                false, false);
+                            "peak_number", peakScanIndex.size(), true,
+                            false, false);
                         peaks.setDimensions(new Dimension[]{peak_number});
                         peaks.setArray(extr);
                         retf.add(work);

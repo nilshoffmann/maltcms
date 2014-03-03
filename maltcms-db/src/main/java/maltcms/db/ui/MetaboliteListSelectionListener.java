@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,21 +27,28 @@
  */
 package maltcms.db.ui;
 
+import cross.datastructures.tuple.Tuple2D;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import maltcms.commands.filters.array.MultiplicationFilter;
 import maltcms.datastructures.ms.IMetabolite;
-
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -49,23 +56,12 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.MAMath;
-import cross.datastructures.tuple.Tuple2D;
-import java.awt.BorderLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import javax.swing.AbstractAction;
-import javax.swing.JPopupMenu;
-import javax.swing.JTable;
-import javax.swing.JToolBar;
 
 public class MetaboliteListSelectionListener implements ListSelectionListener,
-        WindowListener, MouseListener {
+    WindowListener, MouseListener {
 
     /**
      *
@@ -85,7 +81,7 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
     private ExecutorService es = Executors.newFixedThreadPool(5);
 
     public MetaboliteListSelectionListener(MetaboliteView metaboliteView,
-            MetaboliteViewModel mvm, JTable table) {
+        MetaboliteViewModel mvm, JTable table) {
         this.metaboliteView = metaboliteView;
         this.mvm2 = mvm;
         this.table = table;
@@ -95,7 +91,7 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
         // final int first_index = e.getFirstIndex();
         final int last_index = e.getLastIndex();
         System.out.println("ListSelection Event at " + last_index
-                + " originated from " + e.getSource().getClass());
+            + " originated from " + e.getSource().getClass());
         // if(first_index==last_index) {
 //        if (o instanceof ListSelectionModel) {
 
@@ -216,8 +212,8 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
             // String s = ((JFrame)e.getWindow()).getTitle();
             // int index = Integer.parseInt(((JFrame)e.getWindow()).getName());
             System.out.println("Removing JFrame "
-                    + ((JFrame) e.getWindow()).getName()
-                    + " from map of active clients!");
+                + ((JFrame) e.getWindow()).getName()
+                + " from map of active clients!");
             hm.remove(((JFrame) e.getWindow()).getName());
         }
 

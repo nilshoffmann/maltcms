@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,32 +27,29 @@
  */
 package maltcms.commands.fragments.visualization;
 
-import java.io.File;
-
-import maltcms.tools.MaltcmsTools;
-import maltcms.ui.charts.PlotRunner;
-
-import org.apache.commons.configuration.Configuration;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYBarRenderer;
-import org.jfree.data.xy.XYIntervalSeries;
-import org.jfree.data.xy.XYIntervalSeriesCollection;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.Index;
-import ucar.ma2.MAMath;
-import ucar.ma2.MAMath.MinMax;
 import cross.Factory;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
+import java.io.File;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.tools.MaltcmsTools;
+import maltcms.ui.charts.PlotRunner;
+import org.apache.commons.configuration.Configuration;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
+import org.jfree.data.xy.XYIntervalSeries;
+import org.jfree.data.xy.XYIntervalSeriesCollection;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.Index;
+import ucar.ma2.MAMath;
+import ucar.ma2.MAMath.MinMax;
 
 /**
  * Plot the distribution of values looking at mz bin values.
@@ -86,7 +83,7 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
             final MinMax mm = MAMath.getMinMax(domains[0]);
             final double res = 1.0d;
             final int nbins = MaltcmsTools.getNumberOfIntegerMassBins(mm.min,
-                    mm.max, res);
+                mm.max, res);
             log.info("Using nbins: {}", nbins);
             final ArrayDouble.D1 binVal = new ArrayDouble.D1(nbins);
             final ArrayDouble.D1 binCnt = new ArrayDouble.D1(nbins);
@@ -96,7 +93,7 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
                 final int bin = MaltcmsTools.binMZ(mz, mm.min, mm.max, res);
                 log.debug("Setting bin: {}", bin);
                 binVal.set(bin, MaltcmsTools.binMZ(mz + mm.min, mm.min, mm.max,
-                        res));
+                    res));
                 binCnt.set(bin, binCnt.get(bin) + intens);
             }
             final MinMax mmi = MAMath.getMinMax(binCnt);
@@ -112,20 +109,20 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
             xyb.setShadowVisible(false);
             xyb.setGradientPaintTransformer(null);
             final XYPlot cp = new XYPlot(xsc, new NumberAxis("mass value"),
-                    new NumberAxis("intensity value"), xyb);
+                new NumberAxis("intensity value"), xyb);
             final PlotRunner pl = new PlotRunner(cp,
-                    "Intensity Distribution Plot of " + f.getName(),
-                    "intensDistrPlot-" + f.getName(), getWorkflow().
-                    getOutputDirectory(this));
+                "Intensity Distribution Plot of " + f.getName(),
+                "intensDistrPlot-" + f.getName(), getWorkflow().
+                getOutputDirectory(this));
             pl.configure(Factory.getInstance().getConfiguration());
             final File file = pl.getFile();
-			try {
-				pl.call();
-			} catch (Exception ex) {
-				log.error(ex.getLocalizedMessage());
-			}
+            try {
+                pl.call();
+            } catch (Exception ex) {
+                log.error(ex.getLocalizedMessage());
+            }
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(file,
-                    this, WorkflowSlot.VISUALIZATION, f);
+                this, WorkflowSlot.VISUALIZATION, f);
             getWorkflow().append(dwr);
         }
         return t;
@@ -135,14 +132,14 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.x_var = cfg.getString(this.getClass().getName() + ".x_var",
-                "mass_values");
+            "mass_values");
         this.y_var = cfg.getString(this.getClass().getName() + ".y_var",
-                "intensity_values");
+            "intensity_values");
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
     @Override

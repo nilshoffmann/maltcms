@@ -37,6 +37,6 @@ import ucar.ma2.Array;
  */
 public interface IPeakFinder extends Serializable, ICopyable<IPeakFinder> {
 
-	PeakPositionsResultSet findPeakPositions(Array tic);
+    PeakPositionsResultSet findPeakPositions(Array tic);
 
 }

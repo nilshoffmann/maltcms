@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -42,7 +42,7 @@ public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorCompar
         if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
             final int lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
             final int rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();
-            if (lhsRT!=-1 && rhsRT==-1) {
+            if (lhsRT != -1 && rhsRT == -1) {
                 return true;
             }
         }
@@ -58,10 +58,10 @@ public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorCompar
             final int lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
             final int rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();
             //if gt is NaN, but test has a value, if FP=true
-            if (lhsRT==-1 && rhsRT!=-1) {
+            if (lhsRT == -1 && rhsRT != -1) {
                 return true;
             }
-            if (lhsRT!=-1 && rhsRT!=-1 && lhsRT!=rhsRT) {
+            if (lhsRT != -1 && rhsRT != -1 && lhsRT != rhsRT) {
                 return true;
             }
         }
@@ -77,7 +77,7 @@ public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorCompar
             final int lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
             final int rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();
             //both are NaNs
-            if (lhsRT==-1 && rhsRT==-1) {
+            if (lhsRT == -1 && rhsRT == -1) {
                 return true;
             }
         }
@@ -93,11 +93,11 @@ public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorCompar
             final int lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
             final int rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();
             //if either is a NaN or both, TP=false
-            if ((lhsRT==-1 && rhsRT!=-1) || (lhsRT!=-1 && rhsRT==-1)) {
+            if ((lhsRT == -1 && rhsRT != -1) || (lhsRT != -1 && rhsRT == -1)) {
                 return false;
             }
             //true positive if both have a value, and their difference is <=delta
-            if (lhsRT!=-1 && rhsRT!=-1 && lhsRT == rhsRT) {
+            if (lhsRT != -1 && rhsRT != -1 && lhsRT == rhsRT) {
                 return true;
             }
         }

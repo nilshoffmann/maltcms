@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,21 +27,20 @@
  */
 package maltcms.commands.fragments2d.peakfinding.bbh;
 
+import cross.datastructures.fragments.IFileFragment;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import maltcms.commands.fragments2d.peakfinding.output.IPeakExporter;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.Peak2DClique;
-import cross.datastructures.fragments.IFileFragment;
 
 public class BBHTools {
 
     public static List<Peak2DClique> getPeak2DCliqueList(
-            Collection<IFileFragment> f, List<List<Point>> bidiBestHitList,
-            List<List<Peak2D>> peaklist) {
+        Collection<IFileFragment> f, List<List<Point>> bidiBestHitList,
+        List<List<Peak2D>> peaklist) {
         final List<Peak2DClique> peakCliques = new ArrayList<Peak2DClique>();
 
         boolean complete = false;
@@ -71,14 +70,14 @@ public class BBHTools {
      * This is needed to assure the correctness of the export by
      * {@link IPeakExporter} (method exportDetailedBBH)
      *
-     * @param i ith chromatogram
-     * @param j jth chromatogram
+     * @param i            ith chromatogram
+     * @param j            jth chromatogram
      * @param bidiBestHits full BBH list
      * @return BBH list containing only the peaks of the ith and jth
-     * chromatogram
+     *         chromatogram
      */
     public static List<List<Point>> getBidiBestList(final int i, final int j,
-            final List<List<Point>> bidiBestHits) {
+        final List<List<Point>> bidiBestHits) {
         final List<List<Point>> index = new ArrayList<List<Point>>();
         int c = 0;
         for (List<Point> list : bidiBestHits) {
@@ -99,22 +98,22 @@ public class BBHTools {
      * This Method will call all methods of {@link IPeakExporter}. Furthermore
      * it creates all pairwise BBH information.
      *
-     * @param bidiBestHitList bidirection best hit list
-     * @param peaklist peaklist
-     * @param bbh bidirectional best hits class
-     * @param peakExporter peak exporter
+     * @param bidiBestHitList   bidirection best hit list
+     * @param peaklist          peaklist
+     * @param bbh               bidirectional best hits class
+     * @param peakExporter      peak exporter
      * @param chromatogramNames names of the chromatograms
      */
     public static void exportBBHInformation(List<List<Point>> bidiBestHitList,
-            List<List<Peak2D>> peaklist, IBidirectionalBestHit bbh,
-            IPeakExporter peakExporter, List<String> chromatogramNames) {
+        List<List<Peak2D>> peaklist, IBidirectionalBestHit bbh,
+        IPeakExporter peakExporter, List<String> chromatogramNames) {
 
         // this.log.info("Exporting whole detailed BBH information");
         peakExporter.exportDetailedBBHInformation(bidiBestHitList, peaklist,
-                bbh, chromatogramNames, null, "detailedBBHInformation.csv");
+            bbh, chromatogramNames, null, "detailedBBHInformation.csv");
         // this.log.info("Exporting peak occurence map");
         peakExporter.exportPeakOccurrenceMap(bidiBestHitList, peaklist, bbh,
-                chromatogramNames, "peakOccurenceMap.csv");
+            chromatogramNames, "peakOccurenceMap.csv");
 
         // Workaround to export pairwise detailed bbh information
         List<String> filenamest;
@@ -141,27 +140,26 @@ public class BBHTools {
 
                 // qc.calc(bbh.getPeakLists().get(i), bbh.getPeakLists()
                 // .get(j), bidiBestHitListt);
-
                 peakExporter.exportDetailedBBHInformation(bidiBestHitListt,
-                        peaklists, bbh, filenamest, null, "pwBBH_"
-                        + chromatogramNames.get(i) + "-"
-                        + chromatogramNames.get(j) + ".csv");
+                    peaklists, bbh, filenamest, null, "pwBBH_"
+                    + chromatogramNames.get(i) + "-"
+                    + chromatogramNames.get(j) + ".csv");
             }
         }
 
         // peakExporter.exportBBHInformation(bidiBestHitList, bbh,
         // chromatogramNames, relis);
         peakExporter.exportBBHInformation(bidiBestHitList, peaklist, bbh,
-                chromatogramNames, null);
+            chromatogramNames, null);
         peakExporter.exportBBHMultipleAlignmentRT(bidiBestHitList, peaklist, bbh,
-                chromatogramNames, null);
+            chromatogramNames, null);
 
         // return bidiBestHitList;
     }
 
     public static List<MissingPeak2D> getMissingPeaks(
-            List<List<Point>> bidiBestHitList, List<List<Peak2D>> peaklist,
-            int scansPerModulation) {
+        List<List<Point>> bidiBestHitList, List<List<Peak2D>> peaklist,
+        int scansPerModulation) {
         final List<MissingPeak2D> missing = new ArrayList<MissingPeak2D>();
         final int chromatogramCount = bidiBestHitList.get(0).size();
         final int peakCount = bidiBestHitList.size();
@@ -193,11 +191,11 @@ public class BBHTools {
                         if (p2.x != -1) {
                             pe2 = peaklist.get(p2.y).get(p2.x);
                             dx = Math.abs(pe1.getPeakArea().getSeedPoint().x
-                                    - pe2.getPeakArea().getSeedPoint().x);
+                                - pe2.getPeakArea().getSeedPoint().x);
                             dxl.add(dx);
                             maxFirstDelta = Math.max(maxFirstDelta, dx);
                             dy = Math.abs(pe1.getPeakArea().getSeedPoint().y
-                                    - pe2.getPeakArea().getSeedPoint().y);
+                                - pe2.getPeakArea().getSeedPoint().y);
                             dyl.add(dy);
                             maxSecondDelta = Math.max(maxSecondDelta, dy);
                         }
@@ -212,9 +210,9 @@ public class BBHTools {
                 missingPeak.setMeanFirstScanIndex(meanFirstScanIndex);
                 missingPeak.setMeanSecondScanIndex(meanSecondScanIndex);
                 missingPeak.setMaxFirstDelta(
-                        (int) ((double) maxFirstDelta * 1.25)); //adding 25% as additional offset
+                    (int) ((double) maxFirstDelta * 1.25)); //adding 25% as additional offset
                 missingPeak.setMaxSecondDelta(
-                        (int) ((double) maxSecondDelta * 1.25)); // adding 25% as additional offset
+                    (int) ((double) maxSecondDelta * 1.25)); // adding 25% as additional offset
                 missingPeak.setAverageCount(c);
                 missing.add(missingPeak);
             }

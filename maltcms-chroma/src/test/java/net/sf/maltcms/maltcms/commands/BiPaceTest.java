@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,28 +27,25 @@
  */
 package net.sf.maltcms.maltcms.commands;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import maltcms.commands.fragments.peakfinding.TICPeakFinder;
-import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
-import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
-import maltcms.test.ZipResourceExtractor;
-import maltcms.test.AFragmentCommandTest;
-
-import org.junit.Test;
-
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
+import cross.test.IntegrationTest;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
+import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
-import cross.test.IntegrationTest;
-import java.io.IOException;
+import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
+import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
+import maltcms.test.AFragmentCommandTest;
+import maltcms.test.ZipResourceExtractor;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 /**
@@ -57,17 +54,17 @@ import org.junit.experimental.categories.Category;
  */
 @Category(IntegrationTest.class)
 public class BiPaceTest extends AFragmentCommandTest {
-    
+
     /**
      *
      */
     @Test
-    public void testChromA() throws IOException  {
+    public void testChromA() throws IOException {
         File dataFolder = tf.newFolder("chromaTest Data ö");
         File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
+            "/cdf/1D/glucoseA.cdf.gz", dataFolder);
         File inputFile2 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
+            "/cdf/1D/glucoseB.cdf.gz", dataFolder);
         File outputBase = tf.newFolder("chromaTest Out ü");
         List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
         commands.add(new DefaultVarLoader());
@@ -90,7 +87,7 @@ public class BiPaceTest extends AFragmentCommandTest {
         commands.add(tpf);
         commands.add(new PeakCliqueAlignment());
         IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1, inputFile2));
+            inputFile1, inputFile2));
         testWorkflow(w);
     }
 

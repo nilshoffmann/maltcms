@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,16 +27,15 @@
  */
 package maltcms.datastructures.quadTree;
 
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.List;
-
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ConstraintViolationException;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import maltcms.datastructures.quadTree.distances.PerpendicularDistance;
 
 /**
@@ -65,16 +64,16 @@ public class QuadTreeNode<T> {
         this.s = "Node[" + level + "] x:" + this.r.x + ", y:" + this.r.y + ", width:" + this.r.width + ", height:" + this.r.height;
     }
 
-	public List<Tuple2D<Point2D, T>> getClosestChildrenPerpendicularToLine(List<Tuple2D<Point2D, T>> children, Line2D l, double distance) {
-		PerpendicularDistance pd = new PerpendicularDistance();
-		    //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
+    public List<Tuple2D<Point2D, T>> getClosestChildrenPerpendicularToLine(List<Tuple2D<Point2D, T>> children, Line2D l, double distance) {
+        PerpendicularDistance pd = new PerpendicularDistance();
+        //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
         if (this.t != null) {//this node has no children yet
             //iterate over local points
             for (Tuple2D<Point2D, T> tple : this.t) {
                 double dist1 = pd.distance(tple.getFirst(), l);//tple.getFirst().distance(p);
                 //check if query is in distance
                 if (dist1 <= distance) {
-					children.add(tple);
+                    children.add(tple);
                 }
             }
         }
@@ -84,7 +83,7 @@ public class QuadTreeNode<T> {
             for (QuadTreeNode<T> qtn : this.children) {
                 if (qtn != null) {
                     //intersection with quadrant
-                    if (l.intersects(qtn.getArea()) || qtn.getArea().intersectsLine(l) || (qtn.getArea().contains(l.getP1()) && qtn.getArea().contains(l.getP2())) ) {
+                    if (l.intersects(qtn.getArea()) || qtn.getArea().intersectsLine(l) || (qtn.getArea().contains(l.getP1()) && qtn.getArea().contains(l.getP2()))) {
                         //check for closest child
                         qtn.getClosestChildrenPerpendicularToLine(children, l, distance);
                     }
@@ -92,8 +91,8 @@ public class QuadTreeNode<T> {
             }
         }
         return children;
-	}
-	
+    }
+
     public List<Tuple2D<Point2D, T>> getChildrenInRadius(List<Tuple2D<Point2D, T>> children, Point2D p, double radius) {
         //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
         if (this.t != null) {//this node has no children yet

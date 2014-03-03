@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,17 +27,16 @@
  */
 package maltcms.commands.fragments2d.peakfinding.bbh;
 
+import cross.datastructures.fragments.IFileFragment;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import maltcms.datastructures.peak.Peak2D;
-import cross.datastructures.fragments.IFileFragment;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.peak.Peak2D;
 
 @Slf4j
 @Data
@@ -59,7 +58,7 @@ public class Peak2DClique {
     }
 
     public Peak2DClique(String id, Collection<IFileFragment> f,
-            List<Peak2D> peaks) {
+        List<Peak2D> peaks) {
         this(id);
         Iterator<IFileFragment> i1 = f.iterator();
         Iterator<Peak2D> i2 = peaks.iterator();

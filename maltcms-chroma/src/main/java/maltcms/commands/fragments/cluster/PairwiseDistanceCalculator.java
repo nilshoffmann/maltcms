@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,40 +27,38 @@
  */
 package maltcms.commands.fragments.cluster;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import maltcms.datastructures.fragments.PairwiseDistances;
-import maltcms.io.csv.CSVWriter;
-
-import org.apache.commons.configuration.Configuration;
-
-import ucar.ma2.ArrayChar;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.MAMath;
-import ucar.ma2.MAMath.MinMax;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowProgressResult;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
-import cross.datastructures.tools.EvalTools;
+import java.io.File;
 import java.net.URI;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.AWorkerFactory;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.PairwiseDistanceResult;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.PairwiseDistanceWorker;
+import maltcms.datastructures.fragments.PairwiseDistances;
+import maltcms.io.csv.CSVWriter;
 import net.sf.mpaxs.api.ICompletionService;
+import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.ArrayChar;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.MAMath;
+import ucar.ma2.MAMath.MinMax;
 
 /**
  * Calculates pairwise scores or costs between time series of different lengths.
@@ -95,7 +93,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
     }
 
     private List<Tuple2D<IFileFragment, IFileFragment>> checkInput(
-            final TupleND<IFileFragment> t) {
+        final TupleND<IFileFragment> t) {
         List<Tuple2D<IFileFragment, IFileFragment>> list;
         if (this.pairsWithFirstElement) {
             list = t.getPairsWithFirstElement();
@@ -103,7 +101,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
             list = t.getPairs();
         }
         EvalTools.notNull(list, "Input list for " + this.getClass().getName()
-                + " is null!", this);
+            + " is null!", this);
         EvalTools.inRangeI(1, Integer.MAX_VALUE, list.size(), this);
         return list;
     }
@@ -117,11 +115,11 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
     @Override
     public void configure(final Configuration cfg) {
         this.minArrayComp = cfg.getString("var.minimizing_array_comp",
-                "minimizing_array_comp");
+            "minimizing_array_comp");
         this.pairsWithFirstElement = cfg.getBoolean(this.getClass().getName()
-                + ".pairsWithFirstElement", false);
+            + ".pairsWithFirstElement", false);
         this.pwdExtension = cfg.getString(this.getClass().getName()
-                + ".pwdExtension", "");
+            + ".pwdExtension", "");
     }
 
     /**
@@ -160,8 +158,8 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
     }
 
     private ArrayChar.D2 initNames(final TupleND<IFileFragment> t,
-            final HashMap<URI, Integer> filenameToIndex, final int nextIndex1,
-            final int maxlength) {
+        final HashMap<URI, Integer> filenameToIndex, final int nextIndex1,
+        final int maxlength) {
         int nextIndex = nextIndex1;
         Iterator<IFileFragment> ffiter;
         final ArrayChar.D2 names = new ArrayChar.D2(t.size(), maxlength);
@@ -179,13 +177,13 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
     }
 
     private void normalizePairwiseDistances(
-            final ArrayDouble.D2 pairwiseDistances, final boolean isDistance) {
+        final ArrayDouble.D2 pairwiseDistances, final boolean isDistance) {
         final MinMax mm = MAMath.getMinMax(pairwiseDistances);
         double val = 0;
         for (int i = 0; i < pairwiseDistances.getShape()[0]; i++) {
             for (int j = 0; j < pairwiseDistances.getShape()[1]; j++) {
                 val = (pairwiseDistances.get(i, j) - mm.min)
-                        / (mm.max - mm.min);
+                    / (mm.max - mm.min);
                 if (isDistance) {
                     pairwiseDistances.set(i, j, val);
                 } else {
@@ -203,7 +201,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
      * @return
      */
     protected TupleND<IFileFragment> pairwiseDistances(
-            final TupleND<IFileFragment> t, final PairwiseDistanceCalculator pdc) {
+        final TupleND<IFileFragment> t, final PairwiseDistanceCalculator pdc) {
         EvalTools.notNull(t, this);
         log.info("Received " + t.getSize() + " elements!");
         final List<Tuple2D<IFileFragment, IFileFragment>> list = checkInput(t);
@@ -214,28 +212,28 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
         final HashMap<URI, Integer> filenameToIndex = new HashMap<URI, Integer>();
         final int nextIndex = 0;
         final ArrayDouble.D2 pairwiseDistances = new ArrayDouble.D2(
-                t.getSize(), t.getSize());
+            t.getSize(), t.getSize());
         final Iterator<IFileFragment> ffiter = t.getIterator();
         final int maxlength = initMaxLength(ffiter);
         final ArrayChar.D2 names = initNames(t, filenameToIndex, nextIndex,
-                maxlength);
+            maxlength);
 
         final TupleND<IFileFragment> alignments = new TupleND<IFileFragment>();
         final Iterator<Tuple2D<IFileFragment, IFileFragment>> iter = list.iterator();
         int tcnt = 0;
         final int lsize = list.size();
         final String[] stepnames = new String[t.getSize() * (t.getSize() - 1)
-                / 2];
+            / 2];
 
         ICompletionService<PairwiseDistanceResult> ccs = createCompletionService(PairwiseDistanceResult.class);
         while (iter.hasNext()) {
             final Tuple2D<IFileFragment, IFileFragment> tuple = iter.next();
             stepnames[tcnt] = "Pairwise distance/similarity of "
-                    + tuple.getFirst().getName() + " and "
-                    + tuple.getSecond().getName();
+                + tuple.getFirst().getName() + " and "
+                + tuple.getSecond().getName();
             log.debug("Creating job for tuple {}/{}: {} with {}", new Object[]{
-                        (tcnt + 1), list.size(), tuple.getFirst().getName(),
-                        tuple.getSecond().getName()});
+                (tcnt + 1), list.size(), tuple.getFirst().getName(),
+                tuple.getSecond().getName()});
             final PairwiseDistanceWorker worker = workerFactory.create();
             if (tcnt == 0) {
                 log.info("Using {} as pairwise sequence function.", worker.getSimilarity().getClass().getName());
@@ -249,7 +247,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
             tcnt++;
         }
         final DefaultWorkflowProgressResult dwpr = new DefaultWorkflowProgressResult(
-                stepnames, this, getWorkflowSlot());
+            stepnames, this, getWorkflowSlot());
         List<PairwiseDistanceResult> results = Collections.emptyList();
         try {
             results = ccs.call();
@@ -269,8 +267,8 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
                 IFileFragment ff = new FileFragment(tpl.getAlignment());
                 alignments.add(ff);
                 final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                        new File(ff.getUri()), this,
-                        WorkflowSlot.ALIGNMENT, ff);
+                    new File(ff.getUri()), this,
+                    WorkflowSlot.ALIGNMENT, ff);
                 getWorkflow().append(dwr);
                 // notify workflow
                 getWorkflow().append(dwpr.nextStep());
@@ -280,7 +278,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
         // set diagonal values appropriately
         for (int i = 0; i < pairwiseDistances.getShape()[0]; i++) {
             pairwiseDistances.set(i, i, this.minimizingLocalDistance ? 0.0d
-                    : 1.0d);
+                : 1.0d);
         }
         final String name = "pairwise_distances" + this.pwdExtension + ".cdf";
         final PairwiseDistances pd = new PairwiseDistances();
@@ -295,7 +293,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
         pd.modify(ret);
         ret.save();
         final DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(
-                ret.getUri()), this, WorkflowSlot.STATISTICS, ret);
+            ret.getUri()), this, WorkflowSlot.STATISTICS, ret);
         getWorkflow().append(dwr);
         // Factory.getInstance().getConfiguration().setProperty(
         // "pairwise_distances_location", ret.getAbsolutePath());
@@ -304,14 +302,14 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
         final TupleND<IFileFragment> tple = new TupleND<IFileFragment>();
         for (final IFileFragment iff : t) {
             final IFileFragment rf = new FileFragment(new File(getWorkflow().getOutputDirectory(this),
-                    iff.getName()));
+                iff.getName()));
             rf.addSourceFile(iff);
             rf.addSourceFile(ret);
             rf.save();
             tple.add(rf);
             final DefaultWorkflowResult wr = new DefaultWorkflowResult(
-                    new File(rf.getUri()), this,
-                    WorkflowSlot.STATISTICS, rf);
+                new File(rf.getUri()), this,
+                WorkflowSlot.STATISTICS, rf);
             getWorkflow().append(wr);
         }
         return tple;
@@ -324,10 +322,10 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
      * @param names
      */
     public void saveToCSV(final IFileFragment pwdist,
-            final ArrayDouble.D2 distances, final ArrayChar.D2 names) {
+        final ArrayDouble.D2 distances, final ArrayChar.D2 names) {
         final CSVWriter csvw = Factory.getInstance().getObjectFactory().instantiate(CSVWriter.class);
         csvw.setWorkflow(getWorkflow());
         csvw.writeArray2DwithLabels(getWorkflow().getOutputDirectory(this).getAbsolutePath(), "pairwise_distances.csv", distances, names,
-                this.getClass(), WorkflowSlot.STATISTICS, getWorkflow().getStartupDate(), pwdist);
+            this.getClass(), WorkflowSlot.STATISTICS, getWorkflow().getStartupDate(), pwdist);
     }
 }

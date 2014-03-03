@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,13 +27,13 @@
  */
 package maltcms.commands.distances;
 
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
 import cross.commands.ICommand;
 import cross.datastructures.StatsMap;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.workflow.IWorkflowElement;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
 
 /**
  * Interface to allow the values of comparison of multiple arrays to also be
@@ -43,7 +43,7 @@ import cross.datastructures.workflow.IWorkflowElement;
  *
  */
 public interface PairwiseFeatureSequenceSimilarity extends
-        ICommand<Tuple2D<Array[], Array[]>, Array[]>, IWorkflowElement {
+    ICommand<Tuple2D<Array[], Array[]>, Array[]>, IWorkflowElement {
 
     /**
      *

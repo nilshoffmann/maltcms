@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -38,24 +38,24 @@ import cross.datastructures.fragments.ImmutableVariableFragment2;
 import cross.datastructures.fragments.VariableFragment;
 import cross.exception.ResourceNotAvailableException;
 import cross.test.LogMethodName;
-import maltcms.test.ExtractClassPathFiles;
+import cross.test.SetupLogging;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
-import cross.test.SetupLogging;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
+import maltcms.test.ExtractClassPathFiles;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -103,7 +103,7 @@ public class NetcdfDataSourceTest {
             Assert.assertEquals(1, getDataSource().canRead(new FileFragment(f)));
 //            FileFragment.clearFragments();
             Assert.assertEquals(1, getDataSource().
-                    canRead(new ImmutableFileFragment(new FileFragment(f.toURI()))));
+                canRead(new ImmutableFileFragment(new FileFragment(f.toURI()))));
         }
 //        FileFragment.clearFragments();
     }
@@ -119,7 +119,7 @@ public class NetcdfDataSourceTest {
             Assert.assertTrue(l.size() > 0);
             try {
                 List<Array> l2 = getDataSource().
-                        readAll(new ImmutableFileFragment(f));
+                    readAll(new ImmutableFileFragment(f));
                 Assert.assertEquals(l.size(), l2.size());
             } catch (UnsupportedOperationException uoe) {
                 Assert.fail(uoe.getLocalizedMessage());
@@ -226,7 +226,7 @@ public class NetcdfDataSourceTest {
     public void testSupportedFormats() {
         String[] fileEnding = new String[]{"nc", "nc.gz", "nc.z", "nc.zip", "nc.gzip", "nc.bz2", "cdf", "cdf.gz", "cdf.z", "cdf.zip", "cdf.gzip", "cdf.bz2"};
         Assert.assertEquals(new NetcdfDataSource().supportedFormats(), Arrays.
-                asList(fileEnding));
+            asList(fileEnding));
     }
 
     public List<Dimension> copyDims(Dimension... dim) {
@@ -262,7 +262,7 @@ public class NetcdfDataSourceTest {
         VariableFragment ivf1 = new VariableFragment(ff, "variable1");
         ivf1.setDimensions(new Dimension[]{dim1, dim2, dim3});
         ivf1.setAttributes(new Attribute("description",
-                "three-dimensional array"));
+            "three-dimensional array"));
         ArrayDouble.D3 arr1 = new ArrayDouble.D3(15, 8, 10);
         ivf1.setArray(arr1);
         usedDimensions.put("variable1", copyDims(dim1, dim2, dim3));
@@ -277,7 +277,7 @@ public class NetcdfDataSourceTest {
         usedDimensions.put("variable2", copyDims(dim3));
         variableNames.add("variable2");
 
-        //unused dimension 
+        //unused dimension
         Dimension dim4 = new Dimension("dim4", 214);
         ff.addDimensions(dim4);
         unusedDimensions.addAll(copyDims(dim4));
@@ -345,7 +345,7 @@ public class NetcdfDataSourceTest {
     public void testWriteRead() throws IOException {
 //        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
-                "DEBUG");
+            "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
         List<Attribute> attributes = new LinkedList<Attribute>();
         List<String> variableNames = new LinkedList<String>();
@@ -359,7 +359,7 @@ public class NetcdfDataSourceTest {
         File testCdf = new File(outputFolder, "testWriteRead.cdf").getAbsoluteFile();
         URI testCdfUri = testCdf.toURI();
         IFileFragment ff = createTestFragment(testCdfUri, variableNames, indexedVariableNames, attributes, variableAttributes,
-                usedDimensions, unusedDimensions, variableToArray);
+            usedDimensions, unusedDimensions, variableToArray);
         Assert.assertEquals(testCdf, new File(ff.getUri()));
         Assert.assertEquals(testCdfUri, ff.getUri());
         boolean b = ff.save();
@@ -368,13 +368,13 @@ public class NetcdfDataSourceTest {
         IVariableFragment variable1 = Factory.getInstance().getDataSourceFactory().getDataSourceFor(ff).readStructure(new ImmutableVariableFragment2(ff, "variable1"));
         Assert.assertNotNull(variable1.getArray());
         directRead(testCdfUri, variableNames, indexedVariableNames, attributes, variableAttributes, usedDimensions, unusedDimensions,
-                variableToArray);
+            variableToArray);
 //        FileFragment.clearFragments();
 //        testIndirectRead(testCdfUri, variableNames, indexedVariableNames, attributes, variableAttributes, usedDimensions, unusedDimensions,
 //                variableToArray);
 //        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
-                "OFF");
+            "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
     }
 
@@ -402,7 +402,7 @@ public class NetcdfDataSourceTest {
         IndexIterator rii1 = b.getIndexIterator();
         log.info("Original shape: {}", Arrays.toString(a.getShape()));
         log.info("Restored shape: {}", Arrays.toString(b.
-                getShape()));
+            getShape()));
         while (ii1.hasNext() && rii1.hasNext()) {
             Assert.assertEquals(ii1.getDoubleNext(), rii1.getDoubleNext());
         }
@@ -410,10 +410,10 @@ public class NetcdfDataSourceTest {
 
     public void directRead(URI testCdf, List<String> variableNames, Map<String, String> indexedVariableNames, List<Attribute> attributes, Map<String, List<Attribute>> variableAttributes, Map<String, List<Dimension>> usedDimensions, List<Dimension> unusedDimensions, Map<String, List<Array>> variableToArray) throws ResourceNotAvailableException {
         System.out.
-                println("###################################################");
+            println("###################################################");
         System.out.println("# Testing direct read on file " + testCdf);
         sl.setLogLevel("cross.datastructures.fragments",
-                "DEBUG");
+            "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
         //read in the created file
         IFileFragment readFragment = new FileFragment(testCdf);
@@ -427,7 +427,7 @@ public class NetcdfDataSourceTest {
             System.out.println("Variable: " + v.toString());
             System.out.println("\tDataType: " + v.getDataType());
             System.out.println("\tDimensions: " + Arrays.toString(v.
-                    getDimensions()));
+                getDimensions()));
         }
         System.out.println("Global attributes: ");
         for (Attribute attribute : readFragment.getAttributes()) {
@@ -469,17 +469,17 @@ public class NetcdfDataSourceTest {
 
         System.out.println("###################################################");
         sl.setLogLevel("cross.datastructures.fragments",
-                "OFF");
+            "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
         //test direct read
     }
 
     public void indirectRead(URI testCdf, List<String> variableNames, Map<String, String> indexedVariableNames, List<Attribute> attributes, Map<String, List<Attribute>> variableAttributes, Map<String, List<Dimension>> usedDimensions, List<Dimension> unusedDimensions, Map<String, List<Array>> variableToArray) throws ResourceNotAvailableException {
         System.out.
-                println("###################################################");
+            println("###################################################");
         System.out.println("# Testing indirect read on file " + testCdf);
         sl.setLogLevel("cross.datastructures.fragments",
-                "DEBUG");
+            "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
         File outputFolder;
         try {
@@ -530,13 +530,13 @@ public class NetcdfDataSourceTest {
                 }
             }
             System.out.println(
-                    "###################################################");
+                "###################################################");
         } catch (IOException ex) {
             log.error("Caught exception", ex);
             Assert.fail(ex.getLocalizedMessage());
         }
         sl.setLogLevel("cross.datastructures.fragments",
-                "OFF");
+            "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
         //test indirect read
     }
@@ -548,7 +548,7 @@ public class NetcdfDataSourceTest {
     public void testMultiChainedReadWrite() {
 //        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
-                "DEBUG");
+            "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
         List<IFileFragment> sources = new LinkedList<IFileFragment>();
         for (File f : ecpf.getFiles()) {
@@ -570,11 +570,11 @@ public class NetcdfDataSourceTest {
                     work.addSourceFile(fragments[i]);
                     //create a shadowing variable
                     IVariableFragment shadow = new VariableFragment(work,
-                            "shadow-" + i);
+                        "shadow-" + i);
                     shadow.setArray(Array.factory(new int[]{j}));
                     //create unique variable
                     IVariableFragment unique = new VariableFragment(work,
-                            "unique-" + j);
+                        "unique-" + j);
                     unique.setArray(Array.factory(new int[]{i, j}));
                     System.out.println(work.toString());
                     work.save();
@@ -601,12 +601,12 @@ public class NetcdfDataSourceTest {
             }
         } catch (Exception ex) {
             Logger.getLogger(NetcdfDataSourceIntegrationTest.class.getName()).
-                    log(Level.SEVERE, null, ex);
+                log(Level.SEVERE, null, ex);
             Assert.fail(ex.getLocalizedMessage());
         }
 //        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
-                "OFF");
+            "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
     }
 
@@ -656,16 +656,16 @@ public class NetcdfDataSourceTest {
         Assert.assertNull(f.getChild("indexVar1").getIndex());
         Assert.assertFalse(f.getChild("variable1").getIndexedArray().isEmpty());
     }
-	
-	@Test
+
+    @Test
     public void testInvalidIndexFragment() {
-		IFileFragment f = createInvalidIndexTestFragment();
+        IFileFragment f = createInvalidIndexTestFragment();
         f.save();
         //first check that all are there
         Assert.assertNotNull(f.getChild("variable1"));
         Assert.assertNotNull(f.getChild("variable2"));
         Assert.assertNotNull(f.getChild("indexVar1"));
-		Assert.assertNotNull(f.getChild("indexVar2"));
+        Assert.assertNotNull(f.getChild("indexVar2"));
         Assert.assertNotNull(f.getChild("variable3"));
         try {
             f.getChild("variable3");
@@ -678,15 +678,15 @@ public class NetcdfDataSourceTest {
         f.getChild("variable2").setIndex(f.getChild("indexVar2"));
         Assert.assertNotNull(f.getChild("variable2").getIndex());
         Assert.assertEquals(f.getChild("indexVar1"), f.getChild("variable1").getIndex());
-		Assert.assertEquals(f.getChild("indexVar2"), f.getChild("variable2").getIndex());
+        Assert.assertEquals(f.getChild("indexVar2"), f.getChild("variable2").getIndex());
         Assert.assertNull(f.getChild("variable3").getIndex());
         Assert.assertNull(f.getChild("indexVar1").getIndex());
-		Assert.assertNull(f.getChild("indexVar2").getIndex());
+        Assert.assertNull(f.getChild("indexVar2").getIndex());
         Assert.assertFalse(f.getChild("variable1").getIndexedArray().isEmpty());
-		Assert.assertFalse(f.getChild("variable2").getIndexedArray().isEmpty());
-	}
+        Assert.assertFalse(f.getChild("variable2").getIndexedArray().isEmpty());
+    }
 
-	public IFileFragment createInvalidIndexTestFragment() {
+    public IFileFragment createInvalidIndexTestFragment() {
         try {
             File folder = tf.newFolder();
             IFileFragment f = new FileFragment(new File(folder, "invalidIndexTestFrag.cdf"));
@@ -704,13 +704,13 @@ public class NetcdfDataSourceTest {
             f.getChild("variable2").setIndexedArray(l2);
             f.addChild("variable3").setArray(Array.factory(new double[]{2, 3.3, 235.32, 352.3}));
             f.getChild("indexVar1").setArray(Array.factory(new int[]{2, 3, 1, 4}));
-			f.getChild("indexVar2").setArray(Array.factory(new int[]{2, 3}));
+            f.getChild("indexVar2").setArray(Array.factory(new int[]{2, 3}));
             return f;
         } catch (IOException ioex) {
             throw new RuntimeException(ioex);
         }
     }
-	
+
     public IFileFragment createTestFragment() {
         try {
             File folder = tf.newFolder();

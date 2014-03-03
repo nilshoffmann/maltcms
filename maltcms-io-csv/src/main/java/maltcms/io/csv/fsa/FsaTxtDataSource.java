@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -30,61 +30,58 @@ package maltcms.io.csv.fsa;
 /*
  * Copyright (C) 2008, 2009 Nils Hoffmann Nils.Hoffmann A T
  * CeBiTec.Uni-Bielefeld.DE
- * 
+ *
  * This file is part of Cross/Maltcms.
- * 
+ *
  * Cross/Maltcms is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- * 
+ *
  * Cross/Maltcms is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Cross/Maltcms. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * $Id$
  */
 import cross.Factory;
 import cross.datastructures.fragments.FileFragment;
+import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tools.FileTools;
+import cross.datastructures.tuple.Tuple2D;
+import cross.exception.NotImplementedException;
+import cross.exception.ResourceNotAvailableException;
+import cross.io.IDataSource;
+import cross.tools.StringTools;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.event.ConfigurationEvent;
-
-import ucar.ma2.Array;
-import ucar.nc2.Dimension;
-import ucar.nc2.NetcdfFileWriteable;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IVariableFragment;
-import cross.exception.ResourceNotAvailableException;
-import cross.io.IDataSource;
-import cross.datastructures.tools.EvalTools;
-import cross.datastructures.tools.FileTools;
-import cross.datastructures.tuple.Tuple2D;
-import cross.exception.NotImplementedException;
-import cross.tools.StringTools;
-import java.io.FileInputStream;
-import java.net.URI;
-import java.util.Vector;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.io.csv.CSVReader;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
+import ucar.nc2.Dimension;
+import ucar.nc2.NetcdfFileWriteable;
 
 /**
  * Implementation of {@link cross.io.IDataSource} for csv files containing
@@ -115,23 +112,23 @@ public class FsaTxtDataSource implements IDataSource {
     private int dataFieldToRead = 3;
 
     private Dimension addDimension(final NetcdfFileWriteable nfw,
-            final HashMap<String, Dimension> dimensions,
-            final IVariableFragment vf, final Dimension element) {
+        final HashMap<String, Dimension> dimensions,
+        final IVariableFragment vf, final Dimension element) {
 
         String dimname = element.getName();
 
         if (this.pointDimensionVars.contains(vf.getName())) {
             dimname = this.pointDimensionName;
             log.debug("Renaming dimension {} to {} for variable {}",
-                    new Object[]{element.getName(), dimname,
-                        vf.getName()});
+                new Object[]{element.getName(), dimname,
+                    vf.getName()});
         }
 
         if (this.scanDimensionVars.contains(vf.getName())) {
             dimname = this.scanDimensionName;
             log.debug("Renaming dimension {} to {} for variable {}",
-                    new Object[]{element.getName(), dimname,
-                        vf.getName()});
+                new Object[]{element.getName(), dimname,
+                    vf.getName()});
         }
 
         Dimension d = null;
@@ -142,8 +139,8 @@ public class FsaTxtDataSource implements IDataSource {
         } else {
 
             d = nfw.addDimension(dimname, element.getLength(),
-                    element.isShared(), element.isUnlimited(), element.
-                    isVariableLength());
+                element.isShared(), element.isUnlimited(), element.
+                isVariableLength());
             dimensions.put(dimname, d);
         }
         return d;
@@ -154,7 +151,7 @@ public class FsaTxtDataSource implements IDataSource {
         final int dotindex = ff.getName().indexOf(".");
         if (dotindex == -1) {
             throw new RuntimeException("Could not determine File extension of "
-                    + ff);
+                + ff);
         }
         final String fileending = ff.getName().substring(dotindex + 1);
         // System.out.println("fileending: "+fileending);
@@ -174,23 +171,23 @@ public class FsaTxtDataSource implements IDataSource {
     @Override
     public void configure(final Configuration configuration) {
         this.scanDimensionVars = StringTools.toStringList(configuration.getList(this.
-                getClass().getName() + ".scanDimensionVars"));
+            getClass().getName() + ".scanDimensionVars"));
         Collections.sort(this.scanDimensionVars);
         this.scanDimensionName = configuration.getString(this.getClass().getName()
-                + ".scanDimensionName", "scan_number");
+            + ".scanDimensionName", "scan_number");
         this.pointDimensionVars = StringTools.toStringList(configuration.getList(this.
-                getClass().getName() + ".pointDimensionVars"));
+            getClass().getName() + ".pointDimensionVars"));
         Collections.sort(this.pointDimensionVars);
         this.pointDimensionName = configuration.getString(this.getClass().
-                getName()
-                + ".pointDimensionName", "point_number");
+            getName()
+            + ".pointDimensionName", "point_number");
         this.dataFieldToRead = configuration.getInt(
-                this.getClass().getName() + ".dataFieldToRead", 3);
+            this.getClass().getName() + ".dataFieldToRead", 3);
     }
 
     @Override
     public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
-            FileNotFoundException, ResourceNotAvailableException {
+        FileNotFoundException, ResourceNotAvailableException {
         final ArrayList<IVariableFragment> al = readStructure(f);
         final ArrayList<Array> ral = new ArrayList<Array>(al.size());
         for (final IVariableFragment vf : al) {
@@ -202,41 +199,41 @@ public class FsaTxtDataSource implements IDataSource {
 
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
-            throws IOException, FileNotFoundException,
-            ResourceNotAvailableException {
+        throws IOException, FileNotFoundException,
+        ResourceNotAvailableException {
         throw new NotImplementedException();
     }
 
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
-            ResourceNotAvailableException, FileNotFoundException {
+        ResourceNotAvailableException, FileNotFoundException {
         log.debug("Reading single of {}, child of {}", f.toString(),
-                f.getParent().toString());
+            f.getParent().toString());
         log.debug("{}", f.getParent().toString());
         if (f.getName().equals("total_intensity")) {
             Array data = getDataEntry(f.getParent().getUri(),
-                    dataFieldToRead);
+                dataFieldToRead);
             f.setDimensions(new Dimension[]{new Dimension(scanDimensionName,
-                        data.getShape()[0])});
+                data.getShape()[0])});
             return data;
         } else if (f.getName().equals("scan_index")) {
             Array data = getDataEntry(f.getParent().getUri(),
-                    dataFieldToRead);
+                dataFieldToRead);
             Array scanIndex = new ArrayInt.D1(data.getShape()[0]);
             for (int i = 0; i < data.getShape()[0]; i++) {
                 scanIndex.setInt(i, i);
             }
             f.setDimensions(new Dimension[]{new Dimension(scanDimensionName,
-                        scanIndex.getShape()[0])});
+                scanIndex.getShape()[0])});
             return scanIndex;
         }
         throw new ResourceNotAvailableException("Could not retrieve array for fragment " + f.
-                getName());
+            getName());
     }
 
     protected CSVReader read(CSVReader csvr, String inputFileName) throws IOException {
         String fileExtension = StringTools.getFileExtension(inputFileName).
-                toLowerCase();
+            toLowerCase();
         csvr.setComment("#");
         csvr.setFirstLineHeaders(true);
 
@@ -246,14 +243,14 @@ public class FsaTxtDataSource implements IDataSource {
 
         } else {
             throw new IOException(
-                    "Unsupported file extension for CsvDataSource: " + fileExtension);
+                "Unsupported file extension for CsvDataSource: " + fileExtension);
         }
         return csvr;
     }
 
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
-            throws IOException, FileNotFoundException {
+        throws IOException, FileNotFoundException {
         log.debug("Reading structure of {}", f.toString());
         final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
         for (IVariableFragment iv : f) {
@@ -268,8 +265,8 @@ public class FsaTxtDataSource implements IDataSource {
 
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
-            throws IOException, FileNotFoundException,
-            ResourceNotAvailableException {
+        throws IOException, FileNotFoundException,
+        ResourceNotAvailableException {
         log.debug("Reading structure of {}", f.toString());
         Array a = readSingle(f);
 //        f.setArray(a);
@@ -301,10 +298,10 @@ public class FsaTxtDataSource implements IDataSource {
             }
         } catch (IOException ex) {
             Logger.getLogger(FsaTxtDataSource.class.getName()).
-                    log(Level.SEVERE, null, ex);
+                log(Level.SEVERE, null, ex);
         }
         throw new ResourceNotAvailableException("Could not retrieve data item " + id + " from file " + f.
-                toString());
+            toString());
     }
 
     @Override

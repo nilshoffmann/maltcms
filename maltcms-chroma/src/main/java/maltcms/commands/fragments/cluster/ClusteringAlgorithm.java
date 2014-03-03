@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,47 +27,44 @@
  */
 package maltcms.commands.fragments.cluster;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.Map.Entry;
-
-import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
-import maltcms.datastructures.cluster.BinaryCluster;
-import maltcms.datastructures.fragments.PairwiseDistances;
-import maltcms.io.misc.StatsWriter;
-import maltcms.tools.MaltcmsTools;
-
-import org.apache.commons.configuration.Configuration;
-import java.util.Arrays;
-
-import ucar.ma2.ArrayChar;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.StatsMap;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
-import cross.datastructures.tools.EvalTools;
 import cross.tools.StringTools;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
 import maltcms.commands.distances.dtw.MZIDynamicTimeWarp;
 import maltcms.commands.fragments.warp.PathWarp;
+import maltcms.datastructures.cluster.BinaryCluster;
+import maltcms.datastructures.fragments.PairwiseDistances;
+import maltcms.io.misc.StatsWriter;
+import maltcms.tools.MaltcmsTools;
+import org.apache.commons.configuration.Configuration;
+import ucar.ma2.ArrayChar;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayInt;
 
 /**
  * Abstract base class for clustering algorithms based on similarity or distance
@@ -79,7 +76,7 @@ import maltcms.commands.fragments.warp.PathWarp;
 @Slf4j
 @Data
 public abstract class ClusteringAlgorithm extends AFragmentCommand implements
-        IClusteringAlgorithm {
+    IClusteringAlgorithm {
 
     @Override
     public String toString() {
@@ -88,16 +85,16 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.commands.fragments.cluster.IClusteringAlgorithm#toGraphML()
      */
     public static String toGraphML(final IClusteringAlgorithm ica) {
         final StringBuilder sb = new StringBuilder();
         final String header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" "
-                + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                + "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns "
-                + "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">";
+            + "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" "
+            + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+            + "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns "
+            + "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">";
 
         final String gbegin = "<graph id=\"G\" edgedefault=\"undirected\">";
         final String gend = "</graph>";
@@ -115,14 +112,14 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
             if (lc != -1) {
                 final double lcv = ica.getCluster(lc).getDistanceToParent();
                 edges += "<edge id=\"e" + (edgecnt++) + "\" source=\"n" + lc
-                        + "\" target=\"n" + e.getKey() + "\">";
+                    + "\" target=\"n" + e.getKey() + "\">";
                 edges += "<data key=\"d1\">" + lcv + "</data>";
                 edges += "</edge>";
             }
             if (rc != -1) {
                 final double rcv = ica.getCluster(rc).getDistanceToParent();
                 edges += "<edge id=\"e" + (edgecnt++) + "\" source=\"n" + rc
-                        + "\" target=\"n" + e.getKey() + "\">";
+                    + "\" target=\"n" + e.getKey() + "\">";
                 edges += "<data key=\"d1\">" + rcv + "</data>";
                 edges += "</edge>";
             }
@@ -177,18 +174,18 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
         this.names[k] = "((" + this.names[i] + ")" + this.names[j] + ")";
         this.clusterNames[k] = this.clusterNames[i] + "_vs_"
-                + this.clusterNames[j];
+            + this.clusterNames[j];
         this.nameToNameLookup.put(k, new Tuple2D<String, String>(
-                this.clusterNames[i], this.clusterNames[j]));
+            this.clusterNames[i], this.clusterNames[j]));
         log.debug("Merging cluster " + i + " (" + this.names[i] + ") and "
-                + j + " (" + this.names[j] + ") with prior distance of "
-                + d(i, j));
+            + j + " (" + this.names[j] + ") with prior distance of "
+            + d(i, j));
         joinIJtoK(i, j, k, dmat(i, j, k));
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seemaltcms.commands.fragments.cluster.IClusteringAlgorithm#apply(cross.
      * datastructures.tuple.TupleND)
      */
@@ -200,7 +197,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         pwds = new ArrayDouble.D2(this.names.length, this.names.length);
         merge();
         final ArrayList<IFileFragment> al = new ArrayList<IFileFragment>(
-                this.fragments.size());
+            this.fragments.size());
         log.debug("Finished merging!");
         for (int i = 0; i < this.fragments.size(); i++) {
             final IFileFragment ff = this.fragments.get(i);
@@ -234,33 +231,33 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         pd.setAlignments(new TupleND<IFileFragment>(this.alignments));
         pd.setWorkflow(getWorkflow());
         final IFileFragment ret = new FileFragment(
-                new File(getWorkflow().getOutputDirectory(pd), name));
+            new File(getWorkflow().getOutputDirectory(pd), name));
         pd.modify(ret);
         ret.save();
         final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                ret.getUri(), this, WorkflowSlot.STATISTICS, ret);
+            ret.getUri(), this, WorkflowSlot.STATISTICS, ret);
         getWorkflow().append(dwr);
 
         log.info("Returned FileFragments: {}", al);
         TupleND<IFileFragment> retFiles = new TupleND<IFileFragment>();
         for (final IFileFragment iff : al) {
             final IFileFragment rf = new FileFragment(
-                    new File(getWorkflow().getOutputDirectory(this),
+                new File(getWorkflow().getOutputDirectory(this),
                     iff.getName()));
             rf.addSourceFile(iff);
             rf.addSourceFile(ret);
             retFiles.add(rf);
             rf.save();
             final DefaultWorkflowResult wr = new DefaultWorkflowResult(
-                    rf.getUri(), this,
-                    WorkflowSlot.CLUSTERING, rf);
+                rf.getUri(), this,
+                WorkflowSlot.CLUSTERING, rf);
             getWorkflow().append(wr);
         }
         final File graphml = new File(getWorkflow().getOutputDirectory(this),
-                "maltcms.graphml");
+            "maltcms.graphml");
         try {
             final BufferedWriter bw = new BufferedWriter(
-                    new FileWriter(graphml));
+                new FileWriter(graphml));
             bw.write(ClusteringAlgorithm.toGraphML(this));
             bw.flush();
             bw.close();
@@ -268,7 +265,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
             log.error(e.getLocalizedMessage());
         }
         final File newick = new File(getWorkflow().getOutputDirectory(this),
-                "maltcms.newick");
+            "maltcms.newick");
         try {
             final BufferedWriter bw = new BufferedWriter(new FileWriter(newick));
             bw.write(this.cluster.get(this.dist.length - 1).toNewick() + ";");
@@ -295,20 +292,20 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     @Override
     public void configure(final Configuration cfg) {
         this.pairwiseDistanceMatrixVariableName = cfg.getString(
-                "var.pairwise_distance_matrix", "pairwise_distance_matrix");
+            "var.pairwise_distance_matrix", "pairwise_distance_matrix");
         this.pairwiseDistanceNamesVariableName = cfg.getString(
-                "var.pairwise_distance_names", "pairwise_distance_names");
+            "var.pairwise_distance_names", "pairwise_distance_names");
         this.minimizingArrayCompVariableName = cfg.getString(
-                "var.minimizing_array_comp", "minimizing_array_comp");
+            "var.minimizing_array_comp", "minimizing_array_comp");
         this.minArrayComp = cfg.getString("var.minimizing_array_comp",
-                "minimizing_array_comp");
+            "minimizing_array_comp");
     }
 
     private IFileFragment createDenseArrays(final IFileFragment iff) {
 
         AFragmentCommand dap = Factory.getInstance().getObjectFactory().instantiate(
-                "maltcms.commands.fragments.preprocessing.DenseArrayProducer",
-                AFragmentCommand.class);
+            "maltcms.commands.fragments.preprocessing.DenseArrayProducer",
+            AFragmentCommand.class);
         dap.setWorkflow(getWorkflow());
         return dap.apply(new TupleND<IFileFragment>(iff)).get(0);
     }
@@ -316,10 +313,10 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     public double d(final int i, final int j) {
         if (this.cluster.containsKey(i) && this.cluster.containsKey(j)) {
             return this.cluster.get(Math.max(i, j)).getDistanceTo(
-                    Math.min(i, j));
+                Math.min(i, j));
         } else {
             throw new IllegalArgumentException("ICluster " + i + " or cluster "
-                    + j + " unknown!");
+                + j + " unknown!");
         }
     }
 
@@ -350,7 +347,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.commands.fragments.cluster.IClusteringAlgorithm#getCluster(int)
      */
@@ -390,7 +387,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.commands.fragments.cluster.IClusteringAlgorithm#getFragments()
      */
@@ -417,7 +414,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.commands.fragments.cluster.IClusteringAlgorithm#getNames()
      */
     @Override
@@ -445,7 +442,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
     @Override
@@ -455,7 +452,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.commands.fragments.cluster.IClusteringAlgorithm#handleFileFragments
      * (int, int, int)
@@ -466,16 +463,16 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         EvalTools.notNull(this.chromatogramDistanceFunctionClass, this);
         final long t_start = System.currentTimeMillis();
         final IFileFragment dtw = this.chromatogramDistanceFunctionClass.apply(
-                ff1, ff2);
+            ff1, ff2);
         DefaultWorkflowResult dwr = new DefaultWorkflowResult(dtw.getUri(), this, WorkflowSlot.ALIGNMENT, dtw);
         getWorkflow().append(dwr);
         this.chromatogramWarpCommandClass.setWorkflow(getWorkflow());
         final IFileFragment warped = this.chromatogramWarpCommandClass.apply(
-                new TupleND<IFileFragment>(dtw)).get(0);
+            new TupleND<IFileFragment>(dtw)).get(0);
         alignments.add(dtw);
         final long t_end = System.currentTimeMillis() - t_start;
         final StatsMap sm = new StatsMap(new FileFragment(
-                new File(getWorkflow().getOutputDirectory(this), "NJ_"
+            new File(getWorkflow().getOutputDirectory(this), "NJ_"
                 + StringTools.removeFileExt(ff1.getName())
                 + "_"
                 + StringTools.removeFileExt(ff2.getName())
@@ -486,7 +483,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         sw.setWorkflow(getWorkflow());
         sw.write(sm);
         dwr = new DefaultWorkflowResult(warped.getUri(),
-                this, WorkflowSlot.WARPING, warped);
+            this, WorkflowSlot.WARPING, warped);
         getWorkflow().append(dwr);
 
         final IFileFragment res = createDenseArrays(warped);
@@ -502,7 +499,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     public void init(final double[][] distances, final String[] names1,
-            final TupleND<IFileFragment> fragments1) {
+        final TupleND<IFileFragment> fragments1) {
         this.usedIndices = new HashSet<Integer>();
         this.nameToNameLookup = new HashMap<Integer, Tuple2D<String, String>>();
         final int numjoins = (distances.length) * 2 - 1;
@@ -522,16 +519,16 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         this.cluster = new HashMap<Integer, BinaryCluster>();
         for (int i = 0; i < distances.length; i++) {
             System.arraycopy(distances[i], 0, this.dist[i], 0,
-                    distances.length);
+                distances.length);
             final BinaryCluster njc = new BinaryCluster(names1[i], i,
-                    this.dist[i]);
+                this.dist[i]);
             if (fragments1 != null) {
                 this.fragments.put(i, fragments1.get(i));
             }
             this.cluster.put(i, njc);
             // System.out.println("Adding new ICluster: "+i+" "+names[i]);
             log.debug("Adding initial ICluster (" + (i + 1) + "/"
-                    + distances.length + ") : " + njc.toString());
+                + distances.length + ") : " + njc.toString());
         }
         this.names = new String[numjoins];
         System.arraycopy(names1, 0, this.names, 0, names1.length);
@@ -545,7 +542,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seemaltcms.commands.fragments.cluster.IClusteringAlgorithm#init(cross.
      * datastructures.fragments.FileFragment,
      * cross.datastructures.tuple.TupleND)
@@ -556,11 +553,11 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         // if (pwd.hasChild(this.pwdistMName) && pwd.hasChild(this.pwdistNames)
         // && pwd.hasChild(this.minDistComp)) {
         final ArrayDouble.D2 pwdist = (ArrayDouble.D2) pwd.getChild(
-                this.pairwiseDistanceMatrixVariableName).getArray();
+            this.pairwiseDistanceMatrixVariableName).getArray();
         final ArrayChar.D2 names1 = (ArrayChar.D2) pwd.getChild(
-                this.pairwiseDistanceNamesVariableName).getArray();
+            this.pairwiseDistanceNamesVariableName).getArray();
         final ArrayInt.D0 minimizeDistA = (ArrayInt.D0) pwd.getChild(
-                this.minimizingArrayCompVariableName).getArray();
+            this.minimizingArrayCompVariableName).getArray();
         if (minimizeDistA.get() == 0) {
             this.minimizeDist = false;
         } else {
@@ -605,7 +602,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.commands.fragments.cluster.IClusteringAlgorithm#joinIJtoK(int,
      * int, int, double[])
@@ -614,14 +611,14 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see maltcms.commands.fragments.cluster.IClusteringAlgorithm#merge()
      */
     @Override
     public void merge() {
         log.info("#############################################################################");
         log.info("# Running " + this.getClass().getName()
-                + " as clustering algorithm");
+            + " as clustering algorithm");
         log.info("#############################################################################");
         int newIndex = getL();// L is the number of clusters
         // findMaxDist(newIndex);
@@ -644,7 +641,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.commands.fragments.multiplealignment.ClusteringAlgorithm#printCluster
      * ()
@@ -658,16 +655,16 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     public void printDistanceToNewCluster(final int i, final int j,
-            final int nci) {
+        final int nci) {
         log.debug("Distance of " + this.names[i] + " to new cluster "
-                + this.names[nci] + " " + getCluster(i).getDistanceToParent());
+            + this.names[nci] + " " + getCluster(i).getDistanceToParent());
         log.debug("Distance of " + this.names[j] + " to new cluster "
-                + this.names[nci] + " " + getCluster(j).getDistanceToParent());
+            + this.names[nci] + " " + getCluster(j).getDistanceToParent());
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seemaltcms.commands.fragments.multiplealignment.ClusteringAlgorithm#
      * printDistMatrix()
      */
@@ -679,11 +676,11 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         for (int i = 0; i < this.cluster.size(); i++) {
             for (int j = i; j < this.cluster.size(); j++) {
                 if (!this.usedIndices.contains(i)
-                        && !this.usedIndices.contains(j)) {
+                    && !this.usedIndices.contains(j)) {
                     log.info("d({},{})={}", new Object[]{
-                                this.cluster.get(i).getName(),
-                                this.cluster.get(j).getName(),
-                                this.cluster.get(i).getDistanceTo(j)});
+                        this.cluster.get(i).getName(),
+                        this.cluster.get(j).getName(),
+                        this.cluster.get(i).getDistanceTo(j)});
                 }
             }
         }
@@ -691,7 +688,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seemaltcms.commands.fragments.multiplealignment.ClusteringAlgorithm#
      * printNamesMatrix()
      */
@@ -706,19 +703,19 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /**
      * @param chromatogramDistanceFunctionClass the
-     * chromatogramDistanceFunctionClass to set
+     *                                          chromatogramDistanceFunctionClass to set
      */
     public void setChromatogramDistanceFunction(
-            final PairwiseFeatureSequenceSimilarity chromatogramDistanceFunction) {
+        final PairwiseFeatureSequenceSimilarity chromatogramDistanceFunction) {
         this.chromatogramDistanceFunctionClass = chromatogramDistanceFunction;
     }
 
     /**
      * @param chromatogramWarpCommandClass the chromatogramWarpCommandClass to
-     * set
+     *                                     set
      */
     public void setChromatogramWarpCommand(
-            final AFragmentCommand chromatogramWarpCommand) {
+        final AFragmentCommand chromatogramWarpCommand) {
         this.chromatogramWarpCommandClass = chromatogramWarpCommand;
     }
 
@@ -782,10 +779,10 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /**
      * @param minimizingArrayCompVariableName the
-     * minimizingArrayCompVariableName to set
+     *                                        minimizingArrayCompVariableName to set
      */
     public void setMinimizingArrayCompVariableName(
-            final String minimizingArrayCompVariableName) {
+        final String minimizingArrayCompVariableName) {
         this.minimizingArrayCompVariableName = minimizingArrayCompVariableName;
     }
 
@@ -798,19 +795,19 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /**
      * @param pairwiseDistanceMatrixVariableName the
-     * pairwiseDistanceMatrixVariableName to set
+     *                                           pairwiseDistanceMatrixVariableName to set
      */
     public void setPairwiseDistanceMatrixVariableName(
-            final String pairwiseDistanceMatrixVariableName) {
+        final String pairwiseDistanceMatrixVariableName) {
         this.pairwiseDistanceMatrixVariableName = pairwiseDistanceMatrixVariableName;
     }
 
     /**
      * @param pairwiseDistanceNamesVariableName the
-     * pairwiseDistanceNamesVariableName to set
+     *                                          pairwiseDistanceNamesVariableName to set
      */
     public void setPairwiseDistanceNamesVariableName(
-            final String pairwiseDistanceNamesVariableName) {
+        final String pairwiseDistanceNamesVariableName) {
         this.pairwiseDistanceNamesVariableName = pairwiseDistanceNamesVariableName;
     }
 }

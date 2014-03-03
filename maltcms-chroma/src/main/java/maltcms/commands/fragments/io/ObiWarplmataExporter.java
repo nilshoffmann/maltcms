@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -28,16 +28,6 @@
 package maltcms.commands.fragments.io;
 
 import cross.annotations.Configurable;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import maltcms.io.csv.CSVWriter;
-
-
-import ucar.ma2.Array;
-import ucar.ma2.IndexIterator;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
@@ -45,9 +35,16 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.io.csv.CSVWriter;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
+import ucar.ma2.IndexIterator;
 
 /**
  * @author Nils Hoffmann
@@ -75,7 +72,7 @@ public class ObiWarplmataExporter extends AFragmentCommand {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
     @Override
@@ -86,13 +83,13 @@ public class ObiWarplmataExporter extends AFragmentCommand {
         for (final IFileFragment iff : t) {
             log.info("Exporting file {}", iff.getName());
             final Array sat = iff.getChild(this.scanAcquisitionTimeVariableName).
-                    getArray();
+                getArray();
             final IVariableFragment bidx = iff.getChild(
-                    this.binnedScanIndexVariableName);
+                this.binnedScanIndexVariableName);
             final IVariableFragment ms = iff.getChild(
-                    this.binnedMassesVariableName);
+                this.binnedMassesVariableName);
             final IVariableFragment ins = iff.getChild(
-                    this.binnedIntensitiesVariableName);
+                this.binnedIntensitiesVariableName);
             ms.setIndex(bidx);
             ins.setIndex(bidx);
             log.info("Creating header...");
@@ -105,7 +102,7 @@ public class ObiWarplmataExporter extends AFragmentCommand {
             final int nbins = ms.getIndexedArray().get(0).getShape()[0];
             final List<String> bins = new ArrayList<String>(nbins);
             final IndexIterator msi = ms.getIndexedArray().get(0).
-                    getIndexIterator();
+                getIndexIterator();
             while (msi.hasNext()) {
                 bins.add("" + msi.getDoubleNext());
             }
@@ -126,8 +123,8 @@ public class ObiWarplmataExporter extends AFragmentCommand {
             final File path = getWorkflow().getOutputDirectory(this);
             log.info("Writing data...");
             csvw.writeTableByRows(path.getAbsolutePath(), StringTools.
-                    removeFileExt(iff.getName())
-                    + ".lmata", lines, WorkflowSlot.FILEIO);
+                removeFileExt(iff.getName())
+                + ".lmata", lines, WorkflowSlot.FILEIO);
             lines.clear();
         }
         return t;

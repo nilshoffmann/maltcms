@@ -44,47 +44,47 @@ import java.util.Queue;
  */
 public class QuadTreeVisualizer {
 
-	public <T> RenderedImage createImage(QuadTree<T> qt) {
-		return createImage(qt, 1.0d, 1.0d);
-	}
+    public <T> RenderedImage createImage(QuadTree<T> qt) {
+        return createImage(qt, 1.0d, 1.0d);
+    }
 
-	public <T> RenderedImage createImage(QuadTree<T> qt, double pointSizeX, double pointSizeY) {
-		BufferedImage bi = new BufferedImage((int) Math.ceil(qt.getDataBounds().getWidth()) + 1, (int) Math.ceil(qt.getDataBounds().getHeight()) + 1, BufferedImage.TYPE_INT_ARGB);
-		QuadTreeNode<T> root = qt.getRoot();
-		Graphics2D g2 = bi.createGraphics();
-		g2.setTransform(AffineTransform.getTranslateInstance(-qt.getDataBounds().getMinX(), -qt.getDataBounds().getMinY()));
-		Queue<QuadTreeNode<T>> queue = new LinkedList<QuadTreeNode<T>>();
-		queue.add(root);
-		while (!queue.isEmpty()) {
-			QuadTreeNode<T> qtn = queue.poll();
-			if (qtn != null) {
-				if (qtn.getChildren() != null && qtn.getChildren().isEmpty()) {
-					g2.setColor(Color.BLACK);
-					g2.draw(qtn.getArea());
-					if (qtn.getImmediateChildren() != null) {
-						g2.setColor(new Color(0, 0, 255, 128));
-						for (Tuple2D<Point2D, T> t : qtn.getImmediateChildren()) {
-							g2.draw(new Rectangle2D.Double(t.getFirst().getX() - (pointSizeX / 2.0d), t.getFirst().getY() - (pointSizeY / 2.0d), pointSizeX, pointSizeY));
-						}
-					}
-				} else if (qtn.getChildren() != null) {
-					g2.setColor(Color.BLACK);
-					g2.draw(qtn.getArea());
-					queue.addAll(qtn.getChildren());
-				} else {
-					if (qtn.getImmediateChildren() != null) {
-						g2.setColor(Color.BLACK);
-						g2.draw(qtn.getArea());
-						g2.setColor(new Color(0, 0, 255, 128));
-						for (Tuple2D<Point2D, T> t : qtn.getImmediateChildren()) {
-							g2.draw(new Rectangle2D.Double(t.getFirst().getX() - (pointSizeX / 2.0d), t.getFirst().getY() - (pointSizeY / 2.0d), pointSizeX, pointSizeY));
-						}
-					}
-				}
-			}
-		}
-		g2.dispose();
-		return bi;
-	}
+    public <T> RenderedImage createImage(QuadTree<T> qt, double pointSizeX, double pointSizeY) {
+        BufferedImage bi = new BufferedImage((int) Math.ceil(qt.getDataBounds().getWidth()) + 1, (int) Math.ceil(qt.getDataBounds().getHeight()) + 1, BufferedImage.TYPE_INT_ARGB);
+        QuadTreeNode<T> root = qt.getRoot();
+        Graphics2D g2 = bi.createGraphics();
+        g2.setTransform(AffineTransform.getTranslateInstance(-qt.getDataBounds().getMinX(), -qt.getDataBounds().getMinY()));
+        Queue<QuadTreeNode<T>> queue = new LinkedList<QuadTreeNode<T>>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            QuadTreeNode<T> qtn = queue.poll();
+            if (qtn != null) {
+                if (qtn.getChildren() != null && qtn.getChildren().isEmpty()) {
+                    g2.setColor(Color.BLACK);
+                    g2.draw(qtn.getArea());
+                    if (qtn.getImmediateChildren() != null) {
+                        g2.setColor(new Color(0, 0, 255, 128));
+                        for (Tuple2D<Point2D, T> t : qtn.getImmediateChildren()) {
+                            g2.draw(new Rectangle2D.Double(t.getFirst().getX() - (pointSizeX / 2.0d), t.getFirst().getY() - (pointSizeY / 2.0d), pointSizeX, pointSizeY));
+                        }
+                    }
+                } else if (qtn.getChildren() != null) {
+                    g2.setColor(Color.BLACK);
+                    g2.draw(qtn.getArea());
+                    queue.addAll(qtn.getChildren());
+                } else {
+                    if (qtn.getImmediateChildren() != null) {
+                        g2.setColor(Color.BLACK);
+                        g2.draw(qtn.getArea());
+                        g2.setColor(new Color(0, 0, 255, 128));
+                        for (Tuple2D<Point2D, T> t : qtn.getImmediateChildren()) {
+                            g2.draw(new Rectangle2D.Double(t.getFirst().getX() - (pointSizeX / 2.0d), t.getFirst().getY() - (pointSizeY / 2.0d), pointSizeX, pointSizeY));
+                        }
+                    }
+                }
+            }
+        }
+        g2.dispose();
+        return bi;
+    }
 
 }

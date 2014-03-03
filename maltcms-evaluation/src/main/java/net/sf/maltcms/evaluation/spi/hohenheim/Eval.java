@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,6 +27,18 @@
  */
 package net.sf.maltcms.evaluation.spi.hohenheim;
 
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
+import com.db4o.ext.DatabaseFileLockedException;
+import com.db4o.ext.DatabaseReadOnlyException;
+import com.db4o.ext.Db4oIOException;
+import com.db4o.ext.IncompatibleFileFormatException;
+import com.db4o.ext.OldFormatException;
+import com.db4o.query.Predicate;
+import cross.datastructures.tuple.Tuple2D;
+import cross.tools.StringTools;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
@@ -41,32 +53,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
-
 import jxl.Workbook;
-import ucar.ma2.Array;
-import ucar.ma2.ArrayChar;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.Index;
-
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ext.DatabaseReadOnlyException;
-import com.db4o.ext.Db4oIOException;
-import com.db4o.ext.IncompatibleFileFormatException;
-import com.db4o.ext.OldFormatException;
-import com.db4o.query.Predicate;
-
-import cross.datastructures.tuple.Tuple2D;
 import maltcms.io.csv.CSVReader;
-import cross.tools.StringTools;
 import net.sf.maltcms.evaluation.spi.xcalibur.Chromatogram;
 import net.sf.maltcms.evaluation.spi.xcalibur.Creator;
 import net.sf.maltcms.evaluation.spi.xcalibur.Peak;
 import net.sf.maltcms.evaluation.spi.xcalibur.RTUnit;
 import net.sf.maltcms.evaluation.spi.xcalibur.XLSIOProvider;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayChar;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.Index;
 
 /**
  * @author Nils Hoffmann
@@ -100,7 +97,7 @@ public class Eval {
                     for (String peakFile : peakFilesForTool) {
                         List<Peak> l = getMaltcmsPeaks(c, oc, peakFile);
                         System.out.println(
-                                "Storing " + l.size() + " peaks in db");
+                            "Storing " + l.size() + " peaks in db");
                         for (Peak p : l) {
                             oc.store(p);
                         }
@@ -112,14 +109,14 @@ public class Eval {
                     for (String peakFile : peakFilesForTool) {
                         List<Peak> l = getXcaliburPeaks(c, oc, peakFile);
                         System.out.println(
-                                "Storing " + l.size() + " peaks in db");
+                            "Storing " + l.size() + " peaks in db");
                         for (Peak p : l) {
                             oc.store(p);
                         }
                     }
                 } else {
                     throw new IllegalArgumentException(
-                            "Unsupported toolname: " + toolname);
+                        "Unsupported toolname: " + toolname);
                 }
                 System.out.println("Committing peaks to db");
                 oc.commit();
@@ -145,7 +142,7 @@ public class Eval {
         }
         List<String> peakNamesList = new ArrayList<String>(peakNames);
         Collections.sort(peakNamesList, e.new StringListByDoubleComparator(
-                rtToPeakNames));
+            rtToPeakNames));
         System.out.println(peakNames);
         List<List<String>> table = new ArrayList<List<String>>();
         for (Chromatogram c : e.getChromatograms(oc)) {
@@ -154,7 +151,7 @@ public class Eval {
             System.out.println("Adding column " + c.getName());
             for (String peakName : peakNamesList) {
                 Peak peak = e.getPeakForChromatogramByCreatorByName(oc, c,
-                        "xcalibur", peakName).get(0);
+                    "xcalibur", peakName).get(0);
                 column.add((peak.getRt() / 60.0) + "");
             }
             table.add(column);
@@ -188,7 +185,7 @@ public class Eval {
         private final HashMap<String, Double> rtToPeakNames;
 
         public StringListByDoubleComparator(
-                HashMap<String, Double> rtToPeakNames) {
+            HashMap<String, Double> rtToPeakNames) {
             this.rtToPeakNames = rtToPeakNames;
         }
 
@@ -214,25 +211,25 @@ public class Eval {
     }
 
     public ObjectSet<Peak> getPeaksForChromatogram(ObjectContainer oc,
-            Chromatogram c) {
+        Chromatogram c) {
         return oc.query(new ChromatogramPeakPredicate(c));
     }
 
     public ObjectSet<Peak> getPeaksByCreator(ObjectContainer oc,
-            String creatorname) {
+        String creatorname) {
         return oc.query(new CreatorPeakPredicate(creatorname));
     }
 
     public ObjectSet<Peak> getPeaksForChromatogramByCreator(ObjectContainer oc,
-            Chromatogram c, String creatorname) {
+        Chromatogram c, String creatorname) {
         return oc.query(new ChromatogramCreatorPeakPredicate(c, creatorname));
     }
 
     public ObjectSet<Peak> getPeakForChromatogramByCreatorByName(
-            ObjectContainer oc, Chromatogram c, String creatorname,
-            String peakname) {
+        ObjectContainer oc, Chromatogram c, String creatorname,
+        String peakname) {
         return oc.query(new ChromatogramCreatorPeakNamePeakPredicate(c,
-                creatorname, peakname));
+            creatorname, peakname));
     }
 
     public ObjectSet<Peak> getPeaks(ObjectContainer oc) {
@@ -441,7 +438,7 @@ public class Eval {
         @Override
         public boolean match(Peak arg0) {
             if (((ArrayChar.D1) arg0.getFeature("CREATORNAME")).getString().
-                    equals(this.creator)) {
+                equals(this.creator)) {
                 return true;
             }
             return false;
@@ -470,7 +467,7 @@ public class Eval {
 //        	System.out.println("arg0: "+arg0.getParent().getName()+" "+arg0.getCreatorname());
 //        	System.out.println("this: "+this.file+" "+this.creator);
             if (arg0.getParent().getName().equals(this.file) && arg0.
-                    getCreatorname().startsWith(this.creator)) {
+                getCreatorname().startsWith(this.creator)) {
                 return true;
             }
             return false;
@@ -491,7 +488,7 @@ public class Eval {
         private final String peakname;
 
         public ChromatogramCreatorPeakNamePeakPredicate(Chromatogram c,
-                String creator, String peakname) {
+            String creator, String peakname) {
             this.file = c.getName();
             this.creator = creator;
             this.peakname = peakname;
@@ -505,8 +502,8 @@ public class Eval {
 //        	System.out.println("arg0: "+arg0.getParent().getName()+" "+arg0.getCreatorname());
 //        	System.out.println("this: "+this.file+" "+this.creator);
             if (arg0.getParent().getName().equals(this.file) && arg0.
-                    getCreatorname().startsWith(this.creator) && arg0.getName().
-                    equals(this.peakname)) {
+                getCreatorname().startsWith(this.creator) && arg0.getName().
+                equals(this.peakname)) {
                 return true;
             }
             return false;
@@ -524,7 +521,7 @@ public class Eval {
         private final String chromname;
 
         public ByCreatorNameFilenameRTPeakPredicate(String name, Chromatogram c,
-                double rt, double maxrtdev) {
+            double rt, double maxrtdev) {
             this.name = name;
             this.chromname = c.getName();
             this.rt = rt;
@@ -545,7 +542,7 @@ public class Eval {
             Array c = arg0.getFeature("FILE");
             String f = ((ArrayChar.D1) c).getString();
             return (Math.abs(d - this.rt) <= this.maxrtdev) && cname.equals(
-                    this.name) && f.equals(this.chromname);
+                this.name) && f.equals(this.chromname);
         }
     }
 
@@ -557,7 +554,7 @@ public class Eval {
         csvr.setFieldSeparator("\t");
         try {
             Tuple2D<Vector<Vector<String>>, Vector<String>> t = csvr.read(new DataInputStream(new FileInputStream(new File(
-                    filesFile))));
+                filesFile))));
             Vector<Vector<String>> table = t.getFirst();
             ArrayList<String> files = new ArrayList<String>();
             for (Vector<String> row : table) {
@@ -620,7 +617,7 @@ public class Eval {
     }
 
     public List<Peak> getXcaliburPeaks(Creator creator, ObjectContainer oc,
-            String... files) {
+        String... files) {
 
         List<Peak> v = new ArrayList<Peak>();
         for (String file : files) {
@@ -633,14 +630,14 @@ public class Eval {
     }
 
     public List<Peak> getMaltcmsPeaks(Creator creator, ObjectContainer oc,
-            String... files) {
+        String... files) {
         List<Peak> v = new ArrayList<Peak>();
         for (String file : files) {
             CSVReader csvr = new CSVReader();
             Tuple2D<Vector<Vector<String>>, Vector<String>> t = csvr.read(file);
             File f = new File(file);
             String filename = f.getName().substring(0, f.getName().indexOf(
-                    "_peakAreas.csv"));
+                "_peakAreas.csv"));
             Chromatogram c = new Chromatogram(filename);
             ObjectSet<Chromatogram> os = oc.queryByExample(c);
             if (os.isEmpty()) {
@@ -682,7 +679,7 @@ public class Eval {
                     }
                 }
                 Peak p = new Peak(creator, c, "NN", rtapex, rtstart, rtstop,
-                        new double[]{mw}, area, intensity, RTUnit.Seconds);
+                    new double[]{mw}, area, intensity, RTUnit.Seconds);
                 System.out.println(p);
                 v.add(p);
             }
@@ -692,7 +689,7 @@ public class Eval {
 
     public double parseDouble(String s) {
         if (s.isEmpty() || s.equals("N/A") || s.equals("N/F") || s.equals(
-                "Peak Not Found")) {
+            "Peak Not Found")) {
             return Double.NaN;
         }
         s = s.replace(",", ".");

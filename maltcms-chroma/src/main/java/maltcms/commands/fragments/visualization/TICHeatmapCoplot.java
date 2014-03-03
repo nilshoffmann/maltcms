@@ -187,13 +187,13 @@ public class TICHeatmapCoplot extends AFragmentCommand {
                 min = Math.min(min, data[2][k]);
                 max = Math.max(max, data[2][k]);
                 k++;
-				// System.out.println("Adding "+i+" "+d+" "+dtm.getColumnName(j));
+                // System.out.println("Adding "+i+" "+d+" "+dtm.getColumnName(j));
                 // cd.addSeries(xys);
             }
             rowIdx++;
         }
         cd.addSeries("heatmap", data);
-		// ArrayDouble.D1 a = new ArrayDouble.D1(npoints);
+        // ArrayDouble.D1 a = new ArrayDouble.D1(npoints);
         // int offset = 0;
         // for (IFileFragment f : t) {
         // Array tic = f.getChild(ticvar).getArray();

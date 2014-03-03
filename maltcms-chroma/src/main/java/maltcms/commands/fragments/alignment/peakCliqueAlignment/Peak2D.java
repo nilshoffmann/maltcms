@@ -1,5 +1,5 @@
 /*
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -40,14 +40,14 @@ import ucar.ma2.Array;
  */
 @Data
 public class Peak2D extends PeakNG {
-    
+
     private double firstColumnElutionTime;
     private double secondColumnElutionTime;
 
     public Peak2D(int scanIndex, Array array, double sat, String association, int associationId) {
         super(scanIndex, array, sat, association, associationId);
     }
-    
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
@@ -70,7 +70,7 @@ public class Peak2D extends PeakNG {
             return Array.factory(this.secondColumnElutionTime);
         }
         Array retVal = super.getFeature(name);
-        if(retVal!=null) {
+        if (retVal != null) {
             return retVal;
         }
         throw new ResourceNotAvailableException("No such feature: " + name);
@@ -91,15 +91,15 @@ public class Peak2D extends PeakNG {
 
     @Override
     public boolean equals(Object o) {
-        if (o!=null && o instanceof Peak2D) {
-            return getUniqueId().equals(((Peak2D)o).getUniqueId());
+        if (o != null && o instanceof Peak2D) {
+            return getUniqueId().equals(((Peak2D) o).getUniqueId());
         }
         return false;
     }
-    
+
     @Override
     public int hashCode() {
         return getUniqueId().hashCode();
     }
-    
+
 }

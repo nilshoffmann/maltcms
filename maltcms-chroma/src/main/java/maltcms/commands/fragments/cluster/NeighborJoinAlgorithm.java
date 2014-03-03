@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -28,13 +28,12 @@
 package maltcms.commands.fragments.cluster;
 
 import cross.commands.fragments.AFragmentCommand;
-import java.util.Iterator;
-
-import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
-import maltcms.datastructures.cluster.BinaryCluster;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
+import java.util.Iterator;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
+import maltcms.datastructures.cluster.BinaryCluster;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -206,13 +205,13 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
     }
 
     public NeighborJoinAlgorithm(final double[][] distances,
-            final String[] names) {
+        final String[] names) {
         init(distances, names, null);
     }
 
     public NeighborJoinAlgorithm(final double[][] distances,
-            final TupleND<IFileFragment> fragments,
-            final PairwiseFeatureSequenceSimilarity ld) {
+        final TupleND<IFileFragment> fragments,
+        final PairwiseFeatureSequenceSimilarity ld) {
         final String[] names = new String[fragments.getSize()];
         final Iterator<IFileFragment> iter = fragments.getIterator();
         int i = 0;
@@ -228,7 +227,7 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
             double sum = 0.0d;
             for (int j = 0; j < numclust; j++) {
                 if (!getUsedIndices().contains(j)
-                        && !getUsedIndices().contains(i)) {
+                    && !getUsedIndices().contains(i)) {
                     sum += d(i, j);
                 }
             }
@@ -245,15 +244,15 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
         final int ni = getCluster(i).getSize();
         final int nj = getCluster(j).getSize();
         this.log.debug("ICluster " + getCluster(i).getID() + " has " + ni
-                + (ni == 1 ? " child" : " children") + ", cluster "
-                + getCluster(j).getID() + " has " + nj
-                + (nj == 1 ? " child" : " children"));
+            + (ni == 1 ? " child" : " children") + ", cluster "
+            + getCluster(j).getID() + " has " + nj
+            + (nj == 1 ? " child" : " children"));
         for (int m = 0; m < k; m++) {
             if (!getUsedIndices().contains(m) && !getUsedIndices().contains(k)
-                    && (m != i) && (m != j)) {
+                && (m != i) && (m != j)) {
                 dmat[m] = (d(i, m) + d(j, m) - d(i, j)) / 2.0d;
                 this.log.info("Distance from cluster k={} to m={} ={}",
-                        new Object[]{k, getCluster(m).getName(), dmat[m]});
+                    new Object[]{k, getCluster(m).getName(), dmat[m]});
             }
         }
         return dmat;
@@ -269,7 +268,7 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
             for (int n = 0; n < numclust; n++) {
                 if (n != m) {
                     if (!getUsedIndices().contains(m)
-                            && !getUsedIndices().contains(n)) {
+                        && !getUsedIndices().contains(n)) {
                         final double d = d(m, n) - (this.R[m] + this.R[n]);
                         if (d < mind) {
                             mind = d;
@@ -296,23 +295,23 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
 
     @Override
     public void init(final double[][] distances, final String[] names,
-            final TupleND<IFileFragment> fragments) {
+        final TupleND<IFileFragment> fragments) {
         super.init(distances, names, fragments);
         this.R = new double[(distances.length) * 2 - 1];
         if (!isMinimizing()) {
             log.warn("{} should not be used on similarities!", this.getClass().
-                    getName());
+                getName());
         }
     }
 
     @Override
     public void joinIJtoK(final int i, final int j, final int k,
-            final double[] dist) {
+        final double[] dist) {
         final double dij = d(i, j);
         final double dik = (dij + this.R[i] - this.R[j]) / 2.0d;
         final double djk = dij - dik;
         final BinaryCluster njc = new BinaryCluster(getCluster(i),
-                getCluster(j), dik, djk, dist, k);
+            getCluster(j), dik, djk, dist, k);
         putCluster(k, njc);
         printDistanceToNewCluster(i, j, k);
         getUsedIndices().add(i);

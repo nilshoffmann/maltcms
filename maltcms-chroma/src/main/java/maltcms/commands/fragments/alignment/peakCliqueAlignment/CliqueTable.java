@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -75,7 +75,7 @@ public class CliqueTable {
     }
 
     public List<Clique<IBipacePeak>> getCommonCliques(IFileFragment a, IFileFragment b,
-            List<Clique<IBipacePeak>> cliques) {
+        List<Clique<IBipacePeak>> cliques) {
         List<Clique<IBipacePeak>> commonCliques = new ArrayList<Clique<IBipacePeak>>();
         int k = placeMap.get(a.getName());
         int l = placeMap.get(b.getName());

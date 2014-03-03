@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,16 +27,15 @@
  */
 package maltcms.commands.fragments2d.peakfinding.output;
 
+import cross.datastructures.fragments.IFileFragment;
 import java.awt.Point;
 import java.util.Collection;
 import java.util.List;
-
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.peakfinding.bbh.BBHTools;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.Peak2DClique;
-import cross.datastructures.fragments.IFileFragment;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Data
@@ -56,9 +55,9 @@ public class PeakNormalization {
     }
 
     public List<Peak2D> findReference(List<List<Peak2D>> peakLists,
-            List<List<Point>> bidiBestHits, Collection<IFileFragment> f) {
+        List<List<Point>> bidiBestHits, Collection<IFileFragment> f) {
         final List<Peak2DClique> peakCliqueLists = BBHTools.getPeak2DCliqueList(
-                f, bidiBestHits, peakLists);
+            f, bidiBestHits, peakLists);
 
         int x, y, s, minArg = -1;
         double min = Double.MAX_VALUE;
@@ -93,7 +92,7 @@ public class PeakNormalization {
     }
 
     public void normalize(List<List<Peak2D>> peakLists,
-            List<List<Point>> bidiBestHits, Collection<IFileFragment> f) {
+        List<List<Point>> bidiBestHits, Collection<IFileFragment> f) {
         final List<Peak2D> refs = findReference(peakLists, bidiBestHits, f);
         if (refs != null) {
             for (int i = 0; i < peakLists.size(); i++) {

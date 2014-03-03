@@ -1,5 +1,5 @@
 /*
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -33,16 +33,17 @@ import net.sf.maltcms.evaluation.api.classification.Category;
  *
  * Holds classification results for pairs of aligned features from two
  * categories.
- * 
+ *
  * @author Nils Hoffmann
  */
 public class CategoryPairClassificationResult implements Comparable<CategoryPairClassificationResult> {
-	private final Category lhs;
-	private final Category rhs;
-	private final int tp, tn, fp, fn;
+
+    private final Category lhs;
+    private final Category rhs;
+    private final int tp, tn, fp, fn;
     private final double dist;
-	
-	public CategoryPairClassificationResult(Category lhs, Category rhs, int tp, int tn, int fp, int fn, double dist) {
+
+    public CategoryPairClassificationResult(Category lhs, Category rhs, int tp, int tn, int fp, int fn, double dist) {
         this.lhs = lhs;
         this.rhs = rhs;
         this.tp = tp;

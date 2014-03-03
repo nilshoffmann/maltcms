@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -28,23 +28,23 @@
 package net.sf.maltcms.db.search.spi.similarities;
 
 import cross.cache.ICacheDelegate;
-import maltcms.datastructures.ms.IMetabolite;
-import maltcms.tools.ArrayTools;
-import maltcms.tools.MaltcmsTools;
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayDouble.D1;
-import ucar.ma2.MAMath;
-import ucar.ma2.MAMath.MinMax;
 import cross.datastructures.tuple.Tuple2D;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.TreeMap;
+import maltcms.datastructures.ms.IMetabolite;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
+import maltcms.tools.ArrayTools;
+import maltcms.tools.MaltcmsTools;
 import net.sf.maltcms.db.search.api.similarities.AMetabolitePredicate;
 import org.openide.util.lookup.ServiceProvider;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayDouble.D1;
 import ucar.ma2.ArrayInt;
+import ucar.ma2.MAMath;
+import ucar.ma2.MAMath.MinMax;
 
 @ServiceProvider(service = AMetabolitePredicate.class)
 public class Cosine extends AMetabolitePredicate {
@@ -53,13 +53,13 @@ public class Cosine extends AMetabolitePredicate {
     private IArraySimilarity iadc = new ArrayCos();
     private double resolution = 1.0d;
     private double lastMin = Double.POSITIVE_INFINITY,
-            lastMax = Double.NEGATIVE_INFINITY;
+        lastMax = Double.NEGATIVE_INFINITY;
     private boolean normalize = true;
     private boolean forward = true;
     private final Comparator<Tuple2D<Double, IMetabolite>> comparator = Collections.reverseOrder(new Comparator<Tuple2D<Double, IMetabolite>>() {
         @Override
         public int compare(Tuple2D<Double, IMetabolite> t,
-                Tuple2D<Double, IMetabolite> t1) {
+            Tuple2D<Double, IMetabolite> t1) {
             if (t.getFirst() > t1.getFirst()) {
                 return 1;
             } else if (t.getFirst() < t1.getFirst()) {
@@ -107,8 +107,7 @@ public class Cosine extends AMetabolitePredicate {
     }
 
     protected double similarity(Array massesRef, Array intensitiesRef,
-            Array massesQuery, Array intensitiesQuery, double mw) {
-
+        Array massesQuery, Array intensitiesQuery, double mw) {
 
         TreeMap<Double, Integer> tm2 = new TreeMap<Double, Integer>();
 
@@ -140,9 +139,9 @@ public class Cosine extends AMetabolitePredicate {
         ArrayDouble.D1 dmasses1 = new ArrayDouble.D1(bins);
         s1 = new ArrayDouble.D1(bins);
         ArrayTools.createDenseArray(massesRef, intensitiesRef,
-                new Tuple2D<Array, Array>(dmasses1, s1), ((int) Math.floor(min)),
-                ((int) Math.ceil(max)), bins,
-                resolution, 0.0d);
+            new Tuple2D<Array, Array>(dmasses1, s1), ((int) Math.floor(min)),
+            ((int) Math.ceil(max)), bins,
+            resolution, 0.0d);
         s1 = (ArrayDouble.D1) filterMaskedMasses(dmasses1, s1);
 //		}
         //normalization to 0..1
@@ -154,9 +153,9 @@ public class Cosine extends AMetabolitePredicate {
         ArrayDouble.D1 dmasses2 = new ArrayDouble.D1(bins);
         s2 = new ArrayDouble.D1(bins);
         ArrayTools.createDenseArray(massesQuery, intensitiesQuery,
-                new Tuple2D<Array, Array>(dmasses2, s2),
-                ((int) Math.floor(min)), ((int) Math.ceil(max)), bins,
-                resolution, 0.0d);
+            new Tuple2D<Array, Array>(dmasses2, s2),
+            ((int) Math.floor(min)), ((int) Math.ceil(max)), bins,
+            resolution, 0.0d);
         s2 = (ArrayDouble.D1) filterMaskedMasses(dmasses2, s2);
         //normalization
         if (normalize) {
@@ -198,7 +197,7 @@ public class Cosine extends AMetabolitePredicate {
         }
 
         sum /= (Math.sqrt(queryIntens) * Math.sqrt(refIntens));
-//        
+//
 //        Tuple2D<ArrayDouble.D1, ArrayInt.D1> etMs = et.getMassSpectrum();
 //        double sim = similarity(getScan().getMasses(),
 //                getScan().getIntensities(), etMs.getFirst(), etMs.getSecond(),
@@ -209,7 +208,7 @@ public class Cosine extends AMetabolitePredicate {
         if (sim >= getScoreThreshold()) {
             System.out.println("Similarity score " + sim + " is larger than threshold: " + getScoreThreshold());
             Tuple2D<Double, IMetabolite> tple = new Tuple2D<Double, IMetabolite>(
-                    sim, et);
+                sim, et);
             getScoreMap().add(tple);
 
             return true;

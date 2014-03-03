@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,32 +27,6 @@
  */
 package maltcms.datastructures.fragments;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.distances.DtwRecurrence;
-import maltcms.commands.distances.IRecurrence;
-import maltcms.commands.distances.PairwiseFeatureSimilarity;
-import maltcms.datastructures.alignment.DefaultPairSet;
-import maltcms.datastructures.array.IArrayD2Double;
-import maltcms.datastructures.ms.IAnchor;
-import maltcms.io.csv.CSVWriter;
-import maltcms.tools.PathTools;
-
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.math.MathException;
-import org.apache.commons.math.analysis.UnivariateRealFunction;
-import org.apache.commons.math.analysis.interpolation.SplineInterpolator;
-import org.apache.commons.math.analysis.interpolation.UnivariateRealInterpolator;
-import org.jdom.Element;
-
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayDouble.D0;
-import ucar.ma2.ArrayDouble.D1;
-import ucar.ma2.DataType;
-import ucar.nc2.Dimension;
 import cross.Factory;
 import cross.IConfigurable;
 import cross.annotations.Configurable;
@@ -70,7 +44,30 @@ import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.io.IFileFragmentProvider;
 import cross.tools.StringTools;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.distances.DtwRecurrence;
+import maltcms.commands.distances.IRecurrence;
+import maltcms.commands.distances.PairwiseFeatureSimilarity;
+import maltcms.datastructures.alignment.DefaultPairSet;
+import maltcms.datastructures.array.IArrayD2Double;
+import maltcms.datastructures.ms.IAnchor;
+import maltcms.io.csv.CSVWriter;
+import maltcms.tools.PathTools;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.math.MathException;
+import org.apache.commons.math.analysis.UnivariateRealFunction;
+import org.apache.commons.math.analysis.interpolation.SplineInterpolator;
+import org.apache.commons.math.analysis.interpolation.UnivariateRealInterpolator;
+import org.jdom.Element;
 import ucar.ma2.ArrayByte;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayDouble.D0;
+import ucar.ma2.ArrayDouble.D1;
+import ucar.ma2.DataType;
+import ucar.nc2.Dimension;
 
 /**
  * Implementation of IFileFragmentProvider for PairwiseAlignment.
@@ -81,7 +78,7 @@ import ucar.ma2.ArrayByte;
 @Slf4j
 @ProvidesVariables(names = {"var.minimizing_array_comp"})
 public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
-        IWorkflowElement {
+    IWorkflowElement {
 
     private IFileFragment ff;
     @Configurable(name = "alignment.save.pairwise.distance.matrix")
@@ -126,7 +123,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.io.misc.IXMLSerializable#appendXML(org.jdom.Element)
      */
     @Override
@@ -137,21 +134,21 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     @Override
     public void configure(final Configuration cfg) {
         this.saveCDM = cfg.getBoolean(
-                "alignment.save.cumulative.distance.matrix", false);
+            "alignment.save.cumulative.distance.matrix", false);
         this.savePWDM = cfg.getBoolean(
-                "alignment.save.pairwise.distance.matrix", false);
+            "alignment.save.pairwise.distance.matrix", false);
         this.cumulativeDistanceVariableName = cfg.getString(
-                "var.alignment.cumulative_distance", "cumulative_distance");
+            "var.alignment.cumulative_distance", "cumulative_distance");
         this.pairwiseDistanceVariableName = cfg.getString(
-                "var.alignment.pairwise_distance", "pairwise_distance");
+            "var.alignment.pairwise_distance", "pairwise_distance");
         this.arrayComparatorVariableName = cfg.getString(
-                "var.minimizing_array_comp", "array_comp");
+            "var.minimizing_array_comp", "array_comp");
         this.arrayDistanceClassName = cfg.getString(
-                "alignment.algorithm.distance",
-                "maltcms.commands.distances.ArrayLp");
+            "alignment.algorithm.distance",
+            "maltcms.commands.distances.ArrayLp");
         this.normalizeAlignmentValueByMapWeights = cfg.getBoolean(this
-                .getClass().getName()
-                + ".normalizeAlignmentValueByMapWeights", false);
+            .getClass().getName()
+            + ".normalizeAlignmentValueByMapWeights", false);
     }
 
     /**
@@ -216,7 +213,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
      */
     @Override
@@ -289,7 +286,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
     @Override
@@ -333,23 +330,23 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
                 this.iw = new DefaultWorkflow();
             }
             this.ff = FragmentTools.createFragment(this.ref, this.target,
-                    getWorkflow().getOutputDirectory(this));
+                getWorkflow().getOutputDirectory(this));
             final PathTools pt = Factory.getInstance().getObjectFactory()
-                    .instantiate(PathTools.class);
+                .instantiate(PathTools.class);
             long time = start;
             if (this.path == null) {
                 EvalTools.notNull(new Object[]{this.ff, this.alignment,
-                            this.distance, this.isMinimize, this.cd}, this);
+                    this.distance, this.isMinimize, this.cd}, this);
                 // path = pt.makeMap(ff, this.alignment, this.distance,
                 // this.isMinimize, this.cd);
                 this.path = pt.traceback(this.predecessors, this.ref,
-                        this.target);
+                    this.target);
                 // this.interppath = interpolatePath(this.path, this.alignment);
                 time = System.currentTimeMillis() - start;
                 log.info("Calculated traceback in {} milliseconds", time);
                 start = System.currentTimeMillis();
                 pt.savePathCSV(this.ff, this.alignment, this.distance,
-                        this.path, getWorkflow(), isMinimize());
+                    this.path, getWorkflow(), isMinimize());
                 pt.decorate(this.ff, this.distance);
             } else {
                 PathTools.getFragments(this.ff, this.path, this.distance);
@@ -361,12 +358,12 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
             row.add(this.target.getName());
             rows.add(row);
             CSVWriter csvw = Factory.getInstance().getObjectFactory()
-                    .instantiate(CSVWriter.class);
+                .instantiate(CSVWriter.class);
             csvw.setWorkflow(getWorkflow());
             csvw.writeTableByRows(getWorkflow().getOutputDirectory(this)
-                    .getAbsolutePath(), StringTools.removeFileExt(this.ff
+                .getAbsolutePath(), StringTools.removeFileExt(this.ff
                     .getName())
-                    + "_names.txt", rows, WorkflowSlot.ALIGNMENT);
+                + "_names.txt", rows, WorkflowSlot.ALIGNMENT);
             if (this.anchors != null) {
 //                row.add(this.ref.getName());
 //                row.add(this.target.getName());
@@ -378,21 +375,21 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
                     rows.add(row);
                 }
                 CSVWriter csvw2 = Factory.getInstance().getObjectFactory()
-                        .instantiate(CSVWriter.class);
+                    .instantiate(CSVWriter.class);
                 csvw2.setWorkflow(getWorkflow());
                 csvw2.writeTableByRows(getWorkflow().getOutputDirectory(this)
-                        .getAbsolutePath(), StringTools.removeFileExt(this.ff
+                    .getAbsolutePath(), StringTools.removeFileExt(this.ff
                         .getName())
-                        + "_anchors.csv", rows, WorkflowSlot.ALIGNMENT);
+                    + "_anchors.csv", rows, WorkflowSlot.ALIGNMENT);
             }
             final double expw = pt.getNexp()
-                    * this.pwd.getSimilarityFunction().getExpansionWeight();
+                * this.pwd.getSimilarityFunction().getExpansionWeight();
             final double compw = pt.getNcomp()
-                    * this.pwd.getSimilarityFunction().getCompressionWeight();
+                * this.pwd.getSimilarityFunction().getCompressionWeight();
             final double diagw = pt.getNdiag()
-                    * this.pwd.getSimilarityFunction().getMatchWeight();
+                * this.pwd.getSimilarityFunction().getMatchWeight();
             final double gapPenaltiesW = (pt.getNexp() + pt.getNcomp())
-                    * this.cd.getGlobalGapPenalty();
+                * this.cd.getGlobalGapPenalty();
             // log.info("Alignment arrayDistanceClassName: {}",
             // this.alignment.get(this.alignment
             // .rows() - 1, this.alignment.columns() - 1)
@@ -401,12 +398,12 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 
             if (this.saveCDM) {
                 final IVariableFragment vf = new VariableFragment(this.ff,
-                        this.cumulativeDistanceVariableName, null);
+                    this.cumulativeDistanceVariableName, null);
                 vf.setDimensions(new Dimension[]{
-                            new Dimension("reference_scan", this.refsize, true,
-                            false, false),
-                            new Dimension("query_scan", this.querysize, true,
-                            false, false)});
+                    new Dimension("reference_scan", this.refsize, true,
+                    false, false),
+                    new Dimension("query_scan", this.querysize, true,
+                    false, false)});
                 vf.setDataType(DataType.DOUBLE);
                 vf.setArray(this.alignment.getArray());
                 // CSVWriter csvw = new CSVWriter();
@@ -415,12 +412,12 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
             }
             if (this.savePWDM) {
                 final IVariableFragment vf = new VariableFragment(this.ff,
-                        this.pairwiseDistanceVariableName, null);
+                    this.pairwiseDistanceVariableName, null);
                 vf.setDimensions(new Dimension[]{
-                            new Dimension("reference_scan", this.refsize, true,
-                            false, false),
-                            new Dimension("query_scan", this.querysize, true,
-                            false, false)});
+                    new Dimension("reference_scan", this.refsize, true,
+                    false, false),
+                    new Dimension("query_scan", this.querysize, true,
+                    false, false)});
                 vf.setDataType(DataType.DOUBLE);
                 vf.setArray(this.distance.getArray());
                 // CSVWriter csvw = new CSVWriter();
@@ -428,54 +425,54 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
                 // target.getName()+"_pwdist.csv", this.distance);
             }
             String arrayComparatorVariableName = Factory.getInstance()
-                    .getConfiguration().getString(
+                .getConfiguration().getString(
                     "var.alignment.pairwise_distance.class",
                     "pairwise_distance_class");
             String arrayDistanceClassName = Factory.getInstance()
-                    .getConfiguration().getString(
+                .getConfiguration().getString(
                     "var.alignment.cumulative_distance.class",
                     "cumulative_distance_class");
             String alignmentClassVariableName = Factory.getInstance()
-                    .getConfiguration().getString("var.alignment.class",
+                .getConfiguration().getString("var.alignment.class",
                     "alignment_class");
             String alignmentClassName = "maltcms.commands.distances.dtw.MZIDynamicTimeWarp";
             FragmentTools.createString(this.ff, arrayComparatorVariableName,
-                    this.pwd.getSimilarityFunction().getClass().getName());
+                this.pwd.getSimilarityFunction().getClass().getName());
             FragmentTools.createString(this.ff, arrayDistanceClassName, this.cd
-                    .getClass().getName());
+                .getClass().getName());
             FragmentTools.createString(this.ff, alignmentClassVariableName,
-                    alignmentClassName);
+                alignmentClassName);
             if (this.result == null) {
                 this.result = new ArrayDouble.D0();
                 double distance1 = this.alignment
-                        .get(this.alignment.rows() - 1, this.alignment
+                    .get(this.alignment.rows() - 1, this.alignment
                         .columns() - 1);
                 if (this.normalizeAlignmentValueByMapWeights) {
                     distance1 = (distance1 - gapPenaltiesW)
-                            / (expw + compw + diagw);
+                        / (expw + compw + diagw);
                     log.info(
-                            "Alignment value normalized by path weights: {}",
-                            distance1);
+                        "Alignment value normalized by path weights: {}",
+                        distance1);
                 }
                 this.result.set(distance1);
             }
             final String distvar = Factory.getInstance().getConfiguration()
-                    .getString("var.alignment.distance", "distance");
+                .getString("var.alignment.distance", "distance");
             final IVariableFragment dvar = new VariableFragment(this.ff,
-                    distvar);
+                distvar);
             dvar.setArray(this.result);
 
             this.resultVector = new ArrayDouble.D1(1);
             this.resultVector.set(0, this.result.get());
             time = System.currentTimeMillis() - start;
             log.debug("Set Variables on {} in {} milliseconds", this.ff
-                    .getName(), time);
+                .getName(), time);
         }
         return this.ff;
     }
 
     private List<Tuple2DI> interpolatePath(List<Tuple2DI> path,
-            IArrayD2Double alignment) {
+        IArrayD2Double alignment) {
         List<Tuple2DI> interp = new ArrayList<Tuple2DI>();
         List<Tuple2DI> strictlyIncreasingPoints = new ArrayList<Tuple2DI>();
         try {
@@ -485,7 +482,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
             for (int i = 0; i < path.size() - 1; i++) {
                 Tuple2DI q = path.get(i);
                 if (q.getFirst() > p.getFirst()
-                        && q.getSecond() > p.getSecond()) {
+                    && q.getSecond() > p.getSecond()) {
                     if (i < 10) {
                         log.info("Adding q={}", q);
                     }
@@ -495,18 +492,18 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 
             }
             p = strictlyIncreasingPoints
-                    .get(strictlyIncreasingPoints.size() - 1);
+                .get(strictlyIncreasingPoints.size() - 1);
             Tuple2DI q = new Tuple2DI(alignment.rows() - 1,
-                    alignment.columns() - 1);
+                alignment.columns() - 1);
             if (q.getFirst() > p.getFirst() && q.getSecond() > p.getSecond()) {
                 strictlyIncreasingPoints.add(q);
             } else {
                 strictlyIncreasingPoints
-                        .remove(strictlyIncreasingPoints.size() - 1);
+                    .remove(strictlyIncreasingPoints.size() - 1);
                 strictlyIncreasingPoints.add(q);
             }
             log.info("Number of Surviving Points: {}",
-                    strictlyIncreasingPoints.size());
+                strictlyIncreasingPoints.size());
             double[] x = new double[strictlyIncreasingPoints.size()];
             double[] y = new double[strictlyIncreasingPoints.size()];
             for (int i = 0; i < strictlyIncreasingPoints.size(); i++) {
@@ -514,21 +511,21 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
                 y[i] = strictlyIncreasingPoints.get(i).getSecond();
             }
             log.info("x = {}", Arrays.toString(Arrays
-                    .copyOfRange(x, 0, 10)));
+                .copyOfRange(x, 0, 10)));
             log.info("y = {}", Arrays.toString(Arrays
-                    .copyOfRange(y, 0, 10)));
+                .copyOfRange(y, 0, 10)));
             UnivariateRealInterpolator interpolator = new SplineInterpolator();
             UnivariateRealFunction function = interpolator.interpolate(x, y);
 
             for (int i = 0; i < alignment.rows(); i += 10) {
                 Tuple2DI ip = new Tuple2DI(i, (int) (Math.round(function
-                        .value((double) i))));
+                    .value((double) i))));
                 interp.add(ip);
             }
             if (interp.get(interp.size() - 1).getFirst() != alignment.columns() - 1) {
                 Tuple2DI ip = new Tuple2DI(alignment.columns() - 1,
-                        (int) (Math.round(function.value((double) alignment
-                        .columns() - 1))));
+                    (int) (Math.round(function.value((double) alignment
+                            .columns() - 1))));
                 interp.add(ip);
             }
         } catch (MathException e) {
@@ -587,7 +584,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     public void setFileFragments(final IFileFragment ref1,
-            final IFileFragment target1, final Class<?> creator1) {
+        final IFileFragment target1, final Class<?> creator1) {
         this.ref = ref1;
         this.target = target1;
         this.creator = creator1;
@@ -599,7 +596,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seecross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
      * datastructures.workflow.IWorkflow)
      */
@@ -618,7 +615,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
 
     /**
      * @param normalizeAlignmentValueByMapWeights the
-     * normalizeAlignmentValueByMapWeights to set
+     *                                            normalizeAlignmentValueByMapWeights to set
      */
     public void setNormalizeByMapLength(final boolean normalizeByMapWeights) {
         this.normalizeAlignmentValueByMapWeights = normalizeByMapWeights;

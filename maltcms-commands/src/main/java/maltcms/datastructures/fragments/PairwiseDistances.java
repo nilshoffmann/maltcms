@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,29 +27,27 @@
  */
 package maltcms.datastructures.fragments;
 
-import maltcms.datastructures.IFileFragmentModifier;
-
-import org.apache.commons.configuration.Configuration;
-import org.jdom.Element;
-
-import ucar.ma2.ArrayChar;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
-import ucar.ma2.ArrayDouble.D2;
 import cross.IConfigurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
+import cross.datastructures.tools.EvalTools;
+import cross.datastructures.tools.FileTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
 import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.NotImplementedException;
-import cross.datastructures.tools.EvalTools;
-import cross.datastructures.tools.FileTools;
+import maltcms.datastructures.IFileFragmentModifier;
+import org.apache.commons.configuration.Configuration;
+import org.jdom.Element;
+import ucar.ma2.ArrayChar;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayDouble.D2;
+import ucar.ma2.ArrayInt;
 
 public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
-        IWorkflowElement {
+    IWorkflowElement {
 
     /**
      * Static factory method which reconstructs a PairwiseDistances object from
@@ -78,14 +76,14 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
     @Override
     public void configure(final Configuration cfg) {
         this.pwDistMatrixVariableName = cfg.getString(
-                "var.pairwise_distance_matrix", "pairwise_distance_matrix");
+            "var.pairwise_distance_matrix", "pairwise_distance_matrix");
         this.pwDistVariableName = cfg.getString("var.pairwise_distance_names",
-                "pairwise_distance_names");
+            "pairwise_distance_names");
         this.pwDistAlignmentsVarName = cfg.getString(
-                "var.pairwise_distance_alignment_names",
-                "pairwise_distance_alignment_names");
+            "var.pairwise_distance_alignment_names",
+            "pairwise_distance_alignment_names");
         this.name = cfg.getString("pairwise_distances_file_name",
-                "pairwise_distances.cdf");
+            "pairwise_distances.cdf");
 
     }
 
@@ -138,7 +136,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * maltcms.experimental.datastructures.IFileFragmentModifier#decorate(cross
      * .datastructures.fragments.IFileFragment)
@@ -146,18 +144,18 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
     @Override
     public void modify(IFileFragment f) {
         final IVariableFragment pwd = new VariableFragment(f,
-                this.pwDistMatrixVariableName);
+            this.pwDistMatrixVariableName);
         pwd.setArray(this.pairwiseDistances);
         final IVariableFragment na = new VariableFragment(f,
-                this.pwDistVariableName);
+            this.pwDistVariableName);
         na.setArray(this.names);
         final IVariableFragment minimizing = new VariableFragment(f,
-                this.minArrayComp);
+            this.minArrayComp);
         final ArrayInt.D0 ab = new ArrayInt.D0();
         ab.set(this.minimize ? 1 : 0);
         minimizing.setArray(ab);
         final IVariableFragment alignments = new VariableFragment(f,
-                this.pwDistAlignmentsVarName);
+            this.pwDistAlignmentsVarName);
         int maxlength = 128;
         for (final IFileFragment iff : this.alignments) {
             if (iff.getUri().toString().length() > maxlength) {
@@ -165,7 +163,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
             }
         }
         final ArrayChar.D2 anames = cross.datastructures.tools.ArrayTools.createStringArray(
-                this.alignments.getSize(), maxlength);
+            this.alignments.getSize(), maxlength);
         int i = 0;
         for (final IFileFragment iff : this.alignments) {
             anames.setString(i++, FileTools.getRelativeUri(f.getUri(), iff.getUri()).toString());
@@ -177,7 +175,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
         this.alignments = t;
     }
 
-	@Override
+    @Override
     public void setWorkflow(final IWorkflow iw1) {
         this.iw = iw1;
     }
@@ -218,7 +216,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
      * @param pwDistMatrixVariableName the pwDistMatrixVariableName to set
      */
     public void setPwDistMatrixVariableName(
-            final String pwDistMatrixVariableName) {
+        final String pwDistMatrixVariableName) {
         this.pwDistMatrixVariableName = pwDistMatrixVariableName;
     }
 
@@ -231,7 +229,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
     @Override
@@ -241,7 +239,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see cross.io.xml.IXMLSerializable#appendXML(org.jdom.Element)
      */
     @Override
