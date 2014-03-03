@@ -30,6 +30,7 @@ package maltcms.io.xml.mzData;
 import cross.Factory;
 import cross.cache.CacheFactory;
 import cross.cache.ICacheDelegate;
+import cross.datastructures.cache.SerializableArray;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
@@ -42,6 +43,7 @@ import cross.io.misc.Base64Util;
 import cross.tools.StringTools;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -76,7 +78,9 @@ public class MZDataDataSource implements IDataSource {
     private String mass_range_max = "mass_range_max";
     private NetcdfDataSource ndf = null;
     private String source_files = "source_files";
-    private static final ICacheDelegate<IVariableFragment, Array> variableToArrayCache = CacheFactory.createVolatileCache("maltcms.io.readcache");
+    private static final ICacheDelegate<URI, Unmarshaller> fileToIndex = CacheFactory.createVolatileCache(MZDataDataSource.class.getName() + "-unmarshaller", 3600, 7200, 100);
+    private static final ICacheDelegate<URI, MzData> fileToMzData = CacheFactory.createVolatileCache(MZDataDataSource.class.getName() + "-mzData", 3600, 7200, 100);
+    private static final ICacheDelegate<String, SerializableArray> variableToArrayCache = CacheFactory.createVolatileCache("maltcms.io.readcache");
 
     @Override
     public int canRead(final IFileFragment ff) {
@@ -248,13 +252,17 @@ public class MZDataDataSource implements IDataSource {
     }
 
     private Array loadArray(final IFileFragment f, final IVariableFragment var) {
-        final MzData mzd = unmarshal(f);
-        Array a = variableToArrayCache.get(var);
+        SerializableArray sa = variableToArrayCache.get(f.getUri() + ">" + var.getName());
+        Array a = null;
+        if (sa != null) {
+            a = sa.getArray();
+        }
         if (a != null) {
             log.info("Retrieved variable data array from cache for " + var);
             return a;
         }
         final String varname = var.getName();
+        final MzData mzd = unmarshal(f);
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.mass_values)
             || varname.equals(this.intensity_values)) {
@@ -276,7 +284,7 @@ public class MZDataDataSource implements IDataSource {
                 "Unknown varname to mzXML mapping for varname " + varname);
         }
         if (a != null) {
-            variableToArrayCache.put(var, a);
+            variableToArrayCache.put(f.getUri() + ">" + var.getName(), new SerializableArray(a));
         }
         return a;
     }
@@ -562,24 +570,47 @@ public class MZDataDataSource implements IDataSource {
         return Arrays.asList(this.fileEnding);
     }
 
-    private MzData unmarshal(final IFileFragment iff) {
-        if (new File(iff.getUri()).exists()) {
+    private Unmarshaller getUnmarshaller(final IFileFragment ff) {
+        Unmarshaller um = MZDataDataSource.fileToIndex.get(ff.getUri());
+        if (um != null) {
+            log.info("Retrieved unmarshaller from cache!");
+            return um;
+        }
+        if (new File(ff.getUri()).exists()) {
+            log.debug("Initializing unmarshaller for file {}", ff.getUri());
             JAXBContext jc;
             try {
                 jc = JAXBContext.newInstance("maltcms.io.xml.mzData");
                 final Unmarshaller u = jc.createUnmarshaller();
-                final MzData mzd = (MzData) u.unmarshal(new File(iff.getUri()));
-                return mzd;
+                MZDataDataSource.fileToIndex.put(ff.getUri(), u);
+                return u;
             } catch (final JAXBException e) {
                 throw new RuntimeException(e.fillInStackTrace());
             }
-        } else {
-            throw new ResourceNotAvailableException("File fragment " + iff.getUri() + " does not exist!");
         }
+        throw new ResourceNotAvailableException("File fragment " + ff.getUri() + " does not exist!");
+    }
+
+    private MzData unmarshal(final IFileFragment iff) {
+        if (new File(iff.getUri()).exists()) {
+            MzData mzData = fileToMzData.get(iff.getUri());
+            if (mzData == null) {
+                try {
+                    final Unmarshaller u = getUnmarshaller(iff);
+                    mzData = (MzData) u.unmarshal(new File(iff.getUri()));
+                    fileToMzData.put(iff.getUri(), mzData);
+                } catch (final JAXBException e) {
+                    throw new RuntimeException(e.fillInStackTrace());
+                }
+            }
+            return mzData;
+        }
+        throw new ResourceNotAvailableException("File fragment " + iff.getUri() + " does not exist!");
     }
 
     @Override
-    public boolean write(final IFileFragment f) {
+    public boolean write(final IFileFragment f
+    ) {
         EvalTools.notNull(this.ndf, this);
         // TODO Implement real write support
         log.info("Saving {} with MZXMLStaxDataSource", f.getUri());

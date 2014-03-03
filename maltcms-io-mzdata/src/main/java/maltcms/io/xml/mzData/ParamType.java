@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,9 +27,9 @@
  */
 package maltcms.io.xml.mzData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -40,9 +40,11 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * Structure allowing the use of controlled or uncontrolled vocabulary
  *
- * <p> Java class for paramType complex type.
+ * <p>
+ * Java class for paramType complex type.
  *
- * <p> The following schema fragment specifies the expected content contained
+ * <p>
+ * The following schema fragment specifies the expected content contained
  * within this class.
  *
  * <pre>
@@ -66,7 +68,7 @@ import javax.xml.bind.annotation.XmlType;
     maltcms.io.xml.mzData.SpectrumSettingsType.AcqSpecification.Acquisition.class,
     maltcms.io.xml.mzData.SpectrumSettingsType.SpectrumInstrument.class,
     DescriptionType.class})
-public class ParamType {
+public class ParamType implements Serializable {
 
     @XmlElements({
         @XmlElement(name = "cvParam", type = CvParamType.class),
@@ -76,20 +78,23 @@ public class ParamType {
     /**
      * Gets the value of the cvParamOrUserParam property.
      *
-     * <p> This accessor method returns a reference to the live list, not a
+     * <p>
+     * This accessor method returns a reference to the live list, not a
      * snapshot. Therefore any modification you make to the returned list will
      * be present inside the JAXB object. This is why there is not a
      * <CODE>set</CODE> method for the cvParamOrUserParam property.
      *
-     * <p> For example, to add a new item, do as follows:
+     * <p>
+     * For example, to add a new item, do as follows:
      *
      * <pre>
      * getCvParamOrUserParam().add(newItem);
      * </pre>
      *
      *
-     * <p> Objects of the following type(s) are allowed in the list
-	 * {@link CvParamType } {@link UserParamType }
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link CvParamType } {@link UserParamType }
      *
      *
      */

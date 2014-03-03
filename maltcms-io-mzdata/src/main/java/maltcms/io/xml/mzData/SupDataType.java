@@ -1,5 +1,5 @@
-/* 
- * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
+/*
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry.
  * Copyright (C) 2008-2012, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code 
- * under. Certain files or entire directories may not be covered by this 
+ * As a user/recipient of Maltcms, you may choose which license to receive the code
+ * under. Certain files or entire directories may not be covered by this
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a 
+ * License exceptions are explicitly declared in all relevant files or in a
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -27,9 +27,9 @@
  */
 package maltcms.io.xml.mzData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -40,9 +40,11 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * Data type for additional data vectors (beyond m/z and intensity).
  *
- * <p> Java class for supDataType complex type.
+ * <p>
+ * Java class for supDataType complex type.
  *
- * <p> The following schema fragment specifies the expected content contained
+ * <p>
+ * The following schema fragment specifies the expected content contained
  * within this class.
  *
  * <pre>
@@ -75,7 +77,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "supDataType", propOrder = {"arrayName", "_float", "_double",
     "_int", "_boolean", "string", "time", "uri"})
-public class SupDataType {
+public class SupDataType implements Serializable {
 
     @XmlElement(required = true)
     protected String arrayName;
@@ -115,19 +117,22 @@ public class SupDataType {
     /**
      * Gets the value of the boolean property.
      *
-     * <p> This accessor method returns a reference to the live list, not a
+     * <p>
+     * This accessor method returns a reference to the live list, not a
      * snapshot. Therefore any modification you make to the returned list will
      * be present inside the JAXB object. This is why there is not a
      * <CODE>set</CODE> method for the boolean property.
      *
-     * <p> For example, to add a new item, do as follows:
+     * <p>
+     * For example, to add a new item, do as follows:
      *
      * <pre>
      * getBoolean().add(newItem);
      * </pre>
      *
      *
-     * <p> Objects of the following type(s) are allowed in the list {@link Boolean
+     * <p>
+     * Objects of the following type(s) are allowed in the list {@link Boolean
      * }
      *
      *
@@ -142,19 +147,22 @@ public class SupDataType {
     /**
      * Gets the value of the double property.
      *
-     * <p> This accessor method returns a reference to the live list, not a
+     * <p>
+     * This accessor method returns a reference to the live list, not a
      * snapshot. Therefore any modification you make to the returned list will
      * be present inside the JAXB object. This is why there is not a
      * <CODE>set</CODE> method for the double property.
      *
-     * <p> For example, to add a new item, do as follows:
+     * <p>
+     * For example, to add a new item, do as follows:
      *
      * <pre>
      * getDouble().add(newItem);
      * </pre>
      *
      *
-     * <p> Objects of the following type(s) are allowed in the list {@link Double
+     * <p>
+     * Objects of the following type(s) are allowed in the list {@link Double
      * }
      *
      *
@@ -169,19 +177,22 @@ public class SupDataType {
     /**
      * Gets the value of the float property.
      *
-     * <p> This accessor method returns a reference to the live list, not a
+     * <p>
+     * This accessor method returns a reference to the live list, not a
      * snapshot. Therefore any modification you make to the returned list will
      * be present inside the JAXB object. This is why there is not a
      * <CODE>set</CODE> method for the float property.
      *
-     * <p> For example, to add a new item, do as follows:
+     * <p>
+     * For example, to add a new item, do as follows:
      *
      * <pre>
      * getFloat().add(newItem);
      * </pre>
      *
      *
-     * <p> Objects of the following type(s) are allowed in the list {@link Float
+     * <p>
+     * Objects of the following type(s) are allowed in the list {@link Float
      * }
      *
      *
@@ -204,19 +215,22 @@ public class SupDataType {
     /**
      * Gets the value of the int property.
      *
-     * <p> This accessor method returns a reference to the live list, not a
+     * <p>
+     * This accessor method returns a reference to the live list, not a
      * snapshot. Therefore any modification you make to the returned list will
      * be present inside the JAXB object. This is why there is not a
      * <CODE>set</CODE> method for the int property.
      *
-     * <p> For example, to add a new item, do as follows:
+     * <p>
+     * For example, to add a new item, do as follows:
      *
      * <pre>
      * getInt().add(newItem);
      * </pre>
      *
      *
-     * <p> Objects of the following type(s) are allowed in the list {@link Integer
+     * <p>
+     * Objects of the following type(s) are allowed in the list {@link Integer
      * }
      *
      *
@@ -253,19 +267,22 @@ public class SupDataType {
     /**
      * Gets the value of the string property.
      *
-     * <p> This accessor method returns a reference to the live list, not a
+     * <p>
+     * This accessor method returns a reference to the live list, not a
      * snapshot. Therefore any modification you make to the returned list will
      * be present inside the JAXB object. This is why there is not a
      * <CODE>set</CODE> method for the string property.
      *
-     * <p> For example, to add a new item, do as follows:
+     * <p>
+     * For example, to add a new item, do as follows:
      *
      * <pre>
      * getString().add(newItem);
      * </pre>
      *
      *
-     * <p> Objects of the following type(s) are allowed in the list {@link String
+     * <p>
+     * Objects of the following type(s) are allowed in the list {@link String
      * }
      *
      *
@@ -280,19 +297,22 @@ public class SupDataType {
     /**
      * Gets the value of the time property.
      *
-     * <p> This accessor method returns a reference to the live list, not a
+     * <p>
+     * This accessor method returns a reference to the live list, not a
      * snapshot. Therefore any modification you make to the returned list will
      * be present inside the JAXB object. This is why there is not a
      * <CODE>set</CODE> method for the time property.
      *
-     * <p> For example, to add a new item, do as follows:
+     * <p>
+     * For example, to add a new item, do as follows:
      *
      * <pre>
      * getTime().add(newItem);
      * </pre>
      *
      *
-     * <p> Objects of the following type(s) are allowed in the list {@link Float
+     * <p>
+     * Objects of the following type(s) are allowed in the list {@link Float
      * }
      *
      *
@@ -307,19 +327,22 @@ public class SupDataType {
     /**
      * Gets the value of the uri property.
      *
-     * <p> This accessor method returns a reference to the live list, not a
+     * <p>
+     * This accessor method returns a reference to the live list, not a
      * snapshot. Therefore any modification you make to the returned list will
      * be present inside the JAXB object. This is why there is not a
      * <CODE>set</CODE> method for the uri property.
      *
-     * <p> For example, to add a new item, do as follows:
+     * <p>
+     * For example, to add a new item, do as follows:
      *
      * <pre>
      * getURI().add(newItem);
      * </pre>
      *
      *
-     * <p> Objects of the following type(s) are allowed in the list {@link String
+     * <p>
+     * Objects of the following type(s) are allowed in the list {@link String
      * }
      *
      *
