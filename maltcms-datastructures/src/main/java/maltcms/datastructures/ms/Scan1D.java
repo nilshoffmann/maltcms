@@ -76,7 +76,6 @@ public class Scan1D implements IScan1D, Externalizable {
         EvalTools.eqI(masses1.getShape()[0], intensities1.getShape()[0], Scan1D.class);
         this.masses = masses1;
         this.intensities = intensities1;
-        EvalTools.geq(0, scanNumber1, Scan1D.class);
         this.scanNumber = scanNumber1;
 //        this.scanNumber.set(scanNumber1);
         //scan acquisition time can be negative sometimes, so no checking required
