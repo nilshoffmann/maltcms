@@ -1,187 +1,187 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." default="help" name="MaltcmsWeb">
 
-	<property name="jbin.dir" value="bin/" />
-	<property environment="env" />
-	<property name="build.compiler" value="modern" />
-	<property name="build.dir" value="build" />
-	<property name="build-www.dir" value="build-www" />
-	<property name="release_dir" value="release" />
+    <property name="jbin.dir" value="bin/" />
+    <property environment="env" />
+    <property name="build.compiler" value="modern" />
+    <property name="build.dir" value="build" />
+    <property name="build-www.dir" value="build-www" />
+    <property name="release_dir" value="release" />
 
-	<path id="MaltcmsWebUpload.class.path">
-		<fileset dir="build-lib">
-			<include name="*.jar" />
-		</fileset>
-	</path>
+    <path id="MaltcmsWebUpload.class.path">
+        <fileset dir="build-lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
 
 
-	<path id="MaltcmsWeb.classpath">
-		<fileset dir=".">
-			<include name="lib/**/*.jar" />
-		</fileset>
-	</path>
+    <path id="MaltcmsWeb.classpath">
+        <fileset dir=".">
+            <include name="lib/**/*.jar" />
+        </fileset>
+    </path>
 
-	<pathconvert property="mccp" refid="MaltcmsWeb.classpath" />
+    <pathconvert property="mccp" refid="MaltcmsWeb.classpath" />
 
-	<target name="help" description="Prints usage info using -projecthelp">
-		<java classname="org.apache.tools.ant.Main">
-			<arg value="-buildfile" />
-			<arg value="${ant.file}" />
-			<arg value="-projecthelp" />
-		</java>
-	</target>
+    <target name="help" description="Prints usage info using -projecthelp">
+        <java classname="org.apache.tools.ant.Main">
+            <arg value="-buildfile" />
+            <arg value="${ant.file}" />
+            <arg value="-projecthelp" />
+        </java>
+    </target>
 
-	<target name="init">
-		<mkdir dir="${build.dir}" />
-		<mkdir dir="${build.dir}/classes" />
-		<copy includeemptydirs="false" todir="${build.dir}/classes">
-			<fileset dir="src" excludes="**/*.launch, **/*.g, **/*.testsuite, **/*.deploy, **/*.location, **/*.execution, **/*.datapool, **/*.artifact, **/*.html, **/*.svg, **/*.java" />
-		</copy>
-	</target>
+    <target name="init">
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${build.dir}/classes" />
+        <copy includeemptydirs="false" todir="${build.dir}/classes">
+            <fileset dir="src" excludes="**/*.launch, **/*.g, **/*.testsuite, **/*.deploy, **/*.location, **/*.execution, **/*.datapool, **/*.artifact, **/*.html, **/*.svg, **/*.java" />
+        </copy>
+    </target>
 
-	<target name="clean" description="Remove build results and release directory">
-		<delete dir="${build.dir}" />
-		<delete dir="${release_dir}" />
-		<delete>
-			<fileset dir="." includes="*.jar" />
-		</delete>
-		<delete dir="${build-www.dir}" />
-	</target>
+    <target name="clean" description="Remove build results and release directory">
+        <delete dir="${build.dir}" />
+        <delete dir="${release_dir}" />
+        <delete>
+            <fileset dir="." includes="*.jar" />
+        </delete>
+        <delete dir="${build-www.dir}" />
+    </target>
 
-	<target name="build" depends="build-project" />
-	<!-- initialize build -->
-	<target depends="init" name="build-project">
-		<echo message="${ant.project.name}: ${ant.file} building on ${os.name}-${os.arch}-${os.version}" />
-		<antcall target="init-www" />
-		<antcall target="compile" />
-		<antcall target="makexincludejar" />
-		<antcall target="xinclude" />
-		<antcall target="xtransform" />
-	</target>
+    <target name="build" depends="build-project" />
+    <!-- initialize build -->
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file} building on ${os.name}-${os.arch}-${os.version}" />
+        <antcall target="init-www" />
+        <antcall target="compile" />
+        <antcall target="makexincludejar" />
+        <antcall target="xinclude" />
+        <antcall target="xtransform" />
+    </target>
 
-	<target name="compile">
-		<echo message="${mccp}" />
-		<copy todir="${build.dir}/lib">
-			<fileset dir="lib" />
-		</copy>
-		<javac fork="yes" verbose="true" compiler="${build.compiler}" includeAntRuntime="false" includeJavaRuntime="true" destdir="${build.dir}/classes" includeDestClasses="false" source="1.7" target="1.7">
-			<src path="src" />
-                        <classpath refid="MaltcmsWeb.classpath" />
-		</javac>
-	</target>
+    <target name="compile">
+        <echo message="${mccp}" />
+        <copy todir="${build.dir}/lib">
+            <fileset dir="lib" />
+        </copy>
+        <javac fork="yes" verbose="true" compiler="${build.compiler}" includeAntRuntime="false" includeJavaRuntime="true" destdir="${build.dir}/classes" includeDestClasses="false" source="1.7" target="1.7">
+            <src path="src" />
+            <classpath refid="MaltcmsWeb.classpath" />
+        </javac>
+    </target>
 
-	<target name="init-www" description="Create build-www">
-		<mkdir dir="${build-www.dir}" />
-		<copy includeemptydirs="false" todir="${build-www.dir}">
-			<fileset dir="src-www" />
-		</copy>
-		<!--<copy todir="${build-www.dir}/site">
-			<fileset dir="src-www/img" />
-		</copy>-->
-	</target>
+    <target name="init-www" description="Create build-www">
+        <mkdir dir="${build-www.dir}" />
+        <copy includeemptydirs="false" todir="${build-www.dir}">
+            <fileset dir="src-www" />
+        </copy>
+        <!--<copy todir="${build-www.dir}/site">
+                <fileset dir="src-www/img" />
+        </copy>-->
+    </target>
 
-	<target name="xinclude" description="Apply xinclude">
-		<echo message="Running xinclude on ${build.dir}/xinclude.jar, input is from ${build-www.dir}/site.xml" />
-		<java fork="true" jar="${build.dir}/xinclude.jar" failonerror="true" inputstring="">
-			<arg value="${build-www.dir}/site.xml" />
-			<arg value="${build-www.dir}/site-xinclude.xml" />
-                        <classpath refid="MaltcmsWeb.classpath" />
-		</java>
-	</target>
+    <target name="xinclude" description="Apply xinclude">
+        <echo message="Running xinclude on ${build.dir}/xinclude.jar, input is from ${build-www.dir}/site.xml" />
+        <java fork="true" jar="${build.dir}/xinclude.jar" failonerror="true" inputstring="">
+            <arg value="${build-www.dir}/site.xml" />
+            <arg value="${build-www.dir}/site-xinclude.xml" />
+            <classpath refid="MaltcmsWeb.classpath" />
+        </java>
+    </target>
 
-	<target name="xtransform" description="Apply xsl transform">
-		<echo message="Running xtransform" />
-		<java fork="true" classname="org.apache.xalan.xslt.Process" failonerror="true" inputstring="">
-			<arg value="-in" />
-			<arg value="${build-www.dir}/site-xinclude.xml" />
-			<arg value="-xsl" />
-			<arg value="${build-www.dir}/strip-namespaces.xsl" />
-			<arg value="-out" />
-			<arg value="${build-www.dir}/site-xinclude-stripped.xml" />
-			<classpath refid="MaltcmsWeb.classpath" />
-		</java>
-		<java fork="true" classname="org.apache.xalan.xslt.Process" failonerror="true" inputstring="">
-			<arg value="-in" />
-			<arg value="${build-www.dir}/site-xinclude-stripped.xml" />
-			<arg value="-xsl" />
-			<arg value="${build-www.dir}/transform.xsl" />
-			<arg value="-out" />
-			<arg value="${build-www.dir}/siteOut.txt" />
-			<classpath refid="MaltcmsWeb.classpath" />
-		</java>
-	</target>
+    <target name="xtransform" description="Apply xsl transform">
+        <echo message="Running xtransform" />
+        <java fork="true" classname="org.apache.xalan.xslt.Process" failonerror="true" inputstring="">
+            <arg value="-in" />
+            <arg value="${build-www.dir}/site-xinclude.xml" />
+            <arg value="-xsl" />
+            <arg value="${build-www.dir}/strip-namespaces.xsl" />
+            <arg value="-out" />
+            <arg value="${build-www.dir}/site-xinclude-stripped.xml" />
+            <classpath refid="MaltcmsWeb.classpath" />
+        </java>
+        <java fork="true" classname="org.apache.xalan.xslt.Process" failonerror="true" inputstring="">
+            <arg value="-in" />
+            <arg value="${build-www.dir}/site-xinclude-stripped.xml" />
+            <arg value="-xsl" />
+            <arg value="${build-www.dir}/transform.xsl" />
+            <arg value="-out" />
+            <arg value="${build-www.dir}/siteOut.txt" />
+            <classpath refid="MaltcmsWeb.classpath" />
+        </java>
+    </target>
 
-	<!-- create a release -->
-	<target name="release" description="Create a release of MaltcmsWeb" depends="build">
-		<echo message="Creating directories" />
-		<mkdir dir="${release_dir}" />
-		<!--
-			<copy toDir="${release_dir}/"> <fileset dir="${build.dir}/"
-			includes="*.jar"/> </copy>
-		-->
-		<mkdir dir="${release_dir}/site" />
-		<copy toDir="${release_dir}/site" includeemptydirs="false">
-			<fileset dir="${build-www.dir}/" excludes="**/*.xml,transform.xsl,site-xinclude.xml,siteOut.txt,strip-namespaces.xsl" />
-		</copy>
-		<!--<mkdir dir="${release_dir}/site/chromaui" />
-		<copy toDir="${release_dir}/site/chromaui" includeemptydirs="true">
-			<fileset dir="${build-www.dir}/chromaui" />
-		</copy>-->
-		<!--<echo message="Adjusting rights" />
-		<exec inputstring="" dir="${release_dir}" executable="chmod">
-			<arg line="-R" />
-			<arg line="2775" />
-			<arg line="." />
-		</exec>-->
-		<echo message="Done!" />
-	</target>
+    <!-- create a release -->
+    <target name="release" description="Create a release of MaltcmsWeb" depends="build">
+        <echo message="Creating directories" />
+        <mkdir dir="${release_dir}" />
+        <!--
+                <copy toDir="${release_dir}/"> <fileset dir="${build.dir}/"
+                includes="*.jar"/> </copy>
+        -->
+        <mkdir dir="${release_dir}/site" />
+        <copy toDir="${release_dir}/site" includeemptydirs="false">
+            <fileset dir="${build-www.dir}/" excludes="**/*.xml,transform.xsl,site-xinclude.xml,siteOut.txt,strip-namespaces.xsl" />
+        </copy>
+        <!--<mkdir dir="${release_dir}/site/chromaui" />
+        <copy toDir="${release_dir}/site/chromaui" includeemptydirs="true">
+                <fileset dir="${build-www.dir}/chromaui" />
+        </copy>-->
+        <!--<echo message="Adjusting rights" />
+        <exec inputstring="" dir="${release_dir}" executable="chmod">
+                <arg line="-R" />
+                <arg line="2775" />
+                <arg line="." />
+        </exec>-->
+        <echo message="Done!" />
+    </target>
 
-	<!-- create jars -->
-	<target name="makexincludejar">
-		<path id="relative.classpath">
-			<fileset dir="${build.dir}">
-				<include name="." />
-				<include name="lib/*.jar" />
-				<exclude name="net" />
-			</fileset>
-		</path>
-		<!-- Manifest file generation -->
-		<manifestclasspath property="jar.classpath" jarfile="${build.dir}/xinclude.jar">
-			<classpath refid="relative.classpath" />
-		</manifestclasspath>
-		<jar jarfile="${build.dir}/xinclude.jar" includes="net/**/*.class" basedir="${build.dir}/classes">
-			<manifest>
-				<attribute name="Class-Path" value="${jar.classpath}" />
-				<attribute name="Main-Class" value="net.sourceforge.maltcms.web.XIncludeProcessor" />
-				<attribute name="Created-By" value="${user.name}" />
-				<section name="common">
-					<attribute name="Implementation-Title" value="XInclude conversion" />
-					<attribute name="Implementation-Version" value="0.1" />
-					<attribute name="Implementation-Vendor" value="Center for Biotechnology, Bielefeld University" />
-				</section>
-			</manifest>
-		</jar>
-	</target>
+    <!-- create jars -->
+    <target name="makexincludejar">
+        <path id="relative.classpath">
+            <fileset dir="${build.dir}">
+                <include name="." />
+                <include name="lib/*.jar" />
+                <exclude name="net" />
+            </fileset>
+        </path>
+        <!-- Manifest file generation -->
+        <manifestclasspath property="jar.classpath" jarfile="${build.dir}/xinclude.jar">
+            <classpath refid="relative.classpath" />
+        </manifestclasspath>
+        <jar jarfile="${build.dir}/xinclude.jar" includes="net/**/*.class" basedir="${build.dir}/classes">
+            <manifest>
+                <attribute name="Class-Path" value="${jar.classpath}" />
+                <attribute name="Main-Class" value="net.sourceforge.maltcms.web.XIncludeProcessor" />
+                <attribute name="Created-By" value="${user.name}" />
+                <section name="common">
+                    <attribute name="Implementation-Title" value="XInclude conversion" />
+                    <attribute name="Implementation-Version" value="0.1" />
+                    <attribute name="Implementation-Vendor" value="Center for Biotechnology, Bielefeld University" />
+                </section>
+            </manifest>
+        </jar>
+    </target>
 
-	<target name="credentials" description="Ask for user credentials">
-		<input addproperty="sf.username">Please enter sourceforge username:</input>
-		<!--<input message="Please supply password for user ${sf.username}:" addproperty="sf.username.password">
-			<handler type="secure"/>
-		</input>-->
-	</target>
+    <target name="credentials" description="Ask for user credentials">
+        <input addproperty="sf.username">Please enter sourceforge username:</input>
+        <!--<input message="Please supply password for user ${sf.username}:" addproperty="sf.username.password">
+                <handler type="secure"/>
+        </input>-->
+    </target>
 	
-	<target name="deploy" description="Upload results of build to sourceforge" depends="upload"/>
+    <target name="deploy" description="Upload results of build to sourceforge" depends="upload"/>
 
-	<target name="upload" depends="release,credentials">
-		<!--<echo message="Do not forget to supply -Dusername -Dpassword to ant when running the upload target!" />-->
-		<!--<scp todir="${sf.username},maltcms@web.sourceforge.net:htdocs/" password="${sf.username.password}" sftp="true" trust="true" verbose="true">
-			<fileset dir="${release_dir}/site/" />
-		</scp>-->
-		<exec command="rsync" inputstring="">
-			<arg value="-avtruP"/>
-			<arg value="-e ssh "/>
-			<arg value="${release_dir}/site/"/>
-			<arg value="${sf.username},maltcms@web.sourceforge.net:htdocs/"/>
-		</exec>
-	</target>
+    <target name="upload" depends="release,credentials">
+        <!--<echo message="Do not forget to supply -Dusername -Dpassword to ant when running the upload target!" />-->
+        <!--<scp todir="${sf.username},maltcms@web.sourceforge.net:htdocs/" password="${sf.username.password}" sftp="true" trust="true" verbose="true">
+                <fileset dir="${release_dir}/site/" />
+        </scp>-->
+        <exec command="rsync" inputstring="">
+            <arg value="-avtruP"/>
+            <arg value="-e ssh "/>
+            <arg value="${release_dir}/site/"/>
+            <arg value="${sf.username},maltcms@web.sourceforge.net:htdocs/"/>
+        </exec>
+    </target>
 </project>

@@ -95,7 +95,7 @@ public class EICPeakFinder extends AFragmentCommand {
 
     private final String description = "Finds peaks within on mass channels.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;
-    private List<AArrayFilter> filter = new ArrayList<AArrayFilter>();
+    private List<AArrayFilter> filter = new ArrayList<>();
     private IBaselineEstimator baselineEstimator = new LoessMinimaBaselineEstimator();
     private int peakSeparationWindow = 20;
     private boolean integrateRawTic = false;
@@ -112,8 +112,8 @@ public class EICPeakFinder extends AFragmentCommand {
      * @return
      */
     protected static double calcEstimatedCrossCorrelation(final Array a,
-        final Array b, final double meana, final double meanb,
-        final double variancea, final double varianceb) {
+            final Array b, final double meana, final double meanb,
+            final double variancea, final double varianceb) {
         EvalTools.eqI(a.getShape()[0], b.getShape()[0], EICPeakFinder.class);
         double res = 0.0d;
         final int n = a.getShape()[0];
@@ -123,8 +123,8 @@ public class EICPeakFinder extends AFragmentCommand {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 res += (a.getDouble(inda.set(i)) - meana)
-                    * (b.getDouble(indb.set(j)) - meanb)
-                    / Math.sqrt(variancea * varianceb);
+                        * (b.getDouble(indb.set(j)) - meanb)
+                        / Math.sqrt(variancea * varianceb);
             }
         }
         final double v = res / (n - 1.0d);
@@ -144,7 +144,7 @@ public class EICPeakFinder extends AFragmentCommand {
         EvalTools.notNull(t, this);
         SavitzkyGolayFilter sgf = new SavitzkyGolayFilter(10);
         filter.add(sgf);
-        List<IFileFragment> results = new ArrayList<IFileFragment>(t.size());
+        List<IFileFragment> results = new ArrayList<>(t.size());
         for (final IFileFragment f : t) {
             log.info("Retrieving min/max mass range!");
             Tuple2D<Double, Double> mm = MaltcmsTools.getMinMaxMassRange(f);
@@ -158,7 +158,7 @@ public class EICPeakFinder extends AFragmentCommand {
 //			QuantileSnrPeakFinder qspf = new QuantileSnrPeakFinder();
 //			qspf.setPeakSnrThreshold(peakThreshold);
 //			qspf.setPeakSeparationWindow(filterWindow);
-            List<Peak1D> peaks = new ArrayList<Peak1D>();
+            List<Peak1D> peaks = new ArrayList<>();
             boolean[] peakPositions = new boolean[totalScans];
             Array sat = f.getChild("scan_acquisition_time").getArray();
 //			ArrayDouble.D2 a = new ArrayDouble.D2(totalScans, massBins);
@@ -256,7 +256,7 @@ public class EICPeakFinder extends AFragmentCommand {
      * @param ll
      */
     private Collection<WorkflowResult> savePeakTable(final List<Peak1D> l, final IFileFragment iff) {
-        final List<List<String>> rows = new ArrayList<List<String>>(l.size());
+        final List<List<String>> rows = new ArrayList<>(l.size());
         List<String> headers = null;
         final String[] headerLine = new String[]{"APEX", "START", "STOP",
             "RT_APEX", "RT_START", "RT_STOP", "AREA", "AREA_NORMALIZED", "AREA_NORMALIZED_PERCENT", "NORMALIZATION_METHODS", "MW", "INTENSITY", "SNR"};
@@ -265,7 +265,7 @@ public class EICPeakFinder extends AFragmentCommand {
         rows.add(headers);
         for (final Peak1D pb : l) {
             final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
-                Locale.US);
+                    Locale.US);
             df.applyPattern("0.0000");
             log.debug("Adding {} peaks", l.size());
             final String[] line = new String[]{pb.getApexIndex() + "",
@@ -282,8 +282,8 @@ public class EICPeakFinder extends AFragmentCommand {
 
         final CSVWriter csvw = new CSVWriter();
         File peakAreasFile = csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).
-            getAbsolutePath(), StringTools.removeFileExt(iff.getName())
-            + "_peakAreas.csv", rows, WorkflowSlot.ALIGNMENT);
+                getAbsolutePath(), StringTools.removeFileExt(iff.getName())
+                + "_peakAreas.csv", rows, WorkflowSlot.ALIGNMENT);
         WorkflowResult peakAreas = new WorkflowResult(peakAreasFile.toURI(), TICPeakFinder.class.getCanonicalName(), WorkflowSlot.PEAKFINDING, new URI[]{iff.getUri()});
         WorkflowResult annotations = savePeakAnnotations(l, iff);
         return Arrays.asList(peakAreas, annotations);
@@ -295,11 +295,11 @@ public class EICPeakFinder extends AFragmentCommand {
      * @param iff
      */
     public WorkflowResult savePeakAnnotations(final List<Peak1D> l,
-        final IFileFragment iff) {
+            final IFileFragment iff) {
         MaltcmsAnnotationFactory maf = new MaltcmsAnnotationFactory();
         File matFile = new File(getWorkflow().getOutputDirectory(this),
-            StringTools.removeFileExt(iff.getName())
-            + ".maltcmsAnnotation.xml");
+                StringTools.removeFileExt(iff.getName())
+                + ".maltcmsAnnotation.xml");
         MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(iff.getUri());
         for (Peak1D p : l) {
             maf.addPeakAnnotation(ma, this.getClass().getName(), p);
@@ -310,9 +310,9 @@ public class EICPeakFinder extends AFragmentCommand {
     }
 
     private Peak1D getPeakBoundsByTIC(final IFileFragment chromatogram,
-        final int scanIndex, final Array rawTIC,
-        final Array baselineCorrectedTIC,
-        final Array fdTIC, final Array sdTIC, final Array tdTIC) {
+            final int scanIndex, final Array rawTIC,
+            final Array baselineCorrectedTIC,
+            final Array fdTIC, final Array sdTIC, final Array tdTIC) {
 
         Array fdfTIC = baselineCorrectedTIC;
         // return getPeakBoundsByTIC2(scanIndex, f, baselineCorrectedTIC);
@@ -325,7 +325,7 @@ public class EICPeakFinder extends AFragmentCommand {
         int l = scanIndex - 1;
         // start at peak apex = scanIndex
         // order: prev, current, next
-        RingBuffer<Double> rb = new RingBuffer<Double>(3);
+        RingBuffer<Double> rb = new RingBuffer<>(3);
         double oldest = fdfTIC.getDouble(idx.set(apexIndex));
         double previous = fdfTIC.getDouble(idx.set(Math.min(size - 1, r)));
         double current = fdfTIC.getDouble(idx.set(Math.min(size - 1, ++r)));
@@ -339,7 +339,7 @@ public class EICPeakFinder extends AFragmentCommand {
                 break;
             }
             if (tdTIC.getDouble(r) >= 0 && sdTIC.getDouble(r) <= 0
-                && fdTIC.getDouble(r) >= 0) {
+                    && fdTIC.getDouble(r) >= 0) {
                 // System.out.println("Found inflection point on right side");
                 stopIndex = r - 1;
                 break;
@@ -351,7 +351,7 @@ public class EICPeakFinder extends AFragmentCommand {
 
         // start at peak apex = scanIndex
         // order: prev, current, next
-        RingBuffer<Double> rb2 = new RingBuffer<Double>(3);
+        RingBuffer<Double> rb2 = new RingBuffer<>(3);
         oldest = fdfTIC.getDouble(idx.set(apexIndex));
         previous = fdfTIC.getDouble(idx.set(Math.max(0, l)));
         current = fdfTIC.getDouble(idx.set(Math.max(0, --l)));
@@ -366,7 +366,7 @@ public class EICPeakFinder extends AFragmentCommand {
                 break;
             }
             if (tdTIC.getDouble(l) < 0 && sdTIC.getDouble(l) > 0
-                && fdTIC.getDouble(l) < 0) {
+                    && fdTIC.getDouble(l) < 0) {
                 // System.out.println("Found inflection point on left side");
                 startIndex = l + 1;
                 break;
@@ -398,7 +398,7 @@ public class EICPeakFinder extends AFragmentCommand {
      * @return
      */
     private double integratePeak(final Peak1D pb,
-        final List<int[]> mwIndices, final Array tic) {
+            final List<int[]> mwIndices, final Array tic) {
         double s = -1;
         log.debug("Using TIC based integration!");
 //            final Array tic = iff.getChild(this.ticVarName).getArray();
@@ -413,9 +413,9 @@ public class EICPeakFinder extends AFragmentCommand {
     }
 
     public List<Peak1D> findPeakAreas(final IFileFragment chromatogram,
-        final List<Integer> ts, final Array rawTIC,
-        final Array baselineCorrectedTIC, final double[] snr) {
-        final ArrayList<Peak1D> pbs = new ArrayList<Peak1D>();
+            final List<Integer> ts, final Array rawTIC,
+            final Array baselineCorrectedTIC, final double[] snr) {
+        final ArrayList<Peak1D> pbs = new ArrayList<>();
         Array scanAcquisitionTime = chromatogram.getChild("scan_acquisition_time").getArray();
         log.info("Using TIC based peak integration");
         FirstDerivativeFilter fdf = new FirstDerivativeFilter();
@@ -426,8 +426,8 @@ public class EICPeakFinder extends AFragmentCommand {
         for (final Integer scanApex : ts) {
             log.debug("Adding peak at scan index {}", scanApex);
             final Peak1D pb = getPeakBoundsByTIC(chromatogram, scanApex,
-                rawTIC,
-                baselineCorrectedTIC, fdTIC, sdTIC, tdTIC);
+                    rawTIC,
+                    baselineCorrectedTIC, fdTIC, sdTIC, tdTIC);
             if (pb != null && pb.getArea() > 0) {
                 pb.setSnr(snr[pb.getApexIndex()]);
                 pb.setApexTime(scanAcquisitionTime.getDouble(pb.getApexIndex()));
@@ -439,16 +439,16 @@ public class EICPeakFinder extends AFragmentCommand {
         Rectangle2D.Double l1 = null;
         Peak1D prev = null;
         log.info(
-            "Checking peak areas for overlapping or completely contained peaks!");
-        List<Peak1D> overlaps = new ArrayList<Peak1D>();
+                "Checking peak areas for overlapping or completely contained peaks!");
+        List<Peak1D> overlaps = new ArrayList<>();
         for (Peak1D peak : pbs) {
             if (l1 == null) {
                 l1 = new Rectangle2D.Double(peak.getStartIndex(), 0, peak.getStopIndex()
-                    - peak.getStartIndex(), 1);
+                        - peak.getStartIndex(), 1);
                 prev = peak;
             } else {
                 Rectangle2D.Double l2 = new Rectangle2D.Double(peak.getStartIndex(), 0, peak.getStopIndex()
-                    - peak.getStartIndex(), 1);
+                        - peak.getStartIndex(), 1);
                 if (l1.intersects(l2) || l1.contains(l2) || l2.contains(l1)) {
                     log.warn("Peak area overlap detected!");
                     overlaps.add(prev);
@@ -471,7 +471,7 @@ public class EICPeakFinder extends AFragmentCommand {
      */
     private Array applyFilters(final Array correctedtic) {
         final Array filteredtic = BatchFilter.applyFilters(correctedtic,
-            this.filter);
+                this.filter);
         return filteredtic;
     }
 
@@ -484,7 +484,7 @@ public class EICPeakFinder extends AFragmentCommand {
     public PeakPositionsResultSet findPeakPositions(Array tic, Array sat) {
         EvalTools.notNull(tic, this);
         Array correctedtic = null;
-        final ArrayList<Integer> ts = new ArrayList<Integer>();
+        final ArrayList<Integer> ts = new ArrayList<>();
         log.debug("Value\tLow\tMedian\tHigh\tDev\tGTMedian\tSNR");
 
         double[] ticValues = (double[]) tic.get1DJavaArray(double.class
@@ -493,15 +493,15 @@ public class EICPeakFinder extends AFragmentCommand {
         double[] snrValues = new double[ticValues.length];
         double[] satValues = (double[]) sat.get1DJavaArray(double.class);
         double[] cticValues = (double[]) correctedtic.get1DJavaArray(
-            double.class);
+                double.class);
         PolynomialSplineFunction baselineEstimatorFunction = baselineEstimator.findBaseline(satValues, cticValues);
         for (int i = 0;
-            i < snrValues.length;
-            i++) {
+                i < snrValues.length;
+                i++) {
             double snr = Double.NEGATIVE_INFINITY;
             try {
                 double ratio = (cticValues[i])
-                    / baselineEstimatorFunction.value(sat.getDouble(i));
+                        / baselineEstimatorFunction.value(sat.getDouble(i));
                 snr = 20.0d * Math.log10(ratio);
             } catch (ArgumentOutsideDomainException ex) {
                 Logger.getLogger(TICPeakFinder.class.getName()).log(Level.SEVERE, null, ex);
@@ -510,22 +510,22 @@ public class EICPeakFinder extends AFragmentCommand {
         }
 
         log.debug(
-            "SNR: {}", Arrays.toString(snrValues));
+                "SNR: {}", Arrays.toString(snrValues));
         final double threshold = this.peakThreshold;// * maxCorrectedIntensity;
         for (int i = 0;
-            i < ticValues.length;
-            i++) {
+                i < ticValues.length;
+                i++) {
             log.debug("i=" + i);
             PeakFinderUtils.checkExtremum(cticValues, snrValues, ts, threshold, i,
-                this.peakSeparationWindow);
+                    this.peakSeparationWindow);
         }
         PeakPositionsResultSet pprs = new PeakPositionsResultSet(correctedtic,
-            createPeakCandidatesArray(tic, ts), snrValues, ts, baselineEstimatorFunction);
+                createPeakCandidatesArray(tic, ts), snrValues, ts, baselineEstimatorFunction);
         return pprs;
     }
 
     private ArrayInt.D1 createPeakCandidatesArray(final Array tic,
-        final ArrayList<Integer> ts) {
+            final ArrayList<Integer> ts) {
         EvalTools.notNull(ts, this);
         final ArrayInt.D1 extr = new ArrayInt.D1(ts.size());
         // checkUniformDistribution(tic.getShape()[0], ts);
@@ -567,8 +567,8 @@ public class EICPeakFinder extends AFragmentCommand {
      * @param acr
      */
     protected void calcEstimatedAutoCorrelation(final Array a, final Array b,
-        final double mean, final double variance, final int lag,
-        final ArrayDouble.D1 acr) {
+            final double mean, final double variance, final int lag,
+            final ArrayDouble.D1 acr) {
         EvalTools.eqI(a.getRank(), 1, this);
         final int n = a.getShape()[0];
         final int d = n - lag;
@@ -580,7 +580,7 @@ public class EICPeakFinder extends AFragmentCommand {
         final Index indb = b.getIndex();
         for (int i = 0; i < d; i++) {
             res += (a.getDouble(ind.set(i)) - mean)
-                * (b.getDouble(indb.set(i + lag)) - mean);
+                    * (b.getDouble(indb.set(i + lag)) - mean);
         }
         final double v = res / norm;
         acr.set(lag, v);
@@ -613,7 +613,7 @@ public class EICPeakFinder extends AFragmentCommand {
      * @return
      */
     protected Tuple2D<Integer, Double> getMaxAutocorrelation(final Array a,
-        final Array b) {
+            final Array b) {
         final Index ia = a.getIndex();
         final Index ib = b.getIndex();
         final ArrayDouble.D1 autoCorr = new ArrayDouble.D1(a.getShape()[0]);
@@ -628,7 +628,6 @@ public class EICPeakFinder extends AFragmentCommand {
                 maxindex = i;
             }
         }
-        return new Tuple2D<Integer, Double>(Integer.valueOf(maxindex), Double.
-            valueOf(max));
+        return new Tuple2D<>(maxindex, max);
     }
 }

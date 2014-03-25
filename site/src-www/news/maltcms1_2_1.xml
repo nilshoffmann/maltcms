@@ -8,15 +8,19 @@
         </p>
         Maltcms 1.2.1 has seen a number of changes:
         <ul>
-		<li>Script locations for maltcms.sh and maltcms.bat have been relocated to bin/</li>
-		<li>MALTCMSDIR has been replaced by MALTCMS_HOME</li>
-		<li>No need to configure java or the class path anymore</li>
-		<li>Default output directory is now in the current working directory below 'maltcmsOutput'</li>
-		<li>Launching of groovy scripts has been included in maltcms.sh</li>
-		<li>Fixed default parameter for baseline estimation in cfg/xml/chroma.xml which lead to no peaks being found, when using the default cdf dataset from http://sf.net/projects/maltcms/files/maltcms/example-data/maltcms-example-data.zip</li> 
-		<li>Added generation of maltcms.log file for easier bug reporting</li>
-		<li><a href="https://sf.net/p/maltcms/maltcms-bugs/2/">Fixed a bug in maltcms.sh java location code</a></li>
-		<li><a href="https://sf.net/p/maltcms/maltcms-bugs/3/">Fixed a bug in maltcms.sh default configuration location code</a></li>
+            <li>Script locations for maltcms.sh and maltcms.bat have been relocated to bin/</li>
+            <li>MALTCMSDIR has been replaced by MALTCMS_HOME</li>
+            <li>No need to configure java or the class path anymore</li>
+            <li>Default output directory is now in the current working directory below 'maltcmsOutput'</li>
+            <li>Launching of groovy scripts has been included in maltcms.sh</li>
+            <li>Fixed default parameter for baseline estimation in cfg/xml/chroma.xml which lead to no peaks being found, when using the default cdf dataset from http://sf.net/projects/maltcms/files/maltcms/example-data/maltcms-example-data.zip</li> 
+            <li>Added generation of maltcms.log file for easier bug reporting</li>
+            <li>
+                <a href="https://sf.net/p/maltcms/maltcms-bugs/2/">Fixed a bug in maltcms.sh java location code</a>
+            </li>
+            <li>
+                <a href="https://sf.net/p/maltcms/maltcms-bugs/3/">Fixed a bug in maltcms.sh default configuration location code</a>
+            </li>
         </ul>    
         <p>Please consult the README file supplied with Maltcms for instructions on how to get started!</p>    
         <p>For further information, please visit 

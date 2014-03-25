@@ -82,7 +82,7 @@ public class DeltaMasses extends AFragmentCommand {
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         for (final IFileFragment ff : t) {
-            final List<Integer> sdd = new ArrayList<Integer>();
+            final List<Integer> sdd = new ArrayList<>();
             final Array sda = ff.getChild("v_mass_values").getArray();
             final IndexIterator sdaiter = sda.getIndexIterator();
             while (sdaiter.hasNext()) {
@@ -95,9 +95,9 @@ public class DeltaMasses extends AFragmentCommand {
             aaH.remove(aaH.size() - 1);
 
             int dm, dmM;
-            final List<Array> dmList = new ArrayList<Array>();
+            final List<Array> dmList = new ArrayList<>();
             for (final Array ms : aaH) {
-                final Map<Integer, Integer> dmm = new HashMap<Integer, Integer>();
+                final Map<Integer, Integer> dmm = new HashMap<>();
                 final ArrayDouble.D1 msD = (ArrayDouble.D1) ms;
                 for (final Integer ma1 : sdd) {
                     for (final Integer ma2 : sdd) {
@@ -114,7 +114,7 @@ public class DeltaMasses extends AFragmentCommand {
                 dmList.add(a);
             }
             // final Array meanDM = ArrayTools.mean(dmList);
-            final List<Array> picList = new ArrayList<Array>();
+            final List<Array> picList = new ArrayList<>();
             for (final Array a : dmList) {
                 // final Array ab = ArrayTools.sum(a, meanDM);
                 // final IndexIterator iter = ab.getIndexIterator();
@@ -133,10 +133,10 @@ public class DeltaMasses extends AFragmentCommand {
             final ColorRampReader crr = new ColorRampReader();
             final int[][] colorRamp = crr.readColorRamp(this.colorrampLocation);
             createImage(file + "_dm", "delta masses", picList, colorRamp,
-                this.lowThreshold, this.getClass(), this);
+                    this.lowThreshold, this.getClass(), this);
             createImage(file + "_dm_sqr", "delta masses", ArrayTools2.sqrt(
-                picList), colorRamp, this.lowThreshold, this.getClass(),
-                this);
+                    picList), colorRamp, this.lowThreshold, this.getClass(),
+                    this);
 
         }
         return t;
@@ -145,29 +145,29 @@ public class DeltaMasses extends AFragmentCommand {
     /**
      * Creates an image of a list of arrays.
      *
-     * @param filename     filename
-     * @param title        title
-     * @param aa           list of arrays
-     * @param colorRamp    color ramp
+     * @param filename filename
+     * @param title title
+     * @param aa list of arrays
+     * @param colorRamp color ramp
      * @param lowThreshold threshold
-     * @param creator      creator class
-     * @param elem         workflow element
+     * @param creator creator class
+     * @param elem workflow element
      */
     private void createImage(final String filename, final String title,
-        final List<Array> aa, final int[][] colorRamp,
-        final double lowThreshold, final Class<?> creator,
-        final IWorkflowElement elem) {
+            final List<Array> aa, final int[][] colorRamp,
+            final double lowThreshold, final Class<?> creator,
+            final IWorkflowElement elem) {
         final BufferedImage bi2 = maltcms.tools.ImageTools.fullSpectrum(title,
-            aa, aa.get(0).getShape()[0], colorRamp, 1024, true,
-            lowThreshold);
+                aa, aa.get(0).getShape()[0], colorRamp, 1024, true,
+                lowThreshold);
         maltcms.tools.ImageTools.saveImage(bi2, filename, "png", getWorkflow().
-            getOutputDirectory(this), elem);
+                getOutputDirectory(this), elem);
     }
 
     /**
      * Creates a dense array.
      *
-     * @param dma     delta masses
+     * @param dma delta masses
      * @param maxSize max size
      * @return new array
      */

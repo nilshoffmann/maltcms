@@ -57,7 +57,7 @@ public class RidgeCost2 implements IRidgeCost {
         for (int i = 0; i < r.getRidgePoints().size(); i++) {
             Tuple2D<Point2D, Double> point = r.getRidgePoints().get(i);
             ridgePenalty += getScoreContribution(x0, point.getFirst().getX(),
-                point.getSecond().doubleValue());
+                    point.getSecond());
         }
 
         // return Math.abs(2.0 * ridgePenalty / getSize());

@@ -82,8 +82,8 @@ import org.slf4j.Logger;
 @Slf4j
 @Deprecated
 public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
-    IListener<IEvent<IWorkflowResult>>, Runnable, PropertyChangeListener,
-    HyperlinkListener {
+        IListener<IEvent<IWorkflowResult>>, Runnable, PropertyChangeListener,
+        HyperlinkListener {
 
     protected enum State {
 
@@ -91,7 +91,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
     }
 
     private static void handleRuntimeException(final Logger log,
-        final Throwable npe, final LocalHostLauncher lhl, final Date d) {
+            final Throwable npe, final LocalHostLauncher lhl, final Date d) {
         int ecode;
         LocalHostLauncher.shutdown(1, log);
         log.error("Caught Throwable, aborting execution!");
@@ -111,17 +111,17 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
         sb.append("<p>If the exception has not printed anything useful, please submit a bug report including the exception's output to:</p>");
         sb.append("<p><a href=\"https://sourceforge.net/tracker/?func=add&group_id=251287&atid=1127435\">https://sourceforge.net/tracker/?func=add&group_id=251287&atid=1127435</a></p>");
         final File configFile = new File(FileTools.prependDefaultDirsWithPrefix("", Factory.class, d),
-            "runtime.properties");
+                "runtime.properties");
         sb.append("<p>Please attach a copy of <a href=\""
-            + configFile.getAbsolutePath()
-            + "\">the current configuration</a> (at "
-            + configFile.getAbsolutePath() + ") to your report!<br />");
+                + configFile.getAbsolutePath()
+                + "\">the current configuration</a> (at "
+                + configFile.getAbsolutePath() + ") to your report!<br />");
         sb.append("Your report will help improve ChromA, thank you!</p>");
         jpa.setText(sb.toString());
         jpa.addHyperlinkListener(lhl);
         jpa.setEditable(false);
         JOptionPane.showMessageDialog(null, new JScrollPane(jpa),
-            "Error Report", JOptionPane.ERROR_MESSAGE);
+                "Error Report", JOptionPane.ERROR_MESSAGE);
         if (lhl.isExitOnException()) {
             System.exit(ecode);
         }
@@ -137,8 +137,8 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
     private JProgressBar progressBar = null;
     private JList jl = null;
     private DefaultListModel dlm = null;
-    private final Vector<IWorkflowFileResult> buffer = new Vector<IWorkflowFileResult>(
-        5);
+    private final Vector<IWorkflowFileResult> buffer = new Vector<>(
+            5);
     private LocalHostMaltcmsProcess lhmp = null;
     private JTextArea jt;
     private Container jf = null;
@@ -148,7 +148,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
     private boolean navigateToResults = true;
 
     public LocalHostLauncher(final PropertiesConfiguration userConfig,
-        final Container jf, final boolean exitOnException) {
+            final Container jf, final boolean exitOnException) {
         this.cfg = userConfig;
         this.jf = jf;
         this.lhmp = new LocalHostMaltcmsProcess();
@@ -177,7 +177,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
     public Configuration getDefaultConfig() {
         URL defaultConfigLocation = null;
         defaultConfigLocation = getClass().getClassLoader().getResource(
-            "cfg/default.properties");
+                "cfg/default.properties");
         try {
             this.defaultConfig = new PropertiesConfiguration(defaultConfigLocation);
         } catch (Exception e) {
@@ -185,7 +185,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
             try {
                 defaultConfigLocation = new File("cfg/default.properties").toURI().toURL();
                 this.defaultConfig = new PropertiesConfiguration(
-                    defaultConfigLocation);
+                        defaultConfigLocation);
             } catch (MalformedURLException ex) {
                 // TODO Auto-generated catch block
                 ex.printStackTrace();
@@ -195,7 +195,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
         }
 
         System.out.println("Using default config location: "
-            + defaultConfigLocation.toString());
+                + defaultConfigLocation.toString());
 
         final CompositeConfiguration ccfg = new CompositeConfiguration();
         ccfg.addConfiguration(this.cfg);
@@ -224,14 +224,12 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
             if (Desktop.isDesktopSupported()) {
                 try {
                     Desktop.getDesktop().browse(e.getURL().toURI());
-                } catch (final IOException e1) {
-                    this.log.error("{}", e1.getLocalizedMessage());
-                } catch (final URISyntaxException e1) {
+                } catch (final IOException | URISyntaxException e1) {
                     this.log.error("{}", e1.getLocalizedMessage());
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Please view link at "
-                    + e.getURL().toString());
+                        + e.getURL().toString());
             }
         }
 
@@ -254,18 +252,18 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
                         if (!LocalHostLauncher.this.buffer.isEmpty()) {
                             for (final IWorkflowFileResult iwr : LocalHostLauncher.this.buffer) {
                                 LocalHostLauncher.this.dlm.addElement(iwr.getWorkflowSlot()
-                                    + ": "
-                                    + iwr.getWorkflowElement().getClass().getSimpleName()
-                                    + " created "
-                                    + iwr.getFile().getName());
+                                        + ": "
+                                        + iwr.getWorkflowElement().getClass().getSimpleName()
+                                        + " created "
+                                        + iwr.getFile().getName());
                             }
                             LocalHostLauncher.this.buffer.clear();
                         } else {
                             LocalHostLauncher.this.dlm.addElement(dwr.getWorkflowSlot()
-                                + ": "
-                                + dwr.getWorkflowElement().getClass().getSimpleName()
-                                + " created "
-                                + dwr.getFile().getName());
+                                    + ": "
+                                    + dwr.getWorkflowElement().getClass().getSimpleName()
+                                    + " created "
+                                    + dwr.getFile().getName());
                         }
 
                     }
@@ -302,6 +300,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
 
     }
 
+    @Override
     public void run() {
         if (this.progressBar == null) {
             this.progressBar = new JProgressBar(0, 100);
@@ -314,7 +313,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
             jp.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
             jp.add(new JScrollPane(this.jl));
             this.progress.add(new JLabel("Overall progress:"),
-                BorderLayout.SOUTH);
+                    BorderLayout.SOUTH);
             this.progress.add(this.progressBar, BorderLayout.SOUTH);
             jp.add(this.progress);
             this.jf.add(jp);
@@ -338,14 +337,14 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
                             Desktop.getDesktop().browse(result.toURI());
                         } else {
                             Desktop.getDesktop().browse(
-                                result.getParentFile().toURI());
+                                    result.getParentFile().toURI());
                         }
                     } catch (final IOException e) {
                         this.log.error("{}", "Could not access Desktop object");
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Please view your results at "
-                        + result.getParentFile());
+                            + result.getParentFile());
                 }
                 shutdown(30, log);
             }
@@ -355,12 +354,9 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
             this.progressBar.setValue(0);
             this.log.error(e1.getLocalizedMessage());
             return;
-        } catch (final InterruptedException e1) {
+        } catch (final InterruptedException | ExecutionException e1) {
             LocalHostLauncher.handleRuntimeException(this.log, e1, this,
-                this.startup);
-        } catch (final ExecutionException e1) {
-            LocalHostLauncher.handleRuntimeException(this.log, e1, this,
-                this.startup);
+                    this.startup);
         }
 
     }
@@ -375,6 +371,6 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
     @Override
     public void uncaughtException(final Thread t, final Throwable e) {
         LocalHostLauncher.handleRuntimeException(this.log, e, this,
-            this.startup);
+                this.startup);
     }
 }

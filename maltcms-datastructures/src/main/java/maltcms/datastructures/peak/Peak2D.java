@@ -50,7 +50,7 @@ public class Peak2D extends Peak1D implements Serializable {
     private int index = -1;
     private double firstRetTime = -1.0d;
     private double secondRetTime = -1.0d;
-    private List<Tuple2D<Double, IMetabolite>> identification = new ArrayList<Tuple2D<Double, IMetabolite>>();
+    private List<Tuple2D<Double, IMetabolite>> identification = new ArrayList<>();
     private Peak2D reference = null;
 
     /**
@@ -60,8 +60,8 @@ public class Peak2D extends Peak1D implements Serializable {
      */
     public Peak2D() {
         super();
-        this.identification = new ArrayList<Tuple2D<Double, IMetabolite>>();
-        final ArrayList<Tuple2D<Double, IMetabolite>> hitsD = new ArrayList<Tuple2D<Double, IMetabolite>>();
+        this.identification = new ArrayList<>();
+        final ArrayList<Tuple2D<Double, IMetabolite>> hitsD = new ArrayList<>();
         final Metabolite m = new Metabolite();
         m.setID("Unkown");
         hitsD.add(new Tuple2D<Double, IMetabolite>(1.0, m));
@@ -91,6 +91,7 @@ public class Peak2D extends Peak1D implements Serializable {
      *
      * @return name
      */
+    @Override
     public String getName() {
         if ((this.identification != null) && (this.identification.size() > 0)) {
             return this.identification.get(0).getSecond().getID();
@@ -236,9 +237,10 @@ public class Peak2D extends Peak1D implements Serializable {
         return this.peakArea.getAreaIntensity();
     }
 
+    @Override
     public void setArea(double d) {
         throw new UnsupportedOperationException(
-            "Not supported in Peak2D. Please use the PeakArea Object to do this.");
+                "Not supported in Peak2D. Please use the PeakArea Object to do this.");
     }
 
     public static void main(String[] args) {

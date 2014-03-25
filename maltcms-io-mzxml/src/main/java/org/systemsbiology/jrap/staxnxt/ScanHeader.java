@@ -1,10 +1,9 @@
 /**
  * *****************************************************************************
  * --------------------------------------------------------------------------- *
- * File: * @(#) ScanHeader.java * Author: * Mathijs Vogelzang
- * m_v@dds.nl
- * ****************************************************************************** * * *
- * This software is provided ``AS IS'' and any express or implied * *
+ * File: * @(#) ScanHeader.java * Author: * Mathijs Vogelzang m_v@dds.nl
+ * ******************************************************************************
+ * * * * This software is provided ``AS IS'' and any express or implied * *
  * warranties, including, but not limited to, the implied warranties of * *
  * merchantability and fitness for a particular purpose, are disclaimed. * * In
  * no event shall the authors or the Institute for Systems Biology * * liable
@@ -32,16 +31,17 @@ package org.systemsbiology.jrap.staxnxt;
 import java.io.Serializable;
 
 /**
- * ScanHeader is a class that contains all information
- * associated with a Scan, except for the actual peakList.
- * The separation between the peaklist and the other information
- * was made because parsing the peaklist costs a lot of time, and
- * in this way, programs can parse headers separately, and not parse
- * the peaklist when it's not needed.
+ * ScanHeader is a class that contains all information associated with a Scan,
+ * except for the actual peakList. The separation between the peaklist and the
+ * other information was made because parsing the peaklist costs a lot of time,
+ * and in this way, programs can parse headers separately, and not parse the
+ * peaklist when it's not needed.
  *
- * dhmay: rt and retentionTime are completely separate fields, which is horribly confusing. Probably getRetentionTime()
- * should form a String around rt, and getDoubleRetentionTime() should just be a cover for getRT(), if both need to
- * exist. Noting this on 2009/03/10 but not touching it, in case there are unknown dependencies on this separation.
+ * dhmay: rt and retentionTime are completely separate fields, which is horribly
+ * confusing. Probably getRetentionTime() should form a String around rt, and
+ * getDoubleRetentionTime() should just be a cover for getRT(), if both need to
+ * exist. Noting this on 2009/03/10 but not touching it, in case there are
+ * unknown dependencies on this separation.
  *
  * @author M. Vogelzang
  */
@@ -194,9 +194,10 @@ public class ScanHeader implements Serializable {
     protected int intenCompressedLen = -1;
 
     /**
-     * Store the byte offset, within the mz(X)ML file, at which the binary data for this scan are found.
-     * dhmay re-adding 20091021. This was removed by in mid-2008, super important. Note: this must be set explicitly
-     * by calling code -- the offset won't be found in the scan XML itself
+     * Store the byte offset, within the mz(X)ML file, at which the binary data
+     * for this scan are found. dhmay re-adding 20091021. This was removed by in
+     * mid-2008, super important. Note: this must be set explicitly by calling
+     * code -- the offset won't be found in the scan XML itself
      */
     protected long scanOffset = -1;
 
@@ -208,8 +209,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param basePeakIntensity
-     *                          The basePeakIntensity to set.
+     * @param basePeakIntensity The basePeakIntensity to set.
      */
     public void setBasePeakIntensity(float basePeakIntensity) {
         this.basePeakIntensity = basePeakIntensity;
@@ -223,8 +223,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param basePeakMz
-     *                   The basePeakMz to set.
+     * @param basePeakMz The basePeakMz to set.
      */
     public void setBasePeakMz(float basePeakMz) {
         this.basePeakMz = basePeakMz;
@@ -252,8 +251,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param centroided
-     *                   The centroided to set.
+     * @param centroided The centroided to set.
      */
     public void setCentroided(int centroided) {
         this.centroided = centroided;
@@ -267,8 +265,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param chargeDeconvoluted
-     *                           The chargeDeconvoluted to set.
+     * @param chargeDeconvoluted The chargeDeconvoluted to set.
      */
     public void setChargeDeconvoluted(int chargeDeconvoluted) {
         this.chargeDeconvoluted = chargeDeconvoluted;
@@ -282,8 +279,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param collisionEnergy
-     *                        The collisionEnergy to set.
+     * @param collisionEnergy The collisionEnergy to set.
      */
     public void setCollisionEnergy(float collisionEnergy) {
         this.collisionEnergy = collisionEnergy;
@@ -339,8 +335,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param deisotoped
-     *                   The deisotoped to set.
+     * @param deisotoped The deisotoped to set.
      */
     public void setDeisotoped(int deisotoped) {
         this.deisotoped = deisotoped;
@@ -354,8 +349,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param endMz
-     *              The endMz to set.
+     * @param endMz The endMz to set.
      */
     public void setEndMz(float endMz) {
         this.endMz = endMz;
@@ -383,8 +377,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param highMz
-     *               The highMz to set.
+     * @param highMz The highMz to set.
      */
     public void setHighMz(float highMz) {
         this.highMz = highMz;
@@ -398,8 +391,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param ionisationEnergy
-     *                         The ionisationEnergy to set.
+     * @param ionisationEnergy The ionisationEnergy to set.
      */
     public void setIonisationEnergy(float ionisationEnergy) {
         this.ionisationEnergy = ionisationEnergy;
@@ -413,8 +405,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param lowMz
-     *              The lowMz to set.
+     * @param lowMz The lowMz to set.
      */
     public void setLowMz(float lowMz) {
         this.lowMz = lowMz;
@@ -428,8 +419,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param msLevel
-     *                The msLevel to set.
+     * @param msLevel The msLevel to set.
      */
     public void setMsLevel(int msLevel) {
         this.msLevel = msLevel;
@@ -443,8 +433,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param num
-     *            The num to set.
+     * @param num The num to set.
      */
     public void setNum(int num) {
         this.num = num;
@@ -458,8 +447,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param peaksCount
-     *                   The peaksCount to set.
+     * @param peaksCount The peaksCount to set.
      */
     public void setPeaksCount(int peaksCount) {
         this.peaksCount = peaksCount;
@@ -473,8 +461,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param polarity
-     *                 The polarity to set.
+     * @param polarity The polarity to set.
      */
     public void setPolarity(String polarity) {
         this.polarity = polarity;
@@ -488,8 +475,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param precision
-     *                  The precision to set.
+     * @param precision The precision to set.
      */
     public void setPrecision(int precision) {
         this.precision = precision;
@@ -503,8 +489,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param precursorCharge
-     *                        The precursorCharge to set.
+     * @param precursorCharge The precursorCharge to set.
      */
     public void setPrecursorCharge(int precursorCharge) {
         this.precursorCharge = precursorCharge;
@@ -518,8 +503,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param precursorMz
-     *                    The precursorMz to set.
+     * @param precursorMz The precursorMz to set.
      */
     public void setPrecursorMz(float precursorMz) {
         this.precursorMz = precursorMz;
@@ -533,8 +517,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param precursorScanNum
-     *                         The precursorScanNum to set.
+     * @param precursorScanNum The precursorScanNum to set.
      */
     public void setPrecursorScanNum(int precursorScanNum) {
         this.precursorScanNum = precursorScanNum;
@@ -549,8 +532,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param precursorIntensity
-     *                           The precursorIntensity to set
+     * @param precursorIntensity The precursorIntensity to set
      */
     public void setPrecursorIntensity(float precursorIntensity) {
         this.precursorIntensity = precursorIntensity;
@@ -564,8 +546,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param retentionTime
-     *                      The retentionTime to set.
+     * @param retentionTime The retentionTime to set.
      */
     public void setRetentionTime(String retentionTime) {
         this.retentionTime = retentionTime;
@@ -591,8 +572,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param scanType
-     *                 The scanType to set.
+     * @param scanType The scanType to set.
      */
     public void setScanType(String scanType) {
         this.scanType = scanType;
@@ -606,8 +586,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param startMz
-     *                The startMz to set.
+     * @param startMz The startMz to set.
      */
     public void setStartMz(float startMz) {
         this.startMz = startMz;
@@ -621,8 +600,7 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param totIonCurrent
-     *                      The totIonCurrent to set.
+     * @param totIonCurrent The totIonCurrent to set.
      */
     public void setTotIonCurrent(float totIonCurrent) {
         this.totIonCurrent = totIonCurrent;
@@ -631,15 +609,15 @@ public class ScanHeader implements Serializable {
     public double getDoubleRetentionTime() {
         // TODO: more robust ISO time conversion?
         if (retentionTime.charAt(0) != 'P'
-            || retentionTime.charAt(1) != 'T'
-            || retentionTime.charAt(retentionTime.length() - 1) != 'S') {
+                || retentionTime.charAt(1) != 'T'
+                || retentionTime.charAt(retentionTime.length() - 1) != 'S') {
             throw new IllegalArgumentException(
-                "Format of retentiontime is not PTxxxxS, don't know how to parse "
-                + retentionTime);
+                    "Format of retentiontime is not PTxxxxS, don't know how to parse "
+                    + retentionTime);
         }
 
         return Double.parseDouble(
-            retentionTime.substring(2, retentionTime.length() - 1));
+                retentionTime.substring(2, retentionTime.length() - 1));
     }
 
     /**
@@ -732,6 +710,7 @@ public class ScanHeader implements Serializable {
      * Note: This is most likely not an optimal way to build the string.
      * Hopefully this method will only be used for testing.
      */
+    @Override
     public String toString() {
         StringBuffer tmpStrBuffer = new StringBuffer(1000);
         tmpStrBuffer.append("SCANHEADER\n");
@@ -744,7 +723,7 @@ public class ScanHeader implements Serializable {
         tmpStrBuffer.append("centroided = " + centroided + "\n");
         tmpStrBuffer.append("deisotoped = " + deisotoped + "\n");
         tmpStrBuffer.append(
-            "chargeDeconvoluted = " + chargeDeconvoluted + "\n");
+                "chargeDeconvoluted = " + chargeDeconvoluted + "\n");
         tmpStrBuffer.append("retentionTime = " + retentionTime + "\n");
         tmpStrBuffer.append("startMz = " + startMz + "\n");
         tmpStrBuffer.append("endMz = " + endMz + "\n");

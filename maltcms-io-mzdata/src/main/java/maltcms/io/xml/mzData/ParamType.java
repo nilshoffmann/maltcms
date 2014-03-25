@@ -44,8 +44,8 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for paramType complex type.
  *
  * <p>
- * The following schema fragment specifies the expected content contained
- * within this class.
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  *
  * <pre>
  * &lt;complexType name=&quot;paramType&quot;&gt;
@@ -100,7 +100,7 @@ public class ParamType implements Serializable {
      */
     public List<Object> getCvParamOrUserParam() {
         if (this.cvParamOrUserParam == null) {
-            this.cvParamOrUserParam = new ArrayList<Object>();
+            this.cvParamOrUserParam = new ArrayList<>();
         }
         return this.cvParamOrUserParam;
     }

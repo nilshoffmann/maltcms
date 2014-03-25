@@ -31,8 +31,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.TemporaryFolder;
 
@@ -42,44 +40,44 @@ import org.junit.rules.TemporaryFolder;
  */
 public class ExtractClassPathFiles extends ExternalResource {
 
-	private final TemporaryFolder tf;
-	private final String[] resourcePaths;
-	private final List<File> files = new LinkedList<File>();
-	private File baseFolder;
+    private final TemporaryFolder tf;
+    private final String[] resourcePaths;
+    private final List<File> files = new LinkedList<>();
+    private File baseFolder;
 
-	public ExtractClassPathFiles(TemporaryFolder tf, String... resourcePaths) {
-		this.tf = tf;
-		this.resourcePaths = resourcePaths;
-	}
+    public ExtractClassPathFiles(TemporaryFolder tf, String... resourcePaths) {
+        this.tf = tf;
+        this.resourcePaths = resourcePaths;
+    }
 
-	@Override
-	protected void before() throws Throwable {
-		try {
-			this.tf.create();
-		} catch (IOException ex) {
-			throw ex;
-		}
-		baseFolder = tf.newFolder();
-		int i = 0;
-		for (String resource : resourcePaths) {
-			File file = ZipResourceExtractor.extract(
-					resource, baseFolder);
-			files.add(file);
-		}
-	}
+    @Override
+    protected void before() throws Throwable {
+        try {
+            this.tf.create();
+        } catch (IOException ex) {
+            throw ex;
+        }
+        baseFolder = tf.newFolder();
+        int i = 0;
+        for (String resource : resourcePaths) {
+            File file = ZipResourceExtractor.extract(
+                    resource, baseFolder);
+            files.add(file);
+        }
+    }
 
-	@Override
-	protected void after() {
-		for (File f : files) {
-			f.delete();
-		}
-	}
+    @Override
+    protected void after() {
+        for (File f : files) {
+            f.delete();
+        }
+    }
 
-	public List<File> getFiles() {
-		return this.files;
-	}
-	
-	public File getBaseDir() {
-		return baseFolder;
-	}
+    public List<File> getFiles() {
+        return this.files;
+    }
+
+    public File getBaseDir() {
+        return baseFolder;
+    }
 }

@@ -65,32 +65,32 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
     /**
      * Constructor to create an empty plot.
      *
-     * @param iTitle       title
+     * @param iTitle title
      * @param iUseLogScale use logarithmic scale for the y axis
-     * @param iShowLegend  show legend items
+     * @param iShowLegend show legend items
      */
     public MassSpectrumPlot(final String iTitle, final boolean iUseLogScale,
-        final boolean iShowLegend) {
+            final boolean iShowLegend) {
         this.title = iTitle;
         this.showLegend = iShowLegend;
         this.useLogScale = iUseLogScale;
-        this.values = new ArrayList<Array>();
-        this.legendName = new ArrayList<String>();
-        this.seriesColor = new ArrayList<Color>();
+        this.values = new ArrayList<>();
+        this.legendName = new ArrayList<>();
+        this.seriesColor = new ArrayList<>();
     }
 
     /**
      * Default constructor.
      *
-     * @param iTitle       title of this plot
-     * @param iLegendName  series name
-     * @param iValues      values
+     * @param iTitle title of this plot
+     * @param iLegendName series name
+     * @param iValues values
      * @param iUseLogScale use logarithmic scale for range axis
-     * @param iShowLegend  show legend label
+     * @param iShowLegend show legend label
      */
     public MassSpectrumPlot(final String iTitle, final String iLegendName,
-        final Array iValues, final boolean iUseLogScale,
-        final boolean iShowLegend) {
+            final Array iValues, final boolean iUseLogScale,
+            final boolean iShowLegend) {
         this(iTitle, iUseLogScale, iShowLegend);
         addSeries(iLegendName, iValues, Color.RED.darker());
     }
@@ -99,11 +99,11 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
      * Add a new mass spectra to the plot.
      *
      * @param nLegendName legend name
-     * @param nValues     mass spectra
-     * @param nColor      color
+     * @param nValues mass spectra
+     * @param nColor color
      */
     public void addSeries(final String nLegendName, final Array nValues,
-        final Color nColor) {
+            final Color nColor) {
         this.legendName.add(nLegendName);
         this.values.add(nValues);
         this.seriesColor.add(nColor);
@@ -115,11 +115,11 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
     @Override
     public XYPlot create() {
         final XYSeriesCollection collection = new XYSeriesCollection();
-        final List<Map<Integer, Double>> lists = new ArrayList<Map<Integer, Double>>();
+        final List<Map<Integer, Double>> lists = new ArrayList<>();
         final int[] counters = new int[this.values.size()];
         for (int i = 0; i < this.values.size(); i++) {
             final IndexIterator iter = this.values.get(i).getIndexIterator();
-            final Map<Integer, Double> list = new HashMap<Integer, Double>();
+            final Map<Integer, Double> list = new HashMap<>();
             counters[i] = 0;
             final XYSeries series = new XYSeries(this.legendName.get(i));
             while (iter.hasNext()) {
@@ -163,15 +163,16 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
         renderer.setGradientPaintTransformer(null);
 
         final XYPlot plot = new XYPlot(dataset, xaxis, yaxis, renderer);
-        final TreeSet<Double> sortedKeys = new TreeSet<Double>(
-            new Comparator<Double>() {
-                public int compare(final Double double1,
-                    final Double double2) {
-                    return -1
-                    * Double.valueOf(double1.compareTo(double2))
-                    .intValue();
-                }
-            });
+        final TreeSet<Double> sortedKeys = new TreeSet<>(
+                new Comparator<Double>() {
+                    @Override
+                    public int compare(final Double double1,
+                            final Double double2) {
+                        return -1
+                        * Double.valueOf(double1.compareTo(double2))
+                        .intValue();
+                    }
+                });
         for (int i = 0; i < lists.size(); i++) {
             sortedKeys.clear();
             sortedKeys.addAll(lists.get(i).values());
@@ -179,7 +180,7 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
             for (Double value : sortedKeys) {
                 for (Integer x : getXList(lists.get(i), value)) {
                     final XYPointerAnnotation pointer = new XYPointerAnnotation(
-                        x + "", x, value.intValue(), 7 * Math.PI / 4.0d);
+                            x + "", x, value.intValue(), 7 * Math.PI / 4.0d);
                     pointer.setPaint(this.seriesColor.get(i));
                     pointer.setTipRadius(0.0d);
                     plot.addAnnotation(pointer);
@@ -215,13 +216,13 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
     /**
      * Getter.
      *
-     * @param map   map
+     * @param map map
      * @param value value
      * @return list of indices of all occurrences of value
      */
     private List<Integer> getXList(final Map<Integer, Double> map,
-        final double value) {
-        final List<Integer> xlist = new ArrayList<Integer>();
+            final double value) {
+        final List<Integer> xlist = new ArrayList<>();
         for (Integer x : map.keySet()) {
             if (map.get(x) == value) {
                 xlist.add(x);

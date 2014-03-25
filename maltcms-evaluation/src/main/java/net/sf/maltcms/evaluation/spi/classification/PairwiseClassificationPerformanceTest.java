@@ -79,7 +79,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
     }
 
     public static <T extends IFeatureVector> Map<String, EntityGroupList<T>> createMspaPairMap(EntityGroupList<T> entities) {
-        Map<String, EntityGroupList<T>> m = new LinkedHashMap<String, EntityGroupList<T>>();
+        Map<String, EntityGroupList<T>> m = new LinkedHashMap<>();
         int cnt = 0;
         int size = entities.getCategoriesSize() - 1;
         Category[] categories = entities.getCategories().toArray(new Category[entities.getCategoriesSize()]);
@@ -92,7 +92,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
     }
 
     public static <T extends IFeatureVector> Map<String, EntityGroupList<T>> createPairMap(EntityGroupList<T> entities) {
-        Map<String, EntityGroupList<T>> m = new LinkedHashMap<String, EntityGroupList<T>>();
+        Map<String, EntityGroupList<T>> m = new LinkedHashMap<>();
         int cnt = 0;
         int size = entities.getCategoriesSize() * (entities.getCategoriesSize() - 1) / 2;
         Category[] categories = entities.getCategories().toArray(new Category[entities.getCategoriesSize()]);
@@ -109,11 +109,11 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
     public static void main(String[] args) {
         EntityGroupBuilder egb = new EntityGroupBuilder();
         File[] files = FileUtils.listFiles(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/mSPA/data/mSPA_Dataset_I/"), new String[]{"csv"}, false).toArray(new File[0]);
-        ChromaTOFPeakListEntityTable<INamedPeakFeatureVector> t = new ChromaTOFPeakListEntityTable<INamedPeakFeatureVector>(files);
+        ChromaTOFPeakListEntityTable<INamedPeakFeatureVector> t = new ChromaTOFPeakListEntityTable<>(files);
         List<EntityGroup<INamedPeakFeatureVector>> ref = egb.buildCSVPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/mSPA/groundTruth/mSPA_Dataset_I/reference-alignment.txt"), t);
         EntityGroupList referenceGroups = new EntityGroupList(ref.get(0).getCategories().toArray(new Category[0]));
         referenceGroups.addAll(ref);
-        Map<String, List<EntityGroup<INamedPeakFeatureVector>>> tools = new LinkedHashMap<String, List<EntityGroup<INamedPeakFeatureVector>>>();
+        Map<String, List<EntityGroup<INamedPeakFeatureVector>>> tools = new LinkedHashMap<>();
         ///home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/chlamy_Dataset_I/mspa/b1cf508f-fd7a-37b8-bb13-848ca9f2b0f0/PAM/1
         tools.put("mSPA", egb.buildMSPAPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/mSPA_Dataset_I_short/mspa/847570cb-09d1-3411-a74c-8f1b2697baed/PAM/1/"), t));
         tools.put("SWPA", egb.buildMSPAPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/mSPA_Dataset_I_short/swpa/dd1978d5-be59-3dcf-ad8a-56002c341bad/SWRE/1/"), t));
@@ -193,9 +193,9 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
 //			datal.add(eg);
 //		}
 
-            PairwiseClassificationPerformanceTest<INamedPeakFeatureVector> cpt = new PairwiseClassificationPerformanceTest<INamedPeakFeatureVector>(t, referenceGroups, new PeakNameFeatureVectorComparator());
+            PairwiseClassificationPerformanceTest<INamedPeakFeatureVector> cpt = new PairwiseClassificationPerformanceTest<>(t, referenceGroups, new PeakNameFeatureVectorComparator());
             List<PairwisePerformanceMetrics> pm = cpt.performTest(key, toolGroups);
-            MultiMap<IPerformanceMetrics.Vars, Number> metricsMap = new MultiMap<IPerformanceMetrics.Vars, Number>();
+            MultiMap<IPerformanceMetrics.Vars, Number> metricsMap = new MultiMap<>();
             System.out.println("Pairwise evaluation:");
             System.out.println("INSTANCE\tTP\tFP\tTN\tFN\tF1");
             for (PairwisePerformanceMetrics metrics : pm) {
@@ -212,9 +212,9 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
                 DescriptiveStatistics ds = new DescriptiveStatistics(values);
                 System.out.println(var.toString() + ": totalValue=" + ds.getSum() + "; min=" + ds.getMin() + "; max=" + ds.getMax() + "; mean=" + ds.getMean() + "+/-" + ds.getStandardDeviation());
             }
-            ClassificationPerformanceTest<INamedPeakFeatureVector> rpt = new ClassificationPerformanceTest<INamedPeakFeatureVector>(referenceGroups, new PeakRowIndexFeatureVectorComparator());
+            ClassificationPerformanceTest<INamedPeakFeatureVector> rpt = new ClassificationPerformanceTest<>(referenceGroups, new PeakRowIndexFeatureVectorComparator());
             PerformanceMetrics rpm = rpt.performTest("testTool", toolGroups);
-            MultiMap<PerformanceMetrics.Vars, Number> metricsMap2 = new MultiMap<PerformanceMetrics.Vars, Number>();
+            MultiMap<PerformanceMetrics.Vars, Number> metricsMap2 = new MultiMap<>();
             metricsMap2.put(TP, rpm.getTp());
             metricsMap2.put(FP, rpm.getFp());
             metricsMap2.put(TN, rpm.getTn());
@@ -295,7 +295,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         //check assignments from tool -> Kim et al remove the unmatched peaks before comparing
         //nflag is recreated for each pairwise alignment, based on the original peak lists
         //thus, unassigned peaks are not counted at all!
-        TupleND<Category> toolCategories = new TupleND<Category>(tool.getCategories());
+        TupleND<Category> toolCategories = new TupleND<>(tool.getCategories());
         if (toolCategories.size() != 2) {
             throw new IllegalArgumentException("Can only process category pairs!");
         }
@@ -376,8 +376,8 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
 
 //		Map<String, EntityGroupList<T>> refMap = createMspaPairMap(this.groundTruth);
         Map<String, EntityGroupList<T>> resultMap = createPairMap(toolGroups);
-        MultiMap<IPerformanceMetrics.Vars, Number> metricsMap = new MultiMap<IPerformanceMetrics.Vars, Number>();
-        List<PairwisePerformanceMetrics> pml = new ArrayList<PairwisePerformanceMetrics>();
+        MultiMap<IPerformanceMetrics.Vars, Number> metricsMap = new MultiMap<>();
+        List<PairwisePerformanceMetrics> pml = new ArrayList<>();
         for (String s : resultMap.keySet()) {
 //			EntityGroupList<T> ref1 = refMap.get(s);
             EntityGroupList<T> result1 = resultMap.get(s);
@@ -424,9 +424,9 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
             return true;
         }
         //log.warn("Categories differ between ground truth and test group!");
-        List<Category> gtList = new ArrayList<Category>(gtCats);
+        List<Category> gtList = new ArrayList<>(gtCats);
         Collections.sort(gtList);
-        List<Category> tgList = new ArrayList<Category>(gtList);
+        List<Category> tgList = new ArrayList<>(gtList);
         Collections.sort(tgList);
         //log.warn("GroundTruth: " + gtList);
         //log.warn("TestGroup:" + tgList);

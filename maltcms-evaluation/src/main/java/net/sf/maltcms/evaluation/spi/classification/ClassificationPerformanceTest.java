@@ -81,13 +81,13 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         gt[4] = new double[]{6.7, 6.65, 6.71};
         gt[5] = new double[]{7.23, 7.12, 7.123};
 
-        List<EntityGroup<PeakRTFeatureVector>> gtl = new ArrayList<EntityGroup<PeakRTFeatureVector>>();
+        List<EntityGroup<PeakRTFeatureVector>> gtl = new ArrayList<>();
         for (int i = 0; i < gt.length; i++) {
             Entity[] e = new Entity[gt[i].length];
             for (int j = 0; j < e.length; j++) {
-                e[j] = new Entity<PeakRTFeatureVector>(new PeakRTFeatureVector(gt[i][j], Double.NaN), cats[j], "gt" + (i + 1));
+                e[j] = new Entity<>(new PeakRTFeatureVector(gt[i][j], Double.NaN), cats[j], "gt" + (i + 1));
             }
-            EntityGroup<PeakRTFeatureVector> eg = new EntityGroup<PeakRTFeatureVector>(e);
+            EntityGroup<PeakRTFeatureVector> eg = new EntityGroup<>(e);
             gtl.add(eg);
         }
 
@@ -99,17 +99,17 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         data[4] = new double[]{6.34999, 6.321, Double.NaN};
         data[5] = new double[]{7.23, Double.NaN, 7.12};
 
-        List<EntityGroup<PeakRTFeatureVector>> datal = new ArrayList<EntityGroup<PeakRTFeatureVector>>();
+        List<EntityGroup<PeakRTFeatureVector>> datal = new ArrayList<>();
         for (int i = 0; i < data.length; i++) {
             Entity[] e = new Entity[data[i].length];
             for (int j = 0; j < e.length; j++) {
-                e[j] = new Entity<PeakRTFeatureVector>(new PeakRTFeatureVector(data[i][j], Double.NaN), cats[j], "data" + (i + 1));
+                e[j] = new Entity<>(new PeakRTFeatureVector(data[i][j], Double.NaN), cats[j], "data" + (i + 1));
             }
-            EntityGroup<PeakRTFeatureVector> eg = new EntityGroup<PeakRTFeatureVector>(e);
+            EntityGroup<PeakRTFeatureVector> eg = new EntityGroup<>(e);
             datal.add(eg);
         }
 
-        ClassificationPerformanceTest<PeakRTFeatureVector> cpt = new ClassificationPerformanceTest<PeakRTFeatureVector>(gtl, new PeakRTFeatureVectorComparator(0.02));
+        ClassificationPerformanceTest<PeakRTFeatureVector> cpt = new ClassificationPerformanceTest<>(gtl, new PeakRTFeatureVectorComparator(0.02));
         System.out.println(cpt.performTest("test", datal));
     }
 
@@ -128,7 +128,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         //the ground truth.
         //we first try to find the ground truth EntityGroup, which best matches
         //to a given testGroup entity group
-        HashMap<EntityGroup<T>, EntityGroupClassificationResult> gtToClsRes = new LinkedHashMap<EntityGroup<T>, EntityGroupClassificationResult>();
+        HashMap<EntityGroup<T>, EntityGroupClassificationResult> gtToClsRes = new LinkedHashMap<>();
 
         int M = 0;
         for (EntityGroup eg : testGroup) {
@@ -177,7 +177,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
                 }
             }
         }
-        HashSet<EntityGroup> matchedToolGroups = new LinkedHashSet<EntityGroup>();
+        HashSet<EntityGroup> matchedToolGroups = new LinkedHashSet<>();
         int tp = 0, tn = 0, fp = 0, fn = 0;
         double dist = 0;
         for (EntityGroup<T> gtGroup : gtToClsRes.keySet()) {
@@ -190,11 +190,11 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
             EntityGroup<T> toolGroup = gtToClsRes.get(gtGroup).getToolEntityGroup();
             matchedToolGroups.add(toolGroup);
         }
-        HashSet<EntityGroup<T>> unmatchedToolGroups = new LinkedHashSet<EntityGroup<T>>(testGroup);
+        HashSet<EntityGroup<T>> unmatchedToolGroups = new LinkedHashSet<>(testGroup);
         unmatchedToolGroups.removeAll(matchedToolGroups);
 
-        HashSet<EntityGroup<T>> matchedGTGroups = new LinkedHashSet<EntityGroup<T>>(gtToClsRes.keySet());
-        HashSet<EntityGroup<T>> unmatchedGTGroups = new LinkedHashSet<EntityGroup<T>>(groundTruth);
+        HashSet<EntityGroup<T>> matchedGTGroups = new LinkedHashSet<>(gtToClsRes.keySet());
+        HashSet<EntityGroup<T>> unmatchedGTGroups = new LinkedHashSet<>(groundTruth);
         unmatchedGTGroups.removeAll(matchedGTGroups);
 
         PerformanceMetrics pm = new PerformanceMetrics(toolname, tp, fp, tn, fn, N, M, K, dist, unmatchedToolGroups, unmatchedGTGroups, gtToClsRes);
@@ -404,9 +404,9 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
             return true;
         }
         //log.warn("Categories differ between ground truth and test group!");
-        List<Category> gtList = new ArrayList<Category>(gtCats);
+        List<Category> gtList = new ArrayList<>(gtCats);
         Collections.sort(gtList);
-        List<Category> tgList = new ArrayList<Category>(gtList);
+        List<Category> tgList = new ArrayList<>(gtList);
         Collections.sort(tgList);
         //log.warn("GroundTruth: " + gtList);
         //log.warn("TestGroup:" + tgList);

@@ -87,7 +87,7 @@ public class DTWTest {
         // final ArrayDouble.D1 d5 = new ArrayDouble.D1(1);
         // final ArrayDouble.D1 d6 = new ArrayDouble.D1(1);
 
-        final List<Array> la1 = new ArrayList<Array>();
+        final List<Array> la1 = new ArrayList<>();
         la1.add(d1);
         la1.add(d2);
         la1.add(d2);
@@ -96,7 +96,7 @@ public class DTWTest {
 //		la1.add(d1);
 //		la1.add(d1);
 //		la1.add(d1);
-        final List<Array> la2 = new ArrayList<Array>();
+        final List<Array> la2 = new ArrayList<>();
         la2.add(d1);
         la2.add(d2);
         la2.add(d2);
@@ -112,7 +112,7 @@ public class DTWTest {
         // prepare alignment
         AlignmentFactory af = new AlignmentFactory();
         Area constraints = ConstraintFactory.getInstance().createBandConstraint(
-            0, 0, l1.size(), l2.size(), 1.0);
+                0, 0, l1.size(), l2.size(), 1.0);
         final FeatureVectorDtwSimilarity tfvo = new FeatureVectorDtwSimilarity();
         final DtwPairwiseSimilarity idsf = new DtwPairwiseSimilarity();
         idsf.setDenseMassSpectraSimilarity(new ArrayCos());
@@ -120,10 +120,10 @@ public class DTWTest {
         tfvo.setArrayFeatureName("FEATURE0");
 
         IAlignment ia = af.getDTWInstance(Factory.getInstance().getObjectFactory().
-            instantiate(ThreePredecessorsOptimization.class),
-            tfvo, constraints);
+                instantiate(ThreePredecessorsOptimization.class),
+                tfvo, constraints);
         ia.setConstraints(ConstraintFactory.getInstance().createBandConstraint(
-            0, 0, la1.size(), la2.size(), 1.0));
+                0, 0, la1.size(), la2.size(), 1.0));
         // set alignment properties
         ia.setLeftHandSideId("Left");
         ia.setRightHandSideId("Right");
@@ -134,7 +134,7 @@ public class DTWTest {
         List<Point> l = ia.getMap();
         System.out.println("");
         System.out.println(ia.getOptimizationFunction().
-            getOptimalOperationSequenceString());
+                getOptimalOperationSequenceString());
         System.out.println("Done!");
         System.out.println(v);
         System.out.println(ia.getOptimizationFunction().getOptimalValue());

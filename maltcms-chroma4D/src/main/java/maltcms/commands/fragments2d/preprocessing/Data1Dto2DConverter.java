@@ -85,7 +85,7 @@ public class Data1Dto2DConverter extends AFragmentCommand {
         File f = null;
 //		Collections.sort(msLevel);
         if (outputFileName == null) {
-            List<String> filenames = new LinkedList<String>();
+            List<String> filenames = new LinkedList<>();
             for (IFileFragment ff : in) {
                 filenames.add(ff.getName());
             }
@@ -100,17 +100,17 @@ public class Data1Dto2DConverter extends AFragmentCommand {
         f = new File(outputDirectory, outputFileName + ".cdf");
         log.info("Writing output to {}", f.getName());
         IFileFragment fragment = new FileFragment(f);
-        List<Array> massValuesCache = new CachedReadWriteList<Array>(UUID.nameUUIDFromBytes((fragment.getUri() + ">mass_values").getBytes()).toString(), new SerializableArrayProxy(), 5000);
-        List<Array> intensityValuesCache = new CachedReadWriteList<Array>(UUID.nameUUIDFromBytes((fragment.getUri() + ">intensity_values").getBytes()).toString(), new SerializableArrayProxy(), 5000);
+        List<Array> massValuesCache = new CachedReadWriteList<>(UUID.nameUUIDFromBytes((fragment.getUri() + ">mass_values").getBytes()).toString(), new SerializableArrayProxy(), 5000);
+        List<Array> intensityValuesCache = new CachedReadWriteList<>(UUID.nameUUIDFromBytes((fragment.getUri() + ">intensity_values").getBytes()).toString(), new SerializableArrayProxy(), 5000);
 //		ICacheDelegate<Integer, Float> satCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((fragment.getUri() + "-satValues").getBytes()).toString(), 5000);
 //		ICacheDelegate<Integer, Float> fcetCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((fragment.getUri() + "-firstColumnElutionTimeValues").getBytes()).toString(), 5000);
 //		ICacheDelegate<Integer, Float> scetCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((fragment.getUri() + "-secondColumnElutionTimeValues").getBytes()).toString(), 5000);
 //		ICacheDelegate<Integer, Integer> ticCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((fragment.getUri() + "-ticValues").getBytes()).toString(), 5000);
 //		ICacheDelegate<Integer, Integer> msLevelCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((fragment.getUri() + "-msLevelValues").getBytes()).toString(), 5000);
 //		ICacheDelegate<Integer, Integer> scanIndexCache = cross.cache.CacheFactory.createDefaultCache(UUID.nameUUIDFromBytes((fragment.getUri() + "-scanIndexValues").getBytes()).toString(), 5000);
-        ArrayList<String> inSorted = new ArrayList<String>();
+        ArrayList<String> inSorted = new ArrayList<>();
 
-        Map<String, IFileFragment> nameToFragment = new HashMap<String, IFileFragment>();
+        Map<String, IFileFragment> nameToFragment = new HashMap<>();
         int scanCount = 0;
         int pointCount = 0;
         int ticChromScanCount = 0;
@@ -327,7 +327,7 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 //		log.info("Storing results.");
 //		f.save();
         return new TupleND<IFileFragment>(
-            new FileFragment(f));
+                new FileFragment(f));
     }
 
     protected Array toArray(ICacheDelegate<Integer, ?> delegate, DataType dataType) {
@@ -398,12 +398,11 @@ public class Data1Dto2DConverter extends AFragmentCommand {
     private void writeArrayList(String variableName, List<Array> valuesCache, NetcdfFileWriteable nfw) throws IOException {
         int scanIndexOffset = 0;
         int combineScans = 1000;
-        ArrayList<Array> scans = new ArrayList<Array>(combineScans);
+        ArrayList<Array> scans = new ArrayList<>(combineScans);
         int scanCnt = 0;
-        for (int i = 0; i < valuesCache.size(); i++) {
-
+        for (Array valuesCache1 : valuesCache) {
             try {
-                Array intens = valuesCache.get(i);
+                Array intens = valuesCache1;
                 if (scanCnt < combineScans) {
                     scans.add(intens);
                     scanCnt++;
@@ -417,9 +416,7 @@ public class Data1Dto2DConverter extends AFragmentCommand {
                     scans.clear();
                     log.info("Done with flushing!", scans.size());
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvalidRangeException ex) {
+            } catch (IOException | InvalidRangeException ex) {
                 Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -429,9 +426,7 @@ public class Data1Dto2DConverter extends AFragmentCommand {
                 Array toWrite = ArrayTools.glue(scans);
                 int shape = toWrite.getShape()[0];
                 nfw.write(variableName, new int[]{scanIndexOffset}, toWrite);
-            } catch (IOException ex) {
-                Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvalidRangeException ex) {
+            } catch (IOException | InvalidRangeException ex) {
                 Logger.getLogger(Data1Dto2DConverter.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -461,8 +456,8 @@ public class Data1Dto2DConverter extends AFragmentCommand {
                     result = Character.isLetter(ch2) ? compareOther(true) : 1;
                 } else {
                     result = Character.isDigit(ch2) ? 1
-                        : Character.isLetter(ch2) ? -1
-                        : compareOther(false);
+                            : Character.isLetter(ch2) ? -1
+                            : compareOther(false);
                 }
 
                 pos1++;

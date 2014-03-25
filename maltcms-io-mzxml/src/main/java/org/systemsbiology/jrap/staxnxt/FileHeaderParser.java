@@ -3,23 +3,23 @@
  * --------------------------------------------------------------------------- *
  * File: * @(#) FileHeaderParser.java * Author: * Ning Zhang
  * nzhang@systemsbiology.org
- * ****************************************************************************** * * *
- * This software is provided ``AS IS'' and any express or implied
+ * ******************************************************************************
+ * * * * This software is provided ``AS IS'' and any express or implied
  * warranties, including, but not limited to, the implied warranties of
- * merchantability and fitness for a particular purpose, are disclaimed. In
- * no event shall the authors or the Institute for Systems Biology liable
- * for any direct, indirect, incidental, special, exemplary, or
- * consequential damages (including, but not limited to, procurement of
- * substitute goods or services; loss of use, data, or profits; or business
- * interruption) however caused and on any theory of liability, whether in
- * contract, strict liability, or tort (including negligence or otherwise)
- * arising in any way out of the use of this software, even if advised of
- * the possibility of such damage. * * *
+ * merchantability and fitness for a particular purpose, are disclaimed. In no
+ * event shall the authors or the Institute for Systems Biology liable for any
+ * direct, indirect, incidental, special, exemplary, or consequential damages
+ * (including, but not limited to, procurement of substitute goods or services;
+ * loss of use, data, or profits; or business interruption) however caused and
+ * on any theory of liability, whether in contract, strict liability, or tort
+ * (including negligence or otherwise) arising in any way out of the use of this
+ * software, even if advised of the possibility of such damage. * * *
  * *********************************************************************************
  */
 package org.systemsbiology.jrap.staxnxt;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -34,8 +34,8 @@ public class FileHeaderParser {
     String inputMZXMLfile;
     MZXMLFileInfo info;
 
-    ArrayList<ParentFile> parentFiles = new ArrayList<ParentFile>();
-    ArrayList<SoftwareInfo> dataProcessingSoftware = new ArrayList<SoftwareInfo>();
+    ArrayList<ParentFile> parentFiles = new ArrayList<>();
+    ArrayList<SoftwareInfo> dataProcessingSoftware = new ArrayList<>();
 
     boolean isXML = false;
     boolean isML = false;
@@ -81,7 +81,7 @@ public class FileHeaderParser {
 
             parseXMLFileHeader(xmlSR);
             xmlSR.close();
-        } catch (Exception e) {
+        } catch (FileNotFoundException | XMLStreamException e) {
             if (!(e.getMessage()).equals("HeaderEndFoundException")) {
                 e.printStackTrace(System.err);
             }
@@ -104,7 +104,7 @@ public class FileHeaderParser {
     }
 
     private void parseXMLFileHeader(XMLStreamReader xmlSR)
-        throws XMLStreamException {
+            throws XMLStreamException {
         String elementName = null;
         int event = -1;
 
@@ -118,8 +118,8 @@ public class FileHeaderParser {
                 //System.out.println("elementName "+elementName);
                 if (elementName.equals("parentFile")) {
                     parentFiles.add(new ParentFile(xmlSR.getAttributeValue(0),
-                        xmlSR.getAttributeValue(1),
-                        xmlSR.getAttributeValue(2)));
+                            xmlSR.getAttributeValue(1),
+                            xmlSR.getAttributeValue(2)));
                 }
                 if (elementName.equals("msInstrument")) {
                     isInstrument = true;
@@ -176,7 +176,7 @@ public class FileHeaderParser {
 
                     if ((value = xmlSR.getAttributeValue(null, "chargeDeconvoluted")) != null) {
                         info.dataProcessing.chargeDeconvoluted = Integer
-                            .parseInt(value);
+                                .parseInt(value);
                     }
 
                     if ((value = xmlSR.getAttributeValue(null, "spotIntegration")) != null) {
@@ -230,7 +230,7 @@ public class FileHeaderParser {
 
             parseMLFileHeader(xmlSR);
             xmlSR.close();
-        } catch (Exception e) {
+        } catch (FileNotFoundException | XMLStreamException e) {
             if (!(e.getMessage()).equals("HeaderEndFoundException")) {
                 e.printStackTrace(System.err);
             }
@@ -253,7 +253,7 @@ public class FileHeaderParser {
     }
 
     private void parseMLFileHeader(XMLStreamReader xmlSR)
-        throws XMLStreamException {
+            throws XMLStreamException {
         String elementName = null;
         int event = -1;
 
@@ -298,7 +298,7 @@ public class FileHeaderParser {
                         }
                         if (accession.equals("MS:1000529")) {
                             info.instrumentInfo.manufacturer = xmlSR.getAttributeValue(null, "name")
-                                + " " + xmlSR.getAttributeValue(null, "value");
+                                    + " " + xmlSR.getAttributeValue(null, "value");
                         }
                     }
                     if (inSource) {
@@ -394,8 +394,8 @@ public class FileHeaderParser {
                 elementName = xmlSR.getLocalName();
                 if (elementName.equals("sourceFile")) {
                     parentFiles.add(new ParentFile(fileLocation + "/" + fileName,
-                        fileType,
-                        sha1));
+                            fileType,
+                            sha1));
                     inSourceFile = false;
                 }
                 if (elementName.equals("referenceableParamGroup")) {

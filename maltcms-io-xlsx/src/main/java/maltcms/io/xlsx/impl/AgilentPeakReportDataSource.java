@@ -82,10 +82,10 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 
     private final String[] reportFileEnding = new String[]{"xls", "xlsx"};
     private final String[] fileEnding = new String[]{"d"};
-    private HashMap<String, Mapping> varnameToMapping = new HashMap<String, Mapping>();
-    private static final WeakHashMap<IFileFragment, IWorkbook> fileToWorkbook = new WeakHashMap<IFileFragment, IWorkbook>();
+    private HashMap<String, Mapping> varnameToMapping = new HashMap<>();
+    private static final WeakHashMap<IFileFragment, IWorkbook> fileToWorkbook = new WeakHashMap<>();
     private static final ICacheDelegate<String, Array> variableToArrayCache = CacheFactory.createVolatileCache("maltcms.io.readcache");
-    private static final HashMap<URI, WorkbookBridge.IMPL> uriToImpl = new HashMap<URI, WorkbookBridge.IMPL>();
+    private static final HashMap<URI, WorkbookBridge.IMPL> uriToImpl = new HashMap<>();
 
     public AgilentPeakReportDataSource() {
         log.info("Initializing AgilentPeakReportDataSource");
@@ -104,7 +104,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
     }
 
     private Array getSheetData(IWorkbook workbook, Mapping mapping) {
-        LinkedHashMap<String, List<Object>> data = new LinkedHashMap<String, List<Object>>();
+        LinkedHashMap<String, List<Object>> data = new LinkedHashMap<>();
         ISheet s = workbook.getSheet(mapping.getSheetName());
         IRow header = null;
         int nrows = getNumberOfPeaks(workbook, mapping);
@@ -237,7 +237,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
         final String filename = ff.getName().toLowerCase();
         if (dotindex == -1) {
             throw new RuntimeException("Could not determine File extension of "
-                + ff);
+                    + ff);
         }
         for (final String s : this.fileEnding) {
             if (filename.endsWith(s)) {
@@ -268,20 +268,32 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 
     public Dimension[] dimensions(Array a, IVariableFragment ivf) {
         int[] shape = a.getShape();
-        if (ivf.getName().equals("scan_acquisition_time") || ivf.getName().equals("total_intensity") || ivf.getName().equals("scan_index") || ivf.getName().equals("mass_range_min") || ivf.getName().equals("mass_range_max")) {
-            return new Dimension[]{new Dimension("scan_number", shape[0])};
-        } else if (ivf.getName().equals("mass_values") || ivf.getName().equals("intensity_values")) {
-            return new Dimension[]{new Dimension("point_number", shape[0])};
+        switch (ivf.getName()) {
+            case "scan_acquisition_time":
+            case "total_intensity":
+            case "scan_index":
+            case "mass_range_min":
+            case "mass_range_max":
+                return new Dimension[]{new Dimension("scan_number", shape[0])};
+            case "mass_values":
+            case "intensity_values":
+                return new Dimension[]{new Dimension("point_number", shape[0])};
         }
         return new Dimension[]{};
     }
 
     public Range[] ranges(Array a, IVariableFragment ivf) {
         int[] shape = a.getShape();
-        if (ivf.getName().equals("scan_acquisition_time") || ivf.getName().equals("total_intensity") || ivf.getName().equals("scan_index") || ivf.getName().equals("mass_range_min") || ivf.getName().equals("mass_range_max")) {
-            return new Range[]{new Range(shape[0])};
-        } else if (ivf.getName().equals("mass_values") || ivf.getName().equals("intensity_values")) {
-            return new Range[]{new Range(shape[0])};
+        switch (ivf.getName()) {
+            case "scan_acquisition_time":
+            case "total_intensity":
+            case "scan_index":
+            case "mass_range_min":
+            case "mass_range_max":
+                return new Range[]{new Range(shape[0])};
+            case "mass_values":
+            case "intensity_values":
+                return new Range[]{new Range(shape[0])};
         }
         return new Range[]{};
     }
@@ -303,7 +315,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
     @Override
     public ArrayList<Array> readAll(IFileFragment f) throws IOException, ResourceNotAvailableException {
         IWorkbook w = open(f);
-        ArrayList<Array> l = new ArrayList<Array>();
+        ArrayList<Array> l = new ArrayList<>();
         addIfNew("scan_acquisition_time", f);
         addIfNew("total_intensity", f);
         addIfNew("scan_index", f);
@@ -332,16 +344,22 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
             }
             return a;
         }
-        if (ivf.getName().equals("scan_index")) {
-            a = createScanIndex(f, w);
-        } else if (ivf.getName().equals("mass_values")) {
-            a = createMassValues(f, w);
-        } else if (ivf.getName().equals("mass_range_min")) {
-            a = createMassRangeMin(f, w);
-        } else if (ivf.getName().equals("mass_range_max")) {
-            a = createMassRangeMax(f, w);
-        } else {
-            a = getSheetData(w, getMapping(ivf));
+        switch (ivf.getName()) {
+            case "scan_index":
+                a = createScanIndex(f, w);
+                break;
+            case "mass_values":
+                a = createMassValues(f, w);
+                break;
+            case "mass_range_min":
+                a = createMassRangeMin(f, w);
+                break;
+            case "mass_range_max":
+                a = createMassRangeMax(f, w);
+                break;
+            default:
+                a = getSheetData(w, getMapping(ivf));
+                break;
         }
         if (a != null) {
             ivf.setDimensions(dimensions(a, ivf));
@@ -384,27 +402,30 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 
     @Override
     public ArrayList<Array> readIndexed(IVariableFragment f) throws IOException, ResourceNotAvailableException {
-        if (f.getName().equals("mass_values")) {
-            Array a = readSingle(f);
-            ArrayList<Array> al = new ArrayList<Array>();
-            for (int i = 0; i < a.getShape()[0]; i++) {
-                Array arr = Array.factory(DataType.getType(a.getElementType()), new int[]{1});
-                arr.setDouble(0, a.getDouble(i));
-                al.add(arr);
+        switch (f.getName()) {
+            case "mass_values": {
+                Array a = readSingle(f);
+                ArrayList<Array> al = new ArrayList<>();
+                for (int i = 0; i < a.getShape()[0]; i++) {
+                    Array arr = Array.factory(DataType.getType(a.getElementType()), new int[]{1});
+                    arr.setDouble(0, a.getDouble(i));
+                    al.add(arr);
+                }
+                return al;
             }
-            return al;
-        } else if (f.getName().equals("intensity_values")) {
-            Array a = readSingle(f);
-            ArrayList<Array> al = new ArrayList<Array>();
-            for (int i = 0; i < a.getShape()[0]; i++) {
-                Array arr = Array.factory(DataType.getType(a.getElementType()), new int[]{1});
-                arr.setDouble(0, a.getDouble(i));
-                al.add(arr);
+            case "intensity_values": {
+                Array a = readSingle(f);
+                ArrayList<Array> al = new ArrayList<>();
+                for (int i = 0; i < a.getShape()[0]; i++) {
+                    Array arr = Array.factory(DataType.getType(a.getElementType()), new int[]{1});
+                    arr.setDouble(0, a.getDouble(i));
+                    al.add(arr);
+                }
+                return al;
             }
-            return al;
         }
         throw new ResourceNotAvailableException(
-            "Unknown varname to xls/xlsx mapping for varname " + f.getName());
+                "Unknown varname to xls/xlsx mapping for varname " + f.getName());
     }
 
     @Override
@@ -416,7 +437,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
     @Override
     public ArrayList<IVariableFragment> readStructure(IFileFragment f) throws IOException {
         readAll(f);
-        return new ArrayList<IVariableFragment>(f.getImmediateChildren());
+        return new ArrayList<>(f.getImmediateChildren());
     }
 
     @Override

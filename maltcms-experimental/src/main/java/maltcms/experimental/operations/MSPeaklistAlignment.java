@@ -62,7 +62,7 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
     }
 
     public double recurse(double[][] amat, int i, int j, double m1, double m2,
-        double i1, double i2, Point[][] p) {
+            double i1, double i2, Point[][] p) {
         // fill gaps
         if (i == 0 && j > 0) {
             amat[i][j] = amat[i][j - 1] - 1;
@@ -92,14 +92,14 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
     }
 
     public ArrayList<Point> traceback(Point[][] trace) {
-        for (int i = 0; i < trace.length; i++) {
+        for (Point[] trace1 : trace) {
             StringBuilder sb = new StringBuilder();
             for (int j = 0; j < trace[0].length; j++) {
-                sb.append(trace[i][j].toString() + " ");
+                sb.append(trace1[j].toString() + " ");
             }
             System.out.println(sb.toString());
         }
-        ArrayList<Point> al = new ArrayList<Point>();
+        ArrayList<Point> al = new ArrayList<>();
         Point end = trace[trace.length - 1][trace[0].length - 1];
         if (end == null) {
             System.err.println("end is null");
@@ -117,9 +117,9 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
     }
 
     public double peakCntAlignment(double[] masses1, double[] intens1,
-        double[] masses2, double[] intens2) {
+            double[] masses2, double[] intens2) {
         System.out.println("Length 1: " + masses1.length + " length 2: "
-            + masses2.length);
+                + masses2.length);
         Point[][] trace = new Point[masses1.length + 1][masses2.length + 1];
         double[][] amat = new double[masses1.length + 1][masses2.length + 1];
         amat[0][0] = 0;
@@ -127,7 +127,7 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
         for (int i = 1; i < amat.length; i++) {
             for (int j = 1; j < amat[0].length; j++) {
                 recurse(amat, i, j, masses1[i - 1], masses2[j - 1],
-                    intens1[i - 1], intens2[j - 1], trace);
+                        intens1[i - 1], intens2[j - 1], trace);
             }
         }
         printMatrix(amat, masses1, masses2);
@@ -135,7 +135,7 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
     }
 
     public void printMatrix(final double[][] mat, final double[] masses1,
-        final double[] masses2) {
+            final double[] masses2) {
         ImagePanel jp = new ImagePanel();
         jp.setData(mat, masses1, masses2);
         JFrame jf = new JFrame();
@@ -151,16 +151,16 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
         Array i1 = f1.getFeature(this.intensity_values);
         Array i2 = f2.getFeature(this.intensity_values);
         return peakCntAlignment((double[]) m1.get1DJavaArray(double.class),
-            (double[]) i1.get1DJavaArray(double.class), (double[]) m2
-            .get1DJavaArray(double.class), (double[]) i2
-            .get1DJavaArray(double.class));
+                (double[]) i1.get1DJavaArray(double.class), (double[]) m2
+                .get1DJavaArray(double.class), (double[]) i2
+                .get1DJavaArray(double.class));
     }
 
     public double apply(Array m1, Array m2, Array i1, Array i2) {
         return peakCntAlignment((double[]) m1.get1DJavaArray(double.class),
-            (double[]) i1.get1DJavaArray(double.class), (double[]) m2
-            .get1DJavaArray(double.class), (double[]) i2
-            .get1DJavaArray(double.class));
+                (double[]) i1.get1DJavaArray(double.class), (double[]) m2
+                .get1DJavaArray(double.class), (double[]) i2
+                .get1DJavaArray(double.class));
     }
 
     @Override

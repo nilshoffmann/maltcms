@@ -80,10 +80,10 @@ public class MexicanHatWaveletFilter extends AArrayFilter {
 
         if (arr.getRank() == 1) {
             return Array.factory(cwt.apply((double[]) arr
-                .get1DJavaArray(double.class), this.scale, this.variance));
+                    .get1DJavaArray(double.class), this.scale, this.variance));
         } else {
             throw new IllegalArgumentException(getClass().getSimpleName()
-                + " can only be applied to one dimensional arrays!");
+                    + " can only be applied to one dimensional arrays!");
         }
     }
 
@@ -92,7 +92,7 @@ public class MexicanHatWaveletFilter extends AArrayFilter {
         super.configure(cfg);
         this.scale = cfg.getDouble(this.getClass().getName() + ".scale", 2.0);
         this.variance = cfg.getDouble(this.getClass().getName() + ".variance",
-            0.63628);
+                0.63628);
     }
 
     public ContinuousWaveletTransform getContinuousWaveletTransform() {

@@ -112,12 +112,12 @@ public class SparseScanLineCache implements IScanLine {
     /**
      * Default constructor.
      *
-     * @param iff1                file fragment
+     * @param iff1 file fragment
      * @param scansPerModulation1 scans per modulation
-     * @param lastIndex1          index of the last scan
+     * @param lastIndex1 index of the last scan
      */
     protected SparseScanLineCache(final IFileFragment iff1,
-        final int scansPerModulation1, final int lastIndex1, final double minMass, final double maxMass, final double massResolution) {
+            final int scansPerModulation1, final int lastIndex1, final double minMass, final double maxMass, final double massResolution) {
         this.iff = iff1;
         this.scansPerModulation = scansPerModulation1;
         this.lastIndex = lastIndex1;
@@ -132,12 +132,12 @@ public class SparseScanLineCache implements IScanLine {
     }
 
     private void setUpxyIndexMap() {
-        this.xyToScanIndexMap = new ArrayList<List<Integer>>();
+        this.xyToScanIndexMap = new ArrayList<>();
         final Array secondScanIndex = this.iff.getChild(this.secondColumnIndexVar).getArray();
         final IndexIterator iter = secondScanIndex.getIndexIterator();
         int lastScanIndex = iter.getIntNext();
         while (iter.hasNext()) {
-            List<Integer> tmpList = new ArrayList<Integer>();
+            List<Integer> tmpList = new ArrayList<>();
             final int currentScanIndex = iter.getIntNext();
             for (; lastScanIndex < currentScanIndex; lastScanIndex++) {
                 tmpList.add(lastScanIndex);
@@ -153,13 +153,13 @@ public class SparseScanLineCache implements IScanLine {
     public void configure(final Configuration cfg) {
         this.massValuesVar = cfg.getString("var.mass_values", "mass_values");
         this.intensityValuesVar = cfg.getString("var.intensity_values",
-            "intensity_values");
+                "intensity_values");
         this.scanIndexVar = cfg.getString("var.scan_index", "scan_index");
         // this.minRangeVar = cfg
         // .getString("var.mass_range_min", "mass_range_min");
         this.maxRangeVar = cfg.getString("var.mass_range_max", "mass_range_max");
         this.modulationVar = cfg.getString("var.modulation_time",
-            "modulation_time");
+                "modulation_time");
         this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
     }
 
@@ -222,7 +222,7 @@ public class SparseScanLineCache implements IScanLine {
     public Array getMassSpectrum(final int x, final int y) {
         try {
             if ((x >= 0) && (y >= 0) && (y < this.scansPerModulation)
-                && (x < this.getScanLineCount())) {
+                    && (x < this.getScanLineCount())) {
                 return getScanlineMS(x).get(y);
             } else {
                 return null;
@@ -243,13 +243,13 @@ public class SparseScanLineCache implements IScanLine {
     /**
      * Returns normalized Arrays.
      *
-     * @param massValuesA      mass values
+     * @param massValuesA mass values
      * @param massIntensitiesA mass intensities
      * @return length normalized array
      */
     private List<Array> getNormalizedArray(final List<Tuple2D<Array, Array>> mss, final int scanLine) {
         if (mss != null) {
-            final List<Array> normalized = new ArrayList<Array>();
+            final List<Array> normalized = new ArrayList<>();
             int i = 0;
             for (Tuple2D<Array, Array> ms : mss) {
 //				int idx = mapPoint(scanLine, i);
@@ -271,6 +271,7 @@ public class SparseScanLineCache implements IScanLine {
      *
      * @return scan line count
      */
+    @Override
     public int getScanLineCount() {
         return (this.lastIndex / this.scansPerModulation);
     }
@@ -281,6 +282,7 @@ public class SparseScanLineCache implements IScanLine {
      * @param x scan line number
      * @return complete ms list of this scan line
      */
+    @Override
     public List<Array> getScanlineMS(final int x) {
         return getNormalizedArray(getScanlineSparseMS(x), x);
     }
@@ -322,15 +324,15 @@ public class SparseScanLineCache implements IScanLine {
             final List<Array> massValuesA = this.massValues.getIndexedArray();
             final List<Array> massIntensitiesA = this.massIntensities.getIndexedArray();
 
-            final List<Tuple2D<Array, Array>> sl = new ArrayList<Tuple2D<Array, Array>>();
+            final List<Tuple2D<Array, Array>> sl = new ArrayList<>();
             for (int i = 0; i < massValuesA.size()
-                & i < massIntensitiesA.size(); i++) {
-                sl.add(new Tuple2D<Array, Array>(massValuesA.get(i),
-                    massIntensitiesA.get(i)));
+                    & i < massIntensitiesA.size(); i++) {
+                sl.add(new Tuple2D<>(massValuesA.get(i),
+                        massIntensitiesA.get(i)));
             }
 
             if (this.cacheModulations) {
-                this.cache.put(Integer.valueOf(x), sl);
+                this.cache.put(x, sl);
             }
             return sl;
         } catch (final InvalidRangeException e) {
@@ -345,6 +347,7 @@ public class SparseScanLineCache implements IScanLine {
      *
      * @param size bin size
      */
+    @Override
     public void setBinSize(final int size) {
         throw new NotImplementedException("This method is deprecated!");
     }
@@ -352,6 +355,7 @@ public class SparseScanLineCache implements IScanLine {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setCacheModulations(final boolean cacheMod) {
         this.cacheModulations = cacheMod;
     }
@@ -361,6 +365,7 @@ public class SparseScanLineCache implements IScanLine {
      *
      * @param index last index
      */
+    @Override
     public void setLastIndex(final int index) {
         this.lastIndex = index;
     }
@@ -368,6 +373,7 @@ public class SparseScanLineCache implements IScanLine {
     /**
      * Will view some statistical information about the cache usage.
      */
+    @Override
     public void showStat() {
 //		this.log.info("Statistic for ScanLineCache:");
 //		this.log.info("	Loads    : {}", this.loads);
@@ -388,9 +394,9 @@ public class SparseScanLineCache implements IScanLine {
         }
         if (this.massIntensities == null) {
             this.massIntensities = this.iff.getChild(this.intensityValuesVar,
-                true);
+                    true);
         }
-        final Integer scan = Integer.valueOf(x);
+        final Integer scan = x;
         List<Tuple2D<Array, Array>> t = this.cache.get(scan);
         if (t != null && !t.isEmpty()) {
 //			if (this.cache.get(scan).get() != null) {
@@ -407,7 +413,7 @@ public class SparseScanLineCache implements IScanLine {
     public Tuple2D<Array, Array> getSparseMassSpectrum(int x, int y) {
         try {
             if ((x >= 0) && (y >= 0) && (y < this.scansPerModulation)
-                && (x < this.getScanLineCount())) {
+                    && (x < this.getScanLineCount())) {
                 return getScanlineSparseMS(x).get(y);
             } else {
                 return null;

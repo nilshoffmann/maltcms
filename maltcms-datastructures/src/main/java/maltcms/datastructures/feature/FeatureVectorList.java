@@ -41,7 +41,7 @@ import org.apache.commons.configuration.Configuration;
  *
  */
 public class FeatureVectorList<T extends IFeatureVector> implements
-    IFileFragmentModifier {
+        IFileFragmentModifier {
 
     private final List<T> l;
     private final List<String> featureNames;
@@ -60,7 +60,7 @@ public class FeatureVectorList<T extends IFeatureVector> implements
      */
     @Override
     public void modify(IFileFragment iff) {
-        HashSet<String> features = new HashSet<String>();
+        HashSet<String> features = new HashSet<>();
         for (String name : this.featureNames) {
             for (T t : l) {
             }

@@ -55,9 +55,9 @@ public class PartitionCalculator implements Callable<Integer>, IConfigurable {
     private final List<Array> ref, query;
 
     public PartitionCalculator(final Rectangle shape1,
-        final IArrayD2Double pa1, final ArrayDouble.D1 satRef1,
-        final ArrayDouble.D1 satQuery1, final List<Array> ref1,
-        final List<Array> query1) {
+            final IArrayD2Double pa1, final ArrayDouble.D1 satRef1,
+            final ArrayDouble.D1 satQuery1, final List<Array> ref1,
+            final List<Array> query1) {
         this.shape = shape1;
         this.pa = pa1;
         this.satRef = satRef1;
@@ -85,19 +85,19 @@ public class PartitionCalculator implements Callable<Integer>, IConfigurable {
                 final int[] bounds = this.pa.getColumnBounds(i);
                 for (int j = bounds[0]; j < bounds[0] + bounds[1]; j++) {
                     this.pa.set(i, j, this.costFunction.apply(i, j,
-                        this.satRef.get(i), this.satQuery.get(j),
-                        this.ref.get(i), this.query.get(j)));
+                            this.satRef.get(i), this.satQuery.get(j),
+                            this.ref.get(i), this.query.get(j)));
                     counter++;
                 }
             }
-            return new Integer(counter);
+            return counter;
         } else {
             log.debug(
-                "Job outside of defined bounds on PartitionedArray for rectangle {}",
-                this.shape);
+                    "Job outside of defined bounds on PartitionedArray for rectangle {}",
+                    this.shape);
         }
 
-        return new Integer(0);
+        return 0;
     }
 
     /*
@@ -110,11 +110,11 @@ public class PartitionCalculator implements Callable<Integer>, IConfigurable {
     public void configure(final Configuration cfg) {
         final String aldist = "maltcms.commands.distances.ArrayLp";
         this.costFunction = Factory
-            .getInstance()
-            .getObjectFactory()
-            .instantiate(
-                cfg.getString("alignment.algorithm.distance", aldist),
-                IDtwSimilarityFunction.class);
+                .getInstance()
+                .getObjectFactory()
+                .instantiate(
+                        cfg.getString("alignment.algorithm.distance", aldist),
+                        IDtwSimilarityFunction.class);
         log.debug("Using {}", this.costFunction.getClass().getName());
 
     }

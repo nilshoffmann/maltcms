@@ -99,12 +99,12 @@ public class AffineAlignment extends Alignment {
         for (int is = 1; is < n; is++) {
 
             final double dv = vergleiche((chartoNumber(this.seq2.charAt(is))),
-                0);
+                    0);
 
             this.pwd[0][is] = dv;
 
             this.matrix[0][is] = Math
-                .round((this.matrix[0][is - 1] + dv) * 100) / 100.00;
+                    .round((this.matrix[0][is - 1] + dv) * 100) / 100.00;
 
             this.pathway[0][is][0] = 1;
 
@@ -118,12 +118,12 @@ public class AffineAlignment extends Alignment {
         for (int ju = 1; ju < m; ju++) {
 
             final double dv = vergleiche(0,
-                (chartoNumber(this.seq1.charAt(ju))));
+                    (chartoNumber(this.seq1.charAt(ju))));
 
             this.pwd[ju][0] = dv;
 
             this.matrix[ju][0] = Math
-                .round((this.matrix[ju - 1][0] + dv) * 100) / 100.00;
+                    .round((this.matrix[ju - 1][0] + dv) * 100) / 100.00;
 
             this.pathway[ju][0][0] = 2;
 
@@ -140,28 +140,28 @@ public class AffineAlignment extends Alignment {
             for (int j = 1; j < m; j++) {
 
                 final double dv = vergleiche(chartoNumber(this.seq1.charAt(j)),
-                    chartoNumber(this.seq2.charAt(i)));
+                        chartoNumber(this.seq2.charAt(i)));
 
                 this.pwd[j][i] = dv;
 
                 // Horzontale/Vertikale Matrix an der Stelle (i,j) berechnen
                 this.ver[j][i] = Math
-                    .min(
-                        this.matrix[j - 1][i]
-                        + SymbolicRepresentationAlignment
-                        .getGapinit()
-                        + vergleiche((chartoNumber(this.seq1
-                                .charAt(j))), 0),
-                        this.ver[j - 1][i]
-                        + vergleiche((chartoNumber(this.seq1
-                                .charAt(j))), 0));
+                        .min(
+                                this.matrix[j - 1][i]
+                                + SymbolicRepresentationAlignment
+                                .getGapinit()
+                                + vergleiche((chartoNumber(this.seq1
+                                                .charAt(j))), 0),
+                                this.ver[j - 1][i]
+                                + vergleiche((chartoNumber(this.seq1
+                                                .charAt(j))), 0));
 
                 this.hor[j][i] = Math.min(this.matrix[j][i - 1]
-                    + SymbolicRepresentationAlignment.getGapinit()
-                    + vergleiche(0, (chartoNumber(this.seq2.charAt(i)))),
-                    this.hor[j][i - 1]
-                    + vergleiche(0, (chartoNumber(this.seq2
-                            .charAt(i)))));
+                        + SymbolicRepresentationAlignment.getGapinit()
+                        + vergleiche(0, (chartoNumber(this.seq2.charAt(i)))),
+                        this.hor[j][i - 1]
+                        + vergleiche(0, (chartoNumber(this.seq2
+                                        .charAt(i)))));
 
                 // x,y (insertion/deletion)aus Matritzen �bernehmen, z
                 // (diagonale)berechnen
@@ -170,8 +170,8 @@ public class AffineAlignment extends Alignment {
                 this.y = Math.round((this.ver[j][i]) * 100) / 100.00;
 
                 this.z = Math.round((this.matrix[j - 1][i - 1] + vergleiche(
-                    (chartoNumber(this.seq1.charAt(j))),
-                    (chartoNumber(this.seq2.charAt(i))))) * 100) / 100.00;
+                        (chartoNumber(this.seq1.charAt(j))),
+                        (chartoNumber(this.seq2.charAt(i))))) * 100) / 100.00;
 
                 // Minimalen Weg in Matrix �bernehmen
                 this.matrix[j][i] = mini(this.x, this.y, this.z);
@@ -182,8 +182,8 @@ public class AffineAlignment extends Alignment {
                 {
 
                     if ((this.x == mini(this.x, this.y, this.z))
-                        && (this.y == mini(this.x, this.y, this.z))
-                        && (this.z == mini(this.x, this.y, this.z))) {
+                            && (this.y == mini(this.x, this.y, this.z))
+                            && (this.z == mini(this.x, this.y, this.z))) {
 
                         this.pathway[j][i][0] = 1;
 
@@ -196,7 +196,7 @@ public class AffineAlignment extends Alignment {
                     }
 
                     if ((this.x == mini(this.x, this.y, this.z))
-                        && (this.y == mini(this.x, this.y, this.z))) {
+                            && (this.y == mini(this.x, this.y, this.z))) {
 
                         this.pathway[j][i][0] = 1;
 
@@ -207,7 +207,7 @@ public class AffineAlignment extends Alignment {
                     }
 
                     if ((this.y == mini(this.x, this.y, this.z))
-                        && (this.z == mini(this.x, this.y, this.z))) {
+                            && (this.z == mini(this.x, this.y, this.z))) {
 
                         this.pathway[j][i][0] = 2;
 
@@ -218,7 +218,7 @@ public class AffineAlignment extends Alignment {
                     }
 
                     if ((this.x == mini(this.x, this.y, this.z))
-                        && (this.z == mini(this.x, this.y, this.z))) {
+                            && (this.z == mini(this.x, this.y, this.z))) {
 
                         this.pathway[j][i][0] = 1;
 

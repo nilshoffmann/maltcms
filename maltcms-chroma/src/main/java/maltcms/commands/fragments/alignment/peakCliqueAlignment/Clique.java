@@ -54,7 +54,7 @@ public class Clique<T extends IBipacePeak> {
     private static long CLIQUEID = -1;
     private long id = -1;
     private double cliqueMean = 0, cliqueVar = 0;
-    private IntObjectMap<T> clique = new IntObjectOpenHashMap<T>();
+    private IntObjectMap<T> clique = new IntObjectOpenHashMap<>();
     private IBipacePeak centroid = null;
     private double minBbhFraction = 1.0d;
     private int maxBBHErrors = 0;
@@ -122,7 +122,7 @@ public class Clique<T extends IBipacePeak> {
      * @return
      */
     private boolean handleConflictingPeak(LongObjectMap<PeakEdge> edgeMap, T p) {
-        Collection<T> currentPeaks = new ArrayList<T>();
+        Collection<T> currentPeaks = new ArrayList<>();
         T[] t = clique.values().toArray(IBipacePeak.class);
         currentPeaks.addAll(Arrays.asList(t));
         T q = clique.get(p.getAssociationId());
@@ -305,19 +305,19 @@ public class Clique<T extends IBipacePeak> {
     }
 
     public BoxAndWhiskerItem createRTBoxAndWhisker() {
-        List<Double> l = new ArrayList<Double>();
+        List<Double> l = new ArrayList<>();
         for (int f : this.clique.keys().toArray()) {
             l.add(centroid.getScanAcquisitionTime()
-                - this.clique.get(f).getScanAcquisitionTime());
+                    - this.clique.get(f).getScanAcquisitionTime());
         }
         return BoxAndWhiskerCalculator.calculateBoxAndWhiskerStatistics(l);
     }
 
     public BoxAndWhiskerItem createApexTicBoxAndWhisker() {
-        List<Double> l = new ArrayList<Double>();
+        List<Double> l = new ArrayList<>();
         for (int f : this.clique.keys().toArray()) {
             l.add(Math.log(ArrayTools.integrate(centroid.getMsIntensities()))
-                - ArrayTools.integrate(this.clique.get(f).getMsIntensities()));
+                    - ArrayTools.integrate(this.clique.get(f).getMsIntensities()));
         }
         return BoxAndWhiskerCalculator.calculateBoxAndWhiskerStatistics(l);
     }
@@ -330,8 +330,8 @@ public class Clique<T extends IBipacePeak> {
         for (IBipacePeak peak : peaks) {
             for (IBipacePeak peak1 : peaks) {
                 dists[i] += Math.pow(
-                    peak.getScanAcquisitionTime()
-                    - peak1.getScanAcquisitionTime(), 2.0d);
+                        peak.getScanAcquisitionTime()
+                        - peak1.getScanAcquisitionTime(), 2.0d);
             }
             i++;
         }

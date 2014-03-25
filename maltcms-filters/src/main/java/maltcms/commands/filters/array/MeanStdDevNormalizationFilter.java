@@ -66,7 +66,7 @@ public class MeanStdDevNormalizationFilter extends AArrayFilter {
         Array c = af.apply(a);
         // normalize by stddev
         final MultiplicationFilter mf = new MultiplicationFilter(
-            1.0d / (this.stddev));
+                1.0d / (this.stddev));
         c = mf.apply(c);
         return c;
     }

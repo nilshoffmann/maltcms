@@ -55,7 +55,7 @@ public class FeatureVectorFactory {
     }
 
     public List<IFeatureVector> createMSFeatureVectorList(IFileFragment iff) {
-        List<IFeatureVector> l = new ArrayList<IFeatureVector>();
+        List<IFeatureVector> l = new ArrayList<>();
         Chromatogram1D c = new Chromatogram1D(iff);
         for (IScan1D s : c) {
             l.add(s);
@@ -64,8 +64,8 @@ public class FeatureVectorFactory {
     }
 
     public List<IFeatureVector> createBinnedMSFeatureVectorList(
-        IFileFragment iff, int start, int stop, boolean useFastFeatureVector) {
-        List<IFeatureVector> l = new ArrayList<IFeatureVector>();
+            IFileFragment iff, int start, int stop, boolean useFastFeatureVector) {
+        List<IFeatureVector> l = new ArrayList<>();
         int ns = Math.min(stop, MaltcmsTools.getNumberOfBinnedScans(iff));
 //		System.out.println("Reading from " + start + " to " + stop);
         if (useFastFeatureVector) {
@@ -77,7 +77,7 @@ public class FeatureVectorFactory {
             }
         } else {
             Tuple2D<List<Array>, List<Array>> t = MaltcmsTools
-                .getBinnedMZIs(iff);
+                    .getBinnedMZIs(iff);
             for (int i = start; i < ns; i++) {
 //				System.out.println("Reading scan " + i);
                 IFeatureVector fbmf;
@@ -90,13 +90,13 @@ public class FeatureVectorFactory {
     }
 
     public List<IFeatureVector> createBinnedMSFeatureVectorList(
-        IFileFragment iff, boolean useFastFeatureVector) {
+            IFileFragment iff, boolean useFastFeatureVector) {
         int ns = MaltcmsTools.getNumberOfBinnedScans(iff);
         return createBinnedMSFeatureVectorList(iff, 0, ns, useFastFeatureVector);
     }
 
     public List<IFeatureVector> createFeatureVectorList(List<Array> la) {
-        List<IFeatureVector> l = new ArrayList<IFeatureVector>();
+        List<IFeatureVector> l = new ArrayList<>();
         int i = 0;
         for (Array a : la) {
             DefaultFeatureVector dfv = new DefaultFeatureVector();
@@ -111,7 +111,7 @@ public class FeatureVectorFactory {
     }
 
     public DefaultFeatureVector addFeatureToFeatureVector(
-        DefaultFeatureVector ifv, Array a, String featureName) {
+            DefaultFeatureVector ifv, Array a, String featureName) {
         DefaultFeatureVector dfv = ifv;
         if (ifv == null) {
             dfv = new DefaultFeatureVector();
@@ -121,7 +121,7 @@ public class FeatureVectorFactory {
     }
 
     public List<DefaultFeatureVector> addFeaturesToFeatureVectorList(
-        List<DefaultFeatureVector> l, List<Array> la, String featureName) {
+            List<DefaultFeatureVector> l, List<Array> la, String featureName) {
         EvalTools.eqI(l.size(), la.size(), this);
         int i = 0;
         for (Array a : la) {
@@ -132,8 +132,8 @@ public class FeatureVectorFactory {
     }
 
     public List<IFeatureVector> createFeatureVectorList(List<Array> la,
-        String featureName) {
-        List<IFeatureVector> l = new ArrayList<IFeatureVector>();
+            String featureName) {
+        List<IFeatureVector> l = new ArrayList<>();
         for (Array a : la) {
             DefaultFeatureVector dfv = createFeatureVector(a, featureName);
             l.add(dfv);

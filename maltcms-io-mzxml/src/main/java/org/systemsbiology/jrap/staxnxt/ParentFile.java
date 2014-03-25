@@ -1,10 +1,9 @@
 /**
  * *****************************************************************************
  * --------------------------------------------------------------------------- *
- * File: * @(#) ParentFile.java * Author: * Mathijs Vogelzang
- * m_v@dds.nl
- * ****************************************************************************** * * *
- * This software is provided ``AS IS'' and any express or implied * *
+ * File: * @(#) ParentFile.java * Author: * Mathijs Vogelzang m_v@dds.nl
+ * ******************************************************************************
+ * * * * This software is provided ``AS IS'' and any express or implied * *
  * warranties, including, but not limited to, the implied warranties of * *
  * merchantability and fitness for a particular purpose, are disclaimed. * * In
  * no event shall the authors or the Institute for Systems Biology * * liable
@@ -30,8 +29,8 @@
 package org.systemsbiology.jrap.staxnxt;
 
 /**
- * The ParentFile class contains information about parent files
- * of an mzXML file.
+ * The ParentFile class contains information about parent files of an mzXML
+ * file.
  *
  * @author Mathijs
  */
@@ -71,6 +70,7 @@ public class ParentFile {
         return type;
     }
 
+    @Override
     public String toString() {
         return ("URI " + URI + " sha1 " + sha1 + " type " + type);
     }

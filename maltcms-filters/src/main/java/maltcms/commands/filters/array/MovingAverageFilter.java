@@ -63,7 +63,7 @@ public class MovingAverageFilter extends AArrayFilter {
             arr = Array.factory(MathTools.weightedAverage(this.window, d));
         } else {
             throw new IllegalArgumentException(
-                "Can only work on arrays of dimension 1");
+                    "Can only work on arrays of dimension 1");
         }
         return arr;
     }

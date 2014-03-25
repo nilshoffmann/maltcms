@@ -46,12 +46,12 @@ import net.sf.maltcms.evaluation.spi.classification.Peak2DFeatureVector;
  */
 public class EntityGroupList<T extends IFeatureVector> implements List<EntityGroup<T>> {
 
-    private List<EntityGroup<T>> delegate = new ArrayList<EntityGroup<T>>();
+    private List<EntityGroup<T>> delegate = new ArrayList<>();
 
     private final Set<Category> categories;
 
     public EntityGroupList(List<Category> categories) {
-        ArrayList<Category> cats = new ArrayList<Category>(categories);
+        ArrayList<Category> cats = new ArrayList<>(categories);
         Collections.sort(cats, new Comparator<Category>() {
 
             @Override
@@ -59,7 +59,7 @@ public class EntityGroupList<T extends IFeatureVector> implements List<EntityGro
                 return o1.getName().compareTo(o2.getName());
             }
         });
-        this.categories = new LinkedHashSet<Category>(cats);
+        this.categories = new LinkedHashSet<>(cats);
     }
 
     public EntityGroupList(Category... category) {
@@ -97,7 +97,7 @@ public class EntityGroupList<T extends IFeatureVector> implements List<EntityGro
     }
 
     public List<Entity<T>> getEntities(Category c) {
-        List<Entity<T>> es = new ArrayList<Entity<T>>();
+        List<Entity<T>> es = new ArrayList<>();
         for (EntityGroup<T> eg : this) {
             es.add(eg.getEntityForCategory(c));
         }
@@ -105,7 +105,7 @@ public class EntityGroupList<T extends IFeatureVector> implements List<EntityGro
     }
 
     public EntityGroupList<T> getSubList(Category... categories) {
-        EntityGroupList<T> entityGroups = new EntityGroupList<T>(categories);
+        EntityGroupList<T> entityGroups = new EntityGroupList<>(categories);
         for (EntityGroup<T> eg : this) {
             entityGroups.add(eg.subGroup(categories));
         }

@@ -145,25 +145,25 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
      * @return
      */
     protected BufferedImage addSpectra(final String queryName,
-        final String refName, final Array query, final Array ref,
-        final BufferedImage bi, final int specwidth1,
-        final int colorlegendwidth, final int colorlegendheight,
-        final int margin, final int[][] colorTable, final boolean minimize,
-        final List<Integer> refAnchors, final List<Integer> queryAnchors) {
+            final String refName, final Array query, final Array ref,
+            final BufferedImage bi, final int specwidth1,
+            final int colorlegendwidth, final int colorlegendheight,
+            final int margin, final int[][] colorTable, final boolean minimize,
+            final List<Integer> refAnchors, final List<Integer> queryAnchors) {
         log.info("Adding Spectra!");
         log.info("Reference {} with length: {}", refName, ref.getSize());
         log.info("Query {} with length: {}", queryName, query.getSize());
         log.info("TiledImage size: (wxh) " + bi.getWidth() + " x "
-            + bi.getHeight());
+                + bi.getHeight());
         final BufferedImage bi_ref = addSpectrumImage(refName, ref, specwidth1,
-            Color.RED, Color.WHITE, refAnchors);
+                Color.RED, Color.WHITE, refAnchors);
         final BufferedImage bi_query = addSpectrumImage(queryName, query,
-            specwidth1, Color.BLUE, Color.WHITE, queryAnchors);
+                specwidth1, Color.BLUE, Color.WHITE, queryAnchors);
         log.info("Reference img length: " + bi_ref.getWidth());
         log.info("Query img length: " + bi_query.getWidth());
         final BufferedImage bout = new BufferedImage(bi.getWidth() + specwidth1
-            + colorlegendwidth + (2 * margin) + 1, bi.getHeight()
-            + (2 * margin) + specwidth1 + 1, bi.getType());
+                + colorlegendwidth + (2 * margin) + 1, bi.getHeight()
+                + (2 * margin) + specwidth1 + 1, bi.getType());
         final Graphics2D g = (Graphics2D) bout.getGraphics();
 
         // reset affine transform
@@ -172,8 +172,8 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
         // set affine transform for left side of matrix
         // move to origin
         AffineTransform at = AffineTransform.getTranslateInstance(bi_ref.
-            getHeight() / 2.0d, specwidth1 + (bi_ref.getWidth() / 2.0d)
-            + 1.0);
+                getHeight() / 2.0d, specwidth1 + (bi_ref.getWidth() / 2.0d)
+                + 1.0);
         // rotate by 270 degrees
         // at.concatenate(AffineTransform.getRotateInstance(Math
         // .toRadians(-270.0d)));
@@ -182,7 +182,7 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
 
         // move to original position
         at.concatenate(AffineTransform.getTranslateInstance(
-            -bi_ref.getWidth() / 2, -bi_ref.getHeight() / 2));
+                -bi_ref.getWidth() / 2, -bi_ref.getHeight() / 2));
         log.info("Adding {} to the left!", refName);
         // AffineTransform or = g.getTransform();
         g.setColor(Color.BLACK);
@@ -209,11 +209,11 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
         g.setTransform(AffineTransform.getTranslateInstance(0.0d, 0.0d));
         log.info("Filling distance matrix!");
         at = AffineTransform.getTranslateInstance(specwidth1
-            + (bi.getWidth() / 2.0d) + 1.0, specwidth1 + bi.getHeight()
-            / 2.0d + 1.0);
+                + (bi.getWidth() / 2.0d) + 1.0, specwidth1 + bi.getHeight()
+                / 2.0d + 1.0);
         // at.concatenate(AffineTransform.getScaleInstance(-1.0, -1.0));
         at.concatenate(AffineTransform.getTranslateInstance(
-            -bi.getWidth() / 2.0d, -bi.getHeight() / 2.0d));
+                -bi.getWidth() / 2.0d, -bi.getHeight() / 2.0d));
         g.drawImage(bi, at, null);
         g.setColor(Color.WHITE);
         // int fontsize = Math.max(50, Math.min(100, specwidth1 / 3));
@@ -221,10 +221,10 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
         final Font f = new Font("Lucida Sans", Font.PLAIN, this.fontsize);
         g.setFont(f);
         final TextLayout tl = new TextLayout("Top: " + this.query_file_name, f,
-            g.getFontRenderContext());
+                g.getFontRenderContext());
 
         final TextLayout tl2 = new TextLayout("Left: "
-            + this.reference_file_name, f, g.getFontRenderContext());
+                + this.reference_file_name, f, g.getFontRenderContext());
 
         final int x = specwidth1 + 10;
         final int y = bout.getHeight() - (margin);
@@ -234,75 +234,75 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
 
         final WritableRaster wr = bout.getRaster();
         log.info("Setting base for color table to x={},y={}", bout.getWidth()
-            - colorlegendwidth - margin, bout.getHeight()
-            - colorlegendheight - margin);
+                - colorlegendwidth - margin, bout.getHeight()
+                - colorlegendheight - margin);
         // distance case, the smaller, the better
         final int colortableOffset = (bout.getHeight() - (2 * margin)) / 2
-            - colorlegendheight / 2;
+                - colorlegendheight / 2;
         if (minimize) {
             for (int i = 0; i < colorlegendheight; i++) {
                 for (int j = 0; j < colorlegendwidth; j++) {
                     wr.setPixel(
-                        bout.getWidth() - colorlegendwidth - margin + j,
-                        colortableOffset + i, new int[]{
-                            colorTable[255 - i][0],
-                            colorTable[255 - i][1],
-                            colorTable[255 - i][2]});
+                            bout.getWidth() - colorlegendwidth - margin + j,
+                            colortableOffset + i, new int[]{
+                                colorTable[255 - i][0],
+                                colorTable[255 - i][1],
+                                colorTable[255 - i][2]});
                 }
             }
             final TextLayout tlmax = new TextLayout("Max", f, g.
-                getFontRenderContext());
+                    getFontRenderContext());
             tlmax.draw(g, bout.getWidth() - margin + 15,
-                (bout.getHeight() - (2 * margin)) / 2 - colorlegendheight
-                / 2);
+                    (bout.getHeight() - (2 * margin)) / 2 - colorlegendheight
+                    / 2);
             final TextLayout tlmin = new TextLayout("Min", f, g.
-                getFontRenderContext());
+                    getFontRenderContext());
             tlmin.draw(g, bout.getWidth() - margin + 15,
-                (bout.getHeight() - (2 * margin)) / 2 + colorlegendheight
-                / 2);
+                    (bout.getHeight() - (2 * margin)) / 2 + colorlegendheight
+                    / 2);
             final TextLayout tlsim = new TextLayout("distance", f, g.
-                getFontRenderContext());
+                    getFontRenderContext());
             tlsim.draw(g, bout.getWidth() - margin - colorlegendwidth / 2
-                - (float) tlsim.getBounds().getWidth() / 2.0f, (bout.
-                getHeight() - (2 * margin))
-                / 2
-                + colorlegendheight
-                / 2
-                + margin
-                / 2
-                - tlmin.getDescent());
+                    - (float) tlsim.getBounds().getWidth() / 2.0f, (bout.
+                    getHeight() - (2 * margin))
+                    / 2
+                    + colorlegendheight
+                    / 2
+                    + margin
+                    / 2
+                    - tlmin.getDescent());
         } else {// similarity case, the bigger the better
             for (int i = 0; i < colorlegendheight; i++) {
                 for (int j = 0; j < colorlegendwidth; j++) {
                     wr.setPixel(
-                        bout.getWidth() - colorlegendwidth - margin + j,
-                        colortableOffset + i, new int[]{
-                            colorTable[255 - i][0],
-                            colorTable[255 - i][1],
-                            colorTable[255 - i][2]});
+                            bout.getWidth() - colorlegendwidth - margin + j,
+                            colortableOffset + i, new int[]{
+                                colorTable[255 - i][0],
+                                colorTable[255 - i][1],
+                                colorTable[255 - i][2]});
                 }
             }
             final TextLayout tlmax = new TextLayout("Max", f, g.
-                getFontRenderContext());
+                    getFontRenderContext());
             tlmax.draw(g, bout.getWidth() - margin + 15,
-                (bout.getHeight() - (2 * margin)) / 2 - colorlegendheight
-                / 2);
+                    (bout.getHeight() - (2 * margin)) / 2 - colorlegendheight
+                    / 2);
             final TextLayout tlmin = new TextLayout("Min", f, g.
-                getFontRenderContext());
+                    getFontRenderContext());
             tlmin.draw(g, bout.getWidth() - margin + 15,
-                (bout.getHeight() - (2 * margin)) / 2 + colorlegendheight
-                / 2);
+                    (bout.getHeight() - (2 * margin)) / 2 + colorlegendheight
+                    / 2);
             final TextLayout tlsim = new TextLayout("similarity", f, g.
-                getFontRenderContext());
+                    getFontRenderContext());
             tlsim.draw(g, bout.getWidth() - margin - colorlegendwidth / 2
-                - (float) tlsim.getBounds().getWidth() / 2.0f, (bout.
-                getHeight() - (2 * margin))
-                / 2
-                + colorlegendheight
-                / 2
-                + margin
-                / 2
-                - tlmin.getDescent());
+                    - (float) tlsim.getBounds().getWidth() / 2.0f, (bout.
+                    getHeight() - (2 * margin))
+                    / 2
+                    + colorlegendheight
+                    / 2
+                    + margin
+                    / 2
+                    - tlmin.getDescent());
         }
 
         return bout;
@@ -319,8 +319,8 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
      * @return
      */
     protected BufferedImage addSpectrumImage(final String name, final Array a,
-        final int height, final Color fg, final Color bg,
-        final List<Integer> anchorPositions) {
+            final int height, final Color fg, final Color bg,
+            final List<Integer> anchorPositions) {
         final int[] img = new int[a.getShape()[0] * height];
         Arrays.fill(img, bg.getRGB());
         final IndexIterator iter = a.getIndexIterator();
@@ -331,7 +331,7 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
         int row_idx = 0;
         while (iter.hasNext()) {
             final double d = Math.floor(height
-                * (iter.getDoubleNext() / (max - min)));
+                    * (iter.getDoubleNext() / (max - min)));
             row_idx = (int) d;
             // System.out.println(" row_idx "+row_idx+" col "+col+" index:
             // "+idx);
@@ -352,12 +352,12 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
         }
 
         final MemoryImageSource mis = new MemoryImageSource(width, height, img,
-            0, width);
+                0, width);
         final BufferedImage bim = new BufferedImage(a.getShape()[0], height,
-            BufferedImage.TYPE_INT_RGB);
+                BufferedImage.TYPE_INT_RGB);
         final Graphics g = bim.getGraphics();
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON);
+                RenderingHints.VALUE_ANTIALIAS_ON);
         final Image im = Toolkit.getDefaultToolkit().createImage(mis);
         g.drawImage(im, 0, 0, null);
         for (final Integer anchor : anchorPositions) {
@@ -402,9 +402,9 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
      * @param minimize
      */
     protected void createAlignmentMatrixImage(final Array a,
-        final IVariableFragment di, final IFileFragment rF,
-        final IFileFragment qF, final Array reference, final Array query,
-        final List<Tuple2DI> path, final File output, final boolean minimize) {
+            final IVariableFragment di, final IFileFragment rF,
+            final IFileFragment qF, final Array reference, final Array query,
+            final List<Tuple2DI> path, final File output, final boolean minimize) {
         EvalTools.notNull(a, this);
         if ((di != null) && di.getStats().isEmpty()) {
             final ArrayStatsScanner ass = new ArrayStatsScanner();
@@ -426,7 +426,7 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
         log.info("Size of Image {}x{} = {}", new Object[]{cols, rows,
             (cols * rows)});
         BufferedImage bi = new BufferedImage(cols, rows,
-            BufferedImage.TYPE_INT_RGB);
+                BufferedImage.TYPE_INT_RGB);
         final Index ind = a.getIndex();
         if (piter.hasNext()) {
             t1 = piter.next();
@@ -441,8 +441,8 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
         final int[][] colorRamp = crr.readColorRamp(this.colorramp_location);
         final double[] samples = ImageTools.createSampleTable(this.sampleSize);
         final double[] breakpoints = ImageTools.getBreakpoints(a,
-            this.sampleSize, minimize ? Double.POSITIVE_INFINITY
-            : Double.NEGATIVE_INFINITY);
+                this.sampleSize, minimize ? Double.POSITIVE_INFINITY
+                : Double.NEGATIVE_INFINITY);
         log.debug("{}", Arrays.toString(breakpoints));
         log.info("Drawing image with {} rows and {} cols", rows, cols);
         double percentDone = 0.0d;
@@ -457,7 +457,7 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
                 final double av = a.getDouble(ind);
                 double v = 0.0d;
                 if ((av == Double.POSITIVE_INFINITY)
-                    || (av == Double.NEGATIVE_INFINITY)) {
+                        || (av == Double.NEGATIVE_INFINITY)) {
                     log.debug("Found infinite value at {},{}", i, j);
                     infinite = true;
                 } else {
@@ -500,7 +500,7 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
                     wr.setPixel(j, i, new int[]{red, green, blue});
                     percentDone = ArrayTools.calcPercentDone(elements, elemCnt);
                     partCnt = ArrayTools.printPercentDone(percentDone, parts,
-                        partCnt, log);
+                            partCnt, log);
                     elemCnt++;
                 }
             }
@@ -508,27 +508,27 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
 
         if ((reference != null) && (query != null)) {
             final Tuple2D<List<IAnchor>, List<IAnchor>> anchors = MaltcmsTools.
-                getAnchors(rF, qF);
+                    getAnchors(rF, qF);
             final AnchorPairSet aps = new AnchorPairSet(anchors.getFirst(),
-                anchors.getSecond(), rows, cols);
+                    anchors.getSecond(), rows, cols);
             final List<Tuple2D<Integer, Integer>> l = aps.getCorrespondingScans();
-            final List<Integer> l1 = new ArrayList<Integer>();
-            final List<Integer> l2 = new ArrayList<Integer>();
+            final List<Integer> l1 = new ArrayList<>();
+            final List<Integer> l2 = new ArrayList<>();
             for (final Tuple2D<Integer, Integer> tple : l) {
                 l1.add(tple.getFirst());
                 l2.add(tple.getSecond());
             }
             bi = addSpectra(qF.getName(), rF.getName(), query, reference, bi,
-                this.chromatogramHeight, 50, 255, 100, colorRamp, minimize,
-                l1, l2);
+                    this.chromatogramHeight, 50, 255, 100, colorRamp, minimize,
+                    l1, l2);
         }
 
         log.info("Writing Image to file {}", output);
         try {
             ImageIO.write(bi, this.format, output);
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(output,
-                this, WorkflowSlot.VISUALIZATION, new IFileFragment[]{rF,
-                    qF});
+                    this, WorkflowSlot.VISUALIZATION, new IFileFragment[]{rF,
+                        qF});
             getWorkflow().append(dwr);
         } catch (IOException e) {
             log.error(e.getLocalizedMessage());
@@ -550,9 +550,9 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
 //                        IArrayDoubleComp.class);
                 final boolean minimize = false;//iadc.minimize();
                 if ((mm.min == Double.NEGATIVE_INFINITY)
-                    && (mm.max == Double.POSITIVE_INFINITY)) {
+                        && (mm.max == Double.POSITIVE_INFINITY)) {
                     log.warn(
-                        "Found -INF as minimum and +INF as maximum, can not create image!");
+                            "Found -INF as minimum and +INF as maximum, can not create image!");
                     return;
                 }
                 final IFileFragment refF = FragmentTools.getLHSFile(f);
@@ -560,33 +560,33 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
                 this.query_file_name = queryF.getName();
                 this.reference_file_name = refF.getName();
                 final IVariableFragment query_spec = queryF.getChild(
-                    this.top_chromatogram_var);
+                        this.top_chromatogram_var);
                 final IVariableFragment reference_spec = refF.getChild(
-                    this.left_chromatogram_var);
+                        this.left_chromatogram_var);
                 this.filename = StringTools.removeFileExt(refF.getName())
-                    + "_vs_" + StringTools.removeFileExt(queryF.getName())
-                    + "_" + s + "." + this.format;
+                        + "_vs_" + StringTools.removeFileExt(queryF.getName())
+                        + "_" + s + "." + this.format;
                 final Array qval = query_spec.getArray();
                 final Array rval = reference_spec.getArray();
                 if ((qval.getRank() == 1) && (rval.getRank() == 1)) {// ensure
                     // equal
                     // ranks
                     final IVariableFragment path_i_fragment = f.getChild(
-                        this.path_i);
+                            this.path_i);
                     final IVariableFragment path_j_fragment = f.getChild(
-                        this.path_j);
+                            this.path_j);
                     final Array pi = path_i_fragment.getArray();
                     final Array pj = path_j_fragment.getArray();
                     final List<Tuple2DI> l = PathTools.fromArrays(pi, pj);
                     createAlignmentMatrixImage(matrix, matrix_frag,
-                        reference_spec.getParent(), query_spec.getParent(),
-                        qval, rval, l, new File(getWorkflow().
-                            getOutputDirectory(this), this.filename),
-                        minimize);
+                            reference_spec.getParent(), query_spec.getParent(),
+                            qval, rval, l, new File(getWorkflow().
+                                    getOutputDirectory(this), this.filename),
+                            minimize);
                     System.gc();
                 } else {
                     throw new IllegalArgumentException(
-                        "Cannot deal with arrays with more than one dimension!");
+                            "Cannot deal with arrays with more than one dimension!");
                 }
             } catch (final ResourceNotAvailableException re) {
                 log.warn("Could not load variable {}", s);
@@ -603,7 +603,7 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
      * @return
      */
     protected int mapToBin(final double value, final double maxval,
-        final double minval, final int numbins) {
+            final double minval, final int numbins) {
         return (int) Math.floor(value / (maxval - minval)) * numbins;
     }
 }

@@ -50,7 +50,7 @@ public class MetaboliteQueryDB extends QueryDB<IMetabolite> {
     }
 
     public MetaboliteQueryDB(String dblocation, String[] args,
-        MAggregatePredicateFactory mapf) {
+            MAggregatePredicateFactory mapf) {
         super(dblocation, args, mapf);
     }
 
@@ -91,15 +91,13 @@ public class MetaboliteQueryDB extends QueryDB<IMetabolite> {
                     sb.append(m.toString());
                     i++;
                 }
-            } catch (InterruptedException e) {
-                System.err.println(e.getLocalizedMessage());
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 System.err.println(e.getLocalizedMessage());
             }
         } else {
             System.out.println("Invalid number of arguments!");
             System.out.println(
-                "Usage: java maltcms.db.MetaboliteQuery /PATH/TO/DB [PREDICATES]");
+                    "Usage: java maltcms.db.MetaboliteQuery /PATH/TO/DB [PREDICATES]");
         }
     }
 

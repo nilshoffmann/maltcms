@@ -83,7 +83,7 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
             final MinMax mm = MAMath.getMinMax(domains[0]);
             final double res = 1.0d;
             final int nbins = MaltcmsTools.getNumberOfIntegerMassBins(mm.min,
-                mm.max, res);
+                    mm.max, res);
             log.info("Using nbins: {}", nbins);
             final ArrayDouble.D1 binVal = new ArrayDouble.D1(nbins);
             final ArrayDouble.D1 binCnt = new ArrayDouble.D1(nbins);
@@ -93,7 +93,7 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
                 final int bin = MaltcmsTools.binMZ(mz, mm.min, mm.max, res);
                 log.debug("Setting bin: {}", bin);
                 binVal.set(bin, MaltcmsTools.binMZ(mz + mm.min, mm.min, mm.max,
-                    res));
+                        res));
                 binCnt.set(bin, binCnt.get(bin) + intens);
             }
             final MinMax mmi = MAMath.getMinMax(binCnt);
@@ -109,11 +109,11 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
             xyb.setShadowVisible(false);
             xyb.setGradientPaintTransformer(null);
             final XYPlot cp = new XYPlot(xsc, new NumberAxis("mass value"),
-                new NumberAxis("intensity value"), xyb);
+                    new NumberAxis("intensity value"), xyb);
             final PlotRunner pl = new PlotRunner(cp,
-                "Intensity Distribution Plot of " + f.getName(),
-                "intensDistrPlot-" + f.getName(), getWorkflow().
-                getOutputDirectory(this));
+                    "Intensity Distribution Plot of " + f.getName(),
+                    "intensDistrPlot-" + f.getName(), getWorkflow().
+                    getOutputDirectory(this));
             pl.configure(Factory.getInstance().getConfiguration());
             final File file = pl.getFile();
             try {
@@ -122,7 +122,7 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
                 log.error(ex.getLocalizedMessage());
             }
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(file,
-                this, WorkflowSlot.VISUALIZATION, f);
+                    this, WorkflowSlot.VISUALIZATION, f);
             getWorkflow().append(dwr);
         }
         return t;
@@ -132,9 +132,9 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.x_var = cfg.getString(this.getClass().getName() + ".x_var",
-            "mass_values");
+                "mass_values");
         this.y_var = cfg.getString(this.getClass().getName() + ".y_var",
-            "intensity_values");
+                "intensity_values");
     }
 
     /*

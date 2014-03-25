@@ -112,23 +112,23 @@ public class FsaTxtDataSource implements IDataSource {
     private int dataFieldToRead = 3;
 
     private Dimension addDimension(final NetcdfFileWriteable nfw,
-        final HashMap<String, Dimension> dimensions,
-        final IVariableFragment vf, final Dimension element) {
+            final HashMap<String, Dimension> dimensions,
+            final IVariableFragment vf, final Dimension element) {
 
         String dimname = element.getName();
 
         if (this.pointDimensionVars.contains(vf.getName())) {
             dimname = this.pointDimensionName;
             log.debug("Renaming dimension {} to {} for variable {}",
-                new Object[]{element.getName(), dimname,
-                    vf.getName()});
+                    new Object[]{element.getName(), dimname,
+                        vf.getName()});
         }
 
         if (this.scanDimensionVars.contains(vf.getName())) {
             dimname = this.scanDimensionName;
             log.debug("Renaming dimension {} to {} for variable {}",
-                new Object[]{element.getName(), dimname,
-                    vf.getName()});
+                    new Object[]{element.getName(), dimname,
+                        vf.getName()});
         }
 
         Dimension d = null;
@@ -139,8 +139,8 @@ public class FsaTxtDataSource implements IDataSource {
         } else {
 
             d = nfw.addDimension(dimname, element.getLength(),
-                element.isShared(), element.isUnlimited(), element.
-                isVariableLength());
+                    element.isShared(), element.isUnlimited(), element.
+                    isVariableLength());
             dimensions.put(dimname, d);
         }
         return d;
@@ -151,7 +151,7 @@ public class FsaTxtDataSource implements IDataSource {
         final int dotindex = ff.getName().indexOf(".");
         if (dotindex == -1) {
             throw new RuntimeException("Could not determine File extension of "
-                + ff);
+                    + ff);
         }
         final String fileending = ff.getName().substring(dotindex + 1);
         // System.out.println("fileending: "+fileending);
@@ -171,25 +171,25 @@ public class FsaTxtDataSource implements IDataSource {
     @Override
     public void configure(final Configuration configuration) {
         this.scanDimensionVars = StringTools.toStringList(configuration.getList(this.
-            getClass().getName() + ".scanDimensionVars"));
+                getClass().getName() + ".scanDimensionVars"));
         Collections.sort(this.scanDimensionVars);
         this.scanDimensionName = configuration.getString(this.getClass().getName()
-            + ".scanDimensionName", "scan_number");
+                + ".scanDimensionName", "scan_number");
         this.pointDimensionVars = StringTools.toStringList(configuration.getList(this.
-            getClass().getName() + ".pointDimensionVars"));
+                getClass().getName() + ".pointDimensionVars"));
         Collections.sort(this.pointDimensionVars);
         this.pointDimensionName = configuration.getString(this.getClass().
-            getName()
-            + ".pointDimensionName", "point_number");
+                getName()
+                + ".pointDimensionName", "point_number");
         this.dataFieldToRead = configuration.getInt(
-            this.getClass().getName() + ".dataFieldToRead", 3);
+                this.getClass().getName() + ".dataFieldToRead", 3);
     }
 
     @Override
     public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
-        FileNotFoundException, ResourceNotAvailableException {
+            FileNotFoundException, ResourceNotAvailableException {
         final ArrayList<IVariableFragment> al = readStructure(f);
-        final ArrayList<Array> ral = new ArrayList<Array>(al.size());
+        final ArrayList<Array> ral = new ArrayList<>(al.size());
         for (final IVariableFragment vf : al) {
             final Array a = readSingle(vf);
             ral.add(a);
@@ -199,41 +199,44 @@ public class FsaTxtDataSource implements IDataSource {
 
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
-        throws IOException, FileNotFoundException,
-        ResourceNotAvailableException {
+            throws IOException, FileNotFoundException,
+            ResourceNotAvailableException {
         throw new NotImplementedException();
     }
 
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
-        ResourceNotAvailableException, FileNotFoundException {
+            ResourceNotAvailableException, FileNotFoundException {
         log.debug("Reading single of {}, child of {}", f.toString(),
-            f.getParent().toString());
+                f.getParent().toString());
         log.debug("{}", f.getParent().toString());
-        if (f.getName().equals("total_intensity")) {
-            Array data = getDataEntry(f.getParent().getUri(),
-                dataFieldToRead);
-            f.setDimensions(new Dimension[]{new Dimension(scanDimensionName,
-                data.getShape()[0])});
-            return data;
-        } else if (f.getName().equals("scan_index")) {
-            Array data = getDataEntry(f.getParent().getUri(),
-                dataFieldToRead);
-            Array scanIndex = new ArrayInt.D1(data.getShape()[0]);
-            for (int i = 0; i < data.getShape()[0]; i++) {
-                scanIndex.setInt(i, i);
+        switch (f.getName()) {
+            case "total_intensity": {
+                Array data = getDataEntry(f.getParent().getUri(),
+                        dataFieldToRead);
+                f.setDimensions(new Dimension[]{new Dimension(scanDimensionName,
+                    data.getShape()[0])});
+                return data;
             }
-            f.setDimensions(new Dimension[]{new Dimension(scanDimensionName,
-                scanIndex.getShape()[0])});
-            return scanIndex;
+            case "scan_index": {
+                Array data = getDataEntry(f.getParent().getUri(),
+                        dataFieldToRead);
+                Array scanIndex = new ArrayInt.D1(data.getShape()[0]);
+                for (int i = 0; i < data.getShape()[0]; i++) {
+                    scanIndex.setInt(i, i);
+                }
+                f.setDimensions(new Dimension[]{new Dimension(scanDimensionName,
+                    scanIndex.getShape()[0])});
+                return scanIndex;
+            }
         }
         throw new ResourceNotAvailableException("Could not retrieve array for fragment " + f.
-            getName());
+                getName());
     }
 
     protected CSVReader read(CSVReader csvr, String inputFileName) throws IOException {
         String fileExtension = StringTools.getFileExtension(inputFileName).
-            toLowerCase();
+                toLowerCase();
         csvr.setComment("#");
         csvr.setFirstLineHeaders(true);
 
@@ -243,16 +246,16 @@ public class FsaTxtDataSource implements IDataSource {
 
         } else {
             throw new IOException(
-                "Unsupported file extension for CsvDataSource: " + fileExtension);
+                    "Unsupported file extension for CsvDataSource: " + fileExtension);
         }
         return csvr;
     }
 
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
-        throws IOException, FileNotFoundException {
+            throws IOException, FileNotFoundException {
         log.debug("Reading structure of {}", f.toString());
-        final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
+        final ArrayList<IVariableFragment> al = new ArrayList<>();
         for (IVariableFragment iv : f) {
             try {
                 al.add(readStructure(iv));
@@ -265,8 +268,8 @@ public class FsaTxtDataSource implements IDataSource {
 
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
-        throws IOException, FileNotFoundException,
-        ResourceNotAvailableException {
+            throws IOException, FileNotFoundException,
+            ResourceNotAvailableException {
         log.debug("Reading structure of {}", f.toString());
         Array a = readSingle(f);
 //        f.setArray(a);
@@ -298,10 +301,10 @@ public class FsaTxtDataSource implements IDataSource {
             }
         } catch (IOException ex) {
             Logger.getLogger(FsaTxtDataSource.class.getName()).
-                log(Level.SEVERE, null, ex);
+                    log(Level.SEVERE, null, ex);
         }
         throw new ResourceNotAvailableException("Could not retrieve data item " + id + " from file " + f.
-            toString());
+                toString());
     }
 
     @Override

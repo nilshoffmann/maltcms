@@ -58,7 +58,7 @@ public class MAggregatePredicate extends MetabolitePredicate {
     }
 
     public MAggregatePredicate() {
-        this.mpl = new ArrayList<MetabolitePredicate>();
+        this.mpl = new ArrayList<>();
         this.mpl.add(new MetabolitePredicate() {
             /**
              *

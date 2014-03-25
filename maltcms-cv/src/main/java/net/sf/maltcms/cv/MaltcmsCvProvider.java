@@ -71,7 +71,7 @@ public final class MaltcmsCvProvider implements IControlledVocabularyProvider {
         try {
             pc = new PropertiesConfiguration(file);
             log.info("Using {}.cv.version={}", getName(), pc.getString(getName() + ".cv.version"));
-            deprecatedVariables = new LinkedHashSet<String>();
+            deprecatedVariables = new LinkedHashSet<>();
             StringBuilder message = new StringBuilder();
             List<String> l = StringTools.toStringList(pc.getList(getName() + ".deprecated.variables", Collections.emptyList()));
             for (String s : l) {
@@ -90,10 +90,10 @@ public final class MaltcmsCvProvider implements IControlledVocabularyProvider {
             String[] split = s.split(":");
             key = split[0];
             message.append("Variable name ").
-                append(pc.getString(key)).
-                append(" is deprecated. Please replace with ").
-                append(pc.getString(split[1])).
-                append("!");
+                    append(pc.getString(key)).
+                    append(" is deprecated. Please replace with ").
+                    append(pc.getString(split[1])).
+                    append("!");
         } else {
             key = s;
             message.append("Variable name ").append(pc.getString(key)).append(" is deprecated!");

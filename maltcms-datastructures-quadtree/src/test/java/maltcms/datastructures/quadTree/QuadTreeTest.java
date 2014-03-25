@@ -47,7 +47,7 @@ public class QuadTreeTest {
      */
     @Test
     public void testPut() {
-        QuadTree<Integer> qt = new QuadTree<Integer>(new Rectangle2D.Double(0, 0, 100, 100));
+        QuadTree<Integer> qt = new QuadTree<>(new Rectangle2D.Double(0, 0, 100, 100));
         Point2D pt = new Point2D.Double(10.023, 83.87);
         qt.put(pt, 5);
         Assert.assertTrue(qt.contains(5));
@@ -58,7 +58,7 @@ public class QuadTreeTest {
      */
     @Test
     public void testRemove() {
-        QuadTree<Integer> qt = new QuadTree<Integer>(new Rectangle2D.Double(0, 0, 100, 100));
+        QuadTree<Integer> qt = new QuadTree<>(new Rectangle2D.Double(0, 0, 100, 100));
         Point2D pt = new Point2D.Double(10.023, 83.87);
         qt.put(pt, 5);
         qt.remove(pt);
@@ -70,7 +70,7 @@ public class QuadTreeTest {
      */
     @Test
     public void testGet() {
-        QuadTree<Integer> qt = new QuadTree<Integer>(new Rectangle2D.Double(0, 0, 100, 100));
+        QuadTree<Integer> qt = new QuadTree<>(new Rectangle2D.Double(0, 0, 100, 100));
         Point2D pt = new Point2D.Double(10.023, 83.87);
         qt.put(pt, 5);
         Integer retrieved = qt.get(pt);
@@ -82,7 +82,7 @@ public class QuadTreeTest {
      */
     @Test
     public void testGetClosestInRadius() {
-        QuadTree<Integer> qt = new QuadTree<Integer>(new Rectangle2D.Double(0, 0, 100, 100));
+        QuadTree<Integer> qt = new QuadTree<>(new Rectangle2D.Double(0, 0, 100, 100));
         Point2D pt = new Point2D.Double(10.023, 83.87);
         qt.put(pt, 5);
         Point2D pt2 = new Point2D.Double(50.0213, 23.213);
@@ -96,7 +96,7 @@ public class QuadTreeTest {
      */
     @Test
     public void testGetNeighborsInRadius() {
-        QuadTree<Integer> qt = new QuadTree<Integer>(new Rectangle2D.Double(0, 0, 100, 100));
+        QuadTree<Integer> qt = new QuadTree<>(new Rectangle2D.Double(0, 0, 100, 100));
         Point2D pt = new Point2D.Double(10.023, 83.87);
         qt.put(pt, 5);
         Point2D pt2 = new Point2D.Double(50.0213, 23.213);
@@ -154,7 +154,7 @@ public class QuadTreeTest {
      */
     @Test
     public void testIsEmptySizeAndClear() {
-        QuadTree<Integer> qt = new QuadTree<Integer>(new Rectangle2D.Double(0, 0, 100, 100));
+        QuadTree<Integer> qt = new QuadTree<>(new Rectangle2D.Double(0, 0, 100, 100));
         Point2D pt = new Point2D.Double(10.023, 83.87);
         qt.put(pt, 5);
         Point2D pt2 = new Point2D.Double(50.0213, 23.213);
@@ -172,7 +172,7 @@ public class QuadTreeTest {
      */
     @Test
     public void testIterator() {
-        QuadTree<Integer> qt = new QuadTree<Integer>(new Rectangle2D.Double(0, 0, 100, 100));
+        QuadTree<Integer> qt = new QuadTree<>(new Rectangle2D.Double(0, 0, 100, 100));
         Point2D pt = new Point2D.Double(10.023, 83.87);
         qt.put(pt, 5);
         Point2D pt2 = new Point2D.Double(50.0213, 23.213);

@@ -63,7 +63,7 @@ public class MZMLExporterTest extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
-        "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
+            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
 
     public MZMLExporterTest() {
         setLogLevelFor(NetcdfDataSource.class, Level.DEBUG);
@@ -79,7 +79,7 @@ public class MZMLExporterTest extends AFragmentCommandTest {
     public void testApply() throws Exception {
         System.err.println("testApply");
         File outputBase = tf.newFolder("mzmlExporterTestOut");
-        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        List<IFragmentCommand> commands = new ArrayList<>();
         ScanExtractor scanExtractor = new ScanExtractor();
         scanExtractor.setStartScan(10);
         scanExtractor.setEndScan(100);

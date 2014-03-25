@@ -196,26 +196,26 @@
                                     </xsl:element>
                                     <!-- NAVIGATION -->	
                                     <xsl:if test="@navigation='true' or not(@navigation)">
-										<xsl:for-each select="//nav">
-		                                    <xsl:element name="div">
-		                                            <xsl:call-template name="ATTRCLASSTEMPLATE"/>
-	<!--                                            <xsl:attribute name="id">nav</xsl:attribute>-->
-		                                        <xsl:for-each select="//group">
-		                                            <xsl:variable name="currentgroup">
-		                                                <xsl:value-of select="@ident" />
-		                                            </xsl:variable>
-		                                            <xsl:choose>
-		                                                <xsl:when test="$currentgroup=$activegroup">
-		                                                    <xsl:call-template name="NAVTEMPLATE">
-		                                                        <xsl:with-param name="PAGENAME" select="$pagename" />
-		                                                        <xsl:with-param name="GROUPNAME" select="./@nname" />
-		                                                        <xsl:with-param name="PATHTOROOT" select="$pathToRoot" />
-		                                                    </xsl:call-template>
-		                                                </xsl:when>
-		                                            </xsl:choose>
-		                                        </xsl:for-each>
-		                                    </xsl:element>
-										</xsl:for-each>
+                                        <xsl:for-each select="//nav">
+                                            <xsl:element name="div">
+                                                <xsl:call-template name="ATTRCLASSTEMPLATE"/>
+                                                <!--                                            <xsl:attribute name="id">nav</xsl:attribute>-->
+                                                <xsl:for-each select="//group">
+                                                    <xsl:variable name="currentgroup">
+                                                        <xsl:value-of select="@ident" />
+                                                    </xsl:variable>
+                                                    <xsl:choose>
+                                                        <xsl:when test="$currentgroup=$activegroup">
+                                                            <xsl:call-template name="NAVTEMPLATE">
+                                                                <xsl:with-param name="PAGENAME" select="$pagename" />
+                                                                <xsl:with-param name="GROUPNAME" select="./@nname" />
+                                                                <xsl:with-param name="PATHTOROOT" select="$pathToRoot" />
+                                                            </xsl:call-template>
+                                                        </xsl:when>
+                                                    </xsl:choose>
+                                                </xsl:for-each>
+                                            </xsl:element>
+                                        </xsl:for-each>
                                     </xsl:if>
                                     <!-- CONTENT -->
                                     <xsl:apply-templates select="child::node()">

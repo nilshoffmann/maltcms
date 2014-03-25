@@ -41,11 +41,12 @@ public class RetentionInfo implements IRetentionInfo {
     private String name = "";
     private int scanIndex = -1;
 
+    @Override
     public int compareTo(final IAnchor o) {
         if (o instanceof IRetentionInfo) {
             // If no retention index is given, use names as comparison criterion
             if ((((IRetentionInfo) o).getRetentionIndex() < 0)
-                || (getRetentionIndex() < 0)) {
+                    || (getRetentionIndex() < 0)) {
                 return getName().compareTo(o.getName());
             }
             // if retention index is given
@@ -60,42 +61,52 @@ public class RetentionInfo implements IRetentionInfo {
         return toString().compareTo(o.toString());
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public double getRetentionIndex() {
         return this.ri;
     }
 
+    @Override
     public double getRetentionTime() {
         return this.rt;
     }
 
+    @Override
     public String getRetentionTimeUnit() {
         return this.rtu;
     }
 
+    @Override
     public int getScanIndex() {
         return this.scanIndex;
     }
 
+    @Override
     public void setName(final String s) {
         this.name = s;
     }
 
+    @Override
     public void setRetentionIndex(final double d) {
         this.ri = d;
     }
 
+    @Override
     public void setRetentionTime(final double d) {
         this.rt = d;
     }
 
+    @Override
     public void setRetentionTimeUnit(final String s) {
         this.rtu = s;
     }
 
+    @Override
     public void setScanIndex(final int scan) {
         this.scanIndex = scan;
     }

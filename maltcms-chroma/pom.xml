@@ -76,7 +76,7 @@
             <artifactId>jfreechart-osgi</artifactId>
             <!--<version>1.0.14</version>-->
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jcommon-osgi</artifactId>
             <version>1.0.16</version>

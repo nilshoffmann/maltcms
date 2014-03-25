@@ -87,12 +87,12 @@ public class Peak1DGroup implements Iterable<Peak1D> {
         apexMassSpectrum = ms;
         MinMax mm = MAMath.getMinMax(ms.getFirst());
         Peak1D peak = PeakFactory.createPeak1DTic(fragment, scanIndex, scanIndex, scanIndex);
-        this.peakSet = new TreeSet<Peak1D>(new Peak1DComparator());
+        this.peakSet = new TreeSet<>(new Peak1DComparator());
         this.peakSet.add(peak);
     }
 
     public Peak1DGroup(Peak1D... p) {
-        this.peakSet = new TreeSet<Peak1D>(new Peak1DComparator());
+        this.peakSet = new TreeSet<>(new Peak1DComparator());
         this.peakSet.addAll(Arrays.asList(p));
         int startIndex = Integer.MAX_VALUE;
         int stopIndex = Integer.MIN_VALUE;
@@ -169,7 +169,7 @@ public class Peak1DGroup implements Iterable<Peak1D> {
     }
 
     public List<Tuple2D<Array, Array>> getMassSpectra() {
-        List<Tuple2D<Array, Array>> massSpectra = new ArrayList<Tuple2D<Array, Array>>();
+        List<Tuple2D<Array, Array>> massSpectra = new ArrayList<>();
         if (apexMassSpectrum != null) {
             massSpectra.add(apexMassSpectrum);
             return massSpectra;

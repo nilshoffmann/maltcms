@@ -54,7 +54,7 @@ public class RetentionIndexCalculator {
      * @param riPeaks
      */
     public RetentionIndexCalculator(
-        IMetabolite... riPeaks) {
+            IMetabolite... riPeaks) {
         IMetabolite[] metabolites = riPeaks;
         Arrays.sort(metabolites, new Comparator<IMetabolite>() {
             @Override
@@ -90,7 +90,7 @@ public class RetentionIndexCalculator {
      * @param riPeaks
      */
     public RetentionIndexCalculator(int[] numberOfCarbonAtoms,
-        IScan1D... riPeaks) {
+            IScan1D... riPeaks) {
         riRTs = new double[riPeaks.length];
         for (int i = 0; i < riPeaks.length; i++) {
             riRTs[i] = riPeaks[i].getScanAcquisitionTime();
@@ -121,7 +121,7 @@ public class RetentionIndexCalculator {
             int count = 0;
             while (matcher.find()) {
                 count = Integer.parseInt(formula.substring(matcher.start() + 1,
-                    matcher.end()));
+                        matcher.end()));
                 break;
             }
             EvalTools.gt(0, count, RetentionIndexCalculator.class);
@@ -165,7 +165,7 @@ public class RetentionIndexCalculator {
         // System.out.println("RT of next ri: " + nextRIrt);
         int nCAtoms = nCarbAtoms[prevRIIdx];
         double ri = (100 * nCAtoms) + (100 * ((Math.log10(rt) - Math.log10(prevRIrt)) / (Math.
-            log10(nextRIrt) - Math.log10(prevRIrt))));
+                log10(nextRIrt) - Math.log10(prevRIrt))));
         // System.out.println("cAtoms before: " + nCarbAtoms[prevRIIdx]
         // + " after: " + nCarbAtoms[nextRIIdx]);
 //		 System.out.println(prevRIrt + " < " + rt + " < " + nextRIrt + " RI: "
@@ -307,7 +307,7 @@ public class RetentionIndexCalculator {
 
     public static void main(String[] args) {
         int[] cs = (int[]) ArrayTools.indexArray(38, 10).get1DJavaArray(
-            int.class);
+                int.class);
         double[] rts = new double[cs.length * 5];
         double[] rirts = new double[cs.length];
 //		rts = rirts;
@@ -328,17 +328,17 @@ public class RetentionIndexCalculator {
             System.out.println("Item: " + (i + 1) + "/" + rts.length);
             double istRI = ric.getIsothermalKovatsIndex(rts[i]);
             System.out.println("Isothermal RI for peak at rt " + rts[i]
-                + " = "
-                + istRI + "; RI rt range: [" + rirts[0] + ":"
-                + rirts[rirts.length - 1] + "]");
+                    + " = "
+                    + istRI + "; RI rt range: [" + rirts[0] + ":"
+                    + rirts[rirts.length - 1] + "]");
             double tcRI = ric.getTemperatureProgrammedKovatsIndex(rts[i]);
             System.out.println("Temperature programmed RI for peak at rt " + rts[i] + " = "
-                + tcRI + "; RI rt range: [" + rirts[0] + ":"
-                + rirts[rirts.length - 1] + "]");
+                    + tcRI + "; RI rt range: [" + rirts[0] + ":"
+                    + rirts[rirts.length - 1] + "]");
             double liRI = ric.getLinearIndex(rts[i]);
             System.out.println("Linear RI for peak at rt " + rts[i] + " = "
-                + liRI + "; RI rt range: [" + rirts[0] + ":"
-                + rirts[rirts.length - 1] + "]");
+                    + liRI + "; RI rt range: [" + rirts[0] + ":"
+                    + rirts[rirts.length - 1] + "]");
         }
     }
 }

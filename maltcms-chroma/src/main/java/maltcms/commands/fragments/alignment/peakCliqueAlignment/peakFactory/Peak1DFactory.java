@@ -85,7 +85,7 @@ public class Peak1DFactory implements IPeakFactory {
                 a.setDouble(0, peakAreaArray.getDouble(scanIndex));
             }
             PeakNG p = new PeakNG(scanIndex, a,
-                satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
+                    satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
             p.setPeakIndex(peakIndex);
             return p;
         }

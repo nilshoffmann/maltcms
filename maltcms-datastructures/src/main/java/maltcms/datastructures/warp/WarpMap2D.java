@@ -55,7 +55,7 @@ public class WarpMap2D {
     }
 
     public void setAnchors(Tuple2D<Point, Point>... p) {
-        this.anchors = new ArrayList<Tuple2D<Point, Point>>(Arrays.asList(p));
+        this.anchors = new ArrayList<>(Arrays.asList(p));
     }
 
     /**
@@ -80,7 +80,7 @@ public class WarpMap2D {
         }
 
         public void triangulate() {
-            HashMap<Point, TriangulatedPoint> map = new HashMap<Point, TriangulatedPoint>();
+            HashMap<Point, TriangulatedPoint> map = new HashMap<>();
             for (Point p : l) {
                 TriangulatedPoint tp = new TriangulatedPoint();
                 if (map.containsKey(p)) {
@@ -105,6 +105,6 @@ public class WarpMap2D {
 
     class TriangulatedPoint {
 
-        TreeMap<Double, TriangulatedPoint> neighbors = new TreeMap<Double, TriangulatedPoint>();
+        TreeMap<Double, TriangulatedPoint> neighbors = new TreeMap<>();
     }
 }

@@ -47,7 +47,7 @@ public class BatchFilter {
      * @since 1.3.1
      */
     public static List<AArrayFilter> copy(List<AArrayFilter> filters) {
-        List<AArrayFilter> copies = new ArrayList<AArrayFilter>(filters.size());
+        List<AArrayFilter> copies = new ArrayList<>(filters.size());
         for (AArrayFilter filter : filters) {
             copies.add((AArrayFilter) filter.copy());
         }
@@ -55,10 +55,10 @@ public class BatchFilter {
     }
 
     /**
-     * Applies filters in argument list to the provided array.
-     * The array is returned unchanged, if the filters list is empty.
+     * Applies filters in argument list to the provided array. The array is
+     * returned unchanged, if the filters list is empty.
      *
-     * @param a       the array to be filtered
+     * @param a the array to be filtered
      * @param filters the filters to be applied
      * @return the filtered array
      */
@@ -66,7 +66,7 @@ public class BatchFilter {
         Array b = a;
         for (AArrayFilter filter : filters) {
             LoggerFactory.getLogger(BatchFilter.class).info(
-                "Applying Filter: {}", filter.getClass().getName());
+                    "Applying Filter: {}", filter.getClass().getName());
             b = filter.apply(b);
         }
         return b;

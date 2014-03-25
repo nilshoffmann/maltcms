@@ -56,8 +56,8 @@ public class XYZChart extends AChart<XYPlot> {
     private String title = "";
 
     public XYZChart(final String title1, final String name1,
-        final String xaxis1, final String yaxis1, final Array x1,
-        final ArrayList<Array> y1, final ArrayList<Array> z1) {
+            final String xaxis1, final String yaxis1, final Array x1,
+            final ArrayList<Array> y1, final ArrayList<Array> z1) {
         EvalTools.eqI(y1.size(), z1.size(), this);
         this.x = x1;
         this.y = y1;
@@ -77,11 +77,11 @@ public class XYZChart extends AChart<XYPlot> {
         double u = 0.0d, v = 0.0d, w = 0.0d;
         int cnt = 0;
         this.log.info("Creating dataset: {}x{}", this.x.getShape(), this.y
-            .size());
+                .size());
         int zerocnt = 0;
         for (int i = 0; i < this.x.getShape()[0]; i++) {
             this.log.info("Processing scan {} of {}", i,
-                this.x.getShape()[0] - 1);
+                    this.x.getShape()[0] - 1);
             u = this.x.getDouble(xi.set(i));
             final Array mzs = this.y.get(i);
             final Array ints = this.z.get(i);
@@ -104,7 +104,7 @@ public class XYZChart extends AChart<XYPlot> {
         data.addSeries(this.name, d);
         final XYBlockRenderer r = new XYBlockRenderer();
         final XYPlot p = new XYPlot(data, new NumberAxis(this.xaxis),
-            new NumberAxis(this.yaxis), r);
+                new NumberAxis(this.yaxis), r);
         p.setDomainCrosshairVisible(false);
         return p;
     }

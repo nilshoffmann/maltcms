@@ -62,8 +62,8 @@ public class PeakSeparator {
      * @param rts
      */
     public void startSeparationFor(List<PeakArea2D> peakAreaList,
-        IScanLine slc,
-        Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rts) {
+            IScanLine slc,
+            Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rts) {
 
         this.rt1 = rts.getFirst();
         this.rt2 = rts.getSecond();
@@ -73,7 +73,7 @@ public class PeakSeparator {
         long start = System.currentTimeMillis();
         log.info("Checking integrity:");
         PeakArea2D pa1, pa2;
-        Map<PeakArea2D, List<PeakArea2D>> overlapping = new HashMap<PeakArea2D, List<PeakArea2D>>();
+        Map<PeakArea2D, List<PeakArea2D>> overlapping = new HashMap<>();
         for (int i = 0; i < peakAreaList.size(); i++) {
             if (i % 10 == 0) {
                 log.info("	{} checked", i);
@@ -83,7 +83,7 @@ public class PeakSeparator {
                 pa2 = peakAreaList.get(j);
                 if (i != j) {
                     if (pa2.regionContains(pa1.getSeedPoint())
-                        || pa1.regionContains(pa2.getSeedPoint())) {
+                            || pa1.regionContains(pa2.getSeedPoint())) {
                         if (overlapping.containsKey(pa1)) {
                             overlapping.get(pa1).add(pa2);
                             // log.info("  " + pa1.toString() + "<-" +
@@ -108,7 +108,7 @@ public class PeakSeparator {
                                 }
                             }
                             if (!added) {
-                                List<PeakArea2D> l = new ArrayList<PeakArea2D>();
+                                List<PeakArea2D> l = new ArrayList<>();
                                 l.add(pa2);
                                 overlapping.put(pa1, l);
                                 // log.info("N " + pa1.toString() + "<-" +
@@ -135,8 +135,8 @@ public class PeakSeparator {
         // + " peaks");
         // }
         log.info("Checking integrity take {} ms",
-            System.currentTimeMillis()
-            - start);
+                System.currentTimeMillis()
+                - start);
 
         start = System.currentTimeMillis();
         int separated = 0, merged = 0;
@@ -145,9 +145,9 @@ public class PeakSeparator {
                 overlapping.get(pa).add(pa);
             }
             log.info("	class " + c++ + ": " + overlapping.get(pa).size()
-                + " peaks");
+                    + " peaks");
             if (shouldBeSeparated(overlapping.get(pa), separationSimilarity, slc,
-                useMeanMsForSeparation)) {
+                    useMeanMsForSeparation)) {
                 separatePeaks(overlapping.get(pa), similarity, slc);
                 separated++;
             } else {
@@ -183,7 +183,7 @@ public class PeakSeparator {
             // }
         }
 
-        List<PeakArea2D> remove = new ArrayList<PeakArea2D>();
+        List<PeakArea2D> remove = new ArrayList<>();
         for (PeakArea2D pa : peakAreaList) {
             if (pa.isMerged()) {
                 remove.add(pa);
@@ -197,7 +197,7 @@ public class PeakSeparator {
         log.info("	merged {} peak classes", merged);
 
         log.info("Separation take {} ms", System.currentTimeMillis()
-            - start);
+                - start);
     }
 
     private double[] getRT1RT2ForSeed(Point p) {
@@ -221,7 +221,7 @@ public class PeakSeparator {
      * @return
      */
     public boolean shouldBeSeparated(List<PeakArea2D> list,
-        IScalarArraySimilarity similarity, IScanLine slc, boolean useMeanMs) {
+            IScalarArraySimilarity similarity, IScanLine slc, boolean useMeanMs) {
 
         double min = Double.POSITIVE_INFINITY, c;
         double minG = Double.POSITIVE_INFINITY, g;
@@ -232,12 +232,12 @@ public class PeakSeparator {
                 pa2 = list.get(j);
                 if (useMeanMs) {
                     c = similarity.apply(new double[]{}, new double[]{}, pa1.
-                        getMeanMS(), pa2.getMeanMS());
+                            getMeanMS(), pa2.getMeanMS());
                 } else {
                     //TODO should at least gibt scan index difference to distance class
                     c = similarity.apply(getRT1RT2ForSeed(pa1.getSeedPoint()),
-                        getRT1RT2ForSeed(pa2.getSeedPoint()),
-                        pa1.getSeedMS(), pa2.getSeedMS());
+                            getRT1RT2ForSeed(pa2.getSeedPoint()),
+                            pa1.getSeedMS(), pa2.getSeedMS());
                     // log.info("		Score(" + pa1.getSeedPoint().x + ", "
                     // + pa1.getSeedPoint().y + " - " + pa2.getSeedPoint().x
                     // + ", " + pa2.getSeedPoint().y + "): {}", c);
@@ -254,7 +254,7 @@ public class PeakSeparator {
             }
         }
         log.info("		Min: " + min + " < {} = {}", this.minDist,
-            min < this.minDist);
+                min < this.minDist);
 
         // return (min < this.minDist) || (minG < 0.4d);
         return (min < this.minDist);
@@ -267,12 +267,12 @@ public class PeakSeparator {
      * @param slc
      */
     public void separatePeaks(List<PeakArea2D> list,
-        IScalarArraySimilarity similarity, IScanLine slc) {
+            IScalarArraySimilarity similarity, IScanLine slc) {
 
 //        distance = new Array2DTimePenalized();
         // ((Array2DTimePenalized) distance).setSEcondTolerance(2.0d);
         // ((Array2DTimePenalized) distance).setFirstTolerance(50.0d);
-        List<Point> area = new ArrayList<Point>();
+        List<Point> area = new ArrayList<>();
         for (PeakArea2D pa : list) {
             for (Point p : pa.getRegionPoints()) {
                 if (!area.contains(p)) {
@@ -297,8 +297,8 @@ public class PeakSeparator {
 //                        * (double) slc.getScansPerModulation();
 //                rt2diff = Math.abs(p.y - pa.getSeedPoint().y);
                 aD = similarity.apply(getRT1RT2ForSeed(p),
-                    getRT1RT2ForSeed(pa.getSeedPoint()),
-                    pa.getSeedMS(), slc.getMassSpectrum(p));
+                        getRT1RT2ForSeed(pa.getSeedPoint()),
+                        pa.getSeedMS(), slc.getMassSpectrum(p));
                 if (aD > maxD) {
                     maxD = aD;
                     maxArg = c;
@@ -307,7 +307,7 @@ public class PeakSeparator {
             }
             if (maxArg >= 0 && !list.isEmpty()) {
                 list.get(maxArg).addRegionPoint(p, slc.getMassSpectrum(p),
-                    ArrayTools.integrate(slc.getMassSpectrum(p)));
+                        ArrayTools.integrate(slc.getMassSpectrum(p)));
             }
         }
 
@@ -322,7 +322,7 @@ public class PeakSeparator {
      * @param slc
      */
     public void mergePeaks(List<PeakArea2D> list,
-        IScanLine slc) {
+            IScanLine slc) {
 
         double max = Double.NEGATIVE_INFINITY;
         int maxArg = -1;
@@ -339,7 +339,7 @@ public class PeakSeparator {
             if (i != maxArg) {
                 for (Point p : list.get(i).getRegionPoints()) {
                     pa.addRegionPoint(p, slc.getMassSpectrum(p),
-                        ArrayTools.integrate(slc.getMassSpectrum(p)));
+                            ArrayTools.integrate(slc.getMassSpectrum(p)));
                 }
                 list.get(i).setMerged(true);
             }
@@ -358,13 +358,13 @@ public class PeakSeparator {
     }
 
     private double e3(double x1, double y1, double i1, double x2, double y2,
-        double i2) {
+            double i2) {
         return Math.sqrt(x1 * x2 + y1 * y2 + i1 * i2);
     }
 
     @SuppressWarnings("unused")
     private double getGeodesicDist(PeakArea2D pa1, PeakArea2D pa2,
-        List<ArrayDouble.D1> intensities) {
+            List<ArrayDouble.D1> intensities) {
 
         Point p1, p2;
         if (pa1.getSeedPoint().x < pa2.getSeedPoint().x) {
@@ -376,8 +376,8 @@ public class PeakSeparator {
         }
 
         double e3Dist = e3(p1.getX(), p1.getY(), intensities.get(p1.x).get(p1.y),
-            p2.getX(), p2.getY(), intensities.get(p2.x).get(
-                p2.y));
+                p2.getX(), p2.getY(), intensities.get(p2.x).get(
+                        p2.y));
 
         double g1 = 0, i, li = Double.MAX_VALUE;
         int ly = -1, lx = -1;
@@ -418,9 +418,9 @@ public class PeakSeparator {
 
         if (ly != -1) {
             g1 = e3(p1.getX(), p1.getY(), intensities.get(p1.x).get(p1.y), lx,
-                ly, li)
-                + e3(lx, ly, li, p2.getX(), p2.getY(), intensities.get(p2.x).
-                    get(p2.y));
+                    ly, li)
+                    + e3(lx, ly, li, p2.getX(), p2.getY(), intensities.get(p2.x).
+                            get(p2.y));
         }
 
         double s = e3Dist / g1;

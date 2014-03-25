@@ -44,11 +44,11 @@ public interface IPeakIntegration extends IConfigurable {
     /**
      * Integrate the peak area and adds the sum to the PeakArea.
      *
-     * @param peak     peak
-     * @param ff       file fragment
-     * @param otic     tic for integration
+     * @param peak peak
+     * @param ff file fragment
+     * @param otic tic for integration
      * @param workflow workflow
      */
     void integrate(final Peak2D peak, final IFileFragment ff,
-        final List<Array> otic, final IWorkflow workflow);
+            final List<Array> otic, final IWorkflow workflow);
 }

@@ -106,7 +106,7 @@ public class TICPeakFinder extends AFragmentCommand {
     private IBaselineEstimator baselineEstimator = new LoessMinimaBaselineEstimator();
     @Configurable
     private List<AArrayFilter> filter = Arrays.asList(
-        (AArrayFilter) new MultiplicationFilter());
+            (AArrayFilter) new MultiplicationFilter());
     @Configurable
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
@@ -121,38 +121,38 @@ public class TICPeakFinder extends AFragmentCommand {
         log.info("Searching for peaks");
         // create new ProgressResult
         final DefaultWorkflowProgressResult dwpr = new DefaultWorkflowProgressResult(
-            t.getSize(), this, getWorkflowSlot());
+                t.getSize(), this, getWorkflowSlot());
         ICompletionService<TICPeakFinderWorkerResult> completionService = createCompletionService(TICPeakFinderWorkerResult.class);
         for (final IFileFragment f : t) {
-            List<IPeakNormalizer> peakNormalizerCopy = new ArrayList<IPeakNormalizer>();
+            List<IPeakNormalizer> peakNormalizerCopy = new ArrayList<>();
             for (IPeakNormalizer normalizer : peakNormalizers) {
                 peakNormalizerCopy.add((IPeakNormalizer) normalizer.copy());
             }
             TICPeakFinderWorker tpf = new TICPeakFinderWorker(
-                getWorkflow().getOutputDirectory(this),
-                f.getUri(),
-                integratePeaks,
-                integrateTICPeaks,
-                integrateRawTic,
-                saveGraphics,
-                removeOverlappingPeaks,
-                peakThreshold,
-                peakSeparationWindow,
-                snrWindow,
-                (IBaselineEstimator) baselineEstimator.copy(),
-                BatchFilter.copy(filter),
-                peakNormalizerCopy,
-                ticVarName,
-                satVarName,
-                ticPeakVarName,
-                ticFilteredVarName,
-                ConfigurationConverter.getProperties(Factory.getInstance().getConfiguration())
+                    getWorkflow().getOutputDirectory(this),
+                    f.getUri(),
+                    integratePeaks,
+                    integrateTICPeaks,
+                    integrateRawTic,
+                    saveGraphics,
+                    removeOverlappingPeaks,
+                    peakThreshold,
+                    peakSeparationWindow,
+                    snrWindow,
+                    (IBaselineEstimator) baselineEstimator.copy(),
+                    BatchFilter.copy(filter),
+                    peakNormalizerCopy,
+                    ticVarName,
+                    satVarName,
+                    ticPeakVarName,
+                    ticFilteredVarName,
+                    ConfigurationConverter.getProperties(Factory.getInstance().getConfiguration())
             );
             completionService.submit(tpf);
             // notify workflow
         }
         try {
-            List<URI> resultsUris = new ArrayList<URI>();
+            List<URI> resultsUris = new ArrayList<>();
             List<TICPeakFinderWorkerResult> results = completionService.call();
             for (TICPeakFinderWorkerResult res : results) {
                 resultsUris.add(res.getResultUri());
@@ -167,7 +167,7 @@ public class TICPeakFinder extends AFragmentCommand {
         } catch (Exception e) {
             log.warn("Caught exception while waiting for results: ", e);
         }
-        return new TupleND<IFileFragment>();
+        return new TupleND<>();
     }
 
     @Override
@@ -175,12 +175,12 @@ public class TICPeakFinder extends AFragmentCommand {
         log.debug("Configure called on TICPeakFinder");
         this.ticPeakVarName = cfg.getString("var.tic_peaks", "tic_peaks");
         this.ticVarName = cfg.getString("var.total_intensity",
-            "total_intensity");
+                "total_intensity");
         this.satVarName = cfg.getString("var.scan_acquisition_time",
-            "scan_acquisition_time");
+                "scan_acquisition_time");
         this.ticPeakVarName = cfg.getString("var.tic_peaks", "tic_peaks");
         this.ticFilteredVarName = cfg.getString("var.tic_filtered",
-            "tic_filtered");
+                "tic_filtered");
     }
 
     /**

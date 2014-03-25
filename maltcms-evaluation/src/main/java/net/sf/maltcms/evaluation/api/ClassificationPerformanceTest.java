@@ -76,7 +76,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         gt[4] = new double[]{6.7, 6.65, 6.71};
         gt[5] = new double[]{7.23, 7.12, 7.123};
 
-        List<EntityGroup> gtl = new ArrayList<EntityGroup>();
+        List<EntityGroup> gtl = new ArrayList<>();
         for (int i = 0; i < gt.length; i++) {
             Entity[] e = new Entity[gt[i].length];
             for (int j = 0; j < e.length; j++) {
@@ -94,7 +94,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         data[4] = new double[]{6.34999, 6.321, Double.NaN};
         data[5] = new double[]{7.23, Double.NaN, 7.12};
 
-        List<EntityGroup> datal = new ArrayList<EntityGroup>();
+        List<EntityGroup> datal = new ArrayList<>();
         for (int i = 0; i < data.length; i++) {
             Entity[] e = new Entity[data[i].length];
             for (int j = 0; j < e.length; j++) {
@@ -104,7 +104,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
             datal.add(eg);
         }
 
-        ClassificationPerformanceTest<PeakRTFeatureVector> cpt = new ClassificationPerformanceTest<PeakRTFeatureVector>(gtl, new PeakRTFeatureVectorComparator(0.02));
+        ClassificationPerformanceTest<PeakRTFeatureVector> cpt = new ClassificationPerformanceTest<>(gtl, new PeakRTFeatureVectorComparator(0.02));
         System.out.println(cpt.performTest("test", datal));
     }
 
@@ -133,7 +133,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
 //        HashSet<EntityGroup> matchedToolGroups = new HashSet<EntityGroup>();
 //        HashSet<EntityGroup> matchedGroundTruthGroups = new HashSet<EntityGroup>();
 //        HashMap<EntityGroup, EntityGroup> gtToToolGroups = new HashMap<EntityGroup, EntityGroup>();
-        HashMap<EntityGroup, EntityGroupClassificationResult> gtToClsRes = new LinkedHashMap<EntityGroup, EntityGroupClassificationResult>();
+        HashMap<EntityGroup, EntityGroupClassificationResult> gtToClsRes = new LinkedHashMap<>();
 
         int M = 0;
         for (EntityGroup eg : testGroup) {
@@ -213,7 +213,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
 //                //unmatchedTool.addAll(tgEg.getEntities());
 //            }
         }
-        HashSet<EntityGroup> matchedToolGroups = new LinkedHashSet<EntityGroup>();
+        HashSet<EntityGroup> matchedToolGroups = new LinkedHashSet<>();
         int tp = 0, tn = 0, fp = 0, fn = 0;
         double dist = 0;
         for (EntityGroup gtGroup : gtToClsRes.keySet()) {
@@ -226,11 +226,11 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
             EntityGroup toolGroup = gtToClsRes.get(gtGroup).getToolEntityGroup();
             matchedToolGroups.add(toolGroup);
         }
-        HashSet<EntityGroup> unmatchedToolGroups = new LinkedHashSet<EntityGroup>(testGroup);
+        HashSet<EntityGroup> unmatchedToolGroups = new LinkedHashSet<>(testGroup);
         unmatchedToolGroups.removeAll(matchedToolGroups);
 
-        HashSet<EntityGroup> matchedGTGroups = new LinkedHashSet<EntityGroup>(gtToClsRes.keySet());
-        HashSet<EntityGroup> unmatchedGTGroups = new LinkedHashSet<EntityGroup>(groundTruth);
+        HashSet<EntityGroup> matchedGTGroups = new LinkedHashSet<>(gtToClsRes.keySet());
+        HashSet<EntityGroup> unmatchedGTGroups = new LinkedHashSet<>(groundTruth);
         unmatchedGTGroups.removeAll(matchedGTGroups);
 
         System.out.println(matchedToolGroups.size() + "/" + testGroup.size() + " tool entityGroups were assigned ");
@@ -629,9 +629,9 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
             return true;
         }
         System.err.println("Categories differ between ground truth and test group!");
-        List<Category> gtList = new ArrayList<Category>(gtCats);
+        List<Category> gtList = new ArrayList<>(gtCats);
         Collections.sort(gtList);
-        List<Category> tgList = new ArrayList<Category>(gtList);
+        List<Category> tgList = new ArrayList<>(gtList);
         Collections.sort(tgList);
         System.err.println("GroundTruth: " + gtList);
         System.err.println("TestGroup:" + tgList);

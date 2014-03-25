@@ -210,8 +210,8 @@ public class UPGMAAlgorithm extends ClusteringAlgorithm {
     }
 
     public UPGMAAlgorithm(final double[][] distances,
-        final TupleND<IFileFragment> fragments,
-        final PairwiseFeatureSequenceSimilarity ld) {
+            final TupleND<IFileFragment> fragments,
+            final PairwiseFeatureSequenceSimilarity ld) {
         final String[] names = new String[fragments.getSize()];
         final Iterator<IFileFragment> iter = fragments.getIterator();
         int i = 0;
@@ -229,21 +229,21 @@ public class UPGMAAlgorithm extends ClusteringAlgorithm {
         final int ni = getCluster(i).getSize();
         final int nj = getCluster(j).getSize();
         log.debug("ICluster " + getCluster(i).getID() + " has " + ni
-            + (ni == 1 ? " child" : " children") + ", cluster "
-            + getCluster(j).getID() + " has " + nj
-            + (nj == 1 ? " child" : " children"));
+                + (ni == 1 ? " child" : " children") + ", cluster "
+                + getCluster(j).getID() + " has " + nj
+                + (nj == 1 ? " child" : " children"));
         final int sij = ni + nj;
         for (int m = 0; m < k; m++) {
             if (!getUsedIndices().contains(m) && !getUsedIndices().contains(k)
-                && (m != i) && (m != j)) {
+                    && (m != i) && (m != j)) {
                 setd(
-                    k,
-                    m,
-                    (((double) ni / (double) sij) * d(i, m) + ((double) nj / (double) sij)
-                    * d(j, m)));
+                        k,
+                        m,
+                        (((double) ni / (double) sij) * d(i, m) + ((double) nj / (double) sij)
+                        * d(j, m)));
                 dmat[m] = d(Math.max(i, m), Math.min(j, m));
                 log.info("Distance from cluster k={} to m={} ={}",
-                    new Object[]{k, getCluster(m).getName(), dmat[m]});
+                        new Object[]{k, getCluster(m).getName(), dmat[m]});
             }
         }
         return dmat;
@@ -255,12 +255,12 @@ public class UPGMAAlgorithm extends ClusteringAlgorithm {
         int i = -1;
         int j = -1;
         double mind = isMinimizing() ? Double.POSITIVE_INFINITY
-            : Double.NEGATIVE_INFINITY;
+                : Double.NEGATIVE_INFINITY;
         for (int m = 0; m < numclust; m++) {
             for (int n = 0; n < numclust; n++) {
                 if (n != m) {
                     if (!getUsedIndices().contains(m)
-                        && !getUsedIndices().contains(n)) {
+                            && !getUsedIndices().contains(n)) {
                         final double d = d(m, n);
                         if (isMinimizing()) {
                             if (d < mind) {
@@ -294,12 +294,12 @@ public class UPGMAAlgorithm extends ClusteringAlgorithm {
 
     @Override
     public void joinIJtoK(final int i, final int j, final int k,
-        final double[] dist) {
+            final double[] dist) {
         final double dij = d(i, j);
         final double dik = dij / 2.0d;
         final double djk = dik;
         final BinaryCluster njc = new BinaryCluster(getCluster(i),
-            getCluster(j), dik, djk, dist, k);
+                getCluster(j), dik, djk, dist, k);
         putCluster(k, njc);
         printDistanceToNewCluster(i, j, k);
         getUsedIndices().add(i);

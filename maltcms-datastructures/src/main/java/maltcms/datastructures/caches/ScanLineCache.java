@@ -79,7 +79,7 @@ public class ScanLineCache implements IScanLine {
     private int lastIndex = -1;
     private final int scansPerModulation;
 //	private int binSize = -1;
-    private final HashMap<Integer, SoftReference<List<Array>>> cache = new HashMap<Integer, SoftReference<List<Array>>>();
+    private final HashMap<Integer, SoftReference<List<Array>>> cache = new HashMap<>();
     private int cachemiss = 0;
     private int cachehit = 0;
     private int loads = 0;
@@ -94,9 +94,9 @@ public class ScanLineCache implements IScanLine {
      * This constructor will automatically set the number of scans per
      * modulation and the last index.
      *
-     * @param iff1           file fragment
-     * @param minMass	       minimum mass
-     * @param maxMass        maximum mass
+     * @param iff1 file fragment
+     * @param minMass	minimum mass
+     * @param maxMass maximum mass
      * @param massResolution	the mass resolution
      */
     protected ScanLineCache(final IFileFragment iff1, final double minMass, final double maxMass, final double massResolution) {
@@ -115,15 +115,15 @@ public class ScanLineCache implements IScanLine {
     /**
      * Default constructor.
      *
-     * @param iff1                file fragment
+     * @param iff1 file fragment
      * @param scansPerModulation1 scans per modulation
-     * @param lastIndex1          index of the last scan
-     * @param minMass	            minimum mass
-     * @param maxMass             maximum mass
-     * @param massResolution	     the mass resolution
+     * @param lastIndex1 index of the last scan
+     * @param minMass	minimum mass
+     * @param maxMass maximum mass
+     * @param massResolution	the mass resolution
      */
     protected ScanLineCache(final IFileFragment iff1,
-        final int scansPerModulation1, final int lastIndex1, final double minMass, final double maxMass, final double massResolution) {
+            final int scansPerModulation1, final int lastIndex1, final double minMass, final double maxMass, final double massResolution) {
         this.iff = iff1;
         this.scansPerModulation = scansPerModulation1;
         this.lastIndex = lastIndex1;
@@ -134,12 +134,12 @@ public class ScanLineCache implements IScanLine {
     }
 
     private void setUpxyIndexMap() {
-        this.xyToScanIndexMap = new ArrayList<List<Integer>>();
+        this.xyToScanIndexMap = new ArrayList<>();
         final Array secondScanIndex = this.iff.getChild(this.secondColumnIndexVar).getArray();
         final IndexIterator iter = secondScanIndex.getIndexIterator();
         int lastScanIndex = iter.getIntNext();
         while (iter.hasNext()) {
-            List<Integer> tmpList = new ArrayList<Integer>();
+            List<Integer> tmpList = new ArrayList<>();
             final int currentScanIndex = iter.getIntNext();
             for (; lastScanIndex < currentScanIndex; lastScanIndex++) {
                 tmpList.add(lastScanIndex);
@@ -155,11 +155,11 @@ public class ScanLineCache implements IScanLine {
     public void configure(final Configuration cfg) {
         this.massValuesVar = cfg.getString("var.mass_values", "mass_values");
         this.intensityValuesVar = cfg.getString("var.intensity_values",
-            "intensity_values");
+                "intensity_values");
         this.scanIndexVar = cfg.getString("var.scan_index", "scan_index");
         this.maxRangeVar = cfg.getString("var.mass_range_max", "mass_range_max");
         this.modulationVar = cfg.getString("var.modulation_time",
-            "modulation_time");
+                "modulation_time");
         this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
     }
 
@@ -193,6 +193,7 @@ public class ScanLineCache implements IScanLine {
      *
      * @return bin size
      */
+    @Override
     public int getBinsSize() {
         return MaltcmsTools.getNumberOfIntegerMassBins(minMass, maxMass, massResolution);
     }
@@ -202,6 +203,7 @@ public class ScanLineCache implements IScanLine {
      *
      * @return
      */
+    @Override
     public boolean getCacheModulation() {
         return this.cacheModulations;
     }
@@ -211,6 +213,7 @@ public class ScanLineCache implements IScanLine {
      *
      * @return last index
      */
+    @Override
     public int getLastIndex() {
         return this.lastIndex;
     }
@@ -222,7 +225,7 @@ public class ScanLineCache implements IScanLine {
     public Array getMassSpectrum(final int x, final int y) {
         try {
             if ((x >= 0) && (y >= 0) && (y < this.scansPerModulation)
-                && (x < this.getScanLineCount())) {
+                    && (x < this.getScanLineCount())) {
                 return getScanlineMS(x).get(y);
             } else {
                 return null;
@@ -245,6 +248,7 @@ public class ScanLineCache implements IScanLine {
      *
      * @return scan line count
      */
+    @Override
     public int getScanLineCount() {
         return (this.lastIndex / this.scansPerModulation);
     }
@@ -255,6 +259,7 @@ public class ScanLineCache implements IScanLine {
      * @param x scan line number
      * @return complete ms list of this scan line
      */
+    @Override
     public List<Array> getScanlineMS(final int x) {
         this.loads++;
         if (this.scanIndex == null) {
@@ -266,9 +271,9 @@ public class ScanLineCache implements IScanLine {
         }
         if (this.massIntensities == null) {
             this.massIntensities = this.iff.getChild(this.intensityValuesVar,
-                true);
+                    true);
         }
-        final Integer scan = Integer.valueOf(x);
+        final Integer scan = x;
         if (this.cache.containsKey(scan)) {
             final List<Array> l = this.cache.get(scan).get();
             if (l != null) {
@@ -317,17 +322,17 @@ public class ScanLineCache implements IScanLine {
             final List<Array> massValuesA = this.massValues.getIndexedArray();
             final List<Array> massIntensitiesA = this.massIntensities.getIndexedArray();
 
-            final List<Array> normalized = new ArrayList<Array>();
+            final List<Array> normalized = new ArrayList<>();
             for (int i = 0; (i < massValuesA.size())
-                && (i < massIntensitiesA.size()); i++) {
+                    && (i < massIntensitiesA.size()); i++) {
                 normalized.add(ArrayTools2.normalize(massValuesA.get(i),
-                    massIntensitiesA.get(i), massResolution, this.log, minMass, maxMass));
+                        massIntensitiesA.get(i), massResolution, this.log, minMass, maxMass));
             }
 
             if (this.cacheModulations) {
-                final SoftReference<List<Array>> sr = new SoftReference<List<Array>>(
-                    normalized);
-                this.cache.put(Integer.valueOf(x), sr);
+                final SoftReference<List<Array>> sr = new SoftReference<>(
+                        normalized);
+                this.cache.put(x, sr);
             }
             this.loadnew++;
             return normalized;
@@ -341,6 +346,7 @@ public class ScanLineCache implements IScanLine {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setCacheModulations(final boolean cacheMod) {
         this.cacheModulations = cacheMod;
     }
@@ -350,6 +356,7 @@ public class ScanLineCache implements IScanLine {
      *
      * @param index last index
      */
+    @Override
     public void setLastIndex(final int index) {
         this.lastIndex = index;
     }
@@ -357,6 +364,7 @@ public class ScanLineCache implements IScanLine {
     /**
      * Will view some statistical information about the cache usage.
      */
+    @Override
     public void showStat() {
         this.log.info("Statistic for ScanLineCache:");
         this.log.info("	Loads    : {}", this.loads);
@@ -368,7 +376,7 @@ public class ScanLineCache implements IScanLine {
     @Override
     public List<Tuple2D<Array, Array>> getScanlineSparseMS(int x) {
         throw new NotImplementedException(
-            "SLC don't support sparse MS yet. Please use SparseScanlineCache or CachedScanLineList instead.");
+                "SLC don't support sparse MS yet. Please use SparseScanlineCache or CachedScanLineList instead.");
     }
 
     @Override

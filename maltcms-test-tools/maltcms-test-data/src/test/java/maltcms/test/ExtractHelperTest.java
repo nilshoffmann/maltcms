@@ -30,8 +30,8 @@ package maltcms.test;
 import java.io.File;
 import java.io.IOException;
 import org.junit.Assert;
-import org.junit.Test;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
@@ -49,17 +49,17 @@ public class ExtractHelperTest {
         ExtractHelper.typeToPaths.clear();
         //manually add only one file per type category
         ExtractHelper.typeToPaths.put(ExtractHelper.FType.CDF_1D, new String[]{
-                    "/cdf/1D/glucoseA.cdf.gz"
-                });
+            "/cdf/1D/glucoseA.cdf.gz"
+        });
         ExtractHelper.typeToPaths.put(ExtractHelper.FType.MZML, new String[]{
-                    "/mzML/MzMLFile_PDA.mzML.xml.gz"});
+            "/mzML/MzMLFile_PDA.mzML.xml.gz"});
         ExtractHelper.typeToPaths.put(ExtractHelper.FType.MZDATA, new String[]{
-                    "/mzData/tiny1.mzData1.05.mzData.xml.gz"
-                });
+            "/mzData/tiny1.mzData1.05.mzData.xml.gz"
+        });
         ExtractHelper.typeToPaths.put(ExtractHelper.FType.MZXML, new String[]{
-                    "/mzXML/tiny1.mzXML3.0.mzXML.gz"});
+            "/mzXML/tiny1.mzXML3.0.mzXML.gz"});
         ExtractHelper.typeToPaths.put(ExtractHelper.FType.MZ5, new String[]{
-                    "/mz5/small_raw.mz5.gz"});
+            "/mz5/small_raw.mz5.gz"});
         //CDF 1D
         ExtractHelper.FType type = ExtractHelper.FType.CDF_1D;
         File[] files = ExtractHelper.extractAllForType(tf.newFolder(type.name()), type);

@@ -44,8 +44,8 @@ public class DefaultTaskResult implements ITaskResult {
     private final List<File> taskOutputs;
 
     public DefaultTaskResult() {
-        taskInputs = new LinkedList<File>();
-        taskOutputs = new LinkedList<File>();
+        taskInputs = new LinkedList<>();
+        taskOutputs = new LinkedList<>();
     }
     public static final ITaskResult EMPTY = new EmptyTaskResult();
 

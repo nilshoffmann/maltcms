@@ -3,18 +3,17 @@
  * ---------------------------------------------------------------------------
  * File: * @(#) IndexParser.java * Author: * Ning Zhang
  * nzhang@systemsbiology.org
- * ****************************************************************************** * * *
- * This software is provided ``AS IS'' and any express or implied
+ * ******************************************************************************
+ * * * * This software is provided ``AS IS'' and any express or implied
  * warranties, including, but not limited to, the implied warranties of
- * merchantability and fitness for a particular purpose, are disclaimed. In
- * no event shall the authors or the Institute for Systems Biology liable
- * for any direct, indirect, incidental, special, exemplary, or
- * consequential damages (including, but not limited to, procurement of
- * substitute goods or services; loss of use, data, or profits; or business
- * interruption) however caused and on any theory of liability, whether in
- * contract, strict liability, or tort (including negligence or otherwise)
- * arising in any way out of the use of this software, even if advised of
- * the possibility of such damage.
+ * merchantability and fitness for a particular purpose, are disclaimed. In no
+ * event shall the authors or the Institute for Systems Biology liable for any
+ * direct, indirect, incidental, special, exemplary, or consequential damages
+ * (including, but not limited to, procurement of substitute goods or services;
+ * loss of use, data, or profits; or business interruption) however caused and
+ * on any theory of liability, whether in contract, strict liability, or tort
+ * (including negligence or otherwise) arising in any way out of the use of this
+ * software, even if advised of the possibility of such damage.
  * *****************************************************************************
  */
 package org.systemsbiology.jrap.staxnxt;
@@ -29,15 +28,15 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- * dhmay 20091021:
- * -Incorporating Vagisha's changes to close files, merging in my changes for mzML 1.1 support
- * -adding a debug flag for messages that probably don't need to be displayed every time
+ * dhmay 20091021: -Incorporating Vagisha's changes to close files, merging in
+ * my changes for mzML 1.1 support -adding a debug flag for messages that
+ * probably don't need to be displayed every time
  *
  */
 public class IndexParser {
 
     String inputMZXMLfilename;
-    Map<Integer, Long> offsetMap = new HashMap<Integer, Long>(10000);
+    Map<Integer, Long> offsetMap = new HashMap<>(10000);
 
     //for mzML
     long chrogramIndex = -1;
@@ -125,7 +124,7 @@ public class IndexParser {
             if (debug) {
                 System.out.println("indexPosition is " + indexPosition);
             }
-        } catch (Exception e) {
+        } catch (IOException | NumberFormatException e) {
             System.out.println("exception:" + e);
             e.printStackTrace();
         } finally {
@@ -227,7 +226,7 @@ public class IndexParser {
                 }
             }
 
-        } catch (Exception e) {
+        } catch (IOException | XMLStreamException | NumberFormatException e) {
             if (!(e.getMessage()).equals("IndexEndFoundException")) {
                 e.printStackTrace(System.err);
             }
@@ -250,9 +249,11 @@ public class IndexParser {
     }
 
     /**
-     * dhmay adding. mzML 1.1 changes the way scan IDs are stored in the index. They are now stored in
-     * the "idRef" attribute of "offset", which is being used to contain multiple name-value pairs; the
-     * name of the name-value pair containing the scan number is "scan", so I'm knocking off everything but that pair.
+     * dhmay adding. mzML 1.1 changes the way scan IDs are stored in the index.
+     * They are now stored in the "idRef" attribute of "offset", which is being
+     * used to contain multiple name-value pairs; the name of the name-value
+     * pair containing the scan number is "scan", so I'm knocking off everything
+     * but that pair.
      *
      * @param idString
      * @return

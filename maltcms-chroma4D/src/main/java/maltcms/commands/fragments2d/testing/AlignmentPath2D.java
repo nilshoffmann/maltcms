@@ -43,14 +43,14 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class AlignmentPath2D {
 
-    private Map<Integer, List<Integer>> LHStoRHShorizontalMap = new HashMap<Integer, List<Integer>>(),
-        LHStoRHSverticalMap = new HashMap<Integer, List<Integer>>();
-    private Map<Integer, List<Integer>> RHStoLHShorizontalMap = new HashMap<Integer, List<Integer>>(),
-        RHStoLHSverticalMap = new HashMap<Integer, List<Integer>>();
+    private Map<Integer, List<Integer>> LHStoRHShorizontalMap = new HashMap<>(),
+            LHStoRHSverticalMap = new HashMap<>();
+    private Map<Integer, List<Integer>> RHStoLHShorizontalMap = new HashMap<>(),
+            RHStoLHSverticalMap = new HashMap<>();
     private List<Point> horizontalList, verticalList;
 
     private AlignmentPath2D(final List<Point> horizontal,
-        final List<Point> vertical) {
+            final List<Point> vertical) {
         this.horizontalList = horizontal;
         this.verticalList = vertical;
 

@@ -48,7 +48,7 @@ public class BBHFinder {
         if (laassociation == lbassociation) {
             return matchedPeaks;
         }
-        Map<UUID, IBipacePeak> peaks = new HashMap<UUID, IBipacePeak>();
+        Map<UUID, IBipacePeak> peaks = new HashMap<>();
         for (IBipacePeak p : b) {
             peaks.put(p.getUniqueId(), p);
         }

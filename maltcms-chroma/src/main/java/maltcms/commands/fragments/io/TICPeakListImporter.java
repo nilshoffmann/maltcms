@@ -93,7 +93,7 @@ public class TICPeakListImporter extends AFragmentCommand {
      */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-        TupleND<IFileFragment> retf = new TupleND<IFileFragment>();
+        TupleND<IFileFragment> retf = new TupleND<>();
         //check for wildcard arguments
         if (this.filesToRead.size() == 1) {
             log.info("Parsing filesToRead as wildcard expression");
@@ -116,31 +116,31 @@ public class TICPeakListImporter extends AFragmentCommand {
 
             for (String s : this.filesToRead) {
                 if (StringTools.removeFileExt(s).endsWith(
-                    StringTools.removeFileExt(ff.getName()))) {
+                        StringTools.removeFileExt(ff.getName()))) {
                     log.warn("Loading TIC peaks from file {}", s);
                     IFileFragment work = new FileFragment(new File(
-                        getWorkflow().getOutputDirectory(this),
-                        ff.getName()));
+                            getWorkflow().getOutputDirectory(this),
+                            ff.getName()));
                     work.addSourceFile(ff);
                     CSVReader csvr = Factory.getInstance().getObjectFactory().
-                        instantiate(CSVReader.class);
+                            instantiate(CSVReader.class);
                     Tuple2D<Vector<Vector<String>>, Vector<String>> table;
                     try {
                         table = csvr.read(new FileInputStream(s));
                         HashMap<String, Vector<String>> hm = csvr.getColumns(
-                            table);
+                                table);
                         Vector<String> peakScanIndex = hm.get(
-                            scanIndexColumnName);
+                                scanIndexColumnName);
                         ArrayInt.D1 extr = new ArrayInt.D1(peakScanIndex.size());
                         for (int i = 0; i < peakScanIndex.size(); i++) {
                             extr.set(i,
-                                Integer.parseInt(peakScanIndex.get(i)) + scanIndexOffset);
+                                    Integer.parseInt(peakScanIndex.get(i)) + scanIndexOffset);
                         }
                         final IVariableFragment peaks = new VariableFragment(
-                            work, this.ticPeakVarName);
+                                work, this.ticPeakVarName);
                         final Dimension peak_number = new Dimension(
-                            "peak_number", peakScanIndex.size(), true,
-                            false, false);
+                                "peak_number", peakScanIndex.size(), true,
+                                false, false);
                         peaks.setDimensions(new Dimension[]{peak_number});
                         peaks.setArray(extr);
                         retf.add(work);

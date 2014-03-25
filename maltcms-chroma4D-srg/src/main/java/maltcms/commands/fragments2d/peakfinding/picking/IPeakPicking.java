@@ -41,5 +41,5 @@ public interface IPeakPicking extends IConfigurable {
     List<Point> findPeaks(IFileFragment ffO);
 
     List<Point> findPeaksNear(IFileFragment ff, Point p, int dx,
-        int dy);
+            int dy);
 }

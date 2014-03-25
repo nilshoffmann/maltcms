@@ -64,7 +64,7 @@ public class FragmentCommandMockB extends AFragmentCommand {
             IVariableFragment ivf2 = frag.getChild("variable2");
             ivf2.getArray();
             VariableFragment v5 = new VariableFragment(frag, "variable5");
-            List<Array> indexedList = new ArrayList<Array>();
+            List<Array> indexedList = new ArrayList<>();
             for (int i = 0; i < 10; i++) {
                 indexedList.add(new ArrayDouble.D1(20));
             }

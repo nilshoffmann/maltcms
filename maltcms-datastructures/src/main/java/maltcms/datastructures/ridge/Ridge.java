@@ -70,8 +70,8 @@ public class Ridge implements Comparable<Ridge> {
 
     public Ridge(Point2D seed, double seedVal) {
         this.globalScanIndex = (int) seed.getX();
-        this.ridgePoints = new LinkedList<Tuple2D<Point2D, Double>>();
-        this.ridgePoints.add(new Tuple2D<Point2D, Double>(seed, seedVal));
+        this.ridgePoints = new LinkedList<>();
+        this.ridgePoints.add(new Tuple2D<>(seed, seedVal));
         gp.moveTo(seed.getX(), seed.getY());
     }
 
@@ -90,10 +90,10 @@ public class Ridge implements Comparable<Ridge> {
     @Override
     public String toString() {
         return "first: " + ridgePoints.get(0) + " last: "
-            + ridgePoints.get(ridgePoints.size() - 1) + ", length: "
-            + ridgePoints.size() + " Maximum value at scaleIndex: "
-            + getIndexOfMaximum() + " with value "
-            + ridgePoints.get(getIndexOfMaximum()).getSecond();
+                + ridgePoints.get(ridgePoints.size() - 1) + ", length: "
+                + ridgePoints.size() + " Maximum value at scaleIndex: "
+                + getIndexOfMaximum() + " with value "
+                + ridgePoints.get(getIndexOfMaximum()).getSecond();
     }
 
     public void draw(Graphics2D g) {
@@ -107,7 +107,7 @@ public class Ridge implements Comparable<Ridge> {
     public static List<IRidgeCost> getAvailableRidgeCostClasses() {
         if (ridgeCosts == null) {
             ServiceLoader<IRidgeCost> sl = ServiceLoader.load(IRidgeCost.class);
-            List<IRidgeCost> l = new LinkedList<IRidgeCost>();
+            List<IRidgeCost> l = new LinkedList<>();
             Iterator<IRidgeCost> iter = sl.iterator();
             while (iter.hasNext()) {
                 l.add(iter.next());
@@ -132,9 +132,9 @@ public class Ridge implements Comparable<Ridge> {
 
     public List<Tuple2D<String, Double>> getRidgeCosts() {
         List<IRidgeCost> l = getAvailableRidgeCostClasses();
-        List<Tuple2D<String, Double>> d = new ArrayList<Tuple2D<String, Double>>(l.size());
+        List<Tuple2D<String, Double>> d = new ArrayList<>(l.size());
         for (IRidgeCost irc : l) {
-            d.add(new Tuple2D<String, Double>(irc.getClass().getName(), irc.getCost(this)));
+            d.add(new Tuple2D<>(irc.getClass().getName(), irc.getCost(this)));
         }
         return d;
     }
@@ -144,9 +144,9 @@ public class Ridge implements Comparable<Ridge> {
             return false;
         }
         Tuple2D<Point2D, Double> prev = this.ridgePoints
-            .get(this.ridgePoints.size() - 1);
+                .get(this.ridgePoints.size() - 1);
         int x = (int) prev.getFirst().getX();
-        double xval = prev.getSecond().doubleValue();
+        double xval = prev.getSecond();
         int minX = Math.max(0, x - scaleDiff);
         int maxX = Math.min(nextScale.length - 1, x + scaleDiff);
         int maximumR = -1;
@@ -233,7 +233,7 @@ public class Ridge implements Comparable<Ridge> {
         // 0.5*(Math.pow(ridgePoints.get(ridgePoints.size()-1).getFirst().getX()
         // - maximum, 2));
         ridgePoints.add(new Tuple2D<Point2D, Double>(new Point2D.Double(
-            maximum, scaleIdx), nextScale[maximum]));
+                maximum, scaleIdx), nextScale[maximum]));
         gp.lineTo(maximum, scaleIdx);
         double oldMax = ridgePoints.get(getIndexOfMaximum()).getSecond();
         if (nextScale[maximum] > oldMax) {

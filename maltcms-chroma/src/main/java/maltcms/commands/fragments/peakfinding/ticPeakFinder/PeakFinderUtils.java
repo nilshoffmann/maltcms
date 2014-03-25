@@ -53,7 +53,7 @@ public class PeakFinderUtils {
     }
 
     public static boolean isCandidate(final int index, final double[] values,
-        final int window) {
+            final int window) {
         final double max = MathTools.max(values, index - window, index + window);
         final double indxVal = values[index];
         if (max == indxVal) {
@@ -63,7 +63,7 @@ public class PeakFinderUtils {
     }
 
     public static boolean isMinCandidate(final int index, final double[] values,
-        final int window) {
+            final int window) {
         final double min = MathTools.min(values, index - window, index + window);
         final double indxVal = values[index];
         if (min == indxVal) {
@@ -73,32 +73,32 @@ public class PeakFinderUtils {
     }
 
     public static void checkExtremum(final double[] values, final double[] snr,
-        final ArrayList<Integer> ts, final double threshold, final int i,
-        final int window) {
+            final ArrayList<Integer> ts, final double threshold, final int i,
+            final int window) {
         EvalTools.notNull(new Object[]{values, i, threshold}, PeakFinderUtils.class);
         if ((values[i] > 0) && isAboveThreshold(snr[i], threshold)
-            && isCandidate(i, values, window)) {
+                && isCandidate(i, values, window)) {
             ts.add(i);
             log.debug(
-                "Found extremum above snr threshold {} with value {} at scan: {}",
-                new Object[]{threshold, values[i], i});
+                    "Found extremum above snr threshold {} with value {} at scan: {}",
+                    new Object[]{threshold, values[i], i});
         }
     }
 
     public static void checkMinimum(final double[] values,
-        final Collection<Integer> ts, final int i,
-        final int window) {
+            final Collection<Integer> ts, final int i,
+            final int window) {
         EvalTools.notNull(new Object[]{values, i}, PeakFinderUtils.class);
         if (isMinCandidate(i, values, window)) {
             ts.add(i);
             log.debug(
-                "Found extremum with value {} at scan: {}",
-                new Object[]{values[i], i});
+                    "Found extremum with value {} at scan: {}",
+                    new Object[]{values[i], i});
         }
     }
 
     public static boolean isMinimum(final double prev, final double current,
-        final double next) {
+            final double next) {
         if ((current < prev) && (current < next)) {
             return true;
         }
@@ -109,7 +109,7 @@ public class PeakFinderUtils {
     }
 
     public static ArrayInt.D1 createPeakCandidatesArray(final Array tic,
-        final ArrayList<Integer> ts) {
+            final ArrayList<Integer> ts) {
         EvalTools.notNull(ts, PeakFinderUtils.class);
         final ArrayInt.D1 extr = new ArrayInt.D1(ts.size());
         // checkUniformDistribution(tic.getShape()[0], ts);
@@ -120,21 +120,21 @@ public class PeakFinderUtils {
     }
 
     public static PolynomialSplineFunction findBaseline(double[] ticValues, int baselineEstimationMinimaWindow, double accuracy, double bandwidth, int robustnessIterations) {
-        final LinkedHashSet<Integer> ts = new LinkedHashSet<Integer>();
+        final LinkedHashSet<Integer> ts = new LinkedHashSet<>();
         for (int i = 0; i < ticValues.length; i++) {
             log.debug("i=" + i);
             PeakFinderUtils.checkMinimum(ticValues, ts, i,
-                baselineEstimationMinimaWindow);
+                    baselineEstimationMinimaWindow);
         }
 
         log.info("Found {} minima for baseline estimation!", ts.size());
-        ArrayList<Integer> tss = new ArrayList<Integer>(ts);
+        ArrayList<Integer> tss = new ArrayList<>(ts);
         //add the first index
-        if (!tss.get(0).equals(Integer.valueOf(0))) {
+        if (!tss.get(0).equals(0)) {
             tss.add(0, 0);
         }
         //add the last index
-        if (!tss.get(ts.size() - 1).equals(Integer.valueOf(ticValues.length - 1))) {
+        if (!tss.get(ts.size() - 1).equals(ticValues.length - 1)) {
             tss.add(ticValues.length - 1);
         }
         double[] xvalues = new double[ts.size()];

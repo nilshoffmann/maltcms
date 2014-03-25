@@ -66,7 +66,7 @@ public class MinMaxNormalizationFilter extends AArrayFilter {
         Array c = af.apply(a);
         // normalize by max-min
         final MultiplicationFilter mf = new MultiplicationFilter(
-            1.0d / (this.max - this.min));
+                1.0d / (this.max - this.min));
         c = mf.apply(c);
         return c;
     }

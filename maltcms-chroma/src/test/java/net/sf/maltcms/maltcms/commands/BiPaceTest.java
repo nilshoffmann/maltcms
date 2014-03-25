@@ -62,17 +62,17 @@ public class BiPaceTest extends AFragmentCommandTest {
     public void testChromA() throws IOException {
         File dataFolder = tf.newFolder("chromaTest Data ö");
         File inputFile1 = ZipResourceExtractor.extract(
-            "/cdf/1D/glucoseA.cdf.gz", dataFolder);
+                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
         File inputFile2 = ZipResourceExtractor.extract(
-            "/cdf/1D/glucoseB.cdf.gz", dataFolder);
+                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
         File outputBase = tf.newFolder("chromaTest Out ü");
-        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         commands.add(new DenseArrayProducer());
         TICPeakFinder tpf = new TICPeakFinder();
         SavitzkyGolayFilter sgf = new SavitzkyGolayFilter();
         sgf.setWindow(12);
-        List<AArrayFilter> filters = new LinkedList<AArrayFilter>();
+        List<AArrayFilter> filters = new LinkedList<>();
         filters.add(sgf);
         tpf.setFilter(filters);
         LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();
@@ -87,7 +87,7 @@ public class BiPaceTest extends AFragmentCommandTest {
         commands.add(tpf);
         commands.add(new PeakCliqueAlignment());
         IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-            inputFile1, inputFile2));
+                inputFile1, inputFile2));
         testWorkflow(w);
     }
 

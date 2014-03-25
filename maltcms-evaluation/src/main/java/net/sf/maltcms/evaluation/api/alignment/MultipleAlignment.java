@@ -120,5 +120,5 @@ public class MultipleAlignment implements Map<Category, AlignmentColumn> {
     public void clear() {
         map.clear();
     }
-    private LinkedHashMap<Category, AlignmentColumn> map = new LinkedHashMap<Category, AlignmentColumn>();
+    private LinkedHashMap<Category, AlignmentColumn> map = new LinkedHashMap<>();
 }

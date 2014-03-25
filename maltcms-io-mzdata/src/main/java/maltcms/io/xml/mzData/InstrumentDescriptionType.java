@@ -43,8 +43,8 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for instrumentDescriptionType complex type.
  *
  * <p>
- * The following schema fragment specifies the expected content contained
- * within this class.
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  *
  * <pre>
  * &lt;complexType name=&quot;instrumentDescriptionType&quot;&gt;
@@ -85,8 +85,8 @@ public class InstrumentDescriptionType implements Serializable {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content
-     * contained within this class.
+     * The following schema fragment specifies the expected content contained
+     * within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -137,7 +137,7 @@ public class InstrumentDescriptionType implements Serializable {
          */
         public List<ParamType> getAnalyzer() {
             if (this.analyzer == null) {
-                this.analyzer = new ArrayList<ParamType>();
+                this.analyzer = new ArrayList<>();
             }
             return this.analyzer;
         }
@@ -237,7 +237,7 @@ public class InstrumentDescriptionType implements Serializable {
      *
      */
     public void setAnalyzerList(
-        final InstrumentDescriptionType.AnalyzerList value) {
+            final InstrumentDescriptionType.AnalyzerList value) {
         this.analyzerList = value;
     }
 

@@ -26,7 +26,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>net.sf.maltcms.test</groupId>
             <artifactId>maltcms-test-data</artifactId>
             <version>${project.version}</version>

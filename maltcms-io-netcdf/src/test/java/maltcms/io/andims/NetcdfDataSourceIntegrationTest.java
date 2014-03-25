@@ -76,7 +76,8 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
     }
 
     /**
-     * Test of indirectly reading data from a remote file fragment via a local chain of file fragments.
+     * Test of indirectly reading data from a remote file fragment via a local
+     * chain of file fragments.
      */
     @Test
     public void testIndirectRemoteChainedRead() {
@@ -92,7 +93,7 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
             localProxy2.addSourceFile(new FileFragment(localProxy.getUri()));
             localProxy2.save();
             testIndirectRemoteRead(localProxy2.getUri());
-        } catch (Exception ex) {
+        } catch (IOException | ResourceNotAvailableException ex) {
             Logger.getLogger(NetcdfDataSourceIntegrationTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail(ex.getLocalizedMessage());
         }

@@ -78,28 +78,28 @@ public class Scan1DTest {
     public void testConstraintViolation() {
         try {
             Scan1D badScan1 = new Scan1D(
-                Array.factory(new double[]{50.213, 58.997, 82.786}),
-                Array.factory(new int[]{9870, 988, 76234}),
-                -5,
-                782.24);
+                    Array.factory(new double[]{50.213, 58.997, 82.786}),
+                    Array.factory(new int[]{9870, 988, 76234}),
+                    -5,
+                    782.24);
             Assert.fail();
         } catch (ConstraintViolationException cve) {
         }
         try {
             Scan1D badScan2 = new Scan1D(
-                Array.factory(new double[]{50.213, 58.997, 82.786}),
-                Array.factory(new int[]{9870, 988, 76234}),
-                1,
-                783.24, (short) 0);
+                    Array.factory(new double[]{50.213, 58.997, 82.786}),
+                    Array.factory(new int[]{9870, 988, 76234}),
+                    1,
+                    783.24, (short) 0);
             Assert.fail();
         } catch (ConstraintViolationException cve) {
         }
         try {
             Scan1D badScan3 = new Scan1D(
-                Array.factory(new double[]{14.57, 24.13, 42.778}),
-                Array.factory(new int[]{972, 2788, 145}),
-                2,
-                783.24, (short) 1, 1, 82.786, 76234);
+                    Array.factory(new double[]{14.57, 24.13, 42.778}),
+                    Array.factory(new int[]{972, 2788, 145}),
+                    2,
+                    783.24, (short) 1, 1, 82.786, 76234);
             Assert.fail();
         } catch (ConstraintViolationException cve) {
         }
@@ -218,15 +218,9 @@ public class Scan1DTest {
         List<IScan> scans = createScans();
         for (IScan scan : scans) {
             File f = temporaryFolder.newFile();
-            ObjectOutputStream oos = null;
-            try {
-                oos = new ObjectOutputStream(new FileOutputStream(f));
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f))) {
                 oos.writeObject(scan);
             } catch (IOException ioex) {
-            } finally {
-                if (oos != null) {
-                    oos.close();
-                }
             }
             ObjectInputStream ois = null;
             try {

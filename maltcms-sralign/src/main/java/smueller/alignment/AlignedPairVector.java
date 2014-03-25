@@ -64,7 +64,7 @@ public class AlignedPairVector implements Cloneable {
      * @param d1
      */
     public AlignedPairVector(final char a1, final char b1, final int c1,
-        final int d1) {
+            final int d1) {
         this.a = a1;
         this.b = b1;
         this.c = c1;

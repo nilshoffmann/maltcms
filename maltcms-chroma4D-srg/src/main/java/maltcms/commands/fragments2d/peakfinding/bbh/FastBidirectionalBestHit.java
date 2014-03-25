@@ -74,7 +74,7 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
      * Default constructor. Sets up all needed variables.
      */
     public FastBidirectionalBestHit() {
-        this.doneList = new ArrayList<Map<Integer, Boolean>>();
+        this.doneList = new ArrayList<>();
 //        similarity = new ProductSimilarity();
 //        similarity.setArraySimilarities(new ArrayCos());
 //        similarity.setScalarSimilarities(new GaussianDifferenceSimilarity());
@@ -117,12 +117,12 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
             sim = this.similarity.apply(new double[]{p.getFirstRetTime(), p.
                 getSecondRetTime()}, new double[]{np.getFirstRetTime(),
                 np.getSecondRetTime()}, p.getPeakArea().
-                getMeanMS(), np.getPeakArea().getMeanMS());
+                    getMeanMS(), np.getPeakArea().getMeanMS());
         } else {
             sim = this.similarity.apply(new double[]{p.getFirstRetTime(), p.
                 getSecondRetTime()}, new double[]{np.getFirstRetTime(),
                 np.getSecondRetTime()}, p.getPeakArea().
-                getSeedMS(), np.getPeakArea().getSeedMS());
+                    getSeedMS(), np.getPeakArea().getSeedMS());
         }
         return sim;
     }
@@ -130,7 +130,7 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
     /**
      * Will find the best hit in list of peak p.
      *
-     * @param p    peak
+     * @param p peak
      * @param list list
      * @return <code>-1</code> if no one was found
      */
@@ -176,20 +176,19 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
      * Getter.
      *
      * @return a list of all bidirectional best hits. List contains the indices
-     *         of peak in the peaklist.
+     * of peak in the peaklist.
      */
     @Override
     public List<List<Point>> getBidiBestHitList(
-        final List<List<Peak2D>> peaklists) {
+            final List<List<Peak2D>> peaklists) {
         System.out.println(this.maxRetDiff);
         log.info("Dist: {}", this.similarity.toString());
         log.info("Threshold: {}", this.threshold);
         log.info("Use mean MS: {}", this.useMeanMS);
 
-        this.doneList = new ArrayList<Map<Integer, Boolean>>(peaklists.size());
-        for (int i = 0; i < peaklists.size(); i++) {
-            this.doneList.add(new HashMap<Integer, Boolean>(peaklists.get(i).
-                size()));
+        this.doneList = new ArrayList<>(peaklists.size());
+        for (List<Peak2D> peaklist : peaklists) {
+            this.doneList.add(new HashMap<Integer, Boolean>(peaklist.size()));
         }
 
         log.info("peaklistsize {}:", peaklists.size());
@@ -197,8 +196,8 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
             log.info("	{}", l.size());
         }
 
-        final List<List<Point>> indexList = new ArrayList<List<Point>>();
-        List<Point> bidibestlist = new ArrayList<Point>();
+        final List<List<Point>> indexList = new ArrayList<>();
+        List<Point> bidibestlist = new ArrayList<>();
         int ii;
         // Runtime runtime = Runtime.getRuntime();
         int r, l;
@@ -218,11 +217,11 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
                     ii = i;
                     while (true) {
                         bidibestr = findBidiBestHist(peaklists.get(l).get(ii),
-                            peaklists.get(r));
+                                peaklists.get(r));
                         if (bidibestr != -1 && !this.doneList.get(r).containsKey(
-                            bidibestr)) {
+                                bidibestr)) {
                             bidibestl = findBidiBestHist(peaklists.get(r).get(
-                                bidibestr), peaklists.get(l));
+                                    bidibestr), peaklists.get(l));
                             if (bidibestl == ii) {
                                 //TODO check whether group is still a consistent bidibest hit group
                                 boolean consistent = true;
@@ -232,8 +231,8 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
                                     if (tp.x != -1 && tp.y != l) {
                                         //check tp.x peaklist against bidibestr in r
                                         tmpm = findBidiBestHist(peaklists.get(r).
-                                            get(bidibestr),
-                                            peaklists.get(tp.y));
+                                                get(bidibestr),
+                                                peaklists.get(tp.y));
                                         if (tmpm != tp.x) {
                                             consistent = false;
                                             break;
@@ -267,7 +266,7 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
                         }
                     }
                     indexList.add(bidibestlist);
-                    bidibestlist = new ArrayList<Point>();
+                    bidibestlist = new ArrayList<>();
                 }
             }
         }
@@ -279,7 +278,7 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
         final int lastIndex = peaklists.size() - 1;
         for (int i = 0; i < peaklists.get(lastIndex).size(); i++) {
             if (!this.doneList.get(lastIndex).containsKey(i)) {
-                bidibestlist = new ArrayList<Point>();
+                bidibestlist = new ArrayList<>();
                 for (int j = 0; j < lastIndex; j++) {
                     bidibestlist.add(new Point(-1, j));
                 }
@@ -299,7 +298,7 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
 //        this.dist = Factory.getInstance().getObjectFactory().instantiate(
 //                this.distClass, IArrayDoubleComp.class);
         // this.peaklists = new ArrayList<List<Peak2D>>();
-        this.doneList = new ArrayList<Map<Integer, Boolean>>();
+        this.doneList = new ArrayList<>();
         this.counter = 0;
         this.fcounter = 0;
     }

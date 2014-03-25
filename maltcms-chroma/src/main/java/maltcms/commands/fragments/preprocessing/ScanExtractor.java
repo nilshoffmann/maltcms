@@ -177,7 +177,7 @@ public class ScanExtractor extends AFragmentCommand {
      */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-        final TupleND<IFileFragment> res = new TupleND<IFileFragment>();
+        final TupleND<IFileFragment> res = new TupleND<>();
         for (IFileFragment ff : t) {
             try {
                 final IFileFragment work = createWorkFragment(ff);
@@ -208,7 +208,7 @@ public class ScanExtractor extends AFragmentCommand {
                     originalScanIndexVar.setRange(new Range[]{new Range(ranges[0], ranges[1])});
 
                     massesVar.setIndex(originalScanIndexVar);
-                    List<Array> massSubset = new ArrayList<Array>(nscans);
+                    List<Array> massSubset = new ArrayList<>(nscans);
                     EvalTools.eqI(nscans, sat.getShape()[0], this);
                     List<Array> originalMasses = massesVar.getIndexedArray();
                     for (int i = 0; i < nscans; i++) {
@@ -218,7 +218,7 @@ public class ScanExtractor extends AFragmentCommand {
                     int massDim = ArrayTools.getSizeForFlattenedArrays(massSubset);
                     IVariableFragment intensVar = ff.getChild("intensity_values");
                     intensVar.setIndex(originalScanIndexVar);
-                    List<Array> intensSubset = new ArrayList<Array>(nscans);
+                    List<Array> intensSubset = new ArrayList<>(nscans);
                     List<Array> originalIntensities = intensVar.getIndexedArray();
                     for (int i = 0; i < nscans; i++) {
                         intensSubset.add(i, originalIntensities.get(i));

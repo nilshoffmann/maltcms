@@ -63,7 +63,7 @@ public class DataFileVariablePrinter extends AFragmentCommand {
         for (IFileFragment f : t) {
             try {
                 Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).
-                    readStructure(f);
+                        readStructure(f);
             } catch (final IOException e) {
                 throw new RuntimeException(e.fillInStackTrace());
             }

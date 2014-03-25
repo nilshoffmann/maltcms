@@ -49,7 +49,7 @@ public class DtwPairwiseSimilarity implements IDtwSimilarityFunction {
 
     @Override
     public double apply(int i1, int i2, double time1, double time2, Array t1,
-        Array t2) {
+            Array t2) {
         return denseMassSpectraSimilarity.apply(t1, t2);
     }
 

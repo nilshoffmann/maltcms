@@ -45,7 +45,7 @@ import maltcms.datastructures.ms.RetentionInfo;
 public class AnchorPairSet extends DefaultPairSet<IAnchor> {
 
     public AnchorPairSet(final List<IAnchor> a1, final List<IAnchor> a2,
-        final int rows, final int cols, final int minScansBetweenAnchors) {
+            final int rows, final int cols, final int minScansBetweenAnchors) {
         super(a1, a2);
         // System.out.println(a1.size()+" "+a2.size());
         // EvalTools.eqI(a1.size(),a2.size());
@@ -55,13 +55,13 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
     }
 
     public AnchorPairSet(final List<IAnchor> a1, final List<IAnchor> a2,
-        final int rows, final int cols) {
+            final int rows, final int cols) {
         super(a1, a2);
         // System.out.println(a1.size()+" "+a2.size());
         // EvalTools.eqI(a1.size(),a2.size());
         // prepareWithSet(a1, a2, width, height, this.al);
         super.al = checkAnchors(rows, cols, super.al,
-            getMinScansBetweenAnchors());
+                getMinScansBetweenAnchors());
         // checkZeroAndEndPresent(rows, cols, super.al);
     }
 
@@ -69,7 +69,7 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
      * Ensure, that (0,0) and (m-1,n-1) are included as virtual anchors.
      */
     protected void checkZeroAndEndPresent(final int virtual_width,
-        final int virtual_height, final List<Tuple2D<IAnchor, IAnchor>> al1) {
+            final int virtual_height, final List<Tuple2D<IAnchor, IAnchor>> al1) {
         final IAnchor a1 = new RetentionInfo();
         a1.setName("START");
         a1.setScanIndex(0);
@@ -85,14 +85,14 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
         if (al1.isEmpty()) {
             this.log.debug("Only adding start and end anchors!");
             // System.out.println("Only adding start and end anchors!");
-            al1.add(new Tuple2D<IAnchor, IAnchor>(a1, b1));
-            al1.add(new Tuple2D<IAnchor, IAnchor>(a2, b2));
+            al1.add(new Tuple2D<>(a1, b1));
+            al1.add(new Tuple2D<>(a2, b2));
             return;
         }
         // int k = 0;
         Tuple2D<IAnchor, IAnchor> t = al1.get(0);
         if ((t.getFirst().getScanIndex() >= 0)
-            && (t.getSecond().getScanIndex() >= 0)) {// if
+                && (t.getSecond().getScanIndex() >= 0)) {// if
             // there
             // is
             // no
@@ -101,15 +101,15 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
             this.log.debug("Adding start anchor!");
             // check for monotonicity:
             if (t.getFirst().getScanIndex() <= 1
-                || t.getSecond().getScanIndex() <= 1) {
+                    || t.getSecond().getScanIndex() <= 1) {
                 al1.remove(0);
             }
-            al1.add(0, new Tuple2D<IAnchor, IAnchor>(a1, b1));
+            al1.add(0, new Tuple2D<>(a1, b1));
         } else {
             throw new IllegalArgumentException(
-                "Can not process anchors with scan index < 0!: "
-                + t.getFirst().getScanIndex() + " "
-                + t.getSecond().getScanIndex());
+                    "Can not process anchors with scan index < 0!: "
+                    + t.getFirst().getScanIndex() + " "
+                    + t.getSecond().getScanIndex());
             // Integer a = t.getFirst().getScanIndex();
             // Integer b = t.getSecond().getScanIndex();
             // if (a < 0) {
@@ -131,13 +131,13 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
         // process last anchor
         t = al1.get(al1.size() - 1);
         if ((t.getFirst().getScanIndex() < virtual_width - 1)
-            && (t.getSecond().getScanIndex() < virtual_height - 1)) {
+                && (t.getSecond().getScanIndex() < virtual_height - 1)) {
             this.log.debug("Adding end anchor");
             // al1.add(new Tuple2D<IAnchor, IAnchor>(a2, b2));
         } else {
             t = al1.remove(al1.size() - 1);
         }
-        al1.add(new Tuple2D<IAnchor, IAnchor>(a2, b2));
+        al1.add(new Tuple2D<>(a2, b2));
         // Integer a = t.getFirst().getScanIndex();
         // Integer b = t.getSecond().getScanIndex();
         // if (a > virtual_width) {
@@ -158,8 +158,8 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
     }
 
     public List<Tuple2D<IAnchor, IAnchor>> checkAnchors(int rows, int cols,
-        List<Tuple2D<IAnchor, IAnchor>> l, int minScansBetweenAnchors) {
-        ArrayList<Tuple2D<IAnchor, IAnchor>> valid = new ArrayList<Tuple2D<IAnchor, IAnchor>>();
+            List<Tuple2D<IAnchor, IAnchor>> l, int minScansBetweenAnchors) {
+        ArrayList<Tuple2D<IAnchor, IAnchor>> valid = new ArrayList<>();
 
         // first element needs to be (0,0)
         if (l == null || l.isEmpty()) {
@@ -182,7 +182,7 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
         Tuple2D<IAnchor, IAnchor> first = l.get(0);
         // if not present, prepend
         if (first.getFirst().getScanIndex() == 0
-            && first.getSecond().getScanIndex() == 0) {
+                && first.getSecond().getScanIndex() == 0) {
             l.remove(0);
         }
         RetentionInfo s1 = new RetentionInfo();
@@ -198,11 +198,11 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
         for (Tuple2D<IAnchor, IAnchor> t : l) {
             Tuple2D<IAnchor, IAnchor> current = t;
             int deltaRow = t.getFirst().getScanIndex()
-                - prev.getFirst().getScanIndex();
+                    - prev.getFirst().getScanIndex();
             int deltaCol = t.getSecond().getScanIndex()
-                - prev.getSecond().getScanIndex();
+                    - prev.getSecond().getScanIndex();
             if (deltaRow >= getMinScansBetweenAnchors()
-                && deltaCol >= getMinScansBetweenAnchors()) {
+                    && deltaCol >= getMinScansBetweenAnchors()) {
                 valid.add(current);
                 prev = current;
             }
@@ -221,7 +221,7 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
             // last element needs to be (rows-1,cols-1)
             Tuple2D<IAnchor, IAnchor> last = valid.get(valid.size() - 1);
             this.log.debug("last: {}, {}", last.getFirst().getScanIndex(), last
-                .getSecond().getScanIndex());
+                    .getSecond().getScanIndex());
             int deltaRow = rows - 1 - last.getFirst().getScanIndex();
             int deltaCol = cols - 1 - last.getSecond().getScanIndex();
             // if this holds, than anchor has already been found to be valid
@@ -234,7 +234,7 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
                 this.log.debug("Renaming last anchor to END");
 
             } else if (deltaRow >= getMinScansBetweenAnchors()
-                && deltaCol >= getMinScansBetweenAnchors()) {
+                    && deltaCol >= getMinScansBetweenAnchors()) {
                 // if last is smaller than rows-1 and columns-1, retain
                 // and add last anchor
                 s1 = new RetentionInfo();
@@ -247,7 +247,7 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
                 this.log.debug("Retaining last anchor and adding END anchor");
 
             } else if (deltaRow < getMinScansBetweenAnchors()
-                || deltaCol < getMinScansBetweenAnchors()) {
+                    || deltaCol < getMinScansBetweenAnchors()) {
                 // one of last's components does not obey monotonicity
                 Tuple2D<IAnchor, IAnchor> rm = valid.remove(valid.size() - 1);
                 this.log.debug("Removed: {} {} {}", new Object[]{rm,
@@ -262,7 +262,7 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
                 valid.add(new Tuple2D<IAnchor, IAnchor>(s1, s2));
             } else {
                 throw new ConstraintViolationException("Unknown case: "
-                    + deltaRow + " " + deltaCol);
+                        + deltaRow + " " + deltaCol);
             }
         }
         this.log.debug("rows: {}, cols: {}", rows, cols);

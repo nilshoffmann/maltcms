@@ -78,7 +78,7 @@ public final class SparseArray implements IArrayD2Double {
                 }
             }
         }
-        return new Tuple2D<D1, ucar.ma2.ArrayDouble.D1>(nelems, data);
+        return new Tuple2D<>(nelems, data);
     }
 
     /*
@@ -174,7 +174,7 @@ public final class SparseArray implements IArrayD2Double {
      */
     @Override
     public void set(int row, int col, double d)
-        throws ArrayIndexOutOfBoundsException {
+            throws ArrayIndexOutOfBoundsException {
         this.sdm.set(row, col, d);
     }
 }

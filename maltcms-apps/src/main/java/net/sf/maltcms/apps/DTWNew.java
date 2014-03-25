@@ -71,13 +71,11 @@ public class DTWNew {
         Maltcms m = Maltcms.getInstance();
         // set up Maltcms configuration
         CompositeConfiguration cfg = m.parseCommandLine(args);
-        cfg.setProperty("maltcms.ui.charts.PlotRunner.headless", Boolean.valueOf(false));
+        cfg.setProperty("maltcms.ui.charts.PlotRunner.headless", false);
         cfg.setProperty(
-            "cross.datastructures.fragments.VariableFragment.useCachedList",
-            Boolean.valueOf(false));
+                "cross.datastructures.fragments.VariableFragment.useCachedList", false);
         cfg.setProperty(
-            "maltcms.datastructures.fragments.PairwiseAlignment.normalizeAlignmentValueByMapWeights",
-            Boolean.valueOf(true));
+                "maltcms.datastructures.fragments.PairwiseAlignment.normalizeAlignmentValueByMapWeights", true);
         String pipeline = "maltcms.commands.fragments.preprocessing.DefaultVarLoader,maltcms.commands.fragments.preprocessing.DenseArrayProducer";
         cfg.setProperty("pipeline", pipeline);
         cfg.setProperty("cross.io.IDataSource", Arrays.asList(new String[]{"maltcms.io.andims.NetcdfDataSource"}));
@@ -86,14 +84,14 @@ public class DTWNew {
         cfg.setProperty("alignment.save.cumulative.distance.matrix", true);
         cfg.setProperty("alignment.save.pairwise.distance.matrix", true);
         cfg.setProperty("alignment.algorithm.distance",
-            "maltcms.commands.distances.ArrayCos");
+                "maltcms.commands.distances.ArrayCos");
         cfg.setProperty("alignment.algorithm.windowsize", 0.05);
         cfg.setProperty(
-            "maltcms.commands.distances.ArrayCos.compression_weight", 1.0);
+                "maltcms.commands.distances.ArrayCos.compression_weight", 1.0);
         cfg.setProperty("maltcms.commands.distances.ArrayCos.expansion_weight",
-            1.0);
+                1.0);
         cfg.setProperty("maltcms.commands.distances.ArrayCos.diagonal_weight",
-            1.0);
+                1.0);
         // cfg.save(new BufferedOutputStream(System.out));
         cross.Factory.getInstance().configure(cfg);
         System.out.println("Preparing command sequence");
@@ -112,15 +110,15 @@ public class DTWNew {
         // prepare feature vectors
         FeatureVectorFactory fvf = FeatureVectorFactory.getInstance();
         iff3.getChild("binned_intensity_values").setIndex(
-            iff3.getChild("binned_scan_index"));
+                iff3.getChild("binned_scan_index"));
         List<Array> bi1 = iff3.getChild("binned_intensity_values").getIndexedArray();
         System.out.println("Length of binned intensity values: " + bi1.size());
 
         //
         List<IFeatureVector> l1 = fvf.createBinnedMSFeatureVectorList(iff3,
-            true);
+                true);
         List<IFeatureVector> l2 = fvf.createBinnedMSFeatureVectorList(iff4,
-            true);
+                true);
 
         System.out.println("Preparing alignment");
         // prepare alignment
@@ -138,8 +136,8 @@ public class DTWNew {
         tpo.setWeight(ThreePredecessorsOptimization.State.NW.name(), dtwtpps.getMatchWeight());
         tpo.setWeight(ThreePredecessorsOptimization.State.W.name(), dtwtpps.getCompressionWeight());
         IAlignment ia = af.getDTWInstance(Factory.getInstance().getObjectFactory().instantiate(
-            ThreePredecessorsOptimization.class), fvds,
-            constraints);
+                ThreePredecessorsOptimization.class), fvds,
+                constraints);
         // set alignment properties
         ia.setLeftHandSideId(iff3.getName());
         ia.setRightHandSideId(iff4.getName());
@@ -157,8 +155,8 @@ public class DTWNew {
         ia.modify(ares);
         ares.save();
         ADynamicTimeWarp adtw = Factory.getInstance().getObjectFactory().instantiate(
-            "maltcms.commands.distances.dtw.MZIDynamicTimeWarp",
-            ADynamicTimeWarp.class);
+                "maltcms.commands.distances.dtw.MZIDynamicTimeWarp",
+                ADynamicTimeWarp.class);
         adtw.setWorkflow(cp.getWorkflow());
         IFileFragment iff = adtw.apply(iff3, iff4);
         iff.clearArrays();

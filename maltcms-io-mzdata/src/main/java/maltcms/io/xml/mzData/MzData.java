@@ -42,8 +42,8 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for anonymous complex type.
  *
  * <p>
- * The following schema fragment specifies the expected content contained
- * within this class.
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  *
  * <pre>
  * &lt;complexType&gt;
@@ -103,8 +103,8 @@ public class MzData implements Serializable {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content
-     * contained within this class.
+     * The following schema fragment specifies the expected content contained
+     * within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -199,8 +199,8 @@ public class MzData implements Serializable {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content
-     * contained within this class.
+     * The following schema fragment specifies the expected content contained
+     * within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -289,7 +289,7 @@ public class MzData implements Serializable {
          */
         public List<MzData.SpectrumList.Spectrum> getSpectrum() {
             if (this.spectrum == null) {
-                this.spectrum = new ArrayList<MzData.SpectrumList.Spectrum>();
+                this.spectrum = new ArrayList<>();
             }
             return this.spectrum;
         }
@@ -347,7 +347,7 @@ public class MzData implements Serializable {
      */
     public List<CvLookupType> getCvLookup() {
         if (this.cvLookup == null) {
-            this.cvLookup = new ArrayList<CvLookupType>();
+            this.cvLookup = new ArrayList<>();
         }
         return this.cvLookup;
     }

@@ -113,20 +113,20 @@ public class MSPFormatMetaboliteParser {
         }
         if (this.name == null) {
             System.err.println("Error creating metabolite, name=" + this.name
-                + "; id=" + this.id);
+                    + "; id=" + this.id);
             System.exit(-1);
         }
         IMetabolite m = new Metabolite(this.name, this.id, this.idType,
-            this.dbno, this.comments, this.formula, this.syndate, this.ri,
-            this.rt, this.rtUnit, (int) this.mw, this.sp, this.synname,
-            this.masses, this.intensities);
+                this.dbno, this.comments, this.formula, this.syndate, this.ri,
+                this.rt, this.rtUnit, (int) this.mw, this.sp, this.synname,
+                this.masses, this.intensities);
         if (m == null) {
             System.err.println("Error creating metabolite");
             System.exit(-1);
         }
         this.metabolites.add(m);
         System.out.println("Parsed Metabolite Nr. " + this.metabolites.size()
-            + ": " + m.getName());
+                + ": " + m.getName());
         System.out.println("Parsed Metabolite : " + m.toString());
         this.name = null;
         this.id = null;
@@ -300,7 +300,7 @@ public class MSPFormatMetaboliteParser {
                     this.points++;
                 } else {
                     System.err.println("Incorrect split result for pair: " + p
-                        + "! Omitting rest!");
+                            + "! Omitting rest!");
                     return;
                 }
             }
@@ -308,7 +308,7 @@ public class MSPFormatMetaboliteParser {
     }
 
     public ArrayList<IMetabolite> parse(File f) {
-        this.metabolites = new ArrayList<IMetabolite>();
+        this.metabolites = new ArrayList<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
             String line = "";
@@ -334,7 +334,7 @@ public class MSPFormatMetaboliteParser {
             ObjectContainer db = Db4o.openFile(args[0]);
             Configuration configuration = Db4o.newConfiguration();
             configuration.objectClass("maltcms.ms.IMetabolite").cascadeOnUpdate(
-                true);
+                    true);
             String[] files = new String[args.length - 1];
             System.arraycopy(args, 1, files, 0, files.length);
             try {
@@ -354,7 +354,7 @@ public class MSPFormatMetaboliteParser {
                         }
                     });
                     System.out.println("DB holding " + numMet.size()
-                        + " metabolites!");
+                            + " metabolites!");
                     int i = 0;
                     int size = al.size();
                     for (IMetabolite me : al) {
@@ -377,7 +377,7 @@ public class MSPFormatMetaboliteParser {
                         // });
                         // if(os.size() == 0) {
                         System.out.println("Adding metabolite " + (i + 1) + "/"
-                            + size + " :" + me.getName() + " to db!");
+                                + size + " :" + me.getName() + " to db!");
                         System.out.println("ID: " + ID);
                         db.store(me);
                         // }else if(os.size()==1) {
@@ -399,8 +399,8 @@ public class MSPFormatMetaboliteParser {
                 }
                 int committed = db.query(IMetabolite.class).size();
                 System.out.println("Processed " + cnt
-                    + " Metabolites, total in database: "
-                    + committed + "!");
+                        + " Metabolites, total in database: "
+                        + committed + "!");
                 db.close();
 
             } finally {
@@ -409,7 +409,7 @@ public class MSPFormatMetaboliteParser {
 
         } else {
             System.out.println(
-                "Usage: MSPFormatMetaboliteParser <OUTFILE> <INFILE_1> ... <INFILE_N>");
+                    "Usage: MSPFormatMetaboliteParser <OUTFILE> <INFILE_1> ... <INFILE_N>");
         }
         System.exit(0);
     }

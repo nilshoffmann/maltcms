@@ -78,8 +78,8 @@ for details.
         <property name="k" value="2" />
     </bean>
 	
-	<!-- Uses peaks that were found by CwtPeakFinder or TICPeakFinder -->
-	<bean id="peakPickerTic" class="maltcms.commands.fragments2d.peakfinding.picking.TicPeakPicking">
+    <!-- Uses peaks that were found by CwtPeakFinder or TICPeakFinder -->
+    <bean id="peakPickerTic" class="maltcms.commands.fragments2d.peakfinding.picking.TicPeakPicking">
     </bean>
 
     <bean id="peakSeparator" class="maltcms.commands.fragments2d.peakfinding.PeakSeparator">
@@ -233,7 +233,7 @@ for details.
     </bean>
     
     <!-- array similarity functions -->
-	<bean id="dotSimilarity" class="maltcms.math.functions.similarities.ArrayDot" scope="prototype"/>
+    <bean id="dotSimilarity" class="maltcms.math.functions.similarities.ArrayDot" scope="prototype"/>
     <bean id="cosineSimilarity" class="maltcms.math.functions.similarities.ArrayCos" scope="prototype"/>
     <bean id="linCorrSimilarity" class="maltcms.math.functions.similarities.ArrayCorr" scope="prototype"/>
     <bean id="rankCorrSimilarity" class="maltcms.math.functions.similarities.ArrayRankCorr" scope="prototype"/>
@@ -270,7 +270,7 @@ for details.
         <property name="workerFactory" ref="worker2DFactory"/>
         <property name="use2DRetentionTimes" value="true"/>
         <property name="minCliqueSize" value="2"/>
-		<property name="useSparseArrays" value="true"/>
+        <property name="useSparseArrays" value="true"/>
         <property name="savePeakSimilarities" value="false"/>
         <property name="useUserSuppliedAnchors" value="false"/>
         <property name="saveXMLAlignment" value="true"/>

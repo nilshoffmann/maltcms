@@ -55,7 +55,7 @@ public abstract class NodeBuilder {
     }
 
     public List<Point> getPointList(List<double[]> points) {
-        List<Point> l = new ArrayList<Point>();
+        List<Point> l = new ArrayList<>();
         for (double[] d : points) {
             l.add(new Point((int) d[0], (int) d[1]));
         }

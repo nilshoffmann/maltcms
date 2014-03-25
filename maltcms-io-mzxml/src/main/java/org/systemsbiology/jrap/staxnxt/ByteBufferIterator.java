@@ -55,6 +55,7 @@ public class ByteBufferIterator implements Iterator {
         bufferSize = buflen;
     }
 
+    @Override
     public boolean hasNext() {
         boolean hasNext = totBytesRead < fSize;
         if (!hasNext) {
@@ -100,6 +101,7 @@ public class ByteBufferIterator implements Iterator {
      }
      */
 
+    @Override
     public ByteBuffer next() {
         try {
             //dhmay 20100223, fixing issue with small files in which you can't try to read the full buffer size
@@ -138,6 +140,7 @@ public class ByteBufferIterator implements Iterator {
         return bb;
     }
 
+    @Override
     public void remove() {
     }
 

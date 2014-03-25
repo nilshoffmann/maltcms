@@ -69,8 +69,8 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
      * Default constructor. Sets up all needed variables.
      */
     public BidirectionalBestHit() {
-        this.peaklists = new ArrayList<List<Peak2D>>();
-        this.doneList = new ArrayList<Map<Integer, Boolean>>();
+        this.peaklists = new ArrayList<>();
+        this.doneList = new ArrayList<>();
 //        similarity = new ProductSimilarity();
 //        similarity.setArraySimilarities(new ArrayCos());
 //        similarity.setScalarSimilarities(new GaussianDifferenceSimilarity());
@@ -114,12 +114,12 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
             sim = this.similarity.apply(new double[]{p.getFirstRetTime(), p.
                 getSecondRetTime()}, new double[]{np.getFirstRetTime(),
                 np.getSecondRetTime()}, p.getPeakArea().
-                getMeanMS(), np.getPeakArea().getMeanMS());
+                    getMeanMS(), np.getPeakArea().getMeanMS());
         } else {
             sim = this.similarity.apply(new double[]{p.getFirstRetTime(), p.
                 getSecondRetTime()}, new double[]{np.getFirstRetTime(),
                 np.getSecondRetTime()}, p.getPeakArea().
-                getSeedMS(), np.getPeakArea().getSeedMS());
+                    getSeedMS(), np.getPeakArea().getSeedMS());
         }
         return sim;
     }
@@ -127,13 +127,13 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
     /**
      * Will find the best hit in list of peak p.
      *
-     * @param p    peak
+     * @param p peak
      * @param list list
      * @param done donelist to skip calculation
      * @return <code>-1</code> if no one was found
      */
     private int findBidiBestHist(final Peak2D p, final List<Peak2D> list,
-        final Map<Integer, Boolean> done) {
+            final Map<Integer, Boolean> done) {
         int maxI = -1;
         double max;
         max = Double.MIN_VALUE;
@@ -165,7 +165,7 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
      * Getter.
      *
      * @return a list of all bidirectional best hits. List contains the indices
-     *         of peak in the peaklist.
+     * of peak in the peaklist.
      */
     @Override
     public List<List<Point>> getBidiBestHitList(List<List<Peak2D>> peaklists) {
@@ -175,8 +175,8 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
 
         this.peaklists = peaklists;
 
-        final List<List<Point>> indexList = new ArrayList<List<Point>>();
-        List<Point> bidibestlist = new ArrayList<Point>();
+        final List<List<Point>> indexList = new ArrayList<>();
+        List<Point> bidibestlist = new ArrayList<>();
         for (int h = 0; h < this.peaklists.size() - 1; h++) {
             for (int i = 0; i < this.peaklists.get(h).size(); i++) {
                 if (!this.doneList.get(h).containsKey(i)) {
@@ -188,12 +188,12 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
                     bidibestlist.add(new Point(i, l));
                     while (true) {
                         final int bidibestr = findBidiBestHist(this.peaklists.
-                            get(l).get(i), this.peaklists.get(r),
-                            this.doneList.get(r));
+                                get(l).get(i), this.peaklists.get(r),
+                                this.doneList.get(r));
                         if (bidibestr != -1) {
                             final int bidibestl = findBidiBestHist(
-                                this.peaklists.get(r).get(bidibestr),
-                                this.peaklists.get(l), this.doneList.get(l));
+                                    this.peaklists.get(r).get(bidibestr),
+                                    this.peaklists.get(l), this.doneList.get(l));
                             if (bidibestl == i) {
                                 bidibestlist.add(new Point(bidibestr, r));
                                 this.doneList.get(l).put(i, true);
@@ -213,7 +213,7 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
                         }
                     }
                     indexList.add(bidibestlist);
-                    bidibestlist = new ArrayList<Point>();
+                    bidibestlist = new ArrayList<>();
                 }
             }
         }
@@ -221,7 +221,7 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
         final int lastIndex = this.peaklists.size() - 1;
         for (int i = 0; i < this.peaklists.get(lastIndex).size(); i++) {
             if (!this.doneList.get(lastIndex).containsKey(i)) {
-                bidibestlist = new ArrayList<Point>();
+                bidibestlist = new ArrayList<>();
                 for (int j = 0; j < lastIndex; j++) {
                     bidibestlist.add(new Point(-1, j));
                 }

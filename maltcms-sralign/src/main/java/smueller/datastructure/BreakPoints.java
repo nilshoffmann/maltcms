@@ -55,12 +55,12 @@ public class BreakPoints {
     public BreakPoints(final Array c, final Array d) {
 
         final double[] a = calcbreakpoints(c, SymbolicRepresentationAlignment
-            .getSorti().getSortedjavarray1(),
-            SymbolicRepresentationAlignment.getAlphabetgr());
+                .getSorti().getSortedjavarray1(),
+                SymbolicRepresentationAlignment.getAlphabetgr());
 
         final double[] b = calcbreakpoints(d, SymbolicRepresentationAlignment
-            .getSorti().getSortedjavarray2(),
-            SymbolicRepresentationAlignment.getAlphabetgr());
+                .getSorti().getSortedjavarray2(),
+                SymbolicRepresentationAlignment.getAlphabetgr());
 
         this.common = new double[a.length];
 
@@ -86,7 +86,7 @@ public class BreakPoints {
      *
      */
     public double[] calcbreakpoints(final Array a1, final double[] sortiert,
-        final int alphabetgr) {
+            final int alphabetgr) {
 
         final Array a = a1.copy();
 

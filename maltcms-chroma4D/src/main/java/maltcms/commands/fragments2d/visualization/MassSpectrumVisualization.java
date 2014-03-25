@@ -84,9 +84,9 @@ public class MassSpectrumVisualization extends AFragmentCommand {
         for (final IFileFragment ff : t) {
             final IScanLine scl = ScanLineCacheFactory.getScanLineCache(ff);
             final int modulation = ff.getChild(this.modulationVar).getArray().
-                getInt(Index.scalarIndexImmutable);
+                    getInt(Index.scalarIndexImmutable);
             final int scanRate = ff.getChild(this.scanRateVar).getArray().getInt(
-                Index.scalarIndexImmutable);
+                    Index.scalarIndexImmutable);
             final int scansPerModulation = modulation * scanRate;
             for (Integer index : this.indices) {
                 if ((index >= 0) && (index <= scl.getLastIndex())) {
@@ -95,19 +95,19 @@ public class MassSpectrumVisualization extends AFragmentCommand {
                     // final List<Array> scanline = scl.getScanlineMS(x);
                     final Array massSpectra = scl.getScanlineMS(x).get(y);
                     final String title = "mass spectrum for index " + index
-                        + "(TIC:" + (int) MAMath.sumDouble(massSpectra)
-                        + ")";
+                            + "(TIC:" + (int) MAMath.sumDouble(massSpectra)
+                            + ")";
                     log.info(
-                        "Plotting index {}(" + MAMath.sumDouble(massSpectra) + "): {}",
-                        index, massSpectra);
+                            "Plotting index {}(" + MAMath.sumDouble(massSpectra) + "): {}",
+                            index, massSpectra);
                     final AChart<XYPlot> plot = new MassSpectrumPlot(title,
-                        StringTools.removeFileExt(ff.getName()) + " Idx:"
-                        + index, massSpectra, false, false);
+                            StringTools.removeFileExt(ff.getName()) + " Idx:"
+                            + index, massSpectra, false, false);
 
                     ImageTools.writeImage(new JFreeChart(plot.create()),
-                        new File(getWorkflow().getOutputDirectory(this),
-                            StringTools.removeFileExt(ff.getName())
-                            + "_ms-" + index + ".png"), 1024, 768);
+                            new File(getWorkflow().getOutputDirectory(this),
+                                    StringTools.removeFileExt(ff.getName())
+                                    + "_ms-" + index + ".png"), 1024, 768);
                 } else {
                     log.error("Index {} out of range.", index);
                 }
@@ -122,7 +122,7 @@ public class MassSpectrumVisualization extends AFragmentCommand {
     @Override
     public void configure(final Configuration cfg) {
         this.modulationVar = cfg.getString("var.modulation_time",
-            "modulation_time");
+                "modulation_time");
         this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
 //        String[] indA = cfg.getStringArray(this.getClass().getName()
 //                + ".indices");

@@ -76,7 +76,7 @@ import ucar.ma2.ArrayInt;
 @Slf4j
 @Data
 public abstract class ClusteringAlgorithm extends AFragmentCommand implements
-    IClusteringAlgorithm {
+        IClusteringAlgorithm {
 
     @Override
     public String toString() {
@@ -91,10 +91,10 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     public static String toGraphML(final IClusteringAlgorithm ica) {
         final StringBuilder sb = new StringBuilder();
         final String header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            + "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" "
-            + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-            + "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns "
-            + "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">";
+                + "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" "
+                + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                + "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns "
+                + "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">";
 
         final String gbegin = "<graph id=\"G\" edgedefault=\"undirected\">";
         final String gend = "</graph>";
@@ -112,14 +112,14 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
             if (lc != -1) {
                 final double lcv = ica.getCluster(lc).getDistanceToParent();
                 edges += "<edge id=\"e" + (edgecnt++) + "\" source=\"n" + lc
-                    + "\" target=\"n" + e.getKey() + "\">";
+                        + "\" target=\"n" + e.getKey() + "\">";
                 edges += "<data key=\"d1\">" + lcv + "</data>";
                 edges += "</edge>";
             }
             if (rc != -1) {
                 final double rcv = ica.getCluster(rc).getDistanceToParent();
                 edges += "<edge id=\"e" + (edgecnt++) + "\" source=\"n" + rc
-                    + "\" target=\"n" + e.getKey() + "\">";
+                        + "\" target=\"n" + e.getKey() + "\">";
                 edges += "<data key=\"d1\">" + rcv + "</data>";
                 edges += "</edge>";
             }
@@ -163,7 +163,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     private boolean drawTICs;
     @Configurable
     private boolean drawEICs;
-    private List<IFileFragment> alignments = new ArrayList<IFileFragment>();
+    private List<IFileFragment> alignments = new ArrayList<>();
     private ArrayDouble.D2 pwds = null;
     private String minArrayComp;
 
@@ -174,12 +174,12 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
         this.names[k] = "((" + this.names[i] + ")" + this.names[j] + ")";
         this.clusterNames[k] = this.clusterNames[i] + "_vs_"
-            + this.clusterNames[j];
-        this.nameToNameLookup.put(k, new Tuple2D<String, String>(
-            this.clusterNames[i], this.clusterNames[j]));
+                + this.clusterNames[j];
+        this.nameToNameLookup.put(k, new Tuple2D<>(
+                this.clusterNames[i], this.clusterNames[j]));
         log.debug("Merging cluster " + i + " (" + this.names[i] + ") and "
-            + j + " (" + this.names[j] + ") with prior distance of "
-            + d(i, j));
+                + j + " (" + this.names[j] + ") with prior distance of "
+                + d(i, j));
         joinIJtoK(i, j, k, dmat(i, j, k));
     }
 
@@ -196,8 +196,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         init(pwd, t);
         pwds = new ArrayDouble.D2(this.names.length, this.names.length);
         merge();
-        final ArrayList<IFileFragment> al = new ArrayList<IFileFragment>(
-            this.fragments.size());
+        final ArrayList<IFileFragment> al = new ArrayList<>(
+                this.fragments.size());
         log.debug("Finished merging!");
         for (int i = 0; i < this.fragments.size(); i++) {
             final IFileFragment ff = this.fragments.get(i);
@@ -228,53 +228,53 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         pd.setMinArrayComp(this.minArrayComp);
         pd.setMinimize(this.minimizeDist);
         pd.setNames(names);
-        pd.setAlignments(new TupleND<IFileFragment>(this.alignments));
+        pd.setAlignments(new TupleND<>(this.alignments));
         pd.setWorkflow(getWorkflow());
         final IFileFragment ret = new FileFragment(
-            new File(getWorkflow().getOutputDirectory(pd), name));
+                new File(getWorkflow().getOutputDirectory(pd), name));
         pd.modify(ret);
         ret.save();
         final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-            ret.getUri(), this, WorkflowSlot.STATISTICS, ret);
+                ret.getUri(), this, WorkflowSlot.STATISTICS, ret);
         getWorkflow().append(dwr);
 
         log.info("Returned FileFragments: {}", al);
-        TupleND<IFileFragment> retFiles = new TupleND<IFileFragment>();
+        TupleND<IFileFragment> retFiles = new TupleND<>();
         for (final IFileFragment iff : al) {
             final IFileFragment rf = new FileFragment(
-                new File(getWorkflow().getOutputDirectory(this),
-                    iff.getName()));
+                    new File(getWorkflow().getOutputDirectory(this),
+                            iff.getName()));
             rf.addSourceFile(iff);
             rf.addSourceFile(ret);
             retFiles.add(rf);
             rf.save();
             final DefaultWorkflowResult wr = new DefaultWorkflowResult(
-                rf.getUri(), this,
-                WorkflowSlot.CLUSTERING, rf);
+                    rf.getUri(), this,
+                    WorkflowSlot.CLUSTERING, rf);
             getWorkflow().append(wr);
         }
         final File graphml = new File(getWorkflow().getOutputDirectory(this),
-            "maltcms.graphml");
+                "maltcms.graphml");
         try {
-            final BufferedWriter bw = new BufferedWriter(
-                new FileWriter(graphml));
-            bw.write(ClusteringAlgorithm.toGraphML(this));
-            bw.flush();
-            bw.close();
+            try (BufferedWriter bw = new BufferedWriter(
+                    new FileWriter(graphml))) {
+                bw.write(ClusteringAlgorithm.toGraphML(this));
+                bw.flush();
+            }
         } catch (final IOException e) {
             log.error(e.getLocalizedMessage());
         }
         final File newick = new File(getWorkflow().getOutputDirectory(this),
-            "maltcms.newick");
+                "maltcms.newick");
         try {
-            final BufferedWriter bw = new BufferedWriter(new FileWriter(newick));
-            bw.write(this.cluster.get(this.dist.length - 1).toNewick() + ";");
-            bw.flush();
-            bw.close();
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(newick))) {
+                bw.write(this.cluster.get(this.dist.length - 1).toNewick() + ";");
+                bw.flush();
+            }
         } catch (final IOException e) {
             log.error(e.getLocalizedMessage());
         }
-        return new TupleND<IFileFragment>(retFiles);
+        return new TupleND<>(retFiles);
     }
 
     private int initMaxLength(final Iterator<IFileFragment> ffiter) {
@@ -292,31 +292,31 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     @Override
     public void configure(final Configuration cfg) {
         this.pairwiseDistanceMatrixVariableName = cfg.getString(
-            "var.pairwise_distance_matrix", "pairwise_distance_matrix");
+                "var.pairwise_distance_matrix", "pairwise_distance_matrix");
         this.pairwiseDistanceNamesVariableName = cfg.getString(
-            "var.pairwise_distance_names", "pairwise_distance_names");
+                "var.pairwise_distance_names", "pairwise_distance_names");
         this.minimizingArrayCompVariableName = cfg.getString(
-            "var.minimizing_array_comp", "minimizing_array_comp");
+                "var.minimizing_array_comp", "minimizing_array_comp");
         this.minArrayComp = cfg.getString("var.minimizing_array_comp",
-            "minimizing_array_comp");
+                "minimizing_array_comp");
     }
 
     private IFileFragment createDenseArrays(final IFileFragment iff) {
 
         AFragmentCommand dap = Factory.getInstance().getObjectFactory().instantiate(
-            "maltcms.commands.fragments.preprocessing.DenseArrayProducer",
-            AFragmentCommand.class);
+                "maltcms.commands.fragments.preprocessing.DenseArrayProducer",
+                AFragmentCommand.class);
         dap.setWorkflow(getWorkflow());
-        return dap.apply(new TupleND<IFileFragment>(iff)).get(0);
+        return dap.apply(new TupleND<>(iff)).get(0);
     }
 
     public double d(final int i, final int j) {
         if (this.cluster.containsKey(i) && this.cluster.containsKey(j)) {
             return this.cluster.get(Math.max(i, j)).getDistanceTo(
-                Math.min(i, j));
+                    Math.min(i, j));
         } else {
             throw new IllegalArgumentException("ICluster " + i + " or cluster "
-                + j + " unknown!");
+                    + j + " unknown!");
         }
     }
 
@@ -463,27 +463,27 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         EvalTools.notNull(this.chromatogramDistanceFunctionClass, this);
         final long t_start = System.currentTimeMillis();
         final IFileFragment dtw = this.chromatogramDistanceFunctionClass.apply(
-            ff1, ff2);
+                ff1, ff2);
         DefaultWorkflowResult dwr = new DefaultWorkflowResult(dtw.getUri(), this, WorkflowSlot.ALIGNMENT, dtw);
         getWorkflow().append(dwr);
         this.chromatogramWarpCommandClass.setWorkflow(getWorkflow());
         final IFileFragment warped = this.chromatogramWarpCommandClass.apply(
-            new TupleND<IFileFragment>(dtw)).get(0);
+                new TupleND<>(dtw)).get(0);
         alignments.add(dtw);
         final long t_end = System.currentTimeMillis() - t_start;
         final StatsMap sm = new StatsMap(new FileFragment(
-            new File(getWorkflow().getOutputDirectory(this), "NJ_"
-                + StringTools.removeFileExt(ff1.getName())
-                + "_"
-                + StringTools.removeFileExt(ff2.getName())
-                + ".csv")));
+                new File(getWorkflow().getOutputDirectory(this), "NJ_"
+                        + StringTools.removeFileExt(ff1.getName())
+                        + "_"
+                        + StringTools.removeFileExt(ff2.getName())
+                        + ".csv")));
         sm.put("time", new Double(t_end));
         pwds.set(k, k, this.chromatogramDistanceFunctionClass.getResult().get());
         final StatsWriter sw = Factory.getInstance().getObjectFactory().instantiate(StatsWriter.class);
         sw.setWorkflow(getWorkflow());
         sw.write(sm);
         dwr = new DefaultWorkflowResult(warped.getUri(),
-            this, WorkflowSlot.WARPING, warped);
+                this, WorkflowSlot.WARPING, warped);
         getWorkflow().append(dwr);
 
         final IFileFragment res = createDenseArrays(warped);
@@ -499,12 +499,12 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     public void init(final double[][] distances, final String[] names1,
-        final TupleND<IFileFragment> fragments1) {
-        this.usedIndices = new HashSet<Integer>();
-        this.nameToNameLookup = new HashMap<Integer, Tuple2D<String, String>>();
+            final TupleND<IFileFragment> fragments1) {
+        this.usedIndices = new HashSet<>();
+        this.nameToNameLookup = new HashMap<>();
         final int numjoins = (distances.length) * 2 - 1;
         if (fragments1 != null) {
-            this.fragments = new HashMap<Integer, IFileFragment>();
+            this.fragments = new HashMap<>();
         }
         this.clusterNames = new String[numjoins];
         log.debug("Total expected number of elements: " + numjoins);
@@ -516,19 +516,19 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
                 this.dist[i][j] = Double.NaN;
             }
         }
-        this.cluster = new HashMap<Integer, BinaryCluster>();
+        this.cluster = new HashMap<>();
         for (int i = 0; i < distances.length; i++) {
             System.arraycopy(distances[i], 0, this.dist[i], 0,
-                distances.length);
+                    distances.length);
             final BinaryCluster njc = new BinaryCluster(names1[i], i,
-                this.dist[i]);
+                    this.dist[i]);
             if (fragments1 != null) {
                 this.fragments.put(i, fragments1.get(i));
             }
             this.cluster.put(i, njc);
             // System.out.println("Adding new ICluster: "+i+" "+names[i]);
             log.debug("Adding initial ICluster (" + (i + 1) + "/"
-                + distances.length + ") : " + njc.toString());
+                    + distances.length + ") : " + njc.toString());
         }
         this.names = new String[numjoins];
         System.arraycopy(names1, 0, this.names, 0, names1.length);
@@ -553,11 +553,11 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         // if (pwd.hasChild(this.pwdistMName) && pwd.hasChild(this.pwdistNames)
         // && pwd.hasChild(this.minDistComp)) {
         final ArrayDouble.D2 pwdist = (ArrayDouble.D2) pwd.getChild(
-            this.pairwiseDistanceMatrixVariableName).getArray();
+                this.pairwiseDistanceMatrixVariableName).getArray();
         final ArrayChar.D2 names1 = (ArrayChar.D2) pwd.getChild(
-            this.pairwiseDistanceNamesVariableName).getArray();
+                this.pairwiseDistanceNamesVariableName).getArray();
         final ArrayInt.D0 minimizeDistA = (ArrayInt.D0) pwd.getChild(
-            this.minimizingArrayCompVariableName).getArray();
+                this.minimizingArrayCompVariableName).getArray();
         if (minimizeDistA.get() == 0) {
             this.minimizeDist = false;
         } else {
@@ -618,7 +618,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     public void merge() {
         log.info("#############################################################################");
         log.info("# Running " + this.getClass().getName()
-            + " as clustering algorithm");
+                + " as clustering algorithm");
         log.info("#############################################################################");
         int newIndex = getL();// L is the number of clusters
         // findMaxDist(newIndex);
@@ -636,7 +636,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         // System.out.println(sb.toString());
         log.debug(this.cluster.get(this.dist.length - 1).toNewick() + ";");
         printDistMatrix();
-        setConsensus(this.fragments.get(Integer.valueOf(this.dist.length - 1)));
+        setConsensus(this.fragments.get(this.dist.length - 1));
     }
 
     /*
@@ -655,11 +655,11 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     public void printDistanceToNewCluster(final int i, final int j,
-        final int nci) {
+            final int nci) {
         log.debug("Distance of " + this.names[i] + " to new cluster "
-            + this.names[nci] + " " + getCluster(i).getDistanceToParent());
+                + this.names[nci] + " " + getCluster(i).getDistanceToParent());
         log.debug("Distance of " + this.names[j] + " to new cluster "
-            + this.names[nci] + " " + getCluster(j).getDistanceToParent());
+                + this.names[nci] + " " + getCluster(j).getDistanceToParent());
     }
 
     /*
@@ -676,7 +676,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         for (int i = 0; i < this.cluster.size(); i++) {
             for (int j = i; j < this.cluster.size(); j++) {
                 if (!this.usedIndices.contains(i)
-                    && !this.usedIndices.contains(j)) {
+                        && !this.usedIndices.contains(j)) {
                     log.info("d({},{})={}", new Object[]{
                         this.cluster.get(i).getName(),
                         this.cluster.get(j).getName(),
@@ -703,19 +703,19 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /**
      * @param chromatogramDistanceFunctionClass the
-     *                                          chromatogramDistanceFunctionClass to set
+     * chromatogramDistanceFunctionClass to set
      */
     public void setChromatogramDistanceFunction(
-        final PairwiseFeatureSequenceSimilarity chromatogramDistanceFunction) {
+            final PairwiseFeatureSequenceSimilarity chromatogramDistanceFunction) {
         this.chromatogramDistanceFunctionClass = chromatogramDistanceFunction;
     }
 
     /**
      * @param chromatogramWarpCommandClass the chromatogramWarpCommandClass to
-     *                                     set
+     * set
      */
     public void setChromatogramWarpCommand(
-        final AFragmentCommand chromatogramWarpCommand) {
+            final AFragmentCommand chromatogramWarpCommand) {
         this.chromatogramWarpCommandClass = chromatogramWarpCommand;
     }
 
@@ -779,10 +779,10 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /**
      * @param minimizingArrayCompVariableName the
-     *                                        minimizingArrayCompVariableName to set
+     * minimizingArrayCompVariableName to set
      */
     public void setMinimizingArrayCompVariableName(
-        final String minimizingArrayCompVariableName) {
+            final String minimizingArrayCompVariableName) {
         this.minimizingArrayCompVariableName = minimizingArrayCompVariableName;
     }
 
@@ -795,19 +795,19 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     /**
      * @param pairwiseDistanceMatrixVariableName the
-     *                                           pairwiseDistanceMatrixVariableName to set
+     * pairwiseDistanceMatrixVariableName to set
      */
     public void setPairwiseDistanceMatrixVariableName(
-        final String pairwiseDistanceMatrixVariableName) {
+            final String pairwiseDistanceMatrixVariableName) {
         this.pairwiseDistanceMatrixVariableName = pairwiseDistanceMatrixVariableName;
     }
 
     /**
      * @param pairwiseDistanceNamesVariableName the
-     *                                          pairwiseDistanceNamesVariableName to set
+     * pairwiseDistanceNamesVariableName to set
      */
     public void setPairwiseDistanceNamesVariableName(
-        final String pairwiseDistanceNamesVariableName) {
+            final String pairwiseDistanceNamesVariableName) {
         this.pairwiseDistanceNamesVariableName = pairwiseDistanceNamesVariableName;
     }
 }

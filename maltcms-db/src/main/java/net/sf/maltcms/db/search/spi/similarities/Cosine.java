@@ -53,13 +53,13 @@ public class Cosine extends AMetabolitePredicate {
     private IArraySimilarity iadc = new ArrayCos();
     private double resolution = 1.0d;
     private double lastMin = Double.POSITIVE_INFINITY,
-        lastMax = Double.NEGATIVE_INFINITY;
+            lastMax = Double.NEGATIVE_INFINITY;
     private boolean normalize = true;
     private boolean forward = true;
     private final Comparator<Tuple2D<Double, IMetabolite>> comparator = Collections.reverseOrder(new Comparator<Tuple2D<Double, IMetabolite>>() {
         @Override
         public int compare(Tuple2D<Double, IMetabolite> t,
-            Tuple2D<Double, IMetabolite> t1) {
+                Tuple2D<Double, IMetabolite> t1) {
             if (t.getFirst() > t1.getFirst()) {
                 return 1;
             } else if (t.getFirst() < t1.getFirst()) {
@@ -107,9 +107,9 @@ public class Cosine extends AMetabolitePredicate {
     }
 
     protected double similarity(Array massesRef, Array intensitiesRef,
-        Array massesQuery, Array intensitiesQuery, double mw) {
+            Array massesQuery, Array intensitiesQuery, double mw) {
 
-        TreeMap<Double, Integer> tm2 = new TreeMap<Double, Integer>();
+        TreeMap<Double, Integer> tm2 = new TreeMap<>();
 
         int n = Math.max(massesRef.getShape()[0], massesQuery.getShape()[0]);
         int lmax = massesRef.getShape()[0];
@@ -139,9 +139,9 @@ public class Cosine extends AMetabolitePredicate {
         ArrayDouble.D1 dmasses1 = new ArrayDouble.D1(bins);
         s1 = new ArrayDouble.D1(bins);
         ArrayTools.createDenseArray(massesRef, intensitiesRef,
-            new Tuple2D<Array, Array>(dmasses1, s1), ((int) Math.floor(min)),
-            ((int) Math.ceil(max)), bins,
-            resolution, 0.0d);
+                new Tuple2D<Array, Array>(dmasses1, s1), ((int) Math.floor(min)),
+                ((int) Math.ceil(max)), bins,
+                resolution, 0.0d);
         s1 = (ArrayDouble.D1) filterMaskedMasses(dmasses1, s1);
 //		}
         //normalization to 0..1
@@ -153,9 +153,9 @@ public class Cosine extends AMetabolitePredicate {
         ArrayDouble.D1 dmasses2 = new ArrayDouble.D1(bins);
         s2 = new ArrayDouble.D1(bins);
         ArrayTools.createDenseArray(massesQuery, intensitiesQuery,
-            new Tuple2D<Array, Array>(dmasses2, s2),
-            ((int) Math.floor(min)), ((int) Math.ceil(max)), bins,
-            resolution, 0.0d);
+                new Tuple2D<Array, Array>(dmasses2, s2),
+                ((int) Math.floor(min)), ((int) Math.ceil(max)), bins,
+                resolution, 0.0d);
         s2 = (ArrayDouble.D1) filterMaskedMasses(dmasses2, s2);
         //normalization
         if (normalize) {
@@ -172,7 +172,7 @@ public class Cosine extends AMetabolitePredicate {
         ICacheDelegate<IMetabolite, TreeMap<Double, Integer>> cache = getCache();
         TreeMap<Double, Integer> tm1 = cache.get(et);
         if (tm1 == null) {
-            tm1 = new TreeMap<Double, Integer>();
+            tm1 = new TreeMap<>();
             Tuple2D<D1, ArrayInt.D1> ms = et.getMassSpectrum();
             for (int i = 0; i < et.getMassSpectrum().getFirst().getShape()[0]; i++) {
                 tm1.put(ms.getFirst().get(i), ms.getSecond().get(i));
@@ -207,8 +207,8 @@ public class Cosine extends AMetabolitePredicate {
 
         if (sim >= getScoreThreshold()) {
             System.out.println("Similarity score " + sim + " is larger than threshold: " + getScoreThreshold());
-            Tuple2D<Double, IMetabolite> tple = new Tuple2D<Double, IMetabolite>(
-                sim, et);
+            Tuple2D<Double, IMetabolite> tple = new Tuple2D<>(
+                    sim, et);
             getScoreMap().add(tple);
 
             return true;

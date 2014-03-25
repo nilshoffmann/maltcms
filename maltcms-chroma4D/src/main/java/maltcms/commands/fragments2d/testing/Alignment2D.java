@@ -71,20 +71,20 @@ import ucar.ma2.Array;
 public class Alignment2D extends AFragmentCommand {
 
     @Configurable(name = "var.maxms_1d_horizontal",
-        value = "maxms_1d_horizontal")
+            value = "maxms_1d_horizontal")
     private String horizontalVar = "maxms_1d_horizontal";
     @Configurable(name = "var.maxms_1d_horizontal_index",
-        value = "maxms_1d_horizontal_index")
+            value = "maxms_1d_horizontal_index")
     private String horizontalIndexVar = "maxms_1d_horizontal_index";
     @Configurable(name = "var.maxms_1d_vertical", value = "maxms_1d_vertical")
     private String verticalVar = "maxms_1d_vertical";
     @Configurable(name = "var.maxms_1d_vertical_index",
-        value = "maxms_1d_vertical_index")
+            value = "maxms_1d_vertical_index")
     private String verticalIndexVar = "maxms_1d_vertical_index";
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensity = "total_intensity";
     @Configurable(name = "var.second_column_scan_index",
-        value = "second_column_scan_index")
+            value = "second_column_scan_index")
     private String secondColumnScanIndexVar = "second_column_scan_index";
     private TwoFeatureVectorOperation dtwSimilarity;
     @Configurable(value = "false")
@@ -171,15 +171,15 @@ public class Alignment2D extends AFragmentCommand {
                 // HORIZONTAL
                 // prepare feature vectors
                 l1h = getFeatureList(lhsff, this.horizontalVar,
-                    this.horizontalIndexVar, this.filter, this.scale);
+                        this.horizontalIndexVar, this.filter, this.scale);
                 l2h = getFeatureList(rhsff, this.horizontalVar,
-                    this.horizontalIndexVar, this.filter, this.scale);
+                        this.horizontalIndexVar, this.filter, this.scale);
                 System.out.println("l1v size: " + l1h.size());
 
                 // set constraints
                 ia.setConstraints(ConstraintFactory.getInstance().
-                    createBandConstraint(0, 0, l1h.size(),
-                        l2h.size(), 0.5));
+                        createBandConstraint(0, 0, l1h.size(),
+                                l2h.size(), 0.5));
                 // apply and retrieve score
                 cost = ia.apply(l1h, l2h);
                 System.out.println("DTW score h: " + cost);
@@ -193,15 +193,15 @@ public class Alignment2D extends AFragmentCommand {
                 // VERTICAL
                 // prepare feature vectors
                 l1v = getFeatureList(lhsff, this.verticalVar,
-                    this.verticalIndexVar, this.filter, this.scale);
+                        this.verticalIndexVar, this.filter, this.scale);
                 l2v = getFeatureList(rhsff, this.verticalVar,
-                    this.verticalIndexVar, this.filter, this.scale);
+                        this.verticalIndexVar, this.filter, this.scale);
                 System.out.println("l1v size: " + l1v.size());
 
                 // set constraints
                 ia.setConstraints(ConstraintFactory.getInstance().
-                    createBandConstraint(0, 0, l1v.size(),
-                        l2v.size(), 0.5));
+                        createBandConstraint(0, 0, l1v.size(),
+                                l2v.size(), 0.5));
                 // apply and retrieve score
                 cost = ia.apply(l1v, l2v);
                 System.out.println("DTW score v: " + cost);
@@ -211,14 +211,14 @@ public class Alignment2D extends AFragmentCommand {
                 Visualization2D vis = new Visualization2D();
 
                 final BufferedImage image = vis.createImage(scanlinesi,
-                    scanlinesj, h, v);
+                        scanlinesj, h, v);
 
                 final String baseFilename = StringTools.removeFileExt(lhsff.
-                    getName())
-                    + "_vs_" + StringTools.removeFileExt(rhsff.getName());
+                        getName())
+                        + "_vs_" + StringTools.removeFileExt(rhsff.getName());
                 final String filename = baseFilename + "_rgb";
                 final File out = ImageTools.saveImage(image, filename, "png",
-                    getWorkflow().getOutputDirectory(this), this);
+                        getWorkflow().getOutputDirectory(this), this);
 
                 // for (Point p : v) {
                 // System.out.println(p.x + ":" + p.y);
@@ -230,8 +230,8 @@ public class Alignment2D extends AFragmentCommand {
     }
 
     private List<IFeatureVector> getFeatureList(final IFileFragment ff,
-        final String varName, final String indexName, final boolean filter,
-        final boolean scale) {
+            final String varName, final String indexName, final boolean filter,
+            final boolean scale) {
         final FeatureVectorFactory fvf = FeatureVectorFactory.getInstance();
         IVariableFragment ivf = ff.getChild(varName);
         IVariableFragment si = ff.getChild(indexName);
@@ -239,7 +239,7 @@ public class Alignment2D extends AFragmentCommand {
 
         List<Array> feature = ff.getChild(varName).getIndexedArray();
         if (filter) {
-            final List<Integer> hold = new ArrayList<Integer>();
+            final List<Integer> hold = new ArrayList<>();
             feature = ArrayTools2.filterInclude(feature, hold);
         }
         if (scale) {
@@ -247,7 +247,7 @@ public class Alignment2D extends AFragmentCommand {
         }
 
         final List<IFeatureVector> featureList = fvf.createFeatureVectorList(
-            feature);
+                feature);
 
         return featureList;
     }
@@ -273,7 +273,7 @@ public class Alignment2D extends AFragmentCommand {
         IVariableFragment si = ff.getChild(this.secondColumnScanIndexVar);
         ticVar.setIndex(si);
         final List<Array> scanlines = ff.getChild(this.totalIntensity).
-            getIndexedArray();
+                getIndexedArray();
         return scanlines;
     }
 }

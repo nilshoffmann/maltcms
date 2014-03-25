@@ -60,7 +60,7 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
-        "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
+            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
 
     public DenseArrayProducerTest() {
         setLogLevelFor(MaltcmsTools.class, Level.DEBUG);
@@ -73,7 +73,7 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
     @Test
     public void testDirectApply() throws IOException {
         File outputBase = tf.newFolder();
-        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         ScanExtractor se = new ScanExtractor();
         se.setStartScan(1000);
@@ -118,7 +118,7 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
     @Test
     public void testApply() throws IOException {
         File outputBase = tf.newFolder();
-        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         ScanExtractor se = new ScanExtractor();
         se.setStartScan(1000);

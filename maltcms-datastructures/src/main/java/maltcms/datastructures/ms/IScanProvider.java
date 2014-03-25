@@ -49,8 +49,8 @@ public interface IScanProvider<T extends IScan> extends IConfigurable, Iterable<
     public T getScan(int i);
 
     /**
-     * Returns the total number of ms scans available in this chromatogram.
-     * May contain scans of all fragmentation levels.
+     * Returns the total number of ms scans available in this chromatogram. May
+     * contain scans of all fragmentation levels.
      *
      * @return the total number of scans
      */
@@ -75,20 +75,22 @@ public interface IScanProvider<T extends IScan> extends IConfigurable, Iterable<
      * Return a scan for the specific index, bound by the number of available
      * scans for the given ms fragmentation level.
      *
-     * @param i     the requested scan index for the given level
+     * @param i the requested scan index for the given level
      * @param level the ms fragmentation level (1,2,...,n)
      * @return the corresponding scan
-     * @throws ResourceNotAvailableException if a scan at that index or level is not available
+     * @throws ResourceNotAvailableException if a scan at that index or level is
+     * not available
      */
     public T getScanForMsLevel(int i, short level);
 
     /**
-     * Returns a list of integer indices based on the scan_index variable into the raw
-     * data arrays. This allows for a much lighter memory footprint manual access
-     * to the underlying data on selected variables.
+     * Returns a list of integer indices based on the scan_index variable into
+     * the raw data arrays. This allows for a much lighter memory footprint
+     * manual access to the underlying data on selected variables.
      *
      * @param level the ms fragmentation level (1,2,...,n)
-     * @return the list of indices of scans into the raw data variables based on scan_index
+     * @return the list of indices of scans into the raw data variables based on
+     * scan_index
      */
     public List<Integer> getIndicesOfScansForMsLevel(short level);
 }

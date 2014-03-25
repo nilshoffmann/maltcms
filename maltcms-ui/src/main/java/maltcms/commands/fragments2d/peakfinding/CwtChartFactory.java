@@ -81,9 +81,9 @@ public class CwtChartFactory {
         // System.out.println("Sampletable: " +
         // Arrays.toString(sampleTable));
         BufferedImage crampImg = ImageTools.createColorRampImage(sampleTable,
-            Transparency.TRANSLUCENT, cRamp);
+                Transparency.TRANSLUCENT, cRamp);
         BufferedImage destImg = ImageTools.applyLut(bi,
-            ImageTools.createLookupTable(crampImg, 1.0f, nsamples));
+                ImageTools.createLookupTable(crampImg, 1.0f, nsamples));
         return destImg;
         // return bi;
     }
@@ -96,7 +96,7 @@ public class CwtChartFactory {
         // BufferedImage bi = new
         // BufferedImage(array.getShape()[0],array.getShape()[1],BufferedImage.TYPE_INT_RGB);
         BufferedImage bi = new BufferedImage(array.getShape()[0],
-            array.getShape()[1], BufferedImage.TYPE_INT_RGB);;// ImageTools.makeImage2D(array,
+                array.getShape()[1], BufferedImage.TYPE_INT_RGB);;// ImageTools.makeImage2D(array,
         // 256);
         final ColorRampReader crr = new ColorRampReader();
         final int[][] colorRamp = crr.getDefaultRamp();
@@ -104,9 +104,9 @@ public class CwtChartFactory {
         int nsamples = 256;
         double[] sampleTable = ImageTools.createSampleTable(nsamples);
         double[] bp = ImageTools.getBreakpoints(array, nsamples,
-            Double.NEGATIVE_INFINITY);
+                Double.NEGATIVE_INFINITY);
         ImageTools.makeImage2D(bi.getRaster(), array, nsamples, colorRamp,
-            0.0d, bp);
+                0.0d, bp);
         // sampleTable = ImageTools.mapSampleTable(sampleTable, -1, 1);
         // System.out.println("Sampletable: " +
         // Arrays.toString(sampleTable));
@@ -120,7 +120,7 @@ public class CwtChartFactory {
 
     public static List<JFreeChart> createCostHistogramDS(int nbins, Ridge... r) {
         List<IRidgeCost> l = Ridge.getAvailableRidgeCostClasses();
-        List<JFreeChart> dsl = new ArrayList<JFreeChart>(l.size());
+        List<JFreeChart> dsl = new ArrayList<>(l.size());
         int k = 0;
         for (IRidgeCost irc : l) {
             HistogramDataset dxyzd = new HistogramDataset();
@@ -132,8 +132,8 @@ public class CwtChartFactory {
             }
             dxyzd.addSeries(irc.getClass().getName(), vals, nbins);
             JFreeChart jfc = ChartFactory.createHistogram("Cost histogram for "
-                + irc.getClass().getName(), "cost", "count", dxyzd,
-                PlotOrientation.VERTICAL, true, true, true);
+                    + irc.getClass().getName(), "cost", "count", dxyzd,
+                    PlotOrientation.VERTICAL, true, true, true);
             XYPlot xyp = jfc.getXYPlot();
             XYBarRenderer xybr = (XYBarRenderer) xyp.getRenderer();
             xybr.setShadowVisible(false);
@@ -145,12 +145,12 @@ public class CwtChartFactory {
     }
 
     public static List<JFreeChart> createNeighborhoodHistogramDS(int spm, int nbins,
-        QuadTree<Ridge> qt, int radius, Ridge... r) {
+            QuadTree<Ridge> qt, int radius, Ridge... r) {
         List<IRidgeCost> l = Ridge.getAvailableRidgeCostClasses();
-        List<JFreeChart> dsl = new ArrayList<JFreeChart>(l.size());
+        List<JFreeChart> dsl = new ArrayList<>(l.size());
         for (int k = 1; k <= radius; k++) {
             HistogramDataset dxyzd = new HistogramDataset();
-            List<Double> vals = new ArrayList<Double>();
+            List<Double> vals = new ArrayList<>();
             int v = 0;
             for (Ridge ridge : r) {
                 Point2D root = ridge.getRidgePoints().get(0).getFirst();
@@ -164,14 +164,14 @@ public class CwtChartFactory {
             }
             double[] vs = new double[vals.size()];
             for (int i = 0; i < vals.size(); i++) {
-                vs[i] = vals.get(i).doubleValue();
+                vs[i] = vals.get(i);
             }
             if (vs != null && vs.length > 0) {
                 dxyzd.addSeries("Neighborhood histogram for r=" + k, vs, nbins);
                 JFreeChart jfc = ChartFactory.createHistogram(
-                    "Neighborhood histogram for radius " + k,
-                    "neighborhood size", "count", dxyzd,
-                    PlotOrientation.VERTICAL, true, true, true);
+                        "Neighborhood histogram for radius " + k,
+                        "neighborhood size", "count", dxyzd,
+                        PlotOrientation.VERTICAL, true, true, true);
                 XYPlot xyp = jfc.getXYPlot();
                 XYBarRenderer xybr = (XYBarRenderer) xyp.getRenderer();
                 xybr.setShadowVisible(false);
@@ -184,7 +184,7 @@ public class CwtChartFactory {
 
     public static List<JFreeChart> create2DRidgeCostDS(int spm, Ridge... r) {
         List<IRidgeCost> l = Ridge.getAvailableRidgeCostClasses();
-        List<JFreeChart> dsl = new ArrayList<JFreeChart>(l.size());
+        List<JFreeChart> dsl = new ArrayList<>(l.size());
         int k = 0;
         for (IRidgeCost irc : l) {
             DefaultXYZDataset dxyzd = new DefaultXYZDataset();
@@ -211,7 +211,7 @@ public class CwtChartFactory {
                 xybr.setPaintScale(new GradientPaintScale(ImageTools.createSampleTable(256), min, max, new Color[]{Color.BLUE, Color.GREEN, Color.YELLOW, Color.orange, Color.red, Color.MAGENTA}));
             }
             XYPlot xyp = new XYPlot(dxyzd, new NumberAxis("x"), new NumberAxis(
-                "y"), xybr);
+                    "y"), xybr);
             JFreeChart jfc = new JFreeChart(xyp);
             // jfc.addSubtitle(new PaintScaleLegend(xybr.getPaintScale(),
             // new NumberAxis("ridge cost of " + irc.getClass().getName())));
@@ -222,8 +222,8 @@ public class CwtChartFactory {
     }
 
     public static List<JFreeChart> create2DRidgeNeighborhoodDS(int spm,
-        QuadTree<Ridge> qt, int radius, Ridge... r) {
-        List<JFreeChart> l = new ArrayList<JFreeChart>();
+            QuadTree<Ridge> qt, int radius, Ridge... r) {
+        List<JFreeChart> l = new ArrayList<>();
 //		HashMap<Ridge, Integer> ridgeToPreviousNeighbors = new HashMap<Ridge, Integer>();
         for (int i = 1; i <= radius; i++) {
             DefaultXYZDataset dxyzd = new DefaultXYZDataset();
@@ -254,9 +254,9 @@ public class CwtChartFactory {
                 xybr.setPaintScale(new GradientPaintScale(ImageTools.createSampleTable(256), min, max, new Color[]{Color.WHITE, Color.BLUE, Color.GREEN, Color.YELLOW, Color.orange, Color.red, Color.MAGENTA}));
             }
             XYPlot xyp = new XYPlot(dxyzd, new NumberAxis("x"), new NumberAxis(
-                "y"), xybr);
+                    "y"), xybr);
             JFreeChart jfc = new JFreeChart(
-                "2D Vertical Ridge Neighborhood difference for radius: " + i, xyp);
+                    "2D Vertical Ridge Neighborhood difference for radius: " + i, xyp);
             // jfc.addSubtitle(new PaintScaleLegend(xybr.getPaintScale(),
             // new NumberAxis("neighbors in radius " + i)));
             l.add(jfc);
@@ -290,9 +290,9 @@ public class CwtChartFactory {
                 xybr.setPaintScale(new GradientPaintScale(ImageTools.createSampleTable(256), min, max, new Color[]{Color.WHITE, Color.BLUE, Color.GREEN, Color.YELLOW, Color.orange, Color.red, Color.MAGENTA}));
             }
             XYPlot xyp = new XYPlot(dxyzd, new NumberAxis("x"), new NumberAxis(
-                "y"), xybr);
+                    "y"), xybr);
             JFreeChart jfc = new JFreeChart(
-                "2D Horizontal Ridge Neighborhood difference for radius: " + i, xyp);
+                    "2D Horizontal Ridge Neighborhood difference for radius: " + i, xyp);
             // jfc.addSubtitle(new PaintScaleLegend(xybr.getPaintScale(),
             // new NumberAxis("neighbors in radius " + i)));
             l.add(jfc);
@@ -326,9 +326,9 @@ public class CwtChartFactory {
                 xybr.setPaintScale(new GradientPaintScale(ImageTools.createSampleTable(256), min, max, new Color[]{Color.WHITE, Color.BLUE, Color.GREEN, Color.YELLOW, Color.orange, Color.red, Color.MAGENTA}));
             }
             XYPlot xyp = new XYPlot(dxyzd, new NumberAxis("x"), new NumberAxis(
-                "y"), xybr);
+                    "y"), xybr);
             JFreeChart jfc = new JFreeChart(
-                "2D Ridge Neighborhood difference for radius: " + i, xyp);
+                    "2D Ridge Neighborhood difference for radius: " + i, xyp);
             // jfc.addSubtitle(new PaintScaleLegend(xybr.getPaintScale(),
             // new NumberAxis("neighbors in radius " + i)));
             l.add(jfc);
@@ -337,13 +337,13 @@ public class CwtChartFactory {
     }
 
     public static void saveImages(File outputDirectory, String prefix,
-        List<JFreeChart> l) {
+            List<JFreeChart> l) {
         int i = 0;
         for (JFreeChart jfc : l) {
             File image = new File(outputDirectory, prefix + "_" + i + ".png");
             try {
                 ChartUtilities.saveChartAsPNG(image, jfc, 1024, 768, null,
-                    true, 0);
+                        true, 0);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -353,7 +353,7 @@ public class CwtChartFactory {
     }
 
     public static void saveImages(String outputDirectory, String prefix,
-        List<JFreeChart> l) {
+            List<JFreeChart> l) {
         saveImages(new File(outputDirectory), prefix, l);
     }
 }

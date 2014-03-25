@@ -68,9 +68,9 @@ public class DefaultVarLoader extends AFragmentCommand {
 
     @Override
     public TupleND<IFileFragment> apply(
-        final TupleND<IFileFragment> inputFileFragments) {
+            final TupleND<IFileFragment> inputFileFragments) {
         log.debug("Running DefaultVarLoader on {} FileFragments!",
-            inputFileFragments.size());
+                inputFileFragments.size());
         if (defaultVariables.isEmpty() && additionalVariables.isEmpty()) {
             return inputFileFragments;
         }

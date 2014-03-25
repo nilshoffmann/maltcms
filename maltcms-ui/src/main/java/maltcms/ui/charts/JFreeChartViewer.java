@@ -128,8 +128,8 @@ public class JFreeChartViewer extends JFrame {
         cfg.addConfiguration(new SystemConfiguration());
         try {
             PropertiesConfiguration pcfg = new PropertiesConfiguration(
-                JFreeChartViewer.class.getClassLoader().getResource(
-                    "cfg/default.properties"));
+                    JFreeChartViewer.class.getClassLoader().getResource(
+                            "cfg/default.properties"));
             cfg.addConfiguration(pcfg);
             Factory.getInstance().configure(cfg);
         } catch (ConfigurationException e) {
@@ -141,7 +141,7 @@ public class JFreeChartViewer extends JFrame {
 
         final FileOpenAction fopen = new FileOpenAction("Load Chart");
         final ChromatogramOpenAction coa = new ChromatogramOpenAction(
-            "Generate Chart");
+                "Generate Chart");
         fopen.setParent(this);
         this.jmb = new JMenuBar();
         this.fileMenu = new JMenu("File");
@@ -250,12 +250,12 @@ public class JFreeChartViewer extends JFrame {
                         final File f = fc.getSelectedFile();
                         lastOpenDir = f.getParentFile();
                         try {
-                            ObjectOutputStream oos = new ObjectOutputStream(
-                                new BufferedOutputStream(
-                                    new FileOutputStream(f)));
-                            oos.writeObject(getJfc());
-                            oos.flush();
-                            oos.close();
+                            try (ObjectOutputStream oos = new ObjectOutputStream(
+                                    new BufferedOutputStream(
+                                            new FileOutputStream(f)))) {
+                                        oos.writeObject(getJfc());
+                                        oos.flush();
+                                    }
                         } catch (FileNotFoundException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
@@ -326,8 +326,8 @@ public class JFreeChartViewer extends JFrame {
                         @Override
                         public String getDescription() {
                             List<String> l = Factory.getInstance()
-                                .getDataSourceFactory()
-                                .getSupportedFormats();
+                                    .getDataSourceFactory()
+                                    .getSupportedFormats();
                             StringBuilder sb = new StringBuilder();
                             for (String s : l) {
                                 sb.append("." + s + ", ");
@@ -341,10 +341,10 @@ public class JFreeChartViewer extends JFrame {
                                 return true;
                             }
                             for (String s : Factory.getInstance()
-                                .getDataSourceFactory()
-                                .getSupportedFormats()) {
+                                    .getDataSourceFactory()
+                                    .getSupportedFormats()) {
                                 if (f.getAbsolutePath().toLowerCase().endsWith(
-                                    s)) {
+                                        s)) {
                                     return true;
                                 }
                             }
@@ -363,10 +363,10 @@ public class JFreeChartViewer extends JFrame {
                                 int i = 0;
                                 VariableSelectionPanel vsp = new VariableSelectionPanel();
                                 IFileFragment fragment = new FileFragment(f[0]);
-                                ArrayList<String> vars = new ArrayList<String>();
+                                ArrayList<String> vars = new ArrayList<>();
                                 String[] cfgvars = Factory.getInstance()
-                                    .getConfiguration().getStringArray(
-                                        "default.vars");
+                                        .getConfiguration().getStringArray(
+                                                "default.vars");
                                 vars.addAll(Arrays.asList(cfgvars));
                                 // for(String var:vars) {
                                 // try{
@@ -376,32 +376,32 @@ public class JFreeChartViewer extends JFrame {
                                 // }
                                 // }
                                 vsp.setAvailableVariables(vars
-                                    .toArray(new String[]{}));
+                                        .toArray(new String[]{}));
                                 javax.swing.JOptionPane.showMessageDialog(
-                                    getParent(), vsp);
+                                        getParent(), vsp);
                                 String domainVar = vsp
-                                    .getSelectedDomainVariable();
+                                        .getSelectedDomainVariable();
                                 String valueVar = vsp
-                                    .getSelectedValuesVariable();
+                                        .getSelectedValuesVariable();
                                 for (File file : f) {
                                     lastOpenDir = file.getParentFile();
                                     Factory.getInstance().getConfiguration()
-                                        .setProperty("output.basedir",
-                                            file.getParent());
+                                            .setProperty("output.basedir",
+                                                    file.getParent());
                                     Factory.getInstance().getConfiguration()
-                                        .setProperty(
-                                            "user.name",
-                                            System.getProperty(
-                                                "user.name", ""));
+                                            .setProperty(
+                                                    "user.name",
+                                                    System.getProperty(
+                                                            "user.name", ""));
                                     fragment = new FileFragment(
-                                        file);
+                                            file);
                                     labels[i] = fragment.getName();
                                     arrays[i] = fragment.getChild(valueVar)
-                                        .getArray();
+                                            .getArray();
                                     // Factory.getInstance().getConfiguration().getString("var.total_intensity","total_intensity")).getArray();
                                     if (!domainVar.equals("")) {
                                         domains[i] = fragment.getChild(
-                                            domainVar).getArray();
+                                                domainVar).getArray();
                                     }
                                     // Factory.getInstance().getConfiguration().getString("var.scan_acquisition_time","scan_acquisition_time")).getArray();
                                     i++;
@@ -409,15 +409,15 @@ public class JFreeChartViewer extends JFrame {
                                 XYChart xyc = null;
                                 if (!domainVar.equals("")) {
                                     xyc = new XYChart(
-                                        f.length > 1 ? lastOpenDir
-                                        .getName() : f[0].getName(),
-                                        labels, arrays, domains, "time[s]",
-                                        "value");
+                                            f.length > 1 ? lastOpenDir
+                                            .getName() : f[0].getName(),
+                                            labels, arrays, domains, "time[s]",
+                                            "value");
                                 } else {
                                     xyc = new XYChart(
-                                        f.length > 1 ? lastOpenDir
-                                        .getName() : f[0].getName(),
-                                        labels, arrays, "time[s]", "value");
+                                            f.length > 1 ? lastOpenDir
+                                            .getName() : f[0].getName(),
+                                            labels, arrays, "time[s]", "value");
                                 }
                                 JFreeChart jfc2 = new JFreeChart(xyc.create());
                                 addChart(jfc2, lastOpenDir.getName());
@@ -509,19 +509,17 @@ public class JFreeChartViewer extends JFrame {
                         for (File file : f) {
                             lastOpenDir = file.getParentFile();
                             try {
-                                ObjectInputStream ois = new ObjectInputStream(
-                                    new BufferedInputStream(
-                                        new FileInputStream(file)));
-                                JFreeChart jfc1 = (JFreeChart) ois.readObject();
-                                ois.close();
-                                addChart(jfc1, file.getName());
+                                JFreeChart jfc1;
+                                try (ObjectInputStream ois = new ObjectInputStream(
+                                        new BufferedInputStream(
+                                                new FileInputStream(file)))) {
+                                            jfc1 = (JFreeChart) ois.readObject();
+                                        }
+                                        addChart(jfc1, file.getName());
                             } catch (FileNotFoundException e) {
                                 // TODO Auto-generated catch block
                                 e.printStackTrace();
-                            } catch (IOException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            } catch (ClassNotFoundException e) {
+                            } catch (IOException | ClassNotFoundException e) {
                                 // TODO Auto-generated catch block
                                 e.printStackTrace();
                             }
@@ -546,11 +544,11 @@ public class JFreeChartViewer extends JFrame {
     public class XYAnnotationAdder {
 
         public void addAnnotation(final ChartPanel cp, final JFreeChart jfc,
-            final XYItemEntity xyie, final int x, final int y) {
+                final XYItemEntity xyie, final int x, final int y) {
             final double xd = xyie.getDataset().getXValue(
-                xyie.getSeriesIndex(), xyie.getItem());
+                    xyie.getSeriesIndex(), xyie.getItem());
             final double yd = xyie.getDataset().getYValue(
-                xyie.getSeriesIndex(), xyie.getItem());
+                    xyie.getSeriesIndex(), xyie.getItem());
             // Runnable r = new Runnable() {
 
             // @Override
@@ -567,7 +565,7 @@ public class JFreeChartViewer extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     if (!jta.getText().equals("")) {
                         final XYPointerAnnotation xya = new XYPointerAnnotation(
-                            jta.getText(), xd, yd, -0.6);
+                                jta.getText(), xd, yd, -0.6);
                         xya.setTipRadius(0);
                         xya.setTextAnchor(TextAnchor.BASELINE_LEFT);
                         // xya.setBaseRadius(5.0);
@@ -623,17 +621,17 @@ public class JFreeChartViewer extends JFrame {
         @Override
         public void chartMouseClicked(ChartMouseEvent arg0) {
             if (arg0.getEntity() != null
-                && arg0.getEntity() instanceof XYItemEntity) {
+                    && arg0.getEntity() instanceof XYItemEntity) {
                 System.out.println(arg0.getEntity().getClass().getName());
                 XYAnnotationAdder xya = new XYAnnotationAdder();
                 xya.addAnnotation(this.cp, arg0.getChart(), (XYItemEntity) arg0
-                    .getEntity(), arg0.getTrigger().getX(), arg0
-                    .getTrigger().getY());
+                        .getEntity(), arg0.getTrigger().getX(), arg0
+                        .getTrigger().getY());
             }
             System.out.println(arg0.getSource().getClass().getName());
             System.out.println(arg0.getTrigger().getClass().getName());
             System.out.println(arg0.getTrigger().getX() + " "
-                + arg0.getTrigger().getY());
+                    + arg0.getTrigger().getY());
         }
 
         /*
@@ -652,7 +650,7 @@ public class JFreeChartViewer extends JFrame {
                     if (arg0.getEntity() != null) {
                         System.out.println("Found an entity");
                         getStatus().setText(
-                            "Status: " + arg0.getEntity().toString());
+                                "Status: " + arg0.getEntity().toString());
                         // jtt.setLocation(arg0.getTrigger().getX(),
                         // arg0.getTrigger().getY());
                         // jtt.setVisible(true);

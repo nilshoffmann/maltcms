@@ -46,7 +46,7 @@ public class OneAffineAlignment extends Alignment {
      * @param query1
      */
     public OneAffineAlignment(final IFileFragment ref1,
-        final IFileFragment query1) {
+            final IFileFragment query1) {
         super(ref1, query1);
     }
 
@@ -76,8 +76,8 @@ public class OneAffineAlignment extends Alignment {
             final double dv = vergleiche(chartoNumber(this.seq2.charAt(is)), 0);
             this.pwd[0][is] = dv;
             this.matrix[0][is] = Math
-                .round((this.matrix[0][is - 1] + vergleiche(
-                        (chartoNumber(this.seq2.charAt(is))), 0)) * 100) / 100.00;
+                    .round((this.matrix[0][is - 1] + vergleiche(
+                                    (chartoNumber(this.seq2.charAt(is))), 0)) * 100) / 100.00;
             this.pathway[0][is][0] = 1;
             this.ver[0][is] = 100000;
             this.hor[0][is] = 100000;
@@ -88,8 +88,8 @@ public class OneAffineAlignment extends Alignment {
             final double dv = vergleiche(0, chartoNumber(this.seq1.charAt(ju)));
             this.pwd[ju][0] = dv;
             this.matrix[ju][0] = Math
-                .round((this.matrix[ju - 1][0] + vergleiche(0,
-                        (chartoNumber(this.seq1.charAt(ju))))) * 100) / 100.00;
+                    .round((this.matrix[ju - 1][0] + vergleiche(0,
+                                    (chartoNumber(this.seq1.charAt(ju))))) * 100) / 100.00;
             this.pathway[ju][0][0] = 2;
             this.ver[ju][0] = 100000;
             this.hor[ju][0] = 100000;
@@ -100,33 +100,33 @@ public class OneAffineAlignment extends Alignment {
         for (int i = 1; i < n; i++) {
             for (int j = 1; j < m; j++) {
                 final double dv = vergleiche(chartoNumber(this.seq1.charAt(j)),
-                    chartoNumber(this.seq2.charAt(i)));
+                        chartoNumber(this.seq2.charAt(i)));
                 this.pwd[j][i] = dv;
                 // Horzontale/Vertikale Matrix an der Stelle (i,j) berechnen
                 this.ver[j][i] = Math
-                    .min(
-                        this.matrix[j - 1][i]
-                        + SymbolicRepresentationAlignment
-                        .getGapinit()
-                        + vergleiche((chartoNumber(this.seq1
-                                .charAt(j))), 0),
-                        this.ver[j - 1][i]
-                        + vergleiche((chartoNumber(this.seq1
-                                .charAt(j))), 0));
+                        .min(
+                                this.matrix[j - 1][i]
+                                + SymbolicRepresentationAlignment
+                                .getGapinit()
+                                + vergleiche((chartoNumber(this.seq1
+                                                .charAt(j))), 0),
+                                this.ver[j - 1][i]
+                                + vergleiche((chartoNumber(this.seq1
+                                                .charAt(j))), 0));
                 this.hor[j][i] = Math.min(this.matrix[j][i - 1]
-                    + SymbolicRepresentationAlignment.getGapinit()
-                    + vergleiche(0, (chartoNumber(this.seq2.charAt(i)))),
-                    this.hor[j][i - 1]
-                    + vergleiche(0, (chartoNumber(this.seq2
-                            .charAt(i)))));
+                        + SymbolicRepresentationAlignment.getGapinit()
+                        + vergleiche(0, (chartoNumber(this.seq2.charAt(i)))),
+                        this.hor[j][i - 1]
+                        + vergleiche(0, (chartoNumber(this.seq2
+                                        .charAt(i)))));
 
                 // x,y (insertion/deletion)aus Matritzen �bernehmen, z
                 // (diagonale)berechnen
                 this.x = Math.round((this.hor[j][i]) * 100) / 100.00;
                 this.y = Math.round((this.ver[j][i]) * 100) / 100.00;
                 this.z = Math.round((this.matrix[j - 1][i - 1] + vergleiche(
-                    (chartoNumber(this.seq1.charAt(j))),
-                    (chartoNumber(this.seq2.charAt(i))))) * 100) / 100.00;
+                        (chartoNumber(this.seq1.charAt(j))),
+                        (chartoNumber(this.seq2.charAt(i))))) * 100) / 100.00;
 
                 // Minimalen Weg in Matrix �bernehmen
                 this.matrix[j][i] = mini(this.x, this.y, this.z);
@@ -135,27 +135,27 @@ public class OneAffineAlignment extends Alignment {
                 vergleich:
                 {
                     if ((this.x == mini(this.x, this.y, this.z))
-                        && (this.y == mini(this.x, this.y, this.z))
-                        && (this.z == mini(this.x, this.y, this.z))) {
+                            && (this.y == mini(this.x, this.y, this.z))
+                            && (this.z == mini(this.x, this.y, this.z))) {
                         this.pathway[j][i][0] = 1;
                         this.pathway[j][i][1] = 0;
                         this.pathway[j][i][2] = 0;
                         break vergleich;
                     }
                     if ((this.x == mini(this.x, this.y, this.z))
-                        && (this.y == mini(this.x, this.y, this.z))) {
+                            && (this.y == mini(this.x, this.y, this.z))) {
                         this.pathway[j][i][0] = 1;
                         this.pathway[j][i][1] = 0;
                         break vergleich;
                     }
                     if ((this.y == mini(this.x, this.y, this.z))
-                        && (this.z == mini(this.x, this.y, this.z))) {
+                            && (this.z == mini(this.x, this.y, this.z))) {
                         this.pathway[j][i][0] = 2;
                         this.pathway[j][i][1] = 0;
                         break vergleich;
                     }
                     if ((this.x == mini(this.x, this.y, this.z))
-                        && (this.z == mini(this.x, this.y, this.z))) {
+                            && (this.z == mini(this.x, this.y, this.z))) {
                         this.pathway[j][i][0] = 1;
                         this.pathway[j][i][1] = 0;
                         break vergleich;

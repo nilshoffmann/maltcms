@@ -103,7 +103,7 @@ public class Peak1DFeatureVector implements IRowIndexNamedPeakFeatureVector {
      */
     @Override
     public List<String> getFeatureNames() {
-        List<String> l = new LinkedList<String>();
+        List<String> l = new LinkedList<>();
         for (FEATURE f : FEATURE.values()) {
             l.add(f.name());
         }

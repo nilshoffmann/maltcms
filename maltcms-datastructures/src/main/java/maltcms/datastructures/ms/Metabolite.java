@@ -52,7 +52,7 @@ public class Metabolite implements IMetabolite {
     private int dbno = -1;
     private String comments = null;
     private double min_mass, max_mass, min_intensity, max_intensity,
-        min_intensity_norm, max_intensity_norm;
+            min_intensity_norm, max_intensity_norm;
     private String date;
     private double ri = -1.0d;
     private String sp;
@@ -69,11 +69,11 @@ public class Metabolite implements IMetabolite {
     }
 
     public Metabolite(final String name1, final String id1,
-        final String id_type1, final int dbno1, final String comments1,
-        final String formula1, final String date1, final double ri1,
-        final double retentionTime1, final String retentionTimeUnit1,
-        final int mw1, final String sp1, final String shortName,
-        final ArrayDouble.D1 masses1, final ArrayInt.D1 intensities1) {
+            final String id_type1, final int dbno1, final String comments1,
+            final String formula1, final String date1, final double ri1,
+            final double retentionTime1, final String retentionTimeUnit1,
+            final int mw1, final String sp1, final String shortName,
+            final ArrayDouble.D1 masses1, final ArrayInt.D1 intensities1) {
         this();
         this.name = name1;
         this.id = id1;
@@ -100,7 +100,7 @@ public class Metabolite implements IMetabolite {
         if (o instanceof IRetentionInfo) {
             // If no retention index is given, use names as comparison criterion
             if ((((IRetentionInfo) o).getRetentionIndex() < 0)
-                || (getRetentionIndex() < 0)) {
+                    || (getRetentionIndex() < 0)) {
                 return getName().compareTo(o.getName());
             }
             if (((IRetentionInfo) o).getRetentionIndex() < getRetentionIndex()) {
@@ -156,8 +156,8 @@ public class Metabolite implements IMetabolite {
 
     @Override
     public Tuple2D<D1, ucar.ma2.ArrayInt.D1> getMassSpectrum() {
-        return new Tuple2D<D1, ucar.ma2.ArrayInt.D1>(this.masses,
-            this.intensities);
+        return new Tuple2D<>(this.masses,
+                this.intensities);
     }
 
     @Override
@@ -252,7 +252,7 @@ public class Metabolite implements IMetabolite {
 
     @Override
     public void setMassSpectrum(final D1 masses1,
-        final ucar.ma2.ArrayInt.D1 intensities1) {
+            final ucar.ma2.ArrayInt.D1 intensities1) {
         if ((masses1 != null) && (intensities1 != null)) {
             final MinMax mm = MAMath.getMinMax(masses1);
             this.min_mass = mm.min;
@@ -359,7 +359,7 @@ public class Metabolite implements IMetabolite {
         sb.append("\n");
         if (getRetentionTime() > 0) {
             sb.append("Synon: RT:" + getRetentionTimeUnit()
-                + getRetentionTime());
+                    + getRetentionTime());
             sb.append("\n");
         }
         if (getMw() >= 0) {
@@ -413,9 +413,9 @@ public class Metabolite implements IMetabolite {
                 setName(m.getName());
             }
             if ((m.getMassSpectrum().getFirst() != null)
-                && (m.getMassSpectrum().getSecond() != null)) {
+                    && (m.getMassSpectrum().getSecond() != null)) {
                 setMassSpectrum(m.getMassSpectrum().getFirst(), m
-                    .getMassSpectrum().getSecond());
+                        .getMassSpectrum().getSecond());
             }
             if (m.getMW() > 0) {
                 setMW(m.getMW());
@@ -427,7 +427,7 @@ public class Metabolite implements IMetabolite {
                 setRetentionTime(m.getRetentionTime());
             }
             if ((m.getRetentionTimeUnit() != null)
-                && !m.getRetentionTimeUnit().equals("")) {
+                    && !m.getRetentionTimeUnit().equals("")) {
                 setRetentionTimeUnit(m.getRetentionTimeUnit());
             }
             if ((m.getShortName() != null) && !m.getShortName().equals("")) {
@@ -438,7 +438,7 @@ public class Metabolite implements IMetabolite {
             }
         } else {
             throw new IllegalArgumentException(
-                "IDs do not match, cannot update!");
+                    "IDs do not match, cannot update!");
         }
 
     }

@@ -65,13 +65,13 @@ public class XYBPlot extends XYPlot implements Serializable {
      * from the ranges of the axis.
      *
      * @param backgroundFilename full qualified file name of the background
-     *                           image
-     * @param xAxis              x axis of the plot
-     * @param yAxis              y axis of the plot
+     * image
+     * @param xAxis x axis of the plot
+     * @param yAxis y axis of the plot
      * @throws IOException Includes any I/O exceptions that may occur
      */
     public XYBPlot(final String backgroundFilename, final NumberAxis xAxis,
-        final NumberAxis yAxis) throws IOException {
+            final NumberAxis yAxis) throws IOException {
         super(null, xAxis, yAxis, null);
 
         this.backgroundImageFilename = backgroundFilename;
@@ -91,15 +91,15 @@ public class XYBPlot extends XYPlot implements Serializable {
      * from image.
      *
      * @param backgroundFilename full qualified file name of the background
-     *                           image
-     * @param xAxisLabel         label of the x axis
-     * @param yAxisLabel         label of the y axis
+     * image
+     * @param xAxisLabel label of the x axis
+     * @param yAxisLabel label of the y axis
      * @throws IOException Includes any I/O exceptions that may occur
      */
     public XYBPlot(final String backgroundFilename, final String xAxisLabel,
-        final String yAxisLabel) throws IOException {
+            final String yAxisLabel) throws IOException {
         super(null, new NumberAxis(xAxisLabel), new NumberAxis(yAxisLabel),
-            null);
+                null);
 
         this.backgroundImageFilename = backgroundFilename;
 
@@ -111,9 +111,9 @@ public class XYBPlot extends XYPlot implements Serializable {
         this.minLowerYAxisBound = 0d;
 
         getDomainAxis().setRange(this.minLowerXAxisBound,
-            this.maxUpperXAxisBound);
+                this.maxUpperXAxisBound);
         getRangeAxis().setRange(this.minLowerYAxisBound,
-            this.maxUpperYAxisBound);
+                this.maxUpperYAxisBound);
         updateBackground();
     }
 
@@ -124,7 +124,7 @@ public class XYBPlot extends XYPlot implements Serializable {
      */
     private void initBackgroundImage() throws IOException {
         this.backgroundImage = ImageIO.read(new File(
-            this.backgroundImageFilename));
+                this.backgroundImageFilename));
         this.imageHeight = this.backgroundImage.getHeight();
         this.imageWidth = this.backgroundImage.getWidth();
 
@@ -142,9 +142,9 @@ public class XYBPlot extends XYPlot implements Serializable {
      */
     public Point translatePointToImageCoords(final double x, final double y) {
         final double axisXperc = (x - this.minLowerXAxisBound)
-            / (this.maxUpperXAxisBound - this.minLowerXAxisBound);
+                / (this.maxUpperXAxisBound - this.minLowerXAxisBound);
         final double axisYperc = (y - this.minLowerYAxisBound)
-            / (this.maxUpperYAxisBound - this.minLowerYAxisBound);
+                / (this.maxUpperYAxisBound - this.minLowerYAxisBound);
         final int newX = (int) (axisXperc * this.imageWidth);
         final int newY = (int) (axisYperc * this.imageHeight);
         return new Point(newX, newY);
@@ -156,12 +156,12 @@ public class XYBPlot extends XYPlot implements Serializable {
     public void updateBackground() {
         checkAxis();
         final Point p1 = translatePointToImageCoords(getDomainAxis()
-            .getLowerBound(), getRangeAxis().getLowerBound());
+                .getLowerBound(), getRangeAxis().getLowerBound());
         final Point p2 = translatePointToImageCoords(getDomainAxis()
-            .getUpperBound(), getRangeAxis().getUpperBound());
+                .getUpperBound(), getRangeAxis().getUpperBound());
         this.setBackgroundImage(this.backgroundImage.getSubimage((int) (p1
-            .getX()), (int) (this.imageHeight - p2.getY()), (int) (p2
-            .getX() - p1.getX()), (int) (p2.getY() - p1.getY())));
+                .getX()), (int) (this.imageHeight - p2.getY()), (int) (p2
+                .getX() - p1.getX()), (int) (p2.getY() - p1.getY())));
     }
 
     /**
@@ -169,10 +169,10 @@ public class XYBPlot extends XYPlot implements Serializable {
      */
     @Override
     public void zoomDomainAxes(final double factor,
-        final PlotRenderingInfo info, final Point2D source) {
+            final PlotRenderingInfo info, final Point2D source) {
         if (factor == 0.0d) {
             getDomainAxis().setRange(this.minLowerXAxisBound,
-                this.maxUpperXAxisBound);
+                    this.maxUpperXAxisBound);
         } else {
             super.zoomDomainAxes(factor, info, source);
         }
@@ -184,10 +184,10 @@ public class XYBPlot extends XYPlot implements Serializable {
      */
     @Override
     public void zoomRangeAxes(final double factor,
-        final PlotRenderingInfo info, final Point2D source) {
+            final PlotRenderingInfo info, final Point2D source) {
         if (factor == 0.0d) {
             getRangeAxis().setRange(this.minLowerYAxisBound,
-                this.maxUpperYAxisBound);
+                    this.maxUpperYAxisBound);
         } else {
             super.zoomRangeAxes(factor, info, source);
         }
@@ -222,8 +222,8 @@ public class XYBPlot extends XYPlot implements Serializable {
      */
     @Override
     public void zoomDomainAxes(final double factor,
-        final PlotRenderingInfo info, final Point2D source,
-        final boolean useAnchor) {
+            final PlotRenderingInfo info, final Point2D source,
+            final boolean useAnchor) {
         super.zoomDomainAxes(factor, info, source, useAnchor);
         updateBackground();
     }
@@ -233,8 +233,8 @@ public class XYBPlot extends XYPlot implements Serializable {
      */
     @Override
     public void zoomRangeAxes(final double factor,
-        final PlotRenderingInfo info, final Point2D source,
-        final boolean useAnchor) {
+            final PlotRenderingInfo info, final Point2D source,
+            final boolean useAnchor) {
         super.zoomRangeAxes(factor, info, source, useAnchor);
         updateBackground();
     }
@@ -244,8 +244,8 @@ public class XYBPlot extends XYPlot implements Serializable {
      */
     @Override
     public void zoomDomainAxes(final double lowerPercent,
-        final double upperPercent, final PlotRenderingInfo info,
-        final Point2D source) {
+            final double upperPercent, final PlotRenderingInfo info,
+            final Point2D source) {
         super.zoomDomainAxes(lowerPercent, upperPercent, info, source);
         updateBackground();
     }
@@ -255,8 +255,8 @@ public class XYBPlot extends XYPlot implements Serializable {
      */
     @Override
     public void zoomRangeAxes(final double lowerPercent,
-        final double upperPercent, final PlotRenderingInfo info,
-        final Point2D source) {
+            final double upperPercent, final PlotRenderingInfo info,
+            final Point2D source) {
         super.zoomRangeAxes(lowerPercent, upperPercent, info, source);
         updateBackground();
     }
@@ -316,19 +316,19 @@ public class XYBPlot extends XYPlot implements Serializable {
      * Responsible for the reading of serialized objects.
      *
      * @param in input stream
-     * @throws IOException            Includes any I/O exceptions that may occur
+     * @throws IOException Includes any I/O exceptions that may occur
      * @throws ClassNotFoundException Includes any class not found exception
-     *                                that may occur
+     * that may occur
      */
     private void readObject(final ObjectInputStream in) throws IOException,
-        ClassNotFoundException {
+            ClassNotFoundException {
         this.backgroundImageFilename = (String) in.readObject();
         this.maxUpperXAxisBound = (Double) in.readObject();
         this.maxUpperYAxisBound = (Double) in.readObject();
         this.minLowerXAxisBound = (Double) in.readObject();
         this.minLowerYAxisBound = (Double) in.readObject();
         if (this.backgroundImageFilename != null
-            && !this.backgroundImageFilename.equals("")) {
+                && !this.backgroundImageFilename.equals("")) {
             initBackgroundImage();
             updateBackground();
         }
@@ -338,19 +338,19 @@ public class XYBPlot extends XYPlot implements Serializable {
      * Translates a given screen point from a mouse event to the coredponding
      * image coordinates.
      *
-     * @param screenPoint    screen point
+     * @param screenPoint screen point
      * @param screenDataArea scaled data area
      * @return image coordinates
      */
     public Point translatePointToImageCoord(final Point2D screenPoint,
-        final Rectangle2D screenDataArea) {
+            final Rectangle2D screenDataArea) {
         final ValueAxis da = this.getDomainAxis();
         final ValueAxis ra = this.getRangeAxis();
 
         final double x = da.java2DToValue(screenPoint.getX(), screenDataArea,
-            this.getDomainAxisEdge());
+                this.getDomainAxisEdge());
         final double y = ra.java2DToValue(screenPoint.getY(), screenDataArea,
-            this.getRangeAxisEdge());
+                this.getRangeAxisEdge());
 
         return translatePointToImageCoords(x, y);
     }

@@ -75,7 +75,7 @@ public class GradientVisualizer extends AFragmentCommand {
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";
     @Configurable(name = "var.second_column_scan_index",
-        value = "second_column_scan_index")
+            value = "second_column_scan_index")
     private String secondScanIndexVar = "second_column_scan_index";
     @Configurable(name = "var.scan_rate", value = "scan_rate")
     private String scanRateVar = "scan_rate";
@@ -86,7 +86,7 @@ public class GradientVisualizer extends AFragmentCommand {
     @Configurable(name = "maltcms.ui.charts.PlotRunner.filetype", value = "png")
     private String format = "png";
     @Configurable(name = "ucar.nc2.NetcdfFile.fillValueDouble",
-        value = "9.9692099683868690e+36d")
+            value = "9.9692099683868690e+36d")
     private double doubleFillValue;
     @Configurable(name = "images.thresholdLow", value = "0")
     private double threshold = 0;
@@ -107,9 +107,9 @@ public class GradientVisualizer extends AFragmentCommand {
         for (final IFileFragment ff : t) {
             log.info("Creating image for {}", ff.getName());
             final int scanRate = ff.getChild(this.scanRateVar).getArray().getInt(
-                Index.scalarIndexImmutable);
+                    Index.scalarIndexImmutable);
             final int modulationTime = ff.getChild(this.modulationTimeVar).
-                getArray().getInt(Index.scalarIndexImmutable);
+                    getArray().getInt(Index.scalarIndexImmutable);
             final int scansPerModulation = scanRate * modulationTime;
             IVariableFragment ticVar = ff.getChild(this.totalIntensityVar);
             IVariableFragment ssiv = ff.getChild(this.secondScanIndexVar);
@@ -117,10 +117,10 @@ public class GradientVisualizer extends AFragmentCommand {
             if (this.similarity instanceof ArrayDotMap) {
                 log.info("Setting std");
                 ((ArrayDotMap) this.similarity).setStdArray((ArrayDouble.D1) ff.
-                    getChild("sd_intensity_values").getArray());
+                        getChild("sd_intensity_values").getArray());
             }
 
-            final List<Array> gradient = new ArrayList<Array>();
+            final List<Array> gradient = new ArrayList<>();
             final IScanLine slc = ScanLineCacheFactory.getScanLineCache(ff);
             slc.setCacheModulations(false);
             Array old = null, actual = null;
@@ -142,7 +142,7 @@ public class GradientVisualizer extends AFragmentCommand {
                     actual = ms;
                     if ((old != null) && (actual != null)) {
                         d = Math.abs(this.similarity.apply(old,
-                            actual));
+                                actual));
                         sum += d;
                         c++;
                         if (max < d) {
@@ -167,16 +167,16 @@ public class GradientVisualizer extends AFragmentCommand {
             log.info("min: {}, max: {}, mean: " + (sum / c), min, max);
 
             final BufferedImage bi = ImageTools.create2DImage(ff.getName(),
-                gradient, scansPerModulation, this.doubleFillValue,
-                this.threshold, colorRamp, this.getClass());
+                    gradient, scansPerModulation, this.doubleFillValue,
+                    this.threshold, colorRamp, this.getClass());
             if (this.absolut) {
                 log.info("Using abolute MS as reference");
                 bi.getRaster().setPixel(start.x, start.y, new int[]{0, 0, 0});
             }
             final String filename = StringTools.removeFileExt(ff.getName())
-                + "-" + this.similarity.getClass().getSimpleName();
+                    + "-" + this.similarity.getClass().getSimpleName();
             ImageTools.saveImage(bi, filename, this.format, getWorkflow().
-                getOutputDirectory(this), this);
+                    getOutputDirectory(this), this);
         }
         return t;
     }
@@ -187,14 +187,14 @@ public class GradientVisualizer extends AFragmentCommand {
     @Override
     public void configure(final Configuration cfg) {
         this.totalIntensityVar = cfg.getString(this.getClass().getName()
-            + ".total_intensity", "total_intensity");
+                + ".total_intensity", "total_intensity");
         this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
         this.modulationTimeVar = cfg.getString("var.modulation_time",
-            "modulation_time");
+                "modulation_time");
         this.secondScanIndexVar = cfg.getString("var.second_column_scan_index",
-            "second_column_scan_index");
+                "second_column_scan_index");
         this.doubleFillValue = cfg.getDouble(
-            "ucar.nc2.NetcdfFile.fillValueDouble", 9.9692099683868690e+36);
+                "ucar.nc2.NetcdfFile.fillValueDouble", 9.9692099683868690e+36);
         this.threshold = cfg.getDouble("images.thresholdLow", 0.0d);
         this.colorrampLocation = cfg.getString("images.colorramp", "res/colorRamps/bcgyr.csv");
         this.format = cfg.getString("maltcms.ui.charts.PlotRunner.filetype", "png");

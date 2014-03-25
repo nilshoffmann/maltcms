@@ -54,7 +54,7 @@ import ucar.ma2.MAMath;
  */
 public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
 
-    private final Map<Category, List<Entity<T>>> peakTableMap = new LinkedHashMap<Category, List<Entity<T>>>();
+    private final Map<Category, List<Entity<T>>> peakTableMap = new LinkedHashMap<>();
 
     public ChromaTOFPeakListEntityTable(File... peakLists) {
         for (File f : peakLists) {
@@ -70,10 +70,10 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
     }
 
     public final List<Entity<T>> buildEntities(Category c, Tuple2D<LinkedHashSet<String>, List<TableRow>> t) {
-        List<Entity<T>> l = new ArrayList<Entity<T>>(t.getSecond().size());
+        List<Entity<T>> l = new ArrayList<>(t.getSecond().size());
         int rowIndex = 0;
-        Set<Double> areaSet = new HashSet<Double>();
-        MultiMap<String, Entity<T>> mm = new MultiMap<String, Entity<T>>();
+        Set<Double> areaSet = new HashSet<>();
+        MultiMap<String, Entity<T>> mm = new MultiMap<>();
         for (TableRow tr : t.getSecond()) {
             //System.out.println("Parsing row "+(index+1)+"/"+report.getSecond().size());
 //			System.out.println("Row data for row index: "+rowIndex+" = "+tr.toString());
@@ -135,7 +135,7 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
     public List<Entity<T>> findMatching(Entity<T> query, String feature) {
         Category c = query.getCategory();
         List<Entity<T>> l = getEntities(c);
-        List<Entity<T>> results = new LinkedList<Entity<T>>();
+        List<Entity<T>> results = new LinkedList<>();
         Array queryA = query.getFeatureVector().getFeature(feature);
 //		System.out.println("Query for category: "+c+" = "+query);
 //		System.out.println("Categories in table: "+peakTableMap.keySet());

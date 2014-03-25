@@ -54,9 +54,9 @@ public class DBMatch implements Comparable {
     }
 
     public static List<Tuple2D<Double, IMetabolite>> asMatchList(Collection<DBMatch> c) {
-        List<Tuple2D<Double, IMetabolite>> l = new ArrayList<Tuple2D<Double, IMetabolite>>();
+        List<Tuple2D<Double, IMetabolite>> l = new ArrayList<>();
         for (DBMatch dbm : c) {
-            l.add(new Tuple2D<Double, IMetabolite>(dbm.getMatchScore(), dbm.getMetabolite()));
+            l.add(new Tuple2D<>(dbm.getMatchScore(), dbm.getMetabolite()));
         }
         return l;
     }

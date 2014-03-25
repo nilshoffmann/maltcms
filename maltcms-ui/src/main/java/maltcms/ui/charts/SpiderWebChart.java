@@ -41,8 +41,8 @@ import org.jfree.data.category.DefaultCategoryDataset;
 public class SpiderWebChart extends AChart<SpiderWebPlot> {
 
     public static CategoryDataset createCategoryDataset(
-        final String[] collabels, final String[] rowlabels,
-        final double[][] data) {
+            final String[] collabels, final String[] rowlabels,
+            final double[][] data) {
         final DefaultCategoryDataset cd = new DefaultCategoryDataset();
         EvalTools.eqI(collabels.length, data[0].length, cd);
         EvalTools.eqI(rowlabels.length, data.length, cd);
@@ -62,9 +62,9 @@ public class SpiderWebChart extends AChart<SpiderWebPlot> {
     }
 
     public SpiderWebChart(final String title1, final String[] collabels,
-        final String[] rowlabels, final double[][] data) {
+            final String[] rowlabels, final double[][] data) {
         this(title1, SpiderWebChart.createCategoryDataset(collabels, rowlabels,
-            data));
+                data));
     }
 
     @Override

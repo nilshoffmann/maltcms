@@ -176,19 +176,19 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
         EvalTools.notNull(cfg, cfg);
         Factory.getInstance().configure(cfg);
         SymbolicRepresentationAlignment.fenstergr = cfg.getInt(
-            "maltcms.soeren.dimensionreduce.window_size", 10);
+                "maltcms.soeren.dimensionreduce.window_size", 10);
         SymbolicRepresentationAlignment.alphabetgr = cfg.getInt(
-            "maltcms.soeren.symbolic.alphabet_size", 20);
+                "maltcms.soeren.symbolic.alphabet_size", 20);
         SymbolicRepresentationAlignment.gapinit = cfg.getDouble(
-            "maltcms.soeren.alignment.gapinit", 3);
+                "maltcms.soeren.alignment.gapinit", 3);
         SymbolicRepresentationAlignment.format = cfg.getString(
-            "maltcms.soeren.alignment.output_format", "pair");
+                "maltcms.soeren.alignment.output_format", "pair");
         SymbolicRepresentationAlignment.location = cfg.getString(
-            "maltcms.soeren.alignmentoutput.location", "GERMANY");
+                "maltcms.soeren.alignmentoutput.location", "GERMANY");
 
         // Set up the command sequence
         final ICommandSequence cs = Factory.getInstance()
-            .createCommandSequence();
+                .createCommandSequence();
         try {
             cs.getWorkflow().call();
             cs.getWorkflow().save();
@@ -206,25 +206,25 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
         SymbolicRepresentationAlignment.intensearrays = new Array[size];
         final double[] median = new double[size];
         final double[] minmax = new double[size * 2];
-        SymbolicRepresentationAlignment.hm = new HashMap<IFileFragment, Array>();
+        SymbolicRepresentationAlignment.hm = new HashMap<>();
         SymbolicRepresentationAlignment.sorti = new SortedJavArrays();
         SymbolicRepresentationAlignment.stand = new Standardizer();
         int i = 0;
 
         for (final IFileFragment f : t) {
             SymbolicRepresentationAlignment.intensearrays[i] = f.getChild(
-                "total_intensity").getArray().copy();
+                    "total_intensity").getArray().copy();
 
             SymbolicRepresentationAlignment.hm
-                .put(
-                    f,
-                    DimensionReduce
-                    .paa(
-                        SymbolicRepresentationAlignment.stand
-                        .cleanbaseline(SymbolicRepresentationAlignment.stand
-                            .scale(SymbolicRepresentationAlignment.stand
-                                .logData(SymbolicRepresentationAlignment.intensearrays[i]))),
-                        SymbolicRepresentationAlignment.fenstergr));
+                    .put(
+                            f,
+                            DimensionReduce
+                            .paa(
+                                    SymbolicRepresentationAlignment.stand
+                                    .cleanbaseline(SymbolicRepresentationAlignment.stand
+                                            .scale(SymbolicRepresentationAlignment.stand
+                                                    .logData(SymbolicRepresentationAlignment.intensearrays[i]))),
+                                    SymbolicRepresentationAlignment.fenstergr));
             median[i] = SymbolicRepresentationAlignment.stand.getMedian();
             if (i < 1) {
                 minmax[i] = SymbolicRepresentationAlignment.stand.getMin();
@@ -233,78 +233,78 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
             i++;
         }
 
-        final HashMap<IFileFragment, Integer> filenameToIndex = new HashMap<IFileFragment, Integer>();
+        final HashMap<IFileFragment, Integer> filenameToIndex = new HashMap<>();
         final int nextIndex = 0;
         final ArrayDouble.D2 pairwiseDistances = new ArrayDouble.D2(
-            t.getSize(), t.getSize());
+                t.getSize(), t.getSize());
         final Iterator<IFileFragment> ffiter = t.getIterator();
         final int maxlength = initMaxLength(ffiter);
         final ArrayChar.D2 names = initNames(t, filenameToIndex, nextIndex,
-            maxlength);
+                maxlength);
 
         NewDistanceMatrix ndm = null;
-        final TupleND<IFileFragment> alignments = new TupleND<IFileFragment>();
+        final TupleND<IFileFragment> alignments = new TupleND<>();
         final List<Tuple2D<IFileFragment, IFileFragment>> tpl = (this.pairsWithFirst ? t
-            .getPairsWithFirstElement()
-            : t.getPairs());
+                .getPairsWithFirstElement()
+                : t.getPairs());
         for (final Tuple2D<IFileFragment, IFileFragment> F : tpl) {
 
             final String filename = "PW_DISTANCE_"
-                + StringTools.removeFileExt(F.getFirst().getName()) + "_"
-                + StringTools.removeFileExt(F.getSecond().getName())
-                + ".csv";
+                    + StringTools.removeFileExt(F.getFirst().getName()) + "_"
+                    + StringTools.removeFileExt(F.getSecond().getName())
+                    + ".csv";
             final IFileFragment iff = new FileFragment(
-                new File(getWorkflow().getOutputDirectory(this),
-                    filename));
+                    new File(getWorkflow().getOutputDirectory(this),
+                            filename));
             final StatsMap sm = new StatsMap(iff);
             final long t_start = System.currentTimeMillis();
             SymbolicRepresentationAlignment.sorti.sort(
-                SymbolicRepresentationAlignment.hm.get(F.getFirst()),
-                SymbolicRepresentationAlignment.hm.get(F.getSecond()));
+                    SymbolicRepresentationAlignment.hm.get(F.getFirst()),
+                    SymbolicRepresentationAlignment.hm.get(F.getSecond()));
             SymbolicRepresentationAlignment.bpois = new BreakPoints(
-                SymbolicRepresentationAlignment.hm.get(F.getFirst()),
-                SymbolicRepresentationAlignment.hm.get(F.getSecond()));
+                    SymbolicRepresentationAlignment.hm.get(F.getFirst()),
+                    SymbolicRepresentationAlignment.hm.get(F.getSecond()));
 
             ndm = new NewDistanceMatrix(SymbolicRepresentationAlignment.bpois
-                .getCommon());
+                    .getCommon());
             final int aoriglen = F.getFirst().getChild("total_intensity")
-                .getArray().getShape()[0];
+                    .getArray().getShape()[0];
             final int boriglen = F.getSecond().getChild("total_intensity")
-                .getArray().getShape()[0];
+                    .getArray().getShape()[0];
             SymbolicRepresentationAlignment.al = new OneAffineAlignment(F
-                .getFirst(), F.getSecond());
+                    .getFirst(), F.getSecond());
             SymbolicRepresentationAlignment.al.setKostenfunktion(ndm
-                .getDistmat());
+                    .getDistmat());
             SymbolicRepresentationAlignment.al.computeMatrix("-"
-                + SymbolConvert.symbolic(
-                    SymbolicRepresentationAlignment.hm
-                    .get(F.getFirst()),
-                    SymbolicRepresentationAlignment.bpois.getCommon())
-                .toString().replaceAll(" ", ""), "-"
-                + SymbolConvert.symbolic(
-                    SymbolicRepresentationAlignment.hm.get(F
-                        .getSecond()),
-                    SymbolicRepresentationAlignment.bpois.getCommon())
-                .toString().replaceAll(" ", ""));
+                    + SymbolConvert.symbolic(
+                            SymbolicRepresentationAlignment.hm
+                            .get(F.getFirst()),
+                            SymbolicRepresentationAlignment.bpois.getCommon())
+                    .toString().replaceAll(" ", ""), "-"
+                    + SymbolConvert.symbolic(
+                            SymbolicRepresentationAlignment.hm.get(F
+                                    .getSecond()),
+                            SymbolicRepresentationAlignment.bpois.getCommon())
+                    .toString().replaceAll(" ", ""));
             SymbolicRepresentationAlignment.al.createAlignments(
-                SymbolicRepresentationAlignment.al.getSeq1(),
-                SymbolicRepresentationAlignment.al.getSeq2());
+                    SymbolicRepresentationAlignment.al.getSeq1(),
+                    SymbolicRepresentationAlignment.al.getSeq2());
             final long t_end = System.currentTimeMillis() - t_start;
             final AlignmentOutput put = new AlignmentOutput();
             for (int fr = 0; fr < SymbolicRepresentationAlignment.al
-                .getAllalignments().size(); fr++) {
+                    .getAllalignments().size(); fr++) {
                 put.writefile(SymbolicRepresentationAlignment.al.getSeq1(),
-                    SymbolicRepresentationAlignment.al.getSeq2(),
-                    SymbolicRepresentationAlignment.al.getAllalignments(),
-                    SymbolicRepresentationAlignment.al.getMatrix(),
-                    SymbolicRepresentationAlignment.format, ndm
-                    .getDistmat(),
-                    SymbolicRepresentationAlignment.location, fr,
-                    SymbolicRepresentationAlignment.al, aoriglen, boriglen,
-                    getWorkflow());
+                        SymbolicRepresentationAlignment.al.getSeq2(),
+                        SymbolicRepresentationAlignment.al.getAllalignments(),
+                        SymbolicRepresentationAlignment.al.getMatrix(),
+                        SymbolicRepresentationAlignment.format, ndm
+                        .getDistmat(),
+                        SymbolicRepresentationAlignment.location, fr,
+                        SymbolicRepresentationAlignment.al, aoriglen, boriglen,
+                        getWorkflow());
             }
             final int maplength = MaltcmsTools.getWarpPath(
-                put.getResult().provideFileFragment()).size();
+                    put.getResult().provideFileFragment()).size();
             sm.setLabel(F.getFirst().getName() + "-" + F.getSecond().getName());
             sm.put("time", new Double(t_end));
 
@@ -316,19 +316,19 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
             sm.put("maplength", new Double(maplength));
             put.getResult().provideFileFragment().save();
             final double value = put.getResult().getResult().get();
-            sm.put("value", new Double(value));
+            sm.put("value", value);
             final Integer i1 = filenameToIndex.get(F.getFirst());
             final Integer i2 = filenameToIndex.get(F.getSecond());
             pairwiseDistances.set(i1, i2, value);
             pairwiseDistances.set(i2, i1, value);
             final StatsWriter sw = Factory.getInstance().getObjectFactory()
-                .instantiate(StatsWriter.class);
+                    .instantiate(StatsWriter.class);
             sw.setWorkflow(getWorkflow());
             sw.write(sm);
             alignments.add(put.getResult().provideFileFragment());
         }
 
-        drawTICS(t, new TupleND<IFileFragment>(alignments));
+        drawTICS(t, new TupleND<>(alignments));
         final String name = "pairwise_distances.cdf";
         final PairwiseDistances pd = new PairwiseDistances();
         pd.setName(name);
@@ -345,27 +345,27 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     @Override
     public void configure(final Configuration cfg) {
         SymbolicRepresentationAlignment.fenstergr = cfg.getInt(
-            "maltcms.soeren.dimensionreduce.window_size", 4);
+                "maltcms.soeren.dimensionreduce.window_size", 4);
         SymbolicRepresentationAlignment.alphabetgr = cfg.getInt(
-            "maltcms.soeren.symbolic.alphabet_size", 7);
+                "maltcms.soeren.symbolic.alphabet_size", 7);
         SymbolicRepresentationAlignment.gapinit = cfg.getDouble(
-            "maltcms.soeren.alignment.gapinit", 1);
+                "maltcms.soeren.alignment.gapinit", 1);
         SymbolicRepresentationAlignment.format = cfg.getString(
-            "maltcms.soeren.alignment.output_format", "pair");
+                "maltcms.soeren.alignment.output_format", "pair");
         SymbolicRepresentationAlignment.location = cfg.getString(
-            "maltcms.soeren.alignmentoutput.location", "GERMANY");
+                "maltcms.soeren.alignmentoutput.location", "GERMANY");
         this.pairsWithFirst = cfg
-            .getBoolean(
-                "maltcms.commands.fragments.PairwiseDistanceCalculator.pairsWithFirstElement",
-                true);
+                .getBoolean(
+                        "maltcms.commands.fragments.PairwiseDistanceCalculator.pairsWithFirstElement",
+                        true);
         this.minArrayComp = cfg.getString("var.minimizing_array_comp",
-            "minimizing_array_comp");
+                "minimizing_array_comp");
     }
 
     private void drawAlignedTICS(final TupleND<IFileFragment> t,
-        final TupleND<IFileFragment> alignment) {
+            final TupleND<IFileFragment> alignment) {
         final String refname = t.get(0).getName();
-        final ArrayList<IFileFragment> toRefAlignments = new ArrayList<IFileFragment>();
+        final ArrayList<IFileFragment> toRefAlignments = new ArrayList<>();
         for (final IFileFragment iff : alignment) {
             final IFileFragment ref = FragmentTools.getLHSFile(iff);
             if (ref.getName().equals(refname)) {
@@ -379,17 +379,17 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
         maxLength = a[0].getShape()[0];
         for (int i = 0; i < toRefAlignments.size(); i++) {
             final List<Tuple2DI> al = MaltcmsTools.getWarpPath(toRefAlignments
-                .get(i));
+                    .get(i));
             final Array rhs = FragmentTools.getRHSFile(toRefAlignments.get(i))
-                .getChild("total_intensity").getArray();
+                    .getChild("total_intensity").getArray();
             final Array rhsm = Array.factory(a[0].getElementType(), a[0]
-                .getShape());
+                    .getShape());
             final Index rhsi = rhs.getIndex();
             final Index rhsmi = rhsm.getIndex();
             for (final Tuple2DI tpl : al) {
                 final double value = rhsm.getDouble(rhsmi.set(tpl.getFirst()));
                 rhsm.setDouble(rhsmi.set(tpl.getFirst()), (value + rhs
-                    .getDouble(rhsi.set(tpl.getSecond()))) / 2.0d);
+                        .getDouble(rhsi.set(tpl.getSecond()))) / 2.0d);
             }
             a[i + 1] = rhsm;
 
@@ -401,16 +401,16 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
         final StatsMap gsm = ass.getGlobalStatsMap();
         final int maxStringLength = 250;
         final BufferedImage bi = new BufferedImage(maxLength + maxStringLength,
-            heightPerTIC * t.getSize(), BufferedImage.TYPE_INT_RGB);
+                heightPerTIC * t.getSize(), BufferedImage.TYPE_INT_RGB);
         // double[] samples = ImageTools.createSampleTable(1024);
         final ColorRampReader crr = new ColorRampReader();
         final int[][] colorRamp = crr.readColorRamp("res/colorRamps/bw.csv");
         for (int i = 0; i < t.getSize(); i++) {
             final String name = StringTools.removeFileExt(t.get(i).getName());
             final BufferedImage tic = bi.getSubimage(maxStringLength, i
-                * heightPerTIC, maxLength, heightPerTIC);
+                    * heightPerTIC, maxLength, heightPerTIC);
             // double[] brks = ImageTools.getBreakpoints(a[i], 1024);
-            final ArrayList<Array> al = new ArrayList<Array>(a[i].getShape()[0]);
+            final ArrayList<Array> al = new ArrayList<>(a[i].getShape()[0]);
             final ucar.ma2.Index idx = a[i].getIndex();
             for (int j = 0; j < a[i].getShape()[0]; j++) {
                 final ArrayInt.D1 b = new ArrayInt.D1(heightPerTIC);
@@ -419,7 +419,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
             }
             ImageTools.makeImage(tic.getRaster(), al, 1024, colorRamp, 0.0d);
             final BufferedImage label = bi.getSubimage(0, i * heightPerTIC,
-                maxStringLength, heightPerTIC);
+                    maxStringLength, heightPerTIC);
             final Graphics2D g = label.createGraphics();
             g.setColor(Color.WHITE);
             final int fontsize = heightPerTIC * 2 / 3;
@@ -427,9 +427,9 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
             final Font f = new Font("Arial", Font.PLAIN, fontsize);
             g.setFont(f);
             final LineMetrics lm = f.getLineMetrics(name, g
-                .getFontRenderContext());
+                    .getFontRenderContext());
             final TextLayout tl = new TextLayout(name, f, g
-                .getFontRenderContext());
+                    .getFontRenderContext());
             tl.draw(g, 0, tl.getAscent());
             // g.drawString(name, 0, lm.getAscent() / heightPerTIC);
         }
@@ -448,30 +448,30 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     }
 
     private void drawTICS(final TupleND<IFileFragment> t,
-        final TupleND<IFileFragment> alignments) {
+            final TupleND<IFileFragment> alignments) {
         final int heightPerTIC = 50;
         int maxLength = 0;
         final Array[] a = new Array[t.size()];
         for (int i = 0; i < t.size(); i++) {
             a[i] = t.get(i).getChild("total_intensity").getArray();
             maxLength = (a[i].getShape()[0] > maxLength ? a[i].getShape()[0]
-                : maxLength);
+                    : maxLength);
         }
         final ArrayStatsScanner ass = new ArrayStatsScanner();
         final StatsMap[] sm = ass.apply(a);
         final StatsMap gsm = ass.getGlobalStatsMap();
         final int maxStringLength = 250;
         final BufferedImage bi = new BufferedImage(maxLength + maxStringLength,
-            heightPerTIC * t.getSize(), BufferedImage.TYPE_INT_RGB);
+                heightPerTIC * t.getSize(), BufferedImage.TYPE_INT_RGB);
         // double[] samples = ImageTools.createSampleTable(1024);
         final ColorRampReader crr = new ColorRampReader();
         final int[][] colorRamp = crr.readColorRamp("res/colorRamps/bw.csv");
         for (int i = 0; i < t.getSize(); i++) {
             final String name = StringTools.removeFileExt(t.get(i).getName());
             final BufferedImage tic = bi.getSubimage(maxStringLength, i
-                * heightPerTIC, maxLength, heightPerTIC);
+                    * heightPerTIC, maxLength, heightPerTIC);
             // double[] brks = ImageTools.getBreakpoints(a[i], 1024);
-            final ArrayList<Array> al = new ArrayList<Array>(a[i].getShape()[0]);
+            final ArrayList<Array> al = new ArrayList<>(a[i].getShape()[0]);
             final ucar.ma2.Index idx = a[i].getIndex();
             for (int j = 0; j < a[i].getShape()[0]; j++) {
                 final ArrayInt.D1 b = new ArrayInt.D1(heightPerTIC);
@@ -480,7 +480,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
             }
             ImageTools.makeImage(tic.getRaster(), al, 1024, colorRamp, 0.0d);
             final BufferedImage label = bi.getSubimage(0, i * heightPerTIC,
-                maxStringLength, heightPerTIC);
+                    maxStringLength, heightPerTIC);
             final Graphics2D g = label.createGraphics();
             g.setColor(Color.WHITE);
             final int fontsize = heightPerTIC * 2 / 3;
@@ -488,9 +488,9 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
             final Font f = new Font("Arial", Font.PLAIN, fontsize);
             g.setFont(f);
             final LineMetrics lm = f.getLineMetrics(name, g
-                .getFontRenderContext());
+                    .getFontRenderContext());
             final TextLayout tl = new TextLayout(name, f, g
-                .getFontRenderContext());
+                    .getFontRenderContext());
             tl.draw(g, 0, tl.getAscent());
             // g.drawString(name, 0, lm.getAscent() / heightPerTIC);
         }
@@ -544,8 +544,8 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     }
 
     private ArrayChar.D2 initNames(final TupleND<IFileFragment> t,
-        final HashMap<IFileFragment, Integer> filenameToIndex,
-        final int nextIndex1, final int maxlength) {
+            final HashMap<IFileFragment, Integer> filenameToIndex,
+            final int nextIndex1, final int maxlength) {
         int nextIndex = nextIndex1;
         Iterator<IFileFragment> ffiter;
         final ArrayChar.D2 names = new ArrayChar.D2(t.size(), maxlength);
@@ -569,13 +569,13 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
      * @param names
      */
     public void saveToCSV(final IFileFragment pwdist,
-        final ArrayDouble.D2 distances, final ArrayChar.D2 names) {
+            final ArrayDouble.D2 distances, final ArrayChar.D2 names) {
         final CSVWriter csvw = Factory.getInstance().getObjectFactory()
-            .instantiate(CSVWriter.class);
+                .instantiate(CSVWriter.class);
         csvw.setWorkflow(getWorkflow());
         csvw.writeArray2DwithLabels(getWorkflow().getOutputDirectory(this)
-            .getAbsolutePath(), "pairwise_distances.csv", distances, names,
-            this.getClass(), WorkflowSlot.STATISTICS, getWorkflow()
-            .getStartupDate(), pwdist);
+                .getAbsolutePath(), "pairwise_distances.csv", distances, names,
+                this.getClass(), WorkflowSlot.STATISTICS, getWorkflow()
+                .getStartupDate(), pwdist);
     }
 }

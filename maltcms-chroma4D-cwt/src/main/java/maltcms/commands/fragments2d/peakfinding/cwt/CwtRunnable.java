@@ -135,10 +135,10 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     @Configurable(value = "", description = "The output directory. Should be an absolute file path.")
     private String outputDir = "";
     @Configurable(name = "var.modulation_time.default",
-        value = "5.0d", description = "The modulation time. Default value is var.modulation_time.default.")
+            value = "5.0d", description = "The modulation time. Default value is var.modulation_time.default.")
     private double modulationTime = 5.0d;
     @Configurable(name = "var.scan_rate.default", type = double.class,
-        value = "100.0d", description = "The scan rate. Default value is var.scan_rate.default.")
+            value = "100.0d", description = "The scan rate. Default value is var.scan_rate.default.")
     private double scanRate = 100.0d;
     @Configurable(description = "The maximum radius around a peak to search for neighboring peaks.")
     private double radius = 10.0d;
@@ -169,7 +169,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         } catch (ResourceNotAvailableException rnae) {
             mt = new VariableFragment(f, "modulation_time");
             mt.setArray(maltcms.tools.ArrayTools.factoryScalar(
-                this.modulationTime));
+                    this.modulationTime));
         }
 
         IVariableFragment sr = null;
@@ -186,7 +186,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         ArrayStatsScanner ass = new ArrayStatsScanner();
         StatsMap sm = ass.apply(new Array[]{tic})[0];
         MultiplicationFilter mf = new MultiplicationFilter(
-            1.0 / (sm.get(Vars.Max.name()) - sm.get(Vars.Min.name())));
+                1.0 / (sm.get(Vars.Max.name()) - sm.get(Vars.Min.name())));
         tic = mf.apply(tic);
 //		Percentile p = new Percentile(99);
         double[] tica = (double[]) tic.get1DJavaArray(double.class);
@@ -201,7 +201,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         int spm = (int) (mt.getArray().getDouble(0) * sr.getArray().getDouble(0));
         int modulations = tic.getShape()[0] / spm;
         System.out.println("Using " + spm
-            + " scans per modulation, total modulations: " + modulations);
+                + " scans per modulation, total modulations: " + modulations);
         List<Ridge> r = apply(f.getName(), tic, sat, f, 0, modulations, spm, minPercentileValue);//,
         //fivePercent);
         // r = findRidgeMaxima(r,tic);
@@ -212,13 +212,13 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     }
 
     private List<Peak2D> createPeaksForRidges(IFileFragment f, Array tic,
-        Array sat, List<Ridge> r, int spm) {
+            Array sat, List<Ridge> r, int spm) {
         int index = 0;
         Index tidx = tic.getIndex();
         Index sidx = sat.getIndex();
         // List<Scan2D> scans = new ArrayList<Scan2D>();
 //		System.out.println("Building scans");
-        List<Peak2D> p2 = new LinkedList<Peak2D>();
+        List<Peak2D> p2 = new LinkedList<>();
         Tuple2D<Double, Double> massRange = MaltcmsTools.getMinMaxMassRange(f);
         ScanLineCacheFactory.setMinMass(massRange.getFirst());
         ScanLineCacheFactory.setMaxMass(massRange.getSecond());
@@ -244,7 +244,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
             }
             if (ms != null) {
                 PeakArea2D pa2 = new PeakArea2D(seed, ms,
-                    p.getApexIntensity(), p.getApexIndex(), spm);
+                        p.getApexIntensity(), p.getApexIndex(), spm);
                 p.setPeakArea(pa2);
                 //pi.setName(p);
                 List<Tuple2D<Double, IMetabolite>> t = p.getNames();
@@ -270,13 +270,13 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(f.getUri());
         // List<Scan2D> scans = new ArrayList<Scan2D>();
         System.out.println("Building scans");
-        List<Peak1D> p2 = new LinkedList<Peak1D>();
+        List<Peak1D> p2 = new LinkedList<>();
         for (Peak2D p : l) {
             maf.addPeakAnnotation(ma, CwtPeakFinder.class.getName(), p);
             p2.add(p);
         }
         File outf = new File(outputDir, StringTools.removeFileExt(f.getName())
-            + ".mann.xml");
+                + ".mann.xml");
         maf.save(ma, outf);
         Peak2D.append(f, new LinkedList<IPeakNormalizer>(), p2, null, "tic_peaks", null);
 //		return f;
@@ -287,15 +287,15 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     }
 
     private List<Ridge> apply(String filename, final Array arr,
-        final Array sat, final IFileFragment f, final int x,
-        final int modulations, final int spm,
-        final double minPercentileValue) {
+            final Array sat, final IFileFragment f, final int x,
+            final int modulations, final int spm,
+            final double minPercentileValue) {
         MexicanHatWaveletFilter cwt = new MexicanHatWaveletFilter();
 
-        List<Double> scales = new LinkedList<Double>();
+        List<Double> scales = new LinkedList<>();
 
         final ArrayDouble.D2 scaleogram = new ArrayDouble.D2(arr.getShape()[0],
-            maxScale);
+                maxScale);
         for (int i = 1; i <= maxScale; i++) {
             double scale = ((double) i);
             // System.out.println("Scale: " + scale);
@@ -308,14 +308,14 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
             scales.add(scale);
         }
         List<Ridge> ridges = followRidgesBottomUp(minPercentileValue,
-            scaleogram, scales, minScale, maxScale);
+                scaleogram, scales, minScale, maxScale);
         if (saveScaleogramImage) {
             saveScaleogramImage(f, scales, scaleogram, arr, sat);
         }
         if (saveRidgeOverlayImages) {
             BufferedImage bi1 = createRidgeOverlayImage(
-                StringTools.removeFileExt(filename), "allRidges", arr,
-                modulations, spm, ridges);
+                    StringTools.removeFileExt(filename), "allRidges", arr,
+                    modulations, spm, ridges);
         }
         Rectangle2D.Double boundingBox = getBoundingBox(ridges, spm);
         QuadTree<Ridge> qr = getQuadTree(ridges, boundingBox, spm);
@@ -326,11 +326,11 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
             File dir = new File(outputDir, fname);
             dir.mkdirs();
             ImageTools.saveImage(ImageTools.flipVertical(qtimg), "quad-tree", "png",
-                dir, null);
+                    dir, null);
         }
-        List<Rank<Ridge>> ranks = new LinkedList<Rank<Ridge>>();
+        List<Rank<Ridge>> ranks = new LinkedList<>();
         for (Ridge r : ridges) {
-            ranks.add(new Rank<Ridge>(r));
+            ranks.add(new Rank<>(r));
         }
         filterByRidgeCost(ranks);
         ranks = filterByRidgeNeighborhood(ranks, radius, spm, qr, maxNeighbors);
@@ -340,11 +340,11 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
 
         if (saveRidgeOverlayImages) {
             BufferedImage bi4 = createRidgeOverlayImage(
-                StringTools.removeFileExt(filename),
-                "afterRidgeResponseMaxKFilter", arr, modulations, spm, ridges);
+                    StringTools.removeFileExt(filename),
+                    "afterRidgeResponseMaxKFilter", arr, modulations, spm, ridges);
         }
         System.out.println("Found " + ridges.size() + " ridges at maxScale="
-            + maxScale);
+                + maxScale);
         this.ridgeTree = getQuadTree(ridges, boundingBox, spm);
         return ridges;
     }
@@ -354,7 +354,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         String[] fields = new String[]{
             "ridgeNeighborhood"};
         rs.sortToOrder(Arrays.asList(fields), l);
-        LinkedList<Ridge> ridges = new LinkedList<Ridge>();
+        LinkedList<Ridge> ridges = new LinkedList<>();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < Math.min(l.size(), topk); i++) {
             Rank<Ridge> rank = l.get(i);
@@ -378,7 +378,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     }
 
     private List<Rank<Ridge>> filterByRidgeNeighborhood(List<Rank<Ridge>> r, double i,
-        int spm, QuadTree<Ridge> qt, int threshold) {
+            int spm, QuadTree<Ridge> qt, int threshold) {
         double[] vals = new double[r.size()];
         System.out.println("Using threshold: " + threshold);
         int cnt = 0;
@@ -391,7 +391,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
             vals[cnt] = v;
             cnt++;
         }
-        LinkedHashSet<Rank<Ridge>> filtered = new LinkedHashSet<Rank<Ridge>>();
+        LinkedHashSet<Rank<Ridge>> filtered = new LinkedHashSet<>();
         for (int k = 0; k < vals.length; k++) {
             if (vals[k] <= threshold) {// keep
                 r.get(k).addRank("ridgeNeighborhood", vals[k]);
@@ -401,7 +401,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
             }
 
         }
-        return new ArrayList<Rank<Ridge>>(filtered);
+        return new ArrayList<>(filtered);
     }
 
 //	private void exportPeaks(String name, List<Ridge> r, Array tic, Array sat,
@@ -428,11 +428,11 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
 //	}
     private List<Integer> getPeakMaxima(ArrayDouble.D2 scaleogram, int row) {
         double[] scaleResponse = (double[]) scaleogram.slice(1, row).
-            get1DJavaArray(double.class);
+                get1DJavaArray(double.class);
         FirstDerivativeFilter fdf = new FirstDerivativeFilter();
         double[] res = (double[]) fdf.apply(Array.factory(scaleResponse)).
-            get1DJavaArray(double.class);
-        List<Integer> peakMaxima = new LinkedList<Integer>();
+                get1DJavaArray(double.class);
+        List<Integer> peakMaxima = new LinkedList<>();
         for (int i = 1; i < scaleResponse.length - 1; i++) {
             if (res[i - 1] >= 0 && res[i + 1] <= 0) {
                 // remove peaks, which are not true maxima
@@ -443,8 +443,8 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     }
 
     private List<Ridge> followRidgesBottomUp(double minPercentileValue,
-        ArrayDouble.D2 scaleogram, List<Double> scales, int minScale,
-        int maxScale) {
+            ArrayDouble.D2 scaleogram, List<Double> scales, int minScale,
+            int maxScale) {
         int columns = scaleogram.getShape()[0];
         // get peak maxima for first scale
         List<Integer> seeds = getPeakMaxima(scaleogram, 0);
@@ -456,7 +456,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
             // System.out.println("Checking scale " + scales.get(i)
             // + " with max trace diff " + scaleDiff);
             double[] newSeedlings = fillSeeds(columns, maxima, scaleogram, i);
-            List<Integer> ridgesToRemove = new LinkedList<Integer>();
+            List<Integer> ridgesToRemove = new LinkedList<>();
             for (Integer key : ridges.keySet()) {
                 Ridge r = ridges.get(key);
                 if (r.addPoint(scaleDiff, i, newSeedlings)) {
@@ -478,7 +478,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
             // ridges.put(Integer.valueOf(i),findDiffs(seedlings,newSeedlings,i));
         }
         // put all Ridges with size>=maxScale into return list
-        List<Ridge> l = new LinkedList<Ridge>();
+        List<Ridge> l = new LinkedList<>();
         for (Integer key : ridges.keySet()) {
             Ridge r = ridges.get(key);
             if (r.getSize() >= minScale && r.getRidgePoints().get(0).getSecond() >= minPercentileValue) {
@@ -491,12 +491,12 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     }
 
     private HashMap<Integer, Ridge> buildRidges(List<Integer> seeds,
-        int scaleIdx, ArrayDouble.D2 scaleogram) {
+            int scaleIdx, ArrayDouble.D2 scaleogram) {
         // System.out.println("Peak maxima: "+seeds);
-        HashMap<Integer, Ridge> l = new LinkedHashMap<Integer, Ridge>();
+        HashMap<Integer, Ridge> l = new LinkedHashMap<>();
         for (Integer itg : seeds) {
             Ridge r = new Ridge(new Point2D.Double(itg, scaleIdx),
-                scaleogram.get(itg, scaleIdx));
+                    scaleogram.get(itg, scaleIdx));
             // System.out.println("Adding ridge: "+r);
             l.put(itg, r);
         }
@@ -504,27 +504,27 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     }
 
     private double[] fillSeeds(int size, List<Integer> seeds,
-        ArrayDouble.D2 scaleogram, int scaleIdx) {
+            ArrayDouble.D2 scaleogram, int scaleIdx) {
         double[] b = new double[size];
         for (Integer itg : seeds) {
-            int idx = itg.intValue();
+            int idx = itg;
             b[idx] = scaleogram.get(idx, scaleIdx);
         }
         return b;
     }
 
     /**
-     * @param filename    the filename
-     * @param prefix      an arbitrary prefix for the filename
-     * @param arr         the 1D TIC value array
+     * @param filename the filename
+     * @param prefix an arbitrary prefix for the filename
+     * @param arr the 1D TIC value array
      * @param modulations number of modulations
-     * @param spm         scans per modulation
-     * @param ridges      the ridges
+     * @param spm scans per modulation
+     * @param ridges the ridges
      * @return a buffered image of the 2D tic with overlayed peak positions
      */
     private BufferedImage createRidgeOverlayImage(final String filename,
-        final String prefix, final Array arr, final int modulations,
-        final int spm, List<Ridge> ridges) {
+            final String prefix, final Array arr, final int modulations,
+            final int spm, List<Ridge> ridges) {
         Index aidx = arr.getIndex();
         ArrayDouble.D2 heatmap = new ArrayDouble.D2(modulations, spm);
         for (int i = 0; i < modulations; i++) {
@@ -534,8 +534,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         }
         BufferedImage hmImg = CwtChartFactory.createAdaptiveColorHeatmap(heatmap);
         Graphics2D hmg2 = hmImg.createGraphics();
-        for (int i = 0; i < ridges.size(); i++) {
-            Ridge r = ridges.get(i);
+        for (Ridge r : ridges) {
             hmg2.setColor(Color.BLACK);
             Point2D p = r.getRidgePoints().get(0).getFirst();
             double xl = Math.floor(p.getX() / spm);
@@ -547,7 +546,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         File dir = new File(outputDir, fname);
         dir.mkdirs();
         ImageTools.saveImage(ImageTools.flipVertical(hmImg), prefix + "-simp-with-ridgeseeds", "png",
-            dir, null);
+                dir, null);
         return hmImg;
     }
 
@@ -557,8 +556,8 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
      * @param ridges
      */
     private void createRidgeImages(final String filename, final String prefix,
-        final int spm, final ArrayDouble.D2 scaleogram, List<Ridge> ridges,
-        BufferedImage hmImg, int... selection) {
+            final int spm, final ArrayDouble.D2 scaleogram, List<Ridge> ridges,
+            BufferedImage hmImg, int... selection) {
 
         BufferedImage bi = ImageTools.makeImage2D(scaleogram, 256);
         Graphics2D g2 = bi.createGraphics();
@@ -576,7 +575,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
             }
             if (selection != null && selection.length > 0) {
                 System.out.println("Writing scaleogram to " + selection.length
-                    + " parts");
+                        + " parts");
                 for (int j = 0; j < selection.length; j++) {
                     int partWidth = spm;
                     int i = selection[j];
@@ -588,19 +587,19 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                     // + (i * partWidth) + " to "
                     // + (i * partWidth + partWidth));
                     BufferedImage combinedImage = new BufferedImage(partWidth,
-                        height + 1, BufferedImage.TYPE_INT_ARGB);
+                            height + 1, BufferedImage.TYPE_INT_ARGB);
                     BufferedImage subScaleogram = bi.getSubimage(i * partWidth,
-                        0, partWidth, height);
+                            0, partWidth, height);
                     BufferedImage subHeatmap = hmImg.getSubimage(i, 0, 1,
-                        hmImg.getHeight());
+                            hmImg.getHeight());
                     Graphics2D g2comb = combinedImage.createGraphics();
                     AffineTransform at = AffineTransform.getTranslateInstance(
-                        subHeatmap.getHeight() / 2, 0);
+                            subHeatmap.getHeight() / 2, 0);
                     at.concatenate(AffineTransform.getScaleInstance(-1.0, 1.0));
                     at.concatenate(AffineTransform.getQuadrantRotateInstance(1,
-                        0, 0));
+                            0, 0));
                     at.concatenate(AffineTransform.getTranslateInstance(0,
-                        -subHeatmap.getHeight() / 2));
+                            -subHeatmap.getHeight() / 2));
                     g2comb.drawImage(subHeatmap, at, null);
                     g2comb.drawImage(subScaleogram, 0, 1, null);
                     String fname = StringTools.removeFileExt(filename);
@@ -608,8 +607,8 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                     dir.mkdirs();
                     try {
                         ImageIO.write(combinedImage, "PNG", new File(dir,
-                            prefix + "-" + (i + 1) + "_of_" + parts
-                            + ".png"));
+                                prefix + "-" + (i + 1) + "_of_" + parts
+                                + ".png"));
                     } catch (IOException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
@@ -627,19 +626,19 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                     // + (i * partWidth) + " to "
                     // + (i * partWidth + partWidth));
                     BufferedImage combinedImage = new BufferedImage(partWidth,
-                        height + 1, BufferedImage.TYPE_INT_ARGB);
+                            height + 1, BufferedImage.TYPE_INT_ARGB);
                     BufferedImage subScaleogram = bi.getSubimage(i * partWidth,
-                        0, partWidth, height);
+                            0, partWidth, height);
                     BufferedImage subHeatmap = hmImg.getSubimage(i, 0, 1,
-                        hmImg.getHeight());
+                            hmImg.getHeight());
                     Graphics2D g2comb = combinedImage.createGraphics();
                     AffineTransform at = AffineTransform.getTranslateInstance(
-                        subHeatmap.getHeight() / 2, 0);
+                            subHeatmap.getHeight() / 2, 0);
                     at.concatenate(AffineTransform.getScaleInstance(-1.0, 1.0));
                     at.concatenate(AffineTransform.getQuadrantRotateInstance(1,
-                        0, 0));
+                            0, 0));
                     at.concatenate(AffineTransform.getTranslateInstance(0,
-                        -subHeatmap.getHeight() / 2));
+                            -subHeatmap.getHeight() / 2));
                     g2comb.drawImage(subHeatmap, at, null);
                     g2comb.drawImage(subScaleogram, 0, 1, null);
                     String fname = StringTools.removeFileExt(filename);
@@ -647,8 +646,8 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                     dir.mkdirs();
                     try {
                         ImageIO.write(combinedImage, "PNG", new File(dir,
-                            prefix + "-" + (i + 1) + "_of_" + parts
-                            + ".png"));
+                                prefix + "-" + (i + 1) + "_of_" + parts
+                                + ".png"));
                     } catch (IOException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
@@ -669,15 +668,15 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     }
 
     /**
-     * @param f            the file fragment
-     * @param scales       the scales
-     * @param scaleImages  the scale images (scales->rows, values->cols)
+     * @param f the file fragment
+     * @param scales the scales
+     * @param scaleImages the scale images (scales->rows, values->cols)
      * @param signalValues the original signal values
      * @param domainValues the original domain values, e.g. time
      */
     private void saveScaleogramImage(IFileFragment f,
-        List<Double> scales, ArrayDouble.D2 scaleImages,
-        Array signalValues, Array domainValues) {
+            List<Double> scales, ArrayDouble.D2 scaleImages,
+            Array signalValues, Array domainValues) {
         NumberAxis domainAxis = new NumberAxis("Retention Time");
         domainAxis.setAutoRangeIncludesZero(false);
         NumberAxis scalesAxis = new NumberAxis("Scale");
@@ -736,7 +735,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
 
     private void savePlot(XYPlot p, PaintScaleLegend psl, File outputDir, String filename, String title) {
         final StandardChartTheme sct = (StandardChartTheme) StandardChartTheme
-            .createLegacyTheme();
+                .createLegacyTheme();
         final Font elf = new Font("Lucida Sans", Font.BOLD, 22);
         final Font lf = new Font("Lucida Sans", Font.BOLD, 16);
         final Font rf = new Font("Lucida Sans", Font.PLAIN, 14);
@@ -770,7 +769,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
             fos = new FileOutputStream(outputFile);
             try {
                 EncoderUtil.writeBufferedImage(jfc.createBufferedImage(1600,
-                    1024), "png", fos);
+                        1024), "png", fos);
             } catch (final IOException e) {
                 Logger.getLogger(CwtRunnable.class.getName()).log(Level.SEVERE, null, e);
             }
@@ -809,9 +808,9 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     }
 
     private QuadTree<Ridge> getQuadTree(List<Ridge> ridges,
-        Rectangle2D.Double boundingBox, int spm) {
-        QuadTree<Ridge> qt = new QuadTree<Ridge>(boundingBox.x, boundingBox.y,
-            boundingBox.width + 1, boundingBox.height + 1, 5);
+            Rectangle2D.Double boundingBox, int spm) {
+        QuadTree<Ridge> qt = new QuadTree<>(boundingBox.x, boundingBox.y,
+                boundingBox.width + 1, boundingBox.height + 1, 5);
         for (Ridge r : ridges) {
             qt.put(getPointForRidge(r, spm), r);
         }
@@ -827,7 +826,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     public List<Point> findPeaks(IFileFragment ffO) {
         this.inputFile = ffO.getUri();
         call();
-        List<Point> l = new ArrayList<Point>(ridgeTree.size());
+        List<Point> l = new ArrayList<>(ridgeTree.size());
         Iterator<Tuple2D<Point2D, Ridge>> iter = ridgeTree.iterator();
         while (iter.hasNext()) {
             Ridge r = iter.next().getSecond();
@@ -851,8 +850,8 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
             findPeaks(ff);
         }
         List<Tuple2D<Point2D, Ridge>> l = ridgeTree.getNeighborsInRadius(p,
-            Math.max(dx, dy));
-        List<Point> list = new ArrayList<Point>(l.size());
+                Math.max(dx, dy));
+        List<Point> list = new ArrayList<>(l.size());
         for (Tuple2D<Point2D, Ridge> tpl : l) {
             Point2D p2 = tpl.getFirst();
             list.add(new Point((int) p2.getX(), (int) p2.getY()));

@@ -43,7 +43,7 @@ import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 public class MyWorkflow {
 
     public static IWorkflow createWorkflow(
-        List<IFragmentCommand> commands, List<File> inputFiles) {
+            List<IFragmentCommand> commands, List<File> inputFiles) {
         CommandPipeline cp = new CommandPipeline();
         cp.setCommands(commands);
         cp.setInput(FragmentTools.immutable(inputFiles));
@@ -63,18 +63,18 @@ public class MyWorkflow {
         //Download the test files from
         //http://sf.net/projects/maltcms/files/maltcms/example-data/
         List<File> inputFiles = Arrays.asList(
-            new File("glucoseA.cdf"),
-            new File("glucoseB.cdf"),
-            new File("mannitolA.cdf"),
-            new File("mannitolB.cdf"));
+                new File("glucoseA.cdf"),
+                new File("glucoseB.cdf"),
+                new File("mannitolA.cdf"),
+                new File("mannitolB.cdf"));
         List<IFragmentCommand> cmds = Arrays.asList(new IFragmentCommand[]{
             new DefaultVarLoader(),
             new DenseArrayProducer(),
             new TICPeakFinder(),
             new PeakCliqueAlignment()});
         IWorkflow w = createWorkflow(
-            cmds,
-            inputFiles);
+                cmds,
+                inputFiles);
         try {
             w.call();
             w.save();

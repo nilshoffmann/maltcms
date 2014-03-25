@@ -61,14 +61,14 @@ public class PeakSimilarityVisualizer implements IWorkflowElement {
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
 
     public File visualizePairwisePeakSimilarities(File outputDir, final LongObjectMap<PeakEdge> edgeMap,
-        final String lhsName, final List<? extends IBipacePeak> lhsPeaks,
-        final String rhsName, final List<? extends IBipacePeak> rhsPeaks,
-        final int samples, final String prefix, boolean minimize) {
+            final String lhsName, final List<? extends IBipacePeak> lhsPeaks,
+            final String rhsName, final List<? extends IBipacePeak> rhsPeaks,
+            final int samples, final String prefix, boolean minimize) {
         final List<? extends IBipacePeak> l = lhsPeaks;
         if (!lhsName.equals(rhsName)) {
             final List<? extends IBipacePeak> r = rhsPeaks;
             final ArrayDouble.D2 psims = new ArrayDouble.D2(l.size(),
-                r.size());
+                    r.size());
             int i = 0;
             for (final IBipacePeak pl : l) {
                 int j = 0;
@@ -82,14 +82,14 @@ public class PeakSimilarityVisualizer implements IWorkflowElement {
                         }
                     }
                     log.debug("Setting index {}/{},{}/{}",
-                        new Object[]{i, l.size() - 1, j,
-                            r.size() - 1});
+                            new Object[]{i, l.size() - 1, j,
+                                r.size() - 1});
                     psims.set(
-                        i,
-                        j,
-                        sim == Double.NEGATIVE_INFINITY ? 0
-                        : sim == Double.POSITIVE_INFINITY ? Double.MAX_VALUE
-                        : sim);
+                            i,
+                            j,
+                            sim == Double.NEGATIVE_INFINITY ? 0
+                            : sim == Double.POSITIVE_INFINITY ? Double.MAX_VALUE
+                            : sim);
                     j++;
                 }
                 i++;
@@ -98,26 +98,26 @@ public class PeakSimilarityVisualizer implements IWorkflowElement {
             MinMax mm = MAMath.getMinMax(psims);
 
             MinMaxNormalizationFilter mmnf = new MinMaxNormalizationFilter(
-                mm.min, mm.max);
+                    mm.min, mm.max);
             ArrayDouble.D2 img = (ArrayDouble.D2) mmnf.apply(psims);
             final RenderedImage bi = ImageTools.makeImage2D(img,
-                samples, Double.NEGATIVE_INFINITY);
+                    samples, Double.NEGATIVE_INFINITY);
             outputDir.mkdirs();
             JAI.create("filestore", bi, new File(outputDir, prefix + "_" + lhsName
-                + "-" + rhsName + "_peak_similarities.png").
-                getAbsolutePath(), "PNG");
+                    + "-" + rhsName + "_peak_similarities.png").
+                    getAbsolutePath(), "PNG");
             final CSVWriter csvw = new CSVWriter();
             File f = csvw.writeArray2DWithHeader(outputDir.
-                getAbsolutePath(), prefix + "_" + lhsName + "-"
-                + rhsName + "_peak_similarities.csv", psims, new String[]{lhsName, rhsName, "value"});
+                    getAbsolutePath(), prefix + "_" + lhsName + "-"
+                    + rhsName + "_peak_similarities.csv", psims, new String[]{lhsName, rhsName, "value"});
             return f;
         }
         return null;
     }
 
     public void visualizePeakSimilarities(final LongObjectMap<PeakEdge> edgeMap,
-        final Map<String, List<? extends IBipacePeak>> hm, final int samples,
-        final String prefix) {
+            final Map<String, List<? extends IBipacePeak>> hm, final int samples,
+            final String prefix) {
 
         int npeaks = 0;
         for (final String key : hm.keySet()) {
@@ -128,7 +128,7 @@ public class PeakSimilarityVisualizer implements IWorkflowElement {
             return;
         }
         log.info("Saving pairwise peak similarity images.");
-        final List<String> keys = new ArrayList<String>(hm.keySet());
+        final List<String> keys = new ArrayList<>(hm.keySet());
         Collections.sort(keys);
         boolean minimize = false;
         File outputDir = workflow.getOutputDirectory(this);

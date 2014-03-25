@@ -81,12 +81,12 @@ public class MaltcmsAnnotationFactory {
     }
 
     public AnnotationsType getAnnotationsTypeFor(MaltcmsAnnotation ma,
-        String creator, Object annotationObject) {
+            String creator, Object annotationObject) {
         List<AnnotationsType> l = ma.getAnnotations();
         AnnotationsType mat = null;
         for (AnnotationsType at : l) {
             if (at.getType().equals(annotationObject.getClass().getName())
-                && at.getGenerator().equals(creator)) {
+                    && at.getGenerator().equals(creator)) {
                 mat = at;
             }
         }
@@ -125,7 +125,7 @@ public class MaltcmsAnnotationFactory {
     }
 
     public List<Peak1D> getPeak1D(MaltcmsAnnotation ma) {
-        List<Peak1D> peaks = new ArrayList<Peak1D>();
+        List<Peak1D> peaks = new ArrayList<>();
         for (AnnotationsType ann : ma.getAnnotations()) {
             String type = ann.getType();
             if (type.equals(Peak1D.class.getName())) {
@@ -134,34 +134,45 @@ public class MaltcmsAnnotationFactory {
                 if (!atl.isEmpty()) {
                     if (atl.size() != 1) {
                         throw new IllegalArgumentException(
-                            "Peak annotation contained multiple annotation lists!");
+                                "Peak annotation contained multiple annotation lists!");
                     }
                     AnnotationType annt = atl.get(0);
                     for (AttributeType at : annt.getAttribute()) {
-                        if (at.getName().equals("name")) {
-                            p.setName(at.getValue());
-                        } else if (at.getName().equals("scan_index")) {
-                            p.setApexIndex(Integer.parseInt(at.getValue()));
-                        } else if (at.getName().equals("apex_index")) {
-                            p.setApexIndex(Integer.parseInt(at.getValue()));
-                        } else if (at.getName().equals("start_index")) {
-                            p.setStartIndex(Integer.parseInt(at.getValue()));
-                        } else if (at.getName().equals("stop_index")) {
-                            p.setStopIndex(Integer.parseInt(at.getValue()));
-                        } else if (at.getName().equals("apex_time")) {
-                            p.setApexTime(Double.parseDouble(at.getValue()));
-                        } else if (at.getName().equals("start_time")) {
-                            p.setStartTime(Double.parseDouble(at.getValue()));
-                        } else if (at.getName().equals("stop_time")) {
-                            p.setStopTime(Double.parseDouble(at.getValue()));
-                        } else if (at.getName().equals("area")) {
-                            p.setArea(Double.parseDouble(at.getValue()));
-                        } else if (at.getName().equals("intensity")) {
-                            p.setApexIntensity(Double.parseDouble(at.getValue()));
-                        } else if (at.getName().equals("mw")) {
-                            p.setMw(Double.parseDouble(at.getValue()));
+                        switch (at.getName()) {
+                            case "name":
+                                p.setName(at.getValue());
+                                break;
+                            case "scan_index":
+                                p.setApexIndex(Integer.parseInt(at.getValue()));
+                                break;
+                            case "apex_index":
+                                p.setApexIndex(Integer.parseInt(at.getValue()));
+                                break;
+                            case "start_index":
+                                p.setStartIndex(Integer.parseInt(at.getValue()));
+                                break;
+                            case "stop_index":
+                                p.setStopIndex(Integer.parseInt(at.getValue()));
+                                break;
+                            case "apex_time":
+                                p.setApexTime(Double.parseDouble(at.getValue()));
+                                break;
+                            case "start_time":
+                                p.setStartTime(Double.parseDouble(at.getValue()));
+                                break;
+                            case "stop_time":
+                                p.setStopTime(Double.parseDouble(at.getValue()));
+                                break;
+                            case "area":
+                                p.setArea(Double.parseDouble(at.getValue()));
+                                break;
+                            case "intensity":
+                                p.setApexIntensity(Double.parseDouble(at.getValue()));
+                                break;
+                            case "mw":
+                                p.setMw(Double.parseDouble(at.getValue()));
+                                break;
                         }
-                        // TODO add support for peak area
                     }
                     peaks.add(p);
                 }
@@ -236,40 +247,54 @@ public class MaltcmsAnnotationFactory {
     public Peak2D getPeakAnnotation(AnnotationType peak) {
         Peak2D p = new Peak2D();
         for (AttributeType at : peak.getAttribute()) {
-            if (at.getName().equals("name")) {
-                p.setName(at.getValue());
-            } else if (at.getName().equals("scan_index")) {
-                p.setScanIndex(Integer.parseInt(at.getValue()));
-            } else if (at.getName().equals("apex_index")) {
-                p.setApexIndex(Integer.parseInt(at.getValue()));
-            } else if (at.getName().equals("start_index")) {
-                p.setStartIndex(Integer.parseInt(at.getValue()));
-            } else if (at.getName().equals("stop_index")) {
-                p.setStopIndex(Integer.parseInt(at.getValue()));
-            } else if (at.getName().equals("apex_time")) {
-                p.setApexTime(Double.parseDouble(at.getValue()));
-            } else if (at.getName().equals("start_time")) {
-                p.setStartTime(Double.parseDouble(at.getValue()));
-            } else if (at.getName().equals("stop_time")) {
-                p.setStopTime(Double.parseDouble(at.getValue()));
-            } else if (at.getName().equals("area")) {
-                p.setArea(Double.parseDouble(at.getValue()));
-            } else if (at.getName().equals("intensity")) {
-                p.setApexIntensity(Double.parseDouble(at.getValue()));
-            } else if (at.getName().equals("mw")) {
-                p.setMw(Double.parseDouble(at.getValue()));
-            } else if (at.getName().equals("first_column_retention_time")) {
-                p.setFirstRetTime(Double.parseDouble(at.getValue()));
-            } else if (at.getName().equals("second_column_retention_time")) {
-                p.setSecondRetTime(Double.parseDouble(at.getValue()));
-            } else if (at.getName().equals("index")) {
-                p.setIndex(Integer.parseInt(at.getValue()));
-            } else if (at.getName().equals("similarity")) {
-                // FIXME Peak2D should not support this directly
-            } else if (at.getName().equals("names")) {
-                // FIXME Peak2D should not support this directly
+            switch (at.getName()) {
+                case "name":
+                    p.setName(at.getValue());
+                    break;
+                case "scan_index":
+                    p.setScanIndex(Integer.parseInt(at.getValue()));
+                    break;
+                case "apex_index":
+                    p.setApexIndex(Integer.parseInt(at.getValue()));
+                    break;
+                case "start_index":
+                    p.setStartIndex(Integer.parseInt(at.getValue()));
+                    break;
+                case "stop_index":
+                    p.setStopIndex(Integer.parseInt(at.getValue()));
+                    break;
+                case "apex_time":
+                    p.setApexTime(Double.parseDouble(at.getValue()));
+                    break;
+                case "start_time":
+                    p.setStartTime(Double.parseDouble(at.getValue()));
+                    break;
+                case "stop_time":
+                    p.setStopTime(Double.parseDouble(at.getValue()));
+                    break;
+                case "area":
+                    p.setArea(Double.parseDouble(at.getValue()));
+                    break;
+                case "intensity":
+                    p.setApexIntensity(Double.parseDouble(at.getValue()));
+                    break;
+                case "mw":
+                    p.setMw(Double.parseDouble(at.getValue()));
+                    break;
+                case "first_column_retention_time":
+                    p.setFirstRetTime(Double.parseDouble(at.getValue()));
+                    break;
+                case "second_column_retention_time":
+                    p.setSecondRetTime(Double.parseDouble(at.getValue()));
+                    break;
+                case "index":
+                    p.setIndex(Integer.parseInt(at.getValue()));
+                    break;
+                case "similarity":
+                    break;
+                case "names":
+                    break;
             }
-            // TODO add support for peak area
         }
         return p;
     }

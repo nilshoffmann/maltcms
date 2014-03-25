@@ -92,23 +92,23 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
     }
 
     private List<Peak1D> createPeaksForRidges(IFileFragment f, Array tic,
-        List<Ridge> r, MexicanHatWaveletFilter mhwf) {
+            List<Ridge> r, MexicanHatWaveletFilter mhwf) {
         int index = 0;
         Index tidx = tic.getIndex();
         Array sat = f.getChild("scan_acquisition_time").getArray();
         Index sidx = sat.getIndex();
-        List<Peak1D> p2 = new LinkedList<Peak1D>();
+        List<Peak1D> p2 = new LinkedList<>();
         for (Ridge ridge : r) {
             log.debug("Processing Ridge " + (index + 1) + " "
-                + r.size());
+                    + r.size());
             Peak1D p = new Peak1D();
             p.setApexIndex(ridge.getGlobalScanIndex());
             p.setFile(f.getName());
             p.setApexIntensity(tic.getDouble(tidx.set(p.getApexIndex())));
             p.setApexTime(sat.getDouble(sidx.set(p.getApexIndex())));
             int[] scaleBounds = mhwf.getContinuousWaveletTransform().
-                getBoundsForWavelet(p.getApexIndex(), ridge.
-                    getIndexOfMaximum(), tic.getShape()[0]);
+                    getBoundsForWavelet(p.getApexIndex(), ridge.
+                            getIndexOfMaximum(), tic.getShape()[0]);
             //TODO area integration raw vs filtered (wavelet peak shapes)
             double area = 0.0d;
             for (int i = scaleBounds[0]; i <= scaleBounds[1]; i++) {
@@ -136,18 +136,18 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
         StatsMap sm = ass.apply(new Array[]{values})[0];
         //normalize to 0..1
         MultiplicationFilter mf = new MultiplicationFilter(
-            1.0 / (sm.get(Vars.Max.name()) - sm.get(Vars.Min.name())));
+                1.0 / (sm.get(Vars.Max.name()) - sm.get(Vars.Min.name())));
         values = mf.apply(values);
         Percentile p = new Percentile(minPercentile);
         double fivePercent = p.evaluate((double[]) values.get1DJavaArray(
-            double.class));
+                double.class));
         MexicanHatWaveletFilter cwt = new MexicanHatWaveletFilter();
 
-        List<Double> scales = new LinkedList<Double>();
+        List<Double> scales = new LinkedList<>();
 
         final ArrayDouble.D2 scaleogram = new ArrayDouble.D2(
-            values.getShape()[0],
-            maxScale);
+                values.getShape()[0],
+                maxScale);
         for (int i = 1; i <= maxScale; i++) {
             double scale = ((double) i);
             // System.out.println("Scale: " + scale);
@@ -160,11 +160,11 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
             scales.add(scale);
         }
         List<Ridge> ridges = followRidgesBottomUp(fivePercent,
-            scaleogram, scales, minScale, maxScale);
+                scaleogram, scales, minScale, maxScale);
 
-        List<Rank<Ridge>> ranks = new LinkedList<Rank<Ridge>>();
+        List<Rank<Ridge>> ranks = new LinkedList<>();
         for (Ridge r : ridges) {
-            ranks.add(new Rank<Ridge>(r));
+            ranks.add(new Rank<>(r));
         }
         //FIXME remove equal ridges
 
@@ -172,7 +172,7 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
         Collections.sort(ranks);
 
         log.info("Found " + ridges.size() + " ridges at minScale=" + minScale + ", maxScale="
-            + maxScale);
+                + maxScale);
 
         List<Peak1D> peaks = createPeaksForRidges(ff, values, ridges, cwt);
         FileFragment outf = new FileFragment(output);
@@ -200,11 +200,11 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
 
     private List<Integer> getPeakMaxima(ArrayDouble.D2 scaleogram, int row) {
         double[] scaleResponse = (double[]) scaleogram.slice(1, row).
-            get1DJavaArray(double.class);
+                get1DJavaArray(double.class);
         FirstDerivativeFilter fdf = new FirstDerivativeFilter();
         double[] res = (double[]) fdf.apply(Array.factory(scaleResponse)).
-            get1DJavaArray(double.class);
-        List<Integer> peakMaxima = new LinkedList<Integer>();
+                get1DJavaArray(double.class);
+        List<Integer> peakMaxima = new LinkedList<>();
         for (int i = 1; i < scaleResponse.length - 1; i++) {
             if (res[i - 1] >= 0 && res[i + 1] <= 0) {
                 // remove peaks, which are not true maxima
@@ -215,12 +215,12 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
     }
 
     private HashMap<Integer, Ridge> buildRidges(List<Integer> seeds,
-        int scaleIdx, ArrayDouble.D2 scaleogram) {
+            int scaleIdx, ArrayDouble.D2 scaleogram) {
         // System.out.println("Peak maxima: "+seeds);
-        HashMap<Integer, Ridge> l = new LinkedHashMap<Integer, Ridge>();
+        HashMap<Integer, Ridge> l = new LinkedHashMap<>();
         for (Integer itg : seeds) {
             Ridge r = new Ridge(new Point2D.Double(itg, scaleIdx),
-                scaleogram.get(itg, scaleIdx));
+                    scaleogram.get(itg, scaleIdx));
             // System.out.println("Adding ridge: "+r);
             l.put(itg, r);
         }
@@ -228,18 +228,18 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
     }
 
     private double[] fillSeeds(int size, List<Integer> seeds,
-        ArrayDouble.D2 scaleogram, int scaleIdx) {
+            ArrayDouble.D2 scaleogram, int scaleIdx) {
         double[] b = new double[size];
         for (Integer itg : seeds) {
-            int idx = itg.intValue();
+            int idx = itg;
             b[idx] = scaleogram.get(idx, scaleIdx);
         }
         return b;
     }
 
     private List<Ridge> followRidgesBottomUp(double percentile,
-        ArrayDouble.D2 scaleogram, List<Double> scales, int minScale,
-        int maxScale) {
+            ArrayDouble.D2 scaleogram, List<Double> scales, int minScale,
+            int maxScale) {
         int columns = scaleogram.getShape()[0];
         // get peak maxima for first scale
         List<Integer> seeds = getPeakMaxima(scaleogram, 0);
@@ -254,7 +254,7 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
             // System.out.println("Checking scale " + scales.get(i)
             // + " with max trace diff " + scaleDiff);
             double[] newSeedlings = fillSeeds(columns, maxima, scaleogram, i);
-            List<Integer> ridgesToRemove = new LinkedList<Integer>();
+            List<Integer> ridgesToRemove = new LinkedList<>();
             for (Integer key : ridges.keySet()) {
                 Ridge r = ridges.get(key);
                 if (r.addPoint(scaleDiff, i, newSeedlings)) {
@@ -279,13 +279,13 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
             // seedlings = newSeedlings;
         }
         // put all Ridges with size>=maxScale into return list
-        List<Ridge> l = new LinkedList<Ridge>();
+        List<Ridge> l = new LinkedList<>();
         for (Integer key : ridges.keySet()) {
             Ridge r = ridges.get(key);
             // System.out.println("Testing ridge with " + r.getSize()
             // + " elements!");
             if (r.getSize() >= minScale
-                && r.getRidgePoints().get(0).getSecond() >= percentile) {
+                    && r.getRidgePoints().get(0).getSecond() >= percentile) {
                 // System.out.println("RidgePenalty: " + r.getRidgePenalty());
                 l.add(r);
             }

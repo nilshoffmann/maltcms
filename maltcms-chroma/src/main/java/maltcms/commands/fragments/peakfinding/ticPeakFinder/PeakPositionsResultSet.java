@@ -45,7 +45,7 @@ public class PeakPositionsResultSet {
     private final PolynomialSplineFunction baselineEstimator;
 
     public PeakPositionsResultSet(Array correctedTIC,
-        ArrayInt.D1 peakPositions, double[] snrValues, List<Integer> ts, PolynomialSplineFunction baselineEstimator) {
+            ArrayInt.D1 peakPositions, double[] snrValues, List<Integer> ts, PolynomialSplineFunction baselineEstimator) {
         this.snrValues = snrValues;
         this.ts = ts;
         this.peakPositions = peakPositions;

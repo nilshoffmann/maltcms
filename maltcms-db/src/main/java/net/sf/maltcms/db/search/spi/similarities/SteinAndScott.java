@@ -44,12 +44,12 @@ public class SteinAndScott extends AMetabolitePredicate {
     private AMDISMSSimilarity iadc = new AMDISMSSimilarity();
     private double resolution = 1.0d;
     private double lastMin = Double.POSITIVE_INFINITY,
-        lastMax = Double.NEGATIVE_INFINITY;
+            lastMax = Double.NEGATIVE_INFINITY;
     private boolean normalize = true;
     private final Comparator<Tuple2D<Double, IMetabolite>> comparator = Collections.reverseOrder(new Comparator<Tuple2D<Double, IMetabolite>>() {
         @Override
         public int compare(Tuple2D<Double, IMetabolite> t,
-            Tuple2D<Double, IMetabolite> t1) {
+                Tuple2D<Double, IMetabolite> t1) {
             if (t.getFirst() > t1.getFirst()) {
                 return 1;
             } else if (t.getFirst() < t1.getFirst()) {
@@ -92,8 +92,8 @@ public class SteinAndScott extends AMetabolitePredicate {
     }
 
     protected double similarity(Array massesRef, Array intensitiesRef,
-        Array massesQuery, Array intensitiesQuery, double mw) {
-        return iadc.apply(new Tuple2D<Array, Array>(massesRef, intensitiesRef), new Tuple2D<Array, Array>(massesQuery, intensitiesQuery));
+            Array massesQuery, Array intensitiesQuery, double mw) {
+        return iadc.apply(new Tuple2D<>(massesRef, intensitiesRef), new Tuple2D<>(massesQuery, intensitiesQuery));
     }
 
     @Override
@@ -107,11 +107,11 @@ public class SteinAndScott extends AMetabolitePredicate {
         s1 = filterMaskedMasses(m1, s1);
         s2 = filterMaskedMasses(m2, s2);
         double sim = similarity(m1, s1, m2, s2,
-            et.getMW());
+                et.getMW());
         System.out.println("Similarity score: " + sim);
         if (sim >= getScoreThreshold()) {
-            Tuple2D<Double, IMetabolite> tple = new Tuple2D<Double, IMetabolite>(
-                sim, et);
+            Tuple2D<Double, IMetabolite> tple = new Tuple2D<>(
+                    sim, et);
             getScoreMap().add(tple);
             return true;
         }

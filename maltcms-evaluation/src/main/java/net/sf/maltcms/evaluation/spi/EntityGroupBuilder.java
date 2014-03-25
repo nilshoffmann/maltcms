@@ -77,7 +77,7 @@ public class EntityGroupBuilder {
         //categories
         ObjectSet<Chromatogram> c = e.getChromatograms(oc);
         Category[] cats = new Category[c.size()];
-        HashMap<String, EntityGroup<IFeatureVector>> peakNameToEntityGroup = new HashMap<String, EntityGroup<IFeatureVector>>();
+        HashMap<String, EntityGroup<IFeatureVector>> peakNameToEntityGroup = new HashMap<>();
         for (int i = 0; i < cats.length; i++) {
             cats[i] = new Category(c.get(i).getName());
             ObjectSet<Peak> os = e.getPeaksForChromatogramByCreator(oc, c.get(i), "xcalibur");
@@ -87,12 +87,12 @@ public class EntityGroupBuilder {
                     EntityGroup<IFeatureVector> eg = peakNameToEntityGroup.get(p.getName());
                     eg.addEntity(cats[i], ent);
                 } else {
-                    EntityGroup<IFeatureVector> eg = new EntityGroup<IFeatureVector>(ent);
+                    EntityGroup<IFeatureVector> eg = new EntityGroup<>(ent);
                     peakNameToEntityGroup.put(p.getName(), eg);
                 }
             }
         }
-        ArrayList<EntityGroup<IFeatureVector>> al = new ArrayList<EntityGroup<IFeatureVector>>(peakNameToEntityGroup.values());
+        ArrayList<EntityGroup<IFeatureVector>> al = new ArrayList<>(peakNameToEntityGroup.values());
         return al;
     }
 
@@ -104,7 +104,7 @@ public class EntityGroupBuilder {
      *
      * @param par
      * @return list of EntityGroups in order of row appearance in source file
-     *         par
+     * par
      */
     public List<EntityGroup<PeakRTFeatureVector>> buildCSVPeakAssociationGroups(File par) {
         CSVReader csvr = new CSVReader();
@@ -120,7 +120,7 @@ public class EntityGroupBuilder {
             }
             //System.out.println("Using categories: "+Arrays.toString(c));
             int nrows = table.getFirst().size();
-            ArrayList<EntityGroup<PeakRTFeatureVector>> al = new ArrayList<EntityGroup<PeakRTFeatureVector>>();
+            ArrayList<EntityGroup<PeakRTFeatureVector>> al = new ArrayList<>();
             for (int i = 0; i < nrows; i++) {
                 Entity<PeakRTFeatureVector>[] es = new Entity[c.length];
                 for (int j = 0; j < es.length; j++) {
@@ -132,9 +132,9 @@ public class EntityGroupBuilder {
                     } catch (NumberFormatException nfe) {
                         //System.out.println("NumberFormatException on parsing: "+cell+" converting to "+val);
                     }
-                    es[j] = new Entity<PeakRTFeatureVector>(new PeakRTFeatureVector(val, Double.NaN), c[j], "" + i);
+                    es[j] = new Entity<>(new PeakRTFeatureVector(val, Double.NaN), c[j], "" + i);
                 }
-                EntityGroup<PeakRTFeatureVector> eg = new EntityGroup<PeakRTFeatureVector>(es);
+                EntityGroup<PeakRTFeatureVector> eg = new EntityGroup<>(es);
                 al.add(eg);
             }
             return al;
@@ -154,7 +154,7 @@ public class EntityGroupBuilder {
      * @param par
      * @param plet
      * @return list of EntityGroups in order of row appearance in source file
-     *         par
+     * par
      */
     public List<EntityGroup<INamedPeakFeatureVector>> buildCSVPeak2DAssociationGroups(File par, ChromaTOFPeakListEntityTable<INamedPeakFeatureVector> plet) {
         CSVReader csvr = new CSVReader();
@@ -170,7 +170,7 @@ public class EntityGroupBuilder {
             }
             //System.out.println("Using categories: "+Arrays.toString(c));
             int nrows = table.getFirst().size();
-            ArrayList<EntityGroup<INamedPeakFeatureVector>> al = new ArrayList<EntityGroup<INamedPeakFeatureVector>>();
+            ArrayList<EntityGroup<INamedPeakFeatureVector>> al = new ArrayList<>();
             for (int i = 0; i < nrows; i++) {
                 Entity<INamedPeakFeatureVector>[] es = new Entity[c.length];
                 for (int j = 0; j < es.length; j++) {
@@ -195,7 +195,7 @@ public class EntityGroupBuilder {
                     }
 
                 }
-                EntityGroup<INamedPeakFeatureVector> eg = new EntityGroup<INamedPeakFeatureVector>(es);
+                EntityGroup<INamedPeakFeatureVector> eg = new EntityGroup<>(es);
                 al.add(eg);
             }
             return al;
@@ -239,7 +239,7 @@ public class EntityGroupBuilder {
             }
         }
         //otherwise we return a new entity group
-        l.add(new EntityGroup<INamedPeakFeatureVector>(lhs, rhs));
+        l.add(new EntityGroup<>(lhs, rhs));
     }
 
     /**
@@ -251,11 +251,11 @@ public class EntityGroupBuilder {
      * @param plet
      * @param pal
      * @return list of EntityGroups in order of row appearance in source files
-     *         pal
+     * pal
      */
     public List<EntityGroup<INamedPeakFeatureVector>> buildMSPAPeak2DAssociationGroups(File baseDir, ChromaTOFPeakListEntityTable<INamedPeakFeatureVector> plet) {
-        ArrayList<EntityGroup<INamedPeakFeatureVector>> al = new ArrayList<EntityGroup<INamedPeakFeatureVector>>();
-        List<File> pal = new ArrayList<File>(FileUtils.listFiles(baseDir, FileFilterUtils.prefixFileFilter("pa-"), FileFilterUtils.directoryFileFilter()));
+        ArrayList<EntityGroup<INamedPeakFeatureVector>> al = new ArrayList<>();
+        List<File> pal = new ArrayList<>(FileUtils.listFiles(baseDir, FileFilterUtils.prefixFileFilter("pa-"), FileFilterUtils.directoryFileFilter()));
         Collections.sort(pal, new Comparator<File>() {
 
             @Override
@@ -268,7 +268,7 @@ public class EntityGroupBuilder {
             }
         });
 //		System.out.println("Entities for: "+baseDir.getName());
-        Set<Category> orderedSet = new LinkedHashSet<Category>();
+        Set<Category> orderedSet = new LinkedHashSet<>();
 //		Map<Category, Map<Integer, Entity<INamedPeakFeatureVector>>> map = new LinkedHashMap<Category, Map<Integer, Entity<INamedPeakFeatureVector>>>();
         for (File f : pal) {
 //			System.out.println("Processing file "+f.getName());
@@ -287,7 +287,7 @@ public class EntityGroupBuilder {
                 //System.out.println("Using categories: "+Arrays.toString(c));
                 int nrows = table.getFirst().size();
                 for (int i = 0; i < nrows; i++) {
-                    List<Entity<INamedPeakFeatureVector>> entityGroup = new LinkedList<Entity<INamedPeakFeatureVector>>();
+                    List<Entity<INamedPeakFeatureVector>> entityGroup = new LinkedList<>();
                     Vector<String> row = table.getFirst().get(i);
 //					System.out.println("Row "+i+" = "+row);
                     for (int j = 0; j < row.size(); j++) {
@@ -351,7 +351,7 @@ public class EntityGroupBuilder {
      *
      * @param par
      * @return list of EntityGroups in order of row appearance in source file
-     *         par
+     * par
      */
     public List<EntityGroup<PeakRTFeatureVector>> buildCSVTablePeakAssociationGroups(File par) {
         CSVReader csvr = new CSVReader();
@@ -367,7 +367,7 @@ public class EntityGroupBuilder {
                 c[i] = new Category(cstr);
             }
             //System.out.println("Using categories: "+Arrays.toString(c));
-            ArrayList<EntityGroup<PeakRTFeatureVector>> al = new ArrayList<EntityGroup<PeakRTFeatureVector>>();
+            ArrayList<EntityGroup<PeakRTFeatureVector>> al = new ArrayList<>();
             int ncols = table.getFirst().get(0).size() - 1;
             for (int j = 0; j < ncols; j++) {
                 Entity<PeakRTFeatureVector>[] es = new Entity[nrows];
@@ -379,9 +379,9 @@ public class EntityGroupBuilder {
                     } catch (NumberFormatException nfe) {
                         //System.out.println("NumberFormatException on parsing: "+cell+" converting to "+val);
                     }
-                    es[i] = new Entity<PeakRTFeatureVector>(new PeakRTFeatureVector(val, Double.NaN), c[i], "" + i);
+                    es[i] = new Entity<>(new PeakRTFeatureVector(val, Double.NaN), c[i], "" + i);
                 }
-                EntityGroup<PeakRTFeatureVector> eg = new EntityGroup<PeakRTFeatureVector>(es);
+                EntityGroup<PeakRTFeatureVector> eg = new EntityGroup<>(es);
                 al.add(eg);
             }
             return al;

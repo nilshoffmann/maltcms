@@ -11,7 +11,7 @@
     <artifactId>maltcms-test-defaults</artifactId>
     <name>Maltcms Test Defaults</name>
     <packaging>jar</packaging>
-<!--    <dependencies>
+    <!--    <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

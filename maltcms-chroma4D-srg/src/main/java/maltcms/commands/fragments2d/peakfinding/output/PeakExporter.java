@@ -84,7 +84,7 @@ public class PeakExporter implements IPeakExporter {
     @Configurable(value = "#0.00", type = String.class)
     private String formatString = "#0.00";
     private NumberFormat formatter = new DecimalFormat(this.formatString,
-        DecimalFormatSymbols.getInstance(Locale.US));
+            DecimalFormatSymbols.getInstance(Locale.US));
 
     @Override
     public String toString() {
@@ -109,9 +109,9 @@ public class PeakExporter implements IPeakExporter {
      */
     @Override
     public void exportBBHInformation(final List<List<Point>> bidiBestHitList,
-        List<List<Peak2D>> peaklist, final IBidirectionalBestHit bbh,
-        final List<String> names, final List<Reliability> reliabilities) {
-        final List<List<String>> table = new ArrayList<List<String>>();
+            List<List<Peak2D>> peaklist, final IBidirectionalBestHit bbh,
+            final List<String> names, final List<Reliability> reliabilities) {
+        final List<List<String>> table = new ArrayList<>();
         if (bidiBestHitList.size() > 0) {
             table.add(new ArrayList<String>());
             table.get(0).add("Name");
@@ -130,8 +130,8 @@ public class PeakExporter implements IPeakExporter {
                         // .getAreaIntensity())
                         // + "(" + p.x + ")");
                         table.get(p.y + 1).add(
-                            this.formatter.format(peaklist.get(p.y).get(p.x).
-                                getPeakArea().getAreaIntensity()));
+                                this.formatter.format(peaklist.get(p.y).get(p.x).
+                                        getPeakArea().getAreaIntensity()));
 //                                                                p.x + "");
                         if (name.equals("Unkown")) {
                             name = peaklist.get(p.y).get(p.x).getName();
@@ -143,12 +143,9 @@ public class PeakExporter implements IPeakExporter {
                 }
                 table.get(0).add(name);
             }
-            List<String> relis = new ArrayList<String>();
+            List<String> relis = new ArrayList<>();
             relis.add("Reliability");
-            // for (Reliability r : reliabilities) {
-            // relis.add(this.formatter.format(r.getReliability()));
-            // }
-            for (int i = 0; i < bidiBestHitList.size(); i++) {
+            for (List<Point> bidiBestHitList1 : bidiBestHitList) {
                 relis.add("0.0d");
             }
             table.add(relis);
@@ -156,8 +153,8 @@ public class PeakExporter implements IPeakExporter {
             final CSVWriter csvw = new CSVWriter();
             csvw.setWorkflow(this.workflow);
             csvw.writeTableByCols(this.workflow.getOutputDirectory(this).
-                getAbsolutePath(), "bidibestHits.csv", table,
-                WorkflowSlot.PEAKFINDING);
+                    getAbsolutePath(), "bidibestHits.csv", table,
+                    WorkflowSlot.PEAKFINDING);
         } else {
             this.log.error("Bidirectional best hit list ist empty");
         }
@@ -168,12 +165,12 @@ public class PeakExporter implements IPeakExporter {
      */
     @Override
     public void exportBBHMultipleAlignmentRT(
-        final List<List<Point>> bidiBestHitList,
-        List<List<Peak2D>> peaklist, final IBidirectionalBestHit bbh,
-        final List<String> names, final List<Reliability> reliabilities) {
-        final List<List<String>> table = new ArrayList<List<String>>();
+            final List<List<Point>> bidiBestHitList,
+            List<List<Peak2D>> peaklist, final IBidirectionalBestHit bbh,
+            final List<String> names, final List<Reliability> reliabilities) {
+        final List<List<String>> table = new ArrayList<>();
         NumberFormat formatter = new DecimalFormat("#0.0000",
-            DecimalFormatSymbols.getInstance(Locale.US));
+                DecimalFormatSymbols.getInstance(Locale.US));
         if (bidiBestHitList.size() > 0) {
             for (int i = 0; i < bidiBestHitList.get(0).size(); i++) {
                 table.add(new ArrayList<String>());
@@ -183,8 +180,8 @@ public class PeakExporter implements IPeakExporter {
                 for (final Point p : l) {
                     if (p.x != -1) {
                         table.get(p.y).add(
-                            formatter.format(peaklist.get(p.y).get(p.x).
-                                getRetentionTime()));
+                                formatter.format(peaklist.get(p.y).get(p.x).
+                                        getRetentionTime()));
                     } else {
                         // table.get(p.y + 1).add("-(-)");
                         table.get(p.y).add("NA");
@@ -195,8 +192,8 @@ public class PeakExporter implements IPeakExporter {
             final CSVWriter csvw = new CSVWriter();
             csvw.setWorkflow(this.workflow);
             csvw.writeTableByCols(this.workflow.getOutputDirectory(this).
-                getAbsolutePath(), "multiple-alignmentRT.csv", table,
-                WorkflowSlot.PEAKFINDING);
+                    getAbsolutePath(), "multiple-alignmentRT.csv", table,
+                    WorkflowSlot.PEAKFINDING);
         } else {
             this.log.error("Bidirectional best hit list ist empty");
         }
@@ -207,24 +204,24 @@ public class PeakExporter implements IPeakExporter {
      */
     @Override
     public void exportDetailedBBHInformation(
-        final List<List<Point>> bidiBestHitList,
-        final List<List<Peak2D>> peaklists,
-        final IBidirectionalBestHit bbh,
-        final List<String> chromatogramNames,
-        final List<Reliability> reliabilities, final String oFilename) {
+            final List<List<Point>> bidiBestHitList,
+            final List<List<Peak2D>> peaklists,
+            final IBidirectionalBestHit bbh,
+            final List<String> chromatogramNames,
+            final List<Reliability> reliabilities, final String oFilename) {
 
         // Setting up metatable
-        final List<List<String>> metaTable = new ArrayList<List<String>>();
+        final List<List<String>> metaTable = new ArrayList<>();
 
         int diffStart = 1;
         // creating name field
-        final List<String> name = new ArrayList<String>();
+        final List<String> name = new ArrayList<>();
         name.add("Name");
         metaTable.add(name);
         // creating value fields
         for (Datatypes t : Datatypes.values()) {
             for (String filename : chromatogramNames) {
-                final List<String> tmp = new ArrayList<String>();
+                final List<String> tmp = new ArrayList<>();
                 tmp.add(t.toString() + "-" + filename);
                 metaTable.add(tmp);
                 diffStart++;
@@ -236,9 +233,9 @@ public class PeakExporter implements IPeakExporter {
             specC = 0;
             for (int i = 0; i < chromatogramNames.size(); i++) {
                 for (int j = i + 1; j < chromatogramNames.size(); j++) {
-                    final List<String> tmp = new ArrayList<String>();
+                    final List<String> tmp = new ArrayList<>();
                     tmp.add(t.toString() + "-" + chromatogramNames.get(i) + "_"
-                        + chromatogramNames.get(j));
+                            + chromatogramNames.get(j));
                     metaTable.add(tmp);
                     specC++;
                 }
@@ -251,7 +248,7 @@ public class PeakExporter implements IPeakExporter {
         // final List<String> meanG = new ArrayList<String>();
         // meanG.add("Mean_TIC");
         // metaTable.add(meanG);
-        final List<String> group = new ArrayList<String>();
+        final List<String> group = new ArrayList<>();
         group.add("Group");
         metaTable.add(group);
 
@@ -287,23 +284,23 @@ public class PeakExporter implements IPeakExporter {
                             case PeakArea:
                                 // mean += peak.getPeakArea().getAreaIntensity();
                                 metaTable.get(i).add(
-                                    this.formatter.format(peak.getPeakArea().
-                                        getAreaIntensity()));
+                                        this.formatter.format(peak.getPeakArea().
+                                                getAreaIntensity()));
                                 break;
                             case LogPeakArea:
                                 metaTable.get(i).add(
-                                    this.formatter.format(Math.log(peak.
-                                            getPeakArea().getAreaIntensity())));
+                                        this.formatter.format(Math.log(peak.
+                                                        getPeakArea().getAreaIntensity())));
                                 break;
                             case RetT1:
                                 metaTable.get(i).add(
-                                    this.formatter.format(peak.
-                                        getFirstRetTime()));
+                                        this.formatter.format(peak.
+                                                getFirstRetTime()));
                                 break;
                             case RetT2:
                                 metaTable.get(i).add(
-                                    this.formatter.format(peak.
-                                        getSecondRetTime()));
+                                        this.formatter.format(peak.
+                                                getSecondRetTime()));
                                 break;
                             default:
                                 break;
@@ -313,7 +310,7 @@ public class PeakExporter implements IPeakExporter {
                     // creating static content
                     if (p.y == 0) {
                         metaTable.get(0).add(
-                            peaklists.get(0).get(p.x).getName());
+                                peaklists.get(0).get(p.x).getName());
                         metaTable.get(metaTable.size() - 1).add(groupC + "");
                         // metaTable.get(metaTable.size() - 2).add(
                         // this.formatter.format(mean
@@ -333,23 +330,23 @@ public class PeakExporter implements IPeakExporter {
                             switch (t) {
                                 case PeakAreaRatio:
                                     v = peak1.getPeakArea().getAreaIntensity()
-                                        / peak2.getPeakArea().
-                                        getAreaIntensity();
+                                            / peak2.getPeakArea().
+                                            getAreaIntensity();
                                     metaTable.get(diffStart + k * specC + l).add(
-                                        this.formatter.format(v));
+                                            this.formatter.format(v));
                                     break;
                                 case DeltaPeakArea:
                                     v = peak1.getPeakArea().getAreaIntensity()
-                                        - peak2.getPeakArea().
-                                        getAreaIntensity();
+                                            - peak2.getPeakArea().
+                                            getAreaIntensity();
                                     metaTable.get(diffStart + k * specC + l).add(
-                                        this.formatter.format(v));
+                                            this.formatter.format(v));
                                     break;
                                 case LogDeltaPeakArea:
                                     boolean n = false;
                                     v = peak1.getPeakArea().getAreaIntensity()
-                                        - peak2.getPeakArea().
-                                        getAreaIntensity();
+                                            - peak2.getPeakArea().
+                                            getAreaIntensity();
                                     if (v < 0) {
                                         n = true;
                                         v = Math.abs(v);
@@ -361,12 +358,12 @@ public class PeakExporter implements IPeakExporter {
                                         v = v * (-1.0d);
                                     }
                                     metaTable.get(diffStart + k * specC + l).add(
-                                        this.formatter.format(v));
+                                            this.formatter.format(v));
                                     break;
                                 case Similarity:
                                     v = bbh.sim(peak1, peak2);
                                     metaTable.get(diffStart + k * specC + l).add(
-                                        this.formatter.format(v));
+                                            this.formatter.format(v));
                                     break;
                                 default:
                                     break;
@@ -389,8 +386,8 @@ public class PeakExporter implements IPeakExporter {
         final CSVWriter csvw = new CSVWriter();
         csvw.setWorkflow(this.workflow);
         csvw.writeTableByCols(this.workflow.getOutputDirectory(this).
-            getAbsolutePath(), oFilename, metaTable,
-            WorkflowSlot.PEAKFINDING);
+                getAbsolutePath(), oFilename, metaTable,
+                WorkflowSlot.PEAKFINDING);
     }
 
     /**
@@ -398,13 +395,13 @@ public class PeakExporter implements IPeakExporter {
      */
     @Override
     public void exportPeakOccurrenceMap(
-        final List<List<Point>> bidiBestHitList,
-        final List<List<Peak2D>> peaklists,
-        final IBidirectionalBestHit bbh,
-        final List<String> chromatogramNames, final String oFilename) {
-        final List<List<String>> metaTable = new ArrayList<List<String>>();
+            final List<List<Point>> bidiBestHitList,
+            final List<List<Peak2D>> peaklists,
+            final IBidirectionalBestHit bbh,
+            final List<String> chromatogramNames, final String oFilename) {
+        final List<List<String>> metaTable = new ArrayList<>();
 
-        final List<String> header = new ArrayList<String>();
+        final List<String> header = new ArrayList<>();
         header.add("Filename");
         header.add("GroupID");
         header.add("RT1[s]");
@@ -419,16 +416,16 @@ public class PeakExporter implements IPeakExporter {
             for (Point p : bidiBestHitList.get(i)) {
                 if (p.x != -1) {
                     // peakmatch
-                    row = new ArrayList<String>();
+                    row = new ArrayList<>();
                     row.add(chromatogramNames.get(p.y));
                     row.add(i + "");
                     peak = peaklists.get(p.y).get(p.x);
                     row.add(this.formatter.format(peak.getFirstRetTime()));
                     row.add(this.formatter.format(peak.getSecondRetTime()));
                     row.add(this.formatter.format(peak.getPeakArea().
-                        getAreaIntensity()));
+                            getAreaIntensity()));
                     row.add(this.formatter.format(peak.getPeakArea().
-                        getSeedIntensity()));
+                            getSeedIntensity()));
                     metaTable.add(row);
                 } else {
                     // no peak match
@@ -439,8 +436,8 @@ public class PeakExporter implements IPeakExporter {
         final CSVWriter csvw = new CSVWriter();
         csvw.setWorkflow(this.workflow);
         csvw.writeTableByRows(this.workflow.getOutputDirectory(this).
-            getAbsolutePath(), oFilename, metaTable,
-            WorkflowSlot.PEAKFINDING);
+                getAbsolutePath(), oFilename, metaTable,
+                WorkflowSlot.PEAKFINDING);
     }
 
     /**
@@ -448,15 +445,15 @@ public class PeakExporter implements IPeakExporter {
      */
     @Override
     public void exportDetailedPeakInformation(final String name,
-        final List<Peak2D> ps) {
-        final Map<Integer, List<Peak2D>> table = new HashMap<Integer, List<Peak2D>>();
+            final List<Peak2D> ps) {
+        final Map<Integer, List<Peak2D>> table = new HashMap<>();
         Map<Integer, Double> intensities;
         List<Peak2D> list;
         for (final Peak2D p : ps) {
             intensities = p.getPeakArea().getAreaIntensities();
             for (final Integer mass : intensities.keySet()) {
                 if (!table.containsKey(mass)) {
-                    list = new ArrayList<Peak2D>();
+                    list = new ArrayList<>();
                     list.add(p);
                     table.put(mass, list);
                 } else {
@@ -465,7 +462,7 @@ public class PeakExporter implements IPeakExporter {
             }
         }
 
-        final List<Integer> masses = new ArrayList<Integer>(table.keySet());
+        final List<Integer> masses = new ArrayList<>(table.keySet());
         Collections.sort(masses, new Comparator<Integer>() {
             @Override
             public int compare(final Integer o1, final Integer o2) {
@@ -473,8 +470,8 @@ public class PeakExporter implements IPeakExporter {
             }
         });
 
-        final List<List<String>> printTable = new ArrayList<List<String>>();
-        List<String> row = new ArrayList<String>();
+        final List<List<String>> printTable = new ArrayList<>();
+        List<String> row = new ArrayList<>();
         row.add("");
         for (final Integer mass : masses) {
             row.add(mass + "");
@@ -482,16 +479,16 @@ public class PeakExporter implements IPeakExporter {
         printTable.add(row);
 
         for (final Peak2D p : ps) {
-            row = new ArrayList<String>();
+            row = new ArrayList<>();
             row.add(p.getIndex() + "");
-            for (int i = 0; i < masses.size(); i++) {
+            for (Integer masse : masses) {
                 row.add("0.0");
             }
             for (final Entry<Integer, Double> e : p.getPeakArea().
-                getAreaIntensities().entrySet()) {
+                    getAreaIntensities().entrySet()) {
                 row.set(masses.indexOf(e.getKey()) + 1, this.formatter.format(e.
-                    getValue())
-                    + "");
+                        getValue())
+                        + "");
             }
             printTable.add(row);
         }
@@ -499,8 +496,8 @@ public class PeakExporter implements IPeakExporter {
         final CSVWriter csvw = new CSVWriter();
         csvw.setWorkflow(this.workflow);
         csvw.writeTableByRows(this.workflow.getOutputDirectory(this).
-            getAbsolutePath(), name + "_peakAreas.csv", printTable,
-            WorkflowSlot.PEAKFINDING);
+                getAbsolutePath(), name + "_peakAreas.csv", printTable,
+                WorkflowSlot.PEAKFINDING);
     }
 
     /**
@@ -509,10 +506,10 @@ public class PeakExporter implements IPeakExporter {
     @Override
     public void exportPeakInformation(final String name, final List<Peak2D> ps) {
 //		final List<Peak2D> peaklist = new ArrayList<Peak2D>();
-        final List<List<String>> table = new ArrayList<List<String>>();
+        final List<List<String>> table = new ArrayList<>();
 //		final Collection<String> peakNames = new ArrayList<String>();
 //		int maxLength = 10;
-        List<String> row = new ArrayList<String>();
+        List<String> row = new ArrayList<>();
         row.add("Index");
         row.add("ScanIndex");
         row.add("RT1[s]");
@@ -525,30 +522,27 @@ public class PeakExporter implements IPeakExporter {
         table.add(row);
         PeakArea2D s;
         Peak2D peak;
-        for (int i = 0; i < ps.size(); i++) {
-            peak = ps.get(i);
+        for (Peak2D p : ps) {
+            peak = p;
             s = peak.getPeakArea();
-            row = new ArrayList<String>();
+            row = new ArrayList<>();
             row.add(ps.indexOf(peak) + "");
             row.add(peak.getScanIndex() + "");
             row.add(String.format(Locale.US, "%10.4f", peak.getFirstRetTime())
-                + "");
+                    + "");
             row.add(String.format(Locale.US, "%10.4f", peak.getSecondRetTime())
-                + "");
-
+                    + "");
             row.add(String.format(Locale.US, "%10.4f", s.getSeedIntensity())
-                + "");
+                    + "");
             row.add(String.format(Locale.US, "%10.4f", s.getAreaIntensity())
-                + "");
+                    + "");
             row.add(s.size() + "");
-
 //			if (peak.getName().length() > maxLength) {
 //				maxLength = peak.getName().length();
 //			}
             row.add(peak.getName());
 //			peakNames.add(peak.getName());
             row.add(peak.getSim() + "");
-
 //			peaklist.add(peak);
             table.add(row);
         }
@@ -556,8 +550,8 @@ public class PeakExporter implements IPeakExporter {
         final CSVWriter csvw = new CSVWriter();
         csvw.setWorkflow(this.workflow);
         csvw.writeTableByRows(this.workflow.getOutputDirectory(this).
-            getAbsolutePath(), name + "_peaklist.csv", table,
-            WorkflowSlot.PEAKFINDING);
+                getAbsolutePath(), name + "_peaklist.csv", table,
+                WorkflowSlot.PEAKFINDING);
     }
 
     /**
@@ -565,7 +559,7 @@ public class PeakExporter implements IPeakExporter {
      */
     @Override
     public void exportPeaksToMSP(final String name, final List<Peak2D> ps,
-        final IScanLine isl) {
+            final IScanLine isl) {
         File outputDir = this.workflow.getOutputDirectory(this);
         File fname = new File(outputDir, name);
         if (!outputDir.exists()) {
@@ -576,18 +570,18 @@ public class PeakExporter implements IPeakExporter {
             BufferedWriter dos = new BufferedWriter(new FileWriter(fname));
             for (Peak2D p : ps) {
                 String pname = "CHROMA4D_" + StringTools.removeFileExt(name)
-                    + "_" + p.getIndex();
+                        + "_" + p.getIndex();
                 // Tuple2D<Array, Array> t = isl.getSparseMassSpectra(p
                 // .getPeakArea().getSeedPoint());
                 Array denseIntensities = p.getPeakArea().getSeedMS();
 
                 final ArrayInt.D1 mz = new ArrayInt.D1(
-                    denseIntensities.getShape()[0]);
+                        denseIntensities.getShape()[0]);
                 for (int i = 0; i < denseIntensities.getShape()[0]; i++) {
                     mz.set(i, i);
                 }
                 Tuple2D<Array, Array> t = new Tuple2D<Array, Array>(mz,
-                    denseIntensities);
+                        denseIntensities);
 
                 // if (t == null) {
                 // this.log.info("Calling with {},{} returned null.", p
@@ -596,18 +590,18 @@ public class PeakExporter implements IPeakExporter {
                 // }
                 if (t != null && t.getFirst() != null && t.getSecond() != null) {
                     int mw = (int) MaltcmsTools.getMaxMass(t.getFirst(), t.
-                        getSecond());
+                            getSecond());
                     ArrayDouble.D1 masses = new ArrayDouble.D1(t.getFirst().
-                        getShape()[0]);
+                            getShape()[0]);
                     ArrayInt.D1 intensities = new ArrayInt.D1(t.getSecond().
-                        getShape()[0]);
+                            getShape()[0]);
                     MAMath.copyDouble(masses, t.getFirst());
                     MAMath.copyInt(intensities, t.getSecond());
                     Metabolite2D m = new Metabolite2D(pname, pname,
-                        "CHROMA4D-ID", cnt, "", "", this.workflow.
-                        getStartupDate().toString(), 0, p.getFirstRetTime(),
-                        "min", mw, "", p.getName(),
-                        masses, intensities, 0, p.getSecondRetTime(), "sec");
+                            "CHROMA4D-ID", cnt, "", "", this.workflow.
+                            getStartupDate().toString(), 0, p.getFirstRetTime(),
+                            "min", mw, "", p.getName(),
+                            masses, intensities, 0, p.getSecondRetTime(), "sec");
                     try {
                         dos.write(m.toString());
                         dos.newLine();
@@ -619,7 +613,7 @@ public class PeakExporter implements IPeakExporter {
                     cnt++;
                 } else {
                     this.log.error(
-                        "Can not export peak {}, because MS is null", cnt);
+                            "Can not export peak {}, because MS is null", cnt);
                 }
             }
             try {
@@ -642,10 +636,10 @@ public class PeakExporter implements IPeakExporter {
      */
     @Override
     public void exportPeakNames(final List<Peak2D> peaklist,
-        final String chomatogramName) {
-        final List<List<String>> metaTable = new ArrayList<List<String>>();
+            final String chomatogramName) {
+        final List<List<String>> metaTable = new ArrayList<>();
 
-        final List<String> header = new ArrayList<String>();
+        final List<String> header = new ArrayList<>();
         header.add("PeakID");
         header.add("Identifications");
 
@@ -653,7 +647,7 @@ public class PeakExporter implements IPeakExporter {
         String value;
         int i = 0;
         for (Peak2D p : peaklist) {
-            entry = new ArrayList<String>();
+            entry = new ArrayList<>();
             entry.add(i + "");
             value = "";
             for (Tuple2D<Double, IMetabolite> r : p.getNames()) {
@@ -667,9 +661,9 @@ public class PeakExporter implements IPeakExporter {
         final CSVWriter csvw = new CSVWriter();
         csvw.setWorkflow(this.workflow);
         csvw.writeTableByRows(this.workflow.getOutputDirectory(this).
-            getAbsolutePath(), chomatogramName + "_peakIdentifications",
-            metaTable,
-            WorkflowSlot.PEAKFINDING);
+                getAbsolutePath(), chomatogramName + "_peakIdentifications",
+                metaTable,
+                WorkflowSlot.PEAKFINDING);
     }
 
     /**

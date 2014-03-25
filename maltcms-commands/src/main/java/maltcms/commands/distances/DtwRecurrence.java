@@ -70,20 +70,20 @@ public class DtwRecurrence implements IRecurrence {
     @Override
     public void configure(final Configuration cfg) {
         this.comp_weight = cfg.getDouble(
-            "alignment.algorithm.compressionweight", 1.0);
+                "alignment.algorithm.compressionweight", 1.0);
         this.exp_weight = cfg.getDouble("alignment.algorithm.expansionweight",
-            1.0);
+                1.0);
         this.diag_weight = cfg.getDouble("alignment.algorithm.diagonalweight",
-            1.0);
+                1.0);
         this.globalGapPenalty = cfg.getDouble(
-            "alignment.algorithm.globalGapPenalty", 0);
+                "alignment.algorithm.globalGapPenalty", 0);
     }
 
     private double cumDistM(final int row, final int column,
-        final IArrayD2Double cumDistMatrix, final double cij,
-        final boolean minimize1, final ArrayByte.D2 predecessors) {
+            final IArrayD2Double cumDistMatrix, final double cij,
+            final boolean minimize1, final ArrayByte.D2 predecessors) {
         final double init = minimize1 ? Double.POSITIVE_INFINITY
-            : Double.NEGATIVE_INFINITY;
+                : Double.NEGATIVE_INFINITY;
         double n = init, w = init, nw = init;
         if ((row == 0) && (column == 0)) {
             nw = this.diag_weight * cij;
@@ -114,19 +114,19 @@ public class DtwRecurrence implements IRecurrence {
         } else { // all other cases
             n = (this.comp_weight * cij) + cumDistMatrix.get(row - 1, column) + this.globalGapPenalty;
             nw = (this.diag_weight * cij)
-                + cumDistMatrix.get(row - 1, column - 1);
+                    + cumDistMatrix.get(row - 1, column - 1);
             w = (this.exp_weight * cij) + cumDistMatrix.get(row, column - 1) + this.globalGapPenalty;
             final int neq = nequal(n, nw, w);
             if (neq == 3 && (Double.isInfinite(n) || Double.isNaN(n))) {
                 log.error("{} values are equal at {},{}, n={},nw={},w={}",
-                    new Object[]{
-                        neq, row, column, n, nw, w});
+                        new Object[]{
+                            neq, row, column, n, nw, w});
                 throw new ConstraintViolationException(
-                    "Illegal recursion state detected! Please check alignment constraints and pairwise similarity! Example: rtEpsilon should not be set too low for DTW!");
+                        "Illegal recursion state detected! Please check alignment constraints and pairwise similarity! Example: rtEpsilon should not be set too low for DTW!");
 //				log.warn("n={},nw={},w={}", new Object[] { n, nw, w });
             }
             final double m = minimize1 ? MathTools.min(n, w, nw) : MathTools.max(
-                n, w, nw);
+                    n, w, nw);
             // int neq = nequal(n, w, nw);
             if (m == nw) {
                 predecessors.set(row, column, (byte) 1);
@@ -162,34 +162,34 @@ public class DtwRecurrence implements IRecurrence {
     }
 
     private double cumDistM(final int row, final int column,
-        final IArrayD2Double prev, final IArrayD2Double curr,
-        final double cij, final boolean minimize1) {
+            final IArrayD2Double prev, final IArrayD2Double curr,
+            final double cij, final boolean minimize1) {
         //System.out.println("Gap penalty: " + this.globalGapPenalty);
         double m = cij;
         final double init = minimize1 ? Double.POSITIVE_INFINITY
-            : Double.NEGATIVE_INFINITY;
+                : Double.NEGATIVE_INFINITY;
         double n = init, w = init, nw = init;
         if ((row == 0) && (column == 0)) {
             nw = this.diag_weight * cij;
         } else if ((row > 0) && (column == 0)) {
             n = ((this.comp_weight * cij) + prev.get(0, 0))
-                + this.globalGapPenalty;
+                    + this.globalGapPenalty;
         } else if ((row == 0) && (column > 0)) {
             w = ((this.exp_weight * cij) + curr.get(column - 1, 0))
-                + this.globalGapPenalty;
+                    + this.globalGapPenalty;
         } else { // all other cases
             n = (this.comp_weight * cij) + prev.get(column, 0)
-                + this.globalGapPenalty;
+                    + this.globalGapPenalty;
             nw = (this.diag_weight * cij) + prev.get(column - 1, 0);
             w = (this.exp_weight * cij) + curr.get(column - 1, 0)
-                + this.globalGapPenalty;
+                    + this.globalGapPenalty;
             final int neq = nequal(n, nw, w);
             if (neq == 3) {
                 log.error("{} values are equal at {},{}, n={},nw={},w={}",
-                    new Object[]{
-                        neq, row, column, n, nw, w});
+                        new Object[]{
+                            neq, row, column, n, nw, w});
                 throw new ConstraintViolationException(
-                    "Illegal recursion state detected! Please check alignment constraints and pairwise similarity! Example: rtEpsilon should not be set too low for DTW!");
+                        "Illegal recursion state detected! Please check alignment constraints and pairwise similarity! Example: rtEpsilon should not be set too low for DTW!");
 //				log.warn("n={},nw={},w={}", new Object[] { n, nw, w });
             }
         }
@@ -206,8 +206,8 @@ public class DtwRecurrence implements IRecurrence {
      */
     @Override
     public double eval(final int row, final int column,
-        final IArrayD2Double cumDistMatrix, final double dij,
-        final ArrayByte.D2 predecessors) {
+            final IArrayD2Double cumDistMatrix, final double dij,
+            final ArrayByte.D2 predecessors) {
         if (this.minimize) {
             return cumDistM(row, column, cumDistMatrix, dij, true, predecessors);
         }
@@ -223,8 +223,8 @@ public class DtwRecurrence implements IRecurrence {
      */
     @Override
     public double eval(final int row, final int column,
-        final IArrayD2Double previousRow, final IArrayD2Double currentRow,
-        final double dij) {
+            final IArrayD2Double previousRow, final IArrayD2Double currentRow,
+            final double dij) {
         if (this.minimize) {
             return cumDistM(row, column, previousRow, currentRow, dij, true);
         }
@@ -266,7 +266,7 @@ public class DtwRecurrence implements IRecurrence {
      */
     @Override
     public void set(final double compression_weight1,
-        final double expansion_weight1, final double diagonal_weight1) {
+            final double expansion_weight1, final double diagonal_weight1) {
         this.comp_weight = compression_weight1;
         this.exp_weight = expansion_weight1;
         this.diag_weight = diagonal_weight1;

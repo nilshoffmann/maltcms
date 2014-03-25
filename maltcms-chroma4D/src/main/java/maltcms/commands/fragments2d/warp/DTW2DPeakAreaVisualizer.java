@@ -65,7 +65,7 @@ import ucar.ma2.IndexIterator;
 public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
 
     @Configurable(name = "var.boundary_index_list",
-        value = "boundary_index_list")
+            value = "boundary_index_list")
     private String boundaryPeakListVar = "boundary_index_list";
     @Configurable(name = "var.region_index_list", value = "region_index_list")
     private String regionIndexListVar = "region_index_list";
@@ -79,9 +79,9 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.boundaryPeakListVar = cfg.getString("var.boundary_index_list",
-            "boundary_index_list");
+                "boundary_index_list");
         this.regionIndexListVar = cfg.getString("var.region_index_list",
-            "region_index_list");
+                "region_index_list");
 //        this.fillPeakArea = cfg.getBoolean(this.getClass().getName()
 //                + ".fillPeakArea", false);
     }
@@ -94,17 +94,17 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
         final List<Array> scanlines = super.getScanlineFor(ff, spm);
         super.normalize(false);
         super.setBinSize(2);
-        for (int k = 0; k < scanlines.size(); k++) {
-            ArrayTools.fill(scanlines.get(k), 0);
+        for (Array scanline : scanlines) {
+            ArrayTools.fill(scanline, 0);
         }
         Array refBoundary = null;
         if (this.fillPeakArea) {
             log.info("Filling peak area; using {}",
-                this.regionIndexListVar);
+                    this.regionIndexListVar);
             refBoundary = ff.getChild(this.regionIndexListVar).getArray();
         } else {
             log.info("Do not fill peak area; using {}",
-                this.boundaryPeakListVar);
+                    this.boundaryPeakListVar);
             refBoundary = ff.getChild(this.boundaryPeakListVar).getArray();
         }
         final IndexIterator iter = refBoundary.getIndexIterator();
@@ -117,7 +117,7 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
                 tmp.set(k % spm, 1.0d);
             } catch (final IndexOutOfBoundsException e) {
                 log.error("IndexOutOfBounds for index {}(" + (k / spm)
-                    + "," + (k % spm) + ")", k);
+                        + "," + (k % spm) + ")", k);
             }
         }
 
@@ -129,15 +129,15 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
      */
     @Override
     protected void saveChart(final JFreeChart chart, final IFileFragment ref,
-        final IFileFragment query) {
+            final IFileFragment query) {
         final PlotRunner pl = new EPlotRunner(chart,
-            StringTools.removeFileExt(ref.getName())
-            + "_vs_" + StringTools.removeFileExt(query.getName()) + "-PA",
-            getWorkflow().getOutputDirectory(this));
+                StringTools.removeFileExt(ref.getName())
+                + "_vs_" + StringTools.removeFileExt(query.getName()) + "-PA",
+                getWorkflow().getOutputDirectory(this));
         pl.configure(Factory.getInstance().getConfiguration());
         final File f = pl.getFile();
         final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f, this,
-            WorkflowSlot.VISUALIZATION, ref, query);
+                WorkflowSlot.VISUALIZATION, ref, query);
         getWorkflow().append(dwr);
         Factory.getInstance().submitJob(pl);
     }

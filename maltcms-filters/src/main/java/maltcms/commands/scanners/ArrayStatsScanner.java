@@ -90,7 +90,7 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
                 final double d = iter.getDoubleNext();
                 if (this.ignorePositiveInfinity || this.ignoreNegativeInfinity) {
                     if ((d < Double.POSITIVE_INFINITY)
-                        && (d > Double.NEGATIVE_INFINITY)) {
+                            && (d > Double.NEGATIVE_INFINITY)) {
                         max = Math.max(max, d);
                         min = Math.min(min, d);
                         globalmin = Math.min(globalmin, min);
@@ -125,7 +125,7 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
                     // !
                     // !
                     if ((d < Double.POSITIVE_INFINITY)
-                        && (d > Double.NEGATIVE_INFINITY)) {
+                            && (d > Double.NEGATIVE_INFINITY)) {
                         variance += Math.pow((d - mean), 2.0d);
                         skew += Math.pow((d - mean), 3.0d);
                         // globalvar += Math.pow((d - globalmean), 2.0d);
@@ -169,7 +169,7 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
                     // !
                     // !
                     if ((d < Double.POSITIVE_INFINITY)
-                        && (d > Double.NEGATIVE_INFINITY)) {
+                            && (d > Double.NEGATIVE_INFINITY)) {
                         globalvar += Math.pow((d - globalmean), 2.0d);
                         globalskew += Math.pow((d - globalmean), 3.0d);
                         // globalvar += Math.pow((d - globalmean), 2.0d);
@@ -197,9 +197,9 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
     @Override
     public void configure(final Configuration cfg) {
         this.ignorePositiveInfinity = cfg.getBoolean(this.getClass().getName()
-            + ".ignorePositiveInfinity", true);
+                + ".ignorePositiveInfinity", true);
         this.ignoreNegativeInfinity = cfg.getBoolean(this.getClass().getName()
-            + ".ignoreNegativeInfinity", true);
+                + ".ignoreNegativeInfinity", true);
     }
 
     public StatsMap getGlobalStatsMap() {

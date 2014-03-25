@@ -96,35 +96,35 @@ import ucar.ma2.Sparse;
 public class ImageTools {
 
     /**
-     * Adds all peaks to an image. If one of the colors are
-     * <code>null</code>, this component wont be drawn.
+     * Adds all peaks to an image. If one of the colors are <code>null</code>,
+     * this component wont be drawn.
      *
-     * @param img                img
-     * @param peaklist           snakes
-     * @param seedPointColor     color of the seed point
-     * @param regionColor        color of the peak area
-     * @param boundaryColor      color of the boundary
+     * @param img img
+     * @param peaklist snakes
+     * @param seedPointColor color of the seed point
+     * @param regionColor color of the peak area
+     * @param boundaryColor color of the boundary
      * @param scansPerModulation scans per modulation
      * @return new image
      */
     public static BufferedImage addPeakToImage(final BufferedImage img,
-        final List<Peak2D> peaklist, final int[] seedPointColor,
-        final int[] regionColor, final int[] boundaryColor,
-        final int scansPerModulation) {
+            final List<Peak2D> peaklist, final int[] seedPointColor,
+            final int[] regionColor, final int[] boundaryColor,
+            final int scansPerModulation) {
         final WritableRaster raster = img.getRaster();
 
         for (final Peak2D peak : peaklist) {
             if (regionColor != null) {
                 for (final Point p : peak.getPeakArea().getRegionPoints()) {
                     raster.setPixel(p.x, scansPerModulation - p.y - 1,
-                        regionColor);
+                            regionColor);
                 }
             }
             if (boundaryColor != null) {
                 for (final Point p : peak.getPeakArea().getBoundaryPoints()) {
                     try {
                         raster.setPixel(p.x, scansPerModulation - p.y - 1,
-                            boundaryColor);
+                                boundaryColor);
                     } catch (final ArrayIndexOutOfBoundsException e) {
                         // System.out.println("Skipping Pixel");
                     }
@@ -135,9 +135,9 @@ public class ImageTools {
             if (seedPointColor != null) {
                 final Point seed = snake.getPeakArea().getSeedPoint();
                 if (seed.x < img.getWidth()
-                    && (scansPerModulation - seed.y - 1) > 0) {
+                        && (scansPerModulation - seed.y - 1) > 0) {
                     raster.setPixel(seed.x, scansPerModulation - seed.y - 1,
-                        seedPointColor);
+                            seedPointColor);
                 }
             }
         }
@@ -147,35 +147,35 @@ public class ImageTools {
     }
 
     /**
-     * Adds all peaks to an image. If one of the colors are
-     * <code>null</code>, this component wont be drawn.
+     * Adds all peaks to an image. If one of the colors are <code>null</code>,
+     * this component wont be drawn.
      *
-     * @param img                img
-     * @param peaklist           snakes
-     * @param seedPointColor     color of the seed point
-     * @param regionColor        color of the peak area
-     * @param boundaryColor      color of the boundary
+     * @param img img
+     * @param peaklist snakes
+     * @param seedPointColor color of the seed point
+     * @param regionColor color of the peak area
+     * @param boundaryColor color of the boundary
      * @param scansPerModulation scans per modulation
      * @return new image
      */
     public static BufferedImage addPeakAreaToImage(final BufferedImage img,
-        final List<PeakArea2D> peaklist, final int[] seedPointColor,
-        final int[] regionColor, final int[] boundaryColor,
-        final int scansPerModulation) {
+            final List<PeakArea2D> peaklist, final int[] seedPointColor,
+            final int[] regionColor, final int[] boundaryColor,
+            final int scansPerModulation) {
         final WritableRaster raster = img.getRaster();
 
         for (final PeakArea2D peak : peaklist) {
             if (regionColor != null) {
                 for (final Point p : peak.getRegionPoints()) {
                     raster.setPixel(p.x, scansPerModulation - p.y - 1,
-                        regionColor);
+                            regionColor);
                 }
             }
             if (boundaryColor != null) {
                 for (final Point p : peak.getBoundaryPoints()) {
                     try {
                         raster.setPixel(p.x, scansPerModulation - p.y - 1,
-                            boundaryColor);
+                                boundaryColor);
                     } catch (final ArrayIndexOutOfBoundsException e) {
                         // System.out.println("Skipping Pixel");
                     }
@@ -186,9 +186,9 @@ public class ImageTools {
             if (seedPointColor != null) {
                 final Point seed = peak.getSeedPoint();
                 if (seed.x < img.getWidth()
-                    && (scansPerModulation - seed.y - 1) > 0) {
+                        && (scansPerModulation - seed.y - 1) > 0) {
                     raster.setPixel(seed.x, scansPerModulation - seed.y - 1,
-                        seedPointColor);
+                            seedPointColor);
                 }
             }
         }
@@ -200,21 +200,21 @@ public class ImageTools {
     /**
      * Creates an image of an 2D chromatogramm.
      *
-     * @param <T>                should extend {@link AFragmentCommand}
-     * @param ffName             file fragment name
-     * @param intensity          intensity array
+     * @param <T> should extend {@link AFragmentCommand}
+     * @param ffName file fragment name
+     * @param intensity intensity array
      * @param scansPerModulation scans per modulation
-     * @param fillValue          fill value
-     * @param threshold          threshold
-     * @param colorRamp          color ramp
-     * @param creator            creator of this image
+     * @param fillValue fill value
+     * @param threshold threshold
+     * @param colorRamp color ramp
+     * @param creator creator of this image
      * @return image
      */
     public static synchronized <T> BufferedImage create2DImage(
-        final String ffName, final List<Array> intensity,
-        final int scansPerModulation, final double fillValue,
-        final double threshold, final int[][] colorRamp,
-        final Class<T> creator) {
+            final String ffName, final List<Array> intensity,
+            final int scansPerModulation, final double fillValue,
+            final double threshold, final int[][] colorRamp,
+            final Class<T> creator) {
         int maxIndex = 0;
         Array intensities = cross.datastructures.tools.ArrayTools.glue(intensity);
         final IndexIterator ii = intensities.getIndexIterator();
@@ -228,14 +228,14 @@ public class ImageTools {
         if (maxIndex < intensities.getShape()[0]) {
             try {
                 intensities = intensities.section(new int[]{0},
-                    new int[]{maxIndex}, new int[]{1});
+                        new int[]{maxIndex}, new int[]{1});
             } catch (final InvalidRangeException e) {
                 System.out.println(e.getLocalizedMessage());
             }
         }
         final BufferedImage bi = maltcms.tools.ImageTools.fullSpectrum(ffName,
-            intensity, scansPerModulation, colorRamp,
-            1024, true, threshold);
+                intensity, scansPerModulation, colorRamp,
+                1024, true, threshold);
 
         return bi;
     }
@@ -255,7 +255,7 @@ public class ImageTools {
     }
 
     public static BufferedImage createCompatibleImage(int width, int height,
-        int transparencyMode) {
+            int transparencyMode) {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         if (ge.isHeadlessInstance()) {
             return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -266,10 +266,10 @@ public class ImageTools {
     }
 
     public static BufferedImage createColorRampImage(double[] sampleTable,
-        int transparencyMode, Color... colors) {
+            int transparencyMode, Color... colors) {
 
         BufferedImage im = createCompatibleImage(sampleTable.length, 1,
-            transparencyMode);
+                transparencyMode);
         Graphics2D g = im.createGraphics();
         float[] fractions = new float[colors.length];
         float step = 1.0f / (fractions.length);
@@ -277,8 +277,8 @@ public class ImageTools {
             fractions[i] = i * step;
         }
         LinearGradientPaint gradient = new LinearGradientPaint(0, 0,
-            sampleTable.length, 1, fractions, colors,
-            MultipleGradientPaint.CycleMethod.NO_CYCLE);
+                sampleTable.length, 1, fractions, colors,
+                MultipleGradientPaint.CycleMethod.NO_CYCLE);
         g.setPaint(gradient);
         g.fillRect(0, 0, sampleTable.length, 1);
         g.dispose();
@@ -287,29 +287,29 @@ public class ImageTools {
     }
 
     public static BufferedImage modifyImageLookupTable(BufferedImage bi,
-        int[][] activeColorRamp, double[] sampleTable, double alpha,
-        double beta, int transparencyMode, float transparency) {
+            int[][] activeColorRamp, double[] sampleTable, double alpha,
+            double beta, int transparencyMode, float transparency) {
         double[] mappedSampleTable = mapSampleTable(sampleTable, alpha, beta);
         BufferedImage cri = createColorRampImage(mappedSampleTable,
-            transparencyMode, rampToColorArray(activeColorRamp));
+                transparencyMode, rampToColorArray(activeColorRamp));
         return applyLut(bi, createLookupTable(cri, transparency,
-            sampleTable.length));
+                sampleTable.length));
     }
 
     public static BufferedImage createModifiedLookupImage(Color[] colors,
-        double[] sampleTable, double alpha, double beta,
-        int transparencyMode, float transparency) {
+            double[] sampleTable, double alpha, double beta,
+            int transparencyMode, float transparency) {
         double[] mappedSampleTable = mapSampleTable(sampleTable, alpha, beta);
         BufferedImage cri = createColorRampImage(mappedSampleTable,
-            transparencyMode, colors);
+                transparencyMode, colors);
         BufferedImage cri2 = createCompatibleImage(cri.getWidth(),
-            cri.getHeight(), cri.getTransparency());
+                cri.getHeight(), cri.getTransparency());
         for (int i = 0; i < mappedSampleTable.length; i++) {
             double frac = mappedSampleTable[i];
             // System.out.println("Original value: " + sampleTable[i]);
             // System.out.println("Mapped value: " + frac);
             int index = Math.max(0, Math.min(mappedSampleTable.length - 1,
-                (int) (frac * mappedSampleTable.length)));
+                    (int) (frac * mappedSampleTable.length)));
             // System.out.println("Index before: " + i + " index after: " +
             // index);
             cri2.setRGB(i, 0, cri.getRGB(index, 0));
@@ -328,7 +328,7 @@ public class ImageTools {
     }
 
     public static LookupTable createLookupTable(BufferedImage im,
-        float transparency, int tableSize) {
+            float transparency, int tableSize) {
         Raster imageRaster = im.getData();
         double sampleStep = 1.0d * im.getWidth() / tableSize; // Sample pixels
         // evenly
@@ -368,7 +368,7 @@ public class ImageTools {
         MinMax mm = MAMath.getMinMax(img);
         // System.out.println("Min : " + mm.min + " Max: " + mm.max);
         MinMaxNormalizationFilter mmnf = new MinMaxNormalizationFilter(mm.min,
-            mm.max);
+                mm.max);
         img = (ArrayDouble.D2) mmnf.apply(img);
         // System.out.println(img);
         MinMax mm2 = MAMath.getMinMax(img);
@@ -377,10 +377,10 @@ public class ImageTools {
         double[] sampleTable = createSampleTable(nsamples);
         // System.out.println("Sampletable: " + Arrays.toString(sampleTable));
         BufferedImage crampImg = createColorRampImage(sampleTable,
-            Transparency.TRANSLUCENT, cRamp);
+                Transparency.TRANSLUCENT, cRamp);
         BufferedImage sourceImg = makeImage2D(img, nsamples);
         BufferedImage destImg = applyLut(sourceImg, createLookupTable(crampImg,
-            1.0f, nsamples));
+                1.0f, nsamples));
         JPanel jp = new JPanel();
         BoxLayout bl = new BoxLayout(jp, BoxLayout.X_AXIS);
         jp.setLayout(bl);
@@ -398,28 +398,28 @@ public class ImageTools {
     }
 
     public static BufferedImage drawSquareMatrixWithLabels(
-        final List<Integer> heightPerRow, final List<String> labels,
-        final Array a, final double skipvalue) {
+            final List<Integer> heightPerRow, final List<String> labels,
+            final Array a, final double skipvalue) {
         final String fontFamily = "Lucida Sans";
         final int fontsize = 10;// Collections.min(heightPerRow).intValue() * 2
         // / 3;
         final Font f = new Font(fontFamily, Font.PLAIN, fontsize);
         // add legendWidth, draw legend
         final BufferedImage fullImage = new BufferedImage(a.getShape()[0], a.
-            getShape()[1], BufferedImage.TYPE_INT_RGB);
+                getShape()[1], BufferedImage.TYPE_INT_RGB);
         final ColorRampReader crr = new ColorRampReader();
         final int[][] colorRamp = crr.readColorRamp(Factory.getInstance().
-            getConfiguration().getString("images.colorramp",
-                "res/colorRamps/bw.csv"));
+                getConfiguration().getString("images.colorramp",
+                        "res/colorRamps/bw.csv"));
         final double[] breakpoints = ImageTools.getBreakpoints(a, 1024,
-            skipvalue);
+                skipvalue);
         ImageTools.makeImage2D(fullImage.getSubimage(0, 0, a.getShape()[0],
-            a.getShape()[1]).getRaster(), a, 1024, colorRamp, 0.0,
-            breakpoints);
+                a.getShape()[1]).getRaster(), a, 1024, colorRamp, 0.0,
+                breakpoints);
         int prevHeight = 0;
         for (int i = 0; i < heightPerRow.size(); i++) {
             final BufferedImage label = fullImage.getSubimage(prevHeight,
-                prevHeight, heightPerRow.get(i), heightPerRow.get(i));
+                    prevHeight, heightPerRow.get(i), heightPerRow.get(i));
             prevHeight += heightPerRow.get(i);
             final Graphics2D g = label.createGraphics();
             g.setColor(Color.WHITE);
@@ -427,17 +427,17 @@ public class ImageTools {
             g.setColor(Color.BLACK);
             g.setFont(f);
             final TextLayout tl = new TextLayout(labels.get(i), f, g.
-                getFontRenderContext());
+                    getFontRenderContext());
             tl.draw(g, heightPerRow.get(i)
-                - (int) Math.ceil(tl.getBounds().getWidth() / 2),
-                heightPerRow.get(i) - tl.getAscent());
+                    - (int) Math.ceil(tl.getBounds().getWidth() / 2),
+                    heightPerRow.get(i) - tl.getAscent());
         }
         return fullImage;
     }
 
     public static ArrayList<Array> filter(final ArrayList<Array> arrays,
-        final int channels) {
-        final ArrayList<Array> ret = new ArrayList<Array>(arrays.size());
+            final int channels) {
+        final ArrayList<Array> ret = new ArrayList<>(arrays.size());
         final ArrayDouble.D2 a = new ArrayDouble.D2(arrays.size(), channels);
         // ArrayDouble.D2 c = new ArrayDouble.D2(arrays.size(), channels);
         // Loop over scans
@@ -468,9 +468,9 @@ public class ImageTools {
     }
 
     public static BufferedImage fullSpectrum(final String chromatogramName,
-        final List<Array> arrays, final int height,
-        final int[][] colorRamp, final int sampleSize, final boolean flip,
-        final double threshold) {
+            final List<Array> arrays, final int height,
+            final int[][] colorRamp, final int sampleSize, final boolean flip,
+            final double threshold) {
         if (arrays.get(0).getRank() != 1) {
             ImageTools.log.error("Only rank 1 arrays allowed!");
             return null;
@@ -482,7 +482,7 @@ public class ImageTools {
         ImageTools.log.debug("Creating full spectrum image!");
         ImageTools.log.debug("Number of bins: " + height);
         BufferedImage bim = new BufferedImage(arrays.size(), height,
-            BufferedImage.TYPE_INT_RGB);
+                BufferedImage.TYPE_INT_RGB);
         final WritableRaster r = bim.getRaster();
         // Array glued = cross.tools.ArrayTools.flatten(arrays).getSecond()
         // .getSecond();
@@ -490,7 +490,7 @@ public class ImageTools {
         if (flip) {
             // Create a transposed image, flipped about the vertical axis
             final RenderedOp ro = TransposeDescriptor.create(bim,
-                TransposeDescriptor.FLIP_VERTICAL, null);
+                    TransposeDescriptor.FLIP_VERTICAL, null);
             bim = ro.getAsBufferedImage();
         }
         return bim;
@@ -499,19 +499,19 @@ public class ImageTools {
     public static RenderedImage flipVertical(final RenderedImage bi) {
         // Create a transposed image, flipped about the vertical axis
         final RenderedOp ro = TransposeDescriptor.create(bi,
-            TransposeDescriptor.FLIP_VERTICAL, null);
+                TransposeDescriptor.FLIP_VERTICAL, null);
         return ro.getAsBufferedImage();
     }
 
     public static RenderedImage flipHorizontal(final RenderedImage bi) {
         // Create a transposed image, flipped about the horizontal axis
         final RenderedOp ro = TransposeDescriptor.create(bi,
-            TransposeDescriptor.FLIP_HORIZONTAL, null);
+                TransposeDescriptor.FLIP_HORIZONTAL, null);
         return ro.getAsBufferedImage();
     }
 
     public static double[] getBreakpoints(final Array values1,
-        final int samples, final double skipvalue) {
+            final int samples, final double skipvalue) {
         final Array values = values1.copy();
         final double[] sorted = (double[]) values.get1DJavaArray(double.class);
         Arrays.sort(sorted);
@@ -558,7 +558,7 @@ public class ImageTools {
 
         ImageTools.log.debug("Total sum of intensities: " + sum);
         ImageTools.log.debug("Min value: " + svals[0] + " Max value: "
-            + svals[svals.length - 1]);
+                + svals[svals.length - 1]);
         final double nthPart = sum / (samples);
         ImageTools.log.debug("Intensity per sample: " + nthPart);
         final double[] breakpoints = new double[samples];
@@ -566,11 +566,11 @@ public class ImageTools {
         int cnt = 0;
         for (int i = 0; i < samples; i++) {
             while ((Math.abs(psum) < (i + 1) * nthPart)
-                && (cnt < (svals.length))) {
+                    && (cnt < (svals.length))) {
                 psum += svals[cnt++];
             }
             ImageTools.log.debug("Breakpoint " + i + " = "
-                + svals[Math.max(0, cnt - 1)]);
+                    + svals[Math.max(0, cnt - 1)]);
             breakpoints[i] = svals[Math.max(0, cnt - 1)];
         }
         ImageTools.log.info("Using {} breakpoints", breakpoints.length);
@@ -579,11 +579,11 @@ public class ImageTools {
     }
 
     public static int getMaxStringLengthForTuple(
-        final Collection<Tuple2D<String, Array>> c, final Font f) {
+            final Collection<Tuple2D<String, Array>> c, final Font f) {
         // determine maximum allowed string length
         int maxStringLength = 0;
         final BufferedImage gtest = new BufferedImage(1, 1,
-            BufferedImage.TYPE_INT_RGB);
+                BufferedImage.TYPE_INT_RGB);
         final Graphics2D g2d = (Graphics2D) gtest.getGraphics();
         g2d.setFont(f);
         for (final Tuple2D<String, Array> t : c) {
@@ -594,22 +594,22 @@ public class ImageTools {
     }
 
     public static double getSample(final double[] samples,
-        final double[] breakpoints, final double value) {
+            final double[] breakpoints, final double value) {
         final int i = Arrays.binarySearch(breakpoints, value);
         ImageTools.log.debug("Binary search index " + i);
         if (i < 0) {
             if (value < breakpoints[0]) {
                 ImageTools.log.debug("Value is smaller, returning "
-                    + samples[0]);
+                        + samples[0]);
                 return samples[0];
             }
             if (value > breakpoints[breakpoints.length - 1]) {
                 ImageTools.log.debug("Value is greater, returning "
-                    + samples[breakpoints.length - 1]);
+                        + samples[breakpoints.length - 1]);
                 return samples[breakpoints.length - 1];
             }
             ImageTools.log.debug("Value in breakpoints, not exact, Returning sample "
-                + samples[Math.abs(i) - 1]);
+                    + samples[Math.abs(i) - 1]);
             return samples[Math.abs(i) - 1];
         } else if (i >= 0) {
             ImageTools.log.debug("i >= 0, Returning sample " + samples[i]);
@@ -621,17 +621,17 @@ public class ImageTools {
     }
 
     public static void makeImage(final WritableRaster w,
-        final List<Array> arrays, final int nsamples,
-        final int[][] colorRamp, final double threshold) {
+            final List<Array> arrays, final int nsamples,
+            final int[][] colorRamp, final double threshold) {
         final Array values = cross.datastructures.tools.ArrayTools.glue(arrays);
         final double[] breakpoints = ImageTools.getBreakpoints(values,
-            nsamples, Double.POSITIVE_INFINITY);
+                nsamples, Double.POSITIVE_INFINITY);
         ImageTools.makeImage(w, arrays, nsamples, colorRamp, threshold,
-            breakpoints);
+                breakpoints);
     }
 
     public static double mapTanH(final double alpha, final double beta,
-        final double x) {
+            final double x) {
         final double a = Math.max(-1, Math.min(1, alpha));
         final double b = Math.max(1, Math.min(10, beta));
         final double v = (1.0d / b) * Math.tanh(beta * (a + x));
@@ -639,7 +639,7 @@ public class ImageTools {
     }
 
     public static double[] mapSampleTable(final double[] s, final double alpha,
-        final double beta) {
+            final double beta) {
         final double[] ret = new double[s.length];
         final double miny = mapTanH(alpha, beta, -1);
         final double maxy = mapTanH(alpha, beta, 1);
@@ -671,11 +671,11 @@ public class ImageTools {
     }
 
     public static void makeImage(final WritableRaster w,
-        final List<Array> arrays, final int nsamples,
-        final int[][] colorRamp, final double threshold,
-        final double[] breakpoints) {
+            final List<Array> arrays, final int nsamples,
+            final int[][] colorRamp, final double threshold,
+            final double[] breakpoints) {
         final double[] samples = mapSampleTable(ImageTools.createSampleTable(
-            nsamples));
+                nsamples));
         double min = Double.POSITIVE_INFINITY;
         double max = Double.NEGATIVE_INFINITY;
         for (final Array a : arrays) {
@@ -712,17 +712,17 @@ public class ImageTools {
                 double v = 0.0d;
                 if (s instanceof Sparse) {
                     ImageTools.log.debug("Shape of s : {}, Setting index {}",
-                        Arrays.toString(s.getShape()), (j));
+                            Arrays.toString(s.getShape()), (j));
                     ImageTools.log.debug("Offset: {}", minmass);
                     v = ImageTools.getSample(samples, breakpoints, ((Sparse) s).
-                        get(j + minmass));
+                            get(j + minmass));
                     ImageTools.log.debug("Sample value: " + v + " original="
-                        + ((Sparse) s).get(j + minmass));
+                            + ((Sparse) s).get(j + minmass));
                 } else {
                     v = ImageTools.getSample(samples, breakpoints,
-                        s.getDouble(si.set(j)));
+                            s.getDouble(si.set(j)));
                     ImageTools.log.debug("Sample value: " + v + " original="
-                        + s.getDouble(si.set(j)));
+                            + s.getDouble(si.set(j)));
                 }
                 if (v > 1.0) {
                     v = 1.0;
@@ -741,14 +741,14 @@ public class ImageTools {
                     // fleqceil++;
                 } else {
                     v1 = (int) Math.floor(MathTools.getLinearInterpolatedY(
-                        floor, colorRamp[floor][0], ceil,
-                        colorRamp[ceil][0], v));
+                            floor, colorRamp[floor][0], ceil,
+                            colorRamp[ceil][0], v));
                     v2 = (int) Math.floor(MathTools.getLinearInterpolatedY(
-                        floor, colorRamp[floor][1], ceil,
-                        colorRamp[ceil][1], v));
+                            floor, colorRamp[floor][1], ceil,
+                            colorRamp[ceil][1], v));
                     v3 = (int) Math.floor(MathTools.getLinearInterpolatedY(
-                        floor, colorRamp[floor][2], ceil,
-                        colorRamp[ceil][2], v));
+                            floor, colorRamp[floor][2], ceil,
+                            colorRamp[ceil][2], v));
                     // interp++;
                 }
                 // double v1 = colorRamp[(int)floor][0];
@@ -787,23 +787,23 @@ public class ImageTools {
     }
 
     public static RenderedImage makeImage2D(final Array values,
-        final int nsamples, final double skipvalue) {
+            final int nsamples, final double skipvalue) {
         final BufferedImage ba = new BufferedImage(values.getShape()[0], values.
-            getShape()[1], BufferedImage.TYPE_3BYTE_BGR);
+                getShape()[1], BufferedImage.TYPE_3BYTE_BGR);
         final WritableRaster wr = ba.getRaster();
         final double[] breakpoints = ImageTools.getBreakpoints(values,
-            nsamples, skipvalue);
+                nsamples, skipvalue);
         final int[][] colorRamp = new ColorRampReader().getDefaultRamp();
         ImageTools.makeImage2D(wr, values, nsamples, colorRamp, 0, breakpoints);
         return ba;
     }
 
     public static void makeImage2D(final WritableRaster w, final Array values,
-        final int nsamples, final int[][] colorRamp,
-        final double threshold, final double[] breakpoints) {
+            final int nsamples, final int[][] colorRamp,
+            final double threshold, final double[] breakpoints) {
         if (values.getRank() != 2) {
             throw new IllegalArgumentException(
-                "Method only accepts arrays of rank 2");
+                    "Method only accepts arrays of rank 2");
         }
         final double[] samples = ImageTools.createSampleTable(nsamples);
         final MinMax m = MAMath.getMinMax(values);
@@ -828,7 +828,7 @@ public class ImageTools {
                 // w.setPixel(i, j, lkupRaster.getPixel(sample, 0, tmp));
                 double v = 0.0d;
                 v = ImageTools.getSample(samples, breakpoints,
-                    values.getDouble(idx.set(i, j)));
+                        values.getDouble(idx.set(i, j)));
                 if (v > 1.0) {
                     v = 1.0;
                 } else if (v < 0.0) {
@@ -846,14 +846,14 @@ public class ImageTools {
                     // fleqceil++;
                 } else {
                     v1 = (int) Math.floor(MathTools.getLinearInterpolatedY(
-                        floor, colorRamp[floor][0], ceil,
-                        colorRamp[ceil][0], v));
+                            floor, colorRamp[floor][0], ceil,
+                            colorRamp[ceil][0], v));
                     v2 = (int) Math.floor(MathTools.getLinearInterpolatedY(
-                        floor, colorRamp[floor][1], ceil,
-                        colorRamp[ceil][1], v));
+                            floor, colorRamp[floor][1], ceil,
+                            colorRamp[ceil][1], v));
                     v3 = (int) Math.floor(MathTools.getLinearInterpolatedY(
-                        floor, colorRamp[floor][2], ceil,
-                        colorRamp[ceil][2], v));
+                            floor, colorRamp[floor][2], ceil,
+                            colorRamp[ceil][2], v));
                     // interp++;
                 }
                 // double v1 = colorRamp[(int)floor][0];
@@ -891,14 +891,14 @@ public class ImageTools {
     }
 
     public static BufferedImage makeImage2D(final Array matrix,
-        final int nsamples) {
+            final int nsamples) {
         if (matrix.getRank() != 2) {
             throw new IllegalArgumentException(
-                "Method only accepts arrays of rank 2");
+                    "Method only accepts arrays of rank 2");
         }
         MinMax mm = MAMath.getMinMax(matrix);
         MinMaxNormalizationFilter mmnf = new MinMaxNormalizationFilter(mm.min,
-            mm.max);
+                mm.max);
         Array img = (ArrayDouble.D2) mmnf.apply(matrix);
         double[] sampleTable = createSampleTable(nsamples);
         // double[] breakpoints = getBreakpoints(img, 256,
@@ -906,7 +906,7 @@ public class ImageTools {
         int width = matrix.getShape()[0];
         int height = matrix.getShape()[1];
         BufferedImage bi = createCompatibleImage(width, height,
-            Transparency.TRANSLUCENT);
+                Transparency.TRANSLUCENT);
         final Index idx = img.getIndex();
         WritableRaster wr = bi.getRaster();
         final float[] colors = new float[4];
@@ -914,8 +914,8 @@ public class ImageTools {
             for (int j = 0; j < height; j++) {
                 float v = 0.0f;
                 v = (float) sampleTable[((int) Math.floor(img.getFloat(idx.set(
-                    i, j))
-                    * (nsamples - 1)))];
+                        i, j))
+                        * (nsamples - 1)))];
                 // v = (float) ImageTools.getSample(sampleTable, breakpoints, );
                 colors[0] = v * 255.0f;
                 colors[1] = v * 255.0f;
@@ -929,26 +929,26 @@ public class ImageTools {
 
     /**
      *
-     * @param bim       the image to save
-     * @param imgname   the filename
-     * @param format    the format, e.g. "png", "jpeg"
+     * @param bim the image to save
+     * @param imgname the filename
+     * @param format the format, e.g. "png", "jpeg"
      * @param outputDir
-     * @param iw        may be null
+     * @param iw may be null
      * @param resources resources, which were used to create the image
      */
     public static File saveImage(final RenderedImage bim, final String imgname,
-        final String format, final File outputDir,
-        final IWorkflowElement iw, final IFileFragment... resources) {
+            final String format, final File outputDir,
+            final IWorkflowElement iw, final IFileFragment... resources) {
         final String name = StringTools.removeFileExt(imgname);
         File out = null;
         if (name.contains(File.separator)) {
             throw new IllegalArgumentException(
-                "Name of chromatogram must not include file separator character!");
+                    "Name of chromatogram must not include file separator character!");
         }
         out = new File(outputDir, imgname + "." + format);
         if (iw != null) {
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(out,
-                iw, WorkflowSlot.VISUALIZATION, resources);
+                    iw, WorkflowSlot.VISUALIZATION, resources);
             iw.getWorkflow().append(dwr);
         }
         try {
@@ -963,10 +963,10 @@ public class ImageTools {
     }
 
     public static void writeImage(final JFreeChart chart, final File file,
-        final int imgwidth, final int imgheight) {
+            final int imgwidth, final int imgheight) {
         try {
             final String ext = StringTools.getFileExtension(
-                file.getAbsolutePath());
+                    file.getAbsolutePath());
             if (ext.equalsIgnoreCase("svg")) {
 //                ImageTools.log.info("Saving to file {}", file.getAbsolutePath());
 //                final FileOutputStream fos = new FileOutputStream(file);
@@ -988,11 +988,11 @@ public class ImageTools {
                     ImageTools.log.info("Using default image format png");
                 } else {
                     ImageTools.log.warn("Cannot handle image of type " + ext
-                        + "! Saving as png!");
+                            + "! Saving as png!");
                 }
                 final File f = new File(file.getParentFile(), StringTools.removeFileExt(file.
-                    getName())
-                    + ".png");
+                        getName())
+                        + ".png");
                 f.getParentFile().mkdir();
                 ImageTools.log.info("Saving to file {}", f.getAbsolutePath());
                 final FileOutputStream fos = new FileOutputStream(f);
@@ -1004,10 +1004,10 @@ public class ImageTools {
     }
 
     public static void writePNG(final JFreeChart chart,
-        final FileOutputStream fos, final int imgwidth, final int imgheight) {
+            final FileOutputStream fos, final int imgwidth, final int imgheight) {
         try {
             EncoderUtil.writeBufferedImage(chart.createBufferedImage(imgwidth,
-                imgheight), "png", fos);
+                    imgheight), "png", fos);
         } catch (final IOException e) {
             ImageTools.log.error(e.getLocalizedMessage());
         }

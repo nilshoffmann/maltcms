@@ -39,11 +39,11 @@ import groovy.beans.Bindable
 class MaltcmsRuntime {
     String arguments = "-Xmx1G"
     Integer parallelThreads = 1
-	String pipelineMode = "ap"
-	File pipelineFile = new File(System.getProperty("ap.home"),"cfg/pipelines/ap.mpl")
+    String pipelineMode = "ap"
+    File pipelineFile = new File(System.getProperty("ap.home"),"cfg/pipelines/ap.mpl")
     Boolean uniqueOutputDir = true
     String lastOutputDir = ""
-	Map activePanels = [
+    Map activePanels = [
 		"ap"		:
         [
 				"importTab",
@@ -69,6 +69,6 @@ class MaltcmsRuntime {
                 "peakAlignmentTab",
                 "maltcmsTab"
         ]
-	]
+    ]
 }
 

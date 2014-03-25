@@ -82,7 +82,7 @@ public class DefaultWorkflowTest {
     }
 
     public List<IFragmentCommand> getDefaultFragmentCommands() {
-        List<IFragmentCommand> cmds = new ArrayList<IFragmentCommand>();
+        List<IFragmentCommand> cmds = new ArrayList<>();
         cmds.add(new FragmentCommandMockA());
         cmds.add(new FragmentCommandMockB());
         cmds.add(new FragmentCommandMockC());
@@ -90,16 +90,16 @@ public class DefaultWorkflowTest {
     }
 
     public CommandPipeline getDefaultCommandSequence(
-        List<IFragmentCommand> commands, List<File> inputFiles) {
+            List<IFragmentCommand> commands, List<File> inputFiles) {
 
         CommandPipeline cp = new CommandPipeline();
         cp.setCommands(commands);
-        List<IFileFragment> files = new ArrayList<IFileFragment>();
+        List<IFileFragment> files = new ArrayList<>();
         for (File file : inputFiles) {
             log.info("Adding input file: {}", file.getAbsolutePath());
             files.add(new FileFragment(file));
         }
-        cp.setInput(new TupleND<IFileFragment>(files));
+        cp.setInput(new TupleND<>(files));
         cp.setCheckCommandDependencies(checkCommandDependencies);
 
         return cp;
@@ -108,7 +108,7 @@ public class DefaultWorkflowTest {
     public DefaultWorkflow getDefaultWorkflow() {
         log.info("Building test command sequence");
         CommandPipeline cp = getDefaultCommandSequence(
-            getDefaultFragmentCommands(), getDefaultTestFiles());
+                getDefaultFragmentCommands(), getDefaultTestFiles());
         log.info("Creating workflow");
         DefaultWorkflow dw = new DefaultWorkflow();
         dw.setExecuteLocal(true);

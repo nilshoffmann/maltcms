@@ -80,23 +80,23 @@ public class MZ5DataSource implements IDataSource {
     private String pointDimensionName = "point_number";
 
     private Dimension addDimension(final NetcdfFileWriteable nfw,
-        final HashMap<String, Dimension> dimensions,
-        final IVariableFragment vf, final Dimension element) {
+            final HashMap<String, Dimension> dimensions,
+            final IVariableFragment vf, final Dimension element) {
 
         String dimname = element.getName();
 
         if (this.pointDimensionVars.contains(vf.getName())) {
             dimname = this.pointDimensionName;
             log.debug("Renaming dimension {} to {} for variable {}",
-                new Object[]{element.getName(), dimname,
-                    vf.getName()});
+                    new Object[]{element.getName(), dimname,
+                        vf.getName()});
         }
 
         if (this.scanDimensionVars.contains(vf.getName())) {
             dimname = this.scanDimensionName;
             log.debug("Renaming dimension {} to {} for variable {}",
-                new Object[]{element.getName(), dimname,
-                    vf.getName()});
+                    new Object[]{element.getName(), dimname,
+                        vf.getName()});
         }
         Dimension d = addDimension(dimensions, dimname, nfw, element);
         return d;
@@ -144,7 +144,7 @@ public class MZ5DataSource implements IDataSource {
         final int dotindex = ff.getName().lastIndexOf(".");
         if (dotindex == -1) {
             throw new RuntimeException("Could not determine File extension of "
-                + ff);
+                    + ff);
         }
         final String filename = ff.getName().toLowerCase();
         for (final String s : this.fileEnding) {
@@ -184,20 +184,20 @@ public class MZ5DataSource implements IDataSource {
     @Override
     public void configure(final Configuration configuration) {
         this.updateAttributes = configuration.getBoolean(
-            "cross.datastructures.fragments.Fragment.update.attributes",
-            true);
+                "cross.datastructures.fragments.Fragment.update.attributes",
+                true);
         this.scanDimensionVars = StringTools.toStringList(configuration.getList(this.getClass().getName() + ".scanDimensionVars"));
         Collections.sort(this.scanDimensionVars);
         this.scanDimensionName = configuration.getString(this.getClass().getName()
-            + ".scanDimensionName", "scan_number");
+                + ".scanDimensionName", "scan_number");
         this.pointDimensionVars = StringTools.toStringList(configuration.getList(this.getClass().getName() + ".pointDimensionVars"));
         Collections.sort(this.pointDimensionVars);
         this.pointDimensionName = configuration.getString(this.getClass().getName()
-            + ".pointDimensionName", "point_number");
+                + ".pointDimensionName", "point_number");
     }
 
     public IVariableFragment convert(final IFileFragment ff, final Variable v,
-        final IVariableFragment ivf) {
+            final IVariableFragment ivf) {
         final DataType dt = v.getDataType();
         final List<Dimension> dimensions = v.getDimensions();
         final Dimension[] d = new Dimension[dimensions.size()];
@@ -225,7 +225,7 @@ public class MZ5DataSource implements IDataSource {
     }
 
     protected NetcdfFile get(final IVariableFragment vf)
-        throws ResourceNotAvailableException {
+            throws ResourceNotAvailableException {
 
         try {
             final NetcdfFile nf = locateFile(vf);
@@ -283,7 +283,7 @@ public class MZ5DataSource implements IDataSource {
         final List<?> attrs = nf.getGlobalAttributes();
         if (!ff.getAttributes().isEmpty()) {
             log.debug(
-                "IFileFragment {} already has Attributes, updating!", ff.getUri());
+                    "IFileFragment {} already has Attributes, updating!", ff.getUri());
         }
         if (!attrs.isEmpty()) {
             log.debug("Loading Attributes for {}", ff.getUri());
@@ -295,7 +295,7 @@ public class MZ5DataSource implements IDataSource {
                     ff.setAttributes((Attribute) o);
                 } else {
                     log.debug("Attribute {} already exists, ",
-                        ((Attribute) o).getName());
+                            ((Attribute) o).getName());
                 }
             } else {
                 log.debug("Setting Attribute {}", ((Attribute) o).getName());
@@ -312,7 +312,7 @@ public class MZ5DataSource implements IDataSource {
     }
 
     protected NetcdfFile locateFile(final IVariableFragment f)
-        throws IOException, ResourceNotAvailableException {
+            throws IOException, ResourceNotAvailableException {
         NetcdfFile nf = null;
         log.debug("Trying to find {} in {}", f.getName(), f.getParent().getUri());
         // String file = "";
@@ -320,7 +320,7 @@ public class MZ5DataSource implements IDataSource {
             //file = FileTools.getFile(f.getParent()).getAbsolutePath();
             nf = locateFile(f.getParent());//NetcdfFile.open(file);
             log.debug("Searching for IVariableFragment {} in parent {}",
-                f, f.getParent().getUri());
+                    f, f.getParent().getUri());
             if (nf.findVariable(f.getName()) != null) {
                 log.debug("Found IVariableFragment {} in parent {}", f, f.getParent().getUri());
                 return nf;
@@ -350,12 +350,12 @@ public class MZ5DataSource implements IDataSource {
 //                file = FileTools.getFile(ff).getAbsolutePath();
                 nf = locateFile(ff);//NetcdfFile.open(file);
                 log.debug(
-                    "Searching for IVariableFragment {} in source file {}",
-                    f, ff);
+                        "Searching for IVariableFragment {} in source file {}",
+                        f, ff);
                 if (nf.findVariable(f.getName()) != null) {
                     log.debug(
-                        "Found IVariableFragment {} in source file {}", f,
-                        ff);
+                            "Found IVariableFragment {} in source file {}", f,
+                            ff);
                     return nf;
                 } else {
                     nf.close();
@@ -372,14 +372,14 @@ public class MZ5DataSource implements IDataSource {
             }
         }
         throw new ResourceNotAvailableException("Could not find Variable "
-            + f.getName() + " in any associated file!");
+                + f.getName() + " in any associated file!");
     }
 
     @Override
     public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
-        FileNotFoundException, ResourceNotAvailableException {
+            FileNotFoundException, ResourceNotAvailableException {
         final ArrayList<IVariableFragment> al = readStructure(f);
-        final ArrayList<Array> ral = new ArrayList<Array>(al.size());
+        final ArrayList<Array> ral = new ArrayList<>(al.size());
         for (final IVariableFragment vf : al) {
             final Array a = readSingle(vf);
             ral.add(a);
@@ -389,8 +389,8 @@ public class MZ5DataSource implements IDataSource {
 
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
-        throws IOException, FileNotFoundException,
-        ResourceNotAvailableException {
+            throws IOException, FileNotFoundException,
+            ResourceNotAvailableException {
         log.debug("Reading indexed of {}, child of {}", f.toString(), f.getParent().toString());
         final ArrayList<Array> al = readIndexed2(f);
         return al;
@@ -418,15 +418,15 @@ public class MZ5DataSource implements IDataSource {
      * DATA[INDEX[a],INDEX[a+1]-1] ENDIF NEW_INDEX[a] = DATA[INDEX[a]]; ENDFOR
      */
     public ArrayList<Array> readIndexed2(final IVariableFragment f)
-        throws IOException, ResourceNotAvailableException,
-        FileNotFoundException {
+            throws IOException, ResourceNotAvailableException,
+            FileNotFoundException {
         log.debug("{}", f.getParent().toString());
         // get the associated Netcdf File
         final NetcdfFile nd = get(f);
         if (nd == null) {
             throw new FileNotFoundException("File "
-                + f.getParent().getUri()
-                + " appears not to be a valid cdf file!");
+                    + f.getParent().getUri()
+                    + " appears not to be a valid cdf file!");
         }
         // Ensure there is an index
         EvalTools.notNull(f.getIndex(), this);// ,f.getIndex().getRange());
@@ -486,14 +486,14 @@ public class MZ5DataSource implements IDataSource {
         }
 
         log.debug("index_start {}, index_end {}, index_stride {}",
-            new Object[]{index_start, index_end, index_stride});
+                new Object[]{index_start, index_end, index_stride});
 
         // get information for length of compressed data
         final Variable data_var = nd.findVariable(f.getName());
         if (data_var == null) {
             //nd.close();
             throw new ResourceNotAvailableException("Could not read "
-                + f.getName());
+                    + f.getName());
         }
         // get the (first) dimension for that (we expect 1D arrays)
         EvalTools.eqI(1, data_var.getDimensions().size(), this);
@@ -512,7 +512,7 @@ public class MZ5DataSource implements IDataSource {
         }
 
         log.debug("data_start {}, data_end {}, data_stride {}",
-            new Object[]{data_start, data_end, data_stride});
+                new Object[]{data_start, data_end, data_stride});
 
         // Create a new index array, which is zero based
         if (index_range == null) {
@@ -521,7 +521,7 @@ public class MZ5DataSource implements IDataSource {
         if (index_range[0] == null) {
             try {
                 index_range[0] = new Range(0, index_end - index_start,
-                    index_stride);
+                        index_stride);
                 log.debug("index_range[0] = {}", index_range[0]);
             } catch (final InvalidRangeException e) {
                 log.error(e.getLocalizedMessage());
@@ -531,7 +531,7 @@ public class MZ5DataSource implements IDataSource {
         int index_offset = 0;
 
         // create the ArrayList, which will hold the individual arrays
-        final ArrayList<Array> al = new ArrayList<Array>(num_arrays);
+        final ArrayList<Array> al = new ArrayList<>(num_arrays);
 
         // Iterate over all arrays in range, starting at relative index 0
         // this can be translated to absolute in index_array via
@@ -552,7 +552,7 @@ public class MZ5DataSource implements IDataSource {
                     i, data_start, data_end});
                 // Read from data_start to data_end incl. with data_stride
                 final Array ai = data_var.read(data_start + ":" + data_end
-                    + ":" + data_stride);
+                        + ":" + data_stride);
                 // Update new index to the changed value
                 // new_index.set(i, index_offset);
                 // Increase the next start offset by the length of array ai
@@ -573,28 +573,28 @@ public class MZ5DataSource implements IDataSource {
 
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
-        ResourceNotAvailableException, FileNotFoundException {
+            ResourceNotAvailableException, FileNotFoundException {
         log.debug("Reading single of {}, child of {}", f.toString(), f.getParent().toString());
         log.debug("{}", f.getParent().toString());
         final NetcdfFile nd = get(f);
         if (nd == null) {
             throw new FileNotFoundException("Could not find physical file for "
-                + f.getParent().getUri());
+                    + f.getParent().getUri());
         }
         EvalTools.notNull(nd, this);
         try {
             if (f.getIndex() != null) {
 
                 log.debug("IVariableFragment "
-                    + f.getName()
-                    + " has IndexFragment "
-                    + f.getIndex().getName()
-                    + " set. Ignore if you didn't want to read this Variable indexed!");
+                        + f.getName()
+                        + " has IndexFragment "
+                        + f.getIndex().getName()
+                        + " set. Ignore if you didn't want to read this Variable indexed!");
             }
             final Variable v = nd.findVariable(f.getName());
             if (v == null) {
                 throw new ResourceNotAvailableException("Could not read "
-                    + f.getName());
+                        + f.getName());
             }
 
             f.setDataType(v.getDataType());
@@ -659,13 +659,13 @@ public class MZ5DataSource implements IDataSource {
      */
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
-        throws IOException, FileNotFoundException {
+            throws IOException, FileNotFoundException {
         log.debug("Reading structure of {}", f.toString());
-        final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
+        final ArrayList<IVariableFragment> al = new ArrayList<>();
         final NetcdfFile nd = locateFile(f);
         if (nd == null) {
             throw new FileNotFoundException("Could not find physical file for "
-                + f.getUri());
+                    + f.getUri());
         }
         try {
             loadAttributes(f, nd);
@@ -696,19 +696,19 @@ public class MZ5DataSource implements IDataSource {
      */
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
-        throws IOException, FileNotFoundException,
-        ResourceNotAvailableException {
+            throws IOException, FileNotFoundException,
+            ResourceNotAvailableException {
         log.debug("Reading structure of {}", f.toString());
         final NetcdfFile nd = locateFile(f);
         if (nd == null) {
             throw new FileNotFoundException("Could not find physical file for "
-                + f.getParent().getUri());
+                    + f.getParent().getUri());
         }
         try {
             Variable v = nd.findVariable(f.getName());
             if (v == null) {
                 throw new ResourceNotAvailableException("Could not read "
-                    + f.getName());
+                        + f.getName());
             }
             final IVariableFragment vf = convert(f.getParent(), v, f);
             final List<?> att = v.getAttributes();
@@ -746,7 +746,7 @@ public class MZ5DataSource implements IDataSource {
             }
             log.debug("Trying to create NetcdfFileWritable {}", filename);
             nfw = NetcdfFileWriteable.createNew(
-                filename, false);
+                    filename, false);
 
             final List<Attribute> globalAttrs = parent.getAttributes();
             for (final Attribute attr : globalAttrs) {
@@ -754,7 +754,7 @@ public class MZ5DataSource implements IDataSource {
                 nfw.addGlobalAttribute(attr);
             }
 
-            final LinkedHashMap<String, Dimension> dimensions = new LinkedHashMap<String, Dimension>();
+            final LinkedHashMap<String, Dimension> dimensions = new LinkedHashMap<>();
             for (Dimension dim : parent.getDimensions()) {
                 if (dim.getName().startsWith("dimension")) {
                     log.debug("Skipping default dimension {}", dim);
@@ -772,34 +772,34 @@ public class MZ5DataSource implements IDataSource {
                     log.debug("{}", vf.getArray());
                 }
                 if (vf.getParent().getUri().equals(
-                    parent.getUri())) {
+                        parent.getUri())) {
                     // HANDLE DIMENSIONS, SHOULD BE DEFINED GLOBALLY
                     Dimension[] dim = null;
                     if (vf.getDimensions() == null) {
                         if (!vf.hasArray()) {
                             log.warn(
-                                "IVariableFragment {} has no array set, skipping!",
-                                vf);
+                                    "IVariableFragment {} has no array set, skipping!",
+                                    vf);
                             skipVarForMissingData = true;
                         } else {
                             log.warn(
-                                "IVariableFragment {} has no Dimension info, adding defaults!",
-                                vf.getName());
+                                    "IVariableFragment {} has no Dimension info, adding defaults!",
+                                    vf.getName());
                             dim = cross.datastructures.tools.ArrayTools.getDefaultDimensions(vf.getArray());
                             final Dimension[] dimC = new Dimension[dim.length];
                             int i = 0;
                             for (final Dimension element : dim) {
                                 log.debug("Checking Dimension {}", element);
                                 dimC[i++] = addDimension(nfw, dimensions, vf,
-                                    element);
+                                        element);
                             }
                             dim = dimC;
                         }
                     } else {
                         if (!vf.hasArray()) {
                             log.warn(
-                                "IVariableFragment {} has no array set, skipping!",
-                                vf);
+                                    "IVariableFragment {} has no array set, skipping!",
+                                    vf);
                             skipVarForMissingData = true;
                         } else {
                             log.debug("Using Dimensions given by IVariableFragment!");
@@ -816,7 +816,7 @@ public class MZ5DataSource implements IDataSource {
                                     element.setLength(shape[i]);
                                 }
                                 dimC[i] = addDimension(nfw, dimensions, vf,
-                                    element);
+                                        element);
                                 i++;
                             }
                             dim = dimC;
@@ -860,7 +860,7 @@ public class MZ5DataSource implements IDataSource {
 
                         // CREATE VARIABLE
                         final Variable v = new Variable(nfw, variableGroup,
-                            null, vf.getName());
+                                null, vf.getName());
                         nfw.addVariable(variableGroup, v);
 
                         // SET DIMENSIONS
@@ -870,7 +870,7 @@ public class MZ5DataSource implements IDataSource {
 
                         // SET DATA TYPE
                         final DataType dt = vf.getDataType() == null ? DataType.getType(vf.getArray().getElementType())
-                            : vf.getDataType();
+                                : vf.getDataType();
                         v.setDataType(dt);
 
                         // SET ATTRIBUTES
@@ -921,8 +921,8 @@ public class MZ5DataSource implements IDataSource {
     }
 
     private void updateIVariableFragment(final Variable v, final DataType dt,
-        final Dimension[] d, final List<Range> ranges,
-        final IVariableFragment vf) {
+            final Dimension[] d, final List<Range> ranges,
+            final IVariableFragment vf) {
         vf.setDimensions(d);
         vf.setDataType(dt);
         vf.setRange(ranges.toArray(new Range[ranges.size()]));
@@ -959,7 +959,7 @@ public class MZ5DataSource implements IDataSource {
                             final Variable v = nfw.findVariable(varname);
                             if (v != null) {
                                 log.debug("Saving variable "
-                                    + v.getNameAndDimensions());
+                                        + v.getNameAndDimensions());
                                 if (vf.getIndex() != null) {
                                     int offset = 0;
                                     for (Array a : vf.getIndexedArray()) {

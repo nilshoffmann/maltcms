@@ -82,8 +82,8 @@
         <developerConnection>scm:git:https://git.code.sf.net/p/maltcms/code</developerConnection>
         <connection>scm:git:git://git.code.sf.net/p/maltcms/code</connection>
         <url>https://git.code.sf.net/p/maltcms/code</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
     <distributionManagement>
         <repository>
             <id>maltcms-release</id>
@@ -239,8 +239,8 @@
                         </execution>
                     </executions>
                 </plugin>
-<!-- deactivated due to problems with javadoc / site generation -->
-<!--
+                <!-- deactivated due to problems with javadoc / site generation -->
+                <!--
                 <plugin>
                     <groupId>org.projectlombok</groupId>
                     <artifactId>lombok-maven-plugin</artifactId>
@@ -447,7 +447,7 @@
                                     <link>http://www.unidata.ucar.edu/software/netcdf-java/v4.2/javadoc/</link>
                                     <link>http://maltcms.sourceforge.net/maven/cross/1.3.1/apidocs/</link>
                                 </links>
-                <!--                <sourcepath>${basedir}/src/main/java</sourcepath>
+                                <!--                <sourcepath>${basedir}/src/main/java</sourcepath>
                                 <sourcepath>target/generated-sources/delombok</sourcepath>-->
                             </configuration>
                         </plugin>
@@ -588,7 +588,7 @@
         <profile>
             <id>lombok-needs-tools-jar</id>
             <activation>
-<!--                <file>
+                <!--                <file>
                     <exists>${java.home}/../lib/tools.jar</exists>
                 </file>-->
                 <property>
@@ -840,7 +840,7 @@
         <skipITs>true</skipITs>
         <project.build.sourceLevel>1.7</project.build.sourceLevel>
         <project.build.targetLevel>1.7</project.build.targetLevel>
-        <version.cross>1.3.1</version.cross>
+        <version.cross>1.4.0-SNAPSHOT</version.cross>
         <version.slf4j>1.7.2</version.slf4j>
         <version.junit>4.11</version.junit>
         <version.lombok>1.12.4</version.lombok>

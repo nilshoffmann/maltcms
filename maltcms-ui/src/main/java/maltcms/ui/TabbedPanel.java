@@ -57,11 +57,12 @@ public class TabbedPanel extends JPanel implements ActionListener {
 
         private Graphics2D g2 = null;
 
+        @Override
         public void run() {
             if ((this.g2 != null) && (getContent() != null)) {
                 final BufferedImage bi = getContent();
                 this.g2.drawImage(bi, 0, 0, getWidth(), getHeight(), 0, 0, bi
-                    .getWidth(), bi.getHeight(), null);
+                        .getWidth(), bi.getHeight(), null);
                 this.g2.dispose();
             }
         }
@@ -86,10 +87,11 @@ public class TabbedPanel extends JPanel implements ActionListener {
         this.aps = aps1;
         this.paSize = pa1.getEnclosingRectangle().getSize();
         this.paIm = new BufferedImage(this.paSize.width, this.paSize.height,
-            BufferedImage.TYPE_INT_ARGB);
+                BufferedImage.TYPE_INT_ARGB);
         createPAIm(this.paIm);
     }
 
+    @Override
     public void actionPerformed(final ActionEvent evt) {
         // System.out.println("IEvent received!");
         // System.out.println(evt.toString());
@@ -112,7 +114,7 @@ public class TabbedPanel extends JPanel implements ActionListener {
         this.paSize = rect.getBounds().getSize();
         // System.out.println(this.paSize);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-            1.0f));
+                1.0f));
         g2.setColor(Color.BLACK);
         g2.fill(rect);
         setPreferredSize(new Dimension(getWidth(), getHeight()));
@@ -121,7 +123,7 @@ public class TabbedPanel extends JPanel implements ActionListener {
         final Color[] cls = new Color[]{Color.GREEN, Color.CYAN};
         final Composite comp = g2.getComposite();
         final Composite alpha = AlphaComposite.getInstance(
-            AlphaComposite.SRC_OVER, 0.7f);
+                AlphaComposite.SRC_OVER, 0.7f);
         final Shape r = this.pa.getShape();
         EvalTools.notNull(r, this);
         g2.setComposite(alpha);
@@ -140,7 +142,7 @@ public class TabbedPanel extends JPanel implements ActionListener {
         // g2.setColor(Color.BLUE);
         // g2.setComposite(alpha);
         for (final Tuple2D<Integer, Integer> t : this.aps
-            .getCorrespondingScans()) {
+                .getCorrespondingScans()) {
             g2.setColor(cls[(t.getFirst() + t.getSecond()) % cls.length]);
             g2.fillRect(t.getSecond(), t.getFirst(), 1, 1);
         }

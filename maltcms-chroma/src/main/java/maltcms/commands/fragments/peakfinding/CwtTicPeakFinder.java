@@ -89,7 +89,7 @@ public class CwtTicPeakFinder extends AFragmentCommand {
         }
         try {
             List<URI> results = ics.call();
-            TupleND<IFileFragment> resultFragments = new TupleND<IFileFragment>();
+            TupleND<IFileFragment> resultFragments = new TupleND<>();
             for (URI file : results) {
                 FileFragment f = new FileFragment(file);
                 if (saveGraphics) {

@@ -86,7 +86,7 @@ public class AdditionFilter extends AArrayFilter {
         this.aef = new AElementFilter() {
             @Override
             public Double apply(Double t) {
-                return Double.valueOf(t.doubleValue() + add);
+                return t + add;
             }
         };
     }

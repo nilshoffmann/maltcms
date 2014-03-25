@@ -36,7 +36,7 @@ import java.util.List;
  *
  */
 public interface IAlignment extends
-    IPairwiseFeatureVectorSequenceOperation<Double> {
+        IPairwiseFeatureVectorSequenceOperation<Double> {
 
     public List<Point> getMap();
 

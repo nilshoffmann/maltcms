@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class TreatmentGroup1D implements ITreatmentGroup<IChromatogram1D> {
 
-    List<IChromatogram1D> l = new ArrayList<IChromatogram1D>();
+    List<IChromatogram1D> l = new ArrayList<>();
     private String name = "";
 
     /*

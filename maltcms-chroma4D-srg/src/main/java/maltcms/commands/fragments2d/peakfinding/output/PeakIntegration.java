@@ -94,7 +94,7 @@ public class PeakIntegration implements IPeakIntegration {
      * Determines the start and end position of the peak in a specific scanline.
      *
      * @param scanline scanline
-     * @param pa       peakarea
+     * @param pa peakarea
      * @return start and end of this peak
      */
     private int[] getStartAndEnd(final int scanline, final PeakArea2D pa) {
@@ -115,23 +115,24 @@ public class PeakIntegration implements IPeakIntegration {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void integrate(final Peak2D peak, final IFileFragment ff,
-        final List<Array> otic, final IWorkflow workflow) {
+            final List<Array> otic, final IWorkflow workflow) {
 
         final List<Tuple2D<Integer, Double>> sortedMS = ArrayTools2.
-            getUniqueMasses(peak.getPeakArea().getSeedMS());
+                getUniqueMasses(peak.getPeakArea().getSeedMS());
         final int sortedSize = sortedMS.size();
         final IScanLine slc = ScanLineCacheFactory.getScanLineCache(ff);
 
-        final List<Integer> scanlineNumbers = new ArrayList<Integer>();
+        final List<Integer> scanlineNumbers = new ArrayList<>();
         for (final Point p : peak.getPeakArea().getRegionPoints()) {
             if (!scanlineNumbers.contains(p.x)) {
                 scanlineNumbers.add(p.x);
             }
         }
 
-        final Map<Integer, ArrayDouble.D1[]> um = new HashMap<Integer, ArrayDouble.D1[]>();
-        final Map<Integer, ArrayDouble.D1> tic = new HashMap<Integer, ArrayDouble.D1>();
+        final Map<Integer, ArrayDouble.D1[]> um = new HashMap<>();
+        final Map<Integer, ArrayDouble.D1> tic = new HashMap<>();
         ArrayDouble.D1[] intenArray;
         int c = 0;
         List<Array> scanline = null;
@@ -160,11 +161,11 @@ public class PeakIntegration implements IPeakIntegration {
 
         final AArrayFilter filter1 = new MovingAverageFilter();
 
-        final Map<Integer, Array[]> um1 = new HashMap<Integer, Array[]>();
+        final Map<Integer, Array[]> um1 = new HashMap<>();
         for (final Integer x : um.keySet()) {
             um1.put(x, filter1.apply(um.get(x)));
         }
-        final Map<Integer, Array> tic1 = new HashMap<Integer, Array>();
+        final Map<Integer, Array> tic1 = new HashMap<>();
         for (final Integer x : tic.keySet()) {
             tic1.put(x, filter1.apply(new Array[]{tic.get(x)})[0]);
         }
@@ -186,9 +187,9 @@ public class PeakIntegration implements IPeakIntegration {
                         j = 0;
                     }
                     final AChart<XYPlot> xyc = new XYChart(
-                        "1D Visualization of Scanline " + (x + 1),
-                        new String[]{j + " unfiltered", j + " filtered",},
-                        new Array[]{v1, v2,}, "time", "intensity");
+                            "1D Visualization of Scanline " + (x + 1),
+                            new String[]{j + " unfiltered", j + " filtered",},
+                            new Array[]{v1, v2,}, "time", "intensity");
                     plot = xyc.create();
 
                     startEnd = getStartAndEnd(x, peak.getPeakArea());
@@ -200,20 +201,18 @@ public class PeakIntegration implements IPeakIntegration {
                     plot.addDomainMarker(currentEnd);
 
                     final PlotRunner pr = new PlotRunner(plot, "Plot of Peak"
-                        + peak.getIndex(), peak.getIndex() + "_sl"
-                        + (x + 1) + "_m" + j, workflow.getOutputDirectory(
-                            this));
+                            + peak.getIndex(), peak.getIndex() + "_sl"
+                            + (x + 1) + "_m" + j, workflow.getOutputDirectory(
+                                    this));
                     pr.configure(Factory.getInstance().getConfiguration());
                     try {
                         final File f = pr.getFile();
                         final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                            f, SeededRegionGrowing.class.newInstance(),
-                            WorkflowSlot.VISUALIZATION, ff);
+                                f, SeededRegionGrowing.class.newInstance(),
+                                WorkflowSlot.VISUALIZATION, ff);
                         workflow.append(dwr);
                         Factory.getInstance().submitJob(pr);
-                    } catch (final InstantiationException e) {
-                        e.printStackTrace();
-                    } catch (final IllegalAccessException e) {
+                    } catch (final InstantiationException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
@@ -229,15 +228,15 @@ public class PeakIntegration implements IPeakIntegration {
                     peaksum2[i] += tt.get(p.y);
                 } catch (java.lang.ArrayIndexOutOfBoundsException ex) {
                     System.err.println("Array index out of bounds for peak "
-                        + p + " and index " + i + ". Array length is "
-                        + tt.getShape()[0]);
+                            + p + " and index " + i + ". Array length is "
+                            + tt.getShape()[0]);
                 }
             }
         }
 
         for (int i = 0; i < this.k; i++) {
             peak.getPeakArea().addAreaIntensity(
-                sortedMS.get(sortedSize - i - 1).getFirst(), peaksum2[i]);
+                    sortedMS.get(sortedSize - i - 1).getFirst(), peaksum2[i]);
         }
 
         slc.clear();

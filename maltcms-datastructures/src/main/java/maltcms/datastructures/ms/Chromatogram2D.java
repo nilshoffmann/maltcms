@@ -84,20 +84,20 @@ public class Chromatogram2D implements IChromatogram2D {
         this.spm = this.isl.getScansPerModulation();
         this.slc = this.isl.getScanLineCount();
         this.satOffset = e.getChild("scan_acquisition_time").getArray().
-            getDouble(0);
+                getDouble(0);
         this.md = getModulationDuration();
         this.scanAcquisitionTimeVar = e.getChild(scan_acquisition_time_var);
         try {
             IVariableFragment msLevelVar = this.parent.getChild("ms_level");
             msLevel = msLevelVar.getArray();
-            msScanMap = new TreeMap<Short, List<Integer>>();
+            msScanMap = new TreeMap<>();
             for (int i = 0; i < msLevel.getShape()[0]; i++) {
                 Short msLevelValue = msLevel.getShort(i);
                 if (msScanMap.containsKey(msLevelValue)) {
                     List<Integer> scanToScan = msScanMap.get(msLevelValue);
                     scanToScan.add(i);
                 } else {
-                    List<Integer> scanToScan = new ArrayList<Integer>();
+                    List<Integer> scanToScan = new ArrayList<>();
                     scanToScan.add(scanToScan.size(), i);
                     msScanMap.put(msLevelValue, scanToScan);
                 }
@@ -123,9 +123,9 @@ public class Chromatogram2D implements IChromatogram2D {
      * @param secondColumnScanIndex
      */
     public IScan2D getScan2D(final int firstColumnScanIndex,
-        final int secondColumnScanIndex) {
+            final int secondColumnScanIndex) {
         return buildScan((firstColumnScanIndex * isl.getScansPerModulation())
-            + secondColumnScanIndex);
+                + secondColumnScanIndex);
     }
 
     /**
@@ -148,7 +148,7 @@ public class Chromatogram2D implements IChromatogram2D {
             scanMsLevel = msLevel.getByte(i);
         }
         final Scan2D s = new Scan2D(t.getFirst(), t.getSecond(), i, sat, p.x,
-            p.y, sat1, sat2, scanMsLevel);
+                p.y, sat1, sat2, scanMsLevel);
         return s;
     }
 
@@ -160,7 +160,7 @@ public class Chromatogram2D implements IChromatogram2D {
     public Tuple2D<Double, Double> getTimeRange() {
         if (timeRange == null) {
             MAMath.MinMax satMM = MAMath.getMinMax(scanAcquisitionTimeVar.getArray());
-            timeRange = new Tuple2D<Double, Double>(satMM.min, satMM.max);
+            timeRange = new Tuple2D<>(satMM.min, satMM.max);
         }
         return timeRange;
     }
@@ -197,7 +197,7 @@ public class Chromatogram2D implements IChromatogram2D {
     }
 
     public List<IScan2D> getScans() {
-        ArrayList<IScan2D> al = new ArrayList<IScan2D>();
+        ArrayList<IScan2D> al = new ArrayList<>();
         for (int i = 0; i < getNumberOfScans(); i++) {
             al.add(buildScan(i));
         }
@@ -230,7 +230,7 @@ public class Chromatogram2D implements IChromatogram2D {
             @Override
             public void remove() {
                 throw new UnsupportedOperationException(
-                    "Can not remove scans with iterator!");
+                        "Can not remove scans with iterator!");
             }
         };
         return iter;
@@ -241,7 +241,7 @@ public class Chromatogram2D implements IChromatogram2D {
             this.parent = (IExperiment2D) e;
         }
         throw new IllegalArgumentException(
-            "Parameter must be of type IExperiment2D!");
+                "Parameter must be of type IExperiment2D!");
     }
 
     /*
@@ -288,11 +288,11 @@ public class Chromatogram2D implements IChromatogram2D {
     @Override
     public int getIndexFor(double scan_acquisition_time) {
         double[] d = (double[]) getScanAcquisitionTime().get1DJavaArray(
-            double.class);
+                double.class);
         int idx = Arrays.binarySearch(d, scan_acquisition_time);
         if (idx >= 0) {// exact hit
             log.info("sat {}, scan_index {}",
-                scan_acquisition_time, idx);
+                    scan_acquisition_time, idx);
             return idx;
         } else {// imprecise hit, find closest element
             int insertionPosition = (-idx) - 1;
@@ -308,7 +308,7 @@ public class Chromatogram2D implements IChromatogram2D {
             double previous = d[Math.max(0, insertionPosition - 1)];
 //			System.out.println("Value before insertion position: "+previous);
             if (Math.abs(scan_acquisition_time - previous) <= Math.abs(
-                scan_acquisition_time - current)) {
+                    scan_acquisition_time - current)) {
                 int index = Math.max(0, insertionPosition - 1);
 //				System.out.println("Returning "+index);
                 return index;
@@ -367,9 +367,9 @@ public class Chromatogram2D implements IChromatogram2D {
     @Override
     public Collection<Short> getMsLevels() {
         if (msScanMap == null) {
-            return Arrays.asList(Short.valueOf((short) 1));
+            return Arrays.asList((short) 1);
         }
-        List<Short> l = new ArrayList<Short>(msScanMap.keySet());
+        List<Short> l = new ArrayList<>(msScanMap.keySet());
         Collections.sort(l);
         return l;
     }
@@ -389,7 +389,7 @@ public class Chromatogram2D implements IChromatogram2D {
     public List<Integer> getIndicesOfScansForMsLevel(short level) {
         if (level == (short) 1 && msScanMap == null) {
             int scans = getNumberOfScansForMsLevel((short) 1);
-            ArrayList<Integer> indices = new ArrayList<Integer>(scans);
+            ArrayList<Integer> indices = new ArrayList<>(scans);
             for (int i = 0; i < scans; i++) {
                 indices.add(i);
             }
@@ -398,7 +398,7 @@ public class Chromatogram2D implements IChromatogram2D {
         if (msScanMap == null) {
             throw new ResourceNotAvailableException("No ms fragmentation level available for chromatogram " + getParent().getName());
         }
-        return Collections.unmodifiableList(msScanMap.get(Short.valueOf(level)));
+        return Collections.unmodifiableList(msScanMap.get(level));
     }
 
     private class Scan2DIterator implements Iterator<IScan2D> {

@@ -67,15 +67,15 @@ public class PeakArea2D {
     /**
      * Default constructor.
      *
-     * @param seed      seed point
-     * @param ms        mass spectra of the seed point
+     * @param seed seed point
+     * @param ms mass spectra of the seed point
      * @param intensity intensity of the seed point
-     * @param sindex    scan index of the seed point
-     * @param spm       scans per modulation is used to build an index to search
-     *                  efficiently in current region and border list
+     * @param sindex scan index of the seed point
+     * @param spm scans per modulation is used to build an index to search
+     * efficiently in current region and border list
      */
     public PeakArea2D(final Point seed, final Array ms, final double intensity,
-        final int sindex, final int spm) {
+            final int sindex, final int spm) {
         init(seed, ms, intensity, sindex, spm);
     }
 
@@ -99,37 +99,37 @@ public class PeakArea2D {
     }
 
     private void init(final Point seed, final Array ms, final double intensity,
-        final int sindex, final int spm) {
-        this.regionList = new ArrayList<Point>();
+            final int sindex, final int spm) {
+        this.regionList = new ArrayList<>();
         this.seedPoint = seed;
-        this.boundary = new ArrayList<Point>();
-        this.activeList = new TreeSet<Point>(new PointComparator());
+        this.boundary = new ArrayList<>();
+        this.activeList = new TreeSet<>(new PointComparator());
 
-        this.pixelMap = new HashMap<Integer, Boolean>();
-        this.activeMap = new HashMap<Integer, Boolean>();
-        this.boundaryMap = new HashMap<Integer, Boolean>();
+        this.pixelMap = new HashMap<>();
+        this.activeMap = new HashMap<>();
+        this.boundaryMap = new HashMap<>();
         this.seedMS = ms.copy();
         this.sumMS = ms.copy();
         this.seedIntensity = intensity;
         this.areaIntensity = intensity;
         this.scansPerModulation = spm;
         this.index = sindex;
-        this.areaUniqueMassIntensities = new HashMap<Integer, Double>();
-        this.intensities = new HashMap<Point, Double>();
+        this.areaUniqueMassIntensities = new HashMap<>();
+        this.intensities = new HashMap<>();
     }
 
     public void clear() {
-        this.regionList = new ArrayList<Point>();
-        this.boundary = new ArrayList<Point>();
-        this.activeList = new TreeSet<Point>(new PointComparator());
+        this.regionList = new ArrayList<>();
+        this.boundary = new ArrayList<>();
+        this.activeList = new TreeSet<>(new PointComparator());
 
-        this.pixelMap = new HashMap<Integer, Boolean>();
-        this.activeMap = new HashMap<Integer, Boolean>();
-        this.boundaryMap = new HashMap<Integer, Boolean>();
+        this.pixelMap = new HashMap<>();
+        this.activeMap = new HashMap<>();
+        this.boundaryMap = new HashMap<>();
         this.areaIntensity = 0;
         this.sumMS = this.seedMS.copy();
-        this.areaUniqueMassIntensities = new HashMap<Integer, Double>();
-        this.intensities = new HashMap<Point, Double>();
+        this.areaUniqueMassIntensities = new HashMap<>();
+        this.intensities = new HashMap<>();
     }
 
     /**
@@ -137,7 +137,7 @@ public class PeakArea2D {
      *
      * @param p point
      * @return <code>true</code> if p is in active point list, else
-     *         <code>false</code>
+     * <code>false</code>
      */
     private boolean activeContains(final Point p) {
         return this.activeMap.containsKey(getIndex(p));
@@ -158,7 +158,7 @@ public class PeakArea2D {
     /**
      * Setter.
      *
-     * @param mass  mass
+     * @param mass mass
      * @param value area sum
      */
     public void addAreaIntensity(final Integer mass, final Double value) {
@@ -192,12 +192,12 @@ public class PeakArea2D {
     /**
      * Will add the point p to the list.
      *
-     * @param point     point
-     * @param ms        mass spectra of this point
+     * @param point point
+     * @param ms mass spectra of this point
      * @param intensity intensity of this point
      */
     public void addRegionPoint(final Point point, final Array ms,
-        final double intensity) {
+            final double intensity) {
         this.regionList.add(point);
         this.pixelMap.put(getIndex(point), true);
         final int x = point.x;
@@ -218,7 +218,7 @@ public class PeakArea2D {
      *
      * @param p point
      * @return <code>true</code> if p is in boundary list, else
-     *         <code>false</code>
+     * <code>false</code>
      */
     private boolean boundaryContains(final Point p) {
         return this.boundaryMap.containsKey(getIndex(p));
@@ -248,9 +248,9 @@ public class PeakArea2D {
      * @return a list of all boundary points
      */
     public List<Point> getBoundaryPoints() {
-        final List<Point> copyList = new ArrayList<Point>(this.boundary);
-        this.boundary = new ArrayList<Point>();
-        this.boundaryMap = new HashMap<Integer, Boolean>();
+        final List<Point> copyList = new ArrayList<>(this.boundary);
+        this.boundary = new ArrayList<>();
+        this.boundaryMap = new HashMap<>();
         return copyList;
     }
 
@@ -260,7 +260,7 @@ public class PeakArea2D {
      * @return a list of all boundary points
      */
     public List<Point> getBoundaryPointsCopy() {
-        return new ArrayList<Point>(this.boundary);
+        return new ArrayList<>(this.boundary);
     }
 
     /**
@@ -321,14 +321,14 @@ public class PeakArea2D {
     /**
      * Getter.
      *
-     * @param p             center point
+     * @param p center point
      * @param allNeighbours <code>true</code> if all neighbours should be
-     *                      returned, else <code>false</code>
+     * returned, else <code>false</code>
      * @return list of points. ATTENTION: Could contain point which are out of
-     *         bounds.
+     * bounds.
      */
     private List<Point> getNeighbours(final Point p, final boolean allNeighbours) {
-        final List<Point> neigh = new ArrayList<Point>();
+        final List<Point> neigh = new ArrayList<>();
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 final Point np = new Point(p.x + i, p.y + j);
@@ -336,8 +336,8 @@ public class PeakArea2D {
                     neigh.add(np);
                 } else {
                     if (!activeContains(np) && !regionContains(np)
-                        && !boundaryContains(np)
-                        && !this.seedPoint.equals(np)) {
+                            && !boundaryContains(np)
+                            && !this.seedPoint.equals(np)) {
                         neigh.add(np);
                     }
                 }
@@ -352,7 +352,7 @@ public class PeakArea2D {
      * @return list
      */
     public List<Point> getRegionPoints() {
-        return new ArrayList<Point>(this.regionList);
+        return new ArrayList<>(this.regionList);
     }
 
     /**
@@ -386,7 +386,7 @@ public class PeakArea2D {
      * Checks, if this snake has an not empty list of active points.
      *
      * @return <code>true</code> is the active point list is not empty, else
-     *         <code>false</code>
+     * <code>false</code>
      */
     public boolean hasActivePoints() {
         return !this.activeList.isEmpty();
@@ -416,9 +416,9 @@ public class PeakArea2D {
      */
     public boolean regionContains(final Point point) {
         final boolean pixelMapContainsPoint = this.pixelMap.containsKey(getIndex(
-            point));
+                point));
         final boolean seedPointIsPoint = (point.x == this.seedPoint.x)
-            && (point.y == this.seedPoint.y);
+                && (point.y == this.seedPoint.y);
         if (pixelMapContainsPoint || seedPointIsPoint) {
             return true;
         }

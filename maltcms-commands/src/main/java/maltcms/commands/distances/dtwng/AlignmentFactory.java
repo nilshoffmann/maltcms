@@ -46,7 +46,7 @@ public class AlignmentFactory {
     }
 
     public IAlignment getDTWInstance(IOptimizationFunction iof,
-        TwoFeatureVectorOperation tfvo, Area constraints) {
+            TwoFeatureVectorOperation tfvo, Area constraints) {
         IAlignment ia = getDTWInstance();
         ia.setOptimizationFunction(iof);
         ia.setPairwiseFeatureVectorOperation(tfvo);

@@ -112,11 +112,11 @@ public class SparseTest extends TestCase {
         }
 
         final int nbins = MaltcmsTools.getNumberOfIntegerMassBins(Math.min(5,
-            10), Math.max(5 + 25 - 1, 10 + 30 - 1), 1.0d);
+                10), Math.max(5 + 25 - 1, 10 + 30 - 1), 1.0d);
         this.s1 = Sparse.create(this.index, this.values, Math.min(5, 10), Math
-            .max(5 + 25 - 1, 10 + 30 - 1), nbins, 1.0d);
+                .max(5 + 25 - 1, 10 + 30 - 1), nbins, 1.0d);
         this.s2 = Sparse.create(this.index1, this.values1, Math.min(5, 10),
-            Math.max(5 + 25 - 1, 10 + 30 - 1), nbins, 1.0d);
+                Math.max(5 + 25 - 1, 10 + 30 - 1), nbins, 1.0d);
         // System.out.println("Shape 1: " + this.s1.getShape()[0] + " Shape 2: "
         // + this.s2.getShape()[0]);
         // Assert.assertEquals(3.90222d, SparseTools.dot(this.s1,
@@ -125,9 +125,9 @@ public class SparseTest extends TestCase {
 
     public void testGetMaxIndex() {
         Assert.assertEquals(this.s1.getMaxIndex(),
-            10 + this.s1.getShape()[0] - 1);
+                10 + this.s1.getShape()[0] - 1);
         Assert.assertEquals(this.s2.getMaxIndex(),
-            0 + this.s2.getShape()[0] - 1);
+                0 + this.s2.getShape()[0] - 1);
     }
 
     // public void testMeanMerge() {

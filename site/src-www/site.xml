@@ -34,7 +34,7 @@
     <nav id="nav" class="nav col-md-4">
         <group nname="Home" ident="about">
             <ref target="index" />
-<!--            <ref target="users/gettingStarted" />
+            <!--            <ref target="users/gettingStarted" />
             <ref target="news/index" />
             <ref target="info/publications" />
             <ref target="info/license" />

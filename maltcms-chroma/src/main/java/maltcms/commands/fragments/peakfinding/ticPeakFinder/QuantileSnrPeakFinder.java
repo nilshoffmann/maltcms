@@ -52,7 +52,7 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
 
     @Configurable
     private List<AArrayFilter> filter = Arrays.asList(
-        (AArrayFilter) new MultiplicationFilter());
+            (AArrayFilter) new MultiplicationFilter());
     @Configurable
     private TopHatFilter baselineFilter = new TopHatFilter();
     @Configurable
@@ -72,7 +72,7 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
 
     protected Array applyFilters(final Array correctedtic) {
         final Array filteredtic = BatchFilter.applyFilters(correctedtic,
-            this.filter);
+                this.filter);
         return filteredtic;
     }
 
@@ -80,7 +80,7 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
     public PeakPositionsResultSet findPeakPositions(Array tic) {
         EvalTools.notNull(tic, this);
         Array correctedtic = null;
-        final ArrayList<Integer> ts = new ArrayList<Integer>();
+        final ArrayList<Integer> ts = new ArrayList<>();
         log.debug("Value\tLow\tMedian\tHigh\tDev\tGTMedian\tSNR");
         double[] ticValues = (double[]) tic.get1DJavaArray(double.class);
         correctedtic = applyFilters(tic.copy());
@@ -91,7 +91,7 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
         double[] snrValues = new double[ticValues.length];
         double[] baselineEstimate = (double[]) baselineFilter.apply(correctedtic).get1DJavaArray(double.class);
         double[] cticValues = (double[]) correctedtic.get1DJavaArray(
-            double.class);
+                double.class);
         DescriptiveStatistics stats = new DescriptiveStatistics();
         stats.setWindowSize(meanEstimationWindow);
 
@@ -107,10 +107,10 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
         for (int i = 0; i < ticValues.length; i++) {
             log.debug("i=" + i);
             PeakFinderUtils.checkExtremum(cticValues, snrValues, ts, peakSnrThreshold, i,
-                peakSeparationWindow);
+                    peakSeparationWindow);
         }
         PeakPositionsResultSet pprs = new PeakPositionsResultSet(correctedtic,
-            PeakFinderUtils.createPeakCandidatesArray(tic, ts), snrValues, ts, PeakFinderUtils.findBaseline(cticValues, baselineEstimationMinimaWindow));
+                PeakFinderUtils.createPeakCandidatesArray(tic, ts), snrValues, ts, PeakFinderUtils.findBaseline(cticValues, baselineEstimationMinimaWindow));
         return pprs;
     }
 

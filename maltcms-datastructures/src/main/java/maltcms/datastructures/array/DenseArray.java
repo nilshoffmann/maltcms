@@ -49,9 +49,9 @@ import ucar.ma2.ArrayInt.D1;
 public class DenseArray implements IArrayD2Double {
 
     public static BufferedImage createLayoutImage(final DenseArray pa,
-        final Color bg, final Color fg) {
+            final Color bg, final Color fg) {
         final BufferedImage bi = new BufferedImage(pa.rows(), pa.columns(),
-            BufferedImage.TYPE_4BYTE_ABGR);
+                BufferedImage.TYPE_4BYTE_ABGR);
         final Graphics2D g = (Graphics2D) bi.getGraphics();
         final Color b = bg;
         g.setColor(b);
@@ -86,7 +86,7 @@ public class DenseArray implements IArrayD2Double {
      * @param defaultValue1
      */
     public DenseArray(final int rows, final int columns,
-        final double defaultValue1) {
+            final double defaultValue1) {
         this.data = new ArrayDouble.D2(rows, columns);
         this.defaultValue = defaultValue1;
         ArrayTools.fill(this.data, defaultValue1);
@@ -110,7 +110,7 @@ public class DenseArray implements IArrayD2Double {
     @Override
     public Tuple2D<D1, ucar.ma2.ArrayDouble.D1> flatten() {
         final ArrayDouble.D1 arr = new ArrayDouble.D1(
-            getNumberOfStoredElements());
+                getNumberOfStoredElements());
         final ArrayInt.D1 si = new ArrayInt.D1(rows());
         int offset = 0;
         for (int i = 0; i < rows(); i++) {
@@ -120,7 +120,7 @@ public class DenseArray implements IArrayD2Double {
             }
             offset += columns();
         }
-        return new Tuple2D<D1, ucar.ma2.ArrayDouble.D1>(si, arr);
+        return new Tuple2D<>(si, arr);
     }
 
     /*
@@ -211,7 +211,7 @@ public class DenseArray implements IArrayD2Double {
      */
     @Override
     public void set(final int row, final int col, final double d)
-        throws ArrayIndexOutOfBoundsException {
+            throws ArrayIndexOutOfBoundsException {
         this.data.set(row, col, d);
     }
 }

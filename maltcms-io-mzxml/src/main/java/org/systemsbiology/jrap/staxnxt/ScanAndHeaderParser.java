@@ -63,7 +63,7 @@ public class ScanAndHeaderParser {
 
             parseScanAndHeader(xmlSR);
 
-        } catch (Exception e) {
+        } catch (XMLStreamException e) {
             String exception1 = e.getMessage();
             if (!exception1.equals("ScanHeaderEndFoundException")) {
                 if (!exception1.equals("ScanEndFoundException")) {
@@ -89,7 +89,7 @@ public class ScanAndHeaderParser {
     }
 
     public void parseScanAndHeader(XMLStreamReader xmlSR)
-        throws XMLStreamException {
+            throws XMLStreamException {
         boolean inPrecursorMZ = false;
         boolean inPeaks = false;
         String elementName = null;

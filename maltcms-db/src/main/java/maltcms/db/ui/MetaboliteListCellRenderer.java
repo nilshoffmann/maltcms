@@ -45,8 +45,9 @@ public class MetaboliteListCellRenderer extends JLabel implements ListCellRender
      */
     private static final long serialVersionUID = -2284912996792720438L;
 
+    @Override
     public Component getListCellRendererComponent(JList list, Object value,
-        int index, boolean isSelected, boolean cellHasFocus) {
+            int index, boolean isSelected, boolean cellHasFocus) {
 
         if (isSelected) {
             setBackground(list.getSelectionBackground());

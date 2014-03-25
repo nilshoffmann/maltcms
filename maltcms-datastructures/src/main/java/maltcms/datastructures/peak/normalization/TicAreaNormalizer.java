@@ -60,7 +60,7 @@ public class TicAreaNormalizer implements IPeakNormalizer {
 
     @Override
     public double getNormalizationFactor(IFileFragment fragment, int peakIndex) {
-        return 1.0d / getCache().get(fragment).doubleValue();
+        return 1.0d / getCache().get(fragment);
     }
 
     @Override

@@ -1,10 +1,9 @@
 /**
  * *****************************************************************************
  * --------------------------------------------------------------------------- *
- * File: * @(#) DataProcessingInfo.java * Author: * Mathijs Vogelzang
- * m_v@dds.nl
- * ****************************************************************************** * * *
- * This software is provided ``AS IS'' and any express or implied * *
+ * File: * @(#) DataProcessingInfo.java * Author: * Mathijs Vogelzang m_v@dds.nl
+ * ******************************************************************************
+ * * * * This software is provided ``AS IS'' and any express or implied * *
  * warranties, including, but not limited to, the implied warranties of * *
  * merchantability and fitness for a particular purpose, are disclaimed. * * In
  * no event shall the authors or the Institute for Systems Biology * * liable
@@ -57,7 +56,7 @@ public class DataProcessingInfo {
         baseLineReduced = UNKNOWN;
         lowIntensityDataRemoved = UNKNOWN;
 
-        softwareUsed = new ArrayList<SoftwareInfo>();
+        softwareUsed = new ArrayList<>();
 
         intensityCutoff = -1;
     }
@@ -74,8 +73,7 @@ public class DataProcessingInfo {
     /**
      * Set centroided to one of UNKNOWN, YES or NO.
      *
-     * @param centroided
-     *                   The value to set.
+     * @param centroided The value to set.
      */
     public void setCentroided(int centroided) {
         this.centroided = centroided;
@@ -93,8 +91,7 @@ public class DataProcessingInfo {
     /**
      * Set charge deconvoluted to one of UNKNOWN, YES or NO.
      *
-     * @param chargeDeconvoluted
-     *                           The value to set.
+     * @param chargeDeconvoluted The value to set.
      */
     public void setChargeDeconvoluted(int chargeDeconvoluted) {
         this.chargeDeconvoluted = chargeDeconvoluted;
@@ -112,43 +109,38 @@ public class DataProcessingInfo {
     /**
      * Set deisotoped to one of UNKNOWN, YES or NO.
      *
-     * @param deisotoped
-     *                   The value to set.
+     * @param deisotoped The value to set.
      */
     public void setDeisotoped(int deisotoped) {
         this.deisotoped = deisotoped;
     }
 
     /**
-     * Return the intensity cutoff that was used to eliminate
-     * low-signal peaks.
+     * Return the intensity cutoff that was used to eliminate low-signal peaks.
      *
      * A negative value means the cutoff is not known.
      *
-     * @return Returns the intensityCutoff, or a negative value
-     *         when the cutoff is not known.
+     * @return Returns the intensityCutoff, or a negative value when the cutoff
+     * is not known.
      */
     public double getIntensityCutoff() {
         return intensityCutoff;
     }
 
     /**
-     * Set the intensity cutoff that was used to eliminate
-     * low-signal peaks.
+     * Set the intensity cutoff that was used to eliminate low-signal peaks.
      *
      * A negative value means the cutoff is not known.
      *
-     * @param intensityCutoff
-     *                        The intensityCutoff to set.
+     * @param intensityCutoff The intensityCutoff to set.
      */
     public void setIntensityCutoff(double intensityCutoff) {
         this.intensityCutoff = intensityCutoff;
     }
 
     /**
-     * Return an array of information about all software
-     * that was used to process the data, in chronological
-     * order.
+     * Return an array of information about all software that was used to
+     * process the data, in chronological order.
      *
      * @return An array of information about software
      */
@@ -157,11 +149,9 @@ public class DataProcessingInfo {
     }
 
     /**
-     * Set the chronological array of used software for
-     * data processing.
+     * Set the chronological array of used software for data processing.
      *
-     * @param softwareUsed
-     *                     The array of info about software.
+     * @param softwareUsed The array of info about software.
      */
     public void setSoftwareUsed(ArrayList<SoftwareInfo> softwareUsed) {
         this.softwareUsed = softwareUsed;
@@ -179,8 +169,7 @@ public class DataProcessingInfo {
     /**
      * Set spot integration to one of UNKNOWN, YES or NO.
      *
-     * @param spotIntegration
-     *                        The value to set.
+     * @param spotIntegration The value to set.
      */
     public void setSpotIntegration(int spotIntegration) {
         this.spotIntegration = spotIntegration;
@@ -243,18 +232,19 @@ public class DataProcessingInfo {
         this.lowIntensityDataRemoved = lowIntensityDataRemoved;
     }
 
+    @Override
     public String toString() {
         String outputLine = "";
 
         outputLine += " centroided " + centroided + " deisotoped " + deisotoped
-            + " chargeDeconvoluted " + chargeDeconvoluted + " spotIntegration "
-            + spotIntegration + " intensityCutoff " + intensityCutoff + " peakPicked "
-            + peakPicked + " smoothed " + smoothed + " baseLineReduced " + baseLineReduced
-            + " lowIntenistyDataRemoved " + lowIntensityDataRemoved + "\n";
+                + " chargeDeconvoluted " + chargeDeconvoluted + " spotIntegration "
+                + spotIntegration + " intensityCutoff " + intensityCutoff + " peakPicked "
+                + peakPicked + " smoothed " + smoothed + " baseLineReduced " + baseLineReduced
+                + " lowIntenistyDataRemoved " + lowIntensityDataRemoved + "\n";
 
         SoftwareInfo sInfo = null;
-        for (int i = 0; i < softwareUsed.size(); i++) {
-            sInfo = softwareUsed.get(i);
+        for (SoftwareInfo softwareUsed1 : softwareUsed) {
+            sInfo = softwareUsed1;
             outputLine += sInfo.toString() + " ";
         }
         return (outputLine.trim());

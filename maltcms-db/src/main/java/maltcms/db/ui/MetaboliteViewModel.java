@@ -69,7 +69,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
     private PublicMemberGetters<IMetabolite> pmg = null;
     private String[] tableHeader = new String[]{};
     private Vector<IMetabolite> elements = null;
-    private TreeMap<String, IMetabolite> map = new TreeMap<String, IMetabolite>();
+    private TreeMap<String, IMetabolite> map = new TreeMap<>();
     private ObjectContainer oc = null;
     private ExecutorService s = Executors.newFixedThreadPool(1);
     private MetaboliteView mv = null;
@@ -77,8 +77,8 @@ public class MetaboliteViewModel extends AbstractTableModel {
 
     public MetaboliteViewModel(ObjectContainer oc) {
         this.oc = oc;
-        elements = new Vector<IMetabolite>();
-        pmg = new PublicMemberGetters<IMetabolite>(IMetabolite.class);
+        elements = new Vector<>();
+        pmg = new PublicMemberGetters<>(IMetabolite.class);
         this.tableHeader = pmg.getGetterNames();
         this.headerVisible = new boolean[this.tableHeader.length];
         for (int i = 0; i < this.headerVisible.length; i++) {
@@ -210,6 +210,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
             mv.setEnabled(false);
         }
         Runnable r = new Runnable() {
+            @Override
             public void run() {
                 System.out.println("Running query with predicate of type: " + p.getClass().getCanonicalName());
                 final ObjectSet<IMetabolite> os = oc.query(p);//IMetabolite.class);
@@ -229,6 +230,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
                 final int rows = getRowCount();
                 elements.clear();
                 SwingUtilities.invokeLater(new Runnable() {
+                    @Override
                     public void run() {
                         fireTableRowsDeleted(0, Math.max(0, rows - 1));
 
@@ -245,6 +247,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
                     if (i % maxcnt == 0) {
                         last = -1;
                         Runnable notifier = new Runnable() {
+                            @Override
                             public void run() {
                                 System.out.println("Running table update from " + (current_row) + " to " + (current_row + maxcnt));
                                 fireTableRowsInserted(current_row, current_row + maxcnt);//ContentsChanged(m, i, i);
@@ -260,6 +263,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
                 }
                 final int remain = last * maxcnt;
                 Runnable notifier = new Runnable() {
+                    @Override
                     public void run() {
                         if (remain > 0) {
                             System.out.println("Running final table update from " + (remain) + " to " + elements.size());
@@ -307,10 +311,8 @@ public class MetaboliteViewModel extends AbstractTableModel {
                 try {
                     IMetabolite met = (IMetabolite) elements.get(arg0);
                     return m.invoke(met, new Object[]{});
-                } catch (InvocationTargetException ite) {
+                } catch (InvocationTargetException | IllegalAccessException ite) {
                     System.err.println(ite.getLocalizedMessage());
-                } catch (IllegalAccessException iae) {
-                    System.err.println(iae.getLocalizedMessage());
                 }
             }
         }

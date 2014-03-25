@@ -55,7 +55,7 @@ public interface IArraySimilarity extends Serializable {
      * @return
      */
     public abstract double apply(Array t1,
-        Array t2);
+            Array t2);
 
     /**
      * Creates and returns a semantic deep copy of this similarity.

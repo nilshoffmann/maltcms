@@ -66,9 +66,9 @@ public class MetaboliteSearchPreferences extends JFrame {
 
     private MetaboliteViewModel mvm = null;
 
-    private HashMap<Integer, JTextField> textFields = new HashMap<Integer, JTextField>();
+    private HashMap<Integer, JTextField> textFields = new HashMap<>();
 
-    private HashMap<Integer, JPanel> panels = new HashMap<Integer, JPanel>();
+    private HashMap<Integer, JPanel> panels = new HashMap<>();
 
     private JButton submitFilterButton = null;
 
@@ -90,7 +90,7 @@ public class MetaboliteSearchPreferences extends JFrame {
      *
      */
     public static MetaboliteSearchPreferences getInstance(
-        MetaboliteViewModel mvm) {
+            MetaboliteViewModel mvm) {
 
         if (msp == null) {
 
@@ -259,18 +259,18 @@ public class MetaboliteSearchPreferences extends JFrame {
      *
      */
     private HashMap<Integer, JTextField> addTooltipsToTextFields(
-        HashMap<Integer, JTextField> textFieldsHash, int tfHashSize) {
+            HashMap<Integer, JTextField> textFieldsHash, int tfHashSize) {
 
         String stringHelp = "<html>This field takes all variants of strings to filter"
-            + "<ul><li>Enable substring filtering by adding a '&lt;' like: fie&lt;<li></html>";
+                + "<ul><li>Enable substring filtering by adding a '&lt;' like: fie&lt;<li></html>";
 
         String intHelp = "<html>This field takes two variants:"
-            + "<ul><li>A single whole number (Integer) like: 1<li>"
-            + "A range of integers like: 10,20</ul></html>";
+                + "<ul><li>A single whole number (Integer) like: 1<li>"
+                + "A range of integers like: 10,20</ul></html>";
 
         String doubleHelp = "<html>This field takes two variants:"
-            + "<ul><li>A single floating-point number (Double) like: 1.54<li>"
-            + "A range of floating-point numers like: 10.54,20.45</ul></html>";
+                + "<ul><li>A single floating-point number (Double) like: 1.54<li>"
+                + "A range of floating-point numers like: 10.54,20.45</ul></html>";
 
         for (int i = 0; i < tfHashSize; ++i) {
 
@@ -377,7 +377,7 @@ public class MetaboliteSearchPreferences extends JFrame {
         if (this.submitFilterButton == null) {
 
             ActionListener al = new FilterButtonActionListener(mvm, error,
-                textFields, this);
+                    textFields, this);
 
             this.submitFilterButton = new JButton("Submit Filter");
 

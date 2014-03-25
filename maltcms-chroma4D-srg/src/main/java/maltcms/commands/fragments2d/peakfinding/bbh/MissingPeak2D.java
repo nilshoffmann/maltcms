@@ -41,7 +41,7 @@ public class MissingPeak2D {
 
     int meanFirstScanIndex, meanSecondScanIndex, maxFirstDelta, maxSecondDelta;
     int averageCount = 0;
-    List<Integer> missingInChromatogram = new ArrayList<Integer>();
+    List<Integer> missingInChromatogram = new ArrayList<>();
     Array meanMS = null;
 
     @Override
@@ -53,7 +53,7 @@ public class MissingPeak2D {
     }
 
     public MissingPeak2D(int meanFirstScanIndex, int meanSecondScanIndex,
-        int maxFirstDelta, int maxSecondDelta) {
+            int maxFirstDelta, int maxSecondDelta) {
         this.meanFirstScanIndex = meanFirstScanIndex;
         this.meanSecondScanIndex = meanSecondScanIndex;
         this.maxFirstDelta = maxFirstDelta;

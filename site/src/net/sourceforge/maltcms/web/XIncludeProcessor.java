@@ -5,11 +5,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.text.SimpleDateFormat;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,7 +22,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -39,9 +37,9 @@ public class XIncludeProcessor {
     }
 
     public void process() {
-        Map<String,String> authorMap = new HashMap<String,String>();
-        authorMap.put("hoffmann","Nils Hoffmann");
-        authorMap.put("nils","Nils Hoffmann");
+        Map<String, String> authorMap = new HashMap<String, String>();
+        authorMap.put("hoffmann", "Nils Hoffmann");
+        authorMap.put("nils", "Nils Hoffmann");
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         dbf.setXIncludeAware(true);
@@ -49,7 +47,6 @@ public class XIncludeProcessor {
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(new File(in));
 
-            
             XPath xpath = XPathFactory.newInstance().newXPath();
             NodeList nodes = (NodeList) xpath.evaluate(
                     "//@lastchanged", doc, XPathConstants.NODESET);
@@ -62,19 +59,19 @@ public class XIncludeProcessor {
                 try {
                     System.out.print("Replacing " + id);
                     String name = authorMap.get(System.getProperty("user.name"));
-                    id = id.replaceAll("\\$Author\\$",name==null?"N.N.":name);
-                    id = id.replaceAll("\\$Date\\$",sdf.format(date));
+                    id = id.replaceAll("\\$Author\\$", name == null ? "N.N." : name);
+                    id = id.replaceAll("\\$Date\\$", sdf.format(date));
 //                    id = id.replaceAll("\\$", "");
 //                    String[] split = id.split(" ");
 //                    System.out.println("with " + split[1] + " " + split[2] + " " + split[3] + " by " + split[11]);
-                    System.out.println(" with "+id);
+                    System.out.println(" with " + id);
 //                    nodes.item(idx).setTextContent(split[1] + " " + split[2] + " " + split[3] + " (GMT) by " + split[11]);
                     nodes.item(idx).setTextContent(id);
-                }catch(ArrayIndexOutOfBoundsException ae) {
-                    
+                } catch (ArrayIndexOutOfBoundsException ae) {
+
                 }
             }
-            
+
             OutputStream out = new BufferedOutputStream(new FileOutputStream(new File(this.out)));
             TransformerFactory tfactory = TransformerFactory.newInstance();
             Transformer serializer;

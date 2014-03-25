@@ -36,14 +36,14 @@ import maltcms.datastructures.ridge.Ridge;
 
 public class RankSorter {
 
-    private LinkedHashSet<String> features = new LinkedHashSet<String>();
+    private LinkedHashSet<String> features = new LinkedHashSet<>();
 
     public RankSorter(List<Rank<Ridge>> l) {
-        LinkedHashSet<String> union = new LinkedHashSet<String>();
+        LinkedHashSet<String> union = new LinkedHashSet<>();
         for (Rank<Ridge> r : l) {
             union.addAll(r.getFeatures());
         }
-        LinkedHashSet<String> intersection = new LinkedHashSet<String>();
+        LinkedHashSet<String> intersection = new LinkedHashSet<>();
         for (Rank<Ridge> r : l) {
             intersection.retainAll(r.getFeatures());
         }
@@ -51,7 +51,7 @@ public class RankSorter {
     }
 
     public void sort(List<Rank<Ridge>> l) {
-        List<String> ll = new LinkedList<String>(this.features);
+        List<String> ll = new LinkedList<>(this.features);
         //Collections.reverse(ll);
         System.out.println("Sorting by: ");
         for (String str : ll) {
@@ -62,7 +62,7 @@ public class RankSorter {
     }
 
     public void sortToOrder(List<String> features, List<Rank<Ridge>> l) {
-        List<String> ll = new LinkedList<String>(features);
+        List<String> ll = new LinkedList<>(features);
         Collections.reverse(ll);
         System.out.println("Sorting by: ");
         for (String str : ll) {

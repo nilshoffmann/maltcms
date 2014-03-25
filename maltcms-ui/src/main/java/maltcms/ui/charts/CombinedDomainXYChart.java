@@ -46,13 +46,13 @@ public class CombinedDomainXYChart extends AChart<XYPlot> {
 
     private String title = "";
     private String x_axis = "";
-    private List<XYPlot> subplots = new ArrayList<XYPlot>();
+    private List<XYPlot> subplots = new ArrayList<>();
     private CombinedDomainXYPlot cdxyp = null;
     private int gap = 10;
 
     public CombinedDomainXYChart(final String title1,
-        final String domain_axis_name, final boolean headless,
-        final List<XYPlot> subplots1) {
+            final String domain_axis_name, final boolean headless,
+            final List<XYPlot> subplots1) {
         this.title = title1;
         this.x_axis = domain_axis_name;
         this.subplots = subplots1;

@@ -40,7 +40,7 @@ import maltcms.datastructures.ridge.Ridge;
 
 public class Rank<T extends Ridge> implements Comparable<Rank<? extends T>> {
 
-    private final HashMap<String, Double> featureToRank = new LinkedHashMap<String, Double>();
+    private final HashMap<String, Double> featureToRank = new LinkedHashMap<>();
     private final T t;
 
     public Rank(T t) {
@@ -65,7 +65,7 @@ public class Rank<T extends Ridge> implements Comparable<Rank<? extends T>> {
     }
 
     public Set<String> getCommonFeatures(Rank<? extends T> r) {
-        HashSet<String> hs = new HashSet<String>(featureToRank.keySet());
+        HashSet<String> hs = new HashSet<>(featureToRank.keySet());
         hs.retainAll(r.getFeatures());
         return hs;
     }
@@ -102,7 +102,7 @@ public class Rank<T extends Ridge> implements Comparable<Rank<? extends T>> {
 
     @Override
     public int compareTo(Rank<? extends T> o) {
-        List<String> keys = new LinkedList<String>(featureToRank.keySet());
+        List<String> keys = new LinkedList<>(featureToRank.keySet());
         Collections.reverse(keys);
         for (String key : keys) {
             int cmp = compareRanks(key, o);

@@ -79,11 +79,11 @@ public class Chromatogram1D implements IChromatogram1D {
     public Chromatogram1D(final IFileFragment e, final boolean useCache) {
         this.parent = e;
         final String mz = Factory.getInstance().getConfiguration().getString(
-            "var.mass_values", "mass_values");
+                "var.mass_values", "mass_values");
         final String intens = Factory.getInstance().getConfiguration().getString(
-            "var.intensity_values", "intensity_values");
+                "var.intensity_values", "intensity_values");
         final String scan_index = Factory.getInstance().getConfiguration().
-            getString("var.scan_index", "scan_index");
+                getString("var.scan_index", "scan_index");
         final IVariableFragment index = e.getChild(scan_index);
         int scans = MaltcmsTools.getNumberOfScans(e);
         final IVariableFragment mzV = e.getChild(mz);
@@ -108,14 +108,14 @@ public class Chromatogram1D implements IChromatogram1D {
         try {
             IVariableFragment msLevelVar = this.parent.getChild("ms_level");
             msLevel = msLevelVar.getArray();
-            msScanMap = new TreeMap<Short, List<Integer>>();
+            msScanMap = new TreeMap<>();
             for (int i = 0; i < msLevel.getShape()[0]; i++) {
                 Short msLevelValue = msLevel.getShort(i);
                 if (msScanMap.containsKey(msLevelValue)) {
                     List<Integer> scanToScan = msScanMap.get(msLevelValue);
                     scanToScan.add(i);
                 } else {
-                    List<Integer> scanToScan = new ArrayList<Integer>();
+                    List<Integer> scanToScan = new ArrayList<>();
                     scanToScan.add(scanToScan.size(), i);
                     msScanMap.put(msLevelValue, scanToScan);
                 }
@@ -157,7 +157,7 @@ public class Chromatogram1D implements IChromatogram1D {
     public Tuple2D<Double, Double> getTimeRange() {
         if (timeRange == null) {
             MAMath.MinMax satMM = MAMath.getMinMax(scanAcquisitionTimeVar.getArray());
-            timeRange = new Tuple2D<Double, Double>(satMM.min, satMM.max);
+            timeRange = new Tuple2D<>(satMM.min, satMM.max);
         }
         return timeRange;
     }
@@ -173,7 +173,7 @@ public class Chromatogram1D implements IChromatogram1D {
     @Override
     public void configure(final Configuration cfg) {
         this.scan_acquisition_time_var = cfg.getString(
-            "var.scan_acquisition_time", "scan_acquisition_time");
+                "var.scan_acquisition_time", "scan_acquisition_time");
     }
 
     @Override
@@ -200,7 +200,7 @@ public class Chromatogram1D implements IChromatogram1D {
     }
 
     public List<Scan1D> getScans() {
-        ArrayList<Scan1D> al = new ArrayList<Scan1D>();
+        ArrayList<Scan1D> al = new ArrayList<>();
         for (int i = 0; i < getNumberOfScans(); i++) {
             al.add(buildScan(i));
         }
@@ -236,7 +236,7 @@ public class Chromatogram1D implements IChromatogram1D {
             @Override
             public void remove() {
                 throw new UnsupportedOperationException(
-                    "Can not remove scans with iterator!");
+                        "Can not remove scans with iterator!");
             }
         };
         return new Iterable<IScan1D>() {
@@ -274,7 +274,7 @@ public class Chromatogram1D implements IChromatogram1D {
             @Override
             public void remove() {
                 throw new UnsupportedOperationException(
-                    "Can not remove scans with iterator!");
+                        "Can not remove scans with iterator!");
             }
         };
         return new Iterable<IScan1D>() {
@@ -311,7 +311,7 @@ public class Chromatogram1D implements IChromatogram1D {
             @Override
             public void remove() {
                 throw new UnsupportedOperationException(
-                    "Can not remove scans with iterator!");
+                        "Can not remove scans with iterator!");
             }
         };
         return iter;
@@ -347,11 +347,11 @@ public class Chromatogram1D implements IChromatogram1D {
     @Override
     public int getIndexFor(double scan_acquisition_time) throws ArrayIndexOutOfBoundsException {
         double[] d = (double[]) getScanAcquisitionTime().get1DJavaArray(
-            double.class);
+                double.class);
         int idx = Arrays.binarySearch(d, scan_acquisition_time);
         if (idx >= 0) {// exact hit
             log.info("sat {}, scan_index {}",
-                scan_acquisition_time, idx);
+                    scan_acquisition_time, idx);
             return idx;
         } else {// imprecise hit, find closest element
             int insertionPosition = (-idx) - 1;
@@ -367,7 +367,7 @@ public class Chromatogram1D implements IChromatogram1D {
             double previous = d[Math.max(0, insertionPosition - 1)];
 //			System.out.println("Value before insertion position: "+previous);
             if (Math.abs(scan_acquisition_time - previous) <= Math.abs(
-                scan_acquisition_time - current)) {
+                    scan_acquisition_time - current)) {
                 int index = Math.max(0, insertionPosition - 1);
 //				System.out.println("Returning "+index);
                 return index;
@@ -410,9 +410,9 @@ public class Chromatogram1D implements IChromatogram1D {
     @Override
     public Collection<Short> getMsLevels() {
         if (msScanMap == null) {
-            return Arrays.asList(Short.valueOf((short) 1));
+            return Arrays.asList((short) 1);
         }
-        List<Short> l = new ArrayList<Short>(msScanMap.keySet());
+        List<Short> l = new ArrayList<>(msScanMap.keySet());
         Collections.sort(l);
         return l;
     }
@@ -432,7 +432,7 @@ public class Chromatogram1D implements IChromatogram1D {
     public List<Integer> getIndicesOfScansForMsLevel(short level) {
         if (level == (short) 1 && msScanMap == null) {
             int scans = getNumberOfScansForMsLevel((short) 1);
-            ArrayList<Integer> indices = new ArrayList<Integer>(scans);
+            ArrayList<Integer> indices = new ArrayList<>(scans);
             for (int i = 0; i < scans; i++) {
                 indices.add(i);
             }
@@ -441,7 +441,7 @@ public class Chromatogram1D implements IChromatogram1D {
         if (msScanMap == null) {
             throw new ResourceNotAvailableException("No ms fragmentation level available for chromatogram " + getParent().getName());
         }
-        return Collections.unmodifiableList(msScanMap.get(Short.valueOf(level)));
+        return Collections.unmodifiableList(msScanMap.get(level));
     }
 
     private class Scan1DIterator implements Iterator<IScan1D> {

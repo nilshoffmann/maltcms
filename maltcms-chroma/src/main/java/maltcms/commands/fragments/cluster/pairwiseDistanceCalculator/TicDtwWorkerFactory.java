@@ -70,7 +70,7 @@ public class TicDtwWorkerFactory extends AWorkerFactory {
         mdtw.setGlobalBand(globalBand);
         mdtw.setMinScansBetweenAnchors(minScansBetweenAnchors);
         mdtw.setPrecalculatePairwiseDistances(
-            precalculatePairwiseDistances);
+                precalculatePairwiseDistances);
         mdtw.setSaveLayoutImage(saveLayoutImage);
         mdtw.setUseAnchors(useAnchors);
         mdtw.setSaveDtwMatrix(saveDtwMatrix);

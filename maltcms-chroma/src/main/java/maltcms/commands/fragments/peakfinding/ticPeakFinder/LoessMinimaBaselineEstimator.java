@@ -56,19 +56,19 @@ public class LoessMinimaBaselineEstimator implements IBaselineEstimator {
 
     @Override
     public PolynomialSplineFunction findBaseline(double[] xvalues, double[] yvalues) {
-        final ArrayList<Integer> ts = new ArrayList<Integer>();
+        final ArrayList<Integer> ts = new ArrayList<>();
         for (int i = 0; i < yvalues.length; i++) {
             log.debug("i=" + i);
             PeakFinderUtils.checkMinimum(yvalues, ts, i,
-                minimaWindow);
+                    minimaWindow);
         }
         log.info("Found {} minima for baseline estimation!", ts.size());
         //add the first index
-        if (!ts.get(0).equals(Integer.valueOf(0))) {
+        if (!ts.get(0).equals(0)) {
             ts.add(0, 0);
         }
         //add the last index
-        if (!ts.get(ts.size() - 1).equals(Integer.valueOf(yvalues.length - 1))) {
+        if (!ts.get(ts.size() - 1).equals(yvalues.length - 1)) {
             ts.add(yvalues.length - 1);
         }
         double[] xvalues1 = new double[ts.size()];

@@ -103,11 +103,11 @@ public class ContinuityArgmaxNodeBuilder extends NodeBuilder {
                 max[i] = Math.max(d[i], max[i]);
             }
         }
-        return new Tuple2D<double[], double[]>(min, max);
+        return new Tuple2D<>(min, max);
     }
 
     private List<Integer> getArgmax(final List<double[]> l, final double[] a, final double[] c, final double[] min, final double[] max) {
-        List<Integer> maxima = new LinkedList<Integer>();
+        List<Integer> maxima = new LinkedList<>();
         int maxIdx = 0;
         double maxscore = Double.NEGATIVE_INFINITY;
         int i = 0;
@@ -124,13 +124,13 @@ public class ContinuityArgmaxNodeBuilder extends NodeBuilder {
             }
             i++;
         }
-        maxima.add(Integer.valueOf(maxIdx));
+        maxima.add(maxIdx);
         System.out.println("Found " + maxima.size() + " maxima between " + Arrays.toString(a) + " and " + Arrays.toString(c));
         return maxima;
     }
 
     private List<double[]> calcArgmax(List<double[]> points, final double[] min, final double[] max) {
-        final List<double[]> rl = new LinkedList<double[]>();
+        final List<double[]> rl = new LinkedList<>();
         int level = 0;
         argmaxRecursion(points, min, max, rl, level);
         rl.add(0, points.get(0));
@@ -150,7 +150,7 @@ public class ContinuityArgmaxNodeBuilder extends NodeBuilder {
         // retrieve pivot element
         final int nodeIndex = amax.get(0);
         final double[] b = lpart.get(amax.get(0));
-        final LinkedList<double[]> rl = new LinkedList<double[]>();
+        final LinkedList<double[]> rl = new LinkedList<>();
         // add left boundary
         // rl.add(a);
         // recurse into left branch

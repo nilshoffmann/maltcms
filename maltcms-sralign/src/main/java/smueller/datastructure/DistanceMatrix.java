@@ -73,8 +73,8 @@ public class DistanceMatrix {
                 } else {
 
                     this.distmat[i][j] = Math
-                        .round(Math.abs(((bpcopy[i - 1] + bpcopy[i]) / 2)
-                                - ((bpcopy[j - 1] + bpcopy[j]) / 2)) * 3000) / 100.00;
+                            .round(Math.abs(((bpcopy[i - 1] + bpcopy[i]) / 2)
+                                            - ((bpcopy[j - 1] + bpcopy[j]) / 2)) * 3000) / 100.00;
 
                 }
 
@@ -87,10 +87,10 @@ public class DistanceMatrix {
         for (int o = 1; o < this.distmat.length - 1; o++) {
 
             this.distmat[o][0] = Math
-                .round((this.distmat[o + 1][o] + 0.01) * 100) / 100.00;
+                    .round((this.distmat[o + 1][o] + 0.01) * 100) / 100.00;
 
             this.distmat[0][o] = Math
-                .round((this.distmat[o + 1][o] + 0.01) * 100) / 100.00;
+                    .round((this.distmat[o + 1][o] + 0.01) * 100) / 100.00;
 
         }
 

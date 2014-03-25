@@ -55,6 +55,7 @@ public class QueryCallable<T> implements Callable<ObjectSet<T>> {
         }
     }
 
+    @Override
     public ObjectSet<T> call() throws Exception {
         if (new File(this.lloc).exists()) {
             this.log.debug("Opening DB locally as file!");
@@ -74,7 +75,7 @@ public class QueryCallable<T> implements Callable<ObjectSet<T>> {
             // System.out.println(url.getUserInfo());
             this.log.debug("Opening DB via Client!");
             this.oc = Db4o.openClient(url.getHost(), url.getPort(), url.
-                getUserInfo(), "default");
+                    getUserInfo(), "default");
             return oc.query(llap);// oc.query(llap);
         }
         // ObjectContainer oc = Db4o.openFile(lloc);

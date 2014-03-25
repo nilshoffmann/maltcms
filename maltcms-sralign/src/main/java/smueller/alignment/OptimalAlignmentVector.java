@@ -35,7 +35,7 @@ import java.util.Vector;
  */
 public class OptimalAlignmentVector implements Cloneable {
 
-    private final Vector<AlignedPairVector> align = new Vector<AlignedPairVector>();
+    private final Vector<AlignedPairVector> align = new Vector<>();
 
     /**
      *
@@ -104,7 +104,7 @@ public class OptimalAlignmentVector implements Cloneable {
         final OptimalAlignmentVector cloneAlignme = new OptimalAlignmentVector();
         for (int i = 0; i < this.countAlChars(); i++) {
             cloneAlignme.addALChars((AlignedPairVector) this.getCharPair(i)
-                .clone());
+                    .clone());
             // System.out.println(11);
         }
         return cloneAlignme;

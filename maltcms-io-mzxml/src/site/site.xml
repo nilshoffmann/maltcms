@@ -13,7 +13,7 @@
         <breadcrumbs>
             <item name="Maltcms" href="../index.html" />
         </breadcrumbs>
-    	<menu name="${project.name}">
+        <menu name="${project.name}">
             <item name="About ${project.name}" href="index.html" />
             <!--<item name="Getting Started" href="gettingStarted.html" />-->
         </menu>

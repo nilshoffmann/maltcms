@@ -92,24 +92,24 @@ public class ModulationTimeEstimator extends AFragmentCommand {
 
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-        final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
+        final ArrayList<IFileFragment> ret = new ArrayList<>();
         for (final IFileFragment ff : t) {
             final IFileFragment fret = new FileFragment(
-                new File(getWorkflow().getOutputDirectory(this),
-                    ff.getName()));
+                    new File(getWorkflow().getOutputDirectory(this),
+                            ff.getName()));
 
             findSecondRetentionTimes(ff, fret);
             fret.save();
             ret.add(fret);
         }
-        return new TupleND<IFileFragment>(ret);
+        return new TupleND<>(ret);
     }
 
     private Tuple2D<ArrayDouble.D1, ArrayDouble.D1> buildScanAcquisitionTime(
-        final int scansPerModulation, final int numberOfScans,
-        final double avgSat) {
+            final int scansPerModulation, final int numberOfScans,
+            final double avgSat) {
         final ArrayDouble.D1 fstColTime = new ArrayDouble.D1(numberOfScans
-            / scansPerModulation);
+                / scansPerModulation);
         final ArrayDouble.D1 sndColTime = new ArrayDouble.D1(scansPerModulation);
         for (int j = 0; j < scansPerModulation; j++) {
             sndColTime.set(j, j * avgSat);
@@ -117,8 +117,8 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         for (int i = 0; i < fstColTime.getShape()[0]; i++) {
             fstColTime.set(i, ((double) i * scansPerModulation) * avgSat);
         }
-        return new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(fstColTime,
-            sndColTime);
+        return new Tuple2D<>(fstColTime,
+                sndColTime);
     }
 
     /**
@@ -128,34 +128,34 @@ public class ModulationTimeEstimator extends AFragmentCommand {
      * @return
      */
     protected ArrayInt.D2 buildSecondRetentionTime(final ArrayInt.D1 tic,
-        final ArrayList<Integer> maxima) {
+            final ArrayList<Integer> maxima) {
         return null;
     }
 
     private ArrayList<Array> buildTIC2D(final int scansPerModulation,
-        final Array tic) {
+            final Array tic) {
         log.info("Number of tics {}", tic.getShape()[0]);
         log.info("Number of scans {}", scansPerModulation);
         final int size = tic.getShape()[0] / scansPerModulation;
         log
-            .info("Building TIC arrays with fixed number of scans per modulation");
+                .info("Building TIC arrays with fixed number of scans per modulation");
         log.info("Reconstructing {} scans", size);
-        final ArrayList<Array> al = new ArrayList<Array>(size);
+        final ArrayList<Array> al = new ArrayList<>(size);
         int offset = 0;
         final int len = scansPerModulation;
         for (int i = 0; i < size; i++) {
             log.info("Range for scan {}: Offset {}, Length: {}",
-                new Object[]{i, offset, len});
+                    new Object[]{i, offset, len});
             try {
                 if ((offset + len) < tic.getShape()[0]) {
                     final Array a = tic.section(new int[]{offset},
-                        new int[]{len});
+                            new int[]{len});
                     // System.out.println("Scan " + (i + 1));
                     // System.out.println(a.toString());
                     al.add(a);
                 } else {
                     log.warn("Omitting rest! Scan {}, offset {}, len {}",
-                        new Object[]{i, offset, len});
+                            new Object[]{i, offset, len});
                 }
             } catch (final InvalidRangeException e) {
                 // TODO Auto-generated catch block
@@ -167,25 +167,25 @@ public class ModulationTimeEstimator extends AFragmentCommand {
     }
 
     private ArrayList<Array> buildTIC2D(final int scansPerModulation,
-        final D1 msi, final Array tic) {
+            final D1 msi, final Array tic) {
         final int size = msi.getShape()[0];
-        final ArrayList<Array> al = new ArrayList<Array>(size);
+        final ArrayList<Array> al = new ArrayList<>(size);
         int offset = 0;
         final int len = scansPerModulation;
         for (int i = 0; i < size; i++) {
             offset = msi.get(i);
             log.info("Range for scan {}: Offset {}, Length: {}",
-                new Object[]{i, offset, len});
+                    new Object[]{i, offset, len});
             try {
                 if ((offset + len) < tic.getShape()[0]) {
                     final Array a = tic.section(new int[]{offset},
-                        new int[]{len});
+                            new int[]{len});
                     // System.out.println("Scan " + (i + 1));
                     // System.out.println(a.toString());
                     al.add(a);
                 } else {
                     log.warn("Omitting rest! Scan {}, offset {}, len {}",
-                        new Object[]{i, offset, len});
+                            new Object[]{i, offset, len});
                 }
             } catch (final InvalidRangeException e) {
                 // TODO Auto-generated catch block
@@ -204,8 +204,8 @@ public class ModulationTimeEstimator extends AFragmentCommand {
      * @param acr
      */
     protected void calcEstimatedAutoCorrelation(final Array a,
-        final double mean, final double variance, final int lag,
-        final ArrayDouble.D1 acr) {
+            final double mean, final double variance, final int lag,
+            final ArrayDouble.D1 acr) {
         EvalTools.eqI(a.getRank(), 1, this);
         final int n = a.getShape()[0];
         final int d = n - lag;
@@ -216,7 +216,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         final Index ind = a.getIndex();
         for (int i = 0; i < d; i++) {
             res += (a.getDouble(ind.set(i)) - mean)
-                * (a.getDouble(ind.set(i + lag)) - mean);
+                    * (a.getDouble(ind.set(i + lag)) - mean);
         }
         final double v = res / norm;
         acr.set(lag - 1, v);
@@ -245,9 +245,9 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         this.tic_var = cfg.getString("var.total_intensity", "total_intensity");
         this.mass_var = cfg.getString("var.mass_values", "mass_values");
         this.inten_var = cfg.getString("var.intensity_values",
-            "intensity_values");
+                "intensity_values");
         this.doubleFillValue = cfg.getDouble(
-            "ucar.nc2.NetcdfFile.fillValueDouble", 9.9692099683868690e+36);
+                "ucar.nc2.NetcdfFile.fillValueDouble", 9.9692099683868690e+36);
         this.threshold = cfg.getDouble("images.thresholdLow", 0.0d);
     }
 
@@ -261,7 +261,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
      * @return
      */
     protected Tuple2D<ArrayDouble.D1, ArrayInt.D1> findMaxima(
-        final ArrayDouble.D1 a, final ArrayList<Integer> maximaIndices) {
+            final ArrayDouble.D1 a, final ArrayList<Integer> maximaIndices) {
         log.info("Looking for maxima!");
         int lastExtrIdx = 0;
         double lastExtr = 0.0d;
@@ -278,17 +278,17 @@ public class ModulationTimeEstimator extends AFragmentCommand {
             if (isCandidate(prev, current, next) && (current > 0.4d)) {
                 final double maxDev = 5 * (meanSoFar) / 100.0d;
                 log.info("Current deviation {}, Maximum deviation: {}",
-                    ((i - lastMax) - meanSoFar), maxDev);
+                        ((i - lastMax) - meanSoFar), maxDev);
                 if (((i - lastMax) - meanSoFar) / meanSoFar <= maxDev) {
                     log.info(
-                        "Maximum within 5% range of mean {} at lag {}",
-                        current, i);
+                            "Maximum within 5% range of mean {} at lag {}",
+                            current, i);
                     final int diff = i - lastExtrIdx;
                     final double vdiff = current - lastExtr;
                     log.info("Difference to last index {}, value {}",
-                        diff, vdiff);
+                            diff, vdiff);
                     log.info("Number of scans between maxima: {}",
-                        (i - lastMax));
+                            (i - lastMax));
                     lastExtrIdx = i;
                     lastExtr = current;
                     maxima.set(i, current);
@@ -299,7 +299,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
                         meanSoFar = i;
                     } else {
                         meanSoFar = ((i - lastMax) - meanSoFar) / (nMaxima + 1)
-                            + (meanSoFar);
+                                + (meanSoFar);
                         lastMax = i;
 
                     }
@@ -314,7 +314,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
             maximaDiff.set(cnt++, (maxI - lastI));
             lastI = maxI;
         }
-        return new Tuple2D<ArrayDouble.D1, ArrayInt.D1>(maxima, maximaDiff);
+        return new Tuple2D<>(maxima, maximaDiff);
 
     }
 
@@ -324,7 +324,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
      * @param fret
      */
     protected void findSecondRetentionTimes(final IFileFragment ff,
-        final IFileFragment fret) {
+            final IFileFragment fret) {
         // Tuple2D<ArrayList<Array>,ArrayList<Array>> t =
         // MaltcmsTools.getMZIs(ff);
         Array tic = MaltcmsTools.getTIC(ff);
@@ -340,7 +340,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         if (maxIndex < tic.getShape()[0]) {
             try {
                 tic = tic.section(new int[]{0}, new int[]{maxIndex},
-                    new int[]{1});
+                        new int[]{1});
             } catch (final InvalidRangeException e) {
                 log.warn(e.getLocalizedMessage());
             }
@@ -350,34 +350,34 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         final Index sati = sat.getIndex();
         for (int i = 1; i < tic.getShape()[0]; i++) {
             satDiff.set(i - 1, sat.getDouble(sati.set(i))
-                - sat.getDouble(sati.set(i - 1)));
+                    - sat.getDouble(sati.set(i - 1)));
         }
         EvalTools.eqI(tic.getRank(), 1, this);
         final ArrayStatsScanner ass = new ArrayStatsScanner();
         final StatsMap[] sma = ass.apply(new Array[]{tic, satDiff});
         final double mean = sma[0].get(cross.datastructures.Vars.Mean
-            .toString());
+                .toString());
         final double variance = sma[0].get(cross.datastructures.Vars.Variance
-            .toString());
+                .toString());
         final int ubound = Math.min((tic.getShape()[0] - 1) / 10,
-            tic.getShape()[0] - 1);
+                tic.getShape()[0] - 1);
         final ArrayDouble.D1 acr = new ArrayDouble.D1(ubound);
 
         final double satMax = sma[1].get(cross.datastructures.Vars.Max
-            .toString());
+                .toString());
         final double satMin = sma[1].get(cross.datastructures.Vars.Min
-            .toString());
+                .toString());
         final double satMean = sma[1].get(cross.datastructures.Vars.Mean
-            .toString());
+                .toString());
         log.info("scan_acquisition_time deltas: Max: {} Min: {} Mean: {}",
-            new Object[]{satMax, satMin, satMean});
+                new Object[]{satMax, satMin, satMean});
         final double satMeanInv = 1.0d / satMean;
         log.info("Estimated number of scans per second: {}", satMeanInv);
         log
-            .info(
-                "Estimated scans per modulation with {}s second column time: {}",
-                this.secondColumnTime, this.secondColumnTime
-                * satMeanInv);
+                .info(
+                        "Estimated scans per modulation with {}s second column time: {}",
+                        this.secondColumnTime, this.secondColumnTime
+                        * satMeanInv);
         // ArrayList<Tuple2D<Integer, Double>> maxima = new
         // ArrayList<Tuple2D<Integer, Double>>();
         // double min = Double.POSITIVE_INFINITY;
@@ -397,9 +397,9 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         // VariableFragment ac = FragmentTools
         // .getVariable(fret, "autocorrelation");
         // ac.setArray(acr);
-        ArrayList<Integer> maxIndices = new ArrayList<Integer>();
+        ArrayList<Integer> maxIndices = new ArrayList<>();
         Tuple2D<ArrayDouble.D1, ArrayInt.D1> t = findMaxima(acr,
-            maxIndices);
+                maxIndices);
         ArrayDouble.D1 maximaA = t.getFirst();
         // ArrayInt.D1 maximaDiff = t.getSecond();
         // VariableFragment acdomain = FragmentTools.getVariable(fret,
@@ -412,7 +412,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         // //ArrayDouble.D1 secondColumnTime = times.getSecond();
         // //ArrayDouble.D1 modulationTime = times.getFirst();
         final IVariableFragment total_intensity = new VariableFragment(fret,
-            "total_intensity");
+                "total_intensity");
         total_intensity.setArray(tic);// ff.getChild("total_intensity");
         // VariableFragment modulation_scan_index =
         // fret.getChild("modulation_scan_index");
@@ -423,33 +423,33 @@ public class ModulationTimeEstimator extends AFragmentCommand {
 
         final ColorRampReader crr = new ColorRampReader();
         final int[][] colorRamp = crr.readColorRamp(Factory.getInstance()
-            .getConfiguration().getString("images.colorramp",
-                "res/colorRamps/bw.csv"));
+                .getConfiguration().getString("images.colorramp",
+                        "res/colorRamps/bw.csv"));
 
-		// int scansPerMod =
+        // int scansPerMod =
         // ((ArrayInt.D0)fret.getChild("scans_per_modulation").getArray()).get();
         // ArrayList<Array> tic2D = buildTIC2D(scansPerMod,msi,tic);
         // ArrayList<Array> tic2D = buildTIC2D(
         // (int) (secondColumnTime * satMeanInv), tic);
         final ArrayList<Array> tic2D = buildTIC2D(
-            (int) (this.secondColumnTime * this.scanRate), tic);
+                (int) (this.secondColumnTime * this.scanRate), tic);
 
         XYChart xyc = new XYChart("Autocorrelation within "
-            + ff.getName(),
-            new String[]{"Autocorrelation"}, new Array[]{acr},
-            new ArrayInt[]{domain}, "Lag", "Autocorrelation");
+                + ff.getName(),
+                new String[]{"Autocorrelation"}, new Array[]{acr},
+                new ArrayInt[]{domain}, "Lag", "Autocorrelation");
         XYChart xym = new XYChart("Autocorrelation within "
-            + ff.getName(),
-            new String[]{"Maxima"}, new Array[]{maximaA},
-            new ArrayInt[]{domain}, "Lag", "Autocorrelation");
-        ArrayList<XYPlot> alp = new ArrayList<XYPlot>();
+                + ff.getName(),
+                new String[]{"Maxima"}, new Array[]{maximaA},
+                new ArrayInt[]{domain}, "Lag", "Autocorrelation");
+        ArrayList<XYPlot> alp = new ArrayList<>();
         alp.add(xyc.create());
         alp.add(xym.create());
         CombinedDomainXYChart cdc = new CombinedDomainXYChart(
-            "Combined Domains", "autocorrelation", true, alp);
+                "Combined Domains", "autocorrelation", true, alp);
 
         PlotRunner pr = new PlotRunner(cdc.create(), "Autocorrelation within "
-            + ff.getName(), ff.getName() + "_autocorrelation", getWorkflow().getOutputDirectory(this));
+                + ff.getName(), ff.getName() + "_autocorrelation", getWorkflow().getOutputDirectory(this));
         pr.configure(Factory.getInstance().getConfiguration());
         try {
             pr.call();
@@ -459,17 +459,17 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         }
 
         final BufferedImage bi = ImageTools.fullSpectrum(ff.getName(), tic2D,
-            (int) (this.secondColumnTime * this.scanRate), colorRamp, 1024,
-            true, this.threshold);
+                (int) (this.secondColumnTime * this.scanRate), colorRamp, 1024,
+                true, this.threshold);
         ImageTools.saveImage(bi, ff.getName() + "-chromatogram", "png",
-            getWorkflow().getOutputDirectory(this), this);
+                getWorkflow().getOutputDirectory(this), this);
         final HeatMapChart hmc = new HeatMapChart(bi, "time 1 [s]",
-            "time 2 [s]", buildScanAcquisitionTime(
-                (int) (this.secondColumnTime * this.scanRate), tic
-                .getShape()[0], satMean), ff.getUri().getPath());
+                "time 2 [s]", buildScanAcquisitionTime(
+                        (int) (this.secondColumnTime * this.scanRate), tic
+                        .getShape()[0], satMean), ff.getUri().getPath());
         final PlotRunner pl = new PlotRunner(hmc.create(), "Chromatogram of "
-            + ff.getUri().getPath(), "chromatogram-" + ff.getName(),
-            getWorkflow().getOutputDirectory(this));
+                + ff.getUri().getPath(), "chromatogram-" + ff.getName(),
+                getWorkflow().getOutputDirectory(this));
         pl.configure(Factory.getInstance().getConfiguration());
         try {
             pl.call();
@@ -502,8 +502,8 @@ public class ModulationTimeEstimator extends AFragmentCommand {
      * @return
      */
     protected Tuple2D<ArrayDouble.D1, ArrayDouble.D1> getModulationTime(
-        final IFileFragment fret, final double satMean, final Array sat,
-        final ArrayDouble.D1 maximaA, final ucar.ma2.ArrayInt.D1 maximaDiff) {
+            final IFileFragment fret, final double satMean, final Array sat,
+            final ArrayDouble.D1 maximaA, final ucar.ma2.ArrayInt.D1 maximaDiff) {
         final ArrayStatsScanner ass = new ArrayStatsScanner();
         final StatsMap[] smd = ass.apply(new Array[]{maximaDiff, sat});
         final double satmax = smd[1].get(Vars.Max.toString());
@@ -511,21 +511,21 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         final double diffMin = smd[0].get(Vars.Min.toString());
         final double diffMax = smd[0].get(Vars.Max.toString());
         log.info("Scans per modulation: Min {} Max {} Mean {}",
-            new Object[]{smd[0].get(Vars.Min.toString()),
-                smd[0].get(Vars.Max.toString()),
-                smd[0].get(Vars.Mean.toString())});
+                new Object[]{smd[0].get(Vars.Min.toString()),
+                    smd[0].get(Vars.Max.toString()),
+                    smd[0].get(Vars.Mean.toString())});
         log.info("Estimated acquisition_time per modulation: {}", smd[0]
-            .get(Vars.Max.toString())
-            / satMean);
+                .get(Vars.Max.toString())
+                / satMean);
         final Index sati = sat.getIndex();
         int globalScanIndex = 0;
         double time = 0.0d;
         double globtime = 0.0d;
         final ArrayDouble.D1 sctimes = new ArrayDouble.D1(sat.getShape()[0]);
         final ArrayDouble.D1 modtimes = new ArrayDouble.D1(maximaDiff
-            .getShape()[0] + 1);
+                .getShape()[0] + 1);
         final ArrayInt.D1 modindex = new ArrayInt.D1(
-            maximaDiff.getShape()[0] + 1);
+                maximaDiff.getShape()[0] + 1);
         for (int i = 0; i < maximaDiff.getShape()[0] + 1; i++) {
             time = 0.0d;
             // int nscans = maximaDiff.get(i);
@@ -542,20 +542,20 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         }
 
         final IVariableFragment sctimesV = new VariableFragment(fret,
-            "modulation_scan_acquisition_time");
+                "modulation_scan_acquisition_time");
         sctimesV.setArray(sctimes);
         final IVariableFragment modulationtimesV = new VariableFragment(fret,
-            "modulation_time");
+                "modulation_time");
         modulationtimesV.setArray(modtimes);
         final IVariableFragment modulationScanIndex = new VariableFragment(
-            fret, "modulation_scan_index");
+                fret, "modulation_scan_index");
         modulationScanIndex.setArray(modindex);
         final IVariableFragment scansPerModulation = new VariableFragment(fret,
-            "scans_per_modulation");
+                "scans_per_modulation");
         final ArrayInt.D0 spm = new ArrayInt.D0();
         spm.set((int) diffMax);
         scansPerModulation.setArray(spm);
-        return new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(modtimes, sctimes);
+        return new Tuple2D<>(modtimes, sctimes);
     }
 
     /*
@@ -580,7 +580,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
      * @return
      */
     protected boolean isCandidate(final double prev, final double current,
-        final double next) {
+            final double next) {
         final boolean b = (prev < current) && (current > next);
         // log.info("Found candidate, checking additional constraints!");
         return b;

@@ -107,12 +107,12 @@ public class ChromatogramVisualizer extends AFragmentCommand {
             List<Array> aa = null;
             // try {// try loading of binned arrays intensities
             final IVariableFragment bints = ff.getChild(
-                "binned_intensity_values");
+                    "binned_intensity_values");
             final IVariableFragment bsi = ff.getChild("binned_scan_index");
             bints.setIndex(bsi);
             aa = bints.getIndexedArray();
             final List<Array> eics = ArrayTools.tilt(aa);
-            final List<Array> feics = new ArrayList<Array>();
+            final List<Array> feics = new ArrayList<>();
             // for (Array a : eics) {
             // feics.add(filterBaseline(a, 20));
             // }
@@ -143,7 +143,7 @@ public class ChromatogramVisualizer extends AFragmentCommand {
             final double sdevrel = sdev / si;
             this.lowThreshold = 0.0;
             log.info("SDev of intensities: {}, relative: {}", sdev,
-                sdevrel);
+                    sdevrel);
 
             // ArrayList<Array>
             final Array masses = iff.getChild(this.mzVariableName).getArray();
@@ -153,15 +153,18 @@ public class ChromatogramVisualizer extends AFragmentCommand {
             final Array[] domains = new Array[1];
             try {
                 domains[0] = ff.getChild(this.scanAcquisitionTimeVariableName).
-                    getArray().copy();
+                        getArray().copy();
                 log.debug("Using scan acquisition time0 {}", domains[0]);
-                if (this.timeUnit.equals("min")) {
-                    log.info("Converting seconds to minutes");
-                    domains[0] = ArrayTools.divBy60(domains[0]);
-                } else if (this.timeUnit.equals("h")) {
-                    log.info("Converting seconds to hours");
-                    domains[0] = ArrayTools.divBy60(ArrayTools.divBy60(
-                        domains[0]));
+                switch (this.timeUnit) {
+                    case "min":
+                        log.info("Converting seconds to minutes");
+                        domains[0] = ArrayTools.divBy60(domains[0]);
+                        break;
+                    case "h":
+                        log.info("Converting seconds to hours");
+                        domains[0] = ArrayTools.divBy60(ArrayTools.divBy60(
+                                domains[0]));
+                        break;
                 }
                 final double min = MAMath.getMinimum(domains[0]);
                 x_label = "time [" + this.timeUnit + "]";
@@ -171,35 +174,35 @@ public class ChromatogramVisualizer extends AFragmentCommand {
                 }
             } catch (final ResourceNotAvailableException re) {
                 log.info(
-                    "Could not load resource {} for domain axis, falling back to scan index domain!",
-                    this.scanAcquisitionTimeVariableName);
+                        "Could not load resource {} for domain axis, falling back to scan index domain!",
+                        this.scanAcquisitionTimeVariableName);
                 domains[0] = ArrayTools.indexArray(aa.size(), 0);
             }
             sat = (ArrayDouble.D1) domains[0];
             final MinMax mm = MAMath.getMinMax(masses);
             final int bins = MaltcmsTools.getNumberOfIntegerMassBins(mm.min,
-                mm.max, Factory.getInstance().getConfiguration().getDouble(
-                    "dense_arrays.binResolution", 1.0d));
+                    mm.max, Factory.getInstance().getConfiguration().getDouble(
+                            "dense_arrays.binResolution", 1.0d));
             final ArrayDouble.D1 massAxis = new ArrayDouble.D1(bins);
             for (int i = 0; i < bins; i++) {
                 massAxis.set(i, mm.min + i);
             }
             if (!aa.isEmpty()) {
                 final BufferedImage bi = ImageTools.fullSpectrum(ff.getName(),
-                    aa, bins, colorRamp, this.sampleSize, true,
-                    this.lowThreshold);
+                        aa, bins, colorRamp, this.sampleSize, true,
+                        this.lowThreshold);
                 ImageTools.saveImage(bi, ff.getName() + "-chromatogram",
-                    this.format, getWorkflow().getOutputDirectory(this),
-                    this);
+                        this.format, getWorkflow().getOutputDirectory(this),
+                        this);
 
                 final HeatMapChart hmc = new HeatMapChart(bi, x_label, "m/z",
-                    new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(sat,
-                        massAxis), ff.getUri().toString());
+                        new Tuple2D<>(sat,
+                                massAxis), ff.getUri().toString());
                 final PlotRunner pl = new PlotRunner(hmc.create(),
-                    "Chromatogram of " + ff.getName(), StringTools.
-                    removeFileExt(ff.getName())
-                    + "-chromatogram-chart", getWorkflow().
-                    getOutputDirectory(this));
+                        "Chromatogram of " + ff.getName(), StringTools.
+                        removeFileExt(ff.getName())
+                        + "-chromatogram-chart", getWorkflow().
+                        getOutputDirectory(this));
                 pl.configure(Factory.getInstance().getConfiguration());
                 final File f = pl.getFile();
                 try {
@@ -208,7 +211,7 @@ public class ChromatogramVisualizer extends AFragmentCommand {
                     log.error(ex.getLocalizedMessage());
                 }
                 final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
-                    this, WorkflowSlot.VISUALIZATION, ff);
+                        this, WorkflowSlot.VISUALIZATION, ff);
                 getWorkflow().append(dwr);
             } else {
                 log.warn("Could not load required variables");
@@ -220,7 +223,7 @@ public class ChromatogramVisualizer extends AFragmentCommand {
     @Override
     public void configure(final Configuration cfg) {
         this.scanAcquisitionTimeVariableName = cfg.getString(
-            "var.scan_acquisition_time", "scan_acquisition_time");
+                "var.scan_acquisition_time", "scan_acquisition_time");
         this.mzVariableName = cfg.getString("var.mass_values", "mass_values");
     }
 
@@ -230,16 +233,16 @@ public class ChromatogramVisualizer extends AFragmentCommand {
         final MinMax mm = MAMath.getMinMax(tic);
         // a.getShape()
         final Array sortedtic = Array.factory(tic.getElementType(),
-            tic.getShape());
+                tic.getShape());
         final Array correctedtic = Array.factory(tic.getElementType(), tic.
-            getShape());
+                getShape());
         final Index cind = correctedtic.getIndex();
         MAMath.copy(sortedtic, tic);
         final double globalmean = MAMath.sumDouble(tic)
-            / (tic.getShape()[0] - 1);
+                / (tic.getShape()[0] - 1);
         final double globalvar = (mm.max - mm.min) * (mm.max - mm.min);
         log.debug("Squared difference between median and mean: {}",
-            globalvar);
+                globalvar);
         double lmedian = globalmean, lstddev = 0.0d;
         log.debug("Value\tLow\tMedian\tHigh\tDev\tGTMedian\tSNR");
         for (int i = 1; i < tic.getShape()[0] - 1; i++) {
@@ -249,14 +252,14 @@ public class ChromatogramVisualizer extends AFragmentCommand {
             log.debug("Checking for extremum!");
             final int lmedian_low = Math.max(0, i - median_window);
             final int lmedian_high = Math.min(tic.getShape()[0] - 1, i
-                + median_window);
+                    + median_window);
             log.debug("Median low: " + lmedian_low + " high: "
-                + lmedian_high);
+                    + lmedian_high);
             int[] vals;// = new int[lmedian_high-lmedian_low];
             try {
                 vals = (int[]) tic.section(new int[]{lmedian_low},
-                    new int[]{lmedian_high - lmedian_low},
-                    new int[]{1}).get1DJavaArray(int.class);
+                        new int[]{lmedian_high - lmedian_low},
+                        new int[]{1}).get1DJavaArray(int.class);
                 lmedian = MathTools.median(vals);
 
                 lstddev = Math.abs(vals[vals.length - 1] - vals[0]);

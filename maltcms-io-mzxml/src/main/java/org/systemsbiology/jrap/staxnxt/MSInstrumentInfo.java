@@ -1,10 +1,9 @@
 /**
  * *****************************************************************************
  * --------------------------------------------------------------------------- *
- * File: * @(#) MSInstrumentInfo.java * Author: * Mathijs Vogelzang
- * m_v@dds.nl
- * ****************************************************************************** * * *
- * This software is provided ``AS IS'' and any express or implied * *
+ * File: * @(#) MSInstrumentInfo.java * Author: * Mathijs Vogelzang m_v@dds.nl
+ * ******************************************************************************
+ * * * * This software is provided ``AS IS'' and any express or implied * *
  * warranties, including, but not limited to, the implied warranties of * *
  * merchantability and fitness for a particular purpose, are disclaimed. * * In
  * no event shall the authors or the Institute for Systems Biology * * liable
@@ -28,8 +27,8 @@
 package org.systemsbiology.jrap.staxnxt;
 
 /**
- * The MSInstrumentInfo class contains information about the
- * MS instrument used for a certain MzXML file.
+ * The MSInstrumentInfo class contains information about the MS instrument used
+ * for a certain MzXML file.
  *
  * @author M. Vogelzang
  */
@@ -88,9 +87,10 @@ public class MSInstrumentInfo {
         return softwareInfo;
     }
 
+    @Override
     public String toString() {
         return ("msManufacturer " + manufacturer + " msModel " + model + " msIonization "
-            + ionization + " msMassAnalyzer " + massAnalyzer + " detector " + detector);
+                + ionization + " msMassAnalyzer " + massAnalyzer + " detector " + detector);
         //+" SoftwareInfo "+softwareInfo.toString());
     }
 }

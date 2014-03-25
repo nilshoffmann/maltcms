@@ -65,7 +65,7 @@ public class WorkerFactory implements IWorkerFactory {
 
     @Override
     public List<Callable<PairwiseSimilarityResult>> create(File outputDirectory, TupleND<IFileFragment> input, Map<String, List<IBipacePeak>> fragmentToPeaks) {
-        List<Callable<PairwiseSimilarityResult>> worker = new LinkedList<Callable<PairwiseSimilarityResult>>();
+        List<Callable<PairwiseSimilarityResult>> worker = new LinkedList<>();
         if (assumeSymmetricSimilarity) {
             for (Tuple2D<IFileFragment, IFileFragment> t : input.getPairs()) {
                 // calculate similarity between peaks
@@ -74,15 +74,15 @@ public class WorkerFactory implements IWorkerFactory {
 //                log.debug("Comparing {} and {}", t.getFirst().getName(),
 //                        t.getSecond().getName());
                 PairwiseSimilarityWorker psw = new PairwiseSimilarityWorker(
-                    t.getFirst().getName() + "-" + t.getSecond().getName(),
-                    t.getFirst().getName(),
-                    t.getSecond().getName(),
-                    lhsPeaks,
-                    rhsPeaks,
-                    similarityFunction.copy(),
-                    savePeakSimilarities,
-                    outputDirectory,
-                    maxRTDifference
+                        t.getFirst().getName() + "-" + t.getSecond().getName(),
+                        t.getFirst().getName(),
+                        t.getSecond().getName(),
+                        lhsPeaks,
+                        rhsPeaks,
+                        similarityFunction.copy(),
+                        savePeakSimilarities,
+                        outputDirectory,
+                        maxRTDifference
                 );
                 worker.add(psw);
             }
@@ -95,15 +95,15 @@ public class WorkerFactory implements IWorkerFactory {
 //                log.debug("Comparing {} and {}", t.getFirst().getName(),
 //                        t.getSecond().getName());
                     PairwiseSimilarityWorker psw = new PairwiseSimilarityWorker(
-                        f1.getName() + "-" + f2.getName(),
-                        f1.getName(),
-                        f2.getName(),
-                        lhsPeaks,
-                        rhsPeaks,
-                        similarityFunction.copy(),
-                        savePeakSimilarities,
-                        outputDirectory,
-                        maxRTDifference
+                            f1.getName() + "-" + f2.getName(),
+                            f1.getName(),
+                            f2.getName(),
+                            lhsPeaks,
+                            rhsPeaks,
+                            similarityFunction.copy(),
+                            savePeakSimilarities,
+                            outputDirectory,
+                            maxRTDifference
                     );
                     worker.add(psw);
                 }

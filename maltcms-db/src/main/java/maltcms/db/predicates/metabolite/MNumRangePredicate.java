@@ -53,28 +53,22 @@ public class MNumRangePredicate extends MetabolitePredicate {
                 Number n = (Number) val;
                 if (val instanceof Float) {
                     return ((lB.floatValue() <= n.floatValue()) && (n.floatValue() <= uB.
-                        floatValue()));
+                            floatValue()));
                 }
                 if (val instanceof Double) {
                     return ((lB.doubleValue() <= n.doubleValue()) && (n.
-                        doubleValue() <= uB.doubleValue()));
+                            doubleValue() <= uB.doubleValue()));
                 }
                 if (val instanceof Integer) {
                     return ((lB.intValue() <= n.intValue()) && (n.intValue() <= uB.
-                        intValue()));
+                            intValue()));
                 }
                 if (val instanceof Long) {
                     return ((lB.longValue() <= n.longValue()) && (n.longValue() <= uB.
-                        longValue()));
+                            longValue()));
                 }
             }
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

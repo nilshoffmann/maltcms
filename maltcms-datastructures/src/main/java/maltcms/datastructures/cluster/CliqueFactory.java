@@ -70,9 +70,9 @@ public class CliqueFactory {
                     varray = new ArrayDouble.D0();
                 }
                 log
-                    .debug(
-                        "Clique variance before adding peak: {}, clique mean before: {}",
-                        var, mean);
+                        .debug(
+                                "Clique variance before adding peak: {}, clique mean before: {}",
+                                var, mean);
                 double delta = 0;
                 double rt = p.getApexTime();
                 n = c.size() + 1;
@@ -88,9 +88,9 @@ public class CliqueFactory {
                 c.getArrayStatsMap().addFeature("RT_MEAN", marray);
                 c.getArrayStatsMap().addFeature("RT_VARIANCE", varray);
                 log
-                    .debug(
-                        "Clique variance after adding peak: {}, clique mean before: {}",
-                        var, mean);
+                        .debug(
+                                "Clique variance after adding peak: {}, clique mean before: {}",
+                                var, mean);
             }
 
             @Override
@@ -102,7 +102,7 @@ public class CliqueFactory {
                 for (Peak1D peak : peaks) {
                     for (Peak1D peak1 : peaks) {
                         dists[i] += Math.pow(peak.getApexTime()
-                            - peak1.getApexTime(), 2.0d);
+                                - peak1.getApexTime(), 2.0d);
                     }
                     i++;
                 }
@@ -117,7 +117,7 @@ public class CliqueFactory {
                 c.setCentroid(peaks.get(mindistIdx));
             }
         };
-        Clique<Peak1D> c = new Clique<Peak1D>(comp, icmc, icu);
+        Clique<Peak1D> c = new Clique<>(comp, icmc, icu);
         return c;
     }
 }

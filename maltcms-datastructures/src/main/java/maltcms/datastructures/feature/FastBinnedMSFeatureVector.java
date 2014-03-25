@@ -78,14 +78,15 @@ public class FastBinnedMSFeatureVector implements IFeatureVector {
 
     @Override
     public Array getFeature(String string) {
-        if (string.equals("binned_mass_values")) {
-            return this.binnedMasses;
-        } else if (string.equals("binned_intensity_values")) {
-            return this.binnedIntens;
-        } else if (string.equals("total_intensity")) {
-            return this.tic;
-        } else if (string.equals("scan_acquisition_time")) {
-            return this.sat;
+        switch (string) {
+            case "binned_mass_values":
+                return this.binnedMasses;
+            case "binned_intensity_values":
+                return this.binnedIntens;
+            case "total_intensity":
+                return this.tic;
+            case "scan_acquisition_time":
+                return this.sat;
         }
         throw new IllegalArgumentException("Unknown feature name: " + string);
 
@@ -94,7 +95,7 @@ public class FastBinnedMSFeatureVector implements IFeatureVector {
     @Override
     public List<String> getFeatureNames() {
         return Arrays.asList("binned_mass_values", "binned_intensity_values",
-            "total_intensity", "scan_acquisition_time");
+                "total_intensity", "scan_acquisition_time");
     }
 
     @Override

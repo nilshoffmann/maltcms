@@ -78,9 +78,9 @@ public abstract class AChart<T extends Plot> implements IConfigurable {
     }
 
     public List<Array> normalize(final List<Array> c,
-        final String normalization, final boolean normalize_global) {
+            final String normalization, final boolean normalize_global) {
         final NormalizationFilter nf = new NormalizationFilter(normalization,
-            false, normalize_global);
+                false, normalize_global);
         nf.configure(Factory.getInstance().getConfiguration());
         final Array[] as = nf.apply(c.toArray(new Array[]{}));
         return Arrays.asList(as);

@@ -96,17 +96,17 @@ public class Data2DNormalizer extends AFragmentCommand {
 
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-        TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
+        TupleND<IFileFragment> ret = new TupleND<>();
         for (IFileFragment ff : t) {
             final double scanRate = ff.getChild(this.scanRateVar).getArray().getDouble(
-                Index.scalarIndexImmutable);
+                    Index.scalarIndexImmutable);
             final double modulationTime = ff.getChild(this.modulationTimeVar).
-                getArray().getDouble(Index.scalarIndexImmutable);
+                    getArray().getDouble(Index.scalarIndexImmutable);
             final int scansPerModulation = (int) (scanRate * modulationTime);
             log.debug("SPM: {}", scansPerModulation);
 
             IFileFragment retF = new FileFragment(getWorkflow().
-                getOutputDirectory(this), ff.getName());
+                    getOutputDirectory(this), ff.getName());
             retF.addSourceFile(ff);
 
             IVariableFragment index = ff.getChild(this.secondScanIndexVar);
@@ -114,7 +114,7 @@ public class Data2DNormalizer extends AFragmentCommand {
             IVariableFragment ticVar = ff.getChild(this.totalIntensityVar);
             ticVar.setIndex(index);
             List<Array> intensities = ticVar.
-                getIndexedArray();
+                    getIndexedArray();
 
             Array tic = createImage(intensities, scansPerModulation, ff, "beforeFilter");
 
@@ -123,7 +123,7 @@ public class Data2DNormalizer extends AFragmentCommand {
 
             log.info("Filtered signal with {} modulations.", intensities.size());
             IVariableFragment intensVar = new VariableFragment(retF,
-                this.totalIntensityFilteredVar);
+                    this.totalIntensityFilteredVar);
             intensVar.setArray(filteredIntensities);
 
             retF.save();
@@ -142,18 +142,18 @@ public class Data2DNormalizer extends AFragmentCommand {
 //        Array tic = createImage(intensities, scanLineCount, scansPerModulation, f, "beforeFilter");
         if (applyMovingAverage && movingAverageWindow > -1) {
             log.info("Applying moving average filter with window size y: {}",
-                (movingAverageWindow * 2) + 1);
+                    (movingAverageWindow * 2) + 1);
             tic = applyMovingAverageFilter(tic, movingAverageWindow);
         }
         if (applyMovingMedian && movingMedianWindow > -1) {
             System.out.println("Using moving median filter");
             log.info("Applying moving median filter with window size y: {}",
-                (movingMedianWindow * 2) + 1);
+                    (movingMedianWindow * 2) + 1);
             tic = applyMovingMedianFilter(tic, movingMedianWindow);
         }
         if (applyTopHatFilter && topHatFilterWindow > -1) {
             log.info("Applying top hat filter with window size y: {}",
-                (topHatFilterWindow * 2) + 1);
+                    (topHatFilterWindow * 2) + 1);
             tic = applyTopHatFilter(tic, topHatFilterWindow);
         }
 
@@ -170,21 +170,21 @@ public class Data2DNormalizer extends AFragmentCommand {
         }
         Array tic = cross.datastructures.tools.ArrayTools.glue(intensities);
         ArrayDouble.D2 tic2d = create2DArray(intensities.size(), scansPerModulation,
-            values);
+                values);
         RenderedImage bi = ImageTools.makeImage2D(tic2d, 256,
-            Double.NEGATIVE_INFINITY);
+                Double.NEGATIVE_INFINITY);
         ImageTools.saveImage(ImageTools.flipVertical(bi), StringTools.removeFileExt(f.getName())
-            + "-" + name, "png", getWorkflow().
-            getOutputDirectory(this), this);
+                + "-" + name, "png", getWorkflow().
+                getOutputDirectory(this), this);
         return tic;
     }
 
     private ArrayDouble.D2 create2DArray(final int scanLineCount,
-        final int scansPerModulation, Array[] totalIntensity) {
+            final int scansPerModulation, Array[] totalIntensity) {
         log.debug("Creating 2d array with {}x{} elements", scanLineCount,
-            scansPerModulation);
+                scansPerModulation);
         ArrayDouble.D2 tic2d = new ArrayDouble.D2(scanLineCount,
-            scansPerModulation);
+                scansPerModulation);
         for (int x = 0; x < scanLineCount; x++) {
             Array arr = totalIntensity[x];
             Index arrIdx = arr.getIndex();
@@ -225,12 +225,12 @@ public class Data2DNormalizer extends AFragmentCommand {
     public void configure(Configuration cfg) {
         super.configure(cfg);
         this.totalIntensityVar = cfg.getString(this.getClass().getName()
-            + ".totalIntensityVar", "total_intensity");
+                + ".totalIntensityVar", "total_intensity");
         this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
         this.modulationTimeVar = cfg.getString("var.modulation_time",
-            "modulation_time");
+                "modulation_time");
         this.secondScanIndexVar = cfg.getString("var.second_column_scan_index",
-            "second_column_scan_index");
+                "second_column_scan_index");
     }
 
     /**

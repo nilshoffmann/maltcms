@@ -92,118 +92,118 @@ public class ReBuild {
             if (str.charAt(i) == 'a') {
 
                 for (int j = 0; j < SymbolicRepresentationAlignment
-                    .getFenstergr(); j++) {
+                        .getFenstergr(); j++) {
 
                     reb.setDoubleNext(SymbolicRepresentationAlignment
-                        .getBpois().getCommon()[0] / 2);
+                            .getBpois().getCommon()[0] / 2);
 
                 }
 
             } else if (str.charAt(i) == 'b') {
 
                 for (int j = 0; j < SymbolicRepresentationAlignment
-                    .getFenstergr(); j++) {
+                        .getFenstergr(); j++) {
 
                     reb
-                        .setDoubleNext((SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[0] + SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[1]) / 2);
+                            .setDoubleNext((SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[0] + SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[1]) / 2);
 
                 }
 
             } else if (str.charAt(i) == 'c') {
 
                 for (int j = 0; j < SymbolicRepresentationAlignment
-                    .getFenstergr(); j++) {
+                        .getFenstergr(); j++) {
 
                     reb
-                        .setDoubleNext((SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[1] + SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[2]) / 2);
+                            .setDoubleNext((SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[1] + SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[2]) / 2);
 
                 }
 
             } else if (str.charAt(i) == 'd') {
 
                 for (int j = 0; j < SymbolicRepresentationAlignment
-                    .getFenstergr(); j++) {
+                        .getFenstergr(); j++) {
 
                     reb
-                        .setDoubleNext((SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[2] + SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[3]) / 2);
+                            .setDoubleNext((SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[2] + SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[3]) / 2);
 
                 }
 
             } else if (str.charAt(i) == 'e') {
 
                 for (int j = 0; j < SymbolicRepresentationAlignment
-                    .getFenstergr(); j++) {
+                        .getFenstergr(); j++) {
 
                     reb
-                        .setDoubleNext((SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[3] + SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[4]) / 2);
+                            .setDoubleNext((SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[3] + SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[4]) / 2);
 
                 }
 
             } else if (str.charAt(i) == 'f') {
 
                 for (int j = 0; j < SymbolicRepresentationAlignment
-                    .getFenstergr(); j++) {
+                        .getFenstergr(); j++) {
 
                     reb
-                        .setDoubleNext((SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[4] + SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[5]) / 2);
+                            .setDoubleNext((SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[4] + SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[5]) / 2);
 
                 }
 
             } else if (str.charAt(i) == 'g') {
 
                 for (int j = 0; j < SymbolicRepresentationAlignment
-                    .getFenstergr(); j++) {
+                        .getFenstergr(); j++) {
 
                     reb
-                        .setDoubleNext((SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[5] + SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[6]) / 2);
+                            .setDoubleNext((SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[5] + SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[6]) / 2);
 
                 }
 
             } else if (str.charAt(i) == 'h') {
 
                 for (int j = 0; j < SymbolicRepresentationAlignment
-                    .getFenstergr(); j++) {
+                        .getFenstergr(); j++) {
 
                     reb
-                        .setDoubleNext((SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[6] + SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[7]) / 2);
+                            .setDoubleNext((SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[6] + SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[7]) / 2);
 
                 }
 
             } else if (str.charAt(i) == 'i') {
 
                 for (int j = 0; j < SymbolicRepresentationAlignment
-                    .getFenstergr(); j++) {
+                        .getFenstergr(); j++) {
 
                     reb
-                        .setDoubleNext((SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[7] + SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[8]) / 2);
+                            .setDoubleNext((SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[7] + SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[8]) / 2);
 
                 }
 
             } else if (str.charAt(i) == 'k') {
 
                 for (int j = 0; j < SymbolicRepresentationAlignment
-                    .getFenstergr(); j++) {
+                        .getFenstergr(); j++) {
 
                     reb
-                        .setDoubleNext((SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[8] + SymbolicRepresentationAlignment
-                            .getBpois().getCommon()[9]) / 2);
+                            .setDoubleNext((SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[8] + SymbolicRepresentationAlignment
+                                    .getBpois().getCommon()[9]) / 2);
 
                 }
 
@@ -256,7 +256,7 @@ public class ReBuild {
      *
      */
     public static Array unscale(final Array a1, final double min,
-        final double max) {
+            final double max) {
 
         final Array a = a1.copy();
 
@@ -272,7 +272,7 @@ public class ReBuild {
 
             // System.out.println(save);
             System.out.println("minmax" + Math.round(minmax) + "Min" + min
-                + "max" + max);
+                    + "max" + max);
 
         }
 

@@ -72,7 +72,7 @@ public abstract class AArrayFilter implements ICommand<Array, Array>, ICopyable<
     @Override
     public void configure(final Configuration cfg) {
         this.copyArray = cfg.getBoolean(this.getClass().getName()
-            + ".copyArray", true);
+                + ".copyArray", true);
     }
 
 }

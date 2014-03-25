@@ -55,9 +55,9 @@ public class PeakNormalization {
     }
 
     public List<Peak2D> findReference(List<List<Peak2D>> peakLists,
-        List<List<Point>> bidiBestHits, Collection<IFileFragment> f) {
+            List<List<Point>> bidiBestHits, Collection<IFileFragment> f) {
         final List<Peak2DClique> peakCliqueLists = BBHTools.getPeak2DCliqueList(
-            f, bidiBestHits, peakLists);
+                f, bidiBestHits, peakLists);
 
         int x, y, s, minArg = -1;
         double min = Double.MAX_VALUE;
@@ -92,7 +92,7 @@ public class PeakNormalization {
     }
 
     public void normalize(List<List<Peak2D>> peakLists,
-        List<List<Point>> bidiBestHits, Collection<IFileFragment> f) {
+            List<List<Point>> bidiBestHits, Collection<IFileFragment> f) {
         final List<Peak2D> refs = findReference(peakLists, bidiBestHits, f);
         if (refs != null) {
             for (int i = 0; i < peakLists.size(); i++) {

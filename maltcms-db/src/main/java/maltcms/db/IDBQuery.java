@@ -40,5 +40,5 @@ public interface IDBQuery<T extends Predicate<G>, G> {
     public abstract void setDB(String dbLocation);
 
     public abstract Collection<Tuple2D<Double, IMetabolite>> getBestHits(int k,
-        T ssp);
+            T ssp);
 }

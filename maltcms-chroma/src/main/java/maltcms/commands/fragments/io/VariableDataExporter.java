@@ -55,7 +55,7 @@ public class VariableDataExporter extends AFragmentCommand {
     private final String description = "Exports one-dimensional variables to csv format ";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILEIO;
     @Configurable
-    private ArrayList<String> varNames = new ArrayList<String>(0);
+    private ArrayList<String> varNames = new ArrayList<>(0);
 
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
@@ -66,8 +66,8 @@ public class VariableDataExporter extends AFragmentCommand {
             for (final String s : this.varNames) {
                 final Array a = iff.getChild(s).getArray();
                 csvw.writeArray(path.getAbsolutePath(), StringTools.
-                    removeFileExt(iff.getName())
-                    + "_" + s, a);
+                        removeFileExt(iff.getName())
+                        + "_" + s, a);
             }
         }
         return t;

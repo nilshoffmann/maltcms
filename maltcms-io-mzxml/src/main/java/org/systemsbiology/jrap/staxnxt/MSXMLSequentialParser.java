@@ -145,7 +145,7 @@ public class MSXMLSequentialParser {
                 scanParser.parseScanAndHeader(xmlSR);
             } catch (XMLStreamException e) {
                 if (!e.getMessage().equals("ScanHeaderEndFoundException")
-                    && !e.getMessage().equals("ScanEndFoundException")) {
+                        && !e.getMessage().equals("ScanEndFoundException")) {
                     throw e;
                 }
             }
@@ -158,7 +158,7 @@ public class MSXMLSequentialParser {
                 scanParser.parseMLScanAndHeader(xmlSR);
             } catch (XMLStreamException e) {
                 if (!e.getMessage().equals("ScanHeaderEndFoundException")
-                    && !e.getMessage().equals("ScanEndFoundException")) {
+                        && !e.getMessage().equals("ScanEndFoundException")) {
                     throw e;
                 }
             }

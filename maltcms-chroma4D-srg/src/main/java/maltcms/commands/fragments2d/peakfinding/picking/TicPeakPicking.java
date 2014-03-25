@@ -45,7 +45,8 @@ import maltcms.datastructures.quadTree.QuadTree;
 import org.apache.commons.configuration.Configuration;
 
 /**
- * Uses peaks from variable tic_peaks, as provided by CWTPeakFinder or TICPeakFinder.
+ * Uses peaks from variable tic_peaks, as provided by CWTPeakFinder or
+ * TICPeakFinder.
  *
  * @author Nils Hoffmann
  */
@@ -58,7 +59,7 @@ public class TicPeakPicking implements IPeakPicking {
     @Configurable(name = "totalIntensityVar", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";
     @Configurable(name = "var.second_column_scan_index",
-        value = "second_column_scan_index")
+            value = "second_column_scan_index")
     private String secondScanIndexVar = "second_column_scan_index";
     @Configurable(value = "1")
     private int maxDx = 1;
@@ -78,7 +79,7 @@ public class TicPeakPicking implements IPeakPicking {
     private QuadTree<Peak1D> getQuadTree(IFileFragment ff) {
         if (this.quadTree == null) {
             IScanLine isl = ScanLineCacheFactory.getSparseScanLineCache(ff);
-            quadTree = new QuadTree<Peak1D>(0, 0, isl.getScanLineCount(), isl.getScansPerModulation(), 6);
+            quadTree = new QuadTree<>(0, 0, isl.getScanLineCount(), isl.getScansPerModulation(), 6);
             for (Peak1D p : Peak1D.fromFragment(ff)) {
                 Point pt = isl.mapIndex(p.getApexIndex());
                 quadTree.put(new Point2D.Double(pt.x, pt.y), p);
@@ -93,7 +94,7 @@ public class TicPeakPicking implements IPeakPicking {
         log.info("	total_intensity: {}", this.totalIntensityVar);
         List<Peak1D> peaks = Peak1D.fromFragment(ff);
         IScanLine isl = ScanLineCacheFactory.getSparseScanLineCache(ff);
-        List<Point> pointList = new ArrayList<Point>();
+        List<Point> pointList = new ArrayList<>();
         for (Peak1D peak : peaks) {
             pointList.add(isl.mapIndex(peak.getApexIndex()));
         }
@@ -116,7 +117,7 @@ public class TicPeakPicking implements IPeakPicking {
     public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
         QuadTree<Peak1D> tree = getQuadTree(ff);
         List<Tuple2D<Point2D, Peak1D>> l = tree.getChildrenInRange(new Rectangle2D.Double(p.x - dx, p.y - dy, 2 * dx, 2 * dy));
-        ArrayList<Point> al = new ArrayList<Point>();
+        ArrayList<Point> al = new ArrayList<>();
         for (Tuple2D<Point2D, Peak1D> t : l) {
             al.add(new Point((int) t.getFirst().getX(), (int) t.getFirst().getY()));
         }

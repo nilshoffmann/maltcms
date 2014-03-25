@@ -59,7 +59,7 @@ public interface IArrayD2Byte extends Serializable {
      * @param row
      * @param col
      * @return element if row and col are in valid range, otherwise returns
-     *         default value
+     * default value
      */
     public abstract byte get(int row, int col);
 
@@ -108,15 +108,16 @@ public interface IArrayD2Byte extends Serializable {
      *
      * @param row
      * @param col
-     * @param b   the value to be set at row,col
+     * @param b the value to be set at row,col
      * @throws ArrayIndexOutOfBoundsException
      */
     public abstract void set(int row, int col, byte b)
-        throws ArrayIndexOutOfBoundsException;
+            throws ArrayIndexOutOfBoundsException;
 
     /**
      *
      * @return a string representation of this array
      */
+    @Override
     public abstract String toString();
 }

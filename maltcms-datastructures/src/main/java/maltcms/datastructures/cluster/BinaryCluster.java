@@ -41,8 +41,8 @@ public class BinaryCluster extends ACluster {
     private BinaryCluster lchild, rchild;
 
     public BinaryCluster(final BinaryCluster lchild1,
-        final BinaryCluster rchild1, final double distl,
-        final double distr, final double[] dist, final int id) {
+            final BinaryCluster rchild1, final double distl,
+            final double distr, final double[] dist, final int id) {
 
         setLChild(lchild1);
         setRChild(rchild1);
@@ -101,15 +101,16 @@ public class BinaryCluster extends ACluster {
     // public int getLevel(){
     // return this.level;
     // }
+    @Override
     public String toNewick() {
         // (NODE) each Node is encapsulated in parentheses
         String name = getName() == null ? "" : getName();
         name = (this.lchild == null) && (this.rchild == null) ? name : "("
-            + this.lchild.toNewick() + "," + this.rchild.toNewick() + ")";
+                + this.lchild.toNewick() + "," + this.rchild.toNewick() + ")";
 
         name = name
-            + ((getDistanceToParent() == 0.0d) ? "" : ":"
-            + getDistanceToParent());
+                + ((getDistanceToParent() == 0.0d) ? "" : ":"
+                + getDistanceToParent());
         return name;
     }
 
@@ -154,7 +155,7 @@ public class BinaryCluster extends ACluster {
         // "}}{"+child1+child2+"}";
 
         return "\\pstree{" + name + getLabelString() + "{" + d + "}}{" + child2
-            + child1 + "}";
+                + child1 + "}";
         // }
         // return "\\pstree{}{}";
     }

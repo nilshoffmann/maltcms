@@ -66,16 +66,16 @@ public class PeakIdentification implements IPeakIdentification {
     private boolean doSearch = false;
     @Configurable(type = String.class)
     private String dbFile = null;
-    private List<String> dbFiles = new ArrayList<String>();
+    private List<String> dbFiles = new ArrayList<>();
     @Configurable(name = "dbThreshold", value = "0.9d", type = double.class)
     private double threshold = 0.08d;
     @Configurable(name = "kBest", value = "1", type = int.class)
     private int k = 1;
     private boolean dbAvailable = true;
     private IArraySimilarity similarity = new ArrayCos();
-    private List<Integer> masqMasses = new ArrayList<Integer>();
+    private List<Integer> masqMasses = new ArrayList<>();
 //    private ObjectSet<IMetabolite> dbMetabolites = null;
-    private List<ObjectSet<IMetabolite>> dbMetabolitesList = new ArrayList<ObjectSet<IMetabolite>>();
+    private List<ObjectSet<IMetabolite>> dbMetabolitesList = new ArrayList<>();
 
     @Override
     public String toString() {
@@ -119,10 +119,10 @@ public class PeakIdentification implements IPeakIdentification {
         }
         if (this.dbAvailable && this.doSearch) {
 //            if (this.ocl.isEmpty()) {
-            List<DBMatch> hits = new ArrayList<DBMatch>();
+            List<DBMatch> hits = new ArrayList<>();
             for (String dbf : this.dbFiles) {
                 final ArrayDouble.D1 massValues = new ArrayDouble.D1(peak.
-                    getPeakArea().getSeedMS().getShape()[0]);
+                        getPeakArea().getSeedMS().getShape()[0]);
                 final IndexIterator iter = massValues.getIndexIterator();
                 int c = 0;
                 while (iter.hasNext()) {
@@ -130,8 +130,8 @@ public class PeakIdentification implements IPeakIdentification {
                 }
                 Array intensityValues = prepareMS(peak.getPeakArea().getSeedMS());
                 MetaboliteSimilarity ms = new MetaboliteSimilarity(massValues,
-                    intensityValues,
-                    threshold, k, false);
+                        intensityValues,
+                        threshold, k, false);
                 ms.setSimilarityFunction(similarity);
                 MetaboliteQueryDB mqdb = new MetaboliteQueryDB(dbf, ms);
                 QueryCallable<IMetabolite> qc = mqdb.getCallable();
@@ -139,7 +139,7 @@ public class PeakIdentification implements IPeakIdentification {
                 try {
                     osRes = qc.call();
                     log.info("Received {} hits from ObjectSet!",
-                        osRes.size());
+                            osRes.size());
                     for (Tuple2D<Double, IMetabolite> t : ms.getMatches()) {
                         hits.add(new DBMatch(dbf, t.getFirst(), t.getSecond()));
                     }

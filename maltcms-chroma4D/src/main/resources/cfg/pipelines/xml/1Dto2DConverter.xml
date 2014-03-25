@@ -46,8 +46,8 @@ for details.
         </property>    
     </bean>
 	
-	<bean id="data1Dto2DConverter" class="maltcms.commands.fragments2d.preprocessing.Data1Dto2DConverter">
-		<property name="modulationTime" value="60"/>
-	</bean>
+    <bean id="data1Dto2DConverter" class="maltcms.commands.fragments2d.preprocessing.Data1Dto2DConverter">
+        <property name="modulationTime" value="60"/>
+    </bean>
 
 </beans>

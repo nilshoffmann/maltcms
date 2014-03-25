@@ -52,21 +52,21 @@ import ucar.ma2.MAMath.MinMax;
 public final class Sparse extends Array {
 
     public static Sparse create(Array indices, Array values,
-        double massBinResolution) {
+            double massBinResolution) {
         MinMax mm = MAMath.getMinMax(indices);
         int nbins = MaltcmsTools.getNumberOfIntegerMassBins(mm.min,
-            mm.max, massBinResolution);
+                mm.max, massBinResolution);
         double min = mm.min;
         double max = mm.max;
         return Sparse.create(indices, values, (int) Math.floor(min), (int) Math
-            .ceil(max), nbins, massBinResolution);
+                .ceil(max), nbins, massBinResolution);
     }
 
     public static Sparse create(Array indices, Array values,
-        int minindex, int maxindex, int nbins,
-        double massBinResolution) {
+            int minindex, int maxindex, int nbins,
+            double massBinResolution) {
         return new Sparse(indices, values, minindex, maxindex, nbins,
-            massBinResolution);
+                massBinResolution);
     }
     private SparseDoubleMatrix1D indToVal = null;
     private int minindex = 0;
@@ -74,11 +74,11 @@ public final class Sparse extends Array {
     private int bins = 0;
 
     public Sparse(Array indices, Array values, int minindex1,
-        int maxindex1, int nbins, double massBinResolution) {
+            int maxindex1, int nbins, double massBinResolution) {
         super(Index.factory(new int[]{maxindex1 - minindex1}));
         if (indices.getShape()[0] != values.getShape()[0]) {
             throw new IllegalArgumentException(
-                "Length of input arrays differs!");
+                    "Length of input arrays differs!");
 
         }
         this.bins = nbins;
@@ -89,7 +89,7 @@ public final class Sparse extends Array {
         IndexIterator ii2 = values.getIndexIterator();
         while (ii1.hasNext() && ii2.hasNext()) {
             int index = MaltcmsTools.binMZ(ii1.getDoubleNext(),
-                minindex1, maxindex1, massBinResolution);
+                    minindex1, maxindex1, massBinResolution);
             double val = ii2.getDoubleNext();
             if (this.indToVal.get(index) != 0) {
                 this.indToVal.set(index, this.indToVal.get(index) + val);
@@ -203,9 +203,9 @@ public final class Sparse extends Array {
 
     public Tuple2D<ArrayDouble.D1, ArrayDouble.D1> toArrays() {
         ArrayDouble.D1 indices = new ArrayDouble.D1(this.indToVal
-            .cardinality());
+                .cardinality());
         ArrayDouble.D1 values = new ArrayDouble.D1(this.indToVal
-            .cardinality());
+                .cardinality());
         int i = 0;
         IndexIterator indI = indices.getIndexIterator();
         IndexIterator valI = values.getIndexIterator();
@@ -217,7 +217,7 @@ public final class Sparse extends Array {
             }
             i++;
         }
-        return new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(indices, values);
+        return new Tuple2D<>(indices, values);
     }
 
     public double get(Index i) {

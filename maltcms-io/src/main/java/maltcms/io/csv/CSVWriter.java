@@ -76,10 +76,10 @@ public class CSVWriter implements IWorkflowElement {
     private IWorkflow workflow = null;
 
     private void appendToWorkflow(final File f, final WorkflowSlot ws,
-        final IFileFragment... resources) {
+            final IFileFragment... resources) {
         if (getWorkflow() != null) {
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                new File(f.getAbsolutePath()), this, ws, resources);
+                    new File(f.getAbsolutePath()), this, ws, resources);
             getWorkflow().append(dwr);
         }
     }
@@ -125,14 +125,14 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     private File createFile(final File f, final WorkflowSlot ws,
-        final IFileFragment... resources) {
+            final IFileFragment... resources) {
         return createFile(f.getParent(), f.getName(), ws, resources);
     }
 
     private File createFile(final String path, final String filename,
-        final WorkflowSlot ws, final IFileFragment... resources) {
+            final WorkflowSlot ws, final IFileFragment... resources) {
         File f = FileTools.prepareOutput(path, StringTools.removeFileExt(
-            filename), "csv");
+                filename), "csv");
         appendToWorkflow(f, ws, resources);
         return f;
     }
@@ -148,45 +148,45 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File writeAlignmentPath(final String path, final String filename,
-        final List<Tuple2DI> map, final double[] distValues, final int rows, final int cols,
-        final String refname, final String queryname, final String value,
-        final String symbolicPath) {
+            final List<Tuple2DI> map, final double[] distValues, final int rows, final int cols,
+            final String refname, final String queryname, final String value,
+            final String symbolicPath) {
         final File f = createFile(path, filename, WorkflowSlot.ALIGNMENT);
         // appendToWorkflow(f, WorkflowSlot.ALIGNMENT);
         log.info("Value of [0][0] = {}", distValues[0]);
         try {
-            final PrintWriter bw = new PrintWriter(new BufferedWriter(
-                new FileWriter(f)));
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
-                Locale.US);
-            df.applyPattern("0.0000");
-            bw.append(refname + this.fieldSeparator + queryname
-                + this.fieldSeparator + value + this.fieldSeparator
-                + "symbol");
-            bw.println();
-            log.info("Shape of matrix rows {} cols {}", rows, cols);
-            for (int i = 0; i < map.size(); i++) {
-                final Tuple2DI t = map.get(i);
-                log.debug("Getting path value for {},{}", t.getFirst(), t.
-                    getSecond());
-                bw.append(t.getFirst()
-                    + this.fieldSeparator
-                    + t.getSecond()
-                    + this.fieldSeparator
-                    + distValues[i]
-                    + ((symbolicPath != null) ? this.fieldSeparator
-                    + symbolicPath.charAt(i) : ""));
+            try (PrintWriter bw = new PrintWriter(new BufferedWriter(
+                    new FileWriter(f)))) {
+                final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
+                        Locale.US);
+                df.applyPattern("0.0000");
+                bw.append(refname + this.fieldSeparator + queryname
+                        + this.fieldSeparator + value + this.fieldSeparator
+                        + "symbol");
                 bw.println();
-				// if (writeBlockNewline) {
-                // bw.println();
-                // }
+                log.info("Shape of matrix rows {} cols {}", rows, cols);
+                for (int i = 0; i < map.size(); i++) {
+                    final Tuple2DI t = map.get(i);
+                    log.debug("Getting path value for {},{}", t.getFirst(), t.
+                            getSecond());
+                    bw.append(t.getFirst()
+                            + this.fieldSeparator
+                            + t.getSecond()
+                            + this.fieldSeparator
+                            + distValues[i]
+                            + ((symbolicPath != null) ? this.fieldSeparator
+                            + symbolicPath.charAt(i) : ""));
+                    bw.println();
+                    // if (writeBlockNewline) {
+                    // bw.println();
+                    // }
 
-                // bw.flush();
+                    // bw.flush();
+                }
+                bw.flush();
             }
-            bw.flush();
-            bw.close();
             log.info(map.size() + " records written to file "
-                + f.getAbsolutePath());
+                    + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
             // TODO Auto-generated catch block
@@ -196,29 +196,30 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File writeArray(final String path, final String filename,
-        final Array vals) {
+            final Array vals) {
         final File f = createFile(path, filename, WorkflowSlot.FILEIO);
         try {
-            final PrintWriter bw = new PrintWriter(new BufferedWriter(
-                new FileWriter(f)));
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
-                Locale.US);
-            df.applyPattern("0.0000");
-            // double minThreshold = 0.000;
-            final IndexIterator ii = vals.getIndexIterator();
-            int i = 0;
-            while (ii.hasNext()) {
-                final double value = ii.getDoubleNext();
-                // if (value >= minThreshold) {
-                // bw.append(i + this.fieldSeparator + df.format(value));
-                bw.append(df.format(value));
+            int i;
+            try (PrintWriter bw = new PrintWriter(new BufferedWriter(
+                    new FileWriter(f)))) {
+                final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
+                        Locale.US);
+                df.applyPattern("0.0000");
+                // double minThreshold = 0.000;
+                final IndexIterator ii = vals.getIndexIterator();
+                i = 0;
+                while (ii.hasNext()) {
+                    final double value = ii.getDoubleNext();
+                    // if (value >= minThreshold) {
+                    // bw.append(i + this.fieldSeparator + df.format(value));
+                    bw.append(df.format(value));
+                    bw.println();
+                    i++;
+                    // }
+                }
                 bw.println();
-                i++;
-                // }
+                bw.flush();
             }
-            bw.println();
-            bw.flush();
-            bw.close();
             log.info(i + " records written to file " + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
@@ -228,38 +229,38 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File writeArray2DWithHeader(final String path, final String filename,
-        final ArrayDouble.D2 arr, final String[] columnLabels) {
+            final ArrayDouble.D2 arr, final String[] columnLabels) {
 
         // }
         final boolean writeBlockNewline = Factory.getInstance().getConfiguration().
-            getBoolean("csvwriter.writeBlockNewLine",
-                false);
+                getBoolean("csvwriter.writeBlockNewLine",
+                        false);
         EvalTools.eqI(3, columnLabels.length, this);
         final File f = createFile(path, filename, WorkflowSlot.FILEIO);
         try {
-            final PrintWriter bw = new PrintWriter(new BufferedWriter(
-                new FileWriter(f)));
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
-                Locale.US);
-            bw.write(StringTools.join(columnLabels, this.fieldSeparator));
-            bw.println();
-            for (int i = 0; i < arr.getShape()[0]; i++) {
-                for (int j = 0; j < arr.getShape()[1]; j++) {
-                    bw.append(i + this.fieldSeparator + j + this.fieldSeparator
-                        + df.format(arr.get(i, j)));
-                    bw.println();
-                }
+            try (PrintWriter bw = new PrintWriter(new BufferedWriter(
+                    new FileWriter(f)))) {
+                final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
+                        Locale.US);
+                bw.write(StringTools.join(columnLabels, this.fieldSeparator));
+                bw.println();
+                for (int i = 0; i < arr.getShape()[0]; i++) {
+                    for (int j = 0; j < arr.getShape()[1]; j++) {
+                        bw.append(i + this.fieldSeparator + j + this.fieldSeparator
+                                + df.format(arr.get(i, j)));
+                        bw.println();
+                    }
 
-                if (writeBlockNewline) {
-                    bw.println();
-                }
+                    if (writeBlockNewline) {
+                        bw.println();
+                    }
 
+                    bw.flush();
+                }
                 bw.flush();
             }
-            bw.flush();
-            bw.close();
             log.info(arr.getShape()[0] + "*" + arr.getShape()[1]
-                + " records written to file " + f.getAbsolutePath());
+                    + " records written to file " + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
             // TODO Auto-generated catch block
@@ -269,35 +270,35 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File writeArray2D(final String path, final String filename,
-        final ArrayDouble.D2 arr) {
+            final ArrayDouble.D2 arr) {
 
         // }
         final boolean writeBlockNewline = Factory.getInstance().getConfiguration().
-            getBoolean("csvwriter.writeBlockNewLine",
-                false);
+                getBoolean("csvwriter.writeBlockNewLine",
+                        false);
         final File f = createFile(path, filename, WorkflowSlot.FILEIO);
         try {
-            final PrintWriter bw = new PrintWriter(new BufferedWriter(
-                new FileWriter(f)));
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
-                Locale.US);
-            for (int i = 0; i < arr.getShape()[0]; i++) {
-                for (int j = 0; j < arr.getShape()[1]; j++) {
-                    bw.append(i + this.fieldSeparator + j + this.fieldSeparator
-                        + df.format(arr.get(i, j)));
-                    bw.println();
-                }
+            try (PrintWriter bw = new PrintWriter(new BufferedWriter(
+                    new FileWriter(f)))) {
+                final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
+                        Locale.US);
+                for (int i = 0; i < arr.getShape()[0]; i++) {
+                    for (int j = 0; j < arr.getShape()[1]; j++) {
+                        bw.append(i + this.fieldSeparator + j + this.fieldSeparator
+                                + df.format(arr.get(i, j)));
+                        bw.println();
+                    }
 
-                if (writeBlockNewline) {
-                    bw.println();
-                }
+                    if (writeBlockNewline) {
+                        bw.println();
+                    }
 
+                    bw.flush();
+                }
                 bw.flush();
             }
-            bw.flush();
-            bw.close();
             log.info(arr.getShape()[0] + "*" + arr.getShape()[1]
-                + " records written to file " + f.getAbsolutePath());
+                    + " records written to file " + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
             // TODO Auto-generated catch block
@@ -307,61 +308,61 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File writeArray2DwithLabels(final String path,
-        final String filename, final ArrayDouble.D2 arr,
-        final ArrayChar.D2 labels, final Class<?> creator,
-        final WorkflowSlot slot, final Date date,
-        final IFileFragment... resources) {
+            final String filename, final ArrayDouble.D2 arr,
+            final ArrayChar.D2 labels, final Class<?> creator,
+            final WorkflowSlot slot, final Date date,
+            final IFileFragment... resources) {
         final File f = createFile(path, filename, slot);
         createFile(f, slot);
         final boolean useFullPath = Factory.getInstance().getConfiguration().
-            getBoolean(this.getClass().getName() + ".useFullPathAsLabel",
-                false);
+                getBoolean(this.getClass().getName() + ".useFullPathAsLabel",
+                        false);
         try {
             f.createNewFile();
-            final PrintWriter bw = new PrintWriter(new BufferedWriter(
-                new FileWriter(f)));
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
-                Locale.US);
-            df.applyPattern("0.0000");
-            if (labels != null) {
-                final StringIterator si = labels.getStringIterator();
-                final StringBuffer sbuf = new StringBuffer();
-                sbuf.append(this.fieldSeparator);
-                while (si.hasNext()) {
-                    String label = si.next();
-                    if (new File(label).exists() && !useFullPath) {
-                        label = new File(label).getName();
+            try (PrintWriter bw = new PrintWriter(new BufferedWriter(
+                    new FileWriter(f)))) {
+                final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
+                        Locale.US);
+                df.applyPattern("0.0000");
+                if (labels != null) {
+                    final StringIterator si = labels.getStringIterator();
+                    final StringBuffer sbuf = new StringBuffer();
+                    sbuf.append(this.fieldSeparator);
+                    while (si.hasNext()) {
+                        String label = si.next();
+                        if (new File(label).exists() && !useFullPath) {
+                            label = new File(label).getName();
+                        }
+                        sbuf.append(label + this.fieldSeparator);
                     }
-                    sbuf.append(label + this.fieldSeparator);
+                    bw.write(sbuf.toString());
+                    bw.println();
                 }
-                bw.write(sbuf.toString());
-                bw.println();
-            }
-            StringIterator si = null;
-            if (labels != null) {
-                si = labels.getStringIterator();
-            }
-            for (int i = 0; i < arr.getShape()[0]; i++) {
-                if (si != null) {
-                    if (si.hasNext()) {
-                        if (useFullPath) {
-                            bw.append(si.next() + this.fieldSeparator);
-                        } else {
-                            final String label = new File(si.next()).getName();
-                            bw.append(label + this.fieldSeparator);
+                StringIterator si = null;
+                if (labels != null) {
+                    si = labels.getStringIterator();
+                }
+                for (int i = 0; i < arr.getShape()[0]; i++) {
+                    if (si != null) {
+                        if (si.hasNext()) {
+                            if (useFullPath) {
+                                bw.append(si.next() + this.fieldSeparator);
+                            } else {
+                                final String label = new File(si.next()).getName();
+                                bw.append(label + this.fieldSeparator);
+                            }
                         }
                     }
+                    for (int j = 0; j < arr.getShape()[1]; j++) {
+                        bw.append(df.format(arr.get(i, j)) + this.fieldSeparator);
+                    }
+                    bw.println();
+                    bw.flush();
                 }
-                for (int j = 0; j < arr.getShape()[1]; j++) {
-                    bw.append(df.format(arr.get(i, j)) + this.fieldSeparator);
-                }
-                bw.println();
                 bw.flush();
             }
-            bw.flush();
-            bw.close();
             log.info(arr.getShape()[0] + "*" + arr.getShape()[1]
-                + " records written to file " + f.getAbsolutePath());
+                    + " records written to file " + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
             log.error(e.getLocalizedMessage());
@@ -370,42 +371,42 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File writeArrayListOfArrays(final String path,
-        final String filename, final List<Array> values) {
+            final String filename, final List<Array> values) {
         final boolean writeBlockNewline = Factory.getInstance().getConfiguration().
-            getBoolean("csvwriter.writeBlockNewLine",
-                false);
+                getBoolean("csvwriter.writeBlockNewLine",
+                        false);
         final int maxscans = values.size();
         final File f = createFile(path, filename, WorkflowSlot.FILEIO);
         try {
-            final PrintWriter bw = new PrintWriter(new BufferedWriter(
-                new FileWriter(f)));
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
-                Locale.US);
-            df.applyPattern("0.0000");
-            final double minThreshold = 0.001;
-            for (int i = 0; i < maxscans; i++) {
-                System.out.println((i + 1) + "/" + maxscans);
-                final IndexIterator valind = values.get(i).getIndexIterator();
-                // mzToI.add(new LinkedHashMap<Double,Double>());
+            try (PrintWriter bw = new PrintWriter(new BufferedWriter(
+                    new FileWriter(f)))) {
+                final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
+                        Locale.US);
+                df.applyPattern("0.0000");
+                final double minThreshold = 0.001;
+                for (int i = 0; i < maxscans; i++) {
+                    System.out.println((i + 1) + "/" + maxscans);
+                    final IndexIterator valind = values.get(i).getIndexIterator();
+                    // mzToI.add(new LinkedHashMap<Double,Double>());
 
-                while (valind.hasNext()) {
-                    final double value = valind.getDoubleNext();
-                    if (value > minThreshold) {
-                        bw.append(i + this.fieldSeparator + df.format(value));
+                    while (valind.hasNext()) {
+                        final double value = valind.getDoubleNext();
+                        if (value > minThreshold) {
+                            bw.append(i + this.fieldSeparator + df.format(value));
+                            bw.println();
+                        }
+                    }
+
+                    if (writeBlockNewline) {
                         bw.println();
                     }
-                }
 
-                if (writeBlockNewline) {
-                    bw.println();
+                    bw.flush();
                 }
-
                 bw.flush();
             }
-            bw.flush();
-            bw.close();
             log.info(maxscans + " records written to file "
-                + f.getAbsolutePath());
+                    + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
             log.error(e.getLocalizedMessage());
@@ -414,8 +415,8 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File writeArrayListsOfArrays(final String path,
-        final String filename, final List<Array> indices,
-        final List<Array> values) {
+            final String filename, final List<Array> indices,
+            final List<Array> values) {
         // Vector<LinkedHashMap<Double, Double>> mzToI = new
         // Vector<LinkedHashMap<Double,Double>>();
         // if(!checkEqualLength(indices))
@@ -423,43 +424,43 @@ public class CSVWriter implements IWorkflowElement {
         // if(path==null || path.equals("")) {
         // }
         final boolean writeBlockNewline = Factory.getInstance().getConfiguration().
-            getBoolean("csvwriter.writeBlockNewLine",
-                false);
+                getBoolean("csvwriter.writeBlockNewLine",
+                        false);
         final int maxscans = indices.size();
         final File f = createFile(path, filename, WorkflowSlot.FILEIO);
         try {
-            final PrintWriter bw = new PrintWriter(new BufferedWriter(
-                new FileWriter(f)));
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
-                Locale.US);
-            df.applyPattern("0.0000");
-            final double minThreshold = 0.001;
-            for (int i = 0; i < maxscans; i++) {
-                System.out.println((i + 1) + "/" + maxscans);
-                final IndexIterator inind = indices.get(i).getIndexIterator();
-                final IndexIterator valind = values.get(i).getIndexIterator();
-                // mzToI.add(new LinkedHashMap<Double,Double>());
+            try (PrintWriter bw = new PrintWriter(new BufferedWriter(
+                    new FileWriter(f)))) {
+                final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
+                        Locale.US);
+                df.applyPattern("0.0000");
+                final double minThreshold = 0.001;
+                for (int i = 0; i < maxscans; i++) {
+                    System.out.println((i + 1) + "/" + maxscans);
+                    final IndexIterator inind = indices.get(i).getIndexIterator();
+                    final IndexIterator valind = values.get(i).getIndexIterator();
+                    // mzToI.add(new LinkedHashMap<Double,Double>());
 
-                while (inind.hasNext() && valind.hasNext()) {
-                    final double index = inind.getDoubleNext();
-                    final double value = valind.getDoubleNext();
-                    if (value > minThreshold) {
-                        bw.append(i + this.fieldSeparator + df.format(index)
-                            + this.fieldSeparator + df.format(value));
+                    while (inind.hasNext() && valind.hasNext()) {
+                        final double index = inind.getDoubleNext();
+                        final double value = valind.getDoubleNext();
+                        if (value > minThreshold) {
+                            bw.append(i + this.fieldSeparator + df.format(index)
+                                    + this.fieldSeparator + df.format(value));
+                            bw.println();
+                        }
+                    }
+
+                    if (writeBlockNewline) {
                         bw.println();
                     }
-                }
 
-                if (writeBlockNewline) {
-                    bw.println();
+                    bw.flush();
                 }
-
                 bw.flush();
             }
-            bw.flush();
-            bw.close();
             log.info(maxscans + " records written to file "
-                + f.getAbsolutePath());
+                    + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
             // TODO Auto-generated catch block
@@ -469,7 +470,7 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File[] writeOneFilePerArray(final String path,
-        final String filename, final List<Array> values) {
+            final String filename, final List<Array> values) {
         int i = 0;
         final int cnt = values.size();
         final File[] files = new File[cnt];
@@ -480,7 +481,7 @@ public class CSVWriter implements IWorkflowElement {
             final Formatter formatter = new Formatter(sb);
             formatter.format(NUMBERFORMAT, i);
             final File f = writeArray(path, StringTools.removeFileExt(filename)
-                + "_" + sb.toString(), a);
+                    + "_" + sb.toString(), a);
             files[i++] = f;
         }
         return files;
@@ -492,36 +493,37 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File writeStatsMap(final String path, final String filename,
-        final StatsMap sm) {
+            final StatsMap sm) {
         final File f = createFile(path, filename, WorkflowSlot.STATISTICS);
         try {
-            final PrintWriter bw = new PrintWriter(new BufferedWriter(
-                new FileWriter(f)));
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
-                Locale.US);
-            df.applyPattern("0.0000");
-            final String header = sm.getLabel();
-            bw.append("label\t");
-            // if(header!=null) {
-            // bw.append(header+this.fieldSeparator);
-            // }
-            final LinkedList<String> ll = new LinkedList<String>(sm.keySet());
-            Collections.sort(ll);
-            for (final String str : ll) {
-                bw.append(str + this.fieldSeparator);
+            int i;
+            try (PrintWriter bw = new PrintWriter(new BufferedWriter(
+                    new FileWriter(f)))) {
+                final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
+                        Locale.US);
+                df.applyPattern("0.0000");
+                final String header = sm.getLabel();
+                bw.append("label\t");
+                // if(header!=null) {
+                // bw.append(header+this.fieldSeparator);
+                // }
+                final LinkedList<String> ll = new LinkedList<>(sm.keySet());
+                Collections.sort(ll);
+                for (final String str : ll) {
+                    bw.append(str + this.fieldSeparator);
+                }
+                bw.println();
+                bw.flush();
+                i = 0;
+                bw.append(header + this.fieldSeparator);
+                for (final String str : ll) {
+                    final double value = sm.get(str);
+                    bw.append(df.format(value) + this.fieldSeparator);
+                    i++;
+                }
+                bw.println();
+                bw.flush();
             }
-            bw.println();
-            bw.flush();
-            int i = 0;
-            bw.append(header + this.fieldSeparator);
-            for (final String str : ll) {
-                final double value = sm.get(str);
-                bw.append(df.format(value) + this.fieldSeparator);
-                i++;
-            }
-            bw.println();
-            bw.flush();
-            bw.close();
             log.info(i + " stats written to file " + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
@@ -532,40 +534,40 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File writeStatsMaps(final String path, final String filename,
-        final StatsMap... sms) {
+            final StatsMap... sms) {
         final File f = createFile(path, filename, WorkflowSlot.STATISTICS);
         try {
-            final PrintWriter bw = new PrintWriter(new BufferedWriter(
-                new FileWriter(f)));
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
-                Locale.US);
-            df.applyPattern("0.0000");
-            boolean first = true;
-            for (final StatsMap sm : sms) {
-                final LinkedList<String> ll = new LinkedList<String>(sm.keySet());
-                Collections.sort(ll);
-                if (first) {
-                    for (final String str : ll) {
-                        bw.append(str + this.fieldSeparator);
+            try (PrintWriter bw = new PrintWriter(new BufferedWriter(
+                    new FileWriter(f)))) {
+                final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
+                        Locale.US);
+                df.applyPattern("0.0000");
+                boolean first = true;
+                for (final StatsMap sm : sms) {
+                    final LinkedList<String> ll = new LinkedList<>(sm.keySet());
+                    Collections.sort(ll);
+                    if (first) {
+                        for (final String str : ll) {
+                            bw.append(str + this.fieldSeparator);
+                        }
+                        first = false;
+                        bw.println();
+                        bw.flush();
                     }
-                    first = false;
+                    int i = 0;
+                    for (final String str : ll) {
+                        final double value = sm.get(str);
+                        bw.append(df.format(value) + this.fieldSeparator);
+                        i++;
+                    }
                     bw.println();
                     bw.flush();
+                    log.debug(i + " stats written to file "
+                            + f.getAbsolutePath());
                 }
-                int i = 0;
-                for (final String str : ll) {
-                    final double value = sm.get(str);
-                    bw.append(df.format(value) + this.fieldSeparator);
-                    i++;
-                }
-                bw.println();
-                bw.flush();
-                log.debug(i + " stats written to file "
-                    + f.getAbsolutePath());
             }
-            bw.close();
             log.info(sms.length + " records written to file "
-                + f.getAbsolutePath());
+                    + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
             log.error(e.getLocalizedMessage());
@@ -574,24 +576,25 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File writeTableByCols(final String path, final String filename,
-        final List<List<String>> table, final WorkflowSlot ws) {
+            final List<List<String>> table, final WorkflowSlot ws) {
         final File f = createFile(path, filename, ws);
         try {
-            final PrintWriter bw = new PrintWriter(new BufferedWriter(
-                new FileWriter(f)));
             // rows
-            for (int i = 0; i < table.get(0).size(); i++) {
-                // cols
-                final StringBuffer row = new StringBuffer();
-                for (int j = 0; j < table.size(); j++) {
-                    row.append(table.get(j).get(i)
-                        + ((j < table.size() - 1) ? this.fieldSeparator
-                        : "\n"));
+            try (PrintWriter bw = new PrintWriter(new BufferedWriter(
+                    new FileWriter(f)))) {
+                // rows
+                for (int i = 0; i < table.get(0).size(); i++) {
+                    // cols
+                    final StringBuffer row = new StringBuffer();
+                    for (int j = 0; j < table.size(); j++) {
+                        row.append(table.get(j).get(i)
+                                + ((j < table.size() - 1) ? this.fieldSeparator
+                                : "\n"));
+                    }
+                    bw.write(row.toString());
                 }
-                bw.write(row.toString());
+                bw.flush();
             }
-            bw.flush();
-            bw.close();
             return f;
         } catch (final IOException ioe) {
             log.error(ioe.getLocalizedMessage());
@@ -600,24 +603,22 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public File writeTableByRows(final String path, final String filename,
-        final List<List<String>> table, final WorkflowSlot ws) {
+            final List<List<String>> table, final WorkflowSlot ws) {
         final File f = createFile(path, filename, ws);
         try {
-            final PrintWriter bw = new PrintWriter(new BufferedWriter(
-                new FileWriter(f)));
             // rows
-            for (int i = 0; i < table.size(); i++) {
-                // columns
-                final StringBuffer row = new StringBuffer();
-                for (int j = 0; j < table.get(i).size(); j++) {
-                    row.append(table.get(i).get(j)
-                        + ((j < table.get(i).size() - 1) ? this.fieldSeparator
-                        : "\n"));
+            try (PrintWriter bw = new PrintWriter(new BufferedWriter(
+                    new FileWriter(f)))) {
+                for (List<String> table1 : table) {
+                    // columns
+                    final StringBuffer row = new StringBuffer();
+                    for (int j = 0; j < table1.size(); j++) {
+                        row.append(table1.get(j) + ((j < table1.size() - 1) ? this.fieldSeparator : "\n"));
+                    }
+                    bw.write(row.toString());
                 }
-                bw.write(row.toString());
+                bw.flush();
             }
-            bw.flush();
-            bw.close();
             return f;
         } catch (final IOException ioe) {
             log.error(ioe.getLocalizedMessage());
@@ -626,8 +627,8 @@ public class CSVWriter implements IWorkflowElement {
     }
 
     public PrintWriter createPrintWriter(final String path,
-        final String filename, final List<String> header,
-        final WorkflowSlot ws) {
+            final String filename, final List<String> header,
+            final WorkflowSlot ws) {
         final File f = createFile(path, filename, ws);
         PrintWriter bw = null;
         try {
@@ -636,8 +637,8 @@ public class CSVWriter implements IWorkflowElement {
             final StringBuffer row = new StringBuffer();
             for (int j = 0; j < header.size(); j++) {
                 row.append(header.get(j)
-                    + ((j < header.size() - 1) ? this.fieldSeparator
-                    : "\n"));
+                        + ((j < header.size() - 1) ? this.fieldSeparator
+                        : "\n"));
             }
             bw.write(row.toString());
             return bw;
@@ -654,7 +655,7 @@ public class CSVWriter implements IWorkflowElement {
         final StringBuffer row = new StringBuffer();
         for (int j = 0; j < line.size(); j++) {
             row.append(line.get(j)
-                + ((j < line.size() - 1) ? this.fieldSeparator : "\n"));
+                    + ((j < line.size() - 1) ? this.fieldSeparator : "\n"));
         }
         pw.write(row.toString());
     }

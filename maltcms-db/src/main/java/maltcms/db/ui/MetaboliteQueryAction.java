@@ -65,6 +65,7 @@ public class MetaboliteQueryAction extends javax.swing.AbstractAction {
         this.mvm = mvm;
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
 //		SwingWorker<Void,Integer> sw = new SwingWorker<Void,Integer>() {
 //		

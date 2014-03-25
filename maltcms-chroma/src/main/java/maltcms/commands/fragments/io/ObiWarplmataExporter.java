@@ -83,37 +83,37 @@ public class ObiWarplmataExporter extends AFragmentCommand {
         for (final IFileFragment iff : t) {
             log.info("Exporting file {}", iff.getName());
             final Array sat = iff.getChild(this.scanAcquisitionTimeVariableName).
-                getArray();
+                    getArray();
             final IVariableFragment bidx = iff.getChild(
-                this.binnedScanIndexVariableName);
+                    this.binnedScanIndexVariableName);
             final IVariableFragment ms = iff.getChild(
-                this.binnedMassesVariableName);
+                    this.binnedMassesVariableName);
             final IVariableFragment ins = iff.getChild(
-                this.binnedIntensitiesVariableName);
+                    this.binnedIntensitiesVariableName);
             ms.setIndex(bidx);
             ins.setIndex(bidx);
             log.info("Creating header...");
             final int nscans = sat.getShape()[0];
-            final List<String> times = new ArrayList<String>(nscans);
+            final List<String> times = new ArrayList<>(nscans);
             final IndexIterator sati = sat.getIndexIterator();
             while (sati.hasNext()) {
                 times.add("" + sati.getDoubleNext());
             }
             final int nbins = ms.getIndexedArray().get(0).getShape()[0];
-            final List<String> bins = new ArrayList<String>(nbins);
+            final List<String> bins = new ArrayList<>(nbins);
             final IndexIterator msi = ms.getIndexedArray().get(0).
-                getIndexIterator();
+                    getIndexIterator();
             while (msi.hasNext()) {
                 bins.add("" + msi.getDoubleNext());
             }
-            final List<List<String>> lines = new ArrayList<List<String>>();
+            final List<List<String>> lines = new ArrayList<>();
             lines.add(Arrays.asList(nscans + ""));
             lines.add(times);
             lines.add(Arrays.asList(nbins + ""));
             lines.add(bins);
             log.info("Setting data...");
             for (final Array a : ins.getIndexedArray()) {
-                final List<String> v = new ArrayList<String>(a.getShape()[0]);
+                final List<String> v = new ArrayList<>(a.getShape()[0]);
                 final IndexIterator ii = a.getIndexIterator();
                 while (ii.hasNext()) {
                     v.add(ii.getDoubleNext() + "");
@@ -123,8 +123,8 @@ public class ObiWarplmataExporter extends AFragmentCommand {
             final File path = getWorkflow().getOutputDirectory(this);
             log.info("Writing data...");
             csvw.writeTableByRows(path.getAbsolutePath(), StringTools.
-                removeFileExt(iff.getName())
-                + ".lmata", lines, WorkflowSlot.FILEIO);
+                    removeFileExt(iff.getName())
+                    + ".lmata", lines, WorkflowSlot.FILEIO);
             lines.clear();
         }
         return t;

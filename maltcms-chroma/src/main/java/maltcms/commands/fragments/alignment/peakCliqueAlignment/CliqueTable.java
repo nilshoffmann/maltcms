@@ -50,7 +50,7 @@ public class CliqueTable {
 
     public CliqueTable(TupleND<IFileFragment> fragments, List<Clique<IBipacePeak>> l) {
         arr = new ArrayBoolean.D2(l.size(), fragments.size());
-        placeMap = new LinkedHashMap<String, Integer>();
+        placeMap = new LinkedHashMap<>();
         int j = 0;
         for (IFileFragment f : fragments) {
             placeMap.put(f.getName(), j++);
@@ -75,8 +75,8 @@ public class CliqueTable {
     }
 
     public List<Clique<IBipacePeak>> getCommonCliques(IFileFragment a, IFileFragment b,
-        List<Clique<IBipacePeak>> cliques) {
-        List<Clique<IBipacePeak>> commonCliques = new ArrayList<Clique<IBipacePeak>>();
+            List<Clique<IBipacePeak>> cliques) {
+        List<Clique<IBipacePeak>> commonCliques = new ArrayList<>();
         int k = placeMap.get(a.getName());
         int l = placeMap.get(b.getName());
         for (int i = 0; i < arr.getShape()[0]; i++) {

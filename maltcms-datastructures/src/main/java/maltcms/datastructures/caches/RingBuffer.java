@@ -42,7 +42,7 @@ public class RingBuffer<T> {
     private int capacity = 0;
 
     public RingBuffer(int capacity) {
-        this.buffer = new LinkedList<T>();
+        this.buffer = new LinkedList<>();
         this.capacity = capacity;
     }
 
@@ -70,21 +70,22 @@ public class RingBuffer<T> {
         return this.buffer.toArray(t);
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(buffer.size());
-        for (int i = 0; i < buffer.size(); i++) {
-            sb.append(buffer.get(i) + " ");
+        for (T buffer1 : buffer) {
+            sb.append(buffer1 + " ");
         }
         return sb.toString();
     }
 
     public static void main(String[] args) {
-        RingBuffer<Double> rb = new RingBuffer<Double>(3);
+        RingBuffer<Double> rb = new RingBuffer<>(3);
         for (int i = 0; i < 10; i++) {
             rb.push(Double.valueOf(i + 1));
             if (i >= 3) {
                 System.out.println("Current: " + rb.current() + " previous: "
-                    + rb.previous() + " oldest: " + rb.oldest());
+                        + rb.previous() + " oldest: " + rb.oldest());
                 System.out.println(rb);
             }
         }

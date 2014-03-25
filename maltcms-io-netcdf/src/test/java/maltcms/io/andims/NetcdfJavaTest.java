@@ -78,7 +78,7 @@ public class NetcdfJavaTest {
             nfw.addGlobalAttribute(a2);
             nfw.addGlobalAttribute(a3);
 
-            Map<String, Dimension> dimensions = new HashMap<String, Dimension>();
+            Map<String, Dimension> dimensions = new HashMap<>();
             dimensions.put("dim1", new Dimension("dim1", 15));
             dimensions.put("dim2", new Dimension("dim2", 8));
             dimensions.put("dim3", new Dimension("dim3", 10));

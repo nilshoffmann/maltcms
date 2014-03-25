@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
-        <action>
-            <actionName>CUSTOM-Build Cluster</actionName>
-            <displayName>Build Cluster</displayName>
-            <goals>
-                <goal>nbm:cluster</goal>
-            </goals>
-        </action>
-    </actions>
+    <action>
+        <actionName>CUSTOM-Build Cluster</actionName>
+        <displayName>Build Cluster</displayName>
+        <goals>
+            <goal>nbm:cluster</goal>
+        </goals>
+    </action>
+</actions>

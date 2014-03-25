@@ -47,7 +47,7 @@ import ucar.ma2.ArrayDouble.D2;
 import ucar.ma2.ArrayInt;
 
 public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
-    IWorkflowElement {
+        IWorkflowElement {
 
     /**
      * Static factory method which reconstructs a PairwiseDistances object from
@@ -76,14 +76,14 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
     @Override
     public void configure(final Configuration cfg) {
         this.pwDistMatrixVariableName = cfg.getString(
-            "var.pairwise_distance_matrix", "pairwise_distance_matrix");
+                "var.pairwise_distance_matrix", "pairwise_distance_matrix");
         this.pwDistVariableName = cfg.getString("var.pairwise_distance_names",
-            "pairwise_distance_names");
+                "pairwise_distance_names");
         this.pwDistAlignmentsVarName = cfg.getString(
-            "var.pairwise_distance_alignment_names",
-            "pairwise_distance_alignment_names");
+                "var.pairwise_distance_alignment_names",
+                "pairwise_distance_alignment_names");
         this.name = cfg.getString("pairwise_distances_file_name",
-            "pairwise_distances.cdf");
+                "pairwise_distances.cdf");
 
     }
 
@@ -91,6 +91,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
         return this.alignments;
     }
 
+    @Override
     public IWorkflow getWorkflow() {
         return this.iw;
     }
@@ -144,18 +145,18 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
     @Override
     public void modify(IFileFragment f) {
         final IVariableFragment pwd = new VariableFragment(f,
-            this.pwDistMatrixVariableName);
+                this.pwDistMatrixVariableName);
         pwd.setArray(this.pairwiseDistances);
         final IVariableFragment na = new VariableFragment(f,
-            this.pwDistVariableName);
+                this.pwDistVariableName);
         na.setArray(this.names);
         final IVariableFragment minimizing = new VariableFragment(f,
-            this.minArrayComp);
+                this.minArrayComp);
         final ArrayInt.D0 ab = new ArrayInt.D0();
         ab.set(this.minimize ? 1 : 0);
         minimizing.setArray(ab);
         final IVariableFragment alignments = new VariableFragment(f,
-            this.pwDistAlignmentsVarName);
+                this.pwDistAlignmentsVarName);
         int maxlength = 128;
         for (final IFileFragment iff : this.alignments) {
             if (iff.getUri().toString().length() > maxlength) {
@@ -163,7 +164,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
             }
         }
         final ArrayChar.D2 anames = cross.datastructures.tools.ArrayTools.createStringArray(
-            this.alignments.getSize(), maxlength);
+                this.alignments.getSize(), maxlength);
         int i = 0;
         for (final IFileFragment iff : this.alignments) {
             anames.setString(i++, FileTools.getRelativeUri(f.getUri(), iff.getUri()).toString());
@@ -216,7 +217,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
      * @param pwDistMatrixVariableName the pwDistMatrixVariableName to set
      */
     public void setPwDistMatrixVariableName(
-        final String pwDistMatrixVariableName) {
+            final String pwDistMatrixVariableName) {
         this.pwDistMatrixVariableName = pwDistMatrixVariableName;
     }
 

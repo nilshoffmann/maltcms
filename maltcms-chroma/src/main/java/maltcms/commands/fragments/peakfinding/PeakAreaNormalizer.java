@@ -47,8 +47,9 @@ import ucar.ma2.DataType;
 import ucar.nc2.Dimension;
 
 /**
- * Separate class for peak normalization of already annotated peaks. The {@link  TICPeakFinder}
- * class performs the same normalization if configured with the same <code>peakNormalizers</code>.
+ * Separate class for peak normalization of already annotated peaks. The
+ * {@link  TICPeakFinder} class performs the same normalization if configured
+ * with the same <code>peakNormalizers</code>.
  *
  * @author Nils Hoffmann
  */
@@ -76,13 +77,13 @@ public class PeakAreaNormalizer extends AFragmentCommand {
             log.info("Source file of result: {}", result.getSourceFiles());
             Array area = f.getChild(resolve("var.peak_area")).getArray();
             final Dimension peak_number = new Dimension("peak_number",
-                area.getShape()[0], true, false, false);
+                    area.getShape()[0], true, false, false);
             final Dimension _1024_byte_string = new Dimension("_1024_byte_string", 1024, true, false, false);
             final Dimension peak_normalizers = new Dimension("peak_normalizer_count", peakNormalizers.isEmpty() ? 1 : peakNormalizers.size(), true, false, false);
             //set names of normalization methods
             Array normalizedAreaArray = Array.factory(DataType.getType(area.getElementType()), area.getShape());
             ArrayChar.D2 normalizationMethodArray = cross.datastructures.tools.ArrayTools.createStringArray(
-                Math.max(1, peakNormalizers.size()), 1024);
+                    Math.max(1, peakNormalizers.size()), 1024);
             if (peakNormalizers.isEmpty()) {
                 normalizationMethodArray.setString(0, "None");
             } else {

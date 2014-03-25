@@ -38,7 +38,7 @@ import java.io.Serializable;
 public interface IWavelet extends Serializable {
 
     public abstract double applyMotherWavelet(final double t,
-        double... params);
+            double... params);
 
     public abstract double getAdmissabilityConstant();
 }

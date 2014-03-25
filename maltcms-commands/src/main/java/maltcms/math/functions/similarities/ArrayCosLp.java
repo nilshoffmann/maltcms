@@ -59,7 +59,7 @@ public class ArrayCosLp implements IArraySimilarity {
         final double n2 = mav2.norm();
         final double cosd = this.cos.apply(t1, t2);
         final double lpd = this.lp.apply(ArrayTools.mult(
-            t1, 1.0d / n1), ArrayTools.mult(t2, 1.0d / n2));
+                t1, 1.0d / n1), ArrayTools.mult(t2, 1.0d / n2));
         final double dim = t1.getShape()[0];
         final double dist = (lpd / dim) * (1.0d - cosd);
         return SimilarityTools.toSimilarity(dist);

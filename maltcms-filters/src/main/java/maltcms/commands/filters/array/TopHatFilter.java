@@ -64,7 +64,7 @@ public class TopHatFilter extends AArrayFilter {
             arr = Array.factory(th);
         } else {
             throw new IllegalArgumentException(
-                "Can only work on arrays of dimension 1");
+                    "Can only work on arrays of dimension 1");
         }
         return arr;
     }

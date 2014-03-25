@@ -46,13 +46,13 @@ import maltcms.io.xml.bindings.alignment.Alignment;
 public class XmlAlignmentWriter {
 
     public File saveToXMLAlignment(final File out, final TupleND<IFileFragment> tuple,
-        final List<List<IBipacePeak>> ll) {
+            final List<List<IBipacePeak>> ll) {
         AlignmentFactory af = new AlignmentFactory();
         Alignment a = af.createNewAlignment(this.getClass().getName(), false);
-        HashMap<IFileFragment, List<Integer>> fragmentToScanIndexMap = new HashMap<IFileFragment, List<Integer>>();
+        HashMap<IFileFragment, List<Integer>> fragmentToScanIndexMap = new HashMap<>();
         for (final List<IBipacePeak> l : ll) {
             log.debug("Adding {} peaks: {}", l.size(), l);
-            HashMap<String, IPeak> fragToPeak = new HashMap<String, IPeak>();
+            HashMap<String, IPeak> fragToPeak = new HashMap<>();
             for (final IPeak p : l) {
                 fragToPeak.put(p.getAssociation(), p);
             }
@@ -67,7 +67,7 @@ public class XmlAlignmentWriter {
                 if (fragmentToScanIndexMap.containsKey(iff)) {
                     scans = fragmentToScanIndexMap.get(iff);
                 } else {
-                    scans = new ArrayList<Integer>();
+                    scans = new ArrayList<>();
                     fragmentToScanIndexMap.put(iff, scans);
                 }
 
@@ -77,7 +77,7 @@ public class XmlAlignmentWriter {
 
         for (IFileFragment iff : fragmentToScanIndexMap.keySet()) {
             af.addScanIndexMap(a, iff.getUri(),
-                fragmentToScanIndexMap.get(iff), false);
+                    fragmentToScanIndexMap.get(iff), false);
         }
         af.save(a, out);
         return out;

@@ -129,8 +129,8 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
 
     @Override
     public void init(List<IFeatureVector> l, List<IFeatureVector> r,
-        IArrayD2Double cumulatedScore, IArrayD2Double pwScores,
-        TwoFeatureVectorOperation tfvo) {
+            IArrayD2Double cumulatedScore, IArrayD2Double pwScores,
+            TwoFeatureVectorOperation tfvo) {
         this.l = l;
         this.r = r;
         this.cumulatedScores = cumulatedScore;
@@ -149,19 +149,19 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
     @Override
     public void apply(int... current) {
         cumDistM(current[0], current[1], l.get(current[0]), r.get(current[1]),
-            cumulatedScores, pwScores, traceMatrix);
+                cumulatedScores, pwScores, traceMatrix);
     }
 
     private State cumDistM(final int row, final int column, IFeatureVector l,
-        IFeatureVector r, final IArrayD2Double cumDistMatrix,
-        final IArrayD2Double pwvalues, final State[][] predecessors) {
+            IFeatureVector r, final IArrayD2Double cumDistMatrix,
+            final IArrayD2Double pwvalues, final State[][] predecessors) {
         final double cij = this.tfvo.apply(l, r);
         pwvalues.set(row, column, cij);
         // System.out.println(l.getFeature("FEATURE0") + " gegen " +
         // r.getFeature("FEATURE0") + ":" + cij);
         // System.out.println("Score(" + row + "," + column + ")=" + cij);
         final double init = this.minimize ? Double.POSITIVE_INFINITY
-            : Double.NEGATIVE_INFINITY;
+                : Double.NEGATIVE_INFINITY;
         double n = init, w = init, nw = init;
         if ((row == 0) && (column == 0)) {
             nw = weights[NW.ordinal()] * cij;
@@ -173,7 +173,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
             return NW;
         } else if ((row > 0) && (column == 0)) {
             n = ((weights[N.ordinal()] * cij) + cumDistMatrix.get(row - 1, 0))
-                + this.ins;
+                    + this.ins;
             // System.out.println("i="+row+" j="+column+" cij = "+cij +
             // ", n= "+n);
             cumDistMatrix.set(row, column, n);
@@ -192,14 +192,14 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
             return W;
         } else {
             n = (weights[N.ordinal()] * cij)
-                + cumDistMatrix.get(row - 1, column) + this.ins;
+                    + cumDistMatrix.get(row - 1, column) + this.ins;
             nw = (weights[NW.ordinal()] * cij)
-                + cumDistMatrix.get(row - 1, column - 1);
+                    + cumDistMatrix.get(row - 1, column - 1);
             w = (weights[W.ordinal()] * cij)
-                + cumDistMatrix.get(row, column - 1) + this.del;
+                    + cumDistMatrix.get(row, column - 1) + this.del;
 
             final double m = minimize ? MathTools.min(n, w, nw) : MathTools.max(
-                n, w, nw);
+                    n, w, nw);
             cumDistMatrix.set(row, column, m);
             // System.out.println("Scores: " + m + " | " + nw + " | " + n +
             // " | "
@@ -229,8 +229,8 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
         State val = State.NW;
         this.opcounter = new int[State.values().length];
         StringBuilder sb = new StringBuilder();
-        final ArrayList<Point> al = new ArrayList<Point>();
-        final ArrayList<State> sl = new ArrayList<State>();
+        final ArrayList<Point> al = new ArrayList<>();
+        final ArrayList<State> sl = new ArrayList<>();
         while ((a != 0) && (b != 0)) {
             val = this.traceMatrix[a][b];
             // System.out.println(this.traceMatrix[a][b]);
@@ -263,7 +263,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
                 }
                 default: {
                     throw new IllegalArgumentException(
-                        "Don't know how to handle predecessor of type " + val);
+                            "Don't know how to handle predecessor of type " + val);
                 }
             }
         }
@@ -307,16 +307,16 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
      * @param ia
      */
     private void getFragments(final IFileFragment parent, final List<Point> al,
-        final IArrayD2Double ia) {
+            final IArrayD2Double ia) {
         final Tuple2D<Array, Array> t = PathTools.pointListToArrays(al);
         final Dimension d = new Dimension("steps", al.size(), true, false,
-            false);
+                false);
         final IVariableFragment pathDist = new VariableFragment(parent, Factory.
-            getInstance().getConfiguration().getString(
-                "var.warp_path_distance", "warp_path_distance"));
+                getInstance().getConfiguration().getString(
+                        "var.warp_path_distance", "warp_path_distance"));
         final IVariableFragment wpi = new VariableFragment(parent, Factory.
-            getInstance().getConfiguration().getString("var.warp.path.i",
-                "warp_path_i"));
+                getInstance().getConfiguration().getString("var.warp.path.i",
+                        "warp_path_i"));
         wpi.setDimensions(new Dimension[]{d});
         pathDist.setDimensions(new Dimension[]{d});
         final ArrayDouble.D1 dists = new ArrayDouble.D1(al.size());
@@ -327,8 +327,8 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
         }
         pathDist.setArray(dists);
         final IVariableFragment wpj = new VariableFragment(parent, Factory.
-            getInstance().getConfiguration().getString("var.warp.path.j",
-                "warp_path_j"));
+                getInstance().getConfiguration().getString("var.warp.path.j",
+                        "warp_path_j"));
         wpj.setDimensions(new Dimension[]{d});
         wpi.setArray(t.getFirst());
         wpj.setArray(t.getSecond());
@@ -341,10 +341,11 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
      * maltcms.experimental.datastructures.IFileFragmentModifier#decorate(cross
      * .datastructures.fragments.IFileFragment)
      */
+    @Override
     public void modify(IFileFragment iff) {
         if (this.saveCDM) {
             final IVariableFragment vf = new VariableFragment(iff,
-                this.cumulativeDistanceVariableName, null);
+                    this.cumulativeDistanceVariableName, null);
             vf.setDimensions(new Dimension[]{
                 new Dimension("reference_scan", this.l.size(), true,
                 false,
@@ -356,7 +357,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
         }
         if (this.savePWDM) {
             final IVariableFragment vf = new VariableFragment(iff,
-                this.pairwiseDistanceVariableName, null);
+                    this.pairwiseDistanceVariableName, null);
             vf.setDimensions(new Dimension[]{
                 new Dimension("reference_scan", this.l.size(), true,
                 false,
@@ -379,15 +380,15 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
     @Override
     public void configure(Configuration cfg) {
         this.saveCDM = cfg.getBoolean(
-            "alignment.save.cumulative.distance.matrix", false);
+                "alignment.save.cumulative.distance.matrix", false);
         this.savePWDM = cfg.getBoolean(
-            "alignment.save.pairwise.distance.matrix", false);
+                "alignment.save.pairwise.distance.matrix", false);
         this.cumulativeDistanceVariableName = cfg.getString(
-            "var.alignment.cumulative_distance", "cumulative_distance");
+                "var.alignment.cumulative_distance", "cumulative_distance");
         this.pairwiseDistanceVariableName = cfg.getString(
-            "var.alignment.pairwise_distance", "pairwise_distance");
+                "var.alignment.pairwise_distance", "pairwise_distance");
         this.normalizeAlignmentValueByMapWeights = cfg.getBoolean(
-            "alignment.normalizeAlignmentValueByMapWeights", false);
+                "alignment.normalizeAlignmentValueByMapWeights", false);
     }
 
     /*
@@ -402,14 +403,14 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
             double[] vals = new double[this.opcounter.length];
             for (State s : State.values()) {
                 vals[s.ordinal()] = this.weights[s.ordinal()]
-                    * this.opcounter[s.ordinal()];
+                        * this.opcounter[s.ordinal()];
             }
             double sum = 0;
             for (double d : vals) {
                 sum += d;
             }
             return this.cumulatedScores.get(this.l.size() - 1,
-                this.r.size() - 1) / sum;
+                    this.r.size() - 1) / sum;
         }
         return this.cumulatedScores.get(this.l.size() - 1, this.r.size() - 1);
     }
@@ -417,10 +418,10 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
     public void showCumScoreMatrix() {
         System.out.println("");
         for (int i = 0; i < this.cumulatedScores.getShape().getBounds2D().
-            getMaxX(); i++) {
+                getMaxX(); i++) {
             System.out.print(i + ": ");
             for (int j = 0; j < this.cumulatedScores.getShape().getBounds2D().
-                getMaxY(); j++) {
+                    getMaxY(); j++) {
                 System.out.print(this.cumulatedScores.get(i, j) + " ");
             }
             System.out.println("");

@@ -46,7 +46,7 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
 
     private static long CLIQUEID = 0;
     private long id = -1;
-    private HashSet<T> clique = new HashSet<T>();
+    private HashSet<T> clique = new HashSet<>();
     private T centroid = null;
     private ICliqueMemberCriterion<T> icmc;
     private ICliqueUpdater<T> icu;
@@ -59,17 +59,19 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
     }
 
     public Clique(Comparator<T> comp, ICliqueMemberCriterion<T> icmc,
-        ICliqueUpdater<T> icu) {
+            ICliqueUpdater<T> icu) {
         this.id = ++CLIQUEID;
         this.comp = comp;
         this.icmc = icmc;
         this.icu = icu;
     }
 
+    @Override
     public long getID() {
         return this.id;
     }
 
+    @Override
     public boolean add(T p) throws IllegalArgumentException {
         if (clique.contains(p)) {
             log.debug("Peak {} already contained in clique!", p);
@@ -91,6 +93,7 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
         }
     }
 
+    @Override
     public void clear() {
         centroid = null;
         clique.clear();
@@ -112,6 +115,7 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
     // }
     // return BoxAndWhiskerCalculator.calculateBoxAndWhiskerStatistics(l);
     // }
+    @Override
     public void setCentroid(T ifv) {
         this.centroid = ifv;
     }
@@ -123,6 +127,7 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
     // public double getCliqueRTMean() {
     // return this.cliqueMean;
     // }
+    @Override
     public T getCliqueCentroid() {
         return this.centroid;
     }
@@ -146,8 +151,9 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
         return sb.toString();
     }
 
+    @Override
     public List<T> getFeatureVectorList() {
-        List<T> peaks = new ArrayList<T>(this.clique);
+        List<T> peaks = new ArrayList<>(this.clique);
         Collections.sort(peaks, comp);
         return peaks;
     }
@@ -157,6 +163,7 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
         return super.hashCode();
     }
 
+    @Override
     public int size() {
         return this.clique.size();
     }

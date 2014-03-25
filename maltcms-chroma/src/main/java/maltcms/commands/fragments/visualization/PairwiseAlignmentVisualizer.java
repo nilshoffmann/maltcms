@@ -158,21 +158,21 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     }
 
     private void calcRMSE(final List<Tuple2DI> map1, final IFileFragment ref,
-        final IFileFragment query) {
+            final IFileFragment query) {
         final double RMSE = ArrayTools.rootMeanSquareError(map1,
-            NormalizationFilter.normalizeGlobal(MaltcmsTools.getBinnedMZIs(
-                    ref).getSecond()),
-            NormalizationFilter.normalizeGlobal(MaltcmsTools.getBinnedMZIs(
-                    query).getSecond()));
+                NormalizationFilter.normalizeGlobal(MaltcmsTools.getBinnedMZIs(
+                                ref).getSecond()),
+                NormalizationFilter.normalizeGlobal(MaltcmsTools.getBinnedMZIs(
+                                query).getSecond()));
         log.info("RMSE of full chromatograms={}", RMSE);
     }
 
     @Override
     public void configure(final Configuration cfg) {
         this.total_intensity = cfg.getString("var.total_intensity",
-            "total_intensity");
+                "total_intensity");
         this.scan_acquisition_time = cfg.getString("var.scan_acquisition_time",
-            "scan_acquisition_time");
+                "scan_acquisition_time");
     }
 
     /**
@@ -184,10 +184,10 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
      * @return
      */
     public BufferedImage createMapImage(final List<Tuple2DI> l,
-        final int upper_width, final int lower_width, final int height) {
+            final int upper_width, final int lower_width, final int height) {
         log.info("Creating map visualization!");
         final BufferedImage bim = new BufferedImage(Math.max(upper_width,
-            lower_width), height, BufferedImage.TYPE_INT_ARGB);
+                lower_width), height, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D g2 = bim.createGraphics();
         // g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.
         // VALUE_ANTIALIAS_ON);
@@ -198,7 +198,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         int cnt = 0;
         final Composite c = g2.getComposite();
         final AlphaComposite ac = AlphaComposite.getInstance(
-            AlphaComposite.SRC_OVER, 0.2f);
+                AlphaComposite.SRC_OVER, 0.2f);
         g2.setComposite(ac);
         for (final Tuple2DI t : l) {
             if ((cnt % mod == 0) || (cnt == 0) || (cnt == (l.size() - 1))) {
@@ -220,10 +220,10 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
      * @return
      */
     public BufferedImage createSuperimposedImage(final List<Tuple2DI> l,
-        final Array lhs, final Array rhs, final int height) {
+            final Array lhs, final Array rhs, final int height) {
         log.info("Creating superimposed image!");
         final BufferedImage bi = new BufferedImage(l.size(), height,
-            BufferedImage.TYPE_INT_ARGB);
+                BufferedImage.TYPE_INT_ARGB);
         final Graphics2D g2 = bi.createGraphics();
         g2.setColor(Color.WHITE);
         g2.fillRect(0, 0, bi.getWidth(), bi.getHeight());
@@ -238,7 +238,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
             lmin, rmax, rmin});
         final Composite c = g2.getComposite();
         final AlphaComposite ac = AlphaComposite.getInstance(
-            AlphaComposite.SRC_OVER, 0.75f);
+                AlphaComposite.SRC_OVER, 0.75f);
         g2.setComposite(ac);
         final Index lhsi = lhs.getIndex();
         final Index rhsi = rhs.getIndex();
@@ -254,7 +254,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
             // Object[]{t.getFirst(), 0, t.getSecond(),
             // (int)((double)height*(double)rhs.getInt(rhsi)/(rmax-rmin))});
             log.debug("Absolute height: {}; Relative height: {}",
-                new Object[]{rhs.getDouble(rhsi), rheight});
+                    new Object[]{rhs.getDouble(rhsi), rheight});
             g2.drawLine(cnt, height, cnt, (int) Math.floor((height) - rheight));
             g2.setColor(Color.RED);
             final double lheight = height * (lhs.getDouble(lhsi) / lnorm);
@@ -262,7 +262,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
             // Object[]{t.getFirst(), 0, t.getSecond(),
             // (int)((double)height*(double)lhs.getInt(lhsi)/(lmax-lmin))});
             log.debug("Absolute height: {}; Relative height: {}",
-                new Object[]{lhs.getDouble(lhsi), lheight});
+                    new Object[]{lhs.getDouble(lhsi), lheight});
             g2.drawLine(cnt, height, cnt, (int) Math.floor((height) - lheight));
             // }
             cnt++;
@@ -280,17 +280,17 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
      * @return
      */
     public Collection<XYAnnotation> getAnnotations(final IFileFragment iff,
-        final Array domain, final Array yVals) {
-        final ArrayList<XYAnnotation> al = new ArrayList<XYAnnotation>();
+            final Array domain, final Array yVals) {
+        final ArrayList<XYAnnotation> al = new ArrayList<>();
         final MinMax mm = MAMath.getMinMax(yVals);
         final String anchorNamesVar = Factory.getInstance().getConfiguration().
-            getString("var.anchors.retention_index_names",
-                "retention_index_names");
+                getString("var.anchors.retention_index_names",
+                        "retention_index_names");
         final String anchorScansVar = Factory.getInstance().getConfiguration().
-            getString("var.anchors.retention_scans", "retention_scans");
+                getString("var.anchors.retention_scans", "retention_scans");
         final IVariableFragment asv = iff.getChild(anchorScansVar);
         final Collection<String> cnames = FragmentTools.getStringArray(iff,
-            anchorNamesVar);
+                anchorNamesVar);
         final Array a = asv.getArray();
         final Index domIndex = domain.getIndex();
         final Index yValsI = yVals.getIndex();
@@ -298,13 +298,13 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         for (final String s : cnames) {
             final int v = ii.getIntNext();
             final XYPointerAnnotation xyp = new XYPointerAnnotation(
-                s
-                + " "
-                + String.format("%1.2f", domain.getDouble(domIndex.set(v))),
-                domain.getDouble(domIndex.set(v)), yVals.getDouble(yValsI.
-                    set(v))
-                / (mm.max - mm.min) + (0.01 * (mm.max - mm.min)),
-                -0.25);
+                    s
+                    + " "
+                    + String.format("%1.2f", domain.getDouble(domIndex.set(v))),
+                    domain.getDouble(domIndex.set(v)), yVals.getDouble(yValsI.
+                            set(v))
+                    / (mm.max - mm.min) + (0.01 * (mm.max - mm.min)),
+                    -0.25);
             xyp.setTextAnchor(TextAnchor.CENTER_LEFT);
             xyp.setTipRadius(0.01);
             al.add(xyp);
@@ -326,13 +326,13 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
      * @param maxY
      */
     public void makeComparativeTICChart(final AChart<XYPlot> tc1,
-        final AChart<XYPlot> tc2, final IFileFragment ref,
-        final IFileFragment query, final String x_label,
-        final String y_label, final Collection<XYAnnotation> c1,
-        final Collection<XYAnnotation> c2, final double minY,
-        final double maxY) {
+            final AChart<XYPlot> tc2, final IFileFragment ref,
+            final IFileFragment query, final String x_label,
+            final String y_label, final Collection<XYAnnotation> c1,
+            final Collection<XYAnnotation> c2, final double minY,
+            final double maxY) {
         EvalTools.notNull(new Object[]{ref, query}, this);
-        final List<XYPlot> l = new ArrayList<XYPlot>();
+        final List<XYPlot> l = new ArrayList<>();
         final XYPlot xyp1 = tc1.create();
         for (final XYAnnotation xya : c1) {
             xyp1.addAnnotation(xya);
@@ -347,16 +347,16 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         }
         l.add(xyp2);
         final CombinedDomainXYChart cdxy = new CombinedDomainXYChart(
-            "Comparative plot of alignment of " + ref.getName() + " with "
-            + query.getName(), x_label, true, l);
+                "Comparative plot of alignment of " + ref.getName() + " with "
+                + query.getName(), x_label, true, l);
         cdxy.setGap(0);
         final PlotRunner pl = new PlotRunner(cdxy.create(), "Alignment of "
-            + StringTools.removeFileExt(ref.getName()) + " and "
-            + StringTools.removeFileExt(query.getName()),
-            "alignmentComparativeChart_"
-            + StringTools.removeFileExt(ref.getName()) + "-vs-"
-            + StringTools.removeFileExt(query.getName()),
-            getWorkflow().getOutputDirectory(this));
+                + StringTools.removeFileExt(ref.getName()) + " and "
+                + StringTools.removeFileExt(query.getName()),
+                "alignmentComparativeChart_"
+                + StringTools.removeFileExt(ref.getName()) + "-vs-"
+                + StringTools.removeFileExt(query.getName()),
+                getWorkflow().getOutputDirectory(this));
         pl.configure(Factory.getInstance().getConfiguration());
         final File file = pl.getFile();
         try {
@@ -365,8 +365,8 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
             log.error(ex.getLocalizedMessage());
         }
         final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(file,
-            this, WorkflowSlot.VISUALIZATION, new IFileFragment[]{ref,
-                query});
+                this, WorkflowSlot.VISUALIZATION, new IFileFragment[]{ref,
+                    query});
         getWorkflow().append(dwr2);
 //		Factory.getInstance().submitJob(pl);
     }
@@ -385,10 +385,10 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
      * @param c2
      */
     public void makeDifferentialTICChart(final List<Tuple2DI> map1,
-        final IFileFragment ref, final IFileFragment query,
-        final Array lhs, final Array rhs, final Array lhs_domain,
-        final String x_label, final String y_label,
-        final Collection<XYAnnotation> c1, final Collection<XYAnnotation> c2) {
+            final IFileFragment ref, final IFileFragment query,
+            final Array lhs, final Array rhs, final Array lhs_domain,
+            final String x_label, final String y_label,
+            final Collection<XYAnnotation> c1, final Collection<XYAnnotation> c2) {
         EvalTools.notNull(new Object[]{lhs, rhs, ref, query}, this);
         final Array rhsm = ArrayTools.projectToLHS(lhs, map1, rhs, true);
 
@@ -403,24 +403,24 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         final Array diff = ArrayTools.diff(lhsmcopy, rhsmcopy);
 
         final AChart<XYPlot> xy1 = new XYChart(
-            "Differential (LHS-RHS) plot of alignment of"
-            + StringTools.removeFileExt(ref.getName()) + " and "
-            + StringTools.removeFileExt(query.getName()),
-            new String[]{ref.getName() + " - " + query.getName()},
-            new Array[]{diff}, new Array[]{lhs_domain}, x_label,
-            y_label);
+                "Differential (LHS-RHS) plot of alignment of"
+                + StringTools.removeFileExt(ref.getName()) + " and "
+                + StringTools.removeFileExt(query.getName()),
+                new String[]{ref.getName() + " - " + query.getName()},
+                new Array[]{diff}, new Array[]{lhs_domain}, x_label,
+                y_label);
         final XYPlot p1 = xy1.create();
         for (final XYAnnotation xya : c1) {
             p1.addAnnotation(xya);
         }
         final PlotRunner pl = new PlotRunner(p1,
-            "Differential (LHS-RHS) plot of alignment of "
-            + StringTools.removeFileExt(ref.getName()) + " and "
-            + StringTools.removeFileExt(query.getName()),
-            "alignmentDifferentialChart_"
-            + StringTools.removeFileExt(ref.getName()) + "-vs-"
-            + StringTools.removeFileExt(query.getName()),
-            getWorkflow().getOutputDirectory(this));
+                "Differential (LHS-RHS) plot of alignment of "
+                + StringTools.removeFileExt(ref.getName()) + " and "
+                + StringTools.removeFileExt(query.getName()),
+                "alignmentDifferentialChart_"
+                + StringTools.removeFileExt(ref.getName()) + "-vs-"
+                + StringTools.removeFileExt(query.getName()),
+                getWorkflow().getOutputDirectory(this));
         pl.configure(Factory.getInstance().getConfiguration());
         final File file = pl.getFile();
         try {
@@ -429,7 +429,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
             log.error(ex.getLocalizedMessage());
         }
         final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(file,
-            this, WorkflowSlot.VISUALIZATION, ref, query);
+                this, WorkflowSlot.VISUALIZATION, ref, query);
         getWorkflow().append(dwr2);
 //		Factory.getInstance().submitJob(pl);
     }
@@ -448,20 +448,20 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
      * @param c2
      */
     public void makeMapChart(final AChart<XYPlot> tc1,
-        final AChart<XYPlot> tc2, final IFileFragment alignment,
-        final Array tc1Domain, final Array tc2Domain, final String x_label,
-        final IFileFragment filea1, final IFileFragment fileb1,
-        final Collection<XYAnnotation> c1, final Collection<XYAnnotation> c2) {
+            final AChart<XYPlot> tc2, final IFileFragment alignment,
+            final Array tc1Domain, final Array tc2Domain, final String x_label,
+            final IFileFragment filea1, final IFileFragment fileb1,
+            final Collection<XYAnnotation> c1, final Collection<XYAnnotation> c2) {
         final AlignmentMapChart alC = new AlignmentMapChart(MaltcmsTools.
-            getWarpPath(alignment), tc1Domain, tc2Domain, x_label,
-            this.mapheight, 1);
-        final ArrayList<XYPlot> al = new ArrayList<XYPlot>();
+                getWarpPath(alignment), tc1Domain, tc2Domain, x_label,
+                this.mapheight, 1);
+        final ArrayList<XYPlot> al = new ArrayList<>();
         final XYPlot bottomplt = tc2.create();
         bottomplt.getRangeAxis().setInverted(true);
         for (final XYAnnotation xya : c2) {
             if (xya instanceof XYPointerAnnotation) {
                 ((XYPointerAnnotation) xya).setAngle(((XYPointerAnnotation) xya).
-                    getAngle() * (-1));
+                        getAngle() * (-1));
             }
             bottomplt.addAnnotation(xya);
         }
@@ -479,17 +479,17 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         al.add(mapplt);
         al.add(bottomplt);
         final CombinedDomainXYChart cdxyc = new CombinedDomainXYChart("Map",
-            x_label, true, al);
+                x_label, true, al);
         cdxyc.configure(Factory.getInstance().getConfiguration());
         cdxyc.setGap(0);
         final PlotRunner pl = new PlotRunner(cdxyc.create(),
-            "Alignment Map of "
-            + StringTools.removeFileExt(filea1.getName()) + " and "
-            + StringTools.removeFileExt(fileb1.getName()),
-            "alignmentMapChart_"
-            + StringTools.removeFileExt(filea1.getName()) + "-vs-"
-            + StringTools.removeFileExt(fileb1.getName()),
-            getWorkflow().getOutputDirectory(this));
+                "Alignment Map of "
+                + StringTools.removeFileExt(filea1.getName()) + " and "
+                + StringTools.removeFileExt(fileb1.getName()),
+                "alignmentMapChart_"
+                + StringTools.removeFileExt(filea1.getName()) + "-vs-"
+                + StringTools.removeFileExt(fileb1.getName()),
+                getWorkflow().getOutputDirectory(this));
         pl.configure(Factory.getInstance().getConfiguration());
         final File f = pl.getFile();
         try {
@@ -498,7 +498,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
             log.error(ex.getLocalizedMessage());
         }
         final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f, this,
-            WorkflowSlot.VISUALIZATION, alignment, filea1, fileb1);
+                WorkflowSlot.VISUALIZATION, alignment, filea1, fileb1);
         getWorkflow().append(dwr);
     }
 
@@ -516,10 +516,10 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
      * @param c2
      */
     public void makeRatioTICChart(final List<Tuple2DI> map1,
-        final IFileFragment ref, final IFileFragment query,
-        final Array lhs, final Array rhs, final Array lhs_domain,
-        final String x_label, final String y_label,
-        final Collection<XYAnnotation> c1, final Collection<XYAnnotation> c2) {
+            final IFileFragment ref, final IFileFragment query,
+            final Array lhs, final Array rhs, final Array lhs_domain,
+            final String x_label, final String y_label,
+            final Collection<XYAnnotation> c1, final Collection<XYAnnotation> c2) {
         EvalTools.notNull(new Object[]{lhs, rhs, ref, query}, this);
         final Array rhsm = ArrayTools.projectToLHS(lhs, map1, rhs, true);
 
@@ -534,24 +534,24 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         final Array diff = ArrayTools.div(lhsmcopy, rhsmcopy);
 
         final AChart<XYPlot> xy1 = new XYChart(
-            "Ratio (LHS/RHS) plot of alignment of"
-            + StringTools.removeFileExt(ref.getName()) + " and "
-            + StringTools.removeFileExt(query.getName()),
-            new String[]{ref.getName() + " - " + query.getName()},
-            new Array[]{diff}, new Array[]{lhs_domain}, x_label,
-            y_label);
+                "Ratio (LHS/RHS) plot of alignment of"
+                + StringTools.removeFileExt(ref.getName()) + " and "
+                + StringTools.removeFileExt(query.getName()),
+                new String[]{ref.getName() + " - " + query.getName()},
+                new Array[]{diff}, new Array[]{lhs_domain}, x_label,
+                y_label);
         final XYPlot p1 = xy1.create();
         for (final XYAnnotation xya : c1) {
             p1.addAnnotation(xya);
         }
         final PlotRunner pl = new PlotRunner(p1,
-            "Ratio (LHS/RHS) plot of alignment of "
-            + StringTools.removeFileExt(ref.getName()) + " and "
-            + StringTools.removeFileExt(query.getName()),
-            "alignmentRatioChart_"
-            + StringTools.removeFileExt(ref.getName()) + "-vs-"
-            + StringTools.removeFileExt(query.getName()),
-            getWorkflow().getOutputDirectory(this));
+                "Ratio (LHS/RHS) plot of alignment of "
+                + StringTools.removeFileExt(ref.getName()) + " and "
+                + StringTools.removeFileExt(query.getName()),
+                "alignmentRatioChart_"
+                + StringTools.removeFileExt(ref.getName()) + "-vs-"
+                + StringTools.removeFileExt(query.getName()),
+                getWorkflow().getOutputDirectory(this));
         pl.configure(Factory.getInstance().getConfiguration());
         final File file = pl.getFile();
         try {
@@ -560,7 +560,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
             log.error(ex.getLocalizedMessage());
         }
         final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(file,
-            this, WorkflowSlot.VISUALIZATION, ref, query);
+                this, WorkflowSlot.VISUALIZATION, ref, query);
         getWorkflow().append(dwr2);
     }
 
@@ -578,10 +578,10 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
      * @param c2
      */
     public void makeSuperimposedChart(final List<Tuple2DI> map1,
-        final IFileFragment ref, final IFileFragment query,
-        final Array lhs, final Array rhs, final Array lhs_domain,
-        final String x_label, final String y_label,
-        final Collection<XYAnnotation> c1, final Collection<XYAnnotation> c2) {
+            final IFileFragment ref, final IFileFragment query,
+            final Array lhs, final Array rhs, final Array lhs_domain,
+            final String x_label, final String y_label,
+            final Collection<XYAnnotation> c1, final Collection<XYAnnotation> c2) {
         EvalTools.notNull(new Object[]{lhs, rhs, ref, query}, this);
         final Array rhsm = ArrayTools.projectToLHS(lhs, map1, rhs, true);
 
@@ -594,30 +594,30 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         final Array diff = ArrayTools.diff(lhsmcopy, rhsmcopy);
         final Array powdiff = ArrayTools.pow(diff, 2.0d);
         final double TICRMSE = Math.sqrt((ArrayTools.integrate(powdiff) / map1.
-            size()));
+                size()));
         log.info("TICRoot Mean Square Error={}", TICRMSE);
         log.info(ref.toString());
         log.info(query.toString());
         log.debug("Shapes of arrays:ref {}, mapped {}",
-            Arrays.toString(lhs.getShape()), Arrays.toString(rhs.getShape()));
+                Arrays.toString(lhs.getShape()), Arrays.toString(rhs.getShape()));
         final AChart<XYPlot> xyc = new XYChart(
-            "Superimposition of alignment of "
-            + StringTools.removeFileExt(ref.getName()) + " with "
-            + StringTools.removeFileExt(query.getName()),
-            new String[]{ref.getUri().toString(), query.getUri().toString()},
-            new Array[]{lhsmcopy, rhsmcopy}, new Array[]{lhs_domain},
-            x_label, y_label);
+                "Superimposition of alignment of "
+                + StringTools.removeFileExt(ref.getName()) + " with "
+                + StringTools.removeFileExt(query.getName()),
+                new String[]{ref.getUri().toString(), query.getUri().toString()},
+                new Array[]{lhsmcopy, rhsmcopy}, new Array[]{lhs_domain},
+                x_label, y_label);
         final XYPlot p = xyc.create();
         for (final XYAnnotation xya : c1) {
             p.addAnnotation(xya);
         }
         final PlotRunner pl = new PlotRunner(p, "Alignment of "
-            + StringTools.removeFileExt(ref.getName()) + " and "
-            + StringTools.removeFileExt(query.getName()),
-            "alignmentSuperimpositionChart_"
-            + StringTools.removeFileExt(ref.getName()) + "-vs-"
-            + StringTools.removeFileExt(query.getName()),
-            getWorkflow().getOutputDirectory(this));
+                + StringTools.removeFileExt(ref.getName()) + " and "
+                + StringTools.removeFileExt(query.getName()),
+                "alignmentSuperimpositionChart_"
+                + StringTools.removeFileExt(ref.getName()) + "-vs-"
+                + StringTools.removeFileExt(query.getName()),
+                getWorkflow().getOutputDirectory(this));
         pl.configure(Factory.getInstance().getConfiguration());
         final File file = pl.getFile();
         try {
@@ -626,7 +626,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
             log.error(ex.getLocalizedMessage());
         }
         final DefaultWorkflowResult dwr2 = new DefaultWorkflowResult(file,
-            this, WorkflowSlot.VISUALIZATION, ref, query);
+                this, WorkflowSlot.VISUALIZATION, ref, query);
         getWorkflow().append(dwr2);
     }
 
@@ -654,7 +654,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
      * @param alignment
      */
     public void setFragments(final IFileFragment filea1,
-        final IFileFragment fileb1, final IFileFragment alignment) {
+            final IFileFragment fileb1, final IFileFragment alignment) {
         log.info("Preparing variables to be read!");
         log.info("Source files of {}", filea1);
         for (final IFileFragment iff : filea1.getSourceFiles()) {
@@ -674,15 +674,18 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         final Array[] domains = new Array[2];
         try {
             domains[0] = filea1.getChild(this.scan_acquisition_time).getArray().
-                copy();
+                    copy();
             domains[1] = fileb1.getChild(this.scan_acquisition_time).getArray().
-                copy();
-            if (this.timeUnit.equals("min")) {
-                domains[0] = ArrayTools.divBy60(domains[0]);
-                domains[1] = ArrayTools.divBy60(domains[1]);
-            } else if (this.timeUnit.equals("h")) {
-                domains[0] = ArrayTools.divBy60(ArrayTools.divBy60(domains[0]));
-                domains[1] = ArrayTools.divBy60(ArrayTools.divBy60(domains[1]));
+                    copy();
+            switch (this.timeUnit) {
+                case "min":
+                    domains[0] = ArrayTools.divBy60(domains[0]);
+                    domains[1] = ArrayTools.divBy60(domains[1]);
+                    break;
+                case "h":
+                    domains[0] = ArrayTools.divBy60(ArrayTools.divBy60(domains[0]));
+                    domains[1] = ArrayTools.divBy60(ArrayTools.divBy60(domains[1]));
+                    break;
             }
             log.debug("Using scan acquisition time0 {}", domains[0]);
             log.debug("Using scan acquisition time1 {}", domains[1]);
@@ -692,16 +695,16 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
             x_label = "time [" + this.timeUnit + "]";
             if (this.substract_start_time) {
                 final AdditionFilter af = new AdditionFilter(-Math.min(min,
-                    min1));
+                        min1));
                 final AdditionFilter af1 = new AdditionFilter(-Math.min(min,
-                    min1));
+                        min1));
                 domains[0] = af.apply(new Array[]{domains[0].copy()})[0];
                 domains[1] = af1.apply(new Array[]{domains[1].copy()})[0];
             }
         } catch (final ResourceNotAvailableException re) {
             log.info(
-                "Could not load resource {} for domain axis, falling back to scan index domain!",
-                this.scan_acquisition_time);
+                    "Could not load resource {} for domain axis, falling back to scan index domain!",
+                    this.scan_acquisition_time);
             domains[0] = ArrayTools.indexArray(a1.getShape()[0], 0);
             domains[1] = ArrayTools.indexArray(b1.getShape()[0], 0);
         }
@@ -714,7 +717,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         Array[] arrs = null;
         if (this.normalize) {
             final NormalizationFilter nf = new NormalizationFilter("Max-Min",
-                false, this.normalize_global);
+                    false, this.normalize_global);
             arrs = nf.apply(new Array[]{a1, b1});
             // b1c = nf.apply(new Array[] { b1c })[0];
             a1 = arrs[0];
@@ -757,12 +760,12 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         // }else{
         tc1 = new XYChart(filea1.getName(), new String[]{
             filea1.getUri().toString()}, new Array[]{a1},
-            new Array[]{domains[0]}, x_label, this.y_axis_label);
+                new Array[]{domains[0]}, x_label, this.y_axis_label);
         tc1.setYaxis_min(min);
         tc1.setYaxis_max(max);
         tc2 = new XYChart(fileb1.getName(), new String[]{
             fileb1.getUri().toString()}, new Array[]{b1},
-            new Array[]{domains[1]}, x_label, this.y_axis_label);
+                new Array[]{domains[1]}, x_label, this.y_axis_label);
         tc2.setYaxis_min(min);
         tc2.setYaxis_max(max);
         // }
@@ -778,26 +781,26 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         // [1],b1c);
         if (this.createMapTICChart) {
             makeMapChart(tc1, tc2, alignment, domains[0], domains[1], x_label,
-                filea1, fileb1, c1, c2);
+                    filea1, fileb1, c1, c2);
         }
         if (this.createComparativeTICChart) {
             makeComparativeTICChart(tc1, tc2, filea1, fileb1, x_label,
-                this.y_axis_label, c1, c2, min, max);
+                    this.y_axis_label, c1, c2, min, max);
         }
         if (this.createDifferentialTICChart) {
             makeDifferentialTICChart(MaltcmsTools.getWarpPath(alignment),
-                filea1, fileb1, a1, b1, domains[0], x_label,
-                this.y_axis_label, c1, c2);
+                    filea1, fileb1, a1, b1, domains[0], x_label,
+                    this.y_axis_label, c1, c2);
         }
         if (this.createRatioTICChart) {
             makeRatioTICChart(MaltcmsTools.getWarpPath(alignment), filea1,
-                fileb1, a1, b1, domains[0], x_label, this.y_axis_label, c1,
-                c2);
+                    fileb1, a1, b1, domains[0], x_label, this.y_axis_label, c1,
+                    c2);
         }
         if (this.createSuperimposedTICChart) {
             makeSuperimposedChart(MaltcmsTools.getWarpPath(alignment), filea1,
-                fileb1, a1, b1, domains[0], x_label, this.y_axis_label, c1,
-                c2);
+                    fileb1, a1, b1, domains[0], x_label, this.y_axis_label, c1,
+                    c2);
         }
 
     }
@@ -809,7 +812,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
      * @param map1
      */
     public void setImages(final BufferedImage a1im, final BufferedImage b1im,
-        final BufferedImage map1) {
+            final BufferedImage map1) {
         this.ima = a1im;
         this.imb = b1im;
         this.map = map1;

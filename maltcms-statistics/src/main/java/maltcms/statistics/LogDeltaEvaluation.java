@@ -65,7 +65,7 @@ public class LogDeltaEvaluation implements IWorkflowElement {
     public void calcRatios(List<Peak2DClique> peaks, Collection<IFileFragment> f) {
         this.peakCliques = peaks;
         final String groupFileLocation = Factory.getInstance().getConfiguration().
-            getString("groupFileLocation", "");
+                getString("groupFileLocation", "");
         if (groupFileLocation.isEmpty()) {
             this.log.warn("No group file given!");
             return;
@@ -73,34 +73,34 @@ public class LogDeltaEvaluation implements IWorkflowElement {
         // Read group information
         final CSVReader csvr = new CSVReader();
         final Tuple2D<Vector<Vector<String>>, Vector<String>> v = csvr.read(
-            groupFileLocation);
-        final HashMap<String, IFileFragment> fileToShortFile = new HashMap<String, IFileFragment>();
+                groupFileLocation);
+        final HashMap<String, IFileFragment> fileToShortFile = new HashMap<>();
         for (IFileFragment frag : f) {
             fileToShortFile.put(StringTools.removeFileExt(frag.getName()), frag);
         }
 
         // map from file to group/class
-        final HashMap<IFileFragment, String> fileToClass = new HashMap<IFileFragment, String>();
-        final HashMap<String, List<IFileFragment>> classToFiles = new HashMap<String, List<IFileFragment>>();
+        final HashMap<IFileFragment, String> fileToClass = new HashMap<>();
+        final HashMap<String, List<IFileFragment>> classToFiles = new HashMap<>();
         for (Vector<String> line : v.getFirst()) {
             if (line.size() > 1 && !line.isEmpty()) {
                 this.log.debug("line: {}", line);
                 if (fileToShortFile.keySet().contains(
-                    StringTools.removeFileExt(line.get(0)))) {
+                        StringTools.removeFileExt(line.get(0)))) {
                     fileToClass.put(fileToShortFile.get(line.get(0)),
-                        line.get(1));
+                            line.get(1));
                     if (!classToFiles.containsKey(line.get(1))) {
                         // classes.add(line.get(1));
                         classToFiles.put(line.get(1),
-                            new ArrayList<IFileFragment>());
+                                new ArrayList<IFileFragment>());
                     }
                     classToFiles.get(line.get(1)).add(
-                        fileToShortFile.get(line.get(0)));
+                            fileToShortFile.get(line.get(0)));
                 }
             }
         }
 
-        List<String> classes = new ArrayList<String>();
+        List<String> classes = new ArrayList<>();
         for (String c : classToFiles.keySet()) {
             classes.add(c);
         }
@@ -121,28 +121,28 @@ public class LogDeltaEvaluation implements IWorkflowElement {
                         for (IFileFragment ff : classToFiles.get(c1)) {
                             try {
                                 mean1 += pc.get(ff).getPeakArea().
-                                    getAreaIntensity();
+                                        getAreaIntensity();
                                 cc1++;
                             } catch (NullPointerException e) {
                                 this.log.info("NULLPOINTER in c1: " + c1 + "-"
-                                    + c2);
+                                        + c2);
                             }
                         }
                         for (IFileFragment ff : classToFiles.get(c2)) {
                             try {
                                 mean2 += pc.get(ff).getPeakArea().
-                                    getAreaIntensity();
+                                        getAreaIntensity();
                                 cc2++;
                             } catch (NullPointerException e) {
                                 this.log.info("NULLPOINTER in c2: " + c1 + "-"
-                                    + c2);
+                                        + c2);
                             }
                         }
                         if (this.logNaturalis) {
                             r = Math.log(mean1 / cc1) - Math.log(mean2 / cc2);
                         } else {
                             r = Math.log10(mean1 / cc1)
-                                - Math.log10(mean2 / cc2);
+                                    - Math.log10(mean2 / cc2);
                         }
                         pc.addRatio(c1, c2, r);
                     }
@@ -154,8 +154,8 @@ public class LogDeltaEvaluation implements IWorkflowElement {
     }
 
     private void exportRatios(List<String> classes, Collection<IFileFragment> t) {
-        List<List<String>> metaTable = new ArrayList<List<String>>();
-        List<String> header = new ArrayList<String>();
+        List<List<String>> metaTable = new ArrayList<>();
+        List<String> header = new ArrayList<>();
         header.add("Peak");
         int classCombinations = 0;
         String c1, c2;
@@ -172,7 +172,7 @@ public class LogDeltaEvaluation implements IWorkflowElement {
         metaTable.add(header);
         int i = 0;
         for (Peak2DClique pc : this.peakCliques) {
-            List<String> v = new ArrayList<String>();
+            List<String> v = new ArrayList<>();
             v.add(pc.getID());
             metaTable.add(v);
         }
@@ -195,19 +195,19 @@ public class LogDeltaEvaluation implements IWorkflowElement {
                     XYBarDataset dscdRT = new XYBarDataset(fxyds, 1.0);
                     fxyds.addSeries(c1 + " - " + c2, values);
                     JFreeChart jfc = ChartFactory.createXYBarChart(
-                        "Log deltas for peak cliques " + c1 + " and " + c2,
-                        "Clique number", false, "Log Deltas for " + c1
-                        + " and " + c2, dscdRT,
-                        PlotOrientation.VERTICAL, true, true, true);
+                            "Log deltas for peak cliques " + c1 + " and " + c2,
+                            "Clique number", false, "Log Deltas for " + c1
+                            + " and " + c2, dscdRT,
+                            PlotOrientation.VERTICAL, true, true, true);
                     customizeBarChart(jfc);
                     PlotRunner pr = new PlotRunner(jfc.getXYPlot(),
-                        "Log Deltas", "cliqueslogDelta" + c1 + "-" + c2,
-                        getWorkflow().getOutputDirectory(this));
+                            "Log Deltas", "cliqueslogDelta" + c1 + "-" + c2,
+                            getWorkflow().getOutputDirectory(this));
                     pr.configure(Factory.getInstance().getConfiguration());
                     final File file = pr.getFile();
                     final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                        file, this, WorkflowSlot.VISUALIZATION,
-                        t.toArray(new IFileFragment[]{}));
+                            file, this, WorkflowSlot.VISUALIZATION,
+                            t.toArray(new IFileFragment[]{}));
                     getWorkflow().append(dwr);
                     Factory.getInstance().submitJob(pr);
                     c++;
@@ -218,8 +218,8 @@ public class LogDeltaEvaluation implements IWorkflowElement {
         final CSVWriter csvw = new CSVWriter();
         csvw.setWorkflow(this.workflow);
         csvw.writeTableByRows(this.workflow.getOutputDirectory(this).
-            getAbsolutePath(), "classDifferences.csv", metaTable,
-            WorkflowSlot.PEAKFINDING);
+                getAbsolutePath(), "classDifferences.csv", metaTable,
+                WorkflowSlot.PEAKFINDING);
     }
 
     private void customizeBarChart(JFreeChart jfc) {

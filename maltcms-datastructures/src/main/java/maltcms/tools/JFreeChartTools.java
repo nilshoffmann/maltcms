@@ -40,7 +40,7 @@ import org.jfree.data.xy.XYZDataset;
 public class JFreeChartTools {
 
     public static List<double[]> addXYZDataset(List<double[]> l,
-        double[] result, int row) {
+            double[] result, int row) {
         for (int i = 0; i < result.length; i++) {
             double[] d = new double[3];
             d[0] = i;

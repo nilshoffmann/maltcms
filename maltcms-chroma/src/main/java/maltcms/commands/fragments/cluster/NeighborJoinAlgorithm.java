@@ -205,13 +205,13 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
     }
 
     public NeighborJoinAlgorithm(final double[][] distances,
-        final String[] names) {
+            final String[] names) {
         init(distances, names, null);
     }
 
     public NeighborJoinAlgorithm(final double[][] distances,
-        final TupleND<IFileFragment> fragments,
-        final PairwiseFeatureSequenceSimilarity ld) {
+            final TupleND<IFileFragment> fragments,
+            final PairwiseFeatureSequenceSimilarity ld) {
         final String[] names = new String[fragments.getSize()];
         final Iterator<IFileFragment> iter = fragments.getIterator();
         int i = 0;
@@ -227,7 +227,7 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
             double sum = 0.0d;
             for (int j = 0; j < numclust; j++) {
                 if (!getUsedIndices().contains(j)
-                    && !getUsedIndices().contains(i)) {
+                        && !getUsedIndices().contains(i)) {
                     sum += d(i, j);
                 }
             }
@@ -244,15 +244,15 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
         final int ni = getCluster(i).getSize();
         final int nj = getCluster(j).getSize();
         this.log.debug("ICluster " + getCluster(i).getID() + " has " + ni
-            + (ni == 1 ? " child" : " children") + ", cluster "
-            + getCluster(j).getID() + " has " + nj
-            + (nj == 1 ? " child" : " children"));
+                + (ni == 1 ? " child" : " children") + ", cluster "
+                + getCluster(j).getID() + " has " + nj
+                + (nj == 1 ? " child" : " children"));
         for (int m = 0; m < k; m++) {
             if (!getUsedIndices().contains(m) && !getUsedIndices().contains(k)
-                && (m != i) && (m != j)) {
+                    && (m != i) && (m != j)) {
                 dmat[m] = (d(i, m) + d(j, m) - d(i, j)) / 2.0d;
                 this.log.info("Distance from cluster k={} to m={} ={}",
-                    new Object[]{k, getCluster(m).getName(), dmat[m]});
+                        new Object[]{k, getCluster(m).getName(), dmat[m]});
             }
         }
         return dmat;
@@ -268,7 +268,7 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
             for (int n = 0; n < numclust; n++) {
                 if (n != m) {
                     if (!getUsedIndices().contains(m)
-                        && !getUsedIndices().contains(n)) {
+                            && !getUsedIndices().contains(n)) {
                         final double d = d(m, n) - (this.R[m] + this.R[n]);
                         if (d < mind) {
                             mind = d;
@@ -295,23 +295,23 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
 
     @Override
     public void init(final double[][] distances, final String[] names,
-        final TupleND<IFileFragment> fragments) {
+            final TupleND<IFileFragment> fragments) {
         super.init(distances, names, fragments);
         this.R = new double[(distances.length) * 2 - 1];
         if (!isMinimizing()) {
             log.warn("{} should not be used on similarities!", this.getClass().
-                getName());
+                    getName());
         }
     }
 
     @Override
     public void joinIJtoK(final int i, final int j, final int k,
-        final double[] dist) {
+            final double[] dist) {
         final double dij = d(i, j);
         final double dik = (dij + this.R[i] - this.R[j]) / 2.0d;
         final double djk = dij - dik;
         final BinaryCluster njc = new BinaryCluster(getCluster(i),
-            getCluster(j), dik, djk, dist, k);
+                getCluster(j), dik, djk, dist, k);
         putCluster(k, njc);
         printDistanceToNewCluster(i, j, k);
         getUsedIndices().add(i);

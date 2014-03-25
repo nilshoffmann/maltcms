@@ -51,9 +51,9 @@ public class HeatMapChart extends AChart<XYPlot> {
     private ArrayDouble.D1 yaxis = null;
 
     public HeatMapChart(final BufferedImage heatMap, final String x_label,
-        final String y_label,
-        final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> axis,
-        final String seriesLabel) {
+            final String y_label,
+            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> axis,
+            final String seriesLabel) {
         EvalTools.notNull(new Object[]{heatMap, x_label, y_label}, this);
         this.hm = heatMap;
         // this.xdom = x_domain;
@@ -79,13 +79,13 @@ public class HeatMapChart extends AChart<XYPlot> {
         domain.setUpperMargin(0);
         domain.setAutoRange(false);
         domain.setRange(this.xaxis.get(0), this.xaxis
-            .get(this.xaxis.getShape()[0] - 1));
+                .get(this.xaxis.getShape()[0] - 1));
         final NumberAxis values = new NumberAxis(this.ylabel);
         values.setLowerMargin(0);
         values.setUpperMargin(0);
         values.setAutoRange(false);
         values.setRange(this.yaxis.get(0), this.yaxis
-            .get(this.yaxis.getShape()[0] - 1));
+                .get(this.yaxis.getShape()[0] - 1));
         xyp.setDomainAxis(domain);
         xyp.setRangeAxis(values);
         // xyp.setDataset(dxyd);

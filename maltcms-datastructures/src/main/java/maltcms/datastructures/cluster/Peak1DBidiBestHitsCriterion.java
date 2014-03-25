@@ -42,7 +42,7 @@ import maltcms.datastructures.peak.Peak1D;
  *
  */
 public class Peak1DBidiBestHitsCriterion implements
-    ICliqueMemberCriterion<Peak1D> {
+        ICliqueMemberCriterion<Peak1D> {
 
     public class Peak1DSimilarities {
 
@@ -54,7 +54,7 @@ public class Peak1DBidiBestHitsCriterion implements
             this.sims = sims;
             if (sims.rows() != peaks.size() || sims.columns() != peaks.size()) {
                 throw new IllegalArgumentException(
-                    "Number of peaks and dimensions of similarity matrix differ! Check for transposition!");
+                        "Number of peaks and dimensions of similarity matrix differ! Check for transposition!");
             }
         }
 
@@ -89,7 +89,7 @@ public class Peak1DBidiBestHitsCriterion implements
         }
 
         public HashMap<Integer, Integer> getBestHitsForLhs() {
-            HashMap<Integer, Integer> bestHitsLhs = new HashMap<Integer, Integer>();
+            HashMap<Integer, Integer> bestHitsLhs = new HashMap<>();
             for (int i = 0; i < sims.rows(); i++) {
                 bestHitsLhs.put(i, getBestHitForLhs(i));
             }
@@ -97,7 +97,7 @@ public class Peak1DBidiBestHitsCriterion implements
         }
 
         public HashMap<Integer, Integer> getBestHitsForRhs() {
-            HashMap<Integer, Integer> bestHitsRhs = new HashMap<Integer, Integer>();
+            HashMap<Integer, Integer> bestHitsRhs = new HashMap<>();
             for (int j = 0; j < sims.columns(); j++) {
                 bestHitsRhs.put(j, getBestHitForRhs(j));
             }

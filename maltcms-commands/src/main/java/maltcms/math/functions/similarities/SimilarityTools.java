@@ -48,7 +48,8 @@ public class SimilarityTools {
     }
 
     /**
-     * Converts the given similarity s(a,b) to d(a,b):=sqrt(s(a,a)+s(b,b)- 2*s(a,b)).
+     * Converts the given similarity s(a,b) to d(a,b):=sqrt(s(a,a)+s(b,b)-
+     * 2*s(a,b)).
      *
      * @return
      */

@@ -145,10 +145,10 @@ public class Peak2DMSFactory implements IPeakFactory {
         @Override
         Peak2D provide(int scanIndex) {
             Array sparse = new Sparse(indexedMassValues.get(scanIndex), indexedIntensityValues.get(scanIndex),
-                (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
-                size, massBinResolution);
+                    (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
+                    size, massBinResolution);
             Peak2D p = new Peak2D(scanIndex, sparse,
-                satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
+                    satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
             p.setFirstColumnElutionTime(fctArray.getFloat(scanIndex));
             p.setSecondColumnElutionTime(sctArray.getFloat(scanIndex));
             return p;
@@ -175,10 +175,10 @@ public class Peak2DMSFactory implements IPeakFactory {
             Point pt = scanLineCache.mapIndex(scanIndex);
             Tuple2D<Array, Array> t = scanLineCache.getSparseMassSpectrum(pt);
             Array sparse = new Sparse(t.getFirst(), t.getSecond(),
-                (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
-                size, massBinResolution);
+                    (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
+                    size, massBinResolution);
             Peak2D p = new Peak2D(scanIndex, sparse,
-                satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
+                    satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
             p.setFirstColumnElutionTime(fctArray.getFloat(scanIndex));
             p.setSecondColumnElutionTime(sctArray.getFloat(scanIndex));
             return p;
@@ -210,7 +210,7 @@ public class Peak2DMSFactory implements IPeakFactory {
         @Override
         Peak2D provide(int scanIndex) {
             Peak2D p = new Peak2D(scanIndex, indexedIntensityValues.get(scanIndex),
-                satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
+                    satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
             return p;
         }
     }
@@ -236,9 +236,9 @@ public class Peak2DMSFactory implements IPeakFactory {
             Tuple2D<Array, Array> t = scanLineCache.getSparseMassSpectrum(pt);
             Array mz = Array.factory(t.getFirst().getElementType(), new int[]{size});
             Array intens = Array.factory(t.getSecond().getElementType(), new int[]{size});
-            ArrayTools.createDenseArray(t.getFirst(), t.getSecond(), new Tuple2D<Array, Array>(mz, intens), ((int) Math.floor(minMaxMassRange.getFirst())), ((int) Math.ceil(minMaxMassRange.getSecond())), size, massBinResolution, 0.0d);
+            ArrayTools.createDenseArray(t.getFirst(), t.getSecond(), new Tuple2D<>(mz, intens), ((int) Math.floor(minMaxMassRange.getFirst())), ((int) Math.ceil(minMaxMassRange.getSecond())), size, massBinResolution, 0.0d);
             Peak2D p = new Peak2D(scanIndex, intens,
-                satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
+                    satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
             return p;
         }
     }

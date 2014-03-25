@@ -112,7 +112,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     }
 
     private static void handleExitVmException(final Logger log,
-        final ExitVmException npe) {
+            final ExitVmException npe) {
         int ecode;
         Maltcms.shutdown(1, log);
         log.error(npe.getLocalizedMessage());
@@ -121,7 +121,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     }
 
     private static void handleRuntimeException(final Logger log,
-        final Throwable npe, final ICommandSequence ics) {
+            final Throwable npe, final ICommandSequence ics) {
         int ecode;
         Maltcms.shutdown(1, log);
         log.error("Caught Throwable, returning to console!");
@@ -131,7 +131,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         ecode = 1;
         // Save configuration
         Factory.dumpConfig("runtime.properties", ics.getWorkflow().
-            getStartupDate());
+                getStartupDate());
         System.exit(ecode);
     }
 
@@ -148,7 +148,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 log4jConfiguration = new URL(resource);
             } else {
                 log4jConfiguration = Maltcms.class.getResource(
-                    "/cfg/log4j.properties");
+                        "/cfg/log4j.properties");
             }
         } catch (MalformedURLException ex) {
         }
@@ -158,18 +158,18 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             Properties props = new Properties();
             props.setProperty("log4j.rootLogger", "INFO, A1");
             props.setProperty("log4j.appender.A1",
-                "org.apache.log4j.ConsoleAppender");
+                    "org.apache.log4j.ConsoleAppender");
             props.setProperty("log4j.appender.A1.layout",
-                "org.apache.log4j.PatternLayout");
+                    "org.apache.log4j.PatternLayout");
             props.setProperty("log4j.appender.A1.layout.ConversionPattern",
-                "%m%n");
+                    "%m%n");
             props.setProperty("log4j.category.cross", "WARN");
             props.setProperty("log4j.category.cross.datastructures.pipeline",
-                "INFO");
+                    "INFO");
             props.setProperty("log4j.category.maltcms.commands.fragments",
-                "INFO");
+                    "INFO");
             props.setProperty("log4j.category.maltcms.commands.fragments2d",
-                "INFO");
+                    "INFO");
             props.setProperty("log4j.category.maltcms", "WARN");
             props.setProperty("log4j.category.ucar", "WARN");
             props.setProperty("log4j.category.smueller", "WARN");
@@ -184,7 +184,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             final Maltcms m = Maltcms.getInstance();
             final CompositeConfiguration cfg = m.parseCommandLine(args);
             log.info("Running Maltcms version {}",
-                cfg.getString("application.version"));
+                    cfg.getString("application.version"));
             EvalTools.notNull(cfg, cfg);
             log.info("Configuring Factory");
             log.info("Using pipeline definition at {}", cfg.getString("pipeline.xml"));
@@ -209,7 +209,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 }
             } else {
                 throw new ConstraintViolationException(
-                    "Pipeline is invalid, but strict checking was requested!");
+                        "Pipeline is invalid, but strict checking was requested!");
             }
         } catch (final ExitVmException e) {
             Maltcms.handleExitVmException(log, e);
@@ -233,12 +233,12 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         log.error("# If the message does not give hints on how to avoid the exception,");
         log.error("# please submit a bug report including this output to:");
         log.error(
-            "# http://sf.net/p/maltcms/maltcms-bugs");
+                "# http://sf.net/p/maltcms/maltcms-bugs");
         log.error("#");
         log.error("# Please attach Maltcms' log file (maltcms.log) and the runtime");
         log.error("# properties and pipeline configuration to your report. ");
         log.error("# By default, the log file is created within the directory from which"
-            + "");
+                + "");
         log.error("# maltcms is called, while the runtime properties and pipeline are");
         log.error("# located in ");
         log.error("# " + new File(cs.getWorkflow().getOutputDirectory(), "Factory").getAbsolutePath());
@@ -270,65 +270,65 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     protected Maltcms() {
         this.o = new Options();
         this.o.addOption(addOption("c", null, "configuration file location", false,
-            (char) 0, true, false, 0, false, false, 0, "file", false));
+                (char) 0, true, false, 0, false, false, 0, "file", false));
         this.o.addOption(addOption(
-            "i",
-            null,
-            "input base directory",
-            false, (char) 0, true, false, 0, false, false, 0, "dir", false));
+                "i",
+                null,
+                "input base directory",
+                false, (char) 0, true, false, 0, false, false, 0, "dir", false));
         this.o.addOption(addOption("o", null,
-            "target directory for all output", false, (char) 0, true,
-            false, 0, false, false, 0, "dir", false));
+                "target directory for all output", false, (char) 0, true,
+                false, 0, false, false, 0, "dir", false));
         this.o.addOption(addBooleanOption("r", null,
-            "recurse into input base directory", false));
+                "recurse into input base directory", false));
         this.o.addOption(addBooleanOption("h", null, "display this help",
-            false));
+                false));
         this.o.addOption(addBooleanOption("?", null, "display this help",
-            false));
+                false));
         this.o.addOption(addOption(
-            "e",
-            null,
-            "extension locations (directories or .jar files)",
-            true, ',', true, true, 0, false, false, 0, "file:///path1/,...",
-            false));
+                "e",
+                null,
+                "extension locations (directories or .jar files)",
+                true, ',', true, true, 0, false, false, 0, "file:///path1/,...",
+                false));
         this.o.addOption(addOption(
-            "f",
-            null,
-            "input files (wildcard, e.g. *.cdf, file name only if -i is given, or full path)",
-            //: FILENAME>VARNAME1#INDEXVAR[RANGEBEGIN:RANGEEND]&VARNAME2...",
-            true, ',', true, true, 0, false, false, 0, "file1,...",
-            false));
+                "f",
+                null,
+                "input files (wildcard, e.g. *.cdf, file name only if -i is given, or full path)",
+                //: FILENAME>VARNAME1#INDEXVAR[RANGEBEGIN:RANGEEND]&VARNAME2...",
+                true, ',', true, true, 0, false, false, 0, "file1,...",
+                false));
         this.o.addOption(addBooleanOption(
-            "p",
-            null,
-            "print resolved configuration",
-            false));
+                "p",
+                null,
+                "print resolved configuration",
+                false));
         this.o.addOption(addOption(
-            "a",
-            null,
-            "alignment anchor files (without path prefix, assumes location as given with option -i)",
-            true, ',', true, true, 0, false, false, 0, "file1,...",
-            false));
+                "a",
+                null,
+                "alignment anchor files (without path prefix, assumes location as given with option -i)",
+                true, ',', true, true, 0, false, false, 0, "file1,...",
+                false));
         //FIXME currently disabled until beans xml context can be created
         this.o.addOption(addOption(
-            "s",
-            "showProperties",
-            "Prints the properties available for configuration of given classes",
-            true, ',', true, true, 0, false, false, 0,
-            "class1,class2, ...", false));
+                "s",
+                "showProperties",
+                "Prints the properties available for configuration of given classes",
+                true, ',', true, true, 0, false, false, 0,
+                "class1,class2, ...", false));
         this.o.addOption(addOption(
-            "l",
-            null,
-            "print available service providers (e.g. cross.commands.fragments.AFragmentCommand)",
-            true, ',', true, true, 0, false, false, 0,
-            "class1,...", false));
+                "l",
+                null,
+                "print available service providers (e.g. cross.commands.fragments.AFragmentCommand)",
+                true, ',', true, true, 0, false, false, 0,
+                "class1,...", false));
         //FIXME implement beans xml creation
         this.o.addOption(addOption(
-            "b",
-            "createBeanXml",
-            "Creates an xml file in spring format for all given of cross.commands.fragments.AFragmentCommand. '*' as an argument will create one xml file for every available AFragmentCommand implementation.",
-            true, ',', true, true, 0, false, false, 0,
-            "class1,class2, ...", false));
+                "b",
+                "createBeanXml",
+                "Creates an xml file in spring format for all given of cross.commands.fragments.AFragmentCommand. '*' as an argument will create one xml file for every available AFragmentCommand implementation.",
+                true, ',', true, true, 0, false, false, 0,
+                "class1,class2, ...", false));
     }
 
     /**
@@ -340,9 +340,9 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * @return
      */
     protected Option addBooleanOption(final String s, final String l,
-        final String descr, final boolean required) {
+            final String descr, final boolean required) {
         return addOption(s, l, descr, false, (char) 0, false, false, 0, false,
-            false, 0, null, required);
+                false, 0, null, required);
     }
 
     /**
@@ -397,7 +397,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      */
     public void initClassLoader(String[] urls) {
         URL maltcmsLocation = getClass().getProtectionDomain().getCodeSource().
-            getLocation();
+                getLocation();
         File baseDir = new File(".");
         log.info("current working dir is " + baseDir);
         try {
@@ -405,27 +405,27 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
 
         } catch (URISyntaxException ex) {
             java.util.logging.Logger.getLogger(Maltcms.class
-                .getName()).
-                log(Level.SEVERE, null, ex);
+                    .getName()).
+                    log(Level.SEVERE, null, ex);
         }
         log.info("Maltcms is executing from {}", baseDir);
         ClassLoader contextClassLoader = Thread.currentThread().
-            getContextClassLoader();
-        List<URL> contextUrls = new LinkedList<URL>();
-        for (int i = 0; i < urls.length; i++) {
+                getContextClassLoader();
+        List<URL> contextUrls = new LinkedList<>();
+        for (String url1 : urls) {
             URL url = null;
-            File file = new File(urls[i]);
+            File file = new File(url1);
             if (file.exists() && (file.isFile() || file.isDirectory() && file.canRead())) {
                 try {
                     url = file.toURI().toURL();
                 } catch (MalformedURLException ex) {
-                    log.warn("Invalid URL: {}", urls[i]);
+                    log.warn("Invalid URL: {}", url1);
                 }
             } else {
                 try {
-                    url = new URL(urls[i]);
+                    url = new URL(url1);
                 } catch (MalformedURLException mue) {
-                    log.warn("Invalid URL: {}", urls[i]);
+                    log.warn("Invalid URL: {}", url1);
                 }
             }
             if (url != null) {
@@ -437,7 +437,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         // Create the class loader by using the given URL
         // Use contextClassLoader as parent to maintain current visibility
         ClassLoader urlCl
-            = URLClassLoader.newInstance(contextUrls.toArray(new URL[contextUrls.size()]), contextClassLoader);
+                = URLClassLoader.newInstance(contextUrls.toArray(new URL[contextUrls.size()]), contextClassLoader);
 
         try {
             // Save the class loader so that you can restore it later
@@ -445,7 +445,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
 
         } catch (SecurityException e) {
             log.error(
-                "Setting of URL class loader is not allowed!\nPlease extend the classpath by adding additional jars to the -cp command line argument! Alternative: Change the security policy for this program. See http://download.oracle.com/javase/tutorial/security/tour2/step3.html for details!");
+                    "Setting of URL class loader is not allowed!\nPlease extend the classpath by adding additional jars to the -cp command line argument! Alternative: Change the security policy for this program. See http://download.oracle.com/javase/tutorial/security/tour2/step3.html for details!");
         }
 
     }
@@ -470,11 +470,11 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * @return
      */
     protected Option addOption(final String s, final String l,
-        final String descr, final boolean sep, final char ssep,
-        final boolean arg, final boolean args, final int numArgs,
-        final boolean optional_arg, final boolean optional_args,
-        final int num_optional_args, final String argname,
-        final boolean required) {
+            final String descr, final boolean sep, final char ssep,
+            final boolean arg, final boolean args, final int numArgs,
+            final boolean optional_arg, final boolean optional_args,
+            final int num_optional_args, final String argname,
+            final boolean required) {
         if (l != null) {
             OptionBuilder.withLongOpt(l);
         }
@@ -549,7 +549,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             if (cl.hasOption("a")) {
                 cmdLineCfg.setProperty("anchors.use", "true");
                 cmdLineCfg.setProperty("anchors.location",
-                    cl.getOptionValues("a"));
+                        cl.getOptionValues("a"));
                 log.info("Using anchors from location: {}", cl.getOptionValues("a"));
             }
             if (cl.hasOption("e")) {
@@ -575,7 +575,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 cmdLineCfg.setProperty("input.basedir", cl.getOptionValue("i"));
             } else {
                 cmdLineCfg.setProperty("input.basedir",
-                    System.getProperty("user.dir", "."));
+                        System.getProperty("user.dir", "."));
             }
             for (final Option o1 : opts) {
                 if (o1.getOpt().equals("p")) {
@@ -600,7 +600,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                         throw new ExitVmException("Please supply at least one input file!");
                     }
                     cmdLineCfg.setProperty("input.dataInfo",
-                        inputFiles);
+                            inputFiles);
                 }
             }
             if (printHelp) {
@@ -620,7 +620,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     if (!userConfigLocation.isAbsolute()) {
                         // try to add config given by parameter c
                         userConfigLocation = new File(new File(System.getProperty(
-                            "user.dir")), cl.getOptionValue("c"));
+                                "user.dir")), cl.getOptionValue("c"));
                     }
                     cfg.setProperty("pipeline.properties", userConfigLocation.getAbsolutePath());
                     cfg.setProperty("config.basedir", userConfigLocation.getParentFile().getAbsoluteFile().toURI().getPath());
@@ -692,17 +692,17 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     sb.append("Configuration keys: \n");
                     for (String key : keys) {
                         sb.append(
-                            key
-                            + " = "
-                            + AnnotationInspector.getDefaultValueFor(c, key) + "\n");
+                                key
+                                + " = "
+                                + AnnotationInspector.getDefaultValueFor(c, key) + "\n");
                         String descr = AnnotationInspector.getDescriptionFor(c, key);
                         sb.append("\t").append(descr).append("\n");
                     }
                     this.log.info(sb.toString());
                 } else {
                     this.log.info(
-                        "Could not find annotated configuration keys for class {}!",
-                        c.getName());
+                            "Could not find annotated configuration keys for class {}!",
+                            c.getName());
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -729,7 +729,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     }
                 }
                 this.log.info(
-                    "Call Maltcms with -s my.service.provider to see available configuration keys and default values!");
+                        "Call Maltcms with -s my.service.provider to see available configuration keys and default values!");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -747,10 +747,10 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         final HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(80);
         formatter.printHelp(
-            "call " + defaultConfig.getString("application.name")
-            + " with the following arguments", " Version "
-            + defaultConfig.getString("application.version"),
-            this.o, Maltcms.licence);
+                "call " + defaultConfig.getString("application.name")
+                + " with the following arguments", " Version "
+                + defaultConfig.getString("application.version"),
+                this.o, Maltcms.licence);
         System.exit(0);
     }
 
@@ -813,7 +813,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         outputDir.mkdirs();
         File xmlDir = new File(outputDir, "xml");
         xmlDir.mkdirs();
-        LinkedList<String> beanList = new LinkedList<String>();
+        LinkedList<String> beanList = new LinkedList<>();
         if (beans.length == 1 && beans[0].equals("*")) {
             Class<?> c;
             try {
@@ -840,7 +840,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
 
             } catch (ConfigurationException ex) {
                 java.util.logging.Logger.getLogger(Maltcms.class
-                    .getName()).log(Level.SEVERE, null, ex);
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

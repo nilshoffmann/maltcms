@@ -60,26 +60,23 @@ public class MaltcmsTaskResult extends DefaultTaskResult {
         try {
             Document doc = dbuilder.build(workflow);
             List<?> inList = XPath.selectNodes(doc,
-                "//workflowInputs/workflowInput");
+                    "//workflowInputs/workflowInput");
             for (Object o : inList) {
                 Element e = (Element) o;
                 File inputFile = new File(URI.create(e.getAttributeValue("uri")));
                 getTaskInputs().add(inputFile);
             }
             List<?> outList = XPath.selectNodes(doc,
-                "//workflowOutputs/workflowOutput");
+                    "//workflowOutputs/workflowOutput");
             for (Object o : outList) {
                 Element e = (Element) o;
                 File outputFile = new File(
-                    URI.create(e.getAttributeValue("uri")));
+                        URI.create(e.getAttributeValue("uri")));
                 getTaskOutputs().add(outputFile);
             }
-        } catch (JDOMException ex) {
+        } catch (JDOMException | IOException ex) {
             Logger.getLogger(MaltcmsTaskResult.class.getName()).
-                log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MaltcmsTaskResult.class.getName()).
-                log(Level.SEVERE, null, ex);
+                    log(Level.SEVERE, null, ex);
         }
     }
 }

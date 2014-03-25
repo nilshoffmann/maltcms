@@ -50,7 +50,7 @@ public class Task implements ITask<ITaskResult> {
 
     private static final long serialVersionUID = 986719239076016L;
     private final List<String> commandLine;
-    private final HashMap<String, String> additionalEnvironment = new HashMap<String, String>();
+    private final HashMap<String, String> additionalEnvironment = new HashMap<>();
     private final File workingDirectory;
     private final List<IPostProcessor> postProcessors;
     private final File outputDirectory;
@@ -68,25 +68,24 @@ public class Task implements ITask<ITaskResult> {
     @Override
     public ITaskResult call() throws Exception {
         ProcessBuilder pb = new ProcessBuilder(commandLine).directory(
-            workingDirectory).redirectErrorStream(true);
+                workingDirectory).redirectErrorStream(true);
         pb.environment().putAll(additionalEnvironment);
         System.out.println(pb.environment());
         Process p = pb.start();
         try {
             String line;
-            BufferedReader input
-                = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            while ((line = input.readLine()) != null) {
-                System.out.println(line);
+            try (BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+                while ((line = input.readLine()) != null) {
+                    System.out.println(line);
+                }
             }
-            input.close();
         } catch (Exception err) {
             err.printStackTrace();
         }
         int status = p.waitFor();
         if (status != 0) {
             throw new RuntimeException(
-                "Task finished with non-zero exit status: " + status + "\n Commandline: " + commandLine + ", working directory: " + workingDirectory);
+                    "Task finished with non-zero exit status: " + status + "\n Commandline: " + commandLine + ", working directory: " + workingDirectory);
         }
         for (IPostProcessor postProcessor : postProcessors) {
             postProcessor.process(this);
@@ -97,7 +96,7 @@ public class Task implements ITask<ITaskResult> {
             return new MaltcmsTaskResult(outputDirectory);
         }
         Logger.getLogger(Task.class.getName()).
-            log(Level.INFO, "Output directory for task " + getTaskId() + " was removed by post processor!");
+                log(Level.INFO, "Output directory for task " + getTaskId() + " was removed by post processor!");
         //otherwise return the singleton empty result
         return DefaultTaskResult.EMPTY;
     }

@@ -100,7 +100,7 @@ public class Array1DVisualizer extends AFragmentCommand {
         int i = 0;
         for (final IFileFragment ff : t) {
             log.info("Processing File fragment {}: {} of {}",
-                new Object[]{ff.getName(), (i + 1), t.getSize()});
+                    new Object[]{ff.getName(), (i + 1), t.getSize()});
             labels[i] = ff.getUri().toString();
             final IVariableFragment ivf = ff.getChild(this.variableName);
             values[i] = ivf.getArray();
@@ -109,33 +109,36 @@ public class Array1DVisualizer extends AFragmentCommand {
             if (!this.allInOneChart) {
                 try {
                     domains[i] = ff.getChild(
-                        this.scanAcquisitionTimeVariableName).getArray().
-                        copy();
-                    if (this.timeUnit.equals("min")) {
-                        domains[i] = ArrayTools.divBy60(domains[i]);
-                    } else if (this.timeUnit.equals("h")) {
-                        domains[i] = ArrayTools.divBy60(ArrayTools.divBy60(
-                            domains[i]));
+                            this.scanAcquisitionTimeVariableName).getArray().
+                            copy();
+                    switch (this.timeUnit) {
+                        case "min":
+                            domains[i] = ArrayTools.divBy60(domains[i]);
+                            break;
+                        case "h":
+                            domains[i] = ArrayTools.divBy60(ArrayTools.divBy60(
+                                    domains[i]));
+                            break;
                     }
                     log.debug("Using scan acquisition time0 {}",
-                        domains[i]);
+                            domains[i]);
 
                     this.xAxisLabel = "time [" + this.timeUnit + "]";
                 } catch (final ResourceNotAvailableException re) {
                     log.info(
-                        "Could not load resource {} for domain axis, falling back to scan index domain!",
-                        this.scanAcquisitionTimeVariableName);
+                            "Could not load resource {} for domain axis, falling back to scan index domain!",
+                            this.scanAcquisitionTimeVariableName);
                     domains[i] = ArrayTools.indexArray(values[i].getShape()[0],
-                        0);
+                            0);
                 }
                 final AChart<XYPlot> xyc = new XYChart("1D Visualization of "
-                    + this.variableName, new String[]{labels[i]},
-                    new Array[]{values[i]}, new Array[]{domains[i]},
-                    this.xAxisLabel, this.yAxisLabel);
+                        + this.variableName, new String[]{labels[i]},
+                        new Array[]{values[i]}, new Array[]{domains[i]},
+                        this.xAxisLabel, this.yAxisLabel);
                 final PlotRunner pr = new PlotRunner(xyc.create(), "Plot of "
-                    + this.variableName, ff.getName() + ">"
-                    + this.variableName, getWorkflow().getOutputDirectory(
-                        this));
+                        + this.variableName, ff.getName() + ">"
+                        + this.variableName, getWorkflow().getOutputDirectory(
+                                this));
                 pr.configure(Factory.getInstance().getConfiguration());
                 final File f = pr.getFile();
                 try {
@@ -144,18 +147,18 @@ public class Array1DVisualizer extends AFragmentCommand {
                     log.error(ex.getLocalizedMessage());
                 }
                 final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
-                    this, getWorkflowSlot(), ff);
+                        this, getWorkflowSlot(), ff);
                 getWorkflow().append(dwr);
             }
             i++;
         }
         if (this.allInOneChart) {
             final AChart<XYPlot> xyc = new XYChart("1D Visualization of "
-                + this.variableName, labels, values, domains,
-                this.xAxisLabel, this.yAxisLabel);
+                    + this.variableName, labels, values, domains,
+                    this.xAxisLabel, this.yAxisLabel);
             final PlotRunner pr = new PlotRunner(xyc.create(), "Plot of "
-                + this.variableName, this.variableName, getWorkflow().
-                getOutputDirectory(this));
+                    + this.variableName, this.variableName, getWorkflow().
+                    getOutputDirectory(this));
             pr.configure(Factory.getInstance().getConfiguration());
             final File f = pr.getFile();
             try {
@@ -164,7 +167,7 @@ public class Array1DVisualizer extends AFragmentCommand {
                 log.error(ex.getLocalizedMessage());
             }
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
-                this, getWorkflowSlot(), t.toArray(new IFileFragment[]{}));
+                    this, getWorkflowSlot(), t.toArray(new IFileFragment[]{}));
             getWorkflow().append(dwr);
         }
         return t;
@@ -173,9 +176,9 @@ public class Array1DVisualizer extends AFragmentCommand {
     @Override
     public void configure(final Configuration cfg) {
         this.variableName = cfg.getString(this.getClass().getName()
-            + ".variableName", "total_intensity");
+                + ".variableName", "total_intensity");
         this.scanAcquisitionTimeVariableName = cfg.getString(
-            "var.scan_acquisition_time", "scan_acquisition_time");
+                "var.scan_acquisition_time", "scan_acquisition_time");
     }
 
     protected void pairwise(final TupleND<IFileFragment> t) {
@@ -196,25 +199,28 @@ public class Array1DVisualizer extends AFragmentCommand {
             labels[0] = lhs.getUri().toString();
             labels[1] = rhs.getUri().toString();
             if (lhs.hasChild(this.variableName)
-                && rhs.hasChild(this.variableName)) {
+                    && rhs.hasChild(this.variableName)) {
                 values[0] = lhs.getChild(this.variableName).getArray().copy();
                 values[1] = rhs.getChild(this.variableName).getArray().copy();
                 if (lhs.hasChild(this.scanAcquisitionTimeVariableName)
-                    && rhs.hasChild(this.scanAcquisitionTimeVariableName)) {
+                        && rhs.hasChild(this.scanAcquisitionTimeVariableName)) {
                     domains[0] = lhs.getChild(
-                        this.scanAcquisitionTimeVariableName).getArray().
-                        copy();
+                            this.scanAcquisitionTimeVariableName).getArray().
+                            copy();
                     domains[1] = rhs.getChild(
-                        this.scanAcquisitionTimeVariableName).getArray().
-                        copy();
-                    if (this.timeUnit.equals("min")) {
-                        domains[0] = ArrayTools.divBy60(domains[0]);
-                        domains[1] = ArrayTools.divBy60(domains[1]);
-                    } else if (this.timeUnit.equals("h")) {
-                        domains[0] = ArrayTools.divBy60(ArrayTools.divBy60(
-                            domains[0]));
-                        domains[1] = ArrayTools.divBy60(ArrayTools.divBy60(
-                            domains[1]));
+                            this.scanAcquisitionTimeVariableName).getArray().
+                            copy();
+                    switch (this.timeUnit) {
+                        case "min":
+                            domains[0] = ArrayTools.divBy60(domains[0]);
+                            domains[1] = ArrayTools.divBy60(domains[1]);
+                            break;
+                        case "h":
+                            domains[0] = ArrayTools.divBy60(ArrayTools.divBy60(
+                                    domains[0]));
+                            domains[1] = ArrayTools.divBy60(ArrayTools.divBy60(
+                                    domains[1]));
+                            break;
                     }
                     final double min = MAMath.getMinimum(domains[0]);
                     final double min1 = MAMath.getMinimum(domains[1]);
@@ -228,19 +234,19 @@ public class Array1DVisualizer extends AFragmentCommand {
                     }
                 } else {
                     domains[0] = ArrayTools.indexArray(values[0].getShape()[0],
-                        0);
+                            0);
                     domains[1] = ArrayTools.indexArray(values[1].getShape()[0],
-                        0);
+                            0);
                     this.xAxisLabel = "scan number";
                 }
                 final AChart<XYPlot> xyc = new XYChart("1D Visualization of "
-                    + this.variableName, labels, values, domains,
-                    this.xAxisLabel, this.yAxisLabel);
+                        + this.variableName, labels, values, domains,
+                        this.xAxisLabel, this.yAxisLabel);
                 final PlotRunner pr = new PlotRunner(xyc.create(), "Plot of "
-                    + this.variableName + " from files " + lhs.getName()
-                    + " and " + rhs.getName(), this.variableName + "Chart-"
-                    + lhs.getName() + "-" + rhs.getName(), getWorkflow().
-                    getOutputDirectory(this));
+                        + this.variableName + " from files " + lhs.getName()
+                        + " and " + rhs.getName(), this.variableName + "Chart-"
+                        + lhs.getName() + "-" + rhs.getName(), getWorkflow().
+                        getOutputDirectory(this));
                 pr.configure(Factory.getInstance().getConfiguration());
                 final File f = pr.getFile();
                 try {
@@ -249,13 +255,13 @@ public class Array1DVisualizer extends AFragmentCommand {
                     log.error(ex.getLocalizedMessage());
                 }
                 final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
-                    this, getWorkflowSlot(),
-                    new IFileFragment[]{lhs, rhs});
+                        this, getWorkflowSlot(),
+                        new IFileFragment[]{lhs, rhs});
                 getWorkflow().append(dwr);
                 pairs++;
             } else {
                 throw new IllegalArgumentException(lhs.getUri()
-                    + " has no child " + this.variableName);
+                        + " has no child " + this.variableName);
             }
             // }
 
@@ -279,15 +285,15 @@ public class Array1DVisualizer extends AFragmentCommand {
             labels[0] = lhs.getUri().toString();
             labels[1] = rhs.getUri().toString();
             if (lhs.hasChild(this.variableName)
-                && rhs.hasChild(this.variableName)) {
+                    && rhs.hasChild(this.variableName)) {
                 values[0] = lhs.getChild(this.variableName).getArray();
                 values[1] = rhs.getChild(this.variableName).getArray();
                 if (lhs.hasChild(this.scanAcquisitionTimeVariableName)
-                    && rhs.hasChild(this.scanAcquisitionTimeVariableName)) {
+                        && rhs.hasChild(this.scanAcquisitionTimeVariableName)) {
                     domains[0] = lhs.getChild(
-                        this.scanAcquisitionTimeVariableName).getArray();
+                            this.scanAcquisitionTimeVariableName).getArray();
                     domains[1] = rhs.getChild(
-                        this.scanAcquisitionTimeVariableName).getArray();
+                            this.scanAcquisitionTimeVariableName).getArray();
                     final double min = MAMath.getMinimum(domains[0]);
                     final double min1 = MAMath.getMinimum(domains[1]);
                     this.xAxisLabel = "time [s]";
@@ -299,27 +305,27 @@ public class Array1DVisualizer extends AFragmentCommand {
                     }
                 } else {
                     domains[0] = ArrayTools.indexArray(values[0].getShape()[0],
-                        0);
+                            0);
                     domains[1] = ArrayTools.indexArray(values[1].getShape()[0],
-                        0);
+                            0);
                     this.xAxisLabel = "scan number";
                 }
                 final Array maxA = (values[0].getShape()[0] > values[1].getShape()[0]) ? values[0] : values[1];
                 final Array minA = (values[0].getShape()[0] <= values[1].
-                    getShape()[0]) ? values[0] : values[1];
+                        getShape()[0]) ? values[0] : values[1];
                 final Array res = Array.factory(maxA.getElementType(),
-                    new int[]{maxA.getShape()[0]});
+                        new int[]{maxA.getShape()[0]});
                 Array.arraycopy(minA, 0, res, 0, minA.getShape()[0]);
 
                 final NormalizationFilter nf = new NormalizationFilter(
-                    "Max-Min", false, true);
+                        "Max-Min", false, true);
                 // nf.configure(ArrayFactory.getConfiguration());
                 final Array[] maxas = nf.apply(new Array[]{maxA});
                 final Array[] resas = nf.apply(new Array[]{res});
                 final Array diff = ArrayTools.diff(maxas[0], resas[0]);
                 final Array powdiff = ArrayTools.pow(diff, 2.0d);
                 final double RMSE = Math.sqrt((ArrayTools.integrate(powdiff) / (powdiff.
-                    getShape()[0])));
+                        getShape()[0])));
                 log.info("Root Mean Square Error={}", RMSE);
                 // maxA = as[0];
                 if (maxA.equals(values[0])) {
@@ -327,17 +333,17 @@ public class Array1DVisualizer extends AFragmentCommand {
                     ArrayTools.mult(diff, -1.0d);
                 }
                 final AChart<XYPlot> xyc2 = new XYChart("Residual plot of "
-                    + lhs.getName() + " versus " + rhs.getName(),
-                    new String[]{"Residual of " + lhs.getName()
-                        + " versus " + rhs.getName()},
-                    new Array[]{diff}, domains, this.xAxisLabel,
-                    this.yAxisLabel);
+                        + lhs.getName() + " versus " + rhs.getName(),
+                        new String[]{"Residual of " + lhs.getName()
+                            + " versus " + rhs.getName()},
+                        new Array[]{diff}, domains, this.xAxisLabel,
+                        this.yAxisLabel);
                 final PlotRunner pr2 = new PlotRunner(xyc2.create(),
-                    "Residual Plot of " + this.variableName
-                    + " from files " + lhs.getName() + " and "
-                    + rhs.getName(), "residualChart-"
-                    + lhs.getName() + "-" + rhs.getName(),
-                    getWorkflow().getOutputDirectory(this));
+                        "Residual Plot of " + this.variableName
+                        + " from files " + lhs.getName() + " and "
+                        + rhs.getName(), "residualChart-"
+                        + lhs.getName() + "-" + rhs.getName(),
+                        getWorkflow().getOutputDirectory(this));
                 pr2.configure(Factory.getInstance().getConfiguration());
                 final File f = pr2.getFile();
                 try {
@@ -346,12 +352,12 @@ public class Array1DVisualizer extends AFragmentCommand {
                     log.error(ex.getLocalizedMessage());
                 }
                 final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
-                    this, WorkflowSlot.VISUALIZATION, new IFileFragment[]{
-                        lhs, rhs});
+                        this, WorkflowSlot.VISUALIZATION, new IFileFragment[]{
+                            lhs, rhs});
                 getWorkflow().append(dwr);
             } else {
                 throw new IllegalArgumentException(lhs.getUri()
-                    + " has no child " + this.variableName);
+                        + " has no child " + this.variableName);
             }
 
         }

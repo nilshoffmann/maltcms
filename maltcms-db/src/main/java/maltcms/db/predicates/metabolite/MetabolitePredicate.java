@@ -39,7 +39,7 @@ import maltcms.db.predicates.MatchPredicate;
  *
  */
 public abstract class MetabolitePredicate extends Predicate<IMetabolite>
-    implements IMatchPredicate<IMetabolite> {
+        implements IMatchPredicate<IMetabolite> {
 
     /**
      *
@@ -50,7 +50,7 @@ public abstract class MetabolitePredicate extends Predicate<IMetabolite>
     public Method getMethodOnTargetType() {
         return this.im.getMethodOnTargetType();
     }
-    protected IMatchPredicate<IMetabolite> im = new MatchPredicate<IMetabolite>();
+    protected IMatchPredicate<IMetabolite> im = new MatchPredicate<>();
 
     @Override
     public void setMethodOnTargetType(Method m) {

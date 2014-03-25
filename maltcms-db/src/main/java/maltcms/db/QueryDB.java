@@ -37,7 +37,7 @@ import maltcms.db.predicates.metabolite.IAggregatePredicateFactory;
 public class QueryDB<T> {
 
     protected static ExecutorService es = Executors.newFixedThreadPool(Math.min(
-        1, Runtime.getRuntime().availableProcessors() - 1));
+            1, Runtime.getRuntime().availableProcessors() - 1));
     protected String dblocation = null;
     protected ObjectSet<T> qres = null;
     protected Predicate<T> ap = null;
@@ -53,7 +53,7 @@ public class QueryDB<T> {
     }
 
     public QueryDB(String dblocation, String[] args,
-        IAggregatePredicateFactory<T> iapf) {
+            IAggregatePredicateFactory<T> iapf) {
         this(dblocation);
         this.ap = iapf.digestCommandLine(args);
     }
@@ -66,9 +66,9 @@ public class QueryDB<T> {
      */
     public QueryCallable<T> getCallable() {
         if (this.ap == null) {
-            return new QueryCallable<T>(this.dblocation, getDefaultPredicate());
+            return new QueryCallable<>(this.dblocation, getDefaultPredicate());
         }
-        return new QueryCallable<T>(this.dblocation, this.ap);
+        return new QueryCallable<>(this.dblocation, this.ap);
     }
 
     public Predicate<T> getDefaultPredicate() {
@@ -96,7 +96,7 @@ public class QueryDB<T> {
      * @return
      */
     public QueryCallable<T> getCallable(Predicate<T> ap) {
-        return new QueryCallable<T>(this.dblocation, ap);
+        return new QueryCallable<>(this.dblocation, ap);
     }
 
     /**

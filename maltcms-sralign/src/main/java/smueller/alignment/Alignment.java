@@ -43,12 +43,12 @@ public class Alignment {
      *
      */
     protected IFileFragment ref,
-        /**
-         *
-         *
-         *
-         */
-        query;
+            /**
+             *
+             *
+             *
+             */
+            query;
 
     /**
      *
@@ -120,7 +120,7 @@ public class Alignment {
 
     // Vektor, der alle optimalen Alignments enth�lt. Pro Alignment existiert
     // ein OAV, welcher Aligned Pair Vektoren enth�lt
-    Vector<OptimalAlignmentVector> allalignments = new Vector<OptimalAlignmentVector>();
+    Vector<OptimalAlignmentVector> allalignments = new Vector<>();
 
     OptimalAlignmentVector oav1 = new OptimalAlignmentVector();
 
@@ -156,18 +156,18 @@ public class Alignment {
         String str2 = "";
 
         System.out
-            .println("Es existieren "
-                + this.allalignments.size()
-                + " optimale Alignments mit Distanz: "
-                + this.matrix[(this.seq1.length() - 1)][(this.seq2
-                .length() - 1)]);
+                .println("Es existieren "
+                        + this.allalignments.size()
+                        + " optimale Alignments mit Distanz: "
+                        + this.matrix[(this.seq1.length() - 1)][(this.seq2
+                        .length() - 1)]);
 
         for (int p = 0; p < this.allalignments.size(); p++) {
 
             System.out.println("Alignment Nummer: " + (p + 1));
 
             final OptimalAlignmentVector holeAlignment = this.allalignments
-                .get(p);
+                    .get(p);
 
             for (int q = holeAlignment.countAlChars() - 1; q >= 0; q--) {
 
@@ -284,10 +284,10 @@ public class Alignment {
     public void cloneAl() {
 
         final OptimalAlignmentVector zuKopieren = this.allalignments
-            .get(this.counter);
+                .get(this.counter);
 
         final OptimalAlignmentVector alKopie = (OptimalAlignmentVector) zuKopieren
-            .clone();
+                .clone();
 
         this.allalignments.add(alKopie);
 
@@ -326,12 +326,12 @@ public class Alignment {
         for (int is = 1; is < n; is++) {
 
             final double ld = vergleiche((chartoNumber(this.seq2.charAt(is))),
-                0);
+                    0);
 
             this.pwd[0][is] = ld;
 
             this.matrix[0][is] = Math
-                .round((this.matrix[0][is - 1] + ld) * 100) / 100.00;
+                    .round((this.matrix[0][is - 1] + ld) * 100) / 100.00;
 
             this.pathway[0][is][0] = 1;
 
@@ -340,12 +340,12 @@ public class Alignment {
         for (int ju = 1; ju < m; ju++) {
 
             final double ld = vergleiche(0,
-                (chartoNumber(this.seq1.charAt(ju))));
+                    (chartoNumber(this.seq1.charAt(ju))));
 
             this.pwd[ju][0] = ld;
 
             this.matrix[ju][0] = Math
-                .round((this.matrix[ju - 1][0] + ld) * 100) / 100.00;
+                    .round((this.matrix[ju - 1][0] + ld) * 100) / 100.00;
 
             this.pathway[ju][0][0] = 2;
 
@@ -366,16 +366,16 @@ public class Alignment {
                 this.y = this.matrix[j - 1][i];
 
                 final double lz = vergleiche(
-                    (chartoNumber(this.seq1.charAt(j))),
-                    (chartoNumber(this.seq2.charAt(i))));
+                        (chartoNumber(this.seq1.charAt(j))),
+                        (chartoNumber(this.seq2.charAt(i))));
 
                 this.pwd[j][i] = lz;
 
                 final double lx = vergleiche(0, (chartoNumber(this.seq2
-                    .charAt(i))));
+                        .charAt(i))));
 
                 final double ly = vergleiche(
-                    (chartoNumber(this.seq1.charAt(j))), 0);
+                        (chartoNumber(this.seq1.charAt(j))), 0);
 
                 // Werte f�r hor/ver/diag Schritt berechenn
                 this.z = Math.round((this.z + lz) * 100) / 100.00;
@@ -393,8 +393,8 @@ public class Alignment {
                 {
 
                     if ((this.x == mini(this.x, this.y, this.z))
-                        && (this.y == mini(this.x, this.y, this.z))
-                        && (this.z == mini(this.x, this.y, this.z))) {
+                            && (this.y == mini(this.x, this.y, this.z))
+                            && (this.z == mini(this.x, this.y, this.z))) {
 
                         this.pathway[j][i][0] = 1;
 
@@ -407,7 +407,7 @@ public class Alignment {
                     }
 
                     if ((this.x == mini(this.x, this.y, this.z))
-                        && (this.y == mini(this.x, this.y, this.z))) {
+                            && (this.y == mini(this.x, this.y, this.z))) {
 
                         this.pathway[j][i][0] = 1;
 
@@ -418,7 +418,7 @@ public class Alignment {
                     }
 
                     if ((this.y == mini(this.x, this.y, this.z))
-                        && (this.z == mini(this.x, this.y, this.z))) {
+                            && (this.z == mini(this.x, this.y, this.z))) {
 
                         this.pathway[j][i][0] = 2;
 
@@ -429,7 +429,7 @@ public class Alignment {
                     }
 
                     if ((this.x == mini(this.x, this.y, this.z))
-                        && (this.z == mini(this.x, this.y, this.z))) {
+                            && (this.z == mini(this.x, this.y, this.z))) {
 
                         this.pathway[j][i][0] = 1;
 
@@ -521,7 +521,7 @@ public class Alignment {
                 if (this.pathway[j][i][0] == 3) {
 
                     this.oav1.addAlChars(this.seq2.charAt(i), this.seq1
-                        .charAt(j), j, i);
+                            .charAt(j), j, i);
 
                     j--;
 
@@ -544,10 +544,10 @@ public class Alignment {
                     this.oav1 = this.allalignments.get(this.counter);
 
                     i = this.oav1.getCharPair(this.oav1.countAlChars() - 1)
-                        .getD();
+                            .getD();
 
                     j = this.oav1.getCharPair(this.oav1.countAlChars() - 1)
-                        .getC();
+                            .getC();
 
                     continue align;
 
@@ -563,7 +563,7 @@ public class Alignment {
                     cloneAl();
 
                     this.oav2 = this.allalignments.get(this.allalignments
-                        .size() - 1);
+                            .size() - 1);
 
                     this.oav2.addAlChars(this.seq2.charAt(i), '-', j, i - 1);
 
@@ -580,22 +580,22 @@ public class Alignment {
                     cloneAl();
 
                     this.oav2 = this.allalignments.get(this.allalignments
-                        .size() - 1);
+                            .size() - 1);
 
                     if (this.pathway[j][i][0] == 1) {
 
                         this.oav2
-                            .addAlChars(this.seq2.charAt(i), '-', j, i - 1);
+                                .addAlChars(this.seq2.charAt(i), '-', j, i - 1);
 
                     } else {
 
                         this.oav2
-                            .addAlChars('-', this.seq1.charAt(j), j - 1, i);
+                                .addAlChars('-', this.seq1.charAt(j), j - 1, i);
 
                     }
 
                     this.oav1.addAlChars(this.seq2.charAt(i), this.seq1
-                        .charAt(j), j, i);
+                            .charAt(j), j, i);
 
                     j--;
 
@@ -617,17 +617,17 @@ public class Alignment {
                     cloneAl();
 
                     this.oav2 = this.allalignments.get(this.allalignments
-                        .size() - 2);
+                            .size() - 2);
 
                     this.oav2.addAlChars(this.seq2.charAt(i), '-', j, i - 1);
 
                     this.oav2 = this.allalignments.get(this.allalignments
-                        .size() - 1);
+                            .size() - 1);
 
                     this.oav2.addAlChars('-', this.seq1.charAt(i), j - 1, i);
 
                     this.oav1.addAlChars(this.seq2.charAt(i), this.seq1
-                        .charAt(j), j, i);
+                            .charAt(j), j, i);
 
                     j--;
 

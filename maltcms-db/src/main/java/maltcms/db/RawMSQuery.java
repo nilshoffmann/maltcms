@@ -87,8 +87,8 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
         intensities.setInt(intIdx.set(251), 100000);
         //System.out.println(masses);
         //System.out.println(intensities);
-        RawMSQuery rmq = new RawMSQuery(new Tuple2D<Array, Array>(masses,
-            intensities));
+        RawMSQuery rmq = new RawMSQuery(new Tuple2D<>(masses,
+                intensities));
         rmq.setDB(serverfile);//dblocation);
         URL url;
 //		ObjectServer os = null;
@@ -102,8 +102,8 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
 //		}
         //rmq.setQuery(masses, intensities);
         MetaboliteSimilarity ms = new MetaboliteSimilarity(masses, intensities,
-            0.6,
-            10, true);
+                0.6,
+                10, true);
         MSimilarityPredicate msp = new MSimilarityPredicate(ms);
         //synchronized(os) {
         for (Tuple2D<Double, IMetabolite> im : rmq.getBestHits(10, msp)) {
@@ -133,7 +133,7 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
      */
     @Override
     public Collection<Tuple2D<Double, IMetabolite>> getBestHits(final int k,
-        final MSimilarityPredicate ssp) {
+            final MSimilarityPredicate ssp) {
         if (this.mqdb == null) {
             this.mqdb = new MetaboliteQueryDB(dbloc, ssp);
         } else {
@@ -143,12 +143,9 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
         try {
             ObjectSet<IMetabolite> os = c.get();
             return ssp.getSimilaritiesAboveThreshold().subList(0, k - 1);
-        } catch (InterruptedException ex) {
+        } catch (InterruptedException | ExecutionException ex) {
             Logger.getLogger(RawMSQuery.class.getName()).log(Level.SEVERE, null,
-                ex);
-        } catch (ExecutionException ex) {
-            Logger.getLogger(RawMSQuery.class.getName()).log(Level.SEVERE, null,
-                ex);
+                    ex);
         }
         return Collections.emptyList();
     }

@@ -54,8 +54,8 @@ public class ConstraintFactory {
     }
 
     public Area calculateLayout(final int rows, final int cols,
-        final int neighborhood1, final AnchorPairSet aps,
-        final double band, final int rowoverlap, final int coloverlap) {
+            final int neighborhood1, final AnchorPairSet aps,
+            final double band, final int rowoverlap, final int coloverlap) {
         final List<Tuple2D<Integer, Integer>> ris = aps.getCorrespondingScans();
         // by convention, the first contained pair should be (0,0)
         // the last contained pair should be rows-1, cols-1
@@ -73,8 +73,8 @@ public class ConstraintFactory {
         // j0<=j1
         final int npartitions = ris.size();
         final Area bounds = new Area();
-        final ArrayList<Rectangle> partitions = new ArrayList<Rectangle>();
-        final ArrayList<Rectangle> distinctRects = new ArrayList<Rectangle>();
+        final ArrayList<Rectangle> partitions = new ArrayList<>();
+        final ArrayList<Rectangle> distinctRects = new ArrayList<>();
         for (final Tuple2D<Integer, Integer> t : ris) {// iterate over anchors
             j1 = t.getSecond();// begin of next ri
             i1 = t.getFirst();
@@ -87,11 +87,11 @@ public class ConstraintFactory {
             }
             // add partition rectangle
             final Rectangle r = new Rectangle(j0, i0, j1 - j0 + coverlap, i1
-                - i0 + roverlap);
+                    - i0 + roverlap);
             // add local band constraint
             if ((band > 0.0d) && (band < 1.0d)) {
                 final Area bandArea = createBandConstraint(j0, i0, r.height,
-                    r.width, band);
+                        r.width, band);
                 final Area b = new Area(r);
                 b.intersect(bandArea);
                 bounds.add(b);
@@ -108,7 +108,7 @@ public class ConstraintFactory {
             // add anchor rectangle from x to x+1, y to y+1
             if (cnt < npartitions - 1) {
                 final Rectangle anchor = new Rectangle(ax, ay,
-                    (neighborhood1 * 2) + 1, (neighborhood1 * 2) + 1);
+                        (neighborhood1 * 2) + 1, (neighborhood1 * 2) + 1);
                 bounds.add(new Area(anchor));
                 // final Area dr2 = new Area(r);
                 final Area dr2 = new Area(anchor);
@@ -117,7 +117,7 @@ public class ConstraintFactory {
                 // System.out.println("Adding anchor region: "+anchor.toString())
                 // ;
                 log.debug(
-                    "Anchor # " + cnt + " at " + x + "," + y);
+                        "Anchor # " + cnt + " at " + x + "," + y);
                 // partitions.add(anchor);
             }
             x = j1 + 1;
@@ -134,14 +134,14 @@ public class ConstraintFactory {
     }
 
     public Area createBandConstraint(final int x, final int y, final int rows,
-        final int cols, final double r) {
+            final int cols, final double r) {
         final double maxdev = Math.max(1, Math.ceil(Math.max(rows, cols) * r));
         final double ascent = (double) cols / (double) rows;
         log.info(
-            "Using band constraint with width {}, |REF| = {}, |QUERY| = {}",
-            new Object[]{maxdev, rows, cols});
+                "Using band constraint with width {}, |REF| = {}, |QUERY| = {}",
+                new Object[]{maxdev, rows, cols});
         log.info(
-            "Ascent of diagonal is {}", ascent);
+                "Ascent of diagonal is {}", ascent);
         final GeneralPath band = new GeneralPath();
         // create the band
         band.moveTo(x, y);

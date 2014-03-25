@@ -53,8 +53,8 @@ public class ProductSimilarity implements IScalarArraySimilarity {
             }
             val *= v;
         }
-        for (int i = 0; i < arraySimilarities.length; i++) {
-            val *= arraySimilarities[i].apply(a1, a2);
+        for (IArraySimilarity arraySimilaritie : arraySimilarities) {
+            val *= arraySimilaritie.apply(a1, a2);
         }
         return val;
     }

@@ -103,13 +103,13 @@ public class Peak1DMSFactory implements IPeakFactory {
             IBipacePeak p;
             if (useSparseArrays) {
                 Array sparse = new Sparse(indexedMassValues.get(scanIndex), indexedIntensityValues.get(scanIndex),
-                    (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
-                    size, massBinResolution);
+                        (int) Math.floor(minMaxMassRange.getFirst()), (int) Math.ceil(minMaxMassRange.getSecond()),
+                        size, massBinResolution);
                 p = new PeakNG(scanIndex, sparse,
-                    satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
+                        satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
             } else {
                 p = new PeakNG(scanIndex, indexedIntensityValues.get(scanIndex),
-                    satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
+                        satArray.getDouble(scanIndex), sourceFile.getName(), associationId);
             }
             p.setPeakIndex(peakIndex);
             return p;

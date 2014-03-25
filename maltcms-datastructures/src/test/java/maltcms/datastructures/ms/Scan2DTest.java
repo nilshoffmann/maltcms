@@ -76,31 +76,26 @@ public class Scan2DTest extends Scan1DTest {
     public void testGetFeatureNames() {
         IScan scan = createScans().get(0);
         Assert.assertEquals(scan.getFeatureNames(), Arrays.asList(
-            new String[]{"mass_values", "intensity_values",
-                "scan_index", "scan_acquisition_time", "total_intensity",
-                "first_column_scan_index", "second_column_scan_index",
-                "first_column_elution_time", "second_column_elution_time",
-                "ms_level", "precursor_charge", "precursor_mz",
-                "precursor_intensity"}));
+                new String[]{"mass_values", "intensity_values",
+                    "scan_index", "scan_acquisition_time", "total_intensity",
+                    "first_column_scan_index", "second_column_scan_index",
+                    "first_column_elution_time", "second_column_elution_time",
+                    "ms_level", "precursor_charge", "precursor_mz",
+                    "precursor_intensity"}));
     }
 
     /**
      * Test of externalization of class Scan2D.
      */
     @Test
+    @Override
     public void testReadWriteExternal() throws Exception {
         List<IScan> scans = createScans();
         for (IScan scan : scans) {
             File f = temporaryFolder.newFile();
-            ObjectOutputStream oos = null;
-            try {
-                oos = new ObjectOutputStream(new FileOutputStream(f));
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f))) {
                 oos.writeObject(scan);
             } catch (IOException ioex) {
-            } finally {
-                if (oos != null) {
-                    oos.close();
-                }
             }
             ObjectInputStream ois = null;
             try {

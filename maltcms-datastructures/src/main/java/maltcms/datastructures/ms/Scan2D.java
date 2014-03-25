@@ -54,13 +54,13 @@ public class Scan2D extends Scan1D implements IScan2D {
     private int fcind = -1, scind = -1;
 
     public Scan2D(Array masses1, Array intensities1, int scanNumber1,
-        double scanAcquisitionTime1) {
+            double scanAcquisitionTime1) {
         super(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
     }
 
     public Scan2D(Array masses1, Array intensities1, int scanNumber1,
-        double scanAcquisitionTime1, int idx1, int idx2, double rt1,
-        double rt2) {
+            double scanAcquisitionTime1, int idx1, int idx2, double rt1,
+            double rt2) {
         this(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
         this.fcind = idx1;
         this.scind = idx2;
@@ -69,8 +69,8 @@ public class Scan2D extends Scan1D implements IScan2D {
     }
 
     public Scan2D(Array masses1, Array intensities1, int scanNumber1,
-        double scanAcquisitionTime1, int idx1, int idx2, double rt1,
-        double rt2, short msLevel) {
+            double scanAcquisitionTime1, int idx1, int idx2, double rt1,
+            double rt2, short msLevel) {
         super(masses1, intensities1, scanNumber1, scanAcquisitionTime1, msLevel);
         this.fcind = idx1;
         this.scind = idx2;
@@ -79,8 +79,8 @@ public class Scan2D extends Scan1D implements IScan2D {
     }
 
     public Scan2D(Array masses1, Array intensities1, int scanNumber1,
-        double scanAcquisitionTime1, int idx1, int idx2, double rt1,
-        double rt2, short msLevel, final int precursorCharge, final double precursorMz, final double precursorIntensity) {
+            double scanAcquisitionTime1, int idx1, int idx2, double rt1,
+            double rt2, short msLevel, final int precursorCharge, final double precursorMz, final double precursorIntensity) {
         super(masses1, intensities1, scanNumber1, scanAcquisitionTime1, msLevel, precursorCharge, precursorMz, precursorIntensity);
         this.fcind = idx1;
         this.scind = idx2;
@@ -89,8 +89,8 @@ public class Scan2D extends Scan1D implements IScan2D {
     }
 
     public Scan2D(Array masses1, Array intensities1, int scanNumber1,
-        double scanAcquisitionTime1, double rt1,
-        double rt2, short msLevel, final int precursorCharge, final double precursorMz, final double precursorIntensity) {
+            double scanAcquisitionTime1, double rt1,
+            double rt2, short msLevel, final int precursorCharge, final double precursorMz, final double precursorIntensity) {
         super(masses1, intensities1, scanNumber1, scanAcquisitionTime1, msLevel, precursorCharge, precursorMz, precursorIntensity);
         this.fctime = rt1;
         this.sctime = rt2;

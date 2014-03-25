@@ -53,7 +53,7 @@ public class Standardizer {
      * @return
      */
     public Array cleanbase(final Array a1, final double median1,
-        final double deviation) {
+            final double deviation) {
         final Array a = a1.copy();
         final IndexIterator ii4 = a.getIndexIterator();
         final IndexIterator ii5 = a.getIndexIterator();
@@ -84,9 +84,9 @@ public class Standardizer {
         // in
         // Java Array kopiert werden muss.
         SymbolicRepresentationAlignment.getSorti().setSortedjavarray1(
-            (double[]) a.copyTo1DJavaArray());
+                (double[]) a.copyTo1DJavaArray());
         this.median = MathTools.median(SymbolicRepresentationAlignment
-            .getSorti().getSortedjavarray1());
+                .getSorti().getSortedjavarray1());
         SymbolicRepresentationAlignment.getSorti().setSortedjavarray1(null);
         final double standarddev = standardDeviation(a, this.median);
         Array b = a;
@@ -187,7 +187,7 @@ public class Standardizer {
         int counter = 0;
         final double minmax = 1 / (this.max - this.min);
         System.out.println("Larifari" + Math.round(minmax) + "Min" + this.min
-            + "max" + this.max);
+                + "max" + this.max);
         while (ii4.hasNext()) {
             final double save = ((ii4.getDoubleNext() - this.min) * minmax);
             ii4.setDoubleCurrent(save);

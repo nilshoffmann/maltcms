@@ -64,7 +64,7 @@ import maltcms.db.ui.MetaboliteViewModel;
 
 public final class MetaboliteBrowser extends JFrame {
 
-    private HashMap<Integer, JCheckBoxMenuItem> selectTableHeaders = new HashMap<Integer, JCheckBoxMenuItem>();
+    private HashMap<Integer, JCheckBoxMenuItem> selectTableHeaders = new HashMap<>();
     private MetaboliteViewModel mvm;
 
     public MetaboliteBrowser() {
@@ -93,10 +93,10 @@ public final class MetaboliteBrowser extends JFrame {
     }
 
     public static final ObjectContainer getObjectContainer(Credentials c)
-        throws MalformedURLException, Db4oIOException,
-        DatabaseFileLockedException, IncompatibleFileFormatException,
-        OldFormatException, DatabaseReadOnlyException,
-        InvalidPasswordException, URISyntaxException {
+            throws MalformedURLException, Db4oIOException,
+            DatabaseFileLockedException, IncompatibleFileFormatException,
+            OldFormatException, DatabaseReadOnlyException,
+            InvalidPasswordException, URISyntaxException {
         ObjectContainer oc = null;
         // final String[] methods = new String[args.length-1];
         // System.arraycopy(args, 1, methods, 0, methods.length);
@@ -132,13 +132,14 @@ public final class MetaboliteBrowser extends JFrame {
     }
 
     public static final void create(final ObjectContainer oc,
-        final MetaboliteBrowser mb) {
+            final MetaboliteBrowser mb) {
 //        Maltcms m = Maltcms.getInstance();
 //        Factory.getInstance().configure(m.getDefaultConfig());
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 System.out.println("Using the following methods "
-                    + "for data display:");
+                        + "for data display:");
                 final MetaboliteViewModel mvm = new MetaboliteViewModel(oc);
                 mb.setModel(mvm);
                 mb.setupUI();
@@ -165,7 +166,7 @@ public final class MetaboliteBrowser extends JFrame {
                 JPanel jp1 = new JPanel();
                 JLabel jl = new JLabel("Enter file or server url:");
                 final JTextField jtf = new JTextField(
-                    "http://default@127.0.0.1:8888");
+                        "http://default@127.0.0.1:8888");
                 jp1.add(jl, BorderLayout.WEST);
                 jp1.add(jtf, BorderLayout.CENTER);
                 final JButton openFile = new JButton(new AbstractAction("...") {
@@ -226,29 +227,8 @@ public final class MetaboliteBrowser extends JFrame {
                                     jf.setVisible(false);
                                     // opening JFrame
                                     MetaboliteBrowser.create(oc, mb);
-                                } catch (MalformedURLException ex) {
+                                } catch (MalformedURLException | Db4oIOException | DatabaseFileLockedException | IncompatibleFileFormatException | OldFormatException | DatabaseReadOnlyException | InvalidPasswordException | URISyntaxException ex) {
                                     ex.printStackTrace();
-                                } catch (Db4oIOException e1) {
-                                    // TODO Auto-generated catch block
-                                    e1.printStackTrace();
-                                } catch (DatabaseFileLockedException e2) {
-                                    // TODO Auto-generated catch block
-                                    e2.printStackTrace();
-                                } catch (IncompatibleFileFormatException e3) {
-                                    // TODO Auto-generated catch block
-                                    e3.printStackTrace();
-                                } catch (OldFormatException e4) {
-                                    // TODO Auto-generated catch block
-                                    e4.printStackTrace();
-                                } catch (DatabaseReadOnlyException e5) {
-                                    // TODO Auto-generated catch block
-                                    e5.printStackTrace();
-                                } catch (InvalidPasswordException e6) {
-                                    // TODO Auto-generated catch block
-                                    e6.printStackTrace();
-                                } catch (URISyntaxException e7) {
-                                    // TODO Auto-generated catch block
-                                    e7.printStackTrace();
                                 }
 
                             }
@@ -335,7 +315,7 @@ public final class MetaboliteBrowser extends JFrame {
     private JCheckBoxMenuItem createCheckBoxMenuItem(final String header) {
 
         JCheckBoxMenuItem checkBox = new JCheckBoxMenuItem(header
-            + " invisible");
+                + " invisible");
         checkBox.setName(header);
 
         // Checkbox Action: Add or remove a single table header

@@ -55,11 +55,11 @@ public class LineVectorRenderer extends VectorRenderer {
 
     @Override
     public void drawItem(final Graphics2D g2, final XYItemRendererState state,
-        final Rectangle2D dataArea, final PlotRenderingInfo info,
-        final XYPlot plot, final ValueAxis domainAxis,
-        final ValueAxis rangeAxis, final XYDataset dataset,
-        final int series, final int item,
-        final CrosshairState crosshairState, final int pass) {
+            final Rectangle2D dataArea, final PlotRenderingInfo info,
+            final XYPlot plot, final ValueAxis domainAxis,
+            final ValueAxis rangeAxis, final XYDataset dataset,
+            final int series, final int item,
+            final CrosshairState crosshairState, final int pass) {
 
         final double x = dataset.getXValue(series, item);
         final double y = dataset.getYValue(series, item);
@@ -70,13 +70,13 @@ public class LineVectorRenderer extends VectorRenderer {
             dy = ((VectorXYDataset) dataset).getVectorYValue(series, item);
         }
         final double xx0 = domainAxis.valueToJava2D(x, dataArea, plot
-            .getDomainAxisEdge());
+                .getDomainAxisEdge());
         final double yy0 = rangeAxis.valueToJava2D(y, dataArea, plot
-            .getRangeAxisEdge());
+                .getRangeAxisEdge());
         final double xx1 = domainAxis.valueToJava2D(x + dx, dataArea, plot
-            .getDomainAxisEdge());
+                .getDomainAxisEdge());
         final double yy1 = rangeAxis.valueToJava2D(y + dy, dataArea, plot
-            .getRangeAxisEdge());
+                .getRangeAxisEdge());
         Line2D line;
         final PlotOrientation orientation = plot.getOrientation();
         if (orientation.equals(PlotOrientation.HORIZONTAL)) {

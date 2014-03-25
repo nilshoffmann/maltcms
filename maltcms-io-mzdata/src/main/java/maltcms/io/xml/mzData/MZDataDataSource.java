@@ -87,7 +87,7 @@ public class MZDataDataSource implements IDataSource {
         final int dotindex = ff.getName().lastIndexOf(".");
         if (dotindex == -1) {
             throw new RuntimeException("Could not determine File extension of "
-                + ff);
+                    + ff);
         }
         final String filename = ff.getName().toLowerCase();
         for (final String s : this.fileEnding) {
@@ -111,42 +111,43 @@ public class MZDataDataSource implements IDataSource {
         // TODO Auto-generated method stub
     }
 
+    @Override
     public void configure(final Configuration configuration) {
         this.mass_values = configuration.getString("var.mass_values",
-            "mass_values");
+                "mass_values");
         this.intensity_values = configuration.getString("var.intensity_values",
-            "intensity_values");
+                "intensity_values");
         this.total_intensity = configuration.getString("var.total_intensity",
-            "total_intensity");
+                "total_intensity");
         this.scan_index = configuration.getString("var.scan_index",
-            "scan_index");
+                "scan_index");
         this.mass_range_min = configuration.getString("var.mass_range_min",
-            "mass_range_min");
+                "mass_range_min");
         this.mass_range_max = configuration.getString("var.mass_range_max",
-            "mass_range_max");
+                "mass_range_max");
         this.source_files = configuration.getString("var.source_files",
-            "source_files");
+                "source_files");
         this.ndf = new NetcdfDataSource();
         this.ndf.configure(configuration);
     }
 
     private Array getIntensityValues(final MzData mz, final int j) {
         final PeakListBinaryType blbt = mz.getSpectrumList().getSpectrum().get(
-            j).getIntenArrayBinary();
+                j).getIntenArrayBinary();
         return getPeakListArray(blbt);
     }
 
     private Array getMassValues(final MzData mz, final int j) {
         final PeakListBinaryType blbt = mz.getSpectrumList().getSpectrum().get(
-            j).getMzArrayBinary();
+                j).getMzArrayBinary();
         return getPeakListArray(blbt);
     }
 
     private Tuple2D<Double, Double> getMinMaxMassRange(final MzData mp,
-        final int scan) {
+            final int scan) {
         final SpectrumSettingsType.SpectrumInstrument si = mp.spectrumList.spectrum.get(scan).getSpectrumDesc().getSpectrumSettings().getSpectrumInstrument();
-        return new Tuple2D<Double, Double>(
-            Double.valueOf(si.getMzRangeStart()), Double.valueOf(si.getMzRangeStop()));
+        return new Tuple2D<>(
+                Double.valueOf(si.getMzRangeStart()), Double.valueOf(si.getMzRangeStop()));
     }
 
     private int getNumPeaks(final MzData mz, final int i) {
@@ -211,9 +212,9 @@ public class MZDataDataSource implements IDataSource {
     }
 
     private IVariableFragment getVariable(final IFileFragment f,
-        final String name) {
+            final String name) {
         return (f.hasChild(name) ? f.getChild(name) : new ImmutableVariableFragment2(f,
-            name));
+                name));
     }
 
     /**
@@ -222,10 +223,10 @@ public class MZDataDataSource implements IDataSource {
      * @param var
      * @param mp
      * @return a Tuple2D<Array,Array> with mass_range_min as first and
-     *         mass_range_max as second array
+     * mass_range_max as second array
      */
     protected Tuple2D<Array, Array> initMinMaxMZ(final IVariableFragment var,
-        final MzData mp) {
+            final MzData mp) {
         log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
             this.mass_range_max});
         int scans = getScanCount(mp);
@@ -265,7 +266,7 @@ public class MZDataDataSource implements IDataSource {
         final MzData mzd = unmarshal(f);
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.mass_values)
-            || varname.equals(this.intensity_values)) {
+                || varname.equals(this.intensity_values)) {
             a = readMZI(var, mzd);
         } else if (varname.equals(this.scan_index)) {
             a = readScanIndex(var, mzd);
@@ -274,14 +275,14 @@ public class MZDataDataSource implements IDataSource {
             a = readTotalIntensitiesArray(var, mzd);
             // read min and max_mass_range
         } else if (varname.equals(this.mass_range_min)
-            || varname.equals(this.mass_range_max)) {
+                || varname.equals(this.mass_range_max)) {
             a = readMinMaxMassValueArray(var, mzd);
             // read scan_acquisition_time
         } else if (varname.equals(this.scan_acquisition_time)) {
             a = readScanAcquisitionTimeArray(var, mzd);
         } else {
             throw new ResourceNotAvailableException(
-                "Unknown varname to mzXML mapping for varname " + varname);
+                    "Unknown varname to mzXML mapping for varname " + varname);
         }
         if (a != null) {
             variableToArrayCache.put(f.getUri() + ">" + var.getName(), new SerializableArray(a));
@@ -291,9 +292,9 @@ public class MZDataDataSource implements IDataSource {
 
     @Override
     public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
-        ResourceNotAvailableException {
+            ResourceNotAvailableException {
         final ArrayList<IVariableFragment> al = readStructure(f);
-        final ArrayList<Array> ral = new ArrayList<Array>(al.size());
+        final ArrayList<Array> ral = new ArrayList<>(al.size());
         for (final IVariableFragment vf : al) {
             final Array a = readSingle(vf);
             ral.add(a);
@@ -303,9 +304,9 @@ public class MZDataDataSource implements IDataSource {
 
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
-        throws IOException, ResourceNotAvailableException {
+            throws IOException, ResourceNotAvailableException {
         if (f.getName().equals(this.mass_values)) {
-            final ArrayList<Array> al = new ArrayList<Array>();
+            final ArrayList<Array> al = new ArrayList<>();
             final MzData mzd = unmarshal(f.getParent());
             int start = 0;
             int len = getScanCount(mzd);
@@ -323,7 +324,7 @@ public class MZDataDataSource implements IDataSource {
             return al;
         }
         if (f.getName().equals(this.intensity_values)) {
-            final ArrayList<Array> al = new ArrayList<Array>();
+            final ArrayList<Array> al = new ArrayList<>();
             final MzData mzd = unmarshal(f.getParent());
             int start = 0;
             int len = getScanCount(mzd);
@@ -341,11 +342,11 @@ public class MZDataDataSource implements IDataSource {
             return al;
         }
         // return an empty list as default
-        return new ArrayList<Array>();
+        return new ArrayList<>();
     }
 
     private Array readMinMaxMassValueArray(final IVariableFragment var,
-        final MzData mp) {
+            final MzData mp) {
         log.debug("readMinMaxMassValueArray");
         final Tuple2D<Array, Array> t = initMinMaxMZ(var, mp);
         if (var.getName().equals(this.mass_range_min)) {
@@ -355,7 +356,7 @@ public class MZDataDataSource implements IDataSource {
             return t.getSecond();
         }
         throw new IllegalArgumentException(
-            "Method accepts only one of mass_range_min or mass_range_max as varname!");
+                "Method accepts only one of mass_range_min or mass_range_max as varname!");
     }
 
     private Array readMZI(final IVariableFragment var, final MzData mp) {
@@ -409,13 +410,13 @@ public class MZDataDataSource implements IDataSource {
             // f.setArray(a);
         }
         throw new IllegalArgumentException(
-            "Don't know how to handle variable: " + var.getName());
+                "Don't know how to handle variable: " + var.getName());
         // }
         // return f.getArray();
     }
 
     private Array readScanAcquisitionTimeArray(final IVariableFragment var,
-        final MzData mp) {
+            final MzData mp) {
         log.debug("readScanAcquisitionTimeArray");
         int scans = getScanCount(mp);
         int start = 0;
@@ -458,7 +459,7 @@ public class MZDataDataSource implements IDataSource {
 
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
-        ResourceNotAvailableException {
+            ResourceNotAvailableException {
         log.debug("readSingle of {} in {}", f.getName(), f.getParent().getUri());
         if (f.hasArray()) {
             log.warn("{} already has an array set!", f);
@@ -466,7 +467,7 @@ public class MZDataDataSource implements IDataSource {
         final Array a = loadArray(f.getParent(), f);
         if (a == null) {
             throw new ResourceNotAvailableException("Could not find variable "
-                + f.getName() + " in file " + f.getParent().getName());
+                    + f.getName() + " in file " + f.getParent().getName());
         }
         // f.setArray(a);
         return a;
@@ -480,7 +481,7 @@ public class MZDataDataSource implements IDataSource {
      */
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
-        throws IOException {
+            throws IOException {
         final IVariableFragment ti = getVariable(f, this.total_intensity);
         final IVariableFragment sat = getVariable(f, this.scan_acquisition_time);
         final IVariableFragment si = getVariable(f, this.scan_index);
@@ -488,7 +489,7 @@ public class MZDataDataSource implements IDataSource {
         final IVariableFragment mrmax = getVariable(f, this.mass_range_max);
         final IVariableFragment mv = getVariable(f, this.mass_values);
         final IVariableFragment iv = getVariable(f, this.intensity_values);
-        final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
+        final ArrayList<IVariableFragment> al = new ArrayList<>();
         al.addAll(Arrays.asList(new IVariableFragment[]{ti, sat, si, mrmin,
             mrmax, mv, iv}));
         for (final IVariableFragment ivf : al) {
@@ -505,16 +506,16 @@ public class MZDataDataSource implements IDataSource {
      */
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
-        throws IOException, ResourceNotAvailableException {
+            throws IOException, ResourceNotAvailableException {
         final MzData mp = unmarshal(f.getParent());
         final int scancount = getScanCount(mp);
         final String varname = f.getName();
         // Read mass_values or intensity_values for whole chromatogram
         if (varname.equals(this.scan_index)
-            || varname.equals(this.total_intensity)
-            || varname.equals(this.mass_range_min)
-            || varname.equals(this.mass_range_max)
-            || varname.equals(this.scan_acquisition_time)) {
+                || varname.equals(this.total_intensity)
+                || varname.equals(this.mass_range_min)
+                || varname.equals(this.mass_range_max)
+                || varname.equals(this.scan_acquisition_time)) {
             final Dimension[] dims = new Dimension[]{new Dimension(
                 "scan_number", scancount, true)};
             f.setDimensions(dims);
@@ -526,7 +527,7 @@ public class MZDataDataSource implements IDataSource {
                 log.warn("Invalid range: ", ex);
             }
         } else if (varname.equals(this.mass_values)
-            || varname.equals(this.intensity_values)) {
+                || varname.equals(this.intensity_values)) {
             int npeaks = 0;
             try {
                 for (int i = 0; i < scancount; i++) {
@@ -544,18 +545,18 @@ public class MZDataDataSource implements IDataSource {
                 }
             } catch (final NullPointerException npe) {
                 throw new ResourceNotAvailableException(
-                    "Could not rap header of file "
-                    + f.getParent().getUri());
+                        "Could not rap header of file "
+                        + f.getParent().getUri());
             }
         } else {
             throw new ResourceNotAvailableException(
-                "Unknown varname to mzXML mapping for varname " + varname);
+                    "Unknown varname to mzXML mapping for varname " + varname);
         }
         return f;
     }
 
     private Array readTotalIntensitiesArray(final IVariableFragment var,
-        final MzData mp) {
+            final MzData mp) {
         final double[] d = new double[getScanCount(mp)];
         for (int i = 0; i < getScanCount(mp); i++) {
             final Array a = getIntensityValues(mp, i);

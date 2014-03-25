@@ -64,10 +64,11 @@ public class Peak2D extends PeakNG {
      */
     @Override
     public Array getFeature(String name) {
-        if (name.equals("first_column_elution_time")) {
-            return Array.factory(this.firstColumnElutionTime);
-        } else if (name.equals("second_column_elution_time")) {
-            return Array.factory(this.secondColumnElutionTime);
+        switch (name) {
+            case "first_column_elution_time":
+                return Array.factory(this.firstColumnElutionTime);
+            case "second_column_elution_time":
+                return Array.factory(this.secondColumnElutionTime);
         }
         Array retVal = super.getFeature(name);
         if (retVal != null) {
@@ -84,7 +85,7 @@ public class Peak2D extends PeakNG {
     @Override
     public List<String> getFeatureNames() {
         List<String> superFeatureNames = super.getFeatureNames();
-        LinkedList<String> allFeatures = new LinkedList<String>(superFeatureNames);
+        LinkedList<String> allFeatures = new LinkedList<>(superFeatureNames);
         allFeatures.addAll(Arrays.asList("first_column_elution_time", "second_column_elution_time"));
         return allFeatures;
     }

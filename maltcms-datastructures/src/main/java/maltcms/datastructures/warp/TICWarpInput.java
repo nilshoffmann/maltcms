@@ -55,32 +55,38 @@ public class TICWarpInput implements IWarpInput {
         this.refFile = FragmentTools.getLHSFile(ff);
         this.queryFile = FragmentTools.getRHSFile(ff);
         this.targetFile = FragmentTools.createFragment(this.refFile,
-            this.queryFile, iw.getOutputDirectory(this));
+                this.queryFile, iw.getOutputDirectory(this));
         this.tuple = MaltcmsTools
-            .prepareInputArraysTICasList(new Tuple2D<IFileFragment, IFileFragment>(
-                    this.refFile, this.queryFile));
+                .prepareInputArraysTICasList(new Tuple2D<>(
+                                this.refFile, this.queryFile));
     }
 
+    @Override
     public String getAlgorithm() {
         return "TIC";
     }
 
+    @Override
     public Tuple2D<List<Array>, List<Array>> getArrays() {
         return this.tuple;
     }
 
+    @Override
     public IFileFragment getFileFragment() {
         return this.targetFile;
     }
 
+    @Override
     public List<Tuple2DI> getPath() {
         return this.path;
     }
 
+    @Override
     public IFileFragment getQueryFileFragment() {
         return this.queryFile;
     }
 
+    @Override
     public IFileFragment getReferenceFileFragment() {
         return this.refFile;
     }

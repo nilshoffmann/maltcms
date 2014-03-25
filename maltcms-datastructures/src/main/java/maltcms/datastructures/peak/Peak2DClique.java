@@ -43,12 +43,12 @@ public class Peak2DClique {
 
     public Peak2DClique(String id) {
         this.id = id;
-        this.peaks = new HashMap<IFileFragment, Peak2D>();
-        this.ratios = new HashMap<String, Double>();
+        this.peaks = new HashMap<>();
+        this.ratios = new HashMap<>();
     }
 
     public Peak2DClique(String id, Collection<IFileFragment> f,
-        List<Peak2D> peaks) {
+            List<Peak2D> peaks) {
         this(id);
         Iterator<IFileFragment> i1 = f.iterator();
         Iterator<Peak2D> i2 = peaks.iterator();
@@ -66,7 +66,7 @@ public class Peak2DClique {
     }
 
     public List<Peak2D> getAll() {
-        return new ArrayList<Peak2D>(peaks.values());
+        return new ArrayList<>(peaks.values());
         // final List<Peak2D> ret = new ArrayList<Peak2D>();
         // for (IFileFragment ff : f) {
         // ret.add(peaks.get(ff));

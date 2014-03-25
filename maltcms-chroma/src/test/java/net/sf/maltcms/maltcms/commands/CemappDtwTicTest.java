@@ -67,12 +67,12 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
-        "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
+            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
 
     @Test
     public void testCemappDtwTICFull() throws IOException {
         File outputBase = tf.newFolder("testCemappDtwFullTestOut");
-        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        List<IFragmentCommand> commands = new ArrayList<>();
         ScanExtractor se = new ScanExtractor();
         se.setStartScan(1000);
         se.setEndScan(1500);
@@ -80,7 +80,7 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
         commands.add(se);
         commands.add(new DenseArrayProducer());
         commands.add(createPairwiseDistanceCalculatorTIC(false, 0, true,
-            1.0d));
+                1.0d));
         commands.add(new CenterStarAlignment());
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
@@ -114,13 +114,13 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
     @Test
     public void testCemappDtwTICConstrained() throws IOException {
         File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
-        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         commands.add(new DenseArrayProducer());
         TICPeakFinder tpf = new TICPeakFinder();
         SavitzkyGolayFilter sgf = new SavitzkyGolayFilter();
         sgf.setWindow(12);
-        List<AArrayFilter> filters = new LinkedList<AArrayFilter>();
+        List<AArrayFilter> filters = new LinkedList<>();
         filters.add(sgf);
         tpf.setFilter(filters);
         LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();

@@ -99,7 +99,7 @@ public class Default2DTWVisualizer implements IVisualization {
      */
     @Override
     public BufferedImage createImage(List<Array> scanlinesi,
-        List<Array> scanlinesj, final Array warpPathi, final Array warpPathj) {
+            List<Array> scanlinesj, final Array warpPathi, final Array warpPathj) {
         if (!this.horizontal) {
             scanlinesi = ArrayTools2.transpose(scanlinesi);
             scanlinesj = ArrayTools2.transpose(scanlinesj);
@@ -107,10 +107,10 @@ public class Default2DTWVisualizer implements IVisualization {
         this.currentrasterline = -1;
 
         final Tuple2D<double[], Tuple2D<double[], double[]>> sb = getSampleAndBreakpointTable(
-            scanlinesi, scanlinesj);
+                scanlinesi, scanlinesj);
 
-        final List<Tuple2D<Array, Array>> outputintensities = new ArrayList<Tuple2D<Array, Array>>();
-        final List<Tuple2D<Integer, Integer>> outputintensitiescounter = new ArrayList<Tuple2D<Integer, Integer>>();
+        final List<Tuple2D<Array, Array>> outputintensities = new ArrayList<>();
+        final List<Tuple2D<Integer, Integer>> outputintensitiescounter = new ArrayList<>();
 
         final IndexIterator iteri = warpPathi.getIndexIterator();
         final IndexIterator iterj = warpPathj.getIndexIterator();
@@ -128,46 +128,46 @@ public class Default2DTWVisualizer implements IVisualization {
 
             if (oldi != scanindexi && oldj != scanindexj) {
                 // new pixel line
-                outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
-                    scanlinej));
-                outputintensitiescounter.add(new Tuple2D<Integer, Integer>(1, 1));
+                outputintensities.add(new Tuple2D<>(scanlinei,
+                        scanlinej));
+                outputintensitiescounter.add(new Tuple2D<>(1, 1));
                 this.currentrasterline++;
             } else if (oldi != scanindexi && oldj == scanindexj) {
                 if (this.holdj) {
                     // adding pixelline to current sum
                     int c = outputintensitiescounter.get(this.currentrasterline).
-                        getFirst();
+                            getFirst();
                     outputintensitiescounter.get(this.currentrasterline).
-                        setFirst(++c);
+                            setFirst(++c);
                     final Tuple2D<Array, Array> tmp = outputintensities.get(
-                        this.currentrasterline);
+                            this.currentrasterline);
                     tmp.setFirst(maltcms.tools.ArrayTools.sum(tmp.getFirst(),
-                        scanlinei));
+                            scanlinei));
                 } else {
                     // adding pixelline
-                    outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
-                        scanlinej));
-                    outputintensitiescounter.add(new Tuple2D<Integer, Integer>(
-                        1, 1));
+                    outputintensities.add(new Tuple2D<>(scanlinei,
+                            scanlinej));
+                    outputintensitiescounter.add(new Tuple2D<>(
+                            1, 1));
                     this.currentrasterline++;
                 }
             } else if (oldi == scanindexi && oldj != scanindexj) {
                 if (this.holdi) {
                     // add pixelline to current sum
                     int c = outputintensitiescounter.get(this.currentrasterline).
-                        getSecond();
+                            getSecond();
                     outputintensitiescounter.get(this.currentrasterline).
-                        setSecond(++c);
+                            setSecond(++c);
                     final Tuple2D<Array, Array> tmp = outputintensities.get(
-                        this.currentrasterline);
+                            this.currentrasterline);
                     tmp.setSecond(maltcms.tools.ArrayTools.sum(tmp.getSecond(),
-                        scanlinej));
+                            scanlinej));
                 } else {
                     // adding pixelline
-                    outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
-                        scanlinej));
-                    outputintensitiescounter.add(new Tuple2D<Integer, Integer>(
-                        1, 1));
+                    outputintensities.add(new Tuple2D<>(scanlinei,
+                            scanlinej));
+                    outputintensitiescounter.add(new Tuple2D<>(
+                            1, 1));
                     this.currentrasterline++;
                 }
             } else {
@@ -180,8 +180,8 @@ public class Default2DTWVisualizer implements IVisualization {
         }
 
         return ci(outputintensities, outputintensitiescounter,
-            (int) (scanlinesi.get(0).getSize()), sb.getFirst(),
-            sb.getSecond().getFirst(), sb.getSecond().getSecond());
+                (int) (scanlinesi.get(0).getSize()), sb.getFirst(),
+                sb.getSecond().getFirst(), sb.getSecond().getSecond());
     }
 
     /**
@@ -193,12 +193,12 @@ public class Default2DTWVisualizer implements IVisualization {
      * @return {smaple table,{breakpoints i, breakpoints j}}
      */
     protected Tuple2D<double[], Tuple2D<double[], double[]>> getSampleAndBreakpointTable(
-        final List<Array> scanlinesi, final List<Array> scanlinesj) {
+            final List<Array> scanlinesi, final List<Array> scanlinesj) {
         final double[] samples = ImageTools.createSampleTable(this.binSize);
         final Array scanlinesiC = cross.datastructures.tools.ArrayTools.glue(
-            scanlinesi);
+                scanlinesi);
         final Array scanlinesjC = cross.datastructures.tools.ArrayTools.glue(
-            scanlinesj);
+                scanlinesj);
 
         final ArrayStatsScanner ass = new ArrayStatsScanner();
         final StatsMap[] sm = ass.apply(new Array[]{scanlinesiC, scanlinesjC});
@@ -230,30 +230,30 @@ public class Default2DTWVisualizer implements IVisualization {
         }
 
         final double[] breakpointsi = ImageTools.getBreakpoints(scanlinesiC,
-            this.binSize, Double.NEGATIVE_INFINITY);
+                this.binSize, Double.NEGATIVE_INFINITY);
         final double[] breakpointsj = ImageTools.getBreakpoints(scanlinesjC,
-            this.binSize, Double.NEGATIVE_INFINITY);
+                this.binSize, Double.NEGATIVE_INFINITY);
 
-        return new Tuple2D<double[], Tuple2D<double[], double[]>>(samples,
-            new Tuple2D<double[], double[]>(breakpointsi, breakpointsj));
+        return new Tuple2D<>(samples,
+                new Tuple2D<>(breakpointsi, breakpointsj));
     }
 
     /**
      * Creates the image.
      *
-     * @param outputintensities        output intensities
+     * @param outputintensities output intensities
      * @param outputintensitiescounter counter for the output intensities
-     * @param imageheight              image height
-     * @param samples                  samples
-     * @param breakpointsi             break points for reference
-     * @param breakpointsj             break points for query
+     * @param imageheight image height
+     * @param samples samples
+     * @param breakpointsi break points for reference
+     * @param breakpointsj break points for query
      * @return image
      */
     protected BufferedImage ci(
-        final List<Tuple2D<Array, Array>> outputintensities,
-        final List<Tuple2D<Integer, Integer>> outputintensitiescounter,
-        int imageheight, final double[] samples,
-        final double[] breakpointsi, final double[] breakpointsj) {
+            final List<Tuple2D<Array, Array>> outputintensities,
+            final List<Tuple2D<Integer, Integer>> outputintensitiescounter,
+            int imageheight, final double[] samples,
+            final double[] breakpointsi, final double[] breakpointsj) {
 
         int imagewidth = outputintensities.size();
         if (!this.horizontal) {
@@ -262,11 +262,11 @@ public class Default2DTWVisualizer implements IVisualization {
         }
 
         log.info("Creating BufferedImage(" + imagewidth + "x" + imageheight
-            + ")");
+                + ")");
         log.info("{},{}", outputintensities.size(), outputintensities.get(0).
-            getFirst().getShape()[0]);
+                getFirst().getShape()[0]);
         final BufferedImage img = new BufferedImage(imagewidth, imageheight,
-            BufferedImage.TYPE_INT_RGB);
+                BufferedImage.TYPE_INT_RGB);
         final WritableRaster raster = img.getRaster();
 
         int rasterline = 0;
@@ -277,23 +277,23 @@ public class Default2DTWVisualizer implements IVisualization {
             final IndexIterator oiteri = t.getFirst().getIndexIterator();
             final IndexIterator oiterj = t.getSecond().getIndexIterator();
             final int counteri = outputintensitiescounter.get(rasterline).
-                getFirst();
+                    getFirst();
             final int counterj = outputintensitiescounter.get(rasterline).
-                getSecond();
+                    getSecond();
             int c = 0;
             while (oiteri.hasNext() && oiterj.hasNext()) {
                 if (c >= imageheight && this.horizontal) {
                     log.error("Skipping {} value(s) in scanline {}.", c
-                        - imageheight, rasterline);
+                            - imageheight, rasterline);
                     break;
                 }
                 double intensityi = (Double) oiteri.next();
                 double intensityj = (Double) oiterj.next();
                 if (this.normalize) {
                     rgbvalueEqual = getRasterColor(ImageTools.getSample(
-                        samples, breakpointsi, intensityi / counteri),
-                        1.0d, ImageTools.getSample(samples, breakpointsj,
-                            intensityj / counterj), 1.0d);
+                            samples, breakpointsi, intensityi / counteri),
+                            1.0d, ImageTools.getSample(samples, breakpointsj,
+                                    intensityj / counterj), 1.0d);
                 } else if (!this.normalize && this.binSize == 2) {
                     if (intensityi > 0.0d) {
                         intensityi = 1.0d;
@@ -302,22 +302,22 @@ public class Default2DTWVisualizer implements IVisualization {
                         intensityj = 1.0d;
                     }
                     rgbvalueEqual = getRasterColor(intensityi, 1.0d,
-                        intensityj, 1.0d);
+                            intensityj, 1.0d);
                 } else {
                     rgbvalueEqual = getRasterColor(ImageTools.getSample(
-                        samples, breakpointsi, intensityi), 1.0d,
-                        ImageTools.getSample(samples, breakpointsj,
-                            intensityj), 1.0d);
+                            samples, breakpointsi, intensityi), 1.0d,
+                            ImageTools.getSample(samples, breakpointsj,
+                                    intensityj), 1.0d);
                 }
 
                 if (!this.horizontal) {
                     // System.out
                     // .println(c + "," + (imageheight - rasterline - 1));
                     raster.setPixel(c, imageheight - rasterline - 1,
-                        rgbvalueEqual);
+                            rgbvalueEqual);
                 } else {
                     raster.setPixel(rasterline, imageheight - c - 1,
-                        rgbvalueEqual);
+                            rgbvalueEqual);
                 }
 
                 c++;
@@ -341,7 +341,7 @@ public class Default2DTWVisualizer implements IVisualization {
     @Override
     public void configure(final Configuration cfg) {
         this.peakListVar = cfg.getString("var.peak_index_list",
-            "peak_index_list");
+                "peak_index_list");
 //        this.holdi = cfg.getBoolean(this.getClass().getName() + ".holdi", true);
 //        this.holdj = cfg.getBoolean(this.getClass().getName() + ".holdj", false);
 //        this.globalmax = cfg.getBoolean(this.getClass().getName()
@@ -358,14 +358,14 @@ public class Default2DTWVisualizer implements IVisualization {
     /**
      * Will create an array int[3] containing the rgb values for the raster.
      *
-     * @param ci    current intensity of the first series
+     * @param ci current intensity of the first series
      * @param maxci maximum intensity of the first series
-     * @param cj    current intensity of the second series
+     * @param cj current intensity of the second series
      * @param maxcj maximum intensity of the second series
      * @return rgb color array
      */
     protected int[] getRasterColor(final double ci, final double maxci,
-        final double cj, final double maxcj) {
+            final double cj, final double maxcj) {
         final int vi = (int) (ci * 255.0d / maxci);
         final int vj = (int) (cj * 255.0d / maxcj);
 
@@ -381,9 +381,9 @@ public class Default2DTWVisualizer implements IVisualization {
      */
     @Override
     public JFreeChart createChart(final String filename,
-        final String samplenamei, final String samplenamej,
-        final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rettimei,
-        final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rettimej) {
+            final String samplenamei, final String samplenamej,
+            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rettimei,
+            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rettimej) {
         final NumberAxis domain = new NumberAxis();
         domain.setLowerMargin(0);
         domain.setUpperMargin(0);
@@ -392,15 +392,15 @@ public class Default2DTWVisualizer implements IVisualization {
             domain.setLabel("1. retention time(first sample) [s]");
             final ArrayDouble.D1 irettime = rettimei.getFirst();
             domain.setRange(irettime.get(0),
-                irettime.get(irettime.getShape()[0] - 1));
+                    irettime.get(irettime.getShape()[0] - 1));
         } else if (this.holdj && !this.holdi) {
             domain.setLabel("1. retention time(second sample) [s]");
             final ArrayDouble.D1 jrettime = rettimej.getFirst();
             domain.setRange(jrettime.get(0),
-                jrettime.get(jrettime.getShape()[0] - 1));
+                    jrettime.get(jrettime.getShape()[0] - 1));
         } else {
             log.info(
-                "Using neither scan acquisition time from the first nor from the second chromatogram. Using the warp path index for the domain axis.");
+                    "Using neither scan acquisition time from the first nor from the second chromatogram. Using the warp path index for the domain axis.");
             if (this.currentrasterline != -1) {
                 domain.setRange(0, this.currentrasterline);
                 domain.setLabel("warp path index");
@@ -416,23 +416,23 @@ public class Default2DTWVisualizer implements IVisualization {
         values.setAutoRange(false);
         final ArrayDouble.D1 secondrettime = rettimei.getSecond();
         values.setRange(secondrettime.get(0), secondrettime.get(secondrettime.
-            getShape()[0] - 1));
+                getShape()[0] - 1));
         values.setLabel("2. ret time [sec]");
 
         try {
             final XYBPlot plot = new XYBPlot(filename, domain, values);
             final JFreeChart chart = new JFreeChart(
-                "Differential time warp visualization", plot);
+                    "Differential time warp visualization", plot);
             chart.setAntiAlias(true);
             chart.setBackgroundPaint(Color.WHITE);
 
             final int scaleresolution = 100;
             final LookupPaintScale paintscalei = new LookupPaintScale(0,
-                scaleresolution, Color.white);
+                    scaleresolution, Color.white);
             final LookupPaintScale paintscalej = new LookupPaintScale(0,
-                scaleresolution, Color.white);
+                    scaleresolution, Color.white);
             final LookupPaintScale paintscaleij = new LookupPaintScale(0,
-                scaleresolution, Color.white);
+                    scaleresolution, Color.white);
             int[] rgb = new int[3];
             for (int i = 0; i < scaleresolution; i++) {
                 rgb = getRasterColor(i, scaleresolution, 0, scaleresolution);
@@ -446,14 +446,14 @@ public class Default2DTWVisualizer implements IVisualization {
             final NumberAxis scaleaxisi = new NumberAxis(samplenamei);
             final NumberAxis scaleaxisj = new NumberAxis(samplenamej);
             final NumberAxis scaleaxisij = new NumberAxis(samplenamei + " and "
-                + samplenamej);
+                    + samplenamej);
             scaleaxisi.setRange(0, scaleresolution);
             scaleaxisj.setRange(0, scaleresolution);
             scaleaxisij.setRange(0, scaleresolution);
             chart.addSubtitle(0, new PaintScaleLegend(paintscalei, scaleaxisi));
             chart.addSubtitle(1, new PaintScaleLegend(paintscalej, scaleaxisj));
             chart.addSubtitle(2,
-                new PaintScaleLegend(paintscaleij, scaleaxisij));
+                    new PaintScaleLegend(paintscaleij, scaleaxisij));
 
             return chart;
         } catch (final IOException e) {
@@ -466,11 +466,11 @@ public class Default2DTWVisualizer implements IVisualization {
      */
     @Override
     public JFreeChart addPeakMarker(final JFreeChart chart,
-        final Tuple2D<Array, Array> warpPathij, final IFileFragment ref,
-        final IFileFragment query,
-        final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rettimei,
-        final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rettimej,
-        final int spm) {
+            final Tuple2D<Array, Array> warpPathij, final IFileFragment ref,
+            final IFileFragment query,
+            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rettimei,
+            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rettimej,
+            final int spm) {
         ArrayDouble.D1 secondColumnTime = null;
         ArrayDouble.D1 firstColumnTime = null;
         Array peakident = null;
@@ -481,14 +481,14 @@ public class Default2DTWVisualizer implements IVisualization {
                 secondColumnTime = rettimei.getSecond();
                 firstColumnTime = rettimei.getFirst();
                 path = ArrayTools2.createPath(warpPathij.getSecond(),
-                    warpPathij.getFirst());
+                        warpPathij.getFirst());
                 peakident = ref.getChild(this.peakListVar).getArray();
                 peakwarp = query.getChild(this.peakListVar).getArray();
             } else if (this.holdj && !this.holdi) {
                 secondColumnTime = rettimej.getSecond();
                 firstColumnTime = rettimej.getFirst();
                 path = ArrayTools2.createPath(warpPathij.getFirst(), warpPathij.
-                    getSecond());
+                        getSecond());
                 peakident = query.getChild(this.peakListVar).getArray();
                 peakwarp = ref.getChild(this.peakListVar).getArray();
             } else {
@@ -514,7 +514,7 @@ public class Default2DTWVisualizer implements IVisualization {
             final int x = index / scanspermodulation;
             final int y = index % scanspermodulation;
             addMarker(plot, firstColumnTime.get(x + 1), secondColumnTime.get(
-                y + 1), true, refid++);
+                    y + 1), true, refid++);
         }
 
         final IndexIterator iterwarp = peakwarp.getIndexIterator();
@@ -525,7 +525,7 @@ public class Default2DTWVisualizer implements IVisualization {
             final int y = index % scanspermodulation;
             for (Integer x : xs) {
                 addMarker(plot, firstColumnTime.get(x + 1),
-                    secondColumnTime.get(y + 1), false, queryid);
+                        secondColumnTime.get(y + 1), false, queryid);
             }
             queryid++;
         }
@@ -537,14 +537,14 @@ public class Default2DTWVisualizer implements IVisualization {
      * Adding a marker to the given plot.
      *
      * @param plot plot
-     * @param x    x
-     * @param y    y
+     * @param x x
+     * @param y y
      * @param isI  <code>true</code> then the marker will be painted in red,
-     *             otherwise green
-     * @param id   peak id
+     * otherwise green
+     * @param id peak id
      */
     private void addMarker(final XYPlot plot, final double x, final double y,
-        final boolean isI, final int id) {
+            final boolean isI, final int id) {
         XYPointerAnnotation pm;
         if (isI) {
             pm = new XYPointerAnnotation("" + id, x, y, 7 * Math.PI / 4.0d);

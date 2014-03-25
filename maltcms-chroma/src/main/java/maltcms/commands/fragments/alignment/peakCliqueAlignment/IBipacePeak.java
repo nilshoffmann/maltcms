@@ -74,9 +74,9 @@ public interface IBipacePeak extends IPeak {
     void retainSimilarityRemoveRest(LongObjectMap<PeakEdge> edgeMap, final IBipacePeak p);
 
     /**
-     * This is a sequential id of the peak in the order the peak objects
-     * were created. Do not use this for unequivocal identification.
-     * Use getUniqueId() instead.
+     * This is a sequential id of the peak in the order the peak objects were
+     * created. Do not use this for unequivocal identification. Use
+     * getUniqueId() instead.
      *
      * @return
      */

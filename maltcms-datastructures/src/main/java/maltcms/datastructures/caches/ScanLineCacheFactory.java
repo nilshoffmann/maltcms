@@ -31,8 +31,8 @@ import cross.datastructures.fragments.IFileFragment;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * This Factory creates all {@link IScanLine} caches. Each IScanLine instance
- * is created new every time any of the <code>get*</code> methods is invoked.
+ * This Factory creates all {@link IScanLine} caches. Each IScanLine instance is
+ * created new every time any of the <code>get*</code> methods is invoked.
  *
  * Previously created instances are not cached and returned due to memory leak
  * issues.

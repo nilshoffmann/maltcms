@@ -242,7 +242,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("Peak number " + this.peakIndex + " at position " + this.scanIndex + " and rt: " + this.sat
-            + " in file " + this.association);
+                + " in file " + this.association);
         return sb.toString();
     }
 
@@ -254,12 +254,13 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
      */
     @Override
     public Array getFeature(String name) {
-        if (name.equals("scan_acquisition_time")) {
-            return Array.factory(this.sat);
-        } else if (name.equals("scan_index")) {
-            return Array.factory(this.scanIndex);
-        } else if (name.equals("binned_intensity_values")) {
-            return getMsIntensities();
+        switch (name) {
+            case "scan_acquisition_time":
+                return Array.factory(this.sat);
+            case "scan_index":
+                return Array.factory(this.scanIndex);
+            case "binned_intensity_values":
+                return getMsIntensities();
         }
         Array retVal = super.getFeature(name);
         if (retVal != null) {
@@ -276,9 +277,9 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
     @Override
     public List<String> getFeatureNames() {
         List<String> superFeatureNames = super.getFeatureNames();
-        LinkedList<String> allFeatures = new LinkedList<String>(superFeatureNames);
+        LinkedList<String> allFeatures = new LinkedList<>(superFeatureNames);
         allFeatures.addAll(Arrays.asList("scan_acquisition_time", "scan_index",
-            "binned_intensity_values"));
+                "binned_intensity_values"));
         return allFeatures;
     }
 

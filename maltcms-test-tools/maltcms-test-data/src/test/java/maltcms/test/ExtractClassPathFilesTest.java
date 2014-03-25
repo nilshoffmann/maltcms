@@ -39,7 +39,7 @@ import org.junit.rules.TemporaryFolder;
  * @author Nils Hoffmann
  */
 public class ExtractClassPathFilesTest {
-    
+
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
 
@@ -60,8 +60,8 @@ public class ExtractClassPathFilesTest {
             ecpf.after();
             Assert.assertFalse(f.exists());
         } catch (Throwable ex) {
-           Assert.fail(ex.getLocalizedMessage());
+            Assert.fail(ex.getLocalizedMessage());
         }
-        
+
     }
 }

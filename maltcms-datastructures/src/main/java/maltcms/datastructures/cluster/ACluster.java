@@ -50,22 +50,27 @@ public abstract class ACluster implements ICluster {
         return this.dist[i];
     }
 
+    @Override
     public double getDistanceToParent() {
         return this.distanceToParent;
     }
 
+    @Override
     public int getID() {
         return this.id;
     }
 
+    @Override
     public String getLabelString() {
         return this.labelstring;
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public int getSize() {
         return this.size;
     }
@@ -73,10 +78,11 @@ public abstract class ACluster implements ICluster {
     public String printDistances() {
         final StringBuilder sb = new StringBuilder();
         sb.append("ICluster " + getID() + " has distance to parent: "
-            + getDistanceToParent());
+                + getDistanceToParent());
         return sb.toString();
     }
 
+    @Override
     public void setDistances(final double[] d) {
         this.dist = d;
     }
@@ -89,14 +95,17 @@ public abstract class ACluster implements ICluster {
         this.dist[i] = d;
     }
 
+    @Override
     public void setDistanceToParent(final double d) {
         this.distanceToParent = d;
     }
 
+    @Override
     public void setID(final int id1) {
         this.id = id1;
     }
 
+    @Override
     public void setLabelString(final String s) {
         this.labelstring = s;
     }
@@ -105,10 +114,12 @@ public abstract class ACluster implements ICluster {
         this.name = "(" + lc.getName() + " " + rc.getName() + ")";
     }
 
+    @Override
     public void setName(final String name1) {
         this.name = name1;
     }
 
+    @Override
     public void setSize(final int size1) {
         this.size = size1;
     }

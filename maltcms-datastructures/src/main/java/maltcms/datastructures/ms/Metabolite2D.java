@@ -38,11 +38,11 @@ public class Metabolite2D extends Metabolite implements IRetentionInfo2D {
     private String rt2unit = "sec";
 
     public Metabolite2D(final String name1, final String id1,
-        final String id_type1, final int dbno1, final String comments1,
-        final String formula1, final String date1, final double ri1,
-        final double retentionTime1, final String retentionTimeUnit1,
-        final int mw1, final String sp1, final String shortName,
-        final ArrayDouble.D1 masses1, final ArrayInt.D1 intensities1, final double ri2, final double retentionTime2, final String retentionTimeUnit2) {
+            final String id_type1, final int dbno1, final String comments1,
+            final String formula1, final String date1, final double ri1,
+            final double retentionTime1, final String retentionTimeUnit1,
+            final int mw1, final String sp1, final String shortName,
+            final ArrayDouble.D1 masses1, final ArrayInt.D1 intensities1, final double ri2, final double retentionTime2, final String retentionTimeUnit2) {
         super(name1, id1, id_type1, dbno1, comments1, formula1, date1, ri1, retentionTime1, retentionTimeUnit1, mw1, sp1, shortName, masses1, intensities1);
         this.rt2 = retentionTime2;
         this.rt2unit = retentionTimeUnit2;
@@ -100,12 +100,12 @@ public class Metabolite2D extends Metabolite implements IRetentionInfo2D {
         }
         if (getRetentionTime() > 0) {
             sb.append("Synon: RT:" + getRetentionTimeUnit()
-                + getRetentionTime());
+                    + getRetentionTime());
             sb.append("\n");
         }
         if (getRetentionTime2D() > 0) {
             sb.append("Synon: RT2:" + getRetentionTimeUnit2D()
-                + getRetentionTime2D());
+                    + getRetentionTime2D());
             sb.append("\n");
         }
         sb.append("Comments: " + getComments());
@@ -139,6 +139,7 @@ public class Metabolite2D extends Metabolite implements IRetentionInfo2D {
         return sb.toString();
     }
 
+    @Override
     public void update(final IMetabolite m) {
         try {
             super.update(m);

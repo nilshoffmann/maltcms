@@ -39,8 +39,8 @@ import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Exports chromatographic and mass spectrometric data from the common
- * data model representation to mzML.
+ * Exports chromatographic and mass spectrometric data from the common data
+ * model representation to mzML.
  *
  * Supports 1D and 2D chromatography.
  *

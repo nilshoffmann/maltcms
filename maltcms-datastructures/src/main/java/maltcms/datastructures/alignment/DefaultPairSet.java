@@ -47,9 +47,9 @@ import maltcms.datastructures.ms.IAnchor;
  */
 @Slf4j
 public class DefaultPairSet<T extends IAnchor> implements
-    Iterable<Tuple2D<T, T>> {
+        Iterable<Tuple2D<T, T>> {
 
-    List<Tuple2D<T, T>> al = new ArrayList<Tuple2D<T, T>>();
+    List<Tuple2D<T, T>> al = new ArrayList<>();
     @Configurable
     private int minScansBetweenAnchors = 1;
 
@@ -63,18 +63,18 @@ public class DefaultPairSet<T extends IAnchor> implements
 
     public DefaultPairSet(final List<T> a1, final List<T> a2) {
         this.minScansBetweenAnchors = Factory.getInstance().getConfiguration()
-            .getInt(this.getClass().getName() + ".minScansBetweenAnchors",
-                1);
+                .getInt(this.getClass().getName() + ".minScansBetweenAnchors",
+                        1);
         // EvalTools.eqI(a1.size(),a2.size());
         this.al = prepareWithSet(a1, a2);
     }
 
     public List<Tuple2D<Integer, Integer>> getCorrespondingScans() {
-        final ArrayList<Tuple2D<Integer, Integer>> al1 = new ArrayList<Tuple2D<Integer, Integer>>(
-            getSize());
+        final ArrayList<Tuple2D<Integer, Integer>> al1 = new ArrayList<>(
+                getSize());
         for (final Tuple2D<T, T> t : this) {
-            al1.add(new Tuple2D<Integer, Integer>(t.getFirst().getScanIndex(),
-                t.getSecond().getScanIndex()));
+            al1.add(new Tuple2D<>(t.getFirst().getScanIndex(),
+                    t.getSecond().getScanIndex()));
         }
         return al1;
     }
@@ -83,28 +83,29 @@ public class DefaultPairSet<T extends IAnchor> implements
         return this.al.size();
     }
 
+    @Override
     public Iterator<Tuple2D<T, T>> iterator() {
         return this.al.iterator();
     }
 
     protected List<Tuple2D<T, T>> prepareWithSet(final List<T> a1,
-        final List<T> a2) {
-        final List<Tuple2D<T, T>> pairedAnchors = new ArrayList<Tuple2D<T, T>>();
-        final HashMap<String, T> s1 = new HashMap<String, T>();
+            final List<T> a2) {
+        final List<Tuple2D<T, T>> pairedAnchors = new ArrayList<>();
+        final HashMap<String, T> s1 = new HashMap<>();
         this.log.debug("Number of anchors: " + pairedAnchors.size());
         for (final T a : a1) {
             this.log.info("Adding lhs anchor with retention index "
-                + a.toString() + " scan index: " + a.getScanIndex());
+                    + a.toString() + " scan index: " + a.getScanIndex());
             s1.put(a.toString(), a);
         }
         for (final T b : a2) {
             this.log.info("Adding rhs anchor with retention index "
-                + b.toString() + " scan index: " + b.getScanIndex());
+                    + b.toString() + " scan index: " + b.getScanIndex());
             if (s1.containsKey(b.toString())) {
                 this.log.info("IAnchor matches for ("
-                    + s1.get(b.toString()).getScanIndex() + "<->"
-                    + b.getScanIndex() + ")");
-                pairedAnchors.add(new Tuple2D<T, T>(s1.get(b.toString()), b));
+                        + s1.get(b.toString()).getScanIndex() + "<->"
+                        + b.getScanIndex() + ")");
+                pairedAnchors.add(new Tuple2D<>(s1.get(b.toString()), b));
             }
         }
 
@@ -116,16 +117,16 @@ public class DefaultPairSet<T extends IAnchor> implements
             // System.out.println(a.getName()+"
             // "+a.getScanIndex()+"<->"+b.getName()+" "+b.getScanIndex());
             this.log.info(a.getName() + " " + a.getScanIndex() + ":"
-                + b.getName() + " " + b.getScanIndex());
+                    + b.getName() + " " + b.getScanIndex());
         }
         return validAnchors;
     }
 
     public List<Tuple2D<T, T>> checkConsistency(
-        List<Tuple2D<T, T>> pairedAnchors) {
+            List<Tuple2D<T, T>> pairedAnchors) {
         int prevx = -1;
         int prevy = -1;
-        final ArrayList<Tuple2D<T, T>> validAnchors = new ArrayList<Tuple2D<T, T>>();
+        final ArrayList<Tuple2D<T, T>> validAnchors = new ArrayList<>();
         for (int i = 0; i < pairedAnchors.size(); i++) {
             final Tuple2D<T, T> tpl = pairedAnchors.remove(i);
             // if current indices are lower, we must remove the last anchor
@@ -150,32 +151,32 @@ public class DefaultPairSet<T extends IAnchor> implements
             // previous anchor
             if ((i > 0) && i < pairedAnchors.size() - 1) {
                 if ((tpl.getFirst().getScanIndex() - prevx) > 1
-                    && (tpl.getSecond().getScanIndex() - prevy) > 1) {
+                        && (tpl.getSecond().getScanIndex() - prevy) > 1) {
                     validAnchors.add(tpl);
                     this.log.info("Keeping valid anchor at {},{}", tpl
-                        .getFirst().getScanIndex(), tpl.getSecond()
-                        .getScanIndex());
+                            .getFirst().getScanIndex(), tpl.getSecond()
+                            .getScanIndex());
                     prevx = tpl.getFirst().getScanIndex();
                     prevy = tpl.getSecond().getScanIndex();
                 } else {
                     this.log.info("Removing invalid anchor at {},{}", tpl
-                        .getFirst().getScanIndex(), tpl.getSecond()
-                        .getScanIndex());
+                            .getFirst().getScanIndex(), tpl.getSecond()
+                            .getScanIndex());
                     prevx = validAnchors.get(validAnchors.size() - 1)
-                        .getFirst().getScanIndex();
+                            .getFirst().getScanIndex();
                     prevy = validAnchors.get(validAnchors.size() - 1)
-                        .getSecond().getScanIndex();
+                            .getSecond().getScanIndex();
                 }
             }
             // end case, remove preceding anchor, if it violates
             // our monotonicity assumption
             if ((i == pairedAnchors.size() - 1)) {
                 if ((tpl.getFirst().getScanIndex() - prevx) > 1
-                    && (tpl.getSecond().getScanIndex() - prevy) > 1) {
+                        && (tpl.getSecond().getScanIndex() - prevy) > 1) {
                     validAnchors.add(tpl);
                     this.log.info("Keeping valid anchor at {},{}", tpl
-                        .getFirst().getScanIndex(), tpl.getSecond()
-                        .getScanIndex());
+                            .getFirst().getScanIndex(), tpl.getSecond()
+                            .getScanIndex());
                     prevx = tpl.getFirst().getScanIndex();
                     prevy = tpl.getSecond().getScanIndex();
                 } else {

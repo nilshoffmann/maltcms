@@ -74,7 +74,7 @@ public class SavitzkyGolayFilterTest {
     @Test
     public void testApply() throws IOException {
         File outputFolder = tf.newFolder(
-            "cdf");
+                "cdf");
         File outputFile = ZipResourceExtractor.extract("/cdf/1D/glucoseA.cdf.gz", outputFolder);
         File unzippedFile = new File(outputFolder, "glucoseA.cdf");
         ImmutableFileFragment ff = new ImmutableFileFragment(unzippedFile);

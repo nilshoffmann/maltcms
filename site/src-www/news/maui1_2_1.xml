@@ -4,9 +4,9 @@
         <h1>Maui 1.2.1 Released on April 24th, 2013</h1>
         <p>Maui is an Open Source application for chromatography-mass spectrometry using (GC/LC)n-MS instruments based on Maltcms. It is a modular Netbeans Rich Client Platform application, which allows for easy extension of its functionality, while still maintaining platform independence.
         </p>
-		<p>
-			<a href="http://maltcms.de/maui/installation.html">More information</a>
-		</p>
+        <p>
+            <a href="http://maltcms.de/maui/installation.html">More information</a>
+        </p>
 
     </column>
 </content>

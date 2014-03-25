@@ -42,10 +42,10 @@ import net.sf.mpaxs.spi.concurrent.MpaxsResubmissionCompletionService;
  */
 public abstract class APipeline<T extends Serializable> implements IPipeline<T> {
 
-    private List<Callable<T>> pipelines = new ArrayList<Callable<T>>();
+    private List<Callable<T>> pipelines = new ArrayList<>();
     private final String name = UUID.randomUUID().toString();
-    protected ICompletionService<T> ics = new MpaxsResubmissionCompletionService<T>(
-        new MpaxsCompletionService<T>());
+    protected ICompletionService<T> ics = new MpaxsResubmissionCompletionService<>(
+            new MpaxsCompletionService<T>());
 
     public String getName() {
         return name;

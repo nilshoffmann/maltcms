@@ -31,8 +31,8 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 /**
- * Implementation of Perpendicular Distance of a Point onto a line.
- * This is useful for range searches along a given line/dimension.
+ * Implementation of Perpendicular Distance of a Point onto a line. This is
+ * useful for range searches along a given line/dimension.
  *
  * @author Nils Hoffmann
  */

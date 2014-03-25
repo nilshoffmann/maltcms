@@ -43,7 +43,7 @@ public class RetentionIndexCalculatorTest {
     public void testSameNumberOfRisAndCompounds() {
         //create an array of 38 elements from [10 to 10+38-1]
         int[] cs = (int[]) ArrayTools.indexArray(38, 10).get1DJavaArray(
-            int.class);
+                int.class);
         double[] rts;
         double[] rirts = new double[cs.length];
         rts = rirts;
@@ -92,7 +92,7 @@ public class RetentionIndexCalculatorTest {
     public void testMoreCompoundsThanRis() {
         //create an array of 38 elements from [10 to 10+38-1]
         int[] cs = (int[]) ArrayTools.indexArray(38, 10).get1DJavaArray(
-            int.class);
+                int.class);
         double[] rts = new double[cs.length * 5];
         double[] rirts = new double[cs.length];
         System.out.println("Number of RIs: " + cs.length);

@@ -48,7 +48,7 @@ public final class ContinuousWaveletTransform implements Serializable {
     }
 
     public final double[] apply(final double[] x, final double scale,
-        final double... params) {
+            final double... params) {
         final double[] arr = new double[x.length];
         final double[] lut = new double[2 * ((int) scale) + 1];
         final int minIdx = -((int) scale);
@@ -73,12 +73,12 @@ public final class ContinuousWaveletTransform implements Serializable {
     }
 
     public final double[] applyInverseTransform(
-        final List<double[]> scaleImages, final List<Double> scales) {
+            final List<double[]> scaleImages, final List<Double> scales) {
         return applyInverse(scaleImages, scales);
     }
 
     public final double[] applyInverse(final List<double[]> scaleImages,
-        final List<Double> scales, final double... params) {
+            final List<Double> scales, final double... params) {
         final double[] arr = new double[scaleImages.get(0).length];
 
         for (int si = 0; si < scaleImages.size(); si++) {
@@ -100,7 +100,7 @@ public final class ContinuousWaveletTransform implements Serializable {
             }
         }
         final double admConstSq = w.getAdmissabilityConstant()
-            * w.getAdmissabilityConstant();
+                * w.getAdmissabilityConstant();
         for (int i = 0; i < arr.length; i++) {
             arr[i] /= (admConstSq);
         }
@@ -116,10 +116,10 @@ public final class ContinuousWaveletTransform implements Serializable {
     }
 
     final void fillLut(final double[] lut, final double scale,
-        final int minIdx, final double... params) {
+            final int minIdx, final double... params) {
         for (int i = 0; i < lut.length; i++) {
             lut[i] = w.applyMotherWavelet((double) revmap(i, minIdx) / scale,
-                params);
+                    params);
         }
     }
 

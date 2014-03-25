@@ -54,7 +54,7 @@ public class QuadTreeNode<T> {
 
     public QuadTreeNode(double originX, double originY, double width, double height, Tuple2D<Point2D, T> t, int capacity, int level) {
         this.capacity = capacity;
-        this.t = new ArrayList<Tuple2D<Point2D, T>>(this.capacity);
+        this.t = new ArrayList<>(this.capacity);
         this.t.add(t);
         this.r = new Rectangle2D.Double(originX, originY, width, height);
         this.level = level;
@@ -141,7 +141,7 @@ public class QuadTreeNode<T> {
         if (!r.intersects(getArea())) {
             return Collections.emptyList();
         }
-        List<Tuple2D<Point2D, T>> l = new ArrayList<Tuple2D<Point2D, T>>();
+        List<Tuple2D<Point2D, T>> l = new ArrayList<>();
         if (this.t != null) {//this node has no children yet
             //iterate over local points
             for (Tuple2D<Point2D, T> tple : this.t) {
@@ -297,7 +297,7 @@ public class QuadTreeNode<T> {
             //split, if capacity is exceeded
             if (this.t.size() == this.capacity) {
                 if (this.children == null || this.children.isEmpty()) {
-                    this.children = new ArrayList<QuadTreeNode<T>>(4);
+                    this.children = new ArrayList<>(4);
                     for (int i = 0; i < 4; i++) {
                         this.children.add(null);
                     }
@@ -327,16 +327,16 @@ public class QuadTreeNode<T> {
         if (node == null) {
             switch (q) {
                 case NW:
-                    node = new QuadTreeNode<T>(this.r.x, this.r.y + height, width, height, tpl, this.capacity, this.level + 1);
+                    node = new QuadTreeNode<>(this.r.x, this.r.y + height, width, height, tpl, this.capacity, this.level + 1);
                     break;
                 case NE:
-                    node = new QuadTreeNode<T>(this.r.x + width, this.r.y + height, width, height, tpl, this.capacity, this.level + 1);
+                    node = new QuadTreeNode<>(this.r.x + width, this.r.y + height, width, height, tpl, this.capacity, this.level + 1);
                     break;
                 case SE:
-                    node = new QuadTreeNode<T>(this.r.x + width, this.r.y, width, height, tpl, this.capacity, this.level + 1);
+                    node = new QuadTreeNode<>(this.r.x + width, this.r.y, width, height, tpl, this.capacity, this.level + 1);
                     break;
                 case SW:
-                    node = new QuadTreeNode<T>(this.r.x, this.r.y, width, height, tpl, this.capacity, this.level + 1);
+                    node = new QuadTreeNode<>(this.r.x, this.r.y, width, height, tpl, this.capacity, this.level + 1);
                     break;
                 default:
                     throw new IllegalStateException("Unknown switch case: " + q);

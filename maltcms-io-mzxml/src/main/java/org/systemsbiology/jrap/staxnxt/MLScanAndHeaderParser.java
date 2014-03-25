@@ -1,12 +1,11 @@
 /**
  * *************************************************************************
  *                                                                         *
- * This program is free software; you can redistribute it and/or modify *
- * it under the terms of the GNU Lesser General Public License as *
- * published by the Free Software Foundation; either version 2 of the *
- * License, or (at your option) any later version. *
- *                                                                         *
- **************************************************************************
+ * This program is free software; you can redistribute it and/or modify * it
+ * under the terms of the GNU Lesser General Public License as * published by
+ * the Free Software Foundation; either version 2 of the * License, or (at your
+ * option) any later version. * *
+ * *************************************************************************
  */
 /**
  * *****************************************************************************
@@ -40,14 +39,17 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- * dhmay changing 2009/10/21, incorporating Vagisha's changes and rebuilding my changes from 03/2009.
- * mzML 1.1 changes the way scan IDs are stored. They are now stored in
- * the "id" attribute of "spectrum", which is being used to contain multiple name-value pairs; the
- * name of the name-value pair containing the scan number is "scan", so I'm knocking off everything but that pair.
- * Also changing to cobble together Scan.massIntensityList from its components, which was missed earlier.
- * Also calling tmpScanHeader.setRetentionTime(), which was previously not set.
+ * dhmay changing 2009/10/21, incorporating Vagisha's changes and rebuilding my
+ * changes from 03/2009. mzML 1.1 changes the way scan IDs are stored. They are
+ * now stored in the "id" attribute of "spectrum", which is being used to
+ * contain multiple name-value pairs; the name of the name-value pair containing
+ * the scan number is "scan", so I'm knocking off everything but that pair. Also
+ * changing to cobble together Scan.massIntensityList from its components, which
+ * was missed earlier. Also calling tmpScanHeader.setRetentionTime(), which was
+ * previously not set.
  *
- * F Levander changing 2010-02-11. Changed parsing of CVparams from names to accession numbers since those are stable.
+ * F Levander changing 2010-02-11. Changed parsing of CVparams from names to
+ * accession numbers since those are stable.
  */
 public class MLScanAndHeaderParser {
 
@@ -75,9 +77,10 @@ public class MLScanAndHeaderParser {
     }
 
     /**
-     * dhmay: mzML 1.1 changes the way scan IDs are stored. They are now stored in
-     * the "id" attribute of "spectrum", which is being used to contain multiple name-value pairs; the
-     * name of the name-value pair containing the scan number is "scan", so I'm knocking off everything but that pair.
+     * dhmay: mzML 1.1 changes the way scan IDs are stored. They are now stored
+     * in the "id" attribute of "spectrum", which is being used to contain
+     * multiple name-value pairs; the name of the name-value pair containing the
+     * scan number is "scan", so I'm knocking off everything but that pair.
      *
      * @param idString
      * @return The scan number or if a numeric value couldn't be parsed.
@@ -109,7 +112,7 @@ public class MLScanAndHeaderParser {
 
             parseMLScanAndHeader(xmlSR);
 
-        } catch (Exception e) {
+        } catch (XMLStreamException e) {
             String exception1 = e.getMessage();
             if (!exception1.equals("ScanHeaderEndFoundException")) {
                 if (!exception1.equals("ScanEndFoundException")) {
@@ -128,7 +131,7 @@ public class MLScanAndHeaderParser {
     }
 
     public void parseMLScanAndHeader(XMLStreamReader xmlSR)
-        throws XMLStreamException {
+            throws XMLStreamException {
         boolean inSpectrum = false;
         boolean inPeaks = false;
         boolean isPeaks = false;

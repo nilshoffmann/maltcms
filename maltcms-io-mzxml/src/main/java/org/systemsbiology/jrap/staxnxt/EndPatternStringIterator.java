@@ -8,10 +8,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- * Created by IntelliJ IDEA.
- * User: tholzman
- * Date: Nov 16, 2009
- * Time: 3:30:12 PM
+ * Created by IntelliJ IDEA. User: tholzman Date: Nov 16, 2009 Time: 3:30:12 PM
  * To change this template use File | Settings | File Templates.
  */
 //Iterates through long strings within a file that begin with one
@@ -84,10 +81,12 @@ public class EndPatternStringIterator implements Iterator {
 
     boolean noMore = false;
 
+    @Override
     public boolean hasNext() {
         return !noMore;
     }
 
+    @Override
     public StringBuilder next() {
         curBuf.setLength(0);
         //look for left pattern;
@@ -157,13 +156,14 @@ public class EndPatternStringIterator implements Iterator {
         return inputfactory.createXMLStreamReader(new StringBuilderReader(curBuf));
     }
 
+    @Override
     public void remove() {
     }
 
     public static void main(String argv[]) {
         try {
             EndPatternStringIterator epsi
-                = new EndPatternStringIterator(argv[0], argv[1], new LineIterator(new ByteBufferIterator(argv[2])));
+                    = new EndPatternStringIterator(argv[0], argv[1], new LineIterator(new ByteBufferIterator(argv[2])));
             while (epsi.hasNext()) {
                 StringBuilder sb = epsi.next();
                 int lineno = epsi.getFirstLineNo();

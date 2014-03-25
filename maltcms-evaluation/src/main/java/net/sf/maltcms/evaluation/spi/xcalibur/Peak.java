@@ -94,44 +94,54 @@ public class Peak implements IFeatureVector {
      */
     @Override
     public Array getFeature(String name) {
-        if (name.equals("RT")) {
-            ArrayDouble.D0 a = new ArrayDouble.D0();
-            a.set(this.rt);
-            return a;
-        } else if (name.equals("RTSTART")) {
-            ArrayDouble.D0 a = new ArrayDouble.D0();
-            a.set(this.rtstart);
-            return a;
-        } else if (name.equals("RTSTOP")) {
-            ArrayDouble.D0 a = new ArrayDouble.D0();
-            a.set(this.rtstop);
-            return a;
-        } else if (name.equals("AREA")) {
-            ArrayDouble.D0 a = new ArrayDouble.D0();
-            a.set(this.area);
-            return a;
-        } else if (name.equals("HEIGHT")) {
-            ArrayDouble.D0 a = new ArrayDouble.D0();
-            a.set(this.height);
-            return a;
-        } else if (name.equals("MW")) {
-            ArrayDouble.D1 a = new ArrayDouble.D1(this.mw.length);
-            for (int i = 0; i < this.mw.length; i++) {
-                a.set(i, this.mw[i]);
+        switch (name) {
+            case "RT": {
+                ArrayDouble.D0 a = new ArrayDouble.D0();
+                a.set(this.rt);
+                return a;
             }
-            return a;
-        } else if (name.equals("FILE")) {
-            ArrayChar.D1 a = new ArrayChar.D1(this.parent.getName().length());
-            a.setString(this.parent.getName());
-            return a;
-        } else if (name.equals("NAME")) {
-            ArrayChar.D1 a = new ArrayChar.D1(this.name.length());
-            a.setString(this.name);
-            return a;
-        } else if (name.equals("CREATORNAME")) {
-            ArrayChar.D1 a = new ArrayChar.D1(this.creatorname.length());
-            a.setString(this.creatorname);
-            return a;
+            case "RTSTART": {
+                ArrayDouble.D0 a = new ArrayDouble.D0();
+                a.set(this.rtstart);
+                return a;
+            }
+            case "RTSTOP": {
+                ArrayDouble.D0 a = new ArrayDouble.D0();
+                a.set(this.rtstop);
+                return a;
+            }
+            case "AREA": {
+                ArrayDouble.D0 a = new ArrayDouble.D0();
+                a.set(this.area);
+                return a;
+            }
+            case "HEIGHT": {
+                ArrayDouble.D0 a = new ArrayDouble.D0();
+                a.set(this.height);
+                return a;
+            }
+            case "MW": {
+                ArrayDouble.D1 a = new ArrayDouble.D1(this.mw.length);
+                for (int i = 0; i < this.mw.length; i++) {
+                    a.set(i, this.mw[i]);
+                }
+                return a;
+            }
+            case "FILE": {
+                ArrayChar.D1 a = new ArrayChar.D1(this.parent.getName().length());
+                a.setString(this.parent.getName());
+                return a;
+            }
+            case "NAME": {
+                ArrayChar.D1 a = new ArrayChar.D1(this.name.length());
+                a.setString(this.name);
+                return a;
+            }
+            case "CREATORNAME": {
+                ArrayChar.D1 a = new ArrayChar.D1(this.creatorname.length());
+                a.setString(this.creatorname);
+                return a;
+            }
         }
 
         throw new IllegalArgumentException("Feature with name " + name + " not supported!");

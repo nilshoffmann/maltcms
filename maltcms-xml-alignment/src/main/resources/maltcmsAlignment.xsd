@@ -34,10 +34,10 @@ for details.
     <complexType name="mappedPointsType">
         <sequence>
             <element ref="maltcms:resource" maxOccurs="1"
-                         minOccurs="1">
+                     minOccurs="1">
             </element>
             <element ref="maltcms:pointMap" minOccurs="1"
-                         maxOccurs="1">
+                     maxOccurs="1">
             </element>
         </sequence>
         <attribute name="isAlignmentReference" type="boolean"

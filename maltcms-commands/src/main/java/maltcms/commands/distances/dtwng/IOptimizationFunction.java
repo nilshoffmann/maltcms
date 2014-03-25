@@ -40,8 +40,8 @@ import maltcms.datastructures.array.IFeatureVector;
 public interface IOptimizationFunction extends IFileFragmentModifier {
 
     public abstract void init(List<IFeatureVector> l, List<IFeatureVector> r,
-        IArrayD2Double cumulatedScores, IArrayD2Double pwScores,
-        TwoFeatureVectorOperation tfvo);
+            IArrayD2Double cumulatedScores, IArrayD2Double pwScores,
+            TwoFeatureVectorOperation tfvo);
 
     public abstract void apply(int... is);
 

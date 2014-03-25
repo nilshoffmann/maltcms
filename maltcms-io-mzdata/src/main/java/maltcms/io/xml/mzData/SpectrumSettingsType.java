@@ -44,8 +44,8 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for spectrumSettingsType complex type.
  *
  * <p>
- * The following schema fragment specifies the expected content contained
- * within this class.
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  *
  * <pre>
  * &lt;complexType name=&quot;spectrumSettingsType&quot;&gt;
@@ -110,8 +110,8 @@ public class SpectrumSettingsType implements Serializable {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content
-     * contained within this class.
+     * The following schema fragment specifies the expected content contained
+     * within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -226,7 +226,7 @@ public class SpectrumSettingsType implements Serializable {
          */
         public List<SpectrumSettingsType.AcqSpecification.Acquisition> getAcquisition() {
             if (this.acquisition == null) {
-                this.acquisition = new ArrayList<SpectrumSettingsType.AcqSpecification.Acquisition>();
+                this.acquisition = new ArrayList<>();
             }
             return this.acquisition;
         }
@@ -293,8 +293,8 @@ public class SpectrumSettingsType implements Serializable {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content
-     * contained within this class.
+     * The following schema fragment specifies the expected content contained
+     * within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -410,7 +410,7 @@ public class SpectrumSettingsType implements Serializable {
      *
      */
     public void setAcqSpecification(
-        final SpectrumSettingsType.AcqSpecification value) {
+            final SpectrumSettingsType.AcqSpecification value) {
         this.acqSpecification = value;
     }
 
@@ -422,7 +422,7 @@ public class SpectrumSettingsType implements Serializable {
      *
      */
     public void setSpectrumInstrument(
-        final SpectrumSettingsType.SpectrumInstrument value) {
+            final SpectrumSettingsType.SpectrumInstrument value) {
         this.spectrumInstrument = value;
     }
 }

@@ -83,9 +83,9 @@ public abstract class AScanLineCache implements IScanLine {
         System.out.println("Initing AScanLineCache!");
         this.iff = iff1;
         final int modulation = this.iff.getChild(this.modulationVar).getArray()
-            .getInt(Index.scalarIndexImmutable);
+                .getInt(Index.scalarIndexImmutable);
         final int scanRate = this.iff.getChild(this.scanRateVar).getArray()
-            .getInt(Index.scalarIndexImmutable);
+                .getInt(Index.scalarIndexImmutable);
         this.scansPerModulation = modulation * scanRate;
         System.out.println("Estimating bin size!");
         estimateBinSize();
@@ -98,6 +98,7 @@ public abstract class AScanLineCache implements IScanLine {
      *
      * @param size bin size
      */
+    @Override
     public void setBinSize(final int size) {
         this.binSize = size;
     }
@@ -107,6 +108,7 @@ public abstract class AScanLineCache implements IScanLine {
      *
      * @return bin size
      */
+    @Override
     public int getBinsSize() {
         return this.binSize;
     }
@@ -135,6 +137,7 @@ public abstract class AScanLineCache implements IScanLine {
      *
      * @return last index
      */
+    @Override
     public int getLastIndex() {
         return this.lastIndex;
     }
@@ -144,6 +147,7 @@ public abstract class AScanLineCache implements IScanLine {
      *
      * @param index last index
      */
+    @Override
     public void setLastIndex(final int index) {
         this.lastIndex = index;
     }
@@ -153,7 +157,7 @@ public abstract class AScanLineCache implements IScanLine {
      */
     private void estimateLastIndex() {
         this.lastIndex = this.iff.getChild(this.scanIndexVar).getArray()
-            .getShape()[0] - 1;
+                .getShape()[0] - 1;
     }
 
     /**
@@ -163,15 +167,16 @@ public abstract class AScanLineCache implements IScanLine {
     public void configure(final Configuration cfg) {
         this.scanIndexVar = cfg.getString("var.scan_index", "scan_index");
         this.maxRangeVar = cfg
-            .getString("var.mass_range_max", "mass_range_max");
+                .getString("var.mass_range_max", "mass_range_max");
         this.modulationVar = cfg.getString("var.modulation_time",
-            "modulation_time");
+                "modulation_time");
         this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
     }
 
     /**
      * Will view some statistical information about the cache usage.
      */
+    @Override
     public void showStat() {
     }
 
@@ -180,6 +185,7 @@ public abstract class AScanLineCache implements IScanLine {
      *
      * @return scan line count
      */
+    @Override
     public int getScanLineCount() {
         return (int) (this.lastIndex / this.scansPerModulation);
     }
@@ -195,6 +201,7 @@ public abstract class AScanLineCache implements IScanLine {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setCacheModulations(final boolean cacheMod) {
         this.cacheModulations = cacheMod;
     }
@@ -204,6 +211,7 @@ public abstract class AScanLineCache implements IScanLine {
      *
      * @return
      */
+    @Override
     public boolean getCacheModulation() {
         return this.cacheModulations;
     }

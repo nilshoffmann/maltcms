@@ -62,24 +62,24 @@ public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
      */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
-        Tuple2D<IFileFragment, IFileFragment> t) {
+            Tuple2D<IFileFragment, IFileFragment> t) {
 
         final IFileFragment ref = t.getFirst(), query = t.getSecond();
 
         final String refname = StringTools.removeFileExt(ref.getName()), queryname = StringTools.
-            removeFileExt(query.getName());
+                removeFileExt(query.getName());
 
         IVariableFragment var1 = ref.getChild(refname + "_" + queryname + "-tv");
         IVariableFragment index1 = ref.getChild(refname + "_" + queryname + "-idx");
         var1.setIndex(index1);
         List<Array> scanlineRef = ref.getChild(
-            refname + "_" + queryname + "-tv").getIndexedArray();
+                refname + "_" + queryname + "-tv").getIndexedArray();
 
         IVariableFragment var2 = query.getChild(queryname + "_" + refname + "-tv");
         IVariableFragment index2 = query.getChild(queryname + "_" + refname + "-idx");
         var2.setIndex(index2);
         List<Array> scanlineQuery = query.getChild(
-            queryname + "_" + refname + "-tv").getIndexedArray();
+                queryname + "_" + refname + "-tv").getIndexedArray();
 
         if (this.scale) {
             log.info("Scaling");
@@ -87,6 +87,6 @@ public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
             scanlineQuery = ArrayTools2.sqrt(scanlineQuery);
         }
 
-        return new Tuple2D<List<Array>, List<Array>>(scanlineRef, scanlineQuery);
+        return new Tuple2D<>(scanlineRef, scanlineQuery);
     }
 }

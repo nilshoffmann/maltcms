@@ -68,7 +68,7 @@ public class MZMLValidator {
     /**
      * Validate the given file against the provided mzML schema location.
      *
-     * @param mzML           the file to validate
+     * @param mzML the file to validate
      * @param schemaLocation the schema location
      * @return the validation result
      */
@@ -101,8 +101,8 @@ public class MZMLValidator {
         private final URL schemaLocation;
 
         /**
-         * Returns true if the <code>sourceFile</code> passed validation
-         * against the schema at <code>schemaLocation</code>.
+         * Returns true if the <code>sourceFile</code> passed validation against
+         * the schema at <code>schemaLocation</code>.
          *
          * @return true if the sourceFile is valid, false otherwise
          */

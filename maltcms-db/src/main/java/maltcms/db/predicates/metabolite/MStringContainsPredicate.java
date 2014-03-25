@@ -49,18 +49,12 @@ public class MStringContainsPredicate extends MStringMatchPredicate {
                 if (o instanceof String) {
                     if (isCaseInsensitiveMatching()) {
                         return ((String) o).toLowerCase().contains(this.match.
-                            toLowerCase());
+                                toLowerCase());
                     } else {
                         return ((String) o).contains(this.match);
                     }
                 }
-            } catch (IllegalArgumentException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
+            } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }

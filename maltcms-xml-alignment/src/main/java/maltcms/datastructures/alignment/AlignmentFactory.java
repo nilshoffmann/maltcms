@@ -84,7 +84,7 @@ public class AlignmentFactory {
     }
 
     public MappedPointsType getMappedPoints(Alignment a, IFileFragment f)
-        throws ResourceNotAvailableException {
+            throws ResourceNotAvailableException {
         List<MappedPointsType> l = a.getMappedPoints();
         for (MappedPointsType mpt : l) {
             String uri = mpt.getResource().getUri();
@@ -95,15 +95,15 @@ public class AlignmentFactory {
             }
         }
         throw new ResourceNotAvailableException(
-            "Could not find a mappedPoints entry for "
-            + f.getUri());
+                "Could not find a mappedPoints entry for "
+                + f.getUri());
     }
 
     public List<Integer> convertToScanIndexMap(MappedPointsType mpt)
-        throws IllegalArgumentException {
+            throws IllegalArgumentException {
         PointMapType pmt = mpt.getPointMap();
         List<PointType> points = pmt.getPoint();
-        List<Integer> list = new ArrayList<Integer>();
+        List<Integer> list = new ArrayList<>();
         for (PointType pt : points) {
             Dimension d;
             try {
@@ -111,15 +111,15 @@ public class AlignmentFactory {
                 list.add(Integer.parseInt(d.getValue()));
             } catch (ResourceNotAvailableException rnae) {
                 throw new IllegalArgumentException(
-                    "Could not find required Dimension with name scan_index below PointType.",
-                    rnae);
+                        "Could not find required Dimension with name scan_index below PointType.",
+                        rnae);
             }
         }
         return list;
     }
 
     public Dimension getDimensionByName(String name, PointType pt)
-        throws ResourceNotAvailableException {
+            throws ResourceNotAvailableException {
         List<Dimension> l = pt.getDimension();
         for (Dimension d : l) {
             if (d.getName().equals(name)) {
@@ -127,12 +127,12 @@ public class AlignmentFactory {
             }
         }
         throw new ResourceNotAvailableException(
-            "Could not find Dimension with name " + name
-            + " for PointType!");
+                "Could not find Dimension with name " + name
+                + " for PointType!");
     }
 
     public void addScanIndexMap(Alignment a, URI resource, List<Integer> l,
-        boolean isAlignmentReference) {
+            boolean isAlignmentReference) {
         List<MappedPointsType> mp = a.getMappedPoints();
 
         MappedPointsType mpt = new MappedPointsType();

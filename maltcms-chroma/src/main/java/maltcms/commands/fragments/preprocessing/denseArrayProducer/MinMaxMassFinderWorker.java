@@ -68,7 +68,7 @@ public class MinMaxMassFinderWorker implements Callable<double[]>, Serializable 
         if (!ignoreMinMaxMassArrays) {
             try {
                 log.debug(
-                    "Trying to load children from file {}", f);
+                        "Trying to load children from file {}", f);
                 final IVariableFragment vmin = f.getChild(minMassVariableName);
                 final IVariableFragment vmax = f.getChild(maxMassVariableName);
                 min = Math.min(MAMath.getMinimum(vmin.getArray()), min);
@@ -77,7 +77,7 @@ public class MinMaxMassFinderWorker implements Callable<double[]>, Serializable 
                 useFallback = false;
             } catch (final ResourceNotAvailableException e) {
                 log.debug(
-                    "Trying to load children from file {} failed", f);
+                        "Trying to load children from file {} failed", f);
                 log.warn(e.getLocalizedMessage());
             }
         }
@@ -89,7 +89,7 @@ public class MinMaxMassFinderWorker implements Callable<double[]>, Serializable 
             // check
             // values unless we were successful above
             log.debug("Trying to load fallback {} from {}",
-                fallbackVariableName, f);
+                    fallbackVariableName, f);
             final IVariableFragment mass_vals = f.getChild(fallbackVariableName);
             final Array a = mass_vals.getArray();
             final MAMath.MinMax mm = MAMath.getMinMax(a);
@@ -100,11 +100,11 @@ public class MinMaxMassFinderWorker implements Callable<double[]>, Serializable 
         EvalTools.neqD(min, Double.MAX_VALUE, MinMaxMassFinderWorker.class);
         EvalTools.neqD(max, Double.MIN_VALUE, MinMaxMassFinderWorker.class);
         log.info("Found minimum mass: {} and maximum mass {} for file {}",
-            new Object[]{min, max, f.getName()});
+                new Object[]{min, max, f.getName()});
         Factory.getInstance().getConfiguration().setProperty(
-            "maltcms.commands.filters.DenseArrayProducer.min_mass", min);
+                "maltcms.commands.filters.DenseArrayProducer.min_mass", min);
         Factory.getInstance().getConfiguration().setProperty(
-            "maltcms.commands.filters.DenseArrayProducer.max_mass", max);
+                "maltcms.commands.filters.DenseArrayProducer.max_mass", max);
         return new double[]{min, max};
     }
 }

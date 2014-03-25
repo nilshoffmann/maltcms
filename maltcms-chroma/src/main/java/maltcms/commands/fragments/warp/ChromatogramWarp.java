@@ -100,20 +100,20 @@ public class ChromatogramWarp extends AFragmentCommand {
     @Override
     public void configure(final Configuration cfg) {
         this.indexedVars = StringTools.toStringList(cfg.getList(this.getClass()
-            .getName()
-            + ".indexedVars"));
+                .getName()
+                + ".indexedVars"));
         this.indexVar = cfg.getString(this.getClass().getName() + ".indexVar",
-            "scan_index");
+                "scan_index");
         this.plainVars = StringTools.toStringList(cfg.getList(this.getClass()
-            .getName()
-            + ".plainVars"));
+                .getName()
+                + ".plainVars"));
         log.info("{}", this.plainVars);
         this.anchorScanIndexVariableName = cfg.getString(
-            "var.anchors.retention_scans", "retention_scans");
+                "var.anchors.retention_scans", "retention_scans");
         this.anchorNameVariableName = cfg.getString(
-            "var.anchors.retention_scans", "retention_scans");
+                "var.anchors.retention_scans", "retention_scans");
         this.average = cfg.getBoolean(this.getClass().getName()
-            + ".averageCompressions", false);
+                + ".averageCompressions", false);
     }
 
     /**
@@ -123,19 +123,19 @@ public class ChromatogramWarp extends AFragmentCommand {
      * @return
      */
     public IFileFragment copyReference(final IFileFragment ref,
-        final IWorkflow iw) {
+            final IWorkflow iw) {
         try {
             Factory.getInstance().getDataSourceFactory().getDataSourceFor(ref)
-                .readStructure(ref);
+                    .readStructure(ref);
         } catch (final IOException e) {
             throw new RuntimeException(e.fillInStackTrace());
         }
         final IFileFragment copy = new FileFragment(
-            new File(getWorkflow().getOutputDirectory(this),
-                StringTools.removeFileExt(ref.getName())
-                + ".cdf"));
+                new File(getWorkflow().getOutputDirectory(this),
+                        StringTools.removeFileExt(ref.getName())
+                        + ".cdf"));
         log.info("Ref: {}, copy: {}", ref.getUri(), copy
-            .getUri());
+                .getUri());
         copy.setAttributes(ref.getAttributes().toArray(new Attribute[]{}));
         IVariableFragment ivf = null;
         for (final String s : this.indexedVars) {
@@ -145,7 +145,7 @@ public class ChromatogramWarp extends AFragmentCommand {
                 ivf = new VariableFragment(ref, s);
             }
             final IVariableFragment ivfnew = copy.hasChild(s) ? copy
-                .getChild(s) : new VariableFragment(copy, s);
+                    .getChild(s) : new VariableFragment(copy, s);
             ivfnew.setArray(ivf.getArray());
         }
         for (final String s : this.plainVars) {
@@ -155,7 +155,7 @@ public class ChromatogramWarp extends AFragmentCommand {
                 ivf = new VariableFragment(ref, s);
             }
             final IVariableFragment ivfnew = copy.hasChild(s) ? copy
-                .getChild(s) : new VariableFragment(copy, s);
+                    .getChild(s) : new VariableFragment(copy, s);
             ivfnew.setArray(ivf.getArray());
         }
         copy.addSourceFile(ref);
@@ -250,31 +250,31 @@ public class ChromatogramWarp extends AFragmentCommand {
      * @return
      */
     public IFileFragment warp(final IFileFragment ref,
-        final IFileFragment originalFile,
-        final IFileFragment processedFile, final List<Tuple2DI> path,
-        final boolean toLHS, final IWorkflow iw) {
+            final IFileFragment originalFile,
+            final IFileFragment processedFile, final List<Tuple2DI> path,
+            final boolean toLHS, final IWorkflow iw) {
         log.info("Warping {}, saving in {}", originalFile
-            .getUri(), processedFile.getUri());
+                .getUri(), processedFile.getUri());
         final IFileFragment warped = new FileFragment(
-            new File(getWorkflow().getOutputDirectory(this),
-                StringTools.removeFileExt(originalFile
-                    .getName())
-                + ".cdf"));
+                new File(getWorkflow().getOutputDirectory(this),
+                        StringTools.removeFileExt(originalFile
+                                .getName())
+                        + ".cdf"));
 
         try {
             Factory.getInstance().getDataSourceFactory().getDataSourceFor(
-                originalFile).readStructure(originalFile);
+                    originalFile).readStructure(originalFile);
         } catch (final IOException e) {
             throw new RuntimeException(e.fillInStackTrace());
         }
         warped.setAttributes(originalFile.getAttributes().toArray(
-            new Attribute[]{}));
+                new Attribute[]{}));
         log.debug("Currently set attributes on file {}:{}", originalFile
-            .getUri(), Arrays.deepToString(originalFile
-                .getAttributes().toArray()));
+                .getUri(), Arrays.deepToString(originalFile
+                        .getAttributes().toArray()));
         log.debug("Currently set attributes on file {}:{}", warped
-            .getUri(), Arrays.deepToString(warped.getAttributes()
-                .toArray()));
+                .getUri(), Arrays.deepToString(warped.getAttributes()
+                        .toArray()));
         log.debug("Warping {} to {}, saving in {}", new Object[]{
             originalFile.getUri(), ref.getUri(),
             warped.getUri()});
@@ -290,18 +290,18 @@ public class ChromatogramWarp extends AFragmentCommand {
      * Warp non-indexed arrays, which are for example scan_acquisisition_time,
      * tic etc.
      *
-     * @param warpedB    target IFileFragment to store warped arrays
-     * @param ref        reference IFileFragment
+     * @param warpedB target IFileFragment to store warped arrays
+     * @param ref reference IFileFragment
      * @param toBeWarped the to-be-warped IFileFragment
-     * @param path       alignment path of alignment between a and b
-     * @param plainVars  list of variable names, which should be warped
-     * @param toLHS      warp to left hand side
+     * @param path alignment path of alignment between a and b
+     * @param plainVars list of variable names, which should be warped
+     * @param toLHS warp to left hand side
      * @return FileFragment containing warped data
      */
     public IFileFragment warp1D(final IFileFragment warpedB,
-        final IFileFragment ref, final IFileFragment toBeWarped,
-        final List<Tuple2DI> path, final List<String> plainVars,
-        final boolean toLHS) {
+            final IFileFragment ref, final IFileFragment toBeWarped,
+            final List<Tuple2DI> path, final List<String> plainVars,
+            final boolean toLHS) {
         for (final String s : plainVars) {
             if (s.equals(this.indexVar)) {
                 continue;
@@ -316,9 +316,9 @@ public class ChromatogramWarp extends AFragmentCommand {
             }
             if (toLHS) {// a is on lhs of path
                 log
-                    .debug("Warping to lhs {}, {} from file {}",
-                        new Object[]{ref.getName(), s,
-                            toBeWarped.getName()});
+                        .debug("Warping to lhs {}, {} from file {}",
+                                new Object[]{ref.getName(), s,
+                                    toBeWarped.getName()});
                 final Array refA = ref.getChild(s).getArray();
                 warpedA = toBeWarped.getChild(s).getArray();
                 // there exists a subtle bug, if variables in original file has
@@ -327,14 +327,14 @@ public class ChromatogramWarp extends AFragmentCommand {
                 if (warpedA != null) {
                     // refA is only needed for correct shape and data type
                     warpedA = ArrayTools
-                        .projectToLHS(refA, path, warpedA, true);
+                            .projectToLHS(refA, path, warpedA, true);
                 }
 
             } else { // whether b is on lhs of path
                 log
-                    .debug("Warping to lhs {}, {} from file {}",
-                        new Object[]{ref.getName(), s,
-                            toBeWarped.getName()});
+                        .debug("Warping to lhs {}, {} from file {}",
+                                new Object[]{ref.getName(), s,
+                                    toBeWarped.getName()});
                 final Array refA = ref.getChild(s).getArray();
                 warpedA = toBeWarped.getChild(s).getArray();
                 // there exists a subtle bug, if variables in original file has
@@ -343,7 +343,7 @@ public class ChromatogramWarp extends AFragmentCommand {
                 if (warpedA != null) {
                     // refA is only needed for correct shape and data type
                     warpedA = ArrayTools
-                        .projectToRHS(refA, path, warpedA, true);
+                            .projectToRHS(refA, path, warpedA, true);
                 }
             }
             var.setArray(warpedA);
@@ -355,19 +355,19 @@ public class ChromatogramWarp extends AFragmentCommand {
      * Warp indexed arrays, which are lists of 1D arrays, so pseudo 2D. In this
      * case limited to mass_values and intensity_values.
      *
-     * @param warpedB    target IFileFragment to store warped arrays
-     * @param ref        reference IFileFragment
+     * @param warpedB target IFileFragment to store warped arrays
+     * @param ref reference IFileFragment
      * @param toBeWarped the to-be-warped IFileFragment
-     * @param path       alignment path of alignment between a and b
-     * @param plainVars  list of variable names, which should be warped
-     * @param toLHS      whether warping should be done from right to left (true) or
-     *                   vice versa (false)
+     * @param path alignment path of alignment between a and b
+     * @param plainVars list of variable names, which should be warped
+     * @param toLHS whether warping should be done from right to left (true) or
+     * vice versa (false)
      * @return FileFragment containing warped data
      */
     public IFileFragment warp2D(final IFileFragment warpedB,
-        final IFileFragment ref, final IFileFragment toBeWarped,
-        final List<Tuple2DI> path, final List<String> indexedVars,
-        final boolean toLHS) {
+            final IFileFragment ref, final IFileFragment toBeWarped,
+            final List<Tuple2DI> path, final List<String> indexedVars,
+            final boolean toLHS) {
         // indexVar.setArray(b.getChild(this.indexVar).getArray());
         // log.info("Index Variable {}",indexVar.getArray());
         // for(String s:indexedVars) {
@@ -377,7 +377,7 @@ public class ChromatogramWarp extends AFragmentCommand {
         IVariableFragment ivf1 = null, ivf2 = null;
         List<Array> tbwa1 = null, tbwa2 = null;
         Tuple2D<List<Array>, List<Array>> t = null;
-        final ArrayList<Tuple2DI> al = new ArrayList<Tuple2DI>(path.size());
+        final ArrayList<Tuple2DI> al = new ArrayList<>(path.size());
         al.addAll(path);
         // if(sourceOnLHS){ //whether b is on lhs of path
         // log.info("Processing {} indexed by {} from file {}",new
@@ -416,9 +416,9 @@ public class ChromatogramWarp extends AFragmentCommand {
         // }
         try {
             log.debug("Processing {} indexed by {} from file {}",
-                new Object[]{s1, this.indexVar, toBeWarped.getName()});
+                    new Object[]{s1, this.indexVar, toBeWarped.getName()});
             log.debug("Processing {} indexed by {} from file {}",
-                new Object[]{s2, this.indexVar, toBeWarped.getName()});
+                    new Object[]{s2, this.indexVar, toBeWarped.getName()});
             IVariableFragment s1v = ref.getChild(s1);
             IVariableFragment s1iv = ref.getChild(this.indexVar);
             s1v.setIndex(s1iv);
@@ -428,9 +428,9 @@ public class ChromatogramWarp extends AFragmentCommand {
             final List<Array> aA1 = ref.getChild(s1).getIndexedArray();
             final List<Array> aA2 = ref.getChild(s2).getIndexedArray();
             toBeWarped.getChild(s1)
-                .setIndex(toBeWarped.getChild(this.indexVar));
+                    .setIndex(toBeWarped.getChild(this.indexVar));
             toBeWarped.getChild(s2)
-                .setIndex(toBeWarped.getChild(this.indexVar));
+                    .setIndex(toBeWarped.getChild(this.indexVar));
             tbwa1 = toBeWarped.getChild(s1).getIndexedArray();
             tbwa2 = toBeWarped.getChild(s2).getIndexedArray();
             // aA is only needed for correct shape and data type
@@ -440,7 +440,7 @@ public class ChromatogramWarp extends AFragmentCommand {
             // t = ArrayTools.project2(toLHS,aA1, aA2, al, bA1, bA2);
             // }
             t = ArrayTools.project2(toLHS, aA1, aA2, al, tbwa1, tbwa2,
-                this.average);
+                    this.average);
             tbwa1 = t.getFirst();
             tbwa2 = t.getSecond();
             // Update index variable
@@ -471,14 +471,14 @@ public class ChromatogramWarp extends AFragmentCommand {
             ivf1.setIndex(indexVar);
             ivf2.setIndex(indexVar);
 
-            final List<Array> warpedMasses = new ArrayList<Array>();
+            final List<Array> warpedMasses = new ArrayList<>();
             for (final Array a : tbwa1) {
                 final ArrayDouble.D1 ad = new ArrayDouble.D1(a.getShape()[0]);
                 MAMath.copyDouble(ad, a);
                 warpedMasses.add(ad);
             }
             ivf1.setIndexedArray(warpedMasses);
-            final List<Array> warpedIntensities = new ArrayList<Array>();
+            final List<Array> warpedIntensities = new ArrayList<>();
             for (final Array a : tbwa2) {
                 final ArrayDouble.D1 ad = new ArrayDouble.D1(a.getShape()[0]);
                 MAMath.copyDouble(ad, a);
@@ -504,33 +504,33 @@ public class ChromatogramWarp extends AFragmentCommand {
      * @param toLHS
      */
     public void warpAnchors(final IFileFragment warped,
-        final IFileFragment toBeWarped, final List<Tuple2DI> path,
-        final boolean toLHS) {
+            final IFileFragment toBeWarped, final List<Tuple2DI> path,
+            final boolean toLHS) {
         final List<IAnchor> l = MaltcmsTools.prepareAnchors(toBeWarped);
         if (l.isEmpty()) {
             return;
         }
         final ArrayInt.D1 anchPos = new ArrayInt.D1(l.size());
         final ArrayChar.D2 anchNames = cross.datastructures.tools.ArrayTools.
-            createStringArray(l.size(), 1024);
+                createStringArray(l.size(), 1024);
         for (int j = 0; j < l.size(); j++) {
             if (toLHS) {
                 final int warpedAnchor = ArrayTools.getNewIndexOnLHS(l.get(j).
-                    getScanIndex(), path);
+                        getScanIndex(), path);
                 anchPos.set(j, warpedAnchor);
                 anchNames.setString(j, l.get(j).getName());
             } else {
                 final int warpedAnchor = ArrayTools.getNewIndexOnRHS(l.get(j).
-                    getScanIndex(), path);
+                        getScanIndex(), path);
                 anchPos.set(j, warpedAnchor);
                 anchNames.setString(j, l.get(j).getName());
             }
         }
         IVariableFragment anchorScanIndex = new VariableFragment(warped,
-            this.anchorScanIndexVariableName);
+                this.anchorScanIndexVariableName);
         anchorScanIndex.setArray(anchPos);
         IVariableFragment anchorName = new VariableFragment(warped,
-            this.anchorNameVariableName);
+                this.anchorNameVariableName);
 
         anchorName.setArray(anchNames);
     }

@@ -25,7 +25,8 @@
                 <h2>Parallelization</h2>
                 <ul>
                     <li>individual tasks can be executed concurrently</li>
-                    <li><a href="http://sf.net/p/mpaxs/" alt="Modular parallelization and execution system">Mpaxs</a> provides transparent parallel execution within the same virtual machine or within a distributed grid environment</li> 
+                    <li>
+                        <a href="http://sf.net/p/mpaxs/" alt="Modular parallelization and execution system">Mpaxs</a> provides transparent parallel execution within the same virtual machine or within a distributed grid environment</li> 
                     <li>convenience utilties for executing and collection of results from embarrassingly parallel tasks</li>
                     <li>simple integration with JAVA's <code>Runnable</code> and <code>Callable</code> classes</li>
                 </ul>

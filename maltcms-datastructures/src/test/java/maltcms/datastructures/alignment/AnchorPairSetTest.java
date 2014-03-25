@@ -43,9 +43,9 @@ import maltcms.datastructures.ms.RetentionInfo;
  */
 public class AnchorPairSetTest extends TestCase {
 
-    protected ArrayList<IAnchor> al1 = new ArrayList<IAnchor>();
-    protected ArrayList<IAnchor> al2 = new ArrayList<IAnchor>();
-    protected ArrayList<Tuple2D<IAnchor, IAnchor>> testl = new ArrayList<Tuple2D<IAnchor, IAnchor>>();
+    protected ArrayList<IAnchor> al1 = new ArrayList<>();
+    protected ArrayList<IAnchor> al2 = new ArrayList<>();
+    protected ArrayList<Tuple2D<IAnchor, IAnchor>> testl = new ArrayList<>();
     private int width, height;
 
     public AnchorPairSetTest(final String arg0) {
@@ -113,12 +113,12 @@ public class AnchorPairSetTest extends TestCase {
 
     public void testAnchorPairSet() {
         Assert.assertNotNull(new AnchorPairSet(this.al1, this.al2, this.width,
-            this.height, 5));
+                this.height, 5));
     }
 
     public void testPrepare() {
         final AnchorPairSet aps = new AnchorPairSet(this.al1, this.al2,
-            this.width, this.height, 5);
+                this.width, this.height, 5);
         for (final Tuple2D<IAnchor, IAnchor> t : aps) {
             final IAnchor a1 = t.getFirst();
             final IAnchor a2 = t.getSecond();

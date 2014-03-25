@@ -83,20 +83,20 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         final File[] files = drawEICs(getWorkflow().getOutputDirectory(this),
-            t, getScanAcquisitionTimeVar(),
-            null, "");
+                t, getScanAcquisitionTimeVar(),
+                null, "");
         for (final File file : files) {
             final DefaultWorkflowResult dwrut = new DefaultWorkflowResult(file,
-                this, getWorkflowSlot(), t.toArray(new IFileFragment[]{}));
+                    this, getWorkflowSlot(), t.toArray(new IFileFragment[]{}));
             getWorkflow().append(dwrut);
         }
         return t;
     }
 
     private File[] drawEICs(final File outputDir,
-        final TupleND<IFileFragment> t, final String satVar,
-        final IFileFragment ref, final double[] eics, final double binsize,
-        final String filePrefix) {
+            final TupleND<IFileFragment> t, final String satVar,
+            final IFileFragment ref, final double[] eics, final double binsize,
+            final String filePrefix) {
         if (t.isEmpty()) {
             return new File[]{};
         }
@@ -104,7 +104,7 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
         final File[] returnFiles = new File[2 * eics.length];
         int retFileCnt = 0;
         int j = 0;
-        final List<List<IAnchor>> allLabels = new ArrayList<List<IAnchor>>();
+        final List<List<IAnchor>> allLabels = new ArrayList<>();
         int nanchors = 0;
         try {
             for (final IFileFragment iff : t) {
@@ -112,11 +112,11 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
                 j++;
                 for (int i = 0; i < eics.length; i++) {
                     final IVariableFragment ivf = new VariableFragment(iff,
-                        filePrefix + "_eic_" + eics[i]);
+                            filePrefix + "_eic_" + eics[i]);
                     log.debug("Adding eic var {}", ivf.getName());
                     log.debug("to {}", iff.toString());
                     final Array eic = MaltcmsTools.getEIC(iff, eics[i], eics[i]
-                        + binsize, true, false);
+                            + binsize, true, false);
                     log.debug("{}", eic);
                     EvalTools.notNull(eic, ImageTools.class);
                     ivf.setArray(eic);
@@ -143,9 +143,9 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
                 // for each FileFragment
                 for (j = 0; j < t.size(); j++) {
                     log.debug("Trying to read {} from {}", filePrefix + "_eic_"
-                        + eics[i], t.get(j).toString());
+                            + eics[i], t.get(j).toString());
                     arrays[j] = t.get(j).getChild(
-                        filePrefix + "_eic_" + eics[i]).getArray();
+                            filePrefix + "_eic_" + eics[i]).getArray();
                     log.debug("{}", arrays[j]);
                     domains[j] = t.get(j).getChild(satVar).getArray();
                     // get the corresponding anchors
@@ -163,9 +163,9 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
                         // to value of scan_acquisition_time at the given scan
                         // index
                         labelPos.set(offset + cnt, sat.getDouble(satI.set(ia.
-                            getScanIndex())));
+                                getScanIndex())));
                         labelVal.set(offset + cnt,
-                            arrays[j].getDouble(valI.set(ia.getScanIndex())));
+                                arrays[j].getDouble(valI.set(ia.getScanIndex())));
                         // set name
                         labelNames[offset + cnt] = ia.getName();
                         // update counter
@@ -175,12 +175,12 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
 
                 }
                 final AChart<XYPlot> xyc = new XYChart("Plot of EIC "
-                    + filePrefix + " " + eics[i], labels, arrays, domains,
-                    labelPos, labelVal, labelNames, satVar + " [s]",
-                    "Intensity");
+                        + filePrefix + " " + eics[i], labels, arrays, domains,
+                        labelPos, labelVal, labelNames, satVar + " [s]",
+                        "Intensity");
                 final PlotRunner pr = new PlotRunner(xyc.create(),
-                    "Plot of EIC " + eics[i], filePrefix + "_jfc_eic_"
-                    + eics[i] + ".png", outputDir);
+                        "Plot of EIC " + eics[i], filePrefix + "_jfc_eic_"
+                        + eics[i] + ".png", outputDir);
                 pr.configure(Factory.getInstance().getConfiguration());
                 final File f = pr.getFile();
                 returnFiles[retFileCnt++] = f;
@@ -190,9 +190,9 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
                     log.error(ex.getLocalizedMessage());
                 }
                 returnFiles[retFileCnt++] = drawTICS(outputDir,
-                    new TupleND<IFileFragment>(t), filePrefix + "_eic_"
-                    + eics[i], satVar, ref, filePrefix + "_eic_"
-                    + eics[i] + ".png");
+                        new TupleND<>(t), filePrefix + "_eic_"
+                        + eics[i], satVar, ref, filePrefix + "_eic_"
+                        + eics[i] + ".png");
             }
         } catch (final ResourceNotAvailableException rnae) {
             log.warn("Could not load resource: {}", rnae);
@@ -202,8 +202,8 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
     }
 
     private File[] drawEICs(final File outputDir,
-        final TupleND<IFileFragment> t, final String satVar,
-        final IFileFragment ref, final String filePrefix) {
+            final TupleND<IFileFragment> t, final String satVar,
+            final IFileFragment ref, final String filePrefix) {
         if (t.isEmpty()) {
             return new File[]{};
         }

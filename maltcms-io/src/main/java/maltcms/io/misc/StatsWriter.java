@@ -113,22 +113,22 @@ public class StatsWriter implements IWorkflowElement {
                 if (map != null) {
                     final IFragment f = map.getAssociation();
                     final CSVWriter csvw = Factory.getInstance()
-                        .getObjectFactory().instantiate(CSVWriter.class);
+                            .getObjectFactory().instantiate(CSVWriter.class);
                     csvw.setWorkflow(getWorkflow());
                     // if (f instanceof IGroupFragment) {
                     // csvw.write(f
                     // , map);
                     if (f instanceof IVariableFragment) {
                         final IFileFragment parent = ((IVariableFragment) f)
-                            .getParent();
+                                .getParent();
                         final String basename = StringTools
-                            .removeFileExt(FileTools.getFilename(parent.getUri()));
+                                .removeFileExt(FileTools.getFilename(parent.getUri()));
                         final String path = new File(parent.getUri())
-                            .getParent();
+                                .getParent();
                         csvw.writeStatsMap(path,
-                            basename + "-"
-                            + ((IVariableFragment) f).getName()
-                            + ".csv", map);
+                                basename + "-"
+                                + ((IVariableFragment) f).getName()
+                                + ".csv", map);
                     } else if (f instanceof IFileFragment) {
                         csvw.writeStatsMap((IFileFragment) f, map);
                     }

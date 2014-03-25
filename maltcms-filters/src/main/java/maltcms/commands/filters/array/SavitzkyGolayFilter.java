@@ -40,8 +40,8 @@ import ucar.ma2.Array;
  * Golay,M.J.E. (1964) Smoothing and Differentiation of Data by Simplified Least
  * Squares Procedures. Analytical Chemistry, 36, 1627–1639.
  *
- * The effective point number for smoothing is 1+(window*2). So effectively +/-window
- * points around the current point.
+ * The effective point number for smoothing is 1+(window*2). So effectively
+ * +/-window points around the current point.
  *
  * @author Nils Hoffmann
  *
@@ -96,7 +96,7 @@ public class SavitzkyGolayFilter extends AArrayFilter {
      * d[d.length-1]. Resulting, filtered array is still of length d.length.
      *
      * @param filterCoeffs an array of size 2n+1 of filter coefficients
-     * @param d            the data array
+     * @param d the data array
      * @return
      */
     public static double[] convolve(final double[] filterCoeffs, final double[] d) {

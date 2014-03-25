@@ -43,7 +43,7 @@ public class QuadTreeNodeDepthFirstVisitor<T> implements QuadTreeNodeVisitor<T> 
 
     public QuadTreeNodeDepthFirstVisitor(QuadTreeNode<T> root) {
         this.root = root;
-        this.stack = new Stack<QuadTreeNode<T>>();
+        this.stack = new Stack<>();
     }
 
     @Override

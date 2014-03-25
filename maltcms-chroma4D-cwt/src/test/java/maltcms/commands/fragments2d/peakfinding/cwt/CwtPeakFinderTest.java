@@ -60,7 +60,7 @@ public class CwtPeakFinderTest extends AFragmentCommandTest {
         File dataFolder = tf.newFolder("chroma4DTestData");
         File outputBase = tf.newFolder("chroma4DTestOut");
         File inputFile = ZipResourceExtractor.extract(
-            "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", dataFolder);
+                "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", dataFolder);
         setLogLevelFor(CwtPeakFinder.class, Level.ALL);
         Default2DVarLoader d2vl = new Default2DVarLoader();
 //        d2vl.setEstimateModulationTime(true);
@@ -68,7 +68,7 @@ public class CwtPeakFinderTest extends AFragmentCommandTest {
         d2vl.setModulationTime(5.0d);
         d2vl.setScanRate(100.0);
         CwtPeakFinder cpf = new CwtPeakFinder();
-        List<IFragmentCommand> l = new LinkedList<IFragmentCommand>();
+        List<IFragmentCommand> l = new LinkedList<>();
         l.add(d2vl);
         l.add(cpf);
         IWorkflow w = createWorkflow(outputBase, l, Arrays.asList(inputFile));

@@ -90,6 +90,7 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
 
     public void setEnabled(final boolean b) {
         Runnable r = new Runnable() {
+            @Override
             public void run() {
                 metaboliteView.setEnabled(b);
 
@@ -119,7 +120,7 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
 
     public Vector<String> getMetaboliteMembers() {
         Method[] m = Metabolite.class.getMethods();
-        Vector<String> al = new Vector<String>();
+        Vector<String> al = new Vector<>();
         for (Method method : m) {
             if (method.getName().startsWith("get") && !method.getName().equals("getClass")) {
                 al.add(method.getName().substring(3));
@@ -137,6 +138,7 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
         //this.jp.revalidate();
     }
 
+    @Override
     public void tableChanged(TableModelEvent arg0) {
         this.metaboliteView.revalidate();
         //this.jsp.revalidate();
@@ -144,12 +146,15 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
         //this.jp.revalidate();
     }
 
+    @Override
     public void componentHidden(ComponentEvent e) {
     }
 
+    @Override
     public void componentMoved(ComponentEvent e) {
     }
 
+    @Override
     public void componentResized(ComponentEvent e) {
         //System.out.println("Component resized: "+e.toString());
         //this.metaboliteView.setPreferredSize(e.getComponent().getPreferredSize());
@@ -160,6 +165,7 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
 
     }
 
+    @Override
     public void componentShown(ComponentEvent e) {
     }
 //	public class MetaboliteListDataListener implements ListDataListener{

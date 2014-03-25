@@ -1,10 +1,9 @@
 /**
  * *****************************************************************************
  * --------------------------------------------------------------------------- *
- * File: * @(#) MSOperator.java * Author: * Mathijs Vogelzang
- * m_v@dds.nl
- * ****************************************************************************** * * *
- * This software is provided ``AS IS'' and any express or implied * *
+ * File: * @(#) MSOperator.java * Author: * Mathijs Vogelzang m_v@dds.nl
+ * ******************************************************************************
+ * * * * This software is provided ``AS IS'' and any express or implied * *
  * warranties, including, but not limited to, the implied warranties of * *
  * merchantability and fitness for a particular purpose, are disclaimed. * * In
  * no event shall the authors or the Institute for Systems Biology * * liable
@@ -37,11 +36,12 @@ public class MSOperator {
 
     public String firstName, lastName;
     public String phoneNumber,
-        email, URI;
+            email, URI;
 
+    @Override
     public String toString() {
         return ("firstName " + firstName + " lastName " + lastName
-            + " phoneNumber " + phoneNumber + " email " + email
-            + " URI " + URI);
+                + " phoneNumber " + phoneNumber + " email " + email
+                + " URI " + URI);
     }
 }

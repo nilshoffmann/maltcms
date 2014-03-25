@@ -63,13 +63,7 @@ public class MStringMatchPredicate extends MetabolitePredicate {
                     }
                     return this.match.equals((String) o);
                 }
-            } catch (IllegalArgumentException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
+            } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }

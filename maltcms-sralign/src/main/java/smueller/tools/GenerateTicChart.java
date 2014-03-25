@@ -46,13 +46,13 @@ public class GenerateTicChart {
      * @return
      */
     public static AChart<XYPlot> generatePlot(final String name,
-        final String besch, final Array a) {
+            final String besch, final Array a) {
         final String[] beschr = new String[1];
         beschr[0] = besch;
         final Array[] test = new Array[1];
         test[0] = a;
         final AChart<XYPlot> graph = new XYChart(name, beschr, test,
-            "Retention Time", "TIC");
+                "Retention Time", "TIC");
         return graph;
     }
 }

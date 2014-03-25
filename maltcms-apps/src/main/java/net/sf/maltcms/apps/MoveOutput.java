@@ -28,9 +28,9 @@
 package net.sf.maltcms.apps;
 
 /**
- * Moves workflow output directory (--from) to another directory (--to), rewriting
- * absolute URIs of workflow results. Input URIs are untouched unless input
- * location is specified with --in.
+ * Moves workflow output directory (--from) to another directory (--to),
+ * rewriting absolute URIs of workflow results. Input URIs are untouched unless
+ * input location is specified with --in.
  *
  * @author Nils Hoffmann
  */

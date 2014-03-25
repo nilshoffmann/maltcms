@@ -4,10 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.Iterator;
 
 /**
- * Created by IntelliJ IDEA.
- * User: tholzman
- * Date: Nov 16, 2009
- * Time: 2:34:17 PM
+ * Created by IntelliJ IDEA. User: tholzman Date: Nov 16, 2009 Time: 2:34:17 PM
  * To change this template use File | Settings | File Templates.
  */
 public class LineIterator implements Iterator {
@@ -47,12 +44,14 @@ public class LineIterator implements Iterator {
         bbi = bbit;
     }
 
+    @Override
     public boolean hasNext() {
         return bbi.hasNext() || (bb != null && bb.hasRemaining());
     }
 
     //This code is a little iffy.  If a \r\n pair (or \n\n etc) straddle a ByteBuffer boundary
     // it will not work.  Also, line numbers will be wrong for \n\n.
+    @Override
     public StringBuilder next() {
         curLine.setLength(0);
         if (bb == null && bbi.hasNext()) {
@@ -83,6 +82,7 @@ public class LineIterator implements Iterator {
         return curLine;
     }
 
+    @Override
     public void remove() {
     }
 

@@ -40,7 +40,7 @@ import java.util.Set;
  */
 public class MultiMap<K, V> {
 
-    private Map<K, Collection<V>> map = new LinkedHashMap<K, Collection<V>>();
+    private Map<K, Collection<V>> map = new LinkedHashMap<>();
 
     public Set<K> keySet() {
         return map.keySet();
@@ -59,7 +59,7 @@ public class MultiMap<K, V> {
             Collection<V> c = map.get(k);
             c.add(v);
         } else {
-            Collection<V> c = new ArrayList<V>();
+            Collection<V> c = new ArrayList<>();
             c.add(v);
             map.put(k, c);
         }

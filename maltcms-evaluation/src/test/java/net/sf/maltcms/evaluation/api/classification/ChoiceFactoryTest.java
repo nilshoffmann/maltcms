@@ -56,7 +56,7 @@ public class ChoiceFactoryTest {
         for (Object[] obj : data) {
             System.out.println(Arrays.toString(obj));
         }
-        List<Object[]> reference = new LinkedList<Object[]>();
+        List<Object[]> reference = new LinkedList<>();
         reference.add(new Object[]{"a", 0.35, 1});
         reference.add(new Object[]{"a", 0.35, 2});
         reference.add(new Object[]{"a", 0.35, 3});

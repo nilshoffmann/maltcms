@@ -78,7 +78,7 @@ public class TICDynamicTimeWarp extends ADynamicTimeWarp {
      */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
-        final Tuple2D<IFileFragment, IFileFragment> t) {
+            final Tuple2D<IFileFragment, IFileFragment> t) {
         Array ticRef = null;
         synchronized (t.getFirst()) {
             ticRef = t.getFirst().getChild(this.arrayVariable).getArray();
@@ -87,27 +87,27 @@ public class TICDynamicTimeWarp extends ADynamicTimeWarp {
         synchronized (t.getSecond()) {
             queryRef = t.getSecond().getChild(this.arrayVariable).getArray();
         }
-        final List<Array> ref = new ArrayList<Array>();
-        final List<Array> query = new ArrayList<Array>();
+        final List<Array> ref = new ArrayList<>();
+        final List<Array> query = new ArrayList<>();
         IndexIterator iref = ticRef.getIndexIterator();
         final Index idx = Index.scalarIndexImmutable;
         while (iref.hasNext()) {
             final Array a = Array.factory(ticRef.getElementType(),
-                new int[]{1});
+                    new int[]{1});
             a.setObject(idx, iref.next());
             ref.add(a);
         }
         iref = queryRef.getIndexIterator();
         while (iref.hasNext()) {
             final Array a = Array.factory(queryRef.getElementType(),
-                new int[]{1});
+                    new int[]{1});
             a.setObject(idx, iref.next());
             query.add(a);
         }
         // ref.add(ticRef);
         // query.add(queryRef);
-        final Tuple2D<List<Array>, List<Array>> tuple = new Tuple2D<List<Array>, List<Array>>(
-            ref, query);
+        final Tuple2D<List<Array>, List<Array>> tuple = new Tuple2D<>(
+                ref, query);
         this.ref_num_scans = ticRef.getShape()[0];
         this.query_num_scans = queryRef.getShape()[0];
         return tuple;

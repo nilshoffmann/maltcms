@@ -47,8 +47,9 @@ public class QueryResultListCellRenderer extends JLabel implements ListCellRende
         setVerticalAlignment(CENTER);
     }
 
+    @Override
     public Component getListCellRendererComponent(JList list, Object value,
-        int index, boolean isSelected, boolean cellHasFocus) {
+            int index, boolean isSelected, boolean cellHasFocus) {
 
         if (isSelected) {
             setBackground(list.getSelectionBackground());

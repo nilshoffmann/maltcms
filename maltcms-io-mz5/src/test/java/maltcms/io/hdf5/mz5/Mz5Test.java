@@ -87,7 +87,7 @@ public class Mz5Test {
         for (File f : ecpf.getFiles()) {
             Assert.assertEquals(1, getDataSource().canRead(new FileFragment(f)));
             Assert.assertEquals(1, getDataSource().
-                canRead(new ImmutableFileFragment(new FileFragment(f.toURI()))));
+                    canRead(new ImmutableFileFragment(new FileFragment(f.toURI()))));
         }
     }
 
@@ -105,7 +105,7 @@ public class Mz5Test {
             Assert.assertTrue(l.size() > 0);
             try {
                 List<Array> l2 = getDataSource().
-                    readAll(new ImmutableFileFragment(f));
+                        readAll(new ImmutableFileFragment(f));
                 Assert.assertEquals(l.size(), l2.size());
             } catch (UnsupportedOperationException uoe) {
                 Assert.fail(uoe.getLocalizedMessage());
@@ -145,7 +145,7 @@ public class Mz5Test {
             log.info("Fragment: {}", FileFragment.printFragment(allFragment));
         }
         sl.setLogLevel("cross.datastructures.fragments",
-            "INFO");
+                "INFO");
         sl.setLogLevel("maltcms.io.andims", "INFO");
         sl.setLogLevel("maltcms.io.xml.mzML", "INFO");
     }
@@ -157,7 +157,7 @@ public class Mz5Test {
     public void testReadIndexed() throws Exception {
 //        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
-            "DEBUG");
+                "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
         sl.setLogLevel("maltcms.io.hdf5.mz5", "DEBUG");
         for (File f : ecpf.getFiles()) {
@@ -191,7 +191,7 @@ public class Mz5Test {
 
         }
         sl.setLogLevel("cross.datastructures.fragments",
-            "INFO");
+                "INFO");
         sl.setLogLevel("maltcms.io.andims", "INFO");
         sl.setLogLevel("maltcms.io.hdf5.mz5", "INFO");
     }

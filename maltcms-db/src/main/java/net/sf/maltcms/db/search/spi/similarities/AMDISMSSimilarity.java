@@ -112,7 +112,7 @@ public class AMDISMSSimilarity {
 //        return mixedValue / refValue * queryValue;
 //    }
     public double apply(Tuple2D<Array, Array> referenceMassSpectrum,
-        Tuple2D<Array, Array> queryMassSpectrum) {
+            Tuple2D<Array, Array> queryMassSpectrum) {
 //        double massExponent = 1.0;
 //        double intensityExponent = 0.5;
 
@@ -129,18 +129,18 @@ public class AMDISMSSimilarity {
         ArrayDouble.D1 mra = new ArrayDouble.D1(bins);
         ira = new ArrayDouble.D1(bins);
         ArrayTools.createDenseArray(referenceMassSpectrum.getFirst(),
-            referenceMassSpectrum.getSecond(),
-            new Tuple2D<Array, Array>(mra, ira), ((int) Math.floor(min)),
-            ((int) Math.ceil(max)), bins,
-            resolution, 0.0d);
+                referenceMassSpectrum.getSecond(),
+                new Tuple2D<Array, Array>(mra, ira), ((int) Math.floor(min)),
+                ((int) Math.ceil(max)), bins,
+                resolution, 0.0d);
 //		}
         ArrayDouble.D1 mqa = new ArrayDouble.D1(bins);
         iqa = new ArrayDouble.D1(bins);
         ArrayTools.createDenseArray(queryMassSpectrum.getFirst(),
-            queryMassSpectrum.getSecond(),
-            new Tuple2D<Array, Array>(mqa, iqa),
-            ((int) Math.floor(min)), ((int) Math.ceil(max)), bins,
-            resolution, 0.0d);
+                queryMassSpectrum.getSecond(),
+                new Tuple2D<Array, Array>(mqa, iqa),
+                ((int) Math.floor(min)), ((int) Math.ceil(max)), bins,
+                resolution, 0.0d);
 
 //        double maxS1 = MAMath.getMaximum(ira);
 //        ira = (ArrayDouble.D1) ArrayTools.mult(ira, 1.0d / maxS1);

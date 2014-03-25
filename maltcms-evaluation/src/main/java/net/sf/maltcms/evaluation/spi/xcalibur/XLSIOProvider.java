@@ -44,6 +44,7 @@ import jxl.read.biff.BiffException;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 
 /**
  * Based on ExcelTools by Alexander Bunkowski. Uses Jexcel API,
@@ -56,7 +57,7 @@ import jxl.write.WritableWorkbook;
 public class XLSIOProvider {
 
     public static Vector<String> getCompoundNames(Workbook w) {
-        Vector<String> compounds = new Vector<String>();
+        Vector<String> compounds = new Vector<>();
         if (w != null) {
             for (int i = 0; i < w.getNumberOfSheets(); i++) {
                 final Sheet sheet = w.getSheet(i);
@@ -71,7 +72,7 @@ public class XLSIOProvider {
     }
 
     public static Vector<Peak> getPeaks(Workbook w, int rows, Creator creator, ObjectContainer oc) {
-        Vector<Peak> peaks = new Vector<Peak>();
+        Vector<Peak> peaks = new Vector<>();
         if (w != null) {
             for (int i = 0; i < w.getNumberOfSheets(); i++) {
                 final Sheet sheet = w.getSheet(i);
@@ -158,10 +159,7 @@ public class XLSIOProvider {
         try {
             Workbook w = Workbook.getWorkbook(f);
             return w;
-        } catch (BiffException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (BiffException | IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -189,7 +187,7 @@ public class XLSIOProvider {
     }
 
     public static Vector<String> getFilenames(Workbook w) {
-        Vector<String> filenames = new Vector<String>();
+        Vector<String> filenames = new Vector<>();
         if (w != null) {
             Sheet s = w.getSheet(0);
             Cell c = s.findCell("Filename");
@@ -247,7 +245,7 @@ public class XLSIOProvider {
         } catch (StringIndexOutOfBoundsException sie) {
             System.err.println("Exception while trying to subset: " + name + " from " + sidx + " to " + eidx);
         }
-        List<Integer> l = new ArrayList<Integer>();
+        List<Integer> l = new ArrayList<>();
         if (substring.contains(",")) {
             String[] str = substring.split(",");
             for (String sps : str) {
@@ -275,7 +273,7 @@ public class XLSIOProvider {
     }
 
     public static Vector<String[]> importXLS(File f, int sheetNo) {
-        Vector<String[]> data = new Vector<String[]>();
+        Vector<String[]> data = new Vector<>();
         if (f != null) {
             Workbook workbook = null;
             try {
@@ -298,7 +296,7 @@ public class XLSIOProvider {
                     }
                 }
                 workbook.close();
-            } catch (Exception e) {
+            } catch (IOException | BiffException | IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
         }
@@ -320,20 +318,20 @@ public class XLSIOProvider {
             }
             workbook.write();
             workbook.close();
-        } catch (Exception ex) {
+        } catch (IOException | WriteException ex) {
             // Logger.getLogger(XLSIOProvider.class.getName()).log(Level.SEVERE,
             // null, ex);
         }
     }
 
     public static void exportXLS(JTable table, File file) {
-        Vector<String[]> v = new Vector<String[]>();
+        Vector<String[]> v = new Vector<>();
 
         String[] head = new String[table.getTableHeader().getColumnModel()
-            .getColumnCount()];
+                .getColumnCount()];
         for (int i = 0; i < head.length; i++) {
             head[i] = table.getTableHeader().getColumnModel().getColumn(i)
-                .getHeaderValue().toString();
+                    .getHeaderValue().toString();
         }
         v.add(head);
 

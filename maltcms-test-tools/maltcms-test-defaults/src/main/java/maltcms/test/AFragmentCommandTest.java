@@ -101,13 +101,13 @@ public abstract class AFragmentCommandTest {
 
     public IWorkflow createWorkflow(File outputDirectory, List<IFragmentCommand> commands, List<File> inputFiles) {
         CommandPipeline cp = new CommandPipeline();
-        List<IFileFragment> fragments = new ArrayList<IFileFragment>();
+        List<IFileFragment> fragments = new ArrayList<>();
         for (File f : inputFiles) {
             log.info("Adding input file {}", f);
             fragments.add(new FileFragment(f));
         }
         cp.setCommands(commands);
-        cp.setInput(new TupleND<IFileFragment>(fragments));
+        cp.setInput(new TupleND<>(fragments));
         setLogLevelFor(AFragmentCommandTest.class, Level.INFO);
         log.info("Workflow using commands {}", commands);
         log.info("Workflow using inputFiles {}", inputFiles);
@@ -141,9 +141,7 @@ public abstract class AFragmentCommandTest {
         instanceDir.mkdirs();
         try {
             File f = new File(instanceDir, "stacktrace.txt");
-            PrintWriter bw = null;
-            try {
-                bw = new PrintWriter(f);
+            try (PrintWriter bw = new PrintWriter(f)) {
                 Throwable cause = t.getCause();
                 while (cause != null) {
                     cause.printStackTrace(bw);
@@ -152,10 +150,6 @@ public abstract class AFragmentCommandTest {
                 bw.flush();
             } catch (IOException ioex) {
                 log.error("Received io exception while creating stacktrace file!", ioex);
-            } finally {
-                if (bw != null) {
-                    bw.close();
-                }
             }
             System.out.println("Copying workflow output to inspection directory: " + instanceDir.getAbsolutePath());
             FileUtils.copyDirectoryToDirectory(w.getOutputDirectory(), instanceDir);

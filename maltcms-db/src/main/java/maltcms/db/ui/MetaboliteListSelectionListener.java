@@ -61,15 +61,15 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.MAMath;
 
 public class MetaboliteListSelectionListener implements ListSelectionListener,
-    WindowListener, MouseListener {
+        WindowListener, MouseListener {
 
     /**
      *
      */
     private final MetaboliteView metaboliteView;
     private JTable table;
-    protected HashMap<String, JFrame> hm = new LinkedHashMap<String, JFrame>();
-    protected HashMap<String, XYSeries> series = new LinkedHashMap<String, XYSeries>();
+    protected HashMap<String, JFrame> hm = new LinkedHashMap<>();
+    protected HashMap<String, XYSeries> series = new LinkedHashMap<>();
     protected XYSeriesCollection xysc = null;
     protected XYPlot p = null;
     protected JFreeChart jfc = null;
@@ -81,17 +81,18 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
     private ExecutorService es = Executors.newFixedThreadPool(5);
 
     public MetaboliteListSelectionListener(MetaboliteView metaboliteView,
-        MetaboliteViewModel mvm, JTable table) {
+            MetaboliteViewModel mvm, JTable table) {
         this.metaboliteView = metaboliteView;
         this.mvm2 = mvm;
         this.table = table;
     }
 
+    @Override
     public void valueChanged(ListSelectionEvent e) {
         // final int first_index = e.getFirstIndex();
         final int last_index = e.getLastIndex();
         System.out.println("ListSelection Event at " + last_index
-            + " originated from " + e.getSource().getClass());
+                + " originated from " + e.getSource().getClass());
         // if(first_index==last_index) {
 //        if (o instanceof ListSelectionModel) {
 
@@ -203,22 +204,25 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
         updatePlot();
     }
 
+    @Override
     public void windowActivated(WindowEvent e) {
         // TODO Auto-generated method stub
     }
 
+    @Override
     public void windowClosed(WindowEvent e) {
         if (e.getWindow() instanceof JFrame) {
             // String s = ((JFrame)e.getWindow()).getTitle();
             // int index = Integer.parseInt(((JFrame)e.getWindow()).getName());
             System.out.println("Removing JFrame "
-                + ((JFrame) e.getWindow()).getName()
-                + " from map of active clients!");
+                    + ((JFrame) e.getWindow()).getName()
+                    + " from map of active clients!");
             hm.remove(((JFrame) e.getWindow()).getName());
         }
 
     }
 
+    @Override
     public void windowClosing(WindowEvent e) {
         // if(e.getWindow() instanceof JFrame) {
         // String s = ((JFrame)e.getWindow()).getTitle();
@@ -227,18 +231,22 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
         // }
     }
 
+    @Override
     public void windowDeactivated(WindowEvent e) {
         // TODO Auto-generated method stub
     }
 
+    @Override
     public void windowDeiconified(WindowEvent e) {
         // TODO Auto-generated method stub
     }
 
+    @Override
     public void windowIconified(WindowEvent e) {
         // TODO Auto-generated method stub
     }
 
+    @Override
     public void windowOpened(WindowEvent e) {
         // TODO Auto-generated method stub
     }

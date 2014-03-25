@@ -18,29 +18,29 @@
         </goals>
     </action>
     <action>
-            <actionName>CUSTOM-Integration Test</actionName>
-            <displayName>Integration Test</displayName>
-            <goals>
-                <goal>verify</goal>
-            </goals>
-            <properties>
-                <skipITs>false</skipITs>
-            </properties>
-        </action>
+        <actionName>CUSTOM-Integration Test</actionName>
+        <displayName>Integration Test</displayName>
+        <goals>
+            <goal>verify</goal>
+        </goals>
+        <properties>
+            <skipITs>false</skipITs>
+        </properties>
+    </action>
     <action>
-            <actionName>rebuild</actionName>
-            <goals>
-                <goal>clean</goal>
-                <goal>install</goal>
+        <actionName>rebuild</actionName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
                 
-            </goals>
-        </action>
+        </goals>
+    </action>
     <action>
-            <actionName>CUSTOM-Site Preview</actionName>
-            <displayName>Site Preview</displayName>
-            <goals>
-                <goal>site:site</goal>
-                <goal>site:stage</goal>
-            </goals>
-        </action>
+        <actionName>CUSTOM-Site Preview</actionName>
+        <displayName>Site Preview</displayName>
+        <goals>
+            <goal>site:site</goal>
+            <goal>site:stage</goal>
+        </goals>
+    </action>
 </actions>

@@ -75,7 +75,7 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
     @Configurable(name = "var.scan_rate", value = "scan_rate")
     private String scanRateVar = "scan_rate";
     @Configurable(name = "var.second_column_scan_index",
-        value = "second_column_scan_index")
+            value = "second_column_scan_index")
     private String secondColumnScanIndexVar = "second_column_scan_index";
 
     /**
@@ -93,14 +93,14 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
 
         final IFileFragment pwHorizontalAlignmentFragment = MaltcmsTools.
-            getPairwiseDistanceFragment(t, "-horizontal");
+                getPairwiseDistanceFragment(t, "-horizontal");
 
-        final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
+        final ArrayList<IFileFragment> ret = new ArrayList<>();
         IFileFragment fret;
         for (IFileFragment ff : t) {
             fret = new FileFragment(
-                new File(getWorkflow().getOutputDirectory(this),
-                    ff.getName()));
+                    new File(getWorkflow().getOutputDirectory(this),
+                            ff.getName()));
             fret.addSourceFile(ff);
             ret.add(fret);
         }
@@ -124,51 +124,51 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
                 resQuery = ret.get(j);
 
                 modulationi = ref.getChild(this.modulationVar).getArray().
-                    getDouble(idx);
+                        getDouble(idx);
                 modulationj = query.getChild(this.modulationVar).getArray().
-                    getDouble(idx);
+                        getDouble(idx);
                 scanRatei = ref.getChild(this.scanRateVar).getArray().getInt(
-                    idx);
+                        idx);
                 scanRatej = query.getChild(this.scanRateVar).getArray().getInt(
-                    idx);
+                        idx);
 
                 scanlinesi = getScanlineFor(ref, modulationi.intValue()
-                    * scanRatei.intValue());
+                        * scanRatei);
                 scanlinesj = getScanlineFor(query, modulationj.intValue()
-                    * scanRatej.intValue());
+                        * scanRatej);
 
                 alignmentHorizontal = MaltcmsTools.getPairwiseAlignment(
-                    pwHorizontalAlignmentFragment, ref, query);
+                        pwHorizontalAlignmentFragment, ref, query);
                 warpi = alignmentHorizontal.getChild(this.warpPathi).getArray();
                 warpj = alignmentHorizontal.getChild(this.warpPathj).getArray();
 
                 scanlines = vis.createNewScanlines(scanlinesi, scanlinesj,
-                    PathTools.pointListFromArrays(warpi, warpj), false,
-                    false);
+                        PathTools.pointListFromArrays(warpi, warpj), false,
+                        false);
 
                 horizontalRefScanlines = ArrayTools2.transpose(scanlines.
-                    getFirst());
+                        getFirst());
                 horizontalQueryScanlines = ArrayTools2.transpose(scanlines.
-                    getSecond());
+                        getSecond());
 
                 refname = StringTools.removeFileExt(ref.getName());
                 queryname = StringTools.removeFileExt(query.getName());
 
                 hrs = new VariableFragment(resRef, refname + "_" + queryname
-                    + "-tv");
+                        + "-tv");
                 hrs.setIndexedArray(horizontalRefScanlines);
                 hrsIdx = new VariableFragment(resRef, refname + "_" + queryname
-                    + "-idx");
+                        + "-idx");
                 hrsIdx.setArray(
-                    ArrayTools2.getIndexArray(horizontalRefScanlines));
+                        ArrayTools2.getIndexArray(horizontalRefScanlines));
 
                 hqs = new VariableFragment(resQuery, queryname + "_" + refname
-                    + "-tv");
+                        + "-tv");
                 hqs.setIndexedArray(horizontalQueryScanlines);
                 hqsIdx = new VariableFragment(resQuery, queryname + "_"
-                    + refname + "-idx");
+                        + refname + "-idx");
                 hqsIdx.setArray(ArrayTools2.getIndexArray(
-                    horizontalQueryScanlines));
+                        horizontalQueryScanlines));
             }
         }
 
@@ -178,7 +178,7 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
             ff.save();
         }
 
-        return new TupleND<IFileFragment>(ret);
+        return new TupleND<>(ret);
     }
 
     /**
@@ -192,7 +192,7 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
     /**
      * Getter.
      *
-     * @param ff  file fragment
+     * @param ff file fragment
      * @param spm scans per modulation
      * @return scanlines
      */
@@ -201,7 +201,7 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
         IVariableFragment scsiv = ff.getChild(this.secondColumnScanIndexVar);
         ticVar.setIndex(scsiv);
         final List<Array> scanlines = ff.getChild(this.totalIntensity).
-            getIndexedArray();
+                getIndexedArray();
         return scanlines;
     }
 }

@@ -114,22 +114,22 @@ public class MeanVarProducer extends AFragmentCommand {
      */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-        final ArrayList<IFileFragment> ret = new ArrayList<IFileFragment>();
+        final ArrayList<IFileFragment> ret = new ArrayList<>();
         Tuple2D<Double, Double> massRange = MaltcmsTools.getMinMaxMassRange(t);
         ScanLineCacheFactory.setMinMass(massRange.getFirst());
         ScanLineCacheFactory.setMaxMass(massRange.getSecond());
         for (final IFileFragment ff : t) {
             log.info("Computing mean and std for {}", StringTools.removeFileExt(ff.getName()));
             final IFileFragment fret = new FileFragment(
-                new File(getWorkflow().getOutputDirectory(this),
-                    ff.getName()));
+                    new File(getWorkflow().getOutputDirectory(this),
+                            ff.getName()));
             fret.addSourceFile(ff);
 
             final IScanLine slc = ScanLineCacheFactory.getSparseScanLineCache(ff);
             slc.setCacheModulations(false);
 
             log.info("Calculating {} and {}", this.meanMSIntensityVar,
-                this.varMSIntensityVar);
+                    this.varMSIntensityVar);
             long start = System.currentTimeMillis();
             final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> tuple = calculateMeanVarSparse(slc);
             log.info("			{}", System.currentTimeMillis() - start);
@@ -140,50 +140,50 @@ public class MeanVarProducer extends AFragmentCommand {
             boolean visualize = true;
             if (this.minStandardDeviationQuantil >= 0.0d) {
                 this.minStandardDeviation = ArrayTools.getQuantileValue(ff, sd,
-                    new double[]{this.minStandardDeviationQuantil}, visualize,
-                    this)[0];
+                        new double[]{this.minStandardDeviationQuantil}, visualize,
+                        this)[0];
                 log.info(
-                    "Computing {} (using standard deviation minimum {}["
-                    + (this.minStandardDeviationQuantil * 100.0d)
-                    + "%])", this.vIntensityVar,
-                    this.minStandardDeviation);
+                        "Computing {} (using standard deviation minimum {}["
+                        + (this.minStandardDeviationQuantil * 100.0d)
+                        + "%])", this.vIntensityVar,
+                        this.minStandardDeviation);
             } else {
                 log.info(
-                    "Computing {} (using fixed minimal standard deviation {})",
-                    this.vIntensityVar, this.minStandardDeviation);
+                        "Computing {} (using fixed minimal standard deviation {})",
+                        this.vIntensityVar, this.minStandardDeviation);
             }
 
             final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> intensities = computeNewIntensity(
-                sd, slc, fret);
+                    sd, slc, fret);
 
             final IVariableFragment meanV = fret.addChild(
-                this.meanMSIntensityVar);
+                    this.meanMSIntensityVar);
             meanV.setArray(mean);
             final IVariableFragment varV = fret.addChild(
-                this.varMSIntensityVar);
+                    this.varMSIntensityVar);
             varV.setArray(var);
             final IVariableFragment sdV = fret.addChild(
-                this.sdMSIntensityVar);
+                    this.sdMSIntensityVar);
             sdV.setArray(sd);
             final IVariableFragment intV = fret.addChild(
-                this.vIntensityVar);
+                    this.vIntensityVar);
             intV.setArray(intensities.getFirst());
             final IVariableFragment int1DV = fret.addChild(
-                this.vIntensity1DVar);
+                    this.vIntensity1DVar);
             int1DV.setArray(intensities.getSecond());
 
             slc.showStat();
             slc.setCacheModulations(true);
 
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
-                fret.getUri(), this, getWorkflowSlot(),
-                ff);
+                    fret.getUri(), this, getWorkflowSlot(),
+                    ff);
             getWorkflow().append(dwr);
 
             fret.save();
             ret.add(fret);
         }
-        return new TupleND<IFileFragment>(ret);
+        return new TupleND<>(ret);
     }
 
     /**
@@ -194,7 +194,7 @@ public class MeanVarProducer extends AFragmentCommand {
      * @return array with standard deviation
      */
     private ArrayDouble.D1 calculateSd(final ArrayDouble.D1 var,
-        final IScanLine slc) {
+            final IScanLine slc) {
         final ArrayDouble.D1 sd = new ArrayDouble.D1(slc.getBinsSize());
         final IndexIterator varIter = var.getIndexIterator();
         final IndexIterator sdIter = sd.getIndexIterator();
@@ -207,25 +207,25 @@ public class MeanVarProducer extends AFragmentCommand {
     /**
      * Computes a new total_intensity containing only mzs with max variance.
      *
-     * @param sd   array containing the standard deviation
-     * @param slc  scan line cache
+     * @param sd array containing the standard deviation
+     * @param slc scan line cache
      * @param fret file fragment
      * @return v_total_intensity
      */
     private Tuple2D<ArrayDouble.D1, ArrayDouble.D1> computeNewIntensity(
-        final ArrayDouble.D1 sd, final IScanLine slc,
-        final IFileFragment fret) {
+            final ArrayDouble.D1 sd, final IScanLine slc,
+            final IFileFragment fret) {
         final ArrayDouble.D1 intensities = new ArrayDouble.D1(slc.getLastIndex());
         final ArrayDouble.D1 intensities1D = new ArrayDouble.D1(slc.getScanLineCount());
-        final Vector<Integer> holdVector = new Vector<Integer>();
+        final Vector<Integer> holdVector = new Vector<>();
 
         final IndexIterator iiter = intensities.getIndexIterator();
 
-        final List<Array> hMeanMs = new ArrayList<Array>();
-        final List<Array> vMeanMs = new ArrayList<Array>();
+        final List<Array> hMeanMs = new ArrayList<>();
+        final List<Array> vMeanMs = new ArrayList<>();
 
-        final List<Array> hMaxMs = new ArrayList<Array>();
-        final List<Array> vMaxMs = new ArrayList<Array>();
+        final List<Array> hMaxMs = new ArrayList<>();
+        final List<Array> vMaxMs = new ArrayList<>();
 
         final ArrayDouble.D1 nullScan = new ArrayDouble.D1(slc.getBinsSize());
         for (int i = 0; i < slc.getScansPerModulation(); i++) {
@@ -297,7 +297,7 @@ public class MeanVarProducer extends AFragmentCommand {
             maltcms.tools.ArrayTools.mult(a, 1.0d / slc.getScansPerModulation());
         }
 
-        final Vector<Integer> hMeanMsIndex = new Vector<Integer>();
+        final Vector<Integer> hMeanMsIndex = new Vector<>();
         hMeanMsIndex.add(0);
         int index = 0;
         for (final Array a : hMeanMs) {
@@ -305,7 +305,7 @@ public class MeanVarProducer extends AFragmentCommand {
             hMeanMsIndex.add(index);
         }
         hMeanMsIndex.remove(hMeanMsIndex.size() - 1);
-        final Vector<Integer> hMaxMsIndex = new Vector<Integer>();
+        final Vector<Integer> hMaxMsIndex = new Vector<>();
         hMaxMsIndex.add(0);
         index = 0;
         for (final Array a : hMaxMs) {
@@ -313,7 +313,7 @@ public class MeanVarProducer extends AFragmentCommand {
             hMaxMsIndex.add(index);
         }
         hMaxMsIndex.remove(hMaxMsIndex.size() - 1);
-        final Vector<Integer> vMeanMsIndex = new Vector<Integer>();
+        final Vector<Integer> vMeanMsIndex = new Vector<>();
         vMeanMsIndex.add(0);
         index = 0;
         for (final Array a : vMeanMs) {
@@ -321,7 +321,7 @@ public class MeanVarProducer extends AFragmentCommand {
             vMeanMsIndex.add(index);
         }
         vMeanMsIndex.remove(vMeanMsIndex.size() - 1);
-        final Vector<Integer> vMaxMsIndex = new Vector<Integer>();
+        final Vector<Integer> vMaxMsIndex = new Vector<>();
         vMaxMsIndex.add(0);
         index = 0;
         for (final Array a : vMaxMs) {
@@ -331,45 +331,45 @@ public class MeanVarProducer extends AFragmentCommand {
         vMaxMsIndex.remove(vMaxMsIndex.size() - 1);
         //mean ms horizontal
         final IVariableFragment meanMSHindex = new VariableFragment(fret,
-            this.meanMSHorizontalIndexVar);
+                this.meanMSHorizontalIndexVar);
         meanMSHindex.setArray(ArrayTools2.createIntegerArray(hMeanMsIndex));
         final IVariableFragment meanMSH = new VariableFragment(fret,
-            this.meanMSHorizontalVar);
+                this.meanMSHorizontalVar);
         meanMSH.setIndex(meanMSHindex);
         meanMSH.setIndexedArray(hMeanMs);
         //mean ms vertical
         final IVariableFragment meanMSVindex = new VariableFragment(fret,
-            this.meanMSVerticalIndexVar);
+                this.meanMSVerticalIndexVar);
         meanMSVindex.setArray(ArrayTools2.createIntegerArray(vMeanMsIndex));
         final IVariableFragment meanMSV = new VariableFragment(fret,
-            this.meanMSVerticalVar);
+                this.meanMSVerticalVar);
         meanMSV.setIndex(meanMSVindex);
         meanMSV.setIndexedArray(vMeanMs);
 
         //max ms vertical
         final IVariableFragment maxMSVindex = new VariableFragment(fret,
-            this.maxMSVerticalIndexVar);
+                this.maxMSVerticalIndexVar);
         maxMSVindex.setArray(ArrayTools2.createIntegerArray(vMaxMsIndex));
         final IVariableFragment maxMSV = new VariableFragment(fret,
-            this.maxMSVerticalVar);
+                this.maxMSVerticalVar);
         maxMSV.setIndex(maxMSVindex);
         maxMSV.setIndexedArray(vMaxMs);
 
         //max ms horizontal
         final IVariableFragment maxMSHindex = new VariableFragment(fret,
-            this.maxMSHorizontalIndexVar);
+                this.maxMSHorizontalIndexVar);
         maxMSHindex.setArray(ArrayTools2.createIntegerArray(hMaxMsIndex));
         final IVariableFragment maxMSH = new VariableFragment(fret,
-            this.maxMSHorizontalVar);
+                this.maxMSHorizontalVar);
         maxMSH.setIndex(maxMSHindex);
         maxMSH.setIndexedArray(hMaxMs);
         final IVariableFragment hold = new VariableFragment(fret,
-            this.usedMassValuesVar);
+                this.usedMassValuesVar);
         hold.setArray(ArrayTools2.createIntegerArray(holdVector));
 
         // log.info("dense: {}", hMeanMs.get(100));
-        return new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(intensities,
-            intensities1D);
+        return new Tuple2D<>(intensities,
+                intensities1D);
     }
 
     /**
@@ -378,44 +378,44 @@ public class MeanVarProducer extends AFragmentCommand {
     @Override
     public void configure(final Configuration cfg) {
         this.minStandardDeviation = cfg.getDouble(this.getClass().getName()
-            + ".minStandardDeviation", -1.0d);
+                + ".minStandardDeviation", -1.0d);
         if (this.minStandardDeviation >= 0) {
             this.minStandardDeviationQuantil = -1.0d;
         } else {
             this.minStandardDeviationQuantil = cfg.getDouble(this.getClass().getName()
-                + ".minStandardDeviationQuantil", 0.01d);
+                    + ".minStandardDeviationQuantil", 0.01d);
             while (this.minStandardDeviationQuantil > 1) {
                 this.minStandardDeviationQuantil /= 100.0d;
             }
         }
         this.meanMSIntensityVar = cfg.getString("var.mean_ms_intensity",
-            "mean_intensity_values");
+                "mean_intensity_values");
         this.varMSIntensityVar = cfg.getString("var.var_ms_intensity",
-            "var_intensity_values");
+                "var_intensity_values");
         this.sdMSIntensityVar = cfg.getString("var.sd_ms_intensity",
-            "sd_intensity_values");
+                "sd_intensity_values");
         this.vIntensityVar = cfg.getString("var.v_total_intensity",
-            "v_total_intensity");
+                "v_total_intensity");
         this.vIntensity1DVar = cfg.getString("var.v_total_intensity_1d",
-            "v_total_intensity_1d");
+                "v_total_intensity_1d");
         this.meanMSHorizontalVar = cfg.getString("var.meanms_1d_horizontal",
-            "meanms_1d_horizontal");
+                "meanms_1d_horizontal");
         this.meanMSHorizontalIndexVar = cfg.getString(
-            "var.meanms_1d_horizontal_index", "meanms_1d_horizontal_index");
+                "var.meanms_1d_horizontal_index", "meanms_1d_horizontal_index");
         this.meanMSVerticalVar = cfg.getString("var.meanms_1d_vertical",
-            "meanms_1d_vertical");
+                "meanms_1d_vertical");
         this.meanMSVerticalIndexVar = cfg.getString(
-            "var.meanms_1d_vertical_index", "meanms_1d_vertical_index");
+                "var.meanms_1d_vertical_index", "meanms_1d_vertical_index");
         this.maxMSHorizontalVar = cfg.getString("var.maxms_1d_horizontal",
-            "maxms_1d_horizontal");
+                "maxms_1d_horizontal");
         this.maxMSHorizontalIndexVar = cfg.getString(
-            "var.maxms_1d_horizontal_index", "maxms_1d_horizontal_index");
+                "var.maxms_1d_horizontal_index", "maxms_1d_horizontal_index");
         this.maxMSVerticalVar = cfg.getString("var.maxms_1d_vertical",
-            "maxms_1d_vertical");
+                "maxms_1d_vertical");
         this.maxMSVerticalIndexVar = cfg.getString(
-            "var.maxms_1d_vertical_index", "maxms_1d_vertical_index");
+                "var.maxms_1d_vertical_index", "maxms_1d_vertical_index");
         this.usedMassValuesVar = cfg.getString("var.used_mass_values",
-            "used_mass_values");
+                "used_mass_values");
     }
 
     /**
@@ -425,7 +425,7 @@ public class MeanVarProducer extends AFragmentCommand {
      * @return tuple containing mean as first and variance as second element
      */
     private Tuple2D<ArrayDouble.D1, ArrayDouble.D1> calculateMeanVarSparse(
-        final IScanLine slc) {
+            final IScanLine slc) {
         final ArrayDouble.D1 mean = new ArrayDouble.D1(slc.getBinsSize());
         final ArrayDouble.D1 var = new ArrayDouble.D1(slc.getBinsSize());
         // TODO: für jedes mz ein eigenen count? oder doch einer fuer alle?
@@ -468,7 +468,7 @@ public class MeanVarProducer extends AFragmentCommand {
                 iter.setDoubleCurrent(m2 / (n - 1));
             }
         }
-        return new Tuple2D<ArrayDouble.D1, ArrayDouble.D1>(mean, var);
+        return new Tuple2D<>(mean, var);
     }
 
     /**

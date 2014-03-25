@@ -38,9 +38,9 @@ import ucar.ma2.Array;
 public class ProfileChromatogram1D extends Chromatogram1D {
 
     /**
-     * Create a profile chromatogram from a given file fragment.
-     * Requires var.binned_scan_index, var.binned_intensity_values,
-     * and var.binned_mass_values to be available.
+     * Create a profile chromatogram from a given file fragment. Requires
+     * var.binned_scan_index, var.binned_intensity_values, and
+     * var.binned_mass_values to be available.
      *
      * @param f
      */
@@ -49,12 +49,13 @@ public class ProfileChromatogram1D extends Chromatogram1D {
     }
 
     /**
-     * Create a profile chromatogram from a given file fragment.
-     * Requires var.binned_scan_index, var.binned_intensity_values,
-     * and var.binned_mass_values to be available.
+     * Create a profile chromatogram from a given file fragment. Requires
+     * var.binned_scan_index, var.binned_intensity_values, and
+     * var.binned_mass_values to be available.
      *
      * @param f
-     * @throws ResourceNotAvailableException if any of the required variables is not available
+     * @throws ResourceNotAvailableException if any of the required variables is
+     * not available
      */
     public ProfileChromatogram1D(IFileFragment f, boolean checkVariableAvailability) {
         super(f);
@@ -68,8 +69,8 @@ public class ProfileChromatogram1D extends Chromatogram1D {
 
     /**
      *
-     * @return
-     * @throws ResourceNotAvailableException if any of the required variables is not available
+     * @return @throws ResourceNotAvailableException if any of the required
+     * variables is not available
      */
     public List<Array> getBinnedIntensities() {
         return MaltcmsTools.getBinnedMZIs(getParent()).getSecond();
@@ -77,8 +78,8 @@ public class ProfileChromatogram1D extends Chromatogram1D {
 
     /**
      *
-     * @return
-     * @throws ResourceNotAvailableException if any of the required variables is not available
+     * @return @throws ResourceNotAvailableException if any of the required
+     * variables is not available
      */
     public List<Array> getBinnedMasses() {
         return MaltcmsTools.getBinnedMZIs(getParent()).getFirst();

@@ -56,8 +56,8 @@ public class AlignmentMapChart extends AChart<XYPlot> {
     private int stride = 1;
 
     public AlignmentMapChart(final List<Tuple2DI> map1, final Array domain1,
-        final Array domain2, final String x_label, final int height1,
-        final int stride1) {
+            final Array domain2, final String x_label, final int height1,
+            final int stride1) {
         this.map = map1;
         this.height = height1;
         this.stride = stride1;
@@ -72,7 +72,7 @@ public class AlignmentMapChart extends AChart<XYPlot> {
         int cnt = 0;
         for (final Tuple2DI t : this.map) {
             if ((cnt % mod == 0) || (cnt == 0)
-                || (cnt == (this.map.size() - 1))) {
+                    || (cnt == (this.map.size() - 1))) {
                 double x = t.getSecond();
                 double dx = t.getFirst() - t.getSecond();
                 if ((this.domain1 != null) && (this.domain2 != null)) {
@@ -82,7 +82,7 @@ public class AlignmentMapChart extends AChart<XYPlot> {
                     x = this.domain2.getDouble(id2.set(t.getSecond()));
                     dx = this.domain1.getDouble(id1.set(t.getFirst())) - x;
                     this.log.debug("domain1 = {}, domain2 = {}", this.domain1
-                        .getShape()[0], this.domain2.getShape()[0]);
+                            .getShape()[0], this.domain2.getShape()[0]);
                     this.log.debug("i={}, j={}, x={},dx={}", new Object[]{
                         t.getFirst(), t.getSecond(), x, dx});
                 }

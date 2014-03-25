@@ -108,13 +108,13 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
      */
     @Override
     public Array getFeature(String name) {
-        PublicMemberGetters<Peak1D> pmg = new PublicMemberGetters<Peak1D>(
-            getClass());
+        PublicMemberGetters<Peak1D> pmg = new PublicMemberGetters<>(
+                getClass());
         Method m = pmg.getMethodForGetterName(name);
         if (m == null) {
             throw new ResourceNotAvailableException(
-                "Could not find compatible method for feature with name : "
-                + name);
+                    "Could not find compatible method for feature with name : "
+                    + name);
         }
         try {
             Object o = m.invoke(this, new Object[]{});
@@ -123,26 +123,20 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             // }
             if (o == null) {
                 throw new ResourceNotAvailableException(
-                    "Can not create array representation of object for method: "
-                    + name);
+                        "Can not create array representation of object for method: "
+                        + name);
             }
             if (o instanceof Array) {
                 return (Array) o;
             }
             return ArrayTools.factoryScalar(o);
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         throw new ResourceNotAvailableException(
-            "Could not find compatible method for feature with name : "
-            + name);
+                "Could not find compatible method for feature with name : "
+                + name);
     }
 
     /*
@@ -152,8 +146,8 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
      */
     @Override
     public List<String> getFeatureNames() {
-        PublicMemberGetters<Peak1D> pmg = new PublicMemberGetters<Peak1D>(
-            getClass(), "Feature", "FeatureNames");
+        PublicMemberGetters<Peak1D> pmg = new PublicMemberGetters<>(
+                getClass(), "Feature", "FeatureNames");
         return Arrays.asList(pmg.getGetterNames());
     }
 
@@ -195,18 +189,18 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
         IVariableFragment peaks = null;
         try {
             peaks = ff.getChild(
-                "tic_peaks");
+                    "tic_peaks");
         } catch (ResourceNotAvailableException rnae) {
             peaks = ff.getChild("eic_peaks");
         }
         ArrayChar.D2 sourceFileName = (ArrayChar.D2) ff.getChild("peak_source_file").getArray();
         ArrayChar.D2 peakNames = (ArrayChar.D2) ff.getChild("peak_name").getArray();
         Array apexRt = ff.getChild(
-            "peak_retention_time").getArray();
+                "peak_retention_time").getArray();
         Array startRT = ff.getChild(
-            "peak_start_time").getArray();
+                "peak_start_time").getArray();
         Array stopRT = ff.getChild(
-            "peak_end_time").getArray();
+                "peak_end_time").getArray();
         Array area = ff.getChild("peak_area").getArray();
         Array normalizedArea = ff.getChild("peak_area_normalized").getArray();
         Collection<String> normalizationMethods = FragmentTools.getStringArray(ff, "peak_area_normalization_methods");
@@ -220,7 +214,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
         ArrayChar.D2 peakType = (ArrayChar.D2) ff.getChild("peak_type").getArray();
         Array peakDetectionChannel = ff.getChild("peak_detection_channel").getArray();
         ArrayInt.D1 peakPositions = (ArrayInt.D1) peaks.getArray();
-        ArrayList<Peak1D> peaklist = new ArrayList<Peak1D>(peakPositions.getShape()[0]);
+        ArrayList<Peak1D> peaklist = new ArrayList<>(peakPositions.getShape()[0]);
         for (int i = 0; i < peakPositions.getShape()[0]; i++) {
             Peak1D p = new Peak1D();
             p.setNormalizationMethods(normalizationMethods.toArray(new String[normalizationMethods.size()]));
@@ -249,9 +243,9 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
     public static void appendEICs(IFileFragment ff, List<IPeakNormalizer> peakNormalizers, List<Peak1D> peaklist, String peakVarName) {
         if (!peaklist.isEmpty()) {
             final IVariableFragment peaks = new VariableFragment(ff,
-                peakVarName);
+                    peakVarName);
             final Dimension peak_number = new Dimension("peak_number",
-                peaklist.size(), true, false, false);
+                    peaklist.size(), true, false, false);
             final Dimension peak_source_file_number = new Dimension("peak_source_file_number", 1, true, false, false);
             final Dimension _1024_byte_string = new Dimension("_1024_byte_string", 1024, true, false, false);
             final Dimension _64_byte_string = new Dimension("_64_byte_string", 64, true, false, false);
@@ -267,13 +261,13 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             IVariableFragment peakEndIndex = new VariableFragment(ff, "peak_end_index");
             peakEndIndex.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakRT = new VariableFragment(ff,
-                "peak_retention_time");
+                    "peak_retention_time");
             peakRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakStartRT = new VariableFragment(ff,
-                "peak_start_time");
+                    "peak_start_time");
             peakStartRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakStopRT = new VariableFragment(ff,
-                "peak_end_time");
+                    "peak_end_time");
             peakStopRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment snr = new VariableFragment(ff, "peak_signal_to_noise");
             snr.setDimensions(new Dimension[]{peak_number});
@@ -299,13 +293,13 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             ArrayInt.D1 peakStartIndexArray = new ArrayInt.D1(peaklist.size());
             ArrayInt.D1 peakEndIndexArray = new ArrayInt.D1(peaklist.size());
             ArrayChar.D2 names = cross.datastructures.tools.ArrayTools.createStringArray(
-                peaklist.size(), 1024);
+                    peaklist.size(), 1024);
             ArrayChar.D2 peakTypeArray = cross.datastructures.tools.ArrayTools.createStringArray(
-                peaklist.size(), 64);
+                    peaklist.size(), 64);
             ArrayChar.D2 peakSourceFileArray = cross.datastructures.tools.ArrayTools.createStringArray(
-                1, 1024);
+                    1, 1024);
             ArrayChar.D2 normalizationMethodArray = cross.datastructures.tools.ArrayTools.createStringArray(
-                Math.max(1, peakNormalizers.size()), 1024);
+                    Math.max(1, peakNormalizers.size()), 1024);
             String[] normalizationMethodsString = new String[peakNormalizers.size()];
             ArrayDouble.D1 apexRT = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 startRT = new ArrayDouble.D1(peaklist.size());
@@ -385,9 +379,9 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
     public static void append(IFileFragment ff, List<IPeakNormalizer> peakNormalizers, List<Peak1D> peaklist, Array filteredTrace, String peakVarName, String filteredTraceVarName) {
         if (!peaklist.isEmpty()) {
             final IVariableFragment peaks = new VariableFragment(ff,
-                peakVarName);
+                    peakVarName);
             final Dimension peak_number = new Dimension("peak_number",
-                peaklist.size(), true, false, false);
+                    peaklist.size(), true, false, false);
             final Dimension peak_source_file_number = new Dimension("peak_source_file_number", 1, true, false, false);
             final Dimension _1024_byte_string = new Dimension("_1024_byte_string", 1024, true, false, false);
             final Dimension _64_byte_string = new Dimension("_64_byte_string", 64, true, false, false);
@@ -397,7 +391,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             final Dimension scan_number = new Dimension("scan_number", tic.getShape()[0]);
             if (filteredTrace != null && filteredTraceVarName != null) {
                 final IVariableFragment mai = new VariableFragment(ff,
-                    filteredTraceVarName);
+                        filteredTraceVarName);
                 mai.setDimensions(new Dimension[]{scan_number});
                 mai.setArray(filteredTrace);
             }
@@ -410,13 +404,13 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             IVariableFragment peakEndIndex = new VariableFragment(ff, "peak_end_index");
             peakEndIndex.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakRT = new VariableFragment(ff,
-                "peak_retention_time");
+                    "peak_retention_time");
             peakRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakStartRT = new VariableFragment(ff,
-                "peak_start_time");
+                    "peak_start_time");
             peakStartRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakStopRT = new VariableFragment(ff,
-                "peak_end_time");
+                    "peak_end_time");
             peakStopRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment snr = new VariableFragment(ff, "peak_signal_to_noise");
             snr.setDimensions(new Dimension[]{peak_number});
@@ -442,13 +436,13 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             ArrayInt.D1 peakStartIndexArray = new ArrayInt.D1(peaklist.size());
             ArrayInt.D1 peakEndIndexArray = new ArrayInt.D1(peaklist.size());
             ArrayChar.D2 names = cross.datastructures.tools.ArrayTools.createStringArray(
-                peaklist.size(), 1024);
+                    peaklist.size(), 1024);
             ArrayChar.D2 peakTypeArray = cross.datastructures.tools.ArrayTools.createStringArray(
-                peaklist.size(), 64);
+                    peaklist.size(), 64);
             ArrayChar.D2 peakSourceFileArray = cross.datastructures.tools.ArrayTools.createStringArray(
-                1, 1024);
+                    1, 1024);
             ArrayChar.D2 normalizationMethodArray = cross.datastructures.tools.ArrayTools.createStringArray(
-                Math.max(1, peakNormalizers.size()), 1024);
+                    Math.max(1, peakNormalizers.size()), 1024);
             String[] normalizationMethodsString = new String[peakNormalizers.size()];
             ArrayDouble.D1 apexRT = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 startRT = new ArrayDouble.D1(peaklist.size());

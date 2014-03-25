@@ -41,14 +41,17 @@ import ucar.ma2.Array;
 public interface IFeatureVector extends Serializable {
 
     /**
-     * Return an Array for a specified feature with name. This method should only
-     * be used when the implementation type of a feature vector is unknown. Implementations
-     * of IFeatureVector should provide more convenient getter methods to access feature values.
+     * Return an Array for a specified feature with name. This method should
+     * only be used when the implementation type of a feature vector is unknown.
+     * Implementations of IFeatureVector should provide more convenient getter
+     * methods to access feature values.
      *
      * @param name the name of the feature to retrieve
      * @return the array of the requested feature
-     * @throws ResourceNotAvailableException if a resource with the given name is available but has not been initialized
-     * @throws IllegalArgumentException      if a resource with the given name is unknown to this feature vector
+     * @throws ResourceNotAvailableException if a resource with the given name
+     * is available but has not been initialized
+     * @throws IllegalArgumentException if a resource with the given name is
+     * unknown to this feature vector
      */
     @NoFeature
     public abstract Array getFeature(String name) throws ResourceNotAvailableException, IllegalArgumentException;

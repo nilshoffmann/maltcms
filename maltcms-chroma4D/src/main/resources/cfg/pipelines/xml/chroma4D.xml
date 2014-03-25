@@ -48,9 +48,9 @@ for details.
                 <ref bean="default2DVarLoader" />
                 <ref bean="chromatogram2DVisualizer" />
                 <ref bean="data2DNormalizer" />
-				<ref bean="cwtPeakFinder" />
+                <ref bean="cwtPeakFinder" />
                 <ref bean="seededRegionGrowing" />
-				<ref bean="peakCliqueAlignment" />
+                <ref bean="peakCliqueAlignment" />
             </list>
         </property>    
     </bean>

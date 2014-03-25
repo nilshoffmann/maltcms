@@ -139,7 +139,7 @@ public class MZMLDataSource implements IDataSource {
         final int dotindex = ff.getName().lastIndexOf(".");
         if (dotindex == -1) {
             throw new RuntimeException("Could not determine File extension of "
-                + ff);
+                    + ff);
         }
         final String filename = ff.getName().toLowerCase();
         for (final String s : this.fileEnding) {
@@ -158,25 +158,25 @@ public class MZMLDataSource implements IDataSource {
     @Override
     public void configure(final Configuration configuration) {
         this.mass_values = configuration.getString("var.mass_values",
-            "mass_values");
+                "mass_values");
         this.intensity_values = configuration.getString("var.intensity_values",
-            "intensity_values");
+                "intensity_values");
         this.total_intensity = configuration.getString("var.total_intensity",
-            "total_intensity");
+                "total_intensity");
         this.scan_index = configuration.getString("var.scan_index",
-            "scan_index");
+                "scan_index");
         this.mass_range_min = configuration.getString("var.mass_range_min",
-            "mass_range_min");
+                "mass_range_min");
         this.mass_range_max = configuration.getString("var.mass_range_max",
-            "mass_range_max");
+                "mass_range_max");
         this.source_files = configuration.getString("var.source_files",
-            "source_files");
+                "source_files");
         this.modulation_time = configuration.getString("var.modulation_time",
-            "modulation_time");
+                "modulation_time");
         this.first_column_elution_time = configuration.getString("var.first_column_elution_time",
-            "first_column_elution_time");
+                "first_column_elution_time");
         this.second_column_elution_time = configuration.getString("var.second_column_elution_time",
-            "second_column_elution_time");
+                "second_column_elution_time");
         this.total_ion_current_chromatogram = configuration.getString("var.total_ion_current_chromatogram", "total_ion_current_chromatogram");
         this.total_ion_current_chromatogram_scan_acquisition_time = configuration.getString("var.total_ion_current_chromatogram_scan_acquisition_time", "total_ion_current_chromatogram_scan_acquisition_time");
         this.ms_level = configuration.getString("var.ms_level", "ms_level");
@@ -233,7 +233,7 @@ public class MZMLDataSource implements IDataSource {
         try {
             if (um.isIndexedmzML()) {
                 log.debug("Retrieving spectrum by id from spectrum index!");
-                return um.getSpectrumById(um.getSpectrumIDFromSpectrumIndex(Integer.valueOf(idx)));
+                return um.getSpectrumById(um.getSpectrumIDFromSpectrumIndex(idx));
             } else {
                 log.warn("Not using indexed mzML, this is really inefficient!");
                 return getRun(um).getSpectrumList().getSpectrum().get(idx);
@@ -361,7 +361,7 @@ public class MZMLDataSource implements IDataSource {
 
     private Tuple2D<Double, Double> getMinMaxMassRange(final Array massValues) {
         MinMax mm = MAMath.getMinMax(massValues);
-        return new Tuple2D<Double, Double>(mm.min, mm.max);
+        return new Tuple2D<>(mm.min, mm.max);
     }
 
     private CVParam findParam(List<CVParam> l, String accession) {
@@ -371,7 +371,7 @@ public class MZMLDataSource implements IDataSource {
             }
         }
         throw new ResourceNotAvailableException("CVParam with accession "
-            + accession + " not contained in list!");
+                + accession + " not contained in list!");
     }
 
     private String getRTUnit(final Spectrum s, final String cvTerm) {
@@ -403,9 +403,7 @@ public class MZMLDataSource implements IDataSource {
             rt = Double.parseDouble(rtp.getValue());
             String unit = getRTUnit(s, "MS:1000016");
             rt = convertRT(rt, unit);
-        } catch (NullPointerException npe) {
-            log.warn("Could not retrieve spectrum acquisition time!");
-        } catch (ResourceNotAvailableException rne) {
+        } catch (NullPointerException | ResourceNotAvailableException npe) {
             log.warn("Could not retrieve spectrum acquisition time!");
         }
         return rt;
@@ -420,9 +418,9 @@ public class MZMLDataSource implements IDataSource {
     }
 
     private IVariableFragment getVariable(final IFileFragment f,
-        final String name) {
+            final String name) {
         return (f.hasChild(name) ? f.getChild(name) : new ImmutableVariableFragment2(f,
-            name));
+                name));
     }
 
     /**
@@ -431,10 +429,10 @@ public class MZMLDataSource implements IDataSource {
      * @param var
      * @param run
      * @return a Tuple2D<Array,Array> with mass_range_min as first and
-     *         mass_range_max as second array
+     * mass_range_max as second array
      */
     protected Tuple2D<Array, Array> initMinMaxMZ(final IVariableFragment var,
-        final MzMLUnmarshaller um) {
+            final MzMLUnmarshaller um) {
         log.debug("Loading {} and {}", new Object[]{this.mass_range_min,
             this.mass_range_max});
         int scans = getScanCount(um);
@@ -481,7 +479,7 @@ public class MZMLDataSource implements IDataSource {
             a = readSourceFiles(f, mzu);
         }
         if (varname.equals(this.mass_values)
-            || varname.equals(this.intensity_values)) {
+                || varname.equals(this.intensity_values)) {
             a = readMZI(var, mzu);
         } else if (varname.equals(this.scan_index)) {
             a = readScanIndex(var, mzu);
@@ -490,7 +488,7 @@ public class MZMLDataSource implements IDataSource {
             a = readTotalIntensitiesArray(var.getParent(), intensity_values, mzu);
             // read min and max_mass_range
         } else if (varname.equals(this.mass_range_min)
-            || varname.equals(this.mass_range_max)) {
+                || varname.equals(this.mass_range_max)) {
             a = readMinMaxMassValueArray(var, mzu);
             // read scan_acquisition_time
         } else if (varname.equals(this.scan_acquisition_time)) {
@@ -509,7 +507,7 @@ public class MZMLDataSource implements IDataSource {
             a = readElutionTimeArray(var, mzu, this.second_column_elution_timeAccession);
         } else {
             throw new ResourceNotAvailableException(
-                "Unknown variable name to mzML mapping for " + varname);
+                    "Unknown variable name to mzML mapping for " + varname);
         }
         if (a != null) {
             getCache().put(var.getParent().getUri() + ">" + var.getName(), new SerializableArray(a));
@@ -521,9 +519,9 @@ public class MZMLDataSource implements IDataSource {
 
     @Override
     public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
-        ResourceNotAvailableException {
+            ResourceNotAvailableException {
         final ArrayList<IVariableFragment> al = readStructure(f);
-        final ArrayList<Array> ral = new ArrayList<Array>(al.size());
+        final ArrayList<Array> ral = new ArrayList<>(al.size());
         for (final IVariableFragment vf : al) {
             final Array a = readSingle(vf);
             ral.add(a);
@@ -533,10 +531,10 @@ public class MZMLDataSource implements IDataSource {
 
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
-        throws IOException, ResourceNotAvailableException {
+            throws IOException, ResourceNotAvailableException {
         MzMLUnmarshaller um = getUnmarshaller(f.getParent());
         if (f.getName().equals(this.mass_values)) {
-            final ArrayList<Array> al = new ArrayList<Array>();
+            final ArrayList<Array> al = new ArrayList<>();
             int start = 0;
             int len = getScanCount(um);
             if (f.getIndex() != null) {
@@ -558,7 +556,7 @@ public class MZMLDataSource implements IDataSource {
             return al;
         }
         if (f.getName().equals(this.intensity_values)) {
-            final ArrayList<Array> al = new ArrayList<Array>();
+            final ArrayList<Array> al = new ArrayList<>();
             int start = 0;
             int len = getScanCount(um);
             if (f.getIndex() != null) {
@@ -580,13 +578,13 @@ public class MZMLDataSource implements IDataSource {
             return al;
         }
         // return an empty list as default
-        return new ArrayList<Array>();
+        return new ArrayList<>();
     }
 
     private Array readSourceFiles(final IFileFragment f, final MzMLUnmarshaller mzmu) {
         SourceFileList sfl = getSourceFiles(mzmu);
-        List<IFileFragment> sourceFilePaths = new LinkedList<IFileFragment>();
-        Set<String> allowedSchemes = new HashSet<String>(Arrays.asList(new String[]{"http", "https", "ftp"}));
+        List<IFileFragment> sourceFilePaths = new LinkedList<>();
+        Set<String> allowedSchemes = new HashSet<>(Arrays.asList(new String[]{"http", "https", "ftp"}));
         for (SourceFile sfs : sfl.getSourceFile()) {
             try {
                 IFileFragment fragment = new FileFragment(URI.create(sfs.getLocation()));
@@ -631,9 +629,7 @@ public class MZMLDataSource implements IDataSource {
                         CVParam cvp = findParam(cvParams, accession);
                         String value = cvp.getValue();
                         rt = convertRT(Double.parseDouble(value), cvp.getUnitName());
-                    } catch (NullPointerException npe) {
-                        log.warn("Could not retrieve legacy elution time!");
-                    } catch (ResourceNotAvailableException rnae) {
+                    } catch (NullPointerException | ResourceNotAvailableException npe) {
                         log.warn("Could not retrieve legacy elution time!");
                     }
                 }
@@ -661,7 +657,7 @@ public class MZMLDataSource implements IDataSource {
     }
 
     private Array readMinMaxMassValueArray(final IVariableFragment var,
-        final MzMLUnmarshaller um) {
+            final MzMLUnmarshaller um) {
         log.debug("readMinMaxMassValueArray");
         final Tuple2D<Array, Array> t = initMinMaxMZ(var, um);
         if (var.getName().equals(this.mass_range_min)) {
@@ -671,7 +667,7 @@ public class MZMLDataSource implements IDataSource {
             return t.getSecond();
         }
         throw new IllegalArgumentException(
-            "Method accepts only one of mass_range_min or mass_range_max as varname!");
+                "Method accepts only one of mass_range_min or mass_range_max as varname!");
     }
 
     private Array readTicFromMzi(final IVariableFragment var, final MzMLUnmarshaller um) {
@@ -708,7 +704,7 @@ public class MZMLDataSource implements IDataSource {
             return tic;
         }
         throw new IllegalArgumentException(
-            "Don't know how to handle variable: " + var.getName());
+                "Don't know how to handle variable: " + var.getName());
         // }
         // return f.getArray();
     }
@@ -791,7 +787,7 @@ public class MZMLDataSource implements IDataSource {
             return a;
         }
         throw new IllegalArgumentException(
-            "Don't know how to handle variable: " + var.getName());
+                "Don't know how to handle variable: " + var.getName());
         // }
         // return f.getArray();
     }
@@ -818,9 +814,7 @@ public class MZMLDataSource implements IDataSource {
                         paramMsLevel = Integer.parseInt(param.getValue());
                     }
                     a.setInt(i, paramMsLevel);
-                } catch (NullPointerException npe) {
-                    log.warn("Could not retrieve ms level for spectrum {}!", spectrum.getId());
-                } catch (ResourceNotAvailableException rnae) {
+                } catch (NullPointerException | ResourceNotAvailableException npe) {
                     log.warn("Could not retrieve ms level for spectrum {}!", spectrum.getId());
                 }
                 i++;
@@ -830,7 +824,7 @@ public class MZMLDataSource implements IDataSource {
     }
 
     private Array readScanAcquisitionTimeArray(final IVariableFragment var,
-        final MzMLUnmarshaller um) {
+            final MzMLUnmarshaller um) {
         log.debug("readScanAcquisitionTimeArray");
         IteratedSpectrumFunction<ArrayDouble.D1> f = new IteratedSpectrumFunction<>(DataType.DOUBLE, um, new SpectrumFunction<ArrayDouble.D1>() {
             @Override
@@ -939,7 +933,7 @@ public class MZMLDataSource implements IDataSource {
 
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
-        ResourceNotAvailableException {
+            ResourceNotAvailableException {
         log.debug("readSingle of {} in {}", f.getName(), f.getParent().getUri());
         if (f.hasArray()) {
             log.warn("{} already has an array set!", f);
@@ -947,7 +941,7 @@ public class MZMLDataSource implements IDataSource {
         final Array a = loadArray(f.getParent(), f);
         if (a == null) {
             throw new ResourceNotAvailableException("Could not find variable "
-                + f.getName() + " in file " + f.getParent().getName());
+                    + f.getName() + " in file " + f.getParent().getName());
         }
         // f.setArray(a);
         return a;
@@ -961,8 +955,8 @@ public class MZMLDataSource implements IDataSource {
      */
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
-        throws IOException {
-        final ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
+            throws IOException {
+        final ArrayList<IVariableFragment> al = new ArrayList<>();
         final IVariableFragment ti = getVariable(f, this.total_intensity);
         final IVariableFragment sat = getVariable(f, this.scan_acquisition_time);
         final IVariableFragment si = getVariable(f, this.scan_index);
@@ -991,7 +985,7 @@ public class MZMLDataSource implements IDataSource {
      */
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
-        throws IOException, ResourceNotAvailableException {
+            throws IOException, ResourceNotAvailableException {
         MzMLUnmarshaller um = getUnmarshaller(f.getParent());
         final int scancount = getScanCount(um);
         final String varname = f.getName();
@@ -1005,13 +999,13 @@ public class MZMLDataSource implements IDataSource {
             final Range[] ranges = new Range[]{new Range(d1.getLength()), new Range(d2.getLength())};
             f.setRange(ranges);
         } else if (varname.equals(this.scan_index)
-            || varname.equals(this.total_intensity)
-            || varname.equals(this.mass_range_min)
-            || varname.equals(this.mass_range_max)
-            || varname.equals(this.scan_acquisition_time)
-            || varname.equals(this.first_column_elution_time)
-            || varname.equals(this.second_column_elution_time)
-            || varname.equals(this.ms_level)) {
+                || varname.equals(this.total_intensity)
+                || varname.equals(this.mass_range_min)
+                || varname.equals(this.mass_range_max)
+                || varname.equals(this.scan_acquisition_time)
+                || varname.equals(this.first_column_elution_time)
+                || varname.equals(this.second_column_elution_time)
+                || varname.equals(this.ms_level)) {
             final Dimension[] dims = new Dimension[]{new Dimension(
                 "scan_number", scancount, true)};
             f.setDimensions(dims);
@@ -1023,7 +1017,7 @@ public class MZMLDataSource implements IDataSource {
                 log.warn("Invalid range: ", ex);
             }
         } else if (varname.equals(this.mass_values)
-            || varname.equals(this.intensity_values)) {
+                || varname.equals(this.intensity_values)) {
             int npeaks = 0;
             try {
                 MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
@@ -1044,8 +1038,8 @@ public class MZMLDataSource implements IDataSource {
 
             } catch (final NullPointerException npe) {
                 throw new ResourceNotAvailableException(
-                    "Could not read header of file "
-                    + f.getParent().getUri());
+                        "Could not read header of file "
+                        + f.getParent().getUri());
             }
         } else if (varname.equals(this.modulation_time)) {
             Array a = readModulationTimeArray(f, um);
@@ -1061,7 +1055,7 @@ public class MZMLDataSource implements IDataSource {
             f.setRange(ranges);
         } else {
             throw new ResourceNotAvailableException(
-                "Unknown varname to mzML mapping for varname " + varname);
+                    "Unknown varname to mzML mapping for varname " + varname);
         }
         return f;
     }

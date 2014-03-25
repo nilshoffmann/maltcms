@@ -48,7 +48,7 @@ public class BiPaceBidirectionalBestHit implements IBidirectionalBestHit {
 
     @Override
     public List<List<Point>> getBidiBestHitList(List<List<Peak2D>> peaklists) {
-        List<List<Point>> bbhs = new ArrayList<List<Point>>();
+        List<List<Point>> bbhs = new ArrayList<>();
         findBBHs(peaklists, bbhs);
         return bbhs;
     }
@@ -74,11 +74,11 @@ public class BiPaceBidirectionalBestHit implements IBidirectionalBestHit {
         if (this.useMeanMS) {
             sim = this.similarity.apply(new double[]{p1.getFirstRetTime(), p1.getSecondRetTime()}, new double[]{p2.getFirstRetTime(),
                 p2.getSecondRetTime()}, p1.getPeakArea().
-                getMeanMS(), p2.getPeakArea().getMeanMS());
+                    getMeanMS(), p2.getPeakArea().getMeanMS());
         } else {
             sim = this.similarity.apply(new double[]{p1.getFirstRetTime(), p1.getSecondRetTime()}, new double[]{p2.getFirstRetTime(),
                 p2.getSecondRetTime()}, p1.getPeakArea().
-                getSeedMS(), p1.getPeakArea().getSeedMS());
+                    getSeedMS(), p1.getPeakArea().getSeedMS());
         }
         return sim;
     }

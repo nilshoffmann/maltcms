@@ -49,7 +49,7 @@ public class EntityGroup implements Comparable<EntityGroup> {
     private final HashMap<Category, Entity> categoryToEntityMap;
 
     public EntityGroup(Entity... e) {
-        categoryToEntityMap = new HashMap<Category, Entity>();
+        categoryToEntityMap = new HashMap<>();
         for (Entity ent : e) {
             categoryToEntityMap.put(ent.getCategory(), ent);
         }
@@ -63,7 +63,7 @@ public class EntityGroup implements Comparable<EntityGroup> {
     }
 
     public List<Entity> getEntities() {
-        return new ArrayList<Entity>(categoryToEntityMap.values());
+        return new ArrayList<>(categoryToEntityMap.values());
     }
 
     public Entity getEntityForCategory(Category c) {
@@ -77,7 +77,7 @@ public class EntityGroup implements Comparable<EntityGroup> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        List<Category> l = new ArrayList<Category>(getCategories());
+        List<Category> l = new ArrayList<>(getCategories());
         Collections.sort(l);
         StringBuilder header = new StringBuilder();
         for (Category c : l) {
@@ -121,7 +121,7 @@ public class EntityGroup implements Comparable<EntityGroup> {
             IFeatureVector ifv = getEntityForCategory(c).getFeatureVector();
             IFeatureVector ofv = o.getEntityForCategory(c).getFeatureVector();
             List<String> features = ifv.getFeatureNames();
-            LinkedHashSet<String> commonFeatures = new LinkedHashSet<String>(features);
+            LinkedHashSet<String> commonFeatures = new LinkedHashSet<>(features);
             commonFeatures.retainAll(ofv.getFeatureNames());
             for (String featureName : commonFeatures) {
                 int v = ifv.getFeature(featureName).toString().compareTo(ofv.getFeature(featureName).toString());

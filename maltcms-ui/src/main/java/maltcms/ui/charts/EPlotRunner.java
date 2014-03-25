@@ -54,28 +54,28 @@ public class EPlotRunner extends PlotRunner {
     /**
      * Old constructor.
      *
-     * @param plot1     plot
-     * @param title1    title
+     * @param plot1 plot
+     * @param title1 title
      * @param filename1 filename
      * @param outputdir output directory
      */
     public EPlotRunner(final Plot plot1, final String title1,
-        final String filename1, final File outputdir) {
+            final String filename1, final File outputdir) {
         super(plot1, title1, filename1, outputdir);
         throw new RuntimeException(
-            "Use the original PlotRunner instead of the EPlotRunner.");
+                "Use the original PlotRunner instead of the EPlotRunner.");
     }
 
     /**
      * Default constructor.
      *
-     * @param ichart    this chart will be plotted
+     * @param ichart this chart will be plotted
      * @param ifilename filename of background image
      */
     public EPlotRunner(final JFreeChart ichart, final String ifilename,
-        final File outputdir) {
+            final File outputdir) {
         super(ichart.getPlot(), ichart.getTitle().toString(), ifilename,
-            outputdir);
+                outputdir);
         this.chart = ichart;
     }
 
@@ -92,22 +92,22 @@ public class EPlotRunner extends PlotRunner {
     @Override
     public JFreeChart call() throws Exception {
         this.log
-            .info("#############################################################################");
+                .info("#############################################################################");
         final String s = this.getClass().getName();
         this.log.info("# {} running", s);
         this.log
-            .info("#############################################################################");
+                .info("#############################################################################");
 
         if (isSerializeJFreeChart()) {
             try {
-                final ObjectOutputStream oos = new ObjectOutputStream(
-                    new BufferedOutputStream(new FileOutputStream(
-                            StringTools.removeFileExt(getFile()
-                                .getAbsolutePath())
-                            + ".serialized")));
-                oos.writeObject(this.chart);
-                oos.flush();
-                oos.close();
+                try (ObjectOutputStream oos = new ObjectOutputStream(
+                        new BufferedOutputStream(new FileOutputStream(
+                                        StringTools.removeFileExt(getFile()
+                                                .getAbsolutePath())
+                                        + ".serialized")))) {
+                                            oos.writeObject(this.chart);
+                                            oos.flush();
+                                        }
             } catch (final FileNotFoundException e) {
                 log.warn("{}", e.getLocalizedMessage());
             } catch (final IOException e) {

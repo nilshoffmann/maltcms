@@ -70,7 +70,7 @@ public class AddRandomNoise extends AArrayFilter {
         while (ii.hasNext()) {
             final double v = ii.getDoubleNext();
             ii.setDoubleCurrent(v + (this.stddev * this.rg.nextGaussian())
-                + this.mean);
+                    + this.mean);
         }
         return b;
     }

@@ -63,7 +63,7 @@ public class TiledArray implements IArrayD2Double {
     private long[] arrayATime;
 
     public TiledArray(int tilesRows, int tilesCols, int rows, int cols,
-        double defaultValue) {
+            double defaultValue) {
         this.tileSizeRows = (int) Math.ceil((float) rows / (float) tilesRows);
         this.tileSizeCols = (int) Math.ceil((float) cols / (float) tilesCols);
         this.tilesPerRow = tilesCols;
@@ -73,7 +73,7 @@ public class TiledArray implements IArrayD2Double {
         filenames = createFileNames(arrays.length);
         this.defaultValue = defaultValue;
         this.arrayATime = new long[arrays.length];
-        this.pq = new PriorityQueue<IArrayD2Double>();
+        this.pq = new PriorityQueue<>();
     }
 
     private int idx(int x, int y) {
@@ -101,7 +101,7 @@ public class TiledArray implements IArrayD2Double {
         ObjectOutputStream oos = null;
         try {
             oos = new ObjectOutputStream(new BufferedOutputStream(
-                new FileOutputStream(f)));
+                    new FileOutputStream(f)));
             oos.writeObject(arr);
             oos.close();
         } catch (FileNotFoundException e) {
@@ -128,7 +128,7 @@ public class TiledArray implements IArrayD2Double {
         ObjectInputStream ois = null;
         try {
             ois = new ObjectInputStream(new BufferedInputStream(
-                new FileInputStream(f)));
+                    new FileInputStream(f)));
             Object o = ois.readObject();
             ois.close();
             if (o instanceof IArrayD2Double) {
@@ -139,10 +139,7 @@ public class TiledArray implements IArrayD2Double {
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
@@ -164,7 +161,7 @@ public class TiledArray implements IArrayD2Double {
             IArrayD2Double arr = acquireFromDisk(index);
             if (arr == null) {
                 this.arrays[index] = new DenseArray(tileSizeRows, tileSizeCols,
-                    this.defaultValue);
+                        this.defaultValue);
             } else {
                 this.arrays[index] = arr;
             }
@@ -244,9 +241,9 @@ public class TiledArray implements IArrayD2Double {
     @Override
     public int getNumberOfStoredElements() {
         int cnt = 0;
-        for (int i = 0; i < this.arrays.length; i++) {
-            if (this.arrays[i] != null) {
-                cnt += arrays[i].getNumberOfStoredElements();
+        for (IArrayD2Double array : this.arrays) {
+            if (array != null) {
+                cnt += array.getNumberOfStoredElements();
             }
         }
         return cnt;
@@ -292,7 +289,7 @@ public class TiledArray implements IArrayD2Double {
      */
     @Override
     public void set(int row, int col, double d)
-        throws ArrayIndexOutOfBoundsException {
+            throws ArrayIndexOutOfBoundsException {
         // TODO Auto-generated method stub
     }
 }

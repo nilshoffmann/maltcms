@@ -71,15 +71,15 @@ public class CliqueFinder {
      * @return a PairwiseSimilarityResult
      */
     public BBHResult combineBiDiBestHits(final TupleND<IFileFragment> al, final Map<String, IFileFragment> nameToFragment, final Map<String, Integer> nameToIndex,
-        final Map<String, List<IBipacePeak>> fragmentToPeaks, final int minCliqueSize, int npeaks, final LongObjectMap<PeakEdge> edgeMap) {
+            final Map<String, List<IBipacePeak>> fragmentToPeaks, final int minCliqueSize, int npeaks, final LongObjectMap<PeakEdge> edgeMap) {
 
         // given: a hashmap of name<->peak list
         // an empty list of peaks belonging to a clique
         // a minimum size for a clique from when on it is considered valid
-        HashMap<IBipacePeak, Clique<IBipacePeak>> peakToClique = new HashMap<IBipacePeak, Clique<IBipacePeak>>();
-        Set<IBipacePeak> incompatiblePeaks = new LinkedHashSet<IBipacePeak>();
-        Set<IBipacePeak> unassignedPeaks = new LinkedHashSet<IBipacePeak>();
-        ObjectObjectOpenHashMap<UUID, IBipacePeak> peakRepository = new ObjectObjectOpenHashMap<UUID, IBipacePeak>();
+        HashMap<IBipacePeak, Clique<IBipacePeak>> peakToClique = new HashMap<>();
+        Set<IBipacePeak> incompatiblePeaks = new LinkedHashSet<>();
+        Set<IBipacePeak> unassignedPeaks = new LinkedHashSet<>();
+        ObjectObjectOpenHashMap<UUID, IBipacePeak> peakRepository = new ObjectObjectOpenHashMap<>();
         for (String key : fragmentToPeaks.keySet()) {
             for (IBipacePeak p : fragmentToPeaks.get(key)) {
                 peakRepository.put(p.getUniqueId(), p);
@@ -94,7 +94,7 @@ public class CliqueFinder {
         for (IFileFragment iff : al) {
             final List<IBipacePeak> peaks = fragmentToPeaks.get(iff.getName());
             log.info("Checking {} peaks for file {}", peaks.size(),
-                iff.getName());
+                    iff.getName());
 			// for all peaks in file
 
             // final List<IPeak> bidiHits = new ArrayList<IPeak>();
@@ -121,15 +121,15 @@ public class CliqueFinder {
                         // something
                         // is not right!
                         if (p.getSimilarity(edgeMap, q) == Double.NEGATIVE_INFINITY
-                            || p.getSimilarity(edgeMap, q) == Double.POSITIVE_INFINITY) {
+                                || p.getSimilarity(edgeMap, q) == Double.POSITIVE_INFINITY) {
                             throw new IllegalArgumentException(
-                                "Infinite similarity value for associated peaks!");
+                                    "Infinite similarity value for associated peaks!");
                         }
                         // bidirectional hit
                         if (q != null && q.isBidiBestHitFor(edgeMap, p)) {
                             log.debug(
-                                "Found bidirectional best hit for peak {}: {}",
-                                p, q);
+                                    "Found bidirectional best hit for peak {}: {}",
+                                    p, q);
 							// Possible cases, if we found a bidirectional hit
                             // for p
                             // 1: p is already in a clique
@@ -158,7 +158,7 @@ public class CliqueFinder {
                             //
                             if (d != null && c != null && c != d) {
                                 log.debug(
-                                    "Found different cliques for peak p and q!");
+                                        "Found different cliques for peak p and q!");
                                 log.debug("Clique for p: {}", c);
                                 log.debug("Clique for q: {}", d);
                                 // try to merge cliques
@@ -179,13 +179,13 @@ public class CliqueFinder {
                                 }
                             } else {
                                 log.error(
-                                    "Unhandled case in if else! Missed a state?: c={} d={}, p={}, q={}",
-                                    new Object[]{c, d, p, q});
+                                        "Unhandled case in if else! Missed a state?: c={} d={}, p={}, q={}",
+                                        new Object[]{c, d, p, q});
                             }
                         } else {
                             log.debug(
-                                "Peak q:{} and p:{} are no bidirectional best hits!",
-                                p, q);
+                                    "Peak q:{} and p:{} are no bidirectional best hits!",
+                                    p, q);
                         }
                     }
                 }
@@ -193,7 +193,7 @@ public class CliqueFinder {
         }
 
         log.info("Found {}/{} incompatible peaks.",
-            incompatiblePeaks.size(), npeaks);
+                incompatiblePeaks.size(), npeaks);
         log.info("Found {}/{} unassigned peaks.", unassignedPeaks.size(), npeaks);
         File workflowOutputDir = parent.getWorkflow().getOutputDirectory(parent);
         if (saveIncompatiblePeaks) {
@@ -223,17 +223,17 @@ public class CliqueFinder {
         }
 
         // retain all cliques, which exceed minimum size
-        HashSet<Clique<IBipacePeak>> cliques = new HashSet<Clique<IBipacePeak>>();
+        HashSet<Clique<IBipacePeak>> cliques = new HashSet<>();
         for (Clique<IBipacePeak> c : peakToClique.values()) {
             if (!cliques.contains(c)) {
                 log.debug("Size of clique: {}\n{}",
-                    c.size(), c);
+                        c.size(), c);
                 cliques.add(c);
             }
         }
 
         // sort cliques by clique rt mean
-        List<Clique<IBipacePeak>> l = new ArrayList<Clique<IBipacePeak>>(cliques);
+        List<Clique<IBipacePeak>> l = new ArrayList<>(cliques);
         Collections.sort(l, new Comparator<Clique<IBipacePeak>>() {
             @Override
             public int compare(Clique<IBipacePeak> o1, Clique<IBipacePeak> o2) {
@@ -257,7 +257,7 @@ public class CliqueFinder {
     private void createNewClique(HashMap<IBipacePeak, Clique<IBipacePeak>> peakToClique, final IBipacePeak p, final IBipacePeak q, final LongObjectMap<PeakEdge> edgeMap) {
         Clique<IBipacePeak> c;
         // assigned yet
-        c = new Clique<IBipacePeak>();
+        c = new Clique<>();
 //		c.setMaxBBHErrors(this.maxBBHErrors);
         c.setMinBbhFraction(this.minBbhFraction);
         if (c.addPeak(edgeMap, p)) {
@@ -285,10 +285,10 @@ public class CliqueFinder {
 
         //start merging if both cliques have at least one peak in them
         log.debug("Merging cliques: c={}, d={}", c.getID(),
-            d.getID());
+                d.getID());
         // ds has more peaks than cs -> join cs into
         // ds
-        List<IBipacePeak> incompatiblePeaks = new LinkedList<IBipacePeak>();
+        List<IBipacePeak> incompatiblePeaks = new LinkedList<>();
         if (ds > cs) {
             for (IBipacePeak pk : c.getPeakList()) {
                 if (d.addPeak(edgeMap, pk)) {

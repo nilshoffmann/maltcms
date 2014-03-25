@@ -61,7 +61,7 @@ public class ScanlineFilterTicWarp extends ADynamicTimeWarp {
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensity = "total_intensity";
     @Configurable(name = "var.second_column_scan_index",
-        value = "second_column_scan_index")
+            value = "second_column_scan_index")
     private String secondColumnScanIndexVar = "second_column_scan_index";
     @Configurable(value = "false")
     private final boolean transpose = false;
@@ -73,9 +73,9 @@ public class ScanlineFilterTicWarp extends ADynamicTimeWarp {
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.totalIntensity = cfg.getString(this.getClass().getName()
-            + ".total_intensity", "total_intensity");
+                + ".total_intensity", "total_intensity");
         this.secondColumnScanIndexVar = cfg.getString(
-            "var.second_column_scan_index", "second_column_scan_index");
+                "var.second_column_scan_index", "second_column_scan_index");
     }
 
     /**
@@ -83,7 +83,7 @@ public class ScanlineFilterTicWarp extends ADynamicTimeWarp {
      */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
-        final Tuple2D<IFileFragment, IFileFragment> t) {
+            final Tuple2D<IFileFragment, IFileFragment> t) {
 
         this.setExtension("");
 
@@ -91,24 +91,24 @@ public class ScanlineFilterTicWarp extends ADynamicTimeWarp {
         IVariableFragment scsiv1 = t.getFirst().getChild(this.secondColumnScanIndexVar);
         ticVar1.setIndex(scsiv1);
         List<Array> ref = t.getFirst().getChild(this.totalIntensity).
-            getIndexedArray();
+                getIndexedArray();
         IVariableFragment ticVar2 = t.getSecond().getChild(this.totalIntensity);
         IVariableFragment scsiv2 = t.getSecond().getChild(this.secondColumnScanIndexVar);
         ticVar2.setIndex(scsiv2);
         List<Array> query = t.getSecond().getChild(this.totalIntensity).
-            getIndexedArray();
+                getIndexedArray();
 
         // FIXME
         // check if the last array has the same size as the first one
         // this may happen, if #total_intensities%scans_per_modulation != 0
         if (ref.get(ref.size() - 1).getSize() != ref.get(0).getSize()) {
             log.error("Removing last array in ref ({}!={})", ref.get(
-                ref.size() - 1).getSize(), ref.get(0).getSize());
+                    ref.size() - 1).getSize(), ref.get(0).getSize());
             ref.remove(ref.size() - 1);
         }
         if (query.get(query.size() - 1).getSize() != query.get(0).getSize()) {
             log.error("Removing last array in query ({}!={})", query.get(
-                query.size() - 1).getSize(), query.get(0).getSize());
+                    query.size() - 1).getSize(), query.get(0).getSize());
             query.remove(query.size() - 1);
         }
 
@@ -125,8 +125,8 @@ public class ScanlineFilterTicWarp extends ADynamicTimeWarp {
             query = ArrayTools2.transpose(query);
         }
 
-        final Tuple2D<List<Array>, List<Array>> tuple = new Tuple2D<List<Array>, List<Array>>(
-            ArrayTools2.sqrt(ref), ArrayTools2.sqrt(query));
+        final Tuple2D<List<Array>, List<Array>> tuple = new Tuple2D<>(
+                ArrayTools2.sqrt(ref), ArrayTools2.sqrt(query));
 
         this.ref_num_scans = ref.size();
         this.query_num_scans = query.size();

@@ -50,7 +50,7 @@ public interface IDtwSimilarityFunction extends IConfigurable {
      * @return
      */
     public abstract double apply(int i1, int i2, double time1, double time2, Array t1,
-        Array t2);
+            Array t2);
 
     public double getCompressionWeight();
 

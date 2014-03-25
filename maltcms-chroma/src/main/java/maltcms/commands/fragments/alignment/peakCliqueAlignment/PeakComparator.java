@@ -35,7 +35,7 @@ import maltcms.datastructures.peak.IPeak;
  * @author Nils Hoffmann
  */
 public class PeakComparator
-    implements Comparator<IPeak> {
+        implements Comparator<IPeak> {
 
     @Override
     public int compare(final IPeak o1, final IPeak o2) {

@@ -56,15 +56,15 @@ import ucar.ma2.Array;
 @ServiceProvider(service = IDataSource.class)
 public class MZXMLDataSource implements IDataSource {
 
-    private final List<IDataSource> ds = new ArrayList<IDataSource>();
-    private final WeakHashMap<IFileFragment, IDataSource> fragmentToValidReaderMap = new WeakHashMap<IFileFragment, IDataSource>();
+    private final List<IDataSource> ds = new ArrayList<>();
+    private final WeakHashMap<IFileFragment, IDataSource> fragmentToValidReaderMap = new WeakHashMap<>();
 
     public MZXMLDataSource() {
         final List<String> dss = Arrays.asList(
-            "maltcms.io.xml.mzXML.MZXMLStaxDataSource");
+                "maltcms.io.xml.mzXML.MZXMLStaxDataSource");
         for (final String s : dss) {
             this.ds.add(Factory.getInstance().getObjectFactory().instantiate(s,
-                cross.io.IDataSource.class));
+                    cross.io.IDataSource.class));
         }
     }
 
@@ -127,14 +127,14 @@ public class MZXMLDataSource implements IDataSource {
     @Override
     public void configure(final Configuration configuration) {
         final List<String> dss = StringTools.toStringList(configuration.getList(getClass().
-            getName() + ".dataSources", Arrays.asList(new Object[]{
-                "maltcms.io.xml.mzXML.MZXMLStaxDataSource"})));
+                getName() + ".dataSources", Arrays.asList(new Object[]{
+                    "maltcms.io.xml.mzXML.MZXMLStaxDataSource"})));
         for (final String s : dss) {
             if (s.equals("maltcms.io.xml.mzXML.MZXMLSaxDataSource")) {
                 log.warn("MZXMLSaxDataSource is no longer included in Maltcms as of version 1.3. It has been superseded by MZXMLStaxDataSource. Please remove MZXMLSaxDataSource from your configuration!");
             } else {
                 this.ds.add(Factory.getInstance().getObjectFactory().instantiate(s,
-                    cross.io.IDataSource.class));
+                        cross.io.IDataSource.class));
             }
         }
 
@@ -149,7 +149,7 @@ public class MZXMLDataSource implements IDataSource {
                 log.info("Checking DataSource {}", ids.getClass().getName());
                 if (ids.canRead(ff) > 0) {
                     IDataSource dataSource = Factory.getInstance().getObjectFactory().instantiate(ids.getClass().getName(),
-                        cross.io.IDataSource.class);
+                            cross.io.IDataSource.class);
                     this.fragmentToValidReaderMap.put(ff, dataSource);
                     return dataSource;
                 }
@@ -157,7 +157,7 @@ public class MZXMLDataSource implements IDataSource {
             }
         }
         throw new NotImplementedException("No provider available for "
-            + StringTools.getFileExtension(ff.getName()));
+                + StringTools.getFileExtension(ff.getName()));
     }
 
     /*
@@ -169,7 +169,7 @@ public class MZXMLDataSource implements IDataSource {
      */
     @Override
     public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
-        ResourceNotAvailableException {
+            ResourceNotAvailableException {
         return getValidReader(f).readAll(f);
     }
 
@@ -181,7 +181,7 @@ public class MZXMLDataSource implements IDataSource {
      */
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
-        throws IOException, ResourceNotAvailableException {
+            throws IOException, ResourceNotAvailableException {
         return getValidReader(f.getParent()).readIndexed(f);
     }
 
@@ -193,7 +193,7 @@ public class MZXMLDataSource implements IDataSource {
      */
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
-        ResourceNotAvailableException {
+            ResourceNotAvailableException {
         return getValidReader(f.getParent()).readSingle(f);
     }
 
@@ -205,7 +205,7 @@ public class MZXMLDataSource implements IDataSource {
      */
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
-        throws IOException {
+            throws IOException {
         return getValidReader(f).readStructure(f);
     }
 
@@ -217,7 +217,7 @@ public class MZXMLDataSource implements IDataSource {
      */
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
-        throws IOException, ResourceNotAvailableException {
+            throws IOException, ResourceNotAvailableException {
         return getValidReader(f.getParent()).readStructure(f);
     }
 
@@ -228,11 +228,11 @@ public class MZXMLDataSource implements IDataSource {
      */
     @Override
     public List<String> supportedFormats() {
-        final Set<String> al = new HashSet<String>();
+        final Set<String> al = new HashSet<>();
         for (final IDataSource ids : this.ds) {
             al.addAll(ids.supportedFormats());
         }
-        return new ArrayList<String>(al);
+        return new ArrayList<>(al);
     }
 
     /*

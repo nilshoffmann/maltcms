@@ -58,7 +58,7 @@ public class SymbolConvert {
         final Array reduced = reduced1.copy();
         // erzeuge neues Array f�r Daten in Stringrep.
         final Array stringrep = Array
-            .factory(DataType.CHAR, reduced.getShape());
+                .factory(DataType.CHAR, reduced.getShape());
         // Alphabetgr��e ermitteln
         final int buchstanz = bp.length - 1;
         double save = 0;

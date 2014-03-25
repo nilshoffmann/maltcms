@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class TreatmentGroup2D implements ITreatmentGroup<IChromatogram2D> {
 
-    List<IChromatogram2D> l = new ArrayList<IChromatogram2D>();
+    List<IChromatogram2D> l = new ArrayList<>();
     private String name = "";
 
     /*

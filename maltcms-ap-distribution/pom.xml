@@ -122,7 +122,7 @@
                                 <!--                                <unzip src="${project.build.directory}/${project.artifactId}-${project.version}/lib/maltcms-resources-${project.version}.jar" dest="${project.build.directory}/${project.artifactId}-${project.version}/" />-->
                                 <!--<chmod includes="*.sh,*.bat" dir="${project.build.directory}/${project.artifactId}-${project.version}-bin/${project.artifactId}-${project.version}/scripts/" perm="ugo+rx" />-->
                                 <copy file="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/maltcms.sh" toFile="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/maltcms.command" />
-								<copy file="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/maltcms-ap.sh" toFile="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/maltcms-ap.command" />
+                                <copy file="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/maltcms-ap.sh" toFile="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/maltcms-ap.command" />
                                 <chmod includes="*.sh,*.command,*.bat,*.jar" dir="${project.build.directory}/${distributionName}-bin/${distributionName}/" perm="ugo+rx" />
                                 <chmod includes="*.sh,*.command,*.bat,*.jar" dir="${project.build.directory}/${distributionName}-bin/${distributionName}/bin" perm="ugo+rx" />
                                 <copy file="${project.build.directory}/maltcms.jar" toDir="${project.build.directory}/${distributionName}-bin/${distributionName}/" />
@@ -175,13 +175,13 @@
     
 
     <dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-distribution</artifactId>
             <version>${project.version}</version>
-			<type>pom</type>
-		</dependency>
-		<dependency>
+            <type>pom</type>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-ap</artifactId>
             <version>${project.version}</version>

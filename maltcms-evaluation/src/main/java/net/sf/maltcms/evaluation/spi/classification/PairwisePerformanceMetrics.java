@@ -69,26 +69,32 @@ public class PairwisePerformanceMetrics implements IPerformanceMetrics {
         return this.instanceName;
     }
 
+    @Override
     public int getTp() {
         return this.tp;
     }
 
+    @Override
     public int getFp() {
         return this.fp;
     }
 
+    @Override
     public int getTn() {
         return this.tn;
     }
 
+    @Override
     public int getFn() {
         return this.fn;
     }
 
+    @Override
     public double getSensitivity() {
         return this.recall;
     }
 
+    @Override
     public double getSpecificity() {
         double tnv = tn;
         double fpv = fp;
@@ -96,14 +102,17 @@ public class PairwisePerformanceMetrics implements IPerformanceMetrics {
         return spec;
     }
 
+    @Override
     public double getFPR() {
         return 1 - getSpecificity();
     }
 
+    @Override
     public double getFNR() {
         return 1 - getSensitivity();
     }
 
+    @Override
     public double getAccuracy() {
         double tpv = tp;
         double tnv = tn;
@@ -113,6 +122,7 @@ public class PairwisePerformanceMetrics implements IPerformanceMetrics {
         return acc;
     }
 
+    @Override
     public double getGain() {
         //System.out.println("tp+fn=" + (tp + fn));
         //System.out.println("tp+tn+fp+fn=" + (tp + tn + fp + fn));
@@ -123,10 +133,12 @@ public class PairwisePerformanceMetrics implements IPerformanceMetrics {
         return gain;
     }
 
+    @Override
     public double getPrecision() {
         return precision;
     }
 
+    @Override
     public double getRecall() {
         return getSensitivity();
     }
@@ -149,6 +161,7 @@ public class PairwisePerformanceMetrics implements IPerformanceMetrics {
         return sb.toString();
     }
 
+    @Override
     public double getF1() {
         return f1;
     }

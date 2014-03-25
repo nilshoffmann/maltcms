@@ -58,7 +58,7 @@ public class ScanlineTicWarp extends ADynamicTimeWarp {
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensity = "total_intensity";
     @Configurable(name = "var.second_column_scan_index",
-        value = "second_column_scan_index")
+            value = "second_column_scan_index")
     private String secondColumnScanIndexVar = "second_column_scan_index";
 
     /**
@@ -68,9 +68,9 @@ public class ScanlineTicWarp extends ADynamicTimeWarp {
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.totalIntensity = cfg.getString(this.getClass().getName()
-            + ".total_intensity", "total_intensity");
+                + ".total_intensity", "total_intensity");
         this.secondColumnScanIndexVar = cfg.getString(
-            "var.second_column_scan_index", "second_column_scan_index");
+                "var.second_column_scan_index", "second_column_scan_index");
     }
 
     /**
@@ -78,34 +78,34 @@ public class ScanlineTicWarp extends ADynamicTimeWarp {
      */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
-        final Tuple2D<IFileFragment, IFileFragment> t) {
+            final Tuple2D<IFileFragment, IFileFragment> t) {
         IVariableFragment var1 = t.getFirst().getChild(this.totalIntensity);
         IVariableFragment index1 = t.getFirst().getChild(this.secondColumnScanIndexVar);
         var1.setIndex(index1);
         final List<Array> ref = t.getFirst().getChild(this.totalIntensity).
-            getIndexedArray();
+                getIndexedArray();
         IVariableFragment var2 = t.getSecond().getChild(this.totalIntensity);
         IVariableFragment index2 = t.getSecond().getChild(this.secondColumnScanIndexVar);
         var2.setIndex(index2);
         final List<Array> query = t.getSecond().getChild(this.totalIntensity).
-            getIndexedArray();
+                getIndexedArray();
 
         // FIXME
         // check if the last array has the same size as the first one
         // this may happen, if #total_intensities%scans_per_modulation != 0
         if (ref.get(ref.size() - 1).getSize() != ref.get(0).getSize()) {
             log.error("Removing last array in ref ({}!={})", ref.get(
-                ref.size() - 1).getSize(), ref.get(0).getSize());
+                    ref.size() - 1).getSize(), ref.get(0).getSize());
             ref.remove(ref.size() - 1);
         }
         if (query.get(query.size() - 1).getSize() != query.get(0).getSize()) {
             log.error("Removing last array in query ({}!={})", query.get(
-                query.size() - 1).getSize(), query.get(0).getSize());
+                    query.size() - 1).getSize(), query.get(0).getSize());
             query.remove(query.size() - 1);
         }
 
-        final Tuple2D<List<Array>, List<Array>> tuple = new Tuple2D<List<Array>, List<Array>>(
-            ref, query);
+        final Tuple2D<List<Array>, List<Array>> tuple = new Tuple2D<>(
+                ref, query);
 
         this.ref_num_scans = ref.size();
         this.query_num_scans = query.size();

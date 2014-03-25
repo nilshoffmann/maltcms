@@ -39,9 +39,8 @@ import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Detects peaks within the 1D TIC of a 2D chromatogram and
- * selects peaks that have fewer than <code>maxNeighbors</code> in
- * <code>radius</code>.
+ * Detects peaks within the 1D TIC of a 2D chromatogram and selects peaks that
+ * have fewer than <code>maxNeighbors</code> in <code>radius</code>.
  *
  * @author Nils Hoffmann
  *
@@ -58,10 +57,10 @@ public class CwtPeakFinder extends AFragmentCommand {
     @Configurable(value = "", description = "The output directory. Should be an absolute file path.")
     private String outputDir = "";
     @Configurable(name = "var.modulation_time.default",
-        value = "5.0d", description = "The modulation time. Default value is var.modulation_time.default.")
+            value = "5.0d", description = "The modulation time. Default value is var.modulation_time.default.")
     private double modulationTime = 5.0d;
     @Configurable(name = "var.scan_rate.default", type = double.class,
-        value = "100.0d", description = "The scan rate. Default value is var.scan_rate.default.")
+            value = "100.0d", description = "The scan rate. Default value is var.scan_rate.default.")
     private double scanRate = 100.0d;
     @Configurable(description = "The maximum radius around a peak to search for neighboring peaks.")
     private double radius = 10.0d;

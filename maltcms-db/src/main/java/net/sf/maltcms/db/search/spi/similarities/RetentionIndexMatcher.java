@@ -40,7 +40,7 @@ public class RetentionIndexMatcher extends AMetabolitePredicate {
 
     private AMetabolitePredicate delegate = new Cosine();
     private double retentionIndex = Double.NaN;
-    private List<Tuple2D<Double, IMetabolite>> metabolites = new LinkedList<Tuple2D<Double, IMetabolite>>();
+    private List<Tuple2D<Double, IMetabolite>> metabolites = new LinkedList<>();
 
     public AMetabolitePredicate getDelegate() {
         return delegate;

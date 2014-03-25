@@ -105,58 +105,58 @@ public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
                 "SOURCE", "SimilarityFunction", "SourceVariable"});
             CSVWriter csvw = new CSVWriter();
             csvw.setWorkflow(getWorkflow());
-            PrintWriter pw = csvw.createPrintWriter(getWorkflow().
-                getOutputDirectory(this).getAbsolutePath(), StringTools.
-                removeFileExt(iff.getName())
-                + "_peak_assignment.csv", header,
-                WorkflowSlot.IDENTIFICATION);
-            Array peaks = iff.getChild(resolve(peakIndexVariable)).getArray();
-            for (String dbloc : this.dblocation) {
-                for (int i = 0; i < peaks.getShape()[0]; i++) {
-                    int scan = (int) peaks.getInt(i);
-                    this.log.info("Scan {}", scan);
-                    IScan1D scan1D = chrom.getScan(scan);
-                    MetaboliteSimilarity ms = new MetaboliteSimilarity(scan1D,
-                        threshold, maxk, false);
-                    ms.setSimilarityFunction(similarityFunction.copy());
-                    ms.setResolution(massResolution);
-                    MetaboliteQueryDB mqdb = new MetaboliteQueryDB(dbloc, ms);
-                    QueryCallable<IMetabolite> qc = mqdb.getCallable();
-                    ObjectSet<IMetabolite> osRes = null;
-                    try {
-                        osRes = qc.call();
-                        log.info("Received {} hits from ObjectSet!",
-                            osRes.size());
-                        qc.terminate();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    List<Tuple2D<Double, IMetabolite>> l = ms.getMatches();
-                    log.info("Adding top {} hits!", l.size());
-                    for (Tuple2D<Double, IMetabolite> tuple2D : l) {
-                        IMetabolite im = tuple2D.getSecond();
-                        List<String> row = Arrays.asList(
-                            new String[]{
-                                "" + (scan),
-                                "" + scan1D.getScanAcquisitionTime(),
-                                "" + (int) (tuple2D.getFirst() * 1000.0),
-                                "" + im.getRetentionIndex(), "" + im.getMW(),
-                                "" + im.getFormula(), "" + im.getName(), im.getID(),
-                                "" + im.getLink(), "" + dbloc,
-                                similarityFunction.getClass().getSimpleName().substring("Array".length()),
-                                "" + resolve(peakIndexVariable)});
-                        csvw.writeLine(pw, row);
-                    }
-                    if (i % 100 == 0) {
-                        pw.flush();
+            try (PrintWriter pw = csvw.createPrintWriter(getWorkflow().
+                    getOutputDirectory(this).getAbsolutePath(), StringTools.
+                    removeFileExt(iff.getName())
+                    + "_peak_assignment.csv", header,
+                    WorkflowSlot.IDENTIFICATION)) {
+                Array peaks = iff.getChild(resolve(peakIndexVariable)).getArray();
+                for (String dbloc : this.dblocation) {
+                    for (int i = 0; i < peaks.getShape()[0]; i++) {
+                        int scan = (int) peaks.getInt(i);
+                        this.log.info("Scan {}", scan);
+                        IScan1D scan1D = chrom.getScan(scan);
+                        MetaboliteSimilarity ms = new MetaboliteSimilarity(scan1D,
+                                threshold, maxk, false);
+                        ms.setSimilarityFunction(similarityFunction.copy());
+                        ms.setResolution(massResolution);
+                        MetaboliteQueryDB mqdb = new MetaboliteQueryDB(dbloc, ms);
+                        QueryCallable<IMetabolite> qc = mqdb.getCallable();
+                        ObjectSet<IMetabolite> osRes = null;
+                        try {
+                            osRes = qc.call();
+                            log.info("Received {} hits from ObjectSet!",
+                                    osRes.size());
+                            qc.terminate();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        List<Tuple2D<Double, IMetabolite>> l = ms.getMatches();
+                        log.info("Adding top {} hits!", l.size());
+                        for (Tuple2D<Double, IMetabolite> tuple2D : l) {
+                            IMetabolite im = tuple2D.getSecond();
+                            List<String> row = Arrays.asList(
+                                    new String[]{
+                                        "" + (scan),
+                                        "" + scan1D.getScanAcquisitionTime(),
+                                        "" + (int) (tuple2D.getFirst() * 1000.0),
+                                        "" + im.getRetentionIndex(), "" + im.getMW(),
+                                        "" + im.getFormula(), "" + im.getName(), im.getID(),
+                                        "" + im.getLink(), "" + dbloc,
+                                        similarityFunction.getClass().getSimpleName().substring("Array".length()),
+                                        "" + resolve(peakIndexVariable)});
+                            csvw.writeLine(pw, row);
+                        }
+                        if (i % 100 == 0) {
+                            pw.flush();
+                        }
                     }
                 }
             }
-            pw.close();
         }
         return t;
     }

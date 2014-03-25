@@ -50,7 +50,7 @@ public class QuadTree<T> {
     private QuadTreeNode<T> root;
     private final double x, y, width, height;
     private final int capacity;
-    private HashMap<T, QuadTreeNode<T>> hs = new HashMap<T, QuadTreeNode<T>>();
+    private HashMap<T, QuadTreeNode<T>> hs = new HashMap<>();
 
     public QuadTree(Rectangle2D dataBounds) {
         this(dataBounds.getX(), dataBounds.getY(), dataBounds.getWidth(), dataBounds.getHeight(), 20);
@@ -75,10 +75,10 @@ public class QuadTree<T> {
     public T put(Point2D p, T t) {
         //long s = System.nanoTime();
         if (root == null) {
-            QuadTreeNode<T> qtn = new QuadTreeNode<T>(this.x, this.y, this.width, this.height, new Tuple2D<Point2D, T>(p, t), capacity, 0);
+            QuadTreeNode<T> qtn = new QuadTreeNode<>(this.x, this.y, this.width, this.height, new Tuple2D<>(p, t), capacity, 0);
             root = qtn;
         }
-        QuadTreeNode<T> qtn = this.root.addChild(new Tuple2D<Point2D, T>(p, t));
+        QuadTreeNode<T> qtn = this.root.addChild(new Tuple2D<>(p, t));
         hs.put(t, qtn);
         //System.out.println("Time for put: "+(System.nanoTime()-s));
         return t;
@@ -128,7 +128,7 @@ public class QuadTree<T> {
 
     public List<Tuple2D<Point2D, T>> getHorizontalNeighborsInRadius(Point2D p, double radius) {
         List<Tuple2D<Point2D, T>> neighs = getNeighborsInRadius(p, radius);
-        List<Tuple2D<Point2D, T>> hneighs = new LinkedList<Tuple2D<Point2D, T>>();
+        List<Tuple2D<Point2D, T>> hneighs = new LinkedList<>();
         for (Tuple2D<Point2D, T> t : neighs) {
             Point2D p2 = t.getFirst();
             if (Math.abs(p2.getX() - p.getX()) <= radius) {
@@ -140,7 +140,7 @@ public class QuadTree<T> {
 
     public List<Tuple2D<Point2D, T>> getVerticalNeighborsInRadius(Point2D p, double radius) {
         List<Tuple2D<Point2D, T>> neighs = getNeighborsInRadius(p, radius);
-        List<Tuple2D<Point2D, T>> vneighs = new LinkedList<Tuple2D<Point2D, T>>();
+        List<Tuple2D<Point2D, T>> vneighs = new LinkedList<>();
         for (Tuple2D<Point2D, T> t : neighs) {
             Point2D p2 = t.getFirst();
             if (Math.abs(p2.getY() - p.getY()) <= radius) {
@@ -178,21 +178,21 @@ public class QuadTree<T> {
     }
 
     public Iterator<Tuple2D<Point2D, T>> iterator() {
-        QuadTreeNodeDepthFirstVisitor<T> qtn = new QuadTreeNodeDepthFirstVisitor<T>(root);
-        LinkedList<Tuple2D<Point2D, T>> l = new LinkedList<Tuple2D<Point2D, T>>();
+        QuadTreeNodeDepthFirstVisitor<T> qtn = new QuadTreeNodeDepthFirstVisitor<>(root);
+        LinkedList<Tuple2D<Point2D, T>> l = new LinkedList<>();
         return qtn.visit(l).iterator();
     }
 
     public static void main(String[] args) {
         double maxx = Math.pow(2.0d, 64.0d);
-        QuadTree<String> qt = new QuadTree<String>(0, 0, maxx, maxx, 5);
+        QuadTree<String> qt = new QuadTree<>(0, 0, maxx, maxx, 5);
         Random x = new Random(System.nanoTime());
         Random y = new Random(System.nanoTime());
         int npoints = (int) (Integer.MAX_VALUE * (Math.random()) / 10000);
         System.out.println("Creating quad tree for " + npoints + " points");
         long start = 0;
         double tdiff = 0;
-        List<Point2D> l = new ArrayList<Point2D>();
+        List<Point2D> l = new ArrayList<>();
         for (int i = 0; i < npoints; i++) {
             Point2D p = new Point2D.Double((x.nextDouble() * maxx), (y.nextDouble() * maxx));
 //            System.out.println("Adding item at point: "+p);
@@ -202,7 +202,7 @@ public class QuadTree<T> {
         }
         System.out.println("Done");
         System.out.println("Timing get operation!");
-        List<Point2D> testList = new ArrayList<Point2D>();
+        List<Point2D> testList = new ArrayList<>();
         for (int i = 0; i < npoints; i++) {
 //            Point2D p = new Point2D.Double((x.nextDouble()*maxx),(y.nextDouble()*maxx));
 //            System.out.println("Adding item at point: "+p);
@@ -233,8 +233,7 @@ public class QuadTree<T> {
             }
         };
 
-        for (int i = 0; i < testList.size(); i++) {
-            Point2D p = testList.get(i);
+        for (Point2D p : testList) {
             start = System.nanoTime();
             int idx = Collections.binarySearch(l, p, pc);
             if (idx < 0) {
@@ -246,12 +245,7 @@ public class QuadTree<T> {
         System.out.println("Average time for list point retrieval: " + (tdiff / (double) npoints));
 
         tdiff = 0;
-        for (int i = 0; i < testList.size(); i++) {
-//            Point2D p = new Point2D.Double((x.nextDouble()*maxx),(y.nextDouble()*maxx));
-//            System.out.println("Adding item at point: "+p);
-//            qt.put(p, ""+i);
-//            l.add(p);
-            Point2D p = testList.get(i);
+        for (Point2D p : testList) {
             start = System.nanoTime();
             String s = qt.get(p);
             tdiff += (System.nanoTime() - start);

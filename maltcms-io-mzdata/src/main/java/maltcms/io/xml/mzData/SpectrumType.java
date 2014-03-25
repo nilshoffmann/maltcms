@@ -46,8 +46,8 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for spectrumType complex type.
  *
  * <p>
- * The following schema fragment specifies the expected content contained
- * within this class.
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  *
  * <pre>
  * &lt;complexType name=&quot;spectrumType&quot;&gt;
@@ -155,7 +155,7 @@ public class SpectrumType implements Serializable {
      */
     public List<Object> getSupDataArrayBinaryOrSupDataArray() {
         if (this.supDataArrayBinaryOrSupDataArray == null) {
-            this.supDataArrayBinaryOrSupDataArray = new ArrayList<Object>();
+            this.supDataArrayBinaryOrSupDataArray = new ArrayList<>();
         }
         return this.supDataArrayBinaryOrSupDataArray;
     }
@@ -185,7 +185,7 @@ public class SpectrumType implements Serializable {
      */
     public List<SupDescType> getSupDesc() {
         if (this.supDesc == null) {
-            this.supDesc = new ArrayList<SupDescType>();
+            this.supDesc = new ArrayList<>();
         }
         return this.supDesc;
     }

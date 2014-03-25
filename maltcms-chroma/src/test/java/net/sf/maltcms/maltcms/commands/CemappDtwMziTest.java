@@ -70,7 +70,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
-        "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
+            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
 
     @Test
     public void testCemappDtwMZIFull() throws IOException {
@@ -80,7 +80,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
         Fragments.setDefaultFragmentCacheType(CacheType.NONE);
         File outputBase = tf.newFolder("testCemappDtwFullTestOut");
-        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        List<IFragmentCommand> commands = new ArrayList<>();
         ScanExtractor se = new ScanExtractor();
         se.setStartScan(1000);
         se.setEndScan(1500);
@@ -88,7 +88,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         commands.add(se);
         commands.add(new DenseArrayProducer());
         commands.add(createPairwiseDistanceCalculatorMZI(false, 0, true,
-            1.0d));
+                1.0d));
         commands.add(new CenterStarAlignment());
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
@@ -105,7 +105,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
         Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
         File outputBase = tf.newFolder("testCemappDtwFullTestOut");
-        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        List<IFragmentCommand> commands = new ArrayList<>();
         ScanExtractor se = new ScanExtractor();
         se.setStartScan(1000);
         se.setEndScan(1500);
@@ -113,7 +113,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         commands.add(se);
         commands.add(new DenseArrayProducer());
         commands.add(createPairwiseDistanceCalculatorMZI(false, 0, true,
-            1.0d));
+                1.0d));
         commands.add(new CenterStarAlignment());
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
@@ -151,7 +151,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
         Fragments.setDefaultFragmentCacheType(CacheType.NONE);
         File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
-        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         ScanExtractor se = new ScanExtractor();
         se.setStartScan(1600);
@@ -161,7 +161,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         TICPeakFinder tpf = new TICPeakFinder();
         SavitzkyGolayFilter sgf = new SavitzkyGolayFilter();
         sgf.setWindow(12);
-        List<AArrayFilter> filters = new LinkedList<AArrayFilter>();
+        List<AArrayFilter> filters = new LinkedList<>();
         filters.add(sgf);
         tpf.setFilter(filters);
         LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();
@@ -195,7 +195,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
         Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
         File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
-        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         ScanExtractor se = new ScanExtractor();
         se.setStartScan(1600);
@@ -205,7 +205,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         TICPeakFinder tpf = new TICPeakFinder();
         SavitzkyGolayFilter sgf = new SavitzkyGolayFilter();
         sgf.setWindow(12);
-        List<AArrayFilter> filters = new LinkedList<AArrayFilter>();
+        List<AArrayFilter> filters = new LinkedList<>();
         filters.add(sgf);
         tpf.setFilter(filters);
         LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();

@@ -59,7 +59,7 @@ public class ExperimentFactory {
     public static IExperiment1D createExperiment1D(final IFileFragment ff) {
         final Class<Experiment1D> c = Experiment1D.class;
         final Experiment1D ie = Factory.getInstance().getObjectFactory()
-            .instantiate(c);
+                .instantiate(c);
         EvalTools.notNull(ie, ExperimentFactory.class);
         ie.setFileFragment(ff);
         return ie;
@@ -75,7 +75,7 @@ public class ExperimentFactory {
     public static IExperiment2D createExperiment2D(final IFileFragment ff) {
         final Class<Experiment2D> c = Experiment2D.class;
         final Experiment2D ie = Factory.getInstance().getObjectFactory()
-            .instantiate(c);
+                .instantiate(c);
         EvalTools.notNull(ie, ExperimentFactory.class);
         ie.setFileFragment(ff);
         return ie;

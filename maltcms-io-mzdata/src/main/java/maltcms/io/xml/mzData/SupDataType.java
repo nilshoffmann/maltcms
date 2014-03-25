@@ -44,8 +44,8 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for supDataType complex type.
  *
  * <p>
- * The following schema fragment specifies the expected content contained
- * within this class.
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  *
  * <pre>
  * &lt;complexType name=&quot;supDataType&quot;&gt;
@@ -139,7 +139,7 @@ public class SupDataType implements Serializable {
      */
     public List<Boolean> getBoolean() {
         if (this._boolean == null) {
-            this._boolean = new ArrayList<Boolean>();
+            this._boolean = new ArrayList<>();
         }
         return this._boolean;
     }
@@ -169,7 +169,7 @@ public class SupDataType implements Serializable {
      */
     public List<Double> getDouble() {
         if (this._double == null) {
-            this._double = new ArrayList<Double>();
+            this._double = new ArrayList<>();
         }
         return this._double;
     }
@@ -199,7 +199,7 @@ public class SupDataType implements Serializable {
      */
     public List<Float> getFloat() {
         if (this._float == null) {
-            this._float = new ArrayList<Float>();
+            this._float = new ArrayList<>();
         }
         return this._float;
     }
@@ -237,7 +237,7 @@ public class SupDataType implements Serializable {
      */
     public List<Integer> getInt() {
         if (this._int == null) {
-            this._int = new ArrayList<Integer>();
+            this._int = new ArrayList<>();
         }
         return this._int;
     }
@@ -289,7 +289,7 @@ public class SupDataType implements Serializable {
      */
     public List<String> getString() {
         if (this.string == null) {
-            this.string = new ArrayList<String>();
+            this.string = new ArrayList<>();
         }
         return this.string;
     }
@@ -319,7 +319,7 @@ public class SupDataType implements Serializable {
      */
     public List<Float> getTime() {
         if (this.time == null) {
-            this.time = new ArrayList<Float>();
+            this.time = new ArrayList<>();
         }
         return this.time;
     }
@@ -349,7 +349,7 @@ public class SupDataType implements Serializable {
      */
     public List<String> getURI() {
         if (this.uri == null) {
-            this.uri = new ArrayList<String>();
+            this.uri = new ArrayList<>();
         }
         return this.uri;
     }

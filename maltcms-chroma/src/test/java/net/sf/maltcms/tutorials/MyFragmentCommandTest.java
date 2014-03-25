@@ -54,7 +54,7 @@ public class MyFragmentCommandTest extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
-        "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
+            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
 
     /**
      * Test of getDescription method, of class MyFragmentCommand.
@@ -62,7 +62,7 @@ public class MyFragmentCommandTest extends AFragmentCommandTest {
     @Test
     public void testProgrammaticWorkflow() throws IOException {
         File outputBase = tf.newFolder();
-        List<IFragmentCommand> commands = new ArrayList<IFragmentCommand>();
+        List<IFragmentCommand> commands = new ArrayList<>();
         MyFragmentCommand cmd = new MyFragmentCommand();
         cmd.setFilter(Arrays.asList(new AArrayFilter[]{new SqrtFilter()}));
         commands.add(cmd);

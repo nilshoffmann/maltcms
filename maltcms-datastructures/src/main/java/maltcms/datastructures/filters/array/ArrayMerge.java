@@ -57,14 +57,14 @@ public class ArrayMerge extends AArrayFilter {
         Array ret = null;
         if ((b[0] instanceof Sparse) && (b[1] instanceof Sparse)) {
             ret = new Sparse(((Sparse) b[0]).getNumKeys(), ((Sparse) b[0])
-                .getMinIndex(), ((Sparse) b[0]).getMaxIndex());
+                    .getMinIndex(), ((Sparse) b[0]).getMaxIndex());
         } else {
             ret = Array.factory(b[0].getElementType(), b[0].getShape());
         }
         final IndexIterator iir = ret.getIndexIterator();
         while (ii1.hasNext() && ii2.hasNext() && iir.hasNext()) {
             iir
-                .setDoubleNext((ii1.getDoubleNext() + ii2.getDoubleNext()) / 2.0d);
+                    .setDoubleNext((ii1.getDoubleNext() + ii2.getDoubleNext()) / 2.0d);
         }
         return new Array[]{ret};
     }

@@ -131,8 +131,7 @@ public interface IScanLine extends IConfigurable {
 //	 */
 //	double getMassResolution();
     /**
-     * Setter. Default value is
-     * <code>true</code>.
+     * Setter. Default value is <code>true</code>.
      *
      * @param cacheMod <code>true</code> if all modulations should be cached
      */

@@ -45,19 +45,19 @@ import org.apache.commons.math.distribution.NormalDistributionImpl;
 public class QualityControl {
 
     public List<Reliability> calc(List<Peak2D> pl1, List<Peak2D> pl2,
-        List<List<Point>> bidibesthits) {
-        Map<Integer, Integer> m = new HashMap<Integer, Integer>();
+            List<List<Point>> bidibesthits) {
+        Map<Integer, Integer> m = new HashMap<>();
         for (List<Point> l : bidibesthits) {
             m.put(l.get(0).y, l.get(1).y);
         }
-        List<Entry<Integer, Integer>> map = new ArrayList<Entry<Integer, Integer>>(
-            m.entrySet());
+        List<Entry<Integer, Integer>> map = new ArrayList<>(
+                m.entrySet());
         return calcV(pl1, pl2, map);
     }
 
     private List<Reliability> calcV(List<Peak2D> pl1, List<Peak2D> pl2,
-        List<Entry<Integer, Integer>> map) {
-        List<Double> values = new ArrayList<Double>();
+            List<Entry<Integer, Integer>> map) {
+        List<Double> values = new ArrayList<>();
 
         Peak2D p1, p2;
         int rt1dsi, rt2dsi;
@@ -68,9 +68,9 @@ public class QualityControl {
                 p1 = pl1.get(m.getKey());
                 p2 = pl2.get(m.getValue());
                 rt1dsi = Math.abs(p1.getFirstScanIndex()
-                    - p2.getFirstScanIndex());
+                        - p2.getFirstScanIndex());
                 rt2dsi = Math.abs(p1.getSecondScanIndex()
-                    - p2.getSecondScanIndex());
+                        - p2.getSecondScanIndex());
                 rt1dsiSum += rt1dsi;
                 rt2dsiSum += rt2dsi;
                 c++;
@@ -84,9 +84,9 @@ public class QualityControl {
                 p1 = pl1.get(m.getKey());
                 p2 = pl2.get(m.getValue());
                 rt1dsi = Math.abs(p1.getFirstScanIndex()
-                    - p2.getFirstScanIndex());
+                        - p2.getFirstScanIndex());
                 rt2dsi = Math.abs(p1.getSecondScanIndex()
-                    - p2.getSecondScanIndex());
+                        - p2.getSecondScanIndex());
 
                 rt1dsivarSum += Math.pow(meanRT1dsi - rt1dsi, 2.0d);
                 rt2dsivarSum += Math.pow(meanRT2dsi - rt2dsi, 2.0d);
@@ -105,11 +105,11 @@ public class QualityControl {
         // System.out.println("RT1: mean= " + meanRT1dsi + ", std= "
         // + Math.sqrt(varRT1dsi));
         NormalDistribution ndrt1 = new NormalDistributionImpl(0, Math.sqrt(
-            varRT1dsi));
+                varRT1dsi));
         // System.out.println("RT2: mean= " + meanRT2dsi + ", std= "
         // + Math.sqrt(varRT2dsi));
         NormalDistribution ndrt2 = new NormalDistributionImpl(0, Math.sqrt(
-            varRT2dsi));
+                varRT2dsi));
 
         double rt1p, rt2p;
         double drt1, drt2;
@@ -119,11 +119,11 @@ public class QualityControl {
                 p1 = pl1.get(m.getKey());
                 p2 = pl2.get(m.getValue());
                 drt1 = Math.abs(meanRT1dsi
-                    - Math.abs(p1.getFirstScanIndex()
-                        - p2.getFirstScanIndex()));
+                        - Math.abs(p1.getFirstScanIndex()
+                                - p2.getFirstScanIndex()));
                 drt2 = Math.abs(meanRT2dsi
-                    - Math.abs(p1.getSecondScanIndex()
-                        - p2.getSecondScanIndex()));
+                        - Math.abs(p1.getSecondScanIndex()
+                                - p2.getSecondScanIndex()));
                 try {
                     rt1p = 1 - ndrt1.cumulativeProbability(-drt1, drt1);
                     rt2p = 1 - ndrt2.cumulativeProbability(-drt2, drt2);
@@ -142,7 +142,7 @@ public class QualityControl {
             }
         }
 
-        List<Reliability> ret = new ArrayList<Reliability>();
+        List<Reliability> ret = new ArrayList<>();
         for (Double d : values) {
             ret.add(new Reliability(d / max));
         }

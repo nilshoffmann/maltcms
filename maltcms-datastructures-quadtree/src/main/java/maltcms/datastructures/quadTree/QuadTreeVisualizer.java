@@ -53,7 +53,7 @@ public class QuadTreeVisualizer {
         QuadTreeNode<T> root = qt.getRoot();
         Graphics2D g2 = bi.createGraphics();
         g2.setTransform(AffineTransform.getTranslateInstance(-qt.getDataBounds().getMinX(), -qt.getDataBounds().getMinY()));
-        Queue<QuadTreeNode<T>> queue = new LinkedList<QuadTreeNode<T>>();
+        Queue<QuadTreeNode<T>> queue = new LinkedList<>();
         queue.add(root);
         while (!queue.isEmpty()) {
             QuadTreeNode<T> qtn = queue.poll();

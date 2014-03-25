@@ -38,11 +38,10 @@ import org.apache.commons.io.FileUtils;
  *
  * @author Nils Hoffmann
  */
-
 @Slf4j
 public class CopyFilesOnFailure {
-	
-	public static void copyToInspectionDir(File outputDir, Throwable t) {
+
+    public static void copyToInspectionDir(File outputDir, Throwable t) {
         File tmpDir = new File(System.getProperty("java.io.tmpdir"));
         File outDir = new File(tmpDir, "maltcms-test-failures");
         UUID uid = UUID.randomUUID();
@@ -50,21 +49,15 @@ public class CopyFilesOnFailure {
         instanceDir.mkdirs();
         try {
             File f = new File(instanceDir, "stacktrace.txt");
-            PrintWriter bw = null;
-            try {
-                bw = new PrintWriter(f);
+            try (PrintWriter bw = new PrintWriter(f)) {
                 Throwable cause = t.getCause();
-                while(cause!=null) {
+                while (cause != null) {
                     cause.printStackTrace(bw);
                     cause = cause.getCause();
                 }
                 bw.flush();
             } catch (IOException ioex) {
                 log.error("Received io exception while creating stacktrace file!", ioex);
-            } finally {
-                if (bw != null) {
-                    bw.close();
-                }
             }
             System.out.println("Copying output to inspection directory: " + instanceDir.getAbsolutePath());
             FileUtils.copyDirectoryToDirectory(outputDir, instanceDir);
@@ -72,5 +65,5 @@ public class CopyFilesOnFailure {
             log.error("Failed to copy output to inspection directory!", ex);
         }
     }
-	
+
 }

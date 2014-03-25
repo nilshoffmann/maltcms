@@ -52,13 +52,13 @@ public interface IDynamicTimeWarp extends PairwiseFeatureSequenceSimilarity {
      * @param tuple
      * @param ris
      * @param maxdev
-     * @param sat_ref   scan_acquisition_time array for reference
+     * @param sat_ref scan_acquisition_time array for reference
      * @param sat_query scan_acquisition_time array for query
      * @return
      */
     public abstract IArrayD2Double align(
-        Tuple2D<List<Array>, List<Array>> tuple, AnchorPairSet ris,
-        double maxdev, ArrayDouble.D1 sat_ref, ArrayDouble.D1 sat_query);
+            Tuple2D<List<Array>, List<Array>> tuple, AnchorPairSet ris,
+            double maxdev, ArrayDouble.D1 sat_ref, ArrayDouble.D1 sat_query);
 
     /**
      *
@@ -66,7 +66,7 @@ public interface IDynamicTimeWarp extends PairwiseFeatureSequenceSimilarity {
      * @return
      */
     public Tuple2D<List<Array>, List<Array>> createTuple(
-        Tuple2D<IFileFragment, IFileFragment> t);
+            Tuple2D<IFileFragment, IFileFragment> t);
 
     /**
      *

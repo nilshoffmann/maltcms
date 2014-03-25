@@ -43,7 +43,7 @@ import ucar.ma2.ArrayDouble;
  *
  */
 public interface PairwiseFeatureSequenceSimilarity extends
-    ICommand<Tuple2D<Array[], Array[]>, Array[]>, IWorkflowElement {
+        ICommand<Tuple2D<Array[], Array[]>, Array[]>, IWorkflowElement {
 
     /**
      *

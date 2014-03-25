@@ -85,25 +85,25 @@ public class ScoreDistributionVisualizer extends AFragmentCommand {
                 final hep.aida.ref.Converter c = new hep.aida.ref.Converter();
                 final String s = c.toString(h);
                 final File f = new File(
-                    getWorkflow().getOutputDirectory(this), "histogram_"
-                    + iff.getName());
+                        getWorkflow().getOutputDirectory(this), "histogram_"
+                        + iff.getName());
                 try {
-                    final BufferedWriter sw = new BufferedWriter(
-                        new FileWriter(f));
-                    sw.write(s);
-                    sw.flush();
-                    sw.close();
+                    try (BufferedWriter sw = new BufferedWriter(
+                            new FileWriter(f))) {
+                        sw.write(s);
+                        sw.flush();
+                    }
                 } catch (final FileNotFoundException e) {
                     log.error(e.getLocalizedMessage());
                 } catch (final IOException e) {
                     log.error(e.getLocalizedMessage());
                 }
                 final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
-                    this, WorkflowSlot.STATISTICS, iff);
+                        this, WorkflowSlot.STATISTICS, iff);
                 getWorkflow().append(dwr);
             } catch (final ResourceNotAvailableException rnae) {
                 log.warn("Could not load variable {} from file {}",
-                    "pairwise_distance", iff);
+                        "pairwise_distance", iff);
             }
         }
         return t;

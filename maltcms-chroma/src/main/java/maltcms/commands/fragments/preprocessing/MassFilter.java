@@ -75,7 +75,7 @@ public class MassFilter extends AFragmentCommand {
     private final String description = "Removes defined masses and associated intensities from chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.GENERAL_PREPROCESSING;
     @Configurable
-    private List<String> excludeMasses = new LinkedList<String>();
+    private List<String> excludeMasses = new LinkedList<>();
     @Configurable(name = "mass_epsilon")
     private double epsilon = 0.1;
     @Configurable(name = "var.mass_values")
@@ -94,10 +94,10 @@ public class MassFilter extends AFragmentCommand {
         super.configure(cfg);
         this.massValuesVar = cfg.getString("var.mass_values", "mass_values");
         this.intensValuesVar = cfg.getString("var.intensity_values",
-            "intensity_values");
+                "intensity_values");
         this.scanIndexVar = cfg.getString("var.scan_index", "scan_index");
         this.totalIntensVar = cfg.getString("var.total_intensity",
-            "total_intensity");
+                "total_intensity");
     }
 
     /*
@@ -110,10 +110,10 @@ public class MassFilter extends AFragmentCommand {
 
         // create new ProgressResult
         DefaultWorkflowProgressResult dwpr = new DefaultWorkflowProgressResult(
-            t.getSize(), this, getWorkflowSlot());
-        TupleND<IFileFragment> rett = new TupleND<IFileFragment>();
+                t.getSize(), this, getWorkflowSlot());
+        TupleND<IFileFragment> rett = new TupleND<>();
         for (IFileFragment iff : t) {
-            final SortedSet<Double> exclMassSet = new TreeSet<Double>();
+            final SortedSet<Double> exclMassSet = new TreeSet<>();
             for (String s : this.excludeMasses) {
                 if (!s.isEmpty()) {
                     exclMassSet.add(Double.parseDouble(s));
@@ -121,28 +121,28 @@ public class MassFilter extends AFragmentCommand {
             }
             try {
                 double[] em = (double[]) iff.getChild("excluded_masses").
-                    getArray().get1DJavaArray(double.class);
+                        getArray().get1DJavaArray(double.class);
                 for (double d : em) {
                     exclMassSet.add(d);
                 }
             } catch (ResourceNotAvailableException r) {
                 log.warn(
-                    "Could not load excluded_masses from previous file!");
+                        "Could not load excluded_masses from previous file!");
             }
             // create a new FileFragment to hold processed data
             final IFileFragment retf = new FileFragment(
-                new File(getWorkflow().getOutputDirectory(this),
-                    iff.getName()));
+                    new File(getWorkflow().getOutputDirectory(this),
+                            iff.getName()));
             retf.addSourceFile(iff);
             if (!exclMassSet.isEmpty()) {
-                final List<Double> exclMass = new ArrayList<Double>(exclMassSet);
+                final List<Double> exclMass = new ArrayList<>(exclMassSet);
                 // Collections.sort(exclMass);
                 log.info("Removing the following masses: {}", exclMass);
                 // retrieve original variables
                 final IVariableFragment massesV = iff.getChild(
-                    this.massValuesVar);
+                        this.massValuesVar);
                 final IVariableFragment intensV = iff.getChild(
-                    this.intensValuesVar);
+                        this.intensValuesVar);
                 final IVariableFragment scanV = iff.getChild(this.scanIndexVar);
                 scanV.setRange(null);
                 scanV.getArray();
@@ -157,10 +157,10 @@ public class MassFilter extends AFragmentCommand {
                 final ArrayDouble.D1 newTic = new ArrayDouble.D1(scans);
                 final ArrayInt.D1 newSidx = new ArrayInt.D1(scans);
                 // create lists for mass and intensity values
-                final ArrayList<Array> newMassesList = new ArrayList<Array>(
-                    scans);
-                final ArrayList<Array> newIntensList = new ArrayList<Array>(
-                    scans);
+                final ArrayList<Array> newMassesList = new ArrayList<>(
+                        scans);
+                final ArrayList<Array> newIntensList = new ArrayList<>(
+                        scans);
                 // loop over scans
                 int elems = 0;
                 for (int i = 0; i < scans; i++) {
@@ -168,15 +168,15 @@ public class MassFilter extends AFragmentCommand {
                     Array intens = intensV.getIndexedArray().get(i);
                     Array masses = massesV.getIndexedArray().get(i);
                     EvalTools.eqI(intens.getShape()[0], masses.getShape()[0],
-                        this);
+                            this);
                     // find masked masses
                     List<Integer> maskedIndices = MaltcmsTools.findMaskedMasses(
-                        masses, exclMass, this.epsilon);
+                            masses, exclMass, this.epsilon);
                     // filter intensities
                     Array newIntens = null;
 
                     newIntens = ArrayTools.filterIndices(intens, maskedIndices,
-                        this.invert, 0.0d);
+                            this.invert, 0.0d);
 
                     newIntensList.add(newIntens);
                     // set new tic values
@@ -184,21 +184,21 @@ public class MassFilter extends AFragmentCommand {
 
                     newMassesList.add(masses);
                     EvalTools.eqI(newIntens.getShape()[0],
-                        masses.getShape()[0], this);
+                            masses.getShape()[0], this);
                     elems += newIntens.getShape()[0];
                 }
                 // create new variables and set arrays/lists of arrays (indexed)
                 final IVariableFragment newMassesV = VariableFragment.
-                    createCompatible(retf, massesV);
+                        createCompatible(retf, massesV);
                 newMassesV.setIndexedArray(newMassesList);
                 final IVariableFragment newIntensV = VariableFragment.
-                    createCompatible(retf, intensV);
+                        createCompatible(retf, intensV);
                 newIntensV.setIndexedArray(newIntensList);
                 final IVariableFragment newTicV = VariableFragment.
-                    createCompatible(retf, ticV);
+                        createCompatible(retf, ticV);
                 newTicV.setArray(newTic);
                 final IVariableFragment newSidxV = VariableFragment.
-                    createCompatible(retf, scanV);
+                        createCompatible(retf, scanV);
                 newSidxV.setArray(newSidx);
             }
             // save fragment

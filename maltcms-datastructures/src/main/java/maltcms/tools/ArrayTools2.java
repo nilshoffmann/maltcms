@@ -73,13 +73,13 @@ public class ArrayTools2 {
      * Creates an {@link ArrayInt} out of an other array. All listed masses in
      * masqMasses will be set to 0.
      *
-     * @param array      array
+     * @param array array
      * @param masqMasses masses which will be set to 0 instead of the original
-     *                   value
+     * value
      * @return intarray
      */
     public static ArrayInt.D1 createIntegerArray(final Array array,
-        final List<Integer> masqMasses) {
+            final List<Integer> masqMasses) {
         final ArrayInt.D1 intarray = new ArrayInt.D1(array.getShape()[0]);
         final IndexIterator iter = intarray.getIndexIterator();
         final IndexIterator arrayIter = array.getIndexIterator();
@@ -120,8 +120,8 @@ public class ArrayTools2 {
      * @return map map
      */
     public static Map<Integer, Integer[]> createPath(final Array pathOne,
-        final Array pathTwo) {
-        final Map<Integer, Integer[]> map = new HashMap<Integer, Integer[]>();
+            final Array pathTwo) {
+        final Map<Integer, Integer[]> map = new HashMap<>();
 
         final IndexIterator one = pathOne.getIndexIterator();
         final IndexIterator two = pathTwo.getIndexIterator();
@@ -148,7 +148,7 @@ public class ArrayTools2 {
     /**
      * Filters one array with a given filter.
      *
-     * @param a      array
+     * @param a array
      * @param filter filter
      * @return new array
      */
@@ -162,14 +162,14 @@ public class ArrayTools2 {
      * TODO: Should use filterExclude filterInclude instead
      *
      * @param source source
-     * @param hold   mass values which will be hold
+     * @param hold mass values which will be hold
      * @param retNew return a new array or the source array with 0.0d at all non
-     *               hold positions
+     * hold positions
      * @return sparse array
      */
     @Deprecated
     public static Array filter(final Array source, final Array hold,
-        final boolean retNew) {
+            final boolean retNew) {
         final IndexIterator holdIter = hold.getIndexIterator();
         final IndexIterator sourceIter = source.getIndexIterator();
 
@@ -205,13 +205,13 @@ public class ArrayTools2 {
     /**
      * .
      *
-     * @param a       array
-     * @param list    list of indices
+     * @param a array
+     * @param list list of indices
      * @param exclude <code>true</code> if the indices should be excluded
      * @return new array
      */
     public static Array filter(final Array a, final List<Integer> list,
-        final boolean exclude) {
+            final boolean exclude) {
         if (exclude) {
             final Array ret = a.copy();
             for (final Integer i : list) {
@@ -231,13 +231,13 @@ public class ArrayTools2 {
     /**
      * Filters a list of all array with a given filter.
      *
-     * @param list   list of arrays
+     * @param list list of arrays
      * @param filter filter
      * @return new list
      */
     public static List<Array> filter(final List<Array> list,
-        final AArrayFilter filter) {
-        final List<Array> ret = new ArrayList<Array>();
+            final AArrayFilter filter) {
+        final List<Array> ret = new ArrayList<>();
         for (final Array a : list) {
             ret.add(ArrayTools2.filter(a, filter));
         }
@@ -247,7 +247,7 @@ public class ArrayTools2 {
     /**
      * Returns an new array where all listed indices are excluded.
      *
-     * @param a    array
+     * @param a array
      * @param list indices which will be removed (set to 0.0d).
      * @return an copy of the list
      */
@@ -259,12 +259,12 @@ public class ArrayTools2 {
      * Excludes all indices from all arrays of a given list.
      *
      * @param alist list of array
-     * @param list  indices which will be removed (set to 0.0d).
+     * @param list indices which will be removed (set to 0.0d).
      * @return an copy of the list
      */
     public static List<Array> filterExclude(final List<Array> alist,
-        final List<Integer> list) {
-        final List<Array> ret = new ArrayList<Array>();
+            final List<Integer> list) {
+        final List<Array> ret = new ArrayList<>();
         for (final Array a : alist) {
             ret.add(ArrayTools2.filterExclude(a, list));
         }
@@ -274,7 +274,7 @@ public class ArrayTools2 {
     /**
      * Returns an new array where all not listed indices are excluded.
      *
-     * @param a    array
+     * @param a array
      * @param list indices which will be used other will set to 0.0d.
      * @return an copy of the list
      */
@@ -287,12 +287,12 @@ public class ArrayTools2 {
      * given by the second list.
      *
      * @param alist list of array
-     * @param list  indices which will be used other will set to 0.0d.
+     * @param list indices which will be used other will set to 0.0d.
      * @return an copy of the list
      */
     public static List<Array> filterInclude(final List<Array> alist,
-        final List<Integer> list) {
-        final List<Array> ret = new ArrayList<Array>();
+            final List<Integer> list) {
+        final List<Array> ret = new ArrayList<>();
         for (final Array a : alist) {
             ret.add(ArrayTools2.filterInclude(a, list));
         }
@@ -306,17 +306,17 @@ public class ArrayTools2 {
      * @return sorted
      */
     public static List<Tuple2D<Integer, Double>> getUniqueMasses(
-        final Array intensities) {
-        final ArrayList<Tuple2D<Integer, Double>> ms = new ArrayList<Tuple2D<Integer, Double>>();
+            final Array intensities) {
+        final ArrayList<Tuple2D<Integer, Double>> ms = new ArrayList<>();
         final IndexIterator iter = intensities.getIndexIterator();
         int c = 0;
         while (iter.hasNext()) {
-            ms.add(new Tuple2D<Integer, Double>(c++, iter.getDoubleNext()));
+            ms.add(new Tuple2D<>(c++, iter.getDoubleNext()));
         }
         Collections.sort(ms, new Comparator<Tuple2D<Integer, Double>>() {
             @Override
             public int compare(final Tuple2D<Integer, Double> o1,
-                final Tuple2D<Integer, Double> o2) {
+                    final Tuple2D<Integer, Double> o2) {
                 return o1.getSecond().compareTo(o2.getSecond());
             }
         });
@@ -331,7 +331,7 @@ public class ArrayTools2 {
      * @return transposed arrays
      */
     public static List<Array> transpose(final List<Array> list) {
-        final List<ArrayDouble.D1> newList = new ArrayList<ArrayDouble.D1>();
+        final List<ArrayDouble.D1> newList = new ArrayList<>();
 
         for (int i = 0; i < list.get(0).getShape()[0]; i++) {
             newList.add(new ArrayDouble.D1(list.size()));
@@ -352,7 +352,7 @@ public class ArrayTools2 {
             c++;
         }
 
-        final List<Array> ret = new ArrayList<Array>();
+        final List<Array> ret = new ArrayList<>();
         for (final Array a : newList) {
             ret.add(a);
         }
@@ -394,7 +394,7 @@ public class ArrayTools2 {
      */
     public static List<Array> max(final List<Array> a, final List<Array> b) {
         if (a.size() != b.size()) {
-            final List<Array> nl = new ArrayList<Array>();
+            final List<Array> nl = new ArrayList<>();
             for (int i = 0; i < a.size(); i++) {
                 nl.add(ArrayTools2.max(a.get(i), b.get(i)));
             }
@@ -455,7 +455,7 @@ public class ArrayTools2 {
      */
     public static List<Array> min(final List<Array> a, final List<Array> b) {
         if (a.size() != b.size()) {
-            final List<Array> nl = new ArrayList<Array>();
+            final List<Array> nl = new ArrayList<>();
             for (int i = 0; i < a.size(); i++) {
                 nl.add(ArrayTools2.min(a.get(i), b.get(i)));
             }
@@ -467,22 +467,22 @@ public class ArrayTools2 {
     /**
      * Will create a new Array containing all missing mass bins.
      *
-     * @param massValuesA      mass values
+     * @param massValuesA mass values
      * @param massIntensitiesA intensity values
      * @param massResolution
-     * @param log              log
+     * @param log log
      * @param minMass
      * @param maxMass
      * @return new Array containing all mass bins
      */
     public static Array normalize(final Array massValuesA,
-        final Array massIntensitiesA, final double massResolution, final Logger log, double minMass, double maxMass) {
+            final Array massIntensitiesA, final double massResolution, final Logger log, double minMass, double maxMass) {
         int bins = MaltcmsTools.getNumberOfIntegerMassBins(minMass, maxMass, massResolution);
         Array targetMasses = Array.factory(massValuesA.getElementType(), new int[]{bins});
         Array targetIntensities = Array.factory(massIntensitiesA.getElementType(), new int[]{bins});
         ArrayTools.createDenseArray(massValuesA, massIntensitiesA,
-            new Tuple2D<Array, Array>(targetMasses, targetIntensities), ((int) Math.floor(minMass)), ((int) Math.ceil(maxMass)),
-            bins, massResolution, 0.0d);
+                new Tuple2D<>(targetMasses, targetIntensities), ((int) Math.floor(minMass)), ((int) Math.ceil(maxMass)),
+                bins, massResolution, 0.0d);
 //		final ArrayDouble.D1 nms = new ArrayDouble.D1(binNumber);
 //		final IndexIterator nmsiter = nms.getIndexIterator();
 //		final IndexIterator mviter = massValuesA.getIndexIterator();
@@ -531,7 +531,7 @@ public class ArrayTools2 {
     }
 
     protected static Tuple2D<Array, Array> getWarpPath(
-        final List<Point> warpPath) {
+            final List<Point> warpPath) {
         final ArrayInt.D1 pathi = new ArrayInt.D1(warpPath.size());
         final ArrayInt.D1 pathj = new ArrayInt.D1(warpPath.size());
 
@@ -567,8 +567,8 @@ public class ArrayTools2 {
     // return new AlignmentPath2D(horizontalL, verticalL);
     // }
     public static List<Integer> getUsedMasses(final IFileFragment ff,
-        final String usedMassValuesVar) {
-        final List<Integer> sdd = new ArrayList<Integer>();
+            final String usedMassValuesVar) {
+        final List<Integer> sdd = new ArrayList<>();
         final Array sda = ff.getChild(usedMassValuesVar).getArray();
         final IndexIterator sdaiter = sda.getIndexIterator();
         while (sdaiter.hasNext()) {
@@ -592,7 +592,7 @@ public class ArrayTools2 {
     }
 
     public static Tuple2D<Array, Array> excludeSparse(Tuple2D<Array, Array> ms,
-        List<Integer> hold) {
+            List<Integer> hold) {
 
         int c = 0;
         final IndexIterator massiter = ms.getFirst().getIndexIterator();
@@ -603,11 +603,11 @@ public class ArrayTools2 {
         }
 
         Tuple2D<Array, Array> newms = new Tuple2D<Array, Array>(
-            new ArrayInt.D1(c), new ArrayDouble.D1(c));
+                new ArrayInt.D1(c), new ArrayDouble.D1(c));
         final IndexIterator iter1 = ms.getFirst().getIndexIterator(), iter2 = ms
-            .getSecond().getIndexIterator();
+                .getSecond().getIndexIterator();
         final IndexIterator siter1 = newms.getFirst().getIndexIterator(), siter2 = newms
-            .getSecond().getIndexIterator();
+                .getSecond().getIndexIterator();
         int mass;
         double value;
         while (iter1.hasNext() && iter2.hasNext()) {
@@ -622,9 +622,9 @@ public class ArrayTools2 {
     }
 
     public static Array[] glue(List<Tuple2D<Array, Array>> scanlineMS,
-        int scansPerModulation) {
-        List<Array> mzs = new ArrayList<Array>();
-        List<Array> inten = new ArrayList<Array>();
+            int scansPerModulation) {
+        List<Array> mzs = new ArrayList<>();
+        List<Array> inten = new ArrayList<>();
         ArrayInt.D1 scanIndex = new ArrayInt.D1(scansPerModulation);
         final IndexIterator iter = scanIndex.getIndexIterator();
         iter.setIntNext(0);

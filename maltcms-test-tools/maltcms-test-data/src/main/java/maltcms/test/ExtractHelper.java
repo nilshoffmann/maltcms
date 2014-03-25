@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class ExtractHelper {
 
-    public static EnumMap<FType, String[]> typeToPaths = new EnumMap<FType, String[]>(FType.class);
+    public static EnumMap<FType, String[]> typeToPaths = new EnumMap<>(FType.class);
 
     public static enum FType {
 
@@ -48,28 +48,28 @@ public class ExtractHelper {
     public static void setDefaults() {
         typeToPaths.clear();
         typeToPaths.put(FType.CDF_1D, new String[]{
-                    "/cdf/1D/glucoseA.cdf.gz",
-                    "/cdf/1D/glucoseB.cdf.gz",
-                    "/cdf/1D/mannitolA.cdf.gz",
-                    "/cdf/1D/mannitolB.cdf.gz",
-                    "/cdf/1D/succinatA.cdf.gz",
-                    "/cdf/1D/succinatB.cdf.gz"
-                });
+            "/cdf/1D/glucoseA.cdf.gz",
+            "/cdf/1D/glucoseB.cdf.gz",
+            "/cdf/1D/mannitolA.cdf.gz",
+            "/cdf/1D/mannitolB.cdf.gz",
+            "/cdf/1D/succinatA.cdf.gz",
+            "/cdf/1D/succinatB.cdf.gz"
+        });
         typeToPaths.put(FType.CDF_2D, new String[]{
-                    "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz"
-                });
+            "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz"
+        });
         typeToPaths.put(FType.MZML, new String[]{
-                    "/mzML/MzMLFile_PDA.mzML.xml.gz",
-                    "/mzML/small.pwiz.1.1.mzML.gz",
-                    "/mzML/tiny.pwiz.1.1.mzML.gz"});
+            "/mzML/MzMLFile_PDA.mzML.xml.gz",
+            "/mzML/small.pwiz.1.1.mzML.gz",
+            "/mzML/tiny.pwiz.1.1.mzML.gz"});
         typeToPaths.put(FType.MZDATA, new String[]{
-                    "/mzData/tiny1.mzData1.05.mzData.xml.gz"
-                });
+            "/mzData/tiny1.mzData1.05.mzData.xml.gz"
+        });
         typeToPaths.put(FType.MZXML, new String[]{
-                    "/mzXML/tiny1.mzXML2.0.mzXML.gz",
-                    "/mzXML/tiny1.mzXML3.0.mzXML.gz",});
+            "/mzXML/tiny1.mzXML2.0.mzXML.gz",
+            "/mzXML/tiny1.mzXML3.0.mzXML.gz",});
         typeToPaths.put(FType.MZ5, new String[]{
-                    "/mz5/small_raw.mz5.gz"});
+            "/mz5/small_raw.mz5.gz"});
     }
 
     public static File[] extractForType(File tf, FType t, String... paths) {
@@ -77,7 +77,7 @@ public class ExtractHelper {
     }
 
     public static File[] extractFilesToDir(File outputFolder, String... paths) {
-        List<File> files = new LinkedList<File>();
+        List<File> files = new LinkedList<>();
         for (String path : paths) {
             File outputFile = ZipResourceExtractor.extract(path, outputFolder);
             files.add(outputFile);

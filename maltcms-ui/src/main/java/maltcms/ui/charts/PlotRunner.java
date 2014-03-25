@@ -75,7 +75,7 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     private boolean saveGraphics = true;
 
     public PlotRunner(final Plot plot1, final String title1,
-        final String filename1, final File outputDir) {
+            final String filename1, final File outputDir) {
         this.plot = plot1;
         this.title = title1;
         this.filename = filename1;
@@ -88,18 +88,18 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     @Override
     public JFreeChart call() throws Exception {
         log
-            .info("#############################################################################");
+                .info("#############################################################################");
         final String s = this.getClass().getName();
         log.info("# {} running", s);
         log
-            .info("#############################################################################");
+                .info("#############################################################################");
         if (this.plot.getBackgroundImage() != null) {
             this.imgheight = this.plot.getBackgroundImage().getHeight(null);
             this.imgwidth = this.plot.getBackgroundImage().getWidth(null);
             this.sizeOverride = true;
         }
         final StandardChartTheme sct = (StandardChartTheme) StandardChartTheme
-            .createLegacyTheme();
+                .createLegacyTheme();
         final Font elf = new Font(this.fontFamily, Font.BOLD, 20);
         final Font lf = new Font(this.fontFamily, Font.BOLD, 14);
         final Font rf = new Font(this.fontFamily, Font.PLAIN, 12);
@@ -126,22 +126,22 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
         jfc.setBackgroundPaint(Color.WHITE);
         if (this.headless && this.saveGraphics) {
             log.info("Creating plot {} with filename {}", this.title,
-                getFile().getAbsolutePath());
+                    getFile().getAbsolutePath());
             ImageTools
-                .writeImage(jfc, getFile(), this.imgwidth, this.imgheight);
+                    .writeImage(jfc, getFile(), this.imgwidth, this.imgheight);
         }
         if (this.serializeJFreeChart) {
             try {
                 final String filename = StringTools.removeFileExt(getFile()
-                    .getAbsolutePath())
-                    + ".serialized";
+                        .getAbsolutePath())
+                        + ".serialized";
                 log.info("Creating serialized plot {} with filename {}",
-                    this.title, filename);
-                final ObjectOutputStream oos = new ObjectOutputStream(
-                    new BufferedOutputStream(new FileOutputStream(filename)));
-                oos.writeObject(jfc);
-                oos.flush();
-                oos.close();
+                        this.title, filename);
+                try (ObjectOutputStream oos = new ObjectOutputStream(
+                        new BufferedOutputStream(new FileOutputStream(filename)))) {
+                    oos.writeObject(jfc);
+                    oos.flush();
+                }
             } catch (final FileNotFoundException e) {
                 log.warn("{}", e.getLocalizedMessage());
             } catch (final IOException e) {
@@ -156,21 +156,21 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
         if (!this.sizeOverride) {
             this.imgwidth = cfg.getInt(this.getClass().getName() + ".imgwidth", 1280);
             this.imgheight = cfg.getInt(this.getClass().getName()
-                + ".imgheight", 1024);
+                    + ".imgheight", 1024);
         }
         this.filetype = cfg.getString(this.getClass().getName() + ".filetype", "png");
         this.headless = cfg.getBoolean(this.getClass().getName() + ".headless",
-            true);
+                true);
         this.fontFamily = cfg.getString(this.getClass().getName()
-            + ".fontFamily", "sans");
+                + ".fontFamily", "sans");
         this.serializeJFreeChart = cfg.getBoolean(this.getClass().getName()
-            + ".serializeJFreeChart", false);
+                + ".serializeJFreeChart", false);
         this.saveGraphics = cfg.getBoolean(this.getClass().getName()
-            + ".saveGraphics", true);
+                + ".saveGraphics", true);
         log.debug("configure called on {}", this.getClass().getName());
         log.debug("filetype = {}", this.filetype);
         log.debug("Image height: {} width: {}", this.imgheight,
-            this.imgwidth);
+                this.imgwidth);
     }
 
 //    public File getFile() {

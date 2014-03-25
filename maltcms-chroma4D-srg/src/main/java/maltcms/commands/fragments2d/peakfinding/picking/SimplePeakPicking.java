@@ -51,7 +51,7 @@ public class SimplePeakPicking implements IPeakPicking {
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";
     @Configurable(name = "var.second_column_scan_index",
-        value = "second_column_scan_index")
+            value = "second_column_scan_index")
     private String secondScanIndexVar = "second_column_scan_index";
     @Configurable(value = "1")
     private int maxDx = 1;
@@ -71,7 +71,7 @@ public class SimplePeakPicking implements IPeakPicking {
         IVariableFragment tiv = ff.getChild(this.totalIntensityVar);
         IVariableFragment ssiv = ff.getChild(this.secondScanIndexVar);
         tiv.setIndex(ssiv);
-        List<ArrayDouble.D1> intensities = new ArrayList<ArrayDouble.D1>();
+        List<ArrayDouble.D1> intensities = new ArrayList<>();
 
         for (Array a : tiv.getIndexedArray()) {
             intensities.add((ArrayDouble.D1) a);
@@ -90,8 +90,8 @@ public class SimplePeakPicking implements IPeakPicking {
         this.log.info("	stdPerv: {}", this.stdPerc);
 
         return getPeaks(getIntensities(ff), 0, Integer.MAX_VALUE,
-            this.minVerticalScanIndex, Integer.MAX_VALUE, this.maxDx,
-            this.maxDy, this.stdPerc);
+                this.minVerticalScanIndex, Integer.MAX_VALUE, this.maxDx,
+                this.maxDy, this.stdPerc);
     }
 
     /**
@@ -105,12 +105,12 @@ public class SimplePeakPicking implements IPeakPicking {
         int minX = p.x - dx, maxX = p.x + dx, minY = p.y - dy, maxY = p.y + dy;
         // FIXME nicht statisch 1
         return getPeaks(getIntensities(ff), minX, maxX, minY, maxY, 2, 2,
-            Double.MIN_VALUE);
+                Double.MIN_VALUE);
     }
 
     private List<Point> getPeaks(List<ArrayDouble.D1> intensities, int minX,
-        int maxX, int minY, int maxY, int maxdx, int maxdy, double threshold) {
-        final List<Point> peaks = new ArrayList<Point>();
+            int maxX, int minY, int maxY, int maxdx, int maxdy, double threshold) {
+        final List<Point> peaks = new ArrayList<>();
         int scanLineCount = intensities.size();
         int scansPerModulation = intensities.get(0).getShape()[0];
 
@@ -134,22 +134,22 @@ public class SimplePeakPicking implements IPeakPicking {
                 sigma = Math.sqrt(sum / (double) scansPerModulation - 1);
 
                 for (int y = maxdy + minY; y < Math.min(scansPerModulation,
-                    maxY)
-                    - maxdy; y++) {
+                        maxY)
+                        - maxdy; y++) {
                     if (y < intensities.get(x).getShape()[0] && y >= 0) {
                         currentHeight = intensities.get(x).get(y);
                         boolean max = true;
                         for (int i = -maxdx; i <= maxdx; i++) {
                             for (int j = -Math.min(y, maxdy); j <= Math.min(
-                                scansPerModulation - y, maxdy); j++) {
+                                    scansPerModulation - y, maxdy); j++) {
                                 if (x + i > 0
-                                    && x + i < intensities.size()
-                                    && y + j > 0
-                                    && y + j < intensities.get(x + i).
-                                    getShape()[0]) {
+                                        && x + i < intensities.size()
+                                        && y + j > 0
+                                        && y + j < intensities.get(x + i).
+                                        getShape()[0]) {
                                     if ((i != 0) || (j != 0)) {
                                         nHeight = (intensities.get(x + i)).get(
-                                            y + j);
+                                                y + j);
                                         if (currentHeight < nHeight) {
                                             max = false;
                                             break;
@@ -164,7 +164,7 @@ public class SimplePeakPicking implements IPeakPicking {
 
                         if (max) {
                             if ((currentHeight > (mu + threshold * sigma))
-                                || threshold == Double.MIN_VALUE) {
+                                    || threshold == Double.MIN_VALUE) {
                                 peaks.add(new Point(x, y));
                             }
                         }

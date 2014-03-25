@@ -36,13 +36,13 @@ import maltcms.datastructures.array.IFeatureVector;
  *
  */
 public interface IPairwiseFeatureVectorSequenceOperation<RESULT> extends
-    IFileFragmentModifier {
+        IFileFragmentModifier {
 
     public abstract RESULT apply(List<IFeatureVector> l1,
-        List<IFeatureVector> l2);
+            List<IFeatureVector> l2);
 
     public abstract void setPairwiseFeatureVectorOperation(
-        TwoFeatureVectorOperation pao);
+            TwoFeatureVectorOperation pao);
 
     public TwoFeatureVectorOperation getPairwiseFeatureVectorOperation();
 }

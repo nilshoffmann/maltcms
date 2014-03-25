@@ -70,14 +70,14 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
     private String binnedMassValues = "binned_mass_values";
     private String binnedScanIndex = "binned_scan_index";
     private boolean normalizeScans = false;
-    private List<Double> maskedMasses = new LinkedList<Double>();
+    private List<Double> maskedMasses = new LinkedList<>();
     private boolean invertMaskedMasses = false;
     private boolean normalizeEicsToZeroMeanUnitVariance = false;
     private boolean normalizeEicsToUnity = false;
     private double massBinResolution = 1.0d;
     private double minMass = 0;
     private double maxMass = 1000;
-    private List<double[]> minMaxIntensities = new ArrayList<double[]>();
+    private List<double[]> minMaxIntensities = new ArrayList<>();
     private URI fileToLoad;
     private URI fileToSave;
 
@@ -96,9 +96,9 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
 
         log.info("Loading scans for file {}", output.getName());
         MaltcmsTools.prepareDenseArraysMZI(input, output,
-            scanIndex, massValues, intensityValues,
-            binnedScanIndex, binnedMassValues,
-            binnedIntensityValues, minMass, maxMass, null);
+                scanIndex, massValues, intensityValues,
+                binnedScanIndex, binnedMassValues,
+                binnedIntensityValues, minMass, maxMass, null);
         log.debug("Loaded scans for file {}, stored in {}", fileToLoad, fileToSave);
         log.debug("Source Files of f={} : {}", output, output.getSourceFiles());
         final int bins = MaltcmsTools.getNumberOfIntegerMassBins(minMass, maxMass, massBinResolution);
@@ -119,7 +119,7 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
      * @return
      */
     protected List<double[]> findMinMaxIntensities(IFileFragment output, int massBins) {
-        List<double[]> minMaxList = new ArrayList<double[]>(massBins);
+        List<double[]> minMaxList = new ArrayList<>(massBins);
         log.info("Identifiying minimum and maximum intensities on mass traces");
         for (int i = 0; i < massBins; i++) {
             minMaxList.add(new double[]{Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY});
@@ -143,7 +143,7 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
      * @param bins
      */
     protected void maskMasses(final IFileFragment f, final double minMass, final double maxMass, final double massBinResolution,
-        final int bins, final List<Double> maskedMasses, final boolean invertMaskedMasses, final String binnedIntensityVariable, final String binnedScanIndexVariable, final String totalIntensityVariable) {
+            final int bins, final List<Double> maskedMasses, final boolean invertMaskedMasses, final String binnedIntensityVariable, final String binnedScanIndexVariable, final String totalIntensityVariable) {
         // set masked masschannels to zero intensity
         if ((maskedMasses != null) && !maskedMasses.isEmpty()) {
             log.info("Filtering masked masses!");
@@ -152,18 +152,18 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
                 ArrayTools.fill(selector, 1.0d);
                 for (final Double integ : maskedMasses) {
                     log.info("Retaining mass {} at index {}", integ,
-                        MaltcmsTools.binMZ(integ, minMass, maxMass, massBinResolution));
+                            MaltcmsTools.binMZ(integ, minMass, maxMass, massBinResolution));
 
                     selector.set(MaltcmsTools.binMZ(integ, minMass,
-                        maxMass, massBinResolution), 0.0d);
+                            maxMass, massBinResolution), 0.0d);
                     // - (int) (Math.floor(minmax.getFirst())), 0.0d);
                 }
             } else {
                 for (final Double integ : maskedMasses) {
                     log.info("Filtering mass {} at index {}", integ,
-                        MaltcmsTools.binMZ(integ, minMass, maxMass, massBinResolution));
+                            MaltcmsTools.binMZ(integ, minMass, maxMass, massBinResolution));
                     selector.set(MaltcmsTools.binMZ(integ, minMass,
-                        maxMass, massBinResolution), 1.0d);
+                            maxMass, massBinResolution), 1.0d);
                     // - (int) (Math.floor(minmax.getFirst())), 1.0d);
                 }
             }
@@ -173,14 +173,14 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
             // TIC
             // in this case, we shadow previous definitions
             final IVariableFragment total_intens = f.hasChild(totalIntensityVariable) ? f.getChild(totalIntensityVariable) : new VariableFragment(f,
-                totalIntensityVariable);
+                    totalIntensityVariable);
             final Array tan = Array.factory(DataType.DOUBLE, sidx.getArray().getShape());
             final Index tanidx = tan.getIndex();
             ivf.setIndex(sidx);
             final List<Array> intens = ivf.getIndexedArray();
             // Over all scans
             int scan = 0;
-            final ArrayList<Array> filtered = new ArrayList<Array>(intens.size());
+            final ArrayList<Array> filtered = new ArrayList<>(intens.size());
             for (final Array a : intens) {
                 // System.out.println("Before: " + a.toString());
                 final Index aidx = a.getIndex();
@@ -230,7 +230,7 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
             for (int i = 0; i < normIntens.size(); i++) {
                 final Array a = normIntens.get(i);
                 normIntens.set(i, ArrayTools.div(ArrayTools.diff(a, mean),
-                    var));
+                        var));
             }
         } else if (normalizeEicsToUnity) {
             log.info("Normalizing by subtracting min and dividing by max-min!");
@@ -246,7 +246,7 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
             for (int i = 0; i < normIntens.size(); i++) {
                 final Array a = normIntens.get(i);
                 normIntens.set(i, ArrayTools.div(ArrayTools.diff(a, min),
-                    max));
+                        max));
             }
         }
         if (normalizeScans) {

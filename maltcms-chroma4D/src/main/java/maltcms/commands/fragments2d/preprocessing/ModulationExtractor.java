@@ -92,9 +92,9 @@ public class ModulationExtractor extends AFragmentCommand {
     @Override
     public void configure(Configuration cfg) {
         this.totalIntensityVar = cfg.getString("var.total_intensity",
-            "total_intensity");
+                "total_intensity");
         this.modulationTimeVar = cfg.getString("var.modulation_time",
-            "modulation_time");
+                "modulation_time");
         this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
         this.scanAcquisitionTimeVar = cfg.getString("var.scan_acquisition_time", "scan_acquisition_time");
     }
@@ -230,7 +230,7 @@ public class ModulationExtractor extends AFragmentCommand {
      */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-        final TupleND<IFileFragment> res = new TupleND<IFileFragment>();
+        final TupleND<IFileFragment> res = new TupleND<>();
         for (IFileFragment ff : t) {
             final IFileFragment work = createWorkFragment(ff);
             int[] ranges = checkRanges(ff, startModulation, endModulation, -1, -1);

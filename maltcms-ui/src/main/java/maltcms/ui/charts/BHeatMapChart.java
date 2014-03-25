@@ -54,16 +54,16 @@ public class BHeatMapChart extends AChart<XYBPlot> {
     /**
      * Default constructor.
      *
-     * @param bFilename   filename of the background image
-     * @param xLabel      x axis label
-     * @param yLabel      y axis label
-     * @param axis        axis ranges
+     * @param bFilename filename of the background image
+     * @param xLabel x axis label
+     * @param yLabel y axis label
+     * @param axis axis ranges
      * @param seriesLabel series label
      */
     public BHeatMapChart(final String bFilename, final String xLabel,
-        final String yLabel,
-        final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> axis,
-        final String seriesLabel) {
+            final String yLabel,
+            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> axis,
+            final String seriesLabel) {
         EvalTools.notNull(new Object[]{bFilename, xLabel, yLabel}, this);
         this.filename = bFilename;
         this.xlabel = xLabel;

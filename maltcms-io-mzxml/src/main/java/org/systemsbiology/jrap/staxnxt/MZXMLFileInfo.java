@@ -1,10 +1,9 @@
 /**
  * *****************************************************************************
  * --------------------------------------------------------------------------- *
- * File: * @(#) MZXMLFileInfo.java * Author: * Mathijs Vogelzang
- * m_v@dds.nl
- * ****************************************************************************** * * *
- * This software is provided ``AS IS'' and any express or implied * *
+ * File: * @(#) MZXMLFileInfo.java * Author: * Mathijs Vogelzang m_v@dds.nl
+ * ******************************************************************************
+ * * * * This software is provided ``AS IS'' and any express or implied * *
  * warranties, including, but not limited to, the implied warranties of * *
  * merchantability and fitness for a particular purpose, are disclaimed. * * In
  * no event shall the authors or the Institute for Systems Biology * * liable
@@ -40,7 +39,7 @@ import java.util.ArrayList;
 public class MZXMLFileInfo {
 
     //protected ParentFile[] parentFiles;
-    ArrayList<ParentFile> parentFiles = new ArrayList<ParentFile>();
+    ArrayList<ParentFile> parentFiles = new ArrayList<>();
     protected MSInstrumentInfo instrumentInfo;
     protected DataProcessingInfo dataProcessing;
 
@@ -63,7 +62,7 @@ public class MZXMLFileInfo {
      * Get information about the MS instrument used to extract data.
      *
      * @return MS instrument information, or null when no information was
-     *         present in the file.
+     * present in the file.
      */
     public MSInstrumentInfo getInstrumentInfo() {
         return instrumentInfo;
@@ -78,6 +77,7 @@ public class MZXMLFileInfo {
         return dataProcessing;
     }
 
+    @Override
     public String toString() {
         String outputLine = "";
         ParentFile pFile = null;

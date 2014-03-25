@@ -61,7 +61,7 @@ public final class XLSXDataSource implements IDataSource {
         final String filename = ff.getName().toLowerCase();
         if (dotindex == -1) {
             throw new RuntimeException("Could not determine File extension of "
-                + ff);
+                    + ff);
         }
         try {
             IXLSDataSource ds = getDataSourceFor(ff);
@@ -99,11 +99,11 @@ public final class XLSXDataSource implements IDataSource {
 
     @Override
     public List<String> supportedFormats() {
-        final Set<String> al = new HashSet<String>();
+        final Set<String> al = new HashSet<>();
         for (final IDataSource ids : getDataSources()) {
             al.addAll(ids.supportedFormats());
         }
-        return new ArrayList<String>(al);
+        return new ArrayList<>(al);
     }
 
     private Collection<? extends IXLSDataSource> getDataSources() {
@@ -118,12 +118,12 @@ public final class XLSXDataSource implements IDataSource {
             log.info("Checking data source: {}", ds.getClass().getName());
             if (ds.canRead(f) > 0) {
                 IXLSDataSource dataSource = Factory.getInstance().getObjectFactory().instantiate(ds.getClass().getName(),
-                    IXLSDataSource.class);
+                        IXLSDataSource.class);
                 return dataSource;
             }
         }
         throw new NotImplementedException("No provider available for "
-            + StringTools.getFileExtension(f.getName()));
+                + StringTools.getFileExtension(f.getName()));
     }
 
     @Override

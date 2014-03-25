@@ -42,8 +42,8 @@ public class FeatureVectorDtwSimilarity extends TwoFeatureVectorOperation {
     @Override
     public double apply(IFeatureVector f1, IFeatureVector f2) {
         return scoreFunction.apply(0, 0, f1.getFeature(timeFeatureName).
-            getDouble(0), f2.getFeature(timeFeatureName).getDouble(0), f1.
-            getFeature(arrayFeatureName), f2.getFeature(arrayFeatureName));
+                getDouble(0), f2.getFeature(timeFeatureName).getDouble(0), f1.
+                getFeature(arrayFeatureName), f2.getFeature(arrayFeatureName));
     }
 
     @Override

@@ -121,7 +121,7 @@ for details.
     </bean>
     
     <!-- array similarity functions -->
-	<bean id="dotSimilarity" class="maltcms.math.functions.similarities.ArrayDot" scope="prototype"/>
+    <bean id="dotSimilarity" class="maltcms.math.functions.similarities.ArrayDot" scope="prototype"/>
     <bean id="cosineSimilarity" class="maltcms.math.functions.similarities.ArrayCos" scope="prototype"/>
     <bean id="linCorrSimilarity" class="maltcms.math.functions.similarities.ArrayCorr" scope="prototype"/>
     <bean id="rankCorrSimilarity" class="maltcms.math.functions.similarities.ArrayRankCorr" scope="prototype"/>

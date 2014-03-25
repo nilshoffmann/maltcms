@@ -39,6 +39,7 @@ public class QueryDBTest extends TestCase {
         super(name);
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         //oc = Db4o.openFile("res/metabolites.db4o");

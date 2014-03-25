@@ -52,7 +52,7 @@ public class SparseTools {
 
     protected static final ExecutorService es = Executors.newFixedThreadPool(4);
     public static final Map<Sparse, Double> normalized = Collections
-        .synchronizedMap(new HashMap<Sparse, Double>());
+            .synchronizedMap(new HashMap<Sparse, Double>());
 
 //	public static double arccos(final Sparse s, final Sparse t) {
 //		return Math.acos(SparseTools.cos(s, t));
@@ -91,8 +91,8 @@ public class SparseTools {
 //		return cos;
 //	}
     public static Array[] create(final List<Array> indices,
-        final List<Array> values, final int minindex, final int maxindex,
-        final int nbins, final double massPrecision) {
+            final List<Array> values, final int minindex, final int maxindex,
+            final int nbins, final double massPrecision) {
         // FutureTask<Array[]> future = new FutureTask<Array[]>(
         // new Callable<Array[]>() {
         // public Array[] call() {
@@ -110,7 +110,7 @@ public class SparseTools {
                     vls.remove();
                     // System.out.println("Sparse array "+i);
                     s[i++] = new Sparse(a, b, minindex, maxindex, nbins,
-                        massPrecision);
+                            massPrecision);
                 } catch (final ClassCastException cce) {
                     cce.printStackTrace();
                 }
@@ -118,16 +118,16 @@ public class SparseTools {
             return s;
         }
         throw new IllegalArgumentException(
-            "Number of elements in argument lists differ!");
+                "Number of elements in argument lists differ!");
     }
 
     public static List<Array> createAsList(final List<Array> indices,
-        final List<Array> values, final int minindex, final int maxindex,
-        final int nbins, final double massPrecision) {
+            final List<Array> values, final int minindex, final int maxindex,
+            final int nbins, final double massPrecision) {
         final Array[] a = SparseTools.create(indices, values, minindex,
-            maxindex, nbins, massPrecision);
+                maxindex, nbins, massPrecision);
         log.info("Length of Array[] created: {}", a.length);
-        final ArrayList<Array> arr = new ArrayList<Array>(a.length);
+        final ArrayList<Array> arr = new ArrayList<>(a.length);
         for (final Array element : a) {
             arr.add(element);
         }
@@ -157,7 +157,7 @@ public class SparseTools {
 //		return norm;
 //	}
     public static Sparse randomGaussian(final int minindex, final int size,
-        final double mean, final double stddev) {
+            final double mean, final double stddev) {
         final Sparse s = new Sparse(size, minindex, minindex + size - 1);
         for (int i = 0; i < size; i++) {
             s.set(i, (ArrayTools.nextGaussian() - mean) * stddev);
@@ -166,7 +166,7 @@ public class SparseTools {
     }
 
     public static Sparse randomUniform(final int minindex, final int size,
-        final double mean, final double scale) {
+            final double mean, final double scale) {
         final Sparse s = new Sparse(size, minindex, minindex + size - 1);
         for (int i = 0; i < size; i++) {
             s.set(i, (ArrayTools.nextUniform() - mean) * scale);

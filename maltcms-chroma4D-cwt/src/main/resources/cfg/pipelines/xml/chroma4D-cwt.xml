@@ -40,8 +40,8 @@ for details.
     <bean id="cwtPeakFinder" class="maltcms.commands.fragments2d.peakfinding.cwt.CwtPeakFinder" scope="prototype">
         <property name="minScale" value="1"/>
         <property name="maxScale" value="50"/>
-		<property name="maxNeighbors" value="10"/>
-		<property name="radius" value="20.0"/>
+        <property name="maxNeighbors" value="10"/>
+        <property name="radius" value="20.0"/>
     </bean>
    
 </beans>

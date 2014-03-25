@@ -54,7 +54,7 @@ public class MaxSortPeakPicking implements IPeakPicking {
     @Configurable(name = "totalIntensityVar", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";
     @Configurable(name = "var.second_column_scan_index",
-        value = "second_column_scan_index")
+            value = "second_column_scan_index")
     private String secondScanIndexVar = "second_column_scan_index";
     @Configurable(value = "1")
     private int maxDx = 1;
@@ -71,11 +71,11 @@ public class MaxSortPeakPicking implements IPeakPicking {
     }
 
     private List<ArrayDouble.D1> getIntensities(IFileFragment ff,
-        final String localTotalIntensityVar) {
+            final String localTotalIntensityVar) {
         IVariableFragment ltiv = ff.getChild(localTotalIntensityVar);
         IVariableFragment sciv = ff.getChild(this.secondScanIndexVar);
         ltiv.setIndex(sciv);
-        List<ArrayDouble.D1> intensities = new ArrayList<ArrayDouble.D1>();
+        List<ArrayDouble.D1> intensities = new ArrayList<>();
 
         for (Array a : ltiv.getIndexedArray()) {
             intensities.add((ArrayDouble.D1) a);
@@ -85,19 +85,19 @@ public class MaxSortPeakPicking implements IPeakPicking {
     }
 
     private List<Point> getKMax(final List<ArrayDouble.D1> intensities,
-        List<Point> peaks, int count) {
+            List<Point> peaks, int count) {
         Comparator<Point> c = new Comparator<Point>() {
             @Override
             public int compare(Point o1, Point o2) {
                 return -1
-                    * Double.compare(intensities.get(o1.x).get(o1.y),
-                        intensities.get(o2.x).get(o2.y));
+                        * Double.compare(intensities.get(o1.x).get(o1.y),
+                                intensities.get(o2.x).get(o2.y));
             }
         };
 
         Collections.sort(peaks, c);
 
-        List<Point> finalPeaks = new ArrayList<Point>();
+        List<Point> finalPeaks = new ArrayList<>();
         for (int i = 0; i < Math.min(count, peaks.size()); i++) {
             finalPeaks.add(peaks.get(i));
         }
@@ -118,10 +118,10 @@ public class MaxSortPeakPicking implements IPeakPicking {
         log.info("	k: {}", this.k);
 
         final List<ArrayDouble.D1> intensities = getIntensities(ff,
-            this.totalIntensityVar);
+                this.totalIntensityVar);
         List<Point> peaks = getPeaks(intensities, 0, Integer.MAX_VALUE,
-            this.minVerticalScanIndex, Integer.MAX_VALUE, this.maxDx,
-            this.maxDy);
+                this.minVerticalScanIndex, Integer.MAX_VALUE, this.maxDx,
+                this.maxDy);
         return getKMax(intensities, peaks, this.k);
     }
 
@@ -146,14 +146,14 @@ public class MaxSortPeakPicking implements IPeakPicking {
         dy = Math.max(dy, 8);
         int minX = p.x - dx, maxX = p.x + dx, minY = p.y - dy, maxY = p.y + dy;
         final List<ArrayDouble.D1> intensities = getIntensities(ff,
-            this.totalIntensityRedoVar);
+                this.totalIntensityRedoVar);
         List<Point> peaks = getPeaks(intensities, minX, maxX, minY, maxY, 1, 1);
         return getKMax(intensities, peaks, dx * dy);
     }
 
     private List<Point> getPeaks(List<ArrayDouble.D1> intensities, int minX,
-        int maxX, int minY, int maxY, int maxdx, int maxdy) {
-        final List<Point> peaks = new ArrayList<Point>();
+            int maxX, int minY, int maxY, int maxdx, int maxdy) {
+        final List<Point> peaks = new ArrayList<>();
         int scanLineCount = intensities.size();
         int scansPerModulation = intensities.get(0).getShape()[0];
 
@@ -163,22 +163,22 @@ public class MaxSortPeakPicking implements IPeakPicking {
             if (x < intensities.size() && x >= 0) {
 
                 for (int y = maxdy + minY; y <= Math.min(scansPerModulation,
-                    maxY)
-                    - maxdy; y++) {
+                        maxY)
+                        - maxdy; y++) {
                     if (y < intensities.get(x).getShape()[0] && y >= 0) {
                         currentHeight = intensities.get(x).get(y);
                         boolean max = true;
                         for (int i = -maxdx; i <= maxdx; i++) {
                             for (int j = -Math.min(y, maxdy); j <= Math.min(
-                                scansPerModulation - y, maxdy); j++) {
+                                    scansPerModulation - y, maxdy); j++) {
                                 if (x + i > 0
-                                    && x + i < intensities.size()
-                                    && y + j > 0
-                                    && y + j < intensities.get(x + i).
-                                    getShape()[0]) {
+                                        && x + i < intensities.size()
+                                        && y + j > 0
+                                        && y + j < intensities.get(x + i).
+                                        getShape()[0]) {
                                     if ((i != 0) || (j != 0)) {
                                         nHeight = (intensities.get(x + i)).get(
-                                            y + j);
+                                                y + j);
                                         if (currentHeight < nHeight) {
                                             max = false;
                                             break;

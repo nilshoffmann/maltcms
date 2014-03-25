@@ -82,7 +82,7 @@ public class FirstDerivativeFilter extends AArrayFilter {
             cnt++;
         }
         der.setDouble(der.getIndex().set(0),
-            arr.getDouble(arr.getIndex().set(1)));// set value of first element to that of the
+                arr.getDouble(arr.getIndex().set(1)));// set value of first element to that of the
         // second element
         return der;
     }

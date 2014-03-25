@@ -75,32 +75,32 @@ public class Visualization2D {
      * @return
      */
     public BufferedImage createImage(List<Array> scanlinesi,
-        List<Array> scanlinesj, final List<Point> horizontal,
-        final List<Point> vertical) {
+            List<Array> scanlinesj, final List<Point> horizontal,
+            final List<Point> vertical) {
 
-        Tuple2D<List<Array>, List<Array>> scanlines = new Tuple2D<List<Array>, List<Array>>(
-            scanlinesi, scanlinesj);
+        Tuple2D<List<Array>, List<Array>> scanlines = new Tuple2D<>(
+                scanlinesi, scanlinesj);
 
         if (horizontal != null) {
             scanlines = createNewScanlines(scanlines.getFirst(), scanlines.
-                getSecond(), horizontal, this.holdHorizontalI,
-                this.holdHorizontalJ);
+                    getSecond(), horizontal, this.holdHorizontalI,
+                    this.holdHorizontalJ);
         }
 
         if (vertical != null) {
             scanlines = createNewScanlines(ArrayTools2.transpose(scanlines.
-                getFirst()), ArrayTools2.transpose(scanlines.getSecond()),
-                vertical, this.holdVerticalI, this.holdVerticalJ);
-            scanlines = new Tuple2D<List<Array>, List<Array>>(ArrayTools2.
-                transpose(scanlines.getFirst()),
-                ArrayTools2.transpose(scanlines.getSecond()));
+                    getFirst()), ArrayTools2.transpose(scanlines.getSecond()),
+                    vertical, this.holdVerticalI, this.holdVerticalJ);
+            scanlines = new Tuple2D<>(ArrayTools2.
+                    transpose(scanlines.getFirst()),
+                    ArrayTools2.transpose(scanlines.getSecond()));
         }
 
         final Tuple2D<double[], Tuple2D<double[], double[]>> sb = getSampleAndBreakpointTable(
-            scanlinesi, scanlinesj);
+                scanlinesi, scanlinesj);
 
         return ci(scanlines.getFirst(), scanlines.getSecond(), sb.getFirst(),
-            sb.getSecond().getFirst(), sb.getSecond().getSecond());
+                sb.getSecond().getFirst(), sb.getSecond().getSecond());
     }
 
     /**
@@ -113,13 +113,13 @@ public class Visualization2D {
      * @return
      */
     public Tuple2D<List<Array>, List<Array>> createNewScanlines(
-        List<Array> scanlinesi, List<Array> scanlinesj,
-        List<Point> warpPath, final boolean holdi, final boolean holdj) {
+            List<Array> scanlinesi, List<Array> scanlinesj,
+            List<Point> warpPath, final boolean holdi, final boolean holdj) {
 
         this.currentrasterline = -1;
 
-        final List<Tuple2D<Array, Array>> outputintensities = new ArrayList<Tuple2D<Array, Array>>();
-        final List<Tuple2D<Integer, Integer>> outputintensitiescounter = new ArrayList<Tuple2D<Integer, Integer>>();
+        final List<Tuple2D<Array, Array>> outputintensities = new ArrayList<>();
+        final List<Tuple2D<Integer, Integer>> outputintensitiescounter = new ArrayList<>();
 
         // log.info("Conserve left chromatogram axis: {}", this.holdi);
         // log.info("Conserve top chromatogram axis: {}", this.holdj);
@@ -134,44 +134,44 @@ public class Visualization2D {
 
             if (oldi != scanindexi && oldj != scanindexj) {
                 // new pixel line
-                outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
-                    scanlinej));
-                outputintensitiescounter.add(new Tuple2D<Integer, Integer>(1, 1));
+                outputintensities.add(new Tuple2D<>(scanlinei,
+                        scanlinej));
+                outputintensitiescounter.add(new Tuple2D<>(1, 1));
                 this.currentrasterline++;
             } else if (oldi != scanindexi && oldj == scanindexj) {
                 if (holdj) {
                     // adding pixelline to current sum
                     int c = outputintensitiescounter.get(this.currentrasterline).
-                        getFirst();
+                            getFirst();
                     outputintensitiescounter.get(this.currentrasterline).
-                        setFirst(++c);
+                            setFirst(++c);
                     final Tuple2D<Array, Array> tmp = outputintensities.get(
-                        this.currentrasterline);
+                            this.currentrasterline);
                     tmp.setFirst(ArrayTools.sum(tmp.getFirst(), scanlinei));
                 } else {
                     // adding pixelline
-                    outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
-                        scanlinej));
-                    outputintensitiescounter.add(new Tuple2D<Integer, Integer>(
-                        1, 1));
+                    outputintensities.add(new Tuple2D<>(scanlinei,
+                            scanlinej));
+                    outputintensitiescounter.add(new Tuple2D<>(
+                            1, 1));
                     this.currentrasterline++;
                 }
             } else if (oldi == scanindexi && oldj != scanindexj) {
                 if (holdi) {
                     // add pixelline to current sum
                     int c = outputintensitiescounter.get(this.currentrasterline).
-                        getSecond();
+                            getSecond();
                     outputintensitiescounter.get(this.currentrasterline).
-                        setSecond(++c);
+                            setSecond(++c);
                     final Tuple2D<Array, Array> tmp = outputintensities.get(
-                        this.currentrasterline);
+                            this.currentrasterline);
                     tmp.setSecond(ArrayTools.sum(tmp.getSecond(), scanlinej));
                 } else {
                     // adding pixelline
-                    outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
-                        scanlinej));
-                    outputintensitiescounter.add(new Tuple2D<Integer, Integer>(
-                        1, 1));
+                    outputintensities.add(new Tuple2D<>(scanlinei,
+                            scanlinej));
+                    outputintensitiescounter.add(new Tuple2D<>(
+                            1, 1));
                     this.currentrasterline++;
                 }
             } else {
@@ -185,21 +185,21 @@ public class Visualization2D {
     }
 
     private Tuple2D<List<Array>, List<Array>> convertToScanlines(
-        List<Tuple2D<Array, Array>> outputintensities,
-        List<Tuple2D<Integer, Integer>> outputintensitiescounter) {
+            List<Tuple2D<Array, Array>> outputintensities,
+            List<Tuple2D<Integer, Integer>> outputintensitiescounter) {
 
-        final List<Array> scanlinesi = new ArrayList<Array>();
-        final List<Array> scanlinesj = new ArrayList<Array>();
+        final List<Array> scanlinesi = new ArrayList<>();
+        final List<Array> scanlinesj = new ArrayList<>();
 
         for (int i = 0; i < outputintensities.size(); i++) {
             scanlinesi.add(ArrayTools.mult(outputintensities.get(i).getFirst(),
-                1.0d / outputintensitiescounter.get(i).getFirst()));
+                    1.0d / outputintensitiescounter.get(i).getFirst()));
             scanlinesj.add(ArrayTools.mult(
-                outputintensities.get(i).getSecond(),
-                1.0d / outputintensitiescounter.get(i).getSecond()));
+                    outputintensities.get(i).getSecond(),
+                    1.0d / outputintensitiescounter.get(i).getSecond()));
         }
 
-        return new Tuple2D<List<Array>, List<Array>>(scanlinesi, scanlinesj);
+        return new Tuple2D<>(scanlinesi, scanlinesj);
     }
 
     /**
@@ -212,8 +212,8 @@ public class Visualization2D {
      * @return
      */
     protected BufferedImage ci(final List<Array> scanlinesi,
-        final List<Array> scanlinesj, final double[] samples,
-        final double[] breakpointsi, final double[] breakpointsj) {
+            final List<Array> scanlinesj, final double[] samples,
+            final double[] breakpointsi, final double[] breakpointsj) {
 
         if (scanlinesi.size() != scanlinesj.size()) {
             System.out.println("ERROR!!! scanlines nicht gleichlang");
@@ -223,7 +223,7 @@ public class Visualization2D {
         final int imageheight = scanlinesi.get(0).getShape()[0];
         final int imagewidth = scanlinesi.size();
         final BufferedImage img = new BufferedImage(imagewidth, imageheight,
-            BufferedImage.TYPE_INT_RGB);
+                BufferedImage.TYPE_INT_RGB);
         final WritableRaster raster = img.getRaster();
 
         IndexIterator iter1, iter2;
@@ -241,9 +241,9 @@ public class Visualization2D {
                 intensityj = iter2.getDoubleNext();
                 if (this.normalize) {
                     rgbvalueEqual = getRasterColor(ImageTools.getSample(
-                        samples, breakpointsi, intensityi), 1.0d,
-                        ImageTools.getSample(samples, breakpointsj,
-                            intensityj), 1.0d);
+                            samples, breakpointsi, intensityi), 1.0d,
+                            ImageTools.getSample(samples, breakpointsj,
+                                    intensityj), 1.0d);
                 } else if (!this.normalize && this.binSize == 2) {
                     if (intensityi > 0.0d) {
                         intensityi = 1.0d;
@@ -252,19 +252,19 @@ public class Visualization2D {
                         intensityj = 1.0d;
                     }
                     rgbvalueEqual = getRasterColor(intensityi, 1.0d,
-                        intensityj, 1.0d);
+                            intensityj, 1.0d);
                 } else {
                     rgbvalueEqual = getRasterColor(ImageTools.getSample(
-                        samples, breakpointsi, intensityi), 1.0d,
-                        ImageTools.getSample(samples, breakpointsj,
-                            intensityj), 1.0d);
+                            samples, breakpointsi, intensityi), 1.0d,
+                            ImageTools.getSample(samples, breakpointsj,
+                                    intensityj), 1.0d);
                 }
 
                 if ((rasterline < imagewidth)
-                    && ((imageheight - c - 1) < imageheight)
-                    && (imageheight - c - 1) >= 0) {
+                        && ((imageheight - c - 1) < imageheight)
+                        && (imageheight - c - 1) >= 0) {
                     raster.setPixel(rasterline, imageheight - c - 1,
-                        rgbvalueEqual);
+                            rgbvalueEqual);
                 }
 
                 c++;
@@ -278,14 +278,14 @@ public class Visualization2D {
     /**
      * Will create an array int[3] containing the rgb values for the raster.
      *
-     * @param ci    current intensity of the first series
+     * @param ci current intensity of the first series
      * @param maxci maximum intensity of the first series
-     * @param cj    current intensity of the second series
+     * @param cj current intensity of the second series
      * @param maxcj maximum intensity of the second series
      * @return rgb color array
      */
     protected int[] getRasterColor(final double ci, final double maxci,
-        final double cj, final double maxcj) {
+            final double cj, final double maxcj) {
         final int vi = (int) (ci * 255.0d / maxci);
         final int vj = (int) (cj * 255.0d / maxcj);
 
@@ -305,12 +305,12 @@ public class Visualization2D {
      * @return {smaple table,{breakpoints i, breakpoints j}}
      */
     protected Tuple2D<double[], Tuple2D<double[], double[]>> getSampleAndBreakpointTable(
-        final List<Array> scanlinesi, final List<Array> scanlinesj) {
+            final List<Array> scanlinesi, final List<Array> scanlinesj) {
         final double[] samples = ImageTools.createSampleTable(this.binSize);
         final Array scanlinesiC = cross.datastructures.tools.ArrayTools.glue(
-            scanlinesi);
+                scanlinesi);
         final Array scanlinesjC = cross.datastructures.tools.ArrayTools.glue(
-            scanlinesj);
+                scanlinesj);
 
         final ArrayStatsScanner ass = new ArrayStatsScanner();
         final StatsMap[] sm = ass.apply(new Array[]{scanlinesiC, scanlinesjC});
@@ -342,11 +342,11 @@ public class Visualization2D {
         }
 
         final double[] breakpointsi = ImageTools.getBreakpoints(scanlinesiC,
-            this.binSize, Double.NEGATIVE_INFINITY);
+                this.binSize, Double.NEGATIVE_INFINITY);
         final double[] breakpointsj = ImageTools.getBreakpoints(scanlinesjC,
-            this.binSize, Double.NEGATIVE_INFINITY);
+                this.binSize, Double.NEGATIVE_INFINITY);
 
-        return new Tuple2D<double[], Tuple2D<double[], double[]>>(samples,
-            new Tuple2D<double[], double[]>(breakpointsi, breakpointsj));
+        return new Tuple2D<>(samples,
+                new Tuple2D<>(breakpointsi, breakpointsj));
     }
 }

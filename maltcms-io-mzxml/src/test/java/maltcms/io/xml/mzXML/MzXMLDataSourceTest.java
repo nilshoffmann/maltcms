@@ -102,7 +102,7 @@ public class MzXMLDataSourceTest {
         for (File f : ecpf.getFiles()) {
             Assert.assertEquals(1, getDataSource().canRead(new FileFragment(f)));
             Assert.assertEquals(1, getDataSource().
-                canRead(new ImmutableFileFragment(new FileFragment(f.toURI()))));
+                    canRead(new ImmutableFileFragment(new FileFragment(f.toURI()))));
         }
     }
 
@@ -112,7 +112,7 @@ public class MzXMLDataSourceTest {
     @Test
     public void testReadAll() throws Exception {
         sl.setLogLevel("cross.datastructures.fragments",
-            "DEBUG");
+                "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
         sl.setLogLevel("maltcms.io.xml.mzXML", "DEBUG");
         for (File f : ecpf.getFiles()) {
@@ -120,14 +120,14 @@ public class MzXMLDataSourceTest {
             Assert.assertTrue(l.size() > 0);
             try {
                 List<Array> l2 = getDataSource().
-                    readAll(new ImmutableFileFragment(f));
+                        readAll(new ImmutableFileFragment(f));
                 Assert.assertEquals(l.size(), l2.size());
             } catch (UnsupportedOperationException uoe) {
                 Assert.fail(uoe.getLocalizedMessage());
             }
         }
         sl.setLogLevel("cross.datastructures.fragments",
-            "INFO");
+                "INFO");
         sl.setLogLevel("maltcms.io.andims", "INFO");
         sl.setLogLevel("maltcms.io.xml.mzML", "INFO");
     }
@@ -226,11 +226,11 @@ public class MzXMLDataSourceTest {
         Arrays.sort(fileEnding);
         Collections.sort(supportedFormats);
         Assert.assertEquals(supportedFormats, Arrays.
-            asList(fileEnding));
+                asList(fileEnding));
     }
 
     public List<Dimension> copyDims(Dimension... dim) {
-        List<Dimension> copy = new LinkedList<Dimension>();
+        List<Dimension> copy = new LinkedList<>();
         for (Dimension dimension : dim) {
             copy.add(new Dimension(dimension.getName(), dimension));
         }
@@ -238,7 +238,7 @@ public class MzXMLDataSourceTest {
     }
 
     public List<Attribute> copyAttributes(Attribute... attr) {
-        List<Attribute> copy = new LinkedList<Attribute>();
+        List<Attribute> copy = new LinkedList<>();
         for (Attribute attribute : attr) {
             copy.add(new Attribute(attribute.getName(), attribute));
         }
@@ -262,7 +262,7 @@ public class MzXMLDataSourceTest {
         VariableFragment ivf1 = new VariableFragment(ff, "variable1");
         ivf1.setDimensions(new Dimension[]{dim1, dim2, dim3});
         ivf1.setAttributes(new Attribute("description",
-            "three-dimensional array"));
+                "three-dimensional array"));
         ArrayDouble.D3 arr1 = new ArrayDouble.D3(15, 8, 10);
         ivf1.setArray(arr1);
         usedDimensions.put("variable1", copyDims(dim1, dim2, dim3));
@@ -291,7 +291,7 @@ public class MzXMLDataSourceTest {
         //variable4 - index variable
         VariableFragment ivf4 = new VariableFragment(ff, "variable4");
         ivf4.setDimensions(new Dimension[]{dim5});
-        List<Array> arrays = new ArrayList<Array>();
+        List<Array> arrays = new ArrayList<>();
         ArrayInt.D1 index = new ArrayInt.D1(24);
         int offset = 0;
         for (int i = 0; i < 24; i++) {
@@ -316,7 +316,7 @@ public class MzXMLDataSourceTest {
         VariableFragment ivf6 = new VariableFragment(ff, "variable6");
         ivf6.setDimensions(new Dimension[]{dim6});
         ivf6.setIndex(ivf4);
-        List<Array> arrays2 = new ArrayList<Array>();
+        List<Array> arrays2 = new ArrayList<>();
         for (int i = 0; i < 24; i++) {
             Array a = new ArrayDouble.D1(10);
             arrays2.add(a);
@@ -345,21 +345,21 @@ public class MzXMLDataSourceTest {
     public void testWriteRead() throws IOException {
 //        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
-            "DEBUG");
+                "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
-        List<Attribute> attributes = new LinkedList<Attribute>();
-        List<String> variableNames = new LinkedList<String>();
-        Map<String, String> indexedVariableNames = new HashMap<String, String>();
-        Map<String, List<Dimension>> usedDimensions = new HashMap<String, List<Dimension>>();
-        Map<String, List<Attribute>> variableAttributes = new HashMap<String, List<Attribute>>();
-        List<Dimension> unusedDimensions = new LinkedList<Dimension>();
-        Map<String, List<Array>> variableToArray = new HashMap<String, List<Array>>();
+        List<Attribute> attributes = new LinkedList<>();
+        List<String> variableNames = new LinkedList<>();
+        Map<String, String> indexedVariableNames = new HashMap<>();
+        Map<String, List<Dimension>> usedDimensions = new HashMap<>();
+        Map<String, List<Attribute>> variableAttributes = new HashMap<>();
+        List<Dimension> unusedDimensions = new LinkedList<>();
+        Map<String, List<Array>> variableToArray = new HashMap<>();
 
         File outputFolder = tf.newFolder();
         File testCdf = new File(outputFolder, "testWriteRead.cdf").getAbsoluteFile();
         URI testCdfUri = testCdf.toURI();
         IFileFragment ff = createTestFragment(testCdfUri, variableNames, indexedVariableNames, attributes, variableAttributes,
-            usedDimensions, unusedDimensions, variableToArray);
+                usedDimensions, unusedDimensions, variableToArray);
         Assert.assertEquals(testCdf, new File(ff.getUri()));
         Assert.assertEquals(testCdfUri, ff.getUri());
         boolean b = ff.save();
@@ -368,13 +368,13 @@ public class MzXMLDataSourceTest {
         IVariableFragment variable1 = Factory.getInstance().getDataSourceFactory().getDataSourceFor(ff).readStructure(new ImmutableVariableFragment2(ff, "variable1"));
         Assert.assertNotNull(variable1.getArray());
         testDirectRead(testCdfUri, variableNames, indexedVariableNames, attributes, variableAttributes, usedDimensions, unusedDimensions,
-            variableToArray);
+                variableToArray);
 //        FileFragment.clearFragments();
 //        testIndirectRead(testCdfUri, variableNames, indexedVariableNames, attributes, variableAttributes, usedDimensions, unusedDimensions,
 //                variableToArray);
 //        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
-            "OFF");
+                "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
     }
 
@@ -402,7 +402,7 @@ public class MzXMLDataSourceTest {
         IndexIterator rii1 = b.getIndexIterator();
         log.info("Original shape: {}", Arrays.toString(a.getShape()));
         log.info("Restored shape: {}", Arrays.toString(b.
-            getShape()));
+                getShape()));
         while (ii1.hasNext() && rii1.hasNext()) {
             Assert.assertEquals(ii1.getDoubleNext(), rii1.getDoubleNext());
         }
@@ -410,10 +410,10 @@ public class MzXMLDataSourceTest {
 
     public void testDirectRead(URI testCdf, List<String> variableNames, Map<String, String> indexedVariableNames, List<Attribute> attributes, Map<String, List<Attribute>> variableAttributes, Map<String, List<Dimension>> usedDimensions, List<Dimension> unusedDimensions, Map<String, List<Array>> variableToArray) throws ResourceNotAvailableException {
         System.out.
-            println("###################################################");
+                println("###################################################");
         System.out.println("# Testing direct read on file " + testCdf);
         sl.setLogLevel("cross.datastructures.fragments",
-            "DEBUG");
+                "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
         //read in the created file
         IFileFragment readFragment = new FileFragment(testCdf);
@@ -427,7 +427,7 @@ public class MzXMLDataSourceTest {
             System.out.println("Variable: " + v.toString());
             System.out.println("\tDataType: " + v.getDataType());
             System.out.println("\tDimensions: " + Arrays.toString(v.
-                getDimensions()));
+                    getDimensions()));
         }
         System.out.println("Global attributes: ");
         for (Attribute attribute : readFragment.getAttributes()) {
@@ -469,17 +469,17 @@ public class MzXMLDataSourceTest {
 
         System.out.println("###################################################");
         sl.setLogLevel("cross.datastructures.fragments",
-            "OFF");
+                "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
         //test direct read
     }
 
     public void testIndirectRead(URI testCdf, List<String> variableNames, Map<String, String> indexedVariableNames, List<Attribute> attributes, Map<String, List<Attribute>> variableAttributes, Map<String, List<Dimension>> usedDimensions, List<Dimension> unusedDimensions, Map<String, List<Array>> variableToArray) throws ResourceNotAvailableException {
         System.out.
-            println("###################################################");
+                println("###################################################");
         System.out.println("# Testing indirect read on file " + testCdf);
         sl.setLogLevel("cross.datastructures.fragments",
-            "DEBUG");
+                "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
         File outputFolder;
         try {
@@ -530,13 +530,13 @@ public class MzXMLDataSourceTest {
                 }
             }
             System.out.println(
-                "###################################################");
+                    "###################################################");
         } catch (IOException ex) {
             log.error("Caught exception", ex);
             Assert.fail(ex.getLocalizedMessage());
         }
         sl.setLogLevel("cross.datastructures.fragments",
-            "OFF");
+                "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
         //test indirect read
     }
@@ -548,9 +548,9 @@ public class MzXMLDataSourceTest {
     public void testMultiChainedReadWrite() {
 //        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
-            "DEBUG");
+                "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
-        List<IFileFragment> sources = new LinkedList<IFileFragment>();
+        List<IFileFragment> sources = new LinkedList<>();
         for (File f : ecpf.getFiles()) {
             IFileFragment ff = new FileFragment(f);
             sources.add(ff);
@@ -570,11 +570,11 @@ public class MzXMLDataSourceTest {
                     work.addSourceFile(fragments[i]);
                     //create a shadowing variable
                     IVariableFragment shadow = new VariableFragment(work,
-                        "shadow-" + i);
+                            "shadow-" + i);
                     shadow.setArray(Array.factory(new int[]{j}));
                     //create unique variable
                     IVariableFragment unique = new VariableFragment(work,
-                        "unique-" + j);
+                            "unique-" + j);
                     unique.setArray(Array.factory(new int[]{i, j}));
                     System.out.println(work.toString());
                     work.save();
@@ -599,14 +599,14 @@ public class MzXMLDataSourceTest {
                     System.out.println("unique-" + j + " = " + a);
                 }
             }
-        } catch (Exception ex) {
+        } catch (IOException | IllegalStateException | ResourceNotAvailableException ex) {
             Logger.getLogger(MzXMLDataSourceTest.class.getName()).
-                log(Level.SEVERE, null, ex);
+                    log(Level.SEVERE, null, ex);
             Assert.fail(ex.getLocalizedMessage());
         }
 //        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
-            "OFF");
+                "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
     }
 
@@ -662,13 +662,13 @@ public class MzXMLDataSourceTest {
             File folder = tf.newFolder();
             IFileFragment f = new FileFragment(new File(folder, "testFrag.cdf"));
             f.addChild("variable1").setIndex(f.addChild("indexVar1"));
-            List<Array> l1 = new ArrayList<Array>();
+            List<Array> l1 = new ArrayList<>();
             l1.add(Array.factory(new double[]{1.2, 1.5}));
             l1.add(Array.factory(new double[]{2.2, 2.6, 2.87}));
             l1.add(Array.factory(new double[]{3.67}));
             f.getChild("variable1").setIndexedArray(l1);
             f.addChild("variable2").setIndex(f.getChild("indexVar1"));
-            List<Array> l2 = new ArrayList<Array>();
+            List<Array> l2 = new ArrayList<>();
             l2.add(Array.factory(new int[]{1, 1}));
             l2.add(Array.factory(new int[]{2, 2, 2}));
             l2.add(Array.factory(new int[]{3}));

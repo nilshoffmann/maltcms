@@ -8,12 +8,12 @@
         </p>
         Maltcms 1.2.0 has seen a number of changes:
         <ul>
-			<li>Reworking of the TICPeakFinder for improved baseline and SNR estimation leading to better and more consistent integration results.</li>
-			<li>New Savitzky-Golay filter for local polynomial smoothing.</li>
-			<li>ANDIChromImporter now remaps to ANDI-MS for easier compatibility with existing commands.</li>
-			<li>Added peak normalization and export facilities for aligned peaks and their areas.</li>
-			<li>Parallelized PeakCliqueAlignment similarity calculations.</li>
-			<li>Reorganized CWT-based peak finding classes.</li>
+            <li>Reworking of the TICPeakFinder for improved baseline and SNR estimation leading to better and more consistent integration results.</li>
+            <li>New Savitzky-Golay filter for local polynomial smoothing.</li>
+            <li>ANDIChromImporter now remaps to ANDI-MS for easier compatibility with existing commands.</li>
+            <li>Added peak normalization and export facilities for aligned peaks and their areas.</li>
+            <li>Parallelized PeakCliqueAlignment similarity calculations.</li>
+            <li>Reorganized CWT-based peak finding classes.</li>
         </ul>    
         Known Issues:
         <ul>

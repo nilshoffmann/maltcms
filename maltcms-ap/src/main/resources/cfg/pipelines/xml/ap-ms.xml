@@ -48,7 +48,7 @@ for details.
         <property name="checkCommandDependencies" value="false"/>
         <property name="commands">
             <list>
-<!--                <ref bean="andiChromImporter" />-->
+                <!--                <ref bean="andiChromImporter" />-->
                 <ref bean="scanExtractor" />
                 <ref bean="denseArrayProducer" />
                 <ref bean="ticPeakFinder" />

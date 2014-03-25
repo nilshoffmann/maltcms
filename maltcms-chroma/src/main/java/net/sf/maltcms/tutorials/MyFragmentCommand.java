@@ -68,7 +68,7 @@ public class MyFragmentCommand extends AFragmentCommand {
         initProgress(in.size());
         //create a savitzky golay filter (local polynomial smoothing) for 2*10 +1 = 21 points
         SavitzkyGolayFilter sgf = new SavitzkyGolayFilter(10);
-        filter = new LinkedList<AArrayFilter>();
+        filter = new LinkedList<>();
         filter.add(sgf);
         TupleND<IFileFragment> out = createWorkFragments(in);
         for (int i = 0; i < in.size(); i++) {

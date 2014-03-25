@@ -51,7 +51,7 @@ public class DtwTimePenalizedPairwiseSimilarity implements IDtwSimilarityFunctio
 
     @Override
     public double apply(int i1, int i2, double time1, double time2, Array t1,
-        Array t2) {
+            Array t2) {
         final double rtScore = retentionTimeSimilarity.apply(time1, time2);
         if (rtScore == Double.NEGATIVE_INFINITY || rtScore == Double.NaN) {
             return Double.NEGATIVE_INFINITY;

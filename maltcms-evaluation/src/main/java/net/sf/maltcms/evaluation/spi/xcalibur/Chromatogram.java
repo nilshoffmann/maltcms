@@ -44,6 +44,7 @@ public class Chromatogram {
         return name;
     }
 
+    @Override
     public String toString() {
         return getName();
     }

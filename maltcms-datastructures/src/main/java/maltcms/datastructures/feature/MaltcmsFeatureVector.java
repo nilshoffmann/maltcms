@@ -63,7 +63,7 @@ public class MaltcmsFeatureVector implements IFeatureVector {
             Array a = this.iff.getChild(name).getArray();
             try {
                 return a.section(new int[]{this.index},
-                    new int[]{this.index});
+                        new int[]{this.index});
             } catch (InvalidRangeException ex) {
                 System.err.println(ex.getLocalizedMessage());
             }
@@ -73,7 +73,7 @@ public class MaltcmsFeatureVector implements IFeatureVector {
 
     @Override
     public List<String> getFeatureNames() {
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<>();
         for (IVariableFragment ivf : this.iff) {
             names.add(ivf.getName());
         }

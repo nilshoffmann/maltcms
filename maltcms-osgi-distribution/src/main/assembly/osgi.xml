@@ -38,9 +38,9 @@
         <dependencySet>
             <unpack>false</unpack>
             <useTransitiveDependencies>true</useTransitiveDependencies>
-			<includes>
-				<include>*:*:jar</include>
-			</includes>
+            <includes>
+                <include>*:*:jar</include>
+            </includes>
             <outputFileNameMapping>${artifact.artifactId}-${artifact.baseVersion}.${artifact.extension}</outputFileNameMapping>
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>

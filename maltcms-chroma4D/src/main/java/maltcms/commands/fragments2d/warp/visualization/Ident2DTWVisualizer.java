@@ -53,16 +53,16 @@ public class Ident2DTWVisualizer extends Default2DTWVisualizer {
      */
     @Override
     public BufferedImage createImage(final List<Array> scanlinesi,
-        final List<Array> scanlinesj, final Array warpPathi,
-        final Array warpPathj) {
+            final List<Array> scanlinesj, final Array warpPathi,
+            final Array warpPathj) {
 
         final int imageheight = (int) (scanlinesi.get(0).getSize());
 
-        final List<Tuple2D<Array, Array>> outputintensities = new ArrayList<Tuple2D<Array, Array>>();
-        final List<Tuple2D<Integer, Integer>> outputintensitiescounter = new ArrayList<Tuple2D<Integer, Integer>>();
+        final List<Tuple2D<Array, Array>> outputintensities = new ArrayList<>();
+        final List<Tuple2D<Integer, Integer>> outputintensitiescounter = new ArrayList<>();
 
         final Tuple2D<double[], Tuple2D<double[], double[]>> sb = getSampleAndBreakpointTable(
-            scanlinesi, scanlinesj);
+                scanlinesi, scanlinesj);
 
         final ArrayDouble.D1 emptyScanline = new ArrayDouble.D1(imageheight);
         maltcms.tools.ArrayTools.fill(emptyScanline, 0);
@@ -79,14 +79,14 @@ public class Ident2DTWVisualizer extends Default2DTWVisualizer {
             } else {
                 scanlinej = emptyScanline;
             }
-            outputintensities.add(new Tuple2D<Array, Array>(scanlinei,
-                scanlinej));
-            outputintensitiescounter.add(new Tuple2D<Integer, Integer>(1, 1));
+            outputintensities.add(new Tuple2D<>(scanlinei,
+                    scanlinej));
+            outputintensitiescounter.add(new Tuple2D<>(1, 1));
             this.currentrasterline++;
         }
 
         return ci(outputintensities, outputintensitiescounter, imageheight, sb.
-            getFirst(), sb.getSecond().getFirst(),
-            sb.getSecond().getSecond());
+                getFirst(), sb.getSecond().getFirst(),
+                sb.getSecond().getSecond());
     }
 }

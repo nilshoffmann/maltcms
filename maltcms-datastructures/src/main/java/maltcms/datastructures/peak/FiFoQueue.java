@@ -42,13 +42,13 @@ import java.util.Queue;
  */
 public class FiFoQueue<E> implements Queue<E> {
 
-    private ArrayList<E> queue = new ArrayList<E>();
+    private ArrayList<E> queue = new ArrayList<>();
 
     /**
      * Default constructor. Initialize the queue.
      */
     public FiFoQueue() {
-        this.queue = new ArrayList<E>();
+        this.queue = new ArrayList<>();
     }
 
     /**
@@ -72,7 +72,7 @@ public class FiFoQueue<E> implements Queue<E> {
      */
     @Override
     public void clear() {
-        this.queue = new ArrayList<E>();
+        this.queue = new ArrayList<>();
     }
 
     /**

@@ -41,13 +41,13 @@ import ucar.ma2.ArrayByte;
 public interface IRecurrence extends IConfigurable {
 
     public abstract double eval(int row, int column,
-        IArrayD2Double cumDistMatrix, double dij, ArrayByte.D2 predecessors);
+            IArrayD2Double cumDistMatrix, double dij, ArrayByte.D2 predecessors);
 
     public abstract double eval(int row, int column,
-        IArrayD2Double previousRow, IArrayD2Double currentRow, double dij);
+            IArrayD2Double previousRow, IArrayD2Double currentRow, double dij);
 
     public abstract void set(double compression_weight,
-        double expansion_weight, double diagonal_weight);
+            double expansion_weight, double diagonal_weight);
 
     public abstract void setMinimizing(boolean b);
 

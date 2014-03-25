@@ -10,10 +10,10 @@
     <name>Maltcms Filters</name>
     <url>http://maltcms.sourceforge.net</url>
     <dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>cross-main</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>cross-main</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math</artifactId>

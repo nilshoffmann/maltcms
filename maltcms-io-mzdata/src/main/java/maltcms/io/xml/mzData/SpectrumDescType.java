@@ -43,8 +43,8 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for spectrumDescType complex type.
  *
  * <p>
- * The following schema fragment specifies the expected content contained
- * within this class.
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  *
  * <pre>
  * &lt;complexType name=&quot;spectrumDescType&quot;&gt;
@@ -83,8 +83,8 @@ public class SpectrumDescType implements Serializable {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content
-     * contained within this class.
+     * The following schema fragment specifies the expected content contained
+     * within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -143,7 +143,7 @@ public class SpectrumDescType implements Serializable {
          */
         public List<PrecursorType> getPrecursor() {
             if (this.precursor == null) {
-                this.precursor = new ArrayList<PrecursorType>();
+                this.precursor = new ArrayList<>();
             }
             return this.precursor;
         }
@@ -186,7 +186,7 @@ public class SpectrumDescType implements Serializable {
      */
     public List<String> getComments() {
         if (this.comments == null) {
-            this.comments = new ArrayList<String>();
+            this.comments = new ArrayList<>();
         }
         return this.comments;
     }

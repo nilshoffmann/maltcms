@@ -46,8 +46,8 @@ public interface IScan extends IFeatureVector {
     public Array getIntensities();
 
     /**
-     * Returns the m/z values of this mass spectrum. Individual m/z values
-     * are usually stored as double or float values.
+     * Returns the m/z values of this mass spectrum. Individual m/z values are
+     * usually stored as double or float values.
      *
      * @return the m/z values
      */
@@ -61,46 +61,48 @@ public interface IScan extends IFeatureVector {
     public double getScanAcquisitionTime();
 
     /**
-     * Returns the scan index of this mass spectrum. Must be greater or equal to zero.
+     * Returns the scan index of this mass spectrum. Must be greater or equal to
+     * zero.
      *
      * @return the scan index
      */
     public int getScanIndex();
 
     /**
-     * Returns the total intensity (sum) over all measured m/z and intensity pairs.
+     * Returns the total intensity (sum) over all measured m/z and intensity
+     * pairs.
      *
      * @return the total intensity
      */
     public double getTotalIntensity();
 
     /**
-     * Returns the ms fragmentation level of this scan. Must be greater or
-     * equal to 1.
+     * Returns the ms fragmentation level of this scan. Must be greater or equal
+     * to 1.
      *
      * @return the mass spectrum's ion fragmentation level
      */
     public short getMsLevel();
 
     /**
-     * Returns the integer precursor charge. Double.NaN indicates that
-     * no precursor charge has been recorded for this scan.
+     * Returns the integer precursor charge. Double.NaN indicates that no
+     * precursor charge has been recorded for this scan.
      *
      * @return the precursor charge
      */
     public double getPrecursorCharge();
 
     /**
-     * Returns the precursor m/z. Double.NaN indicates that
-     * no precursor m/z has been recorded for this scan.
+     * Returns the precursor m/z. Double.NaN indicates that no precursor m/z has
+     * been recorded for this scan.
      *
      * @return the precursor m/z
      */
     public double getPrecursorMz();
 
     /**
-     * Returns the precursor intensity. Double.NaN indicates that
-     * no precursor intensity has been recorded for this scan.
+     * Returns the precursor intensity. Double.NaN indicates that no precursor
+     * intensity has been recorded for this scan.
      *
      * @return the precursor intensity
      */

@@ -61,7 +61,7 @@ public abstract class AMetabolitePredicate extends Predicate<IMetabolite> implem
 
     public TreeSet<Tuple2D<Double, IMetabolite>> getScoreMap() {
         if (scoreMap == null) {
-            scoreMap = new TreeSet<Tuple2D<Double, IMetabolite>>(getComparator());
+            scoreMap = new TreeSet<>(getComparator());
         }
         return scoreMap;
     }
@@ -70,7 +70,7 @@ public abstract class AMetabolitePredicate extends Predicate<IMetabolite> implem
     private ICacheDelegate<IMetabolite, TreeMap<Double, Integer>> cache = CacheFactory.createDefaultCache(getClass().getName());
 
     public Collection<Tuple2D<Double, IMetabolite>> getMetabolites() {
-        ArrayList<Tuple2D<Double, IMetabolite>> results = new ArrayList<Tuple2D<Double, IMetabolite>>();
+        ArrayList<Tuple2D<Double, IMetabolite>> results = new ArrayList<>();
         System.out.println("Adding " + getScoreMap().size() + " hits!");
         Iterator<Tuple2D<Double, IMetabolite>> iter = getScoreMap().iterator();
         while (iter.hasNext()) {
@@ -120,7 +120,7 @@ public abstract class AMetabolitePredicate extends Predicate<IMetabolite> implem
 
     public void setScan(IScan scan) {
         this.scan = scan;
-        spectrum = new TreeMap<Double, Integer>();
+        spectrum = new TreeMap<>();
         for (int i = 0; i < scan.getMasses().getShape()[0]; i++) {
             spectrum.put(scan.getMasses().getDouble(i), scan.getIntensities().getInt(i));
         }

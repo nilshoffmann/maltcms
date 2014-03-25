@@ -114,7 +114,7 @@ public class ColorRampReader {
         final CSVReader csvr = new CSVReader();
         csvr.setFirstLineHeaders(false);
         final Tuple2D<Vector<Vector<String>>, Vector<String>> t = csvr
-            .read(url);
+                .read(url);
         if (t.getFirst().isEmpty()) {
             log.warn("Could not retrieve color ramp, using default!");
             return ColorRampReader.defaultRamp;

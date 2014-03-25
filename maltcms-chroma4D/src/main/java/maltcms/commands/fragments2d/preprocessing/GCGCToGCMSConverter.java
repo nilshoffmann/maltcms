@@ -81,7 +81,7 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
 
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-        TupleND<IFileFragment> ret = new TupleND<IFileFragment>();
+        TupleND<IFileFragment> ret = new TupleND<>();
         for (IFileFragment ff : t) {
             IFileFragment retF = new FileFragment(getWorkflow().getOutputDirectory(this), ff.getName());
 //            retF.addSourceFile(ff);
@@ -89,7 +89,7 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
             Chromatogram2D c2 = new Chromatogram2D(ff);
             ArrayInt.D1 tic = new ArrayInt.D1(c2.getNumberOfModulations());
             ArrayDouble.D1 sat = new ArrayDouble.D1(c2.getNumberOfModulations());
-            List<Tuple2D<Array, Array>> milist = new ArrayList<Tuple2D<Array, Array>>(c2.getNumberOfModulations());
+            List<Tuple2D<Array, Array>> milist = new ArrayList<>(c2.getNumberOfModulations());
             ArrayInt.D1 scanIndex = new ArrayInt.D1(c2.getNumberOfModulations());
             int offset = 0;
             System.out.println("Loading scans");
@@ -98,7 +98,7 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
             for (int k = 0; k < c2.getNumberOfModulations(); k++) {
                 System.out.println("Modulation: " + (k + 1) + " of " + c2.getNumberOfModulations());
                 int ticv = 0;
-                LinkedHashMap<Double, Integer> modulationMS = new LinkedHashMap<Double, Integer>(1000);
+                LinkedHashMap<Double, Integer> modulationMS = new LinkedHashMap<>(1000);
                 double modtime = osat.getDouble(k * c2.getNumberOfScansPerModulation());
                 for (int i = 0; i < c2.getNumberOfScansPerModulation(); i++) {
                     Tuple2D<Array, Array> ms = c2.getScanLineImpl().getSparseMassSpectrum(k, i);
@@ -146,7 +146,7 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
                 }
                 offset += i;
                 tic.set(k, ticv);
-                milist.add(new Tuple2D<Array, Array>(massValues, intenValues));
+                milist.add(new Tuple2D<>(massValues, intenValues));
             }
 
             Array massVals = new ArrayDouble.D1(offset);

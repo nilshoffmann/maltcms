@@ -63,14 +63,14 @@ public class DefaultFeatureVector implements IFeatureVector {
 
     private List<Array> getDataList() {
         if (this.datalist == null) {
-            this.datalist = new ArrayList<Array>(1);
+            this.datalist = new ArrayList<>(1);
         }
         return this.datalist;
     }
 
     private Map<String, Integer> getFeatureToIndex() {
         if (this.featureToIndex == null) {
-            this.featureToIndex = new HashMap<String, Integer>();
+            this.featureToIndex = new HashMap<>();
         }
         return this.featureToIndex;
     }
@@ -86,7 +86,7 @@ public class DefaultFeatureVector implements IFeatureVector {
 
     private int getFeatureIndex(String name) {
         if (featureToIndex.containsKey(name)) {
-            return getFeatureToIndex().get(name).intValue();
+            return getFeatureToIndex().get(name);
         }
         return -1;
     }
@@ -103,7 +103,7 @@ public class DefaultFeatureVector implements IFeatureVector {
 
     @Override
     public List<String> getFeatureNames() {
-        final List<String> l = new ArrayList<String>();
+        final List<String> l = new ArrayList<>();
         l.addAll(getFeatureToIndex().keySet());
         Collections.sort(l);
         return l;

@@ -64,7 +64,7 @@ public class NormalizationFilter extends AArrayFilter {
     }
 
     public NormalizationFilter(final String normalization1, final boolean log1,
-        final boolean global) {
+            final boolean global) {
         this();
         this.normalization = normalization1;
         this.log = log1;
@@ -75,7 +75,7 @@ public class NormalizationFilter extends AArrayFilter {
     public Array[] apply(final Array[] a) {
         final Array[] b = super.apply(a);
         final ArrayStatsScanner ass = Factory.getInstance().getObjectFactory().
-            instantiate(ArrayStatsScanner.class);
+                instantiate(ArrayStatsScanner.class);
         if (this.normalizeGlobal) {
             applyGlobalNormalization(b, ass, this.log);
         } else {
@@ -87,7 +87,7 @@ public class NormalizationFilter extends AArrayFilter {
     }
 
     protected void applyGlobalNormalization(final Array[] a,
-        final ArrayStatsScanner ass, final boolean log1) {
+            final ArrayStatsScanner ass, final boolean log1) {
         ass.apply(a);
         final StatsMap sm = ass.getGlobalStatsMap();
         EvalTools.notNull(sm, "Global StatsMap is null", this);
@@ -97,7 +97,7 @@ public class NormalizationFilter extends AArrayFilter {
     }
 
     protected void applyNormalization(final Array arr,
-        final ArrayStatsScanner ass, final boolean log1) {
+            final ArrayStatsScanner ass, final boolean log1) {
         final StatsMap sm = ass.apply(new Array[]{arr})[0];
         normalize(arr, sm, this.normalization, this.log);
     }
@@ -106,9 +106,9 @@ public class NormalizationFilter extends AArrayFilter {
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.normalization = cfg.getString(this.getClass().getName()
-            + ".normalization_command", "Max-Min");
+                + ".normalization_command", "Max-Min");
         this.normalizeGlobal = cfg.getBoolean(this.getClass().getName()
-            + ".normalize_global", false);
+                + ".normalize_global", false);
         this.log = cfg.getBoolean(this.getClass().getName() + ".log", false);
     }
 
@@ -137,17 +137,17 @@ public class NormalizationFilter extends AArrayFilter {
     }
 
     public static Array normalize(final Array a, final StatsMap sm,
-        final String normalization, final boolean log1) {
+            final String normalization, final boolean log1) {
         final MultiplicationFilter mf = new MultiplicationFilter(
-            1.0d / (log1 ? (Math.log(1.0d + EvalTools.eval(normalization,
-                    sm))) : (EvalTools.eval(normalization, sm))));
+                1.0d / (log1 ? (Math.log(1.0d + EvalTools.eval(normalization,
+                                sm))) : (EvalTools.eval(normalization, sm))));
         return mf.apply(new Array[]{a})[0];
     }
 
     public static List<Array> normalize(final List<Array> al,
-        final String normalization) {
+            final String normalization) {
         final NormalizationFilter nf = Factory.getInstance().getObjectFactory().
-            instantiate(NormalizationFilter.class);
+                instantiate(NormalizationFilter.class);
         nf.setNormalization(normalization);
         nf.setNormalizeGlobal(false);
         nf.setLog(false);
@@ -156,7 +156,7 @@ public class NormalizationFilter extends AArrayFilter {
 
     public static List<Array> normalizeGlobal(final List<Array> al) {
         final NormalizationFilter nf = Factory.getInstance().getObjectFactory().
-            instantiate(NormalizationFilter.class);
+                instantiate(NormalizationFilter.class);
         nf.setNormalization("Max-Min");
         nf.setNormalizeGlobal(true);
         nf.setLog(false);
@@ -170,8 +170,8 @@ public class NormalizationFilter extends AArrayFilter {
                 mav.normalize();
             } else {
                 LoggerFactory.getLogger(NormalizationFilter.class).error(
-                    "Can not normalize a matrix to unit length, array has rank {}",
-                    a.getRank());
+                        "Can not normalize a matrix to unit length, array has rank {}",
+                        a.getRank());
             }
         }
         return al;

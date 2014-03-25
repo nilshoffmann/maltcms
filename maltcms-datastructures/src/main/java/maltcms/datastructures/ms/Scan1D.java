@@ -71,7 +71,7 @@ public class Scan1D implements IScan1D, Externalizable {
 //    private ArrayDouble.D0 precursorIntensity = null;
 
     public Scan1D(final Array masses1, final Array intensities1,
-        final int scanNumber1, final double scanAcquisitionTime1) {
+            final int scanNumber1, final double scanAcquisitionTime1) {
         //enforce equal lengths for masses and intensities
         EvalTools.eqI(masses1.getShape()[0], intensities1.getShape()[0], Scan1D.class);
         this.masses = masses1;
@@ -87,14 +87,14 @@ public class Scan1D implements IScan1D, Externalizable {
     }
 
     public Scan1D(final Array masses1, final Array intensities1,
-        final int scanNumber1, final double scanAcquisitionTime1, final short msLevel) {
+            final int scanNumber1, final double scanAcquisitionTime1, final short msLevel) {
         this(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
         EvalTools.geq(1, msLevel, Scan1D.class);
         this.msLevel = msLevel;
     }
 
     public Scan1D(final Array masses1, final Array intensities1,
-        final int scanNumber1, final double scanAcquisitionTime1, final short msLevel, final int precursorCharge, final double precursorMz, final double precursorIntensity) {
+            final int scanNumber1, final double scanAcquisitionTime1, final short msLevel, final int precursorCharge, final double precursorMz, final double precursorIntensity) {
         this(masses1, intensities1, scanNumber1, scanAcquisitionTime1, msLevel);
         //ensure that precursor information is only set with msLevel>=2
         EvalTools.geq(2, msLevel, Scan1D.class);

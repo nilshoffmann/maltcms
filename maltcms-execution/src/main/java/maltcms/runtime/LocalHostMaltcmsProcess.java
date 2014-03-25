@@ -51,12 +51,13 @@ import org.slf4j.LoggerFactory;
  */
 @Deprecated
 public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowResult> implements
-    IListener<IEvent<IWorkflowResult>>, IEventSource<IWorkflowResult> {
+        IListener<IEvent<IWorkflowResult>>, IEventSource<IWorkflowResult> {
 
     private Configuration cfg = null;
-    private final EventSource<IWorkflowResult> es = new EventSource<IWorkflowResult>();
+    private final EventSource<IWorkflowResult> es = new EventSource<>();
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
+    @Override
     public void addListener(final IListener<IEvent<IWorkflowResult>> l) {
         this.es.addListener(l);
     }
@@ -70,7 +71,7 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
     public IWorkflow doInBackground() throws Exception {
         log.info("Starting up Maltcms!");
         log.info("Running Maltcms version {}",
-            this.cfg.getString("application.version"));
+                this.cfg.getString("application.version"));
         log.info("Configuring Factory");
 
         Factory.getInstance().configure(this.cfg);
@@ -79,7 +80,7 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
         final ICommandSequence cs = Factory.getInstance().createCommandSequence();
         Date startup = cs.getWorkflow().getStartupDate();
         final AFragmentCommand[] commands = cs.getCommands().toArray(
-            new AFragmentCommand[]{});
+                new AFragmentCommand[]{});
         final float nsteps = commands.length;
         cs.getWorkflow().addListener(this);
         EvalTools.notNull(cs, cs);
@@ -118,13 +119,14 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
         log.info("Progress: {}", progress);
         // Save configuration
         Factory.dumpConfig("runtime.properties",
-            startup);
+                startup);
         // Save workflow
         final IWorkflow iw = cs.getWorkflow();
         iw.save();
         return iw;
     }
 
+    @Override
     public void fireEvent(final IEvent<IWorkflowResult> e) {
         this.es.fireEvent(e);
     }
@@ -144,6 +146,7 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
         this.es.fireEvent(v);
     }
 
+    @Override
     public void removeListener(final IListener<IEvent<IWorkflowResult>> l) {
         this.es.removeListener(l);
     }

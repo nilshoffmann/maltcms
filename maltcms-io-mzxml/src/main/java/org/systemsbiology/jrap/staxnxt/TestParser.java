@@ -2,11 +2,9 @@
  * *****************************************************************************
  * --------------------------------------------------------------------------- *
  * File: * @(#) TestParser.java * Author: * Robert M. Hubley
- * rhubley@systemsbiology.org
- * modified by Ning Zhang
- * nzhang@systemsbiology.org
- * ****************************************************************************** * * *
- * This software is provided ``AS IS'' and any express or implied * *
+ * rhubley@systemsbiology.org modified by Ning Zhang nzhang@systemsbiology.org
+ * ******************************************************************************
+ * * * * This software is provided ``AS IS'' and any express or implied * *
  * warranties, including, but not limited to, the implied warranties of * *
  * merchantability and fitness for a particular purpose, are disclaimed. * * In
  * no event shall the authors or the Institute for Systems Biology * * liable
@@ -66,7 +64,7 @@ public class TestParser {
 
         } else {
             System.out.println(
-                "Invalid number of arguments: TestParser fileName scanNumber1 <scanNumber2>..");
+                    "Invalid number of arguments: TestParser fileName scanNumber1 <scanNumber2>..");
         }
     }
 

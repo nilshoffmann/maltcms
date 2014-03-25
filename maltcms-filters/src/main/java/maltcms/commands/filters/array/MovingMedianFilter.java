@@ -64,12 +64,12 @@ public class MovingMedianFilter extends AArrayFilter {
             final ArrayDouble.D1 ret = new ArrayDouble.D1(d.length);
             for (int i = 0; i < arr.getShape()[0]; i++) {
                 ret.set(i, MathTools.median(d, i - (this.window), i
-                    + (this.window)));
+                        + (this.window)));
             }
             arr = ret;
         } else {
             throw new IllegalArgumentException(
-                "Can only work on arrays of dimension 1");
+                    "Can only work on arrays of dimension 1");
         }
         return arr;
     }
