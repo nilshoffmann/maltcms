@@ -32,11 +32,18 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--        <dependency>
-            <groupId>net.sf.sashimi</groupId>
-            <artifactId>jrapStAX-osgi</artifactId>
-            <version>5.2.0</version>
-        </dependency>-->
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools</groupId>
+            <artifactId>jmzreader</artifactId>
+            <version>1.2.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools</groupId>
+            <artifactId>mzxml-parser</artifactId>
+            <version>1.3.3</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <packaging>jar</packaging>
     <properties>

@@ -42,14 +42,21 @@ import cross.io.IDataSource;
 import cross.io.misc.Base64Util;
 import cross.tools.StringTools;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.io.xml.mzData.MzData.SpectrumList.Spectrum;
@@ -81,6 +88,10 @@ public class MZDataDataSource implements IDataSource {
     private static final ICacheDelegate<URI, Unmarshaller> fileToIndex = CacheFactory.createVolatileCache(MZDataDataSource.class.getName() + "-unmarshaller", 3600, 7200, 100);
     private static final ICacheDelegate<URI, MzData> fileToMzData = CacheFactory.createVolatileCache(MZDataDataSource.class.getName() + "-mzData", 3600, 7200, 100);
     private static final ICacheDelegate<String, SerializableArray> variableToArrayCache = CacheFactory.createVolatileCache("maltcms.io.readcache");
+
+    private ICacheDelegate<String, SerializableArray> getCache() {
+        return MZDataDataSource.variableToArrayCache;
+    }
 
     @Override
     public int canRead(final IFileFragment ff) {
@@ -598,8 +609,14 @@ public class MZDataDataSource implements IDataSource {
             if (mzData == null) {
                 try {
                     final Unmarshaller u = getUnmarshaller(iff);
-                    mzData = (MzData) u.unmarshal(new File(iff.getUri()));
-                    fileToMzData.put(iff.getUri(), mzData);
+                    XMLStreamReader xmlStreamReader;
+                    try {
+                        xmlStreamReader = XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream(new File(iff.getUri())));
+                        mzData = u.unmarshal(xmlStreamReader, MzData.class).getValue();
+                        fileToMzData.put(iff.getUri(), mzData);
+                    } catch (XMLStreamException | FileNotFoundException ex) {
+                        Logger.getLogger(MZDataDataSource.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 } catch (final JAXBException e) {
                     throw new RuntimeException(e.fillInStackTrace());
                 }
