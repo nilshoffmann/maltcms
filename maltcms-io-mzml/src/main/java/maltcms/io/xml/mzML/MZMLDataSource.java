@@ -325,11 +325,12 @@ public class MZMLDataSource implements IDataSource {
                     return bda;
                 }
             } catch (ResourceNotAvailableException rnae) {
-                log.warn("m/z binary data array is not annotated with expected CVParam MS:1000514. Falling back to selecting the first binary data array in list!");
-                if (s.getBinaryDataArrayList().getCount() > 0) {
-                    return s.getBinaryDataArrayList().getBinaryDataArray().get(0);
-                }
+
             }
+        }
+        log.warn("m/z binary data array is not annotated with expected CVParam MS:1000514. Falling back to selecting the first binary data array in list!");
+        if (s.getBinaryDataArrayList().getCount() > 0) {
+            return s.getBinaryDataArrayList().getBinaryDataArray().get(0);
         }
         throw new ResourceNotAvailableException("Could not find m/z binary data array as child of spectrum " + s.getId());
     }
@@ -337,16 +338,18 @@ public class MZMLDataSource implements IDataSource {
     private BinaryDataArray getIntensityBinaryDataArray(final Spectrum s) {
         for (BinaryDataArray bda : s.getBinaryDataArrayList().getBinaryDataArray()) {
             try {
+                log.debug("CVs for BinaryDataArray: {}", bda.getCvParam());
                 CVParam param = findParam(bda.getCvParam(), "MS:1000515");
                 if (param != null) {
                     return bda;
                 }
             } catch (ResourceNotAvailableException rnae) {
-                log.warn("intensity binary data array is not annotated with expected CVParam MS:1000515. Falling back to selecting the second binary data array in list!");
-                if (s.getBinaryDataArrayList().getCount() > 1) {
-                    return s.getBinaryDataArrayList().getBinaryDataArray().get(1);
-                }
+
             }
+        }
+        log.warn("intensity binary data array is not annotated with expected CVParam MS:1000515. Falling back to selecting the second binary data array in list!");
+        if (s.getBinaryDataArrayList().getCount() > 1) {
+            return s.getBinaryDataArrayList().getBinaryDataArray().get(1);
         }
         throw new ResourceNotAvailableException("Could not find intensity binary data array as child of spectrum " + s.getId());
     }

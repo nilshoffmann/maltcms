@@ -33,7 +33,9 @@ import cross.cache.CacheFactory;
 import cross.cache.ICacheDelegate;
 import cross.datastructures.cache.ISerializationProxy;
 import cross.datastructures.cache.SerializableArray;
+import cross.datastructures.collections.CachedLazyList;
 import cross.datastructures.collections.CachedReadWriteList;
+import cross.datastructures.collections.IElementProvider;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
@@ -53,10 +55,13 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -532,7 +537,26 @@ public class MZMLDataSource2 implements IDataSource {
     }
 
     private SerializableArray getArrayFromCache(IVariableFragment variableFragment) {
-        return getCache().get(getKeyForCache(variableFragment));
+        Range[] r = variableFragment.getRange();
+        SerializableArray sa = getCache().get(getKeyForCache(variableFragment));
+        if (sa == null || r == null) {
+            return sa;
+        }
+        int[] shape = sa.getArray().getShape();
+        //if range has been set, try to honour it and compare against cached shape
+        if (r.length != shape.length) {
+            log.debug("Cached array shape and set ranges on variable fragment differ!");
+            return null;
+        }
+        //otherwise, check whether contents/lengths differ
+        for (int i = 0; i < shape.length; i++) {
+            if ((r[i].length() - shape[i]) != 0) {
+                log.debug("Shape mismatch on component " + i + ". Set range was " + r.toString() + "; got shape from cache: " + shape[i]);
+                return null;
+            }
+        }
+        //only return the cached array if it matches our requested shape
+        return sa;
     }
 
     private void putArrayIntoCache(IVariableFragment variableFragment, Array array) {
@@ -551,63 +575,320 @@ public class MZMLDataSource2 implements IDataSource {
         return ral;
     }
 
+    private class IndexedListArrayProvider implements IElementProvider<Array> {
+
+        private final int size;
+        private final int start;
+        private final int numScans;
+        private final int numPoints;
+        private final Array scanIndexArray;
+        private final Array dataArray;
+        private final IVariableFragment variable;
+
+        public IndexedListArrayProvider(IVariableFragment scanIndexVariable, IVariableFragment variable) throws ResourceNotAvailableException {
+            Range[] oldRange = scanIndexVariable.getRange();
+            int startIndex = 0;
+            int scans = 0;
+            if (oldRange != null) {
+                startIndex = oldRange[0].first();
+                scans = oldRange[0].length();
+            }
+            scanIndexVariable.setRange(new Range[0]);
+            try {
+                this.scanIndexArray = readSingle(scanIndexVariable);
+                this.numScans = this.scanIndexArray.getShape()[0];
+            } catch (IOException ex) {
+                throw new ResourceNotAvailableException(ex);
+            } catch (ResourceNotAvailableException ex) {
+                throw ex;
+            } finally {
+                scanIndexVariable.setRange(oldRange);
+            }
+            oldRange = variable.getRange();
+            variable.setRange(new Range[0]);
+            try {
+                this.dataArray = readSingle(variable);
+                this.numPoints = this.dataArray.getShape()[0];
+            } catch (IOException ex) {
+                throw new ResourceNotAvailableException(ex);
+            } catch (ResourceNotAvailableException ex) {
+                throw ex;
+            } finally {
+                variable.setRange(oldRange);
+            }
+            this.variable = variable;
+            this.start = startIndex;
+            this.size = scans;
+        }
+
+        @Override
+        public int size() {
+            return size;
+        }
+
+        @Override
+        public long sizeLong() {
+            return size;
+        }
+
+        @Override
+        public Array get(int i) {
+            if (i >= start && i < (start + size)) {
+                try {
+                    int[] startStop = getStartStopIndices(i, numScans, numPoints, start, scanIndexArray);
+                    return dataArray.section(Arrays.asList(new Range(startStop[0], startStop[1])));
+                } catch (ResourceNotAvailableException ex) {
+                    throw ex;
+                } catch (InvalidRangeException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            throw new IndexOutOfBoundsException("Tried to access list at index " + i + "! Index access is only valid between " + start + " (inclusive) and " + (start + size) + " (exclusive)!");
+        }
+
+        private int[] getStartStopIndices(int i, int num_arrays, int num_points, int index_start, Array index_array) {
+
+            int data_start = index_array.getInt((index_start + i));
+            int data_end = data_start;
+            // if we have reached the last scan start contained in index_array
+            // use the length of the data array -1 as absolute end of last array
+            if ((i + index_start + 1) == num_arrays) {
+                data_end = num_points - 1;
+            } else {
+                data_end = index_array.getInt((index_start + i + 1)) - 1;
+            }
+
+            return new int[]{data_start, data_end};
+        }
+
+        @Override
+        public List<Array> get(int start, int stop) {
+            if (start >= this.start && stop < (this.start + size) && start <= stop) {
+                ArrayList<Array> l = new ArrayList<Array>();
+                for (int i = 0; i < stop - start + 1; i++) {
+                    l.add(get(i));
+                }
+                return l;
+            }
+            throw new IndexOutOfBoundsException("Tried to access list between " + start + " until " + stop + "! Index access is only valid between " + start + " (inclusive) and " + (start + size - 1) + " (inclusive)!");
+        }
+
+        @Override
+        public void reset() {
+
+        }
+
+        @Override
+        public Array get(long l) {
+            return get((int) l);
+        }
+
+        @Override
+        public List<Array> get(long start, long stop) {
+            return get((int) start, (int) stop);
+        }
+    }
+
+    private class ArrayListAdapter extends ArrayList<Array> {
+
+        private final List<Array> delegate;
+
+        ArrayListAdapter(List<Array> delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public int size() {
+            return delegate.size();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return delegate.isEmpty();
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            if (o instanceof Array) {
+                return delegate.contains((Array) o);
+            }
+            throw new IllegalArgumentException("Expected object if type ucar.ma2.Array!");
+        }
+
+        @Override
+        public Iterator<Array> iterator() {
+            return delegate.iterator();
+        }
+
+        @Override
+        public Object[] toArray() {
+            return delegate.toArray();
+        }
+
+        @Override
+        public <T> T[] toArray(T[] a) {
+            return delegate.toArray(a);
+        }
+
+        @Override
+        public boolean add(Array e) {
+            return delegate.add(e);
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            if (o instanceof Array) {
+                return delegate.remove((Array) o);
+            }
+            throw new IllegalArgumentException("Expected object if type ucar.ma2.Array!");
+        }
+
+        @Override
+        public boolean containsAll(Collection<?> c) {
+            return delegate.containsAll(c);
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends Array> c) {
+            return delegate.addAll(c);
+        }
+
+        @Override
+        public boolean addAll(int index, Collection<? extends Array> c) {
+            return delegate.addAll(index, c);
+        }
+
+        @Override
+        public boolean removeAll(Collection<?> c) {
+            return delegate.removeAll(c);
+        }
+
+        @Override
+        public boolean retainAll(Collection<?> c) {
+            return delegate.retainAll(c);
+        }
+
+        @Override
+        public void clear() {
+            delegate.clear();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if(o instanceof Array) {
+                return delegate.equals((Array)o);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return delegate.hashCode();
+        }
+
+        @Override
+        public Array get(int index) {
+            return delegate.get(index);
+        }
+
+        @Override
+        public Array set(int index, Array element) {
+            return delegate.set(index, element);
+        }
+
+        @Override
+        public void add(int index, Array element) {
+            delegate.add(index, element);
+        }
+
+        @Override
+        public Array remove(int index) {
+            return delegate.remove(index);
+        }
+
+        @Override
+        public int indexOf(Object o) {
+            return delegate.indexOf(o);
+        }
+
+        @Override
+        public int lastIndexOf(Object o) {
+            return delegate.lastIndexOf(o);
+        }
+
+        @Override
+        public ListIterator<Array> listIterator() {
+            return delegate.listIterator();
+        }
+
+        @Override
+        public ListIterator<Array> listIterator(int index) {
+            return delegate.listIterator(index);
+        }
+
+        @Override
+        public List<Array> subList(int fromIndex, int toIndex) {
+            return delegate.subList(fromIndex, toIndex);
+        }
+
+        @Override
+        public String toString() {
+            return delegate.toString();
+        }
+    }
+
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
-        Array indexArray = readSingle(f.getIndex());
-        if (indexArray != null) {
-            log.debug("Retrieved index array from cache for " + f);
-            Array indexedArray = readSingle(f);
-        } else {
-
-        }
-        MzMLUnmarshaller um = getUnmarshaller(f.getParent());
-        if (f.getName().equals(this.mass_values)) {
-            final ArrayList<Array> al = new ArrayList<>();
-            int start = 0;
-            int len = getScanCount(um);
-            if (f.getIndex() != null) {
-                Range[] r = f.getIndex().getRange();
-                if (r != null && r[0] != null) {
-                    start = Math.max(0, r[0].first());
-                    len = Math.min(len, r[0].length());
-                }
-            }
-            MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
-            int i = 0;
-            while (spectrumIterator.hasNext()) {
-                Spectrum spectrum = spectrumIterator.next();
-                if (i >= start && i < start + len) {
-                    al.add(getMassValues(spectrum));
-                    i++;
-                }
-            }
-            return al;
-        }
-        if (f.getName().equals(this.intensity_values)) {
-            final ArrayList<Array> al = new ArrayList<>();
-            int start = 0;
-            int len = getScanCount(um);
-            if (f.getIndex() != null) {
-                Range[] r = f.getIndex().getRange();
-                if (r != null && r[0] != null) {
-                    start = Math.max(0, r[0].first());
-                    len = Math.min(len, r[0].length());
-                }
-            }
-            MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
-            int i = 0;
-            while (spectrumIterator.hasNext()) {
-                Spectrum spectrum = spectrumIterator.next();
-                if (i >= start && i < start + len) {
-                    al.add(getIntensityValues(spectrum));
-                    i++;
-                }
-            }
-            return al;
-        }
-        // return an empty list as default
-        return new ArrayList<>();
+        EvalTools.notNull(f.getIndex(), this);
+        return new ArrayListAdapter(new CachedLazyList<Array>(new IndexedListArrayProvider(f.getIndex(), f)));
+//        MzMLUnmarshaller um = getUnmarshaller(f.getParent());
+//        if (f.getName().equals(this.mass_values)) {
+//            final ArrayList<Array> al = new ArrayList<>();
+//            int start = 0;
+//            int len = getScanCount(um);
+//            if (f.getIndex() != null) {
+//                Range[] r = f.getIndex().getRange();
+//                if (r != null && r[0] != null) {
+//                    start = Math.max(0, r[0].first());
+//                    len = Math.min(len, r[0].length());
+//                }
+//            }
+//            MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+//            int i = 0;
+//            while (spectrumIterator.hasNext()) {
+//                Spectrum spectrum = spectrumIterator.next();
+//                if (i >= start && i < start + len) {
+//                    al.add(getMassValues(spectrum));
+//                    i++;
+//                }
+//            }
+//            return al;
+//        }
+//        if (f.getName().equals(this.intensity_values)) {
+//            final ArrayList<Array> al = new ArrayList<>();
+//            int start = 0;
+//            int len = getScanCount(um);
+//            if (f.getIndex() != null) {
+//                Range[] r = f.getIndex().getRange();
+//                if (r != null && r[0] != null) {
+//                    start = Math.max(0, r[0].first());
+//                    len = Math.min(len, r[0].length());
+//                }
+//            }
+//            MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+//            int i = 0;
+//            while (spectrumIterator.hasNext()) {
+//                Spectrum spectrum = spectrumIterator.next();
+//                if (i >= start && i < start + len) {
+//                    al.add(getIntensityValues(spectrum));
+//                    i++;
+//                }
+//            }
+//            return al;
+//        }
+//        // return an empty list as default
+//        return new ArrayList<>();
     }
 
     private Array readSourceFiles(final IFileFragment f, final MzMLUnmarshaller mzmu) {
@@ -822,7 +1103,6 @@ public class MZMLDataSource2 implements IDataSource {
 //        }
 //
 //    }
-
     private class MassesFunction extends SpectrumFunction<Array> {
 
         private Array minMassesArray, maxMassesArray;
@@ -850,7 +1130,7 @@ public class MZMLDataSource2 implements IDataSource {
         @Override
         void apply(Spectrum spectrum, int i, int scans) {
             Precision p = getMzBinaryDataArray(spectrum).getPrecision();
-            if(minMassesArray==null || maxMassesArray==null) {
+            if (minMassesArray == null || maxMassesArray == null) {
                 minMassesArray = createCompatibleArray(p, new int[]{scans});
                 maxMassesArray = minMassesArray.copy();
             }
@@ -899,7 +1179,7 @@ public class MZMLDataSource2 implements IDataSource {
 
         @Override
         void apply(Spectrum spectrum, int i, int scans) {
-            if(ticArray==null) {
+            if (ticArray == null) {
                 ticArray = createArray(spectrum, scans);
             }
             final Array b = getIntensityValues(spectrum);
