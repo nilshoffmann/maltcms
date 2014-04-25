@@ -93,7 +93,9 @@ Preparations:
 
 	git checkout -b release-1.3.0
 
-3. Bump the versions to the next release number
+3. Bump the versions to the next release number, e.g. -RC1 for first release candidate, or 1.3.0 for the final version
+
+	mvn versions:set -Dnew Version=1.3.0-RC1
 
 4. Begin to prepare the site files, documentation and resources for the next release 
    version. Update the changes etc. 
@@ -102,7 +104,7 @@ Preparations:
 	mvn -DstartDate=YYYY-MM-DD -DendDate=YYYY-MM-DD scm:changelog > changelog.txt
 
    Update the site release notes
-4.a) Merging intermediate changes from master into the branch
+4.a) Merging intermediate changes from master into the branch (bugfixes only)
 
 	git rebase master 
 
@@ -155,7 +157,7 @@ Copy nbm artifacts to maltcms.de/updates/cross/RELEASE_VERSION/
 
 	git merge release-1.3.0
 
-16. Update version numbers to next development version
+16. Update version numbers to next development version if release cycle is complete
 
 	mvn versions:set -Dnew Version=1.4.0-SNAPSHOT
 
