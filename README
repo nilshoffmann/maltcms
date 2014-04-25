@@ -50,16 +50,21 @@ due to their size.
 
 Additionally, due to the size of the project, it is not always possible to 
 call multiple maven targets within one call. So instead of calling 
->mvn clean install 
+	
+	mvn clean install 
+
 please use
->mvn clean && mvn install
+
+	mvn clean && mvn install
 
 Or issue three separate calls of maven from the command-line:
->mvn clean
->mvn install
+	
+	mvn clean
+	mvn install
 
 In order to build maltcms and have all tests run automatically, call:
->mvn -Dmaven.test.skip=false install
+
+	mvn -Dmaven.test.skip=false install
 
 This will create a zip release of the project below maltcms-distribution/target.
 
