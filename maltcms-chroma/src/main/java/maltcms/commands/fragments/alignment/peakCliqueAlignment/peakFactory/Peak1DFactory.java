@@ -33,6 +33,7 @@ import cross.datastructures.tuple.Tuple2D;
 import lombok.Data;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakNG;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
@@ -41,6 +42,7 @@ import ucar.ma2.ArrayDouble;
  * @author Nils Hoffmann
  */
 @Data
+@ServiceProvider(service=IPeakFactory.class)
 public class Peak1DFactory implements IPeakFactory {
 
     private String peakAreaVar = "total_intensity";

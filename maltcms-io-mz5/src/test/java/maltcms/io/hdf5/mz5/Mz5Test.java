@@ -107,6 +107,9 @@ public class Mz5Test {
                 List<Array> l2 = getDataSource().
                         readAll(new ImmutableFileFragment(f));
                 Assert.assertEquals(l.size(), l2.size());
+                for(Array a:l2) {
+                    Assert.assertNotNull(a);
+                }
             } catch (UnsupportedOperationException uoe) {
                 Assert.fail(uoe.getLocalizedMessage());
             }
@@ -147,7 +150,7 @@ public class Mz5Test {
         sl.setLogLevel("cross.datastructures.fragments",
                 "INFO");
         sl.setLogLevel("maltcms.io.andims", "INFO");
-        sl.setLogLevel("maltcms.io.xml.mzML", "INFO");
+        sl.setLogLevel("maltcms.io.hdf5.mz5", "INFO");
     }
 
     /**

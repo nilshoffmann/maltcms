@@ -41,6 +41,7 @@ import maltcms.math.functions.IScalarArraySimilarity;
 import maltcms.math.functions.ProductSimilarity;
 import maltcms.math.functions.similarities.ArrayCorr;
 import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -48,6 +49,7 @@ import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
  */
 @Data
 @EqualsAndHashCode
+@ServiceProvider(service=IWorkerFactory.class)
 public class Worker2DFactory implements IWorkerFactory {
 
     private double maxRTDifferenceRt1 = 60.0d;

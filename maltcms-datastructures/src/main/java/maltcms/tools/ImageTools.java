@@ -265,6 +265,14 @@ public class ImageTools {
         return gc.createCompatibleImage(width, height, transparencyMode);
     }
 
+    /**
+     * Creates a color ramp image with width=the number of elements in the 
+     * sample table.
+     * @param sampleTable
+     * @param transparencyMode
+     * @param colors
+     * @return 
+     */
     public static BufferedImage createColorRampImage(double[] sampleTable,
             int transparencyMode, Color... colors) {
 

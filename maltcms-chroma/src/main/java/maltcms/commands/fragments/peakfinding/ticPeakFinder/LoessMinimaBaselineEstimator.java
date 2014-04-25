@@ -34,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.analysis.interpolation.LoessInterpolator;
 import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Estimates a baseline from a an array of function values using local minima to
@@ -43,6 +44,7 @@ import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
  */
 @Slf4j
 @Data
+@ServiceProvider(service=IBaselineEstimator.class)
 public class LoessMinimaBaselineEstimator implements IBaselineEstimator {
 
     @Configurable

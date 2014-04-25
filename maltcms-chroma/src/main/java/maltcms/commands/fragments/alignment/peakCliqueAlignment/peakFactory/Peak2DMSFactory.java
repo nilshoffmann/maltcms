@@ -40,6 +40,7 @@ import maltcms.commands.fragments.alignment.peakCliqueAlignment.Peak2D;
 import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.tools.ArrayTools;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.Sparse;
 
@@ -48,6 +49,7 @@ import ucar.ma2.Sparse;
  * @author Nils Hoffmann
  */
 @Data
+@ServiceProvider(service=IPeakFactory.class)
 public class Peak2DMSFactory implements IPeakFactory {
 
     private String massesVar = "mass_values";

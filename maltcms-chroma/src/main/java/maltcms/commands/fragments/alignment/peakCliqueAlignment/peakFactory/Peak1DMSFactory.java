@@ -35,6 +35,7 @@ import java.util.List;
 import lombok.Data;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.PeakNG;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.Sparse;
 
@@ -43,6 +44,7 @@ import ucar.ma2.Sparse;
  * @author Nils Hoffmann
  */
 @Data
+@ServiceProvider(service=IPeakFactory.class)
 public class Peak1DMSFactory implements IPeakFactory {
 
     private String massesVar = "mass_values";
