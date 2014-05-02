@@ -1,0 +1,22 @@
+<h2>Development with Maltcms</h2>
+
+<h3>Prerequisites for Developing with Maltcms</h3>
+
+- [Git](http://git-scm.com) (for source code access)
+- [Java JDK 7](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+- [Maven 3](http://maven.apache.org/download.html)
+- Any IDE supporting maven 2/3 integration and subversion support
+	- [NetBeans 7.+](http://netbeans.org/)
+	- [Eclipse 3.+ (Indigo) or 4.+](http://eclipse.org/)
+	(requires additional m2e plugin and 
+	 git plugins)
+	- [IntelliJ Idea 10.5](http://www.jetbrains.com/idea/)
+
+<h3>Further Reading</h3>
+The following pages give a more detailed overview of different aspects when developing 
+with Maltcms.
+
+- [Maven](./maven.html)
+- [Data Access](./dataAccess.html)
+- [Parallel Processing](./parallelProcessing.html)
+- [Custom Workflow Elements](./customWorkflowElements.html)
