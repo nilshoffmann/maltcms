@@ -32,7 +32,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import maltcms.math.functions.IArraySimilarity;
 import net.jcip.annotations.NotThreadSafe;
-import org.apache.commons.math.stat.correlation.SpearmansCorrelation;
+import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 

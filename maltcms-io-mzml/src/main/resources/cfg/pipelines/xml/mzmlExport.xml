@@ -81,6 +81,7 @@ for details.
         <property name="mzMLVersion" value="1.1.0"/>
         <!-- whether spectra should be compressed to save space -->
         <property name="compressSpectra" value="true"/>
+        <property name="c
         <!-- validate the created mzML file against the mzML schema -->
         <property name="validate" value="true"/>
     </bean>

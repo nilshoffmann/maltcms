@@ -141,11 +141,12 @@
                             </xsl:element>
                             <xsl:element name="body">
                                 <xsl:element name="div">
-                                    <xsl:attribute name="class">container</xsl:attribute>
+                                    <xsl:attribute name="class">container-fluid</xsl:attribute>
                                     <!-- HEADER -->	
                                     <xsl:element name="div">
                                         <xsl:if test="@header='true' or not(@header)">
                                             <xsl:attribute name="id">header</xsl:attribute>
+                                            <xsl:attribute name="class">span12</xsl:attribute>
                                     
                                             <xsl:apply-templates select="//header" xsl:exclude-result-prefixes="xsl xi xalan"/>
                                             <xsl:for-each select="//header/download">
@@ -228,6 +229,7 @@
                                     </xsl:if>
                                     <xsl:if test="@sitemap='true' or not(@sitemap)">
                                         <div id="sitemap">
+                                            <xsl:attribute name="class">span12</xsl:attribute>
                                             <xsl:for-each select="//group">
                                                 <div style="float: left;">
                                                     <span class="sitemapHeading">

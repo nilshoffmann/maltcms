@@ -57,10 +57,11 @@ import maltcms.datastructures.ms.IAnchor;
 import maltcms.io.csv.CSVWriter;
 import maltcms.tools.PathTools;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.math.MathException;
-import org.apache.commons.math.analysis.UnivariateRealFunction;
-import org.apache.commons.math.analysis.interpolation.SplineInterpolator;
-import org.apache.commons.math.analysis.interpolation.UnivariateRealInterpolator;
+import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
+import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
+import org.apache.commons.math3.exception.DimensionMismatchException;
+import org.apache.commons.math3.exception.MathIllegalArgumentException;
 import org.jdom.Element;
 import ucar.ma2.ArrayByte;
 import ucar.ma2.ArrayDouble;
@@ -514,8 +515,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
                     .copyOfRange(x, 0, 10)));
             log.info("y = {}", Arrays.toString(Arrays
                     .copyOfRange(y, 0, 10)));
-            UnivariateRealInterpolator interpolator = new SplineInterpolator();
-            UnivariateRealFunction function = interpolator.interpolate(x, y);
+            UnivariateInterpolator interpolator = new SplineInterpolator();
+            UnivariateFunction function = interpolator.interpolate(x, y);
 
             for (int i = 0; i < alignment.rows(); i += 10) {
                 Tuple2DI ip = new Tuple2DI(i, (int) (Math.round(function
@@ -528,7 +529,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
                                         .columns() - 1))));
                 interp.add(ip);
             }
-        } catch (MathException e) {
+        } catch (MathIllegalArgumentException e) {
             log.error(e.getLocalizedMessage());
         }
         return interp;

@@ -12,7 +12,7 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>
-            <artifactId>commons-math</artifactId>
+            <artifactId>commons-math3</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -43,31 +43,14 @@
             <artifactId>jfreechart-osgi</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.sf.maltcms.test</groupId>
-            <artifactId>maltcms-test-data</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.maltcms.test</groupId>
-            <artifactId>maltcms-test-defaults</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>com.carrotsearch</groupId>
             <artifactId>hppc</artifactId>
-            <version>0.5.2</version>
+            <version>0.5.3</version>
+            <type>jar</type>
         </dependency>
-    </dependencies>
+    </dependencies>   
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <packaging>jar</packaging>
 </project>
-
-
-
-
-
-

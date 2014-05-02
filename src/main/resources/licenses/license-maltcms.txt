@@ -2,7 +2,7 @@
 ${licenseFirst}
 </#if>
 ${licensePrefix}Maltcms, modular application toolkit for chromatography-mass spectrometry. 
-${licensePrefix}Copyright (C) 2008-2013, The authors of Maltcms. All rights reserved.
+${licensePrefix}Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
 ${licensePrefix?replace(" +$", "", "r")}
 ${licensePrefix}Project website: http://maltcms.sf.net
 ${licensePrefix?replace(" +$", "", "r")}

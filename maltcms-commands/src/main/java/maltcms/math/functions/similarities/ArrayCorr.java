@@ -31,7 +31,7 @@ import cross.cache.ICacheDelegate;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import maltcms.math.functions.IArraySimilarity;
-import org.apache.commons.math.stat.correlation.PearsonsCorrelation;
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 

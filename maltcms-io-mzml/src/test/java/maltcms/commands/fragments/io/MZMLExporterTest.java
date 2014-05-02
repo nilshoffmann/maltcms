@@ -120,9 +120,13 @@ public class MZMLExporterTest extends AFragmentCommandTest {
 //					v1.setRange(new Range(10,100,1));
                 Array a1 = v1.getArray();
                 Assert.assertNotNull(a1);
-                Assert.assertEquals("Checking variable " + variable, a.getElementType(), a1.getElementType());
-                Assert.assertEquals("Checking variable " + variable, a.getShape()[0], a1.getShape()[0]);
-                ArrayTools.checkFullArrayEquality(a, a1);
+                //intensity values must be converted to 32 bit float in mzml
+                if(variable.equals("intensity_values")) {
+                    Assert.assertEquals("Checking variable " + variable, float.class, a.getElementType());
+                }else{
+                    Assert.assertEquals("Checking variable " + variable, a1.getElementType(), a.getElementType());
+                    ArrayTools.checkFullArrayEquality(a, a1);
+                }
             }
         }
     }

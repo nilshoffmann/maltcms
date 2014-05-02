@@ -1,1 +1,11 @@
 <h2>${project.name}</h2>
+This module provides read and write access to mzML files.
+
+<h3>Currently known issues</h3>
+The zlib implementation used by jmzml currently has some problems with correctly encoding compressed binary data.
+We thus recommend to set the following options in `cfg/pipelines/xml/mzmlExport.xml` to
+
+    compressSpectra=false
+    compressChromatogram=false
+
+until the issue is resolved for interoperability reasons.

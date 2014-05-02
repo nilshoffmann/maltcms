@@ -76,9 +76,6 @@ public class ArrayWeightedCosine implements IArraySimilarity {
             c += miProduct(i + 1, Math.sqrt(t1.getDouble(i) / maxI1 * t2.getDouble(i) / maxI2));
         }
         final double val = (c * c / (s1 * s2));
-        if (val > minimumSimilarity) {
-            return val;
-        }
         return val > minimumSimilarity ? val : Double.NEGATIVE_INFINITY;
     }
 

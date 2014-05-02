@@ -29,58 +29,67 @@ package maltcms.math.functions.similarities;
 
 import cross.cache.ICacheDelegate;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import maltcms.math.functions.IArraySimilarity;
+import maltcms.tools.ArrayTools;
 import net.jcip.annotations.NotThreadSafe;
-import org.apache.commons.math3.stat.correlation.Covariance;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
+import ucar.ma2.MAMath;
 
 /**
- * Calculates Pearson's product moment correlation as similarity between arrays.
- *
  * @author Nils Hoffmann
+ *
  *
  */
 @Data
-@EqualsAndHashCode(exclude = {"cache"})
 @ServiceProvider(service = IArraySimilarity.class)
 @NotThreadSafe
-public class ArrayCov implements IArraySimilarity {
+public class ArrayWeightedCosine2 implements IArraySimilarity {
 
-    private final ICacheDelegate<Array, double[]> cache;
-    private boolean returnCoeffDetermination = false;
+    private final ICacheDelegate<Array, Array> cache;
 
-    public ArrayCov() {
-        cache = SimilarityTools.newValueCache("ArrayCovCache");
+    private double minimumSimilarity = 0.0d;
+
+    public ArrayWeightedCosine2() {
+        cache = SimilarityTools.newValueCache("ArrayWeightedCosineCache");
     }
 
+    private Array getNormalizedArray(final Array a) {
+        Array d = cache.get(a);
+        if (d == null) {
+            double max = MAMath.getMaximum(a);
+            Array b = ArrayTools.mult(a, 1.0d/max);
+            cache.put(a, b);
+            return b;
+        }
+        return d;
+    }
+    
     @Override
     public double apply(final Array t1, final Array t2) {
-        Covariance pc = new Covariance();
-        double[] t1a = null, t2a = null;
-        t1a = cache.get(t1);
-        t2a = cache.get(t2);
-        if (t1a == null) {
-            t1a = (double[]) t1.get1DJavaArray(double.class);
-            cache.put(t1, t1a);
+        double s1 = 0, s2 = 0, c = 0, v1 = 0, v2 = 0;
+        final Array t1c = getNormalizedArray(t1);
+        final Array t2c = getNormalizedArray(t2);
+        for (int i = 0; i < t1c.getShape()[0]; i++) {
+            v1 = t1c.getDouble(i);
+            v2 = t2c.getDouble(i);
+            s1 += miProduct(i + 1, v1);
+            s2 += miProduct(i + 1, v2);
+            c += miProduct(i + 1, Math.sqrt(v1 * v2));
         }
-        if (t2a == null) {
-            t2a = (double[]) t2.get1DJavaArray(double.class);
-            cache.put(t2, t2a);
-        }
-        double pcv = pc.covariance(t1a, t2a);
-        if (this.returnCoeffDetermination) {
-            return pcv * pcv;
-        }
-        return pcv;
+        final double val = (c * c / (s1 * s2));
+        return val > minimumSimilarity ? val : Double.NEGATIVE_INFINITY;
+    }
+
+    private double miProduct(double mass, double intensity) {
+        return mass * mass * intensity;
     }
 
     @Override
     public IArraySimilarity copy() {
-        ArrayCov ac = new ArrayCov();
-        ac.setReturnCoeffDetermination(isReturnCoeffDetermination());
-        return ac;
+        ArrayWeightedCosine alp = new ArrayWeightedCosine();
+        alp.setMinimumSimilarity(getMinimumSimilarity());
+        return alp;
     }
 
     @Override

@@ -58,8 +58,10 @@ public class MZMLExporter extends AFragmentCommand {
     private String psiMsVersion = "3.60.0";
     @Configurable(description = "The unit ontology controlled vocabulary version to use.")
     private String unitOntologyVersion = "12:10:2011";
-    @Configurable(description = "Whether spectral data should be gzip compressed or not.")
+    @Configurable(description = "Whether spectral data should be zlib compressed or not.")
     private boolean compressSpectra = true;
+    @Configurable(description = "Whether chromatogram data should be zlib compressed or not.")
+    private boolean compressChromatograms = true;
     @Configurable(description = "Whether the result mzML file should be validated or not.")
     private boolean validate = false;
     @Configurable(description = "The mzML version to use.")
@@ -85,6 +87,7 @@ public class MZMLExporter extends AFragmentCommand {
             worker.setInputFile(f.getUri());
             worker.setOutputFile(createWorkFragment(f).getUri());
             worker.setCompressSpectra(compressSpectra);
+            worker.setCompressChromatograms(compressChromatograms);
             worker.setIntensityValuesVariable(intensityValuesVariable);
             worker.setMassValuesVariable(massValuesVariable);
             worker.setScanAcquisitionTimeVariable(scanAcquisitionTimeVariable);

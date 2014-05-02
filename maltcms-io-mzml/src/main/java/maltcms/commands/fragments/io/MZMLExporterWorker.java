@@ -114,10 +114,10 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
     private String psiMsVersion = "3.60.0";
     @Configurable(description = "The unit ontology controlled vocabulary version to use.")
     private String unitOntologyVersion = "12:10:2011";
-    @Configurable(description = "Whether spectral data should be gzip compressed or not.")
+    @Configurable(description = "Whether spectral data should be zlib compressed or not.")
     private boolean compressSpectra = true;
-    @Configurable(description = "Whether chromatogram data should be gzip compressed or not.")
-    private boolean compressChromatogram = true;
+    @Configurable(description = "Whether chromatogram data should be zlib compressed or not.")
+    private boolean compressChromatograms = true;
     @Configurable(description = "Whether the result mzML file should be validated or not.")
     private boolean validate = false;
     @Configurable(description = "Maximum number of spectra to keep in memory during file creation.")
@@ -200,7 +200,7 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 //			//create spectra
         SpectrumList csl = createSpectraList(inputFileName, inputFileFragment, psiMs, dpl.getDataProcessing().get(0));
 //			//create chromatogram
-        ChromatogramList cl = createChromatogramList(inputFileFragment, psiMs, false, dpl.getDataProcessing().get(0));
+        ChromatogramList cl = createChromatogramList(inputFileFragment, psiMs, compressChromatograms, dpl.getDataProcessing().get(0));
 //			//mzML.setSampleList(null);
 //			//mzML.setScanSettingsList(null);
         RunBuilder runBuilder = new RunBuilder();
@@ -331,23 +331,50 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         return list;
     }
 
-    protected BinaryDataArray createBinaryDataArray(Array a, DataType dataType, boolean compress, DataProcessing dataProcessing, CV cv) {
+    protected BinaryDataArray createBinaryDataArray(boolean massIntensityMode, Array a, DataType dataType, boolean compress, DataProcessing dataProcessing, CV cv) {
         BinaryDataArray bda = new BinaryDataArray();
         int dataArrayLength = a.getShape()[0];
         Object ticDataArray = a.get1DJavaArray(dataType.getPrimitiveClassType());
-        switch (dataType) {
-            case DOUBLE:
-                bda.set64BitFloatArrayAsBinaryData((double[]) ticDataArray, compress, cv);
-                break;
-            case FLOAT:
-                bda.set32BitFloatArrayAsBinaryData((float[]) ticDataArray, compress, cv);
-                break;
-            case INT:
-                bda.set32BitIntArrayAsBinaryData((int[]) ticDataArray, compress, cv);
-                break;
-            case LONG:
-                bda.set64BitIntArrayAsBinaryData((long[]) ticDataArray, compress, cv);
-                break;
+        if (massIntensityMode) {
+            switch (dataType) {
+                case DOUBLE:
+                    bda.set64BitFloatArrayAsBinaryData((double[]) ticDataArray, compress, cv);
+                    break;
+                case FLOAT:
+                    bda.set32BitFloatArrayAsBinaryData((float[]) ticDataArray, compress, cv);
+                    break;
+                case INT:
+                    bda.set32BitFloatArrayAsBinaryData((float[]) a.get1DJavaArray(float.class), compress, cv);
+                    break;
+                case LONG:
+                    bda.set64BitFloatArrayAsBinaryData((double[]) a.get1DJavaArray(long.class), compress, cv);
+                    break;
+                case SHORT:
+                    bda.set32BitFloatArrayAsBinaryData((float[]) a.get1DJavaArray(float.class), compress, cv);
+                    break;
+                default:
+                    throw new IllegalStateException("Unhandled binary data array format: " + dataType);
+            }
+        } else {
+            switch (dataType) {
+                case DOUBLE:
+                    bda.set64BitFloatArrayAsBinaryData((double[]) ticDataArray, compress, cv);
+                    break;
+                case FLOAT:
+                    bda.set32BitFloatArrayAsBinaryData((float[]) ticDataArray, compress, cv);
+                    break;
+                case INT:
+                    bda.set32BitIntArrayAsBinaryData((int[]) ticDataArray, compress, cv);
+                    break;
+                case LONG:
+                    bda.set64BitIntArrayAsBinaryData((long[]) ticDataArray, compress, cv);
+                    break;
+                case SHORT:
+                    bda.set32BitIntArrayAsBinaryData((int[]) a.get1DJavaArray(int.class), compress, cv);
+                    break;
+                default:
+                    throw new IllegalStateException("Unhandled binary data array format: " + dataType);
+            }
         }
         bda.setArrayLength(dataArrayLength);
         bda.setEncodedLength(getEncodedLength(bda.getBinary()));
@@ -373,7 +400,7 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         //tic data
         IVariableFragment ticValues = inputFileFragment.getChild(totalIntensityVariable);
         DataType ticDataType = ticValues.getDataType();
-        BinaryDataArray cbda = createBinaryDataArray(ticValues.getArray(), ticDataType, compress, dataProcessing, psiMs);
+        BinaryDataArray cbda = createBinaryDataArray(true, ticValues.getArray(), ticDataType, compress, dataProcessing, psiMs);
 //        Number[] intensities = cbda.getBinaryDataAsNumberArray();
 //        DataType dataType = ticValues.getDataType();
 //        final Array intensA = Array.factory(dataType, ticValues.getArray().getShape());
@@ -407,7 +434,7 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         //sat data
         IVariableFragment satValues = inputFileFragment.getChild(scanAcquisitionTimeVariable);
         DataType satDataType = satValues.getDataType();
-        BinaryDataArray satbda = createBinaryDataArray(satValues.getArray(), satDataType, compress, dataProcessing, psiMs);
+        BinaryDataArray satbda = createBinaryDataArray(false, satValues.getArray(), satDataType, compress, dataProcessing, psiMs);
 //        Number[] sats = satbda.getBinaryDataAsNumberArray();
 //        final Array satA = Array.factory(satValues.getDataType(), satValues.getArray().getShape());
 //        dataType = satValues.getDataType();
@@ -489,15 +516,16 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         }
         for (int i = 0; i < scans; i++) {
             Spectrum s = new Spectrum();
-
+            Array massValuesArray = indexedMassValues.get(i);
+            Array intensityValuesArray = indexedIntensityValues.get(i);
             s.setIndex(i);
             s.setId(i + "");
             BinaryDataArrayList bdal = new BinaryDataArrayList();
             List<BinaryDataArray> bdas = bdal.getBinaryDataArray();
-            MinMax minMaxMasses = MAMath.getMinMax(indexedMassValues.get(i));
-            BinaryDataArray masses = createBinaryDataArray(indexedMassValues.get(i), massDataType, compressSpectra, dataProcessing, psiMs);
+            MinMax minMaxMasses = MAMath.getMinMax(massValuesArray);
+            BinaryDataArray masses = createBinaryDataArray(true, massValuesArray, massDataType, compressSpectra, dataProcessing, psiMs);
             bdas.add(masses);
-            BinaryDataArray intensities = createBinaryDataArray(indexedIntensityValues.get(i), intensityDataType, compressSpectra, dataProcessing, psiMs);
+            BinaryDataArray intensities = createBinaryDataArray(true, intensityValuesArray, intensityDataType, compressSpectra, dataProcessing, psiMs);
             bdas.add(intensities);
             bdal.setCount(bdas.size());
             s.setBinaryDataArrayList(bdal);
@@ -601,6 +629,11 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
                 case LONG:
                     totalIonCurrent.setValue("" + totalIntensity.getArray().getLong(i));
                     break;
+                case SHORT:
+                    totalIonCurrent.setValue("" + totalIntensity.getArray().getShort(i));
+                    break;
+                default:
+                    throw new IllegalStateException("Unhandled binary data array format: " + dataType);
             }
 
 //            <cvParam cvRef="MS" accession="MS:1000130" name="positive scan" value=""/>

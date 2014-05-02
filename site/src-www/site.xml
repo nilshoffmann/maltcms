@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <header>
+    <header class="span12">
         <div id="affiliation">
             <ul>
                 <li>
@@ -23,7 +23,7 @@
         <download href="http://sf.net/projects/maltcms/files/maltcms/maltcms-1.3/" title="Download" text="Get Maltcms 1.3" provider="Provided by sourceforge.net"/>
         <siteimage/>
     </header>
-    <categories class="nav nav-pills">
+    <categories class="nav nav-pills span12">
         <ref target="index" alt="Home" />
         <ref target="users/features" alt="Maltcms" />
         <ref target="maui/index" alt="Maui" />
@@ -31,7 +31,7 @@
         <ref target="news/index" alt="News" />
         <ref target="info/publications" alt="Info"/>
     </categories>
-    <nav id="nav" class="nav col-md-4">
+    <nav id="nav" class="nav span4">
         <group nname="Home" ident="about">
             <ref target="index" />
             <!--            <ref target="users/gettingStarted" />
@@ -73,7 +73,7 @@
         </group>
     </nav>
 
-    <div id="footer">
+    <div id="footer" class="span12">
         <span>
             &#169; 2008-2014,
         </span>
