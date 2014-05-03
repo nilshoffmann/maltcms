@@ -401,27 +401,6 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         IVariableFragment ticValues = inputFileFragment.getChild(totalIntensityVariable);
         DataType ticDataType = ticValues.getDataType();
         BinaryDataArray cbda = createBinaryDataArray(true, ticValues.getArray(), ticDataType, compress, dataProcessing, psiMs);
-//        Number[] intensities = cbda.getBinaryDataAsNumberArray();
-//        DataType dataType = ticValues.getDataType();
-//        final Array intensA = Array.factory(dataType, ticValues.getArray().getShape());
-//        for (int i = 0; i < intensities.length; i++) {
-//            switch (dataType) {
-//                case DOUBLE:
-//                    intensA.setDouble(i, intensities[i].doubleValue());
-//                    break;
-//                case FLOAT:
-//                    intensA.setFloat(i, intensities[i].floatValue());
-//                    break;
-//                case INT:
-//                    intensA.setInt(i, intensities[i].intValue());
-//                    break;
-//                case LONG:
-//                    intensA.setLong(i, intensities[i].longValue());
-//                    break;
-//            }
-////            intensA.set(i, intensities[i].doubleValue());
-//        }
-//        checkFullArrayEquality(ticValues.getArray(), intensA);
         CVParam ticCvParam = new CVParam();
         ticCvParam.setCvRef("MS");
         ticCvParam.setAccession("MS:1000515");
@@ -435,26 +414,6 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         IVariableFragment satValues = inputFileFragment.getChild(scanAcquisitionTimeVariable);
         DataType satDataType = satValues.getDataType();
         BinaryDataArray satbda = createBinaryDataArray(false, satValues.getArray(), satDataType, compress, dataProcessing, psiMs);
-//        Number[] sats = satbda.getBinaryDataAsNumberArray();
-//        final Array satA = Array.factory(satValues.getDataType(), satValues.getArray().getShape());
-//        dataType = satValues.getDataType();
-//        for (int i = 0; i < sats.length; i++) {
-//            switch (dataType) {
-//                case DOUBLE:
-//                    satA.setDouble(i, sats[i].doubleValue());
-//                    break;
-//                case FLOAT:
-//                    satA.setFloat(i, sats[i].floatValue());
-//                    break;
-//                case INT:
-//                    satA.setInt(i, sats[i].intValue());
-//                    break;
-//                case LONG:
-//                    satA.setLong(i, sats[i].longValue());
-//                    break;
-//            }
-//        }
-//        checkFullArrayEquality(satValues.getArray(), satA);
         CVParam satCvParam = new CVParam();
         satCvParam.setCvRef("MS");
         satCvParam.setAccession("MS:1000595");
@@ -468,7 +427,8 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         cbdal.setCount(l.size());
         //update chromatogram
         c.setBinaryDataArrayList(cbdal);
-//        c.setDefaultArrayLength(Math.max(cbda.getArrayLength(), satbda.getArrayLength()));
+        c.setDefaultArrayLength(cbda.getArrayLength());
+        EvalTools.eqI(cbda.getArrayLength(), satbda.getArrayLength(), this);
         cl.getChromatogram().add(c);
         cl.setCount(cl.getChromatogram().size());
         return cl;

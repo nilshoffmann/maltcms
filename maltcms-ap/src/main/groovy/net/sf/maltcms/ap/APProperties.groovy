@@ -49,13 +49,17 @@ class APProperties {
     MaltcmsRuntime mr = new MaltcmsRuntime()
     Utils u = new Utils();
 
-    public void load() {
-        File customProperties = new File(System.getProperty("user.dir"),"ap-parameters.properties")
+    public File load(String mode) {
+        File customProperties = new File(System.getProperty("user.dir"),mode+"-parameters.properties")
         if (customProperties.exists()) {
             load(customProperties)
+            return customProperties
         } else {
-            load(new File(System.getProperty("ap.home"),"cfg/pipelines/ap-defaultParameters.properties"))
+            File defaultProperties = new File(System.getProperty("ap.home"),"cfg/pipelines/ap-defaultParameters.properties")
+            load(defaultProperties)
+            return defaultProperties
         }
+        
     }
 
     public void load(File f) {
@@ -95,8 +99,8 @@ class APProperties {
         mr.lastOutputDir  = u.convString(props["maltcmsRuntime.lastOutputDir"],"")
     }
 
-    public void save() {
-        File f = new File(System.getProperty("user.dir"),"ap-parameters.properties")
+    public File save(String mode) {
+        File f = new File(System.getProperty("user.dir"), mode+"-parameters.properties")
         def props = new Properties()
         props["workingDirectory"] = wdir.absolutePath
         props["inputFiles"] = ifiles.files
@@ -127,6 +131,7 @@ class APProperties {
         f.withOutputStream {
             stream -> props.store(stream, "maltcms-ap parameters")
         }
+        return f
     }
 }
 

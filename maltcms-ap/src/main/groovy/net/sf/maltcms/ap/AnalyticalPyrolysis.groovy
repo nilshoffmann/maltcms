@@ -76,6 +76,7 @@ swing.lookAndFeel(laf)
 
 public void setMode(String mode, SwingBuilder swing, APProperties props) {
     println "Using mode $mode"
+    props.load(mode)
     props.mr.activePanels["ap"].each{
         apit -> enableComponent(swing."$apit",false)
     }
@@ -130,6 +131,8 @@ def importTab = swing.panel(constraints: BL.CENTER, id: "importTab", name: "Impo
                         fc.currentDirectory = userProps.lastDirectory
                         def retval = fc.showOpenDialog()
                         if(retval == JFileChooser.APPROVE_OPTION) {
+                            //save old properties
+                            props.save(props.mr.pipelineMode)
                             String mode = "ap"
                             if(fc.getSelectedFiles().length>0) {
                                 userProps.lastDirectory = fc.getSelectedFiles()[0].getParentFile()
@@ -192,7 +195,7 @@ def preprocessingTab = swing.panel(constraints: BL.CENTER, id: "preprocessingTab
         tr {
             td(colfill: false, align: "RIGHT") {label "RT Start Time"}
             td(colspan: 3, colfill: true, align: "LEFT") {
-                formattedTextField(id: "seStartTime", columns: 20, toolTipText: "Start time from where to extract. -Infinity: start at beginning", formatterFactory: df)
+                formattedTextField(id: "seStartTime", columns: 20, toolTipText: "Start time from where to extract in seconds. -Infinity: start at beginning", formatterFactory: df)
                 bind(source: seStartTime, sourceProperty: "value", target: props.se, targetProperty: "startTime",
                     mutual:true)
             }
@@ -200,7 +203,7 @@ def preprocessingTab = swing.panel(constraints: BL.CENTER, id: "preprocessingTab
         tr {
             td(colfill: false, align: "RIGHT") {label "RT Stop Time"}
             td(colspan: 3, colfill: true, align: "LEFT") {
-                formattedTextField(id: "seEndTime", columns: 20, toolTipText: "End time to extract up to. Infinity: stop at end of chromatogram", formatterFactory: df)
+                formattedTextField(id: "seEndTime", columns: 20, toolTipText: "End time to extract up to in seconds. Infinity: stop at end of chromatogram", formatterFactory: df)
                 bind(source: seEndTime, sourceProperty: "value", target: props.se, targetProperty: "endTime",
                     mutual:true)
             }
@@ -542,19 +545,24 @@ def contentPanel = swing.panel(constraints: BL.CENTER, border: swing.emptyBorder
 def buttonPanel = swing.panel(constraints: BL.SOUTH, id: "buttonPanel") {
     button("Load Defaults", actionPerformed: {
             props.load(new File(System.getProperty("ap.home"),"cfg/pipelines/ap-defaultParameters.properties"))
+            //intentionally not resetting pipeline mode
         })
     separator(orientation: javax.swing.SwingConstants.VERTICAL)
     button("Save", actionPerformed: {
-            props.save()
+            File properties = props.save(props.mr.pipelineMode)
+            userProps.lastMode = props.mr.pipelineMode
+            userProps.lastConfiguration = properties
             userProps.save()
         })
     button("Reload", actionPerformed: {
-            props.load()
             userProps.load()
+            props.load(userProps.getLastConfiguration())
         })
     separator(orientation: javax.swing.SwingConstants.VERTICAL)
     button("Start", actionPerformed: {
-            props.save()
+            File properties = props.save(props.mr.pipelineMode)
+            userProps.lastMode = props.mr.pipelineMode
+            userProps.lastConfiguration = properties
             userProps.save()
             if(execution!=null) {
                 execution.cancel()
@@ -586,8 +594,12 @@ swing.edt {
     }
 }
 
-props.load()
 userProps.load()
+if(userProps.lastConfiguration==null) {
+    props.load("ap")
+}else{
+    props.load(userProps.lastConfiguration)
+}
 swing.tanTicVariableNames.selectedItem = props.tan.ticVariableName
 swing.pipelineMode = props.mr.pipelineMode
 setMode(props.mr.pipelineMode, swing, props)

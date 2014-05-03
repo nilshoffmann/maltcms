@@ -80,8 +80,8 @@ for details.
         <property name="unitOntologyVersion" value="12:10:2011"/>
         <property name="mzMLVersion" value="1.1.0"/>
         <!-- whether spectra should be compressed to save space -->
-        <property name="compressSpectra" value="true"/>
-        <property name="c
+        <property name="compressSpectra" value="false"/>
+        <property name="compressChromatograms" value="false"/>
         <!-- validate the created mzML file against the mzML schema -->
         <property name="validate" value="true"/>
     </bean>

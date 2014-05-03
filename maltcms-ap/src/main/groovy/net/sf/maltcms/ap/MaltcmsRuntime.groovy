@@ -44,30 +44,30 @@ class MaltcmsRuntime {
     Boolean uniqueOutputDir = true
     String lastOutputDir = ""
     Map activePanels = [
-		"ap"		:
+            "ap":
         [
-				"importTab",
-				"preprocessingTab",
-				"peakDetectionTab",
-				"peakNormalizationTab",
-				"peakAlignmentTab",
-				"maltcmsTab"
+            "importTab",
+            "preprocessingTab",
+            "peakDetectionTab",
+            "peakNormalizationTab",
+            "peakAlignmentTab",
+            "maltcmsTab"
         ],
-		"ap-direct" :
+            "ap-direct" :
         [
-				"importTab",
-				"peakNormalizationTab",
-				"peakAlignmentTab",
-				"maltcmsTab"
+            "importTab",
+            "peakNormalizationTab",
+            "peakAlignmentTab",
+            "maltcmsTab"
         ],
         "ap-ms" :
         [
-                "importTab",
-                "preprocessingTab",
-                "peakDetectionTab",
-                "peakNormalizationTab",
-                "peakAlignmentTab",
-                "maltcmsTab"
+            "importTab",
+            "preprocessingTab",
+            "peakDetectionTab",
+            "peakNormalizationTab",
+            "peakAlignmentTab",
+            "maltcmsTab"
         ]
     ]
 }

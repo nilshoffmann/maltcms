@@ -38,6 +38,8 @@ import groovy.beans.Bindable
 @Bindable
 class UserProperties {
     File lastDirectory = new File(System.getProperty("user.home"))
+    File lastConfiguration = new File(System.getProperty("user.dir"),"ap-parameters.properties")
+    String lastMode = "ap"
 
     public void load() {
         def props = new Properties()
@@ -47,10 +49,15 @@ class UserProperties {
                 stream -> props.load(stream)
             }
             lastDirectory = props["lastDirectory"] as File
+            lastConfiguration = props["lastConfiguration"] as File
+            lastMode = props["lastMode"]
         }else{
             println "${f} not found, using defaults!"
             lastDirectory = new File(System.getProperty("user.home"))
+            lastConfiguration = new File(System.getProperty("user.dir"),"ap-parameters.properties")
+            lastMode = "ap"
         }
+        
     }
 
     public void save() {
@@ -59,6 +66,8 @@ class UserProperties {
         File f = new File(dir,"user.properties")
         def props = new Properties()
         props["lastDirectory"] = lastDirectory.absolutePath
+        props["lastConfiguration"] = lastConfiguration.absolutePath
+        props["lastMode"] = lastMode
         f.withOutputStream {
             stream -> props.store(stream, "maltcms-ap user settings")
         }

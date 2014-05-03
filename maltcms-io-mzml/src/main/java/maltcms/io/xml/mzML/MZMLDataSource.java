@@ -36,6 +36,7 @@ import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
+import cross.datastructures.tools.ArrayTools;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FragmentTools;
 import cross.datastructures.tuple.Tuple2D;
@@ -71,6 +72,7 @@ import ucar.nc2.Dimension;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray.Precision;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
+import uk.ac.ebi.jmzml.model.mzml.CachedSpectrumList;
 import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
 import uk.ac.ebi.jmzml.model.mzml.FileDescription;
 import uk.ac.ebi.jmzml.model.mzml.Run;
@@ -81,12 +83,6 @@ import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
-/**
- * Implementation of IDataSource for the mzML format.
- *
- *
- * @author Nils Hoffmann
- */
 @Slf4j
 @ServiceProvider(service = IDataSource.class)
 public class MZMLDataSource implements IDataSource {
@@ -414,10 +410,6 @@ public class MZMLDataSource implements IDataSource {
 
     private int getScanCount(final MzMLUnmarshaller um) {
         return um.getObjectCountForXpath("/run/spectrumList/spectrum");
-//		if (um.isIndexedmzML()) {
-//			return um.getSpectrumIDs().size();
-//		}
-//		return getRun(um).getSpectrumList().getCount();
     }
 
     private IVariableFragment getVariable(final IFileFragment f,
@@ -430,7 +422,7 @@ public class MZMLDataSource implements IDataSource {
      * Read min and max_mass_range to determine bin sizes.
      *
      * @param var
-     * @param run
+     * @param um
      * @return a Tuple2D<Array,Array> with mass_range_min as first and
      * mass_range_max as second array
      */
@@ -469,7 +461,7 @@ public class MZMLDataSource implements IDataSource {
     }
 
     private Array loadArray(final IFileFragment f, final IVariableFragment var) {
-        SerializableArray sa = getCache().get(f.getUri() + ">" + var.getName());
+        SerializableArray sa = getCache().get(getVariableCacheKey(var));
         if (sa != null) {
             log.debug("Retrieved variable data array from cache for " + var);
             return sa.getArray();
@@ -492,7 +484,8 @@ public class MZMLDataSource implements IDataSource {
             // read min and max_mass_range
         } else if (varname.equals(this.mass_range_min)
                 || varname.equals(this.mass_range_max)) {
-            a = readMinMaxMassValueArray(var, mzu);
+            sa = readMinMaxMassValueArray(var, mzu);
+            return sa.getArray();
             // read scan_acquisition_time
         } else if (varname.equals(this.scan_acquisition_time)) {
             a = readScanAcquisitionTimeArray(var, mzu);
@@ -513,7 +506,7 @@ public class MZMLDataSource implements IDataSource {
                     "Unknown variable name to mzML mapping for " + varname);
         }
         if (a != null) {
-            getCache().put(var.getParent().getUri() + ">" + var.getName(), new SerializableArray(a));
+            getCache().put(getVariableCacheKey(var), new SerializableArray(a));
         } else {
             throw new ResourceNotAvailableException("Array for variable " + var.getName() + " could not be loaded!");
         }
@@ -659,18 +652,26 @@ public class MZMLDataSource implements IDataSource {
         return rt;
     }
 
-    private Array readMinMaxMassValueArray(final IVariableFragment var,
+    private SerializableArray readMinMaxMassValueArray(final IVariableFragment var,
             final MzMLUnmarshaller um) {
         log.debug("readMinMaxMassValueArray");
-        final Tuple2D<Array, Array> t = initMinMaxMZ(var, um);
-        if (var.getName().equals(this.mass_range_min)) {
-            return t.getFirst();
+        SerializableArray sa = getCache().get(getVariableCacheKey(var));
+        if (sa == null) {
+            final Tuple2D<Array, Array> t = initMinMaxMZ(var, um);
+            variableToArrayCache.put(var.getParent().getUri() + ">" + this.mass_range_min, new SerializableArray(t.getFirst()));
+            variableToArrayCache.put(var.getParent().getUri() + ">" + this.mass_range_max, new SerializableArray(t.getSecond()));
         }
-        if (var.getName().equals(this.mass_range_max)) {
-            return t.getSecond();
+        if (var.getName().equals(this.mass_range_min)) {
+            return variableToArrayCache.get(getVariableCacheKey(getVariable(var.getParent(), this.mass_range_min)));
+        } else if (var.getName().equals(this.mass_range_max)) {
+            return variableToArrayCache.get(getVariableCacheKey(getVariable(var.getParent(), this.mass_range_max)));
         }
         throw new IllegalArgumentException(
                 "Method accepts only one of mass_range_min or mass_range_max as varname!");
+    }
+
+    private String getVariableCacheKey(final IVariableFragment var) {
+        return var.getParent().getUri() + ">" + var.getName();
     }
 
     private Array readTicFromMzi(final IVariableFragment var, final MzMLUnmarshaller um) {
@@ -722,7 +723,6 @@ public class MZMLDataSource implements IDataSource {
             }
             var.setIndex(scanIndex);
         }
-        int npeaks = 0;
         int start = 0;
         int scans = getScanCount(um);
         if (var.getIndex() != null) {
@@ -733,66 +733,69 @@ public class MZMLDataSource implements IDataSource {
             }
         }
         log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
-        DataType dataType = null;
+        return createGluedMassIntensityArray(var.getName(), um, start, scans);
+
+    }
+
+    private Array createGluedMassIntensityArray(String variable, final MzMLUnmarshaller um, int start, int scans) throws ConstraintViolationException {
+        ArrayList<Array> scanList = new ArrayList<Array>();
+        int npeaks;
+        npeaks = 0;
         MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
         int i = 0;
+        Precision p = null;
         while (spectrumIterator.hasNext()) {
             Spectrum spectrum = spectrumIterator.next();
             if (i >= start && i < start + scans) {
-                npeaks += getPointCount(getSpectrum(um, i));
+                if (p == null) {
+                    if (variable.equals(this.mass_values)) {
+                        p = getMzBinaryDataArray(spectrum).getPrecision();
+                    } else if (variable.equals(this.intensity_values)) {
+                        p = getIntensityBinaryDataArray(spectrum).getPrecision();
+                    } else {
+                        throw new IllegalArgumentException(
+                                "Don't know how to handle variable: " + variable);
+                    }
+                } else {
+                    Precision q = null;
+                    if (variable.equals(this.mass_values)) {
+                        q = getMzBinaryDataArray(spectrum).getPrecision();
+                    } else if (variable.equals(this.intensity_values)) {
+                        q = getIntensityBinaryDataArray(spectrum).getPrecision();
+                    } else {
+                        throw new IllegalArgumentException(
+                                "Don't know how to handle variable: " + variable);
+                    }
+                    if (!p.equals(q)) {
+                        throw new ConstraintViolationException("Mismatch between precisions of mass values: " + p + "!=" + q);
+                    }
+                }
+                Array b = null;
+                if (variable.equals(this.mass_values)) {
+                    b = getMassValues(spectrum);
+                } else if (variable.equals(this.intensity_values)) {
+                    b = getIntensityValues(spectrum);
+                } else {
+                    throw new IllegalArgumentException(
+                            "Don't know how to handle variable: " + variable);
+                }
+                scanList.add(b);
+                log.debug("Reading scan {} of {}", (i + 1), scans);
+                npeaks += b.getShape()[0];
                 i++;
             }
         }
-        int pointCount = npeaks;
-
-        if (var.getName().equals(this.mass_values)) {
-            Array a = null;
-            npeaks = 0;
-            spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
-            i = 0;
-            while (spectrumIterator.hasNext()) {
-                Spectrum spectrum = spectrumIterator.next();
-                if (i >= start && i < start + scans) {
-                    if (a == null) {
-                        a = createCompatibleArray(getMzBinaryDataArray(spectrum).getPrecision(), new int[]{pointCount});
-                    }
-                    log.debug("Reading scan {} of {}", (i + 1), scans);
-                    final Array b = getMassValues(spectrum);
-                    EvalTools.eq(a.getElementType(), b.getElementType());
-                    Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
-                    npeaks += b.getShape()[0];
-                    i++;
-                }
-            }
-            return a;
-            // f.setArray(a);
-        } else if (var.getName().equals(this.intensity_values)) {
-            Array a = null;
-            npeaks = 0;
-            spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
-            i = 0;
-            while (spectrumIterator.hasNext()) {
-                Spectrum spectrum = spectrumIterator.next();
-                if (i >= start && i < start + scans) {
-                    if (a == null) {
-                        a = createCompatibleArray(getIntensityBinaryDataArray(spectrum).getPrecision(), new int[]{pointCount});
-                    }
-                    log.debug("Reading scan {} of {}", (i + 1), scans);
-                    final Array b = getIntensityValues(spectrum);
-                    EvalTools.eq(a.getElementType(), b.getElementType());
-                    Array.arraycopy(b, 0, a, npeaks, b.getShape()[0]);
-                    npeaks += b.getShape()[0];
-                    log.debug("npeaks after: {}", npeaks);
-                    i++;
-                }
-                // f.setArray(a);
-            }
-            return a;
+        if (p == null) {
+            p = Precision.FLOAT32BIT;
         }
-        throw new IllegalArgumentException(
-                "Don't know how to handle variable: " + var.getName());
-        // }
-        // return f.getArray();
+        Array a = createCompatibleArray(p, new int[]{npeaks});
+        int offset = 0;
+        for (i = 0; i < scanList.size(); i++) {
+            Array b = scanList.get(i);
+            Array.arraycopy(b, 0, a, offset, b.getShape()[0]);
+            offset += b.getShape()[0];
+        }
+        return a;
     }
 
     private Array readMsLevelArray(final IVariableFragment var, final MzMLUnmarshaller um) {

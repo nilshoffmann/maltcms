@@ -32,6 +32,7 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
+import cross.test.IntegrationTest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ import maltcms.tools.MaltcmsTools;
 import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import ucar.ma2.Array;
 
 /**
@@ -55,7 +57,7 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  */
 @Slf4j
-//@Category(IntegrationTest.class)
+@Category(IntegrationTest.class)
 public class DenseArrayProducerTest extends AFragmentCommandTest {
 
     @Rule
