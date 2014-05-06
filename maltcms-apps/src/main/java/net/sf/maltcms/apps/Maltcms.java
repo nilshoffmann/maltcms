@@ -36,6 +36,10 @@ import cross.datastructures.workflow.IWorkflow;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ExitVmException;
 import java.io.File;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.MemoryType;
+import java.lang.management.ThreadMXBean;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -49,6 +53,7 @@ import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.maltcms.apps.util.ThreadTimer;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -115,7 +120,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             final ExitVmException npe) {
         int ecode;
         Maltcms.shutdown(1, log);
-        log.error(npe.getLocalizedMessage());
+        log.error("Caught an ExitVmException!",npe.getLocalizedMessage());
         ecode = 1;
         System.exit(ecode);
     }
@@ -124,9 +129,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             final Throwable npe, final ICommandSequence ics) {
         int ecode;
         Maltcms.shutdown(1, log);
-        log.error("Caught Throwable, returning to console!");
-        log.error(npe.getLocalizedMessage());
-        npe.printStackTrace(System.err);
+        log.error("Caught Throwable, returning to console!", npe);
+//        npe.printStackTrace(System.err);
         Maltcms.printBugTrackMessage(log, ics);
         ecode = 1;
         // Save configuration
@@ -141,6 +145,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * @param args what is passed in from the command-line, usually
      */
     public static void main(final String[] args) {
+        ThreadTimer tt = new ThreadTimer(100);
+        tt.start();
         URL log4jConfiguration = null;
         try {
             String resource = System.getProperty("log4j.configuration");
@@ -206,6 +212,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     Maltcms.handleExitVmException(log, new ExitVmException(iae));
                 } catch (final Throwable t) {
                     Maltcms.handleRuntimeException(log, t, cs);
+                } finally {
+                    addVmStats(tt, iw.getOutputDirectory());
                 }
             } else {
                 throw new ConstraintViolationException(
@@ -218,6 +226,61 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         } catch (final Throwable t) {
             Maltcms.handleRuntimeException(log, t, cs);
         }
+    }
+    
+    private static void addVmStats(ThreadTimer tt, File outputDirectory) {
+        tt.interrupt();
+        List<MemoryPoolMXBean> mbeans = ManagementFactory.getMemoryPoolMXBeans();
+        long maxUsedHeap = 0L;
+        long maxUsedNonHeap = 0L;
+        for (MemoryPoolMXBean mbean : mbeans) {
+            log.debug("Peak memory initial: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getInit() / (1024.0f * 1024.0f))) + " MB");
+            log.debug("Peak memory used: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getUsed() / (1024.0f * 1024.0f))) + " MB");
+            log.debug("Peak memory comitted: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getCommitted() / (1024.0f * 1024.0f))) + " MB");
+            log.debug("Peak memory max: " + mbean.getType().name() + ": " + String.format("%.2f", (mbean.getPeakUsage().getMax() / (1024.0f * 1024.0f))) + " MB");
+            if (mbean.getType() == MemoryType.HEAP) {
+                maxUsedHeap += mbean.getPeakUsage().getUsed();
+            } else {
+                maxUsedNonHeap += mbean.getPeakUsage().getUsed();
+            }
+        }
+        log.info("Total memory used: " + String.format("%.2f", ((maxUsedHeap + maxUsedNonHeap) / (1024f * 1024f))) + " MB");
+        log.info("Heap memory used: " + String.format("%.2f", ((maxUsedHeap) / (1024f * 1024f))) + " MB");
+        log.info("Non-Heap memory used: " + String.format("%.2f", ((maxUsedNonHeap) / (1024f * 1024f))) + " MB");
+        int nmemoryPools = mbeans.size();
+
+//        ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+//        long[] allThreadIds = threadMXBean.getAllThreadIds();
+        long time = 0L;
+        long userTime = 0L;
+        long systemTime = 0L;
+//        for (long id : allThreadIds) {
+//            time += threadMXBean.getThreadCpuTime(id);
+//            userTime += threadMXBean.getThreadUserTime(id);
+//            systemTime += (threadMXBean.getThreadCpuTime(id) - threadMXBean.getThreadUserTime(id));
+//        }
+        time = tt.getTotalCpuTime();
+        userTime = tt.getTotalUserTime();
+        systemTime = tt.getTotalSystemTime();
+
+        log.info("Total cpu time: {} sec, ", String.format("%.2f", (time / 1E9f)));
+        log.info("Total user time: {} sec, ", String.format("%.2f", (userTime / 1E9f)));
+        log.info("Total system time: {} sec, ", String.format("%.2f", (systemTime / 1E9f)));
+        File workflowStats = new File(new File(outputDirectory, "Factory"), "workflowStats.properties");
+
+        PropertiesConfiguration pc;
+        try {
+            pc = new PropertiesConfiguration(workflowStats);
+            pc.setProperty("usertime_nanoseconds", userTime);
+            pc.setProperty("systemtime_nanoseconds", systemTime);
+            pc.setProperty("cputime_nanoseconds", time);
+            pc.setProperty("memory_pools", nmemoryPools);
+            pc.setProperty("maxUsedMemory_bytes", maxUsedHeap + maxUsedNonHeap);
+            pc.save();
+        } catch (ConfigurationException ex) {
+            log.error("{}", ex);
+        }
+
     }
 
     /**
