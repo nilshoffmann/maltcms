@@ -50,7 +50,7 @@ class APProperties {
     Utils u = new Utils();
 
     public File load(String mode) {
-        File customProperties = new File(System.getProperty("user.dir"),mode+"-parameters.properties")
+        File customProperties = new File(System.getProperty("user.dir"),"ap-parameters.properties")
         if (customProperties.exists()) {
             load(customProperties)
             return customProperties
@@ -64,8 +64,16 @@ class APProperties {
 
     public void load(File f) {
         def props = new Properties()
-        f.withInputStream {
-            stream -> props.load(stream)
+        if(f.exists()) { 
+            f.withInputStream {
+                stream -> props.load(stream)
+            }
+        }else{
+            println "Given config file $f.absolutePath does not exist! Loading defaults!"
+            File defaultProperties = new File(System.getProperty("ap.home"),"cfg/pipelines/ap-defaultParameters.properties")
+            defaultProperties.withInputStream {
+                stream -> props.load(stream)
+            }
         }
         ifiles.files = props["inputFiles"]
         wdir = new File(props["workingDirectory"])
@@ -91,6 +99,7 @@ class APProperties {
         pca.peakAreaVariable = u.convString(props["peakCliqueAlignment.peakAreaVariable"],"peak_area_normalized")
         pca.rtNormalizationFactor = u.convDouble(props["peakCliqueAlignment.rtNormalizationFactor"],1.0)
         pca.rtOutputFormat = u.convString(props["peakCliqueAlignment.rtOutputFormat"],"0.00000000000000")
+        pca.minBbhFraction = u.convDouble(props["peakCliqueAlignment.minBbhFraction"],1.0)
         mr.arguments = u.convString(props["maltcmsRuntime.arguments"],"-Xmx1G")
         mr.parallelThreads = u.convInteger(props["maltcmsRuntime.parallelThreads"],1)
         mr.pipelineMode = u.convString(props["maltcmsRuntime.pipelineMode"],"ap")
@@ -100,7 +109,7 @@ class APProperties {
     }
 
     public File save(String mode) {
-        File f = new File(System.getProperty("user.dir"), mode+"-parameters.properties")
+        File f = new File(System.getProperty("user.dir"), "ap-parameters.properties")
         def props = new Properties()
         props["workingDirectory"] = wdir.absolutePath
         props["inputFiles"] = ifiles.files
@@ -122,6 +131,7 @@ class APProperties {
         props["peakCliqueAlignment.peakAreaVariable"] = pca.peakAreaVariable.toString()
         props["peakCliqueAlignment.rtNormalizationFactor"] = pca.rtNormalizationFactor.toString()
         props["peakCliqueAlignment.rtOutputFormat"] = pca.rtOutputFormat.toString()
+        props["peakCliqueAlignment.minBbhFraction"] = pca.minBbhFraction.toString()
         props["maltcmsRuntime.arguments"] = mr.arguments.toString()
         props["maltcmsRuntime.parallelThreads"] = mr.parallelThreads.toString()
         props["maltcmsRuntime.pipelineMode"] = mr.pipelineMode.toString()

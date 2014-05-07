@@ -149,10 +149,11 @@ def importTab = swing.panel(constraints: BL.CENTER, id: "importTab", name: "Impo
                                         mode = "ap-ms"
                                     }
                                 }
-
-                                file.path
+                                println "Adding file $file.absolutePath"
+                                file.absolutePath
                             }
                             inputFiles.text = files.join(",")
+                            props.save(props.mr.pipelineMode)
                             setMode(mode, swing, props)
                         }
                     })
@@ -410,6 +411,18 @@ def peakAlignmentTab = swing.panel(constraints: BL.CENTER, id:"peakAlignmentTab"
                 )
                 bind(source: pcaMinCliqueSize, sourceProperty: "value", target: props.pca,
                     targetProperty: "minCliqueSize", mutual: true)
+            }
+        }
+        tr {
+            td(colfill: true) {hglue()}
+            td(align: "RIGHT") {label "Minimum Bidirectional Best Hit Fraction"}
+            td(colspan: 2, colfill: true, align: "LEFT") {
+                formattedTextField(id: 'pcaMinBbhFraction',columns: 14,formatterFactory: df,
+                toolTipText: "0 < Minimum BBH Fraction <= 1; "+
+                "Minimum required fraction of peak candidate BBHs to peaks in clique"
+                )
+                bind(source: pcaMinBbhFraction, sourceProperty: "value", target: props.pca,
+                    targetProperty: "minBbhFraction", mutual: true)
             }
         }
         tr {

@@ -42,5 +42,6 @@ class PeakCliqueAlignment {
     String peakAreaVariable = "peak_area_normalized"
     Double rtNormalizationFactor = 1.0
     String rtOutputFormat = "0.00000000000000"
+    Double minBbhFraction = 1.0
 }
 

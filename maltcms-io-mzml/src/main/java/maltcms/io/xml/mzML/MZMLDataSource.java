@@ -821,7 +821,8 @@ public class MZMLDataSource implements IDataSource {
                     }
                     a.setInt(i, paramMsLevel);
                 } catch (NullPointerException | ResourceNotAvailableException npe) {
-                    log.warn("Could not retrieve ms level for spectrum {}!", spectrum.getId());
+                    log.warn("Could not retrieve ms level for spectrum {}! Assuming level 1!", spectrum.getId());
+                    a.setInt(i, 1);
                 }
                 i++;
             }

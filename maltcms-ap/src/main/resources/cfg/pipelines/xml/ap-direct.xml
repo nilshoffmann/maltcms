@@ -148,7 +148,7 @@ for details.
         <property name="workerFactory" ref="workerFactory"/>
         <property name="useSparseArrays" value="false"/>
         <property name="minCliqueSize" value="${peakCliqueAlignment.minCliqueSize}"/>
-        <property name="maxBBHErrors" value="0"/>
+        <property name="minBbhFraction" value="${peakCliqueAlignment.minBbhFraction}"/>
         <property name="savePeakSimilarities" value="false"/>
         <property name="useUserSuppliedAnchors" value="false"/>
         <property name="saveXMLAlignment" value="true"/>
