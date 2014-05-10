@@ -27,13 +27,15 @@
  */
 package maltcms.datastructures.ms;
 
+import java.io.Serializable;
+
 /**
  * Interface for alignment anchors.
  *
  * @author Nils Hoffmann
  *
  */
-public interface IAnchor extends Comparable<IAnchor> {
+public interface IAnchor extends Comparable<IAnchor>, Serializable {
 
     public abstract String getName();
 

@@ -51,6 +51,7 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
+import ucar.ma2.DataType;
 import ucar.nc2.Dimension;
 
 /**
@@ -88,9 +89,10 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
     private double baselineStopTime = Double.NaN;
     private double baselineStartValue = Double.NaN;
     private double baselineStopValue = Double.NaN;
-    private UUID uniqueId;
+    private final UUID uniqueId = UUID.randomUUID();
 
     public Peak1D() {
+
     }
 
     public Peak1D(int startIndex, int apexIndex, int stopIndex) {
@@ -108,6 +110,33 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
      */
     @Override
     public Array getFeature(String name) {
+        if (name.equals("ExtractedIonCurrent")) {
+            if (extractedIonCurrent != null) {
+                return Array.factory(extractedIonCurrent);
+            } else {
+                return Array.factory(new double[]{Double.NaN});
+            }
+        }
+        if (name.equals("NormalizationMethods")) {
+            if (normalizationMethods != null) {
+                return Array.makeArray(DataType.STRING, normalizationMethods);
+            } else {
+                return Array.makeArray(DataType.STRING, new String[]{"None"});
+            }
+        }
+        if (name.equals("PeakAnnotations")) {
+            throw new ResourceNotAvailableException("PeakAnnotations can not be accessed via getFeature()");
+        }
+        if (name.equals("PeakType")) {
+            if (peakType == null) {
+                return Array.makeArray(DataType.STRING, new String[]{PeakType.UNDEFINED.name()});
+            } else {
+                return Array.makeArray(DataType.STRING, new String[]{peakType.name()});
+            }
+        }
+        if (name.equals("UniqueId")) {
+            return Array.makeArray(DataType.STRING, new String[]{uniqueId.toString()});
+        }
         PublicMemberGetters<Peak1D> pmg = new PublicMemberGetters<>(
                 getClass());
         Method m = pmg.getMethodForGetterName(name);
@@ -118,9 +147,6 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
         }
         try {
             Object o = m.invoke(this, new Object[]{});
-            // if (o.getClass().isPrimitive()) {
-            // throw new NotImplementedException();
-            // }
             if (o == null) {
                 throw new ResourceNotAvailableException(
                         "Can not create array representation of object for method: "

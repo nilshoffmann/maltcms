@@ -27,6 +27,7 @@
  */
 package maltcms.datastructures.peak.annotations;
 
+import java.io.Serializable;
 import lombok.Data;
 import maltcms.datastructures.ms.IMetabolite;
 
@@ -35,7 +36,7 @@ import maltcms.datastructures.ms.IMetabolite;
  * @author Nils Hoffmann
  */
 @Data
-public class PeakAnnotation {
+public class PeakAnnotation implements Serializable{
 
     private double score = Double.NaN;
     private String database = "";

@@ -30,10 +30,9 @@ package maltcms.datastructures.ms;
 import cross.datastructures.cache.SerializableArray;
 import cross.datastructures.tools.EvalTools;
 import cross.exception.ResourceNotAvailableException;
-import java.io.Externalizable;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -46,7 +45,7 @@ import ucar.ma2.IndexIterator;
  * @author Nils Hoffmann
  *
  */
-public class Scan1D implements IScan1D, Externalizable {
+public class Scan1D implements IScan1D {
 
     /**
      *
@@ -58,8 +57,8 @@ public class Scan1D implements IScan1D, Externalizable {
     private double scanAcquisitionTime = Double.NaN;
 //    private ArrayDouble.D0 total_intensity = new ArrayDouble.D0();
     private double total_intensity = Double.NaN;
-    private Array masses = null;
-    private Array intensities = null;
+    private transient Array masses = null;
+    private transient Array intensities = null;
     private UUID uniqueId = UUID.randomUUID();
     private short msLevel = 1;
     private double precursorCharge = Double.NaN;
@@ -70,6 +69,10 @@ public class Scan1D implements IScan1D, Externalizable {
 //    private ArrayDouble.D0 precursorMz = null;
 //    private ArrayDouble.D0 precursorIntensity = null;
 
+    public Scan1D() {
+        
+    }
+    
     public Scan1D(final Array masses1, final Array intensities1,
             final int scanNumber1, final double scanAcquisitionTime1) {
         //enforce equal lengths for masses and intensities
@@ -182,24 +185,24 @@ public class Scan1D implements IScan1D, Externalizable {
         return uniqueId;
     }
 
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeObject(uniqueId);
         out.writeInt(scanNumber);
         out.writeDouble(scanAcquisitionTime);
         out.writeDouble(total_intensity);
         SerializableArray massesArray = new SerializableArray(masses);
-        massesArray.writeExternal(out);
+        out.writeObject(massesArray);
+//        massesArray.writeExternal(out);
         SerializableArray intensitiesArray = new SerializableArray(intensities);
-        intensitiesArray.writeExternal(out);
+        out.writeObject(intensitiesArray);
+//        intensitiesArray.writeExternal(out);
         out.writeShort(msLevel);
         out.writeDouble(precursorCharge);
         out.writeDouble(precursorMz);
         out.writeDouble(precursorIntensity);
     }
 
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         uniqueId = (UUID) in.readObject();
         scanNumber = in.readInt();
         scanAcquisitionTime = in.readDouble();

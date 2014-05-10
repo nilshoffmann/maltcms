@@ -27,7 +27,12 @@
  */
 package maltcms.datastructures.ms;
 
+import cross.datastructures.cache.SerializableArray;
 import cross.datastructures.tuple.Tuple2D;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.URI;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayDouble.D1;
@@ -441,5 +446,81 @@ public class Metabolite implements IMetabolite {
                     "IDs do not match, cannot update!");
         }
 
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeUTF(id);
+        out.writeUTF(id_type);
+        out.writeInt(dbno);
+        out.writeUTF(name);
+        out.writeUTF(sname);
+        out.writeUTF(comments);
+        out.writeUTF(date);
+        out.writeUTF(sp);
+        out.writeUTF(formula);
+        out.writeInt(mw);
+        out.writeDouble(molecularWeight);
+        out.writeInt(scanIndex);
+        out.writeDouble(retentionTime);
+        out.writeUTF(retentionTimeUnit);
+        out.writeDouble(ri);
+        out.writeObject(link);
+        out.writeDouble(min_mass);
+        out.writeDouble(max_mass);
+        out.writeDouble(min_intensity);
+        out.writeDouble(max_intensity);
+        out.writeDouble(min_intensity_norm);
+        out.writeDouble(max_intensity_norm);
+        if (masses != null) {
+            out.writeObject(new SerializableArray(masses));
+        } else {
+            out.writeObject(new NullArray());
+        }
+        if (intensities != null) {
+            out.writeObject(new SerializableArray(intensities));
+        } else {
+            out.writeObject(new NullArray());
+        }
+    }
+
+    private final class NullArray implements Serializable {
+
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        id = in.readUTF();
+        id_type = in.readUTF();
+        dbno = in.readInt();
+        name = in.readUTF();
+        sname = in.readUTF();
+        comments = in.readUTF();
+        date = in.readUTF();
+        sp = in.readUTF();
+        formula = in.readUTF();
+        mw = in.readInt();
+        molecularWeight = in.readDouble();
+        scanIndex = in.readInt();
+        retentionTime = in.readDouble();
+        retentionTimeUnit = in.readUTF();
+        ri = in.readDouble();
+        link = (URI) in.readObject();
+        min_mass = in.readDouble();
+        max_mass = in.readDouble();
+        min_intensity = in.readDouble();
+        max_intensity = in.readDouble();
+        min_intensity_norm = in.readDouble();
+        max_intensity_norm = in.readDouble();
+        Object mobj = in.readObject();
+        if (mobj != null) {
+            if (!(mobj instanceof NullArray)) {
+                masses = (ArrayDouble.D1) ((SerializableArray) mobj).getArray();
+            }
+        }
+        Object iobj = in.readObject();
+        if (iobj != null) {
+            if (!(iobj instanceof NullArray)) {
+                intensities = (ArrayInt.D1) ((SerializableArray) in.readObject()).getArray();
+            }
+        }
     }
 }

@@ -27,6 +27,7 @@
  */
 package maltcms.datastructures.ms;
 
+import cross.exception.ResourceNotAvailableException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -36,16 +37,43 @@ import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import ucar.ma2.Array;
+import ucar.ma2.IndexIterator;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class Scan2DTest extends Scan1DTest {
+public class Scan2DTest {
 
-    @Override
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    /**
+     *
+     * @param a
+     * @param b
+     */
+    public void checkArraysEqual(Array a, Array b) {
+        Assert.assertNotNull(a);
+        Assert.assertNotNull(b);
+        int[] shape1 = a.getShape();
+        int[] shape2 = b.getShape();
+        Assert.assertEquals(shape1.length, shape2.length);
+        for(int i = 0; i< shape1.length; i++) {
+            Assert.assertEquals(shape1[i], shape2[i]);
+        }
+        junit.framework.Assert.assertEquals(a.getElementType(), b.getElementType());
+        IndexIterator itera = a.getIndexIterator();
+        IndexIterator iterb = b.getIndexIterator();
+        while (itera.hasNext() && iterb.hasNext()) {
+            junit.framework.Assert.assertEquals(itera.getObjectNext(), iterb.getObjectNext());
+        }
+    }
+
     public List<IScan> createScans() {
         IScan[] scans = {
             //default scan
@@ -53,7 +81,7 @@ public class Scan2DTest extends Scan1DTest {
             Array.factory(new double[]{50.213, 58.997, 82.786}),
             Array.factory(new int[]{9870, 988, 76234}),
             0,
-            782.24),
+            782.24, -1, -1, 21.532, 3.13),
             new Scan2D(
             Array.factory(new double[]{50.213, 58.997, 82.786}),
             Array.factory(new int[]{9870, 988, 76234}),
@@ -72,7 +100,6 @@ public class Scan2DTest extends Scan1DTest {
      * Test of getFeatureNames method, of class Scan2D.
      */
     @Test
-    @Override
     public void testGetFeatureNames() {
         IScan scan = createScans().get(0);
         Assert.assertEquals(scan.getFeatureNames(), Arrays.asList(
@@ -88,7 +115,6 @@ public class Scan2DTest extends Scan1DTest {
      * Test of externalization of class Scan2D.
      */
     @Test
-    @Override
     public void testReadWriteExternal() throws Exception {
         List<IScan> scans = createScans();
         for (IScan scan : scans) {
@@ -101,8 +127,22 @@ public class Scan2DTest extends Scan1DTest {
             try {
                 ois = new ObjectInputStream(new FileInputStream(f));
                 IScan o = (IScan) ois.readObject();
-                for (String feature : scan.getFeatureNames()) {
-                    Assert.assertEquals(scan.getFeature(feature), o.getFeature(feature));
+                for (String featureName : scan.getFeatureNames()) {
+                    switch (featureName) {
+                        case "precursor_charge":
+                        case "precursor_mz":
+                        case "precursor_intensity":
+                            try {
+                                Array a = o.getFeature(featureName);
+                            } catch (ResourceNotAvailableException rnae) {
+
+                            }
+                            break;
+                        default:
+                            Array a = scan.getFeature(featureName);
+                            Array b = o.getFeature(featureName);
+                            checkArraysEqual(a, b);
+                    }
                 }
                 Assert.assertEquals(scan.getUniqueId(), o.getUniqueId());
                 Scan2D lhs = (Scan2D) scan;
@@ -113,8 +153,12 @@ public class Scan2DTest extends Scan1DTest {
                 Assert.assertEquals(lhs.getScanAcquisitionTime(), rhs.getScanAcquisitionTime(), 0.0);
                 Assert.assertEquals(lhs.getTotalIntensity(), rhs.getTotalIntensity(), 0.0);
                 Assert.assertEquals(lhs.getScanIndex(), rhs.getScanIndex());
-                Assert.assertEquals(lhs.getFirstColumnScanAcquisitionTime(), rhs.getFirstColumnScanAcquisitionTime());
-                Assert.assertEquals(lhs.getSecondColumnScanAcquisitionTime(), rhs.getSecondColumnScanAcquisitionTime());
+                Assert.assertNotEquals(lhs.getFirstColumnScanAcquisitionTime(), 0.0, 0.0);
+                Assert.assertNotEquals(rhs.getFirstColumnScanAcquisitionTime(), 0.0, 0.0);
+                Assert.assertEquals(lhs.getFirstColumnScanAcquisitionTime(), rhs.getFirstColumnScanAcquisitionTime(), 0.0);
+                Assert.assertNotEquals(lhs.getSecondColumnScanAcquisitionTime(), 0.0, 0.0);
+                Assert.assertNotEquals(rhs.getSecondColumnScanAcquisitionTime(), 0.0, 0.0);
+                Assert.assertEquals(lhs.getSecondColumnScanAcquisitionTime(), rhs.getSecondColumnScanAcquisitionTime(), 0.0);
                 Assert.assertEquals(lhs.getFirstColumnScanIndex(), rhs.getFirstColumnScanIndex());
                 Assert.assertEquals(lhs.getSecondColumnScanIndex(), rhs.getSecondColumnScanIndex());
 

@@ -28,8 +28,8 @@
 package maltcms.datastructures.ms;
 
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.List;
 import ucar.ma2.Array;
@@ -53,6 +53,10 @@ public class Scan2D extends Scan1D implements IScan2D {
     private double fctime = -1, sctime = -1;
     private int fcind = -1, scind = -1;
 
+    public Scan2D() {
+        
+    }
+    
     public Scan2D(Array masses1, Array intensities1, int scanNumber1,
             double scanAcquisitionTime1) {
         super(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
@@ -176,18 +180,16 @@ public class Scan2D extends Scan1D implements IScan2D {
             "precursor_intensity"});
     }
 
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
         out.writeInt(fcind);
         out.writeInt(scind);
         out.writeDouble(fctime);
         out.writeDouble(sctime);
     }
 
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
         fcind = in.readInt();
         scind = in.readInt();
         fctime = in.readDouble();

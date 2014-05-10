@@ -130,6 +130,9 @@ public class ArrayTools {
      * @return
      */
     public static Array factoryScalar(Object o) throws IllegalArgumentException {
+        if (o == null) {
+            throw new IllegalArgumentException("Provided object is null!");
+        }
         if (o instanceof Array) {
             return (Array) o;
         }

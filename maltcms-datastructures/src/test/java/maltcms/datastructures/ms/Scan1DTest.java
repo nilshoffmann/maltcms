@@ -42,6 +42,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import ucar.ma2.Array;
+import ucar.ma2.IndexIterator;
 
 /**
  *
@@ -211,6 +212,28 @@ public class Scan1DTest {
     }
 
     /**
+     *
+     * @param a
+     * @param b
+     */
+    public void checkArraysEqual(Array a, Array b) {
+        Assert.assertNotNull(a);
+        Assert.assertNotNull(b);
+        int[] shape1 = a.getShape();
+        int[] shape2 = b.getShape();
+        Assert.assertEquals(shape1.length, shape2.length);
+        for (int i = 0; i < shape1.length; i++) {
+            Assert.assertEquals(shape1[i], shape2[i]);
+        }
+        junit.framework.Assert.assertEquals(a.getElementType(), b.getElementType());
+        IndexIterator itera = a.getIndexIterator();
+        IndexIterator iterb = b.getIndexIterator();
+        while (itera.hasNext() && iterb.hasNext()) {
+            junit.framework.Assert.assertEquals(itera.getObjectNext(), iterb.getObjectNext());
+        }
+    }
+
+    /**
      * Test of externalization of class Scan1D.
      */
     @Test
@@ -221,13 +244,24 @@ public class Scan1DTest {
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f))) {
                 oos.writeObject(scan);
             } catch (IOException ioex) {
+                throw ioex;
             }
-            ObjectInputStream ois = null;
-            try {
-                ois = new ObjectInputStream(new FileInputStream(f));
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
                 IScan o = (IScan) ois.readObject();
-                for (String feature : scan.getFeatureNames()) {
-                    Assert.assertEquals(scan.getFeature(feature), o.getFeature(feature));
+                for (String featureName : scan.getFeatureNames()) {
+                    switch (featureName) {
+                        case "precursor_charge":
+                        case "precursor_mz":
+                        case "precursor_intensity":
+                            try {
+                                Array a = o.getFeature(featureName);
+                            } catch (ResourceNotAvailableException rnae) {
+
+                            }
+                            break;
+                        default:
+                            checkArraysEqual(scan.getFeature(featureName), o.getFeature(featureName));
+                    }
                 }
                 Assert.assertEquals(scan.getUniqueId(), o.getUniqueId());
                 Scan1D lhs = (Scan1D) scan;
@@ -239,11 +273,7 @@ public class Scan1DTest {
                 Assert.assertEquals(lhs.getTotalIntensity(), rhs.getTotalIntensity(), 0.0);
                 Assert.assertEquals(lhs.getScanIndex(), rhs.getScanIndex());
             } catch (IOException ioex) {
-
-            } finally {
-                if (ois != null) {
-                    ois.close();
-                }
+                throw ioex;
             }
         }
     }

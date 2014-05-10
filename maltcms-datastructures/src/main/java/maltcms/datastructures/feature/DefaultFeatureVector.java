@@ -27,7 +27,13 @@
  */
 package maltcms.datastructures.feature;
 
+import cross.datastructures.cache.SerializableArray;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -36,10 +42,7 @@ import java.util.UUID;
 import maltcms.datastructures.array.IFeatureVector;
 import ucar.ma2.Array;
 
-/**
- * @author Nils Hoffmann
- *
- */
+
 public class DefaultFeatureVector implements IFeatureVector {
 
     /**
@@ -47,8 +50,8 @@ public class DefaultFeatureVector implements IFeatureVector {
      */
     private static final long serialVersionUID = -2245293151270164895L;
     private Map<String, Integer> featureToIndex = null;
-    private List<Array> datalist = null;
-    private final UUID uniqueId;
+    private transient List<Array> datalist = null;
+    private UUID uniqueId;
 
     public DefaultFeatureVector() {
         this(UUID.randomUUID());
@@ -85,7 +88,7 @@ public class DefaultFeatureVector implements IFeatureVector {
     }
 
     private int getFeatureIndex(String name) {
-        if (featureToIndex.containsKey(name)) {
+        if (getFeatureToIndex().containsKey(name)) {
             return getFeatureToIndex().get(name);
         }
         return -1;
@@ -96,7 +99,7 @@ public class DefaultFeatureVector implements IFeatureVector {
         if (idx >= 0) {
             getDataList().set(idx, a);
         } else {
-            getFeatureToIndex().put(name, this.datalist.size());
+            getFeatureToIndex().put(name, getDataList().size());
             getDataList().add(a);
         }
     }
@@ -114,4 +117,26 @@ public class DefaultFeatureVector implements IFeatureVector {
         return uniqueId;
     }
 
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeObject(uniqueId);
+        out.writeInt(featureToIndex.keySet().size());
+        String[] keys = featureToIndex.keySet().toArray(new String[featureToIndex.keySet().size()]);
+        Arrays.sort(keys);
+        for(String key:keys) {
+            out.writeUTF(key);
+            out.writeObject(new SerializableArray(datalist.get(featureToIndex.get(key))));
+        }
+    }
+
+     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+         this.uniqueId = (UUID)in.readObject();
+        int records = in.readInt();
+        this.featureToIndex = new HashMap<>();
+        this.datalist = new ArrayList<>(records); 
+        for (int i = 0; i< records; i++) {
+            String key = in.readUTF();
+            SerializableArray sa = (SerializableArray)in.readObject();
+            addFeature(key, sa.getArray());
+        }
+     }
 }

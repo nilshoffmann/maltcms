@@ -34,14 +34,59 @@ import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cross.tools.MathTools;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.UUID;
+import maltcms.tools.ArrayTools;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import ucar.ma2.Array;
 
 /**
  *
  * @author Nils Hoffmann
  */
 public class PairwiseValueMapTest {
+
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    /**
+     * Test of externalization of class PairwiseValueMap.
+     */
+    @Test
+    public void testReadWriteExternal() throws Exception {
+        PairwiseValueMap pvm = new PairwiseValueMap(3, 4, false, PairwiseValueMap.StorageType.DENSE, Double.NEGATIVE_INFINITY);
+        pvm.setValue(0, 2, 0.89);
+        pvm.setValue(1, 2, 0.414);
+        Assert.assertEquals(0, pvm.indexOfMaxInColumn(2));
+        Assert.assertEquals(0.89, pvm.getValue(pvm.indexOfMaxInColumn(2), 2), 1.0e-10);
+        Assert.assertEquals(2, pvm.indexOfMinInColumn(2));
+        Assert.assertEquals(Double.NEGATIVE_INFINITY, pvm.getValue(pvm.indexOfMinInColumn(2), 2), 1.0e-10);
+
+        File f = temporaryFolder.newFile();
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f))) {
+            oos.writeObject(pvm);
+        } catch (IOException ioex) {
+            throw ioex;
+        }
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
+            PairwiseValueMap o = (PairwiseValueMap) ois.readObject();
+            Assert.assertEquals(0, o.indexOfMaxInColumn(2));
+            Assert.assertEquals(0.89, o.getValue(o.indexOfMaxInColumn(2), 2), 1.0e-10);
+            Assert.assertEquals(2, o.indexOfMinInColumn(2));
+            Assert.assertEquals(Double.NEGATIVE_INFINITY, o.getValue(o.indexOfMinInColumn(2), 2), 1.0e-10);
+            Assert.assertEquals(pvm, o);
+        } catch (IOException ioex) {
+            throw ioex;
+        }
+    }
 
     /**
      * Test of dense matrix.
