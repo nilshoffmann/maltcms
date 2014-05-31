@@ -30,6 +30,7 @@ public final class ThreadTimer
     private final long interval;
     private final long threadId;
     private final HashMap<Long, Times> history = new HashMap<Long, Times>();
+    private long startTime = -1;
 
     /**
      * Create a polling thread to track times.
@@ -59,6 +60,9 @@ public final class ThreadTimer
      * Update the hash table of thread times.
      */
     private void update() {
+        if (startTime == -1) {
+            startTime = System.nanoTime();
+        }
         final ThreadMXBean bean
                 = ManagementFactory.getThreadMXBean();
         final long[] ids = bean.getAllThreadIds();
@@ -116,5 +120,9 @@ public final class ThreadTimer
      */
     public long getTotalSystemTime() {
         return getTotalCpuTime() - getTotalUserTime();
+    }
+
+    public long getElapsedWallClockTime() {
+        return System.nanoTime() - startTime;
     }
 }

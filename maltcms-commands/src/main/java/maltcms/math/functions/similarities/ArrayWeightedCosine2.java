@@ -27,6 +27,8 @@
  */
 package maltcms.math.functions.similarities;
 
+import com.carrotsearch.hppc.ObjectDoubleMap;
+import com.carrotsearch.hppc.ObjectDoubleOpenHashMap;
 import cross.cache.ICacheDelegate;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
@@ -34,6 +36,7 @@ import maltcms.tools.ArrayTools;
 import net.jcip.annotations.NotThreadSafe;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
+import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
 
 /**
@@ -46,7 +49,7 @@ import ucar.ma2.MAMath;
 @NotThreadSafe
 public class ArrayWeightedCosine2 implements IArraySimilarity {
 
-    private final ICacheDelegate<Array, Array> cache;
+    private transient final ICacheDelegate<Array, Array> cache;
 
     private double minimumSimilarity = 0.0d;
 
@@ -58,24 +61,31 @@ public class ArrayWeightedCosine2 implements IArraySimilarity {
         Array d = cache.get(a);
         if (d == null) {
             double max = MAMath.getMaximum(a);
-            Array b = ArrayTools.mult(a, 1.0d/max);
+            Array b = ArrayTools.mult(a, 1.0d / max);
             cache.put(a, b);
             return b;
         }
         return d;
     }
-    
+
     @Override
     public double apply(final Array t1, final Array t2) {
-        double s1 = 0, s2 = 0, c = 0, v1 = 0, v2 = 0;
-        final Array t1c = getNormalizedArray(t1);
-        final Array t2c = getNormalizedArray(t2);
-        for (int i = 0; i < t1c.getShape()[0]; i++) {
-            v1 = t1c.getDouble(i);
-            v2 = t2c.getDouble(i);
-            s1 += miProduct(i + 1, v1);
-            s2 += miProduct(i + 1, v2);
-            c += miProduct(i + 1, Math.sqrt(v1 * v2));
+        double s1 = 0, s2 = 0, c = 0;
+        final Array t1n = getNormalizedArray(t1);
+        final Array t2n = getNormalizedArray(t2);
+        IndexIterator ii1 = t1n.getIndexIterator();
+        IndexIterator ii2 = t2n.getIndexIterator();
+        int i = 0;
+        double v1, v2;
+        int nexti;
+        while (ii1.hasNext() && ii2.hasNext()) {
+            v1 = ii1.getDoubleNext();
+            v2 = ii2.getDoubleNext();
+            nexti = i + 1;
+            s1 += miProduct(nexti, v1);
+            s2 += miProduct(nexti, v2);
+            c += miProduct(nexti, Math.sqrt(v1 * v2));
+            i++;
         }
         final double val = (c * c / (s1 * s2));
         return val > minimumSimilarity ? val : Double.NEGATIVE_INFINITY;
@@ -87,7 +97,7 @@ public class ArrayWeightedCosine2 implements IArraySimilarity {
 
     @Override
     public IArraySimilarity copy() {
-        ArrayWeightedCosine alp = new ArrayWeightedCosine();
+        ArrayWeightedCosine2 alp = new ArrayWeightedCosine2();
         alp.setMinimumSimilarity(getMinimumSimilarity());
         return alp;
     }

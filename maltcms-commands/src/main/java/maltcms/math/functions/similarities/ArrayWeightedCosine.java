@@ -42,12 +42,12 @@ import ucar.ma2.MAMath;
  *
  */
 @Data
-@EqualsAndHashCode(exclude = {"cache"})
+@EqualsAndHashCode
 @ServiceProvider(service = IArraySimilarity.class)
 @NotThreadSafe
 public class ArrayWeightedCosine implements IArraySimilarity {
 
-    private final ICacheDelegate<Array, Double> cache;
+    private transient final ICacheDelegate<Array, Double> cache;
 
     private double minimumSimilarity = 0.0d;
 

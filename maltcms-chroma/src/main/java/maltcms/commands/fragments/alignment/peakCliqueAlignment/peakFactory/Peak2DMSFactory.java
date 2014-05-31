@@ -49,7 +49,7 @@ import ucar.ma2.Sparse;
  * @author Nils Hoffmann
  */
 @Data
-@ServiceProvider(service=IPeakFactory.class)
+@ServiceProvider(service = IPeakFactory.class)
 public class Peak2DMSFactory implements IPeakFactory {
 
     private String massesVar = "mass_values";
@@ -75,7 +75,8 @@ public class Peak2DMSFactory implements IPeakFactory {
 
         public Peak2DMSFactoryImpl(IFileFragment sourceFile, Tuple2D<Double, Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, int associationId) {
             this.sourceFile = new FileFragment(sourceFile.getUri());
-
+            ScanLineCacheFactory.setMinMass(minMaxMassRange.getFirst());
+            ScanLineCacheFactory.setMaxMass(minMaxMassRange.getSecond());
             try {
                 IVariableFragment modulationTime = sourceFile.getChild("modulation_time");
                 if (useSparseArrays) {
@@ -83,16 +84,13 @@ public class Peak2DMSFactory implements IPeakFactory {
                 } else {
                     provider = new ScanLineDenseProvider(this.sourceFile, associationId, massBinResolution, size, minMaxMassRange);
                 }
-
             } catch (ResourceNotAvailableException rnae) {
                 if (useSparseArrays) {
                     provider = new DefaultSparseProvider(this.sourceFile, associationId, massBinResolution, size, minMaxMassRange);
-
                 } else {
                     provider = new DefaultDenseProvider(this.sourceFile, associationId, massBinResolution, size, minMaxMassRange);
                 }
             }
-
         }
 
         @Override

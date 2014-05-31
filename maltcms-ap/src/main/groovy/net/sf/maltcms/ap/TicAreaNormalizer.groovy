@@ -38,6 +38,6 @@ import groovy.beans.Bindable
 @Bindable
 class TicAreaNormalizer {
     String ticVariableName = "total_intensity"
-    ObservableList ticVariableNames = ["total_intensity","peak_area"] as ObservableList
+    ObservableList ticVariableNames = ["total_intensity","tic_filtered","peak_area"] as ObservableList
 }
 

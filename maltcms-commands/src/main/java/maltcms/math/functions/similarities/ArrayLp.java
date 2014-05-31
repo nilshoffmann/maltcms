@@ -31,6 +31,7 @@ import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
+import ucar.ma2.IndexIterator;
 
 /**
  * Lp-norm based distance between arrays.
@@ -45,8 +46,10 @@ public class ArrayLp implements IArraySimilarity {
     @Override
     public double apply(final Array t1, final Array t2) {
         double value = 0.0d;
-        for (int i = 0; i < t1.getShape()[0]; i++) {
-            double diff = t1.getDouble(i) - t2.getDouble(i);
+        IndexIterator ii1 = t1.getIndexIterator();
+        IndexIterator ii2 = t2.getIndexIterator();
+        while(ii1.hasNext() && ii2.hasNext()) {
+            double diff = ii1.getDoubleNext() - ii2.getDoubleNext();
             value += (diff * diff);
         }
         return -Math.sqrt(value);

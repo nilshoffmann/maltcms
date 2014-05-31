@@ -28,12 +28,20 @@
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import com.carrotsearch.hppc.LongObjectMap;
+import cross.datastructures.cache.SerializableArray;
 import cross.exception.ResourceNotAvailableException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import static java.lang.System.out;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.feature.DefaultFeatureVector;
 import ucar.ma2.Array;
@@ -52,17 +60,23 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
      *
      */
     private static final long serialVersionUID = -4337180586706400884L;
-    private final int scanIndex;
-    private final double sat;
+    @Setter(AccessLevel.NONE)
+    private int scanIndex;
+    @Setter(AccessLevel.NONE)
+    private double sat;
     private String name = "";
-    private final String peakKey;
+    @Setter(AccessLevel.NONE)
+    private String peakKey;
     private int peakIndex = -1;
-    private final String association;
-    private Array msIntensities;
-    private final int peakId;
+    @Setter(AccessLevel.NONE)
+    private String association;
+    private transient Array msIntensities;
+    @Setter(AccessLevel.NONE)
+    private int peakId;
 //	private static NonBlockingHashMapLong<PeakEdge> bestHits = new NonBlockingHashMapLong<PeakEdge>(true);
     private static int peakIDs = 0;
-    private final int associationId;
+    @Setter(AccessLevel.NONE)
+    private int associationId;
 
     public PeakNG(int scanIndex, Array array, double sat, String association, int associationId) {
         super(UUID.nameUUIDFromBytes((association + "-" + scanIndex).getBytes()));
@@ -289,5 +303,31 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
             return getUniqueId().equals(((PeakNG) o).getUniqueId());
         }
         return false;
+    }
+    
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeInt(scanIndex);
+        out.writeDouble(sat);
+        out.writeUTF(name);
+        out.writeUTF(peakKey);
+        out.writeInt(peakIndex);
+        out.writeUTF(association);
+        out.writeObject(new SerializableArray(msIntensities));
+        out.writeInt(peakId);
+        out.writeInt(associationId);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        scanIndex = in.readInt();
+        sat = in.readDouble();
+        name = in.readUTF();
+        peakKey = in.readUTF();
+        peakIndex = in.readInt();
+        association = in.readUTF();
+        msIntensities = ((SerializableArray)in.readObject()).getArray();
+        peakId = in.readInt();
+        associationId = in.readInt();
     }
 }

@@ -96,6 +96,15 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <jub.consumers>CONSOLE,H2</jub.consumers>
+                        <jub.db.file>.benchmarks</jub.db.file>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <properties>

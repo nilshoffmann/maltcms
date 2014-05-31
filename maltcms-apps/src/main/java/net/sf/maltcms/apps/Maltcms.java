@@ -120,7 +120,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             final ExitVmException npe) {
         int ecode;
         Maltcms.shutdown(1, log);
-        log.error("Caught an ExitVmException!",npe.getLocalizedMessage());
+        log.error("Caught an ExitVmException!", npe.getLocalizedMessage());
+        log.debug("ExitVmException Stack Trace:", npe);
         ecode = 1;
         System.exit(ecode);
     }
@@ -145,7 +146,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * @param args what is passed in from the command-line, usually
      */
     public static void main(final String[] args) {
-        ThreadTimer tt = new ThreadTimer(100);
+        ThreadTimer tt = new ThreadTimer(5000);
         tt.start();
         URL log4jConfiguration = null;
         try {
@@ -205,6 +206,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     Maltcms.shutdown(30, log);
                     // Save workflow
                     iw.save();
+                    addVmStats(tt, iw.getOutputDirectory());
                     System.exit(ecode);
                 } catch (final ExitVmException e) {
                     Maltcms.handleExitVmException(log, e);
@@ -212,8 +214,6 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     Maltcms.handleExitVmException(log, new ExitVmException(iae));
                 } catch (final Throwable t) {
                     Maltcms.handleRuntimeException(log, t, cs);
-                } finally {
-                    addVmStats(tt, iw.getOutputDirectory());
                 }
             } else {
                 throw new ConstraintViolationException(
@@ -227,7 +227,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             Maltcms.handleRuntimeException(log, t, cs);
         }
     }
-    
+
     private static void addVmStats(ThreadTimer tt, File outputDirectory) {
         tt.interrupt();
         List<MemoryPoolMXBean> mbeans = ManagementFactory.getMemoryPoolMXBeans();
@@ -248,20 +248,14 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         log.info("Heap memory used: " + String.format("%.2f", ((maxUsedHeap) / (1024f * 1024f))) + " MB");
         log.info("Non-Heap memory used: " + String.format("%.2f", ((maxUsedNonHeap) / (1024f * 1024f))) + " MB");
         int nmemoryPools = mbeans.size();
-
-//        ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-//        long[] allThreadIds = threadMXBean.getAllThreadIds();
         long time = 0L;
         long userTime = 0L;
         long systemTime = 0L;
-//        for (long id : allThreadIds) {
-//            time += threadMXBean.getThreadCpuTime(id);
-//            userTime += threadMXBean.getThreadUserTime(id);
-//            systemTime += (threadMXBean.getThreadCpuTime(id) - threadMXBean.getThreadUserTime(id));
-//        }
+        long elapsedWallClockTime = 0L;
         time = tt.getTotalCpuTime();
         userTime = tt.getTotalUserTime();
         systemTime = tt.getTotalSystemTime();
+        elapsedWallClockTime = tt.getElapsedWallClockTime();
 
         log.info("Total cpu time: {} sec, ", String.format("%.2f", (time / 1E9f)));
         log.info("Total user time: {} sec, ", String.format("%.2f", (userTime / 1E9f)));
@@ -274,7 +268,10 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             pc.setProperty("usertime_nanoseconds", userTime);
             pc.setProperty("systemtime_nanoseconds", systemTime);
             pc.setProperty("cputime_nanoseconds", time);
+            pc.setProperty("walltime_nanoseconds", elapsedWallClockTime);
             pc.setProperty("memory_pools", nmemoryPools);
+            pc.setProperty("maxUsedHeapMemory_bytes", maxUsedHeap);
+            pc.setProperty("maxUsedNonHeapMemory_bytes", maxUsedNonHeap);
             pc.setProperty("maxUsedMemory_bytes", maxUsedHeap + maxUsedNonHeap);
             pc.save();
         } catch (ConfigurationException ex) {
@@ -289,25 +286,27 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * @param cs
      */
     public static void printBugTrackMessage(final Logger log, final ICommandSequence cs) {
-        log.error("#############################################################################");
-        log.error("# Maltcms has caught an unexpected exception while executing.");
-        log.error("# Please read the exception message carefully for hints on what");
-        log.error("# went wrong.");
-        log.error("# If the message does not give hints on how to avoid the exception,");
-        log.error("# please submit a bug report including this output to:");
-        log.error(
-                "# http://sf.net/p/maltcms/maltcms-bugs");
-        log.error("#");
-        log.error("# Please attach Maltcms' log file (maltcms.log) and the runtime");
-        log.error("# properties and pipeline configuration to your report. ");
-        log.error("# By default, the log file is created within the directory from which"
+        StringBuilder sb = new StringBuilder();
+        sb.append("#############################################################################\n");
+        sb.append("# Maltcms has caught an unexpected exception while executing.\n");
+        sb.append("# Please read the exception message carefully for hints on what\n");
+        sb.append("# went wrong.\n");
+        sb.append("# If the message does not give hints on how to avoid the exception,\n");
+        sb.append("# please submit a bug report including this output to:\n");
+        sb.append(
+                "# http://sf.net/p/maltcms/maltcms-bugs\n");
+        sb.append("#");
+        sb.append("# Please attach Maltcms' log file (maltcms.log) and the runtime\n");
+        sb.append("# properties and pipeline configuration to your report. \n");
+        sb.append("# By default, the log file is created within the directory from which\n"
                 + "");
-        log.error("# maltcms is called, while the runtime properties and pipeline are");
-        log.error("# located in ");
-        log.error("# " + new File(cs.getWorkflow().getOutputDirectory(), "Factory").getAbsolutePath());
-        log.error("# ");
-        log.error("# Your report will help improve Maltcms, thank you!");
-        log.error("#############################################################################");
+        sb.append("# maltcms is called, while the runtime properties and pipeline are\n");
+        sb.append("# located in \n");
+        sb.append("# " + new File(cs.getWorkflow().getOutputDirectory(), "Factory").getAbsolutePath() + "\n");
+        sb.append("# \n");
+        sb.append("# Your report will help improve Maltcms, thank you!\n");
+        sb.append("#############################################################################\n");
+        log.error(sb.toString());
     }
 
     private static void shutdown(final long seconds, final Logger log) {
@@ -409,7 +408,13 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     }
 
     /**
+     * Returns the default configuration. Either from
+     * {@code new File(System.getProperty("maltcms.home"),"cfg/default.properties")},
+     * or from
+     * {@code new File(System.getProperty("user.dir"),"cfg/default.properties")},
+     * or from the classpath.
      *
+     * @return the default configuration
      */
     public PropertiesConfiguration getDefaultConfiguration() {
         PropertiesConfiguration cfg = null;

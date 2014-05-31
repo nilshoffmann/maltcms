@@ -40,7 +40,7 @@ import ucar.ma2.Array;
 @NotThreadSafe
 public class ArrayBhattacharryya implements IArraySimilarity {
 
-    private final ObjectDoubleOpenHashMap<Array> cache;
+    private transient final ObjectDoubleOpenHashMap<Array> cache;
 
     public ArrayBhattacharryya() {
         cache = new ObjectDoubleOpenHashMap<>();

@@ -118,6 +118,8 @@ public class DefaultFeatureVector implements IFeatureVector {
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
+        getDataList();
+        getFeatureToIndex();
         out.writeObject(uniqueId);
         out.writeInt(featureToIndex.keySet().size());
         String[] keys = featureToIndex.keySet().toArray(new String[featureToIndex.keySet().size()]);
@@ -129,7 +131,7 @@ public class DefaultFeatureVector implements IFeatureVector {
     }
 
      private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-         this.uniqueId = (UUID)in.readObject();
+        this.uniqueId = (UUID)in.readObject();
         int records = in.readInt();
         this.featureToIndex = new HashMap<>();
         this.datalist = new ArrayList<>(records); 

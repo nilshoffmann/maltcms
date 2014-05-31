@@ -43,13 +43,13 @@ import ucar.ma2.Array;
  *
  */
 @Data
-@EqualsAndHashCode(exclude = {"cache"})
+@EqualsAndHashCode
 @ServiceProvider(service = IArraySimilarity.class)
 @NotThreadSafe
 public class ArrayRankCorr implements IArraySimilarity {
 
     private boolean returnCoeffDetermination = false;
-    private final ICacheDelegate<Array, double[]> cache;
+    private transient final ICacheDelegate<Array, double[]> cache;
     private final SpearmansCorrelation sc = new SpearmansCorrelation();
 
     public ArrayRankCorr() {

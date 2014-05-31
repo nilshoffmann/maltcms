@@ -42,11 +42,11 @@ import ucar.ma2.Array;
  *
  */
 @Data
-@EqualsAndHashCode(exclude = {"cache"})
+@EqualsAndHashCode
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayCorr implements IArraySimilarity {
 
-    private final ICacheDelegate<Array, double[]> cache;
+    private transient final ICacheDelegate<Array, double[]> cache;
     private boolean returnCoeffDetermination = false;
     private final PearsonsCorrelation pc = new PearsonsCorrelation();
 

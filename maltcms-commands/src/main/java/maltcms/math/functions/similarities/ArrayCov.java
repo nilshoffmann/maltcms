@@ -43,12 +43,12 @@ import ucar.ma2.Array;
  *
  */
 @Data
-@EqualsAndHashCode(exclude = {"cache"})
+@EqualsAndHashCode
 @ServiceProvider(service = IArraySimilarity.class)
 @NotThreadSafe
 public class ArrayCov implements IArraySimilarity {
 
-    private final ICacheDelegate<Array, double[]> cache;
+    private transient final ICacheDelegate<Array, double[]> cache;
     private boolean returnCoeffDetermination = false;
 
     public ArrayCov() {

@@ -36,10 +36,12 @@ import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,6 +63,7 @@ public class CliqueFinder {
     private final boolean saveUnassignedPeaks;
     private final double minBbhFraction;
     private final IWorkflowElement parent;
+    private final boolean postProcessPeaks;
 
     /**
      * @param al
@@ -201,6 +204,16 @@ public class CliqueFinder {
             File incompatiblePeaksFile = writer.savePeakList(workflowOutputDir, nameToFragment, incompatiblePeaks, "incompatiblePeaks.msp", "INCOMPATIBLE");
             parent.getWorkflow().append(new DefaultWorkflowResult(incompatiblePeaksFile, parent, WorkflowSlot.FILEIO, nameToFragment.values().toArray(new IFileFragment[nameToFragment.size()])));
         }
+        
+        if (saveUnassignedPeaks) {
+            PeakListWriter writer = new PeakListWriter();
+            File unassignedPeaksFile = writer.savePeakList(workflowOutputDir, nameToFragment, unassignedPeaks, "unassignedPeaks.msp", "UNASSIGNED");
+            parent.getWorkflow().append(new DefaultWorkflowResult(unassignedPeaksFile, parent, WorkflowSlot.FILEIO, nameToFragment.values().toArray(new IFileFragment[nameToFragment.size()])));
+        }
+        
+        if (postProcessPeaks) {
+            postProcessCliques(edgeMap, peakToClique.values(), incompatiblePeaks, unassignedPeaks);
+        }
 
         for (IBipacePeak p : incompatiblePeaks) {
             log.debug("Incompatible peak: " + p);
@@ -209,12 +222,7 @@ public class CliqueFinder {
                 p.setMsIntensities(null);
             }
         }
-        if (saveUnassignedPeaks) {
-            PeakListWriter writer = new PeakListWriter();
-            File unassignedPeaksFile = writer.savePeakList(workflowOutputDir, nameToFragment, unassignedPeaks, "unassignedPeaks.msp", "UNASSIGNED");
-            parent.getWorkflow().append(new DefaultWorkflowResult(unassignedPeaksFile, parent, WorkflowSlot.FILEIO, nameToFragment.values().toArray(new IFileFragment[nameToFragment.size()])));
-        }
-
+        
         for (IBipacePeak p : unassignedPeaks) {
             for (String partition : nameToFragment.keySet()) {
                 p.clearSimilarities(edgeMap, nameToIndex.get(partition));
@@ -318,5 +326,62 @@ public class CliqueFinder {
             d.clear();
         }
         return incompatiblePeaks;
+    }
+
+    private void postProcessCliques(LongObjectMap<PeakEdge> edgeMap, Collection<Clique<IBipacePeak>> cliques, Collection<IBipacePeak> incompatiblePeaks, Collection<IBipacePeak> unassignedPeaks) {
+        log.error("Post processing cliques and unmatched peaks");
+//			SparseDoubleMatrix2D sdm = new SparseDoubleMatrix2D(cliques.size(), result.getIncompatiblePeaks().size() + result.getUnassignedPeaks().size() + unmatchedPeaks.size());
+        //identify all peaks that are not contained in the final cliques
+//			int clique = 0;
+        int peakNumberCorrection = 0;
+        int incompatibleAdded = 0;
+        int unassignedAdded = 0;
+//        int unmatchedAdded = 0;
+        for (Clique<IBipacePeak> c : cliques) {
+            if (!c.getPeakList().isEmpty()) {
+                log.debug("Checking clique at {} with size {} and rtvariance {}", new Object[]{c.getCliqueRTMean(), c.getPeakList().size(), c.getCliqueRTVariance()});
+                //log.info("RT variance within clique {} containing {} peaks ={}; Stdev: {}", new Object[]{c.getCliqueRTMean(), c.getPeakList().size(), c.getCliqueRTVariance(), Math.sqrt(c.getCliqueRTVariance())});
+                for (Iterator<IBipacePeak> incompatiblePeaksIter = incompatiblePeaks.iterator(); incompatiblePeaksIter.hasNext();) {
+                    IBipacePeak q = incompatiblePeaksIter.next();
+                    double ratio = c.getRatioOfRTDistanceToCentroidAndCliqueVariance(q);
+                    if (ratio <= 1) {
+                        if (c.addPeak(edgeMap, q)) {
+                            log.debug("Adding formerly incompatible peak {} to clique", q);
+                            peakNumberCorrection++;
+                            incompatibleAdded++;
+                            incompatiblePeaksIter.remove();
+                        }
+                    }
+                }
+                for (Iterator<IBipacePeak> unassignedPeaksIter = unassignedPeaks.iterator(); unassignedPeaksIter.hasNext();) {
+                    IBipacePeak q = unassignedPeaksIter.next();
+                    double ratio = c.getRatioOfRTDistanceToCentroidAndCliqueVariance(q);
+                    if (ratio <= 1) {
+                        if (c.addPeak(edgeMap, q)) {
+                            log.debug("Adding formerly unassigned peak {} to clique", q);
+                            peakNumberCorrection++;
+                            unassignedAdded++;
+                            unassignedPeaksIter.remove();
+                        }
+                    }
+                }
+//                for (Iterator<IBipacePeak> unmatchedPeaksIter = unmatchedPeaks.iterator(); unmatchedPeaksIter.hasNext();) {
+//                    IBipacePeak q = unmatchedPeaksIter.next();
+//                    double ratio = c.getRatioOfRTDistanceToCentroidAndCliqueVariance(q);
+//                    if (ratio <= 1) {
+//                        if (c.addPeak(edgeMap, q)) {
+//                            log.debug("Adding formerly unmatched peak {} to clique", q);
+//                            peakNumberCorrection++;
+//                            unmatchedAdded++;
+//                            unmatchedPeaksIter.remove();
+//                        }
+//                    }
+////                        peak++;
+//                }
+            } else {
+                log.debug("Skipping empty clique at {}", c.getCliqueRTMean());
+            }
+        }
+        log.error("Post processing assigned {} incompatible and {} previously unassigned peaks to cliques!", new Object[]{incompatibleAdded, unassignedAdded});
     }
 }

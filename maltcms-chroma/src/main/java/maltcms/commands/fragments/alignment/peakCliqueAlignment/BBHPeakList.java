@@ -28,12 +28,13 @@
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class BBHPeakList extends ArrayList<IBipacePeak> {
+public class BBHPeakList extends ArrayList<UUID> {
 
     public BBHPeakList(int initialCapacity) {
         super(initialCapacity);

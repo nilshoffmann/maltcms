@@ -60,9 +60,9 @@ import ucar.ma2.Array;
 
 /**
  * Timing microbenchmarks for different array similarities together with product
- * similarity. The benchmark uses a subset of 501 ms scans from two raw chromatograms
- * with 5 repetitions per instance and 3 warmup rounds before the actual timing is 
- * started. It thus runs for quite some time.
+ * similarity. The benchmark uses a subset of 501 ms scans from two raw
+ * chromatograms with 5 repetitions per instance and 3 warmup rounds before the
+ * actual timing is started. It thus runs for quite some time.
  *
  * @author Nils Hoffmann
  */
@@ -81,12 +81,15 @@ public class ArraySimilarityTiming extends AFragmentCommandTest implements Integ
 
     @Before
     public final void setupDenseArrays() throws IOException, Exception {
+        sl.setLogLevel("cross", "OFF");
+        sl.setLogLevel("maltcms", "OFF");
+        sl.setLogLevel("net.sf.maltcms", "OFF");
         if (fileFragments == null) {
             File outputBase = tf.newFolder();
             IFragmentCommand dap = new DenseArrayProducer();
             ScanExtractor se = new ScanExtractor();
             se.setStartScan(1000);
-            se.setEndScan(1500);
+            se.setEndScan(1999);
             List<File> files = ecpf.getFiles();
             IWorkflow w = createWorkflow(outputBase, Arrays.asList(se, dap), files);
             TupleND<IFileFragment> t = w.call();
@@ -139,7 +142,6 @@ public class ArraySimilarityTiming extends AFragmentCommandTest implements Integ
     public void testDotProduct() {
         timedTest(new ArrayDot());
     }
-
     @Test
     public void testWeightedCosine() {
         timedTest(new ArrayWeightedCosine());
@@ -154,7 +156,7 @@ public class ArraySimilarityTiming extends AFragmentCommandTest implements Integ
     public void testCosine() {
         timedTest(new ArrayCos());
     }
-
+    
     public void timedTest(IArraySimilarity sim) {
         GaussianDifferenceSimilarity gds = new GaussianDifferenceSimilarity();
         gds.setThreshold(0.0);
@@ -167,7 +169,7 @@ public class ArraySimilarityTiming extends AFragmentCommandTest implements Integ
         ProfileChromatogram1D pc1 = new ProfileChromatogram1D(f1);
         ProfileChromatogram1D pc2 = new ProfileChromatogram1D(f2);
         List<Array> pc1Intensities = pc1.getBinnedIntensities();
-        List< Array> pc2Intensities = pc2.getBinnedIntensities();
+        List<Array> pc2Intensities = pc2.getBinnedIntensities();
         Array rt1 = pc1.getScanAcquisitionTime();
         Array rt2 = pc2.getScanAcquisitionTime();
         DenseDoubleMatrix2D sdm = new DenseDoubleMatrix2D(pc1Intensities.size(), pc2Intensities.size());
@@ -178,5 +180,6 @@ public class ArraySimilarityTiming extends AFragmentCommandTest implements Integ
                 sdm.setQuick(i, j, ps.apply(new double[]{rt1.getDouble(i)}, new double[]{rt2.getDouble(j)}, iv, jv));
             }
         }
+        System.err.println("Similarity stats: " + sim);
     }
 }

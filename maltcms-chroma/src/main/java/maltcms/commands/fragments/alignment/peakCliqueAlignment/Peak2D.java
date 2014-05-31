@@ -27,7 +27,11 @@
  */
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
+import cross.datastructures.cache.SerializableArray;
 import cross.exception.ResourceNotAvailableException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -101,6 +105,18 @@ public class Peak2D extends PeakNG {
     @Override
     public int hashCode() {
         return getUniqueId().hashCode();
+    }
+    
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeDouble(firstColumnElutionTime);
+        out.writeDouble(secondColumnElutionTime);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        firstColumnElutionTime = in.readDouble();
+        secondColumnElutionTime = in.readDouble();
     }
 
 }

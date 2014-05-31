@@ -34,6 +34,7 @@ import maltcms.math.functions.IArraySimilarity;
 import net.jcip.annotations.NotThreadSafe;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
+import ucar.ma2.IndexIterator;
 import ucar.ma2.MAVector;
 
 /**
@@ -43,12 +44,12 @@ import ucar.ma2.MAVector;
  *
  */
 @Data
-@EqualsAndHashCode(exclude = {"cache"})
+@EqualsAndHashCode
 @ServiceProvider(service = IArraySimilarity.class)
 @NotThreadSafe
 public class ArrayCos implements IArraySimilarity {
 
-    private final ICacheDelegate<Array, Double> cache;
+    private transient final ICacheDelegate<Array, Double> cache;
     private double minimumSimilarity = 0.0d;
 
     public ArrayCos() {
@@ -70,10 +71,13 @@ public class ArrayCos implements IArraySimilarity {
     public double apply(final Array t1, final Array t2) {
         final double l1 = getLength(t1);
         final double l2 = getLength(t2);
-        final int len = t1.getShape()[0];
         double dot = 0.0d;
-        for (int i = 0; i < len; i++) {
-            dot += (t1.getDouble(i) * t2.getDouble(i));
+        IndexIterator ii1 = t1.getIndexIterator();
+        IndexIterator ii2 = t2.getIndexIterator();
+        while(ii1.hasNext() && ii2.hasNext()) {
+            double t1v = ii1.getDoubleNext();
+            double t2v = ii2.getDoubleNext();
+            dot += (t1v*t2v);
         }
         final double val = dot / (l1 * l2);
         return val > minimumSimilarity ? val : Double.NEGATIVE_INFINITY;

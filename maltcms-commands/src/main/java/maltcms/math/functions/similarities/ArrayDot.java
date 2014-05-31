@@ -31,6 +31,7 @@ import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
+import ucar.ma2.IndexIterator;
 
 /**
  * Dot product as similarity measure between arrays.
@@ -43,10 +44,11 @@ public class ArrayDot implements IArraySimilarity {
 
     @Override
     public double apply(final Array t1, final Array t2) {
-        final int len = t1.getShape()[0];
         double dot = 0.0d;
-        for (int i = 0; i < len; i++) {
-            dot += (t1.getDouble(i) * t2.getDouble(i));
+        IndexIterator ii1 = t1.getIndexIterator();
+        IndexIterator ii2 = t2.getIndexIterator();
+        while (ii1.hasNext() && ii2.hasNext()) {
+            dot += (ii1.getDoubleNext() * ii2.getDoubleNext());
         }
         return dot;
     }

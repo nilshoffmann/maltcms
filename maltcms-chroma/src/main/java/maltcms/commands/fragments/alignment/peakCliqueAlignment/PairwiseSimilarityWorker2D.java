@@ -89,6 +89,7 @@ public final class PairwiseSimilarityWorker2D implements Callable<PairwiseSimila
                 }
             }
         }
+        sim=null;
         if (savePeakSimilarities) {
             PeakSimilarityVisualizer psv = new PeakSimilarityVisualizer();
             psv.visualizePairwisePeakSimilarities(outputDirectory, edgeMap, lhsName, lhsPeaks, rhsName, rhsPeaks, 256, "beforeBIDI", false);

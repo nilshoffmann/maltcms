@@ -314,8 +314,25 @@ def peakDetectionTab = swing.panel(constraints: BL.CENTER, id: "peakDetectionTab
             td(align: "RIGHT") {label "Integrate Raw Signal", visible: false}
             td(colspan: 2, align: "LEFT") {
                 checkBox(id: 'tpfIntegrateRawTic', visible: false)
-                bind(source: tpfIntegrateRawTic, sourceProperty: "selected", target:props.tpf,
-                    targetProperty: "integrateRawTic", mutual: true)
+                bind(source: tpfIntegrateRawTic, sourceEvent: "itemStateChanged",
+                    sourceValue: {
+                        if(tpfIntegrateRawTic.isSelected()) {
+                            println "Setting total_intensity"
+                            props.tan.ticVariableName = "total_intensity"
+                            tanTicVariableNames.setSelectedItem((String)"total_intensity")
+                        } else {
+                            if(props.tan.ticVariableName.equals("peak_area")) {
+                                println "Setting peak_area"
+                                props.tan.ticVariableName = "peak_area"
+                                tanTicVariableNames.setSelectedItem((String)"peak_area")
+                            } else {
+                                println "Setting tic_filtered"
+                                props.tan.ticVariableName = "tic_filtered"
+                                tanTicVariableNames.setSelectedItem((String)"tic_filtered")
+                            }
+                        }
+                    }, target:props.tpf,
+                    targetProperty: "integrateRawTic")
             }
         }
         tr {
@@ -341,8 +358,21 @@ def peakNormalizationTab = swing.panel(constraints: BL.CENTER, id: "peakNormaliz
             td(colfill: true) {hglue()}
             td(align: "RIGHT") {label "Normalize using"}
             td(colspan: 2, colfill: true, align: "LEFT") {
-                comboBox(id: 'tanTicVariableNames', items: props.tan.ticVariableNames)
-                bind(source: tanTicVariableNames, sourceEvent:"actionPerformed", sourceValue: {tanTicVariableNames.selectedItem}, target:props.tan, targetProperty: "ticVariableName")
+                comboBox(id: 'tanTicVariableNames', items: props.tan.ticVariableNames, actionPerformed: {
+                        if(tanTicVariableNames.getSelectedItem().equals("peak_area")) {
+                            props.tan.ticVariableName = "peak_area"
+                            tpfIntegrateRawTic.setSelected(false)
+                            props.tpf.integrateRawTic = false
+                        }else if(tanTicVariableNames.getSelectedItem().equals("total_intensity")) {
+                            props.tan.ticVariableName = "total_intensity"
+                            tpfIntegrateRawTic.setSelected(true)
+                            props.tpf.integrateRawTic = true
+                        }else if(tanTicVariableNames.getSelectedItem().equals("tic_filtered")) {
+                            props.tan.ticVariableName = "tic_filtered"
+                            tpfIntegrateRawTic.setSelected(false)
+                            props.tpf.integrateRawTic = false
+                        }
+                    })
             }
         }
     }
@@ -418,7 +448,7 @@ def peakAlignmentTab = swing.panel(constraints: BL.CENTER, id:"peakAlignmentTab"
             td(align: "RIGHT") {label "Minimum Bidirectional Best Hit Fraction"}
             td(colspan: 2, colfill: true, align: "LEFT") {
                 formattedTextField(id: 'pcaMinBbhFraction',columns: 14,formatterFactory: df,
-                toolTipText: "0 < Minimum BBH Fraction <= 1; "+
+                    toolTipText: "0 < Minimum BBH Fraction <= 1; "+
                 "Minimum required fraction of peak candidate BBHs to peaks in clique"
                 )
                 bind(source: pcaMinBbhFraction, sourceProperty: "value", target: props.pca,

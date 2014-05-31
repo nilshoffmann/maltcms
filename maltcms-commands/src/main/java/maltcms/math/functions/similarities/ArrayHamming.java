@@ -49,8 +49,8 @@ public class ArrayHamming implements IArraySimilarity {
         final IndexIterator it1 = t1.getIndexIterator();
         final IndexIterator it2 = t2.getIndexIterator();
         while (it1.hasNext() && it2.hasNext()) {
-            boolean b1 = (it1.getDoubleNext()) > 0 ? true : false;
-            final boolean b2 = (it2.getDoubleNext()) > 0 ? true : false;
+            boolean b1 = (it1.getDoubleNext()) > 0;
+            final boolean b2 = (it2.getDoubleNext()) > 0;
             b1 = ((b1 && !b2) || (!b1 && b2));
             if (b1) {
                 d++;

@@ -58,8 +58,8 @@ public class BBHFinder {
             if (other != null) {
                 UUID otherBestPeak = other.getPeakWithHighestSimilarity(edgeMap, laassociation);
                 if (otherBestPeak != null && lapeak.getUniqueId().equals(otherBestPeak)) {
-                    matchedPeaks.add(lapeak);
-                    matchedPeaks.add(other);
+                    matchedPeaks.add(bestPeak);
+                    matchedPeaks.add(otherBestPeak);
                 }
             }
         }
