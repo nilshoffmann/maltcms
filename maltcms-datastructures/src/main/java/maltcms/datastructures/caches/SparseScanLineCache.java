@@ -91,6 +91,9 @@ public class SparseScanLineCache implements IScanLine {
      * modulation and the last index.
      *
      * @param iff1 file fragment
+     * @param minMass
+     * @param maxMass
+     * @param massResolution
      */
     protected SparseScanLineCache(final IFileFragment iff1, double minMass, double maxMass, double massResolution) {
         this.iff = iff1;
@@ -101,9 +104,9 @@ public class SparseScanLineCache implements IScanLine {
         estimateLastIndex();
         setUpxyIndexMap();
         String cacheName = StringTools.removeFileExt(iff1.getName()) + "-scanLineCache";
-        cache = CacheFactory.createVolatileCache(cacheName, 5, 10, 50);
+        cache = CacheFactory.createVolatileCache(cacheName, 60, 120, 200);
         String arrayCacheName = StringTools.removeFileExt(iff1.getName()) + "-normalizedArrayCache";
-        normalizedArrayCache = CacheFactory.createVolatileCache(arrayCacheName, 3, 7, 2000);
+        normalizedArrayCache = CacheFactory.createVolatileCache(arrayCacheName, 60, 120, 5000);
         this.minMass = minMass;
         this.maxMass = maxMass;
         this.massResolution = massResolution;
@@ -123,9 +126,9 @@ public class SparseScanLineCache implements IScanLine {
         this.lastIndex = lastIndex1;
         setUpxyIndexMap();
         String cacheName = StringTools.removeFileExt(iff1.getName()) + "-scanLineCache";
-        cache = CacheFactory.createVolatileCache(cacheName, 5, 10, 50);
+        cache = CacheFactory.createVolatileCache(cacheName, 60, 120, 200);
         String arrayCacheName = StringTools.removeFileExt(iff1.getName()) + "-normalizedArrayCache";
-        normalizedArrayCache = CacheFactory.createVolatileCache(arrayCacheName, 3, 7, 2000);
+        normalizedArrayCache = CacheFactory.createVolatileCache(arrayCacheName, 60, 120, 5000);
         this.minMass = minMass;
         this.maxMass = maxMass;
         this.massResolution = massResolution;
@@ -225,9 +228,11 @@ public class SparseScanLineCache implements IScanLine {
                     && (x < this.getScanLineCount())) {
                 return getScanlineMS(x).get(y);
             } else {
+                log.error("Tried to access mass spectrum outside of bounds at x=" + x + " y=" + y);
                 return null;
             }
         } catch (final IndexOutOfBoundsException e) {
+            log.error("Tried to access mass spectrum outside of bounds at x=" + x + " y=" + y, e);
             return null;
         }
     }
@@ -252,12 +257,12 @@ public class SparseScanLineCache implements IScanLine {
             final List<Array> normalized = new ArrayList<>();
             int i = 0;
             for (Tuple2D<Array, Array> ms : mss) {
-//				int idx = mapPoint(scanLine, i);
-//				Array normalizedArray = normalizedArrayCache.get(idx);
-//				if (normalizedArray == null) {
-                Array normalizedArray = ArrayTools2.normalize(ms.getFirst(), ms.getSecond(), massResolution, this.log, minMass, maxMass);
-//					normalizedArrayCache.put(idx, normalizedArray);
-//				}
+                int idx = mapPoint(scanLine, i);
+                Array normalizedArray = normalizedArrayCache.get(idx);
+                if (normalizedArray == null) {
+                    normalizedArray = ArrayTools2.normalize(ms.getFirst(), ms.getSecond(), massResolution, this.log, minMass, maxMass);
+                    normalizedArrayCache.put(idx, normalizedArray);
+                }
                 normalized.add(normalizedArray);
                 i++;
             }
@@ -337,6 +342,8 @@ public class SparseScanLineCache implements IScanLine {
             return sl;
         } catch (final InvalidRangeException e) {
             e.printStackTrace();
+        } catch (final IndexOutOfBoundsException e) {
+            e.printStackTrace();
         }
 
         return null;
@@ -399,6 +406,7 @@ public class SparseScanLineCache implements IScanLine {
         final Integer scan = x;
         List<Tuple2D<Array, Array>> t = this.cache.get(scan);
         if (t != null && !t.isEmpty()) {
+            log.info("Retrieved ms from cache!");
 //			if (this.cache.get(scan).get() != null) {
 //				this.cachehit++;
 //				return this.cache.get(scan).get();

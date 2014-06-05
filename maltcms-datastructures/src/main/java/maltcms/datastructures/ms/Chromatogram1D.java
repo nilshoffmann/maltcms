@@ -51,7 +51,7 @@ import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 
 /**
- * Concrete Implementation of a 1-dimensional chromatogram.
+ * Implementation of a one-dimensional chromatogram.
  *
  * @author Nils Hoffmann
  *

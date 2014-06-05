@@ -29,6 +29,8 @@ package maltcms.tools;
 
 import cross.Factory;
 import cross.datastructures.StatsMap;
+import cross.datastructures.cache.SerializableArrayProxy;
+import cross.datastructures.collections.CachedReadWriteList;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
@@ -634,7 +636,7 @@ public class MaltcmsTools {
         IVariableFragment index1 = null;
         try {
             MaltcmsTools.log.info(
-                    "Retrieving EIC from {}, scan start {}, stop {}, mz start {}, stop{}",
+                    "Retrieving EIC from {}, scan start {}, stop {}, mz start {}, stop {}",
                     new Object[]{f.getUri(), start,
                         start + nscans - 1, eicStart, eicStop});
             index1 = f.getChild(Factory.getInstance().getConfiguration().getString("var.scan_index", "scan_index"));
@@ -735,7 +737,7 @@ public class MaltcmsTools {
         Array binnedMassValues = Array.factory(MathTools.seq(minMass, maxMass, 1.0d / resolution));
         try {
             MaltcmsTools.log.info(
-                    "Retrieving EIC from {}, scan start {}, stop {}, mz start {}, stop{}",
+                    "Retrieving EIC from {}, scan start {}, stop {}, mz start {}, stop {}",
                     new Object[]{f.getUri(), start,
                         start + scans - 1, minMass, maxMass});
             index1 = f.getChild(Factory.getInstance().getConfiguration().getString("var.scan_index", "scan_index"));
@@ -762,10 +764,12 @@ public class MaltcmsTools {
             final List<Array> intens1 = intensities.getIndexedArray();
             final List<Array> mass1 = masses.getIndexedArray();
 //		EvalTools.eqI(intens1.size(), mass1.size(), MaltcmsTools.class);
-//			CachedReadWriteList<Array> eicCache = new CachedReadWriteList<Array>(StringTools.removeFileExt(f.getName()) + "-eic", new SerializableArrayProxy());
-            Array[] eics = new Array[massBins];
+            List<Array> eicCache = new CachedReadWriteList<Array>(StringTools.removeFileExt(f.getName()) + "-eic", new SerializableArrayProxy(), 10000);
+//            Array[] eics = new Array[massBins];
             for (int i = 0; i < scans; i++) {
-                log.info("Processing scan {}/{}", (i + 1), scans);
+                if (i % (scans / 10) == 0) {
+                    log.info("Processing scans {}-{}", (i), Math.min(scans - 1, i + (scans / 10) - 1));
+                }
                 final Array massesArray = mass1.get(i);
                 final Index mind = massesArray.getIndex();
                 final Array intensitiesArray = intens1.get(i);
@@ -776,17 +780,17 @@ public class MaltcmsTools {
                     intind.set(j);
                     final double m = massesArray.getDouble(mind);
                     int idx = MaltcmsTools.binMZ(m, minMass, maxMass, resolution);
-                    Array eicArray = eics[idx];//eicCache.get(idx);
+                    Array eicArray = eicCache.get(idx);
                     if (eicArray == null) {
                         eicArray = Array.factory(intensitiesArray.getElementType(), new int[]{scans});
-                        eics[idx] = eicArray;
+                        eicCache.set(idx, eicArray);
                     }
                     // in range
                     final double val = intensitiesArray.getDouble(intind);
                     eicArray.setDouble(i, val + eicArray.getDouble(i));
                 }
             }
-            return new Tuple2D<>(binnedMassValues, Arrays.asList(eics));
+            return new Tuple2D<>(binnedMassValues, eicCache);
         } finally {
             if (originalRange != null && index1 != null) {
                 index1.setRange(originalRange);

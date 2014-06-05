@@ -181,7 +181,7 @@ public class PeakArea2D {
      * @param p center
      * @return active list is not empty
      */
-    public boolean addNeighOf(final Point p) {
+    public boolean addNeighborOf(final Point p) {
         final List<Point> neigh = getNeighbours(p, false);
         for (final Point np : neigh) {
             addActivePoint(np);
@@ -401,6 +401,7 @@ public class PeakArea2D {
         if (!this.activeList.isEmpty()) {
             //was .poll()
             final Point p = this.activeList.first();
+            this.activeList.remove(p);
             this.activeMap.remove(getIndex(p));
             return p;
         } else {
@@ -419,10 +420,7 @@ public class PeakArea2D {
                 point));
         final boolean seedPointIsPoint = (point.x == this.seedPoint.x)
                 && (point.y == this.seedPoint.y);
-        if (pixelMapContainsPoint || seedPointIsPoint) {
-            return true;
-        }
-        return false;
+        return pixelMapContainsPoint || seedPointIsPoint;
     }
 
     public void setSeedPoint(Point p) {
