@@ -52,6 +52,8 @@ public class SavitzkyGolayFilter extends AArrayFilter {
 
     @Configurable
     private int window = 5;
+    @Configurable
+    private int polynomialDegree = 2;
 
     public SavitzkyGolayFilter() {
         super();
@@ -64,11 +66,17 @@ public class SavitzkyGolayFilter extends AArrayFilter {
 
     @Override
     public Array apply(final Array a) {
-        int pointNumber = 1 + window * 2;
-        int index = Arrays.binarySearch(points, pointNumber);
-        if (index < 0) {
-            throw new IllegalArgumentException("No coefficients for filter of width 2x" + window + "+1=" + pointNumber);
+        switch (polynomialDegree) {
+            case 2:
+                return applyQuadraticCubic(a);
+            case 4:
+                return applyQuarticQuintic(a);
+            default:
+                throw new IllegalArgumentException("polynomialDegree must be one of 2 or 4, for quadratic/cubic interpolation, or for quartic/quintic interpolation. Was: " + polynomialDegree);
         }
+    }
+
+    private Array applyFilter(final Array a, int index, int pointNumber, int[][] coefficients, int[] norms) {
         //prepare filter coefficients
         double[] filterCoeffs = new double[pointNumber];
         for (int i = 0; i < window; i++) {
@@ -82,7 +90,24 @@ public class SavitzkyGolayFilter extends AArrayFilter {
             filtered[j] /= (double) norms[index];
         }
         return Array.factory(filtered);
+    }
 
+    private Array applyQuadraticCubic(final Array a) {
+        int pointNumber = 1 + window * 2;
+        int index = Arrays.binarySearch(quadCubicPoints, pointNumber);
+        if (index < 0) {
+            throw new IllegalArgumentException("No coefficients for quadratic / cubic filter of width 2x" + window + "+1=" + pointNumber + ". Minimum width is " + quadCubicPoints[0]);
+        }
+        return applyFilter(a, index, pointNumber, quadCubicCoefficients, quadCubicNorms);
+    }
+
+    private Array applyQuarticQuintic(final Array a) {
+        int pointNumber = 1 + window * 2;
+        int index = Arrays.binarySearch(quarticQuinticPoints, pointNumber);
+        if (index < 0) {
+            throw new IllegalArgumentException("No coefficients for quartic / quintic filter of width 2x" + window + "+1=" + pointNumber + ". Minimum width is " + quarticQuinticPoints[0]);
+        }
+        return applyFilter(a, index, pointNumber, quarticQuinticCoefficients, quarticQuinticNorms);
     }
 
     @Override
@@ -114,7 +139,6 @@ public class SavitzkyGolayFilter extends AArrayFilter {
             double sum = 0.0d;
             //System.out.println("Convolution from: "+(i-offset)+" to "+(i+offset));
             for (int j = 0; j < filterCoeffs.length; j++) {
-
                 sum += filterCoeffs[j] * filterArray[(i - offset) + j];
             }
             ret[i - offset] = sum;
@@ -125,9 +149,9 @@ public class SavitzkyGolayFilter extends AArrayFilter {
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
-        this.window = cfg.getInt(this.getClass().getName() + ".window", 10);
+//        this.window = cfg.getInt(this.getClass().getName() + ".window", 10);
     }
-    public static final int[][] coefficients = {
+    public static final int[][] quadCubicCoefficients = {
         {17, 12, -3},
         {7, 6, 3, -2},
         {59, 54, 39, 14, -21},
@@ -140,8 +164,21 @@ public class SavitzkyGolayFilter extends AArrayFilter {
         {79, 78, 75, 70, 63, 54, 43, 30, 15, -2, -21, -42},
         {467, 462, 447, 422, 387, 343, 287, 222, 147, 62, -33, -138, -253}
     };
-    public static final int[] points = {5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25};
-    public static final int[] norms = {
+    public static final int[][] quarticQuinticCoefficients = {
+        {131, 75, -30, 5},
+        {179, 135, 30, -55, 15},
+        {143, 120, 60, -10, -45, 18},
+        {677, 600, 390, 110, -160, -198, 110},
+        {11063, 10125, 7500, 3755, -165, -2937, -2860, 2145},
+        {883, 825, 660, 415, 135, -117, -260, -195, 195},
+        {1393, 1320, 1110, 790, 405, 18, -290, -420, -255, 340},
+        {44003, 42120, 36660, 28190, 17655, 6375, -3940, -11220, -13005, -6460, 11628},
+        {1011, 975, 870, 705, 495, 261, 30, -165, -285, -285, -114, 285},
+        {4253, 4125, 3750, 3155, 2385, 1503, 590, -255, -915, -1255, -1122, -345, 1265}
+    };
+    public static final int[] quadCubicPoints = {5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25};
+    public static final int[] quarticQuinticPoints = {7, 9, 11, 13, 15, 17, 19, 21, 23, 25};
+    public static final int[] quadCubicNorms = {
         35,
         21,
         231,
@@ -153,5 +190,17 @@ public class SavitzkyGolayFilter extends AArrayFilter {
         3059,
         8059,
         5175
+    };
+    public static final int[] quarticQuinticNorms = {
+        231,
+        429,
+        429,
+        2431,
+        46189,
+        4199,
+        7429,
+        260015,
+        6555,
+        30015
     };
 }

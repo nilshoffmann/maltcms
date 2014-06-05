@@ -32,20 +32,17 @@ import java.io.File;
 import java.io.IOException;
 import junit.framework.Assert;
 import maltcms.test.ZipResourceExtractor;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import ucar.ma2.Array;
+import ucar.ma2.MAMath;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class SavitzkyGolayFilterTest {
+public class TopHatFilterTest {
 
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();
@@ -60,10 +57,33 @@ public class SavitzkyGolayFilterTest {
         File outputFile = ZipResourceExtractor.extract("/cdf/1D/glucoseA.cdf.gz", outputFolder);
         ImmutableFileFragment ff = new ImmutableFileFragment(outputFile);
         Array tic = ff.getChild("total_intensity").getArray();
-        SavitzkyGolayFilter instance = new SavitzkyGolayFilter();
-        instance.setWindow(2);
-        instance.setPolynomialDegree(2);
-        Array result = instance.apply(tic);
+        double ticSum = MAMath.sumDouble(tic);
+        Assert.assertEquals(1.881895164E9, ticSum, 0.0d);
+        TopHatFilter filter = new TopHatFilter();
+        filter.setCopyArray(true);
+        filter.setWindow(5);
+        Array result = filter.apply(tic);
         Assert.assertEquals(tic.getShape()[0], result.getShape()[0]);
+        Assert.assertEquals(9.08282779E8, MAMath.sumDouble(result), 0.0d);
+        Array added = MAMath.add(tic, new MultiplicationFilter(-1.0d).apply(result));
+        Assert.assertTrue(MAMath.sumDouble(added) > MAMath.sumDouble(result));
+        filter.setWindow(50);
+        result = filter.apply(tic);
+        Assert.assertEquals(tic.getShape()[0], result.getShape()[0]);
+        Assert.assertEquals(1.292133967E9, MAMath.sumDouble(result), 0.0d);
+        added = MAMath.add(tic, new MultiplicationFilter(-1.0d).apply(result));
+        Assert.assertTrue(MAMath.sumDouble(added) < MAMath.sumDouble(result));
+        filter.setWindow(500);
+        result = filter.apply(tic);
+        Assert.assertEquals(tic.getShape()[0], result.getShape()[0]);
+        Assert.assertEquals(1.392250034E9, MAMath.sumDouble(result), 0.0d);
+        added = MAMath.add(tic, new MultiplicationFilter(-1.0d).apply(result));
+        Assert.assertTrue(MAMath.sumDouble(added) < MAMath.sumDouble(result));
+        filter.setWindow(1000);
+        result = filter.apply(tic);
+        Assert.assertEquals(tic.getShape()[0], result.getShape()[0]);
+        Assert.assertEquals(1.418168227E9, MAMath.sumDouble(result), 0.0d);
+        added = MAMath.add(tic, new MultiplicationFilter(-1.0d).apply(result));
+        Assert.assertTrue(MAMath.sumDouble(added) < MAMath.sumDouble(result));
     }
 }
