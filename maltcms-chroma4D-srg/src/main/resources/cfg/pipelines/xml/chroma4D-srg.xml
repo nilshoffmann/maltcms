@@ -170,7 +170,6 @@ for details.
         <property name="maxPeakSize" value="3000" />
         <property name="discardPeaksWithMaxArea" value="true" />
         <property name="discardPeaksWithMinArea" value="true" />
-        <property name="filterMS" value="true" />
         <property name="useAlternativFiltering" value="true" />
         <property name="useMeanMS" value="false" />
     </bean>

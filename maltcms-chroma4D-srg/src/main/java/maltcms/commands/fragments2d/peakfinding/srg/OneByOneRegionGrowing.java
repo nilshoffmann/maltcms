@@ -69,8 +69,10 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
     private int minPeakSize = 2;
     @Configurable(value = "1000")
     private int maxPeakSize = 1000;
+    @Deprecated
     @Configurable(value = "false")
     private boolean filterMS = false;
+    @Deprecated
     @Configurable(value = "true")
     private boolean useAlternativFiltering = true;
     @Configurable(value = "true")
@@ -80,11 +82,19 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
     private long timesum;
     private int count;
     private int scansPerModulation;
-    private List<Integer> hold;
+//    private List<Integer> hold;
     private ArrayDouble.D1 intensities;
     private IScanLine slc;
     private IFileFragment ff;
 
+    public void setUseAlternativeFiltering(boolean b) {
+        log.warn("Parameter useAlternativeFiltering has been deprecated. Please use maltcms.commands.fragments.preprocessing.MassFilter for selective removal or inclusion of m/z,intensity pairs!");
+    }
+    
+    public void setFilterMS(boolean b) {
+        log.warn("Parameter filterMS has been deprecated. Please use maltcms.commands.fragments.preprocessing.MassFilter for selective removal or inclusion of m/z,intensity pairs!");
+    }
+    
     /**
      *
      * @return
@@ -105,7 +115,7 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
     public List<PeakArea2D> getAreasFor(List<Point> seeds, IFileFragment ff,
             IScanLine slc) {
 
-        log.info("	Using distance {} with minDist:{}",
+        log.info("Using distance {} with minDist:{}",
                 this.similarity.toString(), this.minDistance);
 
         this.count = 0;
@@ -117,7 +127,7 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
                 getArray();
         this.scansPerModulation = slc.getScansPerModulation();
 
-        getFilter();
+//        getFilter();
 
         final List<PeakArea2D> peakAreaList = new ArrayList<>();
 
@@ -139,7 +149,7 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
      * threshold, otherwise <code>null</code>
      */
     private PeakArea2D regionGrowing(final Point seed) {
-        System.out.println("Building peak area of seed " + seed);
+        log.info("Building peak area of seed " + seed);
         final long start = System.currentTimeMillis();
         Array ms = slc.getMassSpectrum(seed);
         if (ms == null) {
@@ -149,22 +159,32 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
                 slc.getMassSpectrum(seed).copy(),
                 this.intensities.get(idx(seed.x, seed.y)), idx(seed.x, seed.y),
                 this.scansPerModulation);
-        pa.addNeighOf(seed);
+        pa.addNeighborOf(seed);
         Array meanMS = pa.getMeanMS();
 
         while (pa.hasActivePoints()) {
             while (pa.hasActivePoints()) {
-                check(pa, pa.popActivePoint(), slc, meanMS);
-                if (this.useMeanMS) {
-                    meanMS = pa.getMeanMS();
+                Point p = pa.popActivePoint();
+                if (p == null) {
+                    log.warn("Active point was null!");
+                    break;
                 }
+                try {
+                    check(pa, p, slc, meanMS);
+                    if (this.useMeanMS) {
+                        meanMS = pa.getMeanMS();
+                    }
+                } catch (IndexOutOfBoundsException ex) {
+                    log.error("Index of out bounds for point " + p + " within region around " + pa.getSeedPoint(), ex);
+                }
+
                 if (pa.size() > this.maxPeakSize) {
                     break;
                 }
             }
             if (pa.size() > this.maxPeakSize) {
                 log.error(
-                        "			Stopping region growing: Limit of {} points/peakarea exceeded (maxPeakSize)",
+                        "Stopping region growing: Limit of {} points/peakarea exceeded (maxPeakSize)",
                         this.maxPeakSize);
                 while (pa.hasActivePoints()) {
                     pa.addBoundaryPoint(pa.popActivePoint());
@@ -173,35 +193,38 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
             }
             if (this.useMeanMS) {
                 for (final Point bp : pa.getBoundaryPoints()) {
-                    check(pa, bp, slc, meanMS);
-                    if (this.useMeanMS) {
-                        meanMS = pa.getMeanMS();
+                    try {
+                        check(pa, bp, slc, meanMS);
+                        if (this.useMeanMS) {
+                            meanMS = pa.getMeanMS();
+                        }
+                    } catch (IndexOutOfBoundsException ex) {
+                        log.error("Index of out bounds for point " + bp + " within region around " + pa.getSeedPoint(), ex);
                     }
                 }
             }
-        }
 
-        this.timesum += System.currentTimeMillis() - start;
-        this.count++;
-        if (this.count % 10 == 0) {
-            log.info("		Avg time {} in {} runs",
-                    this.timesum / this.count, this.count);
-        }
-        if (pa.size() > this.maxPeakSize) {
-            if (this.discardPeaksWithMaxArea) {
-                return null;
-            } else {
-                return pa;
+            this.timesum += System.currentTimeMillis() - start;
+            this.count++;
+            if (this.count % 10 == 0) {
+                log.info("Avg time {} in {} runs",
+                        this.timesum / this.count, this.count);
+            }
+            if (pa.size() > this.maxPeakSize) {
+                if (this.discardPeaksWithMaxArea) {
+                    return null;
+                } else {
+                    return pa;
+                }
+            }
+            if (pa.getRegionPoints().size() < this.minPeakSize) {
+                if (this.discardPeaksWithMinArea) {
+                    return null;
+                } else {
+                    return pa;
+                }
             }
         }
-        if (pa.getRegionPoints().size() < this.minPeakSize) {
-            if (this.discardPeaksWithMinArea) {
-                return null;
-            } else {
-                return pa;
-            }
-        }
-
 //		double meanI = pa.getAreaIntensity() / (double) (pa.getRegionPoints().size() + 1);
 //		double frac = pa.getSeedIntensity() / meanI;
 //		System.out.println(frac);
@@ -221,24 +244,24 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
      */
     private void check(final PeakArea2D snake, final Point ap,
             final IScanLine slc, final Array meanMS) {
-        try {
-            final Array apMS = slc.getMassSpectrum(ap);
-            if (isNear(meanMS, apMS)) {
-                try {
-                    snake.addRegionPoint(ap, apMS, this.intensities.get(idx(
-                            ap.x, ap.y)));
-                    snake.addNeighOf(ap);
-                } catch (ArrayIndexOutOfBoundsException ex) {
-                    log.error(
-                            "Tried to use point {} and access index {}, allowed : [0,{}]",
-                            new Object[]{ap, idx(ap.x, ap.y),
-                                this.intensities.getShape()[0] - 1});
-                }
-            } else {
-                snake.addBoundaryPoint(ap);
+        log.info("Retrieving ms for point ", ap);
+        final Array apMS = slc.getMassSpectrum(ap);
+        if (isNear(meanMS, apMS)) {
+            try {
+                log.info("Adding region point " + ap);
+                snake.addRegionPoint(ap, apMS, this.intensities.get(idx(
+                        ap.x, ap.y)));
+                log.info("Adding neighbor point " + ap);
+                snake.addNeighborOf(ap);
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                log.error(
+                        "Tried to use point {} and access index {}, allowed : [0,{}]",
+                        new Object[]{ap, idx(ap.x, ap.y),
+                            this.intensities.getShape()[0] - 1});
             }
-        } catch (IndexOutOfBoundsException ex) {
-            log.error(ex.getLocalizedMessage());
+        } else {
+            log.info("Adding boundary point " + ap);
+            snake.addBoundaryPoint(ap);
         }
     }
 
@@ -253,10 +276,10 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
         if ((seedMS != null) && (neighMS != null)) {
             Array sms = seedMS.copy();
             Array nms = neighMS.copy();
-            if (this.filterMS) {
-                sms = ArrayTools2.filter(sms, this.hold, false);
-                nms = ArrayTools2.filter(nms, this.hold, false);
-            }
+//            if (this.filterMS) {
+//                sms = ArrayTools2.filter(sms, this.hold, true);
+//                nms = ArrayTools2.filter(nms, this.hold, true);
+//            }
             final double d = this.similarity.apply(sms, nms);
             // log.info("{}", d);
             return (d >= this.minDistance);
@@ -275,49 +298,49 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
         return x * this.scansPerModulation + y;
     }
 
-    /**
-     * Tries to find the used_mass_values array and converts it to an List of
-     * Integer.
-     *
-     * TODO: Duplicated method. See MeanVarVis - Should be one in ArrayTools?
-     *
-     * @param ff file fragment
-     */
-    private void getFilter() {
-        if (this.filterMS) {
-            log.info("	Filtering mass spectra");
-            try {
-                final Array holdA = this.ff.getChild(this.usedMassValuesVar).
-                        getArray();
-                final IndexIterator iter = holdA.getIndexIterator();
-                this.hold = new ArrayList<>();
-                while (iter.hasNext()) {
-                    this.hold.add(iter.getIntNext());
-                }
-                // FIXME: wenn cahcedlist benutzt werden, klappt das über slc
-                // nicht
-                log.info("		Using {} of {} masses", holdA.getShape()[0],
-                        750);
-            } catch (final ResourceNotAvailableException e) {
-                log.error("Resource {} not available",
-                        this.usedMassValuesVar);
-                if (this.useAlternativFiltering) {
-                    log.info("Using filter 73,74,75,147,148,149");
-                    Tuple2D<Double, Double> t = MaltcmsTools.getMinMaxMassRange(ff);
-                    this.hold = new ArrayList<>();
-                    for (int i = 1; i < 751; i++) {
-                        if (i != 73 && i != 74 && i != 75 && i != 147
-                                && i != 148 && i != 149) {
-                            this.hold.add(i);
-                        }
-                    }
-                } else {
-                    log.error("Turning off filtering.");
-                    this.filterMS = false;
-                }
-            }
-        }
-    }
+//    /**
+//     * Tries to find the used_mass_values array and converts it to an List of
+//     * Integer.
+//     *
+//     * TODO: Duplicated method. See MeanVarVis - Should be one in ArrayTools?
+//     *
+//     * @param ff file fragment
+//     */
+//    private void getFilter() {
+//        if (this.filterMS) {
+//            log.info("Filtering mass spectra");
+//            try {
+//                final Array holdA = this.ff.getChild(this.usedMassValuesVar).
+//                        getArray();
+//                final IndexIterator iter = holdA.getIndexIterator();
+//                this.hold = new ArrayList<>();
+//                while (iter.hasNext()) {
+//                    this.hold.add(iter.getIntNext());
+//                }
+//                // FIXME: wenn cahcedlist benutzt werden, klappt das über slc
+//                // nicht
+//                log.info("Using {} of {} masses", holdA.getShape()[0],
+//                        750);
+//            } catch (final ResourceNotAvailableException e) {
+//                log.error("Resource {} not available",
+//                        this.usedMassValuesVar);
+//                if (this.useAlternativFiltering) {
+//                    log.info("Using filter 73,74,75,147,148,149");
+//                    Tuple2D<Double, Double> t = MaltcmsTools.getMinMaxMassRange(ff);
+//                    this.hold = new ArrayList<>();
+//                    for (int i = 1; i < 751; i++) {
+//                        if (i != 73 && i != 74 && i != 75 && i != 147
+//                                && i != 148 && i != 149) {
+//                            this.hold.add(i);
+//                        }
+//                    }
+//                } else {
+//                    log.error("Turning off filtering.");
+//                    this.filterMS = false;
+//                }
+//            }
+//        }
+//    }
 
     /**
      *

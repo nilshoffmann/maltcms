@@ -80,23 +80,17 @@ public class SimplePeakPicking implements IPeakPicking {
         return intensities;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Point> findPeaks(IFileFragment ff) {
         this.log.info("Running {} with:", this.getClass().getName());
-        this.log.info("	maxDx: {}, maxDy: {}", this.maxDx, this.maxDy);
-        this.log.info("	stdPerv: {}", this.stdPerc);
+        this.log.info("maxDx: {}, maxDy: {}", this.maxDx, this.maxDy);
+        this.log.info("stdPerc: {}", this.stdPerc);
 
         return getPeaks(getIntensities(ff), 0, Integer.MAX_VALUE,
                 this.minVerticalScanIndex, Integer.MAX_VALUE, this.maxDx,
                 this.maxDy, this.stdPerc);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
         // FIXME nicht statisch 7

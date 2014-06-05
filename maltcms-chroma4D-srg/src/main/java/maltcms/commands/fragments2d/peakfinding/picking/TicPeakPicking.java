@@ -91,7 +91,7 @@ public class TicPeakPicking implements IPeakPicking {
     @Override
     public List<Point> findPeaks(IFileFragment ff) {
         log.info("Running {} with:", this.getClass().getName());
-        log.info("	total_intensity: {}", this.totalIntensityVar);
+        log.info("total_intensity: {}", this.totalIntensityVar);
         List<Peak1D> peaks = Peak1D.fromFragment(ff);
         IScanLine isl = ScanLineCacheFactory.getSparseScanLineCache(ff);
         List<Point> pointList = new ArrayList<>();
