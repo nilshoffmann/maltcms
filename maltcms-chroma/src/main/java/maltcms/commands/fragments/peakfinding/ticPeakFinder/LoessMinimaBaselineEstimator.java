@@ -28,6 +28,7 @@
 package maltcms.commands.fragments.peakfinding.ticPeakFinder;
 
 import cross.annotations.Configurable;
+import cross.exception.ConstraintViolationException;
 import java.util.ArrayList;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -37,16 +38,16 @@ import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Estimates a baseline from a an array of function values using local minima to
+ * Estimates a baseline from an array of function values using local minima to
  * fit a Loess polynomial spline function.
  *
  * @author Nils Hoffmann
  */
 @Slf4j
 @Data
-@ServiceProvider(service=IBaselineEstimator.class)
+@ServiceProvider(service = IBaselineEstimator.class)
 public class LoessMinimaBaselineEstimator implements IBaselineEstimator {
-
+    
     @Configurable
     private double bandwidth = LoessInterpolator.DEFAULT_BANDWIDTH;
     @Configurable
@@ -55,13 +56,13 @@ public class LoessMinimaBaselineEstimator implements IBaselineEstimator {
     private int robustnessIterations = LoessInterpolator.DEFAULT_ROBUSTNESS_ITERS;
     @Configurable
     private int minimaWindow = 100;
-
+    
     @Override
-    public PolynomialSplineFunction findBaseline(double[] xvalues, double[] yvalues) {
+    public PolynomialSplineFunction findBaseline(double[] xValues, double[] yValues) {
         final ArrayList<Integer> ts = new ArrayList<>();
-        for (int i = 0; i < yvalues.length; i++) {
+        for (int i = 0; i < yValues.length; i++) {
             log.debug("i=" + i);
-            PeakFinderUtils.checkMinimum(yvalues, ts, i,
+            PeakFinderUtils.checkMinimum(yValues, ts, i,
                     minimaWindow);
         }
         log.info("Found {} minima for baseline estimation!", ts.size());
@@ -70,28 +71,27 @@ public class LoessMinimaBaselineEstimator implements IBaselineEstimator {
             ts.add(0, 0);
         }
         //add the last index
-        if (!ts.get(ts.size() - 1).equals(yvalues.length - 1)) {
-            ts.add(yvalues.length - 1);
+        if (!ts.get(ts.size() - 1).equals(yValues.length - 1)) {
+            ts.add(yValues.length - 1);
         }
         double[] xvalues1 = new double[ts.size()];
         double[] yvalues1 = new double[ts.size()];
         int arrayIdx = 0;
         for (Integer idx : ts) {
-            xvalues1[arrayIdx] = xvalues[idx];
-            yvalues1[arrayIdx] = yvalues[idx];
+            xvalues1[arrayIdx] = xValues[idx];
+            yvalues1[arrayIdx] = yValues[idx];
             arrayIdx++;
         }
-//        double[] xvalues = new double[yvalues.length];
+        log.info("Using bandwidth: {}", bandwidth);
         LoessInterpolator lip;
         try {
             lip = new LoessInterpolator(bandwidth, robustnessIterations, accuracy);
             return lip.interpolate(xvalues1, yvalues1);
         } catch (MathException ex) {
-            log.warn("{}", ex);
+            throw new ConstraintViolationException("Number of sampled minima is too small to fit a LOESS polynomial to the data. Try decreasing the minimaWindow parameter.", ex);
         }
-        return null;
     }
-
+    
     @Override
     public LoessMinimaBaselineEstimator copy() {
         LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();

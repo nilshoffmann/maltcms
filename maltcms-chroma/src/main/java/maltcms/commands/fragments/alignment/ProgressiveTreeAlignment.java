@@ -34,6 +34,7 @@ import org.apache.commons.configuration.Configuration;
 
 import cross.Factory;
 import cross.annotations.Configurable;
+import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
@@ -48,6 +49,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils Hoffmann
  *
  */
+@RequiresVariables(names = {"var.pairwise_distance_matrix"})
 @Data
 @Slf4j
 @ServiceProvider(service = AFragmentCommand.class)

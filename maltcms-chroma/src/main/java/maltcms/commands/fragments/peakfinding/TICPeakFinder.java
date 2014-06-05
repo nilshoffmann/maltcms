@@ -39,6 +39,7 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowProgressResult;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
+import cross.exception.ConstraintViolationException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +53,7 @@ import maltcms.commands.filters.array.MultiplicationFilter;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.IBaselineEstimator;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.TICPeakFinderWorker;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.TICPeakFinderWorker.TICPeakFinderWorkerBuilder;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.TICPeakFinderWorkerResult;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.WorkflowResult;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
@@ -103,6 +105,8 @@ public class TICPeakFinder extends AFragmentCommand {
     @Configurable
     private boolean removeOverlappingPeaks = true;
     @Configurable
+    private boolean subtractBaseline = false;
+    @Configurable
     private IBaselineEstimator baselineEstimator = new LoessMinimaBaselineEstimator();
     @Configurable
     private List<AArrayFilter> filter = Arrays.asList(
@@ -128,26 +132,28 @@ public class TICPeakFinder extends AFragmentCommand {
             for (IPeakNormalizer normalizer : peakNormalizers) {
                 peakNormalizerCopy.add((IPeakNormalizer) normalizer.copy());
             }
-            TICPeakFinderWorker tpf = new TICPeakFinderWorker(
-                    getWorkflow().getOutputDirectory(this),
-                    f.getUri(),
-                    integratePeaks,
-                    integrateTICPeaks,
-                    integrateRawTic,
-                    saveGraphics,
-                    removeOverlappingPeaks,
-                    peakThreshold,
-                    peakSeparationWindow,
-                    snrWindow,
-                    (IBaselineEstimator) baselineEstimator.copy(),
-                    BatchFilter.copy(filter),
-                    peakNormalizerCopy,
-                    ticVarName,
-                    satVarName,
-                    ticPeakVarName,
-                    ticFilteredVarName,
-                    ConfigurationConverter.getProperties(Factory.getInstance().getConfiguration())
-            );
+            TICPeakFinderWorkerBuilder builder = TICPeakFinderWorker.builder();
+            TICPeakFinderWorker tpf = builder
+                .outputDirectory(getWorkflow().getOutputDirectory(this))
+               .inputUri(f.getUri())
+               .integratePeaks(integratePeaks)
+               .integrateTICPeaks(integrateTICPeaks)
+               .integrateRawTic(integrateRawTic)
+               .saveGraphics(saveGraphics)
+               .removeOverlappingPeaks(removeOverlappingPeaks)
+               .subtractBaseline(subtractBaseline)
+               .peakThreshold(peakThreshold)
+               .peakSeparationWindow(peakSeparationWindow)
+               .snrWindow(snrWindow)
+               .baselineEstimator((IBaselineEstimator)baselineEstimator.copy())
+               .filter(BatchFilter.copy(filter))
+               .peakNormalizers(peakNormalizerCopy)
+               .ticVarName(ticVarName)
+               .satVarName(satVarName)
+               .ticPeakVarName(ticPeakVarName)
+               .ticFilteredVarName(ticFilteredVarName)
+               .properties(ConfigurationConverter.getProperties(Factory.getInstance().getConfiguration()))
+               .build();
             completionService.submit(tpf);
             // notify workflow
         }

@@ -32,6 +32,7 @@ import maltcms.commands.distances.DtwRecurrence;
 import maltcms.commands.distances.IDtwSimilarityFunction;
 import maltcms.commands.distances.PairwiseFeatureSimilarity;
 import maltcms.commands.distances.dtw.MZIDynamicTimeWarp;
+import maltcms.math.functions.DtwTimePenalizedPairwiseSimilarity;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -46,21 +47,21 @@ public class MziDtwWorkerFactory extends AWorkerFactory {
      *
      */
     private static final long serialVersionUID = 626200987946759092L;
-    private double bandWidthPercentage;
-    private double globalGapPenalty;
-    private String extension;
-    private boolean globalBand;
-    private int minScansBetweenAnchors;
-    private boolean precalculatePairwiseDistances;
-    private boolean saveLayoutImage;
-    private boolean useAnchors;
-    private int numberOfEICsToSelect;
-    private boolean useSparseArrays;
-    private int anchorRadius;
-    private IDtwSimilarityFunction similarity;
-    private boolean saveDtwMatrix;
-    private boolean savePairwiseSimilarityMatrix;
-    private boolean normalizeAlignmentValue;
+    private double bandWidthPercentage = 0.25;
+    private double globalGapPenalty = 1.0;
+    private String extension = "";
+    private boolean globalBand = false;
+    private int minScansBetweenAnchors = 10;
+    private boolean precalculatePairwiseDistances = false;
+    private boolean saveLayoutImage = false;
+    private boolean useAnchors = false;
+    private int numberOfEICsToSelect = 0;
+    private boolean useSparseArrays = false;
+    private int anchorRadius = 0;
+    private IDtwSimilarityFunction similarity = new DtwTimePenalizedPairwiseSimilarity();
+    private boolean saveDtwMatrix = false;
+    private boolean savePairwiseSimilarityMatrix = false;
+    private boolean normalizeAlignmentValue = false;
 
     /**
      *

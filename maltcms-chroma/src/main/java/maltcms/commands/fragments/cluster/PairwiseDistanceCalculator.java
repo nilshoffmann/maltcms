@@ -48,6 +48,7 @@ import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.AWorkerFactory;
+import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.MziDtwWorkerFactory;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.PairwiseDistanceResult;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.PairwiseDistanceWorker;
 import maltcms.datastructures.fragments.PairwiseDistances;
@@ -80,7 +81,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
     private String minArrayComp = "minimizing_array_comp";
     @Configurable
     private String pwdExtension = "";
-    private AWorkerFactory workerFactory;
+    private AWorkerFactory workerFactory = new MziDtwWorkerFactory();
 
     /*
      * (non-Javadoc)

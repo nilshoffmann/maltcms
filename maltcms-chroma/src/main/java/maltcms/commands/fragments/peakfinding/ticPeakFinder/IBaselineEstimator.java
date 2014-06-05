@@ -32,11 +32,23 @@ import java.io.Serializable;
 import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
 
 /**
+ * Interface for implementations that provide polynomial interpolation and
+ * estimation of signal baselines.
  *
  * @author Nils Hoffmann
  */
 public interface IBaselineEstimator extends Serializable, ICopyable<IBaselineEstimator> {
 
-    PolynomialSplineFunction findBaseline(double[] values, double[] yvalues);
+    /**
+     * Estimates the baseline of a given signal at domain values and function
+     * values.
+     *
+     * @param xValues the domain values of the signal
+     * @param yValues the function values of the signal
+     * @return a polynomial spline function that interpolates the given signal
+     * @throws RuntimeException if a
+     * {@link org.apache.commons.math.MathException} is encountered
+     */
+    PolynomialSplineFunction findBaseline(double[] xValues, double[] yValues) throws RuntimeException;
 
 }

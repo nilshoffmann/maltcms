@@ -153,18 +153,9 @@ public class EICPeakFinder extends AFragmentCommand {
             int totalScans = MaltcmsTools.getNumberOfScans(f);
             log.info("Using " + massBins + " mass bins at resolution " + massResolution + " on " + totalScans + " scans");
             int offset = 0;
-//			int nscans = 100000;
-//			double mass = minMass;
-//			QuantileSnrPeakFinder qspf = new QuantileSnrPeakFinder();
-//			qspf.setPeakSnrThreshold(peakThreshold);
-//			qspf.setPeakSeparationWindow(filterWindow);
             List<Peak1D> peaks = new ArrayList<>();
             boolean[] peakPositions = new boolean[totalScans];
             Array sat = f.getChild("scan_acquisition_time").getArray();
-//			ArrayDouble.D2 a = new ArrayDouble.D2(totalScans, massBins);
-//			MinMax satBounds = MAMath.getMinMax(sat);
-//			QuadTree<Peak1D> qt = new QuadTree<Peak1D>(satBounds.min, minMass, satBounds.max - satBounds.min, maxMass - minMass, 10);
-//			for (int j = 0; j < 2 * (totalScans / nscans) + 1; j++) {
             log.info("Loading eics from scan " + offset + " to scan " + (totalScans - 1));
             Tuple2D<Array, List<Array>> eicPairs = MaltcmsTools.getEICs(f, massResolution, offset, totalScans);
             List<Array> eics = eicPairs.getSecond();
@@ -175,15 +166,10 @@ public class EICPeakFinder extends AFragmentCommand {
                     Array eicArray = eics.get(i);
                     if (eicArray != null) {
                         Array eic = applyFilters(eicArray);
-                        //						eic = BatchFilter.applyFilters(eic, filters);
                         if (eic != null) {
                             PeakPositionsResultSet pprs;
                             try {
                                 pprs = findPeakPositions(eic, sat.section(new int[]{offset}, new int[]{eic.getShape()[0]}));
-//								for (Integer idx : pprs.getTs()) {
-//									peakPositions[offset + idx] = true;
-////									a.set(idx, i, a.get(idx, i) + 1);
-//								}
                                 List<Peak1D> p = findPeakAreas(f, pprs.getTs(), eic, pprs.getCorrectedTIC(), pprs.getSnrValues());
                                 for (Peak1D peak : p) {
                                     peak.setMw(massBin);

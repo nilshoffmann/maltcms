@@ -702,8 +702,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
-     * @param chromatogramDistanceFunctionClass the
-     * chromatogramDistanceFunctionClass to set
+     * @param chromatogramDistanceFunction
      */
     public void setChromatogramDistanceFunction(
             final PairwiseFeatureSequenceSimilarity chromatogramDistanceFunction) {
@@ -711,8 +710,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
-     * @param chromatogramWarpCommandClass the chromatogramWarpCommandClass to
-     * set
+     * @param chromatogramWarpCommand
      */
     public void setChromatogramWarpCommand(
             final AFragmentCommand chromatogramWarpCommand) {

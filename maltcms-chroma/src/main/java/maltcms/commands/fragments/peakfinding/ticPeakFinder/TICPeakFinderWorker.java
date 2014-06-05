@@ -34,6 +34,7 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import cross.tools.StringTools;
+import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.Serializable;
@@ -53,6 +54,7 @@ import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
+import lombok.experimental.Builder;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.BatchFilter;
@@ -87,6 +89,7 @@ import ucar.ma2.Index;
  *
  * @author Nils Hoffmann
  */
+@Builder
 @Data
 @Slf4j
 public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>, Serializable {
@@ -98,6 +101,7 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
     private final boolean integrateRawTic;
     private final boolean saveGraphics;
     private final boolean removeOverlappingPeaks;
+    private final boolean subtractBaseline;
 
     private final double peakThreshold;
     private final int peakSeparationWindow;
@@ -151,19 +155,19 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
     }
 
     public List<Peak1D> findPeakAreas(final IFileFragment chromatogram,
-            final List<Integer> ts, String filename, final Array rawTIC,
-            final Array baselineCorrectedTIC, final double[] snr) {
+            final List<Integer> ts, String filename, final Array sat, final Array rawTIC,
+            final Array filteredTIC, final double[] snr, final PolynomialSplineFunction baseline) {
         final ArrayList<Peak1D> pbs = new ArrayList<>();
         Array scanAcquisitionTime = chromatogram.getChild(satVarName).getArray();
         if (integrateTICPeaks) {
             log.info("Using TIC based peak integration");
             FirstDerivativeFilter fdf = new FirstDerivativeFilter();
-            Array fdTIC = fdf.apply(baselineCorrectedTIC);
+            Array fdTIC = fdf.apply(filteredTIC);
             Array sdTIC = fdf.apply(fdTIC);
             Array tdTIC = fdf.apply(sdTIC);
             XYChart xyc = new XYChart(filename + "-TIC", new String[]{
                 "TIC", "FIRST DERIVATIVE", "SECOND DERIVATIVE",
-                "THIRD DERIVATIVE"}, new Array[]{baselineCorrectedTIC,
+                "THIRD DERIVATIVE"}, new Array[]{filteredTIC,
                 fdTIC, sdTIC, tdTIC}, "scan", "value");
             xyc.configure(ConfigurationConverter.getConfiguration(properties));
             final PlotRunner pr = new PlotRunner(xyc.create(),
@@ -171,7 +175,6 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
                     "tic-derivatives-"
                     + StringTools.removeFileExt(filename),
                     outputDirectory);
-            pr.setSizeOverride(true);
             pr.configure(ConfigurationConverter.getConfiguration(properties));
             CompletionServiceFactory<JFreeChart> csf = new CompletionServiceFactory<>();
             ICompletionService<JFreeChart> ics = csf.newLocalCompletionService();
@@ -185,9 +188,9 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
             // fall back to TIC
             for (final Integer scanApex : ts) {
                 log.debug("Adding peak at scan index {}", scanApex);
-                final Peak1D pb = getPeakBoundsByTIC(chromatogram, scanApex,
+                final Peak1D pb = getPeakBoundsByTIC(chromatogram, scanApex, sat,
                         rawTIC,
-                        baselineCorrectedTIC, fdTIC, sdTIC, tdTIC);
+                        filteredTIC, fdTIC, sdTIC, tdTIC, baseline);
                 if (pb != null && pb.getArea() > 0) {
                     pb.setSnr(snr[pb.getApexIndex()]);
                     pb.setApexTime(scanAcquisitionTime.getDouble(pb.getApexIndex()));
@@ -238,21 +241,21 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
      */
     public PeakPositionsResultSet findPeakPositions(Array tic, Array sat) {
         EvalTools.notNull(tic, this);
-        Array correctedtic = null;
+        Array filteredTic = null;
         final ArrayList<Integer> ts = new ArrayList<>();
         log.debug("Value\tLow\tMedian\tHigh\tDev\tGTMedian\tSNR");
         double[] ticValues = (double[]) tic.get1DJavaArray(double.class);
-        correctedtic = applyFilters(tic.copy());
+        filteredTic = applyFilters(tic.copy());
         double[] snrValues = new double[ticValues.length];
         double[] satValues = (double[]) sat.get1DJavaArray(double.class);
-        double[] cticValues = (double[]) correctedtic.get1DJavaArray(
+        double[] cticValues = (double[]) filteredTic.get1DJavaArray(
                 double.class);
         PolynomialSplineFunction baselineEstimatorFunction = baselineEstimator.findBaseline(satValues, cticValues);
         for (int i = 0; i < snrValues.length; i++) {
             double snr = Double.NEGATIVE_INFINITY;
             try {
-                double ratio = (cticValues[i])
-                        / baselineEstimatorFunction.value(sat.getDouble(i));
+                double baselineValue = baselineEstimatorFunction.value(sat.getDouble(i));
+                double ratio = cticValues[i] / baselineValue;
                 snr = 20.0d * Math.log10(ratio);
             } catch (ArgumentOutsideDomainException ex) {
                 Logger.getLogger(TICPeakFinder.class.getName()).log(Level.SEVERE, null, ex);
@@ -266,7 +269,8 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
             PeakFinderUtils.checkExtremum(cticValues, snrValues, ts, threshold, i,
                     this.peakSeparationWindow);
         }
-        PeakPositionsResultSet pprs = new PeakPositionsResultSet(correctedtic,
+        log.debug("Corrected tic value: {}", filteredTic);
+        PeakPositionsResultSet pprs = new PeakPositionsResultSet(filteredTic,
                 createPeakCandidatesArray(tic, ts), snrValues, ts, baselineEstimatorFunction);
         return pprs;
     }
@@ -280,12 +284,14 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
         log.info("Found {} peaks for file {}", pprs.getTs().size(), f.getName());
         List<Peak1D> peaks = Collections.emptyList();
         if (this.integratePeaks) {
-            peaks = findPeakAreas(f, pprs.getTs(), f.getName(), tic, pprs.getCorrectedTIC(), snrValues);
+            peaks = findPeakAreas(f, pprs.getTs(), f.getName(), sat, tic, pprs.getCorrectedTIC(), snrValues, pprs.getBaselineEstimator());
         }
         List<WorkflowResult> workflowResults = new ArrayList<>();
         if (this.saveGraphics) {
             workflowResults.addAll(visualize(f, sat, tic, pprs.getCorrectedTIC(), snrValues, extr,
                     this.peakThreshold, pprs.getBaselineEstimator()));
+//            workflowResults.addAll(visualize(f, sat, tic, pprs.getCorrectedTIC(), snrValues, extr,
+//                    this.peakThreshold, pprs.getBaselineEstimator()));
         }
         final String filename = f.getName();
         final IFileFragment ff = new FileFragment(
@@ -487,9 +493,9 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
     }
 
     private Peak1D getPeakBoundsByTIC(final IFileFragment chromatogram,
-            final int scanIndex, final Array rawTIC,
+            final int scanIndex, final Array sat, final Array rawTIC,
             final Array baselineCorrectedTIC,
-            final Array fdTIC, final Array sdTIC, final Array tdTIC) {
+            final Array fdTIC, final Array sdTIC, final Array tdTIC, final PolynomialSplineFunction baseline) {
 
         Array fdfTIC = baselineCorrectedTIC;
         // return getPeakBoundsByTIC2(scanIndex, f, baselineCorrectedTIC);
@@ -559,7 +565,22 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
         if (integrateRawTic) {
             integratePeak(pb, null, rawTIC);
         } else {
-            integratePeak(pb, null, baselineCorrectedTIC);
+            Array baselineSubtractedTic = baselineCorrectedTIC.copy();
+            if (subtractBaseline) {
+                Index satIndex = sat.getIndex();
+                Index baselineSubtractedTicIndex = baselineSubtractedTic.getIndex();
+                for (int i = 0; i < baselineSubtractedTic.getShape()[0]; i++, baselineSubtractedTicIndex.incr(), satIndex.incr()) {
+                    double baselineValue;
+                    try {
+                        baselineValue = baseline.value(sat.getDouble(satIndex));
+                        baselineSubtractedTic.setDouble(baselineSubtractedTicIndex, Math.max(0, baselineCorrectedTIC.getDouble(i) - baselineValue));
+                    } catch (ArgumentOutsideDomainException ex) {
+                        Logger.getLogger(TICPeakFinderWorker.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+
+            integratePeak(pb, null, baselineSubtractedTic);
         }
         return pb;
     }
@@ -758,6 +779,7 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
      *
      * @param l
      * @param iff
+     * @return
      */
     public WorkflowResult savePeakAnnotations(final List<Peak1D> l,
             final IFileFragment iff) {
@@ -784,6 +806,7 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
      * @param peaks
      * @param peakThreshold
      * @param baselineEstimator
+     * @return
      */
     public Collection<WorkflowResult> visualize(final IFileFragment f, final Array sat, final Array intensities,
             final Array filteredIntensities,
@@ -823,10 +846,11 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
                 new String[]{"Signal-to-noise ratio", "Threshold"},
                 new Array[]{snrEstimate, threshold}, new Array[]{domain}, posx, posy,
                 new String[]{}, x_label, "snr (db)");
+        tc1.setSeriesColors(new Color[]{Color.RED, Color.BLUE});
         final AChart<XYPlot> tc2 = new XYChart("TICPeakFinder results for "
-                + f.getName(), new String[]{"Total Ion Count (TIC)",
+                + f.getName(), new String[]{"Total Ion Count (TIC)", "Filtered TIC",
                     "Estimated Baseline"},
-                new Array[]{intensities, baseline}, new Array[]{
+                new Array[]{intensities, filteredIntensities, baseline}, new Array[]{
                     domain}, posx,
                 posy, new String[]{}, x_label, "counts");
         // final AChart<XYPlot> tc3 = new XYChart("Peak candidates",
@@ -851,7 +875,6 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
         final PlotRunner pr = new PlotRunner(cdt.create(),
                 "TIC and Peak information for " + f.getName(),
                 "combinedTICandPeakChart-" + StringTools.removeFileExt(f.getName()) + ".png", outputDirectory);
-        pr.setSizeOverride(true);
         pr.configure(ConfigurationConverter.getConfiguration(properties));
         CompletionServiceFactory<JFreeChart> csf = new CompletionServiceFactory<>();
         ICompletionService<JFreeChart> ics = csf.newLocalCompletionService();
