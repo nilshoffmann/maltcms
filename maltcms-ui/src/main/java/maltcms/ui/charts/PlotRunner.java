@@ -45,7 +45,10 @@ import maltcms.tools.ImageTools;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
+import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.Plot;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.ui.RectangleInsets;
 
 /**
@@ -118,9 +121,9 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
         sct.setRegularFont(rf);
         sct.setSmallFont(sf);
         this.plot.setInsets(RectangleInsets.ZERO_INSETS);
+        
         final JFreeChart jfc = new JFreeChart(this.plot);
         sct.apply(jfc);
-
         jfc.setAntiAlias(true);
         jfc.setTitle(this.title);
         jfc.setBackgroundPaint(Color.WHITE);

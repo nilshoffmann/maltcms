@@ -174,6 +174,8 @@ public class XYChart extends AChart<XYPlot> {
         }
         final XYPlot p = new XYPlot(xysc, new NumberAxis(this.xaxis),
                 ynumberaxis, dir);
+
+        applySeriesColors(p, getSeriesColors(), fgAlpha);
         int labelCounter = 0;
         if ((this.annotation_positions_x != null)
                 && (this.annotation_positions_y != null)) {

@@ -29,11 +29,14 @@ package maltcms.ui.charts;
 
 import cross.Factory;
 import cross.IConfigurable;
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 import maltcms.commands.filters.array.NormalizationFilter;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.plot.Plot;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
 import ucar.ma2.Array;
 
 /**
@@ -47,7 +50,29 @@ public abstract class AChart<T extends Plot> implements IConfigurable {
 
     private double yaxis_min = -1;
     private double yaxis_max = -1;
+    private Color[] seriesColors;
+    private static final Color[] baseColors = new Color[]{
+            new Color(166, 206, 227),
+            new Color(178, 223, 138),
+            new Color(251, 154, 153),
+            new Color(253, 191, 111),
+            new Color(202, 178, 214),
+            new Color(31, 120, 180),
+            new Color(51, 160, 44),
+            new Color(227, 26, 28),
+            new Color(255, 127, 0),
+            new Color(106, 61, 154)};
 
+    public AChart() {
+        int cnt = 0;
+        seriesColors = new Color[2 * baseColors.length];
+        for (Color c : baseColors) {
+            seriesColors[cnt] = c.darker();
+            seriesColors[baseColors.length + cnt] = c;
+            cnt++;
+        }
+    }
+    
     /*
      * (non-Javadoc)
      *
@@ -100,5 +125,28 @@ public abstract class AChart<T extends Plot> implements IConfigurable {
      */
     public void setYaxis_min(final double yaxis_min) {
         this.yaxis_min = yaxis_min;
+    }
+    
+    public static void applySeriesColors(XYPlot plot, Color[] plotColors, float alpha) {
+        XYItemRenderer renderer = plot.getRenderer();
+        int series = plot.getSeriesCount();
+        for (int i = 0; i < series; i++) {
+            renderer.setSeriesPaint(i,
+                    withAlpha(plotColors[i % plotColors.length], alpha));
+        }
+    }
+
+    public static Color withAlpha(Color color, float alpha) {
+        Color ca = new Color(color.getRed(), color.getGreen(), color.getBlue(),
+                (int) (alpha * 255.0f));
+        return ca;
+    }
+    
+    public Color[] getSeriesColors() {
+        return seriesColors;
+    }
+    
+    public void setSeriesColors(Color[] colors) {
+        this.seriesColors = colors;
     }
 }
