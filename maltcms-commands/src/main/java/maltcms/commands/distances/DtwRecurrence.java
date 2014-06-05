@@ -69,14 +69,14 @@ public class DtwRecurrence implements IRecurrence {
      */
     @Override
     public void configure(final Configuration cfg) {
-        this.comp_weight = cfg.getDouble(
-                "alignment.algorithm.compressionweight", 1.0);
-        this.exp_weight = cfg.getDouble("alignment.algorithm.expansionweight",
-                1.0);
-        this.diag_weight = cfg.getDouble("alignment.algorithm.diagonalweight",
-                1.0);
-        this.globalGapPenalty = cfg.getDouble(
-                "alignment.algorithm.globalGapPenalty", 0);
+//        this.comp_weight = cfg.getDouble(
+//                "alignment.algorithm.compressionweight", 1.0);
+//        this.exp_weight = cfg.getDouble("alignment.algorithm.expansionweight",
+//                1.0);
+//        this.diag_weight = cfg.getDouble("alignment.algorithm.diagonalweight",
+//                1.0);
+//        this.globalGapPenalty = cfg.getDouble(
+//                "alignment.algorithm.globalGapPenalty", 0);
     }
 
     private double cumDistM(final int row, final int column,

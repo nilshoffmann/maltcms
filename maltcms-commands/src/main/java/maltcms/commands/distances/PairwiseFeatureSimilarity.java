@@ -47,6 +47,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.array.IArrayD2Double;
+import maltcms.math.functions.DtwTimePenalizedPairwiseSimilarity;
 import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -69,7 +70,7 @@ public class PairwiseFeatureSimilarity implements IConfigurable {
      */
     private static final long serialVersionUID = -2087449317783907180L;
     @Configurable(name = "alignment.algorithm.distance")
-    private IDtwSimilarityFunction similarityFunction = null;
+    private IDtwSimilarityFunction similarityFunction = new DtwTimePenalizedPairwiseSimilarity();
     @Configurable(name = "cross.Factory.maxthreads")
     private int nthreads = 1;
     @Getter(AccessLevel.NONE)

@@ -29,7 +29,7 @@ package maltcms.math.functions;
 
 import lombok.Data;
 import maltcms.commands.distances.IDtwSimilarityFunction;
-import maltcms.math.functions.similarities.ArrayCorr;
+import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
@@ -47,7 +47,7 @@ public class DtwTimePenalizedPairwiseSimilarity implements IDtwSimilarityFunctio
     private double matchWeight = 1.0;
     private double compressionWeight = 1.0;
     private IScalarSimilarity retentionTimeSimilarity = new GaussianDifferenceSimilarity();
-    private IArraySimilarity denseMassSpectraSimilarity = new ArrayCorr();
+    private IArraySimilarity denseMassSpectraSimilarity = new ArrayCos();
 
     @Override
     public double apply(int i1, int i2, double time1, double time2, Array t1,

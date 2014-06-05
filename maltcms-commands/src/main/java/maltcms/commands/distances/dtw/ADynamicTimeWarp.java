@@ -128,7 +128,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
     /**
      *
      */
-    protected DtwRecurrence recurrence = null;
+    protected DtwRecurrence recurrence = new DtwRecurrence();
     /**
      *
      */
@@ -138,7 +138,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
     /**
      *
      */
-    protected PairwiseFeatureSimilarity pairwiseFeatureSimilarity = null;
+    protected PairwiseFeatureSimilarity pairwiseFeatureSimilarity = new PairwiseFeatureSimilarity();
     private StatsMap statsMap;
     private boolean useAnchors = true;
     private int anchorRadius = 10;
