@@ -91,6 +91,7 @@ class APProperties {
         tpf.peakSeparationWindow = u.convInteger(props["ticPeakFinder.peakSeparationWindow"],10)
         tpf.integrateRawTic =  u.convBoolean(props["ticPeakFinder.integrateRawTic"],true)
         tpf.saveGraphics =  u.convBoolean(props["ticPeakFinder.saveGraphics"],true)
+        tpf.subtractBaseline = u.convBoolean(props["ticPeakFinder.subtractBaseline"],false)
         tan.ticVariableName = u.convString(props["ticAreaNormalizer.ticVariableName"],"total_intensity")
         gds.tolerance =  u.convDouble(props["gaussianDifferenceSimilarity.tolerance"],0.05)
         gds.threshold =  u.convDouble(props["gaussianDifferenceSimilarity.threshold"],0.0)
@@ -123,6 +124,7 @@ class APProperties {
         props["ticPeakFinder.peakSeparationWindow"] = tpf.peakSeparationWindow.toString()
         props["ticPeakFinder.integrateRawTic"] = tpf.integrateRawTic.toString()
         props["ticPeakFinder.saveGraphics"] = tpf.saveGraphics.toString()
+        props["ticPeakFinder.subtractBaseline"] = tpf.subtractBaseline.toString()
         props["ticAreaNormalizer.ticVariableName"] = tan.ticVariableName.toString()
         props["gaussianDifferenceSimilarity.tolerance"] = gds.tolerance.toString()
         props["gaussianDifferenceSimilarity.threshold"] = gds.threshold.toString()
@@ -137,7 +139,7 @@ class APProperties {
         props["maltcmsRuntime.pipelineMode"] = mr.pipelineMode.toString()
         props["maltcmsRuntime.pipelineFile"] = mr.pipelineFile.absolutePath
         props["maltcmsRuntime.uniqueOutputDir"] = mr.uniqueOutputDir.toString()
-        props["maltcmsRuntime.lastOutputDir"] = mr.lastOutputDir
+        props["maltcmsRuntime.lastOutputDir"] = mr.lastOutputDir.toString()
         f.withOutputStream {
             stream -> props.store(stream, "maltcms-ap parameters")
         }

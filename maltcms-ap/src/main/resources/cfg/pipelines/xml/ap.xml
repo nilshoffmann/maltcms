@@ -128,6 +128,7 @@ for details.
                 <ref bean="ticAreaNormalizer"/>
             </list>
         </property>
+        <property name="subtractBaseline" value="${ticPeakFinder.subtractBaseline}"/>
     </bean>
 
     <bean id="gaussianDifferenceSimilarity" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity" scope="prototype">

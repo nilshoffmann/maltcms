@@ -320,6 +320,7 @@ def peakDetectionTab = swing.panel(constraints: BL.CENTER, id: "peakDetectionTab
                             println "Setting total_intensity"
                             props.tan.ticVariableName = "total_intensity"
                             tanTicVariableNames.setSelectedItem((String)"total_intensity")
+                            tpfSubtractBaseline.setSelected(false)
                         } else {
                             if(props.tan.ticVariableName.equals("peak_area")) {
                                 println "Setting peak_area"
@@ -333,6 +334,15 @@ def peakDetectionTab = swing.panel(constraints: BL.CENTER, id: "peakDetectionTab
                         }
                     }, target:props.tpf,
                     targetProperty: "integrateRawTic")
+            }
+        }
+        tr {
+            td(colfill: true) {hglue()}
+            td(align: "RIGHT") {label "Subtract Estimated Baseline"}
+            td(colspan: 2, colfill: true, align: "LEFT") {
+                checkBox(id: 'tpfSubtractBaseline', toolTipText: 'If selected, the estimated baseline is subtracted from the smoothed signal. Only has a notable effect, if integration is performed on tic_filtered.')
+                bind(source: tpfSubtractBaseline, sourceProperty: "selected", target: props.tpf,
+                    targetProperty: "subtractBaseline", mutual: true)
             }
         }
         tr {
@@ -366,6 +376,7 @@ def peakNormalizationTab = swing.panel(constraints: BL.CENTER, id: "peakNormaliz
                         }else if(tanTicVariableNames.getSelectedItem().equals("total_intensity")) {
                             props.tan.ticVariableName = "total_intensity"
                             tpfIntegrateRawTic.setSelected(true)
+                            tpfSubtractBaseline.setSelected(false)
                             props.tpf.integrateRawTic = true
                         }else if(tanTicVariableNames.getSelectedItem().equals("tic_filtered")) {
                             props.tan.ticVariableName = "tic_filtered"
@@ -410,17 +421,6 @@ def peakAlignmentTab = swing.panel(constraints: BL.CENTER, id:"peakAlignmentTab"
         }
         tr {
             td(colfill: true) {hglue()}
-            td(colspan: 3, colfill: true) {
-                separator()
-            }
-        }
-        tr {
-            td(colspan: 4, colfill: true, align: "LEFT") {
-                label(text: "<html><u>Peak Clique Alignment</u>:</html>")
-            }
-        }
-        tr {
-            td(colfill: true) {hglue()}
             td(align: "RIGHT") {label "Maximum Retention Time Deviation"}
             td(colspan: 2, colfill: true, align: "LEFT") {
                 formattedTextField(id: 'pcaMaxRTDifference',columns: 14,formatterFactory: df,
@@ -429,6 +429,17 @@ def peakAlignmentTab = swing.panel(constraints: BL.CENTER, id:"peakAlignmentTab"
                 )
                 bind(source: pcaMaxRTDifference, sourceProperty: "value", target: props.pca,
                     targetProperty: "maxRTDifference", mutual: true)
+            }
+        }
+        tr {
+            td(colfill: true) {hglue()}
+            td(colspan: 3, colfill: true) {
+                separator()
+            }
+        }
+        tr {
+            td(colspan: 4, colfill: true, align: "LEFT") {
+                label(text: "<html><u>Peak Clique Alignment</u>:</html>")
             }
         }
         tr {

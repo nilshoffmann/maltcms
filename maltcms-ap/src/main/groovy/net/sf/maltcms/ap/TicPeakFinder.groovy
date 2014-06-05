@@ -42,5 +42,6 @@ class TicPeakFinder {
     Integer peakSeparationWindow = 20
     Boolean integrateRawTic = true
     Boolean saveGraphics = true
+    Boolean subtractBaseline = false
 }
 
