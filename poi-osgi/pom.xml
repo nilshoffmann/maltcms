@@ -37,13 +37,13 @@
             <version>3.9</version>
             <!--<scope>provided</scope>-->
         </dependency>
-        <dependency>
+<!--        <dependency>
             <artifactId>xml-apis</artifactId>
             <groupId>xml-apis</groupId>
             <type>jar</type>
             <version>1.0.b2</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <artifactId>xmlbeans</artifactId>
             <groupId>org.apache.xmlbeans</groupId>

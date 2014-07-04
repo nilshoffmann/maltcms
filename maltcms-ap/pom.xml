@@ -138,7 +138,6 @@
         <dependency>
             <artifactId>junit</artifactId>
             <groupId>junit</groupId>
-            <version>4.10</version>
         </dependency>
     </dependencies>
 </project>

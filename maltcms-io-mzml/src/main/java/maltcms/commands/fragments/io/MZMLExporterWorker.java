@@ -133,7 +133,6 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 
     @Override
     public URI call() throws Exception {
-//		try {
         log.info("Creating mzML file for {}", inputFile);
         String inputFileName = StringTools.removeFileExt(FileTools.getFilename(inputFile));
         FileFragment inputFileFragment = new FileFragment(inputFile);
@@ -223,22 +222,10 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         }
         //add the mzml file as a source file of the returned fragment for later reuse and variable retrieval
         IFileFragment mzMLFragment = new FileFragment(f);
-//        if (!mzMLFragment.getUri().equals(outputFileFragment.getUri())) {
-//        outputFileFragment.addSourceFile(mzMLFragment);
-//        }
-        //persist to file
-//        log.info("Saving output file fragment!");
-        //add input file as source file
-//        if (!mzMLFragment.getUri().equals(inputFileFragment.getUri())) {
         outputFileFragment.addSourceFile(mzMLFragment);
         outputFileFragment.addSourceFile(inputFileFragment);
-//        }
         outputFileFragment.save();
         return f.toURI();
-//		} catch (Exception e) {
-//			log.error("Caught exception while exporting to mzML:", e);
-//			throw e;
-//		}
     }
 
     protected DataProcessingList createDataProcessingList() {
@@ -474,154 +461,160 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         } catch (ResourceNotAvailableException ex) {
             log.debug("Not writing msLevel. Not present in source file!");
         }
+        int skippedScans = 0;
         for (int i = 0; i < scans; i++) {
             Spectrum s = new Spectrum();
             Array massValuesArray = indexedMassValues.get(i);
             Array intensityValuesArray = indexedIntensityValues.get(i);
-            s.setIndex(i);
-            s.setId(i + "");
-            BinaryDataArrayList bdal = new BinaryDataArrayList();
-            List<BinaryDataArray> bdas = bdal.getBinaryDataArray();
-            MinMax minMaxMasses = MAMath.getMinMax(massValuesArray);
-            BinaryDataArray masses = createBinaryDataArray(true, massValuesArray, massDataType, compressSpectra, dataProcessing, psiMs);
-            bdas.add(masses);
-            BinaryDataArray intensities = createBinaryDataArray(true, intensityValuesArray, intensityDataType, compressSpectra, dataProcessing, psiMs);
-            bdas.add(intensities);
-            bdal.setCount(bdas.size());
-            s.setBinaryDataArrayList(bdal);
-            s.setDefaultArrayLength(Math.max(masses.getArrayLength(), intensities.getArrayLength()));
-            s.setId("scan=" + i);
-            //cv params
-            CVParam mzCvParam = new CVParam();
-            mzCvParam.setCvRef("MS");
-            mzCvParam.setAccession("MS:1000514");
-            mzCvParam.setName("m/z array");
-            mzCvParam.setUnitCvRef("MS");
-            mzCvParam.setUnitAccession("MS:1000040");
-            mzCvParam.setUnitName("m/z");
-            masses.getCvParam().add(mzCvParam);
+            if (massValuesArray.getShape().length == 0 || intensityValuesArray.getShape().length == 0) {
+                log.warn("Mass Spectrum values at scan with index {}/{} are empty, removing!", new Object[]{i, scans - 1});
+                skippedScans++;
+            } else {
+                s.setIndex(i - skippedScans);
+//            s.setId((i-skippedScans) + "");
+                BinaryDataArrayList bdal = new BinaryDataArrayList();
+                List<BinaryDataArray> bdas = bdal.getBinaryDataArray();
+                MinMax minMaxMasses = MAMath.getMinMax(massValuesArray);
+                BinaryDataArray masses = createBinaryDataArray(true, massValuesArray, massDataType, compressSpectra, dataProcessing, psiMs);
+                bdas.add(masses);
+                BinaryDataArray intensities = createBinaryDataArray(true, intensityValuesArray, intensityDataType, compressSpectra, dataProcessing, psiMs);
+                bdas.add(intensities);
+                bdal.setCount(bdas.size());
+                s.setBinaryDataArrayList(bdal);
+                s.setDefaultArrayLength(Math.max(masses.getArrayLength(), intensities.getArrayLength()));
+                s.setId("scan=" + (i - skippedScans));
+                //cv params
+                CVParam mzCvParam = new CVParam();
+                mzCvParam.setCvRef("MS");
+                mzCvParam.setAccession("MS:1000514");
+                mzCvParam.setName("m/z array");
+                mzCvParam.setUnitCvRef("MS");
+                mzCvParam.setUnitAccession("MS:1000040");
+                mzCvParam.setUnitName("m/z");
+                masses.getCvParam().add(mzCvParam);
 
-            CVParam intenCvParam = new CVParam();
-            intenCvParam.setCvRef("MS");
-            intenCvParam.setAccession("MS:1000515");
-            intenCvParam.setName("intensity array");
-            intenCvParam.setUnitCvRef("MS");
-            intenCvParam.setUnitAccession("MS:1000131");
-            intenCvParam.setUnitName("number of counts");
-            intensities.getCvParam().add(intenCvParam);
+                CVParam intenCvParam = new CVParam();
+                intenCvParam.setCvRef("MS");
+                intenCvParam.setAccession("MS:1000515");
+                intenCvParam.setName("intensity array");
+                intenCvParam.setUnitCvRef("MS");
+                intenCvParam.setUnitAccession("MS:1000131");
+                intenCvParam.setUnitName("number of counts");
+                intensities.getCvParam().add(intenCvParam);
 
-            ScanList scanListType = s.getScanList();
-            if (scanListType == null) {
-                scanListType = new ScanList();
-                s.setScanList(scanListType);
-            }
-
-            List<Scan> scanList = s.getScanList().getScan();
-            Scan scanObject = null;
-            if (scanList.isEmpty()) {
-                scanObject = new Scan();
-                scanList.add(scanObject);
-                s.getScanList().setCount(scanList.size());
-            }
-            for (Scan scanObj : scanList) {
-//                <cvParam cvRef="MS" accession="MS:1000016" name="scan start time" value="0.034924999999999998" unitCvRef="UO" unitAccession="UO:0000031" unitName="minute"/>
-                CVParam sst = new CVParam();
-                sst.setCvRef("MS");
-                sst.setAccession("MS:1000016");
-                sst.setName("scan start time");
-                sst.setUnitCvRef("UO");
-                sst.setUnitAccession("UO:0000010");
-                sst.setUnitName("second");
-                sst.setValue(scanAcquisitionTimeArray.getDouble(i) + "");
-                scanObj.getCvParam().add(sst);
-                if (firstColumnElutionTimeArray != null && secondColumnElutionTimeArray != null) {
-                    //first column elution time
-                    CVParam fcet = new CVParam();
-                    fcet.setCvRef("MS");
-                    fcet.setAccession("MS:1002082");
-                    fcet.setName("first column elution time");
-                    fcet.setUnitCvRef("UO");
-                    fcet.setUnitAccession("UO:0000010");
-                    fcet.setUnitName("second");
-                    fcet.setValue(firstColumnElutionTimeArray.getDouble(i) + "");
-                    scanObj.getCvParam().add(fcet);
-                    //first column elution time
-                    CVParam scet = new CVParam();
-                    scet.setCvRef("MS");
-                    scet.setAccession("MS:1002083");
-                    scet.setName("second column elution time");
-                    scet.setUnitCvRef("UO");
-                    scet.setUnitAccession("UO:0000010");
-                    scet.setUnitName("second");
-                    scet.setValue(secondColumnElutionTimeArray.getDouble(i) + "");
-                    scanObj.getCvParam().add(scet);
-                    scanObj.setSpectrum(s);
+                ScanList scanListType = s.getScanList();
+                if (scanListType == null) {
+                    scanListType = new ScanList();
+                    s.setScanList(scanListType);
                 }
-            }
 
-            if (msLevelArray != null) {
-                //ms level
-                CVParam msLevel = new CVParam();
-                msLevel.setCvRef("MS");
-                msLevel.setAccession("MS:1000511");
-                msLevel.setName("ms level");
-                msLevel.setValue(msLevelArray.getInt(i) + "");
-                s.getCvParam().add(msLevel);
-            }
+                List<Scan> scanList = s.getScanList().getScan();
+                Scan scanObject = null;
+                if (scanList.isEmpty()) {
+                    scanObject = new Scan();
+                    scanList.add(scanObject);
+                    s.getScanList().setCount(scanList.size());
+                }
+                for (Scan scanObj : scanList) {
+//                <cvParam cvRef="MS" accession="MS:1000016" name="scan start time" value="0.034924999999999998" unitCvRef="UO" unitAccession="UO:0000031" unitName="minute"/>
+                    CVParam sst = new CVParam();
+                    sst.setCvRef("MS");
+                    sst.setAccession("MS:1000016");
+                    sst.setName("scan start time");
+                    sst.setUnitCvRef("UO");
+                    sst.setUnitAccession("UO:0000010");
+                    sst.setUnitName("second");
+                    sst.setValue(scanAcquisitionTimeArray.getDouble(i) + "");
+                    scanObj.getCvParam().add(sst);
+                    if (firstColumnElutionTimeArray != null && secondColumnElutionTimeArray != null) {
+                        //first column elution time
+                        CVParam fcet = new CVParam();
+                        fcet.setCvRef("MS");
+                        fcet.setAccession("MS:1002082");
+                        fcet.setName("first column elution time");
+                        fcet.setUnitCvRef("UO");
+                        fcet.setUnitAccession("UO:0000010");
+                        fcet.setUnitName("second");
+                        fcet.setValue(firstColumnElutionTimeArray.getDouble(i) + "");
+                        scanObj.getCvParam().add(fcet);
+                        //first column elution time
+                        CVParam scet = new CVParam();
+                        scet.setCvRef("MS");
+                        scet.setAccession("MS:1002083");
+                        scet.setName("second column elution time");
+                        scet.setUnitCvRef("UO");
+                        scet.setUnitAccession("UO:0000010");
+                        scet.setUnitName("second");
+                        scet.setValue(secondColumnElutionTimeArray.getDouble(i) + "");
+                        scanObj.getCvParam().add(scet);
+                        scanObj.setSpectrum(s);
+                    }
+                }
 
-            //total intensity
+                if (msLevelArray != null) {
+                    //ms level
+                    CVParam msLevel = new CVParam();
+                    msLevel.setCvRef("MS");
+                    msLevel.setAccession("MS:1000511");
+                    msLevel.setName("ms level");
+                    msLevel.setValue(msLevelArray.getInt(i) + "");
+                    s.getCvParam().add(msLevel);
+                }
+
+                //total intensity
 //            <cvParam cvRef="MS" accession="MS:1000285" name="total ion current" value="15245068"/>
-            CVParam totalIonCurrent = new CVParam();
-            totalIonCurrent.setCvRef("MS");
-            totalIonCurrent.setAccession("MS:1000285");
-            totalIonCurrent.setName("total ion current");
-            DataType dataType = totalIntensity.getDataType();
-            switch (dataType) {
-                case DOUBLE:
-                    totalIonCurrent.setValue("" + totalIntensity.getArray().getDouble(i));
-                    break;
-                case FLOAT:
-                    totalIonCurrent.setValue("" + totalIntensity.getArray().getFloat(i));
-                    break;
-                case INT:
-                    totalIonCurrent.setValue("" + totalIntensity.getArray().getInt(i));
-                    break;
-                case LONG:
-                    totalIonCurrent.setValue("" + totalIntensity.getArray().getLong(i));
-                    break;
-                case SHORT:
-                    totalIonCurrent.setValue("" + totalIntensity.getArray().getShort(i));
-                    break;
-                default:
-                    throw new IllegalStateException("Unhandled binary data array format: " + dataType);
-            }
+                CVParam totalIonCurrent = new CVParam();
+                totalIonCurrent.setCvRef("MS");
+                totalIonCurrent.setAccession("MS:1000285");
+                totalIonCurrent.setName("total ion current");
+                DataType dataType = totalIntensity.getDataType();
+                switch (dataType) {
+                    case DOUBLE:
+                        totalIonCurrent.setValue("" + totalIntensity.getArray().getDouble(i));
+                        break;
+                    case FLOAT:
+                        totalIonCurrent.setValue("" + totalIntensity.getArray().getFloat(i));
+                        break;
+                    case INT:
+                        totalIonCurrent.setValue("" + totalIntensity.getArray().getInt(i));
+                        break;
+                    case LONG:
+                        totalIonCurrent.setValue("" + totalIntensity.getArray().getLong(i));
+                        break;
+                    case SHORT:
+                        totalIonCurrent.setValue("" + totalIntensity.getArray().getShort(i));
+                        break;
+                    default:
+                        throw new IllegalStateException("Unhandled binary data array format: " + dataType);
+                }
 
 //            <cvParam cvRef="MS" accession="MS:1000130" name="positive scan" value=""/>
 //          <cvParam cvRef="MS" accession="MS:1000128" name="profile spectrum" value=""/>
 //          <cvParam cvRef="MS" accession="MS:1000504" name="base peak m/z" value="810.415283203125" unitCvRef="MS" unitAccession="MS:1000040" unitName="m/z"/>
 //          <cvParam cvRef="MS" accession="MS:1000505" name="base peak intensity" value="1471973.875" unitCvRef="MS" unitAccession="MS:1000131" unitName="number of counts"/>
 //            minMaxMasses
-            CVParam minMass = new CVParam();
-            minMass.setCvRef("MS");
-            minMass.setAccession("MS:1000528");
-            minMass.setName("lowest observed m/z");
-            minMass.setValue(minMaxMasses.min + "");
-            minMass.setUnitCvRef("MS");
-            minMass.setUnitAccession("MS:1000040");
-            minMass.setUnitName("m/z");
-            s.getCvParam().add(minMass);
+                CVParam minMass = new CVParam();
+                minMass.setCvRef("MS");
+                minMass.setAccession("MS:1000528");
+                minMass.setName("lowest observed m/z");
+                minMass.setValue(minMaxMasses.min + "");
+                minMass.setUnitCvRef("MS");
+                minMass.setUnitAccession("MS:1000040");
+                minMass.setUnitName("m/z");
+                s.getCvParam().add(minMass);
 
-            CVParam maxMass = new CVParam();
-            maxMass.setCvRef("MS");
-            maxMass.setAccession("MS:1000527");
-            maxMass.setName("highest observed m/z");
-            maxMass.setValue(minMaxMasses.max + "");
-            maxMass.setUnitCvRef("MS");
-            maxMass.setUnitAccession("MS:1000040");
-            maxMass.setUnitName("m/z");
-            s.getCvParam().add(maxMass);
+                CVParam maxMass = new CVParam();
+                maxMass.setCvRef("MS");
+                maxMass.setAccession("MS:1000527");
+                maxMass.setName("highest observed m/z");
+                maxMass.setValue(minMaxMasses.max + "");
+                maxMass.setUnitCvRef("MS");
+                maxMass.setUnitAccession("MS:1000040");
+                maxMass.setUnitName("m/z");
+                s.getCvParam().add(maxMass);
 
-            csl.add(s);
+                csl.add(s);
+            }
         }
         sl.setCount(csl.size());
         return sl;

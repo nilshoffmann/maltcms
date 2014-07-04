@@ -876,8 +876,7 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
                 "TIC and Peak information for " + f.getName(),
                 "combinedTICandPeakChart-" + StringTools.removeFileExt(f.getName()) + ".png", outputDirectory);
         pr.configure(ConfigurationConverter.getConfiguration(properties));
-        CompletionServiceFactory<JFreeChart> csf = new CompletionServiceFactory<>();
-        ICompletionService<JFreeChart> ics = csf.newLocalCompletionService();
+        ICompletionService<JFreeChart> ics = new CompletionServiceFactory<JFreeChart>().newLocalCompletionService();
         ics.submit(pr);
         Collection<WorkflowResult> results = new ArrayList<>();
         try {

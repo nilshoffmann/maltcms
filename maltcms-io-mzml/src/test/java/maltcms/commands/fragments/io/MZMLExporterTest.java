@@ -34,6 +34,7 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tools.ArrayTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
+import cross.tools.MathTools;
 import cross.tools.StringTools;
 import java.io.File;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ import java.util.List;
 import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.preprocessing.ScanExtractor;
+import maltcms.datastructures.ms.Chromatogram1D;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.io.xml.mzML.MZMLDataSource;
 import maltcms.io.xml.mzML.MZMLValidator;
@@ -70,6 +72,16 @@ public class MZMLExporterTest extends AFragmentCommandTest {
         setLogLevelFor(MZMLDataSource.class, Level.DEBUG);
         setLogLevelFor(MZMLExporter.class, Level.INFO);
         setLogLevelFor(MZMLExporterWorker.class, Level.INFO);
+    }
+    
+    /**
+     * Test of empty scan behaviour.
+     */
+    @Test
+    public void testEmptyScan() {
+        FileFragment tf = new FileFragment();
+        Array massValues = Array.factory(MathTools.seq(50.0d, 550.0d, 1.0d));
+        
     }
 
     /**
