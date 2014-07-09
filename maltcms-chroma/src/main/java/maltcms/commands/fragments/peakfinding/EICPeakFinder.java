@@ -95,10 +95,15 @@ public class EICPeakFinder extends AFragmentCommand {
 
     private final String description = "Finds peaks within on mass channels.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;
+    @Configurable
     private List<AArrayFilter> filter = new ArrayList<>();
+    @Configurable
     private IBaselineEstimator baselineEstimator = new LoessMinimaBaselineEstimator();
+    @Configurable
     private int peakSeparationWindow = 20;
+    @Configurable
     private boolean integrateRawTic = false;
+    @Configurable
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
     /**

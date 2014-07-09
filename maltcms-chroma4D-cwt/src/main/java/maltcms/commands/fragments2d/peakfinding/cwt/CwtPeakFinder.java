@@ -54,8 +54,6 @@ public class CwtPeakFinder extends AFragmentCommand {
     private int minScale = 5;
     @Configurable(value = "20", description = "The maximum scale to calculate the Continuous Wavelet Transform for.")
     private int maxScale = 20;
-    @Configurable(value = "", description = "The output directory. Should be an absolute file path.")
-    private String outputDir = "";
     @Configurable(name = "var.modulation_time.default",
             value = "5.0d", description = "The modulation time. Default value is var.modulation_time.default.")
     private double modulationTime = 5.0d;
@@ -99,6 +97,7 @@ public class CwtPeakFinder extends AFragmentCommand {
             cwt.setSaveRidgeOverlayImages(saveRidgeOverlayImages);
             cwt.setMaxRidges(maxRidges);
             cwt.setInputFile(f.getUri());
+            cwt.setMinPercentile(minPercentile);
             log.info("Running {}", cwt);
             ics.submit(cwt);
         }
