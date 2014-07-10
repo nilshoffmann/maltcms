@@ -29,6 +29,7 @@ package maltcms.commands.fragments.alignment;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
+import cross.test.IntegrationTest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,13 +48,15 @@ import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ZipResourceExtractor;
 import org.apache.log4j.Level;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 /**
  *
  * @author Nils Hoffmann
  */
-//@Category(IntegrationTest.class)
+@Category(IntegrationTest.class)
 public class ProgressiveTreeAlignmentTest extends AFragmentCommandTest {
 
     @Before
@@ -68,6 +71,7 @@ public class ProgressiveTreeAlignmentTest extends AFragmentCommandTest {
     /**
      *
      */
+    @Ignore
     @Test
     public void testProgressiveTreeAlignment() throws IOException {
         File dataFolder = tf.newFolder("chromaTest Data ö");
