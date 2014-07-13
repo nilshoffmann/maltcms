@@ -264,6 +264,10 @@
                     <configuration>
                         <!-- Default configuration for all reports -->
                         <show>public</show>
+						<links>
+                            <link>http://docs.oracle.com/javase/7/docs/api/</link>
+                            <link>http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.2/javadoc/index.html</link>
+                        </links>
                         <archive>
                             <manifestEntries>
                                 <Built-By>${user.name}</Built-By>
@@ -272,8 +276,8 @@
                         <excludes>
                             <exclude>**/site.xml</exclude>
                         </excludes>
-                        <!--<sourcepath>${basedir}/src/main/java</sourcepath>
-                        <sourcepath>target/generated-sources/delombok</sourcepath>-->
+                        <sourcepath>${basedir}/src/main/java</sourcepath>
+                        <sourcepath>target/generated-sources/delombok</sourcepath>
                     </configuration>
                     <executions>
                         <execution>
@@ -397,13 +401,22 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.1</version>
+                    <version>3.3</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>nbm-maven-plugin</artifactId>
                     <extensions>true</extensions>
                     <version>3.9</version>
+                </plugin>
+				<plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>clirr-maven-plugin</artifactId>
+                    <version>2.6.1</version>
+                    <configuration>
+                        <!-- Compare the current code against version 1.2 -->
+                        <comparisonVersion>${version.maltcms.base}</comparisonVersion>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -435,6 +448,10 @@
                                 <report>scm</report>
                             </reports>
                         </plugin>
+						<plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>clirr-maven-plugin</artifactId>
+                        </plugin>
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-javadoc-plugin</artifactId>
@@ -446,8 +463,8 @@
                                     <link>http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.2/javadoc/index.html</link>
                                     <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/apidocs/</link>
                                 </links>
-                                <!--                <sourcepath>${basedir}/src/main/java</sourcepath>
-                                <sourcepath>target/generated-sources/delombok</sourcepath>-->
+                                <sourcepath>${basedir}/src/main/java</sourcepath>
+                                <sourcepath>target/generated-sources/delombok</sourcepath>
                             </configuration>
                         </plugin>
                         <!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>jxr-maven-plugin</artifactId> 
@@ -845,5 +862,6 @@
         <version.junit>4.11</version.junit>
         <version.lombok>1.14.2</version.lombok>
         <version.lombok.maven>1.14.2.0</version.lombok.maven>
+		<version.maltcms.base>1.3.0</version.maltcms.base>
     </properties>
 </project>

@@ -116,7 +116,13 @@ import ucar.ma2.Index;
 @ServiceProvider(service = AFragmentCommand.class)
 public class PeakCliqueAlignment extends AFragmentCommand {
 
-//    private IScalarArraySimilarity similarityFunction;
+    /**
+      * The name of the variable containing tic peak indices, pointing to the corresponding scan 
+      * within a chromatogram.
+      *
+      * @param ticPeaks the tic peaks variable to use
+      * @return the current variable name used to retrieve tic peaks
+      */
     @Configurable(name = "var.tic_peaks")
     private String ticPeaks = "tic_peaks";
     @Configurable(name = "var.eic_peaks")
