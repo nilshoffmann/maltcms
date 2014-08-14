@@ -1,5 +1,5 @@
 <h2>BiPACE and BiPACE2D Peak Alignment</h2>
-Before continuing, please check that [Maltcms is correctly installed and working](./gettingStarted.html)!
+Before continuing, please check that [Maltcms is correctly installed and working](../gettingStarted.html)!
 
 <h3>Converting ChromaTOF peak lists to netCDF format</h3>
 - Download the latest release of the [Maltcms User Interface Maui](http://maltcms.sf.net/maui)
