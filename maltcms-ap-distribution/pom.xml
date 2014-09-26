@@ -192,6 +192,6 @@
         </dependency>
     </dependencies>
     <properties>
-        <distributionName>maltcms-ap-${project.version}</distributionName>
+        <distributionName>maltcms-ap-distribution-${project.version}</distributionName>
     </properties>
 </project>

@@ -266,7 +266,7 @@
                         <show>public</show>
 						<links>
                             <link>http://docs.oracle.com/javase/7/docs/api/</link>
-                            <link>http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.2/javadoc/index.html</link>
+                            <link>http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.2/javadoc/</link>
                         </links>
                         <archive>
                             <manifestEntries>
@@ -277,7 +277,7 @@
                             <exclude>**/site.xml</exclude>
                         </excludes>
                         <sourcepath>${basedir}/src/main/java</sourcepath>
-                        <sourcepath>target/generated-sources/delombok</sourcepath>
+                        <sourcepath>${basedir}/target/generated-sources/delombok</sourcepath>
                     </configuration>
                     <executions>
                         <execution>
@@ -460,11 +460,11 @@
                                 <links>
                                     <link>http://docs.oracle.com/javase/7/docs/api/</link>
                                     <!-- version 4.1 api not available -->
-                                    <link>http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.2/javadoc/index.html</link>
+                                    <link>http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.2/javadoc/</link>
                                     <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/apidocs/</link>
                                 </links>
                                 <sourcepath>${basedir}/src/main/java</sourcepath>
-                                <sourcepath>target/generated-sources/delombok</sourcepath>
+                                <sourcepath>${basedir}/target/generated-sources/delombok</sourcepath>
                             </configuration>
                         </plugin>
                         <!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>jxr-maven-plugin</artifactId> 
