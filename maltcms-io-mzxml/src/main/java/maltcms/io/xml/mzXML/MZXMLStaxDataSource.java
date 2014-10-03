@@ -125,7 +125,7 @@ public class MZXMLStaxDataSource implements IDataSource {
     /** {@inheritDoc} */
     @Override
     public void configurationChanged(final ConfigurationEvent arg0) {
-        // TODO Auto-generated method stub
+        
     }
 
     /** {@inheritDoc} */

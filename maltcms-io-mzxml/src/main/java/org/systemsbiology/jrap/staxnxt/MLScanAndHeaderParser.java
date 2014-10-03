@@ -37,6 +37,7 @@ import java.util.zip.Inflater;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * dhmay changing 2009/10/21, incorporating Vagisha's changes and rebuilding my
@@ -51,10 +52,8 @@ import javax.xml.stream.XMLStreamReader;
  * F Levander changing 2010-02-11. Changed parsing of CVparams from names to
  * accession numbers since those are stable.
  *
- * @author hoffmann
- * 
- * @since 1.3.2
  */
+@Slf4j
 public class MLScanAndHeaderParser {
 
     public ScanHeader tmpScanHeader;
@@ -123,7 +122,7 @@ public class MLScanAndHeaderParser {
         try {
             retval = Integer.parseInt(idString);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         }
         return retval;
     }
@@ -143,7 +142,7 @@ public class MLScanAndHeaderParser {
             String exception1 = e.getMessage();
             if (!exception1.equals("ScanHeaderEndFoundException")) {
                 if (!exception1.equals("ScanEndFoundException")) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                 }
             }
         } finally {
@@ -151,7 +150,7 @@ public class MLScanAndHeaderParser {
                 try {
                     xmlSR.close();
                 } catch (XMLStreamException e) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                 }
             }
         }
@@ -313,7 +312,7 @@ public class MLScanAndHeaderParser {
                 if (elementName.equals("binaryDataArray")) {
                     inPeaks = true;
                     count++;
-                    //System.out.println("count "+count);
+                    //log.info("count "+count);
 
                     if (count == 1) {
                         tmpScanHeader.setMassCompressedLen(getIntValue(xmlSR, "encodedLength"));
@@ -369,7 +368,7 @@ public class MLScanAndHeaderParser {
                 value = xmlSR.getAttributeValue(null, name);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         }
         return value;
     }
@@ -390,7 +389,7 @@ public class MLScanAndHeaderParser {
                 value = Integer.parseInt(xmlSR.getAttributeValue(null, name));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         }
         return value;
     }
@@ -411,7 +410,7 @@ public class MLScanAndHeaderParser {
                 value = Float.parseFloat(xmlSR.getAttributeValue(null, name));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         }
         return value;
     }
@@ -461,7 +460,7 @@ public class MLScanAndHeaderParser {
                 decompresser.end();
 
             } catch (DataFormatException e) {
-                e.printStackTrace();
+                log.warn(e.getLocalizedMessage());
             }
 
             peakBuffer = ByteBuffer.wrap(result);
@@ -481,7 +480,7 @@ public class MLScanAndHeaderParser {
                     i++;
                 }
                 tmpScan.setDoubleMassList(doubleMassList);
-                //System.out.println("massList size "+tmpScan.getDoubleMassList().length);
+                //log.info("massList size "+tmpScan.getDoubleMassList().length);
 
             }
 
@@ -513,12 +512,12 @@ public class MLScanAndHeaderParser {
                     i++;
                 }
                 tmpScan.setDoubleIntensityList(doubleIntenList);
-                //System.out.println("intenList size "+tmpScan.getFloatIntensityList().length);
+                //log.info("intenList size "+tmpScan.getFloatIntensityList().length);
             }
         }
         //dhmay fixing up the massIntensityList, 2009/03/09.  This seems to have been missed initially
         if (count == 2) {
-//System.err.println("****Setting mass-int list");
+//log.warn("****Setting mass-int list");
             double[][] massIntensityList = new double[2][];
             massIntensityList[0] = tmpScan.getDoubleMassList();
             massIntensityList[1] = tmpScan.getDoubleIntensityList();

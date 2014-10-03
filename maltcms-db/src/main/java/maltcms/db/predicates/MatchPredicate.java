@@ -32,7 +32,7 @@ import java.lang.reflect.Method;
 /**
  * <p>MatchPredicate class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class MatchPredicate<T> implements IMatchPredicate<T> {

@@ -40,11 +40,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.io.csv.chromatof.ChromaTOFParser;
 import maltcms.io.csv.chromatof.TableRow;
 import net.sf.maltcms.evaluation.api.classification.Category;
 import net.sf.maltcms.evaluation.api.classification.Entity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 
@@ -54,8 +57,11 @@ import ucar.ma2.MAMath;
  * @author Nils Hoffmann
  * 
  */
-public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
 
+public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
+    
+    private static final Logger log = LoggerFactory.getLogger(net.sf.maltcms.evaluation.api.ClassificationPerformanceTest.class);
+    
     private final Map<Category, List<Entity<T>>> peakTableMap = new LinkedHashMap<>();
 
     /**
@@ -69,7 +75,7 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
             Category c = new Category(StringTools.removeFileExt(f.getName()));
             peakTableMap.put(c, buildEntities(c, t));
         }
-//		System.out.println("Holding "+peakTableMap.keySet().size()+" categories: "+peakTableMap.keySet());
+//		log.info("Holding "+peakTableMap.keySet().size()+" categories: "+peakTableMap.keySet());
     }
 
     /**
@@ -94,17 +100,17 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
         Set<Double> areaSet = new HashSet<>();
         MultiMap<String, Entity<T>> mm = new MultiMap<>();
         for (TableRow tr : t.getSecond()) {
-            //System.out.println("Parsing row "+(index+1)+"/"+report.getSecond().size());
-//			System.out.println("Row data for row index: "+rowIndex+" = "+tr.toString());
+            //log.info("Parsing row "+(index+1)+"/"+report.getSecond().size());
+//			log.info("Row data for row index: "+rowIndex+" = "+tr.toString());
             IFeatureVector ifc = null;
             double area = Double.NaN;
             if (tr.containsKey("R.T._(S)")) {
                 //fused RT mode
                 String rt = tr.get("R.T._(S)");
-//				System.out.println("Fused RT");
-                //System.out.println("Retention Time: "+rt);
+//				log.info("Fused RT");
+                //log.info("Retention Time: "+rt);
                 if (rt.contains(",")) {//2D mode
-//					System.out.println("2D chromatogram peak data detected");
+//					log.info("2D chromatogram peak data detected");
                     String[] rts = rt.split(",");
                     double rt1 = ChromaTOFParser.parseDouble(rts[0].trim());
                     double rt2 = ChromaTOFParser.parseDouble(rts[1].trim());
@@ -118,13 +124,13 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
                 }
             } else {
                 if (tr.containsKey("1ST_DIMENSION_TIME_(S)") && tr.containsKey("2ND_DIMENSION_TIME_(S)")) {
-//					System.out.println("Separate RT 2D chromatogram peak data detected");
+//					log.info("Separate RT 2D chromatogram peak data detected");
                     double rt1 = ChromaTOFParser.parseDouble(tr.get("1ST_DIMENSION_TIME_(S)"));
                     double rt2 = ChromaTOFParser.parseDouble(tr.get("2ND_DIMENSION_TIME_(S)"));
                     area = ChromaTOFParser.parseDouble(tr.get("AREA"));
                     ifc = new Peak2DFeatureVector(tr.get("NAME"), rowIndex, rt1, rt2, area);
                 } else {
-                    System.out.println("Skipping unparseable row!");
+                    log.info("Skipping unparseable row!");
                 }
             }
             if (!areaSet.contains(area)) {
@@ -132,7 +138,7 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
                 l.add(e);
                 areaSet.add(area);
             } else {
-//				System.out.println("Skipping peak with identical area!");
+//				log.info("Skipping peak with identical area!");
             }
             rowIndex++;
         }
@@ -146,9 +152,9 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
      * @return a {@link java.util.List} object.
      */
     public List<Entity<T>> getEntities(Category category) {
-//		System.out.println("Table contains "+peakTableMap.keySet()+" categories!");
+//		log.info("Table contains "+peakTableMap.keySet()+" categories!");
 //		for(Category c:peakTableMap.keySet()) {
-////			System.out.println("Category "+c.getName()+" contains "+peakTableMap.get(c).size()+" entities!");
+////			log.info("Category "+c.getName()+" contains "+peakTableMap.get(c).size()+" entities!");
 //		}
         List<Entity<T>> l = peakTableMap.get(category);
         if (l == null) {
@@ -169,12 +175,12 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
         List<Entity<T>> l = getEntities(c);
         List<Entity<T>> results = new LinkedList<>();
         Array queryA = query.getFeatureVector().getFeature(feature);
-//		System.out.println("Query for category: "+c+" = "+query);
-//		System.out.println("Categories in table: "+peakTableMap.keySet());
-//		System.out.println("Retrieved "+l.size()+" entities from table for category!");
+//		log.info("Query for category: "+c+" = "+query);
+//		log.info("Categories in table: "+peakTableMap.keySet());
+//		log.info("Retrieved "+l.size()+" entities from table for category!");
         for (Entity<T> e : l) {
             Array refA = e.getFeatureVector().getFeature(feature);
-//			System.out.println("Candidate: "+e);
+//			log.info("Candidate: "+e);
             if (refA != null) {
                 if (MAMath.isEqual(queryA, refA)) {
                     results.add(e);

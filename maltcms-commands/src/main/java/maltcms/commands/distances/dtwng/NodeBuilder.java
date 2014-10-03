@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * <p>Abstract NodeBuilder class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public abstract class NodeBuilder {

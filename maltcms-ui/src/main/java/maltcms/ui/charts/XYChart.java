@@ -58,7 +58,7 @@ import ucar.ma2.MAMath;
  * values.
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Slf4j
 public class XYChart extends AChart<XYPlot> {

@@ -33,6 +33,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.distances.dtwng.TwoFeatureVectorOperation;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.experimental.ui.ImagePanel;
@@ -47,6 +48,7 @@ import ucar.ma2.Array;
  */
 @Data
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values"})
+@Slf4j
 public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
 
     @Configurable(name = "var.mass_values")
@@ -126,18 +128,18 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
             for (int j = 0; j < trace[0].length; j++) {
                 sb.append(trace1[j].toString() + " ");
             }
-            System.out.println(sb.toString());
+            log.info(sb.toString());
         }
         ArrayList<Point> al = new ArrayList<>();
         Point end = trace[trace.length - 1][trace[0].length - 1];
         if (end == null) {
-            System.err.println("end is null");
+            log.warn("end is null");
         }
         Point start = new Point(0, 0);
         Point s = trace[end.x][end.y];
         while (!s.equals(start)) {
             al.add(end);
-            System.out.println(end);
+            log.info("End: {}", end);
             end = s;
             s = trace[end.x][end.y];
         }
@@ -156,7 +158,7 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
      */
     public double peakCntAlignment(double[] masses1, double[] intens1,
             double[] masses2, double[] intens2) {
-        System.out.println("Length 1: " + masses1.length + " length 2: "
+        log.info("Length 1: " + masses1.length + " length 2: "
                 + masses2.length);
         Point[][] trace = new Point[masses1.length + 1][masses2.length + 1];
         double[][] amat = new double[masses1.length + 1][masses2.length + 1];

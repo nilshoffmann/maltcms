@@ -34,7 +34,7 @@ import maltcms.datastructures.peak.Peak2D;
 /**
  * <p>PeakComparator class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  * @since 1.3.2
  */

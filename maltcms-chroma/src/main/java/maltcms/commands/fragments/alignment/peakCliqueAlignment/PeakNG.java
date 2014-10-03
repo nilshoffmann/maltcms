@@ -131,14 +131,14 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
             PeakEdge peakEdge = bestHits.get(key);
             if (peakEdge != null) {
                 if (peakEdge.similarity < similarity) {
-//						System.out.println("Replacing PeakEdge");
+//						log.info("Replacing PeakEdge");
                     PeakEdge edge = new PeakEdge(this, p, similarity);
                     bestHits.put(key, edge);
                 }
             } else {
                 PeakEdge edge = new PeakEdge(this, p, similarity);
                 bestHits.put(key, edge);
-//					System.out.println("Key "+key+" value="+edge);
+//					log.info("Key "+key+" value="+edge);
             }
         }
     }
@@ -293,7 +293,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
     public void retainSimilarityRemoveRest(LongObjectMap<PeakEdge> bestHits, final IBipacePeak p) {
 //		for (String association : keyMap.keySet()) {
 //			if (!p.getAssociation().equals(association)) {
-//				System.out.println("Removing non-best hit association!");
+//				log.info("Removing non-best hit association!");
 //				Long peakToEdgeId = keyTo(association);
 //				bestHits.remove(peakToEdgeId);
 //			}

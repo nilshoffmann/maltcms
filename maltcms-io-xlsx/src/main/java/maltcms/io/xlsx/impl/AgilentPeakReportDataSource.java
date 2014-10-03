@@ -76,7 +76,7 @@ import ucar.nc2.Dimension;
  * <p>AgilentPeakReportDataSource class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Slf4j
 @ServiceProvider(service = IXLSDataSource.class)

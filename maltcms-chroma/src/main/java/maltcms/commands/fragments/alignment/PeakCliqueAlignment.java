@@ -105,7 +105,7 @@ import ucar.ma2.Index;
 /**
  * <p>PeakCliqueAlignment class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 @RequiresVariables(names = {

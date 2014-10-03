@@ -153,7 +153,7 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
                 maxScale);
         for (int i = 1; i <= maxScale; i++) {
             double scale = ((double) i);
-            // System.out.println("Scale: " + scale);
+            // log.info("Scale: " + scale);
             cwt.setScale(scale);
             Array res = cwt.apply(values);
             Index resI = res.getIndex();
@@ -219,12 +219,12 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
 
     private HashMap<Integer, Ridge> buildRidges(List<Integer> seeds,
             int scaleIdx, ArrayDouble.D2 scaleogram) {
-        // System.out.println("Peak maxima: "+seeds);
+        // log.info("Peak maxima: "+seeds);
         HashMap<Integer, Ridge> l = new LinkedHashMap<>();
         for (Integer itg : seeds) {
             Ridge r = new Ridge(new Point2D.Double(itg, scaleIdx),
                     scaleogram.get(itg, scaleIdx));
-            // System.out.println("Adding ridge: "+r);
+            // log.info("Adding ridge: "+r);
             l.put(itg, r);
         }
         return l;
@@ -254,28 +254,28 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
             // double scale = scales.get(i);
             List<Integer> maxima = getPeakMaxima(scaleogram, i);
             int scaleDiff = 1;// 2 * (int) (scales.get(i) - scales.get(i - 1));
-            // System.out.println("Checking scale " + scales.get(i)
+            // log.info("Checking scale " + scales.get(i)
             // + " with max trace diff " + scaleDiff);
             double[] newSeedlings = fillSeeds(columns, maxima, scaleogram, i);
             List<Integer> ridgesToRemove = new LinkedList<>();
             for (Integer key : ridges.keySet()) {
                 Ridge r = ridges.get(key);
                 if (r.addPoint(scaleDiff, i, newSeedlings)) {
-                    // System.out.println("Extended ridge: " + r);
+                    // log.info("Extended ridge: " + r);
                 } else {
-                    // System.out.println("Marking ridge for removal: " + r);
+                    // log.info("Marking ridge for removal: " + r);
                     ridgesToRemove.add(key);
                 }
             }
             for (Integer key : ridgesToRemove) {
-                // System.out.println("Removing ridge: " + ridges.get(key));
+                // log.info("Removing ridge: " + ridges.get(key));
                 Ridge r = ridges.get(key);
                 if (r.getSize() < minScale) {
                     ridges.remove(key);
                 }
             }
             ridgesToRemove.clear();
-            // System.out.println("Maxima at scale: " + maxima);
+            // log.info("Maxima at scale: " + maxima);
             // ridges.put(Integer.valueOf(i),findDiffs(seedlings,newSeedlings,i));
 
             // swap
@@ -285,11 +285,11 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
         List<Ridge> l = new LinkedList<>();
         for (Integer key : ridges.keySet()) {
             Ridge r = ridges.get(key);
-            // System.out.println("Testing ridge with " + r.getSize()
+            // log.info("Testing ridge with " + r.getSize()
             // + " elements!");
             if (r.getSize() >= minScale
                     && r.getRidgePoints().get(0).getSecond() >= percentile) {
-                // System.out.println("RidgePenalty: " + r.getRidgePenalty());
+                // log.info("RidgePenalty: " + r.getRidgePenalty());
                 l.add(r);
             }
         }

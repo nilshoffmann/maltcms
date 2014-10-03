@@ -27,18 +27,26 @@
  */
 package net.sf.maltcms.evaluation.spi.caap;
 
-import cross.datastructures.fragments.IFileFragment;
-import java.io.File;
 import maltcms.io.xml.bindings.openms.featurexml.FeatureMap.FeatureList;
-import org.junit.*;
-import static org.junit.Assert.*;
+import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
+import org.junit.After;
+import org.junit.AfterClass;
+import static org.junit.Assert.assertNotNull;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class PeakFactoryTest {
 
+public class PeakFactoryTest {
+    
+    private static final Logger log = LoggerFactory.getLogger(ClassificationPerformanceTest.class);
+    
     public PeakFactoryTest() {
     }
 
@@ -63,7 +71,7 @@ public class PeakFactoryTest {
      */
     @Test
     public void testGetFeatureList() {
-        System.out.println("getFeatureList");
+        log.info("getFeatureList");
         FeatureList result = PeakFactory.getFeatureList(getClass().getResourceAsStream("/M1_1.featureXML"));
         assertNotNull(result);
     }

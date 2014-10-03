@@ -37,7 +37,7 @@ import org.apache.poi.ss.usermodel.Sheet;
  * <p>POISheet class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Data
 public class POISheet implements ISheet {

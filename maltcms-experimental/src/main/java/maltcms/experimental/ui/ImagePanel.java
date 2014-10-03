@@ -31,6 +31,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ImageTools;
 import ucar.ma2.ArrayDouble;
@@ -41,6 +42,7 @@ import ucar.ma2.ArrayDouble;
  * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class ImagePanel extends JPanel {
 
     /**
@@ -60,7 +62,7 @@ public class ImagePanel extends JPanel {
             final double[] masses2) {
         BufferedImage bi = new BufferedImage(mat[0].length, mat.length,
                 BufferedImage.TYPE_INT_RGB);
-        System.out.println("Creating image: " + mat.length + "x"
+        log.info("Creating image: " + mat.length + "x"
                 + mat[0].length);
         double max = 0;
         double min = 0;
@@ -80,24 +82,6 @@ public class ImagePanel extends JPanel {
                 Double.NEGATIVE_INFINITY);
         ImageTools.makeImage2D(bi.getRaster(), a.transpose(1, 0), samples,
                 colorRamp, 0.0, d);
-        // double minMass = Math.min(masses1[0], masses2[0]);
-        // double maxMass = Math.max(masses1[0], masses2[0]);
-        // Graphics2D g2 = (Graphics2D)bi.getGraphics();
-        // Color bg = g2.getColor();
-        // Color c = Color.red;
-        // Color b = Color.black;
-        // g2.setColor(b);
-        // g2.fillRect(0, 0, width, height);
-        // g2.setColor(c);
-        // for (int i = 0; i < masses1.length; i++) {
-        // for (int j = 0; j < masses2.length; j++) {
-        // float f = (float)((mat[i][j]-min)/(max-min));
-        // System.out.println(f);
-        // g2.setColor(new Color(f,f,f));
-        // g2.fillRect(j, i, 1, 1);
-        // }
-        // }
-        // g2.setColor(bg);
         this.bi = bi;
     }
 
@@ -106,7 +90,7 @@ public class ImagePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (this.bi != null) {
-            // System.out.println("Painting image");
+            // log.info("Painting image");
             setPreferredSize(new Dimension(this.bi.getWidth(), this.bi
                     .getHeight()));
             g.drawImage(this.bi, 0, 0, getWidth(), getHeight(), null);

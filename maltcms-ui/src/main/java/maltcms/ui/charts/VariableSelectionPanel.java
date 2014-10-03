@@ -31,7 +31,7 @@ package maltcms.ui.charts;
  * <p>VariableSelectionPanel class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 public class VariableSelectionPanel extends javax.swing.JPanel {
 

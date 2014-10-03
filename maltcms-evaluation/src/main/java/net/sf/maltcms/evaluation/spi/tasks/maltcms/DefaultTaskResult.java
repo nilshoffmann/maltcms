@@ -38,7 +38,7 @@ import java.util.List;
  * Created by IntelliJ IDEA. User: nilshoffmann Date: 10.12.11 Time: 11:00 To
  * change this template use File | Settings | File Templates.
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class DefaultTaskResult implements ITaskResult {

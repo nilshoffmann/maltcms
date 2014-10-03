@@ -340,7 +340,7 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
             final double d = Math.floor(height
                     * (iter.getDoubleNext() / (max - min)));
             row_idx = (int) d;
-            // System.out.println(" row_idx "+row_idx+" col "+col+" index:
+            // log.info(" row_idx "+row_idx+" col "+col+" index:
             // "+idx);
             if (col == 0) {
                 for (int i = height - 1; i >= 0; i--) {

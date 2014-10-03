@@ -46,7 +46,7 @@ import ucar.ma2.Array;
 /**
  * <p>DefaultFeatureVector class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class DefaultFeatureVector implements IFeatureVector {

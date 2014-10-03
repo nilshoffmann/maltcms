@@ -32,8 +32,8 @@ import java.util.Arrays;
 /**
  * <p>DistanceMatrix class.</p>
  *
- * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * @author Soeren Mueller
+ * 
  */
 public class DistanceMatrix {
 
@@ -101,7 +101,7 @@ public class DistanceMatrix {
 
          * for(int i=0;i<distmat.length;i++){ for(int j=0;j<distmat.length;j++){
 
-         * System.out.print(distmat[i][j]+" "); } System.out.println(); }
+         * log.info(distmat[i][j]+" "); } log.info(); }
 
          */
     }

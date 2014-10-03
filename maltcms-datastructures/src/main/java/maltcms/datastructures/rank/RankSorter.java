@@ -31,15 +31,17 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 import maltcms.datastructures.ridge.Ridge;
 
 /**
  * <p>RankSorter class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class RankSorter {
 
     private LinkedHashSet<String> features = new LinkedHashSet<>();
@@ -69,12 +71,11 @@ public class RankSorter {
     public void sort(List<Rank<Ridge>> l) {
         List<String> ll = new LinkedList<>(this.features);
         //Collections.reverse(ll);
-        System.out.println("Sorting by: ");
+        log.info("Sorting by: ");
         for (String str : ll) {
-            System.out.print(str + " ");
+            log.info(str + " ");
             Collections.sort(l, new RankComparator(str));
         }
-        System.out.println();
     }
 
     /**
@@ -86,11 +87,10 @@ public class RankSorter {
     public void sortToOrder(List<String> features, List<Rank<Ridge>> l) {
         List<String> ll = new LinkedList<>(features);
         Collections.reverse(ll);
-        System.out.println("Sorting by: ");
+        log.info("Sorting by: ");
         for (String str : ll) {
-            System.out.print(str + " ");
+            log.info(str + " ");
             Collections.sort(l, new RankComparator(str));
         }
-        System.out.println();
     }
 }

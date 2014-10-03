@@ -39,7 +39,7 @@ import ucar.ma2.Array;
 /**
  * <p>ArrayBhattacharryya class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 @ServiceProvider(service = IArraySimilarity.class)

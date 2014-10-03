@@ -327,7 +327,7 @@ public class Metabolite implements IMetabolite {
             this.intensities = intensities1;
             // final MAVector mav = new MAVector(this.intensities);
             // mav.normalize();
-            // System.out.println(mav);
+            // log.info(mav);
             // final MinMax m = MAMath.getMinMax(this.intensities);
             // this.min_intensity_norm = m.min;
             // this.max_intensity_norm = m.max;

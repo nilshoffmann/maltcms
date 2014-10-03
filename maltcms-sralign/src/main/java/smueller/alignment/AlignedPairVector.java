@@ -28,13 +28,17 @@
 package smueller.alignment;
 
 // Speichert alignierte Paare und deren Position, zusammen bilden die Objekte in
+
+import lombok.extern.slf4j.Slf4j;
+
 // einem OAV ein Alignment
 /**
  * <p>AlignedPairVector class.</p>
  *
- * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * @author Soeren Mueller
+ * 
  */
+@Slf4j
 public class AlignedPairVector implements Cloneable {
 
     private char a = ' ';
@@ -93,7 +97,7 @@ public class AlignedPairVector implements Cloneable {
         try {
             return super.clone();
         } catch (final CloneNotSupportedException cNSE) {
-            System.err.println("Klonen fehlgeschlagen");
+            log.warn("Klonen fehlgeschlagen");
             return null;
         }
 

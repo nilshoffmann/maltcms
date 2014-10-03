@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.quadTree.QuadTree;
 import maltcms.datastructures.ridge.IRidgeCost;
 import maltcms.datastructures.ridge.Ridge;
@@ -57,8 +58,9 @@ import ucar.ma2.ArrayDouble;
  * <p>CwtChartFactory class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
+@Slf4j
 public class CwtChartFactory {
 
     /**
@@ -81,7 +83,7 @@ public class CwtChartFactory {
         // ImageTools.makeImage2D(bi.getRaster(), array, nsamples, colorRamp,
         // 0.0d, bp);
         sampleTable = ImageTools.mapSampleTable(sampleTable, -1, 1);
-        // System.out.println("Sampletable: " +
+        // log.info("Sampletable: " +
         // Arrays.toString(sampleTable));
         BufferedImage crampImg = ImageTools.createColorRampImage(sampleTable,
                 Transparency.TRANSLUCENT, cRamp);
@@ -113,7 +115,7 @@ public class CwtChartFactory {
         ImageTools.makeImage2D(bi.getRaster(), array, nsamples, colorRamp,
                 0.0d, bp);
         // sampleTable = ImageTools.mapSampleTable(sampleTable, -1, 1);
-        // System.out.println("Sampletable: " +
+        // log.info("Sampletable: " +
         // Arrays.toString(sampleTable));
         // BufferedImage crampImg = ImageTools.createColorRampImage(sampleTable,
         // Transparency.TRANSLUCENT, cRamp);
@@ -390,8 +392,8 @@ public class CwtChartFactory {
                 ChartUtilities.saveChartAsPNG(image, jfc, 1024, 768, null,
                         true, 0);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+   
+                log.warn(e.getLocalizedMessage());
             }
             i++;
         }

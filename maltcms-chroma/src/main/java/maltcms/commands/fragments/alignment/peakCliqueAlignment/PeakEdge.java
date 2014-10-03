@@ -55,7 +55,7 @@ public final class PeakEdge implements Serializable {
         this.sourcePeakId = sourcePeak.getUniqueId();
         this.targetPeakId = targetPeak.getUniqueId();
         this.similarity = similarity;
-//		System.out.println("Peak Edge from "+sourcePeak.getAssociation()+" at "+sourcePeak.getPeakIndex()+ " to "+targetPeak.getAssociation()+" at "+targetPeak.getPeakIndex()+ " = "+similarity);
+//		log.info("Peak Edge from "+sourcePeak.getAssociation()+" at "+sourcePeak.getPeakIndex()+ " to "+targetPeak.getAssociation()+" at "+targetPeak.getPeakIndex()+ " = "+similarity);
     }
 
     /** {@inheritDoc} */

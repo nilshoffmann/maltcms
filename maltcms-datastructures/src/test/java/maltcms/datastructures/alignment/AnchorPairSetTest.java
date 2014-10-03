@@ -31,6 +31,7 @@ import cross.datastructures.tuple.Tuple2D;
 import java.util.ArrayList;
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IAnchor;
 import maltcms.datastructures.ms.IRetentionInfo;
 import maltcms.datastructures.ms.RetentionInfo;
@@ -41,6 +42,7 @@ import maltcms.datastructures.ms.RetentionInfo;
  * @author Nils Hoffmann
  *
  */
+@Slf4j
 public class AnchorPairSetTest extends TestCase {
 
     protected ArrayList<IAnchor> al1 = new ArrayList<>();
@@ -122,7 +124,7 @@ public class AnchorPairSetTest extends TestCase {
         for (final Tuple2D<IAnchor, IAnchor> t : aps) {
             final IAnchor a1 = t.getFirst();
             final IAnchor a2 = t.getSecond();
-            System.out.println(a1 + " " + a2 + " " + a1.compareTo(a2));
+            log.info(a1 + " " + a2 + " " + a1.compareTo(a2));
             if (a1.compareTo(a2) == 0) {
                 Assert.assertTrue(true);
             }

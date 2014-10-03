@@ -34,7 +34,6 @@ package org.systemsbiology.jrap.staxnxt;
  *
  * @author Mathijs
  * 
- * @since 1.3.2
  */
 public class ParentFile {
     //public final static int TYPE_RAW = 1, TYPE_PROCESSED = 2;

@@ -192,7 +192,7 @@ public class TICHeatmapCoplot extends AFragmentCommand {
                 min = Math.min(min, data[2][k]);
                 max = Math.max(max, data[2][k]);
                 k++;
-                // System.out.println("Adding "+i+" "+d+" "+dtm.getColumnName(j));
+                // log.info("Adding "+i+" "+d+" "+dtm.getColumnName(j));
                 // cd.addSeries(xys);
             }
             rowIdx++;

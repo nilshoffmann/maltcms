@@ -42,7 +42,7 @@ import ucar.ma2.Index;
  * variable's value.
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Slf4j
 public class XYZChart extends AChart<XYPlot> {

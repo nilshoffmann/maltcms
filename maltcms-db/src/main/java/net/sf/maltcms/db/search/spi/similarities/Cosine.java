@@ -32,6 +32,7 @@ import cross.datastructures.tuple.Tuple2D;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.TreeMap;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
@@ -49,9 +50,10 @@ import ucar.ma2.MAMath.MinMax;
 /**
  * <p>Cosine class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 @ServiceProvider(service = AMetabolitePredicate.class)
 public class Cosine extends AMetabolitePredicate {
 
@@ -245,10 +247,10 @@ public class Cosine extends AMetabolitePredicate {
 //                getScan().getIntensities(), etMs.getFirst(), etMs.getSecond(),
 //                et.getMW());
         double sim = sum;
-        //System.out.println("Similarity score: "+sim);
+        //log.info("Similarity score: "+sim);
 
         if (sim >= getScoreThreshold()) {
-            System.out.println("Similarity score " + sim + " is larger than threshold: " + getScoreThreshold());
+            log.info("Similarity score " + sim + " is larger than threshold: " + getScoreThreshold());
             Tuple2D<Double, IMetabolite> tple = new Tuple2D<>(
                     sim, et);
             getScoreMap().add(tple);

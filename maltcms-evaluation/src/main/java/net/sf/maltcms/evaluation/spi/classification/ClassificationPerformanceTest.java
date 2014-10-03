@@ -41,6 +41,8 @@ import net.sf.maltcms.evaluation.api.classification.Entity;
 import net.sf.maltcms.evaluation.api.classification.EntityGroup;
 import net.sf.maltcms.evaluation.api.classification.IFeatureVectorComparator;
 import net.sf.maltcms.evaluation.api.classification.PeakRTFeatureVectorComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Performs a classification performance test of a collection of EntityGroup
@@ -48,10 +50,14 @@ import net.sf.maltcms.evaluation.api.classification.PeakRTFeatureVectorComparato
  * are to be evaluated.
  *
  * @author Nils Hoffmann
+ * @param <T> the feature vector type for this test
  * 
  */
-public class ClassificationPerformanceTest<T extends IFeatureVector> {
 
+public class ClassificationPerformanceTest<T extends IFeatureVector> {
+    
+    private static final Logger log = LoggerFactory.getLogger(net.sf.maltcms.evaluation.api.ClassificationPerformanceTest.class);
+    
     private final List<EntityGroup<T>> groundTruth;
     private final int numberOfGroundTruthEntities;
     private final IFeatureVectorComparator ifvc;
@@ -120,7 +126,7 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         }
 
         ClassificationPerformanceTest<PeakRTFeatureVector> cpt = new ClassificationPerformanceTest<>(gtl, new PeakRTFeatureVectorComparator(0.02));
-        System.out.println(cpt.performTest("test", datal));
+        log.info("Test Results: {}", cpt.performTest("test", datal));
     }
 
     /**
@@ -164,18 +170,18 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
             EntityGroupClassificationResult gtg = findBest(tgEg, this.groundTruth);
 
             if (gtg != null) {
-//				System.out.println("##################");
-//				System.out.println("GT group: \n");
-//				System.out.println(gtg.getGroundTruthEntityGroup());
+//				log.info("##################");
+//				log.info("GT group: \n");
+//				log.info(gtg.getGroundTruthEntityGroup());
 //                //log.debug("GT group: \n" + gtg.getGroundTruthEntityGroup());
 //                //log.debug("Best tool group: \n" + gtg.getToolEntityGroup());
-//				System.out.println("Tool group: \n");
-//				System.out.println(gtg.getToolEntityGroup());
-//				System.out.println("TP: "+gtg.getTp()+" FP: "+gtg.getFp()+" TN: "+gtg.getTn()+" FN: "+gtg.getFn());
-//				System.out.println("##################");
+//				log.info("Tool group: \n");
+//				log.info(gtg.getToolEntityGroup());
+//				log.info("TP: "+gtg.getTp()+" FP: "+gtg.getFp()+" TN: "+gtg.getTn()+" FN: "+gtg.getFn());
+//				log.info("##################");
                 EntityGroup<T> gtEntityGroup = gtg.getGroundTruthEntityGroup();
                 if (gtToClsRes.containsKey(gtEntityGroup)) {
-                    //System.err.println("Warning: GT EntityGroup already assigned!");
+                    //log.warn("Warning: GT EntityGroup already assigned!");
                     //test for reassignment
                     EntityGroupClassificationResult other = gtToClsRes.get(gtEntityGroup);
                     int comp = gtg.compareTo(other);
@@ -274,20 +280,20 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
             //minimum one tp
             if (tp > 0) {
                 EntityGroupClassificationResult egcr = new EntityGroupClassificationResult(testGroup, groundTruthEntityGroup, tp, tn, fp, fn, dist);
-                //System.out.println(egcr);
+                //log.info(egcr);
                 if (bestGroup == null) {
                     bestGroup = egcr;
                 } else {
                     try {
                         int comp = egcr.compareTo(bestGroup);
-                        //System.out.println("CompareTo returned: " + comp);
+                        //log.info("CompareTo returned: " + comp);
                         if (comp > 0) {
                             bestGroup = egcr;
                         } else if (comp == 0) {
-                            //System.err.println("Warning: Entity groups are equal!");
+                            //log.warn("Warning: Entity groups are equal!");
                         }
                     } catch (IllegalArgumentException iae) {
-                        //System.err.println("IllegalArgumentException: " + iae.getLocalizedMessage());
+                        //log.warn("IllegalArgumentException: " + iae.getLocalizedMessage());
                     }
                 }
             }

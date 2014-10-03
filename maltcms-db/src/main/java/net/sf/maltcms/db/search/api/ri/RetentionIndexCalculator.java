@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.ms.IScan1D;
 import maltcms.tools.ArrayTools;
@@ -44,6 +45,7 @@ import maltcms.tools.ArrayTools;
  * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class RetentionIndexCalculator {
 
     private final double[] riRTs;
@@ -81,7 +83,7 @@ public class RetentionIndexCalculator {
             }
         }
         this.nCarbAtoms = parseCarbonNumberFromMolecularFormulas(formulas);
-        System.out.println("nCarbonAtoms: " + Arrays.toString(nCarbAtoms));
+        log.info("nCarbonAtoms: " + Arrays.toString(nCarbAtoms));
     }
 
     /**
@@ -150,14 +152,14 @@ public class RetentionIndexCalculator {
 
             if (this.riRTs.length >= 2) {
                 if (prevRIIdx == -1) {
-//                System.out.println("Interpolating ri value from first and second ri");
+//                log.info("Interpolating ri value from first and second ri");
                     double x0 = this.riRTs[0];
                     double y0 = nCarbAtoms[0] * 100;
                     double x1 = this.riRTs[1];
                     double y1 = nCarbAtoms[1] * 100;
                     return extrapolate(x0, y0, x1, y1, rt);
                 } else if (nextRIIdx == -1 || prevRIIdx == nextRIIdx) {
-//                System.out.println("Interpolating ri value from last and previous to last ri");
+//                log.info("Interpolating ri value from last and previous to last ri");
                     double x0 = this.riRTs[riRTs.length - 2];
                     double y0 = nCarbAtoms[riRTs.length - 2] * 100;
                     double x1 = this.riRTs[riRTs.length - 1];
@@ -167,49 +169,49 @@ public class RetentionIndexCalculator {
             }
             return Double.NaN;
         }
-        // System.out.println("Index of previous ri: " + prevRIIdx);
-        // System.out.println("Index of next ri: " + nextRIIdx);
+        // log.info("Index of previous ri: " + prevRIIdx);
+        // log.info("Index of next ri: " + nextRIIdx);
 //        if (prevRIIdx == -1 || nextRIIdx == -1 || prevRIIdx == nextRIIdx) {
 //            return Double.NaN;
 //        }
         double prevRIrt = this.riRTs[prevRIIdx];
         double nextRIrt = this.riRTs[nextRIIdx];
-        // System.out.println("RT of previous ri: " + prevRIrt);
-        // System.out.println("RT of next ri: " + nextRIrt);
+        // log.info("RT of previous ri: " + prevRIrt);
+        // log.info("RT of next ri: " + nextRIrt);
         int nCAtoms = nCarbAtoms[prevRIIdx];
         double ri = (100 * nCAtoms) + (100 * ((Math.log10(rt) - Math.log10(prevRIrt)) / (Math.
                 log10(nextRIrt) - Math.log10(prevRIrt))));
-        // System.out.println("cAtoms before: " + nCarbAtoms[prevRIIdx]
+        // log.info("cAtoms before: " + nCarbAtoms[prevRIIdx]
         // + " after: " + nCarbAtoms[nextRIIdx]);
-//		 System.out.println(prevRIrt + " < " + rt + " < " + nextRIrt + " RI: "
+//		 log.info(prevRIrt + " < " + rt + " < " + nextRIrt + " RI: "
 //		 + ri);
         return ri;
     }
 
     private int getIndexOfPreviousRI(double rt) {
-        // System.out.println("PREVIOUS INDEX:");
-        // System.out.println("RT: " + rt);
+        // log.info("PREVIOUS INDEX:");
+        // log.info("RT: " + rt);
         int idx = Arrays.binarySearch(this.riRTs, rt);
-        // System.out.println(Arrays.toString(this.riRTs));
+        // log.info(Arrays.toString(this.riRTs));
         //positionToInsertAt = (-(insertion point) - 1)
         //=> is larger position
         int posToInsert = ((-idx) - 1);
 //        int x = ((-1) * (idx + 1)) - 1;
         if (idx >= 0) {
-            // System.out.println(this.riRTs[idx] + " < " + rt);
+            // log.info(this.riRTs[idx] + " < " + rt);
             return idx;
         } else {
             if (posToInsert > 0) {
-                // System.out.println(this.riRTs[x] + " > " + rt);
+                // log.info(this.riRTs[x] + " > " + rt);
                 return posToInsert - 1;
             } else {
-                // System.out.println("RT smaller than minimum RI rt!");
+                // log.info("RT smaller than minimum RI rt!");
                 return -1;
             }
         }
-        // System.out.println("Previous RI at index: " + x);
+        // log.info("Previous RI at index: " + x);
         // if (idx >= 0) {
-        // System.out.println("Direct rt match: " + rt + " at index " + idx);
+        // log.info("Direct rt match: " + rt + " at index " + idx);
         // return idx;
         // } else {
         // int prev = x;
@@ -218,22 +220,22 @@ public class RetentionIndexCalculator {
     }
 
     private int getIndexOfNextRI(double rt) {
-        // System.out.println("NEXT INDEX:");
-        // System.out.println("RT: " + rt);
+        // log.info("NEXT INDEX:");
+        // log.info("RT: " + rt);
         int idx = Arrays.binarySearch(this.riRTs, rt);
-        // System.out.println(Arrays.toString(this.riRTs));
+        // log.info(Arrays.toString(this.riRTs));
         int posToInsert = ((-idx) - 1);
 //        int x = ((-1) * (idx + 1));
         if (idx >= 0) {
-            // System.out.println(this.riRTs[idx] + " < " + rt);
+            // log.info(this.riRTs[idx] + " < " + rt);
             // return Math.min(this.riRTs.length, idx + 1);
             return Math.min(idx + 1, this.riRTs.length - 1);
         } else {
             if (posToInsert >= 0 && posToInsert < this.riRTs.length) {
-                // System.out.println(this.riRTs[x] + " < " + rt);
+                // log.info(this.riRTs[x] + " < " + rt);
                 return posToInsert;
             } else {
-                // System.out.println("RT larger than maximum RI rt!");
+                // log.info("RT larger than maximum RI rt!");
                 return -1;
             }
         }
@@ -251,7 +253,7 @@ public class RetentionIndexCalculator {
      */
     public double extrapolate(double x0, double y0, double x1, double y1, double x) {
         double value = MathTools.getLinearInterpolatedY(x0, y0, x1, y1, x);
-//        System.out.println("Extrapolated ri for rt="+x+" [x0="+x0+" y0="+y0+"; x1="+x1+" y1="+y1+"] = "+value);
+//        log.info("Extrapolated ri for rt="+x+" [x0="+x0+" y0="+y0+"; x1="+x1+" y1="+y1+"] = "+value);
         return value;
     }
 
@@ -264,20 +266,20 @@ public class RetentionIndexCalculator {
     public double getTemperatureProgrammedKovatsIndex(double rt) {
         int prevRIIdx = getIndexOfPreviousRI(rt);
         int nextRIIdx = getIndexOfNextRI(rt);
-//		System.out.println("Previous idx: " + prevRIIdx + " next idx: "
+//		log.info("Previous idx: " + prevRIIdx + " next idx: "
 //				+ nextRIIdx);
         if (prevRIIdx == -1 || nextRIIdx == -1 || prevRIIdx == nextRIIdx) {
 
             if (this.riRTs.length >= 2) {
                 if (prevRIIdx == -1) {
-                    //                System.out.println("Interpolating ri value from first and second ri");
+                    //                log.info("Interpolating ri value from first and second ri");
                     double x0 = this.riRTs[0];
                     double y0 = nCarbAtoms[0] * 100;
                     double x1 = this.riRTs[1];
                     double y1 = nCarbAtoms[1] * 100;
                     return extrapolate(x0, y0, x1, y1, rt);
                 } else if (nextRIIdx == -1 || nextRIIdx == prevRIIdx) {
-                    //                System.out.println("Interpolating ri value from last and previous to last ri");
+                    //                log.info("Interpolating ri value from last and previous to last ri");
                     double x0 = this.riRTs[riRTs.length - 2];
                     double y0 = nCarbAtoms[riRTs.length - 2] * 100;
                     double x1 = this.riRTs[riRTs.length - 1];
@@ -297,9 +299,9 @@ public class RetentionIndexCalculator {
 //		} else {
         ri = 100 * nCAtoms + 100 * ((rt - prevRIrt) / (nextRIrt - prevRIrt));
 //		}
-//        System.out.println("cAtoms before: " + nCarbAtoms[prevRIIdx]
+//        log.info("cAtoms before: " + nCarbAtoms[prevRIIdx]
 //                + " after: " + nCarbAtoms[nextRIIdx]);
-//        System.out.println(prevRIrt + " < " + rt + " < " + nextRIrt + " RI: "
+//        log.info(prevRIrt + " < " + rt + " < " + nextRIrt + " RI: "
 //                + ri);
         return ri;
     }
@@ -351,32 +353,32 @@ public class RetentionIndexCalculator {
         double[] rts = new double[cs.length * 5];
         double[] rirts = new double[cs.length];
 //		rts = rirts;
-        System.out.println("Number of RIs: " + cs.length);
+        log.info("Number of RIs: " + cs.length);
         double startSAT = 300;
         double endSAT = 3621;
         for (int i = 0; i < rirts.length; i++) {
             rirts[i] = (startSAT + (Math.random() * (endSAT - startSAT)));
         }
         Arrays.sort(rirts);
-        System.out.println("RI rts: " + Arrays.toString(rirts));
+        log.info("RI rts: " + Arrays.toString(rirts));
         for (int i = 0; i < rts.length; i++) {
             rts[i] = (startSAT - 100 + (Math.random() * (endSAT - startSAT + 121)));
         }
         Arrays.sort(rts);
         RetentionIndexCalculator ric = new RetentionIndexCalculator(cs, rirts);
         for (int i = 0; i < rts.length; i++) {
-            System.out.println("Item: " + (i + 1) + "/" + rts.length);
+            log.info("Item: " + (i + 1) + "/" + rts.length);
             double istRI = ric.getIsothermalKovatsIndex(rts[i]);
-            System.out.println("Isothermal RI for peak at rt " + rts[i]
+            log.info("Isothermal RI for peak at rt " + rts[i]
                     + " = "
                     + istRI + "; RI rt range: [" + rirts[0] + ":"
                     + rirts[rirts.length - 1] + "]");
             double tcRI = ric.getTemperatureProgrammedKovatsIndex(rts[i]);
-            System.out.println("Temperature programmed RI for peak at rt " + rts[i] + " = "
+            log.info("Temperature programmed RI for peak at rt " + rts[i] + " = "
                     + tcRI + "; RI rt range: [" + rirts[0] + ":"
                     + rirts[rirts.length - 1] + "]");
             double liRI = ric.getLinearIndex(rts[i]);
-            System.out.println("Linear RI for peak at rt " + rts[i] + " = "
+            log.info("Linear RI for peak at rt " + rts[i] + " = "
                     + liRI + "; RI rt range: [" + rirts[0] + ":"
                     + rirts[rirts.length - 1] + "]");
         }

@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.array.ArrayFactory;
 import maltcms.datastructures.array.IArrayD2Double;
 import maltcms.datastructures.array.IFeatureVector;
@@ -61,6 +62,7 @@ import ucar.ma2.ArrayDouble;
  * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class DTW implements IAlignment, Serializable {
 
     /**
@@ -114,7 +116,7 @@ public class DTW implements IAlignment, Serializable {
         percentDone = ArrayTools.calcPercentDone(elements, elemCnt);
         ArrayTools.printPercentDone(percentDone, 10, partCnt, System.out);
         this.alignmentMap = optimizationFunction.getTrace();
-        System.out.println("Number of Points in trace: "
+        log.info("Number of Points in trace: "
                 + this.alignmentMap.size());
 
         // minimum of four points for each polynomial
@@ -147,7 +149,7 @@ public class DTW implements IAlignment, Serializable {
         // l.remove(l.size() - 1);
         // }
         // l.add(q);
-        // System.out.println("Number of Surviving Points: " + l.size());
+        // log.info("Number of Surviving Points: " + l.size());
         // double[] x = new double[l.size()];
         // double[] y = new double[l.size()];
         // for (int i = 0; i < l.size(); i++) {
@@ -177,7 +179,7 @@ public class DTW implements IAlignment, Serializable {
                 + "_interpolatedLayoutWithTrace", bi);
         // } catch (MathException e) {
         //
-        // e.printStackTrace();
+        // log.warn(e.getLocalizedMessage());
         // }
         BufferedImage rp = createRecurrencePlot(pwvalues, 0.99);
         saveImage("recurrencePlot-" + this.leftHandSideId + "-"

@@ -30,7 +30,7 @@ package maltcms.commands.filters.array.wavelet;
 /**
  * <p>MexicanHatWavelet class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public final class MexicanHatWavelet implements IWavelet {

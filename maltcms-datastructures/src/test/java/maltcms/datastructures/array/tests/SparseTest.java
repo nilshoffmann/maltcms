@@ -47,23 +47,23 @@ public class SparseTest extends TestCase {
 
     public SparseTest(final String arg0) {
         super(arg0);
-        // System.out.println("Creating first array!");
+        // log.info("Creating first array!");
         this.index = ArrayTools.indexArray(20, 10);
-        // System.out.println(this.index);
+        // log.info(this.index);
         this.values = new ArrayDouble.D1(20);
         for (int i = 0; i < 20; i++) {
             final double val = ArrayTools.nextUniform();
-            // System.out.println(i + " = " + val);
+            // log.info(i + " = " + val);
             this.values.set(i, val);
         }
         this.s1 = Sparse.create(this.index, this.values, 1.0d);
         this.index1 = ArrayTools.indexArray(10, 0);
-        // System.out.println(this.index1);
+        // log.info(this.index1);
         this.values1 = new ArrayDouble.D1(10);
-        // System.out.println("Creating second array!");
+        // log.info("Creating second array!");
         for (int i = 0; i < 10; i++) {
             final double val = ArrayTools.nextUniform();
-            // System.out.println(i + " = " + val);
+            // log.info(i + " = " + val);
             this.values1.set(i, val);
         }
         this.s2 = Sparse.create(this.index1, this.values1, 1.0d);
@@ -78,10 +78,10 @@ public class SparseTest extends TestCase {
             while (ii1.hasNext() && ii2.hasNext()) {
                 final double d1 = ii1.getDoubleNext();
                 final double d2 = ii2.getDoubleNext();
-                // System.out.println(d1 + " " + d2);
+                // log.info(d1 + " " + d2);
                 d = (d1 - d2);
                 diff += d;
-                // System.out.println(d);
+                // log.info(d);
             }
             return diff;
         } else {
@@ -99,15 +99,15 @@ public class SparseTest extends TestCase {
         this.values = new ArrayDouble.D1(30);
         for (int i = 0; i < 30; i++) {
             final double val = ArrayTools.nextUniform();
-            // System.out.println((i) + " = " + val);
+            // log.info((i) + " = " + val);
             this.values.set(i, val);
         }
         this.index1 = ArrayTools.indexArray(25, 5);
         this.values1 = new ArrayDouble.D1(25);
-        // System.out.println("Creating second array!");
+        // log.info("Creating second array!");
         for (int i = 0; i < 25; i++) {
             final double val = ArrayTools.nextUniform();
-            // System.out.println(i + " = " + val);
+            // log.info(i + " = " + val);
             this.values1.set(i, val);
         }
 
@@ -117,7 +117,7 @@ public class SparseTest extends TestCase {
                 .max(5 + 25 - 1, 10 + 30 - 1), nbins, 1.0d);
         this.s2 = Sparse.create(this.index1, this.values1, Math.min(5, 10),
                 Math.max(5 + 25 - 1, 10 + 30 - 1), nbins, 1.0d);
-        // System.out.println("Shape 1: " + this.s1.getShape()[0] + " Shape 2: "
+        // log.info("Shape 1: " + this.s1.getShape()[0] + " Shape 2: "
         // + this.s2.getShape()[0]);
         // Assert.assertEquals(3.90222d, SparseTools.dot(this.s1,
         // this.s2),0.01d);

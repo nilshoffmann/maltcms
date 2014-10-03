@@ -100,7 +100,7 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
     }
 
     public IFileFragment testDirectRemoteRead(URI testCdf) throws ResourceNotAvailableException {
-        System.out.println("Tesing direct remote read!");
+        log.info("Tesing direct remote read!");
         //read in the created file
         IFileFragment readFragment = new FileFragment(testCdf);
         try {
@@ -129,16 +129,16 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
         List<Array> masses = massValues.getIndexedArray();
         for (int i = 0; i < 10; i++) {
             Array a = masses.get(i);
-            System.out.println(a);
+            log.info("Masses: {}", a);
         }
         return readFragment;
     }
 
     public IFileFragment testIndirectRemoteRead(URI testCdf) throws ResourceNotAvailableException {
-        System.out.println("Testing indirect remote read!");
+        log.info("Testing indirect remote read!");
         IFileFragment readFragment = new ImmutableFileFragment(new FileFragment(testCdf));
         IVariableFragment sourceFiles = readFragment.getChild("source_files");
-        System.out.println("SourceFiles for " + testCdf.toString() + ": " + sourceFiles.getArray());
+        log.info("SourceFiles for " + testCdf.toString() + ": " + sourceFiles.getArray());
         //check variables
         IVariableFragment rivf1 = readFragment.getChild("total_intensity");
         Dimension[] rdims1 = rivf1.getDimensions();
@@ -156,7 +156,7 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
         List<Array> masses = massValues.getIndexedArray();
         for (int i = 0; i < 10; i++) {
             Array a = masses.get(i);
-            System.out.println(a);
+            log.info("Masses: {}", a);
         }
         return readFragment;
     }

@@ -68,6 +68,7 @@ import javax.imageio.ImageIO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.FirstDerivativeFilter;
 import maltcms.commands.filters.array.MultiplicationFilter;
 import maltcms.commands.filters.array.wavelet.MexicanHatWaveletFilter;
@@ -121,6 +122,7 @@ import ucar.ma2.MAMath.MinMax;
 @Data
 @ToString(exclude = {"ridgeTree"})
 @EqualsAndHashCode(exclude = {"ridgeTree"})
+@Slf4j
 public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
 
     /**
@@ -195,14 +197,14 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
 //		double ninetyFivePercent = p.evaluate(tica);
         Percentile p = new Percentile(minPercentile);
         double minPercentileValue = p.evaluate(tica);
-//		System.out.println("95% quantile value: " + fivePercent
+//		log.info("95% quantile value: " + fivePercent
 //			+ " 99% quantile value: " + ninetyFivePercent);
 
         Array sat = f.getChild("scan_acquisition_time").getArray();
-//		System.out.println(tic.getShape()[0] + " values");
+//		log.info(tic.getShape()[0] + " values");
         int spm = (int) (mt.getArray().getDouble(0) * sr.getArray().getDouble(0));
         int modulations = tic.getShape()[0] / spm;
-        System.out.println("Using " + spm
+        log.info("Using " + spm
                 + " scans per modulation, total modulations: " + modulations);
         List<Ridge> r = apply(f.getName(), tic, sat, f, 0, modulations, spm, minPercentileValue);//,
         //fivePercent);
@@ -219,14 +221,14 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         Index tidx = tic.getIndex();
         Index sidx = sat.getIndex();
         // List<Scan2D> scans = new ArrayList<Scan2D>();
-//		System.out.println("Building scans");
+//		log.info("Building scans");
         List<Peak2D> p2 = new LinkedList<>();
         Tuple2D<Double, Double> massRange = MaltcmsTools.getMinMaxMassRange(f);
         ScanLineCacheFactory.setMinMass(massRange.getFirst());
         ScanLineCacheFactory.setMaxMass(massRange.getSecond());
         IScanLine isl = ScanLineCacheFactory.getScanLineCache(f);
         for (Ridge ridge : r) {
-//			System.out.println("Processing Ridge " + (index + 1) + "/"
+//			log.info("Processing Ridge " + (index + 1) + "/"
 //				+ r.size());
             Peak2D p = new Peak2D();
             // Point pt = ic2d.getPointFor(ridge.getGlobalScanIndex());
@@ -251,11 +253,11 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                 //pi.setName(p);
                 List<Tuple2D<Double, IMetabolite>> t = p.getNames();
                 for (Tuple2D<Double, IMetabolite> tple : t) {
-//				System.out.println("Score: " + tple.getFirst() + " Name: "
+//				log.info("Score: " + tple.getFirst() + " Name: "
 //					+ tple.getSecond().getName());
                 }
             } else {
-                System.err.println("Could not retrieve mass spectrum for point " + seed);
+                log.warn("Could not retrieve mass spectrum for point " + seed);
             }
         }
         return p2;
@@ -271,7 +273,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         MaltcmsAnnotationFactory maf = new MaltcmsAnnotationFactory();
         MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(f.getUri());
         // List<Scan2D> scans = new ArrayList<Scan2D>();
-        System.out.println("Building scans");
+        log.info("Building scans");
         List<Peak1D> p2 = new LinkedList<>();
         for (Peak2D p : l) {
             maf.addPeakAnnotation(ma, CwtPeakFinder.class.getName(), p);
@@ -300,7 +302,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                 maxScale);
         for (int i = 1; i <= maxScale; i++) {
             double scale = ((double) i);
-            // System.out.println("Scale: " + scale);
+            // log.info("Scale: " + scale);
             cwt.setScale(scale);
             Array res = cwt.apply(arr);
             Index resI = res.getIndex();
@@ -345,7 +347,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                     StringTools.removeFileExt(filename),
                     "afterRidgeResponseMaxKFilter", arr, modulations, spm, ridges);
         }
-        System.out.println("Found " + ridges.size() + " ridges at maxScale="
+        log.info("Found " + ridges.size() + " ridges at maxScale="
                 + maxScale);
         this.ridgeTree = getQuadTree(ridges, boundingBox, spm);
         return ridges;
@@ -367,7 +369,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
             sb.append("\n\r");
             ridges.add(rank.getRidge());
         }
-        System.out.println(sb.toString());
+        log.info(sb.toString());
         return ridges;
     }
 
@@ -382,7 +384,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     private List<Rank<Ridge>> filterByRidgeNeighborhood(List<Rank<Ridge>> r, double i,
             int spm, QuadTree<Ridge> qt, int threshold) {
         double[] vals = new double[r.size()];
-        System.out.println("Using threshold: " + threshold);
+        log.info("Using threshold: " + threshold);
         int cnt = 0;
         for (Rank<Ridge> rank : r) {
             Ridge ridge = rank.getRidge();
@@ -455,28 +457,28 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         for (int i = 1; i < maxScale; i++) {
             List<Integer> maxima = getPeakMaxima(scaleogram, i);
             int scaleDiff = 1;
-            // System.out.println("Checking scale " + scales.get(i)
+            // log.info("Checking scale " + scales.get(i)
             // + " with max trace diff " + scaleDiff);
             double[] newSeedlings = fillSeeds(columns, maxima, scaleogram, i);
             List<Integer> ridgesToRemove = new LinkedList<>();
             for (Integer key : ridges.keySet()) {
                 Ridge r = ridges.get(key);
                 if (r.addPoint(scaleDiff, i, newSeedlings)) {
-                    // System.out.println("Extended ridge: " + r);
+                    // log.info("Extended ridge: " + r);
                 } else {
-                    // System.out.println("Marking ridge for removal: " + r);
+                    // log.info("Marking ridge for removal: " + r);
                     ridgesToRemove.add(key);
                 }
             }
             for (Integer key : ridgesToRemove) {
-                // System.out.println("Removing ridge: " + ridges.get(key));
+                // log.info("Removing ridge: " + ridges.get(key));
                 Ridge r = ridges.get(key);
                 if (r.getSize() < minScale) {
                     ridges.remove(key);
                 }
             }
             ridgesToRemove.clear();
-            // System.out.println("Maxima at scale: " + maxima);
+            // log.info("Maxima at scale: " + maxima);
             // ridges.put(Integer.valueOf(i),findDiffs(seedlings,newSeedlings,i));
         }
         // put all Ridges with size>=maxScale into return list
@@ -484,22 +486,22 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         for (Integer key : ridges.keySet()) {
             Ridge r = ridges.get(key);
             if (r.getSize() >= minScale && r.getRidgePoints().get(0).getSecond() >= minPercentileValue) {
-                // System.out.println("RidgePenalty: " + r.getRidgePenalty());
+                // log.info("RidgePenalty: " + r.getRidgePenalty());
                 l.add(r);
             }
         }
-        System.out.println("Found " + l.size() + " initial ridges.");
+        log.info("Found " + l.size() + " initial ridges.");
         return l;
     }
 
     private HashMap<Integer, Ridge> buildRidges(List<Integer> seeds,
             int scaleIdx, ArrayDouble.D2 scaleogram) {
-        // System.out.println("Peak maxima: "+seeds);
+        // log.info("Peak maxima: "+seeds);
         HashMap<Integer, Ridge> l = new LinkedHashMap<>();
         for (Integer itg : seeds) {
             Ridge r = new Ridge(new Point2D.Double(itg, scaleIdx),
                     scaleogram.get(itg, scaleIdx));
-            // System.out.println("Adding ridge: "+r);
+            // log.info("Adding ridge: "+r);
             l.put(itg, r);
         }
         return l;
@@ -576,7 +578,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                 parts++;
             }
             if (selection != null && selection.length > 0) {
-                System.out.println("Writing scaleogram to " + selection.length
+                log.info("Writing scaleogram to " + selection.length
                         + " parts");
                 for (int j = 0; j < selection.length; j++) {
                     int partWidth = spm;
@@ -584,7 +586,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                     if ((i * partWidth) + partWidth > width) {
                         partWidth = width - (i * partWidth);
                     }
-                    // System.out.println("Part " + (i + 1) + "/" + parts +
+                    // log.info("Part " + (i + 1) + "/" + parts +
                     // " from "
                     // + (i * partWidth) + " to "
                     // + (i * partWidth + partWidth));
@@ -612,18 +614,18 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                                 prefix + "-" + (i + 1) + "_of_" + parts
                                 + ".png"));
                     } catch (IOException e1) {
-                        // TODO Auto-generated catch block
+           
                         e1.printStackTrace();
                     }
                 }
             } else {
-                System.out.println("Writing scaleogram to " + parts + " parts");
+                log.info("Writing scaleogram to " + parts + " parts");
                 for (int i = 0; i < parts; i++) {
                     int partWidth = spm;
                     if ((i * partWidth) + partWidth > width) {
                         partWidth = width - (i * partWidth);
                     }
-                    // System.out.println("Part " + (i + 1) + "/" + parts +
+                    // log.info("Part " + (i + 1) + "/" + parts +
                     // " from "
                     // + (i * partWidth) + " to "
                     // + (i * partWidth + partWidth));
@@ -651,7 +653,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                                 prefix + "-" + (i + 1) + "_of_" + parts
                                 + ".png"));
                     } catch (IOException e1) {
-                        // TODO Auto-generated catch block
+           
                         e1.printStackTrace();
                     }
                 }
@@ -663,7 +665,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                 dir.mkdirs();
                 ImageIO.write(ImageTools.flipVertical(bi), "PNG", new File(dir, "ridges.png"));
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
+   
                 e1.printStackTrace();
             }
         }
@@ -765,7 +767,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         jfc.setBackgroundPaint(Color.WHITE);
         outputDir.mkdirs();
         File outputFile = new File(outputDir, filename);
-        System.out.println("Writing scaleogram to file " + outputFile);
+        log.info("Writing scaleogram to file " + outputFile);
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(outputFile);

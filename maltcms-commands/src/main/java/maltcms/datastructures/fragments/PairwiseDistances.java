@@ -49,7 +49,7 @@ import ucar.ma2.ArrayInt;
 /**
  * <p>PairwiseDistances class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,

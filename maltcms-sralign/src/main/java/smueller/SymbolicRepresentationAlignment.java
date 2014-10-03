@@ -84,8 +84,8 @@ import ucar.ma2.Index;
 /**
  * <p>SymbolicRepresentationAlignment class.</p>
  *
- * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * @author Soeren Mueller
+ * 
  */
 @Slf4j
 @RequiresVariables(names = {"var.total_intensity"})

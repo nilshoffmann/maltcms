@@ -42,13 +42,15 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import lombok.Cleanup;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>ZipResourceExtractor class.</p>
  *
- * @author hoffmann
- * @version $Id: $Id
+ * @author Nils Hoffmann
+ * 
  */
+@Slf4j
 public class ZipResourceExtractor {
 
     /**
@@ -59,7 +61,7 @@ public class ZipResourceExtractor {
      * @return a {@link java.io.File} object.
      */
     public static File extract(String resourcePath, File destDir) {
-        System.out.println("Extracting " + resourcePath + " to directory: " + destDir);
+        log.info("Extracting " + resourcePath + " to directory: " + destDir);
         if (!destDir.exists()) {
             destDir.mkdirs();
         }
@@ -79,7 +81,7 @@ public class ZipResourceExtractor {
             try {
                 String outname = new File(resourceURL.getPath()).getName();
                 outname = outname.replaceAll("%20", " ");
-                System.out.println(outname);
+                log.info(outname);
                 if (resourcePath.endsWith("zip")) {
                     outname = outname.substring(0, outname.lastIndexOf(
                             "."));
@@ -104,11 +106,11 @@ public class ZipResourceExtractor {
                 in.close();
                 out.close();
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+   
+                log.warn(e.getLocalizedMessage());
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+   
+                log.warn(e.getLocalizedMessage());
             }
         } catch (IOException ex) {
             Logger.getLogger(ZipResourceExtractor.class.getName()).

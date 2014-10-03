@@ -330,13 +330,13 @@ public class EICPeakFinder extends AFragmentCommand {
         rb.push(current);
         while ((r < size)) {
             if (PeakFinderUtils.isMinimum(rb.oldest(), rb.previous(), rb.current())) {
-                // System.out.println("Found minimum on right side");
+                // log.info("Found minimum on right side");
                 stopIndex = r - 2;
                 break;
             }
             if (tdTIC.getDouble(r) >= 0 && sdTIC.getDouble(r) <= 0
                     && fdTIC.getDouble(r) >= 0) {
-                // System.out.println("Found inflection point on right side");
+                // log.info("Found inflection point on right side");
                 stopIndex = r - 1;
                 break;
             }
@@ -357,13 +357,13 @@ public class EICPeakFinder extends AFragmentCommand {
         // decrease scan index
         while ((l >= 0)) {
             if (PeakFinderUtils.isMinimum(rb2.current(), rb2.previous(), rb2.oldest())) {
-                // System.out.println("Found minimum on left side");
+                // log.info("Found minimum on left side");
                 startIndex = l + 2;
                 break;
             }
             if (tdTIC.getDouble(l) < 0 && sdTIC.getDouble(l) > 0
                     && fdTIC.getDouble(l) < 0) {
-                // System.out.println("Found inflection point on left side");
+                // log.info("Found inflection point on left side");
                 startIndex = l + 1;
                 break;
             }

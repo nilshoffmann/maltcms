@@ -132,11 +132,11 @@ public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
                                     osRes.size());
                             qc.terminate();
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            log.warn(e.getLocalizedMessage());
                         } catch (ExecutionException e) {
-                            e.printStackTrace();
+                            log.warn(e.getLocalizedMessage());
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            log.warn(e.getLocalizedMessage());
                         }
                         List<Tuple2D<Double, IMetabolite>> l = ms.getMatches();
                         log.info("Adding top {} hits!", l.size());

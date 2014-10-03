@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * <p>IdentityNodeBuilder class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class IdentityNodeBuilder extends NodeBuilder {

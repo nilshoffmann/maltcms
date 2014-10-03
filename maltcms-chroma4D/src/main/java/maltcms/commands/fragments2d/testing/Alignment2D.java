@@ -42,6 +42,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.distances.dtwng.AlignmentFactory;
 import maltcms.commands.distances.dtwng.FeatureVectorDtwSimilarity;
 import maltcms.commands.distances.dtwng.IAlignment;
@@ -70,6 +71,7 @@ import ucar.ma2.Array;
 @RequiresOptionalVariables(names = {""})
 @ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
 //@ServiceProvider(service = AFragmentCommand.class)
+@Slf4j
 public class Alignment2D extends AFragmentCommand {
 
     @Configurable(name = "var.maxms_1d_horizontal",
@@ -165,7 +167,7 @@ public class Alignment2D extends AFragmentCommand {
                         this.horizontalIndexVar, this.filter, this.scale);
                 l2h = getFeatureList(rhsff, this.horizontalVar,
                         this.horizontalIndexVar, this.filter, this.scale);
-                System.out.println("l1v size: " + l1h.size());
+                log.info("l1v size: " + l1h.size());
 
                 // set constraints
                 ia.setConstraints(ConstraintFactory.getInstance().
@@ -173,12 +175,12 @@ public class Alignment2D extends AFragmentCommand {
                                 l2h.size(), 0.5));
                 // apply and retrieve score
                 cost = ia.apply(l1h, l2h);
-                System.out.println("DTW score h: " + cost);
+                log.info("DTW score h: " + cost);
                 // retrieve map
                 List<Point> h = ia.getMap();
 
                 for (Point p : h) {
-                    System.out.println(p.x + " - " + p.y);
+                    log.info(p.x + " - " + p.y);
                 }
 
                 // VERTICAL
@@ -187,7 +189,7 @@ public class Alignment2D extends AFragmentCommand {
                         this.verticalIndexVar, this.filter, this.scale);
                 l2v = getFeatureList(rhsff, this.verticalVar,
                         this.verticalIndexVar, this.filter, this.scale);
-                System.out.println("l1v size: " + l1v.size());
+                log.info("l1v size: " + l1v.size());
 
                 // set constraints
                 ia.setConstraints(ConstraintFactory.getInstance().
@@ -195,7 +197,7 @@ public class Alignment2D extends AFragmentCommand {
                                 l2v.size(), 0.5));
                 // apply and retrieve score
                 cost = ia.apply(l1v, l2v);
-                System.out.println("DTW score v: " + cost);
+                log.info("DTW score v: " + cost);
                 // retrieve map
                 List<Point> v = ia.getMap();
 
@@ -212,7 +214,7 @@ public class Alignment2D extends AFragmentCommand {
                         getWorkflow().getOutputDirectory(this), this);
 
                 // for (Point p : v) {
-                // System.out.println(p.x + ":" + p.y);
+                // log.info(p.x + ":" + p.y);
                 // }
             }
         }

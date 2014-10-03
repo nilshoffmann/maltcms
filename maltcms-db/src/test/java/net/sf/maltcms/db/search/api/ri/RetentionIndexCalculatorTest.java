@@ -28,6 +28,7 @@
 package net.sf.maltcms.db.search.api.ri;
 
 import java.util.Arrays;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.tools.ArrayTools;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -37,6 +38,7 @@ import org.junit.Test;
  *
  * @author Nils Hoffmann
  */
+@Slf4j
 public class RetentionIndexCalculatorTest {
 
     @Test
@@ -47,7 +49,7 @@ public class RetentionIndexCalculatorTest {
         double[] rts;
         double[] rirts = new double[cs.length];
         rts = rirts;
-        System.out.println("Number of RIs: " + cs.length);
+        log.info("Number of RIs: " + cs.length);
         double startSAT = 300;
         double endSAT = 3621;
         //initialize rts of ris
@@ -55,7 +57,7 @@ public class RetentionIndexCalculatorTest {
             rirts[i] = (startSAT + (Math.random() * (endSAT - startSAT)));
         }
         Arrays.sort(rirts);
-        System.out.println("RI rts: " + Arrays.toString(rirts));
+        log.info("RI rts: " + Arrays.toString(rirts));
         //initialize rts of peaks
         for (int i = 0; i < rts.length; i++) {
             rts[i] = (startSAT - 100 + (Math.random() * (endSAT - startSAT + 121)));
@@ -95,7 +97,7 @@ public class RetentionIndexCalculatorTest {
                 int.class);
         double[] rts = new double[cs.length * 5];
         double[] rirts = new double[cs.length];
-        System.out.println("Number of RIs: " + cs.length);
+        log.info("Number of RIs: " + cs.length);
         double startSAT = 300;
         double endSAT = 3621;
         //initialize rts of ris
@@ -104,7 +106,7 @@ public class RetentionIndexCalculatorTest {
         }
         Arrays.sort(rirts);
         //initialize rts of peaks
-        System.out.println("RI rts: " + Arrays.toString(rirts));
+        log.info("RI rts: " + Arrays.toString(rirts));
         for (int i = 0; i < rts.length; i++) {
             rts[i] = (startSAT - 100 + (Math.random() * (endSAT - startSAT + 121)));
         }

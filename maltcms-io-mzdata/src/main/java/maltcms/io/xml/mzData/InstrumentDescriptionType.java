@@ -73,7 +73,7 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)

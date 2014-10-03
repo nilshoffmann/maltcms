@@ -36,7 +36,7 @@ import java.util.List;
  * <p>ExtractHelper class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 public class ExtractHelper {
 

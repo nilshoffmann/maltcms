@@ -31,11 +31,13 @@ import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author Nils Hoffmann
  */
+@Slf4j
 public class MockFragmentCommand extends AFragmentCommand {
 
     @Override
@@ -45,7 +47,7 @@ public class MockFragmentCommand extends AFragmentCommand {
 
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
-        System.out.println("Running fragment command " + getClass().getName());
+        log.info("Running fragment command " + getClass().getName());
         return in;
     }
 

@@ -27,6 +27,7 @@
  */
 package smueller.datastructure;
 
+import lombok.extern.slf4j.Slf4j;
 import smueller.SymbolicRepresentationAlignment;
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
@@ -35,9 +36,10 @@ import ucar.ma2.IndexIterator;
 /**
  * <p>ReBuild class.</p>
  *
- * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * @author Soeren Mueller
+ * 
  */
+@Slf4j
 public class ReBuild {
 
     /**
@@ -59,7 +61,7 @@ public class ReBuild {
 
             ii.setDoubleCurrent(save);
 
-            // System.out.println(save);
+            // log.info(save);
         }
 
         return a;
@@ -256,8 +258,8 @@ public class ReBuild {
 
             ii4.setDoubleCurrent(save);
 
-            // System.out.println(save);
-            System.out.println("minmax" + Math.round(minmax) + "Min" + min
+            // log.info(save);
+            log.info("minmax" + Math.round(minmax) + "Min" + min
                     + "max" + max);
 
         }

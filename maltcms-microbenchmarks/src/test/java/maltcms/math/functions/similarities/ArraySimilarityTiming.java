@@ -43,6 +43,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import maltcms.commands.fragments.preprocessing.ScanExtractor;
 import maltcms.datastructures.ms.ProfileChromatogram1D;
@@ -69,6 +70,7 @@ import ucar.ma2.Array;
 @BenchmarkMethodChart(filePrefix = "benchmark-lists")
 @BenchmarkOptions(callgc = false, benchmarkRounds = 5, warmupRounds = 3)
 @Category(IntegrationTest.class)
+@Slf4j
 public class ArraySimilarityTiming extends AFragmentCommandTest implements IntegrationTest {
 
     @Rule
@@ -180,6 +182,6 @@ public class ArraySimilarityTiming extends AFragmentCommandTest implements Integ
                 sdm.setQuick(i, j, ps.apply(new double[]{rt1.getDouble(i)}, new double[]{rt2.getDouble(j)}, iv, jv));
             }
         }
-        System.err.println("Similarity stats: " + sim);
+        log.warn("Similarity stats: " + sim);
     }
 }

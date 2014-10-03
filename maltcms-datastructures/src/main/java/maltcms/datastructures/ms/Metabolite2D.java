@@ -34,7 +34,7 @@ import ucar.ma2.IndexIterator;
 /**
  * <p>Metabolite2D class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class Metabolite2D extends Metabolite implements IRetentionInfo2D {

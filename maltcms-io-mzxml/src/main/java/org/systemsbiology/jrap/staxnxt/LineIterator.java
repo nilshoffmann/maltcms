@@ -7,9 +7,6 @@ import java.util.Iterator;
  * Created by IntelliJ IDEA. User: tholzman Date: Nov 16, 2009 Time: 2:34:17 PM
  * To change this template use File | Settings | File Templates.
  *
- * @author hoffmann
- * 
- * @since 1.3.2
  */
 public class LineIterator implements Iterator {
 

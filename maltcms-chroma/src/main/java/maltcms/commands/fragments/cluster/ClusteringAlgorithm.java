@@ -613,7 +613,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
                 this.fragments.put(i, fragments1.get(i));
             }
             this.cluster.put(i, njc);
-            // System.out.println("Adding new ICluster: "+i+" "+names[i]);
+            // log.info("Adding new ICluster: "+i+" "+names[i]);
             log.debug("Adding initial ICluster (" + (i + 1) + "/"
                     + distances.length + ") : " + njc.toString());
         }
@@ -621,8 +621,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         System.arraycopy(names1, 0, this.names, 0, names1.length);
         System.arraycopy(names1, 0, this.clusterNames, 0, names1.length);
         log.debug("Starting with the following clusters: {}", Arrays.toString(this.names));
-        // System.out.println("Number of joins: "+numjoins);
-        // System.out.println("Initial number of clusters: "+this.L);
+        // log.info("Number of joins: "+numjoins);
+        // log.info("Initial number of clusters: "+this.L);
         printDistMatrix();
         this.chromatogramDistanceFunctionClass.setWorkflow(getWorkflow());
     }
@@ -728,7 +728,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         int newIndex = getL();// L is the number of clusters
         // findMaxDist(newIndex);
         while (getL() > 2) {
-            // System.out.println("L: "+getL()+" newIndex: "+newIndex);
+            // log.info("L: "+getL()+" newIndex: "+newIndex);
             findBestD(newIndex++);
             printDistMatrix();
             setL(getL() - 1);
@@ -738,7 +738,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
         final StringBuilder sb = new StringBuilder();
         sb.append(this.cluster.get(this.dist.length - 1));
-        // System.out.println(sb.toString());
+        // log.info(sb.toString());
         log.debug(this.cluster.get(this.dist.length - 1).toNewick() + ";");
         printDistMatrix();
         setConsensus(this.fragments.get(this.dist.length - 1));
@@ -787,8 +787,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      * <p>printDistMatrix.</p>
      */
     public void printDistMatrix() {
-        // System.out.println("Printing corrected Distance Matrix:");
-        // System.out.println(java.util.Arrays.deepToString(this.D));
+        // log.info("Printing corrected Distance Matrix:");
+        // log.info(java.util.Arrays.deepToString(this.D));
         log.info("Printing Distance Matrix:");
         log.debug(java.util.Arrays.deepToString(this.dist));
         for (int i = 0; i < this.cluster.size(); i++) {

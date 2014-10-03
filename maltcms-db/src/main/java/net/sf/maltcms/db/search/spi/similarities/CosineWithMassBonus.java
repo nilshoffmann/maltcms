@@ -30,6 +30,7 @@ package net.sf.maltcms.db.search.spi.similarities;
 import cross.datastructures.tuple.Tuple2D;
 import java.util.Collections;
 import java.util.Comparator;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
@@ -46,9 +47,10 @@ import ucar.ma2.MAMath.MinMax;
 /**
  * <p>CosineWithMassBonus class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 @ServiceProvider(service = AMetabolitePredicate.class)
 public class CosineWithMassBonus extends AMetabolitePredicate {
 
@@ -204,7 +206,7 @@ public class CosineWithMassBonus extends AMetabolitePredicate {
         double sim = similarity(getScan().getMasses(),
                 getScan().getIntensities(), etMs.getFirst(), etMs.getSecond(),
                 et.getMW());
-        System.out.println("Similarity score: " + sim);
+        log.info("Similarity score: " + sim);
         if (sim >= getScoreThreshold()) {
             Tuple2D<Double, IMetabolite> tple = new Tuple2D<>(
                     sim, et);

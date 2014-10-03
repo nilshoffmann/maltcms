@@ -38,13 +38,15 @@ import maltcms.db.predicates.metabolite.MAggregatePredicate;
 import maltcms.db.predicates.metabolite.MAggregatePredicateFactory;
 
 import com.db4o.query.Predicate;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>MetaboliteQueryAction class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class MetaboliteQueryAction extends javax.swing.AbstractAction {
 
     /**
@@ -95,9 +97,9 @@ public class MetaboliteQueryAction extends javax.swing.AbstractAction {
 //			@Override
 //			protected Void doInBackground() throws Exception {
         ap = af.digestCommandLine(jtf.getText().split(" "));
-        System.out.println("Parsed command line: " + ap.toString());
+        log.info("Parsed command line: " + ap.toString());
         if (mvm != null && ap != null) {
-            System.out.println("Executing query");
+            log.info("Executing query");
             mvm.query(ap);
         }
 //				return Void.TYPE.newInstance();

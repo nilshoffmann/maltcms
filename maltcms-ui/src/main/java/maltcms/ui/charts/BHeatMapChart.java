@@ -31,6 +31,7 @@ import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.Tuple2D;
 import java.awt.Color;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import org.jfree.chart.LegendItem;
 import org.jfree.chart.LegendItemCollection;
 import org.jfree.chart.axis.NumberAxis;
@@ -41,8 +42,9 @@ import ucar.ma2.ArrayDouble;
  * backgroundimage.
  *
  * @author Mathias Wilhelm
- * @version $Id: $Id
+ * 
  */
+@Slf4j
 public class BHeatMapChart extends AChart<XYBPlot> {
 
     private String xlabel, ylabel;
@@ -98,7 +100,7 @@ public class BHeatMapChart extends AChart<XYBPlot> {
             xybp.setFixedLegendItems(items);
 
         } catch (final IOException e) {
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         }
         return xybp;
     }

@@ -88,10 +88,10 @@ public class FeatureVectorFactory {
             IFileFragment iff, int start, int stop, boolean useFastFeatureVector) {
         List<IFeatureVector> l = new ArrayList<>();
         int ns = Math.min(stop, MaltcmsTools.getNumberOfBinnedScans(iff));
-//		System.out.println("Reading from " + start + " to " + stop);
+//		log.info("Reading from " + start + " to " + stop);
         if (useFastFeatureVector) {
             for (int i = start; i < ns; i++) {
-//				System.out.println("Reading scan " + i);
+//				log.info("Reading scan " + i);
                 IFeatureVector fbmf;
                 fbmf = new FastBinnedMSFeatureVector(iff, i);
                 l.add(fbmf);
@@ -100,7 +100,7 @@ public class FeatureVectorFactory {
             Tuple2D<List<Array>, List<Array>> t = MaltcmsTools
                     .getBinnedMZIs(iff);
             for (int i = start; i < ns; i++) {
-//				System.out.println("Reading scan " + i);
+//				log.info("Reading scan " + i);
                 IFeatureVector fbmf;
                 fbmf = new DefaultBinnedMSFeatureVector(iff, i, t);
                 l.add(fbmf);

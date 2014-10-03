@@ -41,7 +41,7 @@ import maltcms.datastructures.peak.Peak2DClique;
 /**
  * <p>PeakNormalization class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 @Data

@@ -221,7 +221,7 @@ public class Visualization2D {
             final double[] breakpointsi, final double[] breakpointsj) {
 
         if (scanlinesi.size() != scanlinesj.size()) {
-            System.out.println("ERROR!!! scanlines nicht gleichlang");
+            log.info("ERROR!!! scanlines nicht gleichlang");
             return null;
         }
 

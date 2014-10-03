@@ -41,7 +41,7 @@ import maltcms.io.xlsx.bridge.IWorkbook;
  * <p>JXLWorkbook class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Data
 public class JXLWorkbook implements IWorkbook {

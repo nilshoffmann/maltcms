@@ -7,14 +7,13 @@ import java.nio.channels.FileChannel;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>ByteBufferIterator class.</p>
  *
- * @author hoffmann
- * 
- * @since 1.3.2
  */
+@Slf4j
 public class ByteBufferIterator implements Iterator {
 
     private int INITIAL_BUFFERSIZE = 10000;
@@ -80,10 +79,10 @@ public class ByteBufferIterator implements Iterator {
      */
     public ByteBufferIterator(String fN) throws IOException {
         fPath = fN;
-        System.out.println("Processing file " + fN);
-        System.out.println("Opening file input stream!");
+        log.info("Processing file " + fN);
+        log.info("Opening file input stream!");
         fis = new FileInputStream(fN);
-        System.out.println("Opening file channel!");
+        log.info("Opening file channel!");
         fc = fis.getChannel();
         fSize = fc.size();
     }
@@ -107,7 +106,7 @@ public class ByteBufferIterator implements Iterator {
         if (!hasNext) {
             if (fc != null) {
                 try {
-                    System.out.println("Closing file channel!");
+                    log.info("Closing file channel!");
                     fc.close();
                 } catch (IOException ex) {
                     Logger.getLogger(ByteBufferIterator.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,7 +114,7 @@ public class ByteBufferIterator implements Iterator {
             }
             if (fis != null) {
                 try {
-                    System.out.println("Closing file input stream!");
+                    log.info("Closing file input stream!");
                     fis.close();
                 } catch (IOException ex) {
                     Logger.getLogger(ByteBufferIterator.class.getName()).log(Level.SEVERE, null, ex);
@@ -137,10 +136,10 @@ public class ByteBufferIterator implements Iterator {
      fis.close();
      }
      bb.rewind();
-     //System.out.println("read "+bytesRead+" bytes, current total is "+totBytesRead+"; and filesize is "+fSize);
+     //log.info("read "+bytesRead+" bytes, current total is "+totBytesRead+"; and filesize is "+fSize);
      } catch (Exception e) {
-     System.err.println("Problem in ByteBufferIterator.next(): "+e);
-     e.printStackTrace();
+     log.warn("Problem in ByteBufferIterator.next(): "+e);
+     log.warn(e.getLocalizedMessage());
      return null;
      }
      return bb;
@@ -163,10 +162,10 @@ public class ByteBufferIterator implements Iterator {
                 fis.close();
             }
             bb.rewind();
-            //System.out.println("read "+bytesRead+" bytes, current total is "+totBytesRead+"; and filesize is "+fSize);
+            //log.info("read "+bytesRead+" bytes, current total is "+totBytesRead+"; and filesize is "+fSize);
         } catch (Exception e) {
-            System.err.println("Problem in ByteBufferIterator.next(): " + e);
-            e.printStackTrace();
+            log.warn("Problem in ByteBufferIterator.next(): " + e);
+            log.warn(e.getLocalizedMessage());
             return null;
         } finally {
             if (fc != null) {

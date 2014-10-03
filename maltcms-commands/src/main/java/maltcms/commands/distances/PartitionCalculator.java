@@ -44,7 +44,7 @@ import ucar.ma2.ArrayDouble;
 /**
  * <p>PartitionCalculator class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 @Data

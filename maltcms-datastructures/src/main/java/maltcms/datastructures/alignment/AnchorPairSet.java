@@ -56,7 +56,7 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
     public AnchorPairSet(final List<IAnchor> a1, final List<IAnchor> a2,
             final int rows, final int cols, final int minScansBetweenAnchors) {
         super(a1, a2);
-        // System.out.println(a1.size()+" "+a2.size());
+        // log.info(a1.size()+" "+a2.size());
         // EvalTools.eqI(a1.size(),a2.size());
         // prepareWithSet(a1, a2, width, height, this.al);
         super.al = checkAnchors(rows, cols, super.al, minScansBetweenAnchors);
@@ -74,7 +74,7 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
     public AnchorPairSet(final List<IAnchor> a1, final List<IAnchor> a2,
             final int rows, final int cols) {
         super(a1, a2);
-        // System.out.println(a1.size()+" "+a2.size());
+        // log.info(a1.size()+" "+a2.size());
         // EvalTools.eqI(a1.size(),a2.size());
         // prepareWithSet(a1, a2, width, height, this.al);
         super.al = checkAnchors(rows, cols, super.al,
@@ -105,7 +105,7 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
         b2.setScanIndex(virtual_height - 1);
         if (al1.isEmpty()) {
             this.log.debug("Only adding start and end anchors!");
-            // System.out.println("Only adding start and end anchors!");
+            // log.info("Only adding start and end anchors!");
             al1.add(new Tuple2D<>(a1, b1));
             al1.add(new Tuple2D<>(a2, b2));
             return;

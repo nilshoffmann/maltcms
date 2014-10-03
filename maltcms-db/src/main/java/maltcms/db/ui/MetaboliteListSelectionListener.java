@@ -47,6 +47,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.MultiplicationFilter;
 import maltcms.datastructures.ms.IMetabolite;
 import org.jfree.chart.ChartPanel;
@@ -63,9 +64,10 @@ import ucar.ma2.MAMath;
 /**
  * <p>MetaboliteListSelectionListener class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class MetaboliteListSelectionListener implements ListSelectionListener,
         WindowListener, MouseListener {
 
@@ -105,7 +107,7 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
     public void valueChanged(ListSelectionEvent e) {
         // final int first_index = e.getFirstIndex();
         final int last_index = e.getLastIndex();
-        System.out.println("ListSelection Event at " + last_index
+        log.info("ListSelection Event at " + last_index
                 + " originated from " + e.getSource().getClass());
         // if(first_index==last_index) {
 //        if (o instanceof ListSelectionModel) {
@@ -115,7 +117,7 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
 
     private JFrame getMSFrame() {
         if (msframe == null) {
-            System.out.println("Creating new Frame");
+            log.info("Creating new Frame");
             msframe = new JFrame("Mass Spectra");
             msframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             msframe.add(getJToolBar(), BorderLayout.PAGE_START);
@@ -139,9 +141,9 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
     }
 
     private void addMetaboliteToChart(final IMetabolite m) {
-        System.out.println("Adding ms chart!");
+        log.info("Adding ms chart!");
         if (series.containsKey(m.getName())) {
-            System.out.println("Series for " + m.getName() + " already created!");
+            log.info("Series for " + m.getName() + " already created!");
         } else {
             Runnable r = new Runnable() {
                 @Override
@@ -221,7 +223,7 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
     /** {@inheritDoc} */
     @Override
     public void windowActivated(WindowEvent e) {
-        // TODO Auto-generated method stub
+        
     }
 
     /** {@inheritDoc} */
@@ -230,7 +232,7 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
         if (e.getWindow() instanceof JFrame) {
             // String s = ((JFrame)e.getWindow()).getTitle();
             // int index = Integer.parseInt(((JFrame)e.getWindow()).getName());
-            System.out.println("Removing JFrame "
+            log.info("Removing JFrame "
                     + ((JFrame) e.getWindow()).getName()
                     + " from map of active clients!");
             hm.remove(((JFrame) e.getWindow()).getName());
@@ -243,7 +245,7 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
     public void windowClosing(WindowEvent e) {
         // if(e.getWindow() instanceof JFrame) {
         // String s = ((JFrame)e.getWindow()).getTitle();
-        // System.out.println("Removing JFrame "+s+" from map of active clients!");
+        // log.info("Removing JFrame "+s+" from map of active clients!");
         // hm.remove(s);
         // }
     }
@@ -251,25 +253,25 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
     /** {@inheritDoc} */
     @Override
     public void windowDeactivated(WindowEvent e) {
-        // TODO Auto-generated method stub
+        
     }
 
     /** {@inheritDoc} */
     @Override
     public void windowDeiconified(WindowEvent e) {
-        // TODO Auto-generated method stub
+        
     }
 
     /** {@inheritDoc} */
     @Override
     public void windowIconified(WindowEvent e) {
-        // TODO Auto-generated method stub
+        
     }
 
     /** {@inheritDoc} */
     @Override
     public void windowOpened(WindowEvent e) {
-        // TODO Auto-generated method stub
+        
     }
 
     /** {@inheritDoc} */
@@ -279,7 +281,7 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
             int row = table.getSelectedRow();
             final IMetabolite m = (IMetabolite) mvm2.getMetaboliteAtRow(row);
             if (m != null) {
-                System.out.println(m.getMassSpectrum().getSecond());
+                log.debug("Intensities: {}", m.getMassSpectrum().getSecond());
                 Runnable fr = new Runnable() {
                     @Override
                     public void run() {

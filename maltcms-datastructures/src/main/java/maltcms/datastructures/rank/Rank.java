@@ -41,7 +41,7 @@ import maltcms.datastructures.ridge.Ridge;
 /**
  * <p>Rank class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class Rank<T extends Ridge> implements Comparable<Rank<? extends T>> {

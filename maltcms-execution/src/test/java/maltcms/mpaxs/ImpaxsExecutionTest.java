@@ -27,9 +27,9 @@
  */
 package maltcms.mpaxs;
 
-import java.util.HashSet;
 import java.util.List;
 import junit.framework.Assert;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.mpaxs.api.ConfigurationKeys;
 import net.sf.mpaxs.api.ExecutionType;
 import net.sf.mpaxs.api.ICompletionService;
@@ -44,6 +44,7 @@ import org.junit.Test;
  *
  * @author Nils Hoffmann
  */
+@Slf4j
 public class ImpaxsExecutionTest {
     
     @Test
@@ -83,7 +84,7 @@ public class ImpaxsExecutionTest {
 //            results.removeAll(localResults);
 //            Assert.assertTrue(results.isEmpty());
         }catch(Exception e) {
-            System.err.println("Caught exception: "+e.getMessage());
+            log.warn("Caught exception: "+e.getMessage());
         } finally {
             if (impxs != null) {
                 impxs.stopMasterServer();

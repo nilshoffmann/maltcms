@@ -43,7 +43,7 @@ import javax.swing.border.TitledBorder;
 /**
  * <p>MetaboliteSearchPreferences class.</p>
  *
- * @author -rhilker-
+ * @author Rolf Hilker
  *
  *
  *

@@ -146,7 +146,7 @@ public class Data2DNormalizer extends AFragmentCommand {
             tic = applyMovingAverageFilter(tic, movingAverageWindow);
         }
         if (applyMovingMedian && movingMedianWindow > -1) {
-            System.out.println("Using moving median filter");
+            log.info("Using moving median filter");
             log.info("Applying moving median filter with window size y: {}",
                     (movingMedianWindow * 2) + 1);
             tic = applyMovingMedianFilter(tic, movingMedianWindow);

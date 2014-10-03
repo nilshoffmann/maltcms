@@ -39,14 +39,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 
 /**
  * <p>MetaboliteViewModel class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class MetaboliteViewModel extends AbstractTableModel {
 
     public final String COMMENTS = "Comments";
@@ -115,7 +117,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
 
         //setDataVector(elements, DefaultTableModel.convertToVector(tableHeader));
         for (Object o : tableHeader) {
-            System.out.println(o);
+            log.info("Header: {}", o);
         }
 
 //		query(new Predicate<IMetabolite>() {
@@ -174,8 +176,8 @@ public class MetaboliteViewModel extends AbstractTableModel {
      * @param b a boolean.
      */
     public void setTableColumnVisible(String header, boolean b) {
-        //System.out.println("Visible table headers: "+Arrays.toString(headers));
-        //System.out.println("All table headers: "+Arrays.toString(tableHeader));
+        //log.info("Visible table headers: "+Arrays.toString(headers));
+        //log.info("All table headers: "+Arrays.toString(tableHeader));
         int col = getColumnForName(header);
         if (col >= 0) {
             this.headerVisible[col] = b;
@@ -195,7 +197,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
 //		}
         //tableHeader = headers;
         //tableHeader = pmg.getGetterNames(headers);
-        //System.out.println("New table header: "+Arrays.toString(tableHeader));
+        //log.info("New table header: "+Arrays.toString(tableHeader));
         //setColumnCount(headers.length);
         //setDataVector(elements, DefaultTableModel.convertToVector(tableHeader));
     }
@@ -255,7 +257,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                System.out.println("Running query with predicate of type: " + p.getClass().getCanonicalName());
+                log.info("Running query with predicate of type: " + p.getClass().getCanonicalName());
                 final ObjectSet<IMetabolite> os = oc.query(p);//IMetabolite.class);
                 //setTableHeader(new String[]{"Name","RetentionIndex","Formula"}); //---------------
 //				IMetabolite[] mets = new IMetabolite[5];
@@ -268,7 +270,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
                 int i = 0;
                 final int maxcnt = 500;
                 int last = 0;
-                System.out.println("Query returned " + os.size() + " results!");
+                log.info("Query returned " + os.size() + " results!");
                 map.clear();
                 final int rows = getRowCount();
                 elements.clear();
@@ -281,7 +283,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
                 });
 
                 for (IMetabolite m : os) {
-                    //System.out.println("Inserting "+m.getName()+" at position "+i);
+                    //log.info("Inserting "+m.getName()+" at position "+i);
                     map.put(m.getID(), m);
                     elements.add(m);
                     //elements.add(m);
@@ -292,7 +294,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
                         Runnable notifier = new Runnable() {
                             @Override
                             public void run() {
-                                System.out.println("Running table update from " + (current_row) + " to " + (current_row + maxcnt));
+                                log.info("Running table update from " + (current_row) + " to " + (current_row + maxcnt));
                                 fireTableRowsInserted(current_row, current_row + maxcnt);//ContentsChanged(m, i, i);
                                 //fireTableDataChanged();
                             }
@@ -309,7 +311,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
                     @Override
                     public void run() {
                         if (remain > 0) {
-                            System.out.println("Running final table update from " + (remain) + " to " + elements.size());
+                            log.info("Running final table update from " + (remain) + " to " + elements.size());
                             fireTableRowsInserted(remain, elements.size());//ContentsChanged(m, i, i);
                         }
                         //ensure update table
@@ -347,16 +349,16 @@ public class MetaboliteViewModel extends AbstractTableModel {
     public Object getValueAt(int arg0, int arg1) {
         //return super.getValueAt(arg0, arg1);
         if (arg0 < elements.size() && arg1 < (tableHeader.length)) {
-            //System.out.println("GetValueAt arg0="+arg0+" arg1="+arg1);
+            //log.info("GetValueAt arg0="+arg0+" arg1="+arg1);
             Method m = pmg.getMethodForGetterName(tableHeader[getVisibleColumn(arg1)]);
             if (m == null) {
-                System.err.println("Invalid method name: " + tableHeader[getVisibleColumn(arg1)]);
+                log.warn("Invalid method name: " + tableHeader[getVisibleColumn(arg1)]);
             } else {
                 try {
                     IMetabolite met = (IMetabolite) elements.get(arg0);
                     return m.invoke(met, new Object[]{});
                 } catch (InvocationTargetException | IllegalAccessException ite) {
-                    System.err.println(ite.getLocalizedMessage());
+                    log.warn(ite.getLocalizedMessage());
                 }
             }
         }

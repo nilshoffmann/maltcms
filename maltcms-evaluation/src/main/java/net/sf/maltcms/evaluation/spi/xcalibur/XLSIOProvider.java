@@ -45,6 +45,9 @@ import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
+import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Based on ExcelTools by Alexander Bunkowski. Uses Jexcel API,
@@ -53,8 +56,11 @@ import jxl.write.WriteException;
  * @author Nils Hoffmann
  * 
  */
-public class XLSIOProvider {
 
+public class XLSIOProvider {
+    
+    private static final Logger log = LoggerFactory.getLogger(ClassificationPerformanceTest.class);
+    
     /**
      * <p>getCompoundNames.</p>
      *
@@ -90,7 +96,7 @@ public class XLSIOProvider {
         if (w != null) {
             for (int i = 0; i < w.getNumberOfSheets(); i++) {
                 final Sheet sheet = w.getSheet(i);
-                //System.out.println("Parsing sheet "+sheet.getName());
+                //log.info("Parsing sheet "+sheet.getName());
                 Cell c = sheet.findCell("Component Name");
                 String compname = getCellContent(sheet.getCell(c.getColumn(), c.getRow() + 1));
                 List<Integer> mws = getCharacteristicMass(compname);
@@ -100,28 +106,28 @@ public class XLSIOProvider {
                 }
                 Cell file = sheet.findCell("Filename", 0, 0, 100, 5, false);
                 int headerRow = file.getRow();
-                //System.out.println("Header info in row: "+headerRow);
+                //log.info("Header info in row: "+headerRow);
                 Cell area = sheet.findCell("Area", 0, headerRow, 100, headerRow, false);
-                //System.out.println("Area column: "+area.getColumn()+" row: "+headerRow);
+                //log.info("Area column: "+area.getColumn()+" row: "+headerRow);
                 int startRow = headerRow + 1;
                 Cell height = sheet.findCell("Height", 0, headerRow, 100, headerRow, false);
-                //System.out.println("Height column: "+height.getColumn()+" row: "+headerRow);
+                //log.info("Height column: "+height.getColumn()+" row: "+headerRow);
                 Cell rt = sheet.findCell("RT", 0, headerRow, 100, headerRow, false);
-                //System.out.println("RT column: "+rt.getColumn()+" row: "+headerRow);
+                //log.info("RT column: "+rt.getColumn()+" row: "+headerRow);
                 Cell startt = sheet.findCell("Start Time", 0, headerRow, 100, headerRow, false);
-                //System.out.println("Starttime column: "+startt.getColumn()+" row: "+headerRow);
+                //log.info("Starttime column: "+startt.getColumn()+" row: "+headerRow);
                 Cell endt = sheet.findCell("End Time", 0, headerRow, 100, headerRow, false);
-                //System.out.println("Endtime column: "+endt.getColumn()+" row: "+headerRow);
-                //System.out.println("Parsing "+rows+" peaks from row "+startRow);
+                //log.info("Endtime column: "+endt.getColumn()+" row: "+headerRow);
+                //log.info("Parsing "+rows+" peaks from row "+startRow);
                 for (int j = startRow; j < (startRow + rows); j++) {
-                    //System.out.println(toString(sheet.getRow(j)));
+                    //log.info(toString(sheet.getRow(j)));
                     Cell areaV = sheet.getCell(area.getColumn(), j);
                     Cell heightV = sheet.getCell(height.getColumn(), j);
                     Cell rtV = sheet.getCell(rt.getColumn(), j);
                     Cell starttV = sheet.getCell(startt.getColumn(), j);
                     Cell endtV = sheet.getCell(endt.getColumn(), j);
                     Cell fileV = sheet.getCell(file.getColumn(), j);
-                    //System.out.println("Area: "+areaV.getContents()+" height: "+heightV.getContents()+" rt: "+rtV.getContents()+" startrt: "+starttV.getContents()+" stoprt: "+endtV.getContents());
+                    //log.info("Area: "+areaV.getContents()+" height: "+heightV.getContents()+" rt: "+rtV.getContents()+" startrt: "+starttV.getContents()+" stoprt: "+endtV.getContents());
                     if (!getCellContent(fileV).isEmpty()) {
                         Chromatogram chrom = new Chromatogram(getCellContent(fileV));
                         ObjectSet<Chromatogram> os = oc.queryByExample(chrom);
@@ -172,7 +178,7 @@ public class XLSIOProvider {
         try {
             return Double.parseDouble(s);
         } catch (NumberFormatException nfe) {
-            System.err.println(nfe);
+            log.warn(nfe.getLocalizedMessage());
             return Double.NaN;
         }
     }
@@ -198,8 +204,8 @@ public class XLSIOProvider {
             Workbook w = Workbook.getWorkbook(f);
             return w;
         } catch (BiffException | IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         }
         return null;
     }
@@ -271,7 +277,7 @@ public class XLSIOProvider {
             for (int i = row + 1; i < cells.length; i++) {
                 Cell cell = cells[i];
                 if (!cell.getContents().trim().isEmpty()) {
-                    //System.out.println("Cell "+i+"="+cell.getContents());
+                    //log.info("Cell "+i+"="+cell.getContents());
                     filenames.add(cell.getContents());
                 } else {
                 }
@@ -291,13 +297,13 @@ public class XLSIOProvider {
             Workbook w = getWorkbook(f);
             Vector<String> filenames = getFilenames(w);
             Vector<String> compounds = getCompoundNames(w);
-            System.out.println("File " + f.getAbsolutePath() + " contains the following records: ");
-            System.out.println("Chromatograms: " + filenames);
-            System.out.println("Compounds: " + compounds);
+            log.info("File " + f.getAbsolutePath() + " contains the following records: ");
+            log.info("Chromatograms: " + filenames);
+            log.info("Compounds: " + compounds);
             int cnt = 0;
             for (String s : compounds) {
                 if (!s.isEmpty()) {
-                    System.out.println((cnt + 1) + "/" + compounds.size() + ": Characteristic mass(es) for " + s + "=" + getCharacteristicMass(s));
+                    log.info((cnt + 1) + "/" + compounds.size() + ": Characteristic mass(es) for " + s + "=" + getCharacteristicMass(s));
                     cnt++;
                 }
             }
@@ -325,10 +331,10 @@ public class XLSIOProvider {
         try {
             int sidx2 = Math.max(0, sidx);
             int eidx2 = Math.min(name.length(), eidx);
-            //System.out.println("sidx2: "+sidx2+" eidx2: "+eidx2);
+            //log.info("sidx2: "+sidx2+" eidx2: "+eidx2);
             substring = name.substring(sidx2, eidx == -1 ? name.length() - 1 : eidx2);
         } catch (StringIndexOutOfBoundsException sie) {
-            System.err.println("Exception while trying to subset: " + name + " from " + sidx + " to " + eidx);
+            log.warn("Exception while trying to subset: " + name + " from " + sidx + " to " + eidx);
         }
         List<Integer> l = new ArrayList<>();
         if (substring.contains(",")) {
@@ -338,7 +344,7 @@ public class XLSIOProvider {
                     int val = Integer.parseInt(sps);
                     l.add(val);
                 } catch (NumberFormatException nfe) {
-                    System.err.println("Could not parse as integer: " + substring);
+                    log.warn("Could not parse as integer: " + substring);
                     //l.add(-1);
                 }
                 //l.add(Integer.parseInt(sps));
@@ -348,7 +354,7 @@ public class XLSIOProvider {
                 int val = Integer.parseInt(substring);
                 l.add(val);
             } catch (NumberFormatException nfe) {
-                System.err.println("Could not parse as integer: " + substring);
+                log.warn("Could not parse as integer: " + substring);
                 //l.add(-1);
             }
 
@@ -389,7 +395,7 @@ public class XLSIOProvider {
                 }
                 workbook.close();
             } catch (IOException | BiffException | IndexOutOfBoundsException e) {
-                e.printStackTrace();
+                log.warn(e.getLocalizedMessage());
             }
         }
         return data;

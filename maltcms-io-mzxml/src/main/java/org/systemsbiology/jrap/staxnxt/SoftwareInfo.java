@@ -32,7 +32,6 @@ package org.systemsbiology.jrap.staxnxt;
  *
  * @author Mathijs Vogelzang
  * 
- * @since 1.3.2
  */
 public class SoftwareInfo {
 

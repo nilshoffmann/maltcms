@@ -150,7 +150,7 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
                     String tmp = line;
                     for (String key : tokenMap.keySet()) {
                         if (tmp.contains(key)) {
-                            System.out.println("Replacing " + key + " with value " + tokenMap.get(key));
+                            log.info("Replacing " + key + " with value " + tokenMap.get(key));
                             tmp = tmp.replaceAll("\\$\\{" + key + "\\}", tokenMap.get(key));
                         }
                     }

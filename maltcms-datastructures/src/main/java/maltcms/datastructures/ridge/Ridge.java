@@ -168,7 +168,7 @@ public class Ridge implements Comparable<Ridge> {
                     return s1.compareTo(s2);
                 }
             });
-//            System.out.println("Using the following ridge cost functions: " + l.toString());
+//            log.info("Using the following ridge cost functions: " + l.toString());
             ridgeCosts = l;
         }
         return ridgeCosts;
@@ -228,7 +228,7 @@ public class Ridge implements Comparable<Ridge> {
             }
         }
         if (maximumR == -1 && maximumL == -1) {
-            // System.out.println("Could not extend ridge beyond: "
+            // log.info("Could not extend ridge beyond: "
             // + prev.getFirst());
             return false;
             // now come the single candidates

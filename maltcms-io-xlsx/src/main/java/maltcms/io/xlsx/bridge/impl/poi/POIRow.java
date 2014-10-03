@@ -37,7 +37,7 @@ import org.apache.poi.ss.usermodel.Row;
  * <p>POIRow class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Data
 public class POIRow implements IRow {

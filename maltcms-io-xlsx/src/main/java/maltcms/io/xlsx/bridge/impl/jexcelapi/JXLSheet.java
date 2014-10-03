@@ -37,7 +37,7 @@ import maltcms.io.xlsx.bridge.ISheet;
  * <p>JXLSheet class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Data
 public class JXLSheet implements ISheet {

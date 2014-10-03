@@ -30,7 +30,7 @@ package maltcms.datastructures.caches;
 import cross.annotations.RequiresVariables;
 import cross.datastructures.fragments.IFileFragment;
 import java.awt.Point;
-import java.lang.ref.SoftReference;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
@@ -46,6 +46,7 @@ import ucar.ma2.IndexIterator;
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",
     "var.modulation_time", "var.scan_rate"})
+@Slf4j
 public abstract class AScanLineCache implements IScanLine {
 
     /** {@inheritDoc} */
@@ -84,16 +85,16 @@ public abstract class AScanLineCache implements IScanLine {
      * @param iff1 file fragment
      */
     protected AScanLineCache(final IFileFragment iff1) {
-        System.out.println("Initing AScanLineCache!");
+        log.info("Initing AScanLineCache!");
         this.iff = iff1;
         final int modulation = this.iff.getChild(this.modulationVar).getArray()
                 .getInt(Index.scalarIndexImmutable);
         final int scanRate = this.iff.getChild(this.scanRateVar).getArray()
                 .getInt(Index.scalarIndexImmutable);
         this.scansPerModulation = modulation * scanRate;
-        System.out.println("Estimating bin size!");
+        log.info("Estimating bin size!");
         estimateBinSize();
-        System.out.println("Estimating last index!");
+        log.info("Estimating last index!");
         estimateLastIndex();
     }
 

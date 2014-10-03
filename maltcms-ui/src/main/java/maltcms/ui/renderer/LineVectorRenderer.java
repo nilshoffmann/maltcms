@@ -44,7 +44,7 @@ import org.jfree.data.xy.XYDataset;
  * Extension of default VectorRenderer, omitting heads / tails of vectors.
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 public class LineVectorRenderer extends VectorRenderer {
 

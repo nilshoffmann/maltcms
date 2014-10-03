@@ -107,7 +107,7 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
 //                        a = v.getArray();
 //                        Assert.assertNotNull(a);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                     Assert.fail(e.getLocalizedMessage());
                 }
             }
@@ -151,7 +151,7 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
 //                        a = v.getArray();
 //                        Assert.assertNotNull(a);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                     Assert.fail(e.getLocalizedMessage());
                 }
             }

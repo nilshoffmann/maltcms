@@ -149,7 +149,7 @@ public class TICPeakListImporter extends AFragmentCommand {
                         retf.add(work);
                         work.save();
                     } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        log.warn(e.getLocalizedMessage());
                     }
 
                 }

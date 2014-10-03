@@ -56,7 +56,7 @@ import org.jfree.ui.RectangleInsets;
  * running in headless mode.
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Slf4j
 @Data

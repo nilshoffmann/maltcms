@@ -131,7 +131,7 @@ public class ConstraintFactory {
                 final Area dr2 = new Area(anchor);
                 dr2.intersect(bounds);
                 distinctRects.add(dr2.getBounds());
-                // System.out.println("Adding anchor region: "+anchor.toString())
+                // log.info("Adding anchor region: "+anchor.toString())
                 // ;
                 log.debug(
                         "Anchor # " + cnt + " at " + x + "," + y);

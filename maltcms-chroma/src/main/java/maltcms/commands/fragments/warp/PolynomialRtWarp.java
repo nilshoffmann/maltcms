@@ -259,8 +259,8 @@ public class PolynomialRtWarp extends AFragmentCommand {
                     }
                 }
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+   
+                log.warn(e.getLocalizedMessage());
             }
         }
 

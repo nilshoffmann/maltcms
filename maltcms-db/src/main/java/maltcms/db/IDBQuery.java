@@ -38,7 +38,7 @@ import maltcms.datastructures.ms.IMetabolite;
 /**
  * <p>IDBQuery interface.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public interface IDBQuery<T extends Predicate<G>, G> {

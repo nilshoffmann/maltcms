@@ -69,7 +69,7 @@ public class BinaryCluster extends ACluster {
         // this.level = Math.max(this.lchild.getLevel(),
         // this.rchild.getLevel())+1;
         setID(id);
-        // System.out.println("Created new ICluster "+this.name);
+        // log.info("Created new ICluster "+this.name);
     }
 
     /**

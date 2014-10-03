@@ -33,8 +33,8 @@ import java.util.Vector;
 /**
  * <p>OptimalAlignmentVector class.</p>
  *
- * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * @author Soeren Mueller
+ * 
  */
 public class OptimalAlignmentVector implements Cloneable {
 
@@ -110,7 +110,7 @@ public class OptimalAlignmentVector implements Cloneable {
         for (int i = 0; i < this.countAlChars(); i++) {
             cloneAlignme.addALChars((AlignedPairVector) this.getCharPair(i)
                     .clone());
-            // System.out.println(11);
+            // log.info(11);
         }
         return cloneAlignme;
 

@@ -454,12 +454,12 @@ public class PeakArea2D implements Serializable {
     public void findAndSetBoundary() {
         for (Point p : this.regionList) {
             for (Point b : getNeighbours(p, false)) {
-                // System.out.println("Trying to add" + b);
+                // log.info("Trying to add" + b);
                 addBoundaryPoint(b);
             }
         }
         // for (Point p : this.boundary) {
-        // System.out.println("ADDED: " + p);
+        // log.info("ADDED: " + p);
         // }
     }
 

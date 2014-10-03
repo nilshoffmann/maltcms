@@ -188,8 +188,8 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
         this.gsm.put(Vars.Mean.toString(), globalmean);
         this.gsm.put(Vars.Variance.toString(), globalvar);
         this.gsm.put(Vars.Skewness.toString(), globalskew);
-        // System.out.println("Global stats:");
-        // System.out.println("Min: "+globalmin+" Max: "+globalmax+" Mean:
+        // log.info("Global stats:");
+        // log.info("Min: "+globalmin+" Max: "+globalmax+" Mean:
         // "+globalmean+" Variance: "+globalvar);
         return hashes;
     }

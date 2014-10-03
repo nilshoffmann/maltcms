@@ -55,7 +55,7 @@ import ucar.ma2.MAMath.MinMax;
 /**
  * <p>MetaboliteSimilarity class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 @EqualsAndHashCode(callSuper = true)

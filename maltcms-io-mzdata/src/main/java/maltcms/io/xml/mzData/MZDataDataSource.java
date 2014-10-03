@@ -75,7 +75,7 @@ import ucar.nc2.Dimension;
 /**
  * <p>MZDataDataSource class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 @ServiceProvider(service = IDataSource.class)
@@ -127,7 +127,7 @@ public class MZDataDataSource implements IDataSource {
     /** {@inheritDoc} */
     @Override
     public void configurationChanged(final ConfigurationEvent arg0) {
-        // TODO Auto-generated method stub
+        
     }
 
     /** {@inheritDoc} */

@@ -47,6 +47,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.peak.Peak1D;
 import maltcms.datastructures.peak.Peak2D;
 
@@ -56,6 +57,7 @@ import maltcms.datastructures.peak.Peak2D;
  * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class ChromaTOFParser {
 
     /** Constant <code>FIELD_SEPARATOR="\t"</code> */
@@ -83,7 +85,7 @@ public class ChromaTOFParser {
                 if (!line.isEmpty()) {
                     String[] lineArray = line.split(String.valueOf(FIELD_SEPARATOR));
                     if (lineCount > 0) {
-                        //                        System.out.println(
+                        //                        log.info(
                         //                                "Adding file to group mapping: " + lineArray[0] + " " + lineArray[1]);
                         filenameToGroupMap.put(lineArray[0], lineArray[1]);
                     }
@@ -133,7 +135,7 @@ public class ChromaTOFParser {
     public static Tuple2D<double[], int[]> convertMassSpectrum(
             String massSpectrum) {
         if (massSpectrum == null) {
-            System.err.println("Warning: mass spectral data was null!");
+            log.warn("Warning: mass spectral data was null!");
             return new Tuple2D<>(new double[0], new int[0]);
         }
         String[] mziTuples = massSpectrum.split(" ");
@@ -143,7 +145,7 @@ public class ChromaTOFParser {
                 String[] tplArray = tuple.split(":");
                 tm.put(Float.valueOf(tplArray[0]), Integer.valueOf(tplArray[1]));
             } else {
-                System.err.println(
+                log.warn(
                         "Warning: encountered strange tuple: " + tuple + " within ms: " + massSpectrum);
             }
         }
@@ -170,7 +172,7 @@ public class ChromaTOFParser {
         ArrayList<String> header = null;
         String fileName = f.getName().substring(0, f.getName().lastIndexOf(
                 "."));
-        //System.out.println("Processing report " + fileName);
+        //log.info("Processing report " + fileName);
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader(f));
@@ -326,11 +328,11 @@ public class ChromaTOFParser {
     public static Tuple2D<LinkedHashSet<String>, List<TableRow>> parseReport(
             File f, boolean normalizeColumnNames) {
         if (f.getName().toLowerCase().endsWith("csv")) {
-//            System.out.println("CSV Mode");
+//            log.info("CSV Mode");
             ChromaTOFParser.FIELD_SEPARATOR = ",";
             ChromaTOFParser.QUOTATION_CHARACTER = "\"";
         } else if (f.getName().toLowerCase().endsWith("tsv") || f.getName().toLowerCase().endsWith("txt")) {
-//            System.out.println("TSV Mode");
+//            log.info("TSV Mode");
             ChromaTOFParser.FIELD_SEPARATOR = "\t";
             ChromaTOFParser.QUOTATION_CHARACTER = "";
         }
@@ -347,7 +349,7 @@ public class ChromaTOFParser {
      * @return a {@link maltcms.datastructures.peak.Peak1D} object.
      */
     public static Peak1D create1DPeak(File peakReport, TableRow tr) {
-        //System.out.println("1D chromatogram peak data detected");
+        //log.info("1D chromatogram peak data detected");
         Peak1D p1 = new Peak1D();
         p1.setName(tr.get("NAME"));
         p1.setFile(peakReport.getAbsolutePath());
@@ -365,7 +367,7 @@ public class ChromaTOFParser {
      * @return a {@link maltcms.datastructures.peak.Peak2D} object.
      */
     public static Peak2D create2DPeak(File peakReport, TableRow tr, double rt1, double rt2) {
-        //System.out.println("Adding peak "+tr.get("NAME"));
+        //log.info("Adding peak "+tr.get("NAME"));
         Peak2D p2 = new Peak2D();
         p2.setName(tr.get("NAME"));
         p2.setFile(peakReport.getAbsolutePath());
@@ -403,9 +405,9 @@ public class ChromaTOFParser {
      * @return a double.
      */
     public static double parseDouble(String fieldName, TableRow tr) {
-//        System.out.println("Retrieving " + fieldName);
+//        log.info("Retrieving " + fieldName);
         String value = tr.get(fieldName);
-//        System.out.println("Value: " + value);
+//        log.info("Value: " + value);
         return parseDouble(value);
     }
 

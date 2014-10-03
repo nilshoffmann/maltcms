@@ -33,8 +33,8 @@ import smueller.SymbolicRepresentationAlignment;
 /**
  * <p>OneAffineAlignment class.</p>
  *
- * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * @author Soeren Mueller
+ * 
  */
 public class OneAffineAlignment extends Alignment {
 

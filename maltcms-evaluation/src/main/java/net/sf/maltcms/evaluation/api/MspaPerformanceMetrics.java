@@ -244,11 +244,11 @@ public final class MspaPerformanceMetrics {
      * @return a double.
      */
     public double getGain() {
-        //System.out.println("tp+fn=" + (tp + fn));
-        //System.out.println("tp+tn+fp+fn=" + (tp + tn + fp + fn));
+        //log.info("tp+fn=" + (tp + fn));
+        //log.info("tp+tn+fp+fn=" + (tp + tn + fp + fn));
         double r = ((double) (tp + fn)) / ((double) (tp + tn + fp + fn));
-        //System.out.println("R=" + r);
-        //System.out.println("Precisions=" + getPrecision());
+        //log.info("R=" + r);
+        //log.info("Precisions=" + getPrecision());
         double gain = getPrecision() / r;
         return gain;
     }

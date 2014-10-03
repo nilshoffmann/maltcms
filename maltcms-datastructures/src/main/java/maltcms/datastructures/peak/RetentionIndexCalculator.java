@@ -81,15 +81,15 @@ public class RetentionIndexCalculator {
     public double getIsothermalKovatsIndex(double rt) {
         int prevRIIdx = getIndexOfPreviousRI(rt);
         int nextRIIdx = getIndexOfNextRI(rt);
-        // System.out.println("Index of previous ri: " + prevRIIdx);
-        // System.out.println("Index of next ri: " + nextRIIdx);
+        // log.info("Index of previous ri: " + prevRIIdx);
+        // log.info("Index of next ri: " + nextRIIdx);
         if (prevRIIdx == -1 || nextRIIdx == -1) {
             return Double.NaN;
         }
         double prevRIrt = this.riRTs[prevRIIdx];
         double nextRIrt = this.riRTs[nextRIIdx];
-        // System.out.println("RT of previous ri: " + prevRIrt);
-        // System.out.println("RT of next ri: " + nextRIrt);
+        // log.info("RT of previous ri: " + prevRIrt);
+        // log.info("RT of next ri: " + nextRIrt);
         int nCAtoms = nCarbAtoms[prevRIIdx];
         int NCAtoms = nCarbAtoms[nextRIIdx];
         double ri = 0;
@@ -98,26 +98,26 @@ public class RetentionIndexCalculator {
     }
 
     private int getIndexOfPreviousRI(double rt) {
-        // System.out.println("PREVIOUS INDEX:");
-        // System.out.println("RT: " + rt);
+        // log.info("PREVIOUS INDEX:");
+        // log.info("RT: " + rt);
         int idx = Arrays.binarySearch(this.riRTs, rt);
-        // System.out.println(Arrays.toString(this.riRTs));
+        // log.info(Arrays.toString(this.riRTs));
         int x = ((-1) * (idx + 1)) - 1;
         if (idx >= 0) {
-            // System.out.println(this.riRTs[idx] + " < " + rt);
+            // log.info(this.riRTs[idx] + " < " + rt);
             return idx;
         } else {
             if (x >= 0) {
-                // System.out.println(this.riRTs[x] + " > " + rt);
+                // log.info(this.riRTs[x] + " > " + rt);
                 return x;
             } else {
-                // System.out.println("RT smaller than minimum RI rt!");
+                // log.info("RT smaller than minimum RI rt!");
                 return -1;
             }
         }
-        // System.out.println("Previous RI at index: " + x);
+        // log.info("Previous RI at index: " + x);
         // if (idx >= 0) {
-        // System.out.println("Direct rt match: " + rt + " at index " + idx);
+        // log.info("Direct rt match: " + rt + " at index " + idx);
         // return idx;
         // } else {
         // int prev = x;
@@ -126,21 +126,21 @@ public class RetentionIndexCalculator {
     }
 
     private int getIndexOfNextRI(double rt) {
-        // System.out.println("NEXT INDEX:");
-        // System.out.println("RT: " + rt);
+        // log.info("NEXT INDEX:");
+        // log.info("RT: " + rt);
         int idx = Arrays.binarySearch(this.riRTs, rt);
-        // System.out.println(Arrays.toString(this.riRTs));
+        // log.info(Arrays.toString(this.riRTs));
         int x = ((-1) * (idx + 1));
         if (idx >= 0) {
-            // System.out.println(this.riRTs[idx] + " < " + rt);
+            // log.info(this.riRTs[idx] + " < " + rt);
             // return Math.min(this.riRTs.length, idx + 1);
             return Math.min(idx + 1, this.riRTs.length - 1);
         } else {
             if (x >= 0 && x < this.riRTs.length) {
-                // System.out.println(this.riRTs[x] + " < " + rt);
+                // log.info(this.riRTs[x] + " < " + rt);
                 return x;
             } else {
-                // System.out.println("RT larger than maximum RI rt!");
+                // log.info("RT larger than maximum RI rt!");
                 return -1;
             }
         }
@@ -166,7 +166,7 @@ public class RetentionIndexCalculator {
         int NCAtoms = nCarbAtoms[nextRIIdx];
         double ri = 0;
         ri = riTp(nCAtoms, NCAtoms, prevRIrt, nextRIrt, rt);
-        // System.out.println("cAtoms before: " + nCarbAtoms[prevRIIdx]
+        // log.info("cAtoms before: " + nCarbAtoms[prevRIIdx]
         // + " after: " + nCarbAtoms[nextRIIdx]);
         log.debug(prevRIrt + " < " + rt + " < " + nextRIrt + " RI: "
                 + ri);
@@ -221,7 +221,7 @@ public class RetentionIndexCalculator {
         for (int i = 0; i < rts.length; i++) {
             log.debug("Item: " + (i + 1) + "/" + rts.length);
             // double istRI = ric.getIsothermalKovatsIndex(rts[i]);
-            // System.out.println("Isothermal RI for peak at rt " + rts[i] +
+            // log.info("Isothermal RI for peak at rt " + rts[i] +
             // " = "
             // + istRI);
             double tcRI = ric.getTemperatureProgrammedKovatsIndex(rts[i]);

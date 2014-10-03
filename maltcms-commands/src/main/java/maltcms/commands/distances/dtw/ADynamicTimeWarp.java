@@ -264,7 +264,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
     /** {@inheritDoc} */
     @Override
     public void appendXML(final Element e) {
-        // TODO Auto-generated method stub
+        
     }
 
     /*
@@ -468,8 +468,8 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
                     this), alignmentName
                     + "_matrixLayout.png"));
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         }
     }
 

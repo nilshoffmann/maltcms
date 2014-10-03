@@ -255,8 +255,8 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
                     log.error(
                             query.getName() + " modulation{} scanRate{}",
                             modulationj, scanRatej);
-                    System.out.println(scanRatei + "-" + scanRatej);
-                    System.out.println(modulationi + "-" + modulationj);
+                    log.info(scanRatei + "-" + scanRatej);
+                    log.info(modulationi + "-" + modulationj);
                 }
             }
         }

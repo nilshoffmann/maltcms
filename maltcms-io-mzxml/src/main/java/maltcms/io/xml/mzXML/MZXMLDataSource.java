@@ -89,18 +89,18 @@ public class MZXMLDataSource implements IDataSource {
         // public void startElement(String uri, String localName,
         // String qName, Attributes attributes)
         // throws SAXException {
-        // // System.out.println(qName);
+        // // log.info(qName);
         // }
         // });
         // reader.parse(new InputSource(new FileInputStream(ff
         // .getAbsolutePath())));
         //
         // } catch (SAXException e) {
-        // e.printStackTrace();
+        // log.warn(e.getLocalizedMessage());
         // } catch (FileNotFoundException e) {
-        // e.printStackTrace();
+        // log.warn(e.getLocalizedMessage());
         // } catch (IOException e) {
-        // e.printStackTrace();
+        // log.warn(e.getLocalizedMessage());
         // }
         try {
             final IDataSource ids = getValidReader(ff);

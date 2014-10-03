@@ -31,6 +31,7 @@ import com.db4o.ObjectSet;
 import com.db4o.query.Predicate;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.db.predicates.metabolite.MAggregatePredicateFactory;
 import maltcms.db.predicates.metabolite.MetabolitePredicate;
@@ -38,9 +39,10 @@ import maltcms.db.predicates.metabolite.MetabolitePredicate;
 /**
  * <p>MetaboliteQueryDB class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class MetaboliteQueryDB extends QueryDB<IMetabolite> {
 
     /**
@@ -104,12 +106,12 @@ public class MetaboliteQueryDB extends QueryDB<IMetabolite> {
             Future<ObjectSet<IMetabolite>> c = mqdb.invoke(mqdb.getCallable());
             try {
                 ObjectSet<IMetabolite> os = c.get();
-                //System.out.println("Found the following metabolites:");
+                //log.info("Found the following metabolites:");
                 StringBuffer sb = new StringBuffer();
                 int i = 0;
                 for (IMetabolite m : os) {
                     if (i % 49 == 0) {
-                        //System.out.println(sb);
+                        //log.info(sb);
                         sb = new StringBuffer();
                         i = 0;
                     }
@@ -117,11 +119,11 @@ public class MetaboliteQueryDB extends QueryDB<IMetabolite> {
                     i++;
                 }
             } catch (InterruptedException | ExecutionException e) {
-                System.err.println(e.getLocalizedMessage());
+                log.warn(e.getLocalizedMessage());
             }
         } else {
-            System.out.println("Invalid number of arguments!");
-            System.out.println(
+            log.info("Invalid number of arguments!");
+            log.info(
                     "Usage: java maltcms.db.MetaboliteQuery /PATH/TO/DB [PREDICATES]");
         }
     }

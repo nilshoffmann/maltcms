@@ -105,7 +105,7 @@ public class JFreeChartTools {
             data[2][i] = a[2];
             i++;
         }
-        // System.out.println(Arrays.deepToString(data));
+        // log.info(Arrays.deepToString(data));
         d.addSeries(name, data);
         return d;
     }

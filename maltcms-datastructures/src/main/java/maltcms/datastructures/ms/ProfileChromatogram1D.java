@@ -37,7 +37,7 @@ import ucar.ma2.Array;
 /**
  * <p>ProfileChromatogram1D class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 @RequiresVariables(names = {"var.binned_mass_values", "var.binned_intensity_values", "var.binned_scan_index"})

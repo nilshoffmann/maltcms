@@ -55,15 +55,21 @@ import net.sf.maltcms.evaluation.api.classification.PeakRowIndexFeatureVectorCom
 import net.sf.maltcms.evaluation.spi.EntityGroupBuilder;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>PairwiseClassificationPerformanceTest class.</p>
  *
  * @author Nils Hoffmann
+ * @param <T> the named feature vector type for this test
  * 
  */
-public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVector> {
 
+public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVector> {
+    
+    private static final Logger log = LoggerFactory.getLogger(net.sf.maltcms.evaluation.api.ClassificationPerformanceTest.class);
+    
     private final EntityGroupList<T> groundTruth;
     private final int numberOfGroundTruthEntities;
     private final IFeatureVectorComparator ifvc;
@@ -100,7 +106,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         int size = entities.getCategoriesSize() - 1;
         Category[] categories = entities.getCategories().toArray(new Category[entities.getCategoriesSize()]);
         for (int i = 0; i < entities.getCategoriesSize() - 1; i++) {
-//			System.out.println("Adding pair " + (cnt + 1) + " of " + size);
+//			log.info("Adding pair " + (cnt + 1) + " of " + size);
             m.put(i + "-" + (i + 1), entities.getSubList(categories[i], categories[(i + 1)]));
             cnt++;
         }
@@ -121,7 +127,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         Category[] categories = entities.getCategories().toArray(new Category[entities.getCategoriesSize()]);
         for (int i = 0; i < entities.getCategoriesSize() - 1; i++) {
             for (int j = i + 1; j < entities.getCategoriesSize(); j++) {
-//				System.out.println("Adding pair " + (cnt + 1) + " of " + size);
+//				log.info("Adding pair " + (cnt + 1) + " of " + size);
                 m.put(i + "-" + j, entities.getSubList(categories[i], categories[j]));
                 cnt++;
             }
@@ -149,7 +155,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         //guineu 9a34522f-7fed-39dc-9420-dcc32ccaf3b5
         tools.put("Guineu", egb.buildCSVPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/mSPA_Dataset_I_short/guineu/0e029001-7d61-3b29-8d0e-20f05c413ded/multiple-alignment.csv"), t));
         for (String key : tools.keySet()) {
-            System.out.println("Tool: " + key);
+            log.info("Tool: " + key);
             EntityGroupList toolGroups = new EntityGroupList(tools.get(key).get(0).getCategories().toArray(new Category[0]));
             toolGroups.addAll(tools.get(key));
 //		Category c1 = new Category("c1");
@@ -224,21 +230,21 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
             PairwiseClassificationPerformanceTest<INamedPeakFeatureVector> cpt = new PairwiseClassificationPerformanceTest<>(t, referenceGroups, new PeakNameFeatureVectorComparator());
             List<PairwisePerformanceMetrics> pm = cpt.performTest(key, toolGroups);
             MultiMap<IPerformanceMetrics.Vars, Number> metricsMap = new MultiMap<>();
-            System.out.println("Pairwise evaluation:");
-            System.out.println("INSTANCE\tTP\tFP\tTN\tFN\tF1");
+            log.info("Pairwise evaluation:");
+            log.info("INSTANCE\tTP\tFP\tTN\tFN\tF1");
             for (PairwisePerformanceMetrics metrics : pm) {
-//			System.out.println(metrics);
+//			log.info(metrics);
                 metricsMap.put(TP, metrics.getTp());
                 metricsMap.put(FP, metrics.getFp());
                 metricsMap.put(TN, metrics.getTn());
                 metricsMap.put(FN, metrics.getFn());
                 metricsMap.put(F1, metrics.getF1());
-                System.out.println(metrics.getInstanceName() + "\t" + metrics.getTp() + "\t" + metrics.getFp() + "\t" + metrics.getTn() + "\t" + metrics.getFn() + "\t" + metrics.getF1());
+                log.info(metrics.getInstanceName() + "\t" + metrics.getTp() + "\t" + metrics.getFp() + "\t" + metrics.getTn() + "\t" + metrics.getFn() + "\t" + metrics.getF1());
             }
             for (IPerformanceMetrics.Vars var : metricsMap.keySet()) {
                 double[] values = toArray(metricsMap.get(var));
                 DescriptiveStatistics ds = new DescriptiveStatistics(values);
-                System.out.println(var.toString() + ": totalValue=" + ds.getSum() + "; min=" + ds.getMin() + "; max=" + ds.getMax() + "; mean=" + ds.getMean() + "+/-" + ds.getStandardDeviation());
+                log.info(var.toString() + ": totalValue=" + ds.getSum() + "; min=" + ds.getMin() + "; max=" + ds.getMax() + "; mean=" + ds.getMean() + "+/-" + ds.getStandardDeviation());
             }
             ClassificationPerformanceTest<INamedPeakFeatureVector> rpt = new ClassificationPerformanceTest<>(referenceGroups, new PeakRowIndexFeatureVectorComparator());
             PerformanceMetrics rpm = rpt.performTest("testTool", toolGroups);
@@ -248,14 +254,14 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
             metricsMap2.put(TN, rpm.getTn());
             metricsMap2.put(FN, rpm.getFn());
             metricsMap2.put(F1, rpm.getF1());
-            System.out.println("Row-wise evaluation:");
+            log.info("Row-wise evaluation:");
             for (PerformanceMetrics.Vars var : metricsMap2.keySet()) {
                 double[] values = toArray(metricsMap2.get(var));
                 DescriptiveStatistics ds = new DescriptiveStatistics(values);
-                System.out.println(var.toString() + ": totalValue=" + ds.getSum() + "; min=" + ds.getMin() + "; max=" + ds.getMax() + "; mean=" + ds.getMean() + "+/-" + ds.getStandardDeviation());
+                log.info(var.toString() + ": totalValue=" + ds.getSum() + "; min=" + ds.getMin() + "; max=" + ds.getMax() + "; mean=" + ds.getMean() + "+/-" + ds.getStandardDeviation());
             }
         }
-//		System.out.println(cpt.performTest("test", datal));
+//		log.info(cpt.performTest("test", datal));
     }
 
     /**
@@ -292,7 +298,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
     public int getNumberOfNonNulls(List<Entity<T>> l) {
         int n = 0;
         for (Entity<T> e : l) {
-//			System.out.println("EG: "+eg);
+//			log.info("EG: "+eg);
             if (e.getFeatureVector().getName() != null) {
                 n++;
             }
@@ -341,7 +347,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
 //
 //    rlt=c(t.p.r,p.p.v,t.p,f.p,f.n,t.n,f1)
 //    rlt
-//		System.out.println("Instance: " + instanceName);
+//		log.info("Instance: " + instanceName);
         //count the number of peaks in the reference
         int totalPos = 0;
         int lhsPeaks = 0;
@@ -359,7 +365,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
             List<Entity<T>> rhsEntities = groundTruth.getEntities(t.getSecond());
             lhsPeaks += getNumberOfNonNulls(lhsEntities);
             rhsPeaks += getNumberOfNonNulls(rhsEntities);
-            //System.out.println("Lhs Peaks: " + lhsPeaks + " Rhs Peaks: " + rhsPeaks);
+            //log.info("Lhs Peaks: " + lhsPeaks + " Rhs Peaks: " + rhsPeaks);
             for (EntityGroup<T> lhs : groundTruth.getSubList(t.getFirst(), t.getSecond())) {
                 int nonNulls = getNumberOfNonNulls(lhs.getEntities());
                 if (nonNulls == 2) {
@@ -370,22 +376,22 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
 //					String rhsName = rhs.getFeatureVector().getName();
 //					if (lhsName != null && rhsName != null) {
 ////						if (lhsName.equals(rhsName)) {
-////							System.out.println(lhsName + "==" + rhsName);
+////							log.info(lhsName + "==" + rhsName);
 //							totalPos++;
 ////							break;
 ////						}
 //					}
 //				}
             }
-            //System.out.println("Matched peaks: "+totalPos);
+            //log.info("Matched peaks: "+totalPos);
         }
         int totalMatch = 0;
         int nentities = lhsPeaks + rhsPeaks;
         int totalNeg = (lhsPeaks * rhsPeaks) - totalPos;
-//		System.out.println("number of peaks: " + nentities + " total.pos=" + totalPos + " total.neg=" + totalNeg + "; totalNeg+totalPos=" + (totalNeg + totalPos));
+//		log.info("number of peaks: " + nentities + " total.pos=" + totalPos + " total.neg=" + totalNeg + "; totalNeg+totalPos=" + (totalNeg + totalPos));
         int tp = 0;
         for (Tuple2D<Category, Category> c : toolCategories.getPairs()) {
-//			System.out.println("Comparing category " + c.getFirst() + " with " + c.getSecond());
+//			log.info("Comparing category " + c.getFirst() + " with " + c.getSecond());
             for (EntityGroup<T> tgEg : tool) {
                 Entity<T> lhsEnt = tgEg.getEntityForCategory(c.getFirst());
                 Entity<T> rhsEnt = tgEg.getEntityForCategory(c.getSecond());
@@ -398,13 +404,13 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
                     }
                     if (lhsName != null && rhsName != null) {
                         if (lhsName.equals(rhsName)) {
-//							System.out.println("TP: "+lhsEnt.getFeatureVector()+" -/- "+rhsEnt.getFeatureVector());
-                            //						System.out.println("TP: " + lhsName + "\t" + rhsName);
-                            //						System.out.println("TP");
+//							log.info("TP: "+lhsEnt.getFeatureVector()+" -/- "+rhsEnt.getFeatureVector());
+                            //						log.info("TP: " + lhsName + "\t" + rhsName);
+                            //						log.info("TP");
                             tp++;
                         } else {
-//							System.out.println("FP: "+lhsEnt.getFeatureVector()+" -/- "+rhsEnt.getFeatureVector());
-                            //						System.out.println("FP: " + lhsName + "\t" + rhsName);
+//							log.info("FP: "+lhsEnt.getFeatureVector()+" -/- "+rhsEnt.getFeatureVector());
+                            //						log.info("FP: " + lhsName + "\t" + rhsName);
                         }
                     }
                 }
@@ -414,7 +420,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         int fn = totalPos - tp;
         int fp = totalMatch - tp;
         int tn = totalNeg - fp;
-//		System.out.println("Total match: " + totalMatch + " TP: " + tp + " FP: " + fp + " total pos: " + totalPos + " FN: " + fn + " total neg: " + totalNeg + " TN: " + tn);
+//		log.info("Total match: " + totalMatch + " TP: " + tp + " FP: " + fp + " total pos: " + totalPos + " FN: " + fn + " total neg: " + totalNeg + " TN: " + tn);
         if ((totalPos + totalNeg) != (tp + fp + tn + fn)) {
             throw new IllegalArgumentException("Sum of positives+negatives!=tp+fp+tn+fn");
         }
@@ -450,7 +456,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
             metricsMap.put(FN, pm.getFn());
             metricsMap.put(F1, pm.getF1());
             pml.add(pm);
-//			System.out.println(pm);
+//			log.info(pm);
         }
         return pml;
     }

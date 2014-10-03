@@ -31,7 +31,7 @@ package maltcms.io.xlsx.bridge;
  * <p>IWorkbook interface.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 public interface IWorkbook {
 

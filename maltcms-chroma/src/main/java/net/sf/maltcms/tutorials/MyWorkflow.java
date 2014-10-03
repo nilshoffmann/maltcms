@@ -35,6 +35,7 @@ import cross.datastructures.workflow.IWorkflow;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
@@ -43,9 +44,10 @@ import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 /**
  * <p>MyWorkflow class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class MyWorkflow {
 
     /**
@@ -62,9 +64,9 @@ public class MyWorkflow {
         cp.setInput(FragmentTools.immutable(inputFiles));
         DefaultWorkflow dw = new DefaultWorkflow();
         dw.setCommandSequence(cp);
-        System.out.println("Workflow using commands " + dw.getCommandSequence().getCommands());
-        System.out.println("Workflow using inputFiles " + dw.getCommandSequence().getInput());
-        System.out.println("Workflow using outputDirectory " + dw.getOutputDirectory());
+        log.info("Workflow using commands " + dw.getCommandSequence().getCommands());
+        log.info("Workflow using inputFiles " + dw.getCommandSequence().getInput());
+        log.info("Workflow using outputDirectory " + dw.getOutputDirectory());
         return dw;
     }
 
@@ -93,7 +95,7 @@ public class MyWorkflow {
             w.call();
             w.save();
         } catch (Exception ex) {
-            System.err.println(ex.getLocalizedMessage());
+            log.warn(ex.getLocalizedMessage());
         }
     }
 }

@@ -32,14 +32,16 @@ import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 
 /**
  * <p>QueryResultListCellRenderer class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class QueryResultListCellRenderer extends JLabel implements ListCellRenderer {
 
     /**
@@ -94,10 +96,10 @@ public class QueryResultListCellRenderer extends JLabel implements ListCellRende
                 sb.append(m.getID());
                 setText(sb.toString());
             } else {
-                System.err.println("Invalid Objects, not of Type Double or IMetabolite");
+                log.warn("Invalid Objects, not of Type Double or IMetabolite");
             }
         } else {
-            System.err.println("Unknow Object type returned from list!");
+            log.warn("Unknow Object type returned from list!");
         }
 
         return this;

@@ -39,7 +39,7 @@ import javax.xml.bind.annotation.XmlRegistry;
  * of schema type definitions, element declarations and model groups.
  * ArrayFactory methods for each of these are provided in this class.
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 @XmlRegistry

@@ -53,7 +53,7 @@ import com.db4o.ObjectContainer;
 /**
  * <p>MetaboliteView class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class MetaboliteView implements TableModelListener, ComponentListener {
@@ -153,7 +153,7 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
             }
         }
         Collections.sort(al);
-        //System.out.println(al);
+        //log.info(al);
         return al;
     }
 
@@ -191,7 +191,7 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
     /** {@inheritDoc} */
     @Override
     public void componentResized(ComponentEvent e) {
-        //System.out.println("Component resized: "+e.toString());
+        //log.info("Component resized: "+e.toString());
         //this.metaboliteView.setPreferredSize(e.getComponent().getPreferredSize());
         //this.jsp.getViewport().setPreferredSize(e.getComponent().getPreferredSize());
         this.jsp.revalidate();

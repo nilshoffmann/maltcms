@@ -28,6 +28,7 @@
 package smueller.tools;
 
 import cross.tools.MathTools;
+import lombok.extern.slf4j.Slf4j;
 import smueller.SymbolicRepresentationAlignment;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
@@ -36,9 +37,10 @@ import ucar.ma2.IndexIterator;
 /**
  * <p>Standardizer class.</p>
  *
- * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * @author Soeren Mueller
+ * 
  */
+@Slf4j
 public class Standardizer {
 
     private double median;
@@ -139,7 +141,7 @@ public class Standardizer {
         while (ii4.hasNext()) {
             final double save = (Math.log(ii4.getDoubleNext()));
             ii4.setDoubleCurrent(save);
-            // System.out.println("Wert " + " :" + save);
+            // log.info("Wert " + " :" + save);
         }
         return a;
     }
@@ -177,7 +179,7 @@ public class Standardizer {
                 ii4.setDoubleCurrent(save);
             } else {
                 ii4.setDoubleCurrent(0);
-                // System.out.println("Wert " + " :" + save);
+                // log.info("Wert " + " :" + save);
             }
         }
         return a;
@@ -198,13 +200,13 @@ public class Standardizer {
 
         int counter = 0;
         final double minmax = 1 / (this.max - this.min);
-        System.out.println("Larifari" + Math.round(minmax) + "Min" + this.min
+        log.info("Larifari" + Math.round(minmax) + "Min" + this.min
                 + "max" + this.max);
         while (ii4.hasNext()) {
             final double save = ((ii4.getDoubleNext() - this.min) * minmax);
             ii4.setDoubleCurrent(save);
             counter++;
-            // System.out.println("Wert " + counter + " :" + save);
+            // log.info("Wert " + counter + " :" + save);
 
         }
         return a;

@@ -86,6 +86,6 @@ public class FeatureVectorList<T extends IFeatureVector> implements
     /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
-        // TODO Auto-generated method stub
+        
     }
 }

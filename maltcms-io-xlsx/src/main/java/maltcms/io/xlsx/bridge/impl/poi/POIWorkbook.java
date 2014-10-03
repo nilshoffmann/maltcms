@@ -40,7 +40,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  * <p>POIWorkbook class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Data
 public class POIWorkbook implements IWorkbook {

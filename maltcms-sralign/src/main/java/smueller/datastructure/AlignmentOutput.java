@@ -53,8 +53,8 @@ import ucar.ma2.Array;
 /**
  * <p>AlignmentOutput class.</p>
  *
- * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * @author Soeren Mueller
+ * 
  */
 @Slf4j
 public class AlignmentOutput {
@@ -114,8 +114,8 @@ public class AlignmentOutput {
         int j = 0;
         int y = 0;
         int z = 0;
-        System.out.println(a);
-        System.out.println(b);
+        log.info(a);
+        log.info(b);
         final int[][] pfad = new int[aoriglen][boriglen];
         System.out
                 .println("Grosser Pfad " + pfad.length + " " + pfad[0].length);
@@ -128,7 +128,7 @@ public class AlignmentOutput {
                     // i++;
                     // if(i<(aoriglen)) {
                     for (int fr = 0; fr < fenstergr; fr++) {
-                        // System.out.println("VGAP at ["+i+"]["+j+"]");
+                        // log.info("VGAP at ["+i+"]["+j+"]");
                         if (i < aoriglen - 1) {
                             pfad[i][j] = 1;
                             i++;
@@ -141,7 +141,7 @@ public class AlignmentOutput {
                     z++;
                     // j++;
                     for (int fr = 0; fr < fenstergr; fr++) {
-                        // System.out.println("HGAP at ["+i+"]["+j+"]");
+                        // log.info("HGAP at ["+i+"]["+j+"]");
                         if (j < boriglen - 1) {
                             pfad[i][j] = 1;
                             j++;
@@ -155,7 +155,7 @@ public class AlignmentOutput {
                     // j++;
                     for (int fr = 0; fr < fenstergr; fr++) {
                         pfad[i][j] = 1;
-                        // System.out.println("MATCH at ["+i+"]["+j+"]");
+                        // log.info("MATCH at ["+i+"]["+j+"]");
                         if (i < aoriglen - 1) {
                             i++;
                         }
@@ -165,11 +165,11 @@ public class AlignmentOutput {
                     }
 
                 } else {
-                    System.out.println("Uncaught case!");
+                    log.info("Uncaught case!");
                 }
             }
         } catch (final ArrayIndexOutOfBoundsException aae) {
-            System.out.println("Caught exception i=" + i + " j=" + j);
+            log.info("Caught exception i=" + i + " j=" + j);
         }
         if (i < aoriglen - 1) {
             for (; i < aoriglen; i++) {
@@ -181,7 +181,7 @@ public class AlignmentOutput {
                 pfad[i][j] = 1;
             }
         }
-        System.out.println("i=" + i + " j=" + j);
+        log.info("i=" + i + " j=" + j);
         return pfad;
 
     }
@@ -215,8 +215,8 @@ public class AlignmentOutput {
                 pfad[i][j] = 1;
             }
         }
-        System.out.println("i:" + i);
-        System.out.println("j:" + j);
+        log.info("i:" + i);
+        log.info("j:" + j);
         return pfad;
 
     }
@@ -371,7 +371,7 @@ public class AlignmentOutput {
                 this.outputStream.close();
             } catch (final IOException e) {
                 e.printStackTrace(System.err);
-                // System.err.println("IOException");
+                // log.warn("IOException");
             }
         }
         if (format.equals("fasta")) {
@@ -407,7 +407,7 @@ public class AlignmentOutput {
                 this.outputStream.close();
             } catch (final IOException e) {
                 e.printStackTrace(System.err);
-                // System.err.println("IOException");
+                // log.warn("IOException");
             }
         }
         if (format.equals("pair")) {
@@ -650,7 +650,7 @@ public class AlignmentOutput {
 
             } catch (final IOException e) {
                 e.printStackTrace(System.err);
-                // System.err.println("IOException");
+                // log.warn("IOException");
             }
         }
     }

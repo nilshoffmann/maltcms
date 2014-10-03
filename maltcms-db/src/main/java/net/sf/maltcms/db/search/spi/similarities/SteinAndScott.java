@@ -30,6 +30,7 @@ package net.sf.maltcms.db.search.spi.similarities;
 import cross.datastructures.tuple.Tuple2D;
 import java.util.Collections;
 import java.util.Comparator;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 import net.sf.maltcms.db.search.api.similarities.AMetabolitePredicate;
 import org.openide.util.lookup.ServiceProvider;
@@ -40,9 +41,10 @@ import ucar.ma2.ArrayInt;
 /**
  * <p>SteinAndScott class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 @ServiceProvider(service = AMetabolitePredicate.class)
 public class SteinAndScott extends AMetabolitePredicate {
 
@@ -149,7 +151,7 @@ public class SteinAndScott extends AMetabolitePredicate {
         s2 = filterMaskedMasses(m2, s2);
         double sim = similarity(m1, s1, m2, s2,
                 et.getMW());
-        System.out.println("Similarity score: " + sim);
+        log.info("Similarity score: " + sim);
         if (sim >= getScoreThreshold()) {
             Tuple2D<Double, IMetabolite> tple = new Tuple2D<>(
                     sim, et);

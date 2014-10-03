@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.distances.dtw.ADynamicTimeWarp;
 import maltcms.commands.distances.dtwng.AlignmentFactory;
 import maltcms.commands.distances.dtwng.FeatureVectorDtwSimilarity;
@@ -64,6 +65,7 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class DTWNew {
 
     /**
@@ -101,25 +103,25 @@ public class DTWNew {
                 1.0);
         // cfg.save(new BufferedOutputStream(System.out));
         cross.Factory.getInstance().configure(cfg);
-        System.out.println("Preparing command sequence");
+        log.info("Preparing command sequence");
         ICommandSequence cp = Factory.getInstance().createCommandSequence();
 
-        System.out.println("Running commands");
+        log.info("Running commands");
         TupleND<IFileFragment> res = null;
         while (cp.hasNext()) {
             res = cp.next();
         }
-        System.out.println("Finished running commands");
+        log.info("Finished running commands");
         IFileFragment iff3 = res.get(0);
         IFileFragment iff4 = res.get(1);
 
-        System.out.println("Creating feature vectors");
+        log.info("Creating feature vectors");
         // prepare feature vectors
         FeatureVectorFactory fvf = FeatureVectorFactory.getInstance();
         iff3.getChild("binned_intensity_values").setIndex(
                 iff3.getChild("binned_scan_index"));
         List<Array> bi1 = iff3.getChild("binned_intensity_values").getIndexedArray();
-        System.out.println("Length of binned intensity values: " + bi1.size());
+        log.info("Length of binned intensity values: " + bi1.size());
 
         //
         List<IFeatureVector> l1 = fvf.createBinnedMSFeatureVectorList(iff3,
@@ -127,7 +129,7 @@ public class DTWNew {
         List<IFeatureVector> l2 = fvf.createBinnedMSFeatureVectorList(iff4,
                 true);
 
-        System.out.println("Preparing alignment");
+        log.info("Preparing alignment");
         // prepare alignment
         AlignmentFactory af = new AlignmentFactory();
         FeatureVectorDtwSimilarity fvds = new FeatureVectorDtwSimilarity();
@@ -148,16 +150,16 @@ public class DTWNew {
         // set alignment properties
         ia.setLeftHandSideId(iff3.getName());
         ia.setRightHandSideId(iff4.getName());
-        System.out.println("Calculating alignment");
+        log.info("Calculating alignment");
         // apply and retrieve score
         double v = ia.apply(l1, l2);
         // retrieve map
 //        List<Point> l = ia.getMap();
         String s1 = ia.getOptimizationFunction().getOptimalOperationSequenceString();
-//        System.out.println(s1);
-        System.out.println("Done!");
-        System.out.println(v);
-        System.out.println(ia.getOptimizationFunction().getOptimalValue());
+//        log.info(s1);
+        log.info("Done!");
+        log.info("{}",v);
+        log.info("{}",ia.getOptimizationFunction().getOptimalValue());
         IFileFragment ares = new FileFragmentFactory().create(iff3, iff4, cp.getWorkflow().getOutputDirectory(ia));
         ia.modify(ares);
         ares.save();
@@ -172,18 +174,18 @@ public class DTWNew {
 
 //        List<Point> pl2 = PathTools.toPointList(ll);
 //        if (pl2.equals(l)) {
-//            System.out.println("Both alignments return the same result!");
+//            log.info("Both alignments return the same result!");
 //        }else{
-//            System.out.println("Both alignments return different results!");
+//            log.info("Both alignments return different results!");
 //        }
-        //System.out.println("New: " + l);
-        //System.out.println("Old: " + pl2);
-        System.out.println("New value: " + v);
-        System.out.println("Old value: " + adtw.getResult().get());
+        //log.info("New: " + l);
+        //log.info("Old: " + pl2);
+        log.info("New value: " + v);
+        log.info("Old value: " + adtw.getResult().get());
         String s2 = getStringFromFile(((IWorkflowFileResult) l.get(0)).getFile());
         EditDistance ed = new EditDistance();
         double d = ed.getDistance(s1, s2);
-        System.out.println("Edit distance: " + d);
+        log.info("Edit distance: " + d);
 
     }
 

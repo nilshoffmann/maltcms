@@ -49,7 +49,7 @@ import org.apache.commons.configuration.Configuration;
  * fixiert werden
  *
  * @author Mathias Wilhelm
- * 
+ *
  */
 @Slf4j
 @Data
@@ -66,7 +66,9 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
     private int counter = 0;
     private int fcounter = 0;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return getClass().getName();
@@ -91,7 +93,9 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
         this.doneList.add(new HashMap<Integer, Boolean>());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration cfg) {
 //        this.threshold = cfg.getDouble(
@@ -107,7 +111,9 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
 //                + ".maxRetDiff", 500.0d);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double sim(Peak2D p, Peak2D np) {
         double sim = Double.NEGATIVE_INFINITY;
@@ -178,7 +184,7 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
     @Override
     public List<List<Point>> getBidiBestHitList(
             final List<List<Peak2D>> peaklists) {
-        System.out.println(this.maxRetDiff);
+        log.info("{}", this.maxRetDiff);
         log.info("Dist: {}", this.similarity.toString());
         log.info("Threshold: {}", this.threshold);
         log.info("Use mean MS: {}", this.useMeanMS);
@@ -244,7 +250,7 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
                                     r++;
                                     ii = bidibestr;
                                 } else {
-//                                                                    System.out.println("would result in an inconsistent group! will not add peak to group!");
+//                                                                    log.info("would result in an inconsistent group! will not add peak to group!");
                                     bidibestlist.add(new Point(-1, r));
                                     r++;
                                 }
@@ -269,7 +275,7 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
         }
 
         for (Map<Integer, Boolean> li : this.doneList) {
-            System.out.println("Donelistsize: " + li.keySet().size());
+            log.info("Donelistsize: " + li.keySet().size());
         }
 
         final int lastIndex = peaklists.size() - 1;
@@ -290,7 +296,9 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
         return indexList;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void clear() {
 //        this.dist = Factory.getInstance().getObjectFactory().instantiate(

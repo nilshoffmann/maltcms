@@ -36,7 +36,7 @@ import maltcms.math.functions.DtwTimePenalizedPairwiseSimilarity;
 /**
  * <p>FeatureVectorDtwSimilarity class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class FeatureVectorDtwSimilarity extends TwoFeatureVectorOperation {

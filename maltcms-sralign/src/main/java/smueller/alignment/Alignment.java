@@ -29,13 +29,15 @@ package smueller.alignment;
 
 import cross.datastructures.fragments.IFileFragment;
 import java.util.Vector;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>Alignment class.</p>
  *
- * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * @author Soeren Mueller
+ * 
  */
+@Slf4j
 public class Alignment {
 
     /**
@@ -160,7 +162,7 @@ public class Alignment {
 
         for (int p = 0; p < this.allalignments.size(); p++) {
 
-            System.out.println("Alignment Nummer: " + (p + 1));
+            log.info("Alignment Nummer: " + (p + 1));
 
             final OptimalAlignmentVector holeAlignment = this.allalignments
                     .get(p);
@@ -173,11 +175,11 @@ public class Alignment {
 
             }
 
-            System.out.println(str1);
+            log.info(str1);
 
-            System.out.println(str2);
+            log.info(str2);
 
-            System.out.println("");
+            log.info("");
 
             str1 = "";
 
@@ -638,27 +640,27 @@ public class Alignment {
 
         final int n = this.seq2.length();
 
-        System.out.print(" ");
+        log.info(" ");
 
         for (int k1 = 0; k1 < n; k1++) {
 
-            System.out.print("    " + this.seq2.charAt(k1));
+            log.info("    " + this.seq2.charAt(k1));
 
         }
 
-        System.out.println("");
+        log.info("");
 
         for (int i = 0; i < m; i++) {
 
-            System.out.print(this.seq1.charAt(i) + "");
+            log.info(this.seq1.charAt(i) + "");
 
             for (int j = 0; j < n; j++) {
 
-                System.out.print(" " + getMatrix()[i][j] + " ");
+                log.info(" " + getMatrix()[i][j] + " ");
 
             }
 
-            System.out.println("");
+            log.info("");
 
         }
 
@@ -674,35 +676,35 @@ public class Alignment {
 
         final int n = this.seq2.length();
 
-        System.out.print(" ");
+        log.info(" ");
 
         for (int ebene = 0; ebene < 3; ebene++) {
 
-            System.out.println("Pfadmatrix in der " + ebene + ". Ebene");
+            log.info("Pfadmatrix in der " + ebene + ". Ebene");
 
             for (int k1 = 0; k1 < n; k1++) {
 
-                System.out.print("  " + this.seq2.charAt(k1));
+                log.info("  " + this.seq2.charAt(k1));
 
             }
 
-            System.out.println("");
+            log.info("");
 
             for (int i = 0; i < m; i++) {
 
-                System.out.print(this.seq1.charAt(i) + " ");
+                log.info(this.seq1.charAt(i) + " ");
 
                 for (int j = 0; j < n; j++) {
 
-                    System.out.print(" " + getPathway()[i][j][ebene] + " ");
+                    log.info(" " + getPathway()[i][j][ebene] + " ");
 
                 }
 
-                System.out.println("");
+                log.info("");
 
             }
 
-            System.out.println("");
+            log.info("");
 
         }
 

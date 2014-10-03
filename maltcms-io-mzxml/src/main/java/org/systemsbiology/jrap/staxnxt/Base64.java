@@ -2,6 +2,7 @@ package org.systemsbiology.jrap.staxnxt;
 
 import java.awt.HeadlessException;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Encodes and decodes to and from Base64 notation.
@@ -31,8 +32,8 @@ import java.io.IOException;
  * @author Robert Harder
  * @author rob@iharder.net
  * @version 1.4
- * @since 1.3.2
  */
+@Slf4j
 public final class Base64 {
 
     /**
@@ -148,12 +149,12 @@ public final class Base64 {
             {
                 byte[] bytes1 = {(byte) 2, (byte) 2, (byte) 3, (byte) 0, (byte) 9}; // My zip code
                 byte[] bytes2 = {(byte) 99, (byte) 2, (byte) 2, (byte) 3, (byte) 0, (byte) 9};
-                System.out.println("Bytes 2,2,3,0,9 as Base64: " + encodeBytes(bytes1));
-                System.out.println("Bytes 2,2,3,0,9 w/ offset: " + encodeBytes(bytes2, 1, bytes2.length - 1));
+                log.info("Bytes 2,2,3,0,9 as Base64: " + encodeBytes(bytes1));
+                log.info("Bytes 2,2,3,0,9 w/ offset: " + encodeBytes(bytes2, 1, bytes2.length - 1));
                 byte[] dbytes = decode(encodeBytes(bytes1));
-                System.out.print(encodeBytes(bytes1) + " decoded: ");
+                log.info(encodeBytes(bytes1) + " decoded: ");
                 for (int i = 0; i < dbytes.length; i++) {
-                    System.out.print(dbytes[i] + (i < dbytes.length - 1 ? "," : "\n"));
+                    log.info(dbytes[i] + (i < dbytes.length - 1 ? "," : "\n"));
                 }
             }   // end testing byte arrays
 
@@ -290,7 +291,7 @@ public final class Base64 {
 
         } // end try
         catch (HeadlessException | IOException e) {
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         }
     }   // end main
 
@@ -426,7 +427,7 @@ public final class Base64 {
             oos.writeObject(serializableObject);
         } // end try
         catch (java.io.IOException e) {
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
             return null;
         } // end catch
         finally {
@@ -814,10 +815,10 @@ public final class Base64 {
 
                 return 3;
             } catch (Exception e) {
-                System.out.println("" + source[srcOffset] + ": " + (DECODABET[ source[ srcOffset]]));
-                System.out.println("" + source[srcOffset + 1] + ": " + (DECODABET[ source[ srcOffset + 1]]));
-                System.out.println("" + source[srcOffset + 2] + ": " + (DECODABET[ source[ srcOffset + 2]]));
-                System.out.println("" + source[srcOffset + 3] + ": " + (DECODABET[ source[ srcOffset + 3]]));
+                log.info("" + source[srcOffset] + ": " + (DECODABET[ source[ srcOffset]]));
+                log.info("" + source[srcOffset + 1] + ": " + (DECODABET[ source[ srcOffset + 1]]));
+                log.info("" + source[srcOffset + 2] + ": " + (DECODABET[ source[ srcOffset + 2]]));
+                log.info("" + source[srcOffset + 3] + ": " + (DECODABET[ source[ srcOffset + 3]]));
                 return -1;
             }   //e nd catch
         }
@@ -868,7 +869,7 @@ public final class Base64 {
             return ois.readObject();
         } // end try
         catch (java.io.IOException | java.lang.ClassNotFoundException e) {
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
             return null;
         } // end catch
         finally {
@@ -925,7 +926,7 @@ public final class Base64 {
 
             } // end if: white space, equals sign or better
             else {
-                System.err.println("Bad Base64 input character at " + i + ": " + source[i] + "(decimal)");
+                log.warn("Bad Base64 input character at " + i + ": " + source[i] + "(decimal)");
                 return null;
             }   // end else:
         }   // each input character
@@ -974,7 +975,7 @@ public final class Base64 {
 
             } // end if: white space, equals sign or better
             else {
-                System.err.println("Bad Base64 input character at " + i + ": " + source[i] + "(decimal)");
+                log.warn("Bad Base64 input character at " + i + ": " + source[i] + "(decimal)");
                 return -1;
             }   // end else:
         }   // each input character

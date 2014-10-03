@@ -39,7 +39,7 @@ import ucar.ma2.Array;
 /**
  * <p>MissingPeak2D class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 @Data

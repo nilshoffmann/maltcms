@@ -39,13 +39,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>QuadTree class.</p>
  *
  * @author Nils Hoffmann
+ * @param <T> the type of elements stored in the quad tree.
  * 
  */
+@Slf4j
 public class QuadTree<T> {
 
     private QuadTreeNode<T> root;
@@ -113,7 +116,7 @@ public class QuadTree<T> {
         }
         QuadTreeNode<T> qtn = this.root.addChild(new Tuple2D<>(p, t));
         hs.put(t, qtn);
-        //System.out.println("Time for put: "+(System.nanoTime()-s));
+        //log.info("Time for put: "+(System.nanoTime()-s));
         return t;
     }
 
@@ -127,7 +130,7 @@ public class QuadTree<T> {
         //long s = System.nanoTime();
         T t = this.root.remove(p);
         hs.remove(t);
-        //System.out.println("Time for remove: "+(System.nanoTime()-s));
+        //log.info("Time for remove: "+(System.nanoTime()-s));
         return t;
     }
 
@@ -144,7 +147,7 @@ public class QuadTree<T> {
             throw new ElementNotFoundException();
         }
         T t = this.root.getChild(p);
-        //System.out.println("Time for get: "+(System.nanoTime()-s));
+        //log.info("Time for get: "+(System.nanoTime()-s));
         return t;
     }
 
@@ -162,7 +165,7 @@ public class QuadTree<T> {
             throw new ElementNotFoundException();
         }
         Tuple2D<Point2D, T> t = this.root.getClosestChild(p, radius);
-        //System.out.println("Time for getClosestInRadius: "+(System.nanoTime()-s));
+        //log.info("Time for getClosestInRadius: "+(System.nanoTime()-s));
         return t;
     }
 
@@ -307,23 +310,23 @@ public class QuadTree<T> {
         Random x = new Random(System.nanoTime());
         Random y = new Random(System.nanoTime());
         int npoints = (int) (Integer.MAX_VALUE * (Math.random()) / 10000);
-        System.out.println("Creating quad tree for " + npoints + " points");
+        log.info("Creating quad tree for " + npoints + " points");
         long start = 0;
         double tdiff = 0;
         List<Point2D> l = new ArrayList<>();
         for (int i = 0; i < npoints; i++) {
             Point2D p = new Point2D.Double((x.nextDouble() * maxx), (y.nextDouble() * maxx));
-//            System.out.println("Adding item at point: "+p);
+//            log.info("Adding item at point: "+p);
             qt.put(p, "" + i);
             l.add(p);
 
         }
-        System.out.println("Done");
-        System.out.println("Timing get operation!");
+        log.info("Done");
+        log.info("Timing get operation!");
         List<Point2D> testList = new ArrayList<>();
         for (int i = 0; i < npoints; i++) {
 //            Point2D p = new Point2D.Double((x.nextDouble()*maxx),(y.nextDouble()*maxx));
-//            System.out.println("Adding item at point: "+p);
+//            log.info("Adding item at point: "+p);
 //            qt.put(p, ""+i);
 //            l.add(p);
             int idx = (int) (npoints * Math.random());
@@ -355,12 +358,12 @@ public class QuadTree<T> {
             start = System.nanoTime();
             int idx = Collections.binarySearch(l, p, pc);
             if (idx < 0) {
-                System.out.println("Warning: Point not found in List!");
+                log.info("Warning: Point not found in List!");
             }
             tdiff += (System.nanoTime() - start);
         }
 
-        System.out.println("Average time for list point retrieval: " + (tdiff / (double) npoints));
+        log.info("Average time for list point retrieval: " + (tdiff / (double) npoints));
 
         tdiff = 0;
         for (Point2D p : testList) {
@@ -369,6 +372,6 @@ public class QuadTree<T> {
             tdiff += (System.nanoTime() - start);
         }
 
-        System.out.println("Average time for tree point retrieval: " + (tdiff / (double) npoints));
+        log.info("Average time for tree point retrieval: " + (tdiff / (double) npoints));
     }
 }

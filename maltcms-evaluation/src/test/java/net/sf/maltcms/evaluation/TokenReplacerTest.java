@@ -27,18 +27,24 @@
  */
 package net.sf.maltcms.evaluation;
 
+import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class TokenReplacerTest {
 
+public class TokenReplacerTest {
+    
+    private static final Logger log = LoggerFactory.getLogger(ClassificationPerformanceTest.class);
+    
     public TokenReplacerTest() {
     }
 
@@ -60,7 +66,7 @@ public class TokenReplacerTest {
         String s = base + "${KEY}";
         String value = "VALUE";
         String s2 = s.replaceAll("\\$\\{KEY\\}", value);
-        System.out.println(s2);
+        log.info(s2);
         assertEquals(base + value, s2);
     }
     // TODO add test methods here.

@@ -27,12 +27,15 @@
  */
 package maltcms.experimental.operations;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Implementation of the Edit-Distance on Strings.
  *
  * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class EditDistance {
 
     /**
@@ -113,27 +116,27 @@ public class EditDistance {
 
             switch (editOp) {
                 case C:
-                    System.out.println("EditOp:" + editOp.toString() + " i: " + a.substring(ai, ai + 1) + " j: " + b.substring(bj, bj + 1));
+                    log.info("EditOp:" + editOp.toString() + " i: " + a.substring(ai, ai + 1) + " j: " + b.substring(bj, bj + 1));
                     as.append(a.substring(ai, ai + 1));
                     bs.append(b.substring(bj, bj + 1));
                     ai++;
                     bj++;
                     break;
                 case S:
-                    System.out.println("EditOp:" + editOp.toString() + " i: " + a.substring(ai, ai + 1) + " j: " + b.substring(bj, bj + 1));
+                    log.info("EditOp:" + editOp.toString() + " i: " + a.substring(ai, ai + 1) + " j: " + b.substring(bj, bj + 1));
                     as.append(a.substring(ai, ai + 1));
                     bs.append(b.substring(bj, bj + 1));
                     ai++;
                     bj++;
                     break;
                 case D:
-                    System.out.println("EditOp:" + editOp.toString() + " i: " + a.substring(ai, ai + 1) + " j: -");
+                    log.info("EditOp:" + editOp.toString() + " i: " + a.substring(ai, ai + 1) + " j: -");
                     as.append(a.substring(ai, ai + 1));
                     bs.append("-");
                     ai++;
                     break;
                 case I:
-                    System.out.println("EditOp:" + editOp.toString() + " i: -" + " j: " + b.substring(bj, bj + 1));
+                    log.info("EditOp:" + editOp.toString() + " i: -" + " j: " + b.substring(bj, bj + 1));
                     bs.append(b.substring(bj, bj + 1));
                     as.append("-");
                     bj++;
@@ -144,7 +147,7 @@ public class EditDistance {
         alignment.append(as.toString() + "\n");
         alignment.append(bs.toString());
         String al = alignment.toString();
-        System.out.println(al);
+        log.info(al);
         return al;
     }
 
@@ -189,7 +192,7 @@ public class EditDistance {
             }
         }
         String esequence = sb.reverse().toString();
-        System.out.println("EditSequence: " + esequence);
+        log.info("EditSequence: " + esequence);
         return esequence;
     }
 
@@ -219,6 +222,6 @@ public class EditDistance {
             }
             sb.append("\n");
         }
-        System.out.println(sb.toString());
+        log.info(sb.toString());
     }
 }

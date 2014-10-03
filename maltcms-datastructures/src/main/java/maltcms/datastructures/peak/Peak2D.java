@@ -31,6 +31,7 @@ import cross.datastructures.tuple.Tuple2D;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.ms.Metabolite;
 
@@ -40,6 +41,7 @@ import maltcms.datastructures.ms.Metabolite;
  * @author Mathias Wilhelm
  * 
  */
+@Slf4j
 public class Peak2D extends Peak1D implements Serializable {
 
     /**
@@ -276,11 +278,11 @@ public class Peak2D extends Peak1D implements Serializable {
         p.setStopIndex(80);
         p.setFirstRetTime(380);
         p.setSecondRetTime(3.12);
-        System.out.println(p.getFeature("ApexIndex"));
-        System.out.println(p.getFeature("StartIndex"));
-        System.out.println(p.getFeature("StopIndex"));
-        System.out.println(p.getFeature("FirstRetTime"));
-        System.out.println(p.getFeature("SecondRetTime"));
-        // System.out.println(p.getFeature("PeakArea"));
+        log.info("ApexIndex: {}",p.getFeature("ApexIndex"));
+        log.info("StartIndex: {}",p.getFeature("StartIndex"));
+        log.info("StopIndex: {}",p.getFeature("StopIndex"));
+        log.info("FirstRetTime: {}",p.getFeature("FirstRetTime"));
+        log.info("SecondRetTime: {}",p.getFeature("SecondRetTime"));
+        // log.info(p.getFeature("PeakArea"));
     }
 }

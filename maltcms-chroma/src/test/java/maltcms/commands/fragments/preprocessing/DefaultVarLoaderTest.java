@@ -97,7 +97,7 @@ public class DefaultVarLoaderTest extends AFragmentCommandTest {
                     //remove
                     f.removeChild(v);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                     Assert.fail(e.getLocalizedMessage());
                 }
             }

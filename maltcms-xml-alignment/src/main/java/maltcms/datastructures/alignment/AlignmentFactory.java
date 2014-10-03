@@ -50,7 +50,7 @@ import maltcms.io.xml.bindings.alignment.ResourceType;
  * <p>AlignmentFactory class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 public class AlignmentFactory {
 

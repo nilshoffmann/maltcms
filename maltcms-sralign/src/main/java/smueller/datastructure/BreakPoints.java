@@ -36,8 +36,8 @@ import ucar.ma2.IndexIterator;
 /**
  * <p>BreakPoints class.</p>
  *
- * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * @author Soeren Mueller
+ * 
  */
 public class BreakPoints {
 
@@ -136,7 +136,7 @@ public class BreakPoints {
 
         }
 
-        // System.out.println("--------");
+        // log.info("--------");
         // Max und Min den Breakpoints mitgeben
         bps[alphabetgr] = Math.round(sortiert[0] * 100) / 100.00;
 

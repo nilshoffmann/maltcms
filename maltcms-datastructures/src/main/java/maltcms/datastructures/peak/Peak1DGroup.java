@@ -287,13 +287,13 @@ public class Peak1DGroup implements Iterable<Peak1D> {
 //        Peak1D p4 = new Peak1D(30, 35, 40, 2367.932, 1267);
 //        p4.setMw(124.25);
 //        Peak1DGroup pg = new Peak1DGroup(p1, p2, p3, p4);
-//        System.out.println(pg.getFeatureNames());
-//        System.out.println(pg.getFeature("Masses"));
-//        System.out.println(pg.getFeature("Intensities"));
-//        // System.out.println(pg.getFeature("Peaks"));
-//        // System.out.println(pg.getFeature("FeatureNames"));
+//        log.info(pg.getFeatureNames());
+//        log.info(pg.getFeature("Masses"));
+//        log.info(pg.getFeature("Intensities"));
+//        // log.info(pg.getFeature("Peaks"));
+//        // log.info(pg.getFeature("FeatureNames"));
 //        for (Peak1D p : pg) {
-//            System.out.print(p);
+//            log.info(p);
 //        }
 //
 //        Peak2D p21 = new Peak2D();
@@ -303,11 +303,11 @@ public class Peak1DGroup implements Iterable<Peak1D> {
 //        p21.setFirstRetTime(380);
 //        p21.setSecondRetTime(3.12);
 //        p21.setMw(123.23);
-//        // System.out.println(p21.getFeature("ApexIndex"));
-//        // System.out.println(p21.getFeature("StartIndex"));
-//        // System.out.println(p21.getFeature("StopIndex"));
-//        // System.out.println(p21.getFeature("FirstRetTime"));
-//        // System.out.println(p21.getFeature("SecondRetTime"));
+//        // log.info(p21.getFeature("ApexIndex"));
+//        // log.info(p21.getFeature("StartIndex"));
+//        // log.info(p21.getFeature("StopIndex"));
+//        // log.info(p21.getFeature("FirstRetTime"));
+//        // log.info(p21.getFeature("SecondRetTime"));
 //        Peak2D p22 = new Peak2D();
 //        p22.setApexIndex(50);
 //        p22.setStartIndex(30);
@@ -317,13 +317,13 @@ public class Peak1DGroup implements Iterable<Peak1D> {
 //        p22.setMw(456.014);
 //
 //        Peak1DGroup pg2 = new Peak1DGroup(p21, p22);
-//        System.out.println(pg2.getFeatureNames());
-//        System.out.println(pg2.getFeature("Masses"));
-//        System.out.println(pg2.getFeature("Intensities"));
-//        // System.out.println(pg.getFeature("Peaks"));
-//        // System.out.println(pg.getFeature("FeatureNames"));
+//        log.info(pg2.getFeatureNames());
+//        log.info(pg2.getFeature("Masses"));
+//        log.info(pg2.getFeature("Intensities"));
+//        // log.info(pg.getFeature("Peaks"));
+//        // log.info(pg.getFeature("FeatureNames"));
 //        for (Peak1D p : pg2) {
-//            System.out.print(p);
+//            log.info(p);
 //        }
 //    }
 }

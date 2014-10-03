@@ -41,17 +41,21 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * <p>JoinScans class.</p>
+ * <p>
+ * JoinScans class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
+@Slf4j
 public class JoinScans {
 
     /**
-     * <p>createConcatenatedFile.</p>
+     * <p>
+     * createConcatenatedFile.</p>
      *
      * @param filename a {@link java.lang.String} object.
      * @param filenames an array of {@link java.lang.String} objects.
@@ -65,7 +69,7 @@ public class JoinScans {
             final HashMap<String, HashMap<Integer, Integer>> hm) {
         final File dir = new File(filenames[0]).getParentFile();
         final File f = new File(dir, filename);
-        System.out.println(f.getAbsolutePath());
+        log.info(f.getAbsolutePath());
         FileOutputStream fos;
         try {
             fos = new FileOutputStream(f);
@@ -73,7 +77,7 @@ public class JoinScans {
                     new OutputStreamWriter(fos))) {
                 final StringBuffer sb = new StringBuffer();
                 for (int i = 0; i < headers.length; i++) {
-                    System.out.println(headers[i]);
+                    log.info(headers[i]);
                     if (i == 0) {
                         sb.append(headers[0].split("\t")[0]);
                         sb.append("\t" + headers[0].split("\t")[1]);
@@ -103,16 +107,17 @@ public class JoinScans {
                 bw.flush();
             }
         } catch (final FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         }
     }
 
     /**
-     * <p>createReducedFile.</p>
+     * <p>
+     * createReducedFile.</p>
      *
      * @param originalFilename a {@link java.lang.String} object.
      * @param header a {@link java.lang.String} object.
@@ -125,7 +130,7 @@ public class JoinScans {
         final File f = new File(originalFilename);
         final String name = f.getName().substring(0, f.getName().length() - 4)
                 + "_reduced.txt";
-        System.out.println(name);
+        log.info(name);
         FileOutputStream fos;
         try {
             fos = new FileOutputStream(new File(f.getParentFile(), name));
@@ -142,17 +147,18 @@ public class JoinScans {
                 bw.flush();
             }
         } catch (final FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         }
 
     }
 
     /**
-     * <p>main.</p>
+     * <p>
+     * main.</p>
      *
      * @param args an array of {@link java.lang.String} objects.
      */
@@ -198,11 +204,11 @@ public class JoinScans {
                 filecounter++;
                 JoinScans.printMap(s, scanToScan);
             } catch (final FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+   
+                log.warn(e.getLocalizedMessage());
             } catch (final IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+   
+                log.warn(e.getLocalizedMessage());
             }
             JoinScans.printSet(retainedPeaks);
 
@@ -222,24 +228,26 @@ public class JoinScans {
     }
 
     /**
-     * <p>printMap.</p>
+     * <p>
+     * printMap.</p>
      *
      * @param filename a {@link java.lang.String} object.
      * @param map a {@link java.util.HashMap} object.
      */
     public static void printMap(final String filename,
             final HashMap<Integer, Integer> map) {
-        System.out.println("Map for " + filename);
+        log.info("Map for " + filename);
         final Set<Integer> s = map.keySet();
         final ArrayList<Integer> al = new ArrayList<>(s);
         Collections.sort(al);
         for (final Integer i : al) {
-            System.out.println(i + ":" + map.get(i));
+            log.info(i + ":" + map.get(i));
         }
     }
 
     /**
-     * <p>printSet.</p>
+     * <p>
+     * printSet.</p>
      *
      * @param set a {@link java.util.Set} object.
      */
@@ -247,7 +255,7 @@ public class JoinScans {
         final ArrayList<Integer> al = new ArrayList<>(set);
         Collections.sort(al);
         for (final Integer i : al) {
-            System.out.println(i);
+            log.info("{}", i);
         }
     }
 }

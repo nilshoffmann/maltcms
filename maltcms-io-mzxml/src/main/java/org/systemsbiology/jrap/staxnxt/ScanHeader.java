@@ -45,7 +45,6 @@ import java.io.Serializable;
  *
  * @author M. Vogelzang
  * 
- * @since 1.3.2
  */
 public class ScanHeader implements Serializable {
 //    class Members and Defaults

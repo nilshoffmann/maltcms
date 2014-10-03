@@ -39,7 +39,7 @@ import maltcms.datastructures.peak.Peak2DClique;
 /**
  * <p>BBHTools class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class BBHTools {

@@ -42,6 +42,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.tools.ImageTools;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.renderer.PaintScale;
@@ -50,8 +51,9 @@ import org.jfree.chart.renderer.PaintScale;
  * <p>GradientPaintScale class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
+@Slf4j
 public class GradientPaintScale implements PaintScale, IConfigurable,
         Serializable {
 
@@ -115,8 +117,8 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
 
     private BufferedImage createLookupImage(double[] sampleTable,
             Color... colors) {
-        // System.out.println("" + sampleTable.length + " samples");
-        // System.out.println("" + colors.length + " colors");
+        // log.info("" + sampleTable.length + " samples");
+        // log.info("" + colors.length + " colors");
         return ImageTools.createColorRampImage(sampleTable,
                 BufferedImage.TRANSLUCENT, colors);
     }
@@ -232,12 +234,12 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
     @Override
     public Paint getPaint(double arg0) {
         double relativeIndex = ((arg0 - this.min) / (this.max - this.min));
-        // System.out.println("RelIdx: " + relativeIndex);
+        // log.info("RelIdx: " + relativeIndex);
         int sample = Math.max(0, Math.min(
                 (int) ((this.st.length - 1) * relativeIndex),
                 this.st.length - 1));
-        // System.out.println("value: " + arg0);
-        // System.out.println("Sample: " + sample);
+        // log.info("value: " + arg0);
+        // log.info("Sample: " + sample);
         return this.lookupColors[Math.max(0, Math
                 .min(this.lookupImage.getWidth() - 1,
                         (int) ((this.st.length - 1) * this.st[sample])))];
@@ -245,22 +247,22 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
         // this.ramp[(int) arg0][2]);
         //
         // double v = ImageTools.getSample(this.st, this.breakPoints, arg0);
-        // // System.out.println("Value: " + arg0 + " Sample value: " + v);
+        // // log.info("Value: " + arg0 + " Sample value: " + v);
         // final int floor = Math.max(0, ((int) Math.floor(v
         // * (this.ramp.length - 1))));
         // final int ceil = Math.min(this.ramp.length - 1, ((int) Math.ceil(v
         // * this.ramp.length)));
         // int v1, v2, v3;
         // // if (floor != ceil) {
-        // // System.out.println("Floor: " + floor + " ceil: " + ceil);
+        // // log.info("Floor: " + floor + " ceil: " + ceil);
         // // }
         // // if (floor == ceil) {
-        // // System.out.println("Floor=ceil");
+        // // log.info("Floor=ceil");
         // v1 = this.ramp[floor][0];
         // v2 = this.ramp[floor][1];
         // v3 = this.ramp[floor][2];
         // // } else {
-        // // // System.out.println("Interpolation");
+        // // // log.info("Interpolation");
         // // v1 = (int) Math.floor(255.0 * MathTools.getLinearInterpolatedY(
         // // floor, this.ramp[floor][0], ceil, this.ramp[ceil][0], v));
         // // v2 = (int) Math.floor(255.0 * MathTools.getLinearInterpolatedY(
@@ -268,7 +270,7 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
         // // v3 = (int) Math.floor(255.0 * MathTools.getLinearInterpolatedY(
         // // floor, this.ramp[floor][2], ceil, this.ramp[ceil][2], v));
         // // }
-        // // System.out.println(v1+" "+v2+" "+v3);
+        // // log.info(v1+" "+v2+" "+v3);
         // if (v1 < 0) {
         // v1 = 0;
         // }
@@ -315,7 +317,7 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
     /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
-        // TODO Auto-generated method stub
+        
     }
 
     /**
@@ -325,7 +327,7 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
      */
     public static void main(String[] args) {
         double[] st = ImageTools.createSampleTable(256);
-        System.out.println(Arrays.toString(st));
+        log.info(Arrays.toString(st));
         double min = 564.648;
         double max = 24334.234;
         GradientPaintScale gps = new GradientPaintScale(st, min, max,
@@ -333,15 +335,15 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
                     Color.yellow, Color.white});
         double val = min;
         double incr = (max - min) / (st.length - 1);
-        System.out.println("Increment: " + incr);
+        log.info("Increment: " + incr);
         for (int i = 0; i < st.length; i++) {
-            System.out.println("Value: " + val);
+            log.info("Value: " + val);
             gps.getPaint(val);
             val += incr;
         }
-        System.out.println("Printing min and max values");
-        System.out.println("Min: " + min + " gps min: " + gps.getPaint(min));
-        System.out.println("Max: " + max + " gps max: " + gps.getPaint(max));
+        log.info("Printing min and max values");
+        log.info("Min: " + min + " gps min: " + gps.getPaint(min));
+        log.info("Max: " + max + " gps max: " + gps.getPaint(max));
         JList jl = new JList();
         DefaultListModel dlm = new DefaultListModel();
         jl.setModel(dlm);
@@ -368,8 +370,8 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
         for (int alpha = -10; alpha <= 10; alpha++) {
             for (int beta = 1; beta <= 20; beta++) {
                 gps.setAlphaBeta(alpha, beta);
-                // System.out.println(Arrays.toString(gps.st));
-                // System.out.println(Arrays.toString(gps.sampleTable));
+                // log.info(Arrays.toString(gps.st));
+                // log.info(Arrays.toString(gps.sampleTable));
                 BufferedImage bi = gps.getLookupImage();
                 ImageIcon ii = new ImageIcon(bi);
                 dlm.addElement(new JLabel(ii));

@@ -32,6 +32,7 @@ import cross.datastructures.fragments.IVariableFragment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.array.IFeatureVector;
 import ucar.ma2.Array;
 import ucar.ma2.InvalidRangeException;
@@ -43,6 +44,7 @@ import ucar.ma2.InvalidRangeException;
  * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class MaltcmsFeatureVector implements IFeatureVector {
 
     /**
@@ -73,7 +75,7 @@ public class MaltcmsFeatureVector implements IFeatureVector {
                 return a.section(new int[]{this.index},
                         new int[]{this.index});
             } catch (InvalidRangeException ex) {
-                System.err.println(ex.getLocalizedMessage());
+                log.warn(ex.getLocalizedMessage());
             }
         }
         return this.iff.getChild(name).getIndexedArray().get(this.index);

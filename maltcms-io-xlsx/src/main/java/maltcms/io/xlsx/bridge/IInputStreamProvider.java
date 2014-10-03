@@ -33,7 +33,7 @@ import java.io.InputStream;
  * <p>IInputStreamProvider interface.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 public interface IInputStreamProvider {
 

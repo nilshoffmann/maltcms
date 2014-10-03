@@ -42,9 +42,13 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.io.xml.bindings.openms.featurexml.FeatureMap;
 import maltcms.io.xml.bindings.openms.featurexml.FeatureType;
 import maltcms.io.xml.bindings.openms.featurexml.FeatureType.Position;
+import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.nc2.Dimension;
@@ -55,8 +59,11 @@ import ucar.nc2.Dimension;
  * @author Nils Hoffmann
  * 
  */
-public class PeakFactory {
 
+public class PeakFactory {
+    
+    private static final Logger log = LoggerFactory.getLogger(ClassificationPerformanceTest.class);
+    
     /**
      * <p>getFeatureList.</p>
      *
@@ -248,7 +255,7 @@ public class PeakFactory {
             FeatureMap.FeatureList fl = getFeatureList(f);
             IFileFragment frag = joinFeatures(new File(output), f.getName(), fl);
         }
-        System.out.println("Processed " + files.length + " files!");
+        log.info("Processed " + files.length + " files!");
         System.exit(0);
     }
 }

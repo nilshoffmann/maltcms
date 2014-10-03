@@ -89,7 +89,7 @@ public class MZMLExporterTest extends AFragmentCommandTest {
      */
     @Test
     public void testApply() throws Exception {
-        System.err.println("testApply");
+        log.warn("testApply");
         File outputBase = tf.newFolder("mzmlExporterTestOut");
         List<IFragmentCommand> commands = new ArrayList<>();
         ScanExtractor scanExtractor = new ScanExtractor();
@@ -100,10 +100,10 @@ public class MZMLExporterTest extends AFragmentCommandTest {
         mzmlExporter.setValidate(true);
         mzmlExporter.setSpectrumCacheSize(20);
         commands.add(mzmlExporter);
-        System.err.println("testApply creating workflow");
+        log.warn("testApply creating workflow");
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         TupleND<IFileFragment> results;
-        System.err.println("Test workflow");
+        log.warn("Test workflow");
 //        //execute workflow
         results = testWorkflow(w);
         Collection<String> variablesToCheck = Arrays.asList(new String[]{"mass_values", "intensity_values", "scan_index", "total_intensity", "scan_acquisition_time"});//AnnotationInspector.getProvidedVariables(DenseArrayProducer.class);
@@ -113,7 +113,7 @@ public class MZMLExporterTest extends AFragmentCommandTest {
             File processedCdfFile = new File(f.getUri());
             Assert.assertTrue(processedCdfFile.exists() && processedCdfFile.isFile());
             File mzMLFile = new File(processedCdfFile.getParentFile(), StringTools.removeFileExt(f.getName()) + ".mzml");
-            System.err.println("mzML file: " + mzMLFile.getAbsolutePath());
+            log.warn("mzML file: " + mzMLFile.getAbsolutePath());
             Assert.assertTrue(mzMLFile.exists() && mzMLFile.isFile());
             MZMLValidator validator = new MZMLValidator();
             ValidationResult result = validator.validateMzML(mzMLFile);

@@ -49,7 +49,7 @@ import ucar.ma2.IndexIterator;
  * Will create a {@link org.jfree.chart.plot.XYPlot} bar chart.
  *
  * @author Mathias Wilhelm
- * @version $Id: $Id
+ * 
  */
 public class MassSpectrumPlot extends AChart<XYPlot> {
 

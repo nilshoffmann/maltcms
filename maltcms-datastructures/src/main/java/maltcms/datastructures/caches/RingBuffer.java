@@ -28,21 +28,25 @@
 package maltcms.datastructures.caches;
 
 import java.util.LinkedList;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of a RingBuffer datastructure e.g. for caches with fixed
  * capacity and automatic remove oldest entry semantics.
  *
  * @author Nils Hoffmann
- * 
+ * @param <T> the element type
+ *
  */
+@Slf4j
 public class RingBuffer<T> {
 
     private final LinkedList<T> buffer;
     private int capacity = 0;
 
     /**
-     * <p>Constructor for RingBuffer.</p>
+     * <p>
+     * Constructor for RingBuffer.</p>
      *
      * @param capacity a int.
      */
@@ -52,7 +56,8 @@ public class RingBuffer<T> {
     }
 
     /**
-     * <p>oldest.</p>
+     * <p>
+     * oldest.</p>
      *
      * @return a T object.
      */
@@ -61,7 +66,8 @@ public class RingBuffer<T> {
     }
 
     /**
-     * <p>current.</p>
+     * <p>
+     * current.</p>
      *
      * @return a T object.
      */
@@ -70,7 +76,8 @@ public class RingBuffer<T> {
     }
 
     /**
-     * <p>previous.</p>
+     * <p>
+     * previous.</p>
      *
      * @return a T object.
      */
@@ -79,7 +86,8 @@ public class RingBuffer<T> {
     }
 
     /**
-     * <p>push.</p>
+     * <p>
+     * push.</p>
      *
      * @param d a T object.
      * @return a T object.
@@ -93,7 +101,8 @@ public class RingBuffer<T> {
     }
 
     /**
-     * <p>Getter for the field <code>buffer</code>.</p>
+     * <p>
+     * Getter for the field <code>buffer</code>.</p>
      *
      * @param t an array of T objects.
      * @return an array of T objects.
@@ -102,7 +111,9 @@ public class RingBuffer<T> {
         return this.buffer.toArray(t);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(buffer.size());
@@ -113,7 +124,8 @@ public class RingBuffer<T> {
     }
 
     /**
-     * <p>main.</p>
+     * <p>
+     * main.</p>
      *
      * @param args an array of {@link java.lang.String} objects.
      */
@@ -122,9 +134,9 @@ public class RingBuffer<T> {
         for (int i = 0; i < 10; i++) {
             rb.push(Double.valueOf(i + 1));
             if (i >= 3) {
-                System.out.println("Current: " + rb.current() + " previous: "
+                log.info("Current: " + rb.current() + " previous: "
                         + rb.previous() + " oldest: " + rb.oldest());
-                System.out.println(rb);
+                log.info("{}", rb);
             }
         }
     }

@@ -38,7 +38,7 @@ import cross.datastructures.tuple.TupleND;
 /**
  * <p>IClusteringAlgorithm interface.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public interface IClusteringAlgorithm extends Iterable<IFileFragment> {

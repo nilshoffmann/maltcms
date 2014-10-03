@@ -35,6 +35,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import maltcms.datastructures.array.IFeatureVector;
+import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A group of Entity objects which all share the same class label, meaning they
@@ -43,8 +46,11 @@ import maltcms.datastructures.array.IFeatureVector;
  * @author Nils Hoffmann
  * 
  */
-public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityGroup>, Serializable {
 
+public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityGroup>, Serializable {
+    
+    private static final Logger log = LoggerFactory.getLogger(ClassificationPerformanceTest.class);
+        
     private final HashMap<Category, Entity<T>> categoryToEntityMap;
 
     /**
@@ -82,7 +88,7 @@ public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityG
      */
     public void addEntity(Category c, Entity<T> e) {
         if (this.categoryToEntityMap.containsKey(c)) {
-            System.err.println("Element with key " + c + " already contained in EntityGroup!");
+            log.warn("Element with key " + c + " already contained in EntityGroup!");
         }
         this.categoryToEntityMap.put(c, e);
     }

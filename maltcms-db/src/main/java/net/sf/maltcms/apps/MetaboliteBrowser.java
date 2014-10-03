@@ -57,17 +57,18 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.db.ui.MetaboliteQueryPanel;
 import maltcms.db.ui.MetaboliteView;
 import maltcms.db.ui.MetaboliteViewModel;
-//import net.sf.maltcms.apps.Maltcms;
 
 /**
  * <p>MetaboliteBrowser class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public final class MetaboliteBrowser extends JFrame {
 
     private HashMap<Integer, JCheckBoxMenuItem> selectTableHeaders = new HashMap<>();
@@ -135,20 +136,20 @@ public final class MetaboliteBrowser extends JFrame {
         }
 
         if (f.exists()) {
-            System.out.println("Opening DB locally as file!");
+            log.info("Opening DB locally as file!");
             oc = Db4o.openFile(f.getAbsolutePath());// oc.query(llap);
         } else {
-            // System.out.println(url.getAuthority());
-            // System.out.println(url.getHost());
-            // System.out.println(url.getFile());
-            // System.out.println(url.getDefaultPort());
-            // System.out.println(url.getPath());
-            // System.out.println(url.getPort());
-            // System.out.println(url.getProtocol());
-            // System.out.println(url.getQuery());
-            // System.out.println(url.getRef());
-            // System.out.println(url.getUserInfo());
-            System.out.println("Opening DB via Client!");
+            // log.info(url.getAuthority());
+            // log.info(url.getHost());
+            // log.info(url.getFile());
+            // log.info(url.getDefaultPort());
+            // log.info(url.getPath());
+            // log.info(url.getPort());
+            // log.info(url.getProtocol());
+            // log.info(url.getQuery());
+            // log.info(url.getRef());
+            // log.info(url.getUserInfo());
+            log.info("Opening DB via Client!");
             oc = Db4o.openClient(url.getHost(), url.getPort(), url.getUserInfo(), c.getPassword());
         }
         return oc;
@@ -167,7 +168,7 @@ public final class MetaboliteBrowser extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Using the following methods "
+                log.info("Using the following methods "
                         + "for data display:");
                 final MetaboliteViewModel mvm = new MetaboliteViewModel(oc);
                 mb.setModel(mvm);
@@ -254,7 +255,7 @@ public final class MetaboliteBrowser extends JFrame {
                                 c.setLocation(jtf.getText());
                                 mb.setTitle("MetaboliteBrowser: " + jtf.getText());
                                 if (c.getLocation() == null) {
-                                    System.err.println("No db selected, exiting!");
+                                    log.warn("No db selected, exiting!");
                                     System.exit(1);
                                 }
                                 ObjectContainer oc;

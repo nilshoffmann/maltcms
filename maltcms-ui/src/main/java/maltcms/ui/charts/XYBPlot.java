@@ -49,7 +49,7 @@ import org.jfree.chart.plot.XYPlot;
  * like the image.
  *
  * @author Mathias Wilhelm
- * @version $Id: $Id
+ * 
  */
 public class XYBPlot extends XYPlot implements Serializable {
 

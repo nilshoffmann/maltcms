@@ -151,16 +151,16 @@ public class ModulationTimeEstimator extends AFragmentCommand {
                 if ((offset + len) < tic.getShape()[0]) {
                     final Array a = tic.section(new int[]{offset},
                             new int[]{len});
-                    // System.out.println("Scan " + (i + 1));
-                    // System.out.println(a.toString());
+                    // log.info("Scan " + (i + 1));
+                    // log.info(a.toString());
                     al.add(a);
                 } else {
                     log.warn("Omitting rest! Scan {}, offset {}, len {}",
                             new Object[]{i, offset, len});
                 }
             } catch (final InvalidRangeException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+   
+                log.warn(e.getLocalizedMessage());
             }
             offset += len;
         }
@@ -181,16 +181,16 @@ public class ModulationTimeEstimator extends AFragmentCommand {
                 if ((offset + len) < tic.getShape()[0]) {
                     final Array a = tic.section(new int[]{offset},
                             new int[]{len});
-                    // System.out.println("Scan " + (i + 1));
-                    // System.out.println(a.toString());
+                    // log.info("Scan " + (i + 1));
+                    // log.info(a.toString());
                     al.add(a);
                 } else {
                     log.warn("Omitting rest! Scan {}, offset {}, len {}",
                             new Object[]{i, offset, len});
                 }
             } catch (final InvalidRangeException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+   
+                log.warn(e.getLocalizedMessage());
             }
         }
         return al;

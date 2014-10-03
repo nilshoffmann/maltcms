@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.PriorityQueue;
+import lombok.extern.slf4j.Slf4j;
 import ucar.ma2.ArrayDouble.D2;
 import ucar.ma2.ArrayInt.D1;
 
@@ -48,6 +49,7 @@ import ucar.ma2.ArrayInt.D1;
  * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class TiledArray implements IArrayD2Double {
 
     /**
@@ -99,8 +101,7 @@ public class TiledArray implements IArrayD2Double {
             try {
                 f[i] = File.createTempFile(super.hashCode() + "_" + i, null);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.warn(e.getLocalizedMessage());
             }
         }
         return f;
@@ -115,19 +116,16 @@ public class TiledArray implements IArrayD2Double {
             oos.writeObject(arr);
             oos.close();
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         } finally {
             try {
                 if (oos != null) {
                     oos.close();
                 }
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.warn(e.getLocalizedMessage());
             }
         }
 
@@ -147,18 +145,15 @@ public class TiledArray implements IArrayD2Double {
                 throw new ClassCastException();
             }
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         } catch (IOException | ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         } finally {
             if (ois != null) {
                 try {
                     ois.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                 }
             }
         }
@@ -205,7 +200,7 @@ public class TiledArray implements IArrayD2Double {
     /** {@inheritDoc} */
     @Override
     public Tuple2D<D1, ucar.ma2.ArrayDouble.D1> flatten() {
-        // TODO Auto-generated method stub
+        
         return null;
     }
 
@@ -229,7 +224,7 @@ public class TiledArray implements IArrayD2Double {
     /** {@inheritDoc} */
     @Override
     public D2 getArray() {
-        // TODO Auto-generated method stub
+        
         return null;
     }
 
@@ -281,7 +276,7 @@ public class TiledArray implements IArrayD2Double {
     /** {@inheritDoc} */
     @Override
     public Area getShape() {
-        // TODO Auto-generated method stub
+        
         return null;
     }
 
@@ -293,7 +288,7 @@ public class TiledArray implements IArrayD2Double {
     /** {@inheritDoc} */
     @Override
     public boolean inRange(int i, int j) {
-        // TODO Auto-generated method stub
+        
         return false;
     }
 
@@ -305,7 +300,7 @@ public class TiledArray implements IArrayD2Double {
     /** {@inheritDoc} */
     @Override
     public int rows() {
-        // TODO Auto-generated method stub
+        
         return 0;
     }
 
@@ -318,6 +313,6 @@ public class TiledArray implements IArrayD2Double {
     @Override
     public void set(int row, int col, double d)
             throws ArrayIndexOutOfBoundsException {
-        // TODO Auto-generated method stub
+        
     }
 }

@@ -44,7 +44,7 @@ import ucar.ma2.Array;
  *
  * @author Nils Hoffmann
  * @param <T extends Plot>
- * @version $Id: $Id
+ * 
  */
 public abstract class AChart<T extends Plot> implements IConfigurable {
 

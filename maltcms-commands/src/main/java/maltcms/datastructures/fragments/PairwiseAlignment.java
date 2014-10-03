@@ -140,7 +140,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     /** {@inheritDoc} */
     @Override
     public void appendXML(final Element e) {
-        // TODO Auto-generated method stub
+        
     }
 
     /** {@inheritDoc} */

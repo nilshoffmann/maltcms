@@ -36,7 +36,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
  * Chart displaying a plot of different variables organized as a spider's web.
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 public class SpiderWebChart extends AChart<SpiderWebPlot> {
 

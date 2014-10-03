@@ -49,7 +49,7 @@ import maltcms.datastructures.array.PartitionedArray;
  * set of anchors.
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 public class TabbedPanel extends JPanel implements ActionListener {
 
@@ -100,15 +100,15 @@ public class TabbedPanel extends JPanel implements ActionListener {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(final ActionEvent evt) {
-        // System.out.println("IEvent received!");
-        // System.out.println(evt.toString());
-        // System.out.println(this.zoom);
+        // log.info("IEvent received!");
+        // log.info(evt.toString());
+        // log.info(this.zoom);
         // if(evt.getActionCommand().equals("ZOOMIN")) {
         // this.zoom = (this.zoom<1000.0d)?this.zoom*2.0d:this.zoom;
         // }else if (evt.getActionCommand().equals("ZOOMOUT")) {
         // this.zoom = (this.zoom>1.0d)?this.zoom/2.0d:this.zoom;
         // }
-        // System.out.println(this.zoom);
+        // log.info(this.zoom);
         // RepaintManager.currentManager(this).markCompletelyDirty(this);
     }
 
@@ -124,7 +124,7 @@ public class TabbedPanel extends JPanel implements ActionListener {
         final Rectangle rect = this.pa.getEnclosingRectangle();
 
         this.paSize = rect.getBounds().getSize();
-        // System.out.println(this.paSize);
+        // log.info(this.paSize);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                 1.0f));
         g2.setColor(Color.BLACK);

@@ -29,17 +29,22 @@ package net.sf.maltcms.evaluation.spi.alignment;
 
 import net.sf.maltcms.evaluation.api.alignment.AlignmentColumn;
 import net.sf.maltcms.evaluation.api.Category;
+import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
 import net.sf.maltcms.evaluation.api.alignment.AlignmentColumnComparator;
 import net.sf.maltcms.evaluation.api.alignment.MultipleAlignment;
 import org.junit.*;
-import static org.junit.Assert.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class ColumnWiseComparisonTest {
 
+public class ColumnWiseComparisonTest {
+    
+    private static final Logger log = LoggerFactory.getLogger(ClassificationPerformanceTest.class);
+    
     private MultipleAlignment referenceAlignment;
     private MultipleAlignment toolAlignment;
     private Category[] categories;
@@ -95,13 +100,13 @@ public class ColumnWiseComparisonTest {
             }
         }
         for (int i = 0; i < evaluationResults.length; i++) {
-            System.out.println(AlignmentColumnComparator.names[i] + " = " + evaluationResults[i]);
+            log.info(AlignmentColumnComparator.names[i] + " = " + evaluationResults[i]);
         }
 
         float prec = evaluationResults[AlignmentColumnComparator.TP] / (float) (evaluationResults[AlignmentColumnComparator.TP] + evaluationResults[AlignmentColumnComparator.FP]);
-        System.out.println("Precision: " + (prec));
+        log.info("Precision: " + (prec));
         float recall = evaluationResults[AlignmentColumnComparator.TP] / (float) (evaluationResults[AlignmentColumnComparator.TP] + evaluationResults[AlignmentColumnComparator.FN]);
-        System.out.println("Recall: " + (recall));
+        log.info("Recall: " + (recall));
 
     }
 }

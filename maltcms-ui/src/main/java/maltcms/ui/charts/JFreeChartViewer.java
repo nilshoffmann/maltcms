@@ -60,6 +60,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -78,8 +79,9 @@ import ucar.ma2.Array;
  * <p>JFreeChartViewer class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
+@Slf4j
 public class JFreeChartViewer extends JFrame {
 
     /**
@@ -177,8 +179,8 @@ public class JFreeChartViewer extends JFrame {
             cfg.addConfiguration(pcfg);
             Factory.getInstance().configure(cfg);
         } catch (ConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         }
 
         this.jtp = new JTabbedPane();
@@ -227,7 +229,7 @@ public class JFreeChartViewer extends JFrame {
      */
     public ChartPanel getActiveChartPanel() {
         Object o = getJtp().getTabComponentAt(getJtp().getSelectedIndex());
-        System.out.println("class: " + o.getClass().getName());
+        log.info("class: " + o.getClass().getName());
         return (ChartPanel) o;
     }
 
@@ -257,7 +259,7 @@ public class JFreeChartViewer extends JFrame {
          */
         public ChartSerializeAction() {
             super();
-            // TODO Auto-generated constructor stub
+            
         }
 
         /**
@@ -266,7 +268,7 @@ public class JFreeChartViewer extends JFrame {
          */
         public ChartSerializeAction(String name, Icon icon) {
             super(name, icon);
-            // TODO Auto-generated constructor stub
+            
         }
 
         /**
@@ -274,7 +276,7 @@ public class JFreeChartViewer extends JFrame {
          */
         public ChartSerializeAction(String name) {
             super(name);
-            // TODO Auto-generated constructor stub
+            
         }
         /**
          *
@@ -302,7 +304,7 @@ public class JFreeChartViewer extends JFrame {
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("Running chart serialize action!");
+                    log.info("Running chart serialize action!");
                     JFileChooser fc = new JFileChooser(lastOpenDir);
                     fc.setMultiSelectionEnabled(false);
                     int type = fc.showSaveDialog(getParent());
@@ -317,14 +319,14 @@ public class JFreeChartViewer extends JFrame {
                                         oos.flush();
                                     }
                         } catch (FileNotFoundException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+               
+                            log.warn(e.getLocalizedMessage());
                         } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+               
+                            log.warn(e.getLocalizedMessage());
                         }
                     } else {
-                        System.out.println("Aborted by user");
+                        log.info("Aborted by user");
                         // System.exit(-1);
                     }
 
@@ -347,7 +349,7 @@ public class JFreeChartViewer extends JFrame {
          */
         public ChromatogramOpenAction() {
             super();
-            // TODO Auto-generated constructor stub
+            
         }
 
         /**
@@ -356,7 +358,7 @@ public class JFreeChartViewer extends JFrame {
          */
         public ChromatogramOpenAction(String name, Icon icon) {
             super(name, icon);
-            // TODO Auto-generated constructor stub
+            
         }
 
         /**
@@ -364,7 +366,7 @@ public class JFreeChartViewer extends JFrame {
          */
         public ChromatogramOpenAction(String name) {
             super(name);
-            // TODO Auto-generated constructor stub
+            
         }
 
         /*
@@ -379,7 +381,7 @@ public class JFreeChartViewer extends JFrame {
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("Running Chromatogram open action!");
+                    log.info("Running Chromatogram open action!");
                     final JFileChooser jfc = new JFileChooser(lastOpenDir);
                     jfc.setMultiSelectionEnabled(true);
                     jfc.setFileFilter(new FileFilter() {
@@ -485,7 +487,7 @@ public class JFreeChartViewer extends JFrame {
                         };
                         SwingUtilities.invokeLater(r);
                     } else {
-                        System.out.println("Aborted by user");
+                        log.info("Aborted by user");
                         // System.exit(-1);
                     }
 
@@ -517,7 +519,7 @@ public class JFreeChartViewer extends JFrame {
          */
         public FileOpenAction() {
             super();
-            // TODO Auto-generated constructor stub
+            
         }
 
         /**
@@ -526,7 +528,7 @@ public class JFreeChartViewer extends JFrame {
          */
         public FileOpenAction(String name, Icon icon) {
             super(name, icon);
-            // TODO Auto-generated constructor stub
+            
         }
 
         /**
@@ -534,7 +536,7 @@ public class JFreeChartViewer extends JFrame {
          */
         public FileOpenAction(String name) {
             super(name);
-            // TODO Auto-generated constructor stub
+            
         }
 
         @Override
@@ -542,7 +544,7 @@ public class JFreeChartViewer extends JFrame {
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("Running File open action!");
+                    log.info("Running File open action!");
                     JFileChooser jfc = new JFileChooser(lastOpenDir);
                     jfc.setMultiSelectionEnabled(true);
                     jfc.setFileFilter(new FileFilter() {
@@ -577,11 +579,11 @@ public class JFreeChartViewer extends JFrame {
                                         }
                                         addChart(jfc1, file.getName());
                             } catch (FileNotFoundException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
+                   
+                                log.warn(e.getLocalizedMessage());
                             } catch (IOException | ClassNotFoundException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
+                   
+                                log.warn(e.getLocalizedMessage());
                             }
                         }
 
@@ -590,7 +592,7 @@ public class JFreeChartViewer extends JFrame {
                         // };
                         // SwingUtilities.invokeLater(r);
                     } else {
-                        System.out.println("Aborted by user");
+                        log.info("Aborted by user");
                         // System.exit(-1);
                     }
 
@@ -682,15 +684,15 @@ public class JFreeChartViewer extends JFrame {
         public void chartMouseClicked(ChartMouseEvent arg0) {
             if (arg0.getEntity() != null
                     && arg0.getEntity() instanceof XYItemEntity) {
-                System.out.println(arg0.getEntity().getClass().getName());
+                log.info(arg0.getEntity().getClass().getName());
                 XYAnnotationAdder xya = new XYAnnotationAdder();
                 xya.addAnnotation(this.cp, arg0.getChart(), (XYItemEntity) arg0
                         .getEntity(), arg0.getTrigger().getX(), arg0
                         .getTrigger().getY());
             }
-            System.out.println(arg0.getSource().getClass().getName());
-            System.out.println(arg0.getTrigger().getClass().getName());
-            System.out.println(arg0.getTrigger().getX() + " "
+            log.info(arg0.getSource().getClass().getName());
+            log.info(arg0.getTrigger().getClass().getName());
+            log.info(arg0.getTrigger().getX() + " "
                     + arg0.getTrigger().getY());
         }
 
@@ -703,12 +705,12 @@ public class JFreeChartViewer extends JFrame {
          */
         @Override
         public void chartMouseMoved(final ChartMouseEvent arg0) {
-            // System.out.println("Mouse moved");
+            // log.info("Mouse moved");
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
                     if (arg0.getEntity() != null) {
-                        System.out.println("Found an entity");
+                        log.info("Found an entity");
                         getStatus().setText(
                                 "Status: " + arg0.getEntity().toString());
                         // jtt.setLocation(arg0.getTrigger().getX(),

@@ -39,7 +39,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
  * <p>WorkbookBridge class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Slf4j
 public class WorkbookBridge {

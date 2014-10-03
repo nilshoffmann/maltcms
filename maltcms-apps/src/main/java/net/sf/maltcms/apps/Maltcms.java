@@ -782,7 +782,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                             c.getName());
                 }
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                log.warn(e.getLocalizedMessage());
             }
         }
         System.exit(0);
@@ -808,7 +808,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 this.log.info(
                         "Call Maltcms with -s my.service.provider to see available configuration keys and default values!");
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                log.warn(e.getLocalizedMessage());
             }
 
         }
@@ -898,7 +898,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 }
 
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                log.warn(e.getLocalizedMessage());
             }
         } else {
             File contextFile = new File(xmlDir, "customContext.xml");

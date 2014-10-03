@@ -42,7 +42,7 @@ import maltcms.datastructures.peak.Peak2D;
 /**
  * <p>Peak2DClique class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 @Data

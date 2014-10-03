@@ -143,11 +143,11 @@ public class PeakIdentification implements IPeakIdentification {
                     }
                     qc.terminate();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                 } catch (ExecutionException e) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                 }
 
             }

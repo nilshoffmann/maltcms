@@ -30,9 +30,6 @@ import javax.xml.stream.XMLStreamReader;
 /**
  * <p>MSXMLSequentialParser class.</p>
  *
- * @author hoffmann
- * 
- * @since 1.3.2
  */
 public class MSXMLSequentialParser {
 

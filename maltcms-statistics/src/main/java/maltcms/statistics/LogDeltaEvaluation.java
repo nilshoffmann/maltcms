@@ -59,8 +59,8 @@ import org.jfree.data.xy.XYBarDataset;
 /**
  * <p>LogDeltaEvaluation class.</p>
  *
- * @author hoffmann
- * @version $Id: $Id
+ * @author Nils Hoffmann
+ * 
  */
 public class LogDeltaEvaluation implements IWorkflowElement {
 

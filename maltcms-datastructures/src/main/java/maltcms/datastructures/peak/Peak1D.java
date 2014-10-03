@@ -43,6 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.peak.annotations.PeakAnnotation;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
@@ -64,6 +65,7 @@ import ucar.nc2.Dimension;
  * 
  */
 @Data
+@Slf4j
 public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
 
     /**
@@ -170,8 +172,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             }
             return ArrayTools.factoryScalar(o);
         } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         }
         throw new ResourceNotAvailableException(
                 "Could not find compatible method for feature with name : "
@@ -193,10 +194,10 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
 
 //	public static void main(String[] args) {
 //		Peak1D p = new Peak1D(30, 35, 40, 123124.932, 12354);
-//		System.out.println(p.getFeature("StartIndex"));
-//		System.out.println(p.getFeature("StopIndex"));
-//		System.out.println(p.getFeature("Area"));
-//		System.out.println(p.getFeature("Intensity"));
+//		log.info(p.getFeature("StartIndex"));
+//		log.info(p.getFeature("StopIndex"));
+//		log.info(p.getFeature("Area"));
+//		log.info(p.getFeature("Intensity"));
 //	}
     /** {@inheritDoc} */
     @Override

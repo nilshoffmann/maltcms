@@ -35,7 +35,7 @@ import cross.datastructures.tuple.Tuple2D;
 /**
  * <p>MSimilarityPredicate class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class MSimilarityPredicate extends MetabolitePredicate {

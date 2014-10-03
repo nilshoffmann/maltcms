@@ -218,8 +218,8 @@ public class CSVWriter implements IWorkflowElement {
                     + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         }
         return null;
     }
@@ -309,8 +309,8 @@ public class CSVWriter implements IWorkflowElement {
                     + " records written to file " + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         }
         return null;
     }
@@ -355,8 +355,8 @@ public class CSVWriter implements IWorkflowElement {
                     + " records written to file " + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         }
         return null;
     }
@@ -460,7 +460,7 @@ public class CSVWriter implements IWorkflowElement {
                 df.applyPattern("0.0000");
                 final double minThreshold = 0.001;
                 for (int i = 0; i < maxscans; i++) {
-                    System.out.println((i + 1) + "/" + maxscans);
+                    log.info((i + 1) + "/" + maxscans);
                     final IndexIterator valind = values.get(i).getIndexIterator();
                     // mzToI.add(new LinkedHashMap<Double,Double>());
 
@@ -520,7 +520,7 @@ public class CSVWriter implements IWorkflowElement {
                 df.applyPattern("0.0000");
                 final double minThreshold = 0.001;
                 for (int i = 0; i < maxscans; i++) {
-                    System.out.println((i + 1) + "/" + maxscans);
+                    log.info((i + 1) + "/" + maxscans);
                     final IndexIterator inind = indices.get(i).getIndexIterator();
                     final IndexIterator valind = values.get(i).getIndexIterator();
                     // mzToI.add(new LinkedHashMap<Double,Double>());
@@ -547,8 +547,8 @@ public class CSVWriter implements IWorkflowElement {
                     + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         }
         return null;
     }
@@ -634,8 +634,8 @@ public class CSVWriter implements IWorkflowElement {
             log.info(i + " stats written to file " + f.getAbsolutePath());
             return f;
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         }
         return null;
     }

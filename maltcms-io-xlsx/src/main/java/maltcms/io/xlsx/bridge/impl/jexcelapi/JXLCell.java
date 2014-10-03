@@ -37,7 +37,7 @@ import maltcms.io.xlsx.bridge.ICell;
  * <p>JXLCell class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Data
 public class JXLCell implements ICell {

@@ -28,14 +28,16 @@
 package maltcms.db.predicates.metabolite;
 
 import java.lang.reflect.InvocationTargetException;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 
 /**
  * <p>MStringContainsPredicate class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class MStringContainsPredicate extends MStringMatchPredicate {
 
     /**
@@ -67,11 +69,11 @@ public class MStringContainsPredicate extends MStringMatchPredicate {
                     }
                 }
             } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+   
+                log.warn(e.getLocalizedMessage());
             }
         } else {
-            System.err.println("Method not initialized!");
+            log.warn("Method not initialized!");
         }
         return false;
     }

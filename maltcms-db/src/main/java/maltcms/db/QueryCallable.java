@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * <p>QueryCallable class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class QueryCallable<T> implements Callable<ObjectSet<T>> {
@@ -76,16 +76,16 @@ public class QueryCallable<T> implements Callable<ObjectSet<T>> {
             return oc.query(llap);// oc.query(llap);
         } else {
             URL url = new URL(this.lloc);
-            // System.out.println(url.getAuthority());
-            // System.out.println(url.getHost());
-            // System.out.println(url.getFile());
-            // System.out.println(url.getDefaultPort());
-            // System.out.println(url.getPath());
-            // System.out.println(url.getPort());
-            // System.out.println(url.getProtocol());
-            // System.out.println(url.getQuery());
-            // System.out.println(url.getRef());
-            // System.out.println(url.getUserInfo());
+            // log.info(url.getAuthority());
+            // log.info(url.getHost());
+            // log.info(url.getFile());
+            // log.info(url.getDefaultPort());
+            // log.info(url.getPath());
+            // log.info(url.getPort());
+            // log.info(url.getProtocol());
+            // log.info(url.getQuery());
+            // log.info(url.getRef());
+            // log.info(url.getUserInfo());
             this.log.debug("Opening DB via Client!");
             this.oc = Db4o.openClient(url.getHost(), url.getPort(), url.
                     getUserInfo(), "default");

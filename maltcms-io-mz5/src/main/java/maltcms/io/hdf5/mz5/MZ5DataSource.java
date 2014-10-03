@@ -160,8 +160,8 @@ public class MZ5DataSource implements IDataSource {
     /** {@inheritDoc} */
     @Override
     public void configurationChanged(final ConfigurationEvent arg0) {
-        // System.out.println("Configuration changed for property");
-        // System.out.println(arg0.getPropertyName()+" =
+        // log.info("Configuration changed for property");
+        // log.info(arg0.getPropertyName()+" =
         // "+arg0.getPropertyValue());
         // int type = arg0.getType();
         // String typeS = "With event type ";
@@ -180,7 +180,7 @@ public class MZ5DataSource implements IDataSource {
         // break;
         //
         // }
-        // System.out.println(typeS);
+        // log.info(typeS);
     }
 
     /** {@inheritDoc} */

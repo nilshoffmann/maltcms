@@ -126,7 +126,7 @@ public class ImageTools {
                         raster.setPixel(p.x, scansPerModulation - p.y - 1,
                                 boundaryColor);
                     } catch (final ArrayIndexOutOfBoundsException e) {
-                        // System.out.println("Skipping Pixel");
+                        // log.info("Skipping Pixel");
                     }
                 }
             }
@@ -177,7 +177,7 @@ public class ImageTools {
                         raster.setPixel(p.x, scansPerModulation - p.y - 1,
                                 boundaryColor);
                     } catch (final ArrayIndexOutOfBoundsException e) {
-                        // System.out.println("Skipping Pixel");
+                        // log.info("Skipping Pixel");
                     }
                 }
             }
@@ -230,7 +230,7 @@ public class ImageTools {
                 intensities = intensities.section(new int[]{0},
                         new int[]{maxIndex}, new int[]{1});
             } catch (final InvalidRangeException e) {
-                System.out.println(e.getLocalizedMessage());
+                log.info(e.getLocalizedMessage());
             }
         }
         final BufferedImage bi = maltcms.tools.ImageTools.fullSpectrum(ffName,
@@ -359,11 +359,11 @@ public class ImageTools {
                 cri.getHeight(), cri.getTransparency());
         for (int i = 0; i < mappedSampleTable.length; i++) {
             double frac = mappedSampleTable[i];
-            // System.out.println("Original value: " + sampleTable[i]);
-            // System.out.println("Mapped value: " + frac);
+            // log.info("Original value: " + sampleTable[i]);
+            // log.info("Mapped value: " + frac);
             int index = Math.max(0, Math.min(mappedSampleTable.length - 1,
                     (int) (frac * mappedSampleTable.length)));
-            // System.out.println("Index before: " + i + " index after: " +
+            // log.info("Index before: " + i + " index after: " +
             // index);
             cri2.setRGB(i, 0, cri.getRGB(index, 0));
         }
@@ -436,18 +436,18 @@ public class ImageTools {
                 img.set(i, j, ((double) i) * ((double) j));
             }
         }
-        // System.out.println(img);
+        // log.info(img);
         MinMax mm = MAMath.getMinMax(img);
-        // System.out.println("Min : " + mm.min + " Max: " + mm.max);
+        // log.info("Min : " + mm.min + " Max: " + mm.max);
         MinMaxNormalizationFilter mmnf = new MinMaxNormalizationFilter(mm.min,
                 mm.max);
         img = (ArrayDouble.D2) mmnf.apply(img);
-        // System.out.println(img);
+        // log.info(img);
         MinMax mm2 = MAMath.getMinMax(img);
-        // System.out.println("Min : " + mm2.min + " Max: " + mm2.max);
+        // log.info("Min : " + mm2.min + " Max: " + mm2.max);
         int nsamples = 256;
         double[] sampleTable = createSampleTable(nsamples);
-        // System.out.println("Sampletable: " + Arrays.toString(sampleTable));
+        // log.info("Sampletable: " + Arrays.toString(sampleTable));
         BufferedImage crampImg = createColorRampImage(sampleTable,
                 Transparency.TRANSLUCENT, cRamp);
         BufferedImage sourceImg = makeImage2D(img, nsamples);

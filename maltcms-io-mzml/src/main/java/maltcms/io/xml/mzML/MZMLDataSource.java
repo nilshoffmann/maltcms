@@ -87,7 +87,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 /**
  * <p>MZMLDataSource class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 @ServiceProvider(service = IDataSource.class)

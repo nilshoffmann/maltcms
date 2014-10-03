@@ -211,7 +211,7 @@ public class PeakIntegration implements IPeakIntegration {
                         workflow.append(dwr);
                         Factory.getInstance().submitJob(pr);
                     } catch (final InstantiationException | IllegalAccessException e) {
-                        e.printStackTrace();
+                        log.warn(e.getLocalizedMessage());
                     }
                 }
             }
@@ -225,7 +225,7 @@ public class PeakIntegration implements IPeakIntegration {
                 try {
                     peaksum2[i] += tt.get(p.y);
                 } catch (java.lang.ArrayIndexOutOfBoundsException ex) {
-                    System.err.println("Array index out of bounds for peak "
+                    log.warn("Array index out of bounds for peak "
                             + p + " and index " + i + ". Array length is "
                             + tt.getShape()[0]);
                 }

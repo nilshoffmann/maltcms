@@ -43,7 +43,7 @@ import ucar.ma2.ArrayBoolean;
  *
  * CliqueTable allows for easy retrieval of common clique information.
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class CliqueTable {

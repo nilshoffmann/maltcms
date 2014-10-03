@@ -54,7 +54,7 @@ import org.junit.rules.TemporaryFolder;
  * <p>Abstract AFragmentCommandTest class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Slf4j
 public abstract class AFragmentCommandTest {
@@ -191,7 +191,7 @@ public abstract class AFragmentCommandTest {
             } catch (IOException ioex) {
                 log.error("Received io exception while creating stacktrace file!", ioex);
             }
-            System.out.println("Copying workflow output to inspection directory: " + instanceDir.getAbsolutePath());
+            log.info("Copying workflow output to inspection directory: " + instanceDir.getAbsolutePath());
             FileUtils.copyDirectoryToDirectory(w.getOutputDirectory(), instanceDir);
         } catch (IOException ex) {
             log.error("Failed to copy workflow output to inspection directory!", ex);

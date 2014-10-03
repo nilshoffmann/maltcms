@@ -38,7 +38,7 @@ import org.apache.commons.io.FileUtils;
  * <p>CopyFilesOnFailure class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Slf4j
 public class CopyFilesOnFailure {
@@ -67,7 +67,7 @@ public class CopyFilesOnFailure {
             } catch (IOException ioex) {
                 log.error("Received io exception while creating stacktrace file!", ioex);
             }
-            System.out.println("Copying output to inspection directory: " + instanceDir.getAbsolutePath());
+            log.info("Copying output to inspection directory: " + instanceDir.getAbsolutePath());
             FileUtils.copyDirectoryToDirectory(outputDir, instanceDir);
         } catch (IOException ex) {
             log.error("Failed to copy output to inspection directory!", ex);

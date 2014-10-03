@@ -91,11 +91,11 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
             List<Tuple2D<Array, Array>> milist = new ArrayList<>(c2.getNumberOfModulations());
             ArrayInt.D1 scanIndex = new ArrayInt.D1(c2.getNumberOfModulations());
             int offset = 0;
-            System.out.println("Loading scans");
+            log.info("Loading scans");
             Array osat = ff.getChild("scan_acquisition_time").getArray();
             double minMass = Double.POSITIVE_INFINITY, maxMass = Double.NEGATIVE_INFINITY;
             for (int k = 0; k < c2.getNumberOfModulations(); k++) {
-                System.out.println("Modulation: " + (k + 1) + " of " + c2.getNumberOfModulations());
+                log.info("Modulation: " + (k + 1) + " of " + c2.getNumberOfModulations());
                 int ticv = 0;
                 LinkedHashMap<Double, Integer> modulationMS = new LinkedHashMap<>(1000);
                 double modtime = osat.getDouble(k * c2.getNumberOfScansPerModulation());
@@ -133,7 +133,7 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
                 StatsMap sm = ass.apply(new Array[]{intenValues})[0];
                 double stdev = Math.sqrt(sm.get(Vars.Variance.name()));
                 double snr = -(20.0d * Math.log10(median / stdev));
-                System.out.println("Median: " + median + " stdev: " + stdev + " snr: " + snr);
+                log.info("Median: " + median + " stdev: " + stdev + " snr: " + snr);
                 for (int l = 0; l < intenValues.getShape()[0]; l++) {
 
                     if (snr < (this.snrthreshold)) {
@@ -151,7 +151,7 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
             Array massVals = new ArrayDouble.D1(offset);
             Array intenVals = new ArrayInt.D1(offset);
             offset = 0;
-            System.out.println("Setting mass and intensity values");
+            log.info("Setting mass and intensity values");
             for (Tuple2D<Array, Array> tpl : milist) {
                 Array.arraycopy(tpl.getFirst(), 0, massVals, offset, tpl.getFirst().getShape()[0]);
                 Array.arraycopy(tpl.getSecond(), 0, intenVals, offset, tpl.getSecond().getShape()[0]);

@@ -134,7 +134,7 @@ public class FsaTxtDataSource implements IDataSource {
                     + ff);
         }
         final String fileending = ff.getName().substring(dotindex + 1);
-        // System.out.println("fileending: "+fileending);
+        // log.info("fileending: "+fileending);
         for (final String s : this.fileEnding) {
             if (s.equalsIgnoreCase(fileending)) {
                 return 1;

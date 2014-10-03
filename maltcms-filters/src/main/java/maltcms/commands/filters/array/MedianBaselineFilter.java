@@ -179,9 +179,9 @@ public class MedianBaselineFilter extends AArrayFilter {
                         // ;
                         final double lvar = vals[vals.length - 1] - lmedian;
                         final double snr = (mean / lstddev);
-                        //System.out.println(snr);
+                        //log.info(snr);
                         final double snrdb = 10.0d * Math.log10(snr);// lmedian_high
-                        //System.out.println(snrdb);
+                        //log.info(snrdb);
                         // -
                         // lmedian;
                         if (snrdb > 0.0d) {

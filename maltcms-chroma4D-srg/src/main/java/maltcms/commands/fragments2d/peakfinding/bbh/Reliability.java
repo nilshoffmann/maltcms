@@ -30,7 +30,7 @@ package maltcms.commands.fragments2d.peakfinding.bbh;
 /**
  * <p>Reliability class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  * @since 1.3.2
  */

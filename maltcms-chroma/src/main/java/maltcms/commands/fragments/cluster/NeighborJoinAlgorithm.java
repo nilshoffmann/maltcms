@@ -313,7 +313,7 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
             } else {
                 // log.debug("Found maximum similarity "+d(i,j));
             }
-            // System.out.println("Found minimum distance "+this.dist[i][j]+"
+            // log.info("Found minimum distance "+this.dist[i][j]+"
             // between "+this.names[i]+" and "+this.names[j]);
             addNodeK(i, j, numclust);
         } else {
@@ -371,13 +371,13 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
     // String>>();
     // while (iter.hasNext()) {
     // Integer i = iter.next();
-    // System.out.println(this.cnames[i] + " "
+    // log.info(this.cnames[i] + " "
     // + this.nameToNameLookup.get(i).getFirst() + " "
     // + this.nameToNameLookup.get(i).getSecond());
     // list.add(this.nameToNameLookup.get(i));
     // // NeighborJoinCluster njc = this.cluster.get(i);
     // //
-    // System.out.println(NeighborJoinCluster.getConsensString(this.cluster.get(
+    // log.info(NeighborJoinCluster.getConsensString(this.cluster.get(
     // njc.getLChild()),this.cluster.get(njc.getRChild())));
     // }
     //

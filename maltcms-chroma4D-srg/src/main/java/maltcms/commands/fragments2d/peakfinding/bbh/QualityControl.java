@@ -44,7 +44,7 @@ import org.apache.commons.math.distribution.NormalDistributionImpl;
 /**
  * <p>QualityControl class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  * @since 1.3.2
  */
@@ -117,11 +117,11 @@ public class QualityControl {
             varRT2dsi += 1;
         }
 
-        // System.out.println("RT1: mean= " + meanRT1dsi + ", std= "
+        // log.info("RT1: mean= " + meanRT1dsi + ", std= "
         // + Math.sqrt(varRT1dsi));
         NormalDistribution ndrt1 = new NormalDistributionImpl(0, Math.sqrt(
                 varRT1dsi));
-        // System.out.println("RT2: mean= " + meanRT2dsi + ", std= "
+        // log.info("RT2: mean= " + meanRT2dsi + ", std= "
         // + Math.sqrt(varRT2dsi));
         NormalDistribution ndrt2 = new NormalDistributionImpl(0, Math.sqrt(
                 varRT2dsi));
@@ -142,15 +142,15 @@ public class QualityControl {
                 try {
                     rt1p = 1 - ndrt1.cumulativeProbability(-drt1, drt1);
                     rt2p = 1 - ndrt2.cumulativeProbability(-drt2, drt2);
-                    // System.out.println(drt1 + " - " + drt2);
-                    // System.out.println(rt1p + " * " + rt2p + " = " + rt1p
+                    // log.info(drt1 + " - " + drt2);
+                    // log.info(rt1p + " * " + rt2p + " = " + rt1p
                     // * rt2p);
                     if (rt1p * rt2p > max) {
                         max = rt1p * rt2p;
                     }
                     values.add(rt1p * rt2p);
                 } catch (MathException e) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                 }
             } else {
                 values.add(0.0d);

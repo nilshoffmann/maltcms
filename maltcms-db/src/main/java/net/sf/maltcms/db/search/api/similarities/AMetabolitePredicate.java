@@ -39,6 +39,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.ms.IScan;
 import maltcms.tools.ArrayTools;
@@ -52,6 +53,7 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public abstract class AMetabolitePredicate extends Predicate<IMetabolite> implements IMatchPredicate<IMetabolite> {
 
     private double scoreThreshold;
@@ -88,7 +90,7 @@ public abstract class AMetabolitePredicate extends Predicate<IMetabolite> implem
      */
     public Collection<Tuple2D<Double, IMetabolite>> getMetabolites() {
         ArrayList<Tuple2D<Double, IMetabolite>> results = new ArrayList<>();
-        System.out.println("Adding " + getScoreMap().size() + " hits!");
+        log.info("Adding " + getScoreMap().size() + " hits!");
         Iterator<Tuple2D<Double, IMetabolite>> iter = getScoreMap().iterator();
         while (iter.hasNext()) {
             results.add(iter.next());

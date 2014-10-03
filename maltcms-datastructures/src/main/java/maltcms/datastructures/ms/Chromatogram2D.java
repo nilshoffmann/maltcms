@@ -108,7 +108,7 @@ public class Chromatogram2D implements IChromatogram2D {
                 }
             }
         } catch (ResourceNotAvailableException rnae) {
-            System.out.println("Chromatogram has no ms_level variable, assuming all scans are MS1!");
+            log.info("Chromatogram has no ms_level variable, assuming all scans are MS1!");
         }
     }
 
@@ -347,18 +347,18 @@ public class Chromatogram2D implements IChromatogram2D {
             if (insertionPosition >= d.length) {
                 throw new ArrayIndexOutOfBoundsException("Insertion index is out of bounds! " + insertionPosition + ">=" + d.length);
             }
-//			System.out.println("Would insert before "+insertionPosition);
+//			log.info("Would insert before "+insertionPosition);
             double current = d[Math.min(d.length - 1, insertionPosition)];
-//			System.out.println("Value at insertion position: "+current);
+//			log.info("Value at insertion position: "+current);
             double previous = d[Math.max(0, insertionPosition - 1)];
-//			System.out.println("Value before insertion position: "+previous);
+//			log.info("Value before insertion position: "+previous);
             if (Math.abs(scan_acquisition_time - previous) <= Math.abs(
                     scan_acquisition_time - current)) {
                 int index = Math.max(0, insertionPosition - 1);
-//				System.out.println("Returning "+index);
+//				log.info("Returning "+index);
                 return index;
             } else {
-//				System.out.println("Returning "+insertionPosition);
+//				log.info("Returning "+insertionPosition);
                 return insertionPosition;
             }
         }

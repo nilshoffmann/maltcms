@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * <p>ChromatogramFactory class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class ChromatogramFactory implements IConfigurable {

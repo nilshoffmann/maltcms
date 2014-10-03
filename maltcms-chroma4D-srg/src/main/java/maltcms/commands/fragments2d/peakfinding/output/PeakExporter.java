@@ -593,8 +593,8 @@ public class PeakExporter implements IPeakExporter {
                         dos.newLine();
                         dos.flush();
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+           
+                        log.warn(e.getLocalizedMessage());
                     }
                     cnt++;
                 } else {
@@ -605,15 +605,15 @@ public class PeakExporter implements IPeakExporter {
             try {
                 dos.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+   
+                log.warn(e.getLocalizedMessage());
             }
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         }
     }
 

@@ -29,6 +29,7 @@ package maltcms.db.predicates.metabolite;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import lombok.extern.slf4j.Slf4j;
 
 import maltcms.datastructures.ms.IMetabolite;
 
@@ -42,6 +43,7 @@ import maltcms.datastructures.ms.IMetabolite;
  * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class MAggregatePredicate extends MetabolitePredicate {
 
     /**
@@ -83,13 +85,13 @@ public class MAggregatePredicate extends MetabolitePredicate {
     /** {@inheritDoc} */
     @Override
     public boolean match(IMetabolite arg0) {
-        //System.out.println("Match called!");
+        //log.info("Match called!");
         if (this.mpl == null) {
-            System.out.println("No Predicates defined!");
+            log.info("No Predicates defined!");
             return false;
         }
         for (MetabolitePredicate mp : mpl) {
-            //System.out.println("Processing Predicate "+mp.getClass().getName());
+            //log.info("Processing Predicate "+mp.getClass().getName());
             if (!mp.match(arg0)) {
                 return false;
             }

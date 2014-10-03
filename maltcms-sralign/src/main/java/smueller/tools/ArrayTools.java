@@ -34,8 +34,8 @@ import ucar.ma2.MAMath;
 /**
  * <p>ArrayTools class.</p>
  *
- * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * @author Soeren Mueller
+ * 
  */
 public class ArrayTools {
 

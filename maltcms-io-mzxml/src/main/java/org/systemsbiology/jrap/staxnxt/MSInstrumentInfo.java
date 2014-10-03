@@ -32,7 +32,6 @@ package org.systemsbiology.jrap.staxnxt;
  *
  * @author M. Vogelzang
  * 
- * @since 1.3.2
  */
 public class MSInstrumentInfo {
 

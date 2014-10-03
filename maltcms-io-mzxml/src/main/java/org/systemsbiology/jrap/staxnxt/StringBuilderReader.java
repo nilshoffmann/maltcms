@@ -13,9 +13,6 @@ import java.io.Reader;
  * This class exists to stream stringbuilders without copies. Just copied the
  * (open)jdk class and did some alterations.
  *
- * @author hoffmann
- * 
- * @since 1.3.2
  */
 public class StringBuilderReader extends Reader {
 

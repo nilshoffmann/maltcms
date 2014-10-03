@@ -31,15 +31,21 @@ import cross.datastructures.combinations.ChoiceFactory;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class ChoiceFactoryTest {
 
+public class ChoiceFactoryTest {
+    
+    private static final Logger log = LoggerFactory.getLogger(ClassificationPerformanceTest.class);
+    
     public List<Object[]> createData() {
         Object[] a = new String[]{"a", "b"};
         Object[] b = new Double[]{0.35, 976.213, 8612.2};
@@ -54,7 +60,7 @@ public class ChoiceFactoryTest {
     public void testGetKPartiteChoices() {
         List<Object[]> data = ChoiceFactory.getKPartiteChoices(createData());
         for (Object[] obj : data) {
-            System.out.println(Arrays.toString(obj));
+            log.info(Arrays.toString(obj));
         }
         List<Object[]> reference = new LinkedList<>();
         reference.add(new Object[]{"a", 0.35, 1});

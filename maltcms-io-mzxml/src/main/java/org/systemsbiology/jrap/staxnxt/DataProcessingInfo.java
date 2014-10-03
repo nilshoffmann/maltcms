@@ -36,7 +36,6 @@ import java.util.ArrayList;
  *
  * @author M. Vogelzang
  * 
- * @since 1.3.2
  */
 public class DataProcessingInfo {
 

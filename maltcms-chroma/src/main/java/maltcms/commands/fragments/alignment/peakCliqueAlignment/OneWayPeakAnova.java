@@ -251,7 +251,7 @@ public class OneWayPeakAnova implements IWorkflowElement {
         // cliqueMean)
         // / (N - k);
         // double fisherRatio = sigmaSqCls / sigmaSqErr;
-        // System.out.println("Fisher ratio for clique: " + fisherRatio);
+        // log.info("Fisher ratio for clique: " + fisherRatio);
         double alpha = 0.01;
         OneWayAnova owa = TestUtils.getOneWayAnova();
         // FDistribution fdist = new FDistributionImpl(k - 1, N - k);
@@ -259,7 +259,7 @@ public class OneWayPeakAnova implements IWorkflowElement {
         double pvalue = Double.NaN;
         try {
             // double pval = 1.0d - fdist.cumulativeProbability(fisherRatio);
-            // System.out.println("p-value for clique: " + pval);
+            // log.info("p-value for clique: " + pval);
             // if (pval < alpha) {
             // System.out
             // .println("Rejected Null hypothesis at significance level "
@@ -270,9 +270,9 @@ public class OneWayPeakAnova implements IWorkflowElement {
             // + alpha);
             // }
             fisherRatio = owa.anovaFValue(groupValues);
-            System.out.println("F-ratio: " + fisherRatio);
+            log.info("F-ratio: " + fisherRatio);
             pvalue = owa.anovaPValue(groupValues);
-            System.out.println("p-value: " + pvalue);
+            log.info("p-value: " + pvalue);
             if (owa.anovaTest(groupValues, alpha)) {
                 System.out
                         .println("Null hypthesis rejected, group variances exceed given significance level of "
@@ -377,6 +377,6 @@ public class OneWayPeakAnova implements IWorkflowElement {
     /** {@inheritDoc} */
     @Override
     public void appendXML(Element e) {
-        // TODO Auto-generated method stub
+        
     }
 }

@@ -36,11 +36,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lombok.extern.slf4j.Slf4j;
+import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
 import net.sf.maltcms.evaluation.api.tasks.IPostProcessor;
 import net.sf.maltcms.evaluation.api.tasks.ITask;
 import net.sf.maltcms.evaluation.api.tasks.ITaskResult;
 import net.sf.maltcms.evaluation.spi.tasks.maltcms.DefaultTaskResult;
 import net.sf.maltcms.evaluation.spi.tasks.maltcms.MaltcmsTaskResult;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>Task class.</p>
@@ -48,8 +51,11 @@ import net.sf.maltcms.evaluation.spi.tasks.maltcms.MaltcmsTaskResult;
  * @author Nils Hoffmann
  * 
  */
-public class Task implements ITask<ITaskResult> {
 
+public class Task implements ITask<ITaskResult> {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ClassificationPerformanceTest.class);
+    
     private static final long serialVersionUID = 986719239076016L;
     private final List<String> commandLine;
     private final HashMap<String, String> additionalEnvironment = new HashMap<>();
@@ -81,13 +87,13 @@ public class Task implements ITask<ITaskResult> {
         ProcessBuilder pb = new ProcessBuilder(commandLine).directory(
                 workingDirectory).redirectErrorStream(true);
         pb.environment().putAll(additionalEnvironment);
-        System.out.println(pb.environment());
+        log.info("Environments: {}", pb.environment());
         Process p = pb.start();
         try {
             String line;
             try (BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
                 while ((line = input.readLine()) != null) {
-                    System.out.println(line);
+                    log.info(line);
                 }
             }
         } catch (Exception err) {

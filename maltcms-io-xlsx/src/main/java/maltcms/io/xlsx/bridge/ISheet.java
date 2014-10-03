@@ -31,7 +31,7 @@ package maltcms.io.xlsx.bridge;
  * <p>ISheet interface.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 public interface ISheet extends Iterable<IRow> {
 

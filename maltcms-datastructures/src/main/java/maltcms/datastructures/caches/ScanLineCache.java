@@ -325,7 +325,7 @@ public class ScanLineCache implements IScanLine {
             this.loadnew++;
             return normalized;
         } catch (final InvalidRangeException e) {
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         }
 
         return null;

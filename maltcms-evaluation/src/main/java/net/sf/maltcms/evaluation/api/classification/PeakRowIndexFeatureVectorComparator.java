@@ -129,7 +129,7 @@ public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorCompar
 //                return 0;
 //            }
 //            double diff = Math.pow((lhsRT - rhsRT), 2.0d);
-////            System.out.println("DiffSq: "+diff);
+////            log.info("DiffSq: "+diff);
 //            return diff;
 //        }
         return Double.NaN;

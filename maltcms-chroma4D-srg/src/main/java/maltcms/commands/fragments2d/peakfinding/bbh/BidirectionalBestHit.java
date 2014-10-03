@@ -148,7 +148,7 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
             }
         }
 
-        System.out.print(max + "-");
+        log.info(max + "-");
         return maxI;
     }
 

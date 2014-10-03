@@ -34,7 +34,7 @@ import maltcms.datastructures.ridge.Ridge;
 /**
  * <p>RankComparator class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class RankComparator implements Comparator<Rank<Ridge>> {

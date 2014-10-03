@@ -32,6 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import javax.swing.JTextField;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.db.predicates.metabolite.IAggregatePredicateFactory;
 import maltcms.db.predicates.metabolite.MAggregatePredicate;
@@ -40,9 +41,10 @@ import maltcms.db.predicates.metabolite.MAggregatePredicateFactory;
 /**
  * <p>FilterButtonActionListener class.</p>
  *
- * @author -rhilker-
+ * @author Rolf Hilker
  * 
  */
+@Slf4j
 public class FilterButtonActionListener implements ActionListener {
 
     private IAggregatePredicateFactory af = null;
@@ -105,7 +107,7 @@ public class FilterButtonActionListener implements ActionListener {
 
             }
 
-            System.out.println(filter.toString());
+            log.info(filter.toString());
 
             submitFilter(filter);
 
@@ -140,7 +142,7 @@ public class FilterButtonActionListener implements ActionListener {
 
         String methodName = jtf.getName();
 
-        System.out.println("NAMEEE: " + methodName); //Mit MassWeight stimmt noch was net, teste alle Namen!
+        log.info("NAMEEE: " + methodName); //Mit MassWeight stimmt noch was net, teste alle Namen!
 
         if (input.length() != 0) {
 
@@ -234,11 +236,11 @@ public class FilterButtonActionListener implements ActionListener {
         // protected Void doInBackground() throws Exception {
         ap = af.digestCommandLine(filter.split(" "));
 
-        System.out.println("Parsed command line: " + filter);
+        log.info("Parsed command line: " + filter);
 
         if (mvm != null && ap != null) {
 
-            System.out.println("Executing query");
+            log.info("Executing query");
 
             mvm.query(ap);
 

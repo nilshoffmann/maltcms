@@ -45,7 +45,7 @@ import org.jfree.chart.plot.Plot;
  * . It will throw a {@link java.lang.RuntimeException}.
  *
  * @author Mathias Wilhelm
- * @version $Id: $Id
+ * 
  */
 @Slf4j
 public class EPlotRunner extends PlotRunner {

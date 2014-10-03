@@ -1242,7 +1242,7 @@ public class MaltcmsTools {
             throws ResourceNotAvailableException {
         IVariableFragment matrix = f.getChild(Factory.getInstance().getConfiguration().getString("var.pairwise_distance_matrix",
                 "pairwise_distance_matrix"));
-        //System.out.println(matrix.getArray());
+        //log.info(matrix.getArray());
         return matrix.getParent();
     }
 
@@ -2345,11 +2345,11 @@ public class MaltcmsTools {
         double epsilon = 1;
         for (int i = 0; i < 10; i++) {
             double delta = epsilon / ((double) (i + 1));
-            System.out.println(delta);
+            log.info("Delta: {}", delta);
             List<Integer> maskedIndices = MaltcmsTools.unique(MaltcmsTools.findMaskedMasses(a, masked, delta));
-            System.out.println("Masked indices: " + maskedIndices);
+            log.info("Masked indices: " + maskedIndices);
             Array b = ArrayTools.filterIndices(a, maskedIndices, 0.0d);
-            System.out.println(b);
+            log.info("Filtered array: {}", b);
         }
 
     }

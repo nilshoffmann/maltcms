@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.NormalizationFilter;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -58,24 +59,27 @@ import ucar.ma2.Array;
 import ucar.ma2.Index;
 
 /**
- * <p>MSScanVisualizer class.</p>
+ * <p>
+ * MSScanVisualizer class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
+@Slf4j
 public class MSScanVisualizer {
 
     /**
-     * <p>main.</p>
+     * <p>
+     * main.</p>
      *
      * @param args an array of {@link java.lang.String} objects.
      */
     public static void main(final String[] args) {
         final Maltcms m = Maltcms.getInstance();
         IFactory factory = Factory.getInstance();
-        System.out.println("Starting Maltcms");
+        log.info("Starting Maltcms");
         factory.configure(m.parseCommandLine(args));
-        System.out.println("Configured Factory");
+        log.info("Configured Factory");
         final String[] s = factory.getConfiguration()
                 .getStringArray("input.dataInfo");
         final int imwidth = factory.getConfiguration().getInt(
@@ -96,7 +100,7 @@ public class MSScanVisualizer {
         // String scan_index = ArrayFactory.getConfiguration().getString(
         // "var.scan_index", "scan_index");
         for (final String str : s) {
-            System.out.println("Reading input.DataInfo: " + str);
+            log.info("Reading input.DataInfo: " + str);
             final IFileFragment parent = new FragmentStringParser().parse(factory, str);
             //
             final IFileFragment al = new FileFragment(
@@ -104,7 +108,7 @@ public class MSScanVisualizer {
                             .getName()));
             al.addSourceFile(parent);
             FragmentTools.loadDefaultVars(al);
-            System.out.println(al);
+            log.info("{}", al);
 
             if (al.hasChild(mv) && al.hasChild(iv)) {
                 al.getChild(mv).setIndex(al.getChild(si));
@@ -119,9 +123,9 @@ public class MSScanVisualizer {
                 final List<Array> l = Arrays.asList(res);
                 final ArrayList<Array> intens2 = new ArrayList<>(l);
                 final XYSeriesCollection xysc = new XYSeriesCollection();
-                System.out.println(intens2.size());
+                log.info("{}", intens2.size());
                 for (int i = 0; i < intens2.size(); i++) {
-                    System.out.println("Generating plot for scan " + i);
+                    log.info("Generating plot for scan " + i);
                     final XYSeries xs = new XYSeries(al.getName() + "_scan_"
                             + i);
                     final Array a = mzs.get(i);
@@ -154,13 +158,13 @@ public class MSScanVisualizer {
                     // Formatter formatter = new Formatter(sb);
                     final File f = new File(d, al.getName() + "_all_scans.png");
 
-                    System.out.println("Saving to file " + f.getAbsolutePath());
+                    log.info("Saving to file " + f.getAbsolutePath());
                     // if(f.exists() &&
                     // !ArrayFactory.getConfiguration().getBoolean(
                     // "output.overwrite")
                     // )
                     // {
-                    // System.err.println("File "+f.getAbsolutePath()+" exists
+                    // log.warn("File "+f.getAbsolutePath()+" exists
                     // and option output.overwrite is set to false, stopping!");
                     // System.exit(-1);
                     //
@@ -170,9 +174,9 @@ public class MSScanVisualizer {
                             imwidth, imheight), "png", fos);
                     // }
                 } catch (final FileNotFoundException e) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                 } catch (final IOException e) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                 }
                 for (int i = 0; i < intens2.size(); i++) {
                     dir = new XYLineAndShapeRenderer();
@@ -214,13 +218,13 @@ public class MSScanVisualizer {
                         final File f = new File(d, al.getName() + "_scan_"
                                 + sb.toString() + ".png");
 
-                        System.out.println("Saving to file "
+                        log.info("Saving to file "
                                 + f.getAbsolutePath());
                         // if(f.exists() &&
                         // !ArrayFactory.getConfiguration().getBoolean(
                         // "output.overwrite"))
                         // {
-                        // System.err.println("File "+f.getAbsolutePath()+"
+                        // log.warn("File "+f.getAbsolutePath()+"
                         // exists and option output.overwrite is set to false,
                         // stopping!");
                         // System.exit(-1);
@@ -231,9 +235,9 @@ public class MSScanVisualizer {
                                 imwidth, imheight), "png", fos);
                         // }
                     } catch (final FileNotFoundException e) {
-                        e.printStackTrace();
+                        log.warn(e.getLocalizedMessage());
                     } catch (final IOException e) {
-                        e.printStackTrace();
+                        log.warn(e.getLocalizedMessage());
                     }
                 }
             } else {

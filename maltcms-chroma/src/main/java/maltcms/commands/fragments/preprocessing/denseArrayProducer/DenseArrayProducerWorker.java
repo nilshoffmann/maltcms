@@ -190,7 +190,7 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
             int scan = 0;
             final ArrayList<Array> filtered = new ArrayList<>(intens.size());
             for (final Array a : intens) {
-                // System.out.println("Before: " + a.toString());
+                // log.info("Before: " + a.toString());
                 final Index aidx = a.getIndex();
                 EvalTools.eqI(1, a.getRank(), this);
                 // double accum = 0;
@@ -205,7 +205,7 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
                 tanidx.set(scan);
                 tan.setDouble(tanidx, ArrayTools.integrate(a));
                 filtered.add(a);
-                // System.out.println("After: " + a.toString());
+                // log.info("After: " + a.toString());
                 scan++;
             }
             ivf.setIndexedArray(filtered);

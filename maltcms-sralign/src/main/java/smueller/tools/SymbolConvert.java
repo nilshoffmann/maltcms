@@ -36,8 +36,8 @@ import ucar.ma2.IndexIterator;
 /**
  * <p>SymbolConvert class.</p>
  *
- * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * @author Soeren Mueller
+ * 
  */
 public class SymbolConvert {
 
@@ -77,7 +77,7 @@ public class SymbolConvert {
         // offset = charintervals[2];
         // }
         // if(charintervals[2]+i > charintervals[3]) {
-        // System.err.println("Symbols will not be visible!");
+        // log.warn("Symbols will not be visible!");
         // }
         // characters[i] = offset+i;
         // }
@@ -85,7 +85,7 @@ public class SymbolConvert {
         final IndexIterator ii4 = reduced.getIndexIterator();
         final IndexIterator stre = stringrep.getIndexIterator();
         // int bpcnt = 0;
-        // //System.out.println("Size of breakpoint array: "+bp.length);
+        // //log.info("Size of breakpoint array: "+bp.length);
         // while(ii4.hasNext()) {
         // save = ii4.getDoubleNext();
         // int insert = Arrays.binarySearch(bp, save);
@@ -93,7 +93,7 @@ public class SymbolConvert {
         // stre.setCharNext((char)characters[insert]);
         // }else{ // No direct hit
         // //-(insertionpoint)-1 is returned
-        // //System.out.println(insert);
+        // //log.info(insert);
         // if(-insert-1==bp.length) {
         // stre.setCharNext((char)characters[bp.length-1]);
         // }else{
@@ -107,7 +107,7 @@ public class SymbolConvert {
         // alphabetbuf.append((char)characters[i-1]);
         // }
         // alphabet = alphabetbuf.toString();
-        // System.out.println("Alphabet: "+alphabet);
+        // log.info("Alphabet: "+alphabet);
 
         // Vergleiche, abh�ngig von Alphabetgr.
         switch (buchstanz) {

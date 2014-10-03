@@ -38,13 +38,15 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>MetaboliteQueryPanel class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class MetaboliteQueryPanel extends JPanel implements KeyListener {
 
     /**
@@ -104,7 +106,7 @@ public class MetaboliteQueryPanel extends JPanel implements KeyListener {
     /** {@inheritDoc} */
     @Override
     public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
+        
     }
 
     /* (non-Javadoc)
@@ -115,14 +117,14 @@ public class MetaboliteQueryPanel extends JPanel implements KeyListener {
     public void keyReleased(KeyEvent e) {
         Object o = e.getSource();
         if (o == this.jtf) {
-            //System.out.println("Received KeyEvent from JTextField");
+            //log.info("Received KeyEvent from JTextField");
             int kc = e.getKeyCode();
-            //System.out.println("Key code: "+kc);
+            //log.info("Key code: "+kc);
             if (kc == KeyEvent.VK_ENTER) {
                 Runnable r = new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("Launching Query");
+                        log.info("Launching Query");
                         AbstractAction aa = new MetaboliteQueryAction("Query", null, getJTextField(), mvm);
                         aa.actionPerformed(new ActionEvent(getJTextField(), (int) System.nanoTime(), (String) aa.getValue(Action.NAME)));
 
@@ -130,7 +132,7 @@ public class MetaboliteQueryPanel extends JPanel implements KeyListener {
                 };
                 SwingUtilities.invokeLater(r);
             } else {
-                System.out.println("Received event from key: " + KeyEvent.getKeyText(kc));
+                log.info("Received event from key: " + KeyEvent.getKeyText(kc));
             }
         }
 

@@ -148,7 +148,7 @@ public class DefaultPairSet<T extends IAnchor> implements
         for (final Tuple2D<T, T> t : validAnchors) {
             final T a = t.getFirst();
             final T b = t.getSecond();
-            // System.out.println(a.getName()+"
+            // log.info(a.getName()+"
             // "+a.getScanIndex()+"<->"+b.getName()+" "+b.getScanIndex());
             this.log.info(a.getName() + " " + a.getScanIndex() + ":"
                     + b.getName() + " " + b.getScanIndex());

@@ -38,7 +38,7 @@ import ucar.ma2.ArrayDouble;
  * Creates a chart with labeled domain axis, displaying a heatmap.
  *
  * @author Nils.Hoffman@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * 
  */
 public class HeatMapChart extends AChart<XYPlot> {
 

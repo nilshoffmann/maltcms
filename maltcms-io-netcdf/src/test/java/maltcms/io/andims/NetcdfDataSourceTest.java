@@ -333,7 +333,7 @@ public class NetcdfDataSourceTest {
         variableToArray.put("variable5", arrays);
         variableToArray.put("variable6", arrays2);
 
-        System.out.println("Defined dimensions: " + ff.getDimensions());
+        log.info("Defined dimensions: " + ff.getDimensions());
 
         return ff;
     }
@@ -411,7 +411,7 @@ public class NetcdfDataSourceTest {
     public void directRead(URI testCdf, List<String> variableNames, Map<String, String> indexedVariableNames, List<Attribute> attributes, Map<String, List<Attribute>> variableAttributes, Map<String, List<Dimension>> usedDimensions, List<Dimension> unusedDimensions, Map<String, List<Array>> variableToArray) throws ResourceNotAvailableException {
         System.out.
                 println("###################################################");
-        System.out.println("# Testing direct read on file " + testCdf);
+        log.info("# Testing direct read on file " + testCdf);
         sl.setLogLevel("cross.datastructures.fragments",
                 "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
@@ -421,17 +421,17 @@ public class NetcdfDataSourceTest {
         for (Dimension unusedDim : unusedDimensions) {
             Assert.assertFalse(readFragment.getDimensions().contains(unusedDim));
         }
-        System.out.println("Stored dimensions: " + readFragment.getDimensions());
-        System.out.println("Stored variables: ");
+        log.info("Stored dimensions: " + readFragment.getDimensions());
+        log.info("Stored variables: ");
         for (IVariableFragment v : readFragment) {
-            System.out.println("Variable: " + v.toString());
-            System.out.println("\tDataType: " + v.getDataType());
-            System.out.println("\tDimensions: " + Arrays.toString(v.
+            log.info("Variable: " + v.toString());
+            log.info("\tDataType: " + v.getDataType());
+            log.info("\tDimensions: " + Arrays.toString(v.
                     getDimensions()));
         }
-        System.out.println("Global attributes: ");
+        log.info("Global attributes: ");
         for (Attribute attribute : readFragment.getAttributes()) {
-            System.out.println("Attribute: " + attribute.getName() + "=" + attribute.getStringValue());
+            log.info("Attribute: " + attribute.getName() + "=" + attribute.getStringValue());
         }
         //check global attributes
         for (Attribute attribute : attributes) {
@@ -467,7 +467,7 @@ public class NetcdfDataSourceTest {
             }
         }
 
-        System.out.println("###################################################");
+        log.info("###################################################");
         sl.setLogLevel("cross.datastructures.fragments",
                 "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
@@ -477,7 +477,7 @@ public class NetcdfDataSourceTest {
     public void indirectRead(URI testCdf, List<String> variableNames, Map<String, String> indexedVariableNames, List<Attribute> attributes, Map<String, List<Attribute>> variableAttributes, Map<String, List<Dimension>> usedDimensions, List<Dimension> unusedDimensions, Map<String, List<Array>> variableToArray) throws ResourceNotAvailableException {
         System.out.
                 println("###################################################");
-        System.out.println("# Testing indirect read on file " + testCdf);
+        log.info("# Testing indirect read on file " + testCdf);
         sl.setLogLevel("cross.datastructures.fragments",
                 "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
@@ -529,7 +529,7 @@ public class NetcdfDataSourceTest {
                     }
                 }
             }
-            System.out.println(
+            log.info(
                     "###################################################");
         } catch (IOException ex) {
             log.error("Caught exception", ex);
@@ -576,7 +576,7 @@ public class NetcdfDataSourceTest {
                     IVariableFragment unique = new VariableFragment(work,
                             "unique-" + j);
                     unique.setArray(Array.factory(new int[]{i, j}));
-                    System.out.println(work.toString());
+                    log.info(work.toString());
                     work.save();
                     work.clearArrays();
                     work.clearDimensions();
@@ -589,14 +589,14 @@ public class NetcdfDataSourceTest {
                 Array shadowA = shadow.getArray();
                 Assert.assertNotNull(shadowA);
                 Assert.assertEquals(shadowA.getInt(0), 4);
-                System.out.println("shadow-" + i + " = " + shadowA);
+                log.info("shadow-" + i + " = " + shadowA);
                 for (int j = 0; j < 5; j++) {
                     IVariableFragment unique = work.getChild("unique-" + j);
                     Array a = unique.getArray();
                     Assert.assertNotNull(a);
                     Assert.assertEquals(a.getInt(0), i);
                     Assert.assertEquals(a.getInt(1), j);
-                    System.out.println("unique-" + j + " = " + a);
+                    log.info("unique-" + j + " = " + a);
                 }
             }
         } catch (IOException | IllegalStateException | ResourceNotAvailableException ex) {

@@ -37,7 +37,7 @@ import maltcms.io.xlsx.bridge.IRow;
  * <p>JXLRow class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Data
 public class JXLRow implements IRow {

@@ -27,14 +27,14 @@
  */
 package org.systemsbiology.jrap.staxnxt;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * A demo program which uses the MSXMLParser to read in scans from a file you
  * specify on the command line.
  *
- * @author hoffmann
- * @version $Id: $Id
- * @since 1.3.2
  */
+@Slf4j
 public class TestParser {
 
     /**
@@ -49,29 +49,29 @@ public class TestParser {
 
         if (asArg.length > 1) {
             MSXMLParser myParser = new MSXMLParser(asArg[0]);
-            System.out.println("There are total " + myParser.getScanCount() + " scans.");
+            log.info("There are total " + myParser.getScanCount() + " scans.");
 
-            System.out.println("=============================================");
-            System.out.println("Writing out FileHeader info!");
+            log.info("=============================================");
+            log.info("Writing out FileHeader info!");
             fileInfo = myParser.rapFileHeader();
-            System.out.println(fileInfo);
+            log.info("FileInfo: {}", fileInfo);
 
-            System.out.println("=============================================");
-            System.out.println("Writing out ScanHeader info!");
+            log.info("=============================================");
+            log.info("Writing out ScanHeader info!");
             for (int i = 1; i < asArg.length; i++) {
                 myHeader = myParser.rapHeader(Integer.parseInt(asArg[i]));
-                System.out.println(myHeader);
+                log.info("ScanHeader: {}", myHeader);
             }
 
-            System.out.println("==============================================");
-            System.out.println("Writing out Scan info!");
+            log.info("==============================================");
+            log.info("Writing out Scan info!");
             for (int i = 1; i < asArg.length; i++) {
                 myScan = myParser.rap(Integer.parseInt(asArg[i]));
-                System.out.println(myScan);
+                log.info("Scan: {}", myScan);
             }
 
         } else {
-            System.out.println(
+            log.info(
                     "Invalid number of arguments: TestParser fileName scanNumber1 <scanNumber2>..");
         }
     }

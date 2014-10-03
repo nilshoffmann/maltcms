@@ -67,7 +67,7 @@ import ucar.nc2.dataset.NetcdfDataset;
  * the ANDI-MS/AIA standard.
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Slf4j
 @ServiceProvider(service = IDataSource.class)
@@ -166,8 +166,8 @@ public class NetcdfDataSource implements IDataSource {
     /** {@inheritDoc} */
     @Override
     public void configurationChanged(final ConfigurationEvent arg0) {
-        // System.out.println("Configuration changed for property");
-        // System.out.println(arg0.getPropertyName()+" =
+        // log.info("Configuration changed for property");
+        // log.info(arg0.getPropertyName()+" =
         // "+arg0.getPropertyValue());
         // int type = arg0.getType();
         // String typeS = "With event type ";
@@ -186,7 +186,7 @@ public class NetcdfDataSource implements IDataSource {
         // break;
         //
         // }
-        // System.out.println(typeS);
+        // log.info(typeS);
     }
 
     /** {@inheritDoc} */

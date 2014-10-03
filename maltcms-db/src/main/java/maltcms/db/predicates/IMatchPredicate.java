@@ -38,7 +38,7 @@ import java.lang.reflect.Method;
 /**
  * <p>IMatchPredicate interface.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public interface IMatchPredicate<T> {

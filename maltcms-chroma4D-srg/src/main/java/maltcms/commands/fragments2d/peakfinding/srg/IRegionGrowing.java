@@ -37,7 +37,7 @@ import maltcms.datastructures.peak.PeakArea2D;
 /**
  * <p>IRegionGrowing interface.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public interface IRegionGrowing extends IConfigurable {

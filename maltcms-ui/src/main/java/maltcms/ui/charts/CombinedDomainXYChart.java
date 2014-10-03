@@ -40,7 +40,7 @@ import org.jfree.chart.plot.XYPlot;
  * that they are vertically stacked (default).
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 public class CombinedDomainXYChart extends AChart<XYPlot> {
 

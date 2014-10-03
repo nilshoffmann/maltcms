@@ -30,8 +30,10 @@ package maltcms.commands.fragments2d.testing;
 import cross.Factory;
 import java.awt.Point;
 import java.awt.geom.Area;
+import static java.lang.Math.log;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.distances.dtwng.AlignmentFactory;
 import maltcms.commands.distances.dtwng.FeatureVectorDtwSimilarity;
 import maltcms.commands.distances.dtwng.IAlignment;
@@ -45,15 +47,18 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
 /**
- * <p>DTWTest class.</p>
+ * <p>
+ * DTWTest class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
+@Slf4j
 public class DTWTest {
 
     /**
-     * <p>main.</p>
+     * <p>
+     * main.</p>
      *
      * @param args an array of {@link java.lang.String} objects.
      */
@@ -105,13 +110,13 @@ public class DTWTest {
         la2.add(d2);
         la2.add(d2);
 
-        System.out.println("Creating feature vectors");
+        log.info("Creating feature vectors");
         // prepare feature vectors
         FeatureVectorFactory fvf = FeatureVectorFactory.getInstance();
         List<IFeatureVector> l1 = fvf.createFeatureVectorList(la1);
         List<IFeatureVector> l2 = fvf.createFeatureVectorList(la2);
 
-        System.out.println("Preparing alignment");
+        log.info("Preparing alignment");
         // prepare alignment
         AlignmentFactory af = new AlignmentFactory();
         Area constraints = ConstraintFactory.getInstance().createBandConstraint(
@@ -130,17 +135,17 @@ public class DTWTest {
         // set alignment properties
         ia.setLeftHandSideId("Left");
         ia.setRightHandSideId("Right");
-        System.out.println("Calculating alignment");
+        log.info("Calculating alignment");
         // apply and retrieve score
         double v = ia.apply(l1, l2);
         // retrieve map
         List<Point> l = ia.getMap();
-        System.out.println("");
-        System.out.println(ia.getOptimizationFunction().
+        log.info("");
+        log.info(ia.getOptimizationFunction().
                 getOptimalOperationSequenceString());
-        System.out.println("Done!");
-        System.out.println(v);
-        System.out.println(ia.getOptimizationFunction().getOptimalValue());
+        log.info("Done!");
+        log.info("{}", v);
+        log.info("{}", ia.getOptimizationFunction().getOptimalValue());
         // IFileFragment ares = Factory.getInstance().getFileFragmentFactory()
         // .createFragment(iff3, iff4, DTW.class,
         // cp.getWorkflow().getStartupDate());

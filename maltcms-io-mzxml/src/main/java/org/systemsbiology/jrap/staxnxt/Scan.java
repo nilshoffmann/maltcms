@@ -34,9 +34,6 @@ import java.io.Serializable;
  * components of massIntensityList. dhmay noting this on 2009/03/10 but not
  * touching it, in case there are unknown dependencies on this separation.
  *
- * @author hoffmann
- * 
- * @since 1.3.2
  */
 public final class Scan implements Serializable {
 

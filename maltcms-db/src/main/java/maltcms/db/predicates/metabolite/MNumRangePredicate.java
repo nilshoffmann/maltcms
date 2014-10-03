@@ -29,14 +29,16 @@ package maltcms.db.predicates.metabolite;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 
 /**
  * <p>MNumRangePredicate class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class MNumRangePredicate extends MetabolitePredicate {
 
     /**
@@ -83,8 +85,7 @@ public class MNumRangePredicate extends MetabolitePredicate {
                 }
             }
         } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         }
         return false;
     }

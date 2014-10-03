@@ -38,7 +38,7 @@ import java.util.Map;
 /**
  * <p>Peak2DClique class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class Peak2DClique {

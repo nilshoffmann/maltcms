@@ -51,7 +51,7 @@ import ucar.ma2.Array;
  * <p>XLSXDataSource class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Slf4j
 @ServiceProvider(service = IDataSource.class)

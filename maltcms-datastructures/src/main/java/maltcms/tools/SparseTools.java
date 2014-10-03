@@ -57,42 +57,6 @@ public class SparseTools {
     public static final Map<Sparse, Double> normalized = Collections
             .synchronizedMap(new HashMap<Sparse, Double>());
 
-//	public static double arccos(final Sparse s, final Sparse t) {
-//		return Math.acos(SparseTools.cos(s, t));
-//	}
-//	public static double cos(final Sparse s, final Sparse t) {
-//		synchronized (SparseTools.normalized) {
-//			if (!SparseTools.normalized.containsKey(s)) {
-//				SparseTools.normalized.put(s, SparseTools.norm(s));
-//			}
-//			if (!SparseTools.normalized.containsKey(t)) {
-//				SparseTools.normalized.put(t, SparseTools.norm(t));
-//			}
-//		}
-//
-//		final double dot = SparseTools.dot(s, t);
-//		if (dot == 0.0d) {
-//			return Math.cos(dot);
-//		}
-//		// System.out.println("Dot "+dot);
-//		// System.out.println("Normalized s "+normalized.get(s));
-//		// System.out.println("Normalized t "+normalized.get(t));
-//		// (1.0 / 0.0) * 0.0 -> NaN
-//		double prod = 0.0d;
-//		synchronized (SparseTools.normalized) {
-//			prod = SparseTools.normalized.get(s)
-//			        * SparseTools.normalized.get(t);
-//		}
-//		// System.out.println("PRod: "+prod);
-//		final double div = dot / prod;
-//		// System.out.println(div);
-//		double cos = Math.cos(div);
-//		if (Double.isNaN(cos)) {// check for NaN
-//			cos = 0.0d;
-//		}
-//		// System.out.println("acos="+acos);
-//		return cos;
-//	}
     /**
      * <p>create.</p>
      *
@@ -122,11 +86,11 @@ public class SparseTools {
                     final Array b = vls.next();
                     idx.remove();
                     vls.remove();
-                    // System.out.println("Sparse array "+i);
+                    // log.info("Sparse array "+i);
                     s[i++] = new Sparse(a, b, minindex, maxindex, nbins,
                             massPrecision);
                 } catch (final ClassCastException cce) {
-                    cce.printStackTrace();
+                    log.warn(cce.getLocalizedMessage());
                 }
             }
             return s;
@@ -185,7 +149,7 @@ public class SparseTools {
 
 //	public static double norm(final Sparse s) {
 //		final double norm = Math.sqrt(SparseTools.dot(s, s));
-//		// System.out.println(norm);
+//		// log.info(norm);
 //		return norm;
 //	}
     /**

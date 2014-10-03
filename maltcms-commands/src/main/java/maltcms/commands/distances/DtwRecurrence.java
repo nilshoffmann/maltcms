@@ -89,14 +89,14 @@ public class DtwRecurrence implements IRecurrence {
         if ((row == 0) && (column == 0)) {
             nw = this.diag_weight * cij;
             predecessors.set(row, column, (byte) 1);
-            // System.out.println("cij = "+cij + ", nw= "+nw);
+            // log.info("cij = "+cij + ", nw= "+nw);
             cumDistMatrix.set(row, column, nw);
             // log.debug(
             // "Case 1: First column, first row ={}, best from Diag", nw);
             return nw;
         } else if ((row > 0) && (column == 0)) {
             n = ((this.comp_weight * cij) + cumDistMatrix.get(row - 1, 0)) + this.globalGapPenalty;
-            // System.out.println("i="+row+" j="+column+" cij = "+cij +
+            // log.info("i="+row+" j="+column+" cij = "+cij +
             // ", n= "+n);
             cumDistMatrix.set(row, column, n);
             predecessors.set(row, column, (byte) 2);
@@ -105,7 +105,7 @@ public class DtwRecurrence implements IRecurrence {
             return n;
         } else if ((row == 0) && (column > 0)) {
             w = ((this.exp_weight * cij) + cumDistMatrix.get(0, column - 1)) + this.globalGapPenalty;
-            // System.out.println("i="+row+" j="+column+" cij = "+cij +
+            // log.info("i="+row+" j="+column+" cij = "+cij +
             // ", w= "+w);
             cumDistMatrix.set(row, column, w);
             predecessors.set(row, column, (byte) 3);
@@ -165,7 +165,7 @@ public class DtwRecurrence implements IRecurrence {
     private double cumDistM(final int row, final int column,
             final IArrayD2Double prev, final IArrayD2Double curr,
             final double cij, final boolean minimize1) {
-        //System.out.println("Gap penalty: " + this.globalGapPenalty);
+        //log.info("Gap penalty: " + this.globalGapPenalty);
         double m = cij;
         final double init = minimize1 ? Double.POSITIVE_INFINITY
                 : Double.NEGATIVE_INFINITY;

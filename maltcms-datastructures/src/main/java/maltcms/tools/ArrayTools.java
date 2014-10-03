@@ -426,7 +426,7 @@ public class ArrayTools {
             final Array source_val, final Tuple2D<Array, Array> tiv,
             final double min, final double max, final int nbins,
             final double resolution, final double fillvalue) {
-        // System.out.println("Creating a dense Array!");
+        // log.info("Creating a dense Array!");
         final Index nii = source_ind.getIndex();
         final Index vii = source_val.getIndex();
         ArrayTools.log.debug("Size of new arrays {}", (nbins));
@@ -446,11 +446,11 @@ public class ArrayTools {
             target_ind.setDouble(tnii.set(i), (min + i));
         }
         final Index tvii = target_val.getIndex();
-        // System.out.println("Source index array: "+source_ind.getShape()[0]);
-        // System.out.println("Source value array: "+source_val.getShape()[0]);
+        // log.info("Source index array: "+source_ind.getShape()[0]);
+        // log.info("Source value array: "+source_val.getShape()[0]);
 
-        // System.out.println("Target index array: "+target_ind.getShape()[0]);
-        // System.out.println("Target value array: "+target_val.getShape()[0]);
+        // log.info("Target index array: "+target_ind.getShape()[0]);
+        // log.info("Target value array: "+target_val.getShape()[0]);
         int curr = 0;
         double lastm = -1;
         double currm = 0;
@@ -466,10 +466,10 @@ public class ArrayTools {
                 throw new IllegalArgumentException(
                         "Found mass value below minimum! " + d + "<" + min);
             }
-            // System.out.println("Index "+i+" d="+d);
+            // log.info("Index "+i+" d="+d);
             // values
             final double v = source_val.getDouble(vii.set(i));
-            // System.out.println("Value "+i+" v="+v);
+            // log.info("Value "+i+" v="+v);
             // int idx = ((int) Math.rint(d));
             curr = MaltcmsTools.binMZ(d, min, max, resolution);
             // double f = Math.floor(d);
@@ -711,8 +711,8 @@ public class ArrayTools {
             try {
                 final Array a = values.section(new int[]{offset},
                         new int[]{len});
-                // System.out.println("Scan " + (i + 1));
-                // System.out.println(a.toString());
+                // log.info("Scan " + (i + 1));
+                // log.info(a.toString());
                 al.add(a);
             } catch (final InvalidRangeException e) {
                 throw new ConstraintViolationException(e);
@@ -726,8 +726,8 @@ public class ArrayTools {
         try {
             final Array a = values.section(new int[]{offset},
                     new int[]{len});
-            // System.out.println("Scan " + size);
-            // System.out.println(a.toString());
+            // log.info("Scan " + size);
+            // log.info(a.toString());
             al.add(a);
         } catch (final InvalidRangeException e) {
             throw new ConstraintViolationException(e);
@@ -1665,7 +1665,7 @@ public class ArrayTools {
                 ArrayTools.log.debug("Scan " + i + " from " + 0
                         + " with length " + len + " to target with size "
                         + target.getShape()[0] + " at position " + (offset));
-                // System.out.println(scan.toString());
+                // log.info(scan.toString());
                 Array.arraycopy(scan, 0, target, offset, len);
                 indices.set(i, offset);
                 offset += len;

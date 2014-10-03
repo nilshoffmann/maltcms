@@ -42,6 +42,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.array.IArrayD2Double;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.tools.PathTools;
@@ -58,6 +59,7 @@ import ucar.nc2.Dimension;
  * 
  */
 @Data
+@Slf4j
 public class ThreePredecessorsOptimization implements IOptimizationFunction {
 
     private boolean minimize = true;
@@ -163,16 +165,16 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
             final IArrayD2Double pwvalues, final State[][] predecessors) {
         final double cij = this.tfvo.apply(l, r);
         pwvalues.set(row, column, cij);
-        // System.out.println(l.getFeature("FEATURE0") + " gegen " +
+        // log.info(l.getFeature("FEATURE0") + " gegen " +
         // r.getFeature("FEATURE0") + ":" + cij);
-        // System.out.println("Score(" + row + "," + column + ")=" + cij);
+        // log.info("Score(" + row + "," + column + ")=" + cij);
         final double init = this.minimize ? Double.POSITIVE_INFINITY
                 : Double.NEGATIVE_INFINITY;
         double n = init, w = init, nw = init;
         if ((row == 0) && (column == 0)) {
             nw = weights[NW.ordinal()] * cij;
             predecessors[row][column] = NW;
-            // System.out.println("cij = "+cij + ", nw= "+nw);
+            // log.info("cij = "+cij + ", nw= "+nw);
             cumDistMatrix.set(row, column, nw);
             // this.log.debug(
             // "Case 1: First column, first row ={}, best from Diag", nw);
@@ -180,7 +182,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
         } else if ((row > 0) && (column == 0)) {
             n = ((weights[N.ordinal()] * cij) + cumDistMatrix.get(row - 1, 0))
                     + this.ins;
-            // System.out.println("i="+row+" j="+column+" cij = "+cij +
+            // log.info("i="+row+" j="+column+" cij = "+cij +
             // ", n= "+n);
             cumDistMatrix.set(row, column, n);
             predecessors[row][column] = N;
@@ -189,7 +191,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
             return N;
         } else if ((row == 0) && (column > 0)) {
             w = ((weights[W.ordinal()] * cij) + cumDistMatrix.get(0, column - 1)) + this.del;
-            // System.out.println("i="+row+" j="+column+" cij = "+cij +
+            // log.info("i="+row+" j="+column+" cij = "+cij +
             // ", w= "+w);
             cumDistMatrix.set(row, column, w);
             predecessors[row][column] = W;
@@ -207,7 +209,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
             final double m = minimize ? MathTools.min(n, w, nw) : MathTools.max(
                     n, w, nw);
             cumDistMatrix.set(row, column, m);
-            // System.out.println("Scores: " + m + " | " + nw + " | " + n +
+            // log.info("Scores: " + m + " | " + nw + " | " + n +
             // " | "
             // + w);
             if (m == nw) {
@@ -241,7 +243,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
         final ArrayList<State> sl = new ArrayList<>();
         while ((a != 0) && (b != 0)) {
             val = this.traceMatrix[a][b];
-            // System.out.println(this.traceMatrix[a][b]);
+            // log.info(this.traceMatrix[a][b]);
             // val = State.values()[i];
             switch (val) {
                 case NW: {
@@ -430,15 +432,15 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
      * <p>showCumScoreMatrix.</p>
      */
     public void showCumScoreMatrix() {
-        System.out.println("");
+        log.info("");
         for (int i = 0; i < this.cumulatedScores.getShape().getBounds2D().
                 getMaxX(); i++) {
-            System.out.print(i + ": ");
+            log.info(i + ": ");
             for (int j = 0; j < this.cumulatedScores.getShape().getBounds2D().
                     getMaxY(); j++) {
-                System.out.print(this.cumulatedScores.get(i, j) + " ");
+                log.info(this.cumulatedScores.get(i, j) + " ");
             }
-            System.out.println("");
+            log.info("");
         }
     }
 
@@ -446,13 +448,13 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
      * <p>showPwScoreMatrix.</p>
      */
     public void showPwScoreMatrix() {
-        System.out.println("");
+        log.info("");
         for (int i = 0; i < this.pwScores.getShape().getBounds2D().getMaxX(); i++) {
-            System.out.print(i + ": ");
+            log.info(i + ": ");
             for (int j = 0; j < this.pwScores.getShape().getBounds2D().getMaxY(); j++) {
-                System.out.print(this.pwScores.get(i, j) + " ");
+                log.info(this.pwScores.get(i, j) + " ");
             }
-            System.out.println("");
+            log.info("");
         }
     }
 

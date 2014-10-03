@@ -17,9 +17,6 @@
  * software, even if advised of the possibility of such damage. * * *
  * *********************************************************************************
  *
- * @author hoffmann
- * 
- * @since 1.3.2
  */
 package org.systemsbiology.jrap.staxnxt;
 
@@ -33,6 +30,9 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class FileHeaderParser {
 
     String inputMZXMLfile;
@@ -133,7 +133,7 @@ public class FileHeaderParser {
             event = xmlSR.next();
             if (event == XMLStreamConstants.START_ELEMENT) {
                 elementName = xmlSR.getLocalName();
-                //System.out.println("elementName "+elementName);
+                //log.info("elementName "+elementName);
                 if (elementName.equals("parentFile")) {
                     parentFiles.add(new ParentFile(xmlSR.getAttributeValue(0),
                             xmlSR.getAttributeValue(1),
@@ -164,7 +164,7 @@ public class FileHeaderParser {
                     operator.phoneNumber = xmlSR.getAttributeValue(null, "phone");
                     operator.email = xmlSR.getAttributeValue(null, "email");
                     operator.URI = xmlSR.getAttributeValue(null, "URI");
-                    //System.out.println("operator "+operator);
+                    //log.info("operator "+operator);
 
                     info.instrumentInfo.operator = operator;
                 }
@@ -209,7 +209,7 @@ public class FileHeaderParser {
                     isInstrument = false;
                 }
                 if (elementName.equals("dataProcessing")) {
-                    //System.out.println("elementName "+elementName);
+                    //log.info("elementName "+elementName);
                     isDataProcess = false;
                     info.parentFiles = parentFiles;
                     info.dataProcessing.softwareUsed = dataProcessingSoftware;
@@ -232,7 +232,7 @@ public class FileHeaderParser {
             sInfo.setVersion(xmlSR.getAttributeValue(null, "version"));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         }
         return sInfo;
     }
@@ -293,7 +293,7 @@ public class FileHeaderParser {
             event = xmlSR.next();
             if (event == xmlSR.START_ELEMENT) {
                 elementName = xmlSR.getLocalName();
-                //System.out.println("elementName "+elementName);
+                //log.info("elementName "+elementName);
                 if (elementName.equals("sourceFile")) {
                     fileName = xmlSR.getAttributeValue(null, "name");
                     fileLocation = xmlSR.getAttributeValue(null, "location");
@@ -431,7 +431,7 @@ public class FileHeaderParser {
                 }
 
                 if (elementName.equals("dataProcessing")) {
-                    //System.out.println("elementName "+elementName);
+                    //log.info("elementName "+elementName);
                     isDataProcess = false;
                     info.parentFiles = parentFiles;
                     info.dataProcessing.softwareUsed = dataProcessingSoftware;

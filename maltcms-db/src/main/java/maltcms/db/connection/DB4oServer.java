@@ -29,6 +29,7 @@ package maltcms.db.connection;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectServer;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>DB4oServer class.</p>
@@ -36,6 +37,7 @@ import com.db4o.ObjectServer;
  * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class DB4oServer implements Runnable {
 
     private String address, port;
@@ -75,7 +77,7 @@ public class DB4oServer implements Runnable {
     /** {@inheritDoc} */
     @Override
     public void run() {
-        System.out.println("Starting db4o server for " + this.address + " on port " + this.port);
+        log.info("Starting db4o server for " + this.address + " on port " + this.port);
 //    	Configuration cfg = Db4o.newConfiguration();
 //    	cfg.clientServer().batchMessages(true);
 //    	cfg.clientServer().maxBatchQueueSize(10);
@@ -88,14 +90,14 @@ public class DB4oServer implements Runnable {
         while (!shutdown) {
             int cl = os.ext().clientCount();
             if (cl != clients) {
-                System.out.println("Active clients: " + cl);
+                log.info("Active clients: " + cl);
                 clients = cl;
             }
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+   
+                log.warn(e.getLocalizedMessage());
             }
         }
         os.close();

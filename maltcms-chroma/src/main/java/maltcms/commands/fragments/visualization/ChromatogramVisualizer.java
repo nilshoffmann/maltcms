@@ -272,7 +272,7 @@ public class ChromatogramVisualizer extends AFragmentCommand {
                 correctedtic.setDouble(cind, corrected_value);
 
             } catch (final InvalidRangeException e) {
-                System.err.println(e.getLocalizedMessage());
+                log.warn(e.getLocalizedMessage());
             }
 
         }

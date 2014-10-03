@@ -194,7 +194,7 @@ public class Default2DVarLoader extends AFragmentCommand {
                 }
             } catch (final InvalidRangeException e) {
                 log.warn("Invalid range while reading scan {}/{}", i, size);
-                e.printStackTrace();
+                log.warn(e.getLocalizedMessage());
             }
             offset += len;
         }
@@ -461,7 +461,7 @@ public class Default2DVarLoader extends AFragmentCommand {
         Integer modulationCnt;
         // if (ticcount % scanspermodulation == 0) {
         modulationCnt = (ticcount / scanspermodulation);
-        System.out.println("Chromatogram has " + modulationCnt + " modulations");
+        log.info("Chromatogram has " + modulationCnt + " modulations");
         log.info("ticcount: {}, scanspermodulation: {}, scancount: {}",
                 new Object[]{ticcount, scanspermodulation, modulationCnt});
         // } else {

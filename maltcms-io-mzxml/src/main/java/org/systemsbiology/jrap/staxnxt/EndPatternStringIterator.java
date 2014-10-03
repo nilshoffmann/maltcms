@@ -6,18 +6,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by IntelliJ IDEA. User: tholzman Date: Nov 16, 2009 Time: 3:30:12 PM
  * To change this template use File | Settings | File Templates.
- *
- * @author hoffmann
  * 
- * @since 1.3.2
  */
 //Iterates through long strings within a file that begin with one
 //pattern and end with another.  Useful for cutting out "<scan>...</scan>"
 //etc.
+@Slf4j
 public class EndPatternStringIterator implements Iterator {
 
     private static XMLInputFactory inputfactory = XMLInputFactory.newInstance();
@@ -247,11 +246,11 @@ public class EndPatternStringIterator implements Iterator {
                 StringBuilder sb = epsi.next();
                 int lineno = epsi.getFirstLineNo();
                 long filePos = epsi.getFilePos();
-                System.out.println("Line: " + lineno + " filePos: " + filePos + " " + sb);
+                log.info("Line: " + lineno + " filePos: " + filePos + " " + sb);
             }
         } catch (Exception e) {
-            System.err.println(e);
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
+            log.warn(e.getLocalizedMessage());
         }
     }
 }

@@ -58,18 +58,18 @@ public class PairwisePerformanceMetrics implements IPerformanceMetrics {
     public PairwisePerformanceMetrics(String toolName, String instanceName, int tp, int fp, int tn, int fn) {
         this.toolName = toolName;
         this.instanceName = instanceName;
-//		System.out.println("tp: "+tp+" fp: "+fp+" tn: "+tn+" fn: "+fn);
+//		log.info("tp: "+tp+" fp: "+fp+" tn: "+tn+" fn: "+fn);
         this.tp = tp;
         this.fp = fp;//+unmatchedTool;
         this.tn = tn;
         this.fn = fn;
         this.recall = (double) tp / (double) (tp + fn);
         this.precision = (double) tp / (double) (tp + fp);
-//		System.out.println("Recall: "+recall);
-//		System.out.println("Precision: "+precision);
+//		log.info("Recall: "+recall);
+//		log.info("Precision: "+precision);
 //    f1 = 2*t.p.r*p.p.v/(t.p.r+p.p.v)
         this.f1 = 2.0d * ((precision * recall) / (precision + recall));
-//		System.out.println("F1: "+f1);
+//		log.info("F1: "+f1);
     }
 
     /**
@@ -155,11 +155,11 @@ public class PairwisePerformanceMetrics implements IPerformanceMetrics {
     /** {@inheritDoc} */
     @Override
     public double getGain() {
-        //System.out.println("tp+fn=" + (tp + fn));
-        //System.out.println("tp+tn+fp+fn=" + (tp + tn + fp + fn));
+        //log.info("tp+fn=" + (tp + fn));
+        //log.info("tp+tn+fp+fn=" + (tp + tn + fp + fn));
         double r = ((double) (tp + fn)) / ((double) (tp + tn + fp + fn));
-        //System.out.println("R=" + r);
-        //System.out.println("Precisions=" + getPrecision());
+        //log.info("R=" + r);
+        //log.info("Precisions=" + getPrecision());
         double gain = getPrecision() / r;
         return gain;
     }

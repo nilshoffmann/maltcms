@@ -32,14 +32,16 @@ import cross.datastructures.tools.EvalTools;
 import cross.tools.PublicMemberGetters;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 
 /**
  * <p>MAggregatePredicateFactory class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class MAggregatePredicateFactory implements
         IAggregatePredicateFactory<IMetabolite> {
 
@@ -68,7 +70,7 @@ public class MAggregatePredicateFactory implements
             split(pmg, nl, s);
         }
         if (nl.isEmpty()) {
-            System.out.println("Using default match all predicate");
+            log.info("Using default match all predicate");
             return this.defaultPredicate;
         } else {
             return new MAggregatePredicate(nl);
@@ -81,8 +83,8 @@ public class MAggregatePredicateFactory implements
         if (split.length == 2) {
             String method = split[0];
             Method m = pmg.getMethodForGetterName(method);
-            System.out.println(m.getGenericReturnType());
-            System.out.println("Found the following method: " + m.getName());
+            log.info("Generic return type: {}", m.getGenericReturnType());
+            log.info("Found the following method: " + m.getName());
             String arg = split[1];
             if (arg.startsWith("[") && arg.endsWith("]")) {//NumPredicate
                 handleNumRange(nl, m, arg);
@@ -90,7 +92,7 @@ public class MAggregatePredicateFactory implements
                 handleString(nl, m, arg);
             }
         } else {
-            System.err.println("Could not evaluate command-line!");
+            log.warn("Could not evaluate command-line!");
         }
     }
 
@@ -100,7 +102,7 @@ public class MAggregatePredicateFactory implements
         if (arg.endsWith("<")) {//substring matching
             msmp = new MStringContainsPredicate(arg.substring(0,
                     arg.length() - 1));
-            System.out.println("Substring matching on " + arg.substring(0, arg.
+            log.info("Substring matching on " + arg.substring(0, arg.
                     length() - 1));
         } else {
             msmp = new MStringMatchPredicate(arg);
@@ -129,7 +131,7 @@ public class MAggregatePredicateFactory implements
 //						Byte b2 = Byte.parseByte(range[1]);
 //						mnrp = new NumRangePredicate<T>(b1,b2);
 //					} catch (NumberFormatException nfe3) {
-                    System.err.println(
+                    log.warn(
                             "Could not parse strings as numbers: " + range[0] + " and " + range[1]);
                     //}
                 }
@@ -140,7 +142,7 @@ public class MAggregatePredicateFactory implements
                 nl.add(mnrp);
             }
         } else {
-            System.err.println("Could not evaluate numerical arguments!");
+            log.warn("Could not evaluate numerical arguments!");
         }
     }
 

@@ -37,6 +37,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.db.predicates.metabolite.MSimilarityPredicate;
 import maltcms.db.predicates.metabolite.MetaboliteSimilarity;
@@ -51,6 +52,7 @@ import ucar.ma2.Index;
  * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
 
     private QueryDB<IMetabolite> mqdb;
@@ -77,7 +79,7 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
         }
 
         if (dblocation == null) {
-            System.err.println("No db selected, exiting!");
+            log.warn("No db selected, exiting!");
             System.exit(1);
         }
         //dblocation = "http://default@127.0.0.1:8888";
@@ -88,8 +90,8 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
         intensities.setInt(intIdx.set(72), 2000230);
         intensities.setInt(intIdx.set(73), 1213231);
         intensities.setInt(intIdx.set(251), 100000);
-        //System.out.println(masses);
-        //System.out.println(intensities);
+        //log.info(masses);
+        //log.info(intensities);
         RawMSQuery rmq = new RawMSQuery(new Tuple2D<>(masses,
                 intensities));
         rmq.setDB(serverfile);//dblocation);
@@ -101,7 +103,7 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
 //			os = Db4o.openServer(serverfile, 8888);
 //			os.grantAccess("default", "default");
 //		} catch (MalformedURLException e) {
-//			e.printStackTrace();
+//			log.warn(e.getLocalizedMessage());
 //		}
         //rmq.setQuery(masses, intensities);
         MetaboliteSimilarity ms = new MetaboliteSimilarity(masses, intensities,
@@ -110,7 +112,7 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
         MSimilarityPredicate msp = new MSimilarityPredicate(ms);
         //synchronized(os) {
         for (Tuple2D<Double, IMetabolite> im : rmq.getBestHits(10, msp)) {
-            System.out.println(im.getFirst() + ": " + im.getSecond().getName());
+            log.info(im.getFirst() + ": " + im.getSecond().getName());
 
         }
         //}

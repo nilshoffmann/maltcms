@@ -35,8 +35,8 @@ import cross.tools.MathTools;
 /**
  * <p>DimensionReduce class.</p>
  *
- * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- * @version $Id: $Id
+ * @author Soeren Mueller
+ * 
  */
 public class DimensionReduce {
 

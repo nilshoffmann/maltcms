@@ -18,9 +18,6 @@
  * the possibility of such damage. * * *
  * *****************************************************************************
  *
- * @author hoffmann
- * 
- * @since 1.3.2
  */
 package org.systemsbiology.jrap.staxnxt;
 
@@ -34,6 +31,9 @@ import java.util.zip.Inflater;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ScanAndHeaderParser {
 
     public ScanHeader tmpScanHeader;
@@ -231,7 +231,7 @@ public class ScanAndHeaderParser {
                 value = xmlSR.getAttributeValue(null, name);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         }
         return value;
     }
@@ -252,7 +252,7 @@ public class ScanAndHeaderParser {
                 value = Integer.parseInt(xmlSR.getAttributeValue(null, name));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         }
         return value;
     }
@@ -273,7 +273,7 @@ public class ScanAndHeaderParser {
                 value = Float.parseFloat(xmlSR.getAttributeValue(null, name));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
         }
         return value;
     }
@@ -304,7 +304,7 @@ public class ScanAndHeaderParser {
                 decompresser.end();
 
             } catch (DataFormatException e) {
-                e.printStackTrace();
+                log.warn(e.getLocalizedMessage());
             }
 
             arrayLen = result.length / (tmpScanHeader.getPrecision() / 8) / 2;

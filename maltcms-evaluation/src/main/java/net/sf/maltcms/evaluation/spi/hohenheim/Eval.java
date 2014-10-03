@@ -55,11 +55,14 @@ import java.util.List;
 import java.util.Vector;
 import jxl.Workbook;
 import maltcms.io.csv.CSVReader;
+import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
 import net.sf.maltcms.evaluation.spi.xcalibur.Chromatogram;
 import net.sf.maltcms.evaluation.spi.xcalibur.Creator;
 import net.sf.maltcms.evaluation.spi.xcalibur.Peak;
 import net.sf.maltcms.evaluation.spi.xcalibur.RTUnit;
 import net.sf.maltcms.evaluation.spi.xcalibur.XLSIOProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
@@ -71,8 +74,11 @@ import ucar.ma2.Index;
  * @author Nils Hoffmann
  * 
  */
-public class Eval {
 
+public class Eval {
+    
+    private static final Logger log = LoggerFactory.getLogger(ClassificationPerformanceTest.class);
+    
     private final String dbdir;
 
     /**
@@ -111,22 +117,22 @@ public class Eval {
                 if (toolname.equalsIgnoreCase("maltcms")) {
                     Creator c = new Creator(toolname, "0.95-beta");
                     oc.store(c);
-                    System.out.println("Processing maltcms peaks");
+                    log.info("Processing maltcms peaks");
                     for (String peakFile : peakFilesForTool) {
                         List<Peak> l = getMaltcmsPeaks(c, oc, peakFile);
-                        System.out.println(
+                        log.info(
                                 "Storing " + l.size() + " peaks in db");
                         for (Peak p : l) {
                             oc.store(p);
                         }
                     }
                 } else if (toolname.equalsIgnoreCase("xcalibur")) {
-                    System.out.println("Processing xcalibur peaks");
+                    log.info("Processing xcalibur peaks");
                     Creator c = new Creator("xcalibur", "unknown");
                     oc.store(c);
                     for (String peakFile : peakFilesForTool) {
                         List<Peak> l = getXcaliburPeaks(c, oc, peakFile);
-                        System.out.println(
+                        log.info(
                                 "Storing " + l.size() + " peaks in db");
                         for (Peak p : l) {
                             oc.store(p);
@@ -136,7 +142,7 @@ public class Eval {
                     throw new IllegalArgumentException(
                             "Unsupported toolname: " + toolname);
                 }
-                System.out.println("Committing peaks to db");
+                log.info("Committing peaks to db");
                 oc.commit();
             }
         }
@@ -152,12 +158,12 @@ public class Eval {
     public static void main(String[] args) {
         Eval e = new Eval(System.getProperty("user.dir"));
         ObjectContainer oc = e.createDB(false, args);
-        System.out.println("Querying for peaks");
+        log.info("Querying for peaks");
         ObjectSet<Peak> xcpeaks = e.getPeaks(oc);
         HashSet<String> peakNames = new HashSet<>();
         HashMap<String, Double> rtToPeakNames = new HashMap<>();
         for (Peak p : xcpeaks) {
-            System.out.println(p.getName());
+            log.info(p.getName());
             peakNames.add(p.getName());
             if (!rtToPeakNames.containsKey(p.getName())) {
                 rtToPeakNames.put(p.getName(), p.getRt());
@@ -166,12 +172,12 @@ public class Eval {
         List<String> peakNamesList = new ArrayList<>(peakNames);
         Collections.sort(peakNamesList, e.new StringListByDoubleComparator(
                 rtToPeakNames));
-        System.out.println(peakNames);
+        log.info("Peak names: {}", peakNames);
         List<List<String>> table = new ArrayList<>();
         for (Chromatogram c : e.getChromatograms(oc)) {
             List<String> column = new ArrayList<>();
             column.add(c.getName());
-            System.out.println("Adding column " + c.getName());
+            log.info("Adding column " + c.getName());
             for (String peakName : peakNamesList) {
                 Peak peak = e.getPeakForChromatogramByCreatorByName(oc, c,
                         "xcalibur", peakName).get(0);
@@ -180,7 +186,7 @@ public class Eval {
             table.add(column);
         }
         int nrows = peakNamesList.size() + 1;
-        System.out.println(table);
+        log.info("Table: {}", table);
         File xcfile = new File("xcalibur", "multiple-alignmentRT.csv");
         if (!xcfile.getParentFile().exists()) {
             xcfile.getParentFile().mkdirs();
@@ -198,7 +204,7 @@ public class Eval {
                 bw.flush();
             }
         } catch (IOException e1) {
-            // TODO Auto-generated catch block
+            
             e1.printStackTrace();
         }
     }
@@ -484,8 +490,8 @@ public class Eval {
         @Override
         public boolean match(Peak arg0) {
             if (arg0.getParent().getName().equals(this.file)) {
-                System.out.println("arg0: " + arg0.getParent().getName());
-                System.out.println("this: " + this.file);
+                log.info("arg0: " + arg0.getParent().getName());
+                log.info("this: " + this.file);
                 return true;
             }
             return false;
@@ -536,8 +542,8 @@ public class Eval {
          */
         @Override
         public boolean match(Peak arg0) {
-//        	System.out.println("arg0: "+arg0.getParent().getName()+" "+arg0.getCreatorname());
-//        	System.out.println("this: "+this.file+" "+this.creator);
+//        	log.info("arg0: "+arg0.getParent().getName()+" "+arg0.getCreatorname());
+//        	log.info("this: "+this.file+" "+this.creator);
             if (arg0.getParent().getName().equals(this.file) && arg0.
                     getCreatorname().startsWith(this.creator)) {
                 return true;
@@ -571,8 +577,8 @@ public class Eval {
          */
         @Override
         public boolean match(Peak arg0) {
-//        	System.out.println("arg0: "+arg0.getParent().getName()+" "+arg0.getCreatorname());
-//        	System.out.println("this: "+this.file+" "+this.creator);
+//        	log.info("arg0: "+arg0.getParent().getName()+" "+arg0.getCreatorname());
+//        	log.info("this: "+this.file+" "+this.creator);
             if (arg0.getParent().getName().equals(this.file) && arg0.
                     getCreatorname().startsWith(this.creator) && arg0.getName().
                     equals(this.peakname)) {
@@ -640,8 +646,8 @@ public class Eval {
             }
             return files;
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         }
         return Collections.emptyList();
     }
@@ -663,8 +669,8 @@ public class Eval {
             ObjectContainer oc = Db4o.openFile(cfg, db.getAbsolutePath());
             return oc;
         } catch (Db4oIOException | DatabaseFileLockedException | IncompatibleFileFormatException | OldFormatException | DatabaseReadOnlyException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            log.warn(e.getLocalizedMessage());
         }
         throw new NullPointerException();
     }
@@ -769,7 +775,7 @@ public class Eval {
                 }
                 Peak p = new Peak(creator, c, "NN", rtapex, rtstart, rtstop,
                         new double[]{mw}, area, intensity, RTUnit.Seconds);
-                System.out.println(p);
+                log.info("Peak: {}", p);
                 v.add(p);
             }
         }
@@ -791,7 +797,7 @@ public class Eval {
         try {
             return Double.parseDouble(s);
         } catch (NumberFormatException nfe) {
-            System.err.println(nfe);
+            log.warn(nfe.getLocalizedMessage());
             return Double.NaN;
         }
     }

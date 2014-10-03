@@ -35,7 +35,7 @@ import org.apache.poi.ss.usermodel.Cell;
  * <p>POICell class.</p>
  *
  * @author Nils Hoffmann
- * @version $Id: $Id
+ * 
  */
 @Data
 public class POICell implements ICell {

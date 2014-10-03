@@ -39,6 +39,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.ms.Metabolite;
 import ucar.ma2.ArrayDouble;
@@ -47,9 +48,10 @@ import ucar.ma2.ArrayInt;
 /**
  * <p>MSPFormatMetaboliteParser class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class MSPFormatMetaboliteParser {
 
     private ArrayDouble.D1 masses = null;
@@ -92,7 +94,7 @@ public class MSPFormatMetaboliteParser {
         } else if (line.startsWith("Comments: ")) {
             handleComments(line.substring("Comments: ".length()));
         } else if (line.startsWith("CAS#: ")) {
-            // System.out.println("Skipping "+line);
+            // log.info("Skipping "+line);
         } else if (line.startsWith("Num Peaks: ")) {
             nnpeaks++;
             handleNumPeaks(line.substring(("Num Peaks: ").length()));
@@ -113,7 +115,7 @@ public class MSPFormatMetaboliteParser {
                 }
                 data.append(line);
             }
-            // System.out.println(data.toString());
+            // log.info(data.toString());
         }
         linecounter++;
     }
@@ -126,7 +128,7 @@ public class MSPFormatMetaboliteParser {
             this.id = this.name;
         }
         if (this.name == null) {
-            System.err.println("Error creating metabolite, name=" + this.name
+            log.warn("Error creating metabolite, name=" + this.name
                     + "; id=" + this.id);
             System.exit(-1);
         }
@@ -135,13 +137,13 @@ public class MSPFormatMetaboliteParser {
                 this.rt, this.rtUnit, (int) this.mw, this.sp, this.synname,
                 this.masses, this.intensities);
         if (m == null) {
-            System.err.println("Error creating metabolite");
+            log.warn("Error creating metabolite");
             System.exit(-1);
         }
         this.metabolites.add(m);
-        System.out.println("Parsed Metabolite Nr. " + this.metabolites.size()
+        log.info("Parsed Metabolite Nr. " + this.metabolites.size()
                 + ": " + m.getName());
-        System.out.println("Parsed Metabolite : " + m.toString());
+        log.info("Parsed Metabolite : " + m.toString());
         this.name = null;
         this.id = null;
         this.idType = null;
@@ -200,7 +202,7 @@ public class MSPFormatMetaboliteParser {
         } else if (synon.startsWith("MATCH:")) {
             handleSynonMATCH(synon.substring(("MATCH:").length()));
         } else {
-            // System.err.println("Unknown SYNON attribute: "+synon);
+            // log.warn("Unknown SYNON attribute: "+synon);
             // System.exit(-1);
         }
     }
@@ -211,7 +213,7 @@ public class MSPFormatMetaboliteParser {
      * @param date a {@link java.lang.String} object.
      */
     public void handleSynonDate(String date) {
-        // System.out.println("Date: "+date);
+        // log.info("Date: "+date);
         this.syndate = date;
     }
 
@@ -221,7 +223,7 @@ public class MSPFormatMetaboliteParser {
      * @param name a {@link java.lang.String} object.
      */
     public void handleSynonName(String name) {
-        // System.out.println("Name: "+name);
+        // log.info("Name: "+name);
         this.synname = name;
     }
 
@@ -231,7 +233,7 @@ public class MSPFormatMetaboliteParser {
      * @param sp a {@link java.lang.String} object.
      */
     public void handleSynonSP(String sp) {
-        // System.out.println("Synon: SP:"+sp);
+        // log.info("Synon: SP:"+sp);
         this.sp = sp;
     }
 
@@ -241,7 +243,7 @@ public class MSPFormatMetaboliteParser {
      * @param id a {@link java.lang.String} object.
      */
     public void handleSynonMPIMPID(String id) {
-        // System.out.println("Synon: MPIMP-ID:"+id);
+        // log.info("Synon: MPIMP-ID:"+id);
         handleSynonID(id);
     }
 
@@ -251,7 +253,7 @@ public class MSPFormatMetaboliteParser {
      * @param id a {@link java.lang.String} object.
      */
     public void handleSynonID(String id) {
-        // System.out.println("Synon: ID:"+id);
+        // log.info("Synon: ID:"+id);
         this.id = id;
     }
 
@@ -261,7 +263,7 @@ public class MSPFormatMetaboliteParser {
      * @param ri a {@link java.lang.String} object.
      */
     public void handleSynonRI(String ri) {
-        // System.out.println("Synon: RI:"+ri);
+        // log.info("Synon: RI:"+ri);
         this.ri = Double.parseDouble(ri);
     }
 
@@ -271,7 +273,7 @@ public class MSPFormatMetaboliteParser {
      * @param rt a {@link java.lang.String} object.
      */
     public void handleSynonRT(String rt) {
-        // System.out.println("Synon: RT:"+rt);
+        // log.info("Synon: RT:"+rt);
         // this.rt = Double.parseDouble(rt);
         // Assume sec or min prefix
         if (rt.startsWith("sec") || rt.startsWith("min")) {
@@ -290,7 +292,7 @@ public class MSPFormatMetaboliteParser {
      * @param match a {@link java.lang.String} object.
      */
     public void handleSynonMATCH(String match) {
-        System.out.println("IGNORING ATTRIBUTE MATCH=" + match);
+        log.info("IGNORING ATTRIBUTE MATCH=" + match);
     }
 
     /**
@@ -299,7 +301,7 @@ public class MSPFormatMetaboliteParser {
      * @param formula a {@link java.lang.String} object.
      */
     public void handleFormula(String formula) {
-        // System.out.println("formula: "+formula);
+        // log.info("formula: "+formula);
         this.formula = formula;
     }
 
@@ -309,7 +311,7 @@ public class MSPFormatMetaboliteParser {
      * @param mw a {@link java.lang.String} object.
      */
     public void handleMW(String mw) {
-        // System.out.println("MW: "+mw);
+        // log.info("MW: "+mw);
         try {
             this.mw = Double.parseDouble(mw);
         } catch (NumberFormatException nfe) {
@@ -329,7 +331,7 @@ public class MSPFormatMetaboliteParser {
      * @param comments a {@link java.lang.String} object.
      */
     public void handleComments(String comments) {
-        // System.out.println("Comments: "+comments);
+        // log.info("Comments: "+comments);
         this.comments = comments;
     }
 
@@ -339,7 +341,7 @@ public class MSPFormatMetaboliteParser {
      * @param dbno a {@link java.lang.String} object.
      */
     public void handleDBNo(String dbno) {
-        // System.out.println("DB#: "+dbno);
+        // log.info("DB#: "+dbno);
         this.dbno = Integer.parseInt(dbno);
     }
 
@@ -349,7 +351,7 @@ public class MSPFormatMetaboliteParser {
      * @param numpeaks a {@link java.lang.String} object.
      */
     public void handleNumPeaks(String numpeaks) {
-        // System.out.println("Num Peaks: "+numpeaks);
+        // log.info("Num Peaks: "+numpeaks);
         this.npeaks = Integer.parseInt(numpeaks);
     }
 
@@ -365,35 +367,35 @@ public class MSPFormatMetaboliteParser {
         if (this.intensities == null) {
             this.intensities = new ArrayInt.D1(this.npeaks);
         }
-        // System.out.println(data);
+        // log.info(data);
         if (data.contains(";")) {
             parseMZI(data, " ", ";");
-            // System.out.println(this.masses);
-            // System.out.println(this.intensities);
+            // log.info(this.masses);
+            // log.info(this.intensities);
         } else if (data.contains(" ")) {
-            // System.out.println("Parsing msp compatible data!");
+            // log.info("Parsing msp compatible data!");
             parseMZI(data, ":", " ");
         } else {
-            System.out.println("This is no valid data line! " + data);
+            log.info("This is no valid data line! " + data);
         }
     }
 
     private void parseMZI(String data, String pairsep, String recordsep) {
-        // System.out.println("Parsing mzI data: "+data);
+        // log.info("Parsing mzI data: "+data);
         String[] pairs = data.split(recordsep);
-        System.out.println("Point pairs: " + Arrays.deepToString(pairs));
+        log.info("Point pairs: " + Arrays.deepToString(pairs));
         for (String p : pairs) {
             p = p.trim();
             if (!p.isEmpty()) {
-                // System.out.println(p);
+                // log.info(p);
                 String[] pair = p.split(pairsep);
-                System.out.println(Arrays.toString(pair));
+                log.info(Arrays.toString(pair));
                 if (pair.length == 2) {
                     this.masses.set(this.points, Double.parseDouble(pair[0]));
                     this.intensities.set(this.points, Integer.parseInt(pair[1]));
                     this.points++;
                 } else {
-                    System.err.println("Incorrect split result for pair: " + p
+                    log.warn("Incorrect split result for pair: " + p
                             + "! Omitting rest!");
                     return;
                 }
@@ -415,15 +417,15 @@ public class MSPFormatMetaboliteParser {
             while ((line = br.readLine()) != null) {
                 handleLine(line);
             }
-            // System.out.println("Found "+nnpeaks+" mass spectra!");
+            // log.info("Found "+nnpeaks+" mass spectra!");
             // System.exit(-1);
             // handleLine("\r");
         } catch (FileNotFoundException e) {
-            System.err.println(e.getLocalizedMessage());
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
+            log.warn(e.getLocalizedMessage());
         } catch (IOException e) {
-            System.err.println(e.getLocalizedMessage());
-            e.printStackTrace();
+            log.warn(e.getLocalizedMessage());
+            log.warn(e.getLocalizedMessage());
         }
         return this.metabolites;
     }
@@ -458,7 +460,7 @@ public class MSPFormatMetaboliteParser {
                             return true;
                         }
                     });
-                    System.out.println("DB holding " + numMet.size()
+                    log.info("DB holding " + numMet.size()
                             + " metabolites!");
                     int i = 0;
                     int size = al.size();
@@ -481,29 +483,29 @@ public class MSPFormatMetaboliteParser {
                         // }
                         // });
                         // if(os.size() == 0) {
-                        System.out.println("Adding metabolite " + (i + 1) + "/"
+                        log.info("Adding metabolite " + (i + 1) + "/"
                                 + size + " :" + me.getName() + " to db!");
-                        System.out.println("ID: " + ID);
+                        log.info("ID: " + ID);
                         db.store(me);
                         // }else if(os.size()==1) {
-                        // System.out.println("Updating metabolite "+(i+1)+"/"+size+" :"+me.getName());
+                        // log.info("Updating metabolite "+(i+1)+"/"+size+" :"+me.getName());
                         // os.get(0).update(me);
                         // db.set(me);
                         // } else if(os.size()>2){
-                        // System.err.println("Query returned ambiguous results for "+(i+1)+"/"+size+"!");
+                        // log.warn("Query returned ambiguous results for "+(i+1)+"/"+size+"!");
                         // for(IMetabolite met:os) {
-                        // System.err.println(met.getName());
+                        // log.warn(met.getName());
                         // }
                         // System.exit(-1);
                         // }
                         i++;
                     }
                     cnt += i;
-                    System.out.println("Committing to database!");
+                    log.info("Committing to database!");
                     db.commit();
                 }
                 int committed = db.query(IMetabolite.class).size();
-                System.out.println("Processed " + cnt
+                log.info("Processed " + cnt
                         + " Metabolites, total in database: "
                         + committed + "!");
                 db.close();
@@ -513,7 +515,7 @@ public class MSPFormatMetaboliteParser {
             }
 
         } else {
-            System.out.println(
+            log.info(
                     "Usage: MSPFormatMetaboliteParser <OUTFILE> <INFILE_1> ... <INFILE_N>");
         }
         System.exit(0);

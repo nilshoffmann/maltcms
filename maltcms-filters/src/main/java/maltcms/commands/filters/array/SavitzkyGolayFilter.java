@@ -138,7 +138,7 @@ public class SavitzkyGolayFilter extends AArrayFilter {
     public static double[] convolve(final double[] filterCoeffs, final double[] d) {
         double[] ret = new double[d.length];
         double[] filterArray = new double[d.length + (filterCoeffs.length - 1)];
-        //System.out.println("Length of filter array: "+filterArray.length);
+        //log.info("Length of filter array: "+filterArray.length);
         int offset = (filterCoeffs.length - 1) / 2;
         //initialize boundaries by padding
         for (int i = 0; i < offset; i++) {
@@ -148,7 +148,7 @@ public class SavitzkyGolayFilter extends AArrayFilter {
         System.arraycopy(d, 0, filterArray, offset, d.length);
         for (int i = offset; i < filterArray.length - offset; i++) {
             double sum = 0.0d;
-            //System.out.println("Convolution from: "+(i-offset)+" to "+(i+offset));
+            //log.info("Convolution from: "+(i-offset)+" to "+(i+offset));
             for (int j = 0; j < filterCoeffs.length; j++) {
                 sum += filterCoeffs[j] * filterArray[(i - offset) + j];
             }

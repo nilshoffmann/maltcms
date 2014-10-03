@@ -26,16 +26,15 @@ import java.util.Map;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * dhmay 20091021: -Incorporating Vagisha's changes to close files, merging in
  * my changes for mzML 1.1 support -adding a debug flag for messages that
  * probably don't need to be displayed every time
  *
- * @author hoffmann
- * 
- * @since 1.3.2
  */
+@Slf4j
 public class IndexParser {
 
     String inputMZXMLfilename;
@@ -77,7 +76,7 @@ public class IndexParser {
      */
     public Map<Integer, Long> getOffsetMap() {
         if (debug) {
-            System.out.println("offset size " + offsetMap.size());
+            log.info("offset size " + offsetMap.size());
         }
         return offsetMap;
 
@@ -90,7 +89,7 @@ public class IndexParser {
      */
     public long getChrogramIndex() {
         if (debug) {
-            System.out.println("chrogramIndex " + chrogramIndex);
+            log.info("chrogramIndex " + chrogramIndex);
         }
         return chrogramIndex;
 
@@ -103,7 +102,7 @@ public class IndexParser {
      */
     public int getMaxScan() {
         if (debug) {
-            System.out.println("maxScan " + maxScan);
+            log.info("maxScan " + maxScan);
         }
         return maxScan;
     }
@@ -123,7 +122,7 @@ public class IndexParser {
 
         try {
             tmpXML = new File(inputMZXMLfilename);
-            //System.out.println(inputMZXMLfilename +" length is "+ tmpXML.length());
+            //log.info(inputMZXMLfilename +" length is "+ tmpXML.length());
 
             fileIN = new FileInputStream(inputMZXMLfilename);
             fileIN.skip(tmpXML.length() - 500);
@@ -132,12 +131,12 @@ public class IndexParser {
             String footer = new String(bytes, 0, bytesRead);
             int offset;
             if ((offset = footer.indexOf("<" + indexName + ">")) == -1) {
-                System.err.println("<" + indexName + ">" + " not found!!!");
+                log.warn("<" + indexName + ">" + " not found!!!");
             }
             footer = footer.substring(offset + indexName.length() + 2);
             int endIndex = footer.indexOf("</" + indexName + ">");
             if (endIndex == -1) {
-                System.err.println("</" + indexName + "> not found!!!");
+                log.warn("</" + indexName + "> not found!!!");
             }
 
             footer = footer.substring(0, endIndex);
@@ -145,17 +144,17 @@ public class IndexParser {
 
 //            fileIN.close();
             if (debug) {
-                System.out.println("indexPosition is " + indexPosition);
+                log.info("indexPosition is " + indexPosition);
             }
         } catch (IOException | NumberFormatException e) {
-            System.out.println("exception:" + e);
-            e.printStackTrace();
+            log.info("exception:" + e);
+            log.warn(e.getLocalizedMessage());
         } finally {
             if (fileIN != null) {
                 try {
                     fileIN.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                 }
             }
         }
@@ -170,7 +169,7 @@ public class IndexParser {
         XMLStreamReader xmlSR = null;
         try {
             long indexPos = getIndexPosition();
-//            System.out.println("indexPos "+indexPos);
+//            log.info("indexPos "+indexPos);
 
             fileIN = new FileInputStream(inputMZXMLfilename);
             fileIN.skip(indexPos);
@@ -191,7 +190,7 @@ public class IndexParser {
                 int event = xmlSR.next();
                 if (event == xmlSR.START_ELEMENT) {
                     elementName = xmlSR.getLocalName();
-//                    System.out.println("elementName "+elementName);
+//                    log.info("elementName "+elementName);
 
                     if (elementName.equals("index")) {
                         if (isML) {
@@ -233,7 +232,7 @@ public class IndexParser {
                             chrogramIndex = offset;
                         } else {
                             assert currentScan != -1 : "Did not find the scan number associated with offset " + indexBuffer.toString();
-                            //System.out.println("index "+indexBuffer.toString());
+                            //log.info("index "+indexBuffer.toString());
                             offsetMap.put(currentScan, offset);
                             maxScan = currentScan;
                             currentScan = -1;
@@ -261,14 +260,14 @@ public class IndexParser {
                 try {
                     xmlSR.close();
                 } catch (XMLStreamException e) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                 }
             }
             if (fileIN != null) {
                 try {
                     fileIN.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.warn(e.getLocalizedMessage());
                 }
             }
         }

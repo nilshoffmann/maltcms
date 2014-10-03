@@ -205,20 +205,20 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
         try {
             this.defaultConfig = new PropertiesConfiguration(defaultConfigLocation);
         } catch (Exception e) {
-            System.err.println(e.getLocalizedMessage());
+            log.warn(e.getLocalizedMessage());
             try {
                 defaultConfigLocation = new File("cfg/default.properties").toURI().toURL();
                 this.defaultConfig = new PropertiesConfiguration(
                         defaultConfigLocation);
             } catch (MalformedURLException ex) {
-                // TODO Auto-generated catch block
+   
                 ex.printStackTrace();
             } catch (final ConfigurationException e1) {
                 this.log.warn(e1.getLocalizedMessage());
             }
         }
 
-        System.out.println("Using default config location: "
+        log.info("Using default config location: "
                 + defaultConfigLocation.toString());
 
         final CompositeConfiguration ccfg = new CompositeConfiguration();

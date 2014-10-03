@@ -32,13 +32,15 @@ import java.awt.Point;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>ContinuityArgmaxNodeBuilder class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class ContinuityArgmaxNodeBuilder extends NodeBuilder {
 
     // private final double[] penaltyLookupTable;
@@ -57,7 +59,7 @@ public class ContinuityArgmaxNodeBuilder extends NodeBuilder {
         // // for (int i = 0; i < penaltyLookupTable.length; i++) {
         // // penaltyLookupTable[i] = Math.exp(-Math.pow(
         // // (((double) i) / scale), 2.0d) / 2.0d);
-        // // System.out.println("p(" + (((double) i) / scale) + ")="
+        // // log.info("p(" + (((double) i) / scale) + ")="
         // // + penaltyLookupTable[i]);
         // // }
         //
@@ -72,10 +74,10 @@ public class ContinuityArgmaxNodeBuilder extends NodeBuilder {
     public List<Point> eval(List<double[]> points, int polyOrder) {
         Tuple2D<double[], double[]> minMax = getMinMax(points);
         List<double[]> anchors = calcArgmax(points, minMax.getFirst(), minMax.getSecond());
-        System.out.println("Found " + anchors.size() + " anchors!");
-        // System.out.println("Anchors: ");
+        log.info("Found " + anchors.size() + " anchors!");
+        // log.info("Anchors: ");
         // for (double[] d : anchors) {
-        // System.out.println(Arrays.toString(d));
+        // log.info(Arrays.toString(d));
         // }
         return getPointList(anchors);
         // the following rules apply:
@@ -137,7 +139,7 @@ public class ContinuityArgmaxNodeBuilder extends NodeBuilder {
             i++;
         }
         maxima.add(maxIdx);
-        System.out.println("Found " + maxima.size() + " maxima between " + Arrays.toString(a) + " and " + Arrays.toString(c));
+        log.info("Found " + maxima.size() + " maxima between " + Arrays.toString(a) + " and " + Arrays.toString(c));
         return maxima;
     }
 
@@ -166,13 +168,13 @@ public class ContinuityArgmaxNodeBuilder extends NodeBuilder {
         // add left boundary
         // rl.add(a);
         // recurse into left branch
-        System.out.println("Left recursion");
+        log.info("Left recursion");
         if (nodeIndex > 0) {
             argmaxRecursion(lpart.subList(0, nodeIndex), min, max, rl, level + 1);
         }
         rl.add(b);
         // recurse into right branch
-        System.out.println("Right recursion");
+        log.info("Right recursion");
         if (nodeIndex < lpart.size() - 1) {
             argmaxRecursion(lpart.subList(nodeIndex, lpart.size() - 1), min, max, rl, level + 1);
         } // rl.add(c);

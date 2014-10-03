@@ -36,7 +36,7 @@ import maltcms.datastructures.ms.IMetabolite;
 /**
  * <p>MetaboliteListCellRenderer class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class MetaboliteListCellRenderer extends JLabel implements ListCellRenderer {

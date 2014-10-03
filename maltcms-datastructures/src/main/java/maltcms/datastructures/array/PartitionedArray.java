@@ -179,39 +179,39 @@ public class PartitionedArray implements IArrayD2Double {
             int startCol = -1;
             int len = 0;
 
-            // System.out.println("Checking bounds of row "+i);
+            // log.info("Checking bounds of row "+i);
             a = new Area(new Rectangle(0, i, cols, 1));
             a.intersect(bounds);
             // log.info(
             // "Row {}, start column={} end={}",new
             // Object[]{i,a.getBounds().x,a.
             // getBounds().x+a.getBounds().width-1});
-            // System.out.println("Row "+i+" start column="+a.getBounds().x+
+            // log.info("Row "+i+" start column="+a.getBounds().x+
             // " ncols="+(a.getBounds().width-1));
             // for(int j = 0;j<cols;j++) {
             // if(bounds.contains(j, i)){
-            // // System.out.println(""+i+","+j+" contained in bounds");
+            // // log.info(""+i+","+j+" contained in bounds");
             // if(startCol==-1) {
             // startCol = j;
-            // //System.out.println("start column = "+startCol);
+            // //log.info("start column = "+startCol);
             // }else{
             // len++;
-            // //System.out.println("length of column = "+len);
+            // //log.info("length of column = "+len);
             // //neighborhoods.add(new Rectangle(startCol,i,j-startCol,1));
             // }
             // //partitions.add(new Rectangle(j,i,1,1));
             // }
             // }
-            // System.out.println("length of column = "+len);
+            // log.info("length of column = "+len);
             // EvalTools.eqI(len, a.getBounds().width-1,
             // PartitionedArray.class);
             startCol = a.getBounds().x;
             len = a.getBounds().width - 1;
             // r.setBounds(0, r.getBounds().y+1, cols, 1);
-            // System.out.println("Offset before adding cols: "+offset);
+            // log.info("Offset before adding cols: "+offset);
             offset = PartitionedArray.prepareRow(offset, i, startCol, len + 1,
                     rowOffset, colStart, rowLength);
-            // System.out.println("Offset after adding cols: "+offset);
+            // log.info("Offset after adding cols: "+offset);
         }
         final long end = System.currentTimeMillis() - start;
         log.debug(
@@ -272,7 +272,7 @@ public class PartitionedArray implements IArrayD2Double {
 //		pa.getEnclosingRectangle();
 //
 //		for (int i = 0; i < 15; i++) {
-//			System.out.println("Row " + i + " offset: "
+//			log.info("Row " + i + " offset: "
 //			        + pa.getRowOffset().get(i) + " colStart: "
 //			        + pa.getColStart().get(i) + " colLen: "
 //			        + pa.getRowLength().get(i));
@@ -285,13 +285,13 @@ public class PartitionedArray implements IArrayD2Double {
 //				// PartitionedArray.class);
 //				// double d = Math.random() * 1024;
 //				// if(i==0 && j==0) {
-//				// System.out.println("Getting element "+i+" "+j+"="+pa.get(i,
+//				// log.info("Getting element "+i+" "+j+"="+pa.get(i,
 //				// j));
-//				// System.out.println("Setting element "+i+" "+j+"="+cnt);
+//				// log.info("Setting element "+i+" "+j+"="+cnt);
 //				// pa.set(i,j,cnt);
-//				// System.out.println("Getting element "+i+" "+j+"="+pa.get(i,
+//				// log.info("Getting element "+i+" "+j+"="+pa.get(i,
 //				// j));
-//				// System.out.println("Address in array: "+pa.
+//				// log.info("Address in array: "+pa.
 //				// getAddressInDataArray(0, 0));
 //				// }else{
 //
@@ -302,24 +302,24 @@ public class PartitionedArray implements IArrayD2Double {
 //					EvalTools.eqI(cnt, pa.getAddressInDataArray(i, j),
 //					        PartitionedArray.class);
 //					pa.set(i, j, cnt);
-//					// System.out.println("Getting element "+i+" "+j+"="+cnt);
-//					// System.out.println("Retrieving element "+i+" "+j);
+//					// log.info("Getting element "+i+" "+j+"="+cnt);
+//					// log.info("Retrieving element "+i+" "+j);
 //					EvalTools.eqD(cnt, pa.get(i, j), pa);
-//					System.out.println("Array index: row=" + i + " col=" + j
+//					log.info("Array index: row=" + i + " col=" + j
 //					        + " value= " + pa.get(i, j));
 //					cnt++;
 //				} else {// should return default value
-//					// System.out.println("Retrieving element "+i+" "+j);
+//					// log.info("Retrieving element "+i+" "+j);
 //					EvalTools.eqD(pa.getDefaultValue(), pa.get(i, j), pa);
 //				}
 //
 //			}
 //		}
-//		System.out.println("Last Array index: row=" + (pa.rows() - 1) + " col="
+//		log.info("Last Array index: row=" + (pa.rows() - 1) + " col="
 //		        + (pa.columns() - 1) + " value= "
 //		        + pa.get(pa.rows() - 1, pa.columns() - 1));
 //
-//		System.out.println("Size of data array = "
+//		log.info("Size of data array = "
 //		        + pa.getDataArray().getShape()[0]);
 //
 //		jp = new TabbedPanel(pa, aps);
@@ -347,18 +347,18 @@ public class PartitionedArray implements IArrayD2Double {
         // + " size of offset array: " + rowOffset.getShape()[0]);
 
         rowOffset.set(row, offset);
-        // System.out.println("Processing row " + k + " with " + n
+        // log.info("Processing row " + k + " with " + n
         // + " elements");
-        // System.out.println("Startindex " + scol);
-        // System.out.println("ncolumns " + (len));
-        // System.out.println("Offset " + offset);
-        // System.out.println("Setting colstart of row " + row + " to " +
+        // log.info("Startindex " + scol);
+        // log.info("ncolumns " + (len));
+        // log.info("Offset " + offset);
+        // log.info("Setting colstart of row " + row + " to " +
         // startcol);
         colStart.set(row, startcol);
-        // System.out.println("Setting rowlength of row " + row + " to " + len);
+        // log.info("Setting rowlength of row " + row + " to " + len);
         rowLength.set(row, len);
         offset += len;
-        // System.out.println("Setting Row "+row+" offset: "+rowOffset.get(row)+
+        // log.info("Setting Row "+row+" offset: "+rowOffset.get(row)+
         // " colStart: "+colStart.get(row)+" colLen: "+rowLength.get(row));
         return offset;
     }
@@ -482,7 +482,7 @@ public class PartitionedArray implements IArrayD2Double {
             final int rowOffsetPos = this.rowOffset.get(row);
             final int colStart = this.colStart.get(row);
             // int len = this.rowLength.get(row);
-            // System.out.println("Adress in array: "+(rowOffsetPos+col));
+            // log.info("Adress in array: "+(rowOffsetPos+col));
             return rowOffsetPos + col - colStart;
         }
         return -1;
@@ -665,9 +665,9 @@ public class PartitionedArray implements IArrayD2Double {
         if ((row < 0) || (row >= rows()) || (col < 0) || (col >= columns())) {
             return false;
         }
-        // System.out.println("Retrieving address for row "+row+" col "+col);
+        // log.info("Retrieving address for row "+row+" col "+col);
         final int[] colBounds = getColumnBounds(row);
-        // System.out.println("["+row+","+col+"] =>" +
+        // log.info("["+row+","+col+"] =>" +
         // " column start= "+colStartPos+" len: "+len);
         if ((col < colBounds[0]) || (col >= (colBounds[0] + colBounds[1]))) {
             return false;
@@ -706,11 +706,11 @@ public class PartitionedArray implements IArrayD2Double {
     public void set(final int row, final int col, final double d)
             throws ArrayIndexOutOfBoundsException {
         final int index = getAddressInDataArray(row, col);
-        // System.out.println("Row "+row+" Column "+col+
+        // log.info("Row "+row+" Column "+col+
         // " Index in dataArray array: "+
         // index);
         if (index == -1) {
-            // System.out.println(index+" for "+row+" "+col+
+            // log.info(index+" for "+row+" "+col+
             // " : Index out of bounds!");
         } else {
             this.dataArray.set(index, d);

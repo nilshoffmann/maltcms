@@ -37,7 +37,7 @@ import maltcms.db.predicates.metabolite.IAggregatePredicateFactory;
 /**
  * <p>QueryDB class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public class QueryDB<T> {

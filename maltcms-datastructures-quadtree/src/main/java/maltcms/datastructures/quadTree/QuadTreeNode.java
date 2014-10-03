@@ -86,7 +86,7 @@ public class QuadTreeNode<T> {
      */
     public List<Tuple2D<Point2D, T>> getClosestChildrenPerpendicularToLine(List<Tuple2D<Point2D, T>> children, Line2D l, double distance) {
         PerpendicularDistance pd = new PerpendicularDistance();
-        //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
+        //log.info("Querying node "+toString()+ " for point: "+p.toString());
         if (this.t != null) {//this node has no children yet
             //iterate over local points
             for (Tuple2D<Point2D, T> tple : this.t) {
@@ -97,7 +97,7 @@ public class QuadTreeNode<T> {
                 }
             }
         }
-        //System.out.println("Looking for Point in children!");
+        //log.info("Looking for Point in children!");
         if (this.children != null) {//this node has children
             //iterate over child nodes
             for (QuadTreeNode<T> qtn : this.children) {
@@ -122,9 +122,9 @@ public class QuadTreeNode<T> {
      * @return a {@link java.util.List} object.
      */
     public List<Tuple2D<Point2D, T>> getChildrenInRadius(List<Tuple2D<Point2D, T>> children, Point2D p, double radius) {
-        //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
+        //log.info("Querying node "+toString()+ " for point: "+p.toString());
         if (this.t != null) {//this node has no children yet
-            //System.out.println("Looking for Point in local list!");
+            //log.info("Looking for Point in local list!");
             Point2D closest = null;
             Tuple2D<Point2D, T> type = null;
             double mindist = Double.POSITIVE_INFINITY;
@@ -139,7 +139,7 @@ public class QuadTreeNode<T> {
                 }
             }
         }
-        //System.out.println("Looking for Point in children!");
+        //log.info("Looking for Point in children!");
         if (this.children != null) {//this node has children
             //create elliptical search region
             Ellipse2D.Double e = new Ellipse2D.Double(p.getX() - radius, p.getY() - radius, 2 * radius, 2 * radius);
@@ -185,7 +185,7 @@ public class QuadTreeNode<T> {
                 }
             }
         }
-        //System.out.println("Looking for Point in children!");
+        //log.info("Looking for Point in children!");
         if (this.children != null) {//this node has children
             //iterate over child nodes
             for (QuadTreeNode<T> qtn : this.children) {
@@ -206,9 +206,9 @@ public class QuadTreeNode<T> {
      * @throws maltcms.datastructures.quadTree.ElementNotFoundException if any.
      */
     public Tuple2D<Point2D, T> getClosestChild(Point2D p, double radius) throws ElementNotFoundException {
-        //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
+        //log.info("Querying node "+toString()+ " for point: "+p.toString());
         if (this.t != null) {//this node has no children yet
-            //System.out.println("Looking for Point in local list!");
+            //log.info("Looking for Point in local list!");
             Point2D closest = null;
             Tuple2D<Point2D, T> type = null;
             double mindist = Double.POSITIVE_INFINITY;
@@ -228,7 +228,7 @@ public class QuadTreeNode<T> {
                 return type;
             }
         }
-        //System.out.println("Looking for Point in children!");
+        //log.info("Looking for Point in children!");
         if (this.children != null) {//this node has children
             //create elliptical search region
             Ellipse2D.Double e = new Ellipse2D.Double(p.getX() - radius, p.getY() - radius, 2 * radius, 2 * radius);
@@ -269,16 +269,16 @@ public class QuadTreeNode<T> {
      * @throws maltcms.datastructures.quadTree.ElementNotFoundException if any.
      */
     public T getChild(Point2D p) throws ElementNotFoundException {
-        //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
+        //log.info("Querying node "+toString()+ " for point: "+p.toString());
         if (this.t != null) {//this node has no children yet
-            //System.out.println("Looking for Point in local list!");
+            //log.info("Looking for Point in local list!");
             for (Tuple2D<Point2D, T> tple : this.t) {
                 if (tple.getFirst().equals(p)) {
                     return tple.getSecond();
                 }
             }
         }
-        //System.out.println("Looking for Point in children!");
+        //log.info("Looking for Point in children!");
         if (this.children != null) {//this node has children
             for (QuadTreeNode<T> qtn : this.children) {
                 if (qtn != null) {
@@ -287,7 +287,7 @@ public class QuadTreeNode<T> {
                             return qtn.getChild(p);
                         }
                     } catch (ConstraintViolationException cve) {
-                        //System.out.println("Looking for Point in children!");
+                        //log.info("Looking for Point in children!");
                     }
                 }
             }
@@ -356,7 +356,7 @@ public class QuadTreeNode<T> {
      */
     public QuadTreeNode<T> addChild(Tuple2D<Point2D, T> tpl) {
         if (!contains(tpl.getFirst())) {
-            //System.out.println("Node does not contain element, not adding!");
+            //log.info("Node does not contain element, not adding!");
             return null;
         }
         //add point to local list, until capacity is reached
@@ -389,7 +389,7 @@ public class QuadTreeNode<T> {
     }
 
     private QuadTreeNode<T> addNode(Tuple2D<Point2D, T> tpl) {
-        //System.out.println("Children present, trying to find quadrant!");
+        //log.info("Children present, trying to find quadrant!");
         Quad q = getQuadrant(tpl.getFirst());
         QuadTreeNode<T> node = this.children.get(q.ordinal());
         double width = this.r.width / 2.0d, height = this.r.height / 2.0d;
@@ -441,7 +441,7 @@ public class QuadTreeNode<T> {
                 q = Quad.NE;
             }
         }
-        //System.out.println("Quadrant: "+q.name()+" Point: "+p);
+        //log.info("Quadrant: "+q.name()+" Point: "+p);
         return q;
     }
 

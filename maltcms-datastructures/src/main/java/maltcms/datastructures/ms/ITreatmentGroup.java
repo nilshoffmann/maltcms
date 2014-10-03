@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * <p>ITreatmentGroup interface.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 public interface ITreatmentGroup<T extends IChromatogram> {

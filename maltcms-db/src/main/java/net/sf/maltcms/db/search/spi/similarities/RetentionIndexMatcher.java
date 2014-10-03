@@ -33,15 +33,17 @@ import maltcms.datastructures.ms.IMetabolite;
 import cross.datastructures.tuple.Tuple2D;
 import java.util.LinkedList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.maltcms.db.search.api.similarities.AMetabolitePredicate;
 
 //@ServiceProvider(service = AMetabolitePredicate.class)
 /**
  * <p>RetentionIndexMatcher class.</p>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class RetentionIndexMatcher extends AMetabolitePredicate {
 
     private AMetabolitePredicate delegate = new Cosine();
@@ -162,7 +164,7 @@ public class RetentionIndexMatcher extends AMetabolitePredicate {
     public boolean match(IMetabolite et) {
 
         if (Double.isNaN(retentionIndex) || et.getRetentionIndex() == 0.0) {
-//            System.out.println("RI is not a number! Using fallback similarity");
+//            log.info("RI is not a number! Using fallback similarity");
             //fallback
 //            return delegate.match(et);
             return false;
@@ -174,10 +176,10 @@ public class RetentionIndexMatcher extends AMetabolitePredicate {
 //                metabolites.add(new Tuple2D<Double, IMetabolite>(delta, et));
                 //FIXME this is a quickfix
                 if (delegate.match(et)) {
-                    System.out.println("Candidate above threshold and within window: " + delta);
+                    log.info("Candidate above threshold and within window: " + delta);
                     return true;
                 }
-//                //System.out.println("Delegate score "+delegate.getClass().getName()+" match: "+match);
+//                //log.info("Delegate score "+delegate.getClass().getName()+" match: "+match);
 //                return true;
 //                return true;
             }

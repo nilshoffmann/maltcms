@@ -62,7 +62,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * &lt;/complexType&gt;
  * </pre>
  *
- * @author hoffmann
+ * @author Nils Hoffmann
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
