@@ -31,7 +31,7 @@ import cross.IConfigurable;
 import cross.datastructures.workflow.IWorkflowElement;
 import java.awt.Point;
 import java.util.List;
-import maltcms.commands.fragments2d.peakfinding.Reliability;
+import maltcms.commands.fragments2d.peakfinding.bbh.Reliability;
 import maltcms.commands.fragments2d.peakfinding.bbh.IBidirectionalBestHit;
 import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.peak.Peak2D;

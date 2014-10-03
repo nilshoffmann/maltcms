@@ -51,7 +51,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments2d.peakfinding.Reliability;
+import maltcms.commands.fragments2d.peakfinding.bbh.Reliability;
 import maltcms.commands.fragments2d.peakfinding.bbh.IBidirectionalBestHit;
 import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.ms.IMetabolite;

@@ -27,7 +27,9 @@
  */
 package maltcms.datastructures.peak;
 
+import cross.datastructures.cache.SerializableArray;
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -43,7 +45,7 @@ import ucar.ma2.Array;
  *
  * @author Mathias Wilhelm
  */
-public class PeakArea2D {
+public class PeakArea2D implements Serializable {
 
     private Point seedPoint;
     private List<Point> regionList;
@@ -60,8 +62,8 @@ public class PeakArea2D {
     private double areaIntensity = 0.0d;
     private double seedIntensity = 0.0d;
     private Map<Integer, Double> areaUniqueMassIntensities;
-    private Array sumMS = null;
-    private Array seedMS;
+    private SerializableArray sumMS = null;
+    private SerializableArray seedMS;
     private boolean merged = false;
 
     /**
@@ -79,7 +81,7 @@ public class PeakArea2D {
         init(seed, ms, intensity, sindex, spm);
     }
 
-    private final class PointComparator implements Comparator<Point> {
+    private final class PointComparator implements Comparator<Point>, Serializable {
 
         @Override
         public int compare(Point o1, Point o2) {
@@ -108,8 +110,8 @@ public class PeakArea2D {
         this.pixelMap = new HashMap<>();
         this.activeMap = new HashMap<>();
         this.boundaryMap = new HashMap<>();
-        this.seedMS = ms.copy();
-        this.sumMS = ms.copy();
+        this.seedMS = new SerializableArray(ms.copy());
+        this.sumMS = new SerializableArray(ms.copy());
         this.seedIntensity = intensity;
         this.areaIntensity = intensity;
         this.scansPerModulation = spm;
@@ -127,7 +129,7 @@ public class PeakArea2D {
         this.activeMap = new HashMap<>();
         this.boundaryMap = new HashMap<>();
         this.areaIntensity = 0;
-        this.sumMS = this.seedMS.copy();
+        this.sumMS = new SerializableArray(this.seedMS.getArray().copy());
         this.areaUniqueMassIntensities = new HashMap<>();
         this.intensities = new HashMap<>();
     }
@@ -208,7 +210,7 @@ public class PeakArea2D {
         if (Math.abs(this.seedPoint.y - y) > this.maxHeight) {
             this.maxHeight = Math.abs(this.seedPoint.y - y);
         }
-        this.sumMS = ArrayTools.sum(this.sumMS, ms);
+        this.sumMS = new SerializableArray(ArrayTools.sum(this.sumMS.getArray(), ms));
         this.areaIntensity += intensity;
         this.intensities.put(point, intensity);
     }
@@ -315,7 +317,7 @@ public class PeakArea2D {
      * @return mean mass spectra of this peak area
      */
     public Array getMeanMS() {
-        return ArrayTools.mult(this.sumMS, this.regionList.size() + 1);
+        return ArrayTools.mult(this.sumMS.getArray(), this.regionList.size() + 1);
     }
 
     /**
@@ -370,7 +372,7 @@ public class PeakArea2D {
      * @return seed mass spectra
      */
     public Array getSeedMS() {
-        return this.seedMS;
+        return this.seedMS.getArray();
     }
 
     /**

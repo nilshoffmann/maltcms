@@ -51,4 +51,11 @@
                 <goal>install</goal>
             </goals>
         </action>
+    <action>
+            <actionName>CUSTOM-Compile</actionName>
+            <displayName>Compile</displayName>
+            <goals>
+                <goal>compile</goal>
+            </goals>
+        </action>
 </actions>

@@ -1,4 +1,4 @@
-/* 
+/*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
  * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
@@ -25,26 +25,32 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.mpaxs;
+package maltcms.commands.fragments2d.peakfinding.comparator;
 
-import java.io.Serializable;
-import java.util.concurrent.Callable;
+import java.awt.Point;
+import java.util.Comparator;
+import maltcms.datastructures.peak.PeakArea2D;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class TestCallable implements Callable<String>, Serializable {
+public class PeakAreaComparator implements Comparator<PeakArea2D> {
 
+    /**
+     *
+     * @param o1
+     * @param o2
+     * @return
+     */
     @Override
-    public String call() throws Exception {
-        for (int i = 0; i < 10; i++) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-//                Logger.getLogger(TestCallable.class.getName()).log(Level.SEVERE, null, ex);
-            }
+    public int compare(PeakArea2D o1, PeakArea2D o2) {
+        Point p1 = o1.getSeedPoint();
+        Point p2 = o2.getSeedPoint();
+        if (Double.compare(p1.x, p2.x) == 0) {
+            return Double.compare(p1.y, p2.y);
+        } else {
+            return Double.compare(p1.x, p2.x);
         }
-        return "TestCallable" + System.nanoTime();
     }
 }

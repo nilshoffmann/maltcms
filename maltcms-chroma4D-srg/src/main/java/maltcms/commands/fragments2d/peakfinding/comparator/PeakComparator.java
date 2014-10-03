@@ -1,4 +1,4 @@
-/* 
+/*
  * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
  * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
@@ -25,32 +25,32 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package net.sf.maltcms.execution.api;
+package maltcms.commands.fragments2d.peakfinding.comparator;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import java.awt.Point;
+import java.util.Comparator;
+import maltcms.datastructures.peak.Peak2D;
 
 /**
  *
- * @author Nils Hoffmann
  */
-public class MpaxsExecutorServiceTest {
+public class PeakComparator implements Comparator<Peak2D> {
 
-    public MpaxsExecutorServiceTest() {
+    /**
+     *
+     * @param o1
+     * @param o2
+     * @return
+     */
+    @Override
+    public int compare(Peak2D o1, Peak2D o2) {
+        Point p1 = o1.getPeakArea().getSeedPoint();
+        Point p2 = o2.getPeakArea().getSeedPoint();
+        if (Double.compare(p1.x, p2.x) == 0) {
+            return Double.compare(p1.y, p2.y);
+        } else {
+            return Double.compare(p1.x, p2.x);
+        }
     }
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
+    
 }

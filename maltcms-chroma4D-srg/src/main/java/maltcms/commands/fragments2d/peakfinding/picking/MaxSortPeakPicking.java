@@ -208,17 +208,11 @@ public class MaxSortPeakPicking implements IPeakPicking {
      */
     @Override
     public void configure(Configuration cfg) {
-        // this.totalIntensityVar = cfg.getString(SeededRegionGrowing.class
-        // .getName()
-        // + ".totalIntensityVar", "total_intensity");
-//        this.totalIntensityVar = cfg.getString(this.getClass().getName()
-//                + ".totalIntensityVar", "total_intensity");
-//        this.totalIntensityRedoVar = cfg.getString(this.getClass().getName()
-//                + ".totalIntensityRedoVar", "total_intensity");
-//        this.maxDx = cfg.getInt(this.getClass().getName() + ".maxDx", 1);
-//        this.maxDy = cfg.getInt(this.getClass().getName() + ".maxDy", 1);
-//        this.minVerticalScanIndex = cfg.getInt(this.getClass().getName()
-//                + ".minVerticalScanIndex", -1);
-//        this.k = cfg.getInt(this.getClass().getName() + ".k", 100);
+        this.secondScanIndexVar = cfg.getString(this.getClass().getName()
+                + ".second_column_scan_index", "second_column_scan_index");
+        this.totalIntensityVar = cfg.getString(this.getClass().getName()
+                + ".totalIntensityVar", "total_intensity");
+        this.totalIntensityRedoVar = cfg.getString(this.getClass().getName()
+                + ".totalIntensityRedoVar", "total_intensity");
     }
 }

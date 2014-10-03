@@ -28,6 +28,7 @@
 package maltcms.commands.fragments2d.peakfinding.srg;
 
 import cross.annotations.Configurable;
+import cross.datastructures.collections.CachedReadWriteList;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
@@ -57,11 +58,6 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
 
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";
-    @Configurable(name = "var.used_mass_values", value = "used_mass_values")
-    private final String usedMassValuesVar = "used_mass_values";
-    @Configurable(name = "var.second_column_scan_index",
-            value = "second_column_scan_index")
-    private String secondScanIndexVar = "second_column_scan_index";
     @Configurable(value = "0.99d")
     private double minDistance = 0.99d;
     private IArraySimilarity similarity = new ArrayCos();
@@ -69,12 +65,6 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
     private int minPeakSize = 2;
     @Configurable(value = "1000")
     private int maxPeakSize = 1000;
-    @Deprecated
-    @Configurable(value = "false")
-    private boolean filterMS = false;
-    @Deprecated
-    @Configurable(value = "true")
-    private boolean useAlternativFiltering = true;
     @Configurable(value = "true")
     private boolean useMeanMS = false;
     private boolean discardPeaksWithMaxArea = true;
@@ -82,7 +72,6 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
     private long timesum;
     private int count;
     private int scansPerModulation;
-//    private List<Integer> hold;
     private ArrayDouble.D1 intensities;
     private IScanLine slc;
     private IFileFragment ff;
@@ -90,11 +79,11 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
     public void setUseAlternativeFiltering(boolean b) {
         log.warn("Parameter useAlternativeFiltering has been deprecated. Please use maltcms.commands.fragments.preprocessing.MassFilter for selective removal or inclusion of m/z,intensity pairs!");
     }
-    
+
     public void setFilterMS(boolean b) {
         log.warn("Parameter filterMS has been deprecated. Please use maltcms.commands.fragments.preprocessing.MassFilter for selective removal or inclusion of m/z,intensity pairs!");
     }
-    
+
     /**
      *
      * @return
@@ -126,10 +115,7 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
         this.intensities = (ArrayDouble.D1) ff.getChild(this.totalIntensityVar).
                 getArray();
         this.scansPerModulation = slc.getScansPerModulation();
-
-//        getFilter();
-
-        final List<PeakArea2D> peakAreaList = new ArrayList<>();
+        final List<PeakArea2D> peakAreaList = new CachedReadWriteList<>(ff.getName() + "-peakArea2D-cache", 100);
 
         for (final Point seed : seeds) {
             final PeakArea2D s = regionGrowing(seed);
@@ -225,12 +211,6 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
                 }
             }
         }
-//		double meanI = pa.getAreaIntensity() / (double) (pa.getRegionPoints().size() + 1);
-//		double frac = pa.getSeedIntensity() / meanI;
-//		System.out.println(frac);
-//		if (frac < 1.02d) {
-//			return null;
-//		}
         return pa;
     }
 
@@ -246,7 +226,7 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
             final IScanLine slc, final Array meanMS) {
         log.info("Retrieving ms for point ", ap);
         final Array apMS = slc.getMassSpectrum(ap);
-        if (isNear(meanMS, apMS)) {
+        if (isNear(similarity, meanMS, apMS, minDistance)) {
             try {
                 log.info("Adding region point " + ap);
                 snake.addRegionPoint(ap, apMS, this.intensities.get(idx(
@@ -266,23 +246,19 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
     }
 
     /**
-     * Getter.
      *
      * @param seedMS seed ms
      * @param neighMS neighbour ms
-     * @return true if dist is low enough, otherwise false
+     * @param minSimilarity
+     * @return true if similarity is higher than thre, otherwise false
      */
-    private boolean isNear(final Array seedMS, final Array neighMS) {
+    private boolean isNear(final IArraySimilarity similarity, final Array seedMS, final Array neighMS, final double minSimilarity) {
         if ((seedMS != null) && (neighMS != null)) {
-            Array sms = seedMS.copy();
-            Array nms = neighMS.copy();
-//            if (this.filterMS) {
-//                sms = ArrayTools2.filter(sms, this.hold, true);
-//                nms = ArrayTools2.filter(nms, this.hold, true);
-//            }
-            final double d = this.similarity.apply(sms, nms);
+//            Array sms = seedMS.copy();
+//            Array nms = neighMS.copy();
+            final double d = similarity.apply(seedMS, neighMS);
             // log.info("{}", d);
-            return (d >= this.minDistance);
+            return (d >= minSimilarity);
         }
         return false;
     }
@@ -298,70 +274,14 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
         return x * this.scansPerModulation + y;
     }
 
-//    /**
-//     * Tries to find the used_mass_values array and converts it to an List of
-//     * Integer.
-//     *
-//     * TODO: Duplicated method. See MeanVarVis - Should be one in ArrayTools?
-//     *
-//     * @param ff file fragment
-//     */
-//    private void getFilter() {
-//        if (this.filterMS) {
-//            log.info("Filtering mass spectra");
-//            try {
-//                final Array holdA = this.ff.getChild(this.usedMassValuesVar).
-//                        getArray();
-//                final IndexIterator iter = holdA.getIndexIterator();
-//                this.hold = new ArrayList<>();
-//                while (iter.hasNext()) {
-//                    this.hold.add(iter.getIntNext());
-//                }
-//                // FIXME: wenn cahcedlist benutzt werden, klappt das über slc
-//                // nicht
-//                log.info("Using {} of {} masses", holdA.getShape()[0],
-//                        750);
-//            } catch (final ResourceNotAvailableException e) {
-//                log.error("Resource {} not available",
-//                        this.usedMassValuesVar);
-//                if (this.useAlternativFiltering) {
-//                    log.info("Using filter 73,74,75,147,148,149");
-//                    Tuple2D<Double, Double> t = MaltcmsTools.getMinMaxMassRange(ff);
-//                    this.hold = new ArrayList<>();
-//                    for (int i = 1; i < 751; i++) {
-//                        if (i != 73 && i != 74 && i != 75 && i != 147
-//                                && i != 148 && i != 149) {
-//                            this.hold.add(i);
-//                        }
-//                    }
-//                } else {
-//                    log.error("Turning off filtering.");
-//                    this.filterMS = false;
-//                }
-//            }
-//        }
-//    }
-
     /**
      *
      * @param cfg
      */
     @Override
     public void configure(Configuration cfg) {
-//		this.minPeakSize = cfg.getInt(this.getClass().getName()
-//			+ ".minPeakSize", 2);
-//		this.useMeanMS = cfg.getBoolean(this.getClass().getName()
-//			+ ".useMeanMS", true);
-//		this.maxPeakSize = cfg.getInt(this.getClass().getName()
-//			+ ".maxPeakSize", 1000);
-//		this.filterMS = cfg.getBoolean(this.getClass().getName() + ".filterMS",
-//			false);
-////        String distClass = cfg.getString(this.getClass().getName()
-////                + ".distClass", "maltcms.commands.distances.ArrayCos");
-////        this.similarity = Factory.getInstance().getObjectFactory().instantiate(
-////                distClass, IArraySimilarity.class);
-//		this.minDistance = cfg.getDouble(
-//			this.getClass().getName() + ".minDist", 0.99d);
+        this.totalIntensityVar = cfg.getString(this.getClass().getName()
+                + ".totalIntensityVar", "total_intensity");
     }
 
 }

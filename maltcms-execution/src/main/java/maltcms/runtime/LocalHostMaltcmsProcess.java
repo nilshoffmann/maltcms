@@ -118,7 +118,7 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
         SwingUtilities.invokeLater(r);
         log.info("Progress: {}", progress);
         // Save configuration
-        Factory.dumpConfig("runtime.properties",
+        Factory.getInstance().dumpConfig("runtime.properties",
                 startup);
         // Save workflow
         final IWorkflow iw = cs.getWorkflow();

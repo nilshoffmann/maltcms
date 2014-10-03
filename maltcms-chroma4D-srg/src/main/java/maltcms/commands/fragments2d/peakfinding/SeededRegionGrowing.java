@@ -27,12 +27,15 @@
  */
 package maltcms.commands.fragments2d.peakfinding;
 
+import maltcms.commands.fragments2d.peakfinding.srg.PeakSeparator;
+import maltcms.commands.fragments2d.peakfinding.comparator.PeakComparator;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.CachedList;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
@@ -56,11 +59,7 @@ import java.util.List;
 import java.util.Vector;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments2d.peakfinding.bbh.BBHTools;
-import maltcms.commands.fragments2d.peakfinding.bbh.IBidirectionalBestHit;
-import maltcms.commands.fragments2d.peakfinding.bbh.MissingPeak2D;
 import maltcms.commands.fragments2d.peakfinding.output.IPeakExporter;
-import maltcms.commands.fragments2d.peakfinding.output.IPeakIdentification;
 import maltcms.commands.fragments2d.peakfinding.output.IPeakIntegration;
 import maltcms.commands.fragments2d.peakfinding.picking.IPeakPicking;
 import maltcms.commands.fragments2d.peakfinding.srg.IRegionGrowing;
@@ -147,30 +146,17 @@ public class SeededRegionGrowing extends AFragmentCommand {
     private double doubleFillValue;
     @Configurable(name = "images.thresholdLow", value = "0", type = double.class)
     private double threshold = 0;
-    @Configurable(value = "true", type = String.class)
-    private boolean doBBH = true;
     @Configurable(value = "true", type = boolean.class)
     private boolean separate = true;
-    @Configurable(value = "true", type = boolean.class)
-    private boolean secondRun = true;
     @Configurable(value = "false", type = boolean.class)
     private boolean doNormalization = false;
     @Configurable(value = "false", type = boolean.class)
     private boolean doIntegration = false;
-    @Configurable(value = "0.99d", type = double.class)
-    private double secondSeedMinDistance = 0.99d;
-    private boolean seedNotInRegion = false;
     private int scansPerModulation = 0;
-    @Configurable
-    private IScalarArraySimilarity similaritySecondRun;
     @Configurable
     private IPeakPicking peakPicking;
     @Configurable
     private IRegionGrowing regionGrowing;
-    @Configurable
-    private IBidirectionalBestHit bbh;
-    @Configurable
-    private IPeakIdentification identification;
     @Configurable
     private IPeakIntegration integration;
     @Configurable
@@ -204,38 +190,10 @@ public class SeededRegionGrowing extends AFragmentCommand {
             }
             this.peakLists.add(peaklist);
         }
-
-//        // finding BBHs
-//        List<List<Point>> bidiBestHitList = null;
-//        if (t.size() > 1 && this.doBBH) {
-//            bidiBestHitList = bbh.getBidiBestHitList(this.peakLists);
-//            this.bbh.clear();
-//        }
-//
-//        // second run
-//        if (bidiBestHitList != null && this.secondRun) {
-//            bidiBestHitList = startSecondRun(bidiBestHitList, t);
-//        }
         for (int i = 0; i < t.size(); i++) {
             addAdditionalInformation(this.peakLists.get(i), t.get(i));
         }
         log.info("Saving all Peaks");
-        // exporting bbh information + doing normalization + statistical
-        // evaluation
-//        if (t.size() > 1 && this.doBBH) {
-//            BBHTools.exportBBHInformation(bidiBestHitList, this.peakLists,
-//                    this.bbh, this.peakExporter, getNamesFor(t));
-//
-//            if (this.doNormalization) {
-//                PeakNormalization pn = new PeakNormalization();
-//                pn.normalize(this.peakLists, bidiBestHitList, t);
-//            }
-//
-//            final LogDeltaEvaluation lde = new LogDeltaEvaluation();
-//            lde.setWorkflow(getWorkflow());
-//            lde.calcRatios(BBHTools.getPeak2DCliqueList(t, bidiBestHitList,
-//                    this.peakLists), t);
-//        }
         // exporting peak lists
         for (int i = 0; i < t.size(); i++) {
             final IFileFragment fret = new FileFragment(
@@ -330,109 +288,8 @@ public class SeededRegionGrowing extends AFragmentCommand {
         slc.clear();
 
         final List<Peak2D> peaklist = createPeaklist(peakAreaList,
-                getRetentionTime(ff), ff);
+                getRetentionTime(ff));
         return peaklist;
-    }
-
-    /**
-     * This methode tries to find missing peaks in all chromatograms. It uses
-     * internally the private variable peakLists. TODO: More
-     *
-     * @param bidiBestHitList bidirection best hit list
-     * @param t file fragment
-     * @return altered bidirection best hit list if some new peaks were found,
-     * or the same list als bidiBestHitList
-     */
-    private List<List<Point>> startSecondRun(List<List<Point>> bidiBestHitList,
-            final TupleND<IFileFragment> t) {
-        boolean change = false;
-        log.info("Checking for missing peaks");
-        final List<MissingPeak2D> missingPeaks = BBHTools.getMissingPeaks(
-                bidiBestHitList, this.peakLists, this.scansPerModulation);
-        List<Point> seeds;
-        List<Point> tmpSeeds;
-        IScanLine slc;
-        double score;
-        for (int i = 0; i < t.size(); i++) {
-            slc = ScanLineCacheFactory.getSparseScanLineCache(t.get(i));
-            seeds = new ArrayList<>();
-            int maxArg;
-            double max = 0;
-            for (MissingPeak2D mp : missingPeaks) {
-                if (mp.getMissingChromatogramList().contains(i)) {
-                    tmpSeeds = this.peakPicking.findPeaksNear(t.get(i), mp.getMeanPoint(), mp.getMaxFirstDelta(), mp.getMaxSecondDelta());
-                    // check weather point is in a region of an
-                    // existing peak or an seed point of an region
-                    List<Point> remove = new ArrayList<>();
-                    for (Point p : tmpSeeds) {
-                        // for (PeakArea2D pa : this.peakAreaLists.get(i)) {
-                        for (Peak2D peak : this.peakLists.get(i)) {
-                            if (this.seedNotInRegion
-                                    && peak.getPeakArea().regionContains(p)) {
-                                remove.add(p);
-                            }
-                            if (tmpSeeds.contains(peak.getPeakArea().
-                                    getSeedPoint())
-                                    && !remove.contains(p)) {
-                                remove.add(p);
-                            }
-                        }
-                    }
-                    for (Point p : remove) {
-                        tmpSeeds.remove(p);
-                    }
-
-                    int c = 0;
-                    max = 0;
-                    maxArg = -1;
-                    for (Point p : tmpSeeds) {
-                        score = this.similaritySecondRun.apply(new double[]{mp.getMeanFirstScanIndex(), mp.getMeanSecondScanIndex()}, new double[]{p.x,
-                            p.y},
-                                mp.getMeanMS(), slc.getMassSpectrum(p));
-                        // log.info("	s: {}", score);
-                        if (score > max) {
-                            max = score;
-                            maxArg = c;
-                        }
-                        c++;
-                    }
-                    if (maxArg != -1 && max > this.secondSeedMinDistance) {
-                        // if (maxArg != -1) {
-                        seeds.add(tmpSeeds.get(maxArg));
-                        // log.info("Adding one with ms sim {}", max);
-                    }
-                }
-            }
-
-            List<Peak2D> peaklist = null;
-            if (seeds.size() > 0) {
-                log.info("Found {} potential peaks in total", seeds.size());
-                peaklist = runSRG(t.get(i), seeds);
-                this.peakLists.get(i).addAll(peaklist);
-                Collections.sort(this.peakLists.get(i), new PeakComparator());
-                for (int j = 0; j < this.peakLists.get(i).size(); j++) {
-                    this.peakLists.get(i).get(j).setIndex(j);
-                }
-
-                change = true;
-            } else {
-                log.info("Nohing found in evaluation of BBHs");
-            }
-            slc.clear();
-        }
-        if (change) {
-            log.info("Setting up BBH");
-            this.bbh.clear();
-            // for (List<Peak2D> pl : this.peakLists) {
-            // this.bbh.addPeakLists(pl);
-            // }
-            log.info("Recomputing BBHs");
-            return this.bbh.getBidiBestHitList(this.peakLists);
-        } else {
-            log.info("All in all nothing found. Will not do BBHs again.");
-        }
-
-        return bidiBestHitList;
     }
 
     /**
@@ -513,12 +370,10 @@ public class SeededRegionGrowing extends AFragmentCommand {
      *
      * @param pas list of all snakes
      * @param times first and second retention time
-     * @param ff file fragment
-     * @return ff
+     * @return peakList
      */
     private List<Peak2D> createPeaklist(final List<PeakArea2D> pas,
-            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times,
-            final IFileFragment ff) {
+            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times) {
         final List<Peak2D> peaklist = new ArrayList<>();
         PeakArea2D s;
         Peak2D peak;
@@ -561,9 +416,6 @@ public class SeededRegionGrowing extends AFragmentCommand {
                 log.info("	Did " + i);
             }
             peak = ps.get(i);
-            if (this.identification != null) {
-                this.identification.setName(peak);
-            }
             if (this.doIntegration) {
                 this.integration.integrate(peak, ff, tic, getWorkflow());
             }
@@ -600,14 +452,9 @@ public class SeededRegionGrowing extends AFragmentCommand {
      */
     private Tuple2D<ArrayDouble.D1, ArrayDouble.D1> getRetentionTime(
             final IFileFragment ff) {
-        // log.info("Reading retention time arrays");
-        // final ArrayDouble.D1 firstRetTime = (ArrayDouble.D1) ArrayTools
-        // .divBy60(ff.getChild(this.scanAcquTime1DVar).getArray());
         final ArrayDouble.D1 firstRetTime = (ArrayDouble.D1) ff.getChild(
                 this.scanAcquTime1DVar).getArray();
         IVariableFragment sctv = ff.getChild(this.secondColumnTimeVar);
-//		IVariableFragment sciv = ff.getChild(this.secondScanIndexVar);
-//		sctv.setIndex(sciv);
         final ArrayDouble.D1 secondRetTime;
         try {
             secondRetTime = (ArrayDouble.D1) sctv.getArray().section(new int[]{0}, new int[]{this.scansPerModulation});
@@ -701,25 +548,6 @@ public class SeededRegionGrowing extends AFragmentCommand {
         if (this.doIntegration) {
             this.peakExporter.exportDetailedPeakInformation(StringTools.removeFileExt(ff.getName()), peaklist);
         }
-        // TupleND<IFileFragment> iff = getIWorkflow().getCommandSequence()
-        // .getInput();
-        // IFileFragment originalFile = null;
-        // for (IFileFragment f : iff) {
-        // if (StringTools.removeFileExt(f.getName()).equals(
-        // StringTools.removeFileExt(ff.getName()))) {
-        // originalFile = f;
-        // }
-        // }
-        // IFileFragment pfrag = Factory.getInstance().getFileFragmentFactory()
-        // .create(getIWorkflow().getOutputDirectory(this),
-        // "osc-" + originalFile.getName(), originalFile);
-        // IVariableFragment scanRateV = new VariableFragment(pfrag,
-        // "scan_rate");
-        // IVariableFragment modTV = new VariableFragment(pfrag,
-        // "modulation_time");
-        // scanRateV.setArray(ff.getChild("scan_rate").getArray());
-        // modTV.setArray(ff.getChild("modulation_time").getArray());
-        // pfrag.save();
         IScanLine isl = ScanLineCacheFactory.getSparseScanLineCache(ff);
         this.peakExporter.exportPeaksToMSP(StringTools.removeFileExt(
                 ff.getName())
@@ -730,10 +558,10 @@ public class SeededRegionGrowing extends AFragmentCommand {
     }
 
     private List<Array> getIntensities(IFileFragment ff) {
-        IVariableFragment ticVar = ff.getChild(this.totalIntensityVar);
+        IVariableFragment ticVar = ff.getChild(this.totalIntensityVar, true);
         IVariableFragment sciv = ff.getChild(this.secondScanIndexVar);
         ticVar.setIndex(sciv);
-        return ff.getChild(this.totalIntensityVar).getIndexedArray();
+        return CachedList.getList(ticVar);
     }
 
     private void createImage(final IFileFragment ff,
@@ -758,77 +586,8 @@ public class SeededRegionGrowing extends AFragmentCommand {
                     StringTools.removeFileExt(ff.getName())
                     + "_boundary", "chromatogram with peak boundaries", peakList,
                     times);
-
-            // Array[] values = null;
-            // values = new Array[intensities.size()];
-            // int cnt = 0;
-            // for (Array a : intensities) {
-            // values[cnt] = a;
-            // cnt++;
-            // }
-            //
-            // // Array tic = cross.tools.ArrayTools.glue(intensities);
-            //
-            // ArrayDouble.D2 tic2d = create2DArray(scanLineCount,
-            // scansPerModulation,
-            // values);
-            // RenderedImage bi = ImageTools.makeImage2D(tic2d, 256,
-            // Double.NEGATIVE_INFINITY);
-            // bi = ImageTools.addPeakToImage(bi, peakList, new int[] { 255, 255,
-            // 255,
-            // 255 }, null, new int[] { 0, 0, 0, 255, },
-            // this.scansPerModulation);
-            // ImageTools.saveImage(ImageTools.flipVertical(bi), ff.getName()
-            // + "-TIC2D", "png", getIWorkflow().getOutputDirectory(this),
-            // this);
         } else {
             log.warn("Intensity array list was empty for fragment {}", ff.getName());
-        }
-    }
-
-    /**
-     *
-     */
-    public class PeakComparator implements Comparator<Peak2D> {
-
-        /**
-         *
-         * @param o1
-         * @param o2
-         * @return
-         */
-        @Override
-        public int compare(Peak2D o1, Peak2D o2) {
-            Point p1 = o1.getPeakArea().getSeedPoint();
-            Point p2 = o2.getPeakArea().getSeedPoint();
-            if (Double.compare(p1.x, p2.x) == 0) {
-                return Double.compare(p1.y, p2.y);
-            } else {
-                return Double.compare(p1.x, p2.x);
-            }
-        }
-    }
-
-    /**
-     *
-     */
-    public class PeakAreaComparator implements Comparator<PeakArea2D> {
-
-        /**
-         *
-         * @param o1
-         * @param o2
-         * @return
-         */
-        @Override
-        public int compare(PeakArea2D o1, PeakArea2D o2) {
-            Point p1 = o1.getSeedPoint();
-            Point p2 = o2.getSeedPoint();
-            if (Double.compare(p1.x, p2.x) == 0) {
-                return Double.compare(p1.y, p2.y);
-            } else {
-                return Double.compare(p1.x, p2.x);
-            }
         }
     }
 }

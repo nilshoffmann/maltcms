@@ -1,6 +1,6 @@
 Release Notes
 
-Changes for version 1.3.1
+Changes for version 1.4.0
 ---------------------------
 #Improvements
 
@@ -21,11 +21,12 @@ Changes for version 1.3.1
 
 #API Changes
 
+* Removed extra steps in `SeededRegionGrowing`, thereby removing a number of configuration options. Alignment can now be performed by `PeakCliqueAlignment`. Example pipelines have been adapted accordingly.
 * Extended IScan interface with precursor_mz, precursor_charge, and precursor_intensity. 
 * Multiple updates and refactoring of IScanLine API. 
 * Added interface ICopyable to filters.
 * The class maltcms.tools.PublicMemberGetters has been moved to the cross project at cross.tools.PublicMemberGetters.
-* cross.Factory.getInstance() now returns cross.IFactory(). The static singleton access pattern has been deprecated and will be replaced in the next major release version.
+* cross.Factory.getInstance() now returns cross.IFactory(). The static singleton access pattern has been deprecated and will be replaced in the next major release version. Refactored static method access wrt `cross.Factory`.
 
 #Data Format support
 
@@ -36,10 +37,10 @@ Changes for version 1.3.1
 
 #Dependencies
 
-* Updated cross dependency to latest stable 1.4.0 release.
+* Updated cross dependency to latest stable 1.4.0 release. 
 * Updated lombok dependency to latest stable 1.12.4 release. 
  
-This version is backwards compatible to 1.3.x releases of maltcms concerning the workflow format. However, some commands have additional properties, so please check whether your pipelines require updating. Parameters are introduced with sensible default values, usually meaning that they are not used when not explicitly configured. Go <a href="fragmentCommands.html">here</a> for more information on how to inquire a fragment command for its supported parameters.
+This version is backwards compatible to 1.3.x releases of maltcms concerning the workflow format. However, some commands have additional properties, while some commands have fewer properties, so please check whether your pipelines require updating. Parameters are introduced with sensible default values, usually meaning that they are not used when not explicitly configured. Go <a href="fragmentCommands.html">here</a> for more information on how to inquire a fragment command for its supported parameters.
 
 Changes for version 1.3
 ---------------------------

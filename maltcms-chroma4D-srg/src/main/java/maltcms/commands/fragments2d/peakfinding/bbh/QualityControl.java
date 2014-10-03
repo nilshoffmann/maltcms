@@ -25,7 +25,7 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.commands.fragments2d.peakfinding;
+package maltcms.commands.fragments2d.peakfinding.bbh;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -149,62 +149,4 @@ public class QualityControl {
 
         return ret;
     }
-    // public static void main(String[] args) {
-    // Peak2D p;
-    // List<Peak2D> pl1 = new ArrayList<Peak2D>();
-    // p = new Peak2D();
-    // p.setFirstScanIndex(10);
-    // p.setSecondScanIndex(10);
-    // pl1.add(p);
-    // p = new Peak2D();
-    // p.setFirstScanIndex(20);
-    // p.setSecondScanIndex(20);
-    // pl1.add(p);
-    // p = new Peak2D();
-    // p.setFirstScanIndex(30);
-    // p.setSecondScanIndex(30);
-    // pl1.add(p);
-    // p = new Peak2D();
-    // p.setFirstScanIndex(40);
-    // p.setSecondScanIndex(40);
-    // pl1.add(p);
-    // p = new Peak2D();
-    // p.setFirstScanIndex(50);
-    // p.setSecondScanIndex(50);
-    // pl1.add(p);
-    // List<Peak2D> pl2 = new ArrayList<Peak2D>();
-    // p = new Peak2D();
-    // p.setFirstScanIndex(11);
-    // p.setSecondScanIndex(12);
-    // pl2.add(p);
-    // p = new Peak2D();
-    // p.setFirstScanIndex(21);
-    // p.setSecondScanIndex(22);
-    // pl2.add(p);
-    // p = new Peak2D();
-    // p.setFirstScanIndex(31);
-    // p.setSecondScanIndex(32);
-    // pl2.add(p);
-    // p = new Peak2D();
-    // p.setFirstScanIndex(41);
-    // p.setSecondScanIndex(42);
-    // pl2.add(p);
-    // p = new Peak2D();
-    // p.setFirstScanIndex(51);
-    // p.setSecondScanIndex(52);
-    // pl2.add(p);
-    // Map<Integer, Integer> m = new HashMap<Integer, Integer>();
-    // m.put(0, 0);
-    // m.put(1, 1);
-    // m.put(2, 2);
-    // m.put(3, 3);
-    // m.put(4, 4);
-    // List<Entry<Integer, Integer>> map = new ArrayList<Entry<Integer,
-    // Integer>>(
-    // m.entrySet());
-    //
-    // for (Reliability d : new QualityControl().calcV(pl1, pl2, map)) {
-    // System.out.println("" + d.getReliability());
-    // }
-    // }
 }

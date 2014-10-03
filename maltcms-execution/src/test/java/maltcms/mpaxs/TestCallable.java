@@ -27,34 +27,24 @@
  */
 package maltcms.mpaxs;
 
-import java.io.File;
-import java.net.URI;
-import net.sf.mpaxs.api.concurrent.ConfigurableRunnable;
-import net.sf.mpaxs.api.job.Progress;
+import java.io.Serializable;
+import java.util.concurrent.Callable;
 
 /**
  *
  * @author Nils Hoffmann
  */
-public class MaltcmsConfigurableRunnable implements ConfigurableRunnable<URI> {
+public class TestCallable implements Callable<String>, Serializable {
 
     @Override
-    public URI get() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void configure(File pathToConfig) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Progress getProgress() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void run() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public String call() throws Exception {
+        for (int i = 0; i < 10; i++) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+//                Logger.getLogger(TestCallable.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return "TestCallable";
     }
 }

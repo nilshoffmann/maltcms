@@ -54,21 +54,6 @@ import org.apache.commons.configuration.Configuration;
 @Data
 public class TicPeakPicking implements IPeakPicking {
 
-    @Configurable(name = "totalIntensityRedoVar", value = "total_intensity")
-    private String totalIntensityRedoVar = "total_intensity";
-    @Configurable(name = "totalIntensityVar", value = "total_intensity")
-    private String totalIntensityVar = "total_intensity";
-    @Configurable(name = "var.second_column_scan_index",
-            value = "second_column_scan_index")
-    private String secondScanIndexVar = "second_column_scan_index";
-    @Configurable(value = "1")
-    private int maxDx = 1;
-    @Configurable(value = "1")
-    private int maxDy = 1;
-    @Configurable(value = "-1")
-    private int minVerticalScanIndex = -1;
-    @Configurable(value = "100")
-    private int k = 100;
     private QuadTree<Peak1D> quadTree;
 
     @Override
@@ -91,7 +76,6 @@ public class TicPeakPicking implements IPeakPicking {
     @Override
     public List<Point> findPeaks(IFileFragment ff) {
         log.info("Running {} with:", this.getClass().getName());
-        log.info("total_intensity: {}", this.totalIntensityVar);
         List<Peak1D> peaks = Peak1D.fromFragment(ff);
         IScanLine isl = ScanLineCacheFactory.getSparseScanLineCache(ff);
         List<Point> pointList = new ArrayList<>();
@@ -99,6 +83,11 @@ public class TicPeakPicking implements IPeakPicking {
             pointList.add(isl.mapIndex(peak.getApexIndex()));
         }
         return pointList;
+    }
+
+    @Override
+    public void configure(Configuration cfg) {
+
     }
 
     public class PointComparator implements Comparator<Point> {
@@ -122,21 +111,5 @@ public class TicPeakPicking implements IPeakPicking {
             al.add(new Point((int) t.getFirst().getX(), (int) t.getFirst().getY()));
         }
         return al;
-    }
-
-    @Override
-    public void configure(Configuration cfg) {
-        // this.totalIntensityVar = cfg.getString(SeededRegionGrowing.class
-        // .getName()
-        // + ".totalIntensityVar", "total_intensity");
-//        this.totalIntensityVar = cfg.getString(this.getClass().getName()
-//                + ".totalIntensityVar", "total_intensity");
-//        this.totalIntensityRedoVar = cfg.getString(this.getClass().getName()
-//                + ".totalIntensityRedoVar", "total_intensity");
-//        this.maxDx = cfg.getInt(this.getClass().getName() + ".maxDx", 1);
-//        this.maxDy = cfg.getInt(this.getClass().getName() + ".maxDy", 1);
-//        this.minVerticalScanIndex = cfg.getInt(this.getClass().getName()
-//                + ".minVerticalScanIndex", -1);
-//        this.k = cfg.getInt(this.getClass().getName() + ".k", 100);
     }
 }

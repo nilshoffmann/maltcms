@@ -59,35 +59,6 @@ public class ScanLineCacheFactory {
     public static void setMassResolution(double massResolution) {
         ScanLineCacheFactory.massResolution = massResolution;
     }
-
-//    static {
-//        if (ScanLineCacheFactory.scanlinecaches == null) {
-//            ScanLineCacheFactory.scanlinecaches = new HashMap<String, IScanLine>();
-//        }
-//    }
-    /**
-     * Creates a new {@link IScanLine} for {@link IFileFragment} and stores it
-     * in a {@link HashMap}.
-     *
-     * The concrete instance of {@link IScanLine} depends on the configuration
-     * cross.datastructures.fragments.VariableFragment.useCachedList. If its set
-     * to true, the {@link IScanLine} will be the {@link CachedScanLineList},
-     * otherwise the {@link ScanLineCache}
-     *
-     * @param ff file fragment
-     * @return scanline cache for this file fragment
-     */
-//	private static IScanLine createScanLineCache(final IFileFragment ff) {
-//		IScanLine slc = null;
-//		final Configuration cfg = Factory.getInstance().getConfiguration();
-//		// log.info("Creating CachedScanLineList for {}", ff.getName());
-//		slc = new ScanLineCache(ff, minMass, maxMass, massResolution);
-//		log.info("Using scan line cache implementation: {}", slc.getClass().getName());
-//		// slc = new CachedScanLineList(ff);
-//		slc.configure(cfg);
-////        scanlinecaches.put(ff.getName(), slc);
-//		return slc;
-//	}
     /**
      * This method will automatically create a new {@link IScanLine} for the
      * given {@link IFileFragment} if no one is cached. Otherwise it will return
@@ -97,56 +68,13 @@ public class ScanLineCacheFactory {
      * @return scanline cache for this file fragment
      */
     public static IScanLine getScanLineCache(final IFileFragment ff) {
-
-//        if (ScanLineCacheFactory.scanlinecaches.containsKey(ff.getName())) {
-//            return ScanLineCacheFactory.scanlinecaches.get(ff.getName());
-//
-//        } else {
-//		return ScanLineCacheFactory.createScanLineCache(ff);
-//        }
         return ScanLineCacheFactory.getSparseScanLineCache(ff);
     }
 
     public static IScanLine getSparseScanLineCache(final IFileFragment ff) {
-//        if (ScanLineCacheFactory.scanlinecaches.containsKey(ff.getName())) {
-//            return ScanLineCacheFactory.scanlinecaches.get(ff.getName());
-//        }
         IScanLine slc = null;
         slc = new SparseScanLineCache(ff, minMass, maxMass, massResolution);
         log.info("Using scan line cache implementation: {}", slc.getClass().getName());
-//        scanlinecaches.put(ff.getName(), slc);
         return slc;
     }
-//
-//	public static IScanLine getDefaultScanLineCache(final IFileFragment ff) {
-////        if (ScanLineCacheFactory.scanlinecaches.containsKey(ff.getName())) {
-////            return ScanLineCacheFactory.scanlinecaches.get(ff.getName());
-////        }
-//		IScanLine slc = null;
-//		slc = new ScanLineCache(ff, minMass, maxMass, massResolution);
-//		log.info("Using scan line cache implementation: {}", slc.getClass().getName());
-////        scanlinecaches.put(ff.getName(), slc);
-//		return slc;
-//	}
-
-//	public static IScanLine getOldScanLineCache(final IFileFragment ff) {
-////        if (ScanLineCacheFactory.scanlinecaches.containsKey(ff.getName())) {
-////            return ScanLineCacheFactory.scanlinecaches.get(ff.getName());
-////        }
-//		IScanLine slc = null;
-//		slc = new ScanLineCacheOld(ff);
-//		log.info("Using scan line cache implementation: {}", slc.getClass().getName());
-////        scanlinecaches.put(ff.getName(), slc);
-//		return slc;
-//	}
-//	public static IScanLine getCachedListScanLineCache(final IFileFragment ff) {
-////        if (ScanLineCacheFactory.scanlinecaches.containsKey(ff.getName())) {
-////            return ScanLineCacheFactory.scanlinecaches.get(ff.getName());
-////        }
-//		IScanLine slc = null;
-//		slc = new CachedScanLineList(ff);
-//		log.info("Using scan line cache implementation: {}", slc.getClass().getName());
-////        scanlinecaches.put(ff.getName(), slc);
-//		return slc;
-//	}
 }

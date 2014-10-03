@@ -35,30 +35,6 @@ for details.
         This file defines elements of the ChromA4D SRG seeded region growing.
     </description>
     
-    <bean id="identificationSim" class="maltcms.math.functions.similarities.ArrayCos" scope="prototype"/>
-    
-    <bean id="peakIdentification" class="maltcms.commands.fragments2d.peakfinding.output.PeakIdentification">
-        <property name="doSearch" value="false" />
-        <property name="dbFiles">
-            <list>
-                <!-- insert path to your maltcms databases below -->
-                <!--<value></value>-->
-            </list>
-        </property>
-        <property name="threshold" value="0.8" />
-        <property name="k" value="1" />
-        <property name="similarity" ref="identificationSim" />
-        <property name="masqMasses" >
-            <list>
-                <value>73</value>
-                <value>74</value>
-                <value>147</value>
-                <value>148</value>
-                <value>149</value>
-            </list>
-        </property>
-    </bean>
-    
     <bean id="peakIntegration" class="maltcms.commands.fragments2d.peakfinding.output.PeakIntegration">
         <property name="k" value="5" />
         <property name="plotIntegration" value="false" />
@@ -82,7 +58,7 @@ for details.
     <bean id="peakPickerTic" class="maltcms.commands.fragments2d.peakfinding.picking.TicPeakPicking">
     </bean>
 
-    <bean id="peakSeparator" class="maltcms.commands.fragments2d.peakfinding.PeakSeparator">
+    <bean id="peakSeparator" class="maltcms.commands.fragments2d.peakfinding.srg.PeakSeparator">
         <property name="minDist" value="0.995"/>
         <property name="separationSimilarity" ref="shouldBeSeparatedSim" />
         <property name="similarity" ref="separationSim" />
@@ -133,35 +109,6 @@ for details.
         </property>
     </bean>
 
-    <bean id="bbhImpl" class="maltcms.commands.fragments2d.peakfinding.bbh.FastBidirectionalBestHit" >
-        <property name="useMeanMS" value="false" />
-        <property name="threshold" value="0.9" />
-        <property name="maxRetDiff" value="500.0" />
-        <property name="similarity" ref="bbhSimilarity" />
-    </bean>
-    <bean id="rt1bbhSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
-        <property name="tolerance" value="15.0"/>
-        <property name="threshold" value="0.0"/>
-    </bean>
-    <bean id="rt2bbhSim" class="maltcms.math.functions.similarities.GaussianDifferenceSimilarity">
-        <property name="tolerance" value="1.0"/>
-        <property name="threshold" value="0.0"/>
-    </bean>
-    <bean id="arraybbhSim" class="maltcms.math.functions.similarities.ArrayCos"/>
-    <bean id="bbhSimilarity" class="maltcms.math.functions.ProductSimilarity">
-        <property name="scalarSimilarities">
-            <array>
-                <ref bean="rt1bbhSim"/>
-                <ref bean="rt2bbhSim"/>
-            </array>
-        </property>
-        <property name="arraySimilarities">
-            <array>
-                <ref bean="arraybbhSim"/>
-            </array>
-        </property>
-    </bean>
-
     <bean id="regionGrower" class="maltcms.commands.fragments2d.peakfinding.srg.OneByOneRegionGrowing">
         <property name="totalIntensityVar" value="total_intensity" />
         <property name="minDistance" value="0.99" />
@@ -170,7 +117,6 @@ for details.
         <property name="maxPeakSize" value="3000" />
         <property name="discardPeaksWithMaxArea" value="true" />
         <property name="discardPeaksWithMinArea" value="true" />
-        <property name="useAlternativFiltering" value="true" />
         <property name="useMeanMS" value="false" />
     </bean>
     <bean id="regionGrowingSim" class="maltcms.math.functions.similarities.ArrayCos" scope="prototype"/>
@@ -180,18 +126,11 @@ for details.
         <property name="colorrampLocation" value="res/colorRamps/bcgyr.csv" />
         <property name="doubleFillValue" value="9.9692099683868690e+36d" />
         <property name="threshold" value="0.0" />
-        <property name="doBBH" value="true"/>
         <property name="separate" value="true" />
-        <property name="secondRun" value="true" />
         <property name="doNormalization" value="false"/>
         <property name="doIntegration" value="false"/>
-        <property name="secondSeedMinDistance" value="0.95" />
-        <property name="seedNotInRegion" value="false" />
-        <property name="similaritySecondRun" ref="secondRunSim"/>
         <property name="peakPicking" ref="peakPickerTic"/>
         <property name="regionGrowing" ref="regionGrower" />
-        <property name="bbh" ref="bbhImpl"/>
-        <property name="identification" ref="peakIdentification"/>
         <property name="integration" ref="peakIntegration"/>
         <property name="peakExporter" ref="peakExporter"/>
         <property name="peakSeparator" ref="peakSeparator"/>

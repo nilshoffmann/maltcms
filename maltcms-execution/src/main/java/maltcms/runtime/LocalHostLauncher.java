@@ -99,7 +99,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
         npe.printStackTrace(System.err);
         ecode = 1;
         // Save configuration
-        Factory.dumpConfig("runtime.properties", d);
+        Factory.getInstance().dumpConfig("runtime.properties", d);
         final JEditorPane jpa = new JEditorPane("text/html", "");
         final StringBuffer sb = new StringBuffer();
         final StringWriter sw = new StringWriter();
